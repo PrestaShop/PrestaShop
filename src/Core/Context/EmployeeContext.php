@@ -38,7 +38,8 @@ class EmployeeContext
     public const SUPER_ADMIN_PROFILE_ID = 1;
 
     public function __construct(
-        protected readonly ?Employee $employee
+        protected readonly ?Employee $employee,
+        protected readonly array $allShopsIds,
     ) {
     }
 
@@ -63,6 +64,25 @@ class EmployeeContext
         }
 
         return $this->isSuperAdmin() || in_array($shopId, $this->getEmployee()->getAssociatedShopIds());
+    }
+
+    public function hasAuthorizationForAllShops(): bool
+    {
+        if (!$this->getEmployee()) {
+            return false;
+        }
+
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        foreach ($this->allShopsIds as $shopId) {
+            if (!$this->hasAuthorizationOnShop($shopId)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function getDefaultShopId(): int

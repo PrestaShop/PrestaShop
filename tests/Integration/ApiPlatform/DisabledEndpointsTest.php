@@ -152,4 +152,190 @@ class DisabledEndpointsTest extends ApiTestCase
             true,
         ];
     }
+
+    /**
+     * @dataProvider getNotFoundEndpoints
+     */
+    public function testEndpointWithCQRSNotFound(bool $isDebug, bool $forceExperimentalEndpoints, string $endpointMethod, string $endpointUrl, string $endpointScope): void
+    {
+        // Boot kernel with appropriate configuration, exceptionally we force the environment, so we have
+        // distinct cache and adapted data/behaviour for each use case
+        $kernelOptions = ['debug' => $isDebug];
+
+        // The purpose in this test is not to check the HTTPS protection so we mimic it (especially for prod environment)
+        $defaultClientOptions = [
+            'headers' => [
+                'X_FORWARDED_PROTO' => 'HTTPS',
+            ],
+        ];
+        static::bootKernel($kernelOptions);
+
+        // Update the configuration
+        if ($forceExperimentalEndpoints) {
+            $this->featureFlagManager->enable(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS);
+        } else {
+            $this->featureFlagManager->disable(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS);
+        }
+
+        // When experimental endpoints are enabled, the scope is visible, it is usable when you create a token so it is requested with the token
+        // When they are disabled, the scope should be filtered out so trying to use it would result in a 401 (that's why it is not requested in the token)
+        $bearerToken = $this->getBearerToken($forceExperimentalEndpoints ? [$endpointScope] : [], $kernelOptions, $defaultClientOptions);
+
+        static::createClient($kernelOptions, $defaultClientOptions)->request($endpointMethod, $endpointUrl, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $bearerToken,
+            ],
+        ]);
+
+        // When experimental endpoints are enabled, the endpoint exists but is invalid so a 400 http code is returned
+        // When experimental endpoints are disabled, the endpoint is filtered out trying to access it results in a 404
+        self::assertResponseStatusCodeSame($forceExperimentalEndpoints ? 400 : 404);
+
+        /** @var ApiResourceScopesExtractor $scopesExtractor */
+        $scopesExtractor = static::createClient($kernelOptions)->getContainer()->get(ApiResourceScopesExtractor::class);
+        $resourceScopes = $scopesExtractor->getAllApiResourceScopes();
+        $foundScope = false;
+        foreach ($resourceScopes as $resourceScope) {
+            if (in_array($endpointScope, $resourceScope->getScopes())) {
+                $foundScope = true;
+                break;
+            }
+        }
+
+        // If experimental endpoint is enabled the scope is found, if not it was filtered
+        $this->assertEquals($forceExperimentalEndpoints, $foundScope);
+    }
+
+    public static function getNotFoundEndpoints(): iterable
+    {
+        // First test when the experimental endpoints are disabled
+        yield 'endpoint with CQRS query not found, experimental feature flag disabled, filtered on prod' => [
+            false,
+            false,
+            'GET',
+            '/test/cqrs/query/not_found',
+            'filtered_query_scope',
+        ];
+
+        yield 'endpoint with CQRS query not found, experimental feature flag disabled, filtered on dev' => [
+            true,
+            false,
+            'GET',
+            '/test/cqrs/query/not_found',
+            'filtered_query_scope',
+        ];
+
+        yield 'endpoint with CQRS command not found, experimental feature flag disabled, filtered on prod' => [
+            false,
+            false,
+            'POST',
+            '/test/cqrs/command/not_found',
+            'filtered_command_scope',
+        ];
+
+        yield 'endpoint with CQRS command not found, experimental feature flag disabled, filtered on dev' => [
+            true,
+            false,
+            'POST',
+            '/test/cqrs/command/not_found',
+            'filtered_command_scope',
+        ];
+
+        yield 'endpoint with CQRS command AND query not found, experimental feature flag disabled, filtered on prod' => [
+            false,
+            false,
+            'PUT',
+            '/test/cqrs/query_and_command/not_found',
+            'filtered_query_command_scope',
+        ];
+
+        yield 'endpoint with CQRS command AND query not found, experimental feature flag disabled, filtered on dev' => [
+            true,
+            false,
+            'PUT',
+            '/test/cqrs/query_and_command/not_found',
+            'filtered_query_command_scope',
+        ];
+
+        yield 'endpoint with grid factory not found, experimental feature flag enabled, filtered on prod' => [
+            false,
+            false,
+            'GET',
+            '/test/cqrs/grid_factory/not_found',
+            'filtered_grid_factory_scope',
+        ];
+
+        yield 'endpoint with grid factory not found, experimental feature flag enabled, filtered on dev' => [
+            true,
+            false,
+            'GET',
+            '/test/cqrs/grid_factory/not_found',
+            'filtered_grid_factory_scope',
+        ];
+
+        // Now the experimental endpoints are enabled
+        yield 'endpoint with CQRS query not found, experimental feature flag enabled, still present on prod' => [
+            false,
+            true,
+            'GET',
+            '/test/cqrs/query/not_found',
+            'filtered_query_scope',
+        ];
+
+        yield 'endpoint with CQRS query not found, experimental feature flag enabled, still present on dev' => [
+            true,
+            true,
+            'GET',
+            '/test/cqrs/query/not_found',
+            'filtered_query_scope',
+        ];
+
+        yield 'endpoint with CQRS command not found, experimental feature flag enabled, still present on prod' => [
+            false,
+            true,
+            'POST',
+            '/test/cqrs/command/not_found',
+            'filtered_command_scope',
+        ];
+
+        yield 'endpoint with CQRS command not found, experimental feature flag enabled, still present on dev' => [
+            true,
+            true,
+            'POST',
+            '/test/cqrs/command/not_found',
+            'filtered_command_scope',
+        ];
+
+        yield 'endpoint with CQRS command AND query not found, experimental feature flag enabled, still present on prod' => [
+            false,
+            true,
+            'PUT',
+            '/test/cqrs/query_and_command/not_found',
+            'filtered_query_command_scope',
+        ];
+
+        yield 'endpoint with CQRS command AND query not found, experimental feature flag enabled, still present on dev' => [
+            true,
+            true,
+            'PUT',
+            '/test/cqrs/query_and_command/not_found',
+            'filtered_query_command_scope',
+        ];
+
+        yield 'endpoint with grid factory not found, experimental feature flag enabled, still present on prod' => [
+            false,
+            true,
+            'GET',
+            '/test/cqrs/grid_factory/not_found',
+            'filtered_grid_factory_scope',
+        ];
+
+        yield 'endpoint with grid factory not found, experimental feature flag enabled, still present on dev' => [
+            true,
+            true,
+            'GET',
+            '/test/cqrs/grid_factory/not_found',
+            'filtered_grid_factory_scope',
+        ];
+    }
 }

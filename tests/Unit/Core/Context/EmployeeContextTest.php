@@ -41,7 +41,7 @@ class EmployeeContextTest extends TestCase
             ->method('getProfileId')
             ->willReturn(EmployeeContext::SUPER_ADMIN_PROFILE_ID)
         ;
-        $employeeContext = new EmployeeContext($employeeMock);
+        $employeeContext = new EmployeeContext($employeeMock, []);
         $this->assertTrue($employeeContext->isSuperAdmin());
     }
 
@@ -52,7 +52,7 @@ class EmployeeContextTest extends TestCase
             ->method('getProfileId')
             ->willReturn(EmployeeContext::SUPER_ADMIN_PROFILE_ID + 1)
         ;
-        $employeeContext = new EmployeeContext($employeeMock);
+        $employeeContext = new EmployeeContext($employeeMock, []);
         $this->assertFalse($employeeContext->isSuperAdmin());
     }
 
@@ -63,7 +63,7 @@ class EmployeeContextTest extends TestCase
             ->method('getDefaultShopId')
             ->willReturn(42)
         ;
-        $employeeContext = new EmployeeContext($employeeMock);
+        $employeeContext = new EmployeeContext($employeeMock, []);
         $this->assertEquals(42, $employeeContext->getDefaultShopId());
     }
 
@@ -81,14 +81,14 @@ class EmployeeContextTest extends TestCase
             ->method('getAssociatedShopIds')
             ->willReturn($shopIds)
         ;
-        $employeeContext = new EmployeeContext($employeeMock);
+        $employeeContext = new EmployeeContext($employeeMock, []);
 
         $this->assertEquals($expectedAuthorization, $employeeContext->hasAuthorizationOnShop($testedShopId));
     }
 
-    public function provideShops(): iterable
+    public static function provideShops(): iterable
     {
-        yield 'super admin with no shops is autorized' => [
+        yield 'super admin with no shops is authorized' => [
             true,
             [],
             42,
@@ -131,14 +131,14 @@ class EmployeeContextTest extends TestCase
             ->method('getAssociatedShopGroupIds')
             ->willReturn($groupIds)
         ;
-        $employeeContext = new EmployeeContext($employeeMock);
+        $employeeContext = new EmployeeContext($employeeMock, []);
 
         $this->assertEquals($expectedAuthorization, $employeeContext->hasAuthorizationOnShopGroup($testedGroupId));
     }
 
-    public function provideShopGroups(): iterable
+    public static function provideShopGroups(): iterable
     {
-        yield 'super admin with no groups is autorized' => [
+        yield 'super admin with no groups is authorized' => [
             true,
             [],
             42,
@@ -163,6 +163,56 @@ class EmployeeContextTest extends TestCase
             false,
             [51],
             42,
+            false,
+        ];
+    }
+
+    /**
+     * @dataProvider provideAllShops
+     */
+    public function testHasAuthorizationForAllShops(bool $isSuperAdmin, array $associatedShopIds, array $allShopIds, bool $expectedAuthorization): void
+    {
+        $employeeMock = $this->createMock(Employee::class);
+        $employeeMock
+            ->method('getProfileId')
+            ->willReturn($isSuperAdmin ? EmployeeContext::SUPER_ADMIN_PROFILE_ID : 42)
+        ;
+        $employeeMock
+            ->method('getAssociatedShopIds')
+            ->willReturn($associatedShopIds)
+        ;
+        $employeeContext = new EmployeeContext($employeeMock, $allShopIds);
+
+        $this->assertEquals($expectedAuthorization, $employeeContext->hasAuthorizationForAllShops());
+    }
+
+    public static function provideAllShops(): iterable
+    {
+        yield 'super admin with no associated shops is authorized' => [
+            true,
+            [],
+            [1, 2, 3, 4],
+            true,
+        ];
+
+        yield 'super admin with associated shops is authorized' => [
+            true,
+            [1, 3],
+            [1, 2, 3, 4],
+            true,
+        ];
+
+        yield 'not super admin with all associated shops is authorized' => [
+            false,
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+            true,
+        ];
+
+        yield 'not super admin with no all associated shops is no authorized' => [
+            false,
+            [1, 2, 4],
+            [1, 2, 3, 4],
             false,
         ];
     }

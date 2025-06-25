@@ -114,8 +114,8 @@ class TabDataProvider
                     }
                 }
 
-                // Tab not active are not shown unless they have active children
-                if (!empty($viewableChildren) || $tab['active']) {
+                // Inactive tabs are not shown unless they have active children. "AdminDashboard" is always shown if active
+                if ($tab['active'] && (!empty($viewableChildren) || $tab['class_name'] == 'AdminDashboard')) {
                     $viewableTabs[$tab['id_tab']] = [
                         'id_tab' => $tab['id_tab'],
                         'name' => $tab['name'],

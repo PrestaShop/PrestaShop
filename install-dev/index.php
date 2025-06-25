@@ -43,6 +43,9 @@ if (
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'init.php';
 require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
 
+define('_PS_APP_ID_', AdminKernel::APP_ID);
+PrestaShop\PrestaShop\Core\Util\CacheClearLocker::waitUntilUnlocked(_PS_ENV_, _PS_APP_ID_);
+
 try {
     if (_PS_MODE_DEV_) {
         Symfony\Component\ErrorHandler\Debug::enable();

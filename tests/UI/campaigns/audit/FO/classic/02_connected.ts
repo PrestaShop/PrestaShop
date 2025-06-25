@@ -1,7 +1,4 @@
 import {expect} from 'chai';
-import {accountIdentityPage as foClassicAccountIdentityPage} from '@pages/FO/classic/myAccount/identity';
-import {creditSlipPage as foClassicCreditSlipsPage} from '@pages/FO/classic/myAccount/creditSlips';
-import {gdprPersonalDataPage as foClassicGdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
 import testContext from '@utils/testContext';
 
 import {
@@ -12,6 +9,9 @@ import {
   foClassicMyAccountPage,
   foClassicMyAddressesPage,
   foClassicMyAddressesCreatePage,
+  foClassicMyCreditSlipsPage,
+  foClassicMyGDPRPersonalDataPage,
+  foClassicMyInformationsPage,
   foClassicMyOrderDetailsPage,
   foClassicMyOrderHistoryPage,
   foClassicMyWishlistsPage,
@@ -94,8 +94,8 @@ describe('Check FO connected pages', async () => {
 
     await foClassicMyAccountPage.goToInformationPage(page);
 
-    const pageTitle = await foClassicAccountIdentityPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicAccountIdentityPage.pageTitle);
+    const pageTitle = await foClassicMyInformationsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicMyInformationsPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -104,7 +104,7 @@ describe('Check FO connected pages', async () => {
   it('should go to the "Your addresses" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
-    await foClassicAccountIdentityPage.goToMyAccountPage(page);
+    await foClassicMyInformationsPage.goToMyAccountPage(page);
     await foClassicMyAccountPage.goToAddressesPage(page);
 
     const pageHeaderTitle = await foClassicMyAddressesPage.getPageTitle(page);
@@ -129,7 +129,7 @@ describe('Check FO connected pages', async () => {
   it('should go to the "Order history" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToHistoryAndDetailsPage', baseContext);
 
-    await foClassicAccountIdentityPage.goToMyAccountPage(page);
+    await foClassicMyInformationsPage.goToMyAccountPage(page);
     await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
     const pageTitle = await foClassicMyOrderHistoryPage.getPageTitle(page);
@@ -154,11 +154,11 @@ describe('Check FO connected pages', async () => {
   it('should go to the "Credit slips" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage', baseContext);
 
-    await foClassicAccountIdentityPage.goToMyAccountPage(page);
+    await foClassicMyInformationsPage.goToMyAccountPage(page);
     await foClassicMyAccountPage.goToCreditSlipsPage(page);
 
-    const pageTitle = await foClassicCreditSlipsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicCreditSlipsPage.pageTitle);
+    const pageTitle = await foClassicMyCreditSlipsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicMyCreditSlipsPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -167,7 +167,7 @@ describe('Check FO connected pages', async () => {
   it('should go to the "My wishlists" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToMyWishlistsPage', baseContext);
 
-    await foClassicAccountIdentityPage.goToMyAccountPage(page);
+    await foClassicMyInformationsPage.goToMyAccountPage(page);
     await foClassicMyAccountPage.goToMyWishlistsPage(page);
 
     const pageTitle = await foClassicMyWishlistsPage.getPageTitle(page);
@@ -192,11 +192,11 @@ describe('Check FO connected pages', async () => {
   it('should go to the "GDPR - Personal data" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToMyGDPRPersonalDataPage', baseContext);
 
-    await foClassicAccountIdentityPage.goToMyAccountPage(page);
+    await foClassicMyInformationsPage.goToMyAccountPage(page);
     await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
-    const pageTitle = await foClassicGdprPersonalDataPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicGdprPersonalDataPage.pageTitle);
+    const pageTitle = await foClassicMyGDPRPersonalDataPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicMyGDPRPersonalDataPage.pageTitle);
 
     const jsErrors = utilsPlaywright.getJsErrors();
     expect(jsErrors.length).to.equals(0);
@@ -205,7 +205,7 @@ describe('Check FO connected pages', async () => {
   it('should logout', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'logout', baseContext);
 
-    await foClassicGdprPersonalDataPage.logout(page);
+    await foClassicMyGDPRPersonalDataPage.logout(page);
 
     const result = await foClassicHomePage.isHomePage(page);
     expect(result).to.eq(true);

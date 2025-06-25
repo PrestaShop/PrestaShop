@@ -143,25 +143,27 @@ class VoucherGenerator
         // @todo: use private method to send mail and later a decoupled mail sender
         $orderLanguage = $order->getAssociatedLanguage();
 
-        @Mail::Send(
-            (int) $orderLanguage->getId(),
-            'voucher',
-            $this->translator->trans(
-                'New voucher for your order #%s',
-                [$order->reference],
-                'Emails.Subject',
-                $orderLanguage->locale
-            ),
-            $params,
-            $customer->email,
-            $customer->firstname . ' ' . $customer->lastname,
-            null,
-            null,
-            null,
-            null,
-            _PS_MAIL_DIR_,
-            true,
-            (int) $order->id_shop
-        );
+        if (!empty($customer->email)) {
+            @Mail::Send(
+                (int) $orderLanguage->getId(),
+                'voucher',
+                $this->translator->trans(
+                    'New voucher for your order #%s',
+                    [$order->reference],
+                    'Emails.Subject',
+                    $orderLanguage->locale
+                ),
+                $params,
+                $customer->email,
+                $customer->firstname . ' ' . $customer->lastname,
+                null,
+                null,
+                null,
+                null,
+                _PS_MAIL_DIR_,
+                true,
+                (int) $order->id_shop
+            );
+        }
     }
 }

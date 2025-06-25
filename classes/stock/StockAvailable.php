@@ -304,13 +304,18 @@ class StockAvailableCore extends ObjectModel
     }
 
     /**
-     * Upgrades total_quantity_available after having saved.
+     * Updates the total quantity of the given product.
+     *
+     * If a product has combinations, the quantity id_product = X, id_product_attribute = 0 entry
+     * is the sum of quantities of all the combinations. After a quantity of any combination has been
+     * updated, we also have to update this sum.
      *
      * @see StockAvailableCore::update()
      * @see StockAvailableCore::add()
      */
     public function postSave()
     {
+        // If there are no combinations, we can just consider it finished
         if ($this->id_product_attribute == 0) {
             return true;
         }
@@ -322,18 +327,7 @@ class StockAvailableCore extends ObjectModel
             $id_shop = (Shop::getContext() != Shop::CONTEXT_GROUP && $this->id_shop ? $this->id_shop : null);
         }
 
-        if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
-            $combination = new Combination((int) $this->id_product_attribute);
-            if ($colors = $combination->getColorsAttributes()) {
-                $product = new Product((int) $this->id_product);
-                foreach ($colors as $color) {
-                    if ($product->isColorUnavailable((int) $color['id_attribute'], (int) $this->id_shop)) {
-                        break;
-                    }
-                }
-            }
-        }
-
+        // Get the total quantity of all combinations
         $total_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             '
 			SELECT SUM(quantity) as quantity
@@ -342,6 +336,8 @@ class StockAvailableCore extends ObjectModel
 			AND id_product_attribute <> 0 ' .
             StockAvailable::addSqlShopRestriction(null, $id_shop)
         );
+
+        // And write it to the id_product = X, id_product_attribute = 0 entry
         $this->setQuantity($this->id_product, 0, $total_quantity, $id_shop, false);
 
         return true;

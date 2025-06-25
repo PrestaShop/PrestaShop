@@ -149,7 +149,8 @@ class CQRSCommand extends AbstractCQRSOperation
         unset($passedArguments['CQRSCommandMapping']);
 
         // By default, the CQRS command is used as the input base class as it contains the exact available parameters for this operation
-        if (empty($passedArguments['input']) && !empty($passedArguments['extraProperties']['CQRSCommand'])) {
+        // Exception in case the class doesn't exist we don't force the input because InputOutputResourceMetadataCollectionFactory will raise an exception when the resources are parsed
+        if (empty($passedArguments['input']) && !empty($passedArguments['extraProperties']['CQRSCommand']) && class_exists($passedArguments['extraProperties']['CQRSCommand'])) {
             $passedArguments['input'] = $passedArguments['extraProperties']['CQRSCommand'];
         }
 

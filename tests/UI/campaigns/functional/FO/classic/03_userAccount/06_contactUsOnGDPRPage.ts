@@ -1,9 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import FO pages
-import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
-
 import {
   boCustomerServicePage,
   boDashboardPage,
@@ -16,6 +13,7 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicMyGDPRPersonalDataPage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -90,14 +88,14 @@ describe('FO - Account : Contact us on GDPR page', async () => {
 
     await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
-    const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
-    expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
+    const pageTitle = await foClassicMyGDPRPersonalDataPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicMyGDPRPersonalDataPage.pageTitle);
   });
 
   it('should click on \'Contact page\' link from Rectification & Erasure requests block', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactUsPage', baseContext);
 
-    await gdprPersonalDataPage.goToContactUsPage(page);
+    await foClassicMyGDPRPersonalDataPage.goToContactUsPage(page);
 
     const pageTitle = await foClassicContactUsPage.getPageTitle(page);
     expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);

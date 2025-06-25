@@ -19,6 +19,7 @@ import {
   type Page,
   utilsCore,
   utilsPlaywright,
+  dataCurrencies,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_conditions_minimumAmount';
@@ -43,7 +44,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
     code: 'test',
     minimumAmount: {
       value: 50,
-      currency: 'EUR',
+      currency: dataCurrencies.euro,
       tax: 'Tax included',
       shipping: 'Shipping excluded',
     },

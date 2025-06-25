@@ -91,8 +91,17 @@ services:
     decorates: api_platform.metadata.resource.metadata_collection_factory
     autowire: true
     arguments:
-      $innerFactory: '@.inner'
+      $decorated: '@.inner'
       $isDebug: '%kernel.debug%'
+
+  # This decorator allows filtering the available ApiPlatform resources when they are base on non existing CQRS classes
+  PrestaShopBundle\ApiPlatform\Metadata\Resource\Factory\CQRSNotFoundMetadataCollectionFactoryDecorator:
+    # It is important to decorate early in the decoration chain, because InputOutputResourceMetadataCollectionFactory checks the existence
+    # of input classes and throws an exception before this one has the chance to clean the CQRS not found
+    decorates: api_platform.metadata.resource.metadata_collection_factory.attributes
+    autowire: true
+    arguments:
+      $decorated: '@.inner'
 
   # This service depends on ResourceMetadataCollectionFactoryInterface (auto wired) and can extract the scopes defined on operations
   PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor:

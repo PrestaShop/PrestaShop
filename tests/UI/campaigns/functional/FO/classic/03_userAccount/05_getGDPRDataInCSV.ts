@@ -3,9 +3,6 @@ import {expect} from 'chai';
 
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 
-// Import FO pages
-import {gdprPersonalDataPage} from '@pages/FO/classic/myAccount/gdprPersonalData';
-
 import {
   boCustomersPage,
   boCustomersViewPage,
@@ -28,6 +25,7 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicMyGDPRPersonalDataPage,
   foClassicProductPage,
   type Page,
   utilsCore,
@@ -147,14 +145,14 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
-        const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
-        expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
+        const pageTitle = await foClassicMyGDPRPersonalDataPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyGDPRPersonalDataPage.pageTitle);
       });
 
       it('should click on \'Get my data to CSV\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToCSV1', baseContext);
 
-        filePath = await gdprPersonalDataPage.exportDataToCSV(page);
+        filePath = await foClassicMyGDPRPersonalDataPage.exportDataToCSV(page);
 
         const found = await utilsFile.doesFileExist(filePath);
         expect(found, 'CSV file was not downloaded').to.eq(true);
@@ -394,14 +392,14 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
-        const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
-        expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
+        const pageTitle = await foClassicMyGDPRPersonalDataPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyGDPRPersonalDataPage.pageTitle);
       });
 
       it('should click on \'Get my data to CSV file\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToCSV2', baseContext);
 
-        filePath = await gdprPersonalDataPage.exportDataToCSV(page);
+        filePath = await foClassicMyGDPRPersonalDataPage.exportDataToCSV(page);
 
         const found = await utilsFile.doesFileExist(filePath);
         expect(found, 'CSV file was not downloaded').to.eq(true);
@@ -543,14 +541,14 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
-        const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
-        expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
+        const pageTitle = await foClassicMyGDPRPersonalDataPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyGDPRPersonalDataPage.pageTitle);
       });
 
       it('should click on \'Get my data to CSV file\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToCSV3', baseContext);
 
-        filePath = await gdprPersonalDataPage.exportDataToCSV(page);
+        filePath = await foClassicMyGDPRPersonalDataPage.exportDataToCSV(page);
 
         const found = await utilsFile.doesFileExist(filePath);
         expect(found, 'CSV file was not downloaded').to.eq(true);
@@ -700,14 +698,14 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
-        const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
-        expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
+        const pageTitle = await foClassicMyGDPRPersonalDataPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyGDPRPersonalDataPage.pageTitle);
       });
 
       it('should click on \'Get my data to CSV file\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToCSV4', baseContext);
 
-        filePath = await gdprPersonalDataPage.exportDataToCSV(page);
+        filePath = await foClassicMyGDPRPersonalDataPage.exportDataToCSV(page);
 
         const found = await utilsFile.doesFileExist(filePath);
         expect(found, 'CSV file was not downloaded').to.eq(true);
@@ -854,14 +852,14 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         await foClassicMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
-        const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
-        expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
+        const pageTitle = await foClassicMyGDPRPersonalDataPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyGDPRPersonalDataPage.pageTitle);
       });
 
       it('should click on \'Get my data to CSV file\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnGetMyDataToCSV5', baseContext);
 
-        filePath = await gdprPersonalDataPage.exportDataToCSV(page);
+        filePath = await foClassicMyGDPRPersonalDataPage.exportDataToCSV(page);
 
         const found = await utilsFile.doesFileExist(filePath);
         expect(found, 'CSV file was not downloaded').to.eq(true);

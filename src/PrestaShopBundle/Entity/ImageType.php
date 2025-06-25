@@ -34,9 +34,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ImageTypeRepository")
  *
- * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="image_type_name", columns={"name"})})
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(columns={"name","theme_name"})})
  *
- * @UniqueEntity("name")
+ * @UniqueEntity({"name", "theme_name"})
  */
 class ImageType
 {
@@ -88,6 +88,11 @@ class ImageType
      * @ORM\Column(name="stores", type="boolean", options={"default": 1})
      */
     private bool $stores;
+
+    /**
+     * @ORM\Column(name="theme_name", type="string", length=255)
+     */
+    private ?string $themeName;
 
     public function getId(): int
     {
@@ -186,6 +191,18 @@ class ImageType
     public function setStores(bool $stores): static
     {
         $this->stores = $stores;
+
+        return $this;
+    }
+
+    public function getThemeName(): ?string
+    {
+        return $this->themeName;
+    }
+
+    public function setThemeName(?string $themeName): static
+    {
+        $this->themeName = $themeName;
 
         return $this;
     }

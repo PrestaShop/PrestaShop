@@ -1,12 +1,5 @@
 import {expect} from 'chai';
 import {disableHummingbird, enableHummingbird} from '@commonTests/BO/design/hummingbird';
-import pricesDropPage from '@pages/FO/hummingbird/pricesDrop';
-import newProductsPage from '@pages/FO/hummingbird/newProducts';
-import deliveryPage from '@pages/FO/hummingbird/delivery';
-import legalNoticePage from '@pages/FO/hummingbird/legalNotice';
-import guestOrderTrackingPage from '@pages/FO/hummingbird/orderTracking/guestOrderTracking';
-import termsAndConditionsOfUsePage from '@pages/FO/hummingbird/termsAndConditionsOfUse';
-import securePaymentPage from '@pages/FO/hummingbird/securePayment';
 import testContext from '@utils/testContext';
 
 import {
@@ -18,12 +11,19 @@ import {
   foHummingbirdCategoryPage,
   foHummingbirdContactUsPage,
   foHummingbirdCreateAccountPage,
+  foHummingbirdDeliveryPage,
+  foHummingbirdGuestOrderTrackingPage,
   foHummingbirdHomePage,
+  foHummingbirdLegalNoticePage,
   foHummingbirdLoginPage,
+  foHummingbirdNewProductsPage,
+  foHummingbirdPricesDropPage,
   foHummingbirdProductPage,
   foHummingbirdSearchResultsPage,
+  foHummingbirdSecurePaymentPage,
   foHummingbirdSitemapPage,
   foHummingbirdStoresPage,
+  foHummingbirdTermsAndConditionsOfUsePage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -115,8 +115,8 @@ describe('Check FO public pages', async () => {
 
     describe('Check \'Products\' footer links', async () => {
       [
-        {linkSelector: 'Prices drop', pageTitle: pricesDropPage.pageTitle},
-        {linkSelector: 'New products', pageTitle: newProductsPage.pageTitle},
+        {linkSelector: 'Prices drop', pageTitle: foHummingbirdPricesDropPage.pageTitle},
+        {linkSelector: 'New products', pageTitle: foHummingbirdNewProductsPage.pageTitle},
         {linkSelector: 'Best sellers', pageTitle: foHummingbirdBestSalesPage.pageTitle},
       ].forEach((args, index: number) => {
         it(`should check '${args.linkSelector}' footer links`, async function () {
@@ -135,11 +135,11 @@ describe('Check FO public pages', async () => {
 
     describe('Check \'Our Company\' footer links', async () => {
       [
-        {linkSelector: 'Delivery', pageTitle: deliveryPage.pageTitle},
-        {linkSelector: 'Legal Notice', pageTitle: legalNoticePage.pageTitle},
-        {linkSelector: 'Terms and conditions of use', pageTitle: termsAndConditionsOfUsePage.pageTitle},
+        {linkSelector: 'Delivery', pageTitle: foHummingbirdDeliveryPage.pageTitle},
+        {linkSelector: 'Legal Notice', pageTitle: foHummingbirdLegalNoticePage.pageTitle},
+        {linkSelector: 'Terms and conditions of use', pageTitle: foHummingbirdTermsAndConditionsOfUsePage.pageTitle},
         {linkSelector: 'About us', pageTitle: foHummingbirdAboutUsPage.pageTitle},
-        {linkSelector: 'Secure payment', pageTitle: securePaymentPage.pageTitle},
+        {linkSelector: 'Secure payment', pageTitle: foHummingbirdSecurePaymentPage.pageTitle},
         {linkSelector: 'Contact us', pageTitle: foHummingbirdContactUsPage.pageTitle},
         {linkSelector: 'Sitemap', pageTitle: foHummingbirdSitemapPage.pageTitle},
         {linkSelector: 'Stores', pageTitle: foHummingbirdStoresPage.pageTitle},
@@ -160,7 +160,7 @@ describe('Check FO public pages', async () => {
 
     describe('Check \'Your Account\' footer links', async () => {
       [
-        {linkSelector: 'Order tracking', pageTitle: guestOrderTrackingPage.pageTitle},
+        {linkSelector: 'Order tracking', pageTitle: foHummingbirdGuestOrderTrackingPage.pageTitle},
         {linkSelector: 'Sign in', pageTitle: foHummingbirdLoginPage.pageTitle},
         {linkSelector: 'Create account', pageTitle: foHummingbirdCreateAccountPage.formTitle},
       ].forEach((args, index: number) => {

@@ -67,13 +67,16 @@ class ScopeRepository implements ScopeRepositoryInterface
         return null;
     }
 
+    /**
+     * @return ScopeEntityInterface[]
+     */
     public function finalizeScopes(
         array $scopes,
-        string $grantType,
+        $grantType,
         ClientEntityInterface $clientEntity,
-        ?string $userIdentifier = null,
-        ?string $authCodeId = null
-    ): array {
+        $userIdentifier = null,
+        $authCodeId = null
+    ) {
         $finalizedScopes = [
             new ScopeEntity('is_authenticated'),
         ];

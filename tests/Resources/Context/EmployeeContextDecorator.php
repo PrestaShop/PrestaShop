@@ -46,7 +46,7 @@ class EmployeeContextDecorator extends EmployeeContext
     public function __construct(EmployeeContext $decoratedEmployeeContext)
     {
         $this->decoratedEmployeeContext = $decoratedEmployeeContext;
-        parent::__construct($decoratedEmployeeContext->getEmployee());
+        parent::__construct($decoratedEmployeeContext->getEmployee(), []);
     }
 
     public function getEmployee(): ?Employee

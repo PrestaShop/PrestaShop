@@ -123,12 +123,8 @@ jobs:
       - name: Composer Install
         run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
-      - name: Update phpunit version
-        if: ${{ startsWith(matrix.php, '8.') }}
-        run: COMPOSER_PROCESS_TIMEOUT=600 composer update -w --ignore-platform-reqs --no-interaction phpunit/phpunit
-
       - name: Run phpunit
-        run: ./vendor/phpunit/phpunit/phpunit -c tests/Unit/phpunit.xml
+        run: composer run-script unit-tests --timeout=0
         env:
           SYMFONY_DEPRECATIONS_HELPER: disabled
 

@@ -29,6 +29,7 @@ namespace PrestaShopBundle\EventListener\Admin;
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Employee\EmployeeSession;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
@@ -73,6 +74,7 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         private readonly RouterInterface $router,
         private readonly ConfigurationInterface $configuration,
         private readonly TranslatorInterface $translator,
+        private readonly EmployeeContextBuilder $employeeContextBuilder,
     ) {
     }
 
@@ -100,6 +102,10 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         $employee->addSession($employeeSession);
         $this->entityManager->persist($employeeSession);
         $this->entityManager->flush();
+
+        // Update EmployeeContextBuilder so the EmployeeContext is ready to be built in early request events,
+        // like in ShopContextSubscriber::initShopContextOnLogin for example
+        $this->employeeContextBuilder->setEmployeeId($employee->getId());
 
         // Set the EmployeeSession as a token attribute so that it is serialized in the session
         $event->getAuthenticatedToken()->setAttribute(TokenAttributes::EMPLOYEE_SESSION, $employeeSession);

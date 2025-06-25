@@ -1,17 +1,15 @@
 // Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import common tests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-import newProductsPage from '@pages/FO/hummingbird/newProducts';
-
-import {expect} from 'chai';
 import {
   type BrowserContext,
   foHummingbirdCategoryPage,
   foHummingbirdHomePage,
+  foHummingbirdNewProductsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -127,8 +125,8 @@ describe('FO - Home Page : Display some products', async () => {
 
       await foHummingbirdHomePage.goToAllProductsPage(page, 'new-products');
 
-      const pageTitle = await newProductsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(newProductsPage.pageTitle);
+      const pageTitle = await foHummingbirdNewProductsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdNewProductsPage.pageTitle);
     });
   });
 

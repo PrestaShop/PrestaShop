@@ -95,6 +95,12 @@ class LegacyController extends PrestaShopAdminController
         ];
 
         $adminController = $this->initController($request, $dispatcherHookParameters);
+
+        // Some process methods echo their output directly, so we get them back and include them in the future response
+        ob_start();
+        $adminController->postProcess();
+        $postProcessResult = ob_get_clean();
+
         // Redirect if necessary after post process
         if (!empty($adminController->getRedirectAfter())) {
             // After each request the cookie must be written to save its modified state during AdminController workflow
@@ -116,7 +122,10 @@ class LegacyController extends PrestaShopAdminController
         header('Cache-Control: no-store, no-cache');
 
         $smarty = $this->legacyContext->getSmarty();
-        $smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'default/template/');
+        $smarty->setTemplateDir([
+            _PS_BO_ALL_THEMES_DIR_ . 'default/template/',
+            _PS_OVERRIDE_DIR_ . 'controllers' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'templates',
+        ]);
 
         $isAjaxRequest = (bool) $request->get('ajax');
         if ($isAjaxRequest) {
@@ -127,6 +136,10 @@ class LegacyController extends PrestaShopAdminController
 
         // Execute hook dispatcher after
         $this->dispatchHookWithParameters('actionDispatcherAfter', $dispatcherHookParameters);
+
+        if (!empty($postProcessResult)) {
+            $response->setContent($postProcessResult . $response->getContent());
+        }
 
         return $response;
     }
@@ -233,7 +246,6 @@ class LegacyController extends PrestaShopAdminController
         // This part comes from AdminController::run method, it has been stripped from permission checks since the permission is already
         // handled by this Symfony controller
         $adminController->setMedia(false);
-        $adminController->postProcess();
 
         return $adminController;
     }

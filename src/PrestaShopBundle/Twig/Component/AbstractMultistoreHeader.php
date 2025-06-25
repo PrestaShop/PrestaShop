@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Twig\Component;
 use Doctrine\ORM\EntityManagerInterface;
 use Link;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShopBundle\Entity\Shop;
@@ -49,6 +50,7 @@ abstract class AbstractMultistoreHeader
         protected readonly TranslatorInterface $translator,
         protected readonly ColorBrightnessCalculator $colorBrightnessCalculator,
         protected readonly LegacyContext $legacyContext,
+        protected readonly EmployeeContext $employeeContext,
     ) {
     }
 
@@ -122,5 +124,10 @@ abstract class AbstractMultistoreHeader
     public function getGroupList(): array
     {
         return $this->groupList;
+    }
+
+    public function isAllShopsAllowed(): bool
+    {
+        return $this->employeeContext->hasAuthorizationForAllShops();
     }
 }

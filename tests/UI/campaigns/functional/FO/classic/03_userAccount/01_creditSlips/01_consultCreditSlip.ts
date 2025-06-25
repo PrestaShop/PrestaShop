@@ -8,10 +8,6 @@ import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import pages
-// Import FO pages
-import {creditSlipPage} from '@pages/FO/classic/myAccount/creditSlips';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -29,6 +25,7 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicMyCreditSlipsPage,
   foClassicMyOrderDetailsPage,
   type MailDev,
   type MailDevEmail,
@@ -149,19 +146,19 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       });
 
       it('should go credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goTocreditSlipPage1', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goTofoClassicMyCreditSlipsPage1', baseContext);
 
         await foClassicMyAccountPage.goToCreditSlipsPage(page);
 
-        const pageTitle = await creditSlipPage.getPageTitle(page);
-        expect(pageTitle).to.equal(creditSlipPage.pageTitle);
+        const pageTitle = await foClassicMyCreditSlipsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyCreditSlipsPage.pageTitle);
       });
 
       it('should check there no credit slips', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNoCreditSlips', baseContext);
 
-        const alertInfoMessage = await creditSlipPage.getAlertInfoMessage(page);
-        expect(alertInfoMessage).to.equal(creditSlipPage.noCreditSlipsInfoMessage);
+        const alertInfoMessage = await foClassicMyCreditSlipsPage.getAlertInfoMessage(page);
+        expect(alertInfoMessage).to.equal(foClassicMyCreditSlipsPage.noCreditSlipsInfoMessage);
       });
     });
 
@@ -280,38 +277,38 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       });
 
       it('should go credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goTocreditSlipPage2', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goTofoClassicMyCreditSlipsPage2', baseContext);
 
         await foClassicMyAccountPage.goToCreditSlipsPage(page);
 
-        const pageTitle = await creditSlipPage.getPageTitle(page);
-        expect(pageTitle).to.equal(creditSlipPage.pageTitle);
+        const pageTitle = await foClassicMyCreditSlipsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foClassicMyCreditSlipsPage.pageTitle);
       });
 
       it('should check the number of credit slips', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNumberCreditSlips', baseContext);
 
-        const numberCreditSlips = await creditSlipPage.getNumberOfCreditSlips(page);
+        const numberCreditSlips = await foClassicMyCreditSlipsPage.getNumberOfCreditSlips(page);
         expect(numberCreditSlips).to.equal(1);
       });
 
       it('should check that the \'Order reference, Credit Slip ID, Date Issued\' are correct', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipInfo', baseContext);
 
-        const creditSlipOrderReference = await creditSlipPage.getOrderReference(page, 1);
+        const creditSlipOrderReference = await foClassicMyCreditSlipsPage.getOrderReference(page, 1);
         expect(creditSlipOrderReference).to.equal(orderReference);
 
-        const creditSlipOrderIdentifier = await creditSlipPage.getCreditSlipID(page, 1);
+        const creditSlipOrderIdentifier = await foClassicMyCreditSlipsPage.getCreditSlipID(page, 1);
         expect(parseInt(creditSlipOrderIdentifier.replace('#', ''), 10)).to.equal(parseInt(creditSlipID, 10));
 
-        const creditSlipDateIssued = await creditSlipPage.getDateIssued(page, 1);
+        const creditSlipDateIssued = await foClassicMyCreditSlipsPage.getDateIssued(page, 1);
         expect(creditSlipDateIssued).to.equal(dateIssued);
       });
 
       it('should click on the PDF Icon on the "View credit slip" column', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewCreditSlip', baseContext);
 
-        filePath = await creditSlipPage.downloadCreditSlip(page, 1);
+        filePath = await foClassicMyCreditSlipsPage.downloadCreditSlip(page, 1);
 
         const found = await utilsFile.doesFileExist(filePath);
         expect(found, 'PDF file was not downloaded').to.eq(true);
@@ -351,14 +348,14 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       it('should click on the order Reference link', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOrderReferenceLink', baseContext);
 
-        await creditSlipPage.clickOrderReference(page, 1);
+        await foClassicMyCreditSlipsPage.clickOrderReference(page, 1);
 
         const pageTitle = await foClassicMyOrderDetailsPage.getPageTitle(page);
         expect(pageTitle).to.equal(foClassicMyOrderDetailsPage.pageTitle);
       });
 
       it('should go to credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goTocreditSlipPage3', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goTofoClassicMyCreditSlipsPage3', baseContext);
 
         await foClassicHomePage.goToMyAccountPage(page);
 
@@ -367,32 +364,32 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         await foClassicMyAccountPage.goToCreditSlipsPage(page);
 
-        const creditSlipPageTitle = await creditSlipPage.getPageTitle(page);
-        expect(creditSlipPageTitle).to.equal(creditSlipPage.pageTitle);
+        const foClassicMyCreditSlipsPageTitle = await foClassicMyCreditSlipsPage.getPageTitle(page);
+        expect(foClassicMyCreditSlipsPageTitle).to.equal(foClassicMyCreditSlipsPage.pageTitle);
       });
 
       it('should click on the "Back to your account" link', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickBackToYourAccountLink', baseContext);
 
-        await creditSlipPage.clickBackToYourAccountLink(page);
+        await foClassicMyCreditSlipsPage.clickBackToYourAccountLink(page);
 
         const myAccountPageTitle = await foClassicMyAccountPage.getPageTitle(page);
         expect(myAccountPageTitle).to.equal(foClassicMyAccountPage.pageTitle);
       });
 
       it('should go to credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goTocreditSlipPage4', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goTofoClassicMyCreditSlipsPage4', baseContext);
 
         await foClassicMyAccountPage.goToCreditSlipsPage(page);
 
-        const creditSlipPageTitle = await creditSlipPage.getPageTitle(page);
-        expect(creditSlipPageTitle).to.equal(creditSlipPage.pageTitle);
+        const foClassicMyCreditSlipsPageTitle = await foClassicMyCreditSlipsPage.getPageTitle(page);
+        expect(foClassicMyCreditSlipsPageTitle).to.equal(foClassicMyCreditSlipsPage.pageTitle);
       });
 
       it('should click on the "Home" link', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickHomeLink', baseContext);
 
-        await creditSlipPage.clickHomeLink(page);
+        await foClassicMyCreditSlipsPage.clickHomeLink(page);
 
         const homePageTitle = await foClassicHomePage.getPageTitle(page);
         expect(homePageTitle).to.equal(foClassicHomePage.pageTitle);

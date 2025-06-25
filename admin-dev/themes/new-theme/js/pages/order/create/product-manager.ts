@@ -113,9 +113,10 @@ export default class ProductManager {
    *
    * @private
    */
+
   private onProductSearch(): void {
-    EventEmitter.on(eventMap.productSearched, (response) => {
-      this.products = response.products;
+    document.addEventListener(eventMap.productSearched, (event: any) => {
+      this.products = event.detail.products;
       this.productRenderer.renderSearchResults(this.products);
       this.selectFirstResult();
     });
@@ -267,7 +268,7 @@ export default class ProductManager {
 
     $searchRequest
       .then((response) => {
-        EventEmitter.emit(eventMap.productSearched, response);
+        document.dispatchEvent(new CustomEvent(eventMap.productSearched, {detail: response}));
       })
       .catch((response: JQuery.jqXHR) => {
         if (response.statusText === 'abort') {

@@ -239,9 +239,7 @@ describe('BO - Shipping - Carriers : Bulk actions', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersAfterCreate', baseContext);
 
     page = await boCarriersPage.changePage(browserContext, 1);
-    await page.reload({
-      waitUntil: 'networkidle',
-    });
+    await page.reload();
 
     const carrierNames = await foClassicCheckoutPage.getAllCarriersNames(page);
     expect(carrierNames.length).to.equals(numberOfCarriers + 1);

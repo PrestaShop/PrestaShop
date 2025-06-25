@@ -22,8 +22,8 @@ describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const createSupplierData: FakerSupplier = new FakerSupplier();
-  const editSupplierData: FakerSupplier = new FakerSupplier();
+  const createSupplierData: FakerSupplier = new FakerSupplier({country: 'France'});
+  const editSupplierData: FakerSupplier = new FakerSupplier({country: 'United States'});
 
   // before and after functions
   before(async function () {

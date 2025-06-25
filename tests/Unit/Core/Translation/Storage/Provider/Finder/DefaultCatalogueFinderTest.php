@@ -74,6 +74,7 @@ class DefaultCatalogueFinderTest extends TestCase
         }
         (new XliffFileDumper())->dump($catalogue, [
             'path' => self::$tempDir,
+            'split_files' => false,
         ]);
     }
 

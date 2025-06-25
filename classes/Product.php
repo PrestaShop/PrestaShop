@@ -4281,38 +4281,49 @@ class ProductCore extends ObjectModel
         if (!Combination::isFeatureActive()) {
             return [];
         }
-        $sql = 'SELECT ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name,
-                    a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, product_attribute_shop.`id_product_attribute`,
-                    IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, product_attribute_shop.`weight`,
-                    product_attribute_shop.`default_on`, pa.`reference`, pa.`ean13`, pa.`mpn`, pa.`upc`, pa.`isbn`, product_attribute_shop.`unit_price_impact`,
-                    product_attribute_shop.`minimal_quantity`, product_attribute_shop.`available_date`, ag.`group_type`,
-                    pal.`available_now`, pal.`available_later`
-                FROM `' . _DB_PREFIX_ . 'product_attribute` pa
-                ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
-                ' . Product::sqlStock('pa', 'pa') . '
-                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_lang` pal
-                    ON (
-                        pa.`id_product_attribute` = pal.`id_product_attribute` AND
-                        pal.`id_lang` = ' . (int) Context::getContext()->language->id . ')
-                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON (ag.`id_attribute_group` = a.`id_attribute_group`)
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute`)
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group`)
-                ' . Shop::addSqlAssociation('attribute', 'a') . '
-                WHERE pa.`id_product` = ' . (int) $this->id . '
-                    AND al.`id_lang` = ' . (int) $id_lang . '
-                    AND agl.`id_lang` = ' . (int) $id_lang . '
-                ';
+
+        $query = new DbQuery();
+
+        $query->select('ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, agl.`public_name` AS public_group_name, a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, product_attribute_shop.`id_product_attribute`, IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, product_attribute_shop.`weight`, product_attribute_shop.`default_on`, pa.`reference`, pa.`ean13`, pa.`mpn`, pa.`upc`, pa.`isbn`, product_attribute_shop.`unit_price_impact`, product_attribute_shop.`minimal_quantity`, product_attribute_shop.`available_date`, ag.`group_type`, pal.`available_now`, pal.`available_later`');
+
+        $query->from('product_attribute', 'pa');
+        $query->join(Shop::addSqlAssociation('product_attribute', 'pa'));
+        $query->join(Product::sqlStock('pa', 'pa'));
+        $query->leftJoin('product_attribute_lang', 'pal', 'pa.id_product_attribute = pal.id_product_attribute AND pal.id_lang = ' . (int) Context::getContext()->language->id);
+        $query->leftJoin('product_attribute_combination', 'pac', 'pac.id_product_attribute = pa.id_product_attribute');
+        $query->leftJoin('attribute', 'a', 'a.id_attribute = pac.id_attribute');
+        $query->leftJoin('attribute_group', 'ag', 'ag.id_attribute_group = a.id_attribute_group');
+        $query->leftJoin('attribute_lang', 'al', 'a.id_attribute = al.id_attribute');
+        $query->leftJoin('attribute_group_lang', 'agl', 'ag.id_attribute_group = agl.id_attribute_group');
+        $query->join(Shop::addSqlAssociation('attribute', 'a'));
+        $query->where('pa.id_product = ' . (int) $this->id);
+        $query->where('al.id_lang = ' . (int) $id_lang);
+        $query->where('agl.id_lang = ' . (int) $id_lang);
 
         if ($id_product_attribute !== null) {
-            $sql .= ' AND product_attribute_shop.`id_product_attribute` = ' . (int) $id_product_attribute . ' ';
+            $query->where('product_attribute_shop.id_product_attribute = ' . (int) $id_product_attribute);
         }
 
-        $sql .= 'GROUP BY id_attribute_group, id_product_attribute
-                ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
+        $query->groupBy('id_attribute_group, id_product_attribute');
+        $query->orderBy('ag.position ASC, a.position ASC, agl.name ASC');
 
-        return Db::getInstance()->executeS($sql);
+        Hook::exec('actionProductGetAttributesGroupsBefore', [
+            'product' => $this,
+            'id_lang' => $id_lang,
+            'id_product_attribute' => $id_product_attribute,
+            'query' => $query,
+        ]);
+
+        $result = Db::getInstance()->executeS($query);
+
+        Hook::exec('actionProductGetAttributesGroupsAfter', [
+            'product' => $this,
+            'id_lang' => $id_lang,
+            'id_product_attribute' => $id_product_attribute,
+            'attributes_groups' => &$result,
+        ]);
+
+        return $result;
     }
 
     /**
@@ -7595,17 +7606,12 @@ class ProductCore extends ObjectModel
     public static function getIdTaxRulesGroupMostUsed()
     {
         return Db::getInstance()->getValue(
-            'SELECT id_tax_rules_group
-            FROM (
-                SELECT COUNT(*) n, product_shop.id_tax_rules_group
-                FROM ' . _DB_PREFIX_ . 'product p
-                ' . Shop::addSqlAssociation('product', 'p') . '
-                JOIN ' . _DB_PREFIX_ . 'tax_rules_group trg ON (product_shop.id_tax_rules_group = trg.id_tax_rules_group)
-                WHERE trg.active = 1 AND trg.deleted = 0
-                GROUP BY product_shop.id_tax_rules_group
-                ORDER BY n DESC
-                LIMIT 1
-            ) most_used'
+            'SELECT product_shop.id_tax_rules_group
+            FROM ' . _DB_PREFIX_ . 'product_shop product_shop
+            INNER JOIN ' . _DB_PREFIX_ . 'tax_rules_group trg ON product_shop.id_tax_rules_group = trg.id_tax_rules_group
+            WHERE trg.active = 1 AND trg.deleted = 0 AND product_shop.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')
+            GROUP BY product_shop.id_tax_rules_group
+            ORDER BY COUNT(*) DESC'
         );
     }
 

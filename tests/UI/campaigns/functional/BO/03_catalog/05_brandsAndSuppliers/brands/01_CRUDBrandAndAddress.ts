@@ -29,8 +29,14 @@ describe('BO - Catalog - Brands & suppliers : CRUD Brand and Address', async () 
   const addressesTable: string = 'manufacturer_address';
   const createBrandData: FakerBrand = new FakerBrand();
   const editBrandData: FakerBrand = new FakerBrand();
-  const createBrandAddressData: FakerBrandAddress = new FakerBrandAddress({brandName: createBrandData.name});
-  const editBrandAddressData: FakerBrandAddress = new FakerBrandAddress({brandName: editBrandData.name});
+  const createBrandAddressData: FakerBrandAddress = new FakerBrandAddress({
+    brandName: createBrandData.name,
+    country: 'United States',
+  });
+  const editBrandAddressData: FakerBrandAddress = new FakerBrandAddress({
+    brandName: editBrandData.name,
+    country: 'France',
+  });
 
   // before and after functions
   before(async function () {

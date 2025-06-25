@@ -1,16 +1,11 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
+import {faker, fakerFR} from '@faker-js/faker';
 
 // Import commonTests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 import {resetModule} from '@commonTests/BO/modules/moduleManager';
 
-// Import pages
-// Import FO pages
-import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
-
-import {expect} from 'chai';
-import {faker, fakerFR} from '@faker-js/faker';
 import {
   boDashboardPage,
   boDesignPositionsPage,
@@ -28,6 +23,7 @@ import {
   foClassicHomePage,
   foClassicLoginPage,
   foClassicMyAccountPage,
+  foClassicMyInformationsPage,
   foClassicProductPage,
   foClassicSearchResultsPage,
   modPsGdprBoMain,
@@ -180,10 +176,10 @@ describe('GDPR : Consent checkbox customization', async () => {
       await foClassicHomePage.goToMyAccountPage(page);
       await foClassicMyAccountPage.goToInformationPage(page);
 
-      const pageTitle = await accountIdentityPage.getPageTitle(page);
-      expect(pageTitle).to.equal(accountIdentityPage.pageTitle);
+      const pageTitle = await foClassicMyInformationsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicMyInformationsPage.pageTitle);
 
-      const gdprLabel = await accountIdentityPage.getGDPRLabel(page);
+      const gdprLabel = await foClassicMyInformationsPage.getGDPRLabel(page);
       expect(gdprLabel).to.contains(messageCustomerAccount);
     });
 
@@ -202,16 +198,16 @@ describe('GDPR : Consent checkbox customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAccountIdentityPageDisabled', baseContext);
 
       page = await modPsGdprBoTabDataConsent.changePage(browserContext, 1);
-      await accountIdentityPage.reloadPage(page);
+      await foClassicMyInformationsPage.reloadPage(page);
 
-      const hasGDPRLabel = await accountIdentityPage.hasGDPRLabel(page);
+      const hasGDPRLabel = await foClassicMyInformationsPage.hasGDPRLabel(page);
       expect(hasGDPRLabel).to.equal(false);
     });
 
     it('should logout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'foLogout', baseContext);
 
-      await accountIdentityPage.logout(page);
+      await foClassicMyInformationsPage.logout(page);
 
       const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(false);

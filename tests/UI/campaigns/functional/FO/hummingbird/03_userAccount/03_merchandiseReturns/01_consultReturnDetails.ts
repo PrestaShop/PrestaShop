@@ -6,10 +6,6 @@ import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/
 import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-// Import FO pages
-import returnDetailsPage from '@pages/FO/hummingbird/myAccount/returnDetails';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -30,6 +26,7 @@ import {
   foHummingbirdMyMerchandiseReturnsPage,
   foHummingbirdMyOrderDetailsPage,
   foHummingbirdMyOrderHistoryPage,
+  foHummingbirdMyReturnDetailsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -275,23 +272,23 @@ describe('FO - Account : Consult return details', async () => {
 
         await foHummingbirdMyMerchandiseReturnsPage.goToReturnDetailsPage(page);
 
-        const pageTitle = await returnDetailsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(returnDetailsPage.pageTitle);
+        const pageTitle = await foHummingbirdMyReturnDetailsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foHummingbirdMyReturnDetailsPage.pageTitle);
       });
 
       it('should check the return notification', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkReturnNotification', baseContext);
 
-        const orderReturnNotifications = await returnDetailsPage.getAlertWarning(page);
-        expect(orderReturnNotifications).to.equal(returnDetailsPage.errorMessage);
+        const orderReturnNotifications = await foHummingbirdMyReturnDetailsPage.getAlertWarning(page);
+        expect(orderReturnNotifications).to.equal(foHummingbirdMyReturnDetailsPage.errorMessage);
       });
 
       it('should check the return details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkReturnDetails', baseContext);
 
-        const orderReturnInfo = await returnDetailsPage.getOrderReturnInfo(page);
+        const orderReturnInfo = await foHummingbirdMyReturnDetailsPage.getOrderReturnInfo(page);
         expect(orderReturnInfo)
-          .to.contains(`on ${orderDate} ${returnDetailsPage.orderReturnCardBlock}`)
+          .to.contains(`on ${orderDate} ${foHummingbirdMyReturnDetailsPage.orderReturnCardBlock}`)
           .and.to.contains(dataOrderReturnStatuses.waitingForConfirmation.name)
           .and.to.contains(`List of items to be returned: Product Quantity ${dataProducts.demo_1.name} `
             + `(Size: S - Color: White) Reference: ${dataProducts.demo_1.reference} 1`);
@@ -415,23 +412,23 @@ describe('FO - Account : Consult return details', async () => {
 
           await foHummingbirdMyMerchandiseReturnsPage.goToReturnDetailsPage(page);
 
-          const pageTitle = await returnDetailsPage.getPageTitle(page);
-          expect(pageTitle).to.contains(returnDetailsPage.pageTitle);
+          const pageTitle = await foHummingbirdMyReturnDetailsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(foHummingbirdMyReturnDetailsPage.pageTitle);
         });
 
         it('should check that the alert warning is not visible', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkReturnNotification${index}`, baseContext);
 
-          const isVisible = await returnDetailsPage.isAlertWarningVisible(page);
+          const isVisible = await foHummingbirdMyReturnDetailsPage.isAlertWarningVisible(page);
           expect(isVisible).to.eq(false);
         });
 
         it('should check the return details', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkReturnDetails${index}`, baseContext);
 
-          const orderReturnInfo = await returnDetailsPage.getOrderReturnInfo(page);
+          const orderReturnInfo = await foHummingbirdMyReturnDetailsPage.getOrderReturnInfo(page);
           expect(orderReturnInfo)
-            .to.contains(`${fileName} on ${orderDate} ${returnDetailsPage.orderReturnCardBlock}`)
+            .to.contains(`${fileName} on ${orderDate} ${foHummingbirdMyReturnDetailsPage.orderReturnCardBlock}`)
             .and.to.contains(test.args.status)
             .and.to.contains(`List of items to be returned: Product Quantity ${dataProducts.demo_1.name} `
               + `(Size: S - Color: White) Reference: ${dataProducts.demo_1.reference} 1`);

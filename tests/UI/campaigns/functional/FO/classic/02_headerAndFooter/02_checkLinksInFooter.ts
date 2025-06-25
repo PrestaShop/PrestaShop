@@ -6,18 +6,6 @@ import deleteCacheTest from '@commonTests/BO/advancedParameters/cache';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
 
-// Import pages
-// Import FO pages
-import {deliveryPage} from '@pages/FO/classic/delivery';
-import {legalNoticePage} from '@pages/FO/classic/legalNotice';
-import {creditSlipPage} from '@pages/FO/classic/myAccount/creditSlips';
-import {accountIdentityPage} from '@pages/FO/classic/myAccount/identity';
-import {guestOrderTrackingPage} from '@pages/FO/classic/orderTracking/guestOrderTracking';
-import {newProductsPage} from '@pages/FO/classic/newProducts';
-import {pricesDropPage} from '@pages/FO/classic/pricesDrop';
-import {securePaymentPage} from '@pages/FO/classic/securePayment';
-import {termsAndConditionsOfUsePage} from '@pages/FO/classic/termsAndConditionsOfUse';
-
 import {
   type BrowserContext,
   dataCustomers,
@@ -26,14 +14,23 @@ import {
   foClassicBestSalesPage,
   foClassicContactUsPage,
   foClassicCreateAccountPage,
+  foClassicDeliveryPage,
+  foClassicGuestOrderTrackingPage,
   foClassicHomePage,
+  foClassicLegalNoticePage,
   foClassicLoginPage,
   foClassicMyAddressesPage,
   foClassicMyAddressesCreatePage,
+  foClassicMyCreditSlipsPage,
+  foClassicMyInformationsPage,
   foClassicMyOrderHistoryPage,
   foClassicMyWishlistsPage,
+  foClassicNewProductsPage,
+  foClassicPricesDropPage,
+  foClassicSecurePaymentPage,
   foClassicSitemapPage,
   foClassicStoresPage,
+  foClassicTermsAndConditionsOfUsePage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -91,8 +88,8 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
 
   describe('Check \'Products\' footer links', async () => {
     [
-      {linkSelector: 'Prices drop', pageTitle: pricesDropPage.pageTitle},
-      {linkSelector: 'New products', pageTitle: newProductsPage.pageTitle},
+      {linkSelector: 'Prices drop', pageTitle: foClassicPricesDropPage.pageTitle},
+      {linkSelector: 'New products', pageTitle: foClassicNewProductsPage.pageTitle},
       {linkSelector: 'Best sellers', pageTitle: foClassicBestSalesPage.pageTitle},
     ].forEach((args, index: number) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
@@ -109,11 +106,11 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
 
   describe('Check \'Our Company\' footer links', async () => {
     [
-      {linkSelector: 'Delivery', pageTitle: deliveryPage.pageTitle},
-      {linkSelector: 'Legal Notice', pageTitle: legalNoticePage.pageTitle},
-      {linkSelector: 'Terms and conditions of use', pageTitle: termsAndConditionsOfUsePage.pageTitle},
+      {linkSelector: 'Delivery', pageTitle: foClassicDeliveryPage.pageTitle},
+      {linkSelector: 'Legal Notice', pageTitle: foClassicLegalNoticePage.pageTitle},
+      {linkSelector: 'Terms and conditions of use', pageTitle: foClassicTermsAndConditionsOfUsePage.pageTitle},
       {linkSelector: 'About us', pageTitle: foClassicAboutUsPage.pageTitle},
-      {linkSelector: 'Secure payment', pageTitle: securePaymentPage.pageTitle},
+      {linkSelector: 'Secure payment', pageTitle: foClassicSecurePaymentPage.pageTitle},
       {linkSelector: 'Contact us', pageTitle: foClassicContactUsPage.pageTitle},
       {linkSelector: 'Sitemap', pageTitle: foClassicSitemapPage.pageTitle},
       {linkSelector: 'Stores', pageTitle: foClassicStoresPage.pageTitle},
@@ -132,7 +129,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
 
   describe('Check \'Your Account\' footer links before login', async () => {
     [
-      {linkSelector: 'Order tracking', pageTitle: guestOrderTrackingPage.pageTitle},
+      {linkSelector: 'Order tracking', pageTitle: foClassicGuestOrderTrackingPage.pageTitle},
       {linkSelector: 'Sign in', pageTitle: foClassicLoginPage.pageTitle},
       {linkSelector: 'Create account', pageTitle: foClassicCreateAccountPage.formTitle},
     ].forEach((args, index: number) => {
@@ -164,10 +161,10 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     });
 
     [
-      {linkSelector: 'Information', pageTitle: accountIdentityPage.pageTitle},
+      {linkSelector: 'Information', pageTitle: foClassicMyInformationsPage.pageTitle},
       {linkSelector: 'Addresses', pageTitle: foClassicMyAddressesPage.pageTitle},
       {linkSelector: 'Orders', pageTitle: foClassicMyOrderHistoryPage.pageTitle},
-      {linkSelector: 'Credit slips', pageTitle: creditSlipPage.pageTitle},
+      {linkSelector: 'Credit slips', pageTitle: foClassicMyCreditSlipsPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: foClassicMyWishlistsPage.pageTitle},
       {linkSelector: 'Sign out', pageTitle: foClassicLoginPage.pageTitle},
     ].forEach((args, index: number) => {
@@ -202,10 +199,10 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     });
 
     [
-      {linkSelector: 'Information', pageTitle: accountIdentityPage.pageTitle},
+      {linkSelector: 'Information', pageTitle: foClassicMyInformationsPage.pageTitle},
       {linkSelector: 'Add first address', pageTitle: foClassicMyAddressesCreatePage.pageTitle},
       {linkSelector: 'Orders', pageTitle: foClassicMyOrderHistoryPage.pageTitle},
-      {linkSelector: 'Credit slips', pageTitle: creditSlipPage.pageTitle},
+      {linkSelector: 'Credit slips', pageTitle: foClassicMyCreditSlipsPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: foClassicMyWishlistsPage.pageTitle},
       {linkSelector: 'Sign out', pageTitle: foClassicLoginPage.pageTitle},
     ].forEach((args, index: number) => {

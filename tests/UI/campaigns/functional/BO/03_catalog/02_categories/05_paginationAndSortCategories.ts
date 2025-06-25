@@ -5,15 +5,13 @@ import {expect} from 'chai';
 import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import bulkDeleteCategoriesTest from '@commonTests/BO/catalog/category';
 
-// Import data
-import ImportCategories from '@data/import/categories';
-
 import {
   boCategoriesPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
   type CategoryFilter,
+  dataImportCategories,
   type Page,
   utilsCore,
   utilsFile,
@@ -42,14 +40,14 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
   const categoryData: CategoryFilter = {filterBy: 'name', value: 'category'};
 
   // Pre-condition: Import list of categories
-  importFileTest(fileName, ImportCategories.entity, `${baseContext}_preTest_1`);
+  importFileTest(fileName, dataImportCategories.entity, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
     // Create csv file with all categories data
-    await utilsFile.createCSVFile('.', fileName, ImportCategories);
+    await utilsFile.createCSVFile('.', fileName, dataImportCategories);
   });
 
   after(async () => {

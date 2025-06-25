@@ -62,7 +62,7 @@ class PasswordPolicyType extends TranslatorAwareType
                     'label' => $this->trans('Maximum length', 'Admin.Advparameters.Feature'),
                     'attr' => [
                         'min' => 1,
-                        'max' => 100,
+                        'max' => 72,
                     ],
                     'required' => true,
                 ]

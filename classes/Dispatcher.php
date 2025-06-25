@@ -67,6 +67,7 @@ class DispatcherCore
                 'id' => ['regexp' => '[0-9]+', 'param' => 'id_category'],
                 'rewrite' => ['regexp' => self::REWRITE_PATTERN],
                 'meta_title' => ['regexp' => '[_a-zA-Z0-9-\pL]*'],
+                'categories' => ['regexp' => '[/_a-zA-Z0-9-\pL]*'],
             ],
         ],
         'supplier_rule' => [

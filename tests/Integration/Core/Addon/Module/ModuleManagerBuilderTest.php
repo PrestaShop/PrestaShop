@@ -82,6 +82,9 @@ class ModuleManagerBuilderTest extends TestCase
         if (is_dir($dirResources . '/Resources/modules_tests/testpropertyconflict')) {
             Tools::recurseCopy($dirResources . '/Resources/modules_tests/testpropertyconflict', _PS_MODULE_DIR_ . '/testpropertyconflict');
         }
+        if (is_dir($dirResources . '/Resources/modules_tests/testtypedpropertyoverride')) {
+            Tools::recurseCopy($dirResources . '/Resources/modules_tests/testtypedpropertyoverride', _PS_MODULE_DIR_ . '/testtypedpropertyoverride');
+        }
     }
 
     public static function tearDownAfterClass(): void
@@ -104,6 +107,9 @@ class ModuleManagerBuilderTest extends TestCase
         if (Module::isInstalled('testpropertyconflict')) {
             Module::getInstanceByName('testpropertyconflict')->uninstall();
         }
+        if (Module::isInstalled('testtypedpropertyoverride')) {
+            Module::getInstanceByName('testtypedpropertyoverride')->uninstall();
+        }
 
         // Remove modules
         if (is_dir(_PS_MODULE_DIR_ . '/pscsx3241')) {
@@ -120,6 +126,9 @@ class ModuleManagerBuilderTest extends TestCase
         }
         if (is_dir(_PS_MODULE_DIR_ . '/testpropertyconflict')) {
             Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testpropertyconflict');
+        }
+        if (is_dir(_PS_MODULE_DIR_ . '/testtypedpropertyoverride')) {
+            Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testtypedpropertyoverride');
         }
 
         // Remove overrides
@@ -142,6 +151,7 @@ class ModuleManagerBuilderTest extends TestCase
         $this->moduleNames = [
             'pscsx32412',
             'pscsx3241',
+            'testtypedpropertyoverride',
         ];
 
         $this->conflictModuleNames = ['testbasicconflict', 'testtrickyconflict', 'testpropertyconflict'];

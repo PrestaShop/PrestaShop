@@ -24,7 +24,207 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 9
 
 ####################################
-#   v9.0.0 Beta 1 - (2024-02-03)
+#   v9.0.0 - (2025-06-06)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #38841: Small refacto LegacyControllerContext (by @boherm)
+    - #38849: Change criteria to hide invalid endpoints (by @jolelievre)
+    - #38783: Update API module and improve CQRS not found filtering in API (by @jolelievre)
+  - Bug fix:
+    - #38199: Fix: Cannot use 'type' => 'file' on HelperOptions on PS 9.0.x (by @Codencode)
+    - #38795: Fix LegacyControllerContextBuilder to use physicalUri (by @boherm)
+- Core:
+  - Improvement:
+    - #38820: Update Symfony components after 6.4.22 release (by @nicosomb)
+    - #38491: OrderSlipCreator Hook actionOrderSlipAdd => add order slip object to hook param (by @Mch0)
+- Tests:
+  - Improvement:
+    - #38793: Functional Tests : API : Check endpoints (by @Progi1984)
+    - #38789: Functional Tests : API : `PATCH /product/{productId}` (by @Progi1984)
+  - Bug fix:
+    - #38749: TextWithLengthCounterType : Support for existing CSS class (by @Progi1984)
+
+####################################
+#   v9.0.0 RC 1 - (2025-05-23)
+####################################
+
+- Back Office:
+  - New feature:
+    - #38567: Add display hook in Information page to add distribution details (by @jolelievre)
+    - #38408: Add new hook `actionProductGetAttributesGroupsAfter` (by @gwojcik7)
+    - #38400: Enable api platform path scanning for entity (by @tleon)
+    - #37638: Switch carrier feature flag to stable and enabled by default (by @jolelievre)
+  - Improvement:
+    - #38755: API operations filtered when CQRS classes not found (by @jolelievre)
+    - #38736: Improve multi shop permissions (by @jolelievre)
+    - #38712: Prevent data from hooks from overriding local translated module data (by @jolelievre)
+    - #38557: Improve OpenApi configuration to include OAuth scopes dynamically (by @jolelievre)
+    - #38526: UI tests adaptation for classic  (by @jolelievre)
+    - #38502: Optimise anonymous route checking (by @jolelievre)
+    - #38481: Fix wording in Abandonned carts KPI (by @boherm)
+    - #38395: Admin API improvement on Open API, floats, datetime (by @jolelievre)
+    - #38370: Demo grid improvements (by @jolelievre)
+    - #38202: Detail development possibilities for trusted proxies (by @jolelievre)
+    - #38073: Check mail template directory before reading (by @matthieu-rolland)
+    - #38142: Fix: improve link styling for better identification – issue #38122 (by @tblivet)
+  - Bug fix:
+    - #38745: Enabling theme of add/update shop in a multistore context (by @boherm)
+    - #38048: Fix: Unable to configure a module that utilizes a modern controller (by @Codencode)
+    - #38731: Fix showcase-card image for attribute page (by @boherm)
+    - #38599: Fixed Order States Provider for Order Listing (by @Progi1984)
+    - #38251: Fix: Query to select most used tax rule is simply ridicoulous (by @Codencode)
+    - #38703: Revert modification in OrderLazyArray that breaks the UI tests (by @jolelievre)
+    - #38572: Fix spinner on mobile resolution (by @boherm)
+    - #38323: Fix: Webservice link_rewrite validation error on Product creation due to Tools::str2url in PS8 (by @Codencode)
+    - #37996: Fix: BO Employee - Setting More as default page cannot load the page (by @Codencode)
+    - #37874: Fix: BO > Movements - Search results is undefined and loads forever (by @Codencode)
+    - #38027: Fix: BO export - Cannot export subcategories (by @Codencode)
+    - #38254: Fix: Migration - Product V2 - tab name not the same - Product creation (by @Codencode)
+    - #38319: Fix: Edit country taxe rules (by @Codencode)
+    - #38496: Fix uploading a module on mobile devices (by @johnkim0306)
+    - #38514: Fix ajax process and legacy shop context init (by @jolelievre)
+    - #36792: Event "OrderCreateProductSearched" not managed in custom modules (related #35970) (by @mattgoud)
+    - #38425: Fix: When I disable a feature flag, I shouldn't see the warning popin (by @Codencode)
+    - #38008: Fix: BO - Product listing - product are still selected after successful deletion (by @Codencode)
+    - #37775: Add .WEBP extensions to back office openable attachments (by @gennaris)
+    - #38381: Bug fix copyFromPost that remove overrided object model definitions in ps8.2 (by @jf-viguier)
+    - #38350: Problem with decimal separator and eco-tax on Combination Form (by @djbuch)
+    - #38355: Fix: It is not possible to view a cart in the admin if it contains customized items (by @Codencode)
+    - #38262: Cast icon to string if null (by @Hlavtox)
+    - #38304: Fix mail theme scanner when used on a module folder (by @jolelievre)
+    - #38203: Remove link in help message for product stock option (by @jolelievre)
+    - #38152: Hide spinner if no ajax in progress (by @Hlavtox)
+    - #38246: Tax rule group country edition (by @jolelievre)
+    - #38234: Update product indexation after each update when it is needed (by @jolelievre)
+    - #38243: Fixed FI taxes in localization files (by @nicosomb)
+    - #38153: Load module translation catalogues for all present modules (by @jolelievre)
+    - #38194: Symfony remember me lifetime is linked to the BO config (by @jolelievre)
+    - #38100: Fix: Cookie mechanism is broken after refactoring for 9.0.0 (by @Codencode)
+    - #38141: Fix missing changeFormLanguageUrl (by @Hlavtox)
+    - #38112: Fix: header positioning (by @tblivet)
+    - #38136: Fix: Issue with JS and CSS cache clearing in multishop context (by @Codencode)
+    - #38168: Category::getParentsCategories fix with multiple root categories (by @jolelievre)
+    - #37961: Search Tab with case sensitive matching (by @jolelievre)
+    - #38156: Fix legacy context initialisation inconsistencies (by @jolelievre)
+    - #37877: Fix: BO - Product Page - Redirection type - Category without image generate 404 call (by @Codencode)
+    - #37970: Fix: [Bug] Missing attributes autoplay, loop, muted, and playsinline in the video tag within Tools::purifyHTML() (by @Codencode)
+    - #37985: Fix: display... hooks duplicated on module transplant list (by @Codencode)
+    - #37958: Fix product filters for csv export (by @boherm)
+    - #37982: Empty the labels "totalPriceText" and "availableText". (by @Codencode)
+  - Refactoring:
+    - #38093: Improve message on exception (by @Hlavtox)
+- Front Office:
+  - New feature:
+    - #38691: Add hook displayCartExtraProductInfo to display cart extra product information (by @jf-viguier)
+    - #38371: Feat - Add hook actionCartDuplicate (by @unlocomqx)
+  - Improvement:
+    - #38488: Add new hook actionGetPdfRenderer to use a custom inherited tcpdf ren… (by @Markus-Gurkcity)
+  - Bug fix:
+    - #38679: Filter out modules that return empty payment options (by @jolelievre)
+    - #38552: Use id_customization for matching cart and order products (by @unlocomqx)
+    - #38265: Fix and refactor category controller for non existent categories (by @Hlavtox)
+    - #38257: Fix: Address Fields Disappear After Changing Country on Checkout Page (by @Codencode)
+    - #38303: Add missing function strpos for smarty templates (by @jolelievre)
+    - #38056: Added smartyRegisterFunction for file_exists and strpos. (by @Codencode)
+    - #38263: Fix profiler working with arrays (by @Hlavtox)
+    - #38157: Fix: Issue with multilingual translations (by @Codencode)
+    - #38037: Fix: Use 'active' from 'product_shop' instead of 'product' in Product::searchByName() (by @Codencode)
+    - #37955: Fix: prestashop don't display Title of product, category meta title, meta description (by @Codencode)
+- Core:
+  - New feature:
+    - #38467: Single file XLF catalog (by @jolelievre)
+    - #37947: Add new hook in object presenter (by @web-cooking-factory)
+  - Improvement:
+    - #38767: Fix image type entity (by @boherm)
+    - #38765: Preliminary steps for RC (by @jolelievre)
+    - #38694: Updated PrestaShop Packages (by @github-actions[bot])
+    - #38576: Update Symfony components after 6.4.21 release (by @nicosomb)
+    - #38583: Update changelog 9.0.0 RC 1 (by @jolelievre)
+    - #37535: Add path parameter to Htaccess Create action hook - #37534 (by @Pliciweb)
+    - #38527: Add support for {categories} keyword in category seo urls, Fixes #38181 (by @tswfi)
+    - #37611: Remove configuration of AEUC_LABEL_TAX_INC_EXC from module ps_legalco… (by @Markus-Gurkcity)
+    - #38376: Update Symfony components after 6.4.20 release (by @nicosomb)
+    - #38195: Updated PrestaShop Packages (by @github-actions[bot])
+    - #38310: Display additional details about the module errors in the CLI command (by @jolelievre)
+    - #38232: Improve hook generation for fixtures and documentation (by @jolelievre)
+    - #38163: Update Symfony components after 6.4.19 release (by @nicosomb)
+    - #37635: Updated PrestaShop Packages (by @github-actions[bot])
+    - #38044: Updated PrestaShop Packages (by @github-actions[bot])
+    - #37964: Fixed license header (by @mattgoud)
+    - #37943: Chore: [release-8.2.1] - composer : update classic-theme package to 2… (by @mattgoud)
+  - Bug fix:
+    - #38701: Stabilize composer create test db (by @jolelievre)
+    - #38633: Improve language for installer and downgrade league/oauth2-server to 8.5 (by @boherm)
+    - #38575: Update dependencies (by @jolelievre)
+    - #38498: Remove dynamic county access (by @jolelievre)
+    - #38482: Remove carrier display on pdf for virtual orders (by @boherm)
+    - #38382: Fix module override system for typed properties (by @boherm)
+    - #37925: Fix: round calcul in calculator (by @Midoclas)
+    - #38342: Translation fixes (by @jolelievre)
+    - #38327: Fix actionFilterDeliveryOptionList hook Cart Param (by @adrianllopis)
+    - #38104: Fixed SK tax in all localization files (by @nicosomb)
+    - #37890: Fix preview mode for combination products (by @boherm)
+- Installer:
+  - Improvement:
+    - #38764: Update default catalog 9.0.x (by @ps-jarvis)
+    - #38698: Block execution while cache clear is running in install endpoints (by @jolelievre)
+    - #38501: Update default catalog 9.0.x (by @ps-jarvis)
+    - #38235: Display the error reported by the module when the installation of PrestaShop fails because of it (by @Quetzacoalt91)
+    - #38077: Add demo product env parameter for cli install via docker (by @matthieu-rolland)
+    - #38058: Use devdocs link (by @PrestaEdit)
+- Web Services:
+  - Bug fix:
+    - #38417: Fix webservice sql error (by @thersane-john)
+    - #38341: Fix: product carrier delete (by @fox-john)
+- Tests:
+  - Improvement:
+    - #38747: Functional Tests : Bump `@prestashop-core/ui-testing` (by @Progi1984)
+    - #38733: Functional Tests : Migrate `@utils/globals` into `ui-testing-library` (by @Progi1984)
+    - #38714: Functional Tests : Migrate to `@prestashop-core/ui-testing` (Part 8) (by @Progi1984)
+    - #38689: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #38620: Functional Tests : Migrate to `@prestashop-core/ui-testing` (Part 7) (by @Progi1984)
+    - #38595: Functional Tests : Bump `@prestashop-core/ui-testing` (by @Progi1984)
+    - #38436: Functional Tests : Stabilisation "functional:FO:hummingbird:08-12" (by @Progi1984)
+    - #38569: Stabilize UI tests for new product module (by @jolelievre)
+    - #38564: Stabilize tests UI for modules, especially faceted search (by @jolelievre)
+    - #38547: Stabilize UI tests for brand and supplier (by @jolelievre)
+    - #38544: Improve tests ui functional bo header campaign (by @boherm)
+    - #38519: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #38495: Improve github actions to help debug classic building (by @jolelievre)
+    - #38447: Functional Tests : Allow override URL_FO for PS Entreprise UI Tests (by @Progi1984)
+    - #38419: Functional Tests : Stabilisation "functional:BO:shop-parameters:05-07" (by @Progi1984)
+    - #38403: Functional Tests : Stabilisation "functional:BO:shop-parameters:05-07" (by @Progi1984)
+    - #38386: Functional Tests : Stabilisation "functional:FO:hummingbird:08-12" (by @Progi1984)
+    - #38379: Functional Tests : Migrate to `@prestashop-core/ui-testing` (Part 6) (by @Progi1984)
+    - #38346: Functional Tests : Bump `@prestashop-core/ui-testing` (by @Progi1984)
+    - #38306: Functional Tests : Bump `@prestashop-core/ui-testing` (by @Progi1984)
+    - #38300: Functional Tests : Stabilisation "functional:BO:shop-parameters:05-07" (by @Progi1984)
+    - #38198: Functional Tests : Enable after #22581 (by @Progi1984)
+    - #38190: Functional Tests : Migrate to `@prestashop-core/ui-testing` (Part 5) (by @Progi1984)
+    - #38169: Add setup log export action (by @jolelievre)
+    - #37801: Functional Tests : Audit - BO - Advanced Parameters (by @florine2623)
+    - #38113: Functional Tests : Migrate to `@prestashop-core/ui-testing` (Part 4) (by @Progi1984)
+    - #38050: Functional Tests : BO - Catalog - Discounts : CRUD catalog price rules (by @Progi1984)
+    - #38035: Functional Tests : BO - Catalog - Discounts : Filter, sort and pagination catalog price rules table (by @Progi1984)
+    - #38030: Functional Tests : FO - Menu and Navigation - Navigate in Categories - Side block categories (by @Progi1984)
+    - #38007: Functional Tests : BO - Cart Rules - Filter, Quick Edit and bulk actions (by @Progi1984)
+    - #37980: Tests UI stabilization: order creation (by @jolelievre)
+    - #37973: Stabilize test view order multi invoices (by @jolelievre)
+  - Bug fix:
+    - #38546: Fix mkcert installation (by @jolelievre)
+    - #38020: Functional Tests : Fixed `functional/API/02*/05_hooks/02*` (by @Progi1984)
+    - #37969: Functional Tests : Fixed `functional/API/02*/09*/01*` (by @Progi1984)
+  - Refactoring:
+    - #38236: Functional Tests : Stabilisation "functional:FO:hummingbird:04-07" (by @Progi1984)
+    - #38230: Functional Tests : Stabilisation "functional:BO:shipping" (by @Progi1984)
+    - #38226: Functional Tests : Stabilisation "functional:BO:shop-parameters:05-07" (by @Progi1984)
+    - #38210: Functional Tests : Stabilisation "functional:FO:hummingbird:08-12" (by @Progi1984)
+    - #38205: Functional Tests : Stabilisation "functional:BO:catalog:07-08" (by @Progi1984)
+
+####################################
+#   v9.0.0 Beta 1 - (2025-02-03)
 ####################################
 
 - Back Office:

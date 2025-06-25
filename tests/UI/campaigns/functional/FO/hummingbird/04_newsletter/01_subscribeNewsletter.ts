@@ -3,10 +3,6 @@ import {expect} from 'chai';
 
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import pages
-// Import FO pages
-import accountIdentityPage from '@pages/FO/hummingbird/myAccount/identity';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -18,12 +14,12 @@ import {
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
+  foHummingbirdMyInformationsPage,
   modPsEmailSubscriptionBoMain,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-// context
 const baseContext: string = 'functional_FO_hummingbird_newsletter_subscribeNewsletter';
 
 /*
@@ -108,15 +104,18 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await foHummingbirdHomePage.goToMyAccountPage(page);
       await foHummingbirdMyAccountPage.goToInformationPage(page);
 
-      const pageTitle = await accountIdentityPage.getPageTitle(page);
-      expect(pageTitle).to.equal(accountIdentityPage.pageTitle);
+      const pageTitle = await foHummingbirdMyInformationsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdMyInformationsPage.pageTitle);
     });
 
     it('should unsubscribe from newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'unsubscribeFromNewsLetter', baseContext);
 
-      const unsubscribeAlertText = await accountIdentityPage.unsubscribeNewsletter(page, dataCustomers.johnDoe.password);
-      expect(unsubscribeAlertText).to.contains(accountIdentityPage.successfulUpdateMessage);
+      const unsubscribeAlertText = await foHummingbirdMyInformationsPage.unsubscribeNewsletter(
+        page,
+        dataCustomers.johnDoe.password,
+      );
+      expect(unsubscribeAlertText).to.contains(foHummingbirdMyInformationsPage.successfulUpdateMessage);
     });
   });
 

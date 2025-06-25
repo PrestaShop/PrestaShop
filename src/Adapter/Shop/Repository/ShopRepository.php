@@ -134,4 +134,18 @@ class ShopRepository extends AbstractObjectModelRepository
 
         return array_map(fn (array $shopRow) => (int) $shopRow['id_shop'], $result);
     }
+
+    public function getAllShopIds(): array
+    {
+        $qb = $this
+            ->connection
+            ->createQueryBuilder()
+            ->select('s.id_shop')
+            ->from($this->dbPrefix . 'shop', 's')
+        ;
+
+        $result = $qb->executeQuery()->fetchAllAssociative();
+
+        return array_map(fn (array $shopRow) => (int) $shopRow['id_shop'], $result);
+    }
 }

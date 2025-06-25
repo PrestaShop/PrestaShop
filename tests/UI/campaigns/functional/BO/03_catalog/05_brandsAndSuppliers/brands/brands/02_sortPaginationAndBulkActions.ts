@@ -1,18 +1,14 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import common tests
 import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 
-// Import data
-import ImportBrands from '@data/import/brands';
-
-import {expect} from 'chai';
 import {
   boBrandsPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
+  dataImportBrands,
   type Page,
   utilsCore,
   utilsFile,
@@ -40,14 +36,14 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
   const numberOfImportedBrands: number = 10;
 
   // Pre-condition: Import list of categories
-  importFileTest(fileName, ImportBrands.entity, `${baseContext}_preTest_1`);
+  importFileTest(fileName, dataImportBrands.entity, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
     // Create csv file with all brands data
-    await utilsFile.createCSVFile('.', fileName, ImportBrands);
+    await utilsFile.createCSVFile('.', fileName, dataImportBrands);
   });
 
   after(async () => {

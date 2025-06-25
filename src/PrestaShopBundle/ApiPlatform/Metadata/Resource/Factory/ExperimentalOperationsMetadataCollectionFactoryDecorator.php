@@ -32,8 +32,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use Throwable;
 
 /**
@@ -50,16 +50,16 @@ use Throwable;
 class ExperimentalOperationsMetadataCollectionFactoryDecorator implements ResourceMetadataCollectionFactoryInterface
 {
     public function __construct(
-        private readonly ResourceMetadataCollectionFactoryInterface $innerFactory,
+        private readonly ResourceMetadataCollectionFactoryInterface $decorated,
         private readonly bool $isDebug,
-        private readonly FeatureFlagManager $featureFlagManager,
+        private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
     ) {
     }
 
     public function create(string $resourceClass): ResourceMetadataCollection
     {
         // We call the original method since we only want to alter the result of this method.
-        $resourceMetadataCollection = $this->innerFactory->create($resourceClass);
+        $resourceMetadataCollection = $this->decorated->create($resourceClass);
 
         // In debug mode we filter nothing, in prod mode we do unless the forcing configuration is enabled
         if ($this->isDebug || $this->areExperimentalEndpointsEnabled()) {
@@ -91,7 +91,7 @@ class ExperimentalOperationsMetadataCollectionFactoryDecorator implements Resour
     private function areExperimentalEndpointsEnabled(): bool
     {
         try {
-            return $this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS);
+            return $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS);
         } catch (Throwable) {
             return false;
         }

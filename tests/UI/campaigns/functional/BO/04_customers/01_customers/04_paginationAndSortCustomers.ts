@@ -5,15 +5,13 @@ import testContext from '@utils/testContext';
 import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import {bulkDeleteCustomersTest} from '@commonTests/BO/customers/customer';
 
-// Import data
-import ImportCustomers from '@data/import/customers';
-
 import {expect} from 'chai';
 import {
   boCustomersPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
+  dataImportCustomers,
   type Page,
   utilsCore,
   utilsFile,
@@ -40,14 +38,14 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
   const fileName: string = 'customers.csv';
 
   // Pre-condition: Import list of categories
-  importFileTest(fileName, ImportCustomers.entity, `${baseContext}_preTest_1`);
+  importFileTest(fileName, dataImportCustomers.entity, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
     // Create csv file with all customers data
-    await utilsFile.createCSVFile('.', fileName, ImportCustomers);
+    await utilsFile.createCSVFile('.', fileName, dataImportCustomers);
   });
 
   after(async () => {

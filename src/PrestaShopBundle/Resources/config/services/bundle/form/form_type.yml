@@ -603,6 +603,10 @@ services:
     arguments:
       $featureChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider'
 
+  PrestaShopBundle\Form\Admin\Type\ThemeChoiceType:
+    arguments:
+      $themesChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameChoiceProvider'
+
   form.type.sell.product.event_listener.categories_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
     public: true

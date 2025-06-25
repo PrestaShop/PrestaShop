@@ -5,9 +5,6 @@ import {expect} from 'chai';
 import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import bulkDeleteCategoriesTest from '@commonTests/BO/catalog/category';
 
-// Import data
-import ImportCategories from '@data/import/categories';
-
 import {
   boCategoriesPage,
   boDashboardPage,
@@ -15,6 +12,7 @@ import {
   boMonitoringPage,
   type BrowserContext,
   type CategoryFilter,
+  dataImportCategories,
   type Page,
   utilsCore,
   utilsFile,
@@ -44,14 +42,14 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of empty categori
   const categoryData: CategoryFilter = {filterBy: 'name', value: 'category'};
 
   // Pre-condition: Import empty category list
-  importFileTest(fileName, ImportCategories.entity, baseContext);
+  importFileTest(fileName, dataImportCategories.entity, baseContext);
 
   // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
     // Create csv file with all data
-    await utilsFile.createCSVFile('.', fileName, ImportCategories);
+    await utilsFile.createCSVFile('.', fileName, dataImportCategories);
   });
 
   after(async () => {

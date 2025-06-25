@@ -1586,7 +1586,7 @@ class FrontControllerCore extends Controller
 
     protected function getDisplayTaxesLabel()
     {
-        return (Module::isEnabled('ps_legalcompliance') && (bool) Configuration::get('AEUC_LABEL_TAX_INC_EXC')) || $this->context->country->display_tax_label;
+        return $this->context->country->display_tax_label;
     }
 
     /**
@@ -1706,7 +1706,7 @@ class FrontControllerCore extends Controller
             'logo' => self::configuredImageUrl('PS_LOGO', $psImageUrl),
             'logo_details' => $this->getShopLogo(),
             'stores_icon' => self::configuredImageUrl('PS_STORES_ICON', $psImageUrl),
-            'favicon' => self::configuredImageUrl('PS_STORES_ICON', $psImageUrl),
+            'favicon' => self::configuredImageUrl('PS_FAVICON', $psImageUrl),
             'favicon_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 
             'address' => [

@@ -21,7 +21,7 @@ monolog:
       handler: nested
     nested:
       type: rotating_file
-      max_files: '%env(PS_LOG_MAX_FILES)%'
+      max_files: '%env(int:PS_LOG_MAX_FILES)%'
       path: '%env(PS_LOG_OUTPUT)%'
       level: debug
     console:

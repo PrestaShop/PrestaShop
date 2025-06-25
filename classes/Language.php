@@ -1670,6 +1670,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     private static function loadAdminTranslatorLocale(string $locale, bool $clearCatalogue): void
     {
         $sfContainer = SymfonyContainer::getInstance();
+        if ($sfContainer === null) {
+            return;
+        }
         $translator = $sfContainer->get(TranslatorInterface::class);
         if (!$translator->isLanguageLoaded($locale) || $clearCatalogue) {
             $languageLoader = $sfContainer->get('prestashop.translation.translator_language_loader');

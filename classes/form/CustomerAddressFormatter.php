@@ -90,6 +90,10 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                     if ($this->country->need_zip_code) {
                         $formField->setRequired(true);
                     }
+
+                    $formField->setMinLength(
+                        strlen($this->country->zip_code_format)
+                    );
                 } elseif ($field === 'phone') {
                     $formField->setType('tel');
                 } elseif ($field === 'dni' && null !== $this->country) {

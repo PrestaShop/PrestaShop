@@ -1278,6 +1278,30 @@ class CartRuleCore extends ObjectModel
             return 0;
         }
 
+        /*
+         * Custom cart rule value from modules. Allows to create infinite possibilities of rules.
+         *
+         * If a module is applying a custom value using actionApplyCartRule, it should also apply
+         * the same value here.
+         */
+        $contextualValueFromModules = null;
+        Hook::exec(
+            'actionGetCartRuleContextualValue',
+            [
+                'cart_rule' => $this,
+                'use_tax' => $use_tax,
+                'context' => $context,
+                'filter' => $filter,
+                'package' => $package,
+                'use_cache' => $use_cache,
+                'contextualValueFromModules' => &$contextualValueFromModules,
+            ]
+        );
+        // @phpstan-ignore-next-line
+        if ($contextualValueFromModules !== null) {
+            return $contextualValueFromModules;
+        }
+
         // set base price that will be used for percent reductions
         if (!empty($context->virtualTotalTaxIncluded) && !empty($context->virtualTotalTaxExcluded)) {
             $basePriceForPercentReduction = $use_tax ? $context->virtualTotalTaxIncluded : $context->virtualTotalTaxExcluded;

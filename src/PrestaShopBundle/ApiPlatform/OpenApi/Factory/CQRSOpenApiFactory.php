@@ -37,6 +37,7 @@ use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 use ApiPlatform\OpenApi\Model\PathItem;
 use ApiPlatform\OpenApi\Model\Paths;
+use ApiPlatform\OpenApi\Model\Server;
 use ApiPlatform\OpenApi\OpenApi;
 use ArrayObject;
 use DateTimeInterface;
@@ -89,6 +90,7 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         $parentOpenApi = $this->decorated->__invoke($context);
 
         $domainsByUri = [];
+        $scopesByUri = [];
         foreach ($this->resourceNameCollectionFactory->create() as $resourceClass) {
             $resourceMetadataCollection = $this->resourceMetadataFactory->create($resourceClass);
 
@@ -109,6 +111,10 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
                         if (!empty($operationDomain) && empty($domainsByUri[$operation->getUriTemplate()])) {
                             $domainsByUri[$operation->getUriTemplate()] = $this->getOperationDomain($operation);
                         }
+                    }
+
+                    if ($operation instanceof HttpOperation && !empty($operation->getExtraProperties()['scopes'])) {
+                        $scopesByUri[$operation->getUriTemplate()][strtolower($operation->getMethod())] = $operation->getExtraProperties()['scopes'];
                     }
 
                     $definition = $this->getSchemaDefinition($parentOpenApi, $operation);
@@ -133,29 +139,41 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         foreach ($parentOpenApi->getPaths()->getPaths() as $path => $pathItem) {
             // Get operations that are defined (not null)
             $operations = array_filter([
-                'withGet' => $pathItem->getGet(),
-                'withPost' => $pathItem->getPost(),
-                'withPut' => $pathItem->getPut(),
-                'withPatch' => $pathItem->getPatch(),
-                'withDelete' => $pathItem->getDelete(),
+                'get' => $pathItem->getGet(),
+                'post' => $pathItem->getPost(),
+                'put' => $pathItem->getPut(),
+                'patch' => $pathItem->getPatch(),
+                'delete' => $pathItem->getDelete(),
             ], fn ($operation) => null !== $operation);
 
-            if (!empty($operations) && !empty($domainsByUri[$path])) {
-                $updatedPathItem = $pathItem;
+            $updatedPathItem = $pathItem;
+            if (!empty($operations)) {
                 /** @var OpenApiOperation $operation */
-                foreach ($operations as $setterMethod => $operation) {
-                    $taggedOperation = $operation->withTags([$domainsByUri[$path]]);
-                    $updatedPathItem = $updatedPathItem->$setterMethod($taggedOperation);
+                foreach ($operations as $httpMethod => $operation) {
+                    $updatedOperation = $operation;
+
+                    // Update tag to group by domain
+                    if (!empty($domainsByUri[$path])) {
+                        $updatedOperation = $operation->withTags([$domainsByUri[$path]]);
+                    }
+
+                    // Add security scopes
+                    if (!empty($scopesByUri[$path][$httpMethod])) {
+                        $updatedOperation = $updatedOperation->withSecurity([['oauth' => $scopesByUri[$path][$httpMethod]]]);
+                    }
+
+                    $setterMethod = 'with' . ucfirst($httpMethod);
+                    $updatedPathItem = $updatedPathItem->$setterMethod($updatedOperation);
                 }
-                $updatedPaths->addPath($path, $updatedPathItem);
-            } else {
-                $updatedPaths->addPath($path, $pathItem);
             }
+            $updatedPaths->addPath($path, $updatedPathItem);
         }
 
         $updatedOpenApi = new OpenApi(
             $parentOpenApi->getInfo(),
-            $parentOpenApi->getServers(),
+            [
+                new Server('/admin-api'),
+            ],
             $updatedPaths,
             $parentOpenApi->getComponents(),
             $parentOpenApi->getSecurity(),

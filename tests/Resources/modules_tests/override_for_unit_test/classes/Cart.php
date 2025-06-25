@@ -219,4 +219,11 @@ class Cart extends CartCore
             }
         }
     }
+
+    /*
+    * module: testtypedpropertyoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    private string $testTypedProperty;
 }

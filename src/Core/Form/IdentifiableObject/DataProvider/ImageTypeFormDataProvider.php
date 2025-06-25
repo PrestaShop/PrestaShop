@@ -60,6 +60,7 @@ final class ImageTypeFormDataProvider implements FormDataProviderInterface
             'manufacturers' => $result->isManufacturers(),
             'suppliers' => $result->isSuppliers(),
             'stores' => $result->isStores(),
+            'themeName' => $result->getThemeName(),
         ];
     }
 
@@ -77,6 +78,7 @@ final class ImageTypeFormDataProvider implements FormDataProviderInterface
             'manufacturers' => false,
             'suppliers' => false,
             'stores' => false,
+            'themeName' => null,
         ];
     }
 }

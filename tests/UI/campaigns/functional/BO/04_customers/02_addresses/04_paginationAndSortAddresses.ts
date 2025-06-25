@@ -1,20 +1,15 @@
-// Import utils
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
-// Import commonTests
 import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import {bulkDeleteAddressesTest} from '@commonTests/BO/customers/address';
-
-// Import data
-import ImportAddresses from '@data/import/addresses';
-
-import {expect} from 'chai';
 
 import {
   boAddressesPage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
+  dataImportAddresses,
   type Page,
   utilsCore,
   utilsFile,
@@ -41,14 +36,14 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
   const fileName: string = 'addresses.csv';
 
   // Pre-condition: Import list of categories
-  importFileTest(fileName, ImportAddresses.entity, `${baseContext}_preTest_1`);
+  importFileTest(fileName, dataImportAddresses.entity, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
     // Create csv file with all customers data
-    await utilsFile.createCSVFile('.', fileName, ImportAddresses);
+    await utilsFile.createCSVFile('.', fileName, dataImportAddresses);
   });
 
   after(async () => {

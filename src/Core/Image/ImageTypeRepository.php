@@ -45,27 +45,34 @@ class ImageTypeRepository
         $this->db_prefix = $db->getPrefix();
     }
 
-    public function setTypes(array $types)
+    public function setTypes(array $types, ?string $theme_name = null)
     {
-        $this->removeAllTypes();
+        if (null !== $theme_name) {
+            $this->remoteAllTypesByTheme($theme_name);
+        } else {
+            $this->removeAllTypes();
+        }
+
         foreach ($types as $name => $data) {
             $this->createType(
                 $name,
                 $data['width'],
                 $data['height'],
-                $data['scope']
+                $data['scope'],
+                $theme_name
             );
         }
 
         return $this;
     }
 
-    public function createType($name, $width, $height, array $scope)
+    public function createType($name, $width, $height, array $scope, ?string $theme_name = null)
     {
         $data = [
             'name' => $this->db->escape($name),
             'width' => $this->db->escape($width),
             'height' => $this->db->escape($height),
+            'theme_name' => $this->db->escape($theme_name),
         ];
 
         foreach ($this->getScopeList() as $scope_item) {
@@ -86,13 +93,20 @@ class ImageTypeRepository
         return ['products', 'categories', 'manufacturers', 'suppliers', 'stores'];
     }
 
-    public function getIdByName($name)
+    public function getIdByName($name, ?string $theme_name = null)
     {
         $escaped_name = $this->db->escape($name);
 
-        $id_image_type = $this->db->getValue(
-            "SELECT id_image_type FROM {$this->db_prefix}image_type WHERE name = '$escaped_name'"
-        );
+        if ($theme_name) {
+            $escaped_theme_name = $this->db->escape($theme_name);
+            $id_image_type = $this->db->getValue(
+                "SELECT id_image_type FROM {$this->db_prefix}image_type WHERE name = '$escaped_name' AND theme_name = '$escaped_theme_name'"
+            );
+        } else {
+            $id_image_type = $this->db->getValue(
+                "SELECT id_image_type FROM {$this->db_prefix}image_type WHERE name = '$escaped_name' AND theme_name IS NULL"
+            );
+        }
 
         return (int) $id_image_type;
     }
@@ -101,6 +115,14 @@ class ImageTypeRepository
     {
         Db::getInstance()->execute(
             "TRUNCATE TABLE {$this->db_prefix}image_type"
+        );
+    }
+
+    protected function remoteAllTypesByTheme($theme_name)
+    {
+        $escaped_theme_name = $this->db->escape($theme_name);
+        Db::getInstance()->execute(
+            "DELETE FROM {$this->db_prefix}image_type WHERE theme_name = '$escaped_theme_name'"
         );
     }
 }

@@ -244,7 +244,7 @@ class TranslationService
                 ->createQueryBuilder('t')
                 ->where('t.lang = :lang')->setParameter('lang', $lang)
                 ->andWhere('t.domain = :domain')->setParameter('domain', $domain)
-                ->andWhere('t.key LIKE :key')->setParameter('key', $key)
+                ->andWhere('t.key = :key')->setParameter('key', $key)
             ;
             if ($theme !== null) {
                 $queryBuilder->andWhere('t.theme = :theme')->setParameter('theme', $theme);

@@ -140,6 +140,8 @@ class ReleaseCreator
         '\.php_cs\.dist$',
         'tools/assets$',
         '\.webpack$',
+        'rector\.php',
+        'phpstan(.*)?',
     ];
 
     /**

@@ -83,6 +83,7 @@ class ApplicableGroupsType extends TranslatorAwareType
         $builder
             ->add('currency_id', CurrencyChoiceType::class, [
                 'add_all_currencies_option' => true,
+                'label' => false,
             ])
             ->add('country_id', CountryChoiceType::class, [
                 'add_all_countries_option' => true,

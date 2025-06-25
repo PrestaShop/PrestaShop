@@ -27,3 +27,8 @@ api_platform:
     # This is used to allow using the Swagger UI in HTML presentation
     html: [ 'text/html' ]
     json: [ 'application/json' ]
+  oauth:
+    enabled: true
+    type: 'oauth2'
+    flow: 'clientCredentials'
+    tokenUrl: '/admin-api/access_token'

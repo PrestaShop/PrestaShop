@@ -38,7 +38,9 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
+use PrestaShop\PrestaShop\Core\Exception\MultiShopAccessDeniedException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
@@ -222,9 +224,41 @@ class PrestaShopAdminController extends AbstractController
             }
         }
 
+        if ($e instanceof MultiShopAccessDeniedException && $e->getShopConstraint()) {
+            if ($e->getShopConstraint()->forAllShops()) {
+                return $this->trans(
+                    'Authorization not allowed for all stores.',
+                    [],
+                    'Admin.Notifications.Error'
+                );
+            }
+
+            if ($e->getShopConstraint()->getShopId()) {
+                return $this->trans(
+                    'Authorization not allowed for this store.',
+                    [],
+                    'Admin.Notifications.Error'
+                );
+            }
+
+            if ($e->getShopConstraint()->getShopGroupId()) {
+                return $this->trans(
+                    'Authorization not allowed for this group of stores.',
+                    [],
+                    'Admin.Notifications.Error'
+                );
+            }
+
+            return $this->trans(
+                'Authorization not allowed for this store context.',
+                [],
+                'Admin.Notifications.Error'
+            );
+        }
+
         // Fallback error message
         $isDebug = $this->getParameter('kernel.debug');
-        if ($isDebug && !empty($message)) {
+        if ($isDebug && !empty($e->getMessage())) {
             return $this->trans(
                 'An unexpected error occurred. [%type% code %code%]: %message%',
                 [
@@ -388,6 +422,27 @@ class PrestaShopAdminController extends AbstractController
         }
 
         return 0;
+    }
+
+    protected function hasAuthorizationByShopConstraint(ShopConstraint $shopConstraint): bool
+    {
+        if (!$this->getShopContext()->isMultiShopEnabled()) {
+            return true;
+        }
+
+        if ($shopConstraint->getShopId()) {
+            return $this->getEmployeeContext()->hasAuthorizationOnShop($shopConstraint->getShopId()->getValue());
+        }
+
+        if ($shopConstraint->getShopGroupId()) {
+            return $this->getEmployeeContext()->hasAuthorizationOnShopGroup($shopConstraint->getShopGroupId()->getValue());
+        }
+
+        if ($shopConstraint->forAllShops()) {
+            return $this->getEmployeeContext()->hasAuthorizationForAllShops();
+        }
+
+        return false;
     }
 
     protected function isDemoModeEnabled(): bool

@@ -358,6 +358,14 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         foreach ($modulesFromHook as $moduleFromHook) {
             if ($module->get('name') === $moduleFromHook['name']) {
+                // Prevent data from hooks from overriding local translations on displayName and description
+                if ($module->attributes->has('displayName') && !empty($module->attributes->get('displayName'))) {
+                    unset($moduleFromHook['displayName']);
+                }
+                if ($module->attributes->has('description') && !empty($module->attributes->get('description'))) {
+                    unset($moduleFromHook['description']);
+                }
+
                 $module->getAttributes()->add($moduleFromHook);
             }
         }

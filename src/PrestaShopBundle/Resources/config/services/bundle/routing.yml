@@ -69,3 +69,10 @@ services:
     autoconfigure: true
     autowire: true
     public: false
+
+  PrestaShopBundle\Routing\AnonymousRouteProvider:
+    autowire: true
+    autoconfigure: true
+    public: false
+    arguments:
+      $router: '@router.default'

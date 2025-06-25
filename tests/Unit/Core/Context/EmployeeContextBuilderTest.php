@@ -33,6 +33,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContextBuilder;
 
 class EmployeeContextBuilderTest extends TestCase
@@ -42,7 +43,8 @@ class EmployeeContextBuilderTest extends TestCase
         $employee = $this->mockEmployee();
         $builder = new EmployeeContextBuilder(
             $this->mockEmployeeRepository($employee),
-            $this->createMock(ContextStateManager::class)
+            $this->createMock(ContextStateManager::class),
+            $this->mockShopRepository(),
         );
         $builder->setEmployeeId(42);
 
@@ -66,7 +68,8 @@ class EmployeeContextBuilderTest extends TestCase
     {
         $builder = new EmployeeContextBuilder(
             $this->createMock(EmployeeRepository::class),
-            $this->createMock(ContextStateManager::class)
+            $this->createMock(ContextStateManager::class),
+            $this->mockShopRepository(),
         );
 
         $employeeContext = $builder->build();
@@ -79,7 +82,8 @@ class EmployeeContextBuilderTest extends TestCase
         $employee = $this->mockEmployee();
         $builder = new EmployeeContextBuilder(
             $this->mockEmployeeRepository($employee),
-            $contextManagerMock
+            $contextManagerMock,
+            $this->mockShopRepository(),
         );
         $builder->setEmployeeId(42);
 
@@ -124,6 +128,17 @@ class EmployeeContextBuilderTest extends TestCase
         $repository
             ->method('get')
             ->willReturn($employee ?: $this->mockEmployee())
+        ;
+
+        return $repository;
+    }
+
+    private function mockShopRepository(): ShopRepository|MockObject
+    {
+        $repository = $this->createMock(ShopRepository::class);
+        $repository
+            ->method('getAllShopIds')
+            ->willReturn([1, 2, 3, 4])
         ;
 
         return $repository;

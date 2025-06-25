@@ -1705,7 +1705,8 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   ),
   KEY `indexed` (
     `indexed`, `active`, `id_product`
-  )
+  ),
+  INDEX `shop_tax` (`id_shop`, `id_tax_rules_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* list of product attributes (E.g. : color) */
@@ -2835,7 +2836,8 @@ CREATE TABLE `PREFIX_image_type` (
   `manufacturers` TINYINT(1) DEFAULT 1 NOT NULL,
   `suppliers`     TINYINT(1) DEFAULT 1 NOT NULL,
   `stores`        TINYINT(1) DEFAULT 1 NOT NULL,
-  UNIQUE KEY `UNIQ_907C95215E237E06` (`name`),
+  `theme_name`    VARCHAR(255) DEFAULT NULL,
+  UNIQUE KEY `UNIQ_907C95215E237E0614E48A3B` (`name`, `theme_name`),
   PRIMARY KEY (`id_image_type`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 

@@ -13,7 +13,6 @@
     "downlevelIteration": true,
     "baseUrl": "./",
     "paths": {
-      "@pages/*": ["pages/*"],
       "@commonTests/*": ["commonTests/*"],
       "@data/*": ["data/*"],
       "@utils/*": ["utils/*"],

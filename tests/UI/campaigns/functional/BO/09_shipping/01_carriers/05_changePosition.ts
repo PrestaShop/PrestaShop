@@ -83,12 +83,19 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
     });
 
     it('should open the back office in new tab', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetCarriersFilters', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToBO', baseContext);
 
       page = await utilsPlaywright.newTab(browserContext);
-      await foClassicCheckoutPage.goToBO(page);
 
       await boLoginPage.goTo(page, global.BO.URL);
+
+      const pageTitle = await boLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLoginPage.pageTitle);
+    });
+
+    it('should connect to the backoffice', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'connectBO', baseContext);
+
       await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
 
       const pageTitle = await boDashboardPage.getPageTitle(page);

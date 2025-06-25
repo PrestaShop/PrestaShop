@@ -45,6 +45,7 @@ use Psr\Container\ContainerInterface;
 use ReflectionException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 class QueryListProvider implements ProviderInterface
 {
@@ -87,6 +88,12 @@ class QueryListProvider implements ProviderInterface
 
         if (null === $gridDataFactoryDefinition) {
             throw new GridDataFactoryNotFoundException(sprintf('Resource %s has no Grid data factory defined.', $operation->getClass()));
+        }
+
+        if (!$this->container->has($gridDataFactoryDefinition)) {
+            // We use UnexpectedValueException as it will be caught by API Platform and interpreted as a 400 http error, similar to the behaviour
+            // for CQRS queries and commands not found
+            throw new UnexpectedValueException(sprintf('GridDataFactory service %s does not exist.', $gridDataFactoryDefinition));
         }
 
         /** @var GridDataFactoryInterface $gridDataFactory */

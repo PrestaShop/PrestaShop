@@ -764,7 +764,7 @@ class EmployeeCore extends ObjectModel
             }
         }
 
-        return $this->associated_shops;
+        return $associatedShopGroupIds;
     }
 
     public function getImageUrl(): string

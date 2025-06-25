@@ -1,562 +1,466 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="Admin.Shipping.Feature.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="07018153f387118b1dacafee609f13b1">
-        <source>Will be applied when the price is</source>
-        <target>Will be applied when the price is</target>
-        <note>Line: 27</note>
-      </trans-unit>
-      <trans-unit id="4c687ab170e51c6eaa65be3b621c7205">
-        <source>Will be applied when the weight is</source>
-        <target>Will be applied when the weight is</target>
-        <note>Line: 28</note>
-      </trans-unit>
-      <trans-unit id="574539ea519352ea60375ee0a3edbf16">
-        <source>Add new range</source>
-        <target>Add new range</target>
-        <note>Line: 40</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form_ranges.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="92711ef5b0215a076fef4a3abbfc2258">
-        <source>Ranges</source>
-        <target>Ranges</target>
-        <note>Line: 27</note>
-      </trans-unit>
-      <trans-unit id="19d3894f53ce79c3f836f26cf8a3be3b">
-        <source>inactive</source>
-        <target>inactive</target>
-        <note>Line: 98</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ba44d024ba9eec02cc432a36dcffb9d9">
-        <source>Carrier name:</source>
-        <target>Carrier name:</target>
-        <note>Line: 28</note>
-      </trans-unit>
-      <trans-unit id="7f9508fc09a86a59fbcea84da182b12a">
-        <source>This carrier will be proposed for those delivery zones:</source>
-        <target>This carrier will be proposed for those delivery zones:</target>
-        <note>Line: 34</note>
-      </trans-unit>
-      <trans-unit id="7d705fb35c90599d918e0a619c69e17b">
-        <source>And it will be proposed for those client groups:</source>
-        <target>And it will be proposed for those client groups:</target>
-        <note>Line: 38</note>
-      </trans-unit>
-      <trans-unit id="272175e18b4f5f142e1afc94698df9e3">
-        <source>Finally, this carrier will be proposed in those shops:</source>
-        <target>Finally, this carrier will be proposed in those shops:</target>
-        <note>Line: 43</note>
-      </trans-unit>
-      <trans-unit id="2eee774899a3338d423fe081beea6451">
-        <source>This carrier is %1$s and the transit time is %2$s.</source>
-        <target>This carrier is %1$s and the transit time is %2$s.</target>
-        <note>Line: 54</note>
-      </trans-unit>
-      <trans-unit id="aa2d6e4f578eb0cfaba23beef76c2194">
-        <source>free</source>
-        <target>free</target>
-        <note>Line: 55</note>
-      </trans-unit>
-      <trans-unit id="43aca442af5353cb54151e4a94fcd0b5">
-        <source>not free</source>
-        <target>not free</target>
-        <note>Line: 56</note>
-      </trans-unit>
-      <trans-unit id="b6fbfa40ef6e8d15ec69cb2da0dcd662">
-        <source>This carrier can deliver orders from %1$s to %2$s.</source>
-        <target>This carrier can deliver orders from %1$s to %2$s.</target>
-        <note>Line: 57</note>
-      </trans-unit>
-      <trans-unit id="2a28ff68d6e69bd4d2ee2d8c11a78823">
-        <source>If the order is out of range, the behavior is to %3$s.</source>
-        <target>If the order is out of range, the behavior is to %3$s.</target>
-        <note>Line: 58</note>
-      </trans-unit>
-      <trans-unit id="343bf3bbd8b70fd2d04bb095ad2418f9">
-        <source>The shipping cost is calculated %1$s and the tax rule %2$s will be applied.</source>
-        <target>The shipping cost is calculated %1$s and the tax rule %2$s will be applied.</target>
-        <note>Line: 59</note>
-      </trans-unit>
-      <trans-unit id="0ea5b002f2959687c7ff926ca01a47a3">
-        <source>according to the price</source>
-        <target>according to the price</target>
-        <note>Line: 60</note>
-      </trans-unit>
-      <trans-unit id="c2908ded92c5ab4bd42c02e608d0b981">
-        <source>according to the weight</source>
-        <target>according to the weight</target>
-        <note>Line: 61</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/carriers/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c26732c157d7b353c1be9f7ba8962e57">
-        <source>Add new carrier</source>
-        <target>Add new carrier</target>
-        <note>Line: 31</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/cart_rules/actions.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
-        <source>Free shipping</source>
-        <target>Free shipping</target>
-        <note>Line: 26</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/lang/KeysReference/CarrierLang.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a8bbb000124c9697aa5d63e7e758b64d">
-        <source>Pick up in-store</source>
-        <target>Pick up in-store</target>
-        <note>Line: 26</note>
-      </trans-unit>
-      <trans-unit id="5d671531babe55fff4ae63b94c80ea38">
-        <source>Delivery next day!</source>
-        <target>Delivery next day!</target>
-        <note>Line: 27</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCarrierWizardController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="482836cce404046ca7dc34fb0a6fc526">
-        <source>Apply the cost of the highest defined range</source>
-        <target>Apply the cost of the highest defined range</target>
-        <note>Line: 364</note>
-      </trans-unit>
-      <trans-unit id="4f890cf6a72112cad95093baecf39831">
-        <source>Disable carrier</source>
-        <target>Disable carrier</target>
-        <note>Line: 368</note>
-      </trans-unit>
-      <trans-unit id="c91e596246bbf8fdff9dae7b349d71d9">
-        <source>Carrier name</source>
-        <target>Carrier name</target>
-        <note>Line: 208</note>
-      </trans-unit>
-      <trans-unit id="dde695268ea519ababd83f0ca3d274fc">
-        <source>Transit time</source>
-        <target>Transit time</target>
-        <note>Line: 219</note>
-      </trans-unit>
-      <trans-unit id="c8b462f779749d2e27abed2e9501b2bd">
-        <source>Speed grade</source>
-        <target>Speed grade</target>
-        <note>Line: 228</note>
-      </trans-unit>
-      <trans-unit id="0979779c4569141b98591d326d343ec2">
-        <source>Tracking URL</source>
-        <target>Tracking URL</target>
-        <note>Line: 241</note>
-      </trans-unit>
-      <trans-unit id="920bd1fb6d54c93fca528ce941464225">
-        <source>Group access</source>
-        <target>Group access</target>
-        <note>Line: 443</note>
-      </trans-unit>
-      <trans-unit id="de62775a71fc2bf7a13d7530ae24a7ed">
-        <source>General settings</source>
-        <target>General settings</target>
-        <note>Line: 87</note>
-      </trans-unit>
-      <trans-unit id="756eb8cebeb953f5ae47235ff2e183b5">
-        <source>Shipping locations and costs</source>
-        <target>Shipping locations and costs</target>
-        <note>Line: 90</note>
-      </trans-unit>
-      <trans-unit id="780c462e85ba4399a5d42e88f69a15ca">
-        <source>Billing</source>
-        <target>Billing</target>
-        <note>Line: 324</note>
-      </trans-unit>
-      <trans-unit id="082ebbb29b5ba59c293a00a55581679b">
-        <source>Out-of-range behavior</source>
-        <target>Out-of-range behavior</target>
-        <note>Line: 358</note>
-      </trans-unit>
-      <trans-unit id="e2fb9fa6091dd9f779b98efdf998a00a">
-        <source>Size, weight, and group access</source>
-        <target>Size, weight, and group access</target>
-        <note>Line: 93</note>
-      </trans-unit>
-      <trans-unit id="829c7cc5ed48e11df7ac9b05e236a12c">
-        <source>Add handling costs</source>
-        <target>Add handling costs</target>
-        <note>Line: 284</note>
+      <trans-unit id="e3d29a6f3d7588301aa04429e686b260">
+        <source>According to total price</source>
+        <target>According to total price</target>
+        <note>File: controllers/admin/AdminCarriersController.php [Line: 319]</note>
       </trans-unit>
       <trans-unit id="0f696253cf9dacf6079bf5060e60da06">
         <source>According to total price.</source>
         <target>According to total price.</target>
-        <note>Line: 333</note>
-      </trans-unit>
-      <trans-unit id="a083cb6637472c81ec701d3342320adf">
-        <source>According to total weight.</source>
-        <target>According to total weight.</target>
-        <note>Line: 338</note>
-      </trans-unit>
-      <trans-unit id="9c3448f86be5ee19015f4ecce4bbd6fe">
-        <source>Maximum package width (%s)</source>
-        <target>Maximum package width (%s)</target>
-        <note>Line: 415</note>
-      </trans-unit>
-      <trans-unit id="65a0cd2bca5d0a980a5582a548d79900">
-        <source>Maximum package height (%s)</source>
-        <target>Maximum package height (%s)</target>
-        <note>Line: 422</note>
-      </trans-unit>
-      <trans-unit id="8317f5bb182c1e92c11221955592b518">
-        <source>Maximum package depth (%s)</source>
-        <target>Maximum package depth (%s)</target>
-        <note>Line: 429</note>
-      </trans-unit>
-      <trans-unit id="da5c987cbda47de7a6b09406b0840ec4">
-        <source>Maximum package weight (%s)</source>
-        <target>Maximum package weight (%s)</target>
-        <note>Line: 436</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
-        <source>Delay</source>
-        <target>Delay</target>
-        <note>Line: 85</note>
-      </trans-unit>
-      <trans-unit id="b00b85425e74ed2c85dc3119b78ff2c3">
-        <source>Free Shipping</source>
-        <target>Free Shipping</target>
-        <note>Line: 97</note>
-      </trans-unit>
-      <trans-unit id="1c0e287237d8c352c6ead633b019c047">
-        <source>Apply shipping cost</source>
-        <target>Apply shipping cost</target>
-        <note>Line: 250</note>
-      </trans-unit>
-      <trans-unit id="7589dfa9a5a899e9701335164c9ab520">
-        <source>Shipping and handling</source>
-        <target>Shipping and handling</target>
-        <note>Line: 284</note>
-      </trans-unit>
-      <trans-unit id="590f6d9a5885f042982c9a911f76abda">
-        <source>Default behavior</source>
-        <target>Default behavior</target>
-        <note>Line: 314</note>
-      </trans-unit>
-      <trans-unit id="e3d29a6f3d7588301aa04429e686b260">
-        <source>According to total price</source>
-        <target>According to total price</target>
-        <note>Line: 319</note>
+        <note>File: controllers/admin/AdminCarrierWizardController.php [Line: 333]</note>
       </trans-unit>
       <trans-unit id="49fec5c86a3b43821fdf0d9aa7bbd935">
         <source>According to total weight</source>
         <target>According to total weight</target>
-        <note>Line: 324</note>
+        <note>File: controllers/admin/AdminCarriersController.php [Line: 324]</note>
       </trans-unit>
-      <trans-unit id="324029d06c6bfe85489099f6e69b7637">
-        <source>Maximum package height</source>
-        <target>Maximum package height</target>
-        <note>Line: 350</note>
-      </trans-unit>
-      <trans-unit id="3e86ececa46af50900510892f94c4ed6">
-        <source>Maximum package width</source>
-        <target>Maximum package width</target>
-        <note>Line: 357</note>
-      </trans-unit>
-      <trans-unit id="1935671a637346f67b485596b9fcba2c">
-        <source>Maximum package depth</source>
-        <target>Maximum package depth</target>
-        <note>Line: 364</note>
-      </trans-unit>
-      <trans-unit id="0cce6348a3d85f52a44d053f542afcbc">
-        <source>Maximum package weight</source>
-        <target>Maximum package weight</target>
-        <note>Line: 371</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCartRulesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
-        <source>Name:</source>
-        <target>Name:</target>
-        <note>Line: 866</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/CarrierType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2676f6da9c7200e6c6e1d510e5f4fc2a">
-        <source>Size and weight</source>
-        <target>Size and weight</target>
-        <note>Line: 59</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8e6c64a901e609a97351f999949d90d3">
-        <source>Please upload a valid jpeg file</source>
-        <target>Please upload a valid jpeg file</target>
-        <note>Line: 105</note>
-      </trans-unit>
-      <trans-unit id="f39b85edce7f4e450d01829da2b70c44">
-        <source>The file is too large. Allowed maximum size is 8MB.</source>
-        <target>The file is too large. Allowed maximum size is 8MB.</target>
-        <note>Line: 106</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dad1f8d794ee0dd7753fe75e73b78f31">
-        <source>Zones</source>
-        <target>Zones</target>
-        <note>Line: 76</note>
-      </trans-unit>
-      <trans-unit id="c41d3aae9e95b460f33a4890422e9e30">
-        <source>[1]Manage locations[/1]</source>
-        <target>[1]Manage locations[/1]</target>
-        <note>Line: 68</note>
-      </trans-unit>
-      <trans-unit id="4b78ac8eb158840e9638a3aeb26c4a9d">
-        <source>Tax</source>
-        <target>Tax</target>
-        <note>Line: 85</note>
-      </trans-unit>
-      <trans-unit id="144240922dde7ebda925e78532ab654b">
-        <source>[1]Manage taxes[/1]</source>
-        <target>[1]Manage taxes[/1]</target>
-        <note>Line: 87</note>
-      </trans-unit>
-      <trans-unit id="04fc88e3eb09f1440cdf0b9b60dc1e58">
-        <source>Handling costs</source>
-        <target>Handling costs</target>
-        <note>Line: 96</note>
-      </trans-unit>
-      <trans-unit id="b62c378b7439b8fac0cbbb678d8bf7d0">
-        <source>[1]Manage handling costs[/1]</source>
-        <target>[1]Manage handling costs[/1]</target>
-        <note>Line: 100</note>
-      </trans-unit>
-      <trans-unit id="9f06b28a40790c4c4df5739bce3c1eb0">
-        <source>Shipping costs</source>
-        <target>Shipping costs</target>
-        <note>Line: 109</note>
-      </trans-unit>
-      <trans-unit id="f4669bd40b65315b54caa4d61e4df2ed">
-        <source>Based on the order's total price</source>
-        <target>Based on the order's total price</target>
-        <note>Line: 111</note>
-      </trans-unit>
-      <trans-unit id="d2716866a1d558fd4d707f592c9c90b8">
-        <source>Based on the order's total weight</source>
-        <target>Based on the order's total weight</target>
-        <note>Line: 112</note>
-      </trans-unit>
-      <trans-unit id="11fbcc6cf7c92c543857f1431f72ddb6">
-        <source>Out of range behavior</source>
-        <target>Out of range behavior</target>
-        <note>Line: 125</note>
-      </trans-unit>
-      <trans-unit id="7e172d83d9c63ed2e7692f73bd91c175">
-        <source>Set ranges and prices</source>
-        <target>Set ranges and prices</target>
-        <note>Line: 134</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/SizeWeightSettings.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b263d6070be2aabbe299b0ebf216453d">
-        <source>Max order width</source>
-        <target>Max order width</target>
-        <note>Line: 61</note>
-      </trans-unit>
-      <trans-unit id="5aaea7027241616d21b8a65885f882d1">
-        <source>Max order height</source>
-        <target>Max order height</target>
-        <note>Line: 78</note>
-      </trans-unit>
-      <trans-unit id="b68ce48b7b0357ef1984c58b49ebe8fa">
-        <source>Max order depth</source>
-        <target>Max order depth</target>
-        <note>Line: 95</note>
-      </trans-unit>
-      <trans-unit id="541a5de2a890554cc91e3b663ed38961">
-        <source>Max order weight</source>
-        <target>Max order weight</target>
-        <note>Line: 112</note>
-      </trans-unit>
-      <trans-unit id="c7fde12988ccac6cc27cc2449fa655d4">
-        <source>Shipping size and weight</source>
-        <target>Shipping size and weight</target>
-        <note>Line: 138</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/Type/CarrierRangesType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ffd2e3df3eb2592fb1ed881aa2ea033d">
-        <source>Add range</source>
-        <target>Add range</target>
-        <note>Line: 62</note>
-      </trans-unit>
-      <trans-unit id="a1d0ec6d56f8833a078b5a7ac4caf2d4">
-        <source>Minimum</source>
-        <target>Minimum</target>
-        <note>Line: 65</note>
-      </trans-unit>
-      <trans-unit id="8321e79c278ec510f63675c040594892">
-        <source>Maximum</source>
-        <target>Maximum</target>
-        <note>Line: 66</note>
+      <trans-unit id="a083cb6637472c81ec701d3342320adf">
+        <source>According to total weight.</source>
+        <target>According to total weight.</target>
+        <note>File: controllers/admin/AdminCarrierWizardController.php [Line: 338]</note>
       </trans-unit>
       <trans-unit id="004bf6c9a40003140292e97330236c53">
         <source>Action</source>
         <target>Action</target>
-        <note>Line: 67</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/Type/CarrierRangesType.php [Line: 67]</note>
       </trans-unit>
-      <trans-unit id="c0a67a1b19d1b12901b4e19986b2d2d5">
-        <source>Make sure there are no overlapping ranges. Remember, the minimum is part of the range, but the maximum isn't. So, the upper limit of a range is the lower limit of the next range.</source>
-        <target>Make sure there are no overlapping ranges. Remember, the minimum is part of the range, but the maximum isn't. So, the upper limit of a range is the lower limit of the next range.</target>
-        <note>Line: 68</note>
+      <trans-unit id="829c7cc5ed48e11df7ac9b05e236a12c">
+        <source>Add handling costs</source>
+        <target>Add handling costs</target>
+        <note>File: controllers/admin/AdminCarrierWizardController.php [Line: 284]</note>
       </trans-unit>
-      <trans-unit id="4a6650b59d401453940437fead8f5880">
-        <source>You can not add a negative range</source>
-        <target>You can not add a negative range</target>
-        <note>Line: 69</note>
+      <trans-unit id="c26732c157d7b353c1be9f7ba8962e57">
+        <source>Add new carrier</source>
+        <target>Add new carrier</target>
+        <note>File: admin-dev/themes/default/template/controllers/carriers/helpers/list/list_header.tpl [Line: 31]</note>
       </trans-unit>
-      <trans-unit id="3ff3227c4a0fe432d4993dc0f5c8b27e">
-        <source>Manage ranges</source>
-        <target>Manage ranges</target>
-        <note>Line: 83</note>
+      <trans-unit id="574539ea519352ea60375ee0a3edbf16">
+        <source>Add new range</source>
+        <target>Add new range</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl [Line: 40]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/Type/CostsRangeType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="87ba2ecc8b6915e8bd6f5089918229fd">
-        <source>Range</source>
-        <target>Range</target>
-        <note>Line: 48</note>
+      <trans-unit id="ffd2e3df3eb2592fb1ed881aa2ea033d">
+        <source>Add range</source>
+        <target>Add range</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/Type/CarrierRangesType.php [Line: 62]</note>
       </trans-unit>
-      <trans-unit id="2ae7cf0472e9c76dee8c098e635b4c87">
-        <source>Price (VAT excl.)</source>
-        <target>Price (VAT excl.)</target>
-        <note>Line: 65</note>
+      <trans-unit id="7d705fb35c90599d918e0a619c69e17b">
+        <source>And it will be proposed for those client groups:</source>
+        <target>And it will be proposed for those client groups:</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl [Line: 38]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/Type/CostsZoneType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="578ccb92833e02e8a119045036b72d09">
-        <source>Delete Zone?</source>
-        <target>Delete Zone?</target>
-        <note>Line: 53</note>
+      <trans-unit id="1c0e287237d8c352c6ead633b019c047">
+        <source>Apply shipping cost</source>
+        <target>Apply shipping cost</target>
+        <note>File: controllers/admin/AdminCarriersController.php [Line: 250]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/CarrierOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bff13ed1cd5b83b03f024f1eb6524337">
-        <source>Default carrier</source>
-        <target>Default carrier</target>
-        <note>Line: 86</note>
+      <trans-unit id="482836cce404046ca7dc34fb0a6fc526">
+        <source>Apply the cost of the highest defined range</source>
+        <target>Apply the cost of the highest defined range</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 128]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/HandlingType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1d8ca7f442e6d4ad3da5cb61b84284fc">
-        <source>Handling charges</source>
-        <target>Handling charges</target>
-        <note>Line: 87</note>
+      <trans-unit id="f4669bd40b65315b54caa4d61e4df2ed">
+        <source>Based on the order's total price</source>
+        <target>Based on the order's total price</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 112]</note>
       </trans-unit>
-      <trans-unit id="c9722f74f95451816de0f8ca3259ae44">
-        <source>Free shipping starts at</source>
-        <target>Free shipping starts at</target>
-        <note>Line: 111</note>
+      <trans-unit id="d2716866a1d558fd4d707f592c9c90b8">
+        <source>Based on the order's total weight</source>
+        <target>Based on the order's total weight</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 113]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Carriers/Blocks/showcase_card.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="301cf62d4bf632f3eb6395ec2cb25f78">
-        <source>Manage your carriers</source>
-        <target>Manage your carriers</target>
-        <note>Line: 34</note>
+      <trans-unit id="780c462e85ba4399a5d42e88f69a15ca">
+        <source>Billing</source>
+        <target>Billing</target>
+        <note>File: controllers/admin/AdminCarriersController.php [Line: 305]</note>
+      </trans-unit>
+      <trans-unit id="914419aa32f04011357d3b604a86d7eb">
+        <source>Carrier</source>
+        <target>Carrier</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig [Line: 32]</note>
+      </trans-unit>
+      <trans-unit id="c91e596246bbf8fdff9dae7b349d71d9">
+        <source>Carrier name</source>
+        <target>Carrier name</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 64]</note>
+      </trans-unit>
+      <trans-unit id="ba44d024ba9eec02cc432a36dcffb9d9">
+        <source>Carrier name:</source>
+        <target>Carrier name:</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl [Line: 28]</note>
+      </trans-unit>
+      <trans-unit id="8430a7b1b81635e3df949c2845303303">
+        <source>Carrier options</source>
+        <target>Carrier options</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig [Line: 33]</note>
+      </trans-unit>
+      <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
+        <source>Carriers</source>
+        <target>Carriers</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/details.html.twig [Line: 35]</note>
       </trans-unit>
       <trans-unit id="47727de83838bb7df93877b04b5efdf7">
         <source>Create carriers to let your customers choose their best shipping option in terms of delivery dates or fees. Start with editing/deleting the default "My carrier", and add as many options as you need.</source>
         <target>Create carriers to let your customers choose their best shipping option in terms of delivery dates or fees. Start with editing/deleting the default "My carrier", and add as many options as you need.</target>
-        <note>Line: 35</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Carriers/Blocks/showcase_card.html.twig [Line: 35]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8430a7b1b81635e3df949c2845303303">
-        <source>Carrier options</source>
-        <target>Carrier options</target>
-        <note>Line: 33</note>
+      <trans-unit id="590f6d9a5885f042982c9a911f76abda">
+        <source>Default behavior</source>
+        <target>Default behavior</target>
+        <note>File: controllers/admin/AdminCarriersController.php [Line: 314]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_handling.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
+      <trans-unit id="bff13ed1cd5b83b03f024f1eb6524337">
+        <source>Default carrier</source>
+        <target>Default carrier</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/CarrierOptionsType.php [Line: 86]</note>
+      </trans-unit>
+      <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
+        <source>Delay</source>
+        <target>Delay</target>
+        <note>File: src/Core/Grid/Definition/Factory/CarrierGridDefinitionFactory.php [Line: 113]</note>
+      </trans-unit>
+      <trans-unit id="578ccb92833e02e8a119045036b72d09">
+        <source>Delete Zone?</source>
+        <target>Delete Zone?</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/Type/CostsZoneType.php [Line: 53]</note>
+      </trans-unit>
+      <trans-unit id="5d671531babe55fff4ae63b94c80ea38">
+        <source>Delivery next day!</source>
+        <target>Delivery next day!</target>
+        <note>File: classes/lang/KeysReference/CarrierLang.php [Line: 27]</note>
+      </trans-unit>
+      <trans-unit id="4f890cf6a72112cad95093baecf39831">
+        <source>Disable carrier</source>
+        <target>Disable carrier</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 129]</note>
+      </trans-unit>
+      <trans-unit id="272175e18b4f5f142e1afc94698df9e3">
+        <source>Finally, this carrier will be proposed in those shops:</source>
+        <target>Finally, this carrier will be proposed in those shops:</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl [Line: 43]</note>
+      </trans-unit>
+      <trans-unit id="b00b85425e74ed2c85dc3119b78ff2c3">
+        <source>Free Shipping</source>
+        <target>Free Shipping</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 81]</note>
+      </trans-unit>
+      <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
+        <source>Free shipping</source>
+        <target>Free shipping</target>
+        <note>File: admin-dev/themes/default/template/controllers/cart_rules/actions.tpl [Line: 26]</note>
+      </trans-unit>
+      <trans-unit id="c9722f74f95451816de0f8ca3259ae44">
+        <source>Free shipping starts at</source>
+        <target>Free shipping starts at</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/HandlingType.php [Line: 111]</note>
+      </trans-unit>
+      <trans-unit id="de62775a71fc2bf7a13d7530ae24a7ed">
+        <source>General settings</source>
+        <target>General settings</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/CarrierType.php [Line: 53]</note>
+      </trans-unit>
+      <trans-unit id="920bd1fb6d54c93fca528ce941464225">
+        <source>Group access</source>
+        <target>Group access</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 122]</note>
+      </trans-unit>
       <trans-unit id="2605fbb693837be42d0cd0e701cb5aa3">
         <source>Handling</source>
         <target>Handling</target>
-        <note>Line: 33</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_handling.html.twig [Line: 33]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/update_shipping_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5068c162a60b5859f973f701333f45c5">
-        <source>Tracking number</source>
-        <target>Tracking number</target>
-        <note>Line: 49</note>
+      <trans-unit id="1d8ca7f442e6d4ad3da5cb61b84284fc">
+        <source>Handling charges</source>
+        <target>Handling charges</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/HandlingType.php [Line: 87]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="914419aa32f04011357d3b604a86d7eb">
-        <source>Carrier</source>
-        <target>Carrier</target>
-        <note>Line: 87</note>
+      <trans-unit id="04fc88e3eb09f1440cdf0b9b60dc1e58">
+        <source>Handling costs</source>
+        <target>Handling costs</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 97]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/details.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
-        <source>Carriers</source>
-        <target>Carriers</target>
-        <note>Line: 35</note>
+      <trans-unit id="2a28ff68d6e69bd4d2ee2d8c11a78823">
+        <source>If the order is out of range, the behavior is to %3$s.</source>
+        <target>If the order is out of range, the behavior is to %3$s.</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl [Line: 58]</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
+      <trans-unit id="c0a67a1b19d1b12901b4e19986b2d2d5">
+        <source>Make sure there are no overlapping ranges. Remember, the minimum is part of the range, but the maximum isn't. So, the upper limit of a range is the lower limit of the next range.</source>
+        <target>Make sure there are no overlapping ranges. Remember, the minimum is part of the range, but the maximum isn't. So, the upper limit of a range is the lower limit of the next range.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/Type/CarrierRangesType.php [Line: 68]</note>
+      </trans-unit>
+      <trans-unit id="3ff3227c4a0fe432d4993dc0f5c8b27e">
+        <source>Manage ranges</source>
+        <target>Manage ranges</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/Type/CarrierRangesType.php [Line: 83]</note>
+      </trans-unit>
+      <trans-unit id="301cf62d4bf632f3eb6395ec2cb25f78">
+        <source>Manage your carriers</source>
+        <target>Manage your carriers</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Carriers/Blocks/showcase_card.html.twig [Line: 34]</note>
+      </trans-unit>
+      <trans-unit id="b68ce48b7b0357ef1984c58b49ebe8fa">
+        <source>Max order depth</source>
+        <target>Max order depth</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/SizeWeightSettings.php [Line: 95]</note>
+      </trans-unit>
+      <trans-unit id="5aaea7027241616d21b8a65885f882d1">
+        <source>Max order height</source>
+        <target>Max order height</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/SizeWeightSettings.php [Line: 78]</note>
+      </trans-unit>
+      <trans-unit id="541a5de2a890554cc91e3b663ed38961">
+        <source>Max order weight</source>
+        <target>Max order weight</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/SizeWeightSettings.php [Line: 112]</note>
+      </trans-unit>
+      <trans-unit id="b263d6070be2aabbe299b0ebf216453d">
+        <source>Max order width</source>
+        <target>Max order width</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/SizeWeightSettings.php [Line: 61]</note>
+      </trans-unit>
+      <trans-unit id="8321e79c278ec510f63675c040594892">
+        <source>Maximum</source>
+        <target>Maximum</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/Type/CarrierRangesType.php [Line: 66]</note>
+      </trans-unit>
+      <trans-unit id="1935671a637346f67b485596b9fcba2c">
+        <source>Maximum package depth</source>
+        <target>Maximum package depth</target>
+        <note>File: controllers/admin/AdminCarriersController.php [Line: 364]</note>
+      </trans-unit>
+      <trans-unit id="8317f5bb182c1e92c11221955592b518">
+        <source>Maximum package depth (%s)</source>
+        <target>Maximum package depth (%s)</target>
+        <note>File: controllers/admin/AdminCarrierWizardController.php [Line: 429]</note>
+      </trans-unit>
+      <trans-unit id="324029d06c6bfe85489099f6e69b7637">
+        <source>Maximum package height</source>
+        <target>Maximum package height</target>
+        <note>File: controllers/admin/AdminCarriersController.php [Line: 350]</note>
+      </trans-unit>
+      <trans-unit id="65a0cd2bca5d0a980a5582a548d79900">
+        <source>Maximum package height (%s)</source>
+        <target>Maximum package height (%s)</target>
+        <note>File: controllers/admin/AdminCarrierWizardController.php [Line: 422]</note>
+      </trans-unit>
+      <trans-unit id="0cce6348a3d85f52a44d053f542afcbc">
+        <source>Maximum package weight</source>
+        <target>Maximum package weight</target>
+        <note>File: controllers/admin/AdminCarriersController.php [Line: 371]</note>
+      </trans-unit>
+      <trans-unit id="da5c987cbda47de7a6b09406b0840ec4">
+        <source>Maximum package weight (%s)</source>
+        <target>Maximum package weight (%s)</target>
+        <note>File: controllers/admin/AdminCarrierWizardController.php [Line: 436]</note>
+      </trans-unit>
+      <trans-unit id="3e86ececa46af50900510892f94c4ed6">
+        <source>Maximum package width</source>
+        <target>Maximum package width</target>
+        <note>File: controllers/admin/AdminCarriersController.php [Line: 357]</note>
+      </trans-unit>
+      <trans-unit id="9c3448f86be5ee19015f4ecce4bbd6fe">
+        <source>Maximum package width (%s)</source>
+        <target>Maximum package width (%s)</target>
+        <note>File: controllers/admin/AdminCarrierWizardController.php [Line: 415]</note>
+      </trans-unit>
+      <trans-unit id="a1d0ec6d56f8833a078b5a7ac4caf2d4">
+        <source>Minimum</source>
+        <target>Minimum</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/Type/CarrierRangesType.php [Line: 65]</note>
+      </trans-unit>
+      <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
+        <source>Name:</source>
+        <target>Name:</target>
+        <note>File: controllers/admin/AdminCartRulesController.php [Line: 866]</note>
+      </trans-unit>
+      <trans-unit id="11fbcc6cf7c92c543857f1431f72ddb6">
+        <source>Out of range behavior</source>
+        <target>Out of range behavior</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 126]</note>
+      </trans-unit>
+      <trans-unit id="082ebbb29b5ba59c293a00a55581679b">
+        <source>Out-of-range behavior</source>
+        <target>Out-of-range behavior</target>
+        <note>File: controllers/admin/AdminCarriersController.php [Line: 330]</note>
+      </trans-unit>
+      <trans-unit id="a8bbb000124c9697aa5d63e7e758b64d">
+        <source>Pick up in-store</source>
+        <target>Pick up in-store</target>
+        <note>File: classes/lang/KeysReference/CarrierLang.php [Line: 26]</note>
+      </trans-unit>
+      <trans-unit id="8e6c64a901e609a97351f999949d90d3">
+        <source>Please upload a valid jpeg file</source>
+        <target>Please upload a valid jpeg file</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 105]</note>
+      </trans-unit>
+      <trans-unit id="2ae7cf0472e9c76dee8c098e635b4c87">
+        <source>Price (VAT excl.)</source>
+        <target>Price (VAT excl.)</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/Type/CostsRangeType.php [Line: 65]</note>
+      </trans-unit>
+      <trans-unit id="87ba2ecc8b6915e8bd6f5089918229fd">
+        <source>Range</source>
+        <target>Range</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/Type/CostsRangeType.php [Line: 48]</note>
+      </trans-unit>
+      <trans-unit id="92711ef5b0215a076fef4a3abbfc2258">
+        <source>Ranges</source>
+        <target>Ranges</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form_ranges.tpl [Line: 27]</note>
+      </trans-unit>
+      <trans-unit id="7e172d83d9c63ed2e7692f73bd91c175">
+        <source>Set ranges and prices</source>
+        <target>Set ranges and prices</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 135]</note>
+      </trans-unit>
+      <trans-unit id="7589dfa9a5a899e9701335164c9ab520">
+        <source>Shipping and handling</source>
+        <target>Shipping and handling</target>
+        <note>File: controllers/admin/AdminCarriersController.php [Line: 284]</note>
+      </trans-unit>
       <trans-unit id="552a0d8c17d95d5dbdc0c28217024f5a">
         <source>Shipping cost</source>
         <target>Shipping cost</target>
-        <note>Line: 34</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig [Line: 34]</note>
+      </trans-unit>
+      <trans-unit id="9f06b28a40790c4c4df5739bce3c1eb0">
+        <source>Shipping costs</source>
+        <target>Shipping costs</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 110]</note>
+      </trans-unit>
+      <trans-unit id="756eb8cebeb953f5ae47235ff2e183b5">
+        <source>Shipping locations and costs</source>
+        <target>Shipping locations and costs</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/CarrierType.php [Line: 56]</note>
+      </trans-unit>
+      <trans-unit id="c7fde12988ccac6cc27cc2449fa655d4">
+        <source>Shipping size and weight</source>
+        <target>Shipping size and weight</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/SizeWeightSettings.php [Line: 138]</note>
+      </trans-unit>
+      <trans-unit id="2676f6da9c7200e6c6e1d510e5f4fc2a">
+        <source>Size and weight</source>
+        <target>Size and weight</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/CarrierType.php [Line: 59]</note>
+      </trans-unit>
+      <trans-unit id="e2fb9fa6091dd9f779b98efdf998a00a">
+        <source>Size, weight, and group access</source>
+        <target>Size, weight, and group access</target>
+        <note>File: controllers/admin/AdminCarrierWizardController.php [Line: 93]</note>
+      </trans-unit>
+      <trans-unit id="c8b462f779749d2e27abed2e9501b2bd">
+        <source>Speed grade</source>
+        <target>Speed grade</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 84]</note>
+      </trans-unit>
+      <trans-unit id="4b78ac8eb158840e9638a3aeb26c4a9d">
+        <source>Tax</source>
+        <target>Tax</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 85]</note>
+      </trans-unit>
+      <trans-unit id="f39b85edce7f4e450d01829da2b70c44">
+        <source>The file is too large. Allowed maximum size is 8MB.</source>
+        <target>The file is too large. Allowed maximum size is 8MB.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 106]</note>
+      </trans-unit>
+      <trans-unit id="343bf3bbd8b70fd2d04bb095ad2418f9">
+        <source>The shipping cost is calculated %1$s and the tax rule %2$s will be applied.</source>
+        <target>The shipping cost is calculated %1$s and the tax rule %2$s will be applied.</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl [Line: 59]</note>
+      </trans-unit>
+      <trans-unit id="b6fbfa40ef6e8d15ec69cb2da0dcd662">
+        <source>This carrier can deliver orders from %1$s to %2$s.</source>
+        <target>This carrier can deliver orders from %1$s to %2$s.</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl [Line: 57]</note>
+      </trans-unit>
+      <trans-unit id="2eee774899a3338d423fe081beea6451">
+        <source>This carrier is %1$s and the transit time is %2$s.</source>
+        <target>This carrier is %1$s and the transit time is %2$s.</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl [Line: 54]</note>
+      </trans-unit>
+      <trans-unit id="7f9508fc09a86a59fbcea84da182b12a">
+        <source>This carrier will be proposed for those delivery zones:</source>
+        <target>This carrier will be proposed for those delivery zones:</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl [Line: 34]</note>
+      </trans-unit>
+      <trans-unit id="0979779c4569141b98591d326d343ec2">
+        <source>Tracking URL</source>
+        <target>Tracking URL</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 112]</note>
+      </trans-unit>
+      <trans-unit id="5068c162a60b5859f973f701333f45c5">
+        <source>Tracking number</source>
+        <target>Tracking number</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/preview.html.twig [Line: 48]</note>
+      </trans-unit>
+      <trans-unit id="dde695268ea519ababd83f0ca3d274fc">
+        <source>Transit time</source>
+        <target>Transit time</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 72]</note>
+      </trans-unit>
+      <trans-unit id="07018153f387118b1dacafee609f13b1">
+        <source>Will be applied when the price is</source>
+        <target>Will be applied when the price is</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl [Line: 27]</note>
+      </trans-unit>
+      <trans-unit id="4c687ab170e51c6eaa65be3b621c7205">
+        <source>Will be applied when the weight is</source>
+        <target>Will be applied when the weight is</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl [Line: 28]</note>
+      </trans-unit>
+      <trans-unit id="4a6650b59d401453940437fead8f5880">
+        <source>You can not add a negative range</source>
+        <target>You can not add a negative range</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/Type/CarrierRangesType.php [Line: 69]</note>
+      </trans-unit>
+      <trans-unit id="dad1f8d794ee0dd7753fe75e73b78f31">
+        <source>Zones</source>
+        <target>Zones</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 76]</note>
+      </trans-unit>
+      <trans-unit id="b62c378b7439b8fac0cbbb678d8bf7d0">
+        <source>[1]Manage handling costs[/1]</source>
+        <target>[1]Manage handling costs[/1]</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 101]</note>
+      </trans-unit>
+      <trans-unit id="c41d3aae9e95b460f33a4890422e9e30">
+        <source>[1]Manage locations[/1]</source>
+        <target>[1]Manage locations[/1]</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 68]</note>
+      </trans-unit>
+      <trans-unit id="144240922dde7ebda925e78532ab654b">
+        <source>[1]Manage taxes[/1]</source>
+        <target>[1]Manage taxes[/1]</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 87]</note>
+      </trans-unit>
+      <trans-unit id="0ea5b002f2959687c7ff926ca01a47a3">
+        <source>according to the price</source>
+        <target>according to the price</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl [Line: 60]</note>
+      </trans-unit>
+      <trans-unit id="c2908ded92c5ab4bd42c02e608d0b981">
+        <source>according to the weight</source>
+        <target>according to the weight</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl [Line: 61]</note>
+      </trans-unit>
+      <trans-unit id="aa2d6e4f578eb0cfaba23beef76c2194">
+        <source>free</source>
+        <target>free</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl [Line: 55]</note>
+      </trans-unit>
+      <trans-unit id="19d3894f53ce79c3f836f26cf8a3be3b">
+        <source>inactive</source>
+        <target>inactive</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form_ranges.tpl [Line: 98]</note>
+      </trans-unit>
+      <trans-unit id="43aca442af5353cb54151e4a94fcd0b5">
+        <source>not free</source>
+        <target>not free</target>
+        <note>File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl [Line: 56]</note>
       </trans-unit>
     </body>
   </file>

@@ -5,10 +5,6 @@ import {expect} from 'chai';
 import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import pages
-// Import FO pages
-import {returnDetailsPage} from '@pages/FO/classic/myAccount/returnDetails';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -30,6 +26,7 @@ import {
   foClassicMyMerchandiseReturnsPage,
   foClassicMyOrderDetailsPage,
   foClassicMyOrderHistoryPage,
+  foClassicMyReturnDetailsPage,
   type Page,
   utilsDate,
   utilsFile,
@@ -274,23 +271,23 @@ describe('FO - Account : Check order return PDF', async () => {
 
       await foClassicMyMerchandiseReturnsPage.goToReturnDetailsPage(page);
 
-      const pageTitle = await returnDetailsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(returnDetailsPage.pageTitle);
+      const pageTitle = await foClassicMyReturnDetailsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyReturnDetailsPage.pageTitle);
     });
 
     it('should check the return notification', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkReturnNotification', baseContext);
 
-      const orderReturnNotifications = await returnDetailsPage.getAlertWarning(page);
-      expect(orderReturnNotifications).to.equal(returnDetailsPage.errorMessage);
+      const orderReturnNotifications = await foClassicMyReturnDetailsPage.getAlertWarning(page);
+      expect(orderReturnNotifications).to.equal(foClassicMyReturnDetailsPage.errorMessage);
     });
 
     it('should check the return details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkReturnDetails', baseContext);
 
-      const orderReturnInfo = await returnDetailsPage.getOrderReturnInfo(page);
+      const orderReturnInfo = await foClassicMyReturnDetailsPage.getOrderReturnInfo(page);
       expect(orderReturnInfo)
-        .to.contains(`on ${orderDate} ${returnDetailsPage.orderReturnCardBlock}`)
+        .to.contains(`on ${orderDate} ${foClassicMyReturnDetailsPage.orderReturnCardBlock}`)
         .and.to.contains(dataOrderReturnStatuses.waitingForConfirmation.name)
         .and.to.contains(`List of items to be returned: Product Quantity ${dataProducts.demo_1.name} `
           + `(Size: S - Color: White) Reference: ${dataProducts.demo_1.reference} 1`);

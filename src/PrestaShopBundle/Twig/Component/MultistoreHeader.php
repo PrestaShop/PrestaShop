@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Twig\Component;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShopBundle\Entity\ShopGroup;
@@ -48,6 +49,7 @@ class MultistoreHeader extends AbstractMultistoreHeader
         TranslatorInterface $translator,
         ColorBrightnessCalculator $colorBrightnessCalculator,
         LegacyContext $legacyContext,
+        EmployeeContext $employeeContext,
     ) {
         parent::__construct(
             $shopContext,
@@ -55,6 +57,7 @@ class MultistoreHeader extends AbstractMultistoreHeader
             $translator,
             $colorBrightnessCalculator,
             $legacyContext,
+            $employeeContext,
         );
     }
 
@@ -68,8 +71,19 @@ class MultistoreHeader extends AbstractMultistoreHeader
         if (!$this->isLockedToAllShopContext()) {
             $this->groupList = array_filter(
                 $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]),
-                static fn (ShopGroup $shopGroup) => !$shopGroup->getShops()->isEmpty()
+                function (ShopGroup $shopGroup) {
+                    return !$shopGroup->getShops()->isEmpty() && $this->employeeContext->hasAuthorizationOnShopGroup($shopGroup->getId());
+                },
             );
+
+            // Filter not allowed shops
+            foreach ($this->groupList as $group) {
+                foreach ($group->getShops() as $shop) {
+                    if (!$this->employeeContext->hasAuthorizationOnShop($shop->getId())) {
+                        $group->getshops()->removeElement($shop);
+                    }
+                }
+            }
         }
     }
 

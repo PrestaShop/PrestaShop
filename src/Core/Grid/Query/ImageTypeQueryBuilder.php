@@ -129,6 +129,7 @@ class ImageTypeQueryBuilder extends AbstractDoctrineQueryBuilder
             'manufacturers',
             'suppliers',
             'stores',
+            'theme_name',
         ];
 
         foreach ($criteria->getFilters() as $filterName => $filterValue) {
@@ -136,7 +137,7 @@ class ImageTypeQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ($filterName === 'name') {
+            if ($filterName === 'name' || $filterName === 'theme_name') {
                 $builder->andwhere('it.' . $filterName . ' like :' . $filterName);
                 $builder->setparameter($filterName, '%' . $filterValue . '%');
             } else {

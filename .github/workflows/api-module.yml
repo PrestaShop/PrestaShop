@@ -65,10 +65,6 @@ jobs:
       - name: Composer Install
         run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
-      - name: Update phpunit version
-        if: ${{ startsWith(matrix.php, '8.') }}
-        run: COMPOSER_PROCESS_TIMEOUT=600 composer update -w --ignore-platform-reqs --no-interaction phpunit/phpunit
-
       # Front assets are needed for the theme to be installed and image types to be inserted in DB, admin assets required
       # because some built files (like preload.html.twig) are included and cause errors when absent
       - name: Build all assets

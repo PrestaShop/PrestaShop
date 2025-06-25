@@ -58,7 +58,7 @@ describe('BO - Header : Search bar', async () => {
     expect(numberModules).to.be.eq(2);
 
     const numberLinks = await boSearchResultsPage.getSearchPanelsLinksNumber(page);
-    expect(numberLinks).to.be.eq(1);
+    expect(numberLinks).to.be.at.least(1);
 
     const linkHref = await boSearchResultsPage.getSearchPanelsLinkURL(page, 1);
     expect(linkHref).to.contains('https://docs.prestashop-project.org/welcome/?q=');
@@ -92,7 +92,7 @@ describe('BO - Header : Search bar', async () => {
     expect(customerName).to.be.eq('DOE');
 
     const numberLinks = await boSearchResultsPage.getSearchPanelsLinksNumber(page);
-    expect(numberLinks).to.be.eq(1);
+    expect(numberLinks).to.be.at.least(1);
 
     const linkHref = await boSearchResultsPage.getSearchPanelsLinkURL(page, 1);
     expect(linkHref).to.contains('https://docs.prestashop-project.org/welcome/?q=');

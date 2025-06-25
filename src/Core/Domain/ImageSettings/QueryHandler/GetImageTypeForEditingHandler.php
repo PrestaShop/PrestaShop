@@ -67,7 +67,8 @@ final class GetImageTypeForEditingHandler implements GetImageTypeForEditingHandl
             (bool) $imageType->isCategories(),
             (bool) $imageType->isManufacturers(),
             (bool) $imageType->isSuppliers(),
-            (bool) $imageType->isStores()
+            (bool) $imageType->isStores(),
+            $imageType->getThemeName(),
         );
     }
 }

@@ -17,6 +17,9 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
   let title: string;
 
   switch (featureFlag) {
+    case boFeatureFlagPage.featureFlagAdminAPIMultistore:
+      title = 'Admin API - Multistore';
+      break;
     case boFeatureFlagPage.featureFlagAdminAPI:
       title = 'Authorization server';
       break;

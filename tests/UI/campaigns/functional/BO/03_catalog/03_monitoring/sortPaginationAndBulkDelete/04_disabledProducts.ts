@@ -4,7 +4,6 @@ import testContext from '@utils/testContext';
 // Import common tests
 import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import bulkDeleteProductsTest from '@commonTests/BO/catalog/monitoring';
-import ImportDisabledProducts from '@data/import/disabledProducts';
 import {expect} from 'chai';
 
 import {
@@ -13,6 +12,7 @@ import {
   boMonitoringPage,
   boProductsCreatePage,
   type BrowserContext,
+  dataImportProductsDisabled,
   type Page,
   utilsCore,
   utilsFile,
@@ -40,14 +40,14 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of disabled produ
   const productsFile: string = 'products.csv';
 
   // Pre-condition: Import list of products
-  importFileTest(productsFile, ImportDisabledProducts.entity, `${baseContext}_preTest_1`);
+  importFileTest(productsFile, dataImportProductsDisabled.entity, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
     // Create csv file with all products data
-    await utilsFile.createCSVFile('.', productsFile, ImportDisabledProducts);
+    await utilsFile.createCSVFile('.', productsFile, dataImportProductsDisabled);
   });
 
   after(async () => {

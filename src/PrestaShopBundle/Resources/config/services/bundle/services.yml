@@ -95,6 +95,7 @@ services:
       $container: '@service_container'
     calls:
       - [ 'setUserTokenManager', [ '@PrestaShopBundle\Security\Admin\UserTokenManager' ] ]
+      - [ 'setAnonymousRouteProvider', [ '@PrestaShopBundle\Routing\AnonymousRouteProvider' ] ]
 
   PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker:
     arguments:

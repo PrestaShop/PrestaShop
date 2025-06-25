@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\StatusColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\ThemeChoiceType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -87,6 +88,13 @@ final class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('ID', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'id_image_type',
+                    ])
+            )
+            ->add(
+                (new DataColumn('theme_name'))
+                    ->setName($this->trans('Theme', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'theme_name',
                     ])
             )
             ->add(
@@ -208,6 +216,10 @@ final class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'required' => false,
                     ])
                     ->setAssociatedColumn('id_image_type')
+            )
+            ->add(
+                (new Filter('theme_name', ThemeChoiceType::class))
+                    ->setAssociatedColumn('theme_name')
             )
             ->add(
                 (new Filter('name', TextType::class))

@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Twig\Component;
 use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -50,6 +51,7 @@ class MultistoreProductHeader extends AbstractMultistoreHeader
         TranslatorInterface $translator,
         ColorBrightnessCalculator $colorBrightnessCalculator,
         LegacyContext $legacyContext,
+        EmployeeContext $employeeContext,
     ) {
         parent::__construct(
             $shopContext,
@@ -57,6 +59,7 @@ class MultistoreProductHeader extends AbstractMultistoreHeader
             $translator,
             $colorBrightnessCalculator,
             $legacyContext,
+            $employeeContext,
         );
     }
 
@@ -81,6 +84,10 @@ class MultistoreProductHeader extends AbstractMultistoreHeader
 
             /** @var ShopGroup $shopGroup */
             foreach ($groupList as $shopGroup) {
+                if (!$this->employeeContext->hasAuthorizationOnShopGroup($shopGroup->getId())) {
+                    continue;
+                }
+
                 /** @var Shop $shop */
                 foreach ($shopGroup->getShops() as $shop) {
                     if (!in_array($shop->getId(), $productShopIds)) {
@@ -89,6 +96,15 @@ class MultistoreProductHeader extends AbstractMultistoreHeader
                 }
                 if (!$shopGroup->getShops()->isEmpty()) {
                     $this->groupList[] = $shopGroup;
+                }
+            }
+
+            // Filter not allowed shops
+            foreach ($this->groupList as $group) {
+                foreach ($group->getShops() as $shop) {
+                    if (!$this->employeeContext->hasAuthorizationOnShop($shop->getId())) {
+                        $group->getshops()->removeElement($shop);
+                    }
                 }
             }
         }

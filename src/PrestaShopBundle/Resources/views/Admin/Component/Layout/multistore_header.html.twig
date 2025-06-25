@@ -71,6 +71,7 @@
 
             <ul class="multishop-modal-group-list js-multishop-scrollbar">
               {% block all_shops_item %}
+                {% if this.allShopsAllowed %}
                 <li class="multishop-modal-all multishop-modal-item">
                   {% if this.isAllShopContext %}
                     <i class="material-icons">check</i>
@@ -81,6 +82,7 @@
                     <span>{{ 'All stores'|trans({}, 'Admin.Global') }}</span>
                   </a>
                 </li>
+                {% endif %}
               {% endblock %}
               {% for group in this.groupList %}
                 <li class="multishop-modal-group-item multishop-modal-item{% if loop.first %} first-group-item{% endif %}">

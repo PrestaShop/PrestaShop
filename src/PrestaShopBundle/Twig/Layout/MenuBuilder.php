@@ -35,6 +35,7 @@ use PrestaShopBundle\Routing\Converter\LegacyParametersConverter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tab as LegacyTab;
 
 class MenuBuilder
 {
@@ -150,7 +151,13 @@ class MenuBuilder
      */
     public function buildNavigationTabs(Tab $tab): array
     {
-        $currentLevelTabs = $this->tabRepository->findByParentId($tab->getIdParent());
+        // Get siblings tabs, filter them based on the employee authorizations
+        $currentLevelTabs = array_filter($this->tabRepository->findByParentId($tab->getIdParent()), function (Tab $tab) {
+            return LegacyTab::checkTabRights($tab->getId())
+                && $tab->isEnabled()
+                && $tab->getClassName() !== 'AdminCarrierWizard';
+        });
+
         $navigationTabs = [];
 
         /* @var $currentLevelTab Tab */

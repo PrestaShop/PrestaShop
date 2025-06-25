@@ -1,8 +1,8 @@
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
+
 import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import bulkDeleteProductsTest from '@commonTests/BO/catalog/monitoring';
-import ImportProductsWithoutQuantities from '@data/import/productsWithoutQuantities';
-import {expect} from 'chai';
 
 import {
   boDashboardPage,
@@ -10,6 +10,7 @@ import {
   boMonitoringPage,
   boProductsCreatePage,
   type BrowserContext,
+  dataImportProductsWithoutQuantities,
   type Page,
   utilsCore,
   utilsFile,
@@ -37,14 +38,14 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
   const productsFile: string = 'products.csv';
 
   // Pre-condition: Import list of products
-  importFileTest(productsFile, ImportProductsWithoutQuantities.entity, `${baseContext}_preTest_1`);
+  importFileTest(productsFile, dataImportProductsWithoutQuantities.entity, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
     // Create csv file with all products data
-    await utilsFile.createCSVFile('.', productsFile, ImportProductsWithoutQuantities);
+    await utilsFile.createCSVFile('.', productsFile, dataImportProductsWithoutQuantities);
   });
 
   after(async () => {

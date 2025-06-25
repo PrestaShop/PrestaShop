@@ -1,15 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import {pricesDropPage} from '@pages/FO/classic/pricesDrop';
-import {newProductsPage} from '@pages/FO/classic/newProducts';
-
 import {expect} from 'chai';
+
 import {
   type BrowserContext,
   foClassicCategoryPage,
   foClassicHomePage,
+  foClassicNewProductsPage,
+  foClassicPricesDropPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -118,8 +115,8 @@ describe('FO - Home Page : Display some products', async () => {
 
       await foClassicHomePage.goToAllProductsBlockPage(page, 2);
 
-      const pageTitle = await pricesDropPage.getPageTitle(page);
-      expect(pageTitle).to.equal(pricesDropPage.pageTitle);
+      const pageTitle = await foClassicPricesDropPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicPricesDropPage.pageTitle);
     });
 
     it('should go to home page', async function () {
@@ -152,8 +149,8 @@ describe('FO - Home Page : Display some products', async () => {
 
       await foClassicHomePage.goToAllProductsBlockPage(page, 3);
 
-      const pageTitle = await newProductsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(newProductsPage.pageTitle);
+      const pageTitle = await foClassicNewProductsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicNewProductsPage.pageTitle);
     });
 
     it('should go to home page', async function () {

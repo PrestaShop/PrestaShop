@@ -63,6 +63,11 @@ class OrderSlipCreator
     private $translator;
 
     /**
+     * @var OrderSlip
+     */
+    private $orderSlipCreated;
+
+    /**
      * @param ConfigurationInterface $configuration
      * @param TranslatorInterface $translator
      */
@@ -109,42 +114,45 @@ class OrderSlipCreator
                 'order' => $order,
                 'productList' => $orderRefundSummary->getProductRefunds(),
                 'qtyList' => $fullQuantityList,
+                'orderSlipCreated' => $this->orderSlipCreated,
             ], null, false, true, false, $order->id_shop);
 
             $customer = new Customer((int) $order->id_customer);
 
-            // @todo: use private method to send mail
-            $params = [
-                '{lastname}' => $customer->lastname,
-                '{firstname}' => $customer->firstname,
-                '{id_order}' => $order->id,
-                '{order_name}' => $order->getUniqReference(),
-            ];
+            if (!empty($customer->email)) {
+                // @todo: use private method to send mail
+                $params = [
+                    '{lastname}' => $customer->lastname,
+                    '{firstname}' => $customer->firstname,
+                    '{id_order}' => $order->id,
+                    '{order_name}' => $order->getUniqReference(),
+                ];
 
-            $orderLanguage = $order->getAssociatedLanguage();
+                $orderLanguage = $order->getAssociatedLanguage();
 
-            // @todo: use a dedicated Mail class (see #13945)
-            // @todo: remove this @and have a proper error handling
-            @Mail::Send(
-                (int) $orderLanguage->getId(),
-                'credit_slip',
-                $this->translator->trans(
-                    'New credit slip regarding your order',
-                    [],
-                    'Emails.Subject',
-                    $orderLanguage->locale
-                ),
-                $params,
-                $customer->email,
-                $customer->firstname . ' ' . $customer->lastname,
-                null,
-                null,
-                null,
-                null,
-                _PS_MAIL_DIR_,
-                true,
-                (int) $order->id_shop
-            );
+                // @todo: use a dedicated Mail class (see #13945)
+                // @todo: remove this @and have a proper error handling
+                @Mail::Send(
+                    (int) $orderLanguage->getId(),
+                    'credit_slip',
+                    $this->translator->trans(
+                        'New credit slip regarding your order',
+                        [],
+                        'Emails.Subject',
+                        $orderLanguage->locale
+                    ),
+                    $params,
+                    $customer->email,
+                    $customer->firstname . ' ' . $customer->lastname,
+                    null,
+                    null,
+                    null,
+                    null,
+                    _PS_MAIL_DIR_,
+                    true,
+                    (int) $order->id_shop
+                );
+            }
         } else {
             throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_AMOUNT);
         }
@@ -328,6 +336,8 @@ class OrderSlipCreator
         }
 
         $res = true;
+
+        $this->orderSlipCreated = $orderSlip;
 
         foreach ($product_list as $product) {
             $res &= $this->addProductOrderSlip((int) $orderSlip->id, $product);

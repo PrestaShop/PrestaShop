@@ -47,6 +47,7 @@ class EditableImageTypeTest extends TestCase
             true,
             true,
             true,
+            'theme_name',
         );
 
         self::assertSame($imageTypeId, $instance->getImageTypeId());
@@ -58,5 +59,6 @@ class EditableImageTypeTest extends TestCase
         self::assertTrue($instance->isManufacturers());
         self::assertTrue($instance->isSuppliers());
         self::assertTrue($instance->isStores());
+        self::assertSame('theme_name', $instance->getThemeName());
     }
 }

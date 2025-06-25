@@ -130,6 +130,7 @@
         <p class="mb-0">
           <strong>{{ 'PrestaShop version:'|trans }}</strong> {{ system.shop.version }}
         </p>
+        {{ renderhook('displayAdminStoreInformation') }}
         <p class="mb-0">
           <strong>{{ 'Shop URL:'|trans }}</strong> {{ system.shop.url }}
         </p>

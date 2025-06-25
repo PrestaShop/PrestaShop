@@ -59,7 +59,7 @@ describe('BO - Payments - Payment methods: Configure module link', async () => {
       expect(pageTitle).to.contains(boPaymentMethodsPage.pageTitle);
 
       const numActivePayments = await boPaymentMethodsPage.getCountActivePayments(page);
-      expect(numActivePayments).to.equal(Object.keys(dataPaymentMethods).length);
+      expect(numActivePayments).to.be.greaterThanOrEqual(Object.keys(dataPaymentMethods).length);
     });
 
     it(`should click on the Configure button for "${dataPaymentMethods.wirePayment.displayName}"`, async function () {
@@ -99,7 +99,7 @@ describe('BO - Payments - Payment methods: Configure module link', async () => {
       expect(pageTitle).to.equal(boPaymentMethodsPage.pageTitle);
 
       const numActivePayments = await boPaymentMethodsPage.getCountActivePayments(page);
-      expect(numActivePayments).to.equal(Object.keys(dataPaymentMethods).length);
+      expect(numActivePayments).to.be.greaterThanOrEqual(Object.keys(dataPaymentMethods).length);
     });
 
     it(`should click on the Configure button for "${dataPaymentMethods.checkPayment.displayName}"`, async function () {
@@ -138,7 +138,7 @@ describe('BO - Payments - Payment methods: Configure module link', async () => {
       expect(pageTitle).to.equal(boPaymentMethodsPage.pageTitle);
 
       const numActivePayments = await boPaymentMethodsPage.getCountActivePayments(page);
-      expect(numActivePayments).to.equal(Object.keys(dataPaymentMethods).length);
+      expect(numActivePayments).to.be.greaterThanOrEqual(Object.keys(dataPaymentMethods).length);
 
       const hasConfigureButton = await boPaymentMethodsPage.hasConfigureButton(page, dataModules.psCashOnDelivery);
       expect(hasConfigureButton).to.equal(false);

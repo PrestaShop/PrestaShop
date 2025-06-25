@@ -1,13 +1,10 @@
-// Import utils
 import testContext from '@utils/testContext';
-
-// Import pages
-import installPage from '@pages/install';
-
 import {expect} from 'chai';
+
 import {
   type BrowserContext,
   foClassicHomePage,
+  installPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';

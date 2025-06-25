@@ -52,6 +52,9 @@ Datas::getInstance()->getAndCheckArgs($argv);
 require_once dirname(__FILE__).'/init.php';
 require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
 
+define('_PS_APP_ID_', AdminKernel::APP_ID);
+PrestaShop\PrestaShop\Core\Util\CacheClearLocker::waitUntilUnlocked(_PS_ENV_, _PS_APP_ID_);
+
 try {
     require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';
     InstallControllerConsole::execute($argc, $argv);

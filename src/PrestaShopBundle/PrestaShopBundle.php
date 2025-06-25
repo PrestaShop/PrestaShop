@@ -27,6 +27,7 @@
 namespace PrestaShopBundle;
 
 use AppKernel;
+use PrestaShopBundle\DependencyInjection\Compiler\ApiPlatformCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryRegisterPass;
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
@@ -93,5 +94,6 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new GridDefinitionServiceIdsCollectorPass());
         $container->addCompilerPass(new IdentifiableObjectFormTypesCollectorPass());
         $container->addCompilerPass(new TestEnvironmentPass());
+        $container->addCompilerPass(new ApiPlatformCompilerPass());
     }
 }

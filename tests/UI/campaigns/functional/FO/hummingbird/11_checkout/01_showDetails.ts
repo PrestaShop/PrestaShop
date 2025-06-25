@@ -65,9 +65,10 @@ describe('FO - Checkout : Show details', async () => {
 
       await foHummingbirdHomePage.quickViewProduct(page, 1);
       await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
+      await foHummingbirdModalBlockCartPage.closeBlockCartModal(page);
 
-      const isModalClosed = await foHummingbirdModalBlockCartPage.closeBlockCartModal(page);
-      expect(isModalClosed).to.eq(true);
+      const isModalVisible = await foHummingbirdModalBlockCartPage.isBlockCartModalVisible(page);
+      expect(isModalVisible).to.eq(false);
     });
 
     it('should add the third product to cart', async function () {

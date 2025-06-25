@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
@@ -86,17 +87,27 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface,
     public function getChoices(array $options = [])
     {
         $orderStates = $this->orderStateDataProvider->getOrderStates($this->langId);
-        $choices = [];
 
-        foreach ($orderStates as $orderState) {
-            if ($orderState['deleted'] == 1 && (empty($options['current_state']) || $options['current_state'] != $orderState['id_order_state'])) {
-                continue;
+        // Filters on non-deleted order state
+        // or deleted & active order state
+        $orderStates = array_filter($orderStates, function (array $item) use ($options) {
+            if ($item['deleted'] == 1) {
+                if (!empty($options['current_state']) && $options['current_state'] != $item['id_order_state']) {
+                    return false;
+                }
             }
-            $orderState['name'] .= $orderState['deleted'] == 1 ? ' ' . $this->translator->trans('(deleted)', [], 'Admin.Global') : '';
-            $choices[$orderState['name']] = $orderState['id_order_state'];
-        }
 
-        return $choices;
+            return true;
+        });
+
+        // Modify name for deleted order states
+        $orderStates = $this->updateOrderStatesNames($orderStates);
+
+        return FormChoiceFormatter::formatFormChoices(
+            $orderStates,
+            'id_order_state',
+            'name'
+        );
     }
 
     /**
@@ -107,14 +118,28 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface,
     public function getChoicesAttributes()
     {
         $orderStates = $this->orderStateDataProvider->getOrderStates($this->langId);
+        $orderStates = $this->updateOrderStatesNames($orderStates);
         $attrs = [];
 
         foreach ($orderStates as $orderState) {
-            $orderState['name'] .= $orderState['deleted'] == 1 ? ' ' . $this->translator->trans('(deleted)', [], 'Admin.Global') : '';
             $attrs[$orderState['name']]['data-background-color'] = $orderState['color'];
             $attrs[$orderState['name']]['data-is-bright'] = $this->colorBrightnessCalculator->isBright($orderState['color']);
         }
 
         return $attrs;
+    }
+
+    /**
+     * Update name for deleted order states
+     *
+     * @return array
+     */
+    protected function updateOrderStatesNames(array $orderStates): array
+    {
+        return array_map(function (array $item) {
+            $item['name'] .= $item['deleted'] == 1 ? ' ' . $this->translator->trans('(deleted)', [], 'Admin.Global') : '';
+
+            return $item;
+        }, $orderStates);
     }
 }

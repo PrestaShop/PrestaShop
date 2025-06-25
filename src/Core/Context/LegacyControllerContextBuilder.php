@@ -90,7 +90,7 @@ class LegacyControllerContextBuilder
             $table,
             $this->requestStack->getCurrentRequest() ?: Request::createFromGlobals(),
             $employeeLanguageId,
-            $this->shopContext->getBaseURI(),
+            $this->shopContext->getPhysicalUri(),
             $this->adminFolderName,
             $this->languageContext->isRTL(),
             $this->psVersion,

@@ -1,12 +1,8 @@
-// Import utils
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 // Import commonTests
 import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
-// Import FO pages
-import gdprPersonalDataPage from '@pages/FO/hummingbird/myAccount/gdprPersonalData';
 
 import {
   boCustomerServicePage,
@@ -20,6 +16,7 @@ import {
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdMyAccountPage,
+  foHummingbirdMyGDPRPersonalDataPage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -98,14 +95,14 @@ describe('FO - Account : Contact us on GDPR page', async () => {
 
       await foHummingbirdMyAccountPage.goToMyGDPRPersonalDataPage(page);
 
-      const pageTitle = await gdprPersonalDataPage.getPageTitle(page);
-      expect(pageTitle).to.equal(gdprPersonalDataPage.pageTitle);
+      const pageTitle = await foHummingbirdMyGDPRPersonalDataPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdMyGDPRPersonalDataPage.pageTitle);
     });
 
     it('should click on \'Contact page\' link from Rectification & Erasure requests block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToContactUsPage', baseContext);
 
-      await gdprPersonalDataPage.goToContactUsPage(page);
+      await foHummingbirdMyGDPRPersonalDataPage.goToContactUsPage(page);
 
       const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdContactUsPage.pageTitle);

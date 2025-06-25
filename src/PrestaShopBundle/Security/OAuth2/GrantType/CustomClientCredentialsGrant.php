@@ -43,12 +43,15 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class CustomClientCredentialsGrant extends ClientCredentialsGrant
 {
+    /**
+     * @return AccessTokenEntityInterface
+     */
     protected function issueAccessToken(
         DateInterval $accessTokenTTL,
         ClientEntityInterface $client,
-        ?string $userIdentifier,
+        $userIdentifier,
         array $scopes = []
-    ): AccessTokenEntityInterface {
+    ) {
         /** @var Client $client */
         if ($client->getLifetime() !== null) {
             $accessTokenTTL = DateInterval::createFromDateString($client->getLifetime() . ' seconds');
@@ -73,7 +76,7 @@ class CustomClientCredentialsGrant extends ClientCredentialsGrant
      *
      * @throws OAuthServerException
      */
-    protected function getRequestParameter(string $parameter, ServerRequestInterface $request, ?string $default = null): ?string
+    protected function getRequestParameter($parameter, ServerRequestInterface $request, $default = null)
     {
         // Any other parameter is not modified
         if ($parameter !== 'scope') {

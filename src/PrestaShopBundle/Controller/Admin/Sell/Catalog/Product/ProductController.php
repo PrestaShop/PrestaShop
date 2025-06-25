@@ -59,6 +59,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Exception\MultiShopAccessDeniedException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
@@ -550,7 +551,12 @@ class ProductController extends PrestaShopAdminController
     public function deleteFromAllShopsAction(int $productId): Response
     {
         try {
-            $this->dispatchCommand(new DeleteProductCommand($productId, ShopConstraint::allShops()));
+            $shopConstraint = ShopConstraint::allShops();
+            if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+                throw new MultiShopAccessDeniedException($shopConstraint);
+            }
+
+            $this->dispatchCommand(new DeleteProductCommand($productId, $shopConstraint));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
@@ -572,7 +578,12 @@ class ProductController extends PrestaShopAdminController
     public function deleteFromShopAction(int $productId, int $shopId): Response
     {
         try {
-            $this->dispatchCommand(new DeleteProductCommand($productId, ShopConstraint::shop($shopId)));
+            $shopConstraint = ShopConstraint::shop($shopId);
+            if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+                throw new MultiShopAccessDeniedException($shopConstraint);
+            }
+
+            $this->dispatchCommand(new DeleteProductCommand($productId, $shopConstraint));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
@@ -594,7 +605,12 @@ class ProductController extends PrestaShopAdminController
     public function deleteFromShopGroupAction(int $productId, int $shopGroupId): Response
     {
         try {
-            $this->dispatchCommand(new DeleteProductCommand($productId, ShopConstraint::shopGroup($shopGroupId)));
+            $shopConstraint = ShopConstraint::shopGroup($shopGroupId);
+            if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+                throw new MultiShopAccessDeniedException($shopConstraint);
+            }
+
+            $this->dispatchCommand(new DeleteProductCommand($productId, $shopConstraint));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
@@ -614,7 +630,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.')]
     public function bulkDeleteFromShopAction(Request $request, int $shopId): Response
     {
-        return $this->bulkDeleteByShopConstraint($request, ShopConstraint::shop($shopId));
+        $shopConstraint = ShopConstraint::shop($shopId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkDeleteByShopConstraint($request, $shopConstraint);
     }
 
     /**
@@ -625,7 +646,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.')]
     public function bulkDeleteFromShopGroupAction(Request $request, int $shopGroupId): Response
     {
-        return $this->bulkDeleteByShopConstraint($request, ShopConstraint::shopGroup($shopGroupId));
+        $shopConstraint = ShopConstraint::shopGroup($shopGroupId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkDeleteByShopConstraint($request, $shopConstraint);
     }
 
     /**
@@ -636,7 +662,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.')]
     public function duplicateAllShopsAction(int $productId): Response
     {
-        return $this->duplicateByShopConstraint($productId, ShopConstraint::allShops());
+        $shopConstraint = ShopConstraint::allShops();
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->duplicateByShopConstraint($productId, $shopConstraint);
     }
 
     /**
@@ -648,7 +679,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.')]
     public function duplicateShopAction(int $productId, int $shopId): Response
     {
-        return $this->duplicateByShopConstraint($productId, ShopConstraint::shop($shopId));
+        $shopConstraint = ShopConstraint::shop($shopId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->duplicateByShopConstraint($productId, $shopConstraint);
     }
 
     /**
@@ -660,7 +696,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.')]
     public function duplicateShopGroupAction(int $productId, int $shopGroupId): Response
     {
-        return $this->duplicateByShopConstraint($productId, ShopConstraint::shopGroup($shopGroupId));
+        $shopConstraint = ShopConstraint::shopGroup($shopGroupId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->duplicateByShopConstraint($productId, $shopConstraint);
     }
 
     /**
@@ -674,7 +715,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index')]
     public function toggleStatusForShopAction(int $productId, int $shopId): JsonResponse
     {
-        return $this->toggleProductStatusByShopConstraint($productId, ShopConstraint::shop($shopId));
+        $shopConstraint = ShopConstraint::shop($shopId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->toggleProductStatusByShopConstraint($productId, $shopConstraint);
     }
 
     /**
@@ -687,7 +733,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index')]
     public function toggleStatusForAllShopsAction(int $productId): JsonResponse
     {
-        return $this->toggleProductStatusByShopConstraint($productId, ShopConstraint::allShops());
+        $shopConstraint = ShopConstraint::allShops();
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->toggleProductStatusByShopConstraint($productId, $shopConstraint);
     }
 
     /**
@@ -700,7 +751,30 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index')]
     public function enableForAllShopsAction(int $productId): RedirectResponse
     {
-        return $this->updateProductStatusByShopConstraint($productId, true, ShopConstraint::allShops());
+        $shopConstraint = ShopConstraint::allShops();
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->updateProductStatusByShopConstraint($productId, true, $shopConstraint);
+    }
+
+    /**
+     * Disable product status for all shops and redirect to product list.
+     *
+     * @param int $productId
+     *
+     * @return RedirectResponse
+     */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index')]
+    public function disableForAllShopsAction(int $productId): RedirectResponse
+    {
+        $shopConstraint = ShopConstraint::allShops();
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->updateProductStatusByShopConstraint($productId, false, $shopConstraint);
     }
 
     /**
@@ -714,7 +788,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index')]
     public function enableForShopGroupAction(int $productId, int $shopGroupId): RedirectResponse
     {
-        return $this->updateProductStatusByShopConstraint($productId, true, ShopConstraint::shopGroup($shopGroupId));
+        $shopConstraint = ShopConstraint::shopGroup($shopGroupId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->updateProductStatusByShopConstraint($productId, true, $shopConstraint);
     }
 
     /**
@@ -728,20 +807,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index')]
     public function disableForShopGroupAction(int $productId, int $shopGroupId): RedirectResponse
     {
-        return $this->updateProductStatusByShopConstraint($productId, false, ShopConstraint::shopGroup($shopGroupId));
-    }
+        $shopConstraint = ShopConstraint::shopGroup($shopGroupId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
 
-    /**
-     * Disable product status for all shops and redirect to product list.
-     *
-     * @param int $productId
-     *
-     * @return RedirectResponse
-     */
-    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index')]
-    public function disableForAllShopsAction(int $productId): RedirectResponse
-    {
-        return $this->updateProductStatusByShopConstraint($productId, false, ShopConstraint::allShops());
+        return $this->updateProductStatusByShopConstraint($productId, false, $shopConstraint);
     }
 
     /**
@@ -831,7 +902,12 @@ class ProductController extends PrestaShopAdminController
     public function bulkDeleteFromAllShopsAction(Request $request): JsonResponse
     {
         try {
-            $this->bulkDeleteByShopConstraint($request, ShopConstraint::allShops());
+            $shopConstraint = ShopConstraint::allShops();
+            if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+                throw new MultiShopAccessDeniedException($shopConstraint);
+            }
+
+            $this->bulkDeleteByShopConstraint($request, $shopConstraint);
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
@@ -857,7 +933,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index', message: 'You do not have permission to edit this.')]
     public function bulkEnableAllShopsAction(Request $request): JsonResponse
     {
-        return $this->bulkUpdateProductStatus($request, true, ShopConstraint::allShops());
+        $shopConstraint = ShopConstraint::allShops();
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkUpdateProductStatus($request, true, $shopConstraint);
     }
 
     /**
@@ -871,7 +952,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index', message: 'You do not have permission to edit this.')]
     public function bulkEnableShopAction(Request $request, int $shopId): JsonResponse
     {
-        return $this->bulkUpdateProductStatus($request, true, ShopConstraint::shop($shopId));
+        $shopConstraint = ShopConstraint::shop($shopId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkUpdateProductStatus($request, true, $shopConstraint);
     }
 
     /**
@@ -885,7 +971,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index', message: 'You do not have permission to edit this.')]
     public function bulkEnableShopGroupAction(Request $request, int $shopGroupId): JsonResponse
     {
-        return $this->bulkUpdateProductStatus($request, true, ShopConstraint::shopGroup($shopGroupId));
+        $shopConstraint = ShopConstraint::shopGroup($shopGroupId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkUpdateProductStatus($request, true, $shopConstraint);
     }
 
     /**
@@ -898,7 +989,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index', message: 'You do not have permission to edit this.')]
     public function bulkDisableAllShopsAction(Request $request): JsonResponse
     {
-        return $this->bulkUpdateProductStatus($request, false, ShopConstraint::allShops());
+        $shopConstraint = ShopConstraint::allShops();
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkUpdateProductStatus($request, false, $shopConstraint);
     }
 
     /**
@@ -912,7 +1008,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index', message: 'You do not have permission to edit this.')]
     public function bulkDisableShopAction(Request $request, int $shopId): JsonResponse
     {
-        return $this->bulkUpdateProductStatus($request, false, ShopConstraint::shop($shopId));
+        $shopConstraint = ShopConstraint::shop($shopId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkUpdateProductStatus($request, false, $shopConstraint);
     }
 
     /**
@@ -926,7 +1027,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index', message: 'You do not have permission to edit this.')]
     public function bulkDisableShopGroupAction(Request $request, int $shopGroupId): JsonResponse
     {
-        return $this->bulkUpdateProductStatus($request, false, ShopConstraint::shopGroup($shopGroupId));
+        $shopConstraint = ShopConstraint::shopGroup($shopGroupId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkUpdateProductStatus($request, false, $shopConstraint);
     }
 
     /**
@@ -939,7 +1045,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index', message: 'You do not have permission to edit this.')]
     public function bulkDuplicateAllShopsAction(Request $request): JsonResponse
     {
-        return $this->bulkDuplicateByShopConstraint($request, ShopConstraint::allShops());
+        $shopConstraint = ShopConstraint::allShops();
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkDuplicateByShopConstraint($request, $shopConstraint);
     }
 
     /**
@@ -953,7 +1064,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index', message: 'You do not have permission to edit this.')]
     public function bulkDuplicateShopAction(Request $request, int $shopId): JsonResponse
     {
-        return $this->bulkDuplicateByShopConstraint($request, ShopConstraint::shop($shopId));
+        $shopConstraint = ShopConstraint::shop($shopId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkDuplicateByShopConstraint($request, $shopConstraint);
     }
 
     /**
@@ -967,7 +1083,12 @@ class ProductController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_products_index', message: 'You do not have permission to edit this.')]
     public function bulkDuplicateShopGroupAction(Request $request, int $shopGroupId): JsonResponse
     {
-        return $this->bulkDuplicateByShopConstraint($request, ShopConstraint::shopGroup($shopGroupId));
+        $shopConstraint = ShopConstraint::shopGroup($shopGroupId);
+        if (!$this->hasAuthorizationByShopConstraint($shopConstraint)) {
+            throw new MultiShopAccessDeniedException($shopConstraint);
+        }
+
+        return $this->bulkDuplicateByShopConstraint($request, $shopConstraint);
     }
 
     /**
@@ -1134,6 +1255,7 @@ class ProductController extends PrestaShopAdminController
             'taxEnabled' => (bool) $configuration->get('PS_TAX'),
             'stockEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
             'isMultistoreActive' => $this->getShopContext()->isMultiShopEnabled(),
+            'layoutTitle' => $this->trans('Product', [], 'Admin.Global'),
         ]);
     }
 

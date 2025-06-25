@@ -109,6 +109,16 @@
 				$('#country').val(data.id_country);
 				$('#state').val(data.id_state);
 
+				const headerInfosHeight = $('#header_infos').length ? $('#header_infos').outerHeight() : 0;
+				const pageHeadHeight = $('.page-head').length ? $('.page-head').outerHeight() : 0;
+			
+				const $target = $('#tax_rule_form');
+				if ($target.length) {
+					$('html, body').animate({
+						scrollTop: $target.offset().top - headerInfosHeight + pageHeadHeight
+					}, 500);
+				}
+
 				zipcode = 0;
 				if (data.zipcode_from != 0)
 				{

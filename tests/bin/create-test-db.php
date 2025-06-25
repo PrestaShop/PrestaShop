@@ -63,6 +63,11 @@ $modelDatabase->createDatabase(_DB_SERVER_, _DB_NAME_, _DB_USER_, _DB_PASSWD_);
 
 $install->clearDatabase(false);
 checkInstallationErrors($install, $logger);
+
+// Clear configuration in case DB was installed when this script is launched or else it keeps cached data that prevents
+// updating the database
+Configuration::resetStaticCache();
+
 if (!$install->installDatabase(true)) {
     exit(1);
 }

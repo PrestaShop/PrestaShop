@@ -87,17 +87,21 @@ class ImageTypeCore extends ObjectModel
      *
      * @param string|null $type Image type
      * @param bool $orderBySize
+     * @param string|null $theme Theme name
      *
      * @return array Image type definitions
      *
      * @throws PrestaShopDatabaseException
      */
-    public static function getImagesTypes($type = null, $orderBySize = false)
+    public static function getImagesTypes($type = null, $orderBySize = false, $theme = null)
     {
-        if (!isset(self::$images_types_cache[$type])) {
+        if (!isset(self::$images_types_cache[$type][$theme])) {
             $where = 'WHERE 1';
             if (!empty($type)) {
                 $where .= ' AND `' . bqSQL($type) . '` = 1 ';
+            }
+            if (null !== $theme) {
+                $where .= ' AND `theme_name` = \'' . pSQL($theme) . '\' OR `theme_name` IS NULL';
             }
 
             if ($orderBySize) {
@@ -106,10 +110,10 @@ class ImageTypeCore extends ObjectModel
                 $query = 'SELECT * FROM `' . _DB_PREFIX_ . 'image_type` ' . $where . ' ORDER BY `name` ASC';
             }
 
-            self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
+            self::$images_types_cache[$type][$theme] = Db::getInstance()->executeS($query);
         }
 
-        return self::$images_types_cache[$type];
+        return self::$images_types_cache[$type][$theme];
     }
 
     /**

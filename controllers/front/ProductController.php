@@ -589,7 +589,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $this->context->smarty->assign([
             'no_tax' => !Configuration::get('PS_TAX') || !$tax,
-            'tax_enabled' => Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC'),
+            'tax_enabled' => Configuration::get('PS_TAX'),
             'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
         ]);
     }

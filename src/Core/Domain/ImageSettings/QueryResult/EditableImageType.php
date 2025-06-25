@@ -44,6 +44,7 @@ class EditableImageType
         private readonly bool $manufacturers,
         private readonly bool $suppliers,
         private readonly bool $stores,
+        private readonly ?string $themeName,
     ) {
     }
 
@@ -90,5 +91,10 @@ class EditableImageType
     public function isStores(): bool
     {
         return $this->stores;
+    }
+
+    public function getThemeName(): ?string
+    {
+        return $this->themeName;
     }
 }

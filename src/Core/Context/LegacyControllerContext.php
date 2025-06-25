@@ -134,7 +134,7 @@ class LegacyControllerContext
         public readonly string $table,
         protected readonly Request $request,
         protected readonly int $employeeLanguageId,
-        protected readonly string $baseUri,
+        protected readonly string $physicalUri,
         protected readonly string $adminFolderName,
         protected readonly bool $isLanguageRTL,
         protected readonly string $psVersion,
@@ -268,8 +268,8 @@ class LegacyControllerContext
      */
     public function loadLegacyMedia(): void
     {
-        $jsDir = rtrim($this->baseUri, '/') . '/js';
-        $adminDir = rtrim($this->baseUri, '/') . '/' . $this->adminFolderName;
+        $jsDir = rtrim($this->physicalUri, '/') . '/js';
+        $adminDir = rtrim($this->physicalUri, '/') . '/' . $this->adminFolderName;
         if ($this->isLanguageRTL) {
             $this->addCSS($adminDir . '/themes/default/public/rtl.css?v=' . $this->psVersion, 'all', 0);
         }

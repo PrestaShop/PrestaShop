@@ -280,7 +280,6 @@ class LocalizationPackCore
 
                     // Default values
                     $id_state = (int) isset($rule_attributes['iso_code_state']) ? State::getIdByIso(strtoupper($rule_attributes['iso_code_state'])) : 0;
-                    $id_county = 0;
                     $zipcode_from = 0;
                     $zipcode_to = 0;
                     $behavior = $rule_attributes['behavior'];
@@ -297,7 +296,6 @@ class LocalizationPackCore
                     $tr->id_tax_rules_group = $trg->id;
                     $tr->id_country = $id_country;
                     $tr->id_state = $id_state;
-                    $tr->id_county = $id_county;
                     $tr->zipcode_from = $zipcode_from;
                     $tr->zipcode_to = $zipcode_to;
                     $tr->behavior = (string) $behavior;

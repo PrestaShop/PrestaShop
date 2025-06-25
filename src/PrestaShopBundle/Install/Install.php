@@ -372,6 +372,7 @@ class Install extends AbstractInstall
         $context = Context::getContext();
         $context->shop = new Shop(1);
         Shop::setContext(Shop::CONTEXT_SHOP, 1);
+        Configuration::resetStaticCache();
         Configuration::loadConfiguration();
         if (!isset($context->language) || !Validate::isLoadedObject($context->language)) {
             $context->language = new Language('en');
@@ -461,6 +462,9 @@ class Install extends AbstractInstall
 
         $flip_languages = array_flip($languages);
         $id_lang = (!empty($flip_languages[$this->language->getLanguageIso()])) ? $flip_languages[$this->language->getLanguageIso()] : 1;
+
+        Configuration::resetStaticCache();
+        Configuration::loadConfiguration();
         Configuration::updateGlobalValue('PS_LANG_DEFAULT', $id_lang);
         Configuration::updateGlobalValue('PS_VERSION_DB', _PS_INSTALL_VERSION_);
         Configuration::updateGlobalValue('PS_INSTALL_VERSION', _PS_INSTALL_VERSION_);
@@ -765,6 +769,7 @@ class Install extends AbstractInstall
         }
 
         Context::getContext()->shop = new Shop(1);
+        Configuration::resetStaticCache();
         Configuration::loadConfiguration();
 
         $id_country = (int) Country::getByIso($data['shop_country']);
