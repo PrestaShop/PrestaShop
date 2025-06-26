@@ -115,7 +115,7 @@ const productCategoriesTags = (function () {
         if ($(optionId).length === 0) {
           defaultCategoryForm.append(`${'<div class="radio">'
             + '<label class="required">'
-            // eslint-disable-next-line
+            // eslint-disable-next-line max-len,no-useless-concat
             + '<input type="radio"' + 'id="form_step1_id_category_default_'}${category.id}" name="form[step1][id_category_default]" required="required" value="${category.id}">${
             category.name}</label>`
             + '</div>');
@@ -145,7 +145,7 @@ const productCategoriesTags = (function () {
         });
       });
 
-      // eslint-disable-next-line
+      // eslint-disable-next-line no-underscore-dangle
       searchBox.autocomplete({
         source: tags,
         minChars: 2,

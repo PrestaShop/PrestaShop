@@ -29,8 +29,10 @@ prestashop.selectors = {
   quantityWanted: '#quantity_wanted',
   product: {
     imageContainer:
-      // eslint-disable-next-line
-      '.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container, .quickview .js-images-container, .page-product:not(.modal-open) .row .js-images-container, .page-product:not(.modal-open) .product-container .js-images-container',
+      '.quickview .images-container, .page-product:not(.modal-open) .row .images-container,'
+      + '.page-product:not(.modal-open) .product-container .images-container,'
+      + '.quickview .js-images-container, .page-product:not(.modal-open) .row .js-images-container,'
+      + '.page-product:not(.modal-open) .product-container .js-images-container',
     container: '.product-container, .js-product-container',
     availability: '#product-availability, .js-product-availability',
     actions: '.product-actions, .js-product-actions',
@@ -71,8 +73,8 @@ prestashop.selectors = {
     conditionAlertSelector: '.js-alert-payment-conditions',
     additionalInformatonSelector: '.js-additional-information',
     optionsForm: '.js-payment-option-form',
-    // eslint-disable-next-line
-    termsCheckboxSelector: '#conditions-to-approve input[name="conditions_to_approve[terms-and-conditions]"], .js-conditions-to-approve input[name="conditions_to_approve[terms-and-conditions]"]',
+    termsCheckboxSelector: '#conditions-to-approve input[name="conditions_to_approve[terms-and-conditions]"], '
+      + '.js-conditions-to-approve input[name="conditions_to_approve[terms-and-conditions]"]',
     paymentBinary: '.payment-binary, .js-payment-binary',
     deliveryFormSelector: '#js-delivery',
     summarySelector: '#js-checkout-summary',
@@ -81,8 +83,8 @@ prestashop.selectors = {
     deliveryOption: '.delivery-option, .js-delivery-option',
     cartPaymentStepRefresh: '.js-cart-payment-step-refresh',
     editAddresses: '.js-edit-addresses',
-    // eslint-disable-next-line
-    deliveryAddressRadios: '#delivery-addresses input[type=radio], #invoice-addresses input[type=radio], .js-address-selector input[type=radio]',
+    deliveryAddressRadios: '#delivery-addresses input[type=radio], #invoice-addresses input[type=radio], '
+      + '.js-address-selector input[type=radio]',
     addressItem: '.address-item, .js-address-item',
     addressesStep: '#checkout-addresses-step',
     addressItemChecked: '.address-item:has(input[type=radio]:checked), .js-address-item:has(input[type=radio]:checked)',

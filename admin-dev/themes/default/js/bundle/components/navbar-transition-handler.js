@@ -33,7 +33,7 @@
  * @method toggle - Add the listener if there is no transition launched yet.
  * @return {Object} The object with methods wich permit to toggle on specific event.
 */
-// eslint-disable-next-line
+// eslint-disable-next-line no-unused-vars
 function NavbarTransitionHandler($navBar, $mainMenu, endTransitionEvent, $body) {
   this.$body = $body;
   this.transitionFired = false;

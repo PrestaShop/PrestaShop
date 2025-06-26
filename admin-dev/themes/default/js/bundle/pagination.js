@@ -37,21 +37,22 @@ $(() => {
   /*
    * Input field changes management
   */
-  // eslint-disable-next-line
+
   function checkInputPage(eventOrigin) {
     const e = eventOrigin || event;
-    // eslint-disable-next-line
-    const char = e.type === 'keypress' ? String.fromCharCode(e.keyCode || e.which) : (e.clipboardData || window.clipboardData).getData('Text');
+    const char = e.type === 'keypress'
+      ? String.fromCharCode(e.keyCode || e.which)
+      : (e.clipboardData || window.clipboardData).getData('Text');
 
     if (/[^\d]/gi.test(char)) {
       return false;
     }
+    return undefined;
   }
   $('input[name="paginator_jump_page"]').each(function () {
     this.onkeypress = checkInputPage;
     this.onpaste = checkInputPage;
 
-    // eslint-disable-next-line
     $(this).on('keyup', function (e) {
       const val = parseInt($(e.target).val(), 10);
 
@@ -70,9 +71,9 @@ $(() => {
         $(this).val(max);
         return false;
       }
+      return undefined;
     });
 
-    // eslint-disable-next-line
     $(this).on('blur', function (e) {
       const val = parseInt($(e.target).val(), 10);
 
@@ -82,6 +83,7 @@ $(() => {
         window.location.href = url;
         return false;
       }
+      return undefined;
     });
   });
 });

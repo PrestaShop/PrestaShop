@@ -434,12 +434,9 @@ $(() => {
     prestashop.selectors.product.refresh,
     (e, extraParameters) => {
       e.preventDefault();
-      let eventType = 'updatedProductCombination';
-
-      if (typeof extraParameters !== 'undefined' && extraParameters.eventType) {
-        // eslint-disable-next-line
-        eventType = extraParameters.eventType;
-      }
+      const eventType = (typeof extraParameters !== 'undefined' && extraParameters.eventType)
+        ? extraParameters.eventType
+        : 'updatedProductCombination';
 
       prestashop.emit('updateProduct', {
         eventType,

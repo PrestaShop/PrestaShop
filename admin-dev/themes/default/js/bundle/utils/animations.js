@@ -30,7 +30,7 @@
  * @return {string} The transition keywoard of the browser.
 */
 
-// eslint-disable-next-line
+// eslint-disable-next-line no-unused-vars
 function getAnimationEvent(type, lifecycle) {
   const el = document.createElement('element');
   const typeUpper = type.charAt(0).toUpperCase() + type.substring(1);

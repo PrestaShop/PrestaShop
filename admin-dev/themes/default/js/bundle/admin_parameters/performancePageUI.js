@@ -88,9 +88,9 @@ window.addEventListener('load', () => {
 const cacheSystemInputs = document.querySelectorAll('input[type=radio]');
 let {length} = cacheSystemInputs;
 
-// eslint-disable-next-line
+// eslint-disable-next-line no-plusplus
 while (length--) {
-  // eslint-disable-next-line
+  // eslint-disable-next-line consistent-return
   cacheSystemInputs[length].addEventListener('change', (e) => {
     const name = e.target.getAttribute('name');
 

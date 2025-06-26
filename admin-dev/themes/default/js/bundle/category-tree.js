@@ -44,11 +44,10 @@
           this.find('li').has('ul').removeClass('less').addClass('more');
           break;
         default:
-          // eslint-disable-next-line
+          // eslint-disable-next-line no-throw-literal
           throw 'Unknown method';
       }
-
-    // eslint-disable-next-line
+      // eslint-disable-next-line brace-style
     }
 
     // initialize tree
@@ -72,7 +71,7 @@
           $ui.parent('li').removeClass('less').addClass('more');
         }
 
-        // eslint-disable-next-line
+        // eslint-disable-next-line consistent-return
         return false;
       };
       this.find('li > ul').each((i, item) => {

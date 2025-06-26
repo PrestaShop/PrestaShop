@@ -125,14 +125,13 @@ function productOrderTable(orderBy, orderWay) {
   window.location.href = url;
 }
 
-// eslint-disable-next-line
 function productOrderPrioritiesTable() {
   window.location.href = $('form#product_catalog_list').attr('orderingurl');
 }
 
 function updateBulkMenu() {
-  // eslint-disable-next-line
-  const selectedCount = $('form#product_catalog_list input:checked[name="bulk_action_selected_products[]"][disabled!="disabled"]').length;
+  const selectedCount = $('form#product_catalog_list input:checked[name="bulk_action_selected_products[]"]'
+    + '[disabled!="disabled"]').length;
   $('#product_bulk_menu').prop('disabled', (selectedCount === 0));
 }
 
@@ -224,8 +223,7 @@ function bulkModalAction(allItems, postUrl, redirectUrl, action) {
       url: postUrl,
       data: {bulk_action_selected_products: [item0]},
       success(data, status) {
-        // eslint-disable-next-line
-        progressBar.css('width', `${currentItemIdx * 100 / itemsCount}%`);
+        progressBar.css('width', `${(currentItemIdx * 100) / itemsCount}%`);
         progressBar.find('span').html(`${currentItemIdx} / ${itemsCount}`);
 
         if (items.length > 0) {
@@ -308,11 +306,9 @@ function bulkProductAction(element, action) {
       // no break !
 
     // this case will post inline edition command
-    // eslint-disable-next-line
-    case 'edition':
-      // eslint-disable-next-line
+    // eslint-disable-next-line no-fallthrough
+    case 'edition': {
       let editionAction;
-      // eslint-disable-next-line
       const bulkEditionSelector = '#bulk_edition_toolbar input:submit';
 
       if ($(bulkEditionSelector).length > 0) {
@@ -327,6 +323,7 @@ function bulkProductAction(element, action) {
         redirectUrl = urlHandler.attr('redirecturl');
       }
       break;
+    }
 
     // unknown cases...
     default:
@@ -357,7 +354,6 @@ function unitProductAction(element, action) {
     .attr('type', 'hidden')
     .attr('name', 'redirect_url').val(redirectUrlHandler.attr('redirecturl'));
 
-  // eslint-disable-next-line
   switch (action) {
     case 'delete':
       // Confirmation popup and callback...
@@ -373,7 +369,7 @@ function unitProductAction(element, action) {
       });
       return;
     // Other cases, nothing to do, continue.
-    // default:
+    default: return;
   }
 
   form.append($(redirectionInput));
@@ -398,7 +394,6 @@ function showBulkProductEdition(show) {
 function bulkProductEdition(element, action) {
   const form = $('form#product_catalog_list');
 
-  // eslint-disable-next-line
   switch (action) {
     case 'sort':
       showBulkProductEdition(true);
@@ -417,6 +412,7 @@ function bulkProductEdition(element, action) {
       $('input#bulk_action_select_all, input:checkbox[name="bulk_action_selected_products[]"]', form)
         .prop('disabled', false);
       break;
+    default: break;
   }
 }
 
