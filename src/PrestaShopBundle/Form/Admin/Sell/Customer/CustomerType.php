@@ -40,6 +40,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -97,15 +98,16 @@ class CustomerType extends TranslatorAwareType
      * @param ConfigurationInterface $configuration
      */
     public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        array $genderChoices,
-        array $groupChoices,
-        array $riskChoices,
-        $isB2bFeatureEnabled,
-        $isPartnerOffersEnabled,
+        TranslatorInterface    $translator,
+        array                  $locales,
+        array                  $genderChoices,
+        array                  $groupChoices,
+        array                  $riskChoices,
+                               $isB2bFeatureEnabled,
+                               $isPartnerOffersEnabled,
         ConfigurationInterface $configuration
-    ) {
+    )
+    {
         parent::__construct($translator, $locales);
         $this->genderChoices = $genderChoices;
         $this->groupChoices = $groupChoices;
@@ -124,15 +126,19 @@ class CustomerType extends TranslatorAwareType
         $maxLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH);
         $minLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH);
 
+        // Social title field is hidden if no social title is available
+        $inputGenderType = !empty($this->genderChoices) ? ChoiceType::class : HiddenType::class;
+        $inputGenderOptions = !empty($this->genderChoices) ? [
+            'choices' => $this->genderChoices,
+            'multiple' => false,
+            'expanded' => true,
+            'required' => false,
+            'placeholder' => null,
+            'label' => $this->trans('Social title', 'Admin.Global'),
+        ] : [];
+
         $builder
-            ->add('gender_id', ChoiceType::class, [
-                'choices' => $this->genderChoices,
-                'multiple' => false,
-                'expanded' => true,
-                'required' => false,
-                'placeholder' => null,
-                'label' => $this->trans('Social title', 'Admin.Global'),
-            ])
+            ->add('gender_id', $inputGenderType, $inputGenderOptions)
             ->add('first_name', TextType::class, [
                 'label' => $this->trans('First name', 'Admin.Global'),
                 'help' => $this->trans(
