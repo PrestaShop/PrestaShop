@@ -72,11 +72,9 @@ services:
           'it': 'https://docs.prestashop-project.org/1.7-documentation/v/italian/guida-utente/vendere/gestire-catalogo/gestire-files'
           '_fallback': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/selling/managing-catalog/managing-files'
         'credit_slip':
-          'en': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/selling/managing-orders/credit-slips'
-          'fr': 'https://docs.prestashop-project.org/1.7-documentation/v/french/guide-utilisateur/vendre/gerer-commandes/avoirs'
-          'es': 'https://docs.prestashop-project.org/1.7-documentation/v/spanish/guia-usuario/vender/gestionar-pedidos/facturas-por-abono'
-          'it': 'https://docs.prestashop-project.org/1.7-documentation/v/italian/guida-utente/vendere/gestire-ordini/note-di-credito'
-          '_fallback': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/selling/managing-orders/credit-slips'
+          'en': 'https://docs.prestashop-project.org/v.8-documentation/user-guide/selling/managing-orders/credit-slips'
+          'fr': 'https://docs.prestashop-project.org/v.8-documentation/french-1/guide-utilisateur/vendre/gerer-commandes/avoirs'
+          '_fallback': 'https://docs.prestashop-project.org/v.8-documentation/user-guide/selling/managing-orders/credit-slips'
         'carrier':
           'en': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/improving-shop/managing-shipping/carriers'
           'fr': 'https://docs.prestashop-project.org/1.7-documentation/v/french/guide-utilisateur/optimiser-boutique/gerer-livraisons/gerer-transporteurs'
