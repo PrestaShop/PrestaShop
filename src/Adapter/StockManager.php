@@ -46,8 +46,17 @@ class StockManager
      *
      * @return StockAvailable
      */
-    public function getStockAvailableByProduct($product, $id_product_attribute = null, $id_shop = null)
+    public function getStockAvailableByProduct($product, $id_product_attribute = null, $id_shop = null, $params = [])
     {
+
+        if ((empty($id_shop) || $id_shop === 0) && isset($params['id_order'])) {
+            $id_order = (int) $params['id_order'];
+            $order = new \Order($id_order);
+            if (\Validate::isLoadedObject($order)) {
+                $id_shop = (int) $order->id_shop;
+            } 
+        }
+        
         $stockAvailable = $this->newStockAvailable($this->getStockAvailableIdByProductId($product->id, $id_product_attribute, $id_shop));
 
         if (!$stockAvailable->id) {
