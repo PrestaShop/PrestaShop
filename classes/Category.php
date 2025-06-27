@@ -1353,25 +1353,28 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idCategory Category ID
      * @param int $idLang Language ID
+     * @param int|null $idShop Shop ID
      *
-     * @return bool|mixed
+     * @return bool|string
      */
-    public static function getLinkRewrite($idCategory, $idLang)
+    public static function getLinkRewrite($idCategory, $idLang, ?int $idShop = null)
     {
         if (!Validate::isUnsignedId($idCategory) || !Validate::isUnsignedId($idLang)) {
             return false;
         }
 
-        if (!isset(self::$_links[$idCategory . '-' . $idLang])) {
-            self::$_links[$idCategory . '-' . $idLang] = Db::getInstance()->getValue('
-			SELECT cl.`link_rewrite`
-			FROM `' . _DB_PREFIX_ . 'category_lang` cl
+        $idShop = $idShop ?? Context::getContext()->shop->id;
+
+        if (!isset(self::$_links[$idCategory . '-' . $idLang . '-' . $idShop])) {
+            self::$_links[$idCategory . '-' . $idLang . '-' . $idShop] = Db::getInstance()->getValue('
+			SELECT `link_rewrite`
+			FROM `' . _DB_PREFIX_ . 'category_lang`
 			WHERE `id_lang` = ' . (int) $idLang . '
-			' . Shop::addSqlRestrictionOnLang('cl') . '
-			AND cl.`id_category` = ' . (int) $idCategory);
+			' . Shop::addSqlRestrictionOnLang(null, $idShop) . '
+			AND `id_category` = ' . (int) $idCategory);
         }
 
-        return self::$_links[$idCategory . '-' . $idLang];
+        return self::$_links[$idCategory . '-' . $idLang . '-' . $idShop];
     }
 
     /**
