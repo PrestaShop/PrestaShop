@@ -124,7 +124,7 @@
     "@types/chai-string": "^1.4.5",
     "@types/mocha": "^10.0.10",
     "@types/mochawesome": "^6.2.4",
-    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/eslint-plugin": "^8.35.0",
     "@typescript-eslint/parser": "^8.34.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.57.1",
