@@ -310,8 +310,6 @@ class HookCore extends ObjectModel
     /**
      * Get the list of hook aliases, indexed by hook name
      *
-     * @since 1.7.1.0
-     *
      * @return array<string, array<string>> Array of hookName => hookAliases[]
      */
     private static function getAllHookAliases(): array
@@ -341,8 +339,6 @@ class HookCore extends ObjectModel
      * @param string $canonicalHookName Canonical hook name
      *
      * @return string[] List of aliases
-     *
-     * @since 1.7.1.0
      */
     private static function getHookAliasesFor(string $canonicalHookName): array
     {
@@ -414,8 +410,6 @@ class HookCore extends ObjectModel
      * @param bool $strict [default=false] Set to TRUE to avoid checking if aliases are callable as well
      *
      * @return bool
-     *
-     * @since 1.7.1.0
      */
     public static function isHookCallableOn(
         Module $module,
@@ -437,8 +431,6 @@ class HookCore extends ObjectModel
 
     /**
      * Call a hook (or one of its alternative names) on a module.
-     *
-     * @since 1.7.1.0
      *
      * @param Module $module
      * @param string $hookName
@@ -491,8 +483,6 @@ class HookCore extends ObjectModel
     /**
      * Get list of all registered hooks with modules, indexed by hook id and module id
      *
-     * @since 1.5.0
-     *
      * @return array<int, array<int, array{id_hook:string|int,title:string,description:string,'hm.position':string|int,'m.position':string|int,id_module:string,name:string,active:string|int}>>
      */
     public static function getHookModuleList()
@@ -541,8 +531,6 @@ class HookCore extends ObjectModel
 
     /**
      * Return Hooks List.
-     *
-     * @since 1.5.0
      *
      * @param int $id_hook
      * @param int|null $id_module
@@ -815,8 +803,6 @@ class HookCore extends ObjectModel
      * @return array[]|false returns an array of hook registrations, or false if the provided hook name is not registered
      *
      * @throws PrestaShopDatabaseException
-     *
-     * @since 1.5.0
      */
     public static function getHookModuleExecList($hookName = null)
     {

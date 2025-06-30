@@ -2132,8 +2132,6 @@ class ProductCore extends ObjectModel
     /**
      * Add a product attribute.
      *
-     * @since 1.5.0.1
-     *
      * @param float $price Additional price
      * @param float $weight Additional weight
      * @param float $unit_impact Additional unit price
@@ -7106,8 +7104,6 @@ class ProductCore extends ObjectModel
     /**
      * Get all product attributes ids.
      *
-     * @since 1.5.0
-     *
      * @param int $id_product Product identifier
      * @param bool $shop_only
      *
@@ -7306,8 +7302,6 @@ class ProductCore extends ObjectModel
     /**
      * Gets the name of a given product, in the given lang.
      *
-     * @since 1.5.0
-     *
      * @param int $id_product Product identifier
      * @param int|null $id_product_attribute Attribute identifier
      * @param int|null $id_lang Language identifier
@@ -7395,8 +7389,6 @@ class ProductCore extends ObjectModel
     /**
      * For a given product, returns its real quantity.
      *
-     * @since 1.5.0
-     *
      * @param int $id_product Product identifier
      * @param int $id_product_attribute Attribute identifier
      * @param int $id_warehouse Warehouse identifier - not used anymore
@@ -7419,8 +7411,6 @@ class ProductCore extends ObjectModel
     /**
      * For a given product, tells if it uses the advanced stock management.
      *
-     * @since 1.5.0
-     *
      * @param int $id_product Product identifier
      *
      * @return bool
@@ -7439,8 +7429,6 @@ class ProductCore extends ObjectModel
 
     /**
      * This method allows to flush price cache.
-     *
-     * @since 1.5.0
      */
     public static function flushPriceCache()
     {
@@ -7450,8 +7438,6 @@ class ProductCore extends ObjectModel
 
     /**
      * Get list of parent categories.
-     *
-     * @since 1.5.0
      *
      * @param int|null $id_lang Language identifier
      *
@@ -7571,8 +7557,6 @@ class ProductCore extends ObjectModel
 
     /**
      * Get the product type (simple, virtual, pack).
-     *
-     * @since in 1.5.0
      *
      * @return int
      */

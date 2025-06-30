@@ -4558,8 +4558,6 @@ class CartCore extends ObjectModel
      *
      * @param bool $ignoreVirtual Ignore virtual products
      *
-     * @since 1.5.0
-     *
      * @return bool False if not all products in the cart are in stock
      */
     public function isAllProductsInStock($ignoreVirtual = false)

@@ -1118,8 +1118,6 @@ class ToolsCore
      * @param string $passwd String to has
      *
      * @return string Hashed password
-     *
-     * @since 1.7.0
      */
     public static function hash($passwd)
     {
@@ -1132,8 +1130,6 @@ class ToolsCore
      * @param string $data String to encrypt
      *
      * @return string Hashed IV
-     *
-     * @since 1.7.0
      */
     public static function hashIV($data)
     {
@@ -2976,8 +2972,6 @@ exit;
     /**
      * Concat $begin and $end, add ? or & between strings.
      *
-     * @since 1.5.0
-     *
      * @param string $begin
      * @param string $end
      *
@@ -3137,8 +3131,6 @@ exit;
     /**
      * Allow to get the memory limit in octets.
      *
-     * @since 1.4.5.0
-     *
      * @return int|string the memory limit value in octet
      */
     public static function getMemoryLimit()
@@ -3150,8 +3142,6 @@ exit;
 
     /**
      * Gets the value of a configuration option in octets.
-     *
-     * @since 1.5.0
      *
      * @param string $option
      *
@@ -3239,8 +3229,6 @@ exit;
      * @param string $name module name
      *
      * @return bool true if exists
-     *
-     * @since 1.4.5.0
      */
     public static function apacheModExists($name)
     {
@@ -3347,8 +3335,6 @@ exit;
      * @param string $dir Add this to prefix output for example /path/dir/*
      *
      * @return array List of file found
-     *
-     * @since 1.5.0
      */
     public static function scandir($path, $ext = 'php', $dir = '', $recursive = false)
     {
