@@ -34,6 +34,11 @@ class OrderShippingForViewing
     private $carriers = [];
 
     /**
+     * @var OrderShipmentForViewing[]
+     */
+    private $shipments = [];
+
+    /**
      * @var bool
      */
     private $isRecycledPackaging;
@@ -55,6 +60,7 @@ class OrderShippingForViewing
 
     /**
      * @param OrderCarrierForViewing[] $carriers
+     * @param OrderShipmentForViewing[] $shipments
      * @param bool $isRecycledPackaging
      * @param bool $isGiftWrapping
      * @param string|null $giftMessage
@@ -62,6 +68,7 @@ class OrderShippingForViewing
      */
     public function __construct(
         array $carriers,
+        array $shipments,
         bool $isRecycledPackaging,
         bool $isGiftWrapping,
         ?string $giftMessage,
@@ -69,6 +76,9 @@ class OrderShippingForViewing
     ) {
         foreach ($carriers as $carrier) {
             $this->addCarrier($carrier);
+        }
+        foreach ($shipments as $shipment) {
+            $this->addShipment($shipment);
         }
 
         $this->isRecycledPackaging = $isRecycledPackaging;
@@ -85,6 +95,14 @@ class OrderShippingForViewing
     public function getCarriers(): array
     {
         return $this->carriers;
+    }
+
+    /**
+     * @return OrderShipmentForViewing[]
+     */
+    public function getShipments(): array
+    {
+        return $this->shipments;
     }
 
     /**
@@ -125,5 +143,13 @@ class OrderShippingForViewing
     private function addCarrier(OrderCarrierForViewing $carrier): void
     {
         $this->carriers[] = $carrier;
+    }
+
+    /**
+     * @param OrderShipmentForViewing $shipment
+     */
+    private function addShipment(OrderShipmentForViewing $shipment): void
+    {
+        $this->shipments[] = $shipment;
     }
 }

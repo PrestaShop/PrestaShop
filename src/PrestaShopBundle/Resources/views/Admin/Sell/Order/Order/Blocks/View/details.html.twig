@@ -35,6 +35,11 @@
   {{ 'Carriers'|trans({}, 'Admin.Shipping.Feature') }} (<span class="count">{{ orderForViewing.shipping.carriers|length }}</span>)
 {% endset %}
 
+{% set shipmentsTitle %}
+  {{ 'Shipments'|trans({}, 'Admin.Shipping.Feature') }} (<span class="count">{{ orderForViewing.shipping.shipments|length }}</span>)
+{% endset %}
+
+
 {% set merchantReturnsTitle %}
   {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} (<span data-role="count">{{ orderForViewing.returns.orderReturns|length }}</span>)
 {% endset %}
@@ -57,6 +62,12 @@
       <a class="nav-link" id="orderShippingTab" data-toggle="tab" href="#orderShippingTabContent" role="tab" aria-controls="orderShippingTabContent" aria-expanded="true" aria-selected="false">
         <i class="material-icons">local_shipping</i>
         {{ carriersTitle }}
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="orderShipmentsTab" data-toggle="tab" href="#orderShipmentsTabContent" role="tab" aria-controls="orderShipmentsTabContent" aria-expanded="true" aria-selected="false">
+        <i class="material-icons">local_shipping</i>
+        {{ shipmentsTitle }}
       </a>
     </li>
     {% if merchandiseReturnEnabled %}
@@ -97,6 +108,16 @@
         {% endblock %}
         {% block body %}
           {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig') }}
+        {% endblock %}
+      {% endembed %}
+    </div>
+    <div class="tab-pane d-print-block fade" id="orderShipmentsTabContent" role="tabpanel" aria-labelledby="orderShipmentsTab">
+      {% embed '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details_card.html.twig' %}
+        {% block header %}
+          {{ shipmentsTitle }}
+        {% endblock %}
+        {% block body %}
+          {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/shipment.html.twig') }}
         {% endblock %}
       {% endembed %}
     </div>

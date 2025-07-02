@@ -79,6 +79,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPricesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnsForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShipmentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingAddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderSourceForViewing;
@@ -580,8 +581,40 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             }
         }
 
+        // fake datas
+        $shipments = [
+            new OrderShipmentForViewing(
+                new DateTimeImmutable('2025-06-25 14:30:00'),
+                1001,
+                'DHL Express',
+                3,
+                12.99,
+                '2.5 kg',
+                'DH123456789FR'
+            ),
+            new OrderShipmentForViewing(
+                new DateTimeImmutable('2025-06-28 09:00:00'),
+                1002,
+                'UPS Standard',
+                1,
+                8.49,
+                '1.2 kg',
+                null
+            ),
+            new OrderShipmentForViewing(
+                new DateTimeImmutable('2025-07-01 16:45:00'),
+                1003,
+                'Chronopost',
+                2,
+                15.75,
+                '3.1 kg',
+                'CH9988776655'
+            ),
+        ];
+
         return new OrderShippingForViewing(
             $carriers,
+            $shipments,
             (bool) $order->recyclable,
             (bool) $order->gift,
             $order->gift_message,

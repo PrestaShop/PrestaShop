@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\PDF\OrderInvoicePdfGenerator;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetAvailableCarriers;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
@@ -109,6 +110,8 @@ use PrestaShopBundle\Form\Admin\Sell\Order\EditProductRowType;
 use PrestaShopBundle\Form\Admin\Sell\Order\InternalNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
+use PrestaShopBundle\Form\Admin\Sell\Order\Shipment\MergeShipmentType;
+use PrestaShopBundle\Form\Admin\Sell\Order\Shipment\SplitShipmentType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
@@ -490,6 +493,40 @@ class OrderController extends PrestaShopAdminController
             'order_id' => $orderId,
         ]);
 
+        $fakeProducts = [
+            [
+                'id' => 1,
+                'name' => 'Télévision',
+                'reference' => 'tv_1',
+                'quantity' => 2,
+                'max_quantity' => 2,
+            ],
+            [
+                'id' => 2,
+                'name' => 'Tabouret',
+                'reference' => 'stool_1',
+                'quantity' => 1,
+                'max_quantity' => 1,
+            ],
+        ];
+
+        $fakeShipments = [
+            'Shipment 2 - Colissimo' => 2,
+            'Shipment 3 - DHL Express' => 3,
+        ];
+
+        $splitShipmentTypeForm = $this->createForm(SplitShipmentType::class, [
+            'products' => $fakeProducts,
+        ], [
+            'order_id' => $orderId,
+        ]);
+
+        $mergeShipmentTypeForm = $this->createForm(MergeShipmentType::class, [
+            'products' => $fakeProducts,
+        ], [
+            'shipments' => $fakeShipments,
+        ]);
+
         // @todo: Fix me. Should not rely on legacy object model - Currency
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
@@ -566,6 +603,8 @@ class OrderController extends PrestaShopAdminController
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
             'privateNoteForm' => $privateNoteForm?->createView(),
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
+            'splitShipmentForm' => $splitShipmentTypeForm->createView(),
+            'mergeShipmentForm' => $mergeShipmentTypeForm->createView(),
             'cancelProductForm' => $cancelProductForm->createView(),
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
             'changeOrderAddressForm' => $changeOrderAddressForm?->createView(),
@@ -974,6 +1013,48 @@ class OrderController extends PrestaShopAdminController
             );
         }
 
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param int $orderInvoiceId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function splitShipmentAction(int $orderId, Request $request): RedirectResponse
+    {
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", message: 'You do not have permission to edit this.')]
+    public function refreshCarriers(
+        Request $request,
+    ): JsonResponse {
+        $data = json_decode($request->getContent(), true);
+        $selectedProducts = $data['selectedProducts'] ?? [];
+
+        $availableCarriers = $this->dispatchQuery(new GetAvailableCarriers($selectedProducts));
+
+        return new JsonResponse(['carriers' => $availableCarriers]);
+    }
+
+    /**
+     * @param int $orderId
+     * @param int $orderInvoiceId
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[AdminSecurity("is_granted('update', 'AdminOrders')", redirectRoute: 'admin_orders_view', redirectQueryParamsToKeep: ['orderId'], message: 'You do not have permission to edit this.')]
+    public function mergeShipmentAction(int $orderId, Request $request): RedirectResponse
+    {
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
         ]);

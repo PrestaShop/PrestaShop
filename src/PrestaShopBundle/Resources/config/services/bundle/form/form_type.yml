@@ -683,3 +683,9 @@ services:
   PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\DeleteImageTypeType: ~
   PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageSettingsType: ~
   PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\RegenerateThumbnailsType: ~
+
+  PrestaShopBundle\Form\Admin\Sell\Order\Shipment\SplitShipmentType:
+    arguments:
+      $carrierForOrderChoiceProvider: '@prestashop.adapter.form.choice.provider.carrier_for_order_choice_provider'
+
+  PrestaShopBundle\Form\Admin\Sell\Order\Shipment\MergeShipmentType:

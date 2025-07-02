@@ -191,6 +191,30 @@ admin_orders_update_invoice_note:
     orderId: \d+
     orderInvoiceId: \d+
 
+admin_orders_split_shipment:
+  path: /{orderId}/shipment/split
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::splitShipmentAction
+  requirements:
+    orderId: \d+
+
+admin_orders_merge_shipment:
+  path: /{orderId}/shipment/merge
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::mergeShipmentAction
+  requirements:
+    orderId: \d+
+
+admin_orders_shipment_refresh_carriers:
+  path: /shipment/refresh-carriers
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::refreshCarriers
+  options:
+    expose: true
+
 admin_orders_generate_invoice:
   path: /{orderId}/invoice
   methods: [ POST ]

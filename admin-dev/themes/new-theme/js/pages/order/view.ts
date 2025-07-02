@@ -25,6 +25,7 @@
 
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import OrderShippingManager from '@pages/order/order-shipping-manager';
+import SplitShipmentManager from '@pages/order/split-shipment-manager';
 import InvoiceNoteManager from '@pages/order/invoice-note-manager';
 import OrderViewPage from '@pages/order/view/order-view-page';
 import OrderProductAutocomplete from '@pages/order/view/order-product-add-autocomplete';
@@ -39,6 +40,7 @@ $(() => {
   const DISCOUNT_TYPE_FREE_SHIPPING = 'free_shipping';
 
   new OrderShippingManager();
+  new SplitShipmentManager();
   window.prestashop.component.initComponents([
     'TextWithLengthCounter',
   ]);

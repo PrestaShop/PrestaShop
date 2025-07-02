@@ -1,0 +1,93 @@
+{# **
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * #}
+
+<div class="modal fade" id="mergeShipmentModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    {{ form_start(mergeShipmentForm, {
+      action: path('admin_orders_merge_shipment', {orderId: orderForViewing.id})
+    }) }}
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ 'Merge shipment'|trans({}, 'Admin.Orderscustomers.Feature') }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p>
+          {{ 'Select items to merge'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          <i class="material-icons" data-toggle="tooltip" title="{{ 'These items will be added to another shipment'|trans }}">help_outline</i>
+        </p>
+
+        <table class="table table-borderless">
+          <thead>
+            <tr>
+              <th>{{ 'Products'|trans }}</th>
+              <th class="text-right">{{ 'Select quantity'|trans }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in mergeShipmentForm.products %}
+              <tr>
+                <td>
+                  <div class="form-check">
+                    {{ form_widget(product.selected, { attr: {'class': 'form-check-input'} }) }}
+                    <label class="form-check-label">
+                      <strong>{{ product.name.vars.value }}</strong><br>
+                      <small>{{ 'Reference:'|trans }} {{ product.reference.vars.value }}</small>
+                    </label>
+                  </div>
+                </td>
+                <td class="text-right">
+                  {{ form_widget(product.quantity) }}
+                  <span>/{{ product.max_quantity.vars.value }}</span>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class="form-group mt-4">
+          <label>{{ 'Select shipment to merge to'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+          <i class="material-icons" data-toggle="tooltip" title="{{ 'Choose the existing shipment where items will be merged'|trans }}">help_outline</i>
+          {{ form_widget(mergeShipmentForm.merge_to_shipment, { attr: {'class': 'form-control'} }) }}
+        </div>
+
+        {{ form_rest(mergeShipmentForm) }}
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </button>
+        <button type="submit" class="btn btn-primary" id="submitMergeShipment" disabled>
+          {{ 'Merge shipment'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+    {{ form_end(mergeShipmentForm) }}
+  </div>
+</div>
