@@ -87,7 +87,7 @@ describe('FO - cart : Add promo code', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue', baseContext);
 
       const totalBeforeDiscount = await foClassicCartPage.getCartRuleValue(page);
-      expect(totalBeforeDiscount).to.equal(`-€${parseFloat(newCartRuleData.discountAmount!.value.toString()).toFixed(2)}`);
+      expect(totalBeforeDiscount).to.equal(`-€${newCartRuleData.discountAmount!.value.toFixed(2)}`);
     });
 
     it('should set the same promo code and check the error message', async function () {
