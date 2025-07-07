@@ -29,9 +29,7 @@ namespace PrestaShopBundle\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
-use Symfony\Component\VarDumper\Caster\CutStub;
-use Symfony\Component\VarDumper\Caster\ReflectionCaster;
-use Symfony\Component\VarDumper\Cloner\Stub;
+use Throwable;
 
 /**
  * Collect all information about Legacy hooks and make it available
@@ -52,7 +50,7 @@ final class HookDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, ?Throwable $exception = null)
     {
         $hooks = $this->registry->getHooks();
         $calledHooks = $this->registry->getCalledHooks();
@@ -64,15 +62,6 @@ final class HookDataCollector extends DataCollector
             'notCalledHooks' => $this->stringifyHookArguments($notCalledHooks),
             'notRegisteredHooks' => $this->stringifyHookArguments($notRegisteredHooks),
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($data)
-    {
-        // it seems that php 7.3 has a bug with unserialize: https://bugs.php.net/bug.php?id=77302
-        $this->data = is_array($data) ? $data : @unserialize($data);
     }
 
     /**
@@ -157,39 +146,5 @@ final class HookDataCollector extends DataCollector
         }
 
         return $hooksList;
-    }
-
-    /**
-     * @return callable[] The casters to add to the cloner
-     */
-    protected function getCasters()
-    {
-        $casters = [
-            '*' => function ($v, array $a, Stub $s, $isNested) {
-                if (!$v instanceof Stub) {
-                    $b = $a;
-                    foreach ($a as $k => $v) {
-                        if (!\is_object($v) || $v instanceof \DateTimeInterface || $v instanceof Stub) {
-                            continue;
-                        }
-
-                        try {
-                            $a[$k] = $s = new CutStub($v);
-
-                            if ($b[$k] === $s) {
-                                // we've hit a non-typed reference
-                                $a[$k] = $v;
-                            }
-                        } catch (\TypeError $e) {
-                            // we've hit a typed reference
-                        }
-                    }
-                }
-
-                return $a;
-            },
-        ] + ReflectionCaster::UNSET_CLOSURE_FILE_INFO;
-
-        return $casters;
     }
 }
