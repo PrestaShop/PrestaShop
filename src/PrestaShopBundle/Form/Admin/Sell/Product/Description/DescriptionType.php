@@ -105,7 +105,7 @@ class DescriptionType extends TranslatorAwareType
                 'options' => [
                     'limit' => $shortDescriptionLimit,
                     'attr' => [
-                        'class' => 'serp-default-description',
+                        'class' => 'serp-default-description advanced-internal-link',
                     ],
                 ],
                 'label_tag_name' => 'h3',
@@ -117,6 +117,9 @@ class DescriptionType extends TranslatorAwareType
                 'type' => FormattedTextareaType::class,
                 'options' => [
                     'limit' => ProductSettings::MAX_DESCRIPTION_LENGTH,
+                    'attr' => [
+                        'class' => 'advanced-internal-link',
+                    ],
                 ],
                 'label_tag_name' => 'h3',
                 'modify_all_shops' => true,

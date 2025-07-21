@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tools;
 
 class ProductPresenter
 {
@@ -97,6 +98,9 @@ class ProductPresenter
         array $product,
         Language $language
     ) {
+        $product['description'] = Tools::processShortcodes($product['description']);
+        $product['description_short'] = Tools::processShortcodes($product['description_short']);
+
         $productLazyArray = new ProductLazyArray(
             $settings,
             $product,

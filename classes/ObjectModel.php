@@ -152,6 +152,11 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     protected static $cache_objects = true;
 
     /**
+     * @var array Contains any fields that can contain shortcodes
+     */
+    protected $allowedShortcodeFields = [];
+
+    /**
      * @return null
      */
     public static function getRepositoryClassName()
@@ -2119,5 +2124,29 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         }
 
         return $shopIdsList;
+    }
+
+    /**
+     * Process any shortcodes for the supported fields
+     */
+    public function proccessShortCodes()
+    {
+        if (!$this->id) {
+            return;
+        }
+
+        if (!$this->allowedShortcodeFields) {
+            return;
+        }
+
+        foreach ($this->allowedShortcodeFields as $fieldName) {
+            if ($this->id_lang === null) { // multilanguage entity
+                foreach ($this->{$fieldName} as &$value) {
+                    $value = Tools::processShortcodes($value);
+                }
+            } else {
+                $this->{$fieldName} = Tools::processShortcodes($this->{$fieldName});
+            }
+        }
     }
 }

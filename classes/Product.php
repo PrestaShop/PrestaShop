@@ -686,6 +686,11 @@ class ProductCore extends ObjectModel
         ],
     ];
 
+    protected $allowedShortcodeFields = [
+        'description_short',
+        'description',
+    ];
+
     public const CUSTOMIZE_FILE = 0;
     public const CUSTOMIZE_TEXTFIELD = 1;
 

@@ -23,6 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import ComponentsMap from '@components/components-map';
+
+import Router from '@components/router';
+
 import {EventEmitter} from './event-emitter';
 
 const {$} = window;
@@ -37,6 +40,7 @@ class TinyMCEEditor {
   constructor(options) {
     const opts = options || {};
     this.tinyMCELoaded = false;
+    this.router = new Router();
     if (typeof opts.baseAdminUrl === 'undefined') {
       if (typeof window.baseAdminDir !== 'undefined') {
         opts.baseAdminUrl = window.baseAdminDir;
@@ -122,6 +126,36 @@ class TinyMCEEditor {
       ...config,
     };
 
+    cfg.toolbar1 += ',advantageInternalLink';
+    cfg.content_style = `
+                          span[data-entity-type] {
+                              display: inline-block;
+                              width: 10px;
+                              height: 10px;
+                              border: 1px dashed #000;
+                              text-align: center;
+                              vertical-align: middle;
+                              position: relative;
+                              font-size: 12px;
+                              font-weight: bold;
+                              color: white;
+                              border-radius: 4px;
+                              padding: 2px 6px;
+                              margin: 0 5px;
+                          }
+                          span[data-entity-type]::after {
+                              content: "🔗";
+                              font-size: 10px;
+                              color: black;
+                              position: absolute;
+                              top: 50%;
+                              left: 50%;
+                              transform: translate(-50%, -50%);
+                              white-space: nowrap;
+                          }
+                      `;
+    /* ****************************************************** */
+
     if (typeof window.defaultTinyMceConfig !== 'undefined') {
       Object.assign(cfg, window.defaultTinyMceConfig);
     }
@@ -145,6 +179,135 @@ class TinyMCEEditor {
    * @param editor
    */
   setupEditor(editor) {
+    if (editor.getElement().classList.contains('advanced-internal-link')) {
+      const router = this.router;
+
+      var resultsListbox;
+      var resultsListboxContainer;
+      var entityTypeInput;
+      var debounceTimeout;
+      var ajaxRequest;
+      editor.addButton('advantageInternalLink', {
+        type: 'button',
+        text: '',
+        icon: 'link',
+        title: 'Internal link',
+        onclick() {
+          editor.windowManager.open({
+            title: 'Add internal link',
+            body: [
+              {
+                type: 'listbox',
+                name: 'entityType',
+                label: 'Entity',
+                values: [{
+                  text: 'Product',
+                  value: 'product',
+                },
+                {
+                  text: 'Category',
+                  value: 'category',
+                },
+                {
+                  text: 'Cms',
+                  value: 'cms',
+                },
+                {
+                  text: 'Cms Category',
+                  value: 'cms_category',
+                },
+                {
+                  text: 'Manufacturer',
+                  value: 'manufacturer',
+                }],
+                onPostRender: function () {
+                  entityTypeInput = this;
+                },
+              },
+              {
+                type: 'textbox',
+                name: 'search',
+                label: 'Search',
+                placeholder: 'Type the term to search for',
+                value: '',
+                onkeyup: function () {
+                  if (debounceTimeout) {
+                    clearTimeout(debounceTimeout);
+                  }
+
+                  const searchValue = this.value().trim();
+
+                  // If a previous results listbox exists, remove it to avoid duplicates
+                  // before making a new AJAX call and populating the new results.
+                  if (resultsListbox) {
+                    resultsListbox.remove();
+                    resultsListbox = null;
+                  }
+
+                  if (searchValue.length >= 3) {
+                    if (ajaxRequest) {
+                      ajaxRequest.abort();
+                      ajaxRequest = null;
+                    }
+
+                    const  entityType = entityTypeInput.value();
+                    const shortCodesSearchRoute = router.generate('admin_shortcodes_' + entityType + '_search');
+
+                    debounceTimeout = setTimeout(() => {
+                      ajaxRequest = $.ajax({
+                          type: "POST",
+                          url: shortCodesSearchRoute,
+                          dataType: 'json',
+                          data: {
+                            entityType: entityTypeInput.value(),
+                            search: searchValue
+                          },
+                          success: function (data) {
+                            if (resultsListbox) {
+                              resultsListbox.remove();
+                            }
+
+                            resultsListboxContainer.append({
+                              label: 'Results',
+                              type: 'listbox',
+                              name: 'entityId',
+                              values: data.map(item => ({
+                                text: item.name,
+                                value: item.id
+                              })),
+                              onPostRender: function () {
+                                resultsListbox = this;
+                              }
+                            });
+                          },
+                        });
+                    }, 500)
+                  }
+                }
+              },
+              {
+                type: 'listbox',
+                name: 'entityId',
+                label: 'Results',
+                values: [],
+                onPostRender: function () {
+                  // Remove the initial "Results" element because it will be dynamically populated via AJAX.
+                  this.remove();
+                  resultsListboxContainer = this.parent();
+                }
+              },
+            ],
+            onsubmit(event) {
+              const { entityType, entityId } = event.data;
+              // Prevent <span> from being automatically removed by adding &nbsp; inside it
+              // and an extra &nbsp; outside to improve selection and editing in TinyMCE.
+              editor.insertContent(`<span data-entity-type="${entityType}" data-entity-id="${entityId}">&nbsp;</span>&nbsp;`);
+            },
+          });
+        },
+      });
+    }
+
     editor.on('loadContent', (event) => {
       this.handleCounterTiny(event.target.id);
     });

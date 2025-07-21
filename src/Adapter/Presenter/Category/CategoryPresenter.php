@@ -33,6 +33,7 @@ use Hook;
 use Language;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use Tools;
 
 class CategoryPresenter
 {
@@ -72,6 +73,8 @@ class CategoryPresenter
         if (empty($category['id'])) {
             $category['id'] = $category['id_category'];
         }
+
+        $category['description'] = Tools::processShortcodes($category['description']);
 
         $categoryLazyArray = new CategoryLazyArray(
             $category,

@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
@@ -38,9 +39,11 @@ use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionProvider;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenter;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
+use PrestaShopBundle\MultiEntitySearch;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use ReflectionClass;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -356,5 +359,29 @@ class CommonController extends PrestaShopAdminController
         }
 
         return $this->redirectToRoute($request->attributes->get('redirect_route'));
+    }
+
+    /**
+     * @param Request $request
+     * @param LegacyContext $context
+     * @param MultiEntitySearch $multiEntitySearch
+     
+     * @return JsonResponse
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function shortCodesSearchAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.legacy.context')]
+        LegacyContext $context,
+        MultiEntitySearch $multiEntitySearch,
+    ): JsonResponse {
+        $results = $multiEntitySearch->searchByTerm(
+            (string) $request->request->get('entityType'),
+            (string) $request->request->get('search'),
+            (int) $context->getContext()->language->id,
+            (int) $context->getContext()->shop->id
+        );
+
+        return $this->json($results);
     }
 }

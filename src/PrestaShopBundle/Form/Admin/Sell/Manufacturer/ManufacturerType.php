@@ -119,6 +119,9 @@ class ManufacturerType extends TranslatorAwareType
                 'required' => false,
                 'options' => [
                     'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
+                    'attr' => [
+                        'class' => 'advanced-internal-link',
+                    ],
                     'constraints' => [
                         new CleanHtml([
                             'message' => $this->trans(

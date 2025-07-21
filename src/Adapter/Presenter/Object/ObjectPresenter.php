@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -30,6 +31,7 @@ use Exception;
 use Hook;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
+use Tools;
 
 class ObjectPresenter implements PresenterInterface
 {
@@ -51,6 +53,10 @@ class ObjectPresenter implements PresenterInterface
         $fields = $object::$definition['fields'];
         foreach ($fields as $fieldName => $null) {
             $presentedObject[$fieldName] = $object->{$fieldName};
+        }
+
+        if (get_class($object) === 'CMS') {
+            $presentedObject['content'] = Tools::processShortcodes($presentedObject['content']);
         }
 
         $presentedObject['id'] = $object->id;

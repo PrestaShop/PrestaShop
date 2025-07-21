@@ -100,6 +100,10 @@ class ManufacturerCore extends ObjectModel
         ],
     ];
 
+    protected $allowedShortcodeFields = [
+        'description'
+    ];
+
     /**
      * ManufacturerCore constructor.
      *
