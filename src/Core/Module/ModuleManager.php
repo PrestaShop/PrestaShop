@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Module;
 
+use Context;
 use Exception;
 use Language as LegacyLanguage;
 use Module as LegacyModule;
@@ -395,6 +396,12 @@ class ModuleManager implements ModuleManagerInterface
 
     protected function upgradeMigration(string $name): bool
     {
+        // Removes outdated config_XX.xml to force module version update
+        $iso = substr(Context::getContext()->language->iso_code, 0, 2);
+        if (file_exists(_PS_MODULE_DIR_ . $name . '/config_' . $iso . '.xml')) {
+            unlink(_PS_MODULE_DIR_ . $name . '/config_' . $iso . '.xml');
+        }
+
         $module_list = LegacyModule::getModulesOnDisk();
 
         foreach ($module_list as $module) {
