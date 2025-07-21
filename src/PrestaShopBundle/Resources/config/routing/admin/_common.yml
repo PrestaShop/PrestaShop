@@ -56,3 +56,53 @@ admin_common_secured_file_image_reader:
   methods: [ GET ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\SecuredFileReaderController::readUploadDocument'
+
+admin_shortcodes_product_search:
+  path: /shortcodes-product-search
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::shortCodesSearchAction'
+    _legacy_controller: AdminProducts
+    _legacy_link: CommonController::shortCodesSearchAction
+  options:
+    expose: true
+
+admin_shortcodes_category_search:
+  path: /shortcodes-category-search
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::shortCodesSearchAction'
+    _legacy_controller: AdminCategories
+    _legacy_link: CommonController::shortCodesSearchAction
+  options:
+    expose: true
+
+admin_shortcodes_cms_search:
+  path: /shortcodes-cms-search
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::shortCodesSearchAction'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: CommonController::shortCodesSearchAction
+  options:
+    expose: true
+
+admin_shortcodes_cms_category_search:
+  path: /shortcodes-cms-category-search
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::shortCodesSearchAction'
+    _legacy_controller: AdminCmsContent
+    _legacy_link: CommonController::shortCodesSearchAction
+  options:
+    expose: true
+
+admin_shortcodes_manufacturer_search:
+  path: /shortcodes-manufacturer-search
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::shortCodesSearchAction'
+    _legacy_controller: AdminManufacturers
+    _legacy_link: CommonController::shortCodesSearchAction
+  options:
+    expose: true

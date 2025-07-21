@@ -70,6 +70,10 @@ class CMSCore extends ObjectModel
         'objectsNodeName' => 'content_management_system',
     ];
 
+    protected $allowedShortcodeFields = [
+        'content',
+    ];
+
     /**
      * Adds current CMS as a new Object to the database.
      *

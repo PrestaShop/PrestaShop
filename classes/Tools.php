@@ -3662,6 +3662,10 @@ exit;
                     if ($allow_style) {
                         $def->addElement('style', 'Block', 'Flow', 'Common', ['type' => 'Text']);
                     }
+                    $def->addElement('span', 'Block', 'Flow', 'Common', [
+                        'data-entity-type' => 'Text',
+                        'data-entity-id' => 'Text',
+                    ]);
                 }
 
                 $purifier = new HTMLPurifier($config);
@@ -3987,6 +3991,77 @@ exit;
         }
 
         return false;
+    }
+
+    public static function processShortcodes($content): string
+    {
+        /** @var Context $context */
+        $context = Context::getContext();
+        $pattern = '/<span\s+data-entity-type="([^"]+)"\s+data-entity-id="(\d+)">(.*?)<\/span>/s';
+        $cache = [];
+
+        preg_match_all($pattern, $content, $entitiesIds);
+
+        $content = preg_replace_callback($pattern, function ($matches) use ($context, &$cache) {
+            $entityType = (string) $matches[1];
+            $entityId = (int) $matches[2];
+            $langId = (int) $context->language->id;
+
+            $cacheKey = "{$entityType}_{$entityId}_{$langId}";
+
+            if (!isset($cache[$cacheKey])) {
+                $cache[$cacheKey] = '';
+                $anchorText = false;
+                $link = false;
+
+                switch ($entityType) {
+                    case 'product':
+                        $entity = new Product($entityId, false, $langId);
+                        if (Validate::isLoadedObject($entity)) {
+                            $anchorText = $entity->name;
+                            $link = $context->link->getProductLink($entity);
+                        }
+                        break;
+                    case 'category':
+                        $entity = new Category($entityId, $langId);
+                        if (Validate::isLoadedObject($entity)) {
+                            $anchorText = $entity->name;
+                            $link = $context->link->getCategoryLink($entity);
+                        }
+                        break;
+                    case 'cms':
+                        $entity = new CMS($entityId, $langId);
+                        if (Validate::isLoadedObject($entity)) {
+                            $anchorText = $entity->meta_title;
+                            $link = $context->link->getCMSLink($entity);
+                        }
+                        break;
+                    case 'cmsCategory':
+                        $entity = new CMSCategory($entityId, $langId);
+                        if (Validate::isLoadedObject($entity)) {
+                            $anchorText = $entity->name;
+                            $link = $context->link->getCMSCategoryLink($entity);
+                        }
+                        break;
+                    case 'manufacturer':
+                        $entity = new Manufacturer($entityId, $langId);
+                        if (Validate::isLoadedObject($entity)) {
+                            $anchorText = $entity->name;
+                            $link = $context->link->getManufacturerLink($entity);
+                        }
+                        break;
+                }
+
+                if ($anchorText !== false && $link !== false) {
+                    $cachedValue = '<a href="' . $link . '">' . $anchorText . '</a>';
+                    $cache[$cacheKey] = $cachedValue;
+                }
+            }
+
+            return $cache[$cacheKey];
+        }, $content);
+
+        return $content;
     }
 }
 

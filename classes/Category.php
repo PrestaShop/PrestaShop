@@ -166,6 +166,10 @@ class CategoryCore extends ObjectModel
         ],
     ];
 
+    protected $allowedShortcodeFields = [
+        'description',
+    ];
+
     /**
      * CategoryCore constructor.
      *
