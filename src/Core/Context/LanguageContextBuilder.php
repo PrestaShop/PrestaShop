@@ -115,12 +115,12 @@ class LanguageContextBuilder implements LegacyContextBuilderInterface
         $localizationLocale = $this->getLocaleByLanguage($language);
 
         return new LanguageContext(
-            id: $language->getId(),
+            id: (int) $language->getId(),
             name: $language->getName(),
             isoCode: $language->getIsoCode(),
             locale: $language->getLocale(),
             languageCode: $language->getLanguageCode(),
-            isRTL: $language->isRTL(),
+            isRTL: (bool) $language->isRTL(),
             dateFormat: $language->getDateFormat(),
             dateTimeFormat: $language->getDateTimeFormat(),
             localizationLocale: $localizationLocale,

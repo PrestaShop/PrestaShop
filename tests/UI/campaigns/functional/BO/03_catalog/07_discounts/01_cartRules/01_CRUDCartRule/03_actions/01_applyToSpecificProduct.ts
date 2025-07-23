@@ -200,10 +200,10 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue1', baseContext);
 
-      const discount = await utilsCore.percentage(dataProducts.demo_8.finalPrice, newCartRuleData.discountPercent!);
+      const discount = await utilsCore.percentage(dataProducts.demo_8.finalPrice, newCartRuleData.getDiscountPercent());
 
-      const discountValue = await foClassicCartPage.getDiscountValue(page);
-      expect(discountValue).to.eq(-discount.toFixed(2));
+      const totalBeforeDiscount = await foClassicCartPage.getCartRuleValue(page, 1);
+      expect(totalBeforeDiscount).to.equal(`-€${discount.toFixed(2)}`);
     });
 
     it('should delete the second product from the cart', async function () {
@@ -218,10 +218,10 @@ describe('BO - Catalog - Cart rules : Apply discount to specific product', async
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue2', baseContext);
 
-      const discount = await utilsCore.percentage(dataProducts.demo_8.finalPrice, newCartRuleData.discountPercent!);
+      const discount = await utilsCore.percentage(dataProducts.demo_8.finalPrice, newCartRuleData.getDiscountPercent());
 
-      const discountValue = await foClassicCartPage.getDiscountValue(page);
-      expect(discountValue).to.eq(-discount.toFixed(2));
+      const totalBeforeDiscount = await foClassicCartPage.getCartRuleValue(page, 1);
+      expect(totalBeforeDiscount).to.equal(`-€${discount.toFixed(2)}`);
     });
 
     it(`should delete the product '${dataProducts.demo_8.name}' from the cart`, async function () {

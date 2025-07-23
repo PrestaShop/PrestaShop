@@ -662,8 +662,6 @@ class LinkCore
     /**
      * Create a link to a module.
      *
-     * @since    1.5.0
-     *
      * @param string $module Module name
      * @param string $controller
      * @param array $params
@@ -946,6 +944,22 @@ class LinkCore
         $type = ($type ? '-' . $type : '');
         $idImage = (string) $idImage;
 
+        $overrideUrl = Hook::exec(
+            'overrideImageLink',
+            [
+                'name' => $name,
+                'ids' => $idImage,
+                'type' => $type,
+                'extension' => $extension,
+            ],
+            null,
+            true
+        );
+
+        if (!empty($overrideUrl)) {
+            return $overrideUrl;
+        }
+
         // Default image like "fr-default"
         if (strpos($idImage, 'default') !== false) {
             $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . $idImage . $type . '-' . Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
@@ -976,7 +990,22 @@ class LinkCore
             }
         }
 
-        return $this->getMediaLink($uriPath);
+        $url = $this->getMediaLink($uriPath);
+
+        Hook::exec(
+            'adaptImageLink',
+            [
+                'protocol_content' => $this->protocol_content,
+                'uri_path' => $uriPath,
+                'url' => &$url,
+                'name' => $name,
+                'ids' => $idImage,
+                'type' => $type,
+                'extension' => $extension,
+            ]
+        );
+
+        return $url;
     }
 
     /**

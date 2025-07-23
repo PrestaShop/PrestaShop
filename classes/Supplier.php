@@ -485,8 +485,6 @@ class SupplierCore extends ObjectModel
      * @param int $idProductAttribute
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getProductInformationsBySupplier($idSupplier, $idProduct, $idProductAttribute = 0)
     {

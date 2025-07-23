@@ -109,8 +109,6 @@ class AdminImportControllerCore extends AdminController
             $this->trans('Store contacts', [], 'Admin.Advparameters.Feature'),
         ];
 
-        // @since 1.5.0
-
         $this->entities = array_flip($this->entities);
 
         switch ((int) Tools::getValue('entity')) {
@@ -3673,7 +3671,6 @@ class AdminImportControllerCore extends AdminController
     }
 
     /**
-     * @since 1.5.0
      * @deprecated Since 9.0 and will be removed in 10.0
      */
     public function supplyOrdersImport($offset = false, $limit = false, $validateOnly = false)

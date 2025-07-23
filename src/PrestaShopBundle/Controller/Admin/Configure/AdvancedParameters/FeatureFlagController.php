@@ -96,7 +96,7 @@ class FeatureFlagController extends PrestaShopAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('New & experimental features', [], 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('New & Experimental Features', [], 'Admin.Navigation.Menu'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'stableFeatureFlagsForm' => $this->isFormEmpty($stableFeatureFlagsForm)

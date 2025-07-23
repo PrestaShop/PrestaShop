@@ -26,8 +26,6 @@
 
 /**
  * ProductSupplierCore class.
- *
- * @since 1.5.0
  */
 class ProductSupplierCore extends ObjectModel
 {

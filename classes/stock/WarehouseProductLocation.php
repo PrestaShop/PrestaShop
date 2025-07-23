@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 /**
- * @since 1.5.0
  * @deprecated since 9.0 and will be removed in 10.0
  */
 class WarehouseProductLocationCore extends ObjectModel

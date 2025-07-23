@@ -310,8 +310,6 @@ class CustomizationCore extends ObjectModel
     /**
      * This method is allow to know if a feature is used or active.
      *
-     * @since 1.5.0.1
-     *
      * @return bool
      */
     public static function isFeatureActive()
@@ -321,8 +319,6 @@ class CustomizationCore extends ObjectModel
 
     /**
      * This method is allow to know if a Customization entity is currently used.
-     *
-     * @since 1.5.0.1
      *
      * @param string|null $table Name of table linked to entity
      * @param bool $hasActiveColumn True if the table has an active column

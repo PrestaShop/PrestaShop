@@ -29,8 +29,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\StockSettings;
 /**
  * Represents quantities available
  * It is either synchronized with Stock or manualy set by the seller.
- *
- * @since 1.5.0
  */
 class StockAvailableCore extends ObjectModel
 {

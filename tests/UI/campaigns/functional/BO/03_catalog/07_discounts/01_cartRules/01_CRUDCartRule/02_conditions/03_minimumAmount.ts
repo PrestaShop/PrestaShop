@@ -159,7 +159,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
 
       const discount = await utilsCore.percentage(
         dataProducts.demo_6.combinations[0].price * 2,
-        newCartRuleData.discountPercent!,
+        newCartRuleData.getDiscountPercent(),
       );
 
       const totalAfterDiscount = await foClassicCartPage.getATIPrice(page);

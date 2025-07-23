@@ -453,8 +453,6 @@ class CombinationCore extends ObjectModel
     /**
      * This method is allow to know if a feature is active.
      *
-     * @since 1.5.0.1
-     *
      * @return bool
      */
     public static function isFeatureActive()
@@ -470,8 +468,6 @@ class CombinationCore extends ObjectModel
 
     /**
      * This method is allow to know if a Combination entity is currently used.
-     *
-     * @since 1.5.0.1
      *
      * @param string|null $table Name of table linked to entity
      * @param bool $hasActiveColumn True if the table has an active column
@@ -556,8 +552,6 @@ class CombinationCore extends ObjectModel
      * @param int $idProductAttribute
      *
      * @return string
-     *
-     * @since 1.5.0
      */
     public static function getPrice($idProductAttribute)
     {

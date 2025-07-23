@@ -21,3 +21,7 @@ services:
       - '@prestashop.core.configuration.ini_configuration'
 
   PrestaShop\PrestaShop\Core\ConfigurationInterface: '@PrestaShop\PrestaShop\Adapter\Configuration'
+
+  PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface:
+    alias: 'prestashop.core.configuration.upload_size_configuration'
+    public: false

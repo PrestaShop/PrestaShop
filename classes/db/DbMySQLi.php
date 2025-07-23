@@ -26,8 +26,6 @@
 
 /**
  * Class DbMySQLiCore.
- *
- * @since 1.5.0,1
  */
 class DbMySQLiCore extends Db
 {

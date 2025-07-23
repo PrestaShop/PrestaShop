@@ -145,7 +145,7 @@ describe('BO - Catalog - Cart rules : Check Total available', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount', baseContext);
 
           const discountedPrice = dataProducts.demo_1.finalPrice
-            - await utilsCore.percentage(dataProducts.demo_1.finalPrice, cartRuleCode.discountPercent!);
+            - await utilsCore.percentage(dataProducts.demo_1.finalPrice, cartRuleCode.getDiscountPercent());
 
           const totalAfterDiscount = await foClassicCartPage.getATIPrice(page);
           expect(totalAfterDiscount).to.equal(parseFloat(discountedPrice.toFixed(2)));

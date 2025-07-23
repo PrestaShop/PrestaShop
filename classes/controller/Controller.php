@@ -30,8 +30,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @TODO Move undeclared variables and methods to this (base) class: $errors, $layout, checkLiveEditAccess, etc.
- *
- * @since 1.5.0
  */
 abstract class ControllerCore
 {
@@ -618,8 +616,6 @@ abstract class ControllerCore
 
     /**
      * Checks if the controller has been called from XmlHttpRequest (AJAX).
-     *
-     * @since 1.5
      *
      * @return bool
      */

@@ -58,6 +58,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
       tax: 'Tax excluded',
     },
   });
+  const cartRuleWithCodeDiscountValue: number = parseFloat(cartRuleWithCodeData.discountAmount!.value.toString());
   const paymentMethodModuleName: string = dataPaymentMethods.checkPayment.moduleName;
   const orderMessage: string = 'Test order message';
 
@@ -190,7 +191,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
         const result = await boOrdersCreatePage.getVoucherDetailsFromTable(page);
         await Promise.all([
           expect(result.name).to.contains(cartRuleWithCodeData.name),
-          expect(result.value).to.equal(cartRuleWithCodeData.discountAmount!.value),
+          expect(result.value).to.equal(cartRuleWithCodeDiscountValue),
         ]);
       });
 
@@ -198,16 +199,16 @@ describe('BO - Orders - Create order : Check summary', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock2', baseContext);
 
         const totalTaxes = await utilsCore.percentage(
-          dataProducts.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount!.value,
+          dataProducts.demo_12.priceTaxExcluded - cartRuleWithCodeDiscountValue,
           20,
         );
-        const totalTaxExcluded = dataProducts.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount!.value;
+        const totalTaxExcluded = dataProducts.demo_12.priceTaxExcluded - cartRuleWithCodeDiscountValue;
         const totalTaxIncluded = totalTaxes + totalTaxExcluded;
 
         const result = await boOrdersCreatePage.getSummaryDetails(page);
         await Promise.all([
           expect(result.totalProducts).to.equal(`€${dataProducts.demo_12.priceTaxExcluded.toFixed(2)}`),
-          expect(result.totalVouchers).to.equal(`-€${cartRuleWithCodeData.discountAmount!.value.toFixed(2)}`),
+          expect(result.totalVouchers).to.equal(`-€${cartRuleWithCodeDiscountValue.toFixed(2)}`),
           expect(result.totalShipping).to.equal('€0.00'),
           expect(result.totalTaxes).to.equal(`€${totalTaxes.toFixed(2)}`),
           expect(result.totalTaxExcluded).to.equal(`€${totalTaxExcluded.toFixed(2)}`),

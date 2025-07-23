@@ -23,10 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-/**
- * @since 1.5
- */
 class PDFGeneratorCore extends TCPDF
 {
     public const DEFAULT_FONT = 'helvetica';

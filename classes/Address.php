@@ -598,8 +598,6 @@ class AddressCore extends ObjectModel
     /**
      * Returns Address ID for a given Supplier ID.
      *
-     * @since 1.5.0
-     *
      * @param int $id_supplier Supplier ID
      *
      * @return int $id_address Address ID

@@ -26,8 +26,6 @@
 
 /**
  * Override module templates easily.
- *
- * @since 1.7.0.0
  */
 class SmartyResourceModuleCore extends Smarty_Resource_Custom
 {

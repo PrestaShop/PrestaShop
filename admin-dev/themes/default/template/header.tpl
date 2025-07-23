@@ -65,7 +65,7 @@
 		var from_msg = '{l|escape s='From:' js=1 d='Admin.Global'} ';
 		var see_order_msg = '{l|escape s='View this order' js=1 d='Admin.Orderscustomers.Feature'}';
 		var new_customer_msg = '{l|escape s='A new customer registered on your store.' js=1 d='Admin.Navigation.Header'}';
-        var customer_name_msg = '{l|escape s='registered' js=1 d='Admin.Navigation.Notification'} ';
+    var customer_name_msg = '{l|escape s='Registered on:' js=1 d='Admin.Navigation.Notification'} ';
 		var new_msg = '{l|escape s='A new message was posted on your store.' js=1 d='Admin.Navigation.Header'}';
 		var see_msg = '{l|escape s='Read this message' js=1 d='Admin.Navigation.Header'}';
 		var token = '{$token|addslashes}';

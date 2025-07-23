@@ -22,10 +22,10 @@
   }
 
   &-footer {
-    padding: 0.625rem 0.9375rem;
-    background-color: $light-gray;
-    border-top: 1px solid $card-border-color;
-    @include border-radius(0 0 5px 5px);
+    padding: var(--#{$cdk}size-24) var(--#{$cdk}size-32);
+    background-color: var(--#{$cdk}white);
+    border: 1px solid var(--#{$cdk}primary-400);
+    border-block-start: none;
 
     .form-group {
       margin-bottom: 0;

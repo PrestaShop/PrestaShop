@@ -250,7 +250,6 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * @since 1.5.0
      * @see ObjectModel::delete()
      */
     public function delete()
@@ -554,19 +553,19 @@ class CarrierCore extends ObjectModel
         }
 
         switch ($modules_filters) {
-            case 1:
+            case self::PS_CARRIERS_ONLY:
                 $sql .= ' AND c.is_module = 0 ';
 
                 break;
-            case 2:
+            case self::CARRIERS_MODULE:
                 $sql .= ' AND c.is_module = 1 ';
 
                 break;
-            case 3:
+            case self::CARRIERS_MODULE_NEED_RANGE:
                 $sql .= ' AND c.is_module = 1 AND c.need_range = 1 ';
 
                 break;
-            case 4:
+            case self::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE:
                 $sql .= ' AND (c.is_module = 0 OR c.need_range = 1) ';
 
                 break;
@@ -701,11 +700,11 @@ class CarrierCore extends ObjectModel
             $id_currency = $context->currency->id;
         }
 
-        if (is_array($groups) && !empty($groups)) {
-            $result = Carrier::getCarriers($id_lang, true, false, (int) $id_zone, $groups, self::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
-        } else {
-            $result = Carrier::getCarriers($id_lang, true, false, (int) $id_zone, [Configuration::get('PS_UNIDENTIFIED_GROUP')], self::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
+        // Use provided groups or a default group if none provided
+        if (!is_array($groups) || empty($groups)) {
+            $groups = [Configuration::get('PS_UNIDENTIFIED_GROUP')];
         }
+        $result = Carrier::getCarriers($id_lang, true, false, (int) $id_zone, $groups, self::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
         $results_array = [];
 
         foreach ($result as $k => $row) {
@@ -887,8 +886,6 @@ class CarrierCore extends ObjectModel
 
     /**
      * Gets a specific group.
-     *
-     * @since 1.5.0
      *
      * @return array Group
      */
@@ -1298,8 +1295,6 @@ class CarrierCore extends ObjectModel
     /**
      * Returns the Tax rates associated to the Carrier.
      *
-     * @since 1.5
-     *
      * @param Address $address Address optional
      *
      * @return float Total Tax rate for this Carrier
@@ -1318,8 +1313,6 @@ class CarrierCore extends ObjectModel
     /**
      * Returns the taxes calculator associated to the carrier.
      *
-     * @since 1.5
-     *
      * @param Address $address Address
      *
      * @return TaxCalculator|AverageTaxOfProductsTaxCalculator Tax calculator object
@@ -1337,8 +1330,6 @@ class CarrierCore extends ObjectModel
 
     /**
      * This tricky method generates a SQL clause to check if ranged data are overloaded by multishop.
-     *
-     * @since 1.5.0
      *
      * @param string $range_table Range table
      *
@@ -1371,8 +1362,6 @@ class CarrierCore extends ObjectModel
 
     /**
      * Moves a carrier.
-     *
-     * @since 1.5.0
      *
      * @param bool $way Up (1) or Down (0)
      * @param int|null $position Current position of the Carrier
@@ -1420,8 +1409,6 @@ class CarrierCore extends ObjectModel
      * Reorder Carrier positions
      * Called after deleting a Carrier.
      *
-     * @since 1.5.0
-     *
      * @return bool $return
      */
     public static function cleanPositions()
@@ -1448,8 +1435,6 @@ class CarrierCore extends ObjectModel
     /**
      * Gets the highest carrier position.
      *
-     * @since 1.5.0
-     *
      * @return int $position
      */
     public static function getHigherPosition()
@@ -1464,8 +1449,6 @@ class CarrierCore extends ObjectModel
 
     /**
      * For a given product, gets the carrier available.
-     *
-     * @since 1.5.0
      *
      * @param Product $product The id of the product, or an array with at least the package size and weight
      * @param int|null $id_warehouse Warehouse ID - not used anymore
@@ -1616,8 +1599,6 @@ class CarrierCore extends ObjectModel
 
     /**
      * Assign one (ore more) group to all carriers.
-     *
-     * @since 1.5.0
      *
      * @param int|array $id_group_list Group ID or array of Group IDs
      * @param array $exception List of Carrier IDs to ignore

@@ -48,8 +48,6 @@ class CMSRoleCore extends ObjectModel
 
     /**
      * @return string
-     *
-     * @since 1.7.0
      */
     public static function getRepositoryClassName()
     {

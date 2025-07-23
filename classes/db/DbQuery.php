@@ -26,8 +26,6 @@
 
 /**
  * SQL query builder.
- *
- * @since 1.5.0.1
  */
 class DbQueryCore
 {

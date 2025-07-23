@@ -382,8 +382,6 @@ class UploaderCore
      * @param bool $clearStatCache
      *
      * @return int
-     *
-     * @since 1.7.0
      */
     protected function getFileSize($filePath, $clearStatCache = false)
     {
@@ -398,8 +396,6 @@ class UploaderCore
      * @param string $var
      *
      * @return string
-     *
-     * @since 1.7.0
      */
     protected function getServerVars($var)
     {
@@ -410,8 +406,6 @@ class UploaderCore
      * @param string $directory
      *
      * @return string
-     *
-     * @since 1.7.0
      */
     protected function normalizeDirectory($directory)
     {

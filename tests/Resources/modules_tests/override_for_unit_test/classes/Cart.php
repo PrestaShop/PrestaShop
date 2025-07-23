@@ -23,8 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-
 class Cart extends CartCore
 {
     public const BOTH = 999;

@@ -1501,8 +1501,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * Check if more on than one language is activated.
      *
-     * @since 1.5.0
-     *
      * @return bool
      */
     public static function isMultiLanguageActivated($id_shop = null)
@@ -1655,12 +1653,17 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     private static function updateMultilangFromClassForShop(DataLangCore $classObject, self $lang, Shop $shop)
     {
         $shopDefaultLangId = (int) Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
-        $shopDefaultLanguage = new Language($shopDefaultLangId);
+        // During install process the default language may not be available yet
+        if (!empty($shopDefaultLangId)) {
+            $shopDefaultLanguage = new Language($shopDefaultLangId);
+            self::loadAdminTranslatorLocale($shopDefaultLanguage->locale, false);
+        }
 
-        self::loadAdminTranslatorLocale($shopDefaultLanguage->locale, false);
+        // The provided locale should always be loaded though
         self::loadAdminTranslatorLocale($lang->locale, false);
 
         $sfContainer = SymfonyContainer::getInstance();
+        /** @var TranslatorInterface $translator */
         $translator = $sfContainer->get(TranslatorInterface::class);
         (new EntityTranslatorFactory($translator))
             ->build($classObject)

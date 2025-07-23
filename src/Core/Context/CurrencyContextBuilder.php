@@ -60,7 +60,7 @@ class CurrencyContextBuilder implements LegacyContextBuilderInterface
         $localizedSymbols = $legacyCurrency->getLocalizedSymbols();
 
         return new CurrencyContext(
-            $legacyCurrency->id,
+            (int) $legacyCurrency->id,
             $localizedNames[$languageId] ?? reset($localizedNames),
             $legacyCurrency->getLocalizedNames(),
             $legacyCurrency->iso_code,
@@ -68,7 +68,7 @@ class CurrencyContextBuilder implements LegacyContextBuilderInterface
             (string) $legacyCurrency->getConversionRate(),
             $localizedSymbols[$languageId] ?? reset($localizedSymbols),
             $legacyCurrency->getLocalizedSymbols(),
-            $legacyCurrency->precision,
+            (int) $legacyCurrency->precision,
             $localizedPatterns[$languageId] ?? reset($localizedPatterns),
             $legacyCurrency->getLocalizedPatterns()
         );

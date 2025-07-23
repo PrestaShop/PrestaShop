@@ -352,8 +352,6 @@ class CookieCore
      * @param string|null $cookie Cookie content
      *
      * @return bool Indicates whether the Cookie was successfully set
-     *
-     * @since 1.7.0
      */
     protected function encryptAndSetCookie($cookie = null)
     {
@@ -473,8 +471,6 @@ class CookieCore
 
     /**
      * Check if the cookie exists.
-     *
-     * @since 1.5.0
      *
      * @return bool
      */

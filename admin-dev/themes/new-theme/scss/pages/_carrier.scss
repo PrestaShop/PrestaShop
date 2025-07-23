@@ -1,0 +1,48 @@
+$component: "carrier" !default;
+
+.#{$component} {
+  &__logo {
+    max-width: var(--#{$cdk}size-128);
+    max-height: var(--#{$cdk}size-128);
+    padding: var(--#{$cdk}size-4);
+    border: var(--#{$cdk}size-1) solid var(--#{$cdk}primary-400);
+  }
+}
+
+##{$component} {
+  &-tabs {
+    .arrow {
+      display: none;
+    }
+
+    &-content {
+      border: var(--#{$cdk}size-1) solid var(--#{$cdk}primary-400);
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    &-tabs {
+      .nav {
+        &-tabs {
+          position: static;
+          left: auto;
+          flex-wrap: nowrap;
+          width: 100%;
+          overflow-x: scroll;
+          overflow-y: hidden;
+          white-space: nowrap;
+          scrollbar-width: none;
+          scroll-snap-type: x mandatory;
+        }
+
+        &-item {
+          scroll-snap-align: start;
+        }
+
+        &-link {
+          margin-block-end: 0;
+        }
+      }
+    }
+  }
+}

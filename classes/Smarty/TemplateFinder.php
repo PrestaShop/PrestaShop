@@ -26,8 +26,6 @@
 
 /**
  * Determine the best existing template.
- *
- * @since 1.7.0.0
  */
 class TemplateFinderCore
 {

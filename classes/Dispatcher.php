@@ -25,9 +25,6 @@
  */
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
-/**
- * @since 1.5.0
- */
 class DispatcherCore
 {
     /**

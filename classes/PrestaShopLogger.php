@@ -221,8 +221,6 @@ class PrestaShopLoggerCore extends ObjectModel
      * check if this log message already exists in database.
      *
      * @return bool true if exists
-     *
-     * @since 1.7.0
      */
     protected function isPresent()
     {

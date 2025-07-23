@@ -123,10 +123,14 @@
 
     {% if this.showNewOrders %}
       <script type="text/html" id="order-notification-template">
-        <a class="notif" href='order_url'>
-          #_id_order_ -
-          {{ 'from'|trans({}, 'Admin.Navigation.Notification') }} <strong>_customer_name_</strong> (_iso_code_)_carrier_
-          <strong class="float-sm-right">_total_paid_</strong>
+        <a class="notif" href="order_url">
+          <span class="notif__id">#_id_order_</span>
+          <span class="notif__customer">
+           - {{ 'From:'|trans({}, 'Admin.Navigation.Notification') }} <strong>_customer_name_</strong> <span class="notif__iso">(_iso_code_)</span>
+          </span>
+          <span class="notif__order-info">
+           <span class="notif__carrier"> _carrier_ -</span> <strong class="notif__total">_total_paid_</strong>
+          </span>
         </a>
       </script>
     {% endif %}
@@ -134,8 +138,13 @@
     {% if this.showNewCustomers %}
       <script type="text/html" id="customer-notification-template">
         <a class="notif" href='customer_url'>
-          #_id_customer_ - <strong>_customer_name_</strong>_company_
-          - {{ 'registered'|trans({}, 'Admin.Navigation.Notification') }} <strong>_date_add_</strong>
+          <span class="notif__id">#_id_customer_</span>
+          <span class="notif__customer">
+           - <strong>_customer_name_</strong> _company_ -
+          </span>
+          <span class="notif__registered-date">
+            {{ 'Registered on:'|trans({}, 'Admin.Navigation.Notification') }} <strong>_date_add_</strong>
+          </span>
         </a>
       </script>
     {% endif %}
@@ -143,10 +152,15 @@
     {% if this.showNewMessages %}
       <script type="text/html" id="message-notification-template">
         <a class="notif" href='message_url'>
-    <span class="message-notification-status _status_">
-      <i class="material-icons">fiber_manual_record</i> _status_
-    </span>
-          - <strong>_customer_name_</strong> (_company_) - <i class="material-icons">access_time</i> _date_add_
+          <span class="notif__status _status_">
+            <i class="material-icons">fiber_manual_record</i> _status_
+          </span>
+          <span class="notif__customer">
+           - <strong>_customer_name_</strong> _company_ -
+          </span>
+          <span class="notif__date">
+            <i class="material-icons">access_time</i> _date_add_
+          </span>
         </a>
       </script>
     {% endif %}

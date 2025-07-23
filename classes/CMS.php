@@ -336,8 +336,6 @@ class CMSCore extends ObjectModel
      * Method required for new PrestaShop Core.
      *
      * @return string
-     *
-     * @since 1.7.0
      */
     public static function getRepositoryClassName()
     {

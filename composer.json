@@ -69,7 +69,7 @@
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
         "prestashop/gsitemap": "^4",
-        "prestashop/hummingbird": "^1.0.0",
+        "prestashop/hummingbird": "^1.0.1",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^7.0",
         "prestashop/ps_apiresources": "^0.1",

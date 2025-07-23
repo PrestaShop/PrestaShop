@@ -1033,8 +1033,6 @@ class FrontControllerCore extends Controller
     /**
      * Checks if token is valid.
      *
-     * @since 1.5.0.1
-     *
      * @return bool
      */
     public function isTokenValid()
@@ -1363,8 +1361,6 @@ class FrontControllerCore extends Controller
      * - /themes/default/override/layout-product-1.tpl
      * - /themes/default/override/layout-product.tpl
      * - /themes/default/layout.tpl.
-     *
-     * @since 1.5.0.13
      *
      * @return bool|string
      */

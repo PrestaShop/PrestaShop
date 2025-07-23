@@ -98,6 +98,9 @@ class QueryListProvider implements ProviderInterface
 
         /** @var GridDataFactoryInterface $gridDataFactory */
         $gridDataFactory = $this->container->get($gridDataFactoryDefinition);
+        if (!$gridDataFactory instanceof GridDataFactoryInterface) {
+            throw new UnexpectedValueException(sprintf('Provided service %s is not a GridDataFactory.', $gridDataFactoryDefinition));
+        }
 
         $filter = $this->createFilters($context, $operation);
 

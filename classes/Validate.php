@@ -588,8 +588,6 @@ class ValidateCore
      * @param string $hashedPasswd Password to validate
      *
      * @return bool Indicates whether the given string is a valid hashed password
-     *
-     * @since 1.7.0
      */
     public static function isHashedPassword($hashedPasswd)
     {

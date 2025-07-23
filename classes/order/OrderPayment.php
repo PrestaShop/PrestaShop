@@ -84,8 +84,6 @@ class OrderPaymentCore extends ObjectModel
      * @param string $order_reference
      *
      * @return array
-     *
-     * @since 1.5.0.13
      */
     public static function getByOrderReference($order_reference)
     {
@@ -128,8 +126,6 @@ class OrderPaymentCore extends ObjectModel
      * Return order invoice object linked to the payment.
      *
      * @param int $id_order Order Id
-     *
-     * @since 1.5.0.13
      */
     public function getOrderInvoice($id_order)
     {

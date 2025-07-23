@@ -48,8 +48,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *
  * This class is responsible for holding all basic information about the environment,
  * the customer, cart, currency, language etc.
- *
- * @since 1.5.0.1
  */
 class ContextCore
 {

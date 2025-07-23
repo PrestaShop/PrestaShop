@@ -286,8 +286,6 @@ class MetaCore extends ObjectModel
 
     /**
      * Get meta tags.
-     *
-     * @since 1.5.0
      */
     public static function getMetaTags($idLang, $pageName, $title = '')
     {
@@ -317,8 +315,6 @@ class MetaCore extends ObjectModel
      * @param string $pageName Page name
      *
      * @return array Meta tags
-     *
-     * @since 1.5.0
      */
     public static function getHomeMetas($idLang, $pageName)
     {
@@ -338,8 +334,6 @@ class MetaCore extends ObjectModel
      * @param string $pageName
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getProductMetas($idProduct, $idLang, $pageName)
     {
@@ -364,8 +358,6 @@ class MetaCore extends ObjectModel
      * @param string $pageName
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getCategoryMetas($idCategory, $idLang, $pageName, $title = '')
     {
@@ -405,8 +397,6 @@ class MetaCore extends ObjectModel
      * @param string $pageName
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getManufacturerMetas($idManufacturer, $idLang, $pageName)
     {
@@ -432,8 +422,6 @@ class MetaCore extends ObjectModel
      * @param string $pageName
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getSupplierMetas($idSupplier, $idLang, $pageName)
     {
@@ -458,8 +446,6 @@ class MetaCore extends ObjectModel
      * @param string $pageName
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getCmsMetas($idCms, $idLang, $pageName)
     {
@@ -482,8 +468,6 @@ class MetaCore extends ObjectModel
      * @param string $pageName
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getCmsCategoryMetas($idCmsCategory, $idLang, $pageName)
     {
@@ -498,9 +482,6 @@ class MetaCore extends ObjectModel
         return Meta::getHomeMetas($idLang, $pageName);
     }
 
-    /**
-     * @since 1.5.0
-     */
     public static function completeMetaTags($metaTags, $defaultValue, ?Context $context = null)
     {
         if (!$context) {

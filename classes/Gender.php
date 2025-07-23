@@ -28,8 +28,6 @@ use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\Gender as ValueObjectGen
 
 /**
  * Class GenderCore.
- *
- * @since 1.5.0
  */
 class GenderCore extends ObjectModel
 {

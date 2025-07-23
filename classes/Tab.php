@@ -234,7 +234,7 @@ class TabCore extends ObjectModel
     {
         $cacheId = 'getCurrentParentId_' . Tools::strtolower(Tools::getValue('controller'));
         if (!Cache::isStored($cacheId)) {
-            $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            $value = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_parent`
 			FROM `' . _DB_PREFIX_ . 'tab`
 			WHERE LOWER(class_name) = \'' . pSQL(Tools::strtolower(Tools::getValue('controller'))) . '\'');
@@ -635,9 +635,6 @@ class TabCore extends ObjectModel
         return parent::update($nullValues);
     }
 
-    /**
-     * @since 1.5.0
-     */
     public static function getClassNameById($idTab)
     {
         return Db::getInstance()->getValue('SELECT class_name FROM ' . _DB_PREFIX_ . 'tab WHERE id_tab = ' . (int) $idTab);

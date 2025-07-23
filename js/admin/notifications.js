@@ -62,8 +62,13 @@ function renderOrderNotification(value) {
   const carrier = value.carrier !== '' ? ` - ${value.carrier}` : '';
   return `
     <a class="notif" href="${value.order_view_url}">
-      #${value.id_order} - ${from_msg}&nbsp;<strong>${value.customer_name}</strong> (${value.iso_code})
-      <strong class="pull-right">${value.total_paid}</strong>${carrier}
+      <span class="notif__id">#${value.id_order}</span>
+      <span class="notif__customer">
+       - ${from_msg} <strong>${value.customer_name}</strong> <span class="notif__iso">(${value.iso_code})</span>
+      </span>
+      <span class="notif__order-info">
+       <span class="notif__carrier">${carrier} -</span> <strong class="notif__total">${value.total_paid}</strong>
+      </span>
     </a>
   `;
 }
@@ -72,7 +77,11 @@ function renderCustomerNotification(value) {
   const company = value.company !== '' ? ` (${value.company})` : '';
   return `
     <a class="notif" href="${value.customer_view_url}">
-      #${value.id_customer} - <strong>${value.customer_name}</strong>${company} - ${customer_name_msg} ${value.date_add};
+      <span class="notif__id">#${value.id_customer}</span>
+      <span class="notif__customer">
+       - <strong>${value.customer_name}</strong> ${company} - 
+      </span>
+      <span class="notif__registered-date">${customer_name_msg} <strong>${value.date_add}</strong></span>
     </a>
   `;
 }
@@ -81,11 +90,15 @@ function renderMessageNotification(value) {
   const company = value.company !== '' ? ` (${value.company})` : '';
   return `
     <a class="notif" href="${value.customer_thread_view_url}">
-      <span class="message-notification-status ${value.status}">
+      <span class="notif__status ${value.status}">
         <i class="material-icons">fiber_manual_record</i> ${value.status}
       </span>
-       - <strong>${value.customer_name}</strong> ${company}
-       - <i class="material-icons">access_time</i> ${value.date_add}
+      <span class="notif__customer">
+       - <strong>${value.customer_name}</strong> ${company} - 
+      </span>
+      <span class="notif__date">
+        <i class="material-icons">access_time</i> ${value.date_add}
+      </span>
     </a>
   `;
 }

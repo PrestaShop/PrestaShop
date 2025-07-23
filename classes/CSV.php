@@ -27,8 +27,6 @@
 /**
  * Simple class to output CSV data
  * Uses CollectionCore.
- *
- * @since 1.5
  */
 class CSVCore
 {

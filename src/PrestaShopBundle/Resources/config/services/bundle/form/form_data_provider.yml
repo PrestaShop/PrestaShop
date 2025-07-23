@@ -111,6 +111,7 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaDataProvider'
     arguments:
       - '@prestashop.adapter.upload_quota.configuration'
+      - '@PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface'
 
   prestashop.adapter.administration.notifications.form_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider'

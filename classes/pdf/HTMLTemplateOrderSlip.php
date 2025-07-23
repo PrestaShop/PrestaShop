@@ -26,9 +26,6 @@
 
 use PrestaShop\PrestaShop\Core\Util\Sorter;
 
-/**
- * @since 1.5
- */
 class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 {
     /**

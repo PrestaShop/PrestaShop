@@ -28,9 +28,6 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-/**
- * @since 1.5.0
- */
 class ShopCore extends ObjectModel
 {
     /** @var int ID of shop group */

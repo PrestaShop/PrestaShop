@@ -57,6 +57,7 @@ describe('FO - Checkout : Display of totals', async () => {
       tax: 'Tax included',
     },
   });
+  const cartRuleWithCodeDiscountValue: number = parseFloat(cartRuleWithCodeData.discountAmount!.value.toString());
 
   // Pre-condition: Create cart rule with code
   createCartRuleTest(cartRuleWithCodeData, `${baseContext}_preTest`);
@@ -139,13 +140,13 @@ describe('FO - Checkout : Display of totals', async () => {
     it('should verify the total after the discount', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount3', baseContext);
 
-      const totalAfterPromoCode: number = dataProducts.demo_12.finalPrice - cartRuleWithCodeData.discountAmount!.value;
+      const totalAfterPromoCode: number = dataProducts.demo_12.finalPrice - cartRuleWithCodeDiscountValue;
 
       const priceATI = await foClassicCartPage.getATIPrice(page);
       expect(priceATI).to.equal(parseFloat(totalAfterPromoCode.toFixed(2)));
 
-      const discountValue = await foClassicCartPage.getDiscountValue(page, 1);
-      expect(discountValue).to.equal(-cartRuleWithCodeData.discountAmount!.value);
+      const discountValue = await foClassicCartPage.getCartRuleValue(page, 1);
+      expect(discountValue).to.equal(`-€${cartRuleWithCodeDiscountValue.toFixed(2)}`);
     });
 
     it('should validate shopping cart and go to checkout page', async function () {
@@ -187,7 +188,7 @@ describe('FO - Checkout : Display of totals', async () => {
       const totalAfterDiscount = await foClassicCheckoutPage.getATIPrice(page);
       expect(totalAfterDiscount.toFixed(2))
         .to.equal(
-          (dataProducts.demo_12.price - cartRuleWithCodeData.discountAmount!.value + dataCarriers.myCarrier.priceTTC).toFixed(2),
+          (dataProducts.demo_12.price - cartRuleWithCodeDiscountValue + dataCarriers.myCarrier.priceTTC).toFixed(2),
         );
     });
 

@@ -80,7 +80,7 @@ final class ImageCopier
      * Copy an image located in $url and save it in a path.
      *
      * @param int $entityId id of product or category (set in entity)
-     * @param int $imageId id of the image if watermark enabled
+     * @param int $imageId id of the image if watermark enabled (calls hook actionWatermark)
      * @param string $url path or url to use
      * @param string $entity 'products' or 'categories'
      * @param bool $regenerate
@@ -91,7 +91,6 @@ final class ImageCopier
     {
         $tmpDir = $this->configuration->get('_PS_TMP_IMG_DIR_');
         $tmpFile = tempnam($tmpDir, 'ps_import');
-        $watermarkTypes = explode(',', $this->configuration->get('WATERMARK_TYPES'));
 
         switch ($entity) {
             default:

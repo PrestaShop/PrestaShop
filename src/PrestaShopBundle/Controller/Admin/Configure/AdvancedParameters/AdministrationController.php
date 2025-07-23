@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
@@ -48,6 +49,10 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AdministrationController extends PrestaShopAdminController
 {
+    public function __construct(private readonly UploadSizeConfigurationInterface $uploadSizeConfiguration)
+    {
+    }
+
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function indexAction(
         #[Autowire(service: 'prestashop.adapter.administration.general.form_handler')]
@@ -207,6 +212,16 @@ class AdministrationController extends PrestaShopAdminController
                 return $this->trans(
                     'The SameSite=None attribute is only available in secure mode.',
                     [],
+                    'Admin.Advparameters.Notification'
+                );
+            case FormDataProvider::ERROR_MAX_SIZE_ATTACHED_FILES:
+                return $this->trans(
+                    '%s is invalid. Please enter an integer between %s and %s.',
+                    [
+                        $this->getFieldLabel($error->getFieldName()),
+                        0,
+                        $this->uploadSizeConfiguration->getMaxUploadSizeInBytes() / 1048576,
+                    ],
                     'Admin.Advparameters.Notification'
                 );
         }

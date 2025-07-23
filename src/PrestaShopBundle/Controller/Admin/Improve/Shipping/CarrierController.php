@@ -40,6 +40,8 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotToggleCarrierIsFre
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotToggleCarrierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -163,8 +165,23 @@ class CarrierController extends PrestaShopAdminController
             return $this->redirectToRoute('admin_carriers_edit', ['carrierId' => $result->getIdentifiableObjectId()]);
         }
 
+        try {
+            $editableCarrier = $this->dispatchQuery(new GetCarrierForEditing(
+                (int) $carrierId,
+                ShopConstraint::allShops()
+            ));
+        } catch (CarrierNotFoundException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_carriers_index');
+        }
+
         return $this->render('@PrestaShop/Admin/Improve/Shipping/Carriers/form.html.twig', [
-            'layoutTitle' => $this->trans('Carrier', [], 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans(
+                'Editing carrier %name%',
+                ['%name%' => $editableCarrier->getName()],
+                'Admin.Navigation.Menu',
+            ),
             'carrierForm' => $form->createView(),
         ]);
     }

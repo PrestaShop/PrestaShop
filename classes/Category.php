@@ -1932,8 +1932,6 @@ class CategoryCore extends ObjectModel
      * @param int $id
      *
      * @return array
-     *
-     * @since 1.5.0
      */
     public static function getInterval($id)
     {
@@ -1958,8 +1956,6 @@ class CategoryCore extends ObjectModel
      * @param Shop $shop
      *
      * @return bool
-     *
-     * @since 1.5.0
      */
     public function inShop(?Shop $shop = null)
     {
@@ -1981,8 +1977,6 @@ class CategoryCore extends ObjectModel
      * @param Shop $shop Shop object
      *
      * @return bool Indicates whether the current category is a child of the Shop root category
-     *
-     * @since 1.5.0
      */
     public static function inShopStatic($idCategory, ?Shop $shop = null)
     {
@@ -2101,8 +2095,6 @@ class CategoryCore extends ObjectModel
      *
      * @return array|false Array with Category information
      *                     `false` if no Category found
-     *
-     * @since 1.7.0
      */
     public static function getCategoryInformation($idsCategory, $idLang = null)
     {

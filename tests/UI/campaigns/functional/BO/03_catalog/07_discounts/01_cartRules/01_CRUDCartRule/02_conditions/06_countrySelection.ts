@@ -249,7 +249,11 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
 
       const totalAfterDiscount = await foClassicCheckoutPage.getATIPrice(page);
-      expect(totalAfterDiscount).to.eq(dataProducts.demo_6.price - cartRule.discountAmount!.value + dataCarriers.myCarrier.price);
+      expect(totalAfterDiscount).to.eq(
+        dataProducts.demo_6.price
+        - parseFloat(cartRule.discountAmount!.value.toString())
+        + dataCarriers.myCarrier.price,
+      );
     });
 
     it('should remove the discount', async function () {

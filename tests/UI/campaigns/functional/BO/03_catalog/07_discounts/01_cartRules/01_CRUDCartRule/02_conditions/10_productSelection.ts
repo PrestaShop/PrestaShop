@@ -195,10 +195,10 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
 
       const total = dataProducts.demo_8.finalPrice + dataProducts.demo_1.finalPrice + dataProducts.demo_3.finalPrice;
 
-      const discount = await utilsCore.percentage(total, newCartRuleData.discountPercent!);
+      const discount = await utilsCore.percentage(total, newCartRuleData.getDiscountPercent());
 
-      const discountValue = await foClassicCartPage.getDiscountValue(page);
-      expect(discountValue).to.eq(-discount.toFixed(2));
+      const discountValue = await foClassicCartPage.getCartRuleValue(page, 1);
+      expect(discountValue).to.equal(`-€${discount.toFixed(2)}`);
     });
 
     it('should delete the second product from the cart', async function () {
@@ -215,10 +215,10 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
 
       const total = dataProducts.demo_8.finalPrice + dataProducts.demo_3.finalPrice;
 
-      const discount = await utilsCore.percentage(total, newCartRuleData.discountPercent!);
+      const discount = await utilsCore.percentage(total, newCartRuleData.getDiscountPercent());
 
-      const discountValue = await foClassicCartPage.getDiscountValue(page);
-      expect(discountValue).to.eq(-discount.toFixed(2));
+      const discountValue = await foClassicCartPage.getCartRuleValue(page, 1);
+      expect(discountValue).to.equal(`-€${discount.toFixed(2)}`);
     });
 
     it(`should delete the product '${dataProducts.demo_8.name}' from the cart`, async function () {

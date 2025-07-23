@@ -642,8 +642,6 @@ class AddressFormatCore extends ObjectModel
      * @param int $idCountry Country ID
      *
      * @return false|string|null Address format
-     *
-     * @since 1.7.0
      */
     protected function getFormatDB($idCountry)
     {

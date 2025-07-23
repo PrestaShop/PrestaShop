@@ -202,8 +202,6 @@ class ProductDownloadCore extends ObjectModel
      * @param string $filename Filename physically
      *
      * @return int Product the id for this virtual product
-     *
-     * @since 1.5.0.1
      */
     public static function getIdFromFilename($filename)
     {
@@ -324,8 +322,6 @@ class ProductDownloadCore extends ObjectModel
      * This method is allow to know if a feature is used or active.
      *
      * @return bool
-     *
-     * @since 1.5.0.1
      */
     public static function isFeatureActive()
     {

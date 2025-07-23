@@ -89,8 +89,8 @@ describe('FO - cart : Add promo code', async () => {
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue', baseContext);
 
-      const totalBeforeDiscount = await foHummingbirdCartPage.getDiscountValue(page);
-      expect(totalBeforeDiscount).to.eq(-newCartRuleData.discountAmount!.value);
+      const totalBeforeDiscount = await foHummingbirdCartPage.getCartRuleValue(page);
+      expect(totalBeforeDiscount).to.equal(`-€${parseFloat(newCartRuleData.discountAmount!.value.toString()).toFixed(2)}`);
     });
 
     it('should set the same promo code and check the error message', async function () {

@@ -763,15 +763,13 @@
 
       {# If there is only one error then display it without popover #}
     {%- else -%}
-      <div class="d-inline-block text-danger align-top">
+      <div class="d-inline-block align-baseline text-danger mt-1" role="alert">
         <i class="material-icons form-error-icon">error_outline</i>
-      </div>
-      <div class="d-inline-block">
+
         {% for error in errors %}
-          <div class="text-danger">
-            <p> {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
-            </p>
-          </div>
+          <span>
+            {{ error.messageTemplate|trans(error.messageParameters, 'form_error') }}
+          </span>
         {%- endfor -%}
       </div>
     {%- endif -%}

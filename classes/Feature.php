@@ -290,8 +290,6 @@ class FeatureCore extends ObjectModel
      * This metohd is allow to know if a feature is used or active.
      *
      * @return bool
-     *
-     * @since 1.5.0.1
      */
     public static function isFeatureActive()
     {

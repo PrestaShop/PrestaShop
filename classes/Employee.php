@@ -506,8 +506,6 @@ class EmployeeCore extends ObjectModel
      * @param int $idShop
      *
      * @return bool
-     *
-     * @since 1.5.0
      */
     public function hasAuthOnShop($idShop)
     {
@@ -520,8 +518,6 @@ class EmployeeCore extends ObjectModel
      * @param int $idShopGroup ShopGroup ID
      *
      * @return bool
-     *
-     * @since 1.5.0
      */
     public function hasAuthOnShopGroup($idShopGroup)
     {
@@ -544,8 +540,6 @@ class EmployeeCore extends ObjectModel
      * Get default id_shop with auth for current employee.
      *
      * @return int
-     *
-     * @since 1.5.0
      */
     public function getDefaultShopID()
     {

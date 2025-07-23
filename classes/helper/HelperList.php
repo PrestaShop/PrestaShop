@@ -28,9 +28,6 @@ use PrestaShop\PrestaShop\Adapter\Routing\LegacyHelperLinkBuilder;
 use PrestaShop\PrestaShop\Core\Routing\EntityLinkBuilderFactory;
 use PrestaShop\PrestaShop\Core\Routing\Exception\BuilderNotFoundException;
 
-/**
- * @since 1.5.0
- */
 class HelperListCore extends Helper
 {
     /**

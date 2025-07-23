@@ -26,8 +26,6 @@
 
 /**
  * Class DbPDOCore.
- *
- * @since 1.5.0.1
  */
 class DbPDOCore extends Db
 {

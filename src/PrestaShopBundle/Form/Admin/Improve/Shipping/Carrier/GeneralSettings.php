@@ -92,6 +92,7 @@ class GeneralSettings extends TranslatorAwareType
             ])
             ->add('logo_preview', ImagePreviewType::class, [
                 'label' => $this->trans('Logo', 'Admin.Global'),
+                'image_class' => 'img-fluid carrier__logo',
             ])
             ->add('logo', FileType::class, [
                 'label' => null,

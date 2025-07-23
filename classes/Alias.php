@@ -138,8 +138,6 @@ class AliasCore extends ObjectModel
     /**
      * This method is allowed to know if a feature is used or active.
      *
-     * @since 1.5.0.1
-     *
      * @return bool
      */
     public static function isFeatureActive()
@@ -153,8 +151,6 @@ class AliasCore extends ObjectModel
      * @param int $idAlias Alias ID
      *
      * @return bool
-     *
-     * @since 1.5.6.0
      */
     public static function aliasExists($idAlias)
     {

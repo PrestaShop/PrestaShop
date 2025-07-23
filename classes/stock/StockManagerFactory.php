@@ -27,7 +27,6 @@
 /**
  * StockManagerFactory : factory of stock manager
  *
- * @since 1.5.0
  * @deprecated since 9.0 and will be removed in 10.0, stock is now managed by new logic
  */
 class StockManagerFactoryCore

@@ -25,8 +25,6 @@
  */
 
 /**
- * @since 1.5.0
- *
  * TaxCaculator is responsible of the tax computation
  */
 class TaxCalculatorCore

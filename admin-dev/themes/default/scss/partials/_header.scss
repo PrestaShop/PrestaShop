@@ -516,18 +516,27 @@
         }
 
         .notif {
-          display: flex;
-          gap: var(--#{$cdk}size-4);
-          align-items: center;
+          display: inline-block;
           width: 100%;
           padding: var(--#{$cdk}size-8);
+          vertical-align: middle;
+
+          * {
+            display: inline-block;
+            line-height: var(--#{$cdk}size-18);
+            vertical-align: text-top;
+          }
 
           .material-icons {
             font-size: var(--#{$cdk}size-16);
-            line-height: var(--#{$cdk}size-16);
+            line-height: var(--#{$cdk}size-18);
           }
 
-          .message-notification-status {
+          &__carrier {
+            color: var(--#{$cdk}primary-600);
+          }
+
+          &__status {
             &.open {
               color: var(--#{$cdk}green-500);
             }

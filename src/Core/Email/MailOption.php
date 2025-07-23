@@ -62,6 +62,12 @@ final class MailOption
     public const TYPE_BOTH = 3;
 
     /**
+     * @var int Option defines that emails should be sent in both HTML and TXT formats,
+     *          with TXT format being automatically generated from HTML content
+     */
+    public const TYPE_BOTH_AUTOMATIC_TEXT = 4;
+
+    /**
      * Class should not be initialized as its responsibility is to hold mail method options.
      */
     private function __construct()

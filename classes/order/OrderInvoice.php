@@ -325,8 +325,6 @@ class OrderInvoiceCore extends ObjectModel
      * This method returns true if at least one order details uses the
      * One After Another tax computation method.
      *
-     * @since 1.5
-     *
      * @return bool
      */
     public function useOneAfterAnotherTaxComputationMethod()
@@ -423,8 +421,6 @@ class OrderInvoiceCore extends ObjectModel
 
     /**
      * Returns the shipping taxes breakdown.
-     *
-     * @since 1.5
      *
      * @param Order $order
      *
@@ -561,8 +557,6 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * Returns the ecotax taxes breakdown.
      *
-     * @since 1.5
-     *
      * @return array
      */
     public function getEcoTaxTaxesBreakdown()
@@ -591,8 +585,6 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * Returns all the order invoice that match the date interval.
      *
-     * @since 1.5
-     *
      * @param string $date_from
      * @param string $date_to
      *
@@ -615,8 +607,6 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * @since 1.5.0.3
-     *
      * @param int $id_order_state
      *
      * @return array collection of OrderInvoice
@@ -637,8 +627,6 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * @since 1.5.0.3
-     *
      * @param string $date_from
      * @param string $date_to
      *
@@ -660,8 +648,6 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * @since 1.5
-     *
      * @param int $id_order_invoice
      */
     public static function getCarrier($id_order_invoice)
@@ -675,8 +661,6 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * @since 1.5
-     *
      * @param int $id_order_invoice
      */
     public static function getCarrierId($id_order_invoice)
@@ -708,8 +692,6 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * Amounts of payments.
      *
-     * @since 1.5.0.2
-     *
      * @return float Total paid
      */
     public function getTotalPaid()
@@ -733,8 +715,6 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * Rest Paid.
      *
-     * @since 1.5.0.2
-     *
      * @return float Rest Paid
      */
     public function getRestPaid()
@@ -748,8 +728,6 @@ class OrderInvoiceCore extends ObjectModel
 
     /**
      * Return collection of order invoice object linked to the payments of the current order invoice object.
-     *
-     * @since 1.5.0.14
      *
      * @return PrestaShopCollection|array Collection of OrderInvoice or empty array
      */
@@ -789,8 +767,6 @@ class OrderInvoiceCore extends ObjectModel
      * @param int $mod TAX_EXCL, TAX_INCL, DETAIL
      *
      * @return float|array
-     *
-     * @since 1.5.0.14
      */
     public function getSiblingTotal($mod = OrderInvoice::TAX_INCL)
     {
@@ -827,8 +803,6 @@ class OrderInvoiceCore extends ObjectModel
      * Get global rest to paid
      *    This method will return something different of the method getRestPaid if
      *    there is an other invoice linked to the payments of the current invoice.
-     *
-     * @since 1.5.0.13
      */
     public function getGlobalRestPaid()
     {
@@ -857,8 +831,6 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * @since 1.5.0.2
-     *
      * @return bool Is paid ?
      */
     public function isPaid()
@@ -867,8 +839,6 @@ class OrderInvoiceCore extends ObjectModel
     }
 
     /**
-     * @since 1.5.0.2
-     *
      * @return PrestaShopCollection Collection of Order payment
      */
     public function getOrderPaymentCollection()
@@ -878,8 +848,6 @@ class OrderInvoiceCore extends ObjectModel
 
     /**
      * Get the formatted number of invoice.
-     *
-     * @since 1.5.0.2
      *
      * @param int $id_lang for invoice_prefix
      *
@@ -952,8 +920,6 @@ class OrderInvoiceCore extends ObjectModel
      * (because uses the whole environnement of PS classes that is not available during upgrade).
      * This method should execute once on an upgraded PrestaShop to fix all OrderInvoices in one shot.
      * This method is triggered once during a (non bulk) creation of a PDF from an OrderInvoice that is not fixed yet.
-     *
-     * @since 1.6.1.1
      */
     public static function fixAllShopAddresses()
     {

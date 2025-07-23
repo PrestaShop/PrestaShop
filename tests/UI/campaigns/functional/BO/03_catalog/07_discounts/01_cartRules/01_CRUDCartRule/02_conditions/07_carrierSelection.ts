@@ -196,7 +196,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
       await foClassicCheckoutPage.addPromoCode(page, newCartRuleData.code);
 
       const totalAfterDiscount = dataProducts.demo_6.combinations[0].price
-        - newCartRuleData.discountAmount!.value + dataCarriers.myCarrier.priceTTC;
+        - parseFloat(newCartRuleData.discountAmount!.value.toString()) + dataCarriers.myCarrier.priceTTC;
 
       const priceATI = await foClassicCheckoutPage.getATIPrice(page);
       expect(priceATI.toFixed(2)).to.equal(totalAfterDiscount.toFixed(2));

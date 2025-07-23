@@ -53,7 +53,8 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
     },
   });
 
-  const amountValue: number = cartRuleEnabledPartialUse.discountAmount!.value - dataProducts.demo_1.finalPrice;
+  const amountValue: number = parseFloat(cartRuleEnabledPartialUse.discountAmount!.value.toString())
+   - dataProducts.demo_1.finalPrice;
 
   // before and after functions
   before(async function () {
@@ -146,8 +147,8 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         const cartRuleName = await foClassicCartPage.getCartRuleName(page);
         expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
 
-        const discountValue = await foClassicCartPage.getDiscountValue(page);
-        expect(discountValue.toString()).to.equal(`-${dataProducts.demo_1.finalPrice}`);
+        const discountValue = await foClassicCartPage.getCartRuleValue(page, 1);
+        expect(discountValue).to.equal(`-€${dataProducts.demo_1.finalPrice.toFixed(2)}`);
       });
 
       it('should validate shopping cart and go to checkout page', async function () {
@@ -354,8 +355,8 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with enabled/disabled parti
         const cartRuleName = await foClassicCartPage.getCartRuleName(page);
         expect(cartRuleName).to.equal(cartRuleEnabledPartialUse.name);
 
-        const discountValue = await foClassicCartPage.getDiscountValue(page);
-        expect(discountValue.toString()).to.equal(`-${dataProducts.demo_1.finalPrice}`);
+        const discountValue = await foClassicCartPage.getCartRuleValue(page, 1);
+        expect(discountValue).to.equal(`-€${dataProducts.demo_1.finalPrice.toFixed(2)}`);
       });
 
       it('should validate shopping cart and go to checkout page', async function () {

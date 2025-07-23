@@ -26,8 +26,6 @@
 
 /**
  * Class TranslateCore.
- *
- * @since 1.5.0
  */
 class TranslateCore
 {

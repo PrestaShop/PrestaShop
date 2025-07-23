@@ -111,6 +111,37 @@ class AdminCarriersControllerCore extends AdminController
         ];
     }
 
+    /**
+     * Extends the renderOptions method to add a notice about migration to Symfony.
+     */
+    public function renderOptions()
+    {
+        // Get original options, probably none in case of this controller
+        $renderedOptions = parent::renderOptions();
+
+        // Add a notice about the new carrier page
+        $renderedOptions .= sprintf(
+            '<div class="alert alert-info"><p>%s</p><p>%s</p></div>',
+            $this->trans(
+                '[1]A new, improved version of this page is ready.[/1] You can enable it with a single click in the [2]New & Experimental Features[/2] section.',
+                [
+                    '[1]' => '<strong>',
+                    '[/1]' => '</strong>',
+                    '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminFeatureFlag') . '">',
+                    '[/2]' => '</a>',
+                ],
+                'Admin.Shipping.Feature'
+            ),
+            $this->trans(
+                'For compatibility reasons, the original version remains enabled on your shop. If no incompatible modules are holding you back, feel free to switch to the new version. The legacy version will eventually be removed in a future release.',
+                [],
+                'Admin.Shipping.Feature'
+            )
+        );
+
+        return $renderedOptions;
+    }
+
     public function initToolbar()
     {
         parent::initToolbar();
