@@ -30,3 +30,10 @@ services:
       - '@logger'
     tags:
       - { name: kernel.event_subscriber }
+
+  PrestaShopBundle\EventListener\Admin\DisableDebugToolbarListener:
+    arguments:
+      $profiler: '@?profiler'
+      $routes: ['admin_login']
+    tags:
+      - { name: kernel.event_subscriber }
