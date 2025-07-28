@@ -242,9 +242,21 @@ class SupplyOrderCore extends ObjectModel
         // build query
         $query = new DbQuery();
 
-        $query->select('
+        // MySQL's GROUP_CONCAT(... SEPARATOR ...) has no direct PostgreSQL equivalent;
+        // STRING_AGG() takes a single pre-concatenated expression plus separator instead.
+        // The "||" operator (not CONCAT(), which treats NULL as an empty string in
+        // PostgreSQL) is used so a missing attribute still yields NULL and falls back
+        // to the plain product name, matching MySQL's CONCAT()/GROUP_CONCAT() NULL propagation.
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            $query->select('
+			s.*,
+			COALESCE(pl.name || \' : \' || STRING_AGG(agl.name || \' - \' || al.name, \', \'), pl.name) as name_displayed');
+        } else {
+            $query->select('
 			s.*,
 			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(agl.name, \' - \', al.name SEPARATOR \', \')), pl.name) as name_displayed');
+        }
 
         $query->from('supply_order_detail', 's');
 
@@ -430,7 +442,7 @@ class SupplyOrderCore extends ObjectModel
         $query = new DbQuery();
         $query->select('id_supply_order');
         $query->from('supply_order', 'so');
-        $query->where('so.id_supply_order = ' . (int) $match . ' OR so.reference = "' . pSQL($match) . '"');
+        $query->where('so.id_supply_order = ' . (int) $match . ' OR so.reference = \'' . pSQL($match) . '\'');
 
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
@@ -453,7 +465,7 @@ class SupplyOrderCore extends ObjectModel
         $query = new DbQuery();
         $query->select('id_supply_order');
         $query->from('supply_order', 'so');
-        $query->where('so.reference = "' . pSQL($reference) . '"');
+        $query->where('so.reference = \'' . pSQL($reference) . '\'');
         $id_supply_order = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
         if (!$id_supply_order) {
@@ -512,9 +524,9 @@ class SupplyOrderCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             '
-			SELECT SUM(`quantity_expected`)
-			FROM `' . _DB_PREFIX_ . 'supply_order_detail`
-			WHERE `id_supply_order` = ' . (int) $this->id
+			SELECT SUM(quantity_expected)
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'supply_order_detail') . '
+			WHERE id_supply_order = ' . (int) $this->id
         );
     }
 
@@ -522,9 +534,9 @@ class SupplyOrderCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             '
-			SELECT SUM(`quantity_received`)
-			FROM `' . _DB_PREFIX_ . 'supply_order_detail`
-			WHERE `id_supply_order` = ' . (int) $this->id
+			SELECT SUM(quantity_received)
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'supply_order_detail') . '
+			WHERE id_supply_order = ' . (int) $this->id
         );
     }
 
@@ -532,9 +544,9 @@ class SupplyOrderCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             '
-			SELECT (SUM(`quantity_expected`) - SUM(`quantity_received`))
-			FROM `' . _DB_PREFIX_ . 'supply_order_detail`
-			WHERE `id_supply_order` = ' . (int) $this->id
+			SELECT (SUM(quantity_expected) - SUM(quantity_received))
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'supply_order_detail') . '
+			WHERE id_supply_order = ' . (int) $this->id
         );
     }
 

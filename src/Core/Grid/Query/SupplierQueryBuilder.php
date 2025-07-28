@@ -105,7 +105,7 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
             $alias = 's';
         }
 
-        $qb->select('COUNT(DISTINCT ' . $alias . '.`id_supplier`)');
+        $qb->select('COUNT(DISTINCT ' . $alias . '.id_supplier)');
 
         return $qb;
     }
@@ -124,22 +124,22 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
                 's',
                 $this->dbPrefix . 'supplier_lang',
                 'sl',
-                'sl.`id_supplier` = s.`id_supplier`'
+                'sl.id_supplier = s.id_supplier'
             )
             ->innerJoin(
                 's',
                 $this->dbPrefix . 'supplier_shop',
                 'ss',
-                'ss.`id_supplier` = s.`id_supplier`'
+                'ss.id_supplier = s.id_supplier'
             )
             ->leftJoin(
                 's',
                 $this->dbPrefix . 'product_supplier',
                 'ps',
-                'ps.`id_supplier` = s.`id_supplier`'
+                'ps.id_supplier = s.id_supplier'
             )
-            ->andWhere('sl.`id_lang` = :contextLangId')
-            ->andWhere('ss.`id_shop` IN (:contextShopIds)')
+            ->andWhere('sl.id_lang = :contextLangId')
+            ->andWhere('ss.id_shop IN (:contextShopIds)')
         ;
     }
 
@@ -163,7 +163,7 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
                 '(' . $subQuery->getSQL() . ')',
                 $alias
             )
-            ->where('subQuery.`products_count` = :productsCountFilter')
+            ->where('subQuery.products_count = :productsCountFilter')
         ;
 
         $qb->setParameter('productsCountFilter', $filters['products_count']);
@@ -179,9 +179,9 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
     private function applyListQuerySelection(QueryBuilder $qb)
     {
         $qb
-            ->select('s.`id_supplier`, s.`name`, s.`active`')
-            ->addSelect('COUNT(DISTINCT ps.`id_product`) AS `products_count`')
-            ->groupBy('s.`id_supplier`')
+            ->select('s.id_supplier, s.name, s.active')
+            ->addSelect('COUNT(DISTINCT ps.id_product) AS products_count')
+            ->groupBy('s.id_supplier')
         ;
     }
 
@@ -219,13 +219,13 @@ final class SupplierQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if (in_array($filterName, ['id_supplier', 'active'], true)) {
-                $qb->andWhere($alias . '.`' . $filterName . '` = :' . $filterName);
+                $qb->andWhere($alias . '.' . $this->connection->quoteIdentifier($filterName) . ' = :' . $filterName);
                 $qb->setParameter($filterName, $value);
 
                 continue;
             }
 
-            $qb->andWhere($alias . '.`name` LIKE :' . $filterName);
+            $qb->andWhere($alias . '.name LIKE :' . $filterName);
             $qb->setParameter($filterName, '%' . $value . '%');
         }
     }

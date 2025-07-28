@@ -67,17 +67,17 @@ class CategoriesProvider
     {
         $mainCategoryQuery = new DbQuery();
         $mainCategoryQuery
-            ->select('c.`id_cms_category`, cl.`name`')
+            ->select('c.id_cms_category, cl.name')
             ->from('cms_category', 'c')
             ->innerJoin(
                 'cms_category_lang',
                 'cl',
-                'cl.`id_cms_category` = c.`id_cms_category`'
+                'cl.id_cms_category = c.id_cms_category'
             )
-            ->where('c.`id_cms_category` = ' . (int) $cmsPageCategoryId)
-            ->where('cl.`id_lang` = ' . $this->contextLanguageId)
-            ->where('cl.`id_shop` IN (' . implode(',', $this->contextShopIds) . ')')
-            ->groupBy('c.`id_cms_category`')
+            ->where('c.id_cms_category = ' . (int) $cmsPageCategoryId)
+            ->where('cl.id_lang = ' . $this->contextLanguageId)
+            ->where('cl.id_shop IN (' . implode(',', $this->contextShopIds) . ')')
+            ->groupBy('c.id_cms_category')
         ;
 
         $result = Db::getInstance()->getRow($mainCategoryQuery);
@@ -85,17 +85,17 @@ class CategoriesProvider
 
         $childrenQuery = new DbQuery();
         $childrenQuery
-            ->select('c.`id_cms_category`, cl.`name`')
+            ->select('c.id_cms_category, cl.name')
             ->from('cms_category', 'c')
             ->innerJoin(
                 'cms_category_lang',
                 'cl',
-                'cl.`id_cms_category` = c.`id_cms_category`'
+                'cl.id_cms_category = c.id_cms_category'
             )
-            ->where('c.`id_parent` = ' . (int) $cmsPageCategoryId)
-            ->where('cl.`id_lang` = ' . $this->contextLanguageId)
-            ->where('cl.`id_shop` IN (' . implode(',', $this->contextShopIds) . ')')
-            ->groupBy('c.`id_cms_category`')
+            ->where('c.id_parent = ' . (int) $cmsPageCategoryId)
+            ->where('cl.id_lang = ' . $this->contextLanguageId)
+            ->where('cl.id_shop IN (' . implode(',', $this->contextShopIds) . ')')
+            ->groupBy('c.id_cms_category')
         ;
 
         $childCategories = Db::getInstance()->executeS($childrenQuery);

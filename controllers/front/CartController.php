@@ -284,12 +284,12 @@ class CartControllerCore extends FrontController
     protected function processDeleteProductInCart(): void
     {
         $customization_product = Db::getInstance()->executeS(
-            'SELECT * FROM `' . _DB_PREFIX_ . 'customization`'
-            . ' WHERE `id_cart` = ' . (int) $this->context->cart->id
-            . ' AND `id_product` = ' . (int) $this->id_product
-            . ' AND `id_customization` != ' . (int) $this->customization_id
-            . ' AND `in_cart` = 1'
-            . ' AND `quantity` > 0'
+            'SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization')
+            . ' WHERE id_cart = ' . (int) $this->context->cart->id
+            . ' AND id_product = ' . (int) $this->id_product
+            . ' AND id_customization != ' . (int) $this->customization_id
+            . ' AND in_cart = 1'
+            . ' AND quantity > 0'
         );
 
         if (count($customization_product)) {

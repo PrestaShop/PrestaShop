@@ -170,7 +170,7 @@ class OrderControllerCore extends FrontController
         $data['checksum'] = $this->cartChecksum->generateChecksum($cart);
 
         Db::getInstance()->execute(
-            'UPDATE ' . _DB_PREFIX_ . 'cart SET checkout_session_data = "' . pSQL(json_encode($data)) . '"
+            'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart') . ' SET checkout_session_data = \'' . pSQL(json_encode($data)) . '\'
                 WHERE id_cart = ' . (int) $cart->id
         );
     }

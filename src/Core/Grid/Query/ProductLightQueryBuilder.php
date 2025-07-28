@@ -54,12 +54,12 @@ final class ProductLightQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->productQueryBuilder->getSearchQueryBuilder($searchCriteria);
         $qb
             ->select('p.id_product')
-            ->addSelect('ps.`price` AS `price_tax_excluded`')
-            ->addSelect('pl.`name`')
+            ->addSelect('ps.price AS price_tax_excluded')
+            ->addSelect('pl.name')
         ;
 
         if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
-            $qb->addSelect('sa.`quantity`');
+            $qb->addSelect('sa.quantity');
         }
 
         $this->searchCriteriaApplicator

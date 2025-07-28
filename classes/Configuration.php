@@ -107,8 +107,8 @@ class ConfigurationCore extends ObjectModel
      */
     public static function getIdByNameFromGivenContext(string $key, ?int $idShopGroup, ?int $idShop): int
     {
-        $sql = 'SELECT `' . bqSQL(self::$definition['primary']) . '`
-                FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
+        $sql = 'SELECT ' . self::$definition['primary'] . '
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . self::$definition['table']) . '
                 WHERE name = \'' . pSQL($key) . '\'
                 ' . Configuration::sqlRestriction($idShopGroup, $idShop);
 
@@ -153,11 +153,10 @@ class ConfigurationCore extends ObjectModel
      */
     public static function loadConfiguration()
     {
-        $sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
-               FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '` c
-               LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang` cl ON (c.`' . bqSQL(
-            self::$definition['primary']
-        ) . '` = cl.`' . bqSQL(self::$definition['primary']) . '`)';
+        $sql = 'SELECT c.name, cl.id_lang, CASE WHEN cl.id_lang IS NULL THEN c.value ELSE cl.value END AS value, c.id_shop_group, c.id_shop
+               FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . self::$definition['table']) . ' c
+               LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . self::$definition['table'] . '_lang') . ' cl ON (c.' . self::$definition['primary']
+        . ' = cl.' . self::$definition['primary'] . ')';
         $db = Db::getInstance();
         $results = $db->executeS($sql);
         if ($results) {
@@ -462,19 +461,23 @@ class ConfigurationCore extends ObjectModel
             if (Configuration::hasKey($key, $lang, $idShopGroup, $idShop)) {
                 if (!$lang) {
                     // Update config not linked to lang
+                    // PostgreSQL doesn't support LIMIT on UPDATE queries; the WHERE clause
+                    // (name + shop/shop group restriction) already targets a single row.
+                    /* @phpstan-ignore-next-line */
+                    $limit = _DB_TYPE_ == 'pgsql' ? 0 : 1;
                     $result &= Db::getInstance()->update(self::$definition['table'], [
                         'value' => pSQL($value, $html),
                         'date_upd' => date('Y-m-d H:i:s'),
-                    ], '`name` = \'' . pSQL($key) . '\'' . Configuration::sqlRestriction($idShopGroup, $idShop), 1, true);
+                    ], 'name = \'' . pSQL($key) . '\'' . Configuration::sqlRestriction($idShopGroup, $idShop), $limit, true);
                 } else {
                     // Update multi lang
-                    $sql = 'UPDATE `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang` cl
+                    $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . self::$definition['table'] . '_lang') . ' cl
                             SET cl.value = \'' . pSQL($value, $html) . '\',
                                 cl.date_upd = NOW()
                             WHERE cl.id_lang = ' . (int) $lang . '
-                                AND cl.`' . bqSQL(self::$definition['primary']) . '` = (
-                                    SELECT c.`' . bqSQL(self::$definition['primary']) . '`
-                                    FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '` c
+                                AND cl.' . self::$definition['primary'] . ' = (
+                                    SELECT c.' . self::$definition['primary'] . '
+                                    FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . self::$definition['table']) . ' c
                                     WHERE c.name = \'' . pSQL($key) . '\''
                                         . Configuration::sqlRestriction($idShopGroup, $idShop)
                                 . ')';
@@ -500,9 +503,9 @@ class ConfigurationCore extends ObjectModel
                     $table = self::$definition['table'] . '_lang';
                     $selectConfiguration = strtr(
                         'SELECT 1 FROM {{ table }} WHERE id_lang = {{ lang }} ' .
-                        'AND `{{ primary_key_column }}` = {{ config_id }}',
+                        'AND {{ primary_key_column }} = {{ config_id }}',
                         [
-                            '{{ table }}' => _DB_PREFIX_ . $table,
+                            '{{ table }}' => Db::quoteIdentifier(_DB_PREFIX_ . $table),
                             '{{ lang }}' => (int) $lang,
                             '{{ primary_key_column }}' => self::$definition['primary'],
                             '{{ config_id }}' => $configID,
@@ -515,9 +518,9 @@ class ConfigurationCore extends ObjectModel
 
                     if ($configurationExists) {
                         $condition = strtr(
-                            '`{{ primary_key_column }}` = {{ config_id }} AND ' .
-                            'date_upd = "{{ update_date }}" AND ' .
-                            'value = "{{ value }}"',
+                            '{{ primary_key_column }} = {{ config_id }} AND ' .
+                            'date_upd = \'{{ update_date }}\' AND ' .
+                            'value = \'{{ value }}\'',
                             [
                                 '{{ primary_key_column }}' => self::$definition['primary'],
                                 '{{ config_id }}' => $configID,
@@ -560,16 +563,16 @@ class ConfigurationCore extends ObjectModel
         }
 
         $result = Db::getInstance()->execute('
-        DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang`
-        WHERE `' . bqSQL(self::$definition['primary']) . '` IN (
-            SELECT `' . bqSQL(self::$definition['primary']) . '`
-            FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
-            WHERE `name` = "' . pSQL($key) . '"
+        DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . self::$definition['table'] . '_lang') . '
+        WHERE ' . self::$definition['primary'] . ' IN (
+            SELECT ' . self::$definition['primary'] . '
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . self::$definition['table']) . '
+            WHERE name = \'' . pSQL($key) . '\'
         )');
 
         $result2 = Db::getInstance()->execute('
-        DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
-        WHERE `name` = "' . pSQL($key) . '"');
+        DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . self::$definition['table']) . '
+        WHERE name = \'' . pSQL($key) . '\'');
 
         self::$_cache = null;
         self::$_new_cache_shop = null;
@@ -617,11 +620,11 @@ class ConfigurationCore extends ObjectModel
     public static function deleteById(int $configurationId): void
     {
         Db::getInstance()->execute('
-        DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
-        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . $configurationId);
+        DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . self::$definition['table']) . '
+        WHERE ' . self::$definition['primary'] . ' = ' . $configurationId);
         Db::getInstance()->execute('
-        DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang`
-        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . $configurationId);
+        DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . self::$definition['table'] . '_lang') . '
+        WHERE ' . self::$definition['primary'] . ' = ' . $configurationId);
 
         self::$_cache = null;
         self::$_new_cache_shop = null;
@@ -733,12 +736,12 @@ class ConfigurationCore extends ObjectModel
     public function getWebserviceObjectList($sqlJoin, $sqlFilter, $sqlSort, $sqlLimit)
     {
         $query = '
-        SELECT DISTINCT main.`' . bqSQL($this->def['primary']) . '`
-        FROM `' . _DB_PREFIX_ . bqSQL($this->def['table']) . '` main
+        SELECT DISTINCT main.' . $this->def['primary'] . '
+        FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->def['table']) . ' main
         ' . $sqlJoin . '
         WHERE id_configuration NOT IN (
             SELECT id_configuration
-            FROM `' . _DB_PREFIX_ . bqSQL($this->def['table']) . '_lang`
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->def['table'] . '_lang') . '
         ) ' . $sqlFilter . '
         ' . ($sqlSort != '' ? $sqlSort : '') . '
         ' . ($sqlLimit != '' ? $sqlLimit : '');

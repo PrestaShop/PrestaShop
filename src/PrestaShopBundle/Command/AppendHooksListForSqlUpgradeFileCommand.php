@@ -194,9 +194,9 @@ class AppendHooksListForSqlUpgradeFileCommand extends Command
         }
 
         $insertSQL = PHP_EOL . "/* Auto generated hooks added for version $prestashopVersion */" . PHP_EOL;
-        $insertSQL .= 'INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES' . PHP_EOL;
+        $insertSQL .= 'INSERT INTO PREFIX_hook (id_hook, name, title, description, position) VALUES' . PHP_EOL;
         $insertSQL .= implode(',' . PHP_EOL, $valuesToInsert);
-        $insertSQL .= PHP_EOL . 'ON DUPLICATE KEY UPDATE `title` = VALUES(`title`), `description` = VALUES(`description`);' . PHP_EOL;
+        $insertSQL .= PHP_EOL . 'ON DUPLICATE KEY UPDATE title = VALUES(title), description = VALUES(description);' . PHP_EOL;
 
         return $insertSQL;
     }
@@ -208,12 +208,12 @@ class AppendHooksListForSqlUpgradeFileCommand extends Command
         }
 
         $deleteSQL = PHP_EOL . "/* Auto generated hooks removed for version $prestashopVersion */" . PHP_EOL;
-        $deleteSQL .= 'DELETE FROM `PREFIX_hook` WHERE `name` IN (' . PHP_EOL;
+        $deleteSQL .= 'DELETE FROM PREFIX_hook WHERE name IN (' . PHP_EOL;
         $deleteSQL .= implode(',' . PHP_EOL, array_map(fn (string $hookName) => "  '$hookName'", $removedHooks));
         $deleteSQL .= PHP_EOL . ');' . PHP_EOL;
         $deleteSQL .= '/* Clean hook registrations related to removed hooks */' . PHP_EOL;
-        $deleteSQL .= 'DELETE FROM `PREFIX_hook_module` WHERE `id_hook` NOT IN (SELECT id_hook FROM `PREFIX_hook`);' . PHP_EOL;
-        $deleteSQL .= 'DELETE FROM `PREFIX_hook_module_exceptions` WHERE `id_hook` NOT IN (SELECT id_hook FROM `PREFIX_hook`);' . PHP_EOL;
+        $deleteSQL .= 'DELETE FROM PREFIX_hook_module WHERE id_hook NOT IN (SELECT id_hook FROM PREFIX_hook);' . PHP_EOL;
+        $deleteSQL .= 'DELETE FROM PREFIX_hook_module_exceptions WHERE id_hook NOT IN (SELECT id_hook FROM PREFIX_hook);' . PHP_EOL;
 
         return $deleteSQL;
     }

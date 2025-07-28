@@ -40,8 +40,8 @@ class HookModuleFormDataProvider
         }
 
         $sql = sprintf(
-            'SELECT DISTINCT file_name FROM `%shook_module_exceptions` WHERE id_module = :moduleId AND id_hook = :hookId',
-            $this->dbPrefix
+            'SELECT DISTINCT file_name FROM %s WHERE id_module = :moduleId AND id_hook = :hookId',
+            $this->connection->quoteIdentifier($this->dbPrefix . 'hook_module_exceptions')
         );
         $rows = $this->connection->fetchAllAssociative($sql, [
             'moduleId' => $moduleId,

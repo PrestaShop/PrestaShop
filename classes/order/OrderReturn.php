@@ -115,9 +115,9 @@ class OrderReturnCore extends ObjectModel
     public function countProduct()
     {
         if (!$data = Db::getInstance()->getRow('
-		SELECT COUNT(`id_order_return`) AS total
-		FROM `' . _DB_PREFIX_ . 'order_return_detail`
-		WHERE `id_order_return` = ' . (int) $this->id . ' AND `cancelled` = 0')) {
+		SELECT COUNT(id_order_return) AS total
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_return_detail') . '
+		WHERE id_order_return = ' . (int) $this->id . ' AND cancelled = 0')) {
             return false;
         }
 
@@ -131,12 +131,12 @@ class OrderReturnCore extends ObjectModel
         }
         $data = Db::getInstance()->executeS('
 		SELECT *
-		FROM `' . _DB_PREFIX_ . 'order_return`
-		WHERE `id_customer` = ' . (int) $customer_id .
-        ($order_id ? ' AND `id_order` = ' . (int) $order_id : '') .
-        ($idOrderReturn ? ' AND `id_order_return` = ' . (int) $idOrderReturn : '') .
-        ($no_denied ? ' AND `state` != 4' : '') . '
-		ORDER BY `date_add` DESC');
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_return') . '
+		WHERE id_customer = ' . (int) $customer_id .
+        ($order_id ? ' AND id_order = ' . (int) $order_id : '') .
+        ($idOrderReturn ? ' AND id_order_return = ' . (int) $idOrderReturn : '') .
+        ($no_denied ? ' AND state != 4' : '') . '
+		ORDER BY date_add DESC');
         foreach ($data as $k => $or) {
             $state = new OrderReturnState($or['state']);
             $data[$k]['state_name'] = $state->name[$context->language->id];
@@ -153,8 +153,8 @@ class OrderReturnCore extends ObjectModel
     {
         return Db::getInstance()->executeS(
             'SELECT *
-		    FROM `' . _DB_PREFIX_ . 'order_return_detail`
-		    WHERE `id_order_return` = ' . (int) $id_order_return
+		    FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_return_detail') . '
+		    WHERE id_order_return = ' . (int) $id_order_return
         );
     }
 
@@ -208,7 +208,7 @@ class OrderReturnCore extends ObjectModel
 
     public static function deleteOrderReturnDetail($id_order_return, $id_order_detail, $id_customization = 0)
     {
-        return Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'order_return_detail` WHERE `id_order_detail` = ' . (int) $id_order_detail . ' AND `id_order_return` = ' . (int) $id_order_return . ' AND `id_customization` = ' . (int) $id_customization);
+        return Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_return_detail') . ' WHERE id_order_detail = ' . (int) $id_order_detail . ' AND id_order_return = ' . (int) $id_order_return . ' AND id_customization = ' . (int) $id_customization);
     }
 
     /**
@@ -220,12 +220,12 @@ class OrderReturnCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT product_quantity, date_add, orsl.name as state
-			FROM `' . _DB_PREFIX_ . 'order_return_detail` ord
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_return` o
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_return_detail') . ' ord
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_return') . ' o
 			ON o.id_order_return = ord.id_order_return
-			LEFT JOIN `' . _DB_PREFIX_ . 'order_return_state_lang` orsl
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_return_state_lang') . ' orsl
 			ON orsl.id_order_return_state = o.state AND orsl.id_lang = ' . (int) Context::getContext()->language->id . '
-			WHERE ord.`id_order_detail` = ' . (int) $id_order_detail);
+			WHERE ord.id_order_detail = ' . (int) $id_order_detail);
     }
 
     /**
@@ -237,9 +237,9 @@ class OrderReturnCore extends ObjectModel
     public static function addReturnedQuantity(&$products, $id_order)
     {
         $details = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT od.id_order_detail, GREATEST(od.product_quantity_return, IFNULL(SUM(ord.product_quantity),0)) as qty_returned
-			FROM ' . _DB_PREFIX_ . 'order_detail od
-			LEFT JOIN ' . _DB_PREFIX_ . 'order_return_detail ord ON ord.id_order_detail = od.id_order_detail AND ord.cancelled = 0
+            'SELECT od.id_order_detail, GREATEST(od.product_quantity_return, COALESCE(SUM(ord.product_quantity),0)) as qty_returned
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . ' od
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_return_detail') . ' ord ON ord.id_order_detail = od.id_order_detail AND ord.cancelled = 0
 			WHERE od.id_order = ' . (int) $id_order . '
 			GROUP BY od.id_order_detail'
         );
@@ -262,7 +262,7 @@ class OrderReturnCore extends ObjectModel
     public static function setCancelledStatus(int $idOrderReturn, bool $cancelled): void
     {
         Db::getInstance()->execute(
-            'UPDATE ' . _DB_PREFIX_ . 'order_return_detail ord '
+            'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_return_detail') . ' ord '
             . 'SET cancelled = ' . ($cancelled ? '1' : '0') . ' '
             . 'WHERE id_order_return = ' . (string) $idOrderReturn
         );

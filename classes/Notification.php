@@ -30,8 +30,8 @@ class NotificationCore
         $notifications = [];
         $employeeInfos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
         SELECT id_last_order, id_last_customer_message, id_last_customer
-        FROM `' . _DB_PREFIX_ . 'employee`
-        WHERE `id_employee` = ' . (int) Context::getContext()->employee->id);
+        FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . '
+        WHERE id_employee = ' . (int) Context::getContext()->employee->id);
 
         foreach ($this->types as $type) {
             $notifications[$type] = Notification::getLastElementsIdsByType($type, $employeeInfos['id_last_' . $type]);
@@ -67,8 +67,8 @@ class NotificationCore
         $notifications = [];
         $employeeInfos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
         SELECT id_last_order, id_last_customer_message, id_last_customer
-        FROM `' . _DB_PREFIX_ . 'employee`
-        WHERE `id_employee` = ' . (int) Context::getContext()->employee->id);
+        FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . '
+        WHERE id_employee = ' . (int) Context::getContext()->employee->id);
 
         $types = array_flip($types);
 
@@ -92,49 +92,63 @@ class NotificationCore
     {
         global $cookie;
 
+        // PostgreSQL has no SQL_CALC_FOUND_ROWS/FOUND_ROWS(); use a COUNT(*) OVER() window
+        // column instead and read the total off the first result row.
+        /* @phpstan-ignore-next-line */
+        $isPgsql = _DB_TYPE_ == 'pgsql';
+        /* @phpstan-ignore-next-line */
+        $foundRowsSelect = $isPgsql ? '' : 'SQL_CALC_FOUND_ROWS ';
+        /* @phpstan-ignore-next-line */
+        $foundRowsColumn = $isPgsql ? ', COUNT(*) OVER() AS total_found_rows' : '';
+
         switch ($type) {
             case 'order':
                 $sql = '
-					SELECT SQL_CALC_FOUND_ROWS o.`id_order`, o.`id_customer`, o.`total_paid`, o.`id_currency`, o.`date_upd`, c.`firstname`, c.`lastname`, ca.`name`, co.`iso_code`
-					FROM `' . _DB_PREFIX_ . 'orders` as o
-					LEFT JOIN `' . _DB_PREFIX_ . 'customer` as c ON (c.`id_customer` = o.`id_customer`)
-					LEFT JOIN `' . _DB_PREFIX_ . 'carrier` as ca ON (ca.`id_carrier` = o.`id_carrier`)
-					LEFT JOIN `' . _DB_PREFIX_ . 'address` as a ON (a.`id_address` = o.`id_address_delivery`)
-					LEFT JOIN `' . _DB_PREFIX_ . 'country` as co ON (co.`id_country` = a.`id_country`)
-					WHERE `id_order` > ' . (int) $idLastElement .
+					SELECT ' . $foundRowsSelect . 'o.id_order, o.id_customer, o.total_paid, o.id_currency, o.date_upd, c.firstname, c.lastname, ca.name, co.iso_code' . $foundRowsColumn . '
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . ' as o
+					LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' as c ON (c.id_customer = o.id_customer)
+					LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'carrier') . ' as ca ON (ca.id_carrier = o.id_carrier)
+					LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'address') . ' as a ON (a.id_address = o.id_address_delivery)
+					LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'country') . ' as co ON (co.id_country = a.id_country)
+					WHERE id_order > ' . (int) $idLastElement .
                     Shop::addSqlRestriction(false, 'o') . '
-					ORDER BY `id_order` DESC
+					ORDER BY id_order DESC
 					LIMIT 5';
 
                 break;
 
             case 'customer_message':
                 $sql = '
-					SELECT SQL_CALC_FOUND_ROWS c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`, ct.`status`, c.`date_add`, cu.`firstname`, cu.`lastname`
-					FROM `' . _DB_PREFIX_ . 'customer_message` as c
-					LEFT JOIN `' . _DB_PREFIX_ . 'customer_thread` as ct ON (c.`id_customer_thread` = ct.`id_customer_thread`)
-					LEFT JOIN `' . _DB_PREFIX_ . 'customer` as cu ON (cu.`id_customer` = ct.`id_customer`)
-					WHERE c.`id_customer_message` > ' . (int) $idLastElement . '
-						AND c.`id_employee` = 0
+					SELECT ' . $foundRowsSelect . 'c.id_customer_message, ct.id_customer, ct.id_customer_thread, ct.email, ct.status, c.date_add, cu.firstname, cu.lastname' . $foundRowsColumn . '
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' as c
+					LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_thread') . ' as ct ON (c.id_customer_thread = ct.id_customer_thread)
+					LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' as cu ON (cu.id_customer = ct.id_customer)
+					WHERE c.id_customer_message > ' . (int) $idLastElement . '
+						AND c.id_employee = 0
 						AND ct.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')
-					ORDER BY c.`id_customer_message` DESC
+					ORDER BY c.id_customer_message DESC
 					LIMIT 5';
 
                 break;
             default:
                 $sql = '
-					SELECT SQL_CALC_FOUND_ROWS t.`id_' . bqSQL($type) . '`, t.*
-					FROM `' . _DB_PREFIX_ . bqSQL($type) . '` t
-					WHERE t.`deleted` = 0 AND t.`id_' . bqSQL($type) . '` > ' . (int) $idLastElement .
+					SELECT ' . $foundRowsSelect . 't.id_' . bqSQL($type) . ', t.*' . $foundRowsColumn . '
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . bqSQL($type)) . ' t
+					WHERE t.deleted = 0 AND t.id_' . bqSQL($type) . ' > ' . (int) $idLastElement .
                     Shop::addSqlRestriction(false, 't') . '
-					ORDER BY t.`id_' . bqSQL($type) . '` DESC
+					ORDER BY t.id_' . bqSQL($type) . ' DESC
 					LIMIT 5';
 
                 break;
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
-        $total = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()', false);
+        /* @phpstan-ignore-next-line */
+        if ($isPgsql) {
+            $total = !empty($result) ? (int) $result[0]['total_found_rows'] : 0;
+        } else {
+            $total = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()', false);
+        }
         $json = ['total' => $total, 'results' => []];
         foreach ($result as $value) {
             $customerName = '';
@@ -203,12 +217,12 @@ class NotificationCore
         if (in_array($type, $this->types)) {
             // We update the last item viewed
             return Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'employee`
-			SET `id_last_' . bqSQL($type) . '` = (
-				SELECT IFNULL(MAX(`id_' . bqSQL($type) . '`), 0)
-				FROM `' . _DB_PREFIX_ . (($type == 'order') ? bqSQL($type) . 's' : bqSQL($type)) . '`
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . '
+			SET id_last_' . bqSQL($type) . ' = (
+				SELECT COALESCE(MAX(id_' . bqSQL($type) . '), 0)
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . (($type == 'order') ? bqSQL($type) . 's' : bqSQL($type))) . '
 			)
-			WHERE `id_employee` = ' . (int) Context::getContext()->employee->id);
+			WHERE id_employee = ' . (int) Context::getContext()->employee->id);
         }
 
         return false;

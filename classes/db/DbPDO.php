@@ -28,9 +28,13 @@ class DbPDOCore extends Db
      */
     protected static function getPDO($host, $user, $password, $dbname, $timeout = 5)
     {
-        $dsn = 'mysql:';
-        if ($dbname) {
-            $dsn .= 'dbname=' . $dbname . ';';
+        $dsn = '';
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'mysql') {
+            $dsn .= 'mysql:';
+        /* @phpstan-ignore-next-line */
+        } elseif (_DB_TYPE_ == 'pgsql') {
+            $dsn .= 'pgsql:';
         }
         if (preg_match('/^(.*):([0-9]+)$/', $host, $matches)) {
             $dsn .= 'host=' . $matches[1] . ';port=' . $matches[2];
@@ -39,31 +43,40 @@ class DbPDOCore extends Db
         } else {
             $dsn .= 'host=' . $host;
         }
-        $dsn .= ';charset=utf8mb4';
+        if ($dbname) {
+            $dsn .= ';dbname=' . $dbname;
+        }
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'mysql') {
+            $dsn .= ';charset=utf8mb4';
+        }
 
         $options = [
             PDO::ATTR_TIMEOUT => $timeout,
         ];
-        /*
-         * PHP 8.5 deprecated the driver specific PDO:: prefixed constants due to security concerns. Their
-         * replacements are the new Pdo\Mysql:: constants, introduced in PHP 8.4. Unfortunately, we don't
-         * have one solution that fits all supported PHP versions.
-         */
-        if (PHP_VERSION_ID >= 80500) {
-            $options = array_merge($options, [
-                /* @phpstan-ignore-next-line */
-                Pdo\Mysql::ATTR_USE_BUFFERED_QUERY => true,
-                /* @phpstan-ignore-next-line */
-                Pdo\Mysql::ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
-                /* @phpstan-ignore-next-line */
-                Pdo\Mysql::ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
-            ]);
-        } else {
-            $options = array_merge($options, [
-                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
-                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
-                PDO::MYSQL_ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
-            ]);
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'mysql') {
+            /*
+            * PHP 8.5 deprecated the driver specific PDO:: prefixed constants due to security concerns. Their
+            * replacements are the new Pdo\Mysql:: constants, introduced in PHP 8.4. Unfortunately, we don't
+            * have one solution that fits all supported PHP versions.
+            */
+            if (PHP_VERSION_ID >= 80500) {
+                $options = array_merge($options, [
+                    /* @phpstan-ignore-next-line */
+                    Pdo\Mysql::ATTR_USE_BUFFERED_QUERY => true,
+                    /* @phpstan-ignore-next-line */
+                    Pdo\Mysql::ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
+                    /* @phpstan-ignore-next-line */
+                    Pdo\Mysql::ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
+                ]);
+            } else {
+                $options = array_merge($options, [
+                    PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+                    PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
+                    PDO::MYSQL_ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
+                ]);
+            }
         }
 
         return new PDO(
@@ -88,9 +101,17 @@ class DbPDOCore extends Db
     public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
     {
         try {
-            $link = DbPDO::getPDO($host, $user, $password, '');
-            $success = $link->exec('CREATE DATABASE `' . str_replace('`', '\\`', $dbname) . '`');
-            if ($dropit && ($link->exec('DROP DATABASE `' . str_replace('`', '\\`', $dbname) . '`') !== false)) {
+            // Note : PostgreSQL needs default database contrary to MySQL for creating database
+            /* @phpstan-ignore-next-line */
+            $link = DbPDO::getPDO($host, $user, $password, _DB_TYPE_ == 'mysql' ? '' : 'postgres');
+            /* @phpstan-ignore-next-line */
+            $quotedDbname = _DB_TYPE_ == 'mysql'
+                ? '`' . str_replace('`', '\\`', $dbname) . '`'
+                : '"' . str_replace('"', '""', $dbname) . '"';
+            // PDO::exec() returns the affected row count (which can be 0, e.g. on
+            // PostgreSQL) on success, or false on failure: only `false` means failure.
+            $success = $link->exec('CREATE DATABASE ' . $quotedDbname) !== false;
+            if ($dropit && ($link->exec('DROP DATABASE ' . $quotedDbname) !== false)) {
                 return true;
             }
         } catch (PDOException $e) {
@@ -117,7 +138,10 @@ class DbPDOCore extends Db
             throw new PrestaShopException('Link to database cannot be established: ' . $e->getMessage());
         }
 
-        $this->link->exec('SET SESSION sql_mode = \'\'');
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'mysql') {
+            $this->link->exec('SET SESSION sql_mode = \'\'');
+        }
         $this->setTimeZone();
 
         return $this->link;
@@ -290,6 +314,15 @@ class DbPDOCore extends Db
             return '';
         }
 
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            // With standard_conforming_strings (PostgreSQL's default since 9.1), backslash has
+            // no special meaning inside a single-quoted string literal: only the quote itself
+            // needs escaping, by doubling it.
+            return str_replace("'", "''", $str);
+        }
+
+        /* @phpstan-ignore-next-line */
         $search = ['\\', "\0", "\n", "\r", "\x1a", "'", '"'];
         $replace = ['\\\\', '\\0', '\\n', '\\r', "\Z", "\'", '\"'];
 
@@ -331,7 +364,12 @@ class DbPDOCore extends Db
             return false;
         }
 
-        $sql = 'SHOW TABLES LIKE \'' . $prefix . '%\'';
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'mysql') {
+            $sql = sprintf('SHOW TABLES LIKE \'%s%%\'', $prefix);
+        } else {
+            $sql = sprintf('SELECT * FROM pg_catalog.pg_tables where tablename like \'%s%%\'', $prefix);
+        }
         $result = $link->query($sql);
 
         return (bool) $result->fetch();
@@ -357,19 +395,32 @@ class DbPDOCore extends Db
             return false;
         }
 
-        $enginesToTest = ['InnoDB', 'MyISAM'];
-        if ($engine !== null) {
-            $enginesToTest = [$engine];
-        }
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'mysql') {
+            $enginesToTest = ['InnoDB', 'MyISAM'];
+            if ($engine !== null) {
+                $enginesToTest = [$engine];
+            }
 
-        foreach ($enginesToTest as $engineToTest) {
-            $result = $link->query('
-            CREATE TABLE `' . $prefix . 'test` (
-                `test` tinyint(1) unsigned NOT NULL
-            ) ENGINE=' . $engineToTest);
+            foreach ($enginesToTest as $engineToTest) {
+                $result = $link->query('
+                CREATE TABLE `' . $prefix . 'test` (
+                    `test` tinyint(1) unsigned NOT NULL
+                ) ENGINE=' . $engineToTest);
+
+                if ($result) {
+                    $link->query('DROP TABLE `' . $prefix . 'test`');
+
+                    return true;
+                }
+            }
+        } else {
+            $result = $link->query('CREATE TABLE "' . $prefix . 'test" (
+                "test" SMALLINT NOT NULL
+            )');
 
             if ($result) {
-                $link->query('DROP TABLE `' . $prefix . 'test`');
+                $link->query('DROP TABLE "' . $prefix . 'test"');
 
                 return true;
             }
@@ -400,19 +451,35 @@ class DbPDOCore extends Db
             return false;
         }
 
-        $enginesToTest = ['InnoDB', 'MyISAM'];
-        if ($engine !== null) {
-            $enginesToTest = [$engine];
-        }
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'mysql') {
+            $enginesToTest = ['InnoDB', 'MyISAM'];
+            if ($engine !== null) {
+                $enginesToTest = [$engine];
+            }
 
-        foreach ($enginesToTest as $engineToTest) {
-            $link->query('CREATE TABLE `' . $prefix . 'test` (
-                `test` tinyint(1) unsigned NOT NULL
-            ) ENGINE=' . $engineToTest);
+            foreach ($enginesToTest as $engineToTest) {
+                $result = $link->query('
+                CREATE TABLE `' . $prefix . 'test` (
+                    `test` tinyint(1) unsigned NOT NULL
+                ) ENGINE=' . $engineToTest);
 
-            $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
+                $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
 
-            $link->query('DROP TABLE `' . $prefix . 'test`');
+                $link->query('DROP TABLE `' . $prefix . 'test`');
+
+                if ($result) {
+                    return true;
+                }
+            }
+        } else {
+            $result = $link->query('CREATE TABLE "' . $prefix . 'test" (
+                "test" SMALLINT NOT NULL
+            )');
+
+            $result = $link->query('SELECT * FROM "' . $prefix . 'test"');
+
+            $link->query('DROP TABLE "' . $prefix . 'test"');
 
             if ($result) {
                 return true;
@@ -459,6 +526,13 @@ class DbPDOCore extends Db
      */
     public function getBestEngine()
     {
+        // PostgreSQL has no notion of storage engine, this only applies to MySQL/MariaDB.
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ != 'mysql') {
+            return '';
+        }
+
+        /* @phpstan-ignore-next-line */
         $value = 'InnoDB';
 
         $sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
@@ -507,7 +581,8 @@ class DbPDOCore extends Db
         } catch (PDOException $e) {
             return false;
         }
-        $result = $link->exec('SET NAMES utf8mb4');
+        /* @phpstan-ignore-next-line */
+        $result = $link->exec(sprintf('SET NAMES \'%s\';', _DB_TYPE_ == 'mysql' ? 'utf8mb4' : 'utf8'));
         unset($link);
 
         return ($result === false) ? false : true;

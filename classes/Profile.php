@@ -64,10 +64,10 @@ class ProfileCore extends ObjectModel
     public static function getProfiles($idLang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT p.`id_profile`, `name`
-		FROM `' . _DB_PREFIX_ . 'profile` p
-		LEFT JOIN `' . _DB_PREFIX_ . 'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = ' . (int) $idLang . ')
-		ORDER BY `id_profile` ASC');
+		SELECT p.id_profile, name
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'profile') . ' p
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'profile_lang') . ' pl ON (p.id_profile = pl.id_profile AND id_lang = ' . (int) $idLang . ')
+		ORDER BY id_profile ASC');
     }
 
     /**
@@ -85,11 +85,11 @@ class ProfileCore extends ObjectModel
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-            'SELECT `name`
-			FROM `' . _DB_PREFIX_ . 'profile` p
-			LEFT JOIN `' . _DB_PREFIX_ . 'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
-			WHERE p.`id_profile` = ' . (int) $idProfile . '
-			AND pl.`id_lang` = ' . (int) $idLang
+            'SELECT name
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'profile') . ' p
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'profile_lang') . ' pl ON (p.id_profile = pl.id_profile)
+			WHERE p.id_profile = ' . (int) $idProfile . '
+			AND pl.id_lang = ' . (int) $idLang
         );
     }
 
@@ -102,8 +102,8 @@ class ProfileCore extends ObjectModel
     {
         if (parent::delete()) {
             return
-                Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'access` WHERE `id_profile` = ' . (int) $this->id)
-                && Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module_access` WHERE `id_profile` = ' . (int) $this->id);
+                Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'access') . ' WHERE id_profile = ' . (int) $this->id)
+                && Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_access') . ' WHERE id_profile = ' . (int) $this->id);
         }
 
         return false;
@@ -165,14 +165,14 @@ class ProfileCore extends ObjectModel
                 ];
                 $roles = self::generateAccessesArrayFromPermissions(
                     Db::getInstance()->executeS('
-                        SELECT `slug`,
-                            `slug` LIKE "%CREATE" as "add",
-                            `slug` LIKE "%READ" as "view",
-                            `slug` LIKE "%UPDATE" as "edit",
-                            `slug` LIKE "%DELETE" as "delete"
-                        FROM `' . _DB_PREFIX_ . 'authorization_role` a
-                        LEFT JOIN `' . _DB_PREFIX_ . 'access` j ON j.id_authorization_role = a.id_authorization_role
-                        WHERE j.`id_profile` = ' . (int) $idProfile)
+                        SELECT slug,
+                            slug LIKE \'%CREATE\' as ' . Db::quoteIdentifier('add') . ',
+                            slug LIKE \'%READ\' as ' . Db::quoteIdentifier('view') . ',
+                            slug LIKE \'%UPDATE\' as ' . Db::quoteIdentifier('edit') . ',
+                            slug LIKE \'%DELETE\' as ' . Db::quoteIdentifier('delete') . '
+                        FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'authorization_role') . ' a
+                        LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'access') . ' j ON j.id_authorization_role = a.id_authorization_role
+                        WHERE j.id_profile = ' . (int) $idProfile)
                 );
             }
             self::fillCacheAccesses(

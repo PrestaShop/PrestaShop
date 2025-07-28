@@ -257,18 +257,20 @@ class AddressCore extends ObjectModel
      */
     protected function deleteCartAddress()
     {
+        // MySQL's multi-table UPDATE...JOIN is rewritten as a portable NOT EXISTS
+        // subquery, since the join here is purely a filter ("cart has no order yet").
         // Reset it from all delivery addresses
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
-            LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON c.id_cart = o.id_cart
-            SET c.id_address_delivery = 0
-            WHERE c.id_address_delivery = ' . $this->id . ' AND o.id_order IS NULL';
+        $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart') . ' c
+            SET id_address_delivery = 0
+            WHERE c.id_address_delivery = ' . $this->id . '
+            AND NOT EXISTS (SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . ' o WHERE o.id_cart = c.id_cart)';
         Db::getInstance()->execute($sql);
 
         // Reset it from all invoice addresses
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
-            LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON c.id_cart = o.id_cart
-            SET c.id_address_invoice = 0
-            WHERE c.id_address_invoice = ' . $this->id . ' AND o.id_order IS NULL';
+        $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart') . ' c
+            SET id_address_invoice = 0
+            WHERE c.id_address_invoice = ' . $this->id . '
+            AND NOT EXISTS (SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . ' o WHERE o.id_cart = c.id_cart)';
         Db::getInstance()->execute($sql);
     }
 
@@ -298,11 +300,11 @@ class AddressCore extends ObjectModel
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT s.`id_zone` AS id_zone_state, c.`id_zone`
-			FROM `' . _DB_PREFIX_ . 'address` a
-			LEFT JOIN `' . _DB_PREFIX_ . 'country` c ON c.`id_country` = a.`id_country`
-			LEFT JOIN `' . _DB_PREFIX_ . 'state` s ON s.`id_state` = a.`id_state`
-			WHERE a.`id_address` = ' . (int) $id_address);
+			SELECT s.id_zone AS id_zone_state, c.id_zone
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'address') . ' a
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'country') . ' c ON c.id_country = a.id_country
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'state') . ' s ON s.id_state = a.id_state
+			WHERE a.id_address = ' . (int) $id_address);
 
         if (empty($result['id_zone_state']) && empty($result['id_zone'])) {
             return false;
@@ -331,10 +333,10 @@ class AddressCore extends ObjectModel
         $cache_id = 'Address::isCountryActiveById_' . (int) $id_address;
         if (!Cache::isStored($cache_id)) {
             $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT c.`active`
-			FROM `' . _DB_PREFIX_ . 'address` a
-			LEFT JOIN `' . _DB_PREFIX_ . 'country` c ON c.`id_country` = a.`id_country`
-			WHERE a.`id_address` = ' . (int) $id_address);
+			SELECT c.active
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'address') . ' a
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'country') . ' c ON c.id_country = a.id_country
+			WHERE a.id_address = ' . (int) $id_address);
             Cache::store($cache_id, $result);
 
             return $result;
@@ -383,9 +385,9 @@ class AddressCore extends ObjectModel
     public static function dniRequired($idCountry)
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT c.`need_identification_number` ' .
-            'FROM `' . _DB_PREFIX_ . 'country` c ' .
-            'WHERE c.`id_country` = ' . (int) $idCountry
+            'SELECT c.need_identification_number ' .
+            'FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'country') . ' c ' .
+            'WHERE c.id_country = ' . (int) $idCountry
         );
     }
 
@@ -401,10 +403,10 @@ class AddressCore extends ObjectModel
         }
 
         $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(`id_order`) AS used
-		FROM `' . _DB_PREFIX_ . 'orders`
-		WHERE `id_address_delivery` = ' . (int) $this->id . '
-		OR `id_address_invoice` = ' . (int) $this->id);
+		SELECT COUNT(id_order) AS used
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . '
+		WHERE id_address_delivery = ' . (int) $this->id . '
+		OR id_address_invoice = ' . (int) $this->id);
 
         return $result > 0 ? (int) $result : false;
     }
@@ -423,8 +425,8 @@ class AddressCore extends ObjectModel
         }
         if ($id_address) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT `id_country`, `id_state`, `vat_number`, `postcode` FROM `' . _DB_PREFIX_ . 'address`
-			WHERE `id_address` = ' . (int) $id_address);
+			SELECT id_country, id_state, vat_number, postcode FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'address') . '
+			WHERE id_address = ' . (int) $id_address);
         } else {
             $result = false;
         }
@@ -453,9 +455,9 @@ class AddressCore extends ObjectModel
         }
 
         static::$addressExists[$id_address] = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT `id_address`
-            FROM ' . _DB_PREFIX_ . 'address a
-            WHERE a.`id_address` = ' . (int) $id_address,
+            'SELECT id_address
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'address') . ' a
+            WHERE a.id_address = ' . (int) $id_address,
             false
         );
 
@@ -473,8 +475,8 @@ class AddressCore extends ObjectModel
     {
         $id_address = (int) $id_address;
         $isValid = Db::getInstance()->getValue('
-            SELECT `id_address` FROM ' . _DB_PREFIX_ . 'address a
-            WHERE a.`id_address` = ' . $id_address . ' AND a.`deleted` = 0 AND a.`active` = 1
+            SELECT id_address FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'address') . ' a
+            WHERE a.id_address = ' . $id_address . ' AND a.deleted = 0 AND a.active = 1
         ');
 
         return (bool) $isValid;
@@ -497,10 +499,10 @@ class AddressCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
-				SELECT `id_address`
-				FROM `' . _DB_PREFIX_ . 'address`
-				WHERE `id_customer` = ' . (int) $id_customer . ' AND `deleted` = 0' . ($active ? ' AND `active` = 1' : '') . '
-                ORDER BY `id_address` ASC'
+				SELECT id_address
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'address') . '
+				WHERE id_customer = ' . (int) $id_customer . ' AND deleted = 0' . ($active ? ' AND active = 1' : '') . '
+                ORDER BY id_address ASC'
             );
             Cache::store($cache_id, $result);
 

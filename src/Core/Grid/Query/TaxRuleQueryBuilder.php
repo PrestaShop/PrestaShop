@@ -49,20 +49,20 @@ class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb
             ->select([
-                'tr.`id_tax_rule`',
-                'tr.`id_tax_rules_group`',
-                'tr.`description`',
-                'tr.`id_country` AS country_id',
-                'cl.`name` AS country_name',
-                'tr.`id_state` AS state_id',
-                'IFNULL(s.`name`, \'--\') AS state_name',
+                'tr.id_tax_rule',
+                'tr.id_tax_rules_group',
+                'tr.description',
+                'tr.id_country AS country_id',
+                'cl.name AS country_name',
+                'tr.id_state AS state_id',
+                'IFNULL(s.name, \'--\') AS state_name',
                 'CASE '
-                    . ' WHEN CONCAT_WS(\' - \', tr.`zipcode_from`, tr.`zipcode_to`) = \'0 - 0\''
-                    . ' THEN \'--\' ELSE CONCAT_WS(\' - \', tr.`zipcode_from`, tr.`zipcode_to`)'
+                    . ' WHEN CONCAT_WS(\' - \', tr.zipcode_from, tr.zipcode_to) = \'0 - 0\''
+                    . ' THEN \'--\' ELSE CONCAT_WS(\' - \', tr.zipcode_from, tr.zipcode_to)'
                 . ' END AS zipcode',
                 'tr.behavior',
                 't.rate',
-                'txl.`name` AS tax_name',
+                'txl.name AS tax_name',
             ])
         ;
 
@@ -81,7 +81,7 @@ class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         return $this
             ->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT tr.`id_tax_rule`)');
+            ->select('COUNT(DISTINCT tr.id_tax_rule)');
     }
 
     /**
@@ -100,31 +100,31 @@ class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
                 'tr',
                 $this->dbPrefix . 'country',
                 'c',
-                'tr.`id_country` = c.`id_country`'
+                'tr.id_country = c.id_country'
             )
             ->leftJoin(
                 'tr',
                 $this->dbPrefix . 'country_lang',
                 'cl',
-                'tr.`id_country` = cl.`id_country` AND cl.`id_lang` = :idLang '
+                'tr.id_country = cl.id_country AND cl.id_lang = :idLang '
             )
             ->leftJoin(
                 'tr',
                 $this->dbPrefix . 'state',
                 's',
-                'tr.`id_country` = s.`id_country` AND tr.`id_state` = s.`id_state`'
+                'tr.id_country = s.id_country AND tr.id_state = s.id_state'
             )
             ->leftJoin(
                 'tr',
                 $this->dbPrefix . 'tax',
                 't',
-                'tr.`id_tax` = t.`id_tax`'
+                'tr.id_tax = t.id_tax'
             )
             ->leftJoin(
                 't',
                 $this->dbPrefix . 'tax_lang',
                 'txl',
-                't.`id_tax` = txl.`id_tax` AND txl.`id_lang` = :idLang'
+                't.id_tax = txl.id_tax AND txl.id_lang = :idLang'
             )
             ->setParameter('idLang', $this->languageContext->getId());
 
@@ -132,7 +132,7 @@ class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
         $taxRulesGroupId = $filters['taxRulesGroupId'] ?? $filters['id_tax_rules_group'] ?? null;
         if (!empty($taxRulesGroupId)) {
             $qb
-                ->andWhere('tr.`id_tax_rules_group` = :idTaxRulesGroup')
+                ->andWhere('tr.id_tax_rules_group = :idTaxRulesGroup')
                 ->setParameter('idTaxRulesGroup', (int) $taxRulesGroupId);
         }
 
@@ -159,36 +159,36 @@ class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             switch ($filterName) {
                 case 'country':
                 case 'country_name':
-                    $qb->andWhere('cl.`name` LIKE :country');
+                    $qb->andWhere('cl.name LIKE :country');
                     $qb->setParameter('country', '%' . $filterValue . '%');
                     break;
                 case 'country_id':
-                    $qb->andWhere('tr.`id_country` = :countryId');
+                    $qb->andWhere('tr.id_country = :countryId');
                     $qb->setParameter('countryId', (int) $filterValue);
                     break;
                 case 'state':
                 case 'state_name':
-                    $qb->andWhere('s.`name` LIKE :state');
+                    $qb->andWhere('s.name LIKE :state');
                     $qb->setParameter('state', '%' . $filterValue . '%');
                     break;
                 case 'tax_name':
-                    $qb->andWhere('txl.`name` LIKE :taxName');
+                    $qb->andWhere('txl.name LIKE :taxName');
                     $qb->setParameter('taxName', '%' . $filterValue . '%');
                     break;
                 case 'zipcode':
-                    $qb->andWhere('(tr.`zipcode_from` LIKE :zipcode OR tr.`zipcode_to` LIKE :zipcode)');
+                    $qb->andWhere('(tr.zipcode_from LIKE :zipcode OR tr.zipcode_to LIKE :zipcode)');
                     $qb->setParameter('zipcode', '%' . $filterValue . '%');
                     break;
                 case 'behavior':
-                    $qb->andWhere('tr.`behavior` = :behavior');
+                    $qb->andWhere('tr.behavior = :behavior');
                     $qb->setParameter('behavior', (int) $filterValue);
                     break;
                 case 'rate':
-                    $qb->andWhere('t.`rate` LIKE :rate');
+                    $qb->andWhere('t.rate LIKE :rate');
                     $qb->setParameter('rate', '%' . $filterValue . '%');
                     break;
                 case 'description':
-                    $qb->andWhere('tr.`description` LIKE :description');
+                    $qb->andWhere('tr.description LIKE :description');
                     $qb->setParameter('description', '%' . $filterValue . '%');
                     break;
             }

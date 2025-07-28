@@ -80,8 +80,8 @@ class MessageCore extends ObjectModel
         return Db::getInstance()->getRow(
             '
 			SELECT *
-			FROM `' . _DB_PREFIX_ . 'message`
-			WHERE `id_cart` = ' . (int) $idCart
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'message') . '
+			WHERE id_cart = ' . (int) $idCart
         );
     }
 
@@ -100,16 +100,16 @@ class MessageCore extends ObjectModel
         }
 
         return Db::getInstance()->executeS('
-			SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname,
+			SELECT m.*, c.firstname AS cfirstname, c.lastname AS clastname, e.firstname AS efirstname, e.lastname AS elastname,
 			(COUNT(mr.id_message) = 0 AND m.id_customer != 0) AS is_new_for_me
-			FROM `' . _DB_PREFIX_ . 'message` m
-			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON m.`id_customer` = c.`id_customer`
-			LEFT JOIN `' . _DB_PREFIX_ . 'message_readed` mr
-				ON mr.`id_message` = m.`id_message`
-				AND mr.`id_employee` = ' . (isset($context->employee) ? (int) $context->employee->id : '\'\'') . '
-			LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e ON e.`id_employee` = m.`id_employee`
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'message') . ' m
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c ON m.id_customer = c.id_customer
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'message_readed') . ' mr
+				ON mr.id_message = m.id_message
+				AND mr.id_employee = ' . (isset($context->employee) ? (int) $context->employee->id : '0') . '
+			LEFT OUTER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . ' e ON e.id_employee = m.id_employee
 			WHERE id_order = ' . (int) $idOrder . '
-			' . (!$private ? ' AND m.`private` = 0' : '') . '
+			' . (!$private ? ' AND m.private = 0' : '') . '
 			GROUP BY m.id_message
 			ORDER BY m.date_add DESC
 		');
@@ -131,14 +131,14 @@ class MessageCore extends ObjectModel
         }
 
         return Db::getInstance()->executeS('
-			SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname,
+			SELECT m.*, c.firstname AS cfirstname, c.lastname AS clastname, e.firstname AS efirstname, e.lastname AS elastname,
 			(COUNT(mr.id_message) = 0 AND m.id_customer != 0) AS is_new_for_me
-			FROM `' . _DB_PREFIX_ . 'message` m
-			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON m.`id_customer` = c.`id_customer`
-			LEFT JOIN `' . _DB_PREFIX_ . 'message_readed` mr ON (mr.id_message = m.id_message AND mr.id_employee = ' . (int) $context->employee->id . ')
-			LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e ON e.`id_employee` = m.`id_employee`
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'message') . ' m
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c ON m.id_customer = c.id_customer
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'message_readed') . ' mr ON (mr.id_message = m.id_message AND mr.id_employee = ' . (int) $context->employee->id . ')
+			LEFT OUTER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . ' e ON e.id_employee = m.id_employee
 			WHERE id_cart = ' . (int) $idCart . '
-			' . (!$private ? ' AND m.`private` = 0' : '') . '
+			' . (!$private ? ' AND m.private = 0' : '') . '
 			GROUP BY m.id_message
 			ORDER BY m.date_add DESC
 		');
@@ -162,7 +162,7 @@ class MessageCore extends ObjectModel
         }
 
         $result = Db::getInstance()->execute('
-			INSERT INTO ' . _DB_PREFIX_ . 'message_readed (id_message , id_employee , date_add) VALUES
+			INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'message_readed') . ' (id_message , id_employee , date_add) VALUES
 			(' . (int) $idMessage . ', ' . (int) $idEmployee . ', NOW());
 		');
 

@@ -23,7 +23,7 @@ class SmartyCustomCore extends Smarty
     public function clearCompiledTemplate($resource_name = null, $compile_id = null, $exp_time = null)
     {
         if ($resource_name == null) {
-            Db::getInstance()->execute('REPLACE INTO `' . _DB_PREFIX_ . 'smarty_last_flush` (`type`, `last_flush`) VALUES (\'compile\', FROM_UNIXTIME(' . time() . '))');
+            $this->replaceLastFlush('compile');
 
             return 0;
         }
@@ -41,9 +41,40 @@ class SmartyCustomCore extends Smarty
      */
     public function clearAllCache($exp_time = null, $type = null)
     {
-        Db::getInstance()->execute('REPLACE INTO `' . _DB_PREFIX_ . 'smarty_last_flush` (`type`, `last_flush`) VALUES (\'template\', FROM_UNIXTIME(' . time() . '))');
+        $this->replaceLastFlush('template');
 
         return $this->delete_from_lazy_cache('', null, null);
+    }
+
+    /**
+     * Upsert the last_flush timestamp for a given flush type ('compile' or 'template').
+     * MySQL's REPLACE INTO / FROM_UNIXTIME() have no direct PostgreSQL equivalent.
+     *
+     * @param string $type
+     */
+    private function replaceLastFlush($type)
+    {
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            Db::getInstance()->execute('INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'smarty_last_flush') . ' (type, last_flush)
+                VALUES (\'' . pSQL($type) . '\', TO_TIMESTAMP(' . time() . '))
+                ON CONFLICT (type) DO UPDATE SET last_flush = EXCLUDED.last_flush');
+        } else {
+            Db::getInstance()->execute('REPLACE INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'smarty_last_flush') . ' (type, last_flush) VALUES (\'' . pSQL($type) . '\', FROM_UNIXTIME(' . time() . '))');
+        }
+    }
+
+    /**
+     * MySQL's UNIX_TIMESTAMP() has no PostgreSQL equivalent; EXTRACT(EPOCH FROM ...) is the portable form.
+     *
+     * @param string $column
+     *
+     * @return string
+     */
+    private function unixTimestampExpr($column)
+    {
+        /* @phpstan-ignore-next-line */
+        return _DB_TYPE_ == 'pgsql' ? 'EXTRACT(EPOCH FROM ' . $column . ')' : 'UNIX_TIMESTAMP(' . $column . ')';
     }
 
     /**
@@ -72,7 +103,7 @@ class SmartyCustomCore extends Smarty
             @touch($this->getCompileDir() . 'last_flush', time());
         } elseif (defined('_DB_PREFIX_')) {
             if ($last_flush === null) {
-                $sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `' . _DB_PREFIX_ . 'smarty_last_flush` WHERE type=\'compile\'';
+                $sql = 'SELECT ' . $this->unixTimestampExpr('last_flush') . ' as last_flush FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'smarty_last_flush') . ' WHERE type=\'compile\'';
                 $last_flush = Db::getInstance()->getValue($sql, false);
             }
             if ((int) $last_flush && @filemtime($this->getCompileDir() . 'last_flush') < $last_flush) {
@@ -119,7 +150,7 @@ class SmartyCustomCore extends Smarty
             @touch($this->getCacheDir() . 'last_template_flush', time());
         } elseif (defined('_DB_PREFIX_')) {
             if ($last_flush === null) {
-                $sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `' . _DB_PREFIX_ . 'smarty_last_flush` WHERE type=\'template\'';
+                $sql = 'SELECT ' . $this->unixTimestampExpr('last_flush') . ' as last_flush FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'smarty_last_flush') . ' WHERE type=\'template\'';
                 $last_flush = Db::getInstance()->getValue($sql, false);
             }
 
@@ -151,16 +182,16 @@ class SmartyCustomCore extends Smarty
     public function update_filepath($filepath, $template, $cache_id, $compile_id)
     {
         $template_md5 = md5($template);
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'smarty_lazy_cache`
+        $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'smarty_lazy_cache') . '
 							SET filepath=\'' . pSQL($filepath) . '\'
-							WHERE `template_hash`=\'' . pSQL($template_md5) . '\'';
+							WHERE template_hash=\'' . pSQL($template_md5) . '\'';
 
-        $sql .= ' AND cache_id="' . pSQL((string) $cache_id) . '"';
+        $sql .= ' AND cache_id=\'' . pSQL((string) $cache_id) . '\'';
 
         if (strlen($compile_id) > 32) {
             $compile_id = md5($compile_id);
         }
-        $sql .= ' AND compile_id="' . pSQL((string) $compile_id) . '"';
+        $sql .= ' AND compile_id=\'' . pSQL((string) $compile_id) . '\'';
         Db::getInstance()->execute($sql, false);
     }
 
@@ -188,10 +219,10 @@ class SmartyCustomCore extends Smarty
         if (isset($is_in_lazy_cache[$key])) {
             return $is_in_lazy_cache[$key];
         } else {
-            $sql = 'SELECT UNIX_TIMESTAMP(last_update) as last_update, filepath FROM `' . _DB_PREFIX_ . 'smarty_lazy_cache`
-							WHERE `template_hash`=\'' . pSQL($template_md5) . '\'';
-            $sql .= ' AND cache_id="' . pSQL((string) $cache_id) . '"';
-            $sql .= ' AND compile_id="' . pSQL((string) $compile_id) . '"';
+            $sql = 'SELECT ' . $this->unixTimestampExpr('last_update') . ' as last_update, filepath FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'smarty_lazy_cache') . '
+							WHERE template_hash=\'' . pSQL($template_md5) . '\'';
+            $sql .= ' AND cache_id=\'' . pSQL((string) $cache_id) . '\'';
+            $sql .= ' AND compile_id=\'' . pSQL((string) $compile_id) . '\'';
 
             $result = Db::getInstance()->getRow($sql, false);
             // If the filepath is not yet set, it means the cache update is in progress in another process.
@@ -230,17 +261,26 @@ class SmartyCustomCore extends Smarty
     public function insert_in_lazy_cache($template, $cache_id, $compile_id)
     {
         $template_md5 = md5($template);
-        $sql = 'INSERT IGNORE INTO `' . _DB_PREFIX_ . 'smarty_lazy_cache`
-							(`template_hash`, `cache_id`, `compile_id`, `last_update`)
+        /* @phpstan-ignore-next-line */
+        $isPgsql = _DB_TYPE_ == 'pgsql';
+        /* @phpstan-ignore-next-line */
+        $insertKeyword = $isPgsql ? 'INSERT' : 'INSERT IGNORE';
+        /* @phpstan-ignore-next-line */
+        $onConflict = $isPgsql ? ' ON CONFLICT (template_hash, cache_id, compile_id) DO NOTHING' : '';
+        /* @phpstan-ignore-next-line */
+        $fromUnixtime = $isPgsql ? 'TO_TIMESTAMP(' . time() . ')' : 'FROM_UNIXTIME(' . time() . ')';
+
+        $sql = $insertKeyword . ' INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'smarty_lazy_cache') . '
+							(template_hash, cache_id, compile_id, last_update)
 							VALUES (\'' . pSQL($template_md5) . '\'';
 
-        $sql .= ',"' . pSQL((string) $cache_id) . '"';
+        $sql .= ',\'' . pSQL((string) $cache_id) . '\'';
 
         if (strlen($compile_id) > 32) {
             $compile_id = md5($compile_id);
         }
-        $sql .= ',"' . pSQL((string) $compile_id) . '"';
-        $sql .= ', FROM_UNIXTIME(' . time() . '))';
+        $sql .= ',\'' . pSQL((string) $compile_id) . '\'';
+        $sql .= ', ' . $fromUnixtime . ')' . $onConflict;
 
         return Db::getInstance()->execute($sql, false);
     }
@@ -257,21 +297,21 @@ class SmartyCustomCore extends Smarty
     public function delete_from_lazy_cache($template, $cache_id, $compile_id)
     {
         if (!$template) {
-            return Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'smarty_lazy_cache`', false);
+            return Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'smarty_lazy_cache'), false);
         }
 
         $template_md5 = md5($template);
-        $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'smarty_lazy_cache` WHERE template_hash=\'' . pSQL($template_md5) . '\'';
+        $sql = 'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'smarty_lazy_cache') . ' WHERE template_hash=\'' . pSQL($template_md5) . '\'';
 
         if ($cache_id != null) {
-            $sql .= ' AND cache_id LIKE "' . pSQL((string) $cache_id) . '%"';
+            $sql .= ' AND cache_id LIKE \'' . pSQL((string) $cache_id) . '%\'';
         }
 
         if ($compile_id != null) {
             if (strlen($compile_id) > 32) {
                 $compile_id = md5($compile_id);
             }
-            $sql .= ' AND compile_id="' . pSQL((string) $compile_id) . '"';
+            $sql .= ' AND compile_id=\'' . pSQL((string) $compile_id) . '\'';
         }
         Db::getInstance()->execute($sql, false);
 

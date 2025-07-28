@@ -58,8 +58,8 @@ final class AddressQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('a.`id_address`, a.`firstname`, a.`lastname`, a.`address1`, a.`postcode`, a.`city`')
-            ->addSelect('cl.`name` as country_name')
+            ->select('a.id_address, a.firstname, a.lastname, a.address1, a.postcode, a.city')
+            ->addSelect('cl.name as country_name')
         ;
 
         $this->searchCriteriaApplicator
@@ -77,7 +77,7 @@ final class AddressQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT a.`id_address`)')
+            ->select('COUNT(DISTINCT a.id_address)')
         ;
 
         return $qb;
@@ -95,28 +95,28 @@ final class AddressQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'address', 'a')
-            ->where('a.`id_customer` != 0')
-            ->andWhere('a.`deleted` = 0');
+            ->where('a.id_customer != 0')
+            ->andWhere('a.deleted = 0');
 
         $qb->leftJoin(
             'a',
             $this->dbPrefix . 'country',
             'c',
-            'a.`id_country` = c.`id_country`'
+            'a.id_country = c.id_country'
         );
 
         $qb->leftJoin(
             'c',
             $this->dbPrefix . 'country_lang',
             'cl',
-            'c.`id_country` = cl.`id_country` AND cl.`id_lang` = :idLang'
+            'c.id_country = cl.id_country AND cl.id_lang = :idLang'
         );
 
         $qb->leftJoin(
             'a',
             $this->dbPrefix . 'customer',
             'customer',
-            'a.`id_customer` = customer.`id_customer`'
+            'a.id_customer = customer.id_customer'
         );
 
         $qb->andWhere('customer.id_shop IN (:context_shop_ids)')

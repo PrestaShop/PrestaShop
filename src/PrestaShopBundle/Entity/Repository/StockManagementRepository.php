@@ -247,7 +247,7 @@ abstract class StockManagementRepository
         $having = '',
         $orderByClause = null
     ) {
-        throw new RuntimeException('You need to implement your own `selectSql` function.');
+        throw new RuntimeException('You need to implement your own selectSql function.');
     }
 
     /**

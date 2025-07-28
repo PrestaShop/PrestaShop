@@ -44,7 +44,7 @@ final class RequestSqlQueryBuilder extends AbstractDoctrineQueryBuilder
 
         return $searchQueryBuilder
             ->select('rs.*')
-            ->orderBy(sprintf('`%s`', $searchCriteria->getOrderBy()), $searchCriteria->getOrderWay())
+            ->orderBy($this->connection->quoteIdentifier($searchCriteria->getOrderBy()), $searchCriteria->getOrderWay())
             ->setFirstResult($searchCriteria->getOffset() ?? 0)
             ->setMaxResults($searchCriteria->getLimit());
     }
@@ -84,7 +84,7 @@ final class RequestSqlQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere("`$filterName` LIKE :$filterName");
+            $qb->andWhere($this->connection->quoteIdentifier($filterName) . ' LIKE :' . $filterName);
             $qb->setParameter($filterName, '%' . $value . '%');
         }
 

@@ -161,7 +161,15 @@ class StockAvailableCore extends ObjectModel
             ];
 
             StockAvailable::addSqlShopParams($params, $id_shop);
-            Db::getInstance()->insert('stock_available', $params, false, true, Db::ON_DUPLICATE_KEY);
+            Db::getInstance()->insert(
+                'stock_available',
+                $params,
+                false,
+                true,
+                Db::ON_DUPLICATE_KEY,
+                true,
+                ['id_product', 'id_product_attribute', 'id_shop', 'id_shop_group']
+            );
         }
     }
 
@@ -211,7 +219,15 @@ class StockAvailableCore extends ObjectModel
             ];
 
             StockAvailable::addSqlShopParams($params, $id_shop);
-            Db::getInstance()->insert('stock_available', $params, false, true, Db::ON_DUPLICATE_KEY);
+            Db::getInstance()->insert(
+                'stock_available',
+                $params,
+                false,
+                true,
+                Db::ON_DUPLICATE_KEY,
+                true,
+                ['id_product', 'id_product_attribute', 'id_shop', 'id_shop_group']
+            );
         }
     }
 

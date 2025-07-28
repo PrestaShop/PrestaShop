@@ -265,10 +265,10 @@ class EmployeeCore extends ObjectModel
     public static function getEmployees($activeOnly = true)
     {
         return Db::getInstance()->executeS('
-			SELECT `id_employee`, `firstname`, `lastname`
-			FROM `' . _DB_PREFIX_ . 'employee`
-			' . ($activeOnly ? ' WHERE `active` = 1' : '') . '
-			ORDER BY `lastname` ASC
+			SELECT id_employee, firstname, lastname
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . '
+			' . ($activeOnly ? ' WHERE active = 1' : '') . '
+			ORDER BY lastname ASC
 		');
     }
 
@@ -291,9 +291,9 @@ class EmployeeCore extends ObjectModel
         $sql = new DbQuery();
         $sql->select('e.*');
         $sql->from('employee', 'e');
-        $sql->where('e.`email` = \'' . pSQL($email) . '\'');
+        $sql->where('e.email = \'' . pSQL($email) . '\'');
         if ($activeOnly) {
-            $sql->where('e.`active` = 1');
+            $sql->where('e.active = 1');
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -342,9 +342,9 @@ class EmployeeCore extends ObjectModel
         }
 
         return (bool) Db::getInstance()->getValue('
-		    SELECT `id_employee`
-		    FROM `' . _DB_PREFIX_ . 'employee`
-		    WHERE `email` = \'' . pSQL($email) . '\'
+		    SELECT id_employee
+		    FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . '
+		    WHERE email = \'' . pSQL($email) . '\'
         ', false);
     }
 
@@ -362,11 +362,11 @@ class EmployeeCore extends ObjectModel
         }
 
         $sql = new DbQuery();
-        $sql->select('e.`id_employee`');
+        $sql->select('e.id_employee');
         $sql->from('employee', 'e');
-        $sql->where('e.`id_employee` = ' . (int) $idEmployee);
-        $sql->where('e.`passwd` = \'' . pSQL($passwordHash) . '\'');
-        $sql->where('e.`active` = 1');
+        $sql->where('e.id_employee = ' . (int) $idEmployee);
+        $sql->where('e.passwd = \'' . pSQL($passwordHash) . '\'');
+        $sql->where('e.active = 1');
 
         // Get result from DB
         return Db::getInstance()->getValue($sql);
@@ -385,9 +385,9 @@ class EmployeeCore extends ObjectModel
         return Db::getInstance()->getValue(
             '
 		    SELECT COUNT(*)
-		    FROM `' . _DB_PREFIX_ . 'employee`
-		    WHERE `id_profile` = ' . (int) $idProfile . '
-		    ' . ($activeOnly ? ' AND `active` = 1' : '')
+		    FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . '
+		    WHERE id_profile = ' . (int) $idProfile . '
+		    ' . ($activeOnly ? ' AND active = 1' : '')
         );
     }
 
@@ -474,9 +474,9 @@ class EmployeeCore extends ObjectModel
     {
         return Db::getInstance()->executeS(
             '
-		    SELECT `module`
-		    FROM `' . _DB_PREFIX_ . 'module_preference`
-		    WHERE `id_employee` = ' . (int) $this->id . ' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
+		    SELECT module
+		    FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_preference') . '
+		    WHERE id_employee = ' . (int) $this->id . ' AND favorite = 1 AND (interest = 1 OR interest IS NULL)'
         );
     }
 
@@ -543,9 +543,9 @@ class EmployeeCore extends ObjectModel
         return Db::getInstance()->executeS(
             '
 		    SELECT *
-		    FROM `' . _DB_PREFIX_ . 'employee`
-		    WHERE `id_profile` = ' . (int) $idProfile . '
-		    ' . ($activeOnly ? ' AND `active` = 1' : '')
+		    FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . '
+		    WHERE id_profile = ' . (int) $idProfile . '
+		    ' . ($activeOnly ? ' AND active = 1' : '')
         );
     }
 
@@ -611,8 +611,8 @@ class EmployeeCore extends ObjectModel
     {
         $element = bqSQL($element);
         $max = Db::getInstance()->getValue('
-			SELECT MAX(`id_' . $element . '`) as `id_' . $element . '`
-			FROM `' . _DB_PREFIX_ . $element . ($element == 'order' ? 's' : '') . '`');
+			SELECT MAX(' . Db::quoteIdentifier('id_' . $element) . ') as ' . Db::quoteIdentifier('id_' . $element) . '
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $element . ($element == 'order' ? 's' : '')));
 
         // if no rows in table, set max to 0
         if ((int) $max < 1) {
@@ -632,11 +632,11 @@ class EmployeeCore extends ObjectModel
     public static function setLastConnectionDate($idEmployee)
     {
         return Db::getInstance()->execute('
-            UPDATE `' . _DB_PREFIX_ . 'employee`
-            SET `last_connection_date` = CURRENT_DATE()
-            WHERE `id_employee` = ' . (int) $idEmployee . '
-            AND (`last_connection_date` < CURRENT_DATE()
-            OR `last_connection_date` IS NULL)
+            UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'employee') . '
+            SET last_connection_date = CURRENT_DATE
+            WHERE id_employee = ' . (int) $idEmployee . '
+            AND (last_connection_date < CURRENT_DATE
+            OR last_connection_date IS NULL)
         ');
     }
 

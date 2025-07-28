@@ -50,25 +50,25 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria)
-            ->select('ct.*, CONCAT(c.`firstname`," ",c.`lastname`) as customer')
+            ->select('ct.*, CONCAT(c.firstname, \' \', c.lastname) as customer')
             ->addSelect('cm.private, cl.name as contact, l.name as langName')
             ->addSelect('s.name as shopName')
 
             // we need to get only the latest message and its employee
             ->addSelect('(
 				SELECT cm3.message
-				FROM `' . _DB_PREFIX_ . 'customer_message` cm3
-				WHERE cm3.`id_customer_thread` = ct.`id_customer_thread`
-				ORDER BY cm3.`date_add` DESC LIMIT 1
+				FROM ' . $this->connection->quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' cm3
+				WHERE cm3.id_customer_thread = ct.id_customer_thread
+				ORDER BY cm3.date_add DESC LIMIT 1
 			) as message')
             ->addSelect('(
-				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
-				FROM `' . _DB_PREFIX_ . 'customer_message` cm2
-				INNER JOIN ' . _DB_PREFIX_ . 'employee e
-					ON e.`id_employee` = cm2.`id_employee`
+				SELECT COALESCE(CONCAT(LEFT(e.firstname, 1), \'. \', e.lastname), \'--\')
+				FROM ' . $this->connection->quoteIdentifier(_DB_PREFIX_ . 'customer_message') . ' cm2
+				INNER JOIN ' . $this->connection->quoteIdentifier(_DB_PREFIX_ . 'employee') . ' e
+					ON e.id_employee = cm2.id_employee
 				WHERE cm2.id_employee > 0
-					AND cm2.`id_customer_thread` = ct.`id_customer_thread`
-				ORDER BY cm2.`date_add` DESC LIMIT 1
+					AND cm2.id_customer_thread = ct.id_customer_thread
+				ORDER BY cm2.date_add DESC LIMIT 1
 			) as employee')
 
             ->addOrderBy('cm.date_add', 'DESC')
@@ -192,7 +192,7 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ($filterName === 'customer') {
-                $builder->andWhere('CONCAT(c.`firstname`," ",c.`lastname`) LIKE :' . $filterName);
+                $builder->andWhere('CONCAT(c.firstname," ",c.lastname) LIKE :' . $filterName);
                 $builder->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }
@@ -200,8 +200,8 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
             if ($filterName === 'employee') {
                 // The column shows the abbreviated name (M. Beier) and a merchant may copy it from there, or type
                 // the real first name: either form matches.
-                $builder->andWhere('(CONCAT(e.`firstname`," ",e.`lastname`) LIKE :' . $filterName
-                    . ' OR CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`) LIKE :' . $filterName . ')');
+                $builder->andWhere('(CONCAT(e.firstname, \' \', e.lastname) LIKE :' . $filterName
+                    . ' OR CONCAT(LEFT(e.firstname, 1), \'. \', e.lastname) LIKE :' . $filterName . ')');
                 $builder->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }

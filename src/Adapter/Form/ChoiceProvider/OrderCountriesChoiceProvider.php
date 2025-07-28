@@ -27,15 +27,15 @@ final class OrderCountriesChoiceProvider implements FormChoiceProviderInterface
         }
 
         $countries = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT cl.id_country, cl.`name`
-            FROM `' . _DB_PREFIX_ . 'country_lang` cl
+			SELECT cl.id_country, cl.name
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'country_lang') . ' cl
             WHERE EXISTS (
                 SELECT 1
-                FROM `' . _DB_PREFIX_ . 'orders` o
-                INNER JOIN `' . _DB_PREFIX_ . 'address` a
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . ' o
+                INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'address') . ' a
 			        ON a.id_address = o.id_address_delivery
                 WHERE a.id_country = cl.id_country
-            ) AND cl.`id_lang` = ' . (int) Context::getContext()->language->id . '
+            ) AND cl.id_lang = ' . (int) Context::getContext()->language->id . '
 			ORDER BY cl.name ASC'
         );
 

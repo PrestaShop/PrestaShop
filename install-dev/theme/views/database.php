@@ -15,6 +15,13 @@
   </p>
   <div id="formCheckSQL">
     <div class="field">
+      <label for="dbType"><?php echo $this->translator->trans('Database type', [], 'Install'); ?> </label>
+      <select id="dbType" name="dbType">
+        <option value="mysql" <?php if (($this->database_type ?? 'mysql') === 'mysql') { ?>selected="selected"<?php } ?>>MySQL</option>
+        <option value="pgsql" <?php if (($this->database_type ?? 'mysql') === 'pgsql') { ?>selected="selected"<?php } ?>>PostgreSQL</option>
+      </select>
+    </div>
+    <div class="field">
       <label for="dbServer"><?php echo $this->translator->trans('Database server address', [], 'Install'); ?> </label>
       <input size="25" class="text" type="text" id="dbServer" name="dbServer" value="<?php echo htmlspecialchars($this->database_server ?? ''); ?>" />
       <span class="userInfos aligned"><?php echo $this->translator->trans('The default port is 3306. To use a different port, add the port number at the end of your server\'s address i.e ":4242".', [], 'Install'); ?></span>

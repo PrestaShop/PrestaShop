@@ -74,24 +74,24 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria);
         $qb
-            ->addSelect('p.`id_product`, p.`reference`, p.`id_shop_default`, p.`product_type`')
-            ->addSelect('ps.`price` AS `price_tax_excluded`, ps.`ecotax` AS `ecotax_tax_excluded`, ps.`id_tax_rules_group`, ps.`active`')
-            ->addSelect('pl.`name`, pl.`link_rewrite`')
-            ->addSelect('cl.`name` AS `category`')
-            ->addSelect('img_shop.`id_image`')
+            ->addSelect('p.id_product, p.reference, p.id_shop_default, p.product_type')
+            ->addSelect('ps.price AS price_tax_excluded, ps.ecotax AS ecotax_tax_excluded, ps.id_tax_rules_group, ps.active')
+            ->addSelect('pl.name, pl.link_rewrite')
+            ->addSelect('cl.name AS category')
+            ->addSelect('img_shop.id_image')
             ->addSelect('img_lang.legend')
-            ->addSelect('p.`id_tax_rules_group`')
+            ->addSelect('p.id_tax_rules_group')
         ;
 
         // When ecotax is enabled the real final price is the sum of price and ecotax so we fetch an extra alias column that is used for sorting
         if ($this->configuration->getBoolean('PS_USE_ECOTAX')) {
-            $qb->addSelect('(ps.`price` + ps.`ecotax`) AS `final_price_tax_excluded`');
+            $qb->addSelect('(ps.price + ps.ecotax) AS final_price_tax_excluded');
         } else {
-            $qb->addSelect('(ps.`price` + ps.`ecotax`) AS `final_price_tax_excluded`');
+            $qb->addSelect('(ps.price + ps.ecotax) AS final_price_tax_excluded');
         }
 
         if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
-            $qb->addSelect('IF(sa.`quantity` IS NULL OR sa.`quantity` = \'\', 0, sa.`quantity`) AS quantity');
+            $qb->addSelect('IF(sa.quantity IS NULL OR sa.quantity = \'\', 0, sa.quantity) AS quantity');
         }
 
         $this->searchCriteriaApplicator
@@ -117,7 +117,7 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria);
-        $qb->select('COUNT(p.`id_product`)');
+        $qb->select('COUNT(p.id_product)');
 
         return $qb;
     }
@@ -156,7 +156,7 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'p',
                 $this->dbPrefix . 'product_shop',
                 'ps',
-                $this->addShopCondition('ps.`id_product` = p.`id_product`', 'ps', $shopId, $filteredShopGroupId)
+                $this->addShopCondition('ps.id_product = p.id_product', 'ps', $shopId, $filteredShopGroupId)
             )
             // This join is only useful in multishop mode, but it's too complicated to handle this in ProductShopsQueryBuilder since
             // it must be called precisely here
@@ -164,33 +164,33 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'p',
                 $this->dbPrefix . 'shop',
                 's',
-                's.`id_shop` = ps.`id_shop`'
+                's.id_shop = ps.id_shop'
             )
             ->leftJoin(
                 'p',
                 $this->dbPrefix . 'product_lang',
                 'pl',
-                $this->addShopCondition('pl.`id_product` = p.`id_product` AND pl.`id_lang` = :langId', 'pl', $shopId, $filteredShopGroupId)
+                $this->addShopCondition('pl.id_product = p.id_product AND pl.id_lang = :langId', 'pl', $shopId, $filteredShopGroupId)
             )
             ->leftJoin(
                 'ps',
                 $this->dbPrefix . 'category_lang',
                 'cl',
-                $this->addShopCondition('cl.`id_category` = ps.`id_category_default` AND cl.`id_lang` = :langId', 'cl', $shopId, $filteredShopGroupId)
+                $this->addShopCondition('cl.id_category = ps.id_category_default AND cl.id_lang = :langId', 'cl', $shopId, $filteredShopGroupId)
             )
             ->leftJoin(
                 'ps',
                 $this->dbPrefix . 'image_shop',
                 'img_shop',
-                $this->addShopCondition('img_shop.`id_product` = ps.`id_product` AND img_shop.`cover` = 1', 'img_shop', $shopId, $filteredShopGroupId)
+                $this->addShopCondition('img_shop.id_product = ps.id_product AND img_shop.cover = 1', 'img_shop', $shopId, $filteredShopGroupId)
             )
             ->leftJoin(
                 'img_shop',
                 $this->dbPrefix . 'image_lang',
                 'img_lang',
-                'img_shop.`id_image` = img_lang.`id_image` AND img_lang.`id_lang` = :langId'
+                'img_shop.id_image = img_lang.id_image AND img_lang.id_lang = :langId'
             )
-            ->andWhere('p.`state` = 1')
+            ->andWhere('p.state = 1')
         ;
 
         $filteredCategoryId = $this->getFilteredCategoryId($filterValues);
@@ -200,10 +200,10 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                     'p',
                     $this->dbPrefix . 'category_product',
                     'pc',
-                    'p.`id_product` = pc.`id_product` AND pc.id_category = :categoryId'
+                    'p.id_product = pc.id_product AND pc.id_category = :categoryId'
                 )
                 ->setParameter('categoryId', $filteredCategoryId)
-                ->addSelect('pc.`position`, pc.`id_category`')
+                ->addSelect('pc.position, pc.id_category')
             ;
         }
 
@@ -228,7 +228,7 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $sqlFilters
             ->addFilter(
                 'id_product',
-                'p.`id_product`',
+                'p.id_product',
                 SqlFilters::MIN_MAX
             )
         ;
@@ -237,13 +237,13 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         if ($this->configuration->getBoolean('PS_USE_ECOTAX')) {
             $sqlFilters->addFilter(
                 'final_price_tax_excluded',
-                '(ps.`price` + ps.`ecotax`)',
+                '(ps.price + ps.ecotax)',
                 SqlFilters::MIN_MAX
             );
         } else {
             $sqlFilters->addFilter(
                 'final_price_tax_excluded',
-                'ps.`price`',
+                'ps.price',
                 SqlFilters::MIN_MAX
             );
         }
@@ -252,7 +252,7 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             $sqlFilters
                 ->addFilter(
                     'quantity',
-                    'sa.`quantity`',
+                    'sa.quantity',
                     SqlFilters::MIN_MAX
                 )
             ;
@@ -271,28 +271,28 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
 
         foreach ($filterValues as $filterName => $filter) {
             if ('active' === $filterName) {
-                $qb->andWhere('ps.`active` = :active');
+                $qb->andWhere('ps.active = :active');
                 $qb->setParameter('active', $filter);
             }
 
             if ('name' === $filterName) {
-                $qb->andWhere('pl.`name` LIKE :name');
+                $qb->andWhere('pl.name LIKE :name');
                 $qb->setParameter('name', '%' . $filter . '%');
             }
 
             if ('reference' === $filterName) {
-                $qb->andWhere('p.`reference` LIKE :reference');
+                $qb->andWhere('p.reference LIKE :reference');
                 $qb->setParameter('reference', '%' . $filter . '%');
             }
 
             if ('category' === $filterName) {
-                $qb->andWhere('cl.`name` LIKE :category');
+                $qb->andWhere('cl.name LIKE :category');
                 $qb->setParameter('category', '%' . $filter . '%');
             }
 
             // Filter by position is only relevant when a category has been selected
             if (array_key_exists('id_category', $filterValues) && 'position' === $filterName) {
-                $qb->andWhere('pc.`position` = :position');
+                $qb->andWhere('pc.position = :position');
                 $qb->setParameter('position', $filter);
             }
         }
@@ -304,7 +304,7 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         if ($shopId) {
             // Single shop context simple left join on a single shopId
-            return $sql . ' AND ' . $tableAlias . '.`id_shop` = :shopId';
+            return $sql . ' AND ' . $tableAlias . '.id_shop = :shopId';
         } elseif ($filteredShopGroupId) {
             // Group shop context, we add a condition on the left join that the id_shop must be part of the group shop AND be associated with the product
             // And we only select the MIN because we only need the first id_shop which will be used as the default display thus we don't need to use a group by on id_product
@@ -316,22 +316,22 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 WHERE s2.id_shop_group = :filteredShopGroupId
                 AND ps2.id_product = ps.id_product';
 
-            return $sql . ' AND ' . $tableAlias . '.`id_shop` IN (' . $groupSubQuery . ')';
+            return $sql . ' AND ' . $tableAlias . '.id_shop IN (' . $groupSubQuery . ')';
         }
 
         // All shops context left join on the product's default shop
-        return $sql . ' AND ' . $tableAlias . '.`id_shop` = p.id_shop_default';
+        return $sql . ' AND ' . $tableAlias . '.id_shop = p.id_shop_default';
     }
 
     protected function getStockOnCondition(?int $sharedStockGroupId, ?int $shopId, ?int $filteredShopGroupId): string
     {
         $stockOnCondition =
-            'sa.`id_product` = p.`id_product`
-            AND sa.`id_product_attribute` = 0
+            'sa.id_product = p.id_product
+            AND sa.id_product_attribute = 0
         ';
 
         if ($sharedStockGroupId) {
-            $stockOnCondition .= 'AND sa.`id_shop` = 0 AND sa.`id_shop_group` = :sharedShopGroupId';
+            $stockOnCondition .= 'AND sa.id_shop = 0 AND sa.id_shop_group = :sharedShopGroupId';
         } else {
             $stockOnCondition = $this->addShopCondition($stockOnCondition, 'sa', $shopId, $filteredShopGroupId);
         }

@@ -40,15 +40,15 @@ class UploadControllerCore extends GetFileController
         }
 
         $isCustomization = Db::getInstance()->getValue('SELECT 1
-            FROM ' . _DB_PREFIX_ . 'cart c
-            INNER JOIN ' . _DB_PREFIX_ . 'customization cu ON c.id_cart = cu.id_cart
-            INNER JOIN ' . _DB_PREFIX_ . 'customized_data cd ON cd.id_customization = cu.id_customization
-            LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON c.id_cart = o.id_cart
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart') . ' c
+            INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization') . ' cu ON c.id_cart = cu.id_cart
+            INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customized_data') . ' cd ON cd.id_customization = cu.id_customization
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . ' o ON c.id_cart = o.id_cart
             WHERE (c.id_customer = ' . (int) $this->context->cart->id_customer . '
             AND c.id_guest = ' . (int) $this->context->cart->id_guest . '
-            OR o.reference = "' . pSQL(Tools::getValue('reference')) . '")
+            OR o.reference = \'' . pSQL(Tools::getValue('reference')) . '\')
             AND cd.type = ' . Product::CUSTOMIZE_FILE . '
-            AND (cd.value = "' . $this->filename . '" OR CONCAT(cd.value, "_small") = "' . $this->filename . '")');
+            AND (cd.value = \'' . $this->filename . '\' OR CONCAT(cd.value, \'_small\') = \'' . $this->filename . '\')');
 
         return (bool) $isCustomization;
     }

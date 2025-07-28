@@ -34,48 +34,48 @@ final class GetTaxRuleListHandler
                 'tr',
                 $this->dbPrefix . 'country_lang',
                 'cl',
-                'tr.`id_country` = cl.`id_country` AND cl.`id_lang` = :idLang'
+                'tr.id_country = cl.id_country AND cl.id_lang = :idLang'
             )
             ->leftJoin(
                 'tr',
                 $this->dbPrefix . 'state',
                 's',
-                'tr.`id_country` = s.`id_country` AND tr.`id_state` = s.`id_state`'
+                'tr.id_country = s.id_country AND tr.id_state = s.id_state'
             )
             ->leftJoin(
                 'tr',
                 $this->dbPrefix . 'tax',
                 't',
-                'tr.`id_tax` = t.`id_tax`'
+                'tr.id_tax = t.id_tax'
             )
             ->leftJoin(
                 'tr',
                 $this->dbPrefix . 'tax_lang',
                 'tl',
-                'tr.`id_tax` = tl.`id_tax` AND tl.`id_lang` = :idLang'
+                'tr.id_tax = tl.id_tax AND tl.id_lang = :idLang'
             )
-            ->where('tr.`id_tax_rules_group` = :idTaxRulesGroup')
+            ->where('tr.id_tax_rules_group = :idTaxRulesGroup')
             ->setParameter('idLang', $query->getLanguageId())
             ->setParameter('idTaxRulesGroup', $query->getTaxRulesGroupId()->getValue())
-            ->orderBy('tr.`id_tax_rule`', 'ASC')
+            ->orderBy('tr.id_tax_rule', 'ASC')
         ;
 
         $countQb = clone $qb;
-        $totalCount = (int) $countQb->select('COUNT(DISTINCT tr.`id_tax_rule`)')->executeQuery()->fetchOne();
+        $totalCount = (int) $countQb->select('COUNT(DISTINCT tr.id_tax_rule)')->executeQuery()->fetchOne();
 
         $qb->select([
-            'tr.`id_tax_rule`',
-            'IFNULL(cl.`name`, \'--\') AS country_name',
-            'IFNULL(s.`name`, \'--\') AS state_name',
+            'tr.id_tax_rule',
+            'IFNULL(cl.name, \'--\') AS country_name',
+            'IFNULL(s.name, \'--\') AS state_name',
             'CASE'
-                . ' WHEN CONCAT_WS(\' - \', tr.`zipcode_from`, tr.`zipcode_to`) = \'0 - 0\''
+                . ' WHEN CONCAT_WS(\' - \', tr.zipcode_from, tr.zipcode_to) = \'0 - 0\''
                 . ' THEN \'--\''
-                . ' ELSE CONCAT_WS(\' - \', tr.`zipcode_from`, tr.`zipcode_to`)'
+                . ' ELSE CONCAT_WS(\' - \', tr.zipcode_from, tr.zipcode_to)'
             . ' END AS zipcode',
-            'tr.`behavior`',
-            'IFNULL(tl.`name`, \'\') AS tax_name',
-            'IFNULL(t.`rate`, \'0\') AS tax_rate',
-            'tr.`description`',
+            'tr.behavior',
+            'IFNULL(tl.name, \'\') AS tax_name',
+            'IFNULL(t.rate, \'0\') AS tax_rate',
+            'tr.description',
         ]);
 
         if ($query->getLimit() !== null) {

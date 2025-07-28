@@ -86,11 +86,11 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
 
         $qb = $this->connection
             ->createQueryBuilder()
-            ->select($this->getCustomerField(false) . ' AS `customer`')
+            ->select($this->getCustomerField(false) . ' AS customer')
             ->addSelect('o.id_order, o.reference, o.total_paid_tax_incl, os.paid, osl.name AS osname')
             ->addSelect('o.id_currency, cur.iso_code')
             ->addSelect('o.current_state, o.id_customer')
-            ->addSelect('cu.`id_customer` IS NULL as `deleted_customer`')
+            ->addSelect('cu.id_customer IS NULL as deleted_customer')
             ->addSelect('os.color, o.payment, s.name AS shop_name')
             ->addSelect('o.date_add, cu.company, cl.name AS country_name, o.invoice_number, o.delivery_number')
             ->from('(' . $paginatedIdsQb->getSQL() . ')', 'paginated')
@@ -167,7 +167,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
                 'os.id_order_state = osl.id_order_state AND osl.id_lang = :context_lang_id'
             )
             ->leftJoin('o', $this->dbPrefix . 'shop', 's', 'o.id_shop = s.id_shop')
-            ->andWhere('o.`id_shop` IN (:context_shop_ids)')
+            ->andWhere('o.id_shop IN (:context_shop_ids)')
             ->setParameter('context_lang_id', $this->contextLangId, PDO::PARAM_INT)
             ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
         ;
@@ -180,13 +180,13 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         ];
 
         $likeComparisonFilters = [
-            'reference' => 'o.`reference`',
-            'company' => 'cu.`company`',
-            'payment' => 'o.`payment`',
+            'reference' => 'o.reference',
+            'company' => 'cu.company',
+            'payment' => 'o.payment',
         ];
 
         $dateComparisonFilters = [
-            'date_add' => 'o.`date_add`',
+            'date_add' => 'o.date_add',
         ];
 
         foreach ($filters as $filterName => $filterValue) {
@@ -274,10 +274,10 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
     private function getCustomerField(bool $includeFullFirstname = true)
     {
         if ($includeFullFirstname) {
-            return 'CONCAT(cu.`firstname`, \' \', cu.`lastname`)';
+            return 'CONCAT(cu.firstname, \' \', cu.lastname)';
         }
 
-        return 'CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`)';
+        return 'CONCAT(LEFT(cu.firstname, 1), \'. \', cu.lastname)';
     }
 
     /**
@@ -318,15 +318,15 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             'id_order' => 'o.id_order',
             'country_name' => 'c.id_country',
             'total_paid_tax_incl' => 'o.total_paid_tax_incl',
-            'reference' => 'o.`reference`',
-            'company' => 'cu.`company`',
-            'payment' => 'o.`payment`',
+            'reference' => 'o.reference',
+            'company' => 'cu.company',
+            'payment' => 'o.payment',
             // WHY: the `customer` column is an alias of the SELECT list, so it can be sorted by
             // name in the display query but must be sorted by its raw expression in the id-only
             // paginating query (which has no SELECT alias). See getSearchQueryBuilder().
             'customer' => $customerSortField,
             'osname' => 'osl.name',
-            'date_add' => 'o.`date_add`',
+            'date_add' => 'o.date_add',
         ];
 
         if (isset($sortableFields[$criteria->getOrderBy()])) {

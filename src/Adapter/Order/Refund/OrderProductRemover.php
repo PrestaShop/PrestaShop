@@ -132,7 +132,7 @@ class OrderProductRemover
         if (!(int) $order->getCurrentState()) {
             throw new DeleteCustomizedProductFromOrderException('Could not get a valid Order state before deletion');
         }
-        if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization` WHERE `id_customization` = ' . (int) $orderDetail->id_customization . ' AND `id_cart` = ' . (int) $order->id_cart . ' AND `id_product` = ' . (int) $orderDetail->product_id)) {
+        if (!Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization') . ' WHERE id_customization = ' . (int) $orderDetail->id_customization . ' AND id_cart = ' . (int) $order->id_cart . ' AND id_product = ' . (int) $orderDetail->product_id)) {
             throw new DeleteCustomizedProductFromOrderException('Could not delete customization from database.');
         }
     }

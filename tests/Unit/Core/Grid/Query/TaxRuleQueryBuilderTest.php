@@ -130,22 +130,22 @@ class TaxRuleQueryBuilderTest extends TestCase
     public function dataProviderQueryBuilder(): iterable
     {
         $select = [
-            'tr.`id_tax_rule`',
-            'tr.`id_tax_rules_group`',
-            'tr.`description`',
-            'tr.`id_country` AS country_id',
-            'cl.`name` AS country_name',
-            'tr.`id_state` AS state_id',
-            'IFNULL(s.`name`, \'--\') AS state_name',
+            'tr.id_tax_rule',
+            'tr.id_tax_rules_group',
+            'tr.description',
+            'tr.id_country AS country_id',
+            'cl.name AS country_name',
+            'tr.id_state AS state_id',
+            'IFNULL(s.name, \'--\') AS state_name',
             'CASE '
-                . ' WHEN CONCAT_WS(\' - \', tr.`zipcode_from`, tr.`zipcode_to`) = \'0 - 0\''
-                . ' THEN \'--\' ELSE CONCAT_WS(\' - \', tr.`zipcode_from`, tr.`zipcode_to`)'
+                . ' WHEN CONCAT_WS(\' - \', tr.zipcode_from, tr.zipcode_to) = \'0 - 0\''
+                . ' THEN \'--\' ELSE CONCAT_WS(\' - \', tr.zipcode_from, tr.zipcode_to)'
             . ' END AS zipcode',
             'tr.behavior',
             't.rate',
-            'txl.`name` AS tax_name',
+            'txl.name AS tax_name',
         ];
-        $countSelect = ['COUNT(DISTINCT tr.`id_tax_rule`)'];
+        $countSelect = ['COUNT(DISTINCT tr.id_tax_rule)'];
 
         // Default: no filter at all, the query lists tax rules across all groups
         $defaultFilters = $this->getFilters();
@@ -164,25 +164,25 @@ class TaxRuleQueryBuilderTest extends TestCase
                         'joinType' => 'left',
                         'joinTable' => self::DB_PREFIX . 'country',
                         'joinAlias' => 'c',
-                        'joinCondition' => 'tr.`id_country` = c.`id_country`',
+                        'joinCondition' => 'tr.id_country = c.id_country',
                     ],
                     [
                         'joinType' => 'left',
                         'joinTable' => self::DB_PREFIX . 'country_lang',
                         'joinAlias' => 'cl',
-                        'joinCondition' => 'tr.`id_country` = cl.`id_country` AND cl.`id_lang` = :idLang ',
+                        'joinCondition' => 'tr.id_country = cl.id_country AND cl.id_lang = :idLang ',
                     ],
                     [
                         'joinType' => 'left',
                         'joinTable' => self::DB_PREFIX . 'state',
                         'joinAlias' => 's',
-                        'joinCondition' => 'tr.`id_country` = s.`id_country` AND tr.`id_state` = s.`id_state`',
+                        'joinCondition' => 'tr.id_country = s.id_country AND tr.id_state = s.id_state',
                     ],
                     [
                         'joinType' => 'left',
                         'joinTable' => self::DB_PREFIX . 'tax',
                         'joinAlias' => 't',
-                        'joinCondition' => 'tr.`id_tax` = t.`id_tax`',
+                        'joinCondition' => 'tr.id_tax = t.id_tax',
                     ],
                 ],
                 't' => [
@@ -190,7 +190,7 @@ class TaxRuleQueryBuilderTest extends TestCase
                         'joinType' => 'left',
                         'joinTable' => self::DB_PREFIX . 'tax_lang',
                         'joinAlias' => 'txl',
-                        'joinCondition' => 't.`id_tax` = txl.`id_tax` AND txl.`id_lang` = :idLang',
+                        'joinCondition' => 't.id_tax = txl.id_tax AND txl.id_lang = :idLang',
                     ],
                 ],
             ],
@@ -219,7 +219,7 @@ class TaxRuleQueryBuilderTest extends TestCase
             'taxRulesGroupId' => 2,
         ]);
         $groupQueryParts = $defaultQueryParts;
-        $groupQueryParts['where'] = 'tr.`id_tax_rules_group` = :idTaxRulesGroup';
+        $groupQueryParts['where'] = 'tr.id_tax_rules_group = :idTaxRulesGroup';
         $groupParameters = $defaultParameters;
         $groupParameters['idTaxRulesGroup'] = 2;
 
@@ -255,10 +255,10 @@ class TaxRuleQueryBuilderTest extends TestCase
         $aliasQueryParts['where'] = new CompositeExpression(
             'AND',
             [
-                'tr.`id_tax_rules_group` = :idTaxRulesGroup',
-                'cl.`name` LIKE :country',
-                'txl.`name` LIKE :taxName',
-                'tr.`behavior` = :behavior',
+                'tr.id_tax_rules_group = :idTaxRulesGroup',
+                'cl.name LIKE :country',
+                'txl.name LIKE :taxName',
+                'tr.behavior = :behavior',
             ]
         );
         $aliasParameters = $defaultParameters;
@@ -284,8 +284,8 @@ class TaxRuleQueryBuilderTest extends TestCase
         $countryIdQueryParts['where'] = new CompositeExpression(
             'AND',
             [
-                'tr.`id_tax_rules_group` = :idTaxRulesGroup',
-                'tr.`id_country` = :countryId',
+                'tr.id_tax_rules_group = :idTaxRulesGroup',
+                'tr.id_country = :countryId',
             ]
         );
         $countryIdParameters = $defaultParameters;
@@ -310,9 +310,9 @@ class TaxRuleQueryBuilderTest extends TestCase
         $legacyQueryParts['where'] = new CompositeExpression(
             'AND',
             [
-                'tr.`id_tax_rules_group` = :idTaxRulesGroup',
-                'cl.`name` LIKE :country',
-                's.`name` LIKE :state',
+                'tr.id_tax_rules_group = :idTaxRulesGroup',
+                'cl.name LIKE :country',
+                's.name LIKE :state',
             ]
         );
         $legacyParameters = $defaultParameters;

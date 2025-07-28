@@ -24,10 +24,10 @@ class CMSRepository extends EntityRepository
     {
         $sql = '
 			SELECT *
-			FROM `' . $this->getTableNameWithPrefix() . '` c
-			JOIN `' . $this->getPrefix() . 'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
-			WHERE cl.`id_lang` = ' . (int) $id_lang . '
-			AND cl.`id_shop` = ' . (int) $id_shop . '
+			FROM ' . $this->db->quoteIdentifier($this->getTableNameWithPrefix()) . ' c
+			JOIN ' . $this->db->quoteIdentifier($this->getPrefix() . 'cms_lang') . ' cl ON c.id_cms= cl.id_cms
+			WHERE cl.id_lang = ' . (int) $id_lang . '
+			AND cl.id_shop = ' . (int) $id_shop . '
 
 		';
 
@@ -49,12 +49,12 @@ class CMSRepository extends EntityRepository
     {
         $sql = '
 			SELECT *
-			FROM `' . $this->getTableNameWithPrefix() . '` c
-			JOIN `' . $this->getPrefix() . 'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
-			WHERE c.`id_cms` = ' . (int) $id_cms . '
-			AND cl.`id_lang` = ' . (int) $id_lang . '
-			AND cl.`id_shop` = ' . (int) $id_shop . '
-			LIMIT 0 , 1
+			FROM ' . $this->db->quoteIdentifier($this->getTableNameWithPrefix()) . ' c
+			JOIN ' . $this->db->quoteIdentifier($this->getPrefix() . 'cms_lang') . ' cl ON c.id_cms= cl.id_cms
+			WHERE c.id_cms = ' . (int) $id_cms . '
+			AND cl.id_lang = ' . (int) $id_lang . '
+			AND cl.id_shop = ' . (int) $id_shop . '
+			LIMIT 1
 		';
 
         return $this->hydrateOne($this->db->select($sql));

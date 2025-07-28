@@ -34,7 +34,10 @@ class RiskCore extends ObjectModel
     public function getFields()
     {
         $this->validateFields();
-        $fields['id_risk'] = (int) $this->id_risk;
+        $fields = [];
+        if (!empty($this->id_risk)) {
+            $fields['id_risk'] = (int) $this->id_risk;
+        }
         $fields['color'] = pSQL($this->color);
         $fields['percent'] = (int) $this->percent;
 

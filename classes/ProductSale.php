@@ -10,16 +10,25 @@
 class ProductSaleCore
 {
     /**
-     * Fill the `product_sale` SQL table with data from `order_detail`.
+     * Fill the product_sale SQL table with data from order_detail.
      *
      * @return bool True on success
      */
     public static function fillProductSales()
     {
-        $sql = 'REPLACE INTO ' . _DB_PREFIX_ . 'product_sale
-				(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
+        // Conflict target is the PRIMARY KEY (id_product); REPLACE's delete+insert semantics
+        // are equivalent here to an upsert of every non-key column.
+        /* @phpstan-ignore-next-line */
+        $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT' : 'REPLACE';
+        /* @phpstan-ignore-next-line */
+        $onConflict = _DB_TYPE_ == 'pgsql'
+            ? 'ON CONFLICT (id_product) DO UPDATE SET quantity = EXCLUDED.quantity, sale_nbr = EXCLUDED.sale_nbr, date_upd = EXCLUDED.date_upd'
+            : '';
+        $sql = $insertKeyword . ' INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . '
+				(id_product, quantity, sale_nbr, date_upd)
 				SELECT od.product_id, SUM(od.product_quantity), COUNT(od.product_id), NOW()
-							FROM ' . _DB_PREFIX_ . 'order_detail od GROUP BY od.product_id';
+							FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . ' od GROUP BY od.product_id
+				' . $onConflict;
 
         return Db::getInstance()->execute($sql);
     }
@@ -31,11 +40,11 @@ class ProductSaleCore
      */
     public static function getNbSales()
     {
-        $sql = 'SELECT COUNT(ps.`id_product`) AS nb
-				FROM `' . _DB_PREFIX_ . 'product_sale` ps
-				LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON p.`id_product` = ps.`id_product`
+        $sql = 'SELECT COUNT(ps.id_product) AS nb
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . ' ps
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ON p.id_product = ps.id_product
 				' . Shop::addSqlAssociation('product', 'p', false) . '
-				WHERE product_shop.`active` = 1';
+				WHERE product_shop.active = 1';
 
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
     }
@@ -77,54 +86,58 @@ class ProductSaleCore
         }
 
         $interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
+        $now = date('Y-m-d') . ' 00:00:00';
+        /* @phpstan-ignore-next-line */
+        $newProductThreshold = _DB_TYPE_ == 'pgsql'
+            ? "(TIMESTAMP '" . pSQL($now) . "' - INTERVAL '" . (int) $interval . " DAY')"
+            : "DATE_SUB('" . pSQL($now) . "', INTERVAL " . (int) $interval . ' DAY)';
 
         // no group by needed : there's only one attribute with default_on=1 for a given id_product + shop
         // same for image with cover=1
-        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
-					' . (Combination::isFeatureActive() ? 'product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity,IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute,' : '') . '
-					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
-					pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
-					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
-					image_shop.`id_image` id_image, il.`legend`,
-					ps.`quantity` AS sales, t.`rate`, pl.`meta_title`, pl.`meta_description`,
-					DATEDIFF(p.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
-					INTERVAL ' . (int) $interval . ' DAY)) > 0 AS new'
-            . ' FROM `' . _DB_PREFIX_ . 'product_sale` ps
-				LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON ps.`id_product` = p.`id_product`
+        $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, COALESCE(stock.quantity, 0) as quantity,
+					' . (Combination::isFeatureActive() ? 'product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity,COALESCE(product_attribute_shop.id_product_attribute,0) id_product_attribute,' : '') . '
+					pl.description, pl.description_short, pl.link_rewrite, pl.meta_description,
+					pl.meta_title, pl.name, pl.available_now, pl.available_later,
+					m.name AS manufacturer_name, p.id_manufacturer as id_manufacturer,
+					image_shop.id_image id_image, il.legend,
+					ps.quantity AS sales, t.rate, pl.meta_title, pl.meta_description,
+					(p.date_add > ' . $newProductThreshold . ') AS new'
+            . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . ' ps
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ON ps.id_product = p.id_product
 				' . Shop::addSqlAssociation('product', 'p', false);
         if (Combination::isFeatureActive()) {
-            $sql .= ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-							ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')';
+            $sql .= ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_shop') . ' product_attribute_shop
+							ON (p.id_product = product_attribute_shop.id_product AND product_attribute_shop.default_on = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')';
         }
 
-        $sql .= ' LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
-					ON p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . '
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
-					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $idLang . ')
-				LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-				LEFT JOIN `' . _DB_PREFIX_ . 'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`)
-					AND tr.`id_country` = ' . (int) $context->country->id . '
-					AND tr.`id_state` = 0
-				LEFT JOIN `' . _DB_PREFIX_ . 'tax` t ON (t.`id_tax` = tr.`id_tax`)
+        $sql .= ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl
+					ON p.id_product = pl.id_product
+					AND pl.id_lang = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . '
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_shop') . ' image_shop
+					ON (image_shop.id_product = p.id_product AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_lang') . ' il ON (image_shop.id_image = il.id_image AND il.id_lang = ' . (int) $idLang . ')
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'manufacturer') . ' m ON (m.id_manufacturer = p.id_manufacturer)
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tax_rule') . ' tr ON (product_shop.id_tax_rules_group = tr.id_tax_rules_group)
+					AND tr.id_country = ' . (int) $context->country->id . '
+					AND tr.id_state = 0
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'tax') . ' t ON (t.id_tax = tr.id_tax)
 				' . Product::sqlStock('p', 0);
 
         $sql .= '
-				WHERE product_shop.`active` = 1
-					AND product_shop.`visibility` != \'none\'';
+				WHERE product_shop.active = 1
+					AND product_shop.visibility != \'none\'';
 
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
-            $sql .= ' AND EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
-            JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . ')
-            WHERE cp.`id_product` = p.`id_product`)';
+            $sql .= ' AND EXISTS(SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp
+            JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' cg ON (cp.id_category = cg.id_category AND cg.id_group ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . ')
+            WHERE cp.id_product = p.id_product)';
         }
 
         if ($finalOrderBy != 'price') {
             $sql .= '
-					ORDER BY ' . (!empty($orderTable) ? '`' . pSQL($orderTable) . '`.' : '') . '`' . pSQL($orderBy) . '` ' . pSQL($orderWay) . '
-					LIMIT ' . (int) (($pageNumber - 1) * $nbProducts) . ', ' . (int) $nbProducts;
+					ORDER BY ' . (!empty($orderTable) ? Db::quoteIdentifier($orderTable) . '.' : '') . Db::quoteIdentifier($orderBy) . ' ' . pSQL($orderWay) . '
+					LIMIT ' . (int) $nbProducts . ' OFFSET ' . (int) (($pageNumber - 1) * $nbProducts);
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -165,37 +178,37 @@ class ProductSaleCore
         // same for image with cover=1
         $sql = '
 		SELECT
-			p.id_product, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute, pl.`link_rewrite`, pl.`name`, pl.`description_short`, product_shop.`id_category_default`,
-			image_shop.`id_image` id_image, il.`legend`,
-			ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category, p.show_price, p.available_for_order, IFNULL(stock.quantity, 0) as quantity, p.customizable,
-			IFNULL(pa.minimal_quantity, p.minimal_quantity) as minimal_quantity, stock.out_of_stock,
-			product_shop.`date_add` > "' . date('Y-m-d', strtotime('-' . (Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY')) . '" as new,
-			product_shop.`on_sale`, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity
-		FROM `' . _DB_PREFIX_ . 'product_sale` ps
-		LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON ps.`id_product` = p.`id_product`
+			p.id_product, COALESCE(product_attribute_shop.id_product_attribute,0) id_product_attribute, pl.link_rewrite, pl.name, pl.description_short, product_shop.id_category_default,
+			image_shop.id_image id_image, il.legend,
+			ps.quantity AS sales, p.ean13, p.upc, cl.link_rewrite AS category, p.show_price, p.available_for_order, COALESCE(stock.quantity, 0) as quantity, p.customizable,
+			COALESCE(pa.minimal_quantity, p.minimal_quantity) as minimal_quantity, stock.out_of_stock,
+			product_shop.date_add > \'' . date('Y-m-d', strtotime('-' . (Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY')) . '\' as new,
+			product_shop.on_sale, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . ' ps
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ON ps.id_product = p.id_product
 		' . Shop::addSqlAssociation('product', 'p') . '
-		LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-			ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')
-		LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON (product_attribute_shop.id_product_attribute=pa.id_product_attribute)
-		LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl
-			ON p.`id_product` = pl.`id_product`
-			AND pl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . '
-		LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
-			ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
-		LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $idLang . ')
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
-			ON cl.`id_category` = product_shop.`id_category_default`
-			AND cl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('cl') . Product::sqlStock('p', 0);
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_shop') . ' product_attribute_shop
+			ON (p.id_product = product_attribute_shop.id_product AND product_attribute_shop.default_on = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute') . ' pa ON (product_attribute_shop.id_product_attribute=pa.id_product_attribute)
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl
+			ON p.id_product = pl.id_product
+			AND pl.id_lang = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl') . '
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_shop') . ' image_shop
+			ON (image_shop.id_product = p.id_product AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_lang') . ' il ON (image_shop.id_image = il.id_image AND il.id_lang = ' . (int) $idLang . ')
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl
+			ON cl.id_category = product_shop.id_category_default
+			AND cl.id_lang = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('cl') . Product::sqlStock('p', 0);
 
         $sql .= '
-		WHERE product_shop.`active` = 1
-		AND p.`visibility` != \'none\'';
+		WHERE product_shop.active = 1
+		AND p.visibility != \'none\'';
 
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
-            $sql .= ' AND EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
-				JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . ')
-				WHERE cp.`id_product` = p.`id_product`)';
+            $sql .= ' AND EXISTS(SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp
+				JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_group') . ' cg ON (cp.id_category = cg.id_category AND cg.id_group ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . ')
+				WHERE cp.id_product = p.id_product)';
         }
 
         $sql .= '
@@ -219,11 +232,16 @@ class ProductSaleCore
      */
     public static function addProductSale($productId, $qty = 1)
     {
+        /* @phpstan-ignore-next-line */
+        $onConflict = _DB_TYPE_ == 'pgsql'
+            ? 'ON CONFLICT (id_product) DO UPDATE SET quantity = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . '.quantity + ' . (int) $qty . ', sale_nbr = ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . '.sale_nbr + 1, date_upd = NOW()'
+            : ('ON DUPLICATE KEY UPDATE quantity = quantity + ' . (int) $qty . ', sale_nbr = sale_nbr + 1, date_upd = NOW()');
+
         return Db::getInstance()->execute('
-			INSERT INTO ' . _DB_PREFIX_ . 'product_sale
-			(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
+			INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . '
+			(id_product, quantity, sale_nbr, date_upd)
 			VALUES (' . (int) $productId . ', ' . (int) $qty . ', 1, NOW())
-			ON DUPLICATE KEY UPDATE `quantity` = `quantity` + ' . (int) $qty . ', `sale_nbr` = `sale_nbr` + 1, `date_upd` = NOW()');
+			' . $onConflict);
     }
 
     /**
@@ -235,7 +253,7 @@ class ProductSaleCore
      */
     public static function getNbrSales($idProduct)
     {
-        $result = Db::getInstance()->getRow('SELECT `sale_nbr` FROM ' . _DB_PREFIX_ . 'product_sale WHERE `id_product` = ' . (int) $idProduct);
+        $result = Db::getInstance()->getRow('SELECT sale_nbr FROM ' . _DB_PREFIX_ . 'product_sale WHERE id_product = ' . (int) $idProduct);
         if (empty($result) || !array_key_exists('sale_nbr', $result)) {
             return -1;
         }
@@ -255,11 +273,14 @@ class ProductSaleCore
     {
         $totalSales = ProductSale::getNbrSales($idProduct);
         if ($totalSales > 1) {
+            /* @phpstan-ignore-next-line */
+            $castType = _DB_TYPE_ == 'pgsql' ? 'INTEGER' : 'SIGNED';
+
             return Db::getInstance()->execute(
                 '
-				UPDATE ' . _DB_PREFIX_ . 'product_sale
-				SET `quantity` = CAST(`quantity` AS SIGNED) - ' . (int) $qty . ', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1, `date_upd` = NOW()
-				WHERE `id_product` = ' . (int) $idProduct
+				UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale') . '
+				SET quantity = CAST(quantity AS ' . $castType . ') - ' . (int) $qty . ', sale_nbr = CAST(sale_nbr AS ' . $castType . ') - 1, date_upd = NOW()
+				WHERE id_product = ' . (int) $idProduct
             );
         } elseif ($totalSales == 1) {
             return Db::getInstance()->delete('product_sale', 'id_product = ' . (int) $idProduct);

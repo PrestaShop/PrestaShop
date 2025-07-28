@@ -114,20 +114,27 @@ class ProductAssemblerCore
             $nbDaysNewProduct = 20;
         }
         $now = date('Y-m-d') . ' 00:00:00';
+        $dateAddColumn = Db::quoteIdentifier('date_add');
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            $newProductExpr = "(p.{$dateAddColumn}::date - ('$now'::timestamp - INTERVAL '$nbDaysNewProduct days')::date) > 0";
+        } else {
+            $newProductExpr = "(DATEDIFF(
+                        p.{$dateAddColumn},
+                        DATE_SUB(
+                            '$now',
+                            INTERVAL $nbDaysNewProduct DAY
+                        )
+                    ) > 0)";
+        }
 
         $sql = "SELECT
                     p.*,
                     ps.*,
                     pl.*,
                     sa.out_of_stock,
-                    IFNULL(sa.quantity, 0) as quantity,
-                    (DATEDIFF(
-                        p.`date_add`,
-                        DATE_SUB(
-                            '$now',
-                            INTERVAL $nbDaysNewProduct DAY
-                        )
-                    ) > 0) as new
+                    COALESCE(sa.quantity, 0) as quantity,
+                    $newProductExpr as new
                 FROM {$prefix}product p
                 LEFT JOIN {$prefix}product_lang pl
                     ON pl.id_product = p.id_product

@@ -60,7 +60,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('wa.`id_webservice_account`, wa.`key`, wa.`description`, wa.`active`');
+        $qb->select('wa.id_webservice_account, wa.' . $this->connection->quoteIdentifier('key') . ', wa.description, wa.active');
 
         $orderBy = $searchCriteria->getOrderBy();
         if (!empty($orderBy)) {
@@ -70,7 +70,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
             );
         }
 
-        $qb->groupBy('wa.`id_webservice_account`');
+        $qb->groupBy('wa.id_webservice_account');
 
         $this->searchCriteriaApplicator->applyPagination($searchCriteria, $qb);
 
@@ -83,7 +83,7 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT wa.`id_webservice_account`)');
+            ->select('COUNT(DISTINCT wa.id_webservice_account)');
 
         return $qb;
     }
@@ -104,14 +104,14 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
                 'wa',
                 $this->dbPrefix . 'webservice_account_shop',
                 'was',
-                'was.`id_webservice_account` = wa.`id_webservice_account`'
+                'was.id_webservice_account = wa.id_webservice_account'
             )
-            ->andWhere('was.`id_shop` IN (:shops)')
+            ->andWhere('was.id_shop IN (:shops)')
             ->setParameter('shops', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
         ;
 
         $sqlFilters = (new SqlFilters())
-            ->addFilter('key', 'wa.key', SqlFilters::WHERE_LIKE)
+            ->addFilter('key', 'wa.' . $this->connection->quoteIdentifier('key'), SqlFilters::WHERE_LIKE)
             ->addFilter('active', 'wa.active', SqlFilters::WHERE_STRICT)
             ->addFilter('description', 'wa.description', SqlFilters::WHERE_LIKE)
         ;
@@ -130,6 +130,6 @@ final class WebserviceKeyQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getModifiedOrderBy($orderBy)
     {
-        return 'wa.' . $orderBy;
+        return 'wa.' . ($orderBy === 'key' ? $this->connection->quoteIdentifier('key') : $orderBy);
     }
 }

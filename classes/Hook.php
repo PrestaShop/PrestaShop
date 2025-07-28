@@ -199,13 +199,11 @@ class HookCore extends ObjectModel
     ) {
         $hooks = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-			SELECT * FROM `' .
-                _DB_PREFIX_ .
-                'hook` h
+			SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook') . ' h
 			' .
-                ($position ? 'WHERE h.`position` = 1' : '') .
+                ($position ? 'WHERE h.position = 1' : '') .
                 '
-			ORDER BY `name`'
+			ORDER BY name'
         );
 
         if ($only_display_hooks) {
@@ -259,11 +257,9 @@ class HookCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->getValue(
                 '
-							SELECT `name`
-							FROM `' .
-                    _DB_PREFIX_ .
-                    'hook`
-							WHERE `id_hook` = ' .
+							SELECT name
+							FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook') . '
+							WHERE id_hook = ' .
                     (int) $hook_id
             );
 
@@ -310,7 +306,7 @@ class HookCore extends ObjectModel
         $cacheId = 'hook_aliases';
         if (!Cache::isStored($cacheId)) {
             $hookAliasList = Db::getInstance()->executeS(
-                'SELECT `name`, `alias` FROM `' . _DB_PREFIX_ . 'hook_alias`'
+                'SELECT name, alias FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_alias') . ''
             );
             $hookAliases = [];
             if ($hookAliasList) {
@@ -362,7 +358,7 @@ class HookCore extends ObjectModel
 
         if (!Cache::isStored($cacheId)) {
             $databaseResults = Db::getInstance()->executeS(
-                'SELECT name, alias FROM `' . _DB_PREFIX_ . 'hook_alias`'
+                'SELECT name, alias FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_alias') . ''
             );
             $hooksByAlias = [];
             if ($databaseResults) {
@@ -487,17 +483,11 @@ class HookCore extends ObjectModel
 
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT h.id_hook, h.name as h_name, title, description, h.position, hm.position as hm_position, m.id_module, m.name, m.active
-            FROM `' .
-                _DB_PREFIX_ .
-                'hook_module` hm
-            STRAIGHT_JOIN `' .
-                _DB_PREFIX_ .
-                'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' .
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_module') . ' hm
+            STRAIGHT_JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook') . ' h ON (h.id_hook = hm.id_hook AND hm.id_shop = ' .
                 (int) Context::getContext()->shop->id .
                 ')
-            STRAIGHT_JOIN `' .
-                _DB_PREFIX_ .
-                'module` as m ON (m.id_module = hm.id_module)
+            STRAIGHT_JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' as m ON (m.id_module = hm.id_module)
             ORDER BY hm.position'
         );
         $list = [];
@@ -555,9 +545,9 @@ class HookCore extends ObjectModel
         $id_module = (int) $module_instance->id;
 
         $sql = "SELECT * FROM {$prefix}hook_module
-                  WHERE `id_hook` = {$id_hook}
-                  AND `id_module` = {$id_module}
-                  AND `id_shop` = {$id_shop}";
+                  WHERE id_hook = {$id_hook}
+                  AND id_module = {$id_module}
+                  AND id_shop = {$id_shop}";
 
         $rows = Db::getInstance()->executeS($sql);
 
@@ -656,13 +646,11 @@ class HookCore extends ObjectModel
 
                 // Get module position in hook
                 $sql =
-                    'SELECT MAX(`position`) AS position
-                    FROM `' .
-                    _DB_PREFIX_ .
-                    'hook_module`
-                    WHERE `id_hook` = ' .
+                    'SELECT MAX(position) AS position
+                    FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_module') . '
+                    WHERE id_hook = ' .
                     (int) $id_hook .
-                    ' AND `id_shop` = ' .
+                    ' AND id_shop = ' .
                     (int) $shop_id;
                 if (!($position = Db::getInstance()->getValue($sql))) {
                     $position = 0;
@@ -680,9 +668,9 @@ class HookCore extends ObjectModel
 
                 if (!in_array($shop_id, $shop_list_employee)) {
                     $where =
-                        '`id_module` = ' .
+                        'id_module = ' .
                         (int) $module_instance->id .
-                        ' AND `id_shop` = ' .
+                        ' AND id_shop = ' .
                         (int) $shop_id;
                     $return =
                         $return
@@ -751,15 +739,13 @@ class HookCore extends ObjectModel
 
         // Unregister module on hook by id
         $sql =
-            'DELETE FROM `' .
-            _DB_PREFIX_ .
-            'hook_module`
-            WHERE `id_module` = ' .
+            'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_module') . '
+            WHERE id_module = ' .
             (int) $module_instance->id .
-            ' AND `id_hook` = ' .
+            ' AND id_hook = ' .
             (int) $hook_id .
             ($shop_list
-                ? ' AND `id_shop` IN(' .
+                ? ' AND id_shop IN(' .
                     implode(', ', array_map('intval', $shop_list)) .
                     ')'
                 : '');
@@ -1342,7 +1328,7 @@ class HookCore extends ObjectModel
         // SQL Request
         $sql = new DbQuery();
         $sql->select(
-            'h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module'
+            'h.name as hook, m.id_module, h.id_hook, m.name as module'
         );
         $sql->from('module', 'm');
         if (
@@ -1356,29 +1342,27 @@ class HookCore extends ObjectModel
             $sql->innerJoin(
                 'module_shop',
                 'module_shop',
-                'module_shop.`id_module` = m.`id_module`'
+                'module_shop.id_module = m.id_module'
             );
         }
-        $sql->innerJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
-        $sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
+        $sql->innerJoin('hook_module', 'hm', 'hm.id_module = m.id_module');
+        $sql->innerJoin('hook', 'h', 'hm.id_hook = h.id_hook');
         if ($hookName !== 'paymentOptions') {
-            $sql->where('h.`name` != "paymentOptions"');
+            $sql->where('h.name != \'paymentOptions\'');
         } elseif ($frontend) {
             // For payment modules, we check that they are available in the contextual country
             if (Validate::isLoadedObject($context->country)) {
                 $sql->where(
                     '(
-                        h.`name` IN ("displayPayment", "displayPaymentEU", "paymentOptions")
+                        h.name IN (\'displayPayment\', \'displayPaymentEU\', \'paymentOptions\')
                         AND (
-                            SELECT `id_country`
-                            FROM `' .
-                        _DB_PREFIX_ .
-                        'module_country` mc
-                            WHERE mc.`id_module` = m.`id_module`
-                            AND `id_country` = ' .
+                            SELECT id_country
+                            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_country') . ' mc
+                            WHERE mc.id_module = m.id_module
+                            AND id_country = ' .
                         (int) $context->country->id .
                         '
-                            AND `id_shop` = ' .
+                            AND id_shop = ' .
                         (int) $shop->id .
                         '
                             LIMIT 1
@@ -1390,14 +1374,12 @@ class HookCore extends ObjectModel
             if (Validate::isLoadedObject($context->currency)) {
                 $sql->where(
                     '(
-                        h.`name` IN ("displayPayment", "displayPaymentEU", "paymentOptions")
+                        h.name IN (\'displayPayment\', \'displayPaymentEU\', \'paymentOptions\')
                         AND (
-                            SELECT `id_currency`
-                            FROM `' .
-                        _DB_PREFIX_ .
-                        'module_currency` mcr
-                            WHERE mcr.`id_module` = m.`id_module`
-                            AND `id_currency` IN (' .
+                            SELECT id_currency
+                            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_currency') . ' mcr
+                            WHERE mcr.id_module = m.id_module
+                            AND id_currency IN (' .
                         (int) $context->currency->id .
                         ', -1, -2)
                             LIMIT 1
@@ -1411,17 +1393,15 @@ class HookCore extends ObjectModel
                 if (Validate::isLoadedObject($carrier)) {
                     $sql->where(
                         '(
-                            h.`name` IN ("displayPayment", "displayPaymentEU", "paymentOptions")
+                            h.name IN (\'displayPayment\', \'displayPaymentEU\', \'paymentOptions\')
                             AND (
-                                SELECT `id_reference`
-                                FROM `' .
-                            _DB_PREFIX_ .
-                            'module_carrier` mcar
-                                WHERE mcar.`id_module` = m.`id_module`
-                                AND `id_reference` = ' .
+                                SELECT id_reference
+                                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module_carrier') . ' mcar
+                                WHERE mcar.id_module = m.id_module
+                                AND id_reference = ' .
                             (int) $carrier->id_reference .
                             '
-                                AND `id_shop` = ' .
+                                AND id_shop = ' .
                             (int) $shop->id .
                             '
                                 LIMIT 1
@@ -1436,7 +1416,7 @@ class HookCore extends ObjectModel
             Validate::isLoadedObject($shop)
             && $hookName !== 'displayAdminLogin'
         ) {
-            $sql->where('hm.`id_shop` = ' . (int) $shop->id);
+            $sql->where('hm.id_shop = ' . (int) $shop->id);
         }
 
         if ($frontend) {
@@ -1444,21 +1424,21 @@ class HookCore extends ObjectModel
                 $sql->leftJoin(
                     'module_group',
                     'mg',
-                    'mg.`id_module` = m.`id_module`'
+                    'mg.id_module = m.id_module'
                 );
                 if (Validate::isLoadedObject($shop)) {
                     $sql->where(
                         'mg.id_shop = ' .
                             ((int) $shop->id) .
                             (count($groups)
-                                ? ' AND  mg.`id_group` IN (' .
+                                ? ' AND  mg.id_group IN (' .
                                     implode(', ', $groups) .
                                     ')'
                                 : '')
                     );
                 } elseif (count($groups)) {
                     $sql->where(
-                        'mg.`id_group` IN (' . implode(', ', $groups) . ')'
+                        'mg.id_group IN (' . implode(', ', $groups) . ')'
                     );
                 }
             }
@@ -1473,7 +1453,7 @@ class HookCore extends ObjectModel
         }
 
         $sql->groupBy('hm.id_hook, hm.id_module');
-        $sql->orderBy('hm.`position`');
+        $sql->orderBy('hm.position');
 
         $allHookRegistrations = [];
         if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
@@ -1528,20 +1508,14 @@ class HookCore extends ObjectModel
 
         if ($withAliases) {
             $sql =
-                'SELECT `id_hook`, `name`
-                FROM `' .
-                _DB_PREFIX_ .
-                'hook`
+                'SELECT id_hook, name
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook') . '
                 UNION
-                SELECT `id_hook`, ha.`alias` as name
-                FROM `' .
-                _DB_PREFIX_ .
-                'hook_alias` ha
-                INNER JOIN `' .
-                _DB_PREFIX_ .
-                'hook` h ON ha.name = h.name';
+                SELECT id_hook, ha.alias as name
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook_alias') . ' ha
+                INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook') . ' h ON ha.name = h.name';
         } else {
-            $sql = 'SELECT `id_hook`, `name` FROM `' . _DB_PREFIX_ . 'hook`';
+            $sql = 'SELECT id_hook, name FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'hook') . '';
         }
 
         $result = $db->executeS($sql, false);

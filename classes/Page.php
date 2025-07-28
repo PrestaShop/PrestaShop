@@ -53,13 +53,13 @@ class PageCore extends ObjectModel
 
         if (array_key_exists($controller, $specialArray)) {
             $objectId = Tools::getValue($specialArray[$controller], null);
-            $where = ' AND `id_object` = ' . (int) $objectId;
+            $where = ' AND id_object = ' . (int) $objectId;
             $insertData['id_object'] = (int) $objectId;
         }
 
-        $sql = 'SELECT `id_page`
-				FROM `' . _DB_PREFIX_ . 'page`
-				WHERE `id_page_type` = ' . (int) $pageTypeId . $where;
+        $sql = 'SELECT id_page
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'page') . '
+				WHERE id_page_type = ' . (int) $pageTypeId . $where;
         $result = Db::getInstance()->getRow($sql);
         if (!empty($result['id_page'])) {
             return $result['id_page'];
@@ -80,7 +80,7 @@ class PageCore extends ObjectModel
         if ($value = Db::getInstance()->getValue(
             '
 				SELECT id_page_type
-				FROM ' . _DB_PREFIX_ . 'page_type
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'page_type') . '
 				WHERE name = \'' . pSQL($name) . '\''
         )
         ) {
@@ -103,11 +103,11 @@ class PageCore extends ObjectModel
         $context = Context::getContext();
 
         // Try to increment the visits counter
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'page_viewed`
-				SET `counter` = `counter` + 1
-				WHERE `id_date_range` = ' . (int) $idDateRange . '
-					AND `id_page` = ' . (int) $idPage . '
-					AND `id_shop` = ' . (int) $context->shop->id;
+        $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'page_viewed') . '
+				SET counter = counter + 1
+				WHERE id_date_range = ' . (int) $idDateRange . '
+					AND id_page = ' . (int) $idPage . '
+					AND id_shop = ' . (int) $context->shop->id;
         Db::getInstance()->execute($sql);
 
         // If no one has seen the page in this date range, it is added

@@ -194,11 +194,11 @@ class AdminShopControllerCore extends AdminController
 
         $this->_select = 'gs.name shop_group_name, cl.name category_name, CONCAT(\'http://\', su.domain, su.physical_uri, su.virtual_uri) AS url';
         $this->_join = '
-			LEFT JOIN `' . _DB_PREFIX_ . 'shop_group` gs
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop_group') . ' gs
 				ON (a.id_shop_group = gs.id_shop_group)
-			LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl
 				ON (a.id_category = cl.id_category AND cl.id_lang=' . (int) $this->context->language->id . ')
-			LEFT JOIN ' . _DB_PREFIX_ . 'shop_url su
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop_url') . ' su
 				ON a.id_shop = su.id_shop AND su.main = 1
 		';
         $this->_group = 'GROUP BY a.id_shop';
@@ -306,7 +306,7 @@ class AdminShopControllerCore extends AdminController
 
         // copy default data
         if (!$useImportData || (is_array($import_data) && !isset($import_data['group']))) {
-            $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'group_shop` (`id_shop`, `id_group`)
+            $sql = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group_shop') . ' (id_shop, id_group)
                     VALUES
                     (' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP') . '),
                     (' . (int) $new_shop->id . ', ' . (int) Configuration::get('PS_GUEST_GROUP') . '),

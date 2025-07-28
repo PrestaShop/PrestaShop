@@ -133,14 +133,14 @@ final class OrderReturnQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_order' === $filterName) {
-                $qb->andWhere('o.`' . $filterName . '` LIKE :' . $filterName);
+                $qb->andWhere('o.' . $this->connection->quoteIdentifier($filterName) . ' LIKE :' . $filterName);
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
             }
 
             if ('status' === $filterName) {
-                $qb->andWhere('orsl.`name` LIKE :' . $filterName);
+                $qb->andWhere('orsl.name LIKE :' . $filterName);
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
@@ -160,7 +160,7 @@ final class OrderReturnQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere('`' . $filterName . '` LIKE :' . $filterName);
+            $qb->andWhere($this->connection->quoteIdentifier($filterName) . ' LIKE :' . $filterName);
             $qb->setParameter($filterName, '%' . $filterValue . '%');
         }
     }

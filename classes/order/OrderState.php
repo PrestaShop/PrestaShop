@@ -111,9 +111,9 @@ class OrderStateCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT *
-            FROM `' . _DB_PREFIX_ . 'order_state` os
-            LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $id_lang . ')'
-            . $deletedStates . ' ORDER BY `name` ASC');
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_state') . ' os
+            LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_state_lang') . ' osl ON (os.id_order_state = osl.id_order_state AND osl.id_lang = ' . (int) $id_lang . ')'
+            . $deletedStates . ' ORDER BY name ASC');
             Cache::store($cache_id, $result);
 
             return $result;
@@ -134,9 +134,9 @@ class OrderStateCore extends ObjectModel
         $result = false;
         if (Configuration::get('PS_INVOICE')) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-            SELECT `invoice`
-            FROM `' . _DB_PREFIX_ . 'order_state`
-            WHERE `id_order_state` = ' . (int) $id_order_state);
+            SELECT invoice
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_state') . '
+            WHERE id_order_state = ' . (int) $id_order_state);
         }
 
         return (bool) $result;
@@ -160,8 +160,8 @@ class OrderStateCore extends ObjectModel
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT COUNT(*) AS count' .
-            ' FROM ' . _DB_PREFIX_ . 'order_state_lang osl' .
-            ' INNER JOIN ' . _DB_PREFIX_ . 'order_state os ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . $idLang . ')' .
+            ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_state_lang') . ' osl' .
+            ' INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_state') . ' os ON (os.id_order_state = osl.id_order_state AND osl.id_lang = ' . $idLang . ')' .
             ' WHERE osl.id_lang = ' . $idLang .
             ' AND osl.name =  \'' . pSQL($name) . '\'' .
             ' AND os.deleted = 0' .

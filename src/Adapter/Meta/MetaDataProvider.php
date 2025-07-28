@@ -22,9 +22,9 @@ class MetaDataProvider implements MetaDataProviderInterface
     public function getIdByPage($pageName)
     {
         $query = new DbQuery();
-        $query->select('`id_meta`');
+        $query->select('id_meta');
         $query->from('meta');
-        $query->where('`page`= "' . pSQL($pageName) . '"');
+        $query->where('page= "' . pSQL($pageName) . '"');
 
         $idMeta = 0;
         $result = Db::getInstance()->getValue($query);
@@ -50,10 +50,10 @@ class MetaDataProvider implements MetaDataProviderInterface
     public function getDefaultMetaPageNameById($metaId)
     {
         $query = new DbQuery();
-        $query->select('`page`');
+        $query->select('page');
         $query->from('meta');
-        $query->where('`id_meta`=' . (int) $metaId);
-        $query->where('`page` NOT LIKE "module-%"');
+        $query->where('id_meta=' . (int) $metaId);
+        $query->where('page NOT LIKE \'module-%\'');
         $result = Db::getInstance()->getValue($query);
 
         return is_string($result) ? $result : null;
@@ -65,10 +65,10 @@ class MetaDataProvider implements MetaDataProviderInterface
     public function getModuleMetaPageNameById($metaId)
     {
         $query = new DbQuery();
-        $query->select('`page`');
+        $query->select('page');
         $query->from('meta');
-        $query->where('`id_meta`=' . (int) $metaId);
-        $query->where('`page` LIKE "module-%"');
+        $query->where('id_meta=' . (int) $metaId);
+        $query->where('page LIKE \'module-%\'');
 
         $result = Db::getInstance()->getValue($query);
 

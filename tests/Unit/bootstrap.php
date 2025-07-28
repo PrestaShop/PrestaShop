@@ -7,6 +7,9 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 
 define('_PS_IN_TEST_', true);
 define('_PS_ROOT_DIR_', dirname(__DIR__, 2));
+// Db::quoteIdentifier() and DbQuery's SQL builders branch on this constant; unit tests here
+// use MockDb rather than a real connection, so default to mysql to match their fixtures.
+define('_DB_TYPE_', 'mysql');
 const _PS_MODULE_DIR_ = _PS_ROOT_DIR_ . '/tests/Resources/modules/';
 const _PS_ALL_THEMES_DIR_ = _PS_ROOT_DIR_ . '/tests/Resources/themes/';
 require_once dirname(__DIR__, 2) . '/config/defines.inc.php';

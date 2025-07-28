@@ -49,10 +49,10 @@ class FeatureCore extends ObjectModel
         return Db::getInstance()->getRow(
             '
 			SELECT *
-			FROM `' . _DB_PREFIX_ . 'feature` f
-			LEFT JOIN `' . _DB_PREFIX_ . 'feature_lang` fl
-				ON ( f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = ' . (int) $idLang . ')
-			WHERE f.`id_feature` = ' . (int) $idFeature
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature') . ' f
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_lang') . ' fl
+				ON ( f.id_feature = fl.id_feature AND fl.id_lang = ' . (int) $idLang . ')
+			WHERE f.id_feature = ' . (int) $idFeature
         );
     }
 
@@ -67,10 +67,10 @@ class FeatureCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 		SELECT DISTINCT f.id_feature, f.*, fl.*
-		FROM `' . _DB_PREFIX_ . 'feature` f
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature') . ' f
 		' . ($withShop ? Shop::addSqlAssociation('feature', 'f') : '') . '
-		LEFT JOIN `' . _DB_PREFIX_ . 'feature_lang` fl ON (f.`id_feature` = fl.`id_feature` AND fl.`id_lang` = ' . (int) $idLang . ')
-		ORDER BY f.`position` ASC');
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_lang') . ' fl ON (f.id_feature = fl.id_feature AND fl.id_lang = ' . (int) $idLang . ')
+		ORDER BY f.position ASC');
     }
 
     /**
@@ -96,7 +96,7 @@ class FeatureCore extends ObjectModel
     /**
      * Adds current Feature as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
+     * @param bool $autoDate Automatically set date_upd and date_add columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Indicates whether the Feature has been successfully added
@@ -139,9 +139,9 @@ class FeatureCore extends ObjectModel
                 }
             }
 
-            $sql = 'SELECT `id_lang` FROM `' . pSQL(_DB_PREFIX_ . $this->def['table']) . '_lang`
-					WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id . '
-						AND `id_lang` = ' . (int) $field['id_lang'];
+            $sql = 'SELECT id_lang FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->def['table'] . '_lang') . '
+					WHERE ' . Db::quoteIdentifier($this->def['primary']) . ' = ' . (int) $this->id . '
+						AND id_lang = ' . (int) $field['id_lang'];
             $mode = Db::getInstance()->getRow($sql);
             $result = $result
                 && (!$mode
@@ -149,7 +149,7 @@ class FeatureCore extends ObjectModel
                     : Db::getInstance()->update(
                         $this->def['table'] . '_lang',
                         $field,
-                        '`' . $this->def['primary'] . '` = ' . (int) $this->id . ' AND `id_lang` = ' . (int) $field['id_lang']
+                        Db::quoteIdentifier($this->def['primary']) . ' = ' . (int) $this->id . ' AND id_lang = ' . (int) $field['id_lang']
                     )
                 );
         }
@@ -166,33 +166,33 @@ class FeatureCore extends ObjectModel
     /**
      * Deletes current Feature from the database.
      *
-     * @return bool `true` if delete was successful
+     * @return bool true if delete was successful
      *
      * @throws PrestaShopException
      */
     public function delete()
     {
         /* Also delete related attributes */
+        // Only one table is actually deleted from here (feature_value_lang); the join to
+        // feature_value is purely a filter, so this is portable as a single-table DELETE
+        // with a subquery, unlike a genuine multi-table DELETE.
         Db::getInstance()->execute('
-			DELETE
-				`' . _DB_PREFIX_ . 'feature_value_lang`
-			FROM
-				`' . _DB_PREFIX_ . 'feature_value_lang`
-				JOIN `' . _DB_PREFIX_ . 'feature_value`
-					ON (`' . _DB_PREFIX_ . 'feature_value_lang`.id_feature_value = `' . _DB_PREFIX_ . 'feature_value`.id_feature_value)
-			WHERE
-				`' . _DB_PREFIX_ . 'feature_value`.`id_feature` = ' . (int) $this->id . '
+			DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value_lang') . '
+			WHERE id_feature_value IN (
+				SELECT id_feature_value FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . '
+				WHERE id_feature = ' . (int) $this->id . '
+			)
 		');
         Db::getInstance()->execute(
             '
-			DELETE FROM `' . _DB_PREFIX_ . 'feature_value`
-			WHERE `id_feature` = ' . (int) $this->id
+			DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_value') . '
+			WHERE id_feature = ' . (int) $this->id
         );
         // Also delete related products
         Db::getInstance()->execute(
             '
-			DELETE FROM `' . _DB_PREFIX_ . 'feature_product`
-			WHERE `id_feature` = ' . (int) $this->id
+			DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_product') . '
+			WHERE id_feature = ' . (int) $this->id
         );
 
         $return = parent::delete();
@@ -217,9 +217,9 @@ class FeatureCore extends ObjectModel
     {
         return (int) Db::getInstance()->getValue('
 		SELECT COUNT(*) as nb
-		FROM `' . _DB_PREFIX_ . 'feature` ag
-		LEFT JOIN `' . _DB_PREFIX_ . 'feature_lang` agl
-		ON (ag.`id_feature` = agl.`id_feature` AND `id_lang` = ' . (int) $idLang . ')
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature') . ' ag
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_lang') . ' agl
+		ON (ag.id_feature = agl.id_feature AND id_lang = ' . (int) $idLang . ')
 		');
     }
 
@@ -234,10 +234,10 @@ class FeatureCore extends ObjectModel
     public static function addFeatureImport($name, $position = false)
     {
         $rq = Db::getInstance()->getRow('
-			SELECT `id_feature`
+			SELECT id_feature
 			FROM ' . _DB_PREFIX_ . 'feature_lang
-			WHERE `name` = \'' . pSQL($name) . '\'
-			GROUP BY `id_feature`
+			WHERE name = \'' . pSQL($name) . '\'
+			GROUP BY id_feature
 		');
         if (empty($rq)) {
             // Feature doesn't exist, create it
@@ -289,10 +289,10 @@ class FeatureCore extends ObjectModel
     {
         if (!$res = Db::getInstance()->executeS(
             '
-			SELECT `position`, `id_feature`
-			FROM `' . _DB_PREFIX_ . 'feature`
-			WHERE `id_feature` = ' . (int) ($idFeature ? $idFeature : $this->id) . '
-			ORDER BY `position` ASC'
+			SELECT position, id_feature
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature') . '
+			WHERE id_feature = ' . (int) ($idFeature ? $idFeature : $this->id) . '
+			ORDER BY position ASC'
         )) {
             return false;
         }
@@ -310,16 +310,16 @@ class FeatureCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         return Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'feature`
-			SET `position`= `position` ' . ($way ? '- 1' : '+ 1') . '
-			WHERE `position`
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature') . '
+			SET position= position ' . ($way ? '- 1' : '+ 1') . '
+			WHERE position
 			' . ($way
-                ? '> ' . (int) $moved_feature['position'] . ' AND `position` <= ' . (int) $position
-                : '< ' . (int) $moved_feature['position'] . ' AND `position` >= ' . (int) $position))
+                ? '> ' . (int) $moved_feature['position'] . ' AND position <= ' . (int) $position
+                : '< ' . (int) $moved_feature['position'] . ' AND position >= ' . (int) $position))
         && Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'feature`
-			SET `position` = ' . (int) $position . '
-			WHERE `id_feature`=' . (int) $moved_feature['id_feature']);
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature') . '
+			SET position = ' . (int) $position . '
+			WHERE id_feature=' . (int) $moved_feature['id_feature']);
     }
 
     /**
@@ -330,8 +330,22 @@ class FeatureCore extends ObjectModel
      */
     public static function cleanPositions()
     {
+        // PostgreSQL has no session variables (MySQL's @i trick); renumber via a window
+        // function instead, joined back on the primary key.
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            return (bool) Db::getInstance()->execute('
+                UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature') . ' AS target
+                SET position = renumbered.new_position
+                FROM (
+                    SELECT id_feature, ROW_NUMBER() OVER (ORDER BY position ASC) - 1 AS new_position
+                    FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature') . '
+                ) AS renumbered
+                WHERE target.id_feature = renumbered.id_feature');
+        }
+
         Db::getInstance()->execute('SET @i = -1', false);
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'feature` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
+        $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature') . ' SET position = @i:=@i+1 ORDER BY position ASC';
 
         return (bool) Db::getInstance()->execute($sql);
     }
@@ -362,8 +376,8 @@ class FeatureCore extends ObjectModel
      */
     public static function getHighestPosition(): int
     {
-        $sql = 'SELECT MAX(`position`)
-				FROM `' . _DB_PREFIX_ . 'feature`';
+        $sql = 'SELECT MAX(position)
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature') . '';
         $position = Db::getInstance()->getValue($sql);
 
         return (is_numeric($position)) ? (int) $position : -1;

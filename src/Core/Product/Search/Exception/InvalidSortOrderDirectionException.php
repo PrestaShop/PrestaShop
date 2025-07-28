@@ -19,7 +19,7 @@ class InvalidSortOrderDirectionException extends CoreException
     public function __construct($direction)
     {
         $message = sprintf(
-            'Invalid SortOrder direction `%s`. Expecting one of: `ASC`, `DESC`, or `RANDOM`.',
+            'Invalid SortOrder direction `%s`. Expecting one of: ASC, DESC, or RANDOM.',
             $direction
         );
 
