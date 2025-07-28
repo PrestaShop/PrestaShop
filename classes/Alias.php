@@ -46,8 +46,8 @@ class AliasCore extends ObjectModel
             } else {
                 $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT a.id_alias, a.search, a.alias
-				FROM `' . _DB_PREFIX_ . 'alias` a
-				WHERE `alias` = \'' . pSQL($alias) . '\' AND `active` = 1');
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'alias') . ' a
+				WHERE alias = \'' . pSQL($alias) . '\' AND active = 1');
 
                 if ($row) {
                     $this->id = (int) $row['id_alias'];
@@ -107,8 +107,8 @@ class AliasCore extends ObjectModel
 
         $aliases = Db::getInstance()->executeS('
 		SELECT a.alias
-		FROM `' . _DB_PREFIX_ . 'alias` a
-		WHERE `search` = \'' . pSQL($this->search) . '\'');
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'alias') . ' a
+		WHERE search = \'' . pSQL($this->search) . '\'');
 
         $aliases = array_map('implode', $aliases);
 
@@ -135,9 +135,9 @@ class AliasCore extends ObjectModel
     public static function aliasExists($idAlias)
     {
         $sql = new DbQuery();
-        $sql->select('a.`id_alias`');
+        $sql->select('a.id_alias');
         $sql->from('alias', 'a');
-        $sql->where('a.`id_alias` = ' . (int) $idAlias);
+        $sql->where('a.id_alias = ' . (int) $idAlias);
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql, false);
 
         return isset($row['id_alias']);

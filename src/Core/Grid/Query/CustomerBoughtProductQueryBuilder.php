@@ -42,7 +42,7 @@ final class CustomerBoughtProductQueryBuilder extends AbstractDoctrineQueryBuild
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('o.`date_add`, od.`product_name`, od.`product_quantity`, od.`id_order`');
+        $qb->select('o.date_add, od.product_name, od.product_quantity, od.id_order');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -57,7 +57,7 @@ final class CustomerBoughtProductQueryBuilder extends AbstractDoctrineQueryBuild
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         return $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(od.`id_order_detail`)');
+            ->select('COUNT(od.id_order_detail)');
     }
 
     /**
@@ -72,13 +72,13 @@ final class CustomerBoughtProductQueryBuilder extends AbstractDoctrineQueryBuild
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'order_detail', 'od')
-            ->where('o.`id_customer` != 0');
+            ->where('o.id_customer != 0');
 
         $qb->innerJoin(
             'od',
             $this->dbPrefix . 'orders',
             'o',
-            'od.`id_order` = o.`id_order`'
+            'od.id_order = o.id_order'
         );
 
         $this->applyFilters($qb, $filters);
@@ -104,7 +104,7 @@ final class CustomerBoughtProductQueryBuilder extends AbstractDoctrineQueryBuild
             }
 
             if ('id_customer' === $filterName) {
-                $qb->andWhere('o.`id_customer` = :' . $filterName);
+                $qb->andWhere('o.id_customer = :' . $filterName);
                 $qb->setParameter($filterName, $value);
             }
         }

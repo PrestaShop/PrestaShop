@@ -46,8 +46,8 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('a.`id_attachment`, al.`name`, a.`file`, a.`file_size`')
-            ->addSelect('COALESCE(virtual_product_attachment.`product_count`, 0) AS products')
+            ->select('a.id_attachment, al.name, a.file, a.file_size')
+            ->addSelect('COALESCE(virtual_product_attachment.product_count, 0) AS products')
         ;
 
         $this->searchCriteriaApplicator
@@ -65,7 +65,7 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT a.`id_attachment`)')
+            ->select('COUNT(DISTINCT a.id_attachment)')
         ;
 
         return $qb;
@@ -87,21 +87,21 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
                 'a',
                 $this->dbPrefix . 'attachment_lang',
                 'al',
-                'a.`id_attachment` = al.`id_attachment`'
+                'a.id_attachment = al.id_attachment'
             );
 
         $productCountQb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'product_attachment', 'pa')
-            ->select('pa.`id_attachment`, COUNT(*) as product_count')
+            ->select('pa.id_attachment, COUNT(*) as product_count')
             ->groupBy('id_attachment');
 
         $qb->leftJoin('a',
             '(' . $productCountQb->getSQL() . ')',
             'virtual_product_attachment',
-            'a.`id_attachment` = virtual_product_attachment.`id_attachment`');
+            'a.id_attachment = virtual_product_attachment.id_attachment');
 
-        $qb->andWhere('al.`id_lang` = :employee_id_lang');
+        $qb->andWhere('al.id_lang = :employee_id_lang');
         $qb->setParameter('employee_id_lang', $this->languageContext->getId());
         $this->applyFilters($qb, $filters);
 

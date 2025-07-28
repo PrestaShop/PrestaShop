@@ -100,12 +100,12 @@ class FeatureValueQueryBuilder extends AbstractDoctrineQueryBuilder
                 } else {
                     $value = null;
                 }
-                $qb->andWhere('fv.`position` = :' . $filterName)
+                $qb->andWhere('fv.position = :' . $filterName)
                     ->setParameter($filterName, $value);
                 continue;
             }
 
-            $qb->andWhere('fv.`' . $filterName . '` = :' . $filterName)
+            $qb->andWhere('fv.' . $this->connection->quoteIdentifier($filterName) . ' = :' . $filterName)
                 ->setParameter($filterName, $value);
         }
 

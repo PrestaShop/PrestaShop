@@ -122,7 +122,7 @@ class TaxRulesGroupQueryBuilderTest extends TestCase
         $defaultFilters = $this->getFilters();
         $defaultQueryParts = [
             'select' => [
-                'trg.`id_tax_rules_group`, trg.`name`, trg.`active`',
+                'trg.id_tax_rules_group, trg.name, trg.active',
             ],
             'distinct' => false,
             'from' => [
@@ -137,7 +137,7 @@ class TaxRulesGroupQueryBuilderTest extends TestCase
                         'joinType' => 'left',
                         'joinTable' => self::DB_PREFIX . 'tax_rules_group_shop',
                         'joinAlias' => 'trgs',
-                        'joinCondition' => 'trg.`id_tax_rules_group` = trgs.`id_tax_rules_group`',
+                        'joinCondition' => 'trg.id_tax_rules_group = trgs.id_tax_rules_group',
                     ],
                 ],
             ],
@@ -145,8 +145,8 @@ class TaxRulesGroupQueryBuilderTest extends TestCase
             'where' => new CompositeExpression(
                 'AND',
                 [
-                    'trgs.`id_shop` IN (:contextShopIds)',
-                    'trg.`deleted` = 0',
+                    'trgs.id_shop IN (:contextShopIds)',
+                    'trg.deleted = 0',
                 ]
             ),
             'groupBy' => [],
@@ -162,7 +162,7 @@ class TaxRulesGroupQueryBuilderTest extends TestCase
         yield [
             $defaultFilters,
             $defaultQueryParts,
-            array_merge($defaultQueryParts, ['select' => [0 => 'COUNT(DISTINCT trg.`id_tax_rules_group`)']]),
+            array_merge($defaultQueryParts, ['select' => [0 => 'COUNT(DISTINCT trg.id_tax_rules_group)']]),
             $defaultParameters,
         ];
 
@@ -175,8 +175,8 @@ class TaxRulesGroupQueryBuilderTest extends TestCase
         $queryParts1['where'] = new CompositeExpression(
             'AND',
             [
-                'trgs.`id_shop` IN (:contextShopIds)',
-                'trg.`deleted` = 0',
+                'trgs.id_shop IN (:contextShopIds)',
+                'trg.deleted = 0',
                 'trg.name LIKE :name',
             ]
         );
@@ -186,7 +186,7 @@ class TaxRulesGroupQueryBuilderTest extends TestCase
         yield [
             $filters1,
             $queryParts1,
-            array_merge($queryParts1, ['select' => [0 => 'COUNT(DISTINCT trg.`id_tax_rules_group`)']]),
+            array_merge($queryParts1, ['select' => [0 => 'COUNT(DISTINCT trg.id_tax_rules_group)']]),
             $parameters1,
         ];
 
@@ -199,8 +199,8 @@ class TaxRulesGroupQueryBuilderTest extends TestCase
         $queryParts2['where'] = new CompositeExpression(
             'AND',
             [
-                'trgs.`id_shop` IN (:contextShopIds)',
-                'trg.`deleted` = 0',
+                'trgs.id_shop IN (:contextShopIds)',
+                'trg.deleted = 0',
                 'trg.name LIKE :name',
             ]
         );
@@ -210,7 +210,7 @@ class TaxRulesGroupQueryBuilderTest extends TestCase
         yield [
             $filters2,
             $queryParts2,
-            array_merge($queryParts2, ['select' => [0 => 'COUNT(DISTINCT trg.`id_tax_rules_group`)']]),
+            array_merge($queryParts2, ['select' => [0 => 'COUNT(DISTINCT trg.id_tax_rules_group)']]),
             $parameters2,
         ];
     }

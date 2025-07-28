@@ -107,11 +107,11 @@ abstract class AbstractDeleteSupplierHandler
      */
     private function deleteProductSupplierRelation(SupplierId $supplierId)
     {
-        $sql = 'DELETE FROM `' . $this->dbPrefix . 'product_supplier` WHERE `id_supplier`=' . $supplierId->getValue();
+        $sql = 'DELETE FROM ' . Db::quoteIdentifier($this->dbPrefix . 'product_supplier') . ' WHERE id_supplier=' . $supplierId->getValue();
         $removedRelations = Db::getInstance()->execute($sql);
 
         // Fetch all products which had this supplier as default
-        $sql = 'SELECT id_product FROM `' . $this->dbPrefix . 'product` WHERE `id_supplier` = ' . $supplierId->getValue();
+        $sql = 'SELECT id_product FROM ' . Db::quoteIdentifier($this->dbPrefix . 'product') . ' WHERE id_supplier = ' . $supplierId->getValue();
         $result = Db::getInstance()->executeS($sql);
         if (!empty($result)) {
             $orphanProductIds = [];

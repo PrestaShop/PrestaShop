@@ -316,9 +316,9 @@ class HelperFormCore extends Helper
 
         $assos = [];
         if ((int) $this->id) {
-            $sql = 'SELECT `id_shop`, `' . bqSQL($this->identifier) . '`
-					FROM `' . _DB_PREFIX_ . bqSQL($this->table) . '_shop`
-					WHERE `' . bqSQL($this->identifier) . '` = ' . (int) $this->id;
+            $sql = 'SELECT id_shop, ' . $this->identifier . '
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->table . '_shop') . '
+					WHERE ' . $this->identifier . ' = ' . (int) $this->id;
 
             foreach (Db::getInstance()->executeS($sql) as $row) {
                 $assos[$row['id_shop']] = $row['id_shop'];

@@ -42,12 +42,11 @@ class OrderInvoiceRepository
     public function countByOrderState(array $shopIds)
     {
         $sql = 'SELECT COUNT(o.id_order) AS nbOrders, o.current_state as id_order_state
-            FROM `{table_prefix}order_invoice` oi
-            INNER JOIN `{table_prefix}orders` o ON oi.id_order = o.id_order
+            FROM ' . $this->connection->quoteIdentifier($this->tablePrefix . 'order_invoice') . ' oi
+            INNER JOIN ' . $this->connection->quoteIdentifier($this->tablePrefix . 'orders') . ' o ON oi.id_order = o.id_order
             WHERE o.id_shop IN(' . implode(',', array_map('intval', $shopIds)) . ')
             AND oi.number > 0
             GROUP BY o.current_state';
-        $sql = str_replace('{table_prefix}', $this->tablePrefix, $sql);
 
         $statement = $this->connection->prepare($sql);
         $statementResult = $statement->executeQuery();

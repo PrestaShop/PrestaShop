@@ -268,16 +268,16 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
     {
         if (isset($pack_item['id_product_attribute']) && $pack_item['id_product_attribute']) {
             $id_image = Db::getInstance()->getValue('
-                SELECT `image_shop`.id_image
-                FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai' .
+                SELECT image_shop.id_image
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_image') . ' pai' .
                 Shop::addSqlAssociation('image', 'pai', true) . '
                 WHERE id_product_attribute = ' . (int) $pack_item['id_product_attribute']);
         }
 
         if (!isset($id_image) || !$id_image) {
             $id_image = Db::getInstance()->getValue('
-                SELECT `image_shop`.id_image
-                FROM `' . _DB_PREFIX_ . 'image` i' .
+                SELECT image_shop.id_image
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . ' i' .
                 Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
                 WHERE i.id_product = ' . (int) $pack_item['id_product']
             );

@@ -366,13 +366,13 @@ class OrderHistoryCore extends ObjectModel
     public function sendEmail($order, $template_vars = false)
     {
         $result = Db::getInstance()->getRow('
-            SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`, os.`module_name`, os.`id_order_state`, os.`pdf_invoice`, os.`pdf_delivery`
-            FROM `' . _DB_PREFIX_ . 'order_history` oh
-                LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON oh.`id_order` = o.`id_order`
-                LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON o.`id_customer` = c.`id_customer`
-                LEFT JOIN `' . _DB_PREFIX_ . 'order_state` os ON oh.`id_order_state` = os.`id_order_state`
-                LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = o.`id_lang`)
-            WHERE oh.`id_order_history` = ' . (int) $this->id . ' AND os.`send_email` = 1');
+            SELECT osl.template, c.lastname, c.firstname, osl.name AS osname, c.email, os.module_name, os.id_order_state, os.pdf_invoice, os.pdf_delivery
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_history') . ' oh
+                LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . ' o ON oh.id_order = o.id_order
+                LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c ON o.id_customer = c.id_customer
+                LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_state') . ' os ON oh.id_order_state = os.id_order_state
+                LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_state_lang') . ' osl ON (os.id_order_state = osl.id_order_state AND osl.id_lang = o.id_lang)
+            WHERE oh.id_order_history = ' . (int) $this->id . ' AND os.send_email = 1');
         if (isset($result['template']) && Validate::isEmail($result['email'])) {
             ShopUrl::cacheMainDomainForShop($order->id_shop);
 
@@ -482,11 +482,11 @@ class OrderHistoryCore extends ObjectModel
     public function isValidated()
     {
         return (int) Db::getInstance()->getValue('
-        SELECT COUNT(oh.`id_order_history`) AS nb
-        FROM `' . _DB_PREFIX_ . 'order_state` os
-        LEFT JOIN `' . _DB_PREFIX_ . 'order_history` oh ON (os.`id_order_state` = oh.`id_order_state`)
-        WHERE oh.`id_order` = ' . (int) $this->id_order . '
-        AND os.`logable` = 1');
+        SELECT COUNT(oh.id_order_history) AS nb
+        FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_state') . ' os
+        LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_history') . ' oh ON (os.id_order_state = oh.id_order_state)
+        WHERE oh.id_order = ' . (int) $this->id_order . '
+        AND os.logable = 1');
     }
 
     /**

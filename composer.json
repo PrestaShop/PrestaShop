@@ -287,6 +287,7 @@
         "create-test-table-dumps": [
             "@php ./tests/bin/create-test-tables-dump.php"
         ],
+        "generate-pgsql-schema": "@php tools/build/GeneratePgsqlSchema.php",
         "git-hook-install": "@php .github/contrib/install.php",
         "git-hook-uninstall": "@php .github/contrib/uninstall.php",
         "header-stamp": "@php ./vendor/bin/header-stamp --dry-run",
@@ -329,6 +330,7 @@
         "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information.",
         "create-test-db": "Create a Database for testing purposes",
         "create-test-table-dumps": "Create a dump of each table in the Database for testing purposes",
+        "generate-pgsql-schema": "Regenerate install-dev/data/db_structure.pgsql.sql from db_structure.sql",
         "php-cs-fixer": "Launch php cs fixer, fixes will be applied automatically",
         "php-cs-fixer:dry": "Launch php cs fixer in dry mode: fixes will not be applied automatically",
         "phpstan": "Launch a phpstan analyzis",

@@ -51,19 +51,32 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             throw new CannotEditRootCategoryException();
         }
 
-        /**
+        /*
          * Select recursivly the subcategories in one SQL request
          */
-        $subcategories = Db::getInstance()->query(
-            'SELECT id_category ' .
-            'FROM ( ' .
-            '  SELECT * FROM `' . _DB_PREFIX_ . 'category`' .
-            '  ORDER BY id_parent, id_category' .
-            ') category_sorted, ' .
-            '(SELECT @pv := ' . (int) $category->id . ') initialisation ' .
-            'WHERE FIND_IN_SET(id_parent, @pv) ' .
-            'AND LENGTH(@pv := CONCAT(@pv, \',\', id_category))'
-        );
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            $sql = 'WITH RECURSIVE subcategories_tree AS (
+                SELECT id_category, id_parent
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . '
+                WHERE id_parent = ' . (int) $category->id . '
+                UNION ALL
+                SELECT c.id_category, c.id_parent
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' c
+                INNER JOIN subcategories_tree t ON c.id_parent = t.id_category
+            )
+            SELECT id_category FROM subcategories_tree';
+        } else {
+            $sql = 'SELECT id_category ' .
+                'FROM ( ' .
+                '  SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') .
+                '  ORDER BY id_parent, id_category' .
+                ') category_sorted, ' .
+                '(SELECT @pv := ' . (int) $category->id . ') initialisation ' .
+                'WHERE FIND_IN_SET(id_parent, @pv) ' .
+                'AND LENGTH(@pv := CONCAT(@pv, \',\', id_category))';
+        }
+        $subcategories = Db::getInstance()->query($sql);
 
         $categoryRedirectTarget = $this->targetProvider->getRedirectTarget(
             $category->redirect_type,

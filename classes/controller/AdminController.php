@@ -909,7 +909,7 @@ class AdminControllerCore extends Controller
                     if (($type == 'date' || $type == 'datetime') && is_string($value)) {
                         $value = json_decode($value, true);
                     }
-                    $key = isset($tmp_tab[1]) ? $tmp_tab[0] . '.`' . $tmp_tab[1] . '`' : '`' . $tmp_tab[0] . '`';
+                    $key = isset($tmp_tab[1]) ? $tmp_tab[0] . '.' . Db::quoteIdentifier($tmp_tab[1]) : Db::quoteIdentifier($tmp_tab[0]);
 
                     // Assignment by reference
                     if (array_key_exists('tmpTableFilter', $field)) {
@@ -939,11 +939,11 @@ class AdminControllerCore extends Controller
                         }
                     } else {
                         $sql_filter .= ' AND ';
-                        $check_key = ($key == $this->identifier || $key == '`' . $this->identifier . '`');
+                        $check_key = ($key == $this->identifier || $key == Db::quoteIdentifier($this->identifier));
                         $alias = ($definition && !empty($definition['fields'][$filter]['shop'])) ? 'sa' : 'a';
 
                         if ($type == 'int' || $type == 'bool') {
-                            $sql_filter .= (($check_key || $key == '`active`') ? $alias . '.' : '') . pSQL($key) . ' = ' . (int) $value . ' ';
+                            $sql_filter .= (($check_key || $key == Db::quoteIdentifier('active')) ? $alias . '.' : '') . pSQL($key) . ' = ' . (int) $value . ' ';
                         } elseif ($type == 'decimal') {
                             $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' = ' . (float) $value . ' ';
                         } elseif ($type == 'select') {
@@ -3152,12 +3152,12 @@ class AdminControllerCore extends Controller
         if ($this->multishop_context && Shop::isTableAssociated($this->table) && !empty($this->className)) {
             if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->context->employee->isSuperAdmin()) {
                 // test if multishop is already considered by planned request
-                $test_join = (null === $this->_join) || !preg_match('#`?' . preg_quote(_DB_PREFIX_ . $this->table . '_shop') . '`? *sa#', $this->_join);
+                $test_join = (null === $this->_join) || !preg_match('#[`"]?' . preg_quote(_DB_PREFIX_ . $this->table . '_shop') . '[`"]? *sa#', $this->_join);
                 if (Shop::isFeatureActive() && $test_join) {
                     $this->_where .= ' AND EXISTS (
                         SELECT 1
-                        FROM `' . _DB_PREFIX_ . $this->table . '_shop` sa
-                        WHERE a.`' . bqSQL($this->identifier) . '` = sa.`' . bqSQL($this->identifier) . '`
+                        FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->table . '_shop') . ' sa
+                        WHERE a.' . Db::quoteIdentifier($this->identifier) . ' = sa.' . Db::quoteIdentifier($this->identifier) . '
                          AND sa.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')
                     )';
                 }
@@ -3182,11 +3182,12 @@ class AdminControllerCore extends Controller
                     }
 
                     if (isset($array_value['filter_key'])) {
-                        $this->_listsql .= str_replace('!', '.`', $array_value['filter_key']) . '` AS `' . $key . '`, ';
+                        $filterKeyParts = explode('!', $array_value['filter_key'], 2);
+                        $this->_listsql .= $filterKeyParts[0] . '.' . Db::quoteIdentifier($filterKeyParts[1]) . ' AS ' . Db::quoteIdentifier($key) . ', ';
                     } elseif ($key == 'id_' . $this->table) {
-                        $this->_listsql .= 'a.`' . bqSQL($key) . '`, ';
+                        $this->_listsql .= 'a.' . Db::quoteIdentifier($key) . ', ';
                     } elseif ($key != 'image' && !preg_match('/' . preg_quote($key, '/') . '/i', $this->_select)) {
-                        $this->_listsql .= '`' . bqSQL($key) . '`, ';
+                        $this->_listsql .= Db::quoteIdentifier($key) . ', ';
                     }
                 }
                 $this->_listsql = rtrim(trim($this->_listsql), ',');
@@ -3196,9 +3197,30 @@ class AdminControllerCore extends Controller
 
             $this->_listsql .= "\n" . (isset($this->_select) ? ', ' . rtrim($this->_select, ', ') : '') . $select_shop;
 
-            $limitClause = ' ' . (($shouldLimitSqlResults) ? ' LIMIT ' . (int) $start . ', ' . (int) $limit : '');
+            // Portable "LIMIT count OFFSET offset" form: MySQL's "LIMIT offset, count" comma
+            // syntax is not valid in PostgreSQL.
+            $limitClause = ' ' . (($shouldLimitSqlResults) ? ' LIMIT ' . (int) $limit . ' OFFSET ' . (int) $start : '');
 
-            if ($this->_use_found_rows || isset($this->_filterHaving) || isset($this->_having)) {
+            /* @phpstan-ignore-next-line */
+            if (_DB_TYPE_ == 'pgsql' && ($this->_use_found_rows || isset($this->_filterHaving) || isset($this->_having))) {
+                // PostgreSQL has no SQL_CALC_FOUND_ROWS/FOUND_ROWS(); count the rows the
+                // query would produce (post GROUP BY/HAVING) via a wrapping COUNT(*) subquery.
+                $this->_listsql = 'SELECT ' . ($this->_tmpTableFilter ? ' * FROM (SELECT ' : '') .
+                    $this->_listsql .
+                    $fromClause .
+                    $joinClause .
+                    $whereClause .
+                    $orderByClause .
+                    $limitClause;
+
+                $list_count = 'SELECT COUNT(*) AS ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->table) . ' FROM (SELECT 1 ' .
+                    ($this->_tmpTableFilter ? ' FROM (SELECT 1 ' : '') .
+                    $fromClause .
+                    $joinClause .
+                    $whereClause .
+                    ($this->_tmpTableFilter ? ') tmpCountTable WHERE 1=1 ' . $this->_tmpTableFilter : '') .
+                    ') AS ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->table . '_counted_rows');
+            } elseif ($this->_use_found_rows || isset($this->_filterHaving) || isset($this->_having)) {
                 $this->_listsql = 'SELECT SQL_CALC_FOUND_ROWS ' . ($this->_tmpTableFilter ? ' * FROM (SELECT ' : '') .
                     $this->_listsql .
                     $fromClause .
@@ -3207,7 +3229,7 @@ class AdminControllerCore extends Controller
                     $orderByClause .
                     $limitClause;
 
-                $list_count = 'SELECT FOUND_ROWS() AS `' . _DB_PREFIX_ . $this->table . '`';
+                $list_count = 'SELECT FOUND_ROWS() AS ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->table);
             } else {
                 $this->_listsql = 'SELECT ' . ($this->_tmpTableFilter ? ' * FROM (SELECT ' : '') .
                     $this->_listsql .
@@ -3217,7 +3239,7 @@ class AdminControllerCore extends Controller
                     $orderByClause .
                     $limitClause;
 
-                $list_count = 'SELECT COUNT(*) AS `' . _DB_PREFIX_ . $this->table . '` ' .
+                $list_count = 'SELECT COUNT(*) AS ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->table) . ' ' .
                     $fromClause .
                     $joinClause .
                     $whereClause;
@@ -3256,7 +3278,7 @@ class AdminControllerCore extends Controller
     {
         $sql_table = $this->table == 'order' ? 'orders' : $this->table;
 
-        return "\n" . 'FROM `' . _DB_PREFIX_ . $sql_table . '` a ';
+        return "\n" . 'FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $sql_table) . ' a ';
     }
 
     /**
@@ -3269,8 +3291,8 @@ class AdminControllerCore extends Controller
     {
         $shopJoinClause = '';
         if ($this->shopLinkType) {
-            $shopJoinClause = ' LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->shopLinkType) . '` shop
-                            ON a.`id_' . bqSQL($this->shopLinkType) . '` = shop.`id_' . bqSQL($this->shopLinkType) . '`';
+            $shopJoinClause = ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->shopLinkType) . ' shop
+                            ON a.' . Db::quoteIdentifier('id_' . $this->shopLinkType) . ' = shop.' . Db::quoteIdentifier('id_' . $this->shopLinkType);
         }
 
         return "\n" . $this->getLanguageJoinClause($id_lang, $id_lang_shop) .
@@ -3288,16 +3310,16 @@ class AdminControllerCore extends Controller
     {
         $languageJoinClause = '';
         if ($this->lang) {
-            $languageJoinClause = 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->table) . '_lang` b
-                ON (b.`' . bqSQL($this->identifier) . '` = a.`' . bqSQL($this->identifier) . '` AND b.`id_lang` = ' . (int) $idLang;
+            $languageJoinClause = 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->table . '_lang') . ' b
+                ON (b.' . Db::quoteIdentifier($this->identifier) . ' = a.' . Db::quoteIdentifier($this->identifier) . ' AND b.id_lang = ' . (int) $idLang;
 
             if ($idLangShop) {
                 if (!Shop::isFeatureActive()) {
-                    $languageJoinClause .= ' AND b.`id_shop` = ' . (int) Configuration::get('PS_SHOP_DEFAULT');
+                    $languageJoinClause .= ' AND b.id_shop = ' . (int) Configuration::get('PS_SHOP_DEFAULT');
                 } elseif (Shop::getContext() == Shop::CONTEXT_SHOP) {
-                    $languageJoinClause .= ' AND b.`id_shop` = ' . (int) $idLangShop;
+                    $languageJoinClause .= ' AND b.id_shop = ' . (int) $idLangShop;
                 } else {
-                    $languageJoinClause .= ' AND b.`id_shop` = a.id_shop_default';
+                    $languageJoinClause .= ' AND b.id_shop = a.id_shop_default';
                 }
             }
             $languageJoinClause .= ')';
@@ -3315,8 +3337,8 @@ class AdminControllerCore extends Controller
         if ($this->shopLinkType) {
             $whereShop = Shop::addSqlRestriction($this->shopShareDatas, 'a');
         }
-        $whereClause = ' WHERE 1 ' . (isset($this->_where) ? $this->_where . ' ' : '') .
-            ($this->deleted ? 'AND a.`deleted` = 0 ' : '') .
+        $whereClause = ' WHERE 1=1 ' . (isset($this->_where) ? $this->_where . ' ' : '') .
+            ($this->deleted ? 'AND a.deleted = 0 ' : '') .
             (isset($this->_filter) ? $this->_filter : '') . $whereShop . "\n" .
             (isset($this->_group) ? $this->_group . ' ' : '') . "\n" .
             $this->getHavingClause();
@@ -3336,11 +3358,11 @@ class AdminControllerCore extends Controller
         $this->_orderWay = $this->checkOrderDirection($orderDirection);
 
         return ' ORDER BY '
-            . ((str_replace('`', '', $this->_orderBy) == $this->identifier) ? 'a.' : '')
+            . ((str_replace(['`', '"'], '', $this->_orderBy) == $this->identifier) ? 'a.' : '')
             . $this->_orderBy
             . ' '
             . $this->_orderWay
-            . ($this->_tmpTableFilter ? ') tmpTable WHERE 1' . $this->_tmpTableFilter : '');
+            . ($this->_tmpTableFilter ? ') tmpTable WHERE 1=1 ' . $this->_tmpTableFilter : '');
     }
 
     /**
@@ -3377,7 +3399,7 @@ class AdminControllerCore extends Controller
 
         if (preg_match('/[.!]/', $orderBy)) {
             $orderBySplit = preg_split('/[.!]/', $orderBy);
-            $orderBy = bqSQL($orderBySplit[0]) . '.`' . bqSQL($orderBySplit[1]) . '`';
+            $orderBy = bqSQL($orderBySplit[0]) . '.' . Db::quoteIdentifier($orderBySplit[1]);
         } elseif ($orderBy) {
             $orderBy = bqSQL($orderBy);
         }
@@ -3811,7 +3833,7 @@ class AdminControllerCore extends Controller
                 $exclude_ids[] = $row['id_shop'];
             }
         }
-        Db::getInstance()->delete($this->table . '_shop', '`' . bqSQL($this->identifier) . '` = ' . (int) $id_object . ($exclude_ids ? ' AND id_shop NOT IN (' . implode(', ', array_map('intval', $exclude_ids)) . ')' : ''));
+        Db::getInstance()->delete($this->table . '_shop', Db::quoteIdentifier($this->identifier) . ' = ' . (int) $id_object . ($exclude_ids ? ' AND id_shop NOT IN (' . implode(', ', array_map('intval', $exclude_ids)) . ')' : ''));
 
         $insert = [];
         foreach ($assos_data as $id_shop) {

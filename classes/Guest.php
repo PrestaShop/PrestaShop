@@ -123,9 +123,9 @@ class GuestCore extends ObjectModel
         foreach ($browserArray as $k => $value) {
             if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT `id_web_browser`
-				FROM `' . _DB_PREFIX_ . 'web_browser` wb
-				WHERE wb.`name` = \'' . pSQL($k) . '\'');
+				SELECT id_web_browser
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'web_browser') . ' wb
+				WHERE wb.name = \'' . pSQL($k) . '\'');
 
                 return $result['id_web_browser'] ?? null;
             }
@@ -156,9 +156,9 @@ class GuestCore extends ObjectModel
         foreach ($osArray as $k => $value) {
             if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-				SELECT `id_operating_system`
-				FROM `' . _DB_PREFIX_ . 'operating_system` os
-				WHERE os.`name` = \'' . pSQL($k) . '\'');
+				SELECT id_operating_system
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'operating_system') . ' os
+				WHERE os.name = \'' . pSQL($k) . '\'');
 
                 return $result['id_operating_system'] ?? null;
             }
@@ -180,9 +180,9 @@ class GuestCore extends ObjectModel
             return false;
         }
         $result = Db::getInstance()->getRow('
-		SELECT `id_guest`
-		FROM `' . _DB_PREFIX_ . 'guest`
-		WHERE `id_customer` = ' . (int) $idCustomer);
+		SELECT id_guest
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'guest') . '
+		WHERE id_customer = ' . (int) $idCustomer);
 
         return $result['id_guest'] ?? false;
     }

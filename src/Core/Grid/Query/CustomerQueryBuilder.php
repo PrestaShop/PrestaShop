@@ -182,7 +182,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if (in_array($filterName, ['active', 'newsletter', 'optin', 'id_customer'])) {
-                $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
+                $qb->andWhere('c.' . $this->connection->quoteIdentifier($filterName) . ' = :' . $filterName);
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
@@ -216,7 +216,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere('c.`' . $filterName . '` LIKE :' . $filterName);
+            $qb->andWhere('c.' . $this->connection->quoteIdentifier($filterName) . ' LIKE :' . $filterName);
             $qb->setParameter($filterName, '%' . $filterValue . '%');
         }
     }

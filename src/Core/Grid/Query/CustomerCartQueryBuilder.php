@@ -45,10 +45,10 @@ final class CustomerCartQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb
             ->select(
-                'c.`id_cart`,
-                c.`date_add`'
+                'c.id_cart,
+                c.date_add'
             )
-            ->addSelect('ca.`name` as carrier_name')
+            ->addSelect('ca.name as carrier_name')
         ;
 
         $this->searchCriteriaApplicator
@@ -65,7 +65,7 @@ final class CustomerCartQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         return $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT c.`id_cart`)');
+            ->select('COUNT(DISTINCT c.id_cart)');
     }
 
     /**
@@ -80,13 +80,13 @@ final class CustomerCartQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'cart', 'c')
-            ->where('c.`id_customer` != 0');
+            ->where('c.id_customer != 0');
 
         $qb->leftJoin(
             'c',
             $this->dbPrefix . 'carrier',
             'ca',
-            'c.`id_carrier` = ca.`id_carrier`'
+            'c.id_carrier = ca.id_carrier'
         );
 
         $this->applyFilters($qb, $filters);
@@ -112,7 +112,7 @@ final class CustomerCartQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_customer' === $filterName) {
-                $qb->andWhere('c.`id_customer` = :' . $filterName);
+                $qb->andWhere('c.id_customer = :' . $filterName);
                 $qb->setParameter($filterName, $value);
             }
         }

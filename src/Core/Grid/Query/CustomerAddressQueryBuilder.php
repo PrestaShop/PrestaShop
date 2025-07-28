@@ -61,21 +61,21 @@ final class CustomerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb
             ->select(
-                'a.`id_address`,
-                CONCAT(a.`firstname`, " ", a.`lastname`) AS full_name,
-                CONCAT(a.`address1`, " ", a.`address2`, " ", a.`postcode`, " ", a.`city`) AS full_address,
+                'a.id_address,
+                CONCAT(a.firstname, " ", a.lastname) AS full_name,
+                CONCAT(a.address1, " ", a.address2, " ", a.postcode, " ", a.city) AS full_address,
                 IF(
-                  a.`company` IS NULL or a.`company` = "",
+                  a.company IS NULL or a.company = "",
                   "--",
-                  a.`company`
+                  a.company
                 ) AS company,
                 IF(
-                  a.`phone` IS NULL or a.`phone` = "",
-                  IF(a.`phone_mobile` IS NULL or a.`phone_mobile` = "", "--",  a.`phone_mobile`),
-                  a.`phone`
+                  a.phone IS NULL or a.phone = "",
+                  IF(a.phone_mobile IS NULL or a.phone_mobile = "", "--",  a.phone_mobile),
+                  a.phone
                 ) AS phone_number'
             )
-            ->addSelect('cl.`name` as country_name')
+            ->addSelect('cl.name as country_name')
         ;
 
         $this->searchCriteriaApplicator
@@ -92,7 +92,7 @@ final class CustomerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         return $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT a.`id_address`)');
+            ->select('COUNT(DISTINCT a.id_address)');
     }
 
     /**
@@ -107,28 +107,28 @@ final class CustomerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'address', 'a')
-            ->where('a.`id_customer` != 0')
-            ->andWhere('a.`deleted` = 0');
+            ->where('a.id_customer != 0')
+            ->andWhere('a.deleted = 0');
 
         $qb->leftJoin(
             'a',
             $this->dbPrefix . 'country',
             'c',
-            'a.`id_country` = c.`id_country`'
+            'a.id_country = c.id_country'
         );
 
         $qb->leftJoin(
             'c',
             $this->dbPrefix . 'country_lang',
             'cl',
-            'c.`id_country` = cl.`id_country` AND cl.`id_lang` = :idLang'
+            'c.id_country = cl.id_country AND cl.id_lang = :idLang'
         );
 
         $qb->leftJoin(
             'a',
             $this->dbPrefix . 'customer',
             'customer',
-            'a.`id_customer` = customer.`id_customer`'
+            'a.id_customer = customer.id_customer'
         );
 
         $qb->andWhere('customer.id_shop IN (:context_shop_ids)')
@@ -158,7 +158,7 @@ final class CustomerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_customer' === $filterName) {
-                $qb->andWhere('a.`id_customer` = :' . $filterName);
+                $qb->andWhere('a.id_customer = :' . $filterName);
                 $qb->setParameter($filterName, $value);
             }
         }

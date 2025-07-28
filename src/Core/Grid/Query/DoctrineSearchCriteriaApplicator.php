@@ -56,7 +56,7 @@ final class DoctrineSearchCriteriaApplicator implements DoctrineSearchCriteriaAp
     ) {
         if ($searchCriteria->getOrderBy() !== $primaryKey) {
             $queryBuilder->addOrderBy(
-                sprintf('%s.`%s`', $alias, $primaryKey),
+                $alias . '.' . $queryBuilder->getConnection()->quoteIdentifier($primaryKey),
                 $searchCriteria->getOrderWay()
             );
         }

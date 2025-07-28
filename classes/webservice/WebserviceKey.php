@@ -62,9 +62,9 @@ class WebserviceKeyCore extends ObjectModel
     public static function keyExists($key)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `key`
-		FROM ' . _DB_PREFIX_ . 'webservice_account
-		WHERE `key` = "' . pSQL($key) . '"');
+		SELECT ' . Db::quoteIdentifier('key') . '
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'webservice_account') . '
+		WHERE ' . Db::quoteIdentifier('key') . ' = \'' . pSQL($key) . '\'');
     }
 
     public function delete()
@@ -104,9 +104,9 @@ class WebserviceKeyCore extends ObjectModel
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT p.*
-			FROM `' . _DB_PREFIX_ . 'webservice_permission` p
-			LEFT JOIN `' . _DB_PREFIX_ . 'webservice_account` a ON (a.id_webservice_account = p.id_webservice_account)
-			WHERE a.key = \'' . pSQL($auth_key) . '\'
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'webservice_permission') . ' p
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'webservice_account') . ' a ON (a.id_webservice_account = p.id_webservice_account)
+			WHERE a.' . Db::quoteIdentifier('key') . ' = \'' . pSQL($auth_key) . '\'
 		');
         $permissions = [];
         if ($result) {
@@ -125,8 +125,8 @@ class WebserviceKeyCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT active
-		FROM `' . _DB_PREFIX_ . 'webservice_account`
-		WHERE `key` = "' . pSQL($auth_key) . '"');
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'webservice_account') . '
+		WHERE ' . Db::quoteIdentifier('key') . ' = \'' . pSQL($auth_key) . '\'');
     }
 
     /**
@@ -136,8 +136,8 @@ class WebserviceKeyCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT class_name
-		FROM `' . _DB_PREFIX_ . 'webservice_account`
-		WHERE `key` = "' . pSQL($auth_key) . '"');
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'webservice_account') . '
+		WHERE ' . Db::quoteIdentifier('key') . ' = \'' . pSQL($auth_key) . '\'');
     }
 
     /**
@@ -148,8 +148,9 @@ class WebserviceKeyCore extends ObjectModel
     public static function getIdFromKey(string $auth_key)
     {
         $sql = sprintf(
-            'SELECT id_webservice_account FROM `%swebservice_account` WHERE `key` = "%s"',
-            _DB_PREFIX_,
+            'SELECT id_webservice_account FROM %s WHERE %s = \'%s\'',
+            Db::quoteIdentifier(_DB_PREFIX_ . 'webservice_account'),
+            Db::quoteIdentifier('key'),
             pSQL($auth_key)
         );
 
@@ -165,7 +166,7 @@ class WebserviceKeyCore extends ObjectModel
     public static function setPermissionForAccount($id_account, $permissions_to_set)
     {
         $ok = true;
-        $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'webservice_permission` WHERE `id_webservice_account` = ' . (int) $id_account;
+        $sql = 'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'webservice_permission') . ' WHERE id_webservice_account = ' . (int) $id_account;
         if (!Db::getInstance()->execute($sql)) {
             $ok = false;
         }
@@ -184,9 +185,20 @@ class WebserviceKeyCore extends ObjectModel
             }
             $account = new WebserviceKey($id_account);
             if ($account->deleteAssociations() && $permissions) {
-                $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'webservice_permission` (`id_webservice_permission` ,`resource` ,`method` ,`id_webservice_account`) VALUES ';
-                foreach ($permissions as $permission) {
-                    $sql .= '(NULL , \'' . pSQL($permission[1]) . '\', \'' . pSQL($permission[0]) . '\', ' . (int) $id_account . '), ';
+                // PostgreSQL's identity/serial columns reject an explicit NULL (unlike
+                // MySQL's AUTO_INCREMENT, which auto-generates on NULL); the id column
+                // is simply omitted from the INSERT so the sequence default applies.
+                /* @phpstan-ignore-next-line */
+                if (_DB_TYPE_ == 'pgsql') {
+                    $sql = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'webservice_permission') . ' (resource, method, id_webservice_account) VALUES ';
+                    foreach ($permissions as $permission) {
+                        $sql .= '(\'' . pSQL($permission[1]) . '\', \'' . pSQL($permission[0]) . '\', ' . (int) $id_account . '), ';
+                    }
+                } else {
+                    $sql = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'webservice_permission') . ' (id_webservice_permission, resource, method, id_webservice_account) VALUES ';
+                    foreach ($permissions as $permission) {
+                        $sql .= '(NULL , \'' . pSQL($permission[1]) . '\', \'' . pSQL($permission[0]) . '\', ' . (int) $id_account . '), ';
+                    }
                 }
                 $sql = rtrim($sql, ', ');
                 if (!Db::getInstance()->execute($sql)) {

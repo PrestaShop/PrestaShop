@@ -41,9 +41,9 @@ class CountryDataProvider
     {
         $query = new DbQuery();
         $query
-            ->select('c.`id_country`')
+            ->select('c.id_country')
             ->from('country', 'c')
-            ->where('c.`need_identification_number` = 1')
+            ->where('c.need_identification_number = 1')
         ;
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
@@ -61,9 +61,9 @@ class CountryDataProvider
     {
         $query = new DbQuery();
         $query
-            ->select('c.`id_country`')
+            ->select('c.id_country')
             ->from('country', 'c')
-            ->where('c.`need_zip_code` = 1')
+            ->where('c.need_zip_code = 1')
         ;
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
@@ -81,9 +81,9 @@ class CountryDataProvider
     {
         $query = new DbQuery();
         $query
-            ->select('c.`id_country`')
+            ->select('c.id_country')
             ->from('country', 'c')
-            ->where('c.`contains_states` = 1')
+            ->where('c.contains_states = 1')
         ;
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 

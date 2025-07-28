@@ -85,7 +85,7 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT pr.`id_specific_price_rule`)');
+            ->select('COUNT(DISTINCT pr.id_specific_price_rule)');
 
         return $qb;
     }
@@ -106,25 +106,25 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
                 'pr',
                 $this->dbPrefix . 'shop',
                 'pr_shop',
-                'pr_shop.`id_shop` = pr.`id_shop` AND pr.`id_shop` IN (:contextShopIds)'
+                'pr_shop.id_shop = pr.id_shop AND pr.id_shop IN (:contextShopIds)'
             )
             ->leftJoin(
                 'pr',
                 $this->dbPrefix . 'currency_lang',
                 'pr_currency',
-                'pr_currency.`id_currency` = pr.`id_currency` AND pr_currency.`id_lang` = :contextLangId'
+                'pr_currency.id_currency = pr.id_currency AND pr_currency.id_lang = :contextLangId'
             )
             ->leftJoin(
                 'pr',
                 $this->dbPrefix . 'country_lang',
                 'pr_country',
-                'pr_country.`id_country` = pr.`id_country` AND pr_country.`id_lang` = :contextLangId'
+                'pr_country.id_country = pr.id_country AND pr_country.id_lang = :contextLangId'
             )
             ->leftJoin(
                 'pr',
                 $this->dbPrefix . 'group_lang',
                 'pr_group',
-                'pr_group.`id_group` = pr.`id_group` AND pr_group.`id_lang` = :contextLangId'
+                'pr_group.id_group = pr.id_group AND pr_group.id_lang = :contextLangId'
             );
 
         $this->applyFilters($qb, $filters);

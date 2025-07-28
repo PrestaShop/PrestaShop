@@ -26,6 +26,7 @@ $(function()
 			url: 'index.php',
 			data: {
                 'checkDb': 'true',
+                'dbType': $('#dbType').val(),
                 'dbServer': $('#dbServer').val(),
                 'dbName': $('#dbName').val(),
                 'dbLogin': $('#dbLogin').val(),
@@ -78,6 +79,7 @@ function bindCreateDB()
 			url: 'index.php',
 			data: {
                 'createDb': 'true',
+                'dbType': $('#dbType').val(),
                 'dbServer': $('#dbServer').val(),
                 'dbName': $('#dbName').val(),
                 'dbLogin': $('#dbLogin').val(),

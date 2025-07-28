@@ -304,20 +304,21 @@ class OrderDetailCore extends ObjectModel
             return false;
         }
         $sql = 'SELECT *
-        FROM `' . _DB_PREFIX_ . 'order_detail` od
-        LEFT JOIN `' . _DB_PREFIX_ . 'product_download` pd ON (od.`product_id`=pd.`id_product`)
-        WHERE od.`download_hash` = \'' . pSQL((string) $hash) . '\'
-        AND pd.`active` = 1';
+        FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . ' od
+        LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_download') . ' pd ON (od.product_id=pd.id_product)
+        WHERE od.download_hash = \'' . pSQL((string) $hash) . '\'
+        AND pd.active = 1';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
     }
 
     public static function incrementDownload($id_order_detail, $increment = 1)
     {
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'order_detail`
-            SET `download_nb` = `download_nb` + ' . (int) $increment . '
-            WHERE `id_order_detail`= ' . (int) $id_order_detail . '
-            LIMIT 1';
+        // No LIMIT clause: id_order_detail is the primary key, so the WHERE
+        // already matches at most one row (PostgreSQL doesn't support LIMIT on UPDATE).
+        $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . '
+            SET download_nb = download_nb + ' . (int) $increment . '
+            WHERE id_order_detail= ' . (int) $id_order_detail;
 
         return Db::getInstance()->execute($sql);
     }
@@ -341,10 +342,10 @@ class OrderDetailCore extends ObjectModel
      */
     public static function getTaxCalculatorStatic($id_order_detail)
     {
-        $sql = 'SELECT t.*, d.`tax_computation_method`
-                FROM `' . _DB_PREFIX_ . 'order_detail_tax` t
-                LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` d ON (d.`id_order_detail` = t.`id_order_detail`)
-                WHERE d.`id_order_detail` = ' . (int) $id_order_detail;
+        $sql = 'SELECT t.*, d.tax_computation_method
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail_tax') . ' t
+                LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . ' d ON (d.id_order_detail = t.id_order_detail)
+                WHERE d.id_order_detail = ' . (int) $id_order_detail;
 
         $computation_method = 1;
         $taxes = [];
@@ -421,12 +422,12 @@ class OrderDetailCore extends ObjectModel
         }
 
         if ($replace) {
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'order_detail_tax` WHERE id_order_detail=' . (int) $this->id);
+            Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail_tax') . ' WHERE id_order_detail=' . (int) $this->id);
         }
 
         if (!empty($values)) {
             $values = rtrim($values, ',');
-            $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
+            $sql = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail_tax') . ' (id_order_detail, id_tax, unit_amount, total_amount)
                 VALUES ' . $values;
 
             return Db::getInstance()->execute($sql);
@@ -477,7 +478,7 @@ class OrderDetailCore extends ObjectModel
      */
     public static function getList($id_order)
     {
-        return Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'order_detail` WHERE `id_order` = ' . (int) $id_order);
+        return Db::getInstance()->executeS('SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . ' WHERE id_order = ' . (int) $id_order);
     }
 
     public function getTaxList()
@@ -487,8 +488,8 @@ class OrderDetailCore extends ObjectModel
 
     public static function getTaxListStatic($id_order_detail)
     {
-        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'order_detail_tax`
-                    WHERE `id_order_detail` = ' . (int) $id_order_detail;
+        $sql = 'SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail_tax') . '
+                    WHERE id_order_detail = ' . (int) $id_order_detail;
 
         return Db::getInstance()->executeS($sql);
     }
@@ -855,8 +856,8 @@ class OrderDetailCore extends ObjectModel
         $query = new DbQuery();
         $query->select('id_tax as id');
         $query->from('order_detail_tax', 'tax');
-        $query->leftJoin('order_detail', 'od', 'tax.`id_order_detail` = od.`id_order_detail`');
-        $query->where('od.`id_order_detail` = ' . (int) $this->id_order_detail);
+        $query->leftJoin('order_detail', 'od', 'tax.id_order_detail = od.id_order_detail');
+        $query->where('od.id_order_detail = ' . (int) $this->id_order_detail);
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
@@ -874,8 +875,8 @@ class OrderDetailCore extends ObjectModel
 
         $orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT o.id_order
-        FROM ' . _DB_PREFIX_ . 'orders o
-        LEFT JOIN ' . _DB_PREFIX_ . 'order_detail od ON (od.id_order = o.id_order)
+        FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'orders') . ' o
+        LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . ' od ON (od.id_order = o.id_order)
         WHERE o.valid = 1 AND od.product_id = ' . (int) $id_product);
 
         if (count($orders)) {
@@ -885,25 +886,29 @@ class OrderDetailCore extends ObjectModel
             }
             $list = rtrim($list, ',');
 
+            // MySQL's RAND() has no PostgreSQL equivalent; PostgreSQL uses RANDOM().
+            /* @phpstan-ignore-next-line */
+            $randomFunction = _DB_TYPE_ == 'pgsql' ? 'RANDOM()' : 'RAND()';
+
             $order_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
                 SELECT DISTINCT od.product_id, p.id_product, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price,
-                cl.link_rewrite category, p.ean13, p.isbn, p.out_of_stock, p.id_category_default ' . (Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
-                FROM ' . _DB_PREFIX_ . 'order_detail od
-                LEFT JOIN ' . _DB_PREFIX_ . 'product p ON (p.id_product = od.product_id)
+                cl.link_rewrite category, p.ean13, p.isbn, p.out_of_stock, p.id_category_default ' . (Combination::isFeatureActive() ? ', COALESCE(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'order_detail') . ' od
+                LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p ON (p.id_product = od.product_id)
                 ' . Shop::addSqlAssociation('product', 'p') .
-                (Combination::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
-                ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) Context::getContext()->shop->id . ')' : '') . '
-                LEFT JOIN ' . _DB_PREFIX_ . 'product_lang pl ON (pl.id_product = od.product_id' . Shop::addSqlRestrictionOnLang('pl') . ')
-                LEFT JOIN ' . _DB_PREFIX_ . 'category_lang cl ON (cl.id_category = product_shop.id_category_default' . Shop::addSqlRestrictionOnLang('cl') . ')
-                LEFT JOIN ' . _DB_PREFIX_ . 'image i ON (i.id_product = od.product_id)
+                (Combination::isFeatureActive() ? 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_shop') . ' product_attribute_shop
+                ON (p.id_product = product_attribute_shop.id_product AND product_attribute_shop.default_on = 1 AND product_attribute_shop.id_shop=' . (int) Context::getContext()->shop->id . ')' : '') . '
+                LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang') . ' pl ON (pl.id_product = od.product_id' . Shop::addSqlRestrictionOnLang('pl') . ')
+                LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON (cl.id_category = product_shop.id_category_default' . Shop::addSqlRestrictionOnLang('cl') . ')
+                LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . ' i ON (i.id_product = od.product_id)
                 ' . Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
                 WHERE od.id_order IN (' . $list . ')
                     AND pl.id_lang = ' . (int) $id_lang . '
                     AND cl.id_lang = ' . (int) $id_lang . '
                     AND od.product_id != ' . (int) $id_product . '
                     AND product_shop.active = 1'
-                    . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
-                ORDER BY RAND()
+                    . ($front ? ' AND product_shop.visibility IN (\'both\', \'catalog\')' : '') . '
+                ORDER BY ' . $randomFunction . '
                 LIMIT ' . (int) $limit . '
             ', true, false);
 

@@ -71,12 +71,12 @@ class AdminGroupsControllerCore extends AdminController
 
         $this->addRowActionSkipList('delete', $groups_to_keep);
 
-        $this->_select .= '(SELECT COUNT(jcg.`id_customer`)
-		FROM `' . _DB_PREFIX_ . 'customer_group` jcg
-		LEFT JOIN `' . _DB_PREFIX_ . 'customer` jc ON (jc.`id_customer` = jcg.`id_customer`)
-		WHERE jc.`deleted` != 1
+        $this->_select .= '(SELECT COUNT(jcg.id_customer)
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer_group') . ' jcg
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' jc ON (jc.id_customer = jcg.id_customer)
+		WHERE jc.deleted != 1
 		' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) . '
-		AND jcg.`id_group` = a.`id_group`) AS nb';
+		AND jcg.id_group = a.id_group) AS nb';
         $this->_use_found_rows = false;
 
         $groups = Group::getGroups(Context::getContext()->language->id, true);
@@ -304,8 +304,8 @@ class AdminGroupsControllerCore extends AdminController
             ],
         ];
         $this->_select = 'c.*, a.id_group';
-        $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (a.`id_customer` = c.`id_customer`)';
-        $this->_where = 'AND a.`id_group` = ' . (int) $group->id . ' AND c.`deleted` != 1';
+        $this->_join = 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer') . ' c ON (a.id_customer = c.id_customer)';
+        $this->_where = 'AND a.id_group = ' . (int) $group->id . ' AND c.deleted != 1';
         $this->_where .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
         self::$currentIndex = self::$currentIndex . '&id_group=' . (int) $group->id . '&viewgroup';
 
@@ -590,13 +590,13 @@ class AdminGroupsControllerCore extends AdminController
         $category_reduction = Tools::getValue('category_reduction');
         Db::getInstance()->execute(
             '
-			DELETE FROM `' . _DB_PREFIX_ . 'group_reduction`
-			WHERE `id_group` = ' . (int) Tools::getValue('id_group')
+			DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group_reduction') . '
+			WHERE id_group = ' . (int) Tools::getValue('id_group')
         );
         Db::getInstance()->execute(
             '
-			DELETE FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache`
-			WHERE `id_group` = ' . (int) Tools::getValue('id_group')
+			DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_group_reduction_cache') . '
+			WHERE id_group = ' . (int) Tools::getValue('id_group')
         );
         if (is_array($category_reduction) && count($category_reduction)) {
             if (!Configuration::getGlobalValue('PS_GROUP_FEATURE_ACTIVE')) {
@@ -629,7 +629,7 @@ class AdminGroupsControllerCore extends AdminController
         if (!Validate::isLoadedObject($group)) {
             $this->errors[] = $this->trans('An error occurred while updating this group.', [], 'Admin.Shopparameters.Notification');
         }
-        $update = Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'group` SET show_prices = ' . ($group->show_prices ? 0 : 1) . ' WHERE `id_group` = ' . (int) $group->id);
+        $update = Db::getInstance()->execute('UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group') . ' SET show_prices = ' . ($group->show_prices ? 0 : 1) . ' WHERE id_group = ' . (int) $group->id);
         if (!$update) {
             $this->errors[] = $this->trans('An error occurred while updating this group.', [], 'Admin.Shopparameters.Notification');
         }

@@ -68,7 +68,7 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
     {
         $qb = $this->getBaseQueryBuilder($searchCriteria)
             ->addSelect('oi.id_order_invoice AS id_invoice, oi.date_add')
-            ->addSelect('CONCAT(LEFT(c.`firstname`, 1), \'. \' , c.`lastname`) AS customer')
+            ->addSelect('CONCAT(LEFT(c.firstname, 1), \'. \' , c.lastname) AS customer')
             ->addSelect('c.company, rl.name AS risk, r.color')
             ->addSelect('c.outstanding_allow_amount')
             ->addSelect('c.id_customer, o.id_order')

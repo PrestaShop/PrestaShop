@@ -204,7 +204,7 @@ class HelperListCore extends Helper
         $patternsOrderBy = [
             '/^([a-z _]*!)/Ui',     // remove a. for example
             '/^([a-z _]*\.)/Ui',    // remove a! for example
-            '/`/',                  // remove ` char
+            '/[`"]/',               // remove ` or " char
         ];
         if ($this->orderBy !== null) {
             $this->orderBy = preg_replace($patternsOrderBy, '', $this->orderBy);

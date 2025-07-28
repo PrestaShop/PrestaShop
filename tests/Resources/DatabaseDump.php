@@ -90,7 +90,8 @@ class DatabaseDump
 
         if (count($host_and_maybe_port) === 1) {
             $this->host = $host_and_maybe_port[0];
-            $this->port = 3306;
+            /* @phpstan-ignore-next-line */
+            $this->port = _DB_TYPE_ == 'pgsql' ? 5432 : 3306;
         } elseif (count($host_and_maybe_port) === 2) {
             $this->host = $host_and_maybe_port[0];
             $this->port = $host_and_maybe_port[1];
@@ -115,7 +116,7 @@ class DatabaseDump
     {
         $this->checkDumpFile();
 
-        $restoreCommand = $this->buildMySQLCommand([$this->databaseName]);
+        $restoreCommand = $this->buildRestoreCommand();
         $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2>&1';
         $this->exec($restoreCommand);
 
@@ -143,7 +144,7 @@ class DatabaseDump
         }
 
         $dumpFile = $this->getTableDumpPath($tableName);
-        $restoreCommand = $this->buildMySQLCommand([$this->databaseName]);
+        $restoreCommand = $this->buildRestoreCommand();
         $restoreCommand .= ' < ' . escapeshellarg($dumpFile) . ' 2>&1';
         $this->exec($restoreCommand);
     }
@@ -183,31 +184,51 @@ class DatabaseDump
     }
 
     /**
-     * Wrapper to easily build mysql commands: sets password, port, user.
-     *
-     * @param array $arguments
-     *
-     * @return string
+     * Builds the command used to restore a dump into the database (reads the dump from stdin,
+     * appended by the caller as `... < dumpfile`).
      */
-    private function buildMySQLCommand(array $arguments = []): string
+    private function buildRestoreCommand(): string
     {
-        $parts = array_merge($this->getDefaultParameters('mysql'), array_map('escapeshellarg', $arguments));
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            $parts = array_merge(
+                $this->getPgsqlDefaultParameters('psql'),
+                ['-v', 'ON_ERROR_STOP=1', escapeshellarg($this->databaseName)]
+            );
+
+            return implode(' ', $parts);
+        }
+
+        $parts = array_merge($this->getMysqlDefaultParameters('mysql'), [escapeshellarg($this->databaseName)]);
 
         return implode(' ', $parts);
     }
 
     /**
-     * Wrapper to easily build mysql commands: sets password, port, user.
-     *
-     * @param array $arguments
-     *
-     * @return string
+     * Builds the command used to dump the database (or a single table) to $dumpfile.
      */
-    private function buildMySQLCommandDumpFile(string $dumpfile, array $arguments = []): string
+    private function buildDumpCommand(string $dumpfile, ?string $table = null): string
     {
-        $parts = array_merge($this->getDefaultParameters('mysqldump'), ['-r', escapeshellarg($dumpfile)]);
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            $parts = array_merge(
+                $this->getPgsqlDefaultParameters('pg_dump'),
+                ['-f', escapeshellarg($dumpfile), '--clean', '--if-exists', '--column-inserts']
+            );
+            if (null !== $table) {
+                $parts[] = '-t';
+                $parts[] = escapeshellarg($table);
+            }
+            $parts[] = escapeshellarg($this->databaseName);
 
-        $parts = array_merge($parts, array_map('escapeshellarg', $arguments));
+            return implode(' ', $parts);
+        }
+
+        $parts = array_merge($this->getMysqlDefaultParameters('mysqldump'), ['-r', escapeshellarg($dumpfile), escapeshellarg($this->databaseName)]);
+        if (null !== $table) {
+            $parts[] = escapeshellarg($table);
+        }
+        $parts[] = '--complete-insert';
 
         return implode(' ', $parts);
     }
@@ -215,7 +236,7 @@ class DatabaseDump
     /**
      * @return string[]
      */
-    private function getDefaultParameters(string $executable): array
+    private function getMysqlDefaultParameters(string $executable): array
     {
         $parts = [
             $executable,
@@ -227,6 +248,30 @@ class DatabaseDump
         if ($this->password) {
             $parts[] = '-p' . escapeshellarg($this->password);
         }
+
+        return $parts;
+    }
+
+    /**
+     * psql/pg_dump use -U for the user (-u doesn't exist) and -p for the port (not the
+     * password); the password can only be passed via the PGPASSWORD environment variable.
+     *
+     * @return string[]
+     */
+    private function getPgsqlDefaultParameters(string $executable): array
+    {
+        $parts = [];
+        if ($this->password) {
+            $parts[] = 'PGPASSWORD=' . escapeshellarg($this->password);
+        }
+
+        $parts[] = $executable;
+        $parts[] = '-U';
+        $parts[] = escapeshellarg($this->user);
+        $parts[] = '-p';
+        $parts[] = escapeshellarg($this->port);
+        $parts[] = '-h';
+        $parts[] = escapeshellarg($this->host);
 
         return $parts;
     }
@@ -258,24 +303,37 @@ class DatabaseDump
      */
     private function dump(): void
     {
-        $dumpCommand = $this->buildMySQLCommandDumpFile($this->dumpFile, [$this->databaseName, '--complete-insert']);
+        $dumpCommand = $this->buildDumpCommand($this->dumpFile);
         $dumpCommand .= ' 2>&1';
         $this->exec($dumpCommand);
     }
 
     private function dumpAllTables(): void
     {
-        $tables = $this->db->executeS('SHOW TABLES;');
-        foreach ($tables as $table) {
-            // $table is an array looking like this [Tables_in_database_name => 'ps_access']
-            $this->dumpTable(reset($table));
+        foreach ($this->listTables() as $table) {
+            $this->dumpTable($table);
         }
+    }
+
+    /**
+     * Lists table names (including prefix) in the current database, in a dialect-agnostic way.
+     *
+     * @return string[]
+     */
+    private function listTables(): array
+    {
+        /* @phpstan-ignore-next-line */
+        $rows = $this->db->executeS(_DB_TYPE_ == 'pgsql'
+            ? "SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'"
+            : 'SHOW TABLES;');
+
+        return array_map(static fn (array $row) => array_values($row)[0], $rows);
     }
 
     private function dumpTable(string $table): void
     {
         $tableDumpFile = $this->getTableDumpPath($table);
-        $dumpCommand = $this->buildMySQLCommandDumpFile($tableDumpFile, [$this->databaseName, $table, '--complete-insert']);
+        $dumpCommand = $this->buildDumpCommand($tableDumpFile, $table);
         $dumpCommand .= ' 2>&1';
         $this->exec($dumpCommand);
 
@@ -317,6 +375,11 @@ class DatabaseDump
      */
     private function getTableChecksum(string $table): string
     {
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            return $this->getPgsqlTableChecksum($table);
+        }
+
         $checksum = $this->db->executeS(sprintf('CHECKSUM TABLE `%s`;', $table));
         $checksum = $checksum[0]['Checksum'];
 
@@ -330,6 +393,39 @@ class DatabaseDump
         $autoIncrement = (int) ($autoIncrement[0]['AUTO_INCREMENT'] ?? 0);
 
         return $checksum . $autoIncrement;
+    }
+
+    /**
+     * PostgreSQL has no CHECKSUM TABLE/information_schema AUTO_INCREMENT equivalent: hashes the
+     * full row content instead (order-independent, via sorting on each row's own hash), and
+     * appends the current value of the table's serial/identity sequence, if it has one.
+     */
+    private function getPgsqlTableChecksum(string $table): string
+    {
+        $checksumRow = $this->db->executeS(sprintf(
+            'SELECT MD5(COALESCE(STRING_AGG(md5(t.*::text), \'\' ORDER BY md5(t.*::text)), \'\')) AS checksum FROM %s t',
+            Db::quoteIdentifier($table)
+        ));
+        $checksum = $checksumRow[0]['checksum'];
+
+        $sequenceRow = $this->db->executeS(sprintf(
+            "SELECT s.relname FROM pg_class t
+            JOIN pg_depend d ON d.refobjid = t.oid AND d.deptype IN ('a', 'i')
+            JOIN pg_class s ON s.oid = d.objid AND s.relkind = 'S'
+            WHERE t.relname = '%s' LIMIT 1",
+            pSQL($table)
+        ));
+
+        $lastValue = 0;
+        if (!empty($sequenceRow[0]['relname'])) {
+            $lastValueRow = $this->db->executeS(sprintf(
+                "SELECT last_value FROM pg_sequences WHERE schemaname = 'public' AND sequencename = '%s'",
+                pSQL($sequenceRow[0]['relname'])
+            ));
+            $lastValue = (int) ($lastValueRow[0]['last_value'] ?? 0);
+        }
+
+        return $checksum . $lastValue;
     }
 
     private function checkDumpFile(): void
@@ -399,10 +495,7 @@ class DatabaseDump
     {
         $dump = new static();
 
-        $tables = $dump->db->executeS('SHOW TABLES;');
-        foreach ($tables as $table) {
-            // $table is an array looking like this [Tables_in_database_name => 'ps_access']
-            $tableName = reset($table);
+        foreach ($dump->listTables() as $tableName) {
             $tableName = substr($tableName, strlen($dump->dbPrefix));
             $dump->restoreTable($tableName);
         }
@@ -431,10 +524,7 @@ class DatabaseDump
     {
         $dump = new static();
 
-        $tables = $dump->db->executeS('SHOW TABLES;');
-        foreach ($tables as $table) {
-            // $table is an array looking like this [Tables_in_database_name => 'ps_access']
-            $tableName = reset($table);
+        foreach ($dump->listTables() as $tableName) {
             $tableName = substr($tableName, strlen($dump->dbPrefix));
             if (preg_match($regexp, $tableName)) {
                 $dump->restoreTable($tableName);
@@ -446,15 +536,12 @@ class DatabaseDump
     {
         $dump = new static();
 
-        $tables = $dump->db->executeS('SHOW TABLES;');
-        foreach ($tables as $table) {
-            // $table is an array looking like this [Tables_in_database_name => 'ps_access']
-            $tableName = reset($table);
+        foreach ($dump->listTables() as $tableName) {
             // Remove all tables that contain _extra, they are the dynamically created tables used
             // by extra property feature, except extra_property_definition which is in the default structure
             // and must be kept
             if ($tableName !== $dump->dbPrefix . 'extra_property_definition' && str_contains($tableName, '_extra')) {
-                $dump->db->execute('DROP TABLE `' . $tableName . '`;');
+                $dump->db->execute('DROP TABLE ' . Db::quoteIdentifier($tableName) . ';');
             }
         }
     }

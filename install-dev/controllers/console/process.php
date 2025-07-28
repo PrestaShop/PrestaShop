@@ -119,10 +119,11 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             }
 
             if ($this->datas->database_create) {
-                $this->model_database->createDatabase($this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password);
+                $this->model_database->createDatabase($this->datas->database_type, $this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password);
             }
 
             if (!$this->model_database->testDatabaseSettings(
+                $this->datas->database_type,
                 $this->datas->database_server,
                 $this->datas->database_name,
                 $this->datas->database_login,
@@ -198,6 +199,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     public function processGenerateSettingsFile()
     {
         return $this->model_install->generateSettingsFile(
+            $this->datas->database_type,
             $this->datas->database_server,
             $this->datas->database_login,
             $this->datas->database_password,

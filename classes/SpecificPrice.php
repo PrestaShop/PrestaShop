@@ -6,6 +6,12 @@
 class SpecificPriceCore extends ObjectModel
 {
     public const ORDER_DEFAULT_FROM_QUANTITY = 1;
+    // KNOWN GAP: this "no date" sentinel is a valid MySQL zero-date but PostgreSQL rejects
+    // '0000-00-00 00:00:00' as an invalid timestamp value outright (not just a quoting issue) —
+    // any add()/update() that persists `from`/`to` still holding this value will fail on
+    // PostgreSQL. This constant is also consumed by Order.php and OrderProductRemover.php.
+    // Needs a dedicated fix (e.g. a dialect-aware sentinel or NULL-based "no date" semantics)
+    // rather than a syntax-only rewrite; left untouched here.
     public const ORDER_DEFAULT_DATE = '0000-00-00 00:00:00';
 
     public $id_product;
@@ -191,8 +197,8 @@ class SpecificPriceCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *
-			FROM `' . _DB_PREFIX_ . 'specific_price`
-			WHERE `id_product` = ' . (int) $id_product .
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . '
+			WHERE id_product = ' . (int) $id_product .
             ($id_product_attribute ? ' AND id_product_attribute = ' . (int) $id_product_attribute : '') . '
 			AND id_cart = ' . (int) $id_cart .
             ($id_price_rule !== null ? ' AND id_specific_price_rule = ' . (int) $id_price_rule : ''));
@@ -201,7 +207,7 @@ class SpecificPriceCore extends ObjectModel
     public static function deleteByIdCart($id_cart, $id_product = false, $id_product_attribute = false)
     {
         return Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'specific_price`
+			DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . '
 			WHERE id_cart=' . (int) $id_cart .
             ($id_product ? ' AND id_product=' . (int) $id_product . ' AND id_product_attribute=' . (int) $id_product_attribute : ''));
     }
@@ -209,9 +215,9 @@ class SpecificPriceCore extends ObjectModel
     public static function getIdsByProductId($id_product, $id_product_attribute = false, $id_cart = 0)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-            SELECT `id_specific_price`
-            FROM `' . _DB_PREFIX_ . 'specific_price`
-            WHERE `id_product` = ' . (int) $id_product .
+            SELECT id_specific_price
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . '
+            WHERE id_product = ' . (int) $id_product .
             ($id_product_attribute !== false ? ' AND id_product_attribute = ' . (int) $id_product_attribute : '') . '
             AND id_cart = ' . (int) $id_cart);
     }
@@ -226,11 +232,11 @@ class SpecificPriceCore extends ObjectModel
         $priority = SpecificPrice::getPriority($id_product);
         foreach (array_reverse($priority) as $k => $field) {
             if (!empty($field)) {
-                $select .= ' IF (`' . bqSQL($field) . '` = ' . (int) $$field . ', ' . 2 ** ($k + 1) . ', 0) + ';
+                $select .= ' CASE WHEN ' . Db::quoteIdentifier($field) . ' = ' . (int) $$field . ' THEN ' . 2 ** ($k + 1) . ' ELSE 0 END + ';
             }
         }
 
-        return rtrim($select, ' +') . ') AS `score`';
+        return rtrim($select, ' +') . ') AS score';
     }
 
     public static function getPriority($id_product)
@@ -241,10 +247,10 @@ class SpecificPriceCore extends ObjectModel
 
         if (!isset(self::$_cache_priorities[(int) $id_product])) {
             self::$_cache_priorities[(int) $id_product] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `priority`, `id_specific_price_priority`
-				FROM `' . _DB_PREFIX_ . 'specific_price_priority`
-				WHERE `id_product` = ' . (int) $id_product . '
-				ORDER BY `id_specific_price_priority` DESC
+				SELECT priority, id_specific_price_priority
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price_priority') . '
+				WHERE id_product = ' . (int) $id_product . '
+				ORDER BY id_specific_price_priority DESC
 			');
         }
 
@@ -272,7 +278,7 @@ class SpecificPriceCore extends ObjectModel
     protected static function filterOutField($field_name, $field_value, $threshold = 1000)
     {
         $name = Db::getInstance()->escape($field_name, false, true);
-        $query_extra = 'AND `' . $name . '` = 0 ';
+        $query_extra = 'AND ' . Db::quoteIdentifier($name) . ' = 0 ';
         if ($field_value == 0 || array_key_exists($field_name, self::$_no_specific_values)) {
             return $query_extra;
         }
@@ -280,7 +286,7 @@ class SpecificPriceCore extends ObjectModel
         $specific_list = [];
         if (!array_key_exists($key_cache, self::$_filterOutCache)) {
             // Check if a specific price with this key exists
-            $query = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
+            $query = 'SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . ' WHERE ' . Db::quoteIdentifier($name) . ' != 0';
             $has_product_specific_price = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
             if ($has_product_specific_price == 0) {
                 self::$_no_specific_values[$field_name] = true;
@@ -288,12 +294,12 @@ class SpecificPriceCore extends ObjectModel
                 return $query_extra;
             }
             // Fetch the approximate count of specific price. explain can be 100x faster than count.
-            $query_count = 'EXPLAIN SELECT COUNT(DISTINCT `' . $name . '`) FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
+            $query_count = 'EXPLAIN SELECT COUNT(DISTINCT ' . Db::quoteIdentifier($name) . ') FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . ' WHERE ' . Db::quoteIdentifier($name) . ' != 0';
             $specific_count_result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query_count);
             $specific_count = $specific_count_result['rows'];
 
             if ($specific_count < $threshold) {
-                $query = 'SELECT DISTINCT `' . $name . '` FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
+                $query = 'SELECT DISTINCT ' . Db::quoteIdentifier($name) . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . ' WHERE ' . Db::quoteIdentifier($name) . ' != 0';
                 $tmp_specific_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
                 foreach ($tmp_specific_list as $value) {
                     $specific_list[] = $value[$field_name];
@@ -307,9 +313,9 @@ class SpecificPriceCore extends ObjectModel
         // $specific_list is empty if the threshold is reached
         if (empty($specific_list) || in_array($field_value, $specific_list)) {
             if ($name == 'id_product' && !self::$_hasGlobalProductRules) {
-                $query_extra = 'AND `' . $name . '` = ' . (int) $field_value . ' ';
+                $query_extra = 'AND ' . Db::quoteIdentifier($name) . ' = ' . (int) $field_value . ' ';
             } else {
-                $query_extra = 'AND `' . $name . '` ' . self::formatIntInQuery(0, $field_value) . ' ';
+                $query_extra = 'AND ' . Db::quoteIdentifier($name) . ' ' . self::formatIntInQuery(0, $field_value) . ' ';
             }
         }
 
@@ -357,13 +363,16 @@ class SpecificPriceCore extends ObjectModel
 
         $query_extra .= self::filterOutField('id_cart', $id_cart);
 
+        $fromColumn = Db::quoteIdentifier('from');
+        $toColumn = Db::quoteIdentifier('to');
+
         if ($ending == $now && $beginning == $now) {
             $key = __FUNCTION__ . '-' . $first_date . '-' . $last_date;
             if (!array_key_exists($key, self::$_filterOutCache)) {
-                $query_from_count = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `from` BETWEEN \'' . $first_date . '\' AND \'' . $last_date . '\'';
+                $query_from_count = 'SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . ' WHERE ' . $fromColumn . ' BETWEEN \'' . $first_date . '\' AND \'' . $last_date . '\'';
                 $from_specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_from_count);
 
-                $query_to_count = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `to` BETWEEN \'' . $first_date . '\' AND \'' . $last_date . '\'';
+                $query_to_count = 'SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . ' WHERE ' . $toColumn . ' BETWEEN \'' . $first_date . '\' AND \'' . $last_date . '\'';
 
                 $to_specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_to_count);
                 self::$_filterOutCache[$key] = [$from_specific_count, $to_specific_count];
@@ -382,8 +391,8 @@ class SpecificPriceCore extends ObjectModel
         $beginning = $db->escape($beginning);
         $ending = $db->escape($ending);
 
-        $query_extra .= ' AND (`from` = \'0000-00-00 00:00:00\' OR \'' . $beginning . '\' >= `from`)'
-                       . ' AND (`to` = \'0000-00-00 00:00:00\' OR \'' . $ending . '\' <= `to`)';
+        $query_extra .= ' AND (' . $fromColumn . ' = \'0000-00-00 00:00:00\' OR \'' . $beginning . '\' >= ' . $fromColumn . ')'
+                       . ' AND (' . $toColumn . ' = \'0000-00-00 00:00:00\' OR \'' . $ending . '\' <= ' . $toColumn . ')';
 
         return $query_extra;
     }
@@ -409,7 +418,7 @@ class SpecificPriceCore extends ObjectModel
     final protected static function couldHaveSpecificPrice($idProduct)
     {
         if (self::$_hasGlobalProductRules === null) {
-            $queryHasGlobalRule = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE id_product = 0';
+            $queryHasGlobalRule = 'SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . ' WHERE id_product = 0';
             $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($queryHasGlobalRule);
             self::$_hasGlobalProductRules = !empty($row);
         }
@@ -418,7 +427,7 @@ class SpecificPriceCore extends ObjectModel
         }
 
         if (!array_key_exists($idProduct, self::$_couldHaveSpecificPriceCache)) {
-            $query = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE id_product = ' . (int) $idProduct;
+            $query = 'SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . ' WHERE id_product = ' . (int) $idProduct;
             $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
             self::$_couldHaveSpecificPriceCache[$idProduct] = !empty($row);
         }
@@ -550,16 +559,16 @@ class SpecificPriceCore extends ObjectModel
             }
             $query = '
 			SELECT *, ' . SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer) . '
-				FROM `' . _DB_PREFIX_ . 'specific_price`
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . '
 				WHERE
-                `id_shop` ' . self::formatIntInQuery(0, $id_shop) . ' AND
-                `id_currency` ' . self::formatIntInQuery(0, $id_currency) . ' AND
-                `id_country` ' . self::formatIntInQuery(0, $id_country) . ' AND
-                `id_group` ' . self::formatIntInQuery(0, $id_group) . ' ' . $query_extra . '
-				AND IF(`from_quantity` > 1, `from_quantity`, 0) <= ';
+                id_shop ' . self::formatIntInQuery(0, $id_shop) . ' AND
+                id_currency ' . self::formatIntInQuery(0, $id_currency) . ' AND
+                id_country ' . self::formatIntInQuery(0, $id_country) . ' AND
+                id_group ' . self::formatIntInQuery(0, $id_group) . ' ' . $query_extra . '
+				AND CASE WHEN from_quantity > 1 THEN from_quantity ELSE 0 END <= ';
 
             $query .= (static::$psQtyDiscountOnCombination || !$id_cart || !$real_quantity) ? (int) $quantity : max(1, (int) $real_quantity);
-            $query .= ' ORDER BY `id_product_attribute` DESC, `id_cart` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC';
+            $query .= ' ORDER BY id_product_attribute DESC, id_cart DESC, from_quantity DESC, id_specific_price_rule ASC, score DESC, ' . Db::quoteIdentifier('to') . ' DESC, ' . Db::quoteIdentifier('from') . ' DESC';
             self::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
         }
 
@@ -574,7 +583,7 @@ class SpecificPriceCore extends ObjectModel
     public static function deletePriorities()
     {
         return Db::getInstance()->execute('
-		TRUNCATE `' . _DB_PREFIX_ . 'specific_price_priority`
+		TRUNCATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price_priority') . '
 		');
     }
 
@@ -585,10 +594,17 @@ class SpecificPriceCore extends ObjectModel
             $value .= pSQL($priority) . ';';
         }
 
+        // Conflict target is the UNIQUE KEY on id_product (not the primary key, which also
+        // includes the auto-increment id_specific_price_priority and never actually conflicts).
+        /* @phpstan-ignore-next-line */
+        $onConflict = _DB_TYPE_ == 'pgsql'
+            ? 'ON CONFLICT (id_product) DO UPDATE SET priority = \'' . pSQL(rtrim($value, ';')) . '\''
+            : 'ON DUPLICATE KEY UPDATE priority = \'' . pSQL(rtrim($value, ';')) . '\'';
+
         return Db::getInstance()->execute('
-		INSERT INTO `' . _DB_PREFIX_ . 'specific_price_priority` (`id_product`, `priority`)
+		INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price_priority') . ' (id_product, priority)
 		VALUES (' . (int) $id_product . ',\'' . pSQL(rtrim($value, ';')) . '\')
-		ON DUPLICATE KEY UPDATE `priority` = \'' . pSQL(rtrim($value, ';')) . '\'
+		' . $onConflict . '
 		');
     }
 
@@ -602,13 +618,13 @@ class SpecificPriceCore extends ObjectModel
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *,
 					' . SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer) . '
-				FROM `' . _DB_PREFIX_ . 'specific_price`
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . '
 				WHERE
-					`id_shop` ' . self::formatIntInQuery(0, $id_shop) . ' AND
-					`id_currency` ' . self::formatIntInQuery(0, $id_currency) . ' AND
-					`id_country` ' . self::formatIntInQuery(0, $id_country) . ' AND
-					`id_group` ' . self::formatIntInQuery(0, $id_group) . ' ' . $query_extra . '
-					ORDER BY `from_quantity` ASC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC
+					id_shop ' . self::formatIntInQuery(0, $id_shop) . ' AND
+					id_currency ' . self::formatIntInQuery(0, $id_currency) . ' AND
+					id_country ' . self::formatIntInQuery(0, $id_country) . ' AND
+					id_group ' . self::formatIntInQuery(0, $id_group) . ' ' . $query_extra . '
+					ORDER BY from_quantity ASC, id_specific_price_rule ASC, score DESC, ' . Db::quoteIdentifier('to') . ' DESC, ' . Db::quoteIdentifier('from') . ' DESC
 		', false, false);
 
         $targeted_prices = [];
@@ -641,14 +657,14 @@ class SpecificPriceCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT *,
 					' . SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer) . '
-			FROM `' . _DB_PREFIX_ . 'specific_price`
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . '
 			WHERE
-					`id_shop` ' . self::formatIntInQuery(0, $id_shop) . ' AND
-					`id_currency` ' . self::formatIntInQuery(0, $id_currency) . ' AND
-					`id_country` ' . self::formatIntInQuery(0, $id_country) . ' AND
-					`id_group` ' . self::formatIntInQuery(0, $id_group) . ' AND
-					`from_quantity` >= ' . (int) $quantity . ' ' . $query_extra . '
-					ORDER BY `from_quantity` DESC, `score` DESC, `to` DESC, `from` DESC
+					id_shop ' . self::formatIntInQuery(0, $id_shop) . ' AND
+					id_currency ' . self::formatIntInQuery(0, $id_currency) . ' AND
+					id_country ' . self::formatIntInQuery(0, $id_country) . ' AND
+					id_group ' . self::formatIntInQuery(0, $id_group) . ' AND
+					from_quantity >= ' . (int) $quantity . ' ' . $query_extra . '
+					ORDER BY from_quantity DESC, score DESC, ' . Db::quoteIdentifier('to') . ' DESC, ' . Db::quoteIdentifier('from') . ' DESC
 		');
     }
 
@@ -660,14 +676,14 @@ class SpecificPriceCore extends ObjectModel
 
         $query_extra = self::computeExtraConditions(null, null, $id_customer, null, $beginning, $ending);
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT `id_product`, `id_product_attribute`
-			FROM `' . _DB_PREFIX_ . 'specific_price`
-			WHERE	`id_shop` ' . self::formatIntInQuery(0, $id_shop) . ' AND
-					`id_currency` ' . self::formatIntInQuery(0, $id_currency) . ' AND
-					`id_country` ' . self::formatIntInQuery(0, $id_country) . ' AND
-					`id_group` ' . self::formatIntInQuery(0, $id_group) . ' AND
-					`from_quantity` = 1 AND
-					`reduction` > 0
+			SELECT id_product, id_product_attribute
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . '
+			WHERE	id_shop ' . self::formatIntInQuery(0, $id_shop) . ' AND
+					id_currency ' . self::formatIntInQuery(0, $id_currency) . ' AND
+					id_country ' . self::formatIntInQuery(0, $id_country) . ' AND
+					id_group ' . self::formatIntInQuery(0, $id_group) . ' AND
+					from_quantity = 1 AND
+					reduction > 0
 		' . $query_extra);
         $ids_product = [];
         foreach ($results as $value) {
@@ -690,7 +706,7 @@ class SpecificPriceCore extends ObjectModel
      */
     public static function deleteByProductId($id_product)
     {
-        if (Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `id_product` = ' . (int) $id_product)) {
+        if (Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . ' WHERE id_product = ' . (int) $id_product)) {
             // Refresh cache of feature detachable
             Configuration::updateGlobalValue('PS_SPECIFIC_PRICE_FEATURE_ACTIVE', SpecificPrice::isCurrentlyUsed('specific_price'));
 
@@ -767,22 +783,22 @@ class SpecificPriceCore extends ObjectModel
      */
     public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, $rule = false, $id_cart = null)
     {
-        $rule = ' AND `id_specific_price_rule`' . (!$rule ? '=0' : '!=0');
+        $rule = ' AND id_specific_price_rule' . (!$rule ? '=0' : '!=0');
         if (null !== $id_cart) {
             $rule .= ' AND id_cart = ' . (int) $id_cart;
         }
 
-        return (int) Db::getInstance()->getValue('SELECT `id_specific_price`
-												FROM ' . _DB_PREFIX_ . 'specific_price
-												WHERE `id_product`=' . (int) $id_product . ' AND
-													`id_product_attribute`=' . (int) $id_product_attribute . ' AND
-													`id_shop`=' . (int) $id_shop . ' AND
-													`id_group`=' . (int) $id_group . ' AND
-													`id_country`=' . (int) $id_country . ' AND
-													`id_currency`=' . (int) $id_currency . ' AND
-													`id_customer`=' . (int) $id_customer . ' AND
-													`from_quantity`=' . (int) $from_quantity . ' AND
-													`from` >= \'' . pSQL($from) . '\' AND
-													`to` <= \'' . pSQL($to) . '\'' . $rule);
+        return (int) Db::getInstance()->getValue('SELECT id_specific_price
+												FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price') . '
+												WHERE id_product=' . (int) $id_product . ' AND
+													id_product_attribute=' . (int) $id_product_attribute . ' AND
+													id_shop=' . (int) $id_shop . ' AND
+													id_group=' . (int) $id_group . ' AND
+													id_country=' . (int) $id_country . ' AND
+													id_currency=' . (int) $id_currency . ' AND
+													id_customer=' . (int) $id_customer . ' AND
+													from_quantity=' . (int) $from_quantity . ' AND
+													' . Db::quoteIdentifier('from') . ' >= \'' . pSQL($from) . '\' AND
+													' . Db::quoteIdentifier('to') . ' <= \'' . pSQL($to) . '\'' . $rule);
     }
 }

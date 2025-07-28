@@ -628,8 +628,8 @@ class AddressFormatCore extends ObjectModel
         if (!Cache::isStored('AddressFormat::getFormatDB' . $idCountry)) {
             $format = Db::getInstance()->getValue('
 			SELECT format
-			FROM `' . _DB_PREFIX_ . $this->def['table'] . '`
-			WHERE `id_country` = ' . (int) $idCountry);
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->def['table']) . '
+			WHERE ' . Db::quoteIdentifier('id_country') . ' = ' . (int) $idCountry);
             $format = trim($format);
             Cache::store('AddressFormat::getFormatDB' . $idCountry, $format);
 

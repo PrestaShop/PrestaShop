@@ -81,7 +81,7 @@ class ImageCore extends ObjectModel
     /**
      * Adds current Image as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
+     * @param bool $autoDate Automatically set date_upd and date_add columns
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Indicates whether the Image has been successfully added
@@ -167,7 +167,7 @@ class ImageCore extends ObjectModel
     /**
      * Deletes current Image from the database.
      *
-     * @return bool `true` if delete was successful
+     * @return bool true if delete was successful
      *
      * @throws PrestaShopException
      */
@@ -186,9 +186,24 @@ class ImageCore extends ObjectModel
         }
 
         // update positions
-        Db::getInstance()->execute('SET @position:=0', false);
-        Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'image` SET position=(@position:=@position+1)
-									WHERE `id_product` = ' . (int) $this->id_product . ' ORDER BY position ASC');
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            // PostgreSQL has no session variables (MySQL's @position trick); renumber via a
+            // window function instead, joined back on the primary key.
+            Db::getInstance()->execute('
+                UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . ' AS target
+                SET position = renumbered.new_position
+                FROM (
+                    SELECT id_image, ROW_NUMBER() OVER (ORDER BY position ASC) AS new_position
+                    FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . '
+                    WHERE id_product = ' . (int) $this->id_product . '
+                ) AS renumbered
+                WHERE target.id_image = renumbered.id_image');
+        } else {
+            Db::getInstance()->execute('SET @position:=0', false);
+            Db::getInstance()->execute('UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . ' SET position=(@position:=@position+1)
+										WHERE id_product = ' . (int) $this->id_product . ' ORDER BY position ASC');
+        }
 
         return true;
     }
@@ -209,15 +224,15 @@ class ImageCore extends ObjectModel
 
         if (!Cache::isStored($cacheId)) {
             $row = Db::getInstance()->getRow('
-					SELECT image_shop.`id_image` id_image, il.`legend`
-					FROM `' . _DB_PREFIX_ . 'image` i
-					INNER JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
+					SELECT image_shop.id_image id_image, il.legend
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . ' i
+					INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_shop') . ' image_shop
 						ON (i.id_image = image_shop.id_image AND image_shop.id_shop = ' . (int) $idShop . ')
-						INNER JOIN `' . _DB_PREFIX_ . 'product_attribute_image` pai
-						ON (pai.`id_image` = i.`id_image` AND pai.`id_product_attribute` = ' . (int) $idProductAttribute . ')
-					LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il
-						ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $idLang . ')
-					WHERE i.`id_product` = ' . (int) $idProduct . ' ORDER BY i.`position` ASC');
+						INNER JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_image') . ' pai
+						ON (pai.id_image = i.id_image AND pai.id_product_attribute = ' . (int) $idProductAttribute . ')
+					LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_lang') . ' il
+						ON (image_shop.id_image = il.id_image AND il.id_lang = ' . (int) $idLang . ')
+					WHERE i.id_product = ' . (int) $idProduct . ' ORDER BY i.position ASC');
 
             Cache::store($cacheId, $row);
         } else {
@@ -239,22 +254,22 @@ class ImageCore extends ObjectModel
      */
     public static function getImages($idLang, $idProduct, $idProductAttribute = null, $idShop = null)
     {
-        $attributeFilter = ($idProductAttribute ? ' AND ai.`id_product_attribute` = ' . (int) $idProductAttribute : '');
-        $shopFilter = ($idShop ? ' AND ims.`id_shop` = ' . (int) $idShop : '');
+        $attributeFilter = ($idProductAttribute ? ' AND ai.id_product_attribute = ' . (int) $idProductAttribute : '');
+        $shopFilter = ($idShop ? ' AND ims.id_shop = ' . (int) $idShop : '');
         $sql = 'SELECT *
-			FROM `' . _DB_PREFIX_ . 'image` i
-			LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (i.`id_image` = il.`id_image`)';
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . ' i
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_lang') . ' il ON (i.id_image = il.id_image)';
 
         if ($idProductAttribute) {
-            $sql .= ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)';
+            $sql .= ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_image') . ' ai ON (i.id_image = ai.id_image)';
         }
 
         if ($idShop) {
-            $sql .= ' LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` ims ON (i.`id_image` = ims.`id_image`)';
+            $sql .= ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_shop') . ' ims ON (i.id_image = ims.id_image)';
         }
 
-        $sql .= ' WHERE i.`id_product` = ' . (int) $idProduct . ' AND il.`id_lang` = ' . (int) $idLang . $attributeFilter . $shopFilter . '
-			ORDER BY i.`position` ASC';
+        $sql .= ' WHERE i.id_product = ' . (int) $idProduct . ' AND il.id_lang = ' . (int) $idLang . $attributeFilter . $shopFilter . '
+			ORDER BY i.position ASC';
 
         return Db::getInstance()->executeS($sql);
     }
@@ -270,16 +285,16 @@ class ImageCore extends ObjectModel
      */
     public static function hasImages($idLang, $idProduct, $idProductAttribute = null)
     {
-        $attribute_filter = ($idProductAttribute ? ' AND ai.`id_product_attribute` = ' . (int) $idProductAttribute : '');
+        $attribute_filter = ($idProductAttribute ? ' AND ai.id_product_attribute = ' . (int) $idProductAttribute : '');
         $sql = 'SELECT 1
-			FROM `' . _DB_PREFIX_ . 'image` i
-			LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (i.`id_image` = il.`id_image`)';
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . ' i
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_lang') . ' il ON (i.id_image = il.id_image)';
 
         if ($idProductAttribute) {
-            $sql .= ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)';
+            $sql .= ' LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_image') . ' ai ON (i.id_image = ai.id_image)';
         }
 
-        $sql .= ' WHERE i.`id_product` = ' . (int) $idProduct . ' AND il.`id_lang` = ' . (int) $idLang . $attribute_filter;
+        $sql .= ' WHERE i.id_product = ' . (int) $idProduct . ' AND il.id_lang = ' . (int) $idLang . $attribute_filter;
 
         return (bool) Db::getInstance()->getValue($sql);
     }
@@ -292,9 +307,9 @@ class ImageCore extends ObjectModel
     public static function getAllImages()
     {
         return Db::getInstance()->executeS('
-		SELECT `id_image`, `id_product`
-		FROM `' . _DB_PREFIX_ . 'image`
-		ORDER BY `id_image` ASC');
+		SELECT id_image, id_product
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . '
+		ORDER BY id_image ASC');
     }
 
     /**
@@ -307,9 +322,9 @@ class ImageCore extends ObjectModel
     public static function getImagesTotal($idProduct)
     {
         $result = Db::getInstance()->getRow('
-		SELECT COUNT(`id_image`) AS total
-		FROM `' . _DB_PREFIX_ . 'image`
-		WHERE `id_product` = ' . (int) $idProduct);
+		SELECT COUNT(id_image) AS total
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . '
+		WHERE id_product = ' . (int) $idProduct);
 
         return $result['total'];
     }
@@ -324,9 +339,9 @@ class ImageCore extends ObjectModel
     public static function getHighestPosition($idProduct)
     {
         $result = Db::getInstance()->getRow('
-		SELECT MAX(`position`) AS max
-		FROM `' . _DB_PREFIX_ . 'image`
-		WHERE `id_product` = ' . (int) $idProduct);
+		SELECT MAX(position) AS max
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . '
+		WHERE id_product = ' . (int) $idProduct);
 
         return $result['max'];
     }
@@ -350,15 +365,15 @@ class ImageCore extends ObjectModel
 
         return Db::getInstance()->execute(
             '
-			UPDATE `' . _DB_PREFIX_ . 'image`
-			SET `cover` = NULL
-			WHERE `id_product` = ' . (int) $idProduct
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . '
+			SET cover = NULL
+			WHERE id_product = ' . (int) $idProduct
         )
         && Db::getInstance()->execute(
             '
-			UPDATE `' . _DB_PREFIX_ . 'image_shop` image_shop
-			SET image_shop.`cover` = NULL
-			WHERE image_shop.id_shop IN (' . implode(',', array_map('intval', Shop::getContextListShopID())) . ') AND image_shop.`id_product` = ' . (int) $idProduct
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_shop') . ' image_shop
+			SET image_shop.cover = NULL
+			WHERE image_shop.id_shop IN (' . implode(',', array_map('intval', Shop::getContextListShopID())) . ') AND image_shop.id_product = ' . (int) $idProduct
         );
     }
 
@@ -377,10 +392,10 @@ class ImageCore extends ObjectModel
         }
 
         return Db::getInstance()->getRow('
-			SELECT * FROM `' . _DB_PREFIX_ . 'image_shop` image_shop
-			WHERE image_shop.`id_product` = ' . (int) $idProduct . '
-			AND image_shop.`id_shop` = ' . (int) $idShop . '
-			AND image_shop.`cover`= 1');
+			SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_shop') . ' image_shop
+			WHERE image_shop.id_product = ' . (int) $idProduct . '
+			AND image_shop.id_shop = ' . (int) $idShop . '
+			AND image_shop.cover= 1');
     }
 
     /**
@@ -393,9 +408,9 @@ class ImageCore extends ObjectModel
     public static function getGlobalCover($idProduct)
     {
         return Db::getInstance()->getRow('
-			SELECT * FROM `' . _DB_PREFIX_ . 'image` i
-			WHERE i.`id_product` = ' . (int) $idProduct . '
-			AND i.`cover`= 1');
+			SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . ' i
+			WHERE i.id_product = ' . (int) $idProduct . '
+			AND i.cover= 1');
     }
 
     /**
@@ -408,9 +423,9 @@ class ImageCore extends ObjectModel
     {
         $imagesTypes = ImageType::getImagesTypes('products');
         $result = Db::getInstance()->executeS('
-		SELECT `id_image`
-		FROM `' . _DB_PREFIX_ . 'image`
-		WHERE `id_product` = ' . (int) $idProductOld);
+		SELECT id_image
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . '
+		WHERE id_product = ' . (int) $idProductOld);
         foreach ($result as $row) {
             $imageOld = new Image($row['id_image']);
             $imageNew = clone $imageOld;
@@ -483,7 +498,7 @@ class ImageCore extends ObjectModel
         if (!isset($combinationImages['new']) || !is_array($combinationImages['new'])) {
             return true;
         }
-        $query = 'INSERT INTO `' . _DB_PREFIX_ . 'product_attribute_image` (`id_product_attribute`, `id_image`) VALUES ';
+        $query = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_image') . ' (id_product_attribute, id_image) VALUES ';
         foreach ($combinationImages['new'] as $idProductAttribute => $imageIds) {
             foreach ($imageIds as $imageId) {
                 $query .= '(' . (int) $idProductAttribute . ', ' . (int) $imageId . '), ';
@@ -512,18 +527,18 @@ class ImageCore extends ObjectModel
         // since BETWEEN is treated differently according to databases
         return
             Db::getInstance()->execute(
-                'UPDATE `' . _DB_PREFIX_ . 'image`
-                SET `position`= `position` ' . ($way ? '- 1' : '+ 1') . '
-                WHERE `position`
+                'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . '
+                SET position= position ' . ($way ? '- 1' : '+ 1') . '
+                WHERE position
                 ' . ($way
-                    ? '> ' . (int) $this->position . ' AND `position` <= ' . (int) $position
-                    : '< ' . (int) $this->position . ' AND `position` >= ' . (int) $position) . '
-                AND `id_product`=' . (int) $this->id_product
+                    ? '> ' . (int) $this->position . ' AND position <= ' . (int) $position
+                    : '< ' . (int) $this->position . ' AND position >= ' . (int) $position) . '
+                AND id_product=' . (int) $this->id_product
             )
             && Db::getInstance()->execute(
-                'UPDATE `' . _DB_PREFIX_ . 'image`
-                SET `position` = ' . (int) $position . '
-                WHERE `id_image` = ' . (int) $this->id_image
+                'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image') . '
+                SET position = ' . (int) $position . '
+                WHERE id_image = ' . (int) $this->id_image
             )
         ;
     }
@@ -537,9 +552,9 @@ class ImageCore extends ObjectModel
     {
         if (!isset(self::$_cacheGetSize[$type])) {
             self::$_cacheGetSize[$type] = Db::getInstance()->getRow('
-				SELECT `width`, `height`
+				SELECT width, height
 				FROM ' . _DB_PREFIX_ . 'image_type
-				WHERE `name` = \'' . pSQL($type) . '\'
+				WHERE name = \'' . pSQL($type) . '\'
 			');
         }
 
@@ -590,8 +605,8 @@ class ImageCore extends ObjectModel
         return Db::getInstance()->execute(
             '
 			DELETE
-			FROM `' . _DB_PREFIX_ . 'product_attribute_image`
-			WHERE `id_image` = ' . (int) $this->id
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_image') . '
+			WHERE id_image = ' . (int) $this->id
         );
     }
 

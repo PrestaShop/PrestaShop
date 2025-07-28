@@ -93,7 +93,7 @@ class AdminShopUrlControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = 's.name AS shop_name, CONCAT(\'http://\', a.domain, a.physical_uri, a.virtual_uri) AS url';
-        $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'shop` s ON (s.id_shop = a.id_shop)';
+        $this->_join = 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'shop') . ' s ON (s.id_shop = a.id_shop)';
 
         if ($id_shop = (int) Tools::getValue('id_shop')) {
             $this->_where = 'AND a.id_shop = ' . $id_shop;

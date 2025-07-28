@@ -11,6 +11,16 @@
       "db": "mysql"
     },
     {
+      "php": "8.1",
+      "browser": "chromium",
+      "db": "postgresql"
+    },
+    {
+      "php": "8.5",
+      "browser": "chromium",
+      "db": "postgresql"
+    },
+    {
       "php": "8.5",
       "browser": "firefox",
       "db": "mysql"

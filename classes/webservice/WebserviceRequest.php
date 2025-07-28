@@ -1153,7 +1153,7 @@ class WebserviceRequestCore
                                 // if there are linked tables
                                 if (isset($this->resourceConfiguration['linked_tables'][$field])) {
                                     // contruct SQL join for linked tables
-                                    $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['linked_tables'][$field]['table']) . '` `' . bqSQL($field) . '` ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = `' . bqSQL($field) . '`.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
+                                    $sql_join .= 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->resourceConfiguration['linked_tables'][$field]['table']) . ' ' . Db::quoteIdentifier($field) . ' ON (main.' . Db::quoteIdentifier($this->resourceConfiguration['fields']['id']['sqlId']) . ' = ' . Db::quoteIdentifier($field) . '.' . Db::quoteIdentifier($this->resourceConfiguration['fields']['id']['sqlId']) . ')' . "\n";
 
                                     // construct SQL filter for linked tables
                                     foreach ($url_param as $field2 => $value) {
@@ -1171,7 +1171,7 @@ class WebserviceRequestCore
                                     if (!is_array($url_param)) {
                                         $url_param = [$url_param];
                                     }
-                                    $sql_join .= 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']) . '_lang` AS main_i18n ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = main_i18n.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
+                                    $sql_join .= 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table'] . '_lang') . ' AS main_i18n ON (main.' . Db::quoteIdentifier($this->resourceConfiguration['fields']['id']['sqlId']) . ' = main_i18n.' . Db::quoteIdentifier($this->resourceConfiguration['fields']['id']['sqlId']) . ')' . "\n";
                                     foreach ($url_param as $field2 => $value) {
                                         $linked_field = $this->resourceConfiguration['fields'][$field];
                                         $sql_filter .= $this->getSQLRetrieveFilter($linked_field['sqlId'], $value, 'main_i18n.');
@@ -1248,9 +1248,9 @@ class WebserviceRequestCore
                 } elseif (in_array($fieldName, $i18n_available_filters)) {
                     // for sort on i18n field
                     if (!preg_match('#main_i18n#', $sql_join)) {
-                        $sql_join .= 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->resourceConfiguration['retrieveData']['table']) . '_lang` AS main_i18n ON (main.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = main_i18n.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
+                        $sql_join .= 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table'] . '_lang') . ' AS main_i18n ON (main.' . Db::quoteIdentifier($this->resourceConfiguration['fields']['id']['sqlId']) . ' = main_i18n.' . Db::quoteIdentifier($this->resourceConfiguration['fields']['id']['sqlId']) . ')' . "\n";
                     }
-                    $sql_sort .= 'main_i18n.`' . bqSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']) . '` ' . $direction . ', '; // ORDER BY main_i18n.`field` ASC|DESC
+                    $sql_sort .= 'main_i18n.' . Db::quoteIdentifier($this->resourceConfiguration['fields'][$fieldName]['sqlId']) . ' ' . $direction . ', '; // ORDER BY main_i18n.field ASC|DESC
                 } else {
                     /** @var ObjectModel $object */
                     $object = new $this->resourceConfiguration['retrieveData']['className']();
@@ -1260,7 +1260,7 @@ class WebserviceRequestCore
                     } else {
                         $table_alias = '';
                     }
-                    $sql_sort .= (isset($this->resourceConfiguration['retrieveData']['tableAlias']) ? '`' . bqSQL($this->resourceConfiguration['retrieveData']['tableAlias']) . '`.' : '`' . bqSQL($table_alias) . '`.') . '`' . pSQL($this->resourceConfiguration['fields'][$fieldName]['sqlId']) . '` ' . $direction . ', '; // ORDER BY `field` ASC|DESC
+                    $sql_sort .= (isset($this->resourceConfiguration['retrieveData']['tableAlias']) ? Db::quoteIdentifier($this->resourceConfiguration['retrieveData']['tableAlias']) . '.' : Db::quoteIdentifier($table_alias) . '.') . Db::quoteIdentifier($this->resourceConfiguration['fields'][$fieldName]['sqlId']) . ' ' . $direction . ', '; // ORDER BY field ASC|DESC
                 }
             }
             $sql_sort = rtrim($sql_sort, ', ') . "\n";
@@ -1339,24 +1339,25 @@ class WebserviceRequestCore
             if ($assoc !== false) {
                 $check_shop_group = false;
 
-                $sql = 'SELECT 1
-	 						FROM `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']);
+                $checkTableName = _DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table'];
                 if ($assoc['type'] != 'fk_shop') {
-                    $sql .= '_' . $assoc['type'];
+                    $checkTableName .= '_' . $assoc['type'];
                 } else {
                     $def = ObjectModel::getDefinition($this->resourceConfiguration['retrieveData']['className']);
                     if (isset($def['fields']['id_shop_group'])) {
                         $check_shop_group = true;
                     }
                 }
-                $sql .= '`';
+
+                $sql = 'SELECT 1
+	 						FROM ' . Db::quoteIdentifier($checkTableName);
 
                 $OR = [];
                 foreach (self::$shopIDs as $id_shop) {
                     $OR[] = ' (id_shop = ' . (int) $id_shop . ($check_shop_group ? ' OR (id_shop = 0 AND id_shop_group=' . (int) Shop::getGroupFromShop((int) $id_shop) . ')' : '') . ') ';
                 }
 
-                $check = ' WHERE (' . implode('OR', $OR) . ') AND `' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = ' . (int) $this->urlSegment[1];
+                $check = ' WHERE (' . implode('OR', $OR) . ') AND ' . Db::quoteIdentifier($this->resourceConfiguration['fields']['id']['sqlId']) . ' = ' . (int) $this->urlSegment[1];
                 if (!Db::getInstance()->getValue($sql . $check)) {
                     $this->setError(404, 'This ' . $this->resourceConfiguration['retrieveData']['className'] . ' (' . (int) $this->urlSegment[1] . ') does not exists on this shop', 131);
                 }
@@ -1668,13 +1669,23 @@ class WebserviceRequestCore
                         $assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
                         if ($assoc !== false && $assoc['type'] != 'fk_shop') {
                             // PUT nor POST is destructive, no deletion
-                            $sql = 'INSERT IGNORE INTO `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table'] . '_' . $assoc['type']) . '` (id_shop, `' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`) VALUES ';
+                            $idColumn = $this->resourceConfiguration['fields']['id']['sqlId'];
+                            $assocTableName = _DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table'] . '_' . $assoc['type'];
+                            // All shop-association tables key on (id_shop, <entity id column>);
+                            // PostgreSQL has no INSERT IGNORE, so ON CONFLICT DO NOTHING replicates it.
+                            /* @phpstan-ignore-next-line */
+                            $insertKeyword = _DB_TYPE_ == 'pgsql' ? 'INSERT' : 'INSERT IGNORE';
+                            /* @phpstan-ignore-next-line */
+                            $onConflict = _DB_TYPE_ == 'pgsql' ? ' ON CONFLICT (id_shop, ' . Db::quoteIdentifier($idColumn) . ') DO NOTHING' : '';
+
+                            $sql = $insertKeyword . ' INTO ' . Db::quoteIdentifier($assocTableName) . ' (id_shop, ' . Db::quoteIdentifier($idColumn) . ') VALUES ';
                             foreach (self::$shopIDs as $id) {
                                 $sql .= '(' . (int) $id . ',' . (int) $object->id . ')';
                                 if ($id != end(self::$shopIDs)) {
                                     $sql .= ', ';
                                 }
                             }
+                            $sql .= $onConflict;
                             Db::getInstance()->execute($sql);
                         }
                     } else {

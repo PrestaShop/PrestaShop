@@ -66,7 +66,7 @@ class ImportMatchRepository implements RepositoryInterface
             ->createQueryBuilder()
             ->select('*')
             ->from($this->importMatchTable)
-            ->where('`name` = :name')
+            ->where('name = :name')
             ->setParameter('name', $name);
 
         return $queryBuilder->executeQuery()->fetchAssociative();

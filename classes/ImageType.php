@@ -81,15 +81,15 @@ class ImageTypeCore extends ObjectModel
     public static function getImagesTypes($type = null, $orderBySize = false)
     {
         if (!isset(self::$images_types_cache[$type])) {
-            $where = 'WHERE 1';
+            $where = 'WHERE 1=1';
             if (!empty($type)) {
-                $where .= ' AND `' . bqSQL($type) . '` = 1 ';
+                $where .= ' AND ' . Db::quoteIdentifier($type) . ' = 1 ';
             }
 
             if ($orderBySize) {
-                $query = 'SELECT * FROM `' . _DB_PREFIX_ . 'image_type` ' . $where . ' ORDER BY `width` DESC, `height` DESC, `name`ASC';
+                $query = 'SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_type') . ' ' . $where . ' ORDER BY width DESC, height DESC, name ASC';
             } else {
-                $query = 'SELECT * FROM `' . _DB_PREFIX_ . 'image_type` ' . $where . ' ORDER BY `name` ASC';
+                $query = 'SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_type') . ' ' . $where . ' ORDER BY name ASC';
             }
 
             self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
@@ -109,7 +109,7 @@ class ImageTypeCore extends ObjectModel
      */
     public static function getImageTypeById(int $id): array
     {
-        return Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . 'image_type` WHERE `id_image_type` = ' . $id);
+        return Db::getInstance()->getRow('SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_type') . ' WHERE id_image_type = ' . $id);
     }
 
     /**
@@ -126,9 +126,9 @@ class ImageTypeCore extends ObjectModel
         }
 
         Db::getInstance()->executeS('
-			SELECT `id_image_type`
-			FROM `' . _DB_PREFIX_ . 'image_type`
-			WHERE `name` = \'' . pSQL($typeName) . '\'', false);
+			SELECT id_image_type
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_type') . '
+			WHERE name = \'' . pSQL($typeName) . '\'', false);
 
         return Db::getInstance()->numRows();
     }
@@ -144,7 +144,7 @@ class ImageTypeCore extends ObjectModel
         static $is_passed = false;
 
         if (!isset(self::$images_types_name_cache[$name . '_' . $type . '_' . $order]) && !$is_passed) {
-            $results = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'image_type`');
+            $results = Db::getInstance()->executeS('SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_type'));
 
             $types = ['products', 'categories', 'manufacturers', 'suppliers', 'stores'];
             $total = count($types);

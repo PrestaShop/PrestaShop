@@ -1,6 +1,7 @@
 <?php return array (
     'parameters' =>
         array (
+            'database_driver' => 'pdo_mysql',
             'database_host' => '127.0.0.1',
             'database_port' => '',
             'database_name' => 'prestashop',
@@ -8,6 +9,7 @@
             'database_password' => 'password',
             'database_prefix' => 'ps_',
             'database_engine' => 'InnoDB',
+            'database_charset' => 'utf8mb4',
             'mailer_transport' => 'smtp',
             'mailer_host' => '127.0.0.1',
             'mailer_user' => NULL,

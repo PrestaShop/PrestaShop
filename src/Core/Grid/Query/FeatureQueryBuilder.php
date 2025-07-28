@@ -144,7 +144,7 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere('f.`' . $filterName . '` = :' . $filterName)
+            $qb->andWhere('f.' . $this->connection->quoteIdentifier($filterName) . ' = :' . $filterName)
                 ->setParameter($filterName, $value);
         }
 

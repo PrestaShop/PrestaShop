@@ -1509,10 +1509,10 @@ class AdminImportControllerCore extends AdminController
             $id_product = (int) $info['id'];
         } elseif ($match_ref && isset($info['reference'])) {
             $idProductByRef = (int) Db::getInstance()->getValue('
-                                    SELECT p.`id_product`
-                                    FROM `' . _DB_PREFIX_ . 'product` p
+                                    SELECT p.' . Db::quoteIdentifier('id_product') . '
+                                    FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
                                     ' . Shop::addSqlAssociation('product', 'p') . '
-                                    WHERE p.`reference` = "' . pSQL($info['reference']) . '"
+                                    WHERE p.' . Db::quoteIdentifier('reference') . ' = \'' . pSQL($info['reference']) . '\'
                                 ', false);
             if ($idProductByRef) {
                 $id_product = $idProductByRef;
@@ -1788,10 +1788,10 @@ class AdminImportControllerCore extends AdminController
             // If match ref is specified && ref product && ref product already in base, trying to update
             if ($match_ref && $product->reference && $product->existsRefInDatabase($product->reference)) {
                 $datas = Db::getInstance()->getRow('
-					SELECT product_shop.`date_add`, p.`id_product`
-					FROM `' . _DB_PREFIX_ . 'product` p
+					SELECT product_shop.' . Db::quoteIdentifier('date_add') . ', p.' . Db::quoteIdentifier('id_product') . '
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
 					' . Shop::addSqlAssociation('product', 'p') . '
-					WHERE p.`reference` = "' . pSQL($product->reference) . '"
+					WHERE p.' . Db::quoteIdentifier('reference') . ' = \'' . pSQL($product->reference) . '\'
 				', false);
                 $product->id = (int) $datas['id_product'];
                 $product->date_add = pSQL($datas['date_add']);
@@ -1799,10 +1799,10 @@ class AdminImportControllerCore extends AdminController
             } // Else If id product && id product already in base, trying to update
             elseif ($productExistsInDatabase) {
                 $datas = Db::getInstance()->getRow('
-					SELECT product_shop.`date_add`
-					FROM `' . _DB_PREFIX_ . 'product` p
+					SELECT product_shop.' . Db::quoteIdentifier('date_add') . '
+					FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
 					' . Shop::addSqlAssociation('product', 'p') . '
-					WHERE p.`id_product` = ' . (int) $product->id, false);
+					WHERE p.' . Db::quoteIdentifier('id_product') . ' = ' . (int) $product->id, false);
                 $product->date_add = pSQL($datas['date_add']);
                 $res = ($validateOnly || $product->update());
             }
@@ -2222,10 +2222,10 @@ class AdminImportControllerCore extends AdminController
             $product = new Product((int) $info['id_product'], false, $default_language);
         } elseif (Tools::getValue('match_ref') && isset($info['product_reference']) && $info['product_reference']) {
             $datas = Db::getInstance()->getRow('
-				SELECT p.`id_product`
-				FROM `' . _DB_PREFIX_ . 'product` p
+				SELECT p.' . Db::quoteIdentifier('id_product') . '
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
 				' . Shop::addSqlAssociation('product', 'p') . '
-				WHERE p.`reference` = "' . pSQL($info['product_reference']) . '"
+				WHERE p.' . Db::quoteIdentifier('reference') . ' = \'' . pSQL($info['product_reference']) . '\'
 			', false);
             if (isset($datas['id_product']) && $datas['id_product']) {
                 $product = new Product((int) $datas['id_product'], false, $default_language);
@@ -3775,18 +3775,23 @@ class AdminImportControllerCore extends AdminController
         switch ((int) $case) {
             case $this->entities[$this->trans('Categories', [], 'Admin.Global')]:
                 Db::getInstance()->execute('
-					DELETE FROM `' . _DB_PREFIX_ . 'category`
+					DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . '
 					WHERE id_category NOT IN (' . (int) Configuration::get('PS_HOME_CATEGORY') .
                     ', ' . (int) Configuration::get('PS_ROOT_CATEGORY') . ')');
                 Db::getInstance()->execute('
-					DELETE FROM `' . _DB_PREFIX_ . 'category_lang`
+					DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . '
 					WHERE id_category NOT IN (' . (int) Configuration::get('PS_HOME_CATEGORY') .
                     ', ' . (int) Configuration::get('PS_ROOT_CATEGORY') . ')');
                 Db::getInstance()->execute('
-					DELETE FROM `' . _DB_PREFIX_ . 'category_shop`
-					WHERE `id_category` NOT IN (' . (int) Configuration::get('PS_HOME_CATEGORY') .
+					DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_shop') . '
+					WHERE ' . Db::quoteIdentifier('id_category') . ' NOT IN (' . (int) Configuration::get('PS_HOME_CATEGORY') .
                     ', ' . (int) Configuration::get('PS_ROOT_CATEGORY') . ')');
-                Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'category` AUTO_INCREMENT = 3');
+                /* @phpstan-ignore-next-line */
+                if (_DB_TYPE_ == 'pgsql') {
+                    Db::getInstance()->execute('ALTER SEQUENCE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_id_category_seq') . ' RESTART WITH 3');
+                } else {
+                    Db::getInstance()->execute('ALTER TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category') . ' AUTO_INCREMENT = 3');
+                }
                 foreach (scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d)) {
                         unlink(_PS_CAT_IMG_DIR_ . $d);
@@ -3795,39 +3800,45 @@ class AdminImportControllerCore extends AdminController
 
                 break;
             case $this->entities[$this->trans('Products', [], 'Admin.Global')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_shop`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'feature_product`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'category_product`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_tag`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'image`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'image_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'image_shop`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'specific_price`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'specific_price_priority`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_carrier`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'cart_product`');
-                if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \'' . _DB_PREFIX_ . 'favorite_product\' '))) { // check if table exist
-                    Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'favorite_product`');
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_shop'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'feature_product'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_lang'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_tag'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_lang'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'image_shop'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'specific_price_priority'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_carrier'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cart_product'));
+                /* @phpstan-ignore-next-line */
+                if (_DB_TYPE_ == 'pgsql') {
+                    $favoriteProductTableExists = (bool) Db::getInstance()->getValue('SELECT 1 FROM pg_catalog.pg_tables WHERE tablename = \'' . pSQL(_DB_PREFIX_ . 'favorite_product') . '\'');
+                } else {
+                    $favoriteProductTableExists = count(Db::getInstance()->executeS('SHOW TABLES LIKE \'' . _DB_PREFIX_ . 'favorite_product\' ')) > 0;
                 }
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attachment`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_country_tax`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_download`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_group_reduction_cache`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_sale`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_supplier`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock_available`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'stock_mvt`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'customization`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'customization_field`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_shop`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_combination`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_image`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'pack`');
+                if ($favoriteProductTableExists) { // check if table exist
+                    Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'favorite_product'));
+                }
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attachment'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_country_tax'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_download'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_group_reduction_cache'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_sale'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_supplier'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'stock'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'stock_available'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'stock_mvt'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customization_field'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_shop'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_combination'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_image'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_lang'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'pack'));
                 Image::deleteAllImages(_PS_PRODUCT_IMG_DIR_);
                 if (!file_exists(_PS_PRODUCT_IMG_DIR_)) {
                     mkdir(_PS_PRODUCT_IMG_DIR_);
@@ -3835,32 +3846,32 @@ class AdminImportControllerCore extends AdminController
 
                 break;
             case $this->entities[$this->trans('Combinations', [], 'Admin.Global')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute_group`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute_group_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute_group_shop`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'attribute_shop`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_shop`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_combination`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_image`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'product_attribute_lang`');
-                Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'stock_available` WHERE id_product_attribute != 0');
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_lang'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group_lang'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group_shop'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_shop'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_shop'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_combination'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_image'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_lang'));
+                Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'stock_available') . ' WHERE id_product_attribute != 0');
 
                 break;
             case $this->entities[$this->trans('Customers', [], 'Admin.Global')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'customer`');
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'customer'));
 
                 break;
             case $this->entities[$this->trans('Addresses', [], 'Admin.Global')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'address`');
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'address'));
 
                 break;
             case $this->entities[$this->trans('Brands', [], 'Admin.Global')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'manufacturer`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'manufacturer_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'manufacturer_shop`');
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'manufacturer'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'manufacturer_lang'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'manufacturer_shop'));
                 foreach (scandir(_PS_MANU_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d)) {
                         unlink(_PS_MANU_IMG_DIR_ . $d);
@@ -3869,9 +3880,9 @@ class AdminImportControllerCore extends AdminController
 
                 break;
             case $this->entities[$this->trans('Suppliers', [], 'Admin.Global')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'supplier`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'supplier_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'supplier_shop`');
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'supplier'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'supplier_lang'));
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'supplier_shop'));
                 foreach (scandir(_PS_SUPP_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d)) {
                         unlink(_PS_SUPP_IMG_DIR_ . $d);
@@ -3880,7 +3891,7 @@ class AdminImportControllerCore extends AdminController
 
                 break;
             case $this->entities[$this->trans('Alias', [], 'Admin.Shopparameters.Feature')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `' . _DB_PREFIX_ . 'alias`');
+                Db::getInstance()->execute('TRUNCATE TABLE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'alias'));
 
                 break;
         }
@@ -4097,15 +4108,25 @@ class AdminImportControllerCore extends AdminController
     {
         if ($this->access('edit')) {
             $match = implode('|', Tools::getValue('type_value'));
-            Db::getInstance()->execute('INSERT IGNORE INTO  `' . _DB_PREFIX_ . 'import_match` (
-										`id_import_match` ,
-										`name` ,
-										`match`,
-										`skip`
+            /* @phpstan-ignore-next-line */
+            if (_DB_TYPE_ == 'pgsql') {
+                $insertKeyword = 'INSERT INTO';
+                $idColumn = '';
+                $idValue = '';
+            } else {
+                $insertKeyword = 'INSERT IGNORE INTO';
+                $idColumn = Db::quoteIdentifier('id_import_match') . ' ,
+										';
+                $idValue = 'NULL ,
+										';
+            }
+            Db::getInstance()->execute($insertKeyword . '  ' . Db::quoteIdentifier(_DB_PREFIX_ . 'import_match') . ' (
+										' . $idColumn . Db::quoteIdentifier('name') . ' ,
+										' . Db::quoteIdentifier('match') . ',
+										' . Db::quoteIdentifier('skip') . '
 										)
 										VALUES (
-										NULL ,
-										\'' . pSQL(Tools::getValue('newImportMatchs')) . '\',
+										' . $idValue . '\'' . pSQL(Tools::getValue('newImportMatchs')) . '\',
 										\'' . pSQL($match) . '\',
 										\'' . pSQL(Tools::getValue('skip')) . '\'
 										)', false);
@@ -4117,7 +4138,7 @@ class AdminImportControllerCore extends AdminController
     public function ajaxProcessLoadImportMatchs()
     {
         if ($this->access('edit')) {
-            $return = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'import_match` WHERE `id_import_match` = '
+            $return = Db::getInstance()->executeS('SELECT * FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'import_match') . ' WHERE ' . Db::quoteIdentifier('id_import_match') . ' = '
                 . (int) Tools::getValue('idImportMatchs'), true, false);
             die('{"id" : "' . $return[0]['id_import_match'] . '", "matchs" : "' . $return[0]['match'] . '", "skip" : "'
                 . $return[0]['skip'] . '"}');
@@ -4127,7 +4148,7 @@ class AdminImportControllerCore extends AdminController
     public function ajaxProcessDeleteImportMatchs()
     {
         if ($this->access('edit')) {
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'import_match` WHERE `id_import_match` = '
+            Db::getInstance()->execute('DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'import_match') . ' WHERE ' . Db::quoteIdentifier('id_import_match') . ' = '
                 . (int) Tools::getValue('idImportMatchs'), false);
             die('1');
         }

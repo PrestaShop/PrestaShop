@@ -164,11 +164,11 @@ abstract class AbstractDeleteCategoryHandler
     private function findProductIdsWithoutCategories(): array
     {
         $results = Db::getInstance()->executeS('
-			SELECT p.`id_product`
-			FROM `' . _DB_PREFIX_ . 'product` p
+			SELECT p.id_product
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
 			' . Shop::addSqlAssociation('product', 'p') . '
 			WHERE NOT EXISTS (
-			    SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`
+			    SELECT 1 FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp WHERE cp.id_product = p.id_product
 			)
 		');
 
@@ -183,8 +183,8 @@ abstract class AbstractDeleteCategoryHandler
     private function findProductIdsByDefaultCategories(array $defaultCategoryIds): array
     {
         $results = Db::getInstance()->executeS('
-			SELECT p.`id_product`
-			FROM `' . _DB_PREFIX_ . 'product` p
+			SELECT p.id_product
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product') . ' p
 			' . Shop::addSqlAssociation('product', 'p') . '
 			WHERE p.id_category_default IN (' . implode(',', array_map('intval', $defaultCategoryIds)) . ')
 		');

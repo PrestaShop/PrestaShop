@@ -91,7 +91,7 @@ class ModuleRepository extends AbstractObjectModelRepository
         $activeModules = [];
         try {
             $modulesData = Db::getInstance()->executeS(
-                'SELECT m.* FROM `' . _DB_PREFIX_ . 'module` m WHERE m.`active` = 1'
+                'SELECT m.* FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' m WHERE m.active = 1'
             );
 
             if (is_array($modulesData)) {
@@ -145,7 +145,7 @@ class ModuleRepository extends AbstractObjectModelRepository
         $installedModules = [];
         try {
             $modulesData = Db::getInstance()->executeS(
-                'SELECT m.* FROM `' . _DB_PREFIX_ . 'module` m'
+                'SELECT m.* FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'module') . ' m'
             );
 
             if (is_array($modulesData)) {

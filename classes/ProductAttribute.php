@@ -124,7 +124,7 @@ class ProductAttributeCore extends ObjectModel
     /**
      * Adds current ProductAttribute as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set `date_upd` and `date_add` column
+     * @param bool $autoDate Automatically set date_upd and date_add column
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Whether the ProductAttribute has been successfully added
@@ -162,18 +162,18 @@ class ProductAttributeCore extends ObjectModel
         }
 
         return Db::getInstance()->executeS('
-			SELECT DISTINCT ag.*, agl.*, a.`id_attribute`, al.`name`, agl.`name` AS `attribute_group`
-			FROM `' . _DB_PREFIX_ . 'attribute_group` ag
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl
-				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $idLang . ')
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a
-				ON a.`id_attribute_group` = ag.`id_attribute_group`
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al
-				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $idLang . ')
+			SELECT DISTINCT ag.*, agl.*, a.id_attribute, al.name, agl.name AS attribute_group
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group') . ' ag
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group_lang') . ' agl
+				ON (ag.id_attribute_group = agl.id_attribute_group AND agl.id_lang = ' . (int) $idLang . ')
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . ' a
+				ON a.id_attribute_group = ag.id_attribute_group
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_lang') . ' al
+				ON (a.id_attribute = al.id_attribute AND al.id_lang = ' . (int) $idLang . ')
 			' . Shop::addSqlAssociation('attribute_group', 'ag') . '
 			' . Shop::addSqlAssociation('attribute', 'a') . '
-			' . ($notNull ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL AND agl.`id_attribute_group` IS NOT NULL' : '') . '
-			ORDER BY agl.`name` ASC, a.`position` ASC
+			' . ($notNull ? 'WHERE a.id_attribute IS NOT NULL AND al.name IS NOT NULL AND agl.id_attribute_group IS NOT NULL' : '') . '
+			ORDER BY agl.name ASC, a.position ASC
 		');
     }
 
@@ -194,17 +194,17 @@ class ProductAttributeCore extends ObjectModel
 
         $result = Db::getInstance()->getValue('
 			SELECT COUNT(*)
-			FROM `' . _DB_PREFIX_ . 'attribute_group` ag
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl
-				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $idLang . ')
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a
-				ON a.`id_attribute_group` = ag.`id_attribute_group`
-			LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al
-				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $idLang . ')
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group') . ' ag
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group_lang') . ' agl
+				ON (ag.id_attribute_group = agl.id_attribute_group AND agl.id_lang = ' . (int) $idLang . ')
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . ' a
+				ON a.id_attribute_group = ag.id_attribute_group
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_lang') . ' al
+				ON (a.id_attribute = al.id_attribute AND al.id_lang = ' . (int) $idLang . ')
 			' . Shop::addSqlAssociation('attribute_group', 'ag') . '
 			' . Shop::addSqlAssociation('attribute', 'a') . '
-			WHERE al.`name` = \'' . pSQL($name) . '\' AND ag.`id_attribute_group` = ' . (int) $idAttributeGroup . '
-			ORDER BY agl.`name` ASC, a.`position` ASC
+			WHERE al.name = \'' . pSQL($name) . '\' AND ag.id_attribute_group = ' . (int) $idAttributeGroup . '
+			ORDER BY agl.name ASC, a.position ASC
 		');
 
         return (int) $result > 0;
@@ -256,12 +256,12 @@ class ProductAttributeCore extends ObjectModel
     public function isColorAttribute()
     {
         if (!Db::getInstance()->getRow('
-			SELECT `group_type`
-			FROM `' . _DB_PREFIX_ . 'attribute_group`
-			WHERE `id_attribute_group` = (
-				SELECT `id_attribute_group`
-				FROM `' . _DB_PREFIX_ . 'attribute`
-				WHERE `id_attribute` = ' . (int) $this->id . ')
+			SELECT group_type
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute_group') . '
+			WHERE id_attribute_group = (
+				SELECT id_attribute_group
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . '
+				WHERE id_attribute = ' . (int) $this->id . ')
 			AND group_type = \'color\'')) {
             return false;
         }
@@ -280,10 +280,10 @@ class ProductAttributeCore extends ObjectModel
     {
         $minimalQuantity = Db::getInstance()->getValue(
             '
-			SELECT `minimal_quantity`
-			FROM `' . _DB_PREFIX_ . 'product_attribute_shop` pas
-			WHERE `id_shop` = ' . (int) Context::getContext()->shop->id . '
-			AND `id_product_attribute` = ' . (int) $idProductAttribute
+			SELECT minimal_quantity
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_attribute_shop') . ' pas
+			WHERE id_shop = ' . (int) Context::getContext()->shop->id . '
+			AND id_product_attribute = ' . (int) $idProductAttribute
         );
 
         if ($minimalQuantity > 1) {
@@ -308,10 +308,10 @@ class ProductAttributeCore extends ObjectModel
         }
 
         $sql = '
-			SELECT a.`id_attribute`, a.`position`, a.`id_attribute_group`
-			FROM `' . _DB_PREFIX_ . 'attribute` a
-			WHERE a.`id_attribute_group` = ' . (int) $idAttributeGroup . '
-			ORDER BY a.`position` ASC';
+			SELECT a.id_attribute, a.position, a.id_attribute_group
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . ' a
+			WHERE a.id_attribute_group = ' . (int) $idAttributeGroup . '
+			ORDER BY a.position ASC';
 
         if (!$res = Db::getInstance()->executeS($sql)) {
             return false;
@@ -332,21 +332,21 @@ class ProductAttributeCore extends ObjectModel
 
         $res1 = Db::getInstance()->execute(
             '
-			UPDATE `' . _DB_PREFIX_ . 'attribute`
-			SET `position`= `position` ' . ($direction ? '- 1' : '+ 1') . '
-			WHERE `position`
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . '
+			SET position= position ' . ($direction ? '- 1' : '+ 1') . '
+			WHERE position
 			' . ($direction
-                ? '> ' . (int) $movedAttribute['position'] . ' AND `position` <= ' . (int) $position
-                : '< ' . (int) $movedAttribute['position'] . ' AND `position` >= ' . (int) $position) . '
-			AND `id_attribute_group`=' . (int) $movedAttribute['id_attribute_group']
+                ? '> ' . (int) $movedAttribute['position'] . ' AND position <= ' . (int) $position
+                : '< ' . (int) $movedAttribute['position'] . ' AND position >= ' . (int) $position) . '
+			AND id_attribute_group=' . (int) $movedAttribute['id_attribute_group']
         );
 
         $res2 = Db::getInstance()->execute(
             '
-			UPDATE `' . _DB_PREFIX_ . 'attribute`
-			SET `position` = ' . (int) $position . '
-			WHERE `id_attribute` = ' . (int) $movedAttribute['id_attribute'] . '
-			AND `id_attribute_group`=' . (int) $movedAttribute['id_attribute_group']
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . '
+			SET position = ' . (int) $position . '
+			WHERE id_attribute = ' . (int) $movedAttribute['id_attribute'] . '
+			AND id_attribute_group=' . (int) $movedAttribute['id_attribute_group']
         );
 
         return $res1 && $res2;
@@ -363,14 +363,31 @@ class ProductAttributeCore extends ObjectModel
      */
     public function cleanPositions($idAttributeGroup, $useLastAttribute = true)
     {
-        Db::getInstance()->execute('SET @i = -1', false);
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'attribute` SET `position` = @i:=@i+1 WHERE';
-
+        $filter = '';
         if ($useLastAttribute) {
-            $sql .= ' `id_attribute` != ' . (int) $this->id . ' AND';
+            $filter .= ' id_attribute != ' . (int) $this->id . ' AND';
+        }
+        $filter .= ' id_attribute_group = ' . (int) $idAttributeGroup;
+
+        // PostgreSQL has no session variables (MySQL's @i trick); renumber via a window
+        // function instead, joined back on the primary key.
+        /* @phpstan-ignore-next-line */
+        if (_DB_TYPE_ == 'pgsql') {
+            $sql = '
+                UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . ' AS target
+                SET position = renumbered.new_position
+                FROM (
+                    SELECT id_attribute, ROW_NUMBER() OVER (ORDER BY position ASC) - 1 AS new_position
+                    FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . '
+                    WHERE' . $filter . '
+                ) AS renumbered
+                WHERE target.id_attribute = renumbered.id_attribute';
+
+            return Db::getInstance()->execute($sql);
         }
 
-        $sql .= ' `id_attribute_group` = ' . (int) $idAttributeGroup . ' ORDER BY `position` ASC';
+        Db::getInstance()->execute('SET @i = -1', false);
+        $sql = 'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . ' SET position = @i:=@i+1 WHERE' . $filter . ' ORDER BY position ASC';
 
         return Db::getInstance()->execute($sql);
     }
@@ -403,8 +420,8 @@ class ProductAttributeCore extends ObjectModel
      */
     public static function getHighestPosition(int $idAttributeGroup): int
     {
-        $sql = 'SELECT MAX(`position`)
-                FROM `' . _DB_PREFIX_ . 'attribute`
+        $sql = 'SELECT MAX(position)
+                FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'attribute') . '
                 WHERE id_attribute_group = ' . (int) $idAttributeGroup;
 
         $position = Db::getInstance()->getValue($sql);

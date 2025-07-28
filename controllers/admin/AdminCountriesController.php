@@ -122,8 +122,8 @@ class AdminCountriesControllerCore extends AdminController
 
     public function renderList()
     {
-        $this->_select = 'z.`name` AS zone';
-        $this->_join = 'LEFT JOIN `' . _DB_PREFIX_ . 'zone` z ON (z.`id_zone` = a.`id_zone`)';
+        $this->_select = 'z.name AS zone';
+        $this->_join = 'LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'zone') . ' z ON (z.id_zone = a.id_zone)';
         $this->_use_found_rows = false;
 
         $this->tpl_list_vars['zones'] = Zone::getZones();
@@ -360,7 +360,7 @@ class AdminCountriesControllerCore extends AdminController
         $country = $this->loadObject();
         if (Validate::isLoadedObject($country) && Tools::getValue('id_zone')) {
             $old_id_zone = $country->id_zone;
-            $results = Db::getInstance()->executeS('SELECT `id_state` FROM `' . _DB_PREFIX_ . 'state` WHERE `id_country` = ' . (int) $country->id . ' AND `id_zone` = ' . (int) $old_id_zone);
+            $results = Db::getInstance()->executeS('SELECT id_state FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'state') . ' WHERE id_country = ' . (int) $country->id . ' AND id_zone = ' . (int) $old_id_zone);
 
             if ($results && count($results)) {
                 $ids = [];
@@ -370,9 +370,9 @@ class AdminCountriesControllerCore extends AdminController
 
                 if (count($ids)) {
                     $res = Db::getInstance()->execute(
-                        'UPDATE `' . _DB_PREFIX_ . 'state`
-							SET `id_zone` = ' . (int) Tools::getValue('id_zone') . '
-							WHERE `id_state` IN (' . implode(',', $ids) . ')'
+                        'UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'state') . '
+							SET id_zone = ' . (int) Tools::getValue('id_zone') . '
+							WHERE id_state IN (' . implode(',', $ids) . ')'
                     );
                 }
             }

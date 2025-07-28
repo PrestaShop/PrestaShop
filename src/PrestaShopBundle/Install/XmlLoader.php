@@ -58,6 +58,11 @@ class XmlLoader
     protected $delayed_inserts = [];
 
     /**
+     * @var array<string, array<string, string>> Cache of table_name => (column_name => column_type), unfiltered
+     */
+    private $rawColumnsCache = [];
+
+    /**
      * @var FileLoader
      */
     private $fileLoader;
@@ -478,11 +483,14 @@ class XmlLoader
     {
         foreach ($this->delayed_inserts as $entity => $queries) {
             $type = Db::INSERT_IGNORE;
+            $conflictColumns = [];
             if ($entity == 'access') {
                 $type = Db::REPLACE;
+                // Matches PREFIX_access's primary key (id_profile, id_authorization_role).
+                $conflictColumns = ['id_profile', 'id_authorization_role'];
             }
 
-            if (!Db::getInstance()->insert($entity, $queries, false, true, $type)) {
+            if (!Db::getInstance()->insert($entity, $queries, false, true, $type, true, $conflictColumns)) {
                 $this->setError($this->translator->trans('An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>', ['%entity%' => $entity, '%message%' => Db::getInstance()->getMsgError()], 'Install'));
             }
             unset($this->delayed_inserts[$entity]);
@@ -529,6 +537,16 @@ class XmlLoader
                 $data[$primary] = $entity_id;
             }
 
+            // MySQL's non-strict mode silently defaults omitted NOT NULL date_add/date_upd
+            // columns; PostgreSQL has no such leniency, so fill them in explicitly here when
+            // the table has them and the XML data doesn't already provide a value.
+            $now = date('Y-m-d H:i:s');
+            foreach (['date_add', 'date_upd'] as $dateColumn) {
+                if (!isset($data[$dateColumn]) && $this->hasColumn($entity, $dateColumn)) {
+                    $data[$dateColumn] = $now;
+                }
+            }
+
             // Store INSERT queries in order to optimize install with grouped inserts
             $this->delayed_inserts[$entity][] = array_map('pSQL', $data);
             if ($data_lang) {
@@ -566,13 +584,23 @@ class XmlLoader
 
     public function createEntityConfiguration($identifier, array $data, array $data_lang)
     {
-        if (Db::getInstance()->getValue('SELECT id_configuration FROM ' . _DB_PREFIX_ . 'configuration WHERE name = \'' . pSQL($data['name']) . '\'')) {
+        if (Db::getInstance()->getValue('SELECT id_configuration FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'configuration') . ' WHERE name = \'' . pSQL($data['name']) . '\'')) {
             return;
         }
 
         $entity = 'configuration';
         $entity_id = $this->generatePrimary($entity, 'id_configuration');
         $data['id_configuration'] = $entity_id;
+
+        // MySQL's non-strict mode silently defaults omitted NOT NULL date_add/date_upd
+        // columns; PostgreSQL has no such leniency, so fill them in explicitly here when
+        // the table has them and the XML data doesn't already provide a value.
+        $now = date('Y-m-d H:i:s');
+        foreach (['date_add', 'date_upd'] as $dateColumn) {
+            if (!isset($data[$dateColumn]) && $this->hasColumn($entity, $dateColumn)) {
+                $data[$dateColumn] = $now;
+            }
+        }
 
         // Store INSERT queries in order to optimize install with grouped inserts
         $this->delayed_inserts[$entity][] = array_map('pSQL', $data);
@@ -681,6 +709,16 @@ class XmlLoader
             $entity_id = 0;
         }
 
+        // MySQL's non-strict mode silently defaults omitted NOT NULL date_add/date_upd
+        // columns; PostgreSQL has no such leniency, so fill them in explicitly here when
+        // the table has them and the XML data doesn't already provide a value.
+        $now = date('Y-m-d H:i:s');
+        foreach (['date_add', 'date_upd'] as $dateColumn) {
+            if (!isset($data[$dateColumn]) && $this->hasColumn($entity, $dateColumn)) {
+                $data[$dateColumn] = $now;
+            }
+        }
+
         // Make sure data are correctly ordered because some attributes are optional
         // and Db::insert needs to have all data keys in the same order when using multiple insert
         ksort($data);
@@ -711,7 +749,7 @@ class XmlLoader
             $entity = Db::getInstance()->escape($entity, false, true);
             $primary = Db::getInstance()->escape($primary, false, true);
             $this->primaries[$entity] = (int) Db::getInstance()->getValue(
-                'SELECT ' . $primary . ' FROM `' . _DB_PREFIX_ . $entity . '` ORDER BY `' . $primary . '` DESC'
+                'SELECT ' . $primary . ' FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $entity) . ' ORDER BY ' . Db::quoteIdentifier($primary) . ' DESC'
             );
         }
 
@@ -931,10 +969,21 @@ class XmlLoader
 
         if (null === $tables) {
             $tables = [];
-            foreach (Db::getInstance()->executeS('SHOW TABLES') as $row) {
+            /* @phpstan-ignore-next-line */
+            if (_DB_TYPE_ == 'pgsql') {
+                $sql = 'SELECT tablename AS "Tables_in_db" FROM pg_catalog.pg_tables WHERE schemaname = \'public\'';
+            } else {
+                $sql = 'SHOW TABLES';
+            }
+            foreach (Db::getInstance()->executeS($sql) as $row) {
                 $table = current($row);
                 if (preg_match('#^' . _DB_PREFIX_ . '(.+?)(_lang)?$#i', $table, $m)) {
-                    $tables[$m[1]] = (isset($m[2]) && $m[2]) ? true : false;
+                    // MySQL's SHOW TABLES happens to return rows alphabetically, so the base
+                    // table is always processed before its _lang counterpart; PostgreSQL's
+                    // pg_catalog.pg_tables has no such guarantee. Only ever flip false -> true
+                    // here so the result doesn't depend on row order.
+                    $isLangTable = isset($m[2]) && $m[2];
+                    $tables[$m[1]] = ($tables[$m[1]] ?? false) || $isLangTable;
                 }
             }
         }
@@ -946,20 +995,27 @@ class XmlLoader
     {
         $table = Db::getInstance()->escape($table, false, true);
 
-        return (bool) Db::getInstance()->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . $table . '`');
+        return (bool) Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . $table));
     }
 
     public function getColumns($table, $multilang = false, array $exclude = [])
     {
-        static $columns = [];
-
         if ($multilang) {
             return ($this->isMultilang($table)) ? $this->getColumns($table . '_lang', false, ['id_' . $table]) : [];
         }
 
+        $columns = &$this->rawColumnsCache;
         if (!isset($columns[$table])) {
             $columns[$table] = [];
-            $sql = 'SHOW COLUMNS FROM `' . _DB_PREFIX_ . bqSQL($table) . '`';
+            /* @phpstan-ignore-next-line */
+            if (_DB_TYPE_ == 'pgsql') {
+                $sql = 'SELECT column_name AS "Field",
+                    CASE WHEN data_type = \'character varying\' THEN \'varchar(\' || character_maximum_length || \')\' ELSE data_type END AS "Type"
+                    FROM information_schema.columns
+                    WHERE table_name = \'' . pSQL(_DB_PREFIX_ . $table) . '\'';
+            } else {
+                $sql = 'SHOW COLUMNS FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . bqSQL($table));
+            }
             foreach (Db::getInstance()->executeS($sql) as $row) {
                 $columns[$table][$row['Field']] = $this->checkIfTypeIsText($row['Type']);
             }
@@ -975,6 +1031,16 @@ class XmlLoader
         }
 
         return $list;
+    }
+
+    /**
+     * Checks whether a table has a given column, regardless of the exclusions applied by getColumns().
+     */
+    public function hasColumn($table, $columnName)
+    {
+        $this->getColumns($table);
+
+        return isset($this->rawColumnsCache[$table][$columnName]);
     }
 
     public function getClasses($path = null)
@@ -1336,9 +1402,9 @@ class XmlLoader
                     foreach ($xml->fields->field as $field) {
                         $column = (string) $field['name'];
                         if (isset($field['relation'])) {
-                            $sql = 'SELECT `id_' . bqSQL($field['relation']) . '`
-									FROM `' . bqSQL(_DB_PREFIX_ . $field['relation']) . '`
-									WHERE `id_' . bqSQL($field['relation']) . '` = ' . (int) $row[$column];
+                            $sql = 'SELECT ' . Db::quoteIdentifier('id_' . bqSQL($field['relation'])) . '
+									FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . bqSQL($field['relation'])) . '
+									WHERE ' . Db::quoteIdentifier('id_' . bqSQL($field['relation'])) . ' = ' . (int) $row[$column];
                             $node[$column] = $this->generateId((string) $field['relation'], Db::getInstance()->getValue($sql));
 
                             // A little trick to allow storage of some hard values, like '-1' for tab.id_parent

@@ -38,9 +38,9 @@ class GroupReductionCore extends ObjectModel
     {
         $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-			SELECT cp.`id_product`
-			FROM `' . _DB_PREFIX_ . 'category_product` cp
-			WHERE cp.`id_category` = ' . (int) $this->id_category
+			SELECT cp.id_product
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp
+			WHERE cp.id_category = ' . (int) $this->id_category
         );
 
         $ids = array_column($products, 'id_product');
@@ -61,9 +61,9 @@ class GroupReductionCore extends ObjectModel
     {
         $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-			SELECT cp.`id_product`
-			FROM `' . _DB_PREFIX_ . 'category_product` cp
-			WHERE cp.`id_category` = ' . (int) $this->id_category
+			SELECT cp.id_product
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp
+			WHERE cp.id_category = ' . (int) $this->id_category
         );
 
         $values = [];
@@ -72,9 +72,18 @@ class GroupReductionCore extends ObjectModel
         }
 
         if (count($values)) {
-            $query = 'INSERT INTO `' . _DB_PREFIX_ . 'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`)
-			VALUES ' . implode(', ', $values) . ' ON DUPLICATE KEY UPDATE
-			`reduction` = IF(VALUES(`reduction`) > `reduction`, VALUES(`reduction`), `reduction`)';
+            /* @phpstan-ignore-next-line */
+            if (_DB_TYPE_ == 'pgsql') {
+                $query = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_group_reduction_cache') . ' (id_product, id_group, reduction)
+				VALUES ' . implode(', ', $values) . ' ON CONFLICT (id_product, id_group) DO UPDATE SET
+				reduction = GREATEST(EXCLUDED.reduction, reduction)';
+
+                return Db::getInstance()->execute($query);
+            }
+
+            $query = 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_group_reduction_cache') . ' (id_product, id_group, reduction)
+				VALUES ' . implode(', ', $values) . ' ON DUPLICATE KEY UPDATE
+				reduction = IF(VALUES(reduction) > reduction, VALUES(reduction), reduction)';
 
             return Db::getInstance()->execute($query);
         }
@@ -86,9 +95,9 @@ class GroupReductionCore extends ObjectModel
     {
         $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-			SELECT cp.`id_product`
-			FROM `' . _DB_PREFIX_ . 'category_product` cp
-			WHERE cp.`id_category` = ' . (int) $this->id_category
+			SELECT cp.id_product
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_product') . ' cp
+			WHERE cp.id_category = ' . (int) $this->id_category
         );
 
         $ids = array_column($products, 'id_product');
@@ -109,10 +118,10 @@ class GroupReductionCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-			SELECT gr.`id_group_reduction`, gr.`id_group`, gr.`id_category`, gr.`reduction`, cl.`name` AS category_name
-			FROM `' . _DB_PREFIX_ . 'group_reduction` gr
-			LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (cl.`id_category` = gr.`id_category` AND cl.`id_lang` = ' . (int) $lang . ')
-			WHERE `id_group` = ' . (int) $id_group
+			SELECT gr.id_group_reduction, gr.id_group, gr.id_category, gr.reduction, cl.name AS category_name
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group_reduction') . ' gr
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'category_lang') . ' cl ON (cl.id_category = gr.id_category AND cl.id_lang = ' . (int) $lang . ')
+			WHERE id_group = ' . (int) $id_group
         );
     }
 
@@ -124,9 +133,9 @@ class GroupReductionCore extends ObjectModel
 
         if (!isset(self::$reduction_cache[$id_product . '-' . $id_group])) {
             self::$reduction_cache[$id_product . '-' . $id_group] = Db::getInstance()->getValue('
-			SELECT `reduction`
-			FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache`
-			WHERE `id_product` = ' . (int) $id_product . ' AND `id_group` = ' . (int) $id_group);
+			SELECT reduction
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_group_reduction_cache') . '
+			WHERE id_product = ' . (int) $id_product . ' AND id_group = ' . (int) $id_group);
         }
 
         // Should return string (decimal in database) and not a float
@@ -136,18 +145,18 @@ class GroupReductionCore extends ObjectModel
     public static function doesExist($id_group, $id_category)
     {
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `id_group`
-		FROM `' . _DB_PREFIX_ . 'group_reduction`
-		WHERE `id_group` = ' . (int) $id_group . ' AND `id_category` = ' . (int) $id_category);
+		SELECT id_group
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group_reduction') . '
+		WHERE id_group = ' . (int) $id_group . ' AND id_category = ' . (int) $id_category);
     }
 
     public static function getGroupsByCategoryId($id_category)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-			SELECT gr.`id_group` as id_group, gr.`reduction` as reduction, id_group_reduction
-			FROM `' . _DB_PREFIX_ . 'group_reduction` gr
-			WHERE `id_category` = ' . (int) $id_category
+			SELECT gr.id_group as id_group, gr.reduction as reduction, id_group_reduction
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group_reduction') . ' gr
+			WHERE id_category = ' . (int) $id_category
         );
     }
 
@@ -155,9 +164,9 @@ class GroupReductionCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-			SELECT gr.`id_group_reduction` as id_group_reduction, id_group
-			FROM `' . _DB_PREFIX_ . 'group_reduction` gr
-			WHERE `id_category` = ' . (int) $id_category
+			SELECT gr.id_group_reduction as id_group_reduction, id_group
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group_reduction') . ' gr
+			WHERE id_category = ' . (int) $id_category
         );
     }
 
@@ -184,7 +193,7 @@ class GroupReductionCore extends ObjectModel
 
     public static function deleteProductReduction($id_product)
     {
-        $query = 'DELETE FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache` WHERE `id_product` = ' . (int) $id_product;
+        $query = 'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_group_reduction_cache') . ' WHERE id_product = ' . (int) $id_product;
 
         return Db::getInstance()->execute($query);
     }
@@ -193,9 +202,9 @@ class GroupReductionCore extends ObjectModel
     {
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-			SELECT pgr.`id_product`, pgr.`id_group`, pgr.`reduction`
-			FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache` pgr
-			WHERE pgr.`id_product` = ' . (int) $id_product_old
+			SELECT pgr.id_product, pgr.id_group, pgr.reduction
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_group_reduction_cache') . ' pgr
+			WHERE pgr.id_product = ' . (int) $id_product_old
         );
 
         if (!$res) {
@@ -204,9 +213,14 @@ class GroupReductionCore extends ObjectModel
 
         $query = '';
 
+        /* @phpstan-ignore-next-line */
+        $onConflict = _DB_TYPE_ == 'pgsql'
+            ? ' ON CONFLICT (id_product, id_group) DO UPDATE SET reduction = '
+            : ' ON DUPLICATE KEY UPDATE reduction = ';
+
         foreach ($res as $row) {
-            $query .= 'INSERT INTO `' . _DB_PREFIX_ . 'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`) VALUES ';
-            $query .= '(' . (int) $id_product . ', ' . (int) $row['id_group'] . ', ' . (float) $row['reduction'] . ') ON DUPLICATE KEY UPDATE `reduction` = ' . (float) $row['reduction'] . ';';
+            $query .= 'INSERT INTO ' . Db::quoteIdentifier(_DB_PREFIX_ . 'product_group_reduction_cache') . ' (id_product, id_group, reduction) VALUES ';
+            $query .= '(' . (int) $id_product . ', ' . (int) $row['id_group'] . ', ' . (float) $row['reduction'] . ')' . $onConflict . (float) $row['reduction'] . ';';
         }
 
         return Db::getInstance()->execute($query);
@@ -214,7 +228,7 @@ class GroupReductionCore extends ObjectModel
 
     public static function deleteCategory($id_category)
     {
-        $query = 'DELETE FROM `' . _DB_PREFIX_ . 'group_reduction` WHERE `id_category` = ' . (int) $id_category;
+        $query = 'DELETE FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'group_reduction') . ' WHERE id_category = ' . (int) $id_category;
 
         return Db::getInstance()->execute($query);
     }

@@ -51,11 +51,11 @@ final class CustomerViewedProductQueryBuilder extends AbstractDoctrineQueryBuild
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb->select('
-            cp.`date_add`,
-            cp.`id_product`,
-            cp.`id_cart`,
-            cp.`id_shop`,
-            pl.`name` as product_name
+            cp.date_add,
+            cp.id_product,
+            cp.id_cart,
+            cp.id_shop,
+            pl.name as product_name
        ');
 
         $this->searchCriteriaApplicator
@@ -71,7 +71,7 @@ final class CustomerViewedProductQueryBuilder extends AbstractDoctrineQueryBuild
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         return $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(cp.`id_product`)');
+            ->select('COUNT(cp.id_product)');
     }
 
     /**
@@ -86,21 +86,21 @@ final class CustomerViewedProductQueryBuilder extends AbstractDoctrineQueryBuild
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'cart_product', 'cp')
-            ->where('c.`id_customer` != 0')
-            ->where('cp.`id_cart` NOT IN (SELECT `id_cart` FROM ' . $this->dbPrefix . 'orders)')
+            ->where('c.id_customer != 0')
+            ->where('cp.id_cart NOT IN (SELECT id_cart FROM ' . $this->dbPrefix . 'orders)')
         ;
 
         $qb->innerJoin(
             'cp',
             $this->dbPrefix . 'cart',
             'c',
-            'cp.`id_cart` = c.`id_cart`'
+            'cp.id_cart = c.id_cart'
         );
         $qb->innerJoin(
             'cp',
             $this->dbPrefix . 'product_lang',
             'pl',
-            'cp.`id_product` = pl.`id_product` AND pl.`id_lang` = :langId'
+            'cp.id_product = pl.id_product AND pl.id_lang = :langId'
         )->setParameter('langId', $this->contextLanguageId);
 
         $this->applyFilters($qb, $filters);
@@ -126,7 +126,7 @@ final class CustomerViewedProductQueryBuilder extends AbstractDoctrineQueryBuild
             }
 
             if ('id_customer' === $filterName) {
-                $qb->andWhere('c.`id_customer` = :' . $filterName);
+                $qb->andWhere('c.id_customer = :' . $filterName);
                 $qb->setParameter($filterName, $value);
             }
         }

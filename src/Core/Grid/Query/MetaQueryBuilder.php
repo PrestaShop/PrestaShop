@@ -57,7 +57,7 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('m.`id_meta`, m.`page`, l.`title`, l.`url_rewrite`');
+        $qb->select('m.id_meta, m.page, l.title, l.url_rewrite');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -72,7 +72,7 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(m.`id_meta`)');
+        $qb->select('COUNT(m.id_meta)');
 
         return $qb;
     }
@@ -100,18 +100,18 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
                 'm',
                 $this->dbPrefix . 'meta_lang',
                 'l',
-                'm.`id_meta` = l.`id_meta`'
+                'm.id_meta = l.id_meta'
             );
 
-        $qb->andWhere('l.`id_lang` = :id_lang');
-        $qb->andWhere('l.`id_shop` = :id_shop');
+        $qb->andWhere('l.id_lang = :id_lang');
+        $qb->andWhere('l.id_shop = :id_shop');
 
         $qb->setParameters([
             'id_lang' => $this->contextIdLang,
             'id_shop' => $this->contextIdShop,
         ]);
 
-        $qb->andWhere('m.`configurable`=1');
+        $qb->andWhere('m.configurable=1');
 
         foreach ($filters as $name => $value) {
             if (!in_array($name, $availableFilters, true)) {
@@ -119,20 +119,20 @@ final class MetaQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_meta' === $name) {
-                $qb->andWhere('m.`id_meta` = :' . $name);
+                $qb->andWhere('m.id_meta = :' . $name);
                 $qb->setParameter($name, $value);
 
                 continue;
             }
 
             if ('page' === $name) {
-                $qb->andWhere('m.`page` LIKE :' . $name);
+                $qb->andWhere('m.page LIKE :' . $name);
                 $qb->setParameter($name, '%' . $value . '%');
 
                 continue;
             }
 
-            $qb->andWhere('l.`' . $name . '` LIKE :' . $name);
+            $qb->andWhere('l.' . $this->connection->quoteIdentifier($name) . ' LIKE :' . $name);
             $qb->setParameter($name, '%' . $value . '%');
         }
 

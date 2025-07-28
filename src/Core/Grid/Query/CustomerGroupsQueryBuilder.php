@@ -80,7 +80,7 @@ class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
         $builder = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'group', 'g')
             ->innerJoin('g', $this->dbPrefix . 'group_lang', 'gl', 'g.id_group = gl.id_group')
-            ->andWhere('gl.`id_lang`= :language')
+            ->andWhere('gl.id_lang= :language')
             ->setParameter('language', $this->languageId)
         ;
 

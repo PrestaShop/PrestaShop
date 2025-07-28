@@ -46,7 +46,7 @@ final class TaxQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('t.`id_tax`, tl.`name`, t.`rate`, t.`active`')
+            ->select('t.id_tax, tl.name, t.rate, t.active')
         ;
 
         $this->searchCriteriaApplicator
@@ -63,7 +63,7 @@ final class TaxQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT t.`id_tax`)')
+            ->select('COUNT(DISTINCT t.id_tax)')
         ;
 
         return $qb;
@@ -85,10 +85,10 @@ final class TaxQueryBuilder extends AbstractDoctrineQueryBuilder
                 't',
                 $this->dbPrefix . 'tax_lang',
                 'tl',
-                't.`id_tax` = tl.`id_tax`'
+                't.id_tax = tl.id_tax'
             );
-        $qb->andWhere('tl.`id_lang` = :employee_id_lang');
-        $qb->andWhere('t.`deleted` = 0');
+        $qb->andWhere('tl.id_lang = :employee_id_lang');
+        $qb->andWhere('t.deleted = 0');
 
         $qb->setParameter('employee_id_lang', $this->languageContext->getId());
         $this->applyFilters($qb, $filters);

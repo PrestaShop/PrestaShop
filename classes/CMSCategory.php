@@ -154,35 +154,46 @@ class CMSCategoryCore extends ObjectModel
             $id_lang = Context::getContext()->language->id;
         }
 
-        $sql = 'SELECT c.`id_cms_category`, c.`id_parent`, c.`level_depth`, cl.`name`, cl.`link_rewrite`
-				FROM `' . _DB_PREFIX_ . 'cms_category` c
-				JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON c.`id_cms_category` = cl.`id_cms_category`
-					WHERE c.`id_cms_category` = ' . (int) $current . '
-					AND `id_lang` = ' . (int) $id_lang;
+        $sql = 'SELECT c.id_cms_category, c.id_parent, c.level_depth, cl.name, cl.link_rewrite
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . ' c
+				JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category_lang') . ' cl ON c.id_cms_category = cl.id_cms_category
+					WHERE c.id_cms_category = ' . (int) $current . '
+					AND id_lang = ' . (int) $id_lang;
         /** @var array $category */
         $category = Db::getInstance()->getRow($sql);
 
-        $sql = 'SELECT c.`id_cms_category`
-				FROM `' . _DB_PREFIX_ . 'cms_category` c
+        $sql = 'SELECT c.id_cms_category
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . ' c
 				' . Shop::addSqlAssociation('cms_category', 'c') . '
-				WHERE c.`id_parent` = ' . (int) $current .
-                    ($active ? ' AND c.`active` = 1' : '') .
-        ' ORDER BY c.`position`';
+				WHERE c.id_parent = ' . (int) $current .
+                    ($active ? ' AND c.active = 1' : '') .
+        ' ORDER BY c.position';
 
         $result = Db::getInstance()->executeS($sql);
         foreach ($result as $row) {
             $category['children'][] = CMSCategory::getRecurseCategory($id_lang, $row['id_cms_category'], $active, $links);
         }
 
-        $sql = 'SELECT c.`id_cms`, cl.`meta_title`, cl.`link_rewrite`
-				FROM `' . _DB_PREFIX_ . 'cms` c
+        // PostgreSQL, unlike MySQL, doesn't recognize that cl.meta_title/cl.link_rewrite are
+        // functionally dependent on c.id_cms through the join (MySQL allows non-aggregated
+        // columns from joined tables under GROUP BY; PostgreSQL only allows it for the
+        // grouped table's own columns). DISTINCT ON is PostgreSQL's idiomatic equivalent here.
+        /* @phpstan-ignore-next-line */
+        $dedupeClause = _DB_TYPE_ == 'pgsql' ? 'DISTINCT ON (c.id_cms) ' : '';
+        /* @phpstan-ignore-next-line */
+        $groupByClause = _DB_TYPE_ == 'pgsql' ? '' : 'GROUP BY c.id_cms';
+        /* @phpstan-ignore-next-line */
+        $orderByClause = _DB_TYPE_ == 'pgsql' ? 'ORDER BY c.id_cms, c.position' : 'ORDER BY c.position';
+
+        $sql = 'SELECT ' . $dedupeClause . 'c.id_cms, cl.meta_title, cl.link_rewrite
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms') . ' c
 				' . Shop::addSqlAssociation('cms', 'c') . '
-				JOIN `' . _DB_PREFIX_ . 'cms_lang` cl ON c.`id_cms` = cl.`id_cms`
-				WHERE `id_cms_category` = ' . (int) $current . ($active ? ' AND c.`active` = 1' : '') . '
-				AND cl.`id_shop` = ' . (int) Context::getContext()->shop->id . '
-				AND cl.`id_lang` = ' . (int) $id_lang . '
-				GROUP BY c.id_cms
-				ORDER BY c.`position`';
+				JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_lang') . ' cl ON c.id_cms = cl.id_cms
+				WHERE id_cms_category = ' . (int) $current . ($active ? ' AND c.active = 1' : '') . '
+				AND cl.id_shop = ' . (int) Context::getContext()->shop->id . '
+				AND cl.id_lang = ' . (int) $id_lang . '
+				' . $groupByClause . '
+				' . $orderByClause;
 
         $category['cms'] = Db::getInstance()->executeS($sql);
         if ($links == 1) {
@@ -225,9 +236,9 @@ class CMSCategoryCore extends ObjectModel
         }
 
         $result = Db::getInstance()->executeS('
-		SELECT `id_cms_category`
-		FROM `' . _DB_PREFIX_ . 'cms_category`
-		WHERE `id_parent` = ' . (int) $id_cms_category);
+		SELECT id_cms_category
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . '
+		WHERE id_parent = ' . (int) $id_cms_category);
         foreach ($result as $row) {
             $to_delete[] = (int) $row['id_cms_category'];
             $this->recursiveDelete($to_delete, (int) $row['id_cms_category']);
@@ -321,11 +332,11 @@ class CMSCategoryCore extends ObjectModel
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
-		FROM `' . _DB_PREFIX_ . 'cms_category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON c.`id_cms_category` = cl.`id_cms_category`
-		WHERE `id_lang` = ' . (int) $id_lang . '
-		' . ($active ? 'AND `active` = 1' : '') . '
-		ORDER BY `name` ASC');
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . ' c
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category_lang') . ' cl ON c.id_cms_category = cl.id_cms_category
+		WHERE id_lang = ' . (int) $id_lang . '
+		' . ($active ? 'AND active = 1' : '') . '
+		ORDER BY name ASC');
 
         if (!$order) {
             return $result;
@@ -342,11 +353,11 @@ class CMSCategoryCore extends ObjectModel
     public static function getSimpleCategories($id_lang)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.`id_cms_category`, cl.`name`
-		FROM `' . _DB_PREFIX_ . 'cms_category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category`)
-		WHERE cl.`id_lang` = ' . (int) $id_lang . '
-		ORDER BY cl.`name`');
+		SELECT c.id_cms_category, cl.name
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . ' c
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category_lang') . ' cl ON (c.id_cms_category = cl.id_cms_category)
+		WHERE cl.id_lang = ' . (int) $id_lang . '
+		ORDER BY cl.name');
     }
 
     /**
@@ -359,14 +370,25 @@ class CMSCategoryCore extends ObjectModel
      */
     public function getSubCategories(int $id_lang, bool $active = true)
     {
+        // PostgreSQL, unlike MySQL, doesn't recognize that cl.* are functionally dependent
+        // on c.id_cms_category through the join (MySQL allows non-aggregated columns from
+        // joined tables under GROUP BY; PostgreSQL only allows it for the grouped table's
+        // own columns). DISTINCT ON is PostgreSQL's idiomatic equivalent here.
+        /* @phpstan-ignore-next-line */
+        $dedupeClause = _DB_TYPE_ == 'pgsql' ? 'DISTINCT ON (c.id_cms_category) ' : '';
+        /* @phpstan-ignore-next-line */
+        $groupByClause = _DB_TYPE_ == 'pgsql' ? '' : 'GROUP BY c.id_cms_category';
+        /* @phpstan-ignore-next-line */
+        $orderByClause = _DB_TYPE_ == 'pgsql' ? 'ORDER BY c.id_cms_category, position ASC' : 'ORDER BY position ASC';
+
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_description
-		FROM `' . _DB_PREFIX_ . 'cms_category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = ' . (int) $id_lang . ')
-		WHERE `id_parent` = ' . (int) $this->id . '
-		' . ($active ? 'AND `active` = 1' : '') . '
-		GROUP BY c.`id_cms_category`
-		ORDER BY `position` ASC');
+		SELECT ' . $dedupeClause . 'c.*, cl.id_lang, cl.name, cl.description, cl.link_rewrite, cl.meta_title, cl.meta_description
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . ' c
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category_lang') . ' cl ON (c.id_cms_category = cl.id_cms_category AND id_lang = ' . (int) $id_lang . ')
+		WHERE id_parent = ' . (int) $this->id . '
+		' . ($active ? 'AND active = 1' : '') . '
+		' . $groupByClause . '
+		' . $orderByClause);
 
         // Modify SQL result
         foreach ($result as &$row) {
@@ -404,13 +426,13 @@ class CMSCategoryCore extends ObjectModel
     public static function getChildren($id_parent, $id_lang, bool $active = true)
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.`id_cms_category`, cl.`name`, cl.`link_rewrite`
-		FROM `' . _DB_PREFIX_ . 'cms_category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON c.`id_cms_category` = cl.`id_cms_category`
-		WHERE `id_lang` = ' . (int) $id_lang . '
-		AND c.`id_parent` = ' . (int) $id_parent . '
-		' . ($active ? 'AND `active` = 1' : '') . '
-		ORDER BY `name` ASC');
+		SELECT c.id_cms_category, cl.name, cl.link_rewrite
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . ' c
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category_lang') . ' cl ON c.id_cms_category = cl.id_cms_category
+		WHERE id_lang = ' . (int) $id_lang . '
+		AND c.id_parent = ' . (int) $id_parent . '
+		' . ($active ? 'AND active = 1' : '') . '
+		ORDER BY name ASC');
 
         // Modify SQL result
         $results_array = [];
@@ -464,7 +486,7 @@ class CMSCategoryCore extends ObjectModel
         $i = (int) $id_parent;
 
         while (42) {
-            $result = Db::getInstance()->getRow('SELECT `id_parent` FROM `' . _DB_PREFIX_ . 'cms_category` WHERE `id_cms_category` = ' . (int) $i);
+            $result = Db::getInstance()->getRow('SELECT id_parent FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . ' WHERE id_cms_category = ' . (int) $i);
             if (!isset($result['id_parent'])) {
                 return false;
             }
@@ -489,11 +511,11 @@ class CMSCategoryCore extends ObjectModel
         }
 
         $result = Db::getInstance()->getRow('
-		SELECT cl.`link_rewrite`
-		FROM `' . _DB_PREFIX_ . 'cms_category` c
-		LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON c.`id_cms_category` = cl.`id_cms_category`
-		WHERE `id_lang` = ' . (int) $id_lang . '
-		AND c.`id_cms_category` = ' . (int) $id_cms_category);
+		SELECT cl.link_rewrite
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . ' c
+		LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category_lang') . ' cl ON c.id_cms_category = cl.id_cms_category
+		WHERE id_lang = ' . (int) $id_lang . '
+		AND c.id_cms_category = ' . (int) $id_cms_category);
         self::$_links[$id_cms_category . '-' . $id_lang] = $result['link_rewrite'];
 
         return $result['link_rewrite'];
@@ -536,15 +558,15 @@ class CMSCategoryCore extends ObjectModel
         if ($unrestricted === true) {
             return Db::getInstance()->getRow('
 			SELECT c.*, cl.*
-			FROM `' . _DB_PREFIX_ . 'cms_category` c
-			LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category`)
-			WHERE `name` = \'' . pSQL($query) . '\'');
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . ' c
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category_lang') . ' cl ON (c.id_cms_category = cl.id_cms_category)
+			WHERE name = \'' . pSQL($query) . '\'');
         } else {
             return Db::getInstance()->executeS('
 			SELECT c.*, cl.*
-			FROM `' . _DB_PREFIX_ . 'cms_category` c
-			LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = ' . (int) $id_lang . ')
-			WHERE `name` LIKE \'%' . pSQL($query) . '%\' AND c.`id_cms_category` != 1');
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . ' c
+			LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category_lang') . ' cl ON (c.id_cms_category = cl.id_cms_category AND id_lang = ' . (int) $id_lang . ')
+			WHERE name LIKE \'%' . pSQL($query) . '%\' AND c.id_cms_category != 1');
         }
     }
 
@@ -566,9 +588,9 @@ class CMSCategoryCore extends ObjectModel
         while (true) {
             $query = '
 				SELECT c.*, cl.*
-				FROM `' . _DB_PREFIX_ . 'cms_category` c
-				LEFT JOIN `' . _DB_PREFIX_ . 'cms_category_lang` cl ON (c.`id_cms_category` = cl.`id_cms_category` AND `id_lang` = ' . (int) $id_lang . ')
-				WHERE c.`id_cms_category` = ' . (int) $id_current . ' AND c.`id_parent` != 0
+				FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . ' c
+				LEFT JOIN ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category_lang') . ' cl ON (c.id_cms_category = cl.id_cms_category AND id_lang = ' . (int) $id_lang . ')
+				WHERE c.id_cms_category = ' . (int) $id_current . ' AND c.id_parent != 0
 			';
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
@@ -584,10 +606,10 @@ class CMSCategoryCore extends ObjectModel
     {
         if (!$res = Db::getInstance()->executeS(
             '
-			SELECT cp.`id_cms_category`, cp.`position`, cp.`id_parent`
-			FROM `' . _DB_PREFIX_ . 'cms_category` cp
-			WHERE cp.`id_parent` = ' . (int) $this->id_parent . '
-			ORDER BY cp.`position` ASC'
+			SELECT cp.id_cms_category, cp.position, cp.id_parent
+			FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . ' cp
+			WHERE cp.id_parent = ' . (int) $this->id_parent . '
+			ORDER BY cp.position ASC'
         )) {
             return false;
         }
@@ -604,34 +626,34 @@ class CMSCategoryCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         return Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'cms_category`
-			SET `position`= `position` ' . ($way ? '- 1' : '+ 1') . '
-			WHERE `position`
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . '
+			SET position= position ' . ($way ? '- 1' : '+ 1') . '
+			WHERE position
 			' . ($way
-                ? '> ' . (int) $moved_category['position'] . ' AND `position` <= ' . (int) $position
-                : '< ' . (int) $moved_category['position'] . ' AND `position` >= ' . (int) $position) . '
-			AND `id_parent`=' . (int) $moved_category['id_parent'])
+                ? '> ' . (int) $moved_category['position'] . ' AND position <= ' . (int) $position
+                : '< ' . (int) $moved_category['position'] . ' AND position >= ' . (int) $position) . '
+			AND id_parent=' . (int) $moved_category['id_parent'])
         && Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'cms_category`
-			SET `position` = ' . (int) $position . '
-			WHERE `id_parent` = ' . (int) $moved_category['id_parent'] . '
-			AND `id_cms_category`=' . (int) $moved_category['id_cms_category']);
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . '
+			SET position = ' . (int) $position . '
+			WHERE id_parent = ' . (int) $moved_category['id_parent'] . '
+			AND id_cms_category=' . (int) $moved_category['id_cms_category']);
     }
 
     public static function cleanPositions($id_category_parent)
     {
         $result = Db::getInstance()->executeS('
-		SELECT `id_cms_category`
-		FROM `' . _DB_PREFIX_ . 'cms_category`
-		WHERE `id_parent` = ' . (int) $id_category_parent . '
-		ORDER BY `position`');
+		SELECT id_cms_category
+		FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . '
+		WHERE id_parent = ' . (int) $id_category_parent . '
+		ORDER BY position');
         $sizeof = count($result);
         for ($i = 0; $i < $sizeof; ++$i) {
             $sql = '
-			UPDATE `' . _DB_PREFIX_ . 'cms_category`
-			SET `position` = ' . (int) $i . '
-			WHERE `id_parent` = ' . (int) $id_category_parent . '
-			AND `id_cms_category` = ' . (int) $result[$i]['id_cms_category'];
+			UPDATE ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . '
+			SET position = ' . (int) $i . '
+			WHERE id_parent = ' . (int) $id_category_parent . '
+			AND id_cms_category = ' . (int) $result[$i]['id_cms_category'];
             Db::getInstance()->execute($sql);
         }
 
@@ -651,7 +673,7 @@ class CMSCategoryCore extends ObjectModel
     public static function getLastPosition($idParentCmsCategory)
     {
         return (int) Db::getInstance()->getValue('SELECT MAX(position) + 1
-            FROM `' . _DB_PREFIX_ . 'cms_category`
-            WHERE `id_parent` = ' . (int) $idParentCmsCategory);
+            FROM ' . Db::quoteIdentifier(_DB_PREFIX_ . 'cms_category') . '
+            WHERE id_parent = ' . (int) $idParentCmsCategory);
     }
 }

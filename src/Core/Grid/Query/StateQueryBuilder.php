@@ -47,14 +47,14 @@ class StateQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
             ->select(
-                's.`id_state`',
-                's.`name`',
-                's.`iso_code`',
-                's.`id_country`',
-                's.`id_zone`',
-                's.`active`',
-                'cl.`name` as country_name',
-                'z.`name` as zone_name'
+                's.id_state',
+                's.name',
+                's.iso_code',
+                's.id_country',
+                's.id_zone',
+                's.active',
+                'cl.name as country_name',
+                'z.name as zone_name'
             )
         ;
 
@@ -72,7 +72,7 @@ class StateQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         return $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT s.`id_state`)');
+            ->select('COUNT(DISTINCT s.id_state)');
     }
 
     /**
@@ -92,21 +92,21 @@ class StateQueryBuilder extends AbstractDoctrineQueryBuilder
             's',
             $this->dbPrefix . 'zone',
             'z',
-            's.`id_zone` = z.`id_zone`'
+            's.id_zone = z.id_zone'
         );
 
         $qb->leftJoin(
             's',
             $this->dbPrefix . 'country',
             'c',
-            's.`id_country` = c.`id_country`'
+            's.id_country = c.id_country'
         );
 
         $qb->leftJoin(
             's',
             $this->dbPrefix . 'country_lang',
             'cl',
-            's.`id_country` = cl.`id_country` AND cl.`id_lang` = :idLang '
+            's.id_country = cl.id_country AND cl.id_lang = :idLang '
         );
 
         $qb->setParameter('idLang', $this->languageContext->getId());
