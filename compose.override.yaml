@@ -1,0 +1,68 @@
+# Development environment override
+services:
+  php:
+    build:
+      context: .
+      target: php_dev
+      args:
+        - PHP_VERSION=${PHP_VERSION:-8.1}
+        - NODE_VERSION=${NODE_VERSION:-20}
+    volumes:
+      - ./:/app
+      - /app/var
+      # If you develop on Mac or Windows you can remove the vendor/ directory
+      #  from the bind-mount for better performance by enabling the next line:
+      # - /app/vendor
+    ports:
+      # HTTP
+      - target: 80
+        published: ${HTTP_PORT:-8001}
+        protocol: tcp
+    environment:
+      DATABASE_URL: mysql://${DB_USER:-prestashop}:${DB_PASSWORD:-prestashop}@${DB_SERVER:-database}:${DB_PORT:-3306}/${DB_DATABASE:-prestashop}?serverVersion=${DB_VERSION:-8}&charset=${DB_CHARSET:-utf8mb4}
+      DB_SERVER: ${DB_SERVER:-database}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_NAME: ${DB_NAME:-prestashop}
+      DB_USER: ${DB_USER:-prestashop}
+      DB_PASSWORD: ${DB_PASSWORD:-prestashop}
+      DB_PREFIX: ${DB_PREFIX:-ps_}
+
+      PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-true}
+      PS_DOMAIN: ${PS_DOMAIN:-localhost:8001}
+      PS_ENABLE_SSL: ${PS_ENABLE_SSL:-0}
+      PS_FOLDER_INSTALL: ${PS_FOLDER_INSTALL:-install-dev}
+      PS_LANGUAGE: ${PS_LANGUAGE:-fr}
+      PS_COUNTRY: ${PS_COUNTRY:-FR}
+      PS_ALL_LANGUAGES: ${PS_ALL_LANGUAGES:-0}
+      PS_INSTALL_DEMO_PRODUCTS: ${PS_INSTALL_DEMO_PRODUCTS:-0}
+      PS_USE_DOCKER_MAILDEV: ${PS_USE_DOCKER_MAILDEV:-1}
+
+      ADMIN_FIRSTNAME: ${ADMIN_FIRSTNAME:-John}
+      ADMIN_LASTNAME: ${ADMIN_LASTNAME:-Doe}
+      ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Correct Horse Battery Staple}
+      
+      # See https://xdebug.org/docs/all_settings#mode
+      XDEBUG_MODE: "${XDEBUG_MODE:-off}"
+    extra_hosts:
+      # Ensure that host.docker.internal is correctly defined on Linux
+      - host.docker.internal:host-gateway
+    tty: true
+
+
+###> doctrine/doctrine-bundle ###
+  database:
+    ports:
+      - target: 3306
+        published: 3306
+        protocol: tcp
+###< doctrine/doctrine-bundle ###
+
+  maildev:
+    ports:
+      - target: 1080
+        published: 1080
+        protocol: tcp
+      - target: 1025
+        published: 1025
+        protocol: tcp

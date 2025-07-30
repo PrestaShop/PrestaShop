@@ -1,54 +1,113 @@
-help: ## Display this help menu
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+# Executables (local)
+DOCKER_COMP = docker compose
 
-install: composer assets  ## Install PHP dependencies and build the static assets
+# Docker containers
+PHP_CONT = $(DOCKER_COMP) exec php
 
-composer: ## Install PHP dependencies
-	COMPOSER_PROCESS_TIMEOUT=600 composer install --no-interaction
-	./bin/console cache:clear --no-warmup
+# Executables
+PHP      = $(PHP_CONT) php
+COMPOSER = $(PHP_CONT) composer
+SYMFONY  = $(PHP) bin/console
 
-assets:  ## Rebuilds all the static assets, running npm install-clean as needed
-	./tools/assets/build.sh
+# Misc
+.DEFAULT_GOAL = help
+.PHONY        : help build up start down logs sh composer vendor sf cc test assets assets-dev admin front admin-default admin-new-theme front-core front-classic front-hummingbird install-prestashop
 
-wait-assets:
-	./tools/assets/wait-build.sh
+## —— 🎵 🐳 PrestaShop Docker Makefile 🐳 🎵 ———————————————————————————————————
+help: ## Outputs this help screen
+	@grep -E '(^[a-zA-Z0-9\./_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
-front-core: ## Building core theme assets
-	./tools/assets/build.sh front-core
+## —— Docker 🐳 ————————————————————————————————————————————————————————————————
+build: ## Builds the Docker images
+	export COMPOSE_BAKE=true
+	@$(DOCKER_COMP) build --pull --no-cache
 
-front-classic: ## Building classic theme assets
-	./tools/assets/build.sh front-classic
+up: ## Start the docker hub in detached mode (no logs)
+	@$(DOCKER_COMP) up --detach --force-recreate
 
-front-hummingbird: ## Building hummingbird theme assets
-	./tools/assets/build.sh front-hummingbird
+start: build up ## Build and start the containers
 
-admin-default: ## Building admin default theme assets
-	./tools/assets/build.sh admin-default
+down: ## Stop the docker hub
+	@$(DOCKER_COMP) down --remove-orphans
 
-admin-new-theme: ## Building admin new theme assets
-	./tools/assets/build.sh admin-new-theme
+logs: ## Show live logs
+	@$(DOCKER_COMP) logs --tail=0 --follow
 
-admin: admin-default admin-new-theme ## Building admin assets
+sh: ## Connect to the FrankenPHP container
+	@$(PHP_CONT) sh
 
-front: front-core front-classic ## Building front assets
+bash: ## Connect to the FrankenPHP container via bash so up and down arrows go to previous commands
+	@$(PHP_CONT) bash
 
-cs-fixer: ## Run php-cs-fixer
-	./vendor/bin/php-cs-fixer fix
+## —— Assets 🎨 ———————————————————————————————————————————————————————————————
+assets: admin front ## Build all assets
+	@$(DOCKER_COMP) exec php tools/assets/build.sh all
+
+assets-dev: ## Run dev-server for assets
+	@$(DOCKER_COMP) exec php npx concurrently -c "#93c5fd,#c4b5fd,#fb7185,#fdba74" "cd admin-dev/themes/default && npm run watch" "cd admin-dev/themes/new-theme && npm run watch" "cd themes/classic/_dev && npm run watch" "cd themes/hummingbird && npm run watch" --names=admin-default,admin-new-theme,front-classic,front-hummingbird --kill-others
+
+admin: admin-default admin-new-theme ## Build admin assets
+
+front: front-core front-classic ## Build front assets
+
+admin-default: ## Build azssets for default admin theme
+	@$(DOCKER_COMP) exec php tools/assets/build.sh admin-default
+
+admin-new-theme: ## Build azssets for new admin theme
+	@$(DOCKER_COMP) exec php tools/assets/build.sh admin-new-theme
+
+front-core: ## Build assets for core theme
+	@$(DOCKER_COMP) exec php tools/assets/build.sh front-core
+
+front-classic: ## Build assets for classic theme
+	@$(DOCKER_COMP) exec php tools/assets/build.sh front-classic
+
+front-hummingbird: ## Build assets for hummingbird theme
+	@$(DOCKER_COMP) exec php tools/assets/build.sh hummingbird
+
+## —— PrestaShop 🛒 ————————————————————————————————————————————————————————————
+install-prestashop: ## Install PrestaShop
+	@$(DOCKER_COMP) exec php tools/database/install.sh
+
+## —— Composer 🧙 ——————————————————————————————————————————————————————————————
+composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
+	@$(eval c ?=)
+	@$(COMPOSER) $(c)
+
+vendor: ## Install vendors according to the current composer.lock file
+vendor: c=install --prefer-dist --no-dev --no-progress --no-scripts --no-interaction
+vendor: composer
+
+## —— Symfony 🎵 ———————————————————————————————————————————————————————————————
+sf: ## List all Symfony commands or pass the parameter "c=" to run a given command, example: make sf c=about
+	@$(eval c ?=)
+	@$(SYMFONY) $(c)
+
+cc: c=c:c ## Clear the cache
+cc: sf
+
+## -- Code quality 🧹 ——————————————————————————————————————————————————————————
+test: ## Start tests with phpunit, pass the parameter "c=" to add options to phpunit, example: make test c="--group e2e --stop-on-failure"
+	@$(eval c ?=)
+	@$(DOCKER_COMP) exec -e APP_ENV=test php bin/phpunit $(c)
+
+php-cs-fixer: ## Run php-cs-fixer
+	@$(DOCKER_COMP) exec -e APP_ENV=test php vendor/bin/php-cs-fixer fix
+
+php-cs-fixer-dry: ## Run php-cs-fixer with dry-run
+	@$(DOCKER_COMP) exec -e APP_ENV=test php vendor/bin/php-cs-fixer fix --dry-run --diff
 
 phpstan: ## Run phpstan analysis
-	./vendor/bin/phpstan analyse -c phpstan.neon.dist
+	@$(DOCKER_COMP) exec -e APP_ENV=test php vendor/bin/phpstan analyse -c phpstan.neon.dist
 
 scss-fixer: ## Run scss-fix
-	cd admin-dev/themes/new-theme && npm run scss-fix
-	cd admin-dev/themes/default && npm run scss-fix
-	cd themes/classic/_dev && npm run scss-fix
+	@$(DOCKER_COMP) exec -e APP_ENV=test php cd admin-dev/themes/new-theme && npm run scss-fix
+	@$(DOCKER_COMP) exec -e APP_ENV=test php cd admin-dev/themes/default && npm run scss-fix
+	@$(DOCKER_COMP) exec -e APP_ENV=test php cd themes/classic/_dev && npm run scss-fix
+	@$(DOCKER_COMP) exec -e APP_ENV=test php cd themes/hummingbird && npm run scss-fix
 
 es-linter: ## Run lint-fix
-	cd admin-dev/themes/new-theme && npm run lint-fix
-	cd admin-dev/themes/default && npm run lint-fix
-	cd themes/classic/_dev && npm run lint-fix
-	cd themes && npm run lint-fix
-
-.PHONY: help install composer assets front-core front-classic admin-default admin-new-theme admin front cs-fixer phpstan scss-fixer es-linter
-
-.DEFAULT_GOAL := install
+	@$(DOCKER_COMP) exec -e APP_ENV=test php cd admin-dev/themes/new-theme && npm run lint-fix
+	@$(DOCKER_COMP) exec -e APP_ENV=test php cd admin-dev/themes/default && npm run lint-fix
+	@$(DOCKER_COMP) exec -e APP_ENV=test php cd themes/classic/_dev && npm run lint-fix
+	@$(DOCKER_COMP) exec -e APP_ENV=test php cd themes && npm run lint-fix

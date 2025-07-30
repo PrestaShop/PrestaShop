@@ -12,6 +12,7 @@ doctrine:
         dbname: "%database_name%"
         user: "%database_user%"
         password: "%database_password%"
+        url: "%env(DATABASE_URL)%"
         charset: utf8mb4
         mapping_types:
           enum: string

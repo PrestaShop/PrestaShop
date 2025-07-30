@@ -1,0 +1,34 @@
+services:
+  php:
+    image: ${IMAGES_PREFIX:-}app-php
+    depends_on:
+      - database
+    restart: unless-stopped
+
+###> doctrine/doctrine-bundle ###
+  database:
+    image: mysql:${MYSQL_VERSION:-8}
+    restart: unless-stopped
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+      MYSQL_USER: ${DB_USER:-prestashop}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-prestashop}
+      MYSQL_DATABASE: ${DB_DATABASE:-prestashop}
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - database_data:/var/lib/mysql:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/var/lib/mysql:rw
+###< doctrine/doctrine-bundle ###
+
+  maildev:
+    image: 'maildev/maildev'
+
+volumes:
+###> doctrine/doctrine-bundle ###
+  database_data:
+###< doctrine/doctrine-bundle ###
