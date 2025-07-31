@@ -71,6 +71,8 @@ class HookCore extends ObjectModel
 
     protected static $disabledHookModules = [];
 
+    protected static $hookRegistrationsSqlCache = [];
+
     /**
      * @see ObjectModel::$definition
      */
@@ -799,16 +801,18 @@ class HookCore extends ObjectModel
      * If no hook name is given, it returns all the hook registrations, indexed by lower cased hook name.
      *
      * @param string|null $hookName Hook name (null to return all hooks)
+     * @param bool $activeModulesOnly only enabled modules
      *
      * @return array[]|false returns an array of hook registrations, or false if the provided hook name is not registered
      *
      * @throws PrestaShopDatabaseException
      */
-    public static function getHookModuleExecList($hookName = null)
+    public static function getHookModuleExecList($hookName = null, bool $activeModulesOnly = false)
     {
         $allHookRegistrations = self::getAllHookRegistrations(
             Context::getContext(),
-            $hookName
+            $hookName,
+            $activeModulesOnly
         );
 
         // If no hook_name is given, return all registered hooks
@@ -949,7 +953,7 @@ class HookCore extends ObjectModel
 
         // We retrieve a list of modules to be executed for the given hook.
         // If no modules associated to hook_name or recompatible hook name, we stop the function.
-        if (!($module_list = Hook::getHookModuleExecList($hook_name))) {
+        if (!($module_list = Hook::getHookModuleExecList($hook_name, true))) {
             if ($isRegistryEnabled) {
                 $hookRegistry->collect();
             }
@@ -1310,6 +1314,7 @@ class HookCore extends ObjectModel
      *
      * @param Context $context
      * @param string|null $hookName Hook name (to be used when the hook registration is dynamic and context sensitive)
+     * @param bool $activeModulesOnly only enabled modules
      *
      * @return array[][]
      *
@@ -1317,7 +1322,8 @@ class HookCore extends ObjectModel
      */
     private static function getAllHookRegistrations(
         Context $context,
-        ?string $hookName
+        ?string $hookName,
+        bool $activeModulesOnly = false
     ): array {
         $shop = $context->shop;
         $customer = $context->customer;
@@ -1493,11 +1499,24 @@ class HookCore extends ObjectModel
             );
         }
 
+        if ($activeModulesOnly) {
+            $sql->where('m.`active` = 1');
+        }
+
         $sql->groupBy('hm.id_hook, hm.id_module');
         $sql->orderBy('hm.`position`');
 
         $allHookRegistrations = [];
-        if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
+        $sqlCacheId = 'getAllHookRegistrations_'.Tools::hash($sql->build());
+
+        if (isset(self::$hookRegistrationsSqlCache[$sqlCacheId])) {
+            $result = self::$hookRegistrationsSqlCache[$sqlCacheId];
+        } else {
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+            self::$hookRegistrationsSqlCache[$sqlCacheId] = $result;
+        }
+
+        if ($result) {
             /** @var array{hook: string, id_module: int, id_hook: int, module: string} $row */
             foreach ($result as $row) {
                 $row['hook'] = strtolower($row['hook']);
