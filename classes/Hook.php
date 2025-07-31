@@ -1507,7 +1507,7 @@ class HookCore extends ObjectModel
         $sql->orderBy('hm.`position`');
 
         $allHookRegistrations = [];
-        $sqlCacheId = 'getAllHookRegistrations_'.Tools::hash($sql->build());
+        $sqlCacheId = 'getAllHookRegistrations_' . Tools::hash($sql->build());
 
         if (isset(self::$hookRegistrationsSqlCache[$sqlCacheId])) {
             $result = self::$hookRegistrationsSqlCache[$sqlCacheId];
