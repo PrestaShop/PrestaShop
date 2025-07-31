@@ -1316,6 +1316,7 @@ class CartRuleCore extends ObjectModel
      */
     public function getContextualValue($use_tax, ?Context $context = null, $filter = null, $package = null, $use_cache = true)
     {
+        return 0;
         if (!CartRule::isFeatureActive()) {
             return 0;
         }
