@@ -201,7 +201,7 @@ class OrderDetailUpdater
                             'total_amount' => (float) $totalAmount,
                         ];
                         $orderDetail->unit_price_tax_incl = (float) $orderDetail->unit_price_tax_excl + $unitAmount;
-                        $orderDetail->total_price_tax_incl = (float) $orderDetail->total_price_tax_incl + $totalAmount;
+                        $orderDetail->total_price_tax_incl = (float) $orderDetail->total_price_tax_excl + $totalAmount;
                     }
 
                     Db::getInstance()->insert('order_detail_tax', $orderDetailTaxes, false);
@@ -209,7 +209,7 @@ class OrderDetailUpdater
 
                 // Update OrderDetail values
                 $orderDetail->unit_price_tax_incl = (float) $orderDetail->unit_price_tax_excl + $unitAmount;
-                $orderDetail->total_price_tax_incl = (float) $orderDetail->total_price_tax_incl + $totalAmount;
+                $orderDetail->total_price_tax_incl = (float) $orderDetail->total_price_tax_excl + $totalAmount;
                 if (!$orderDetail->update()) {
                     throw new OrderException('An error occurred while editing the product line.');
                 }
