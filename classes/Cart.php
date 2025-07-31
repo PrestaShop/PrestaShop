@@ -3594,6 +3594,21 @@ class CartCore extends ObjectModel
         if ($orderTotalwithDiscounts >= (float) $free_fees_price && (float) $free_fees_price > 0) {
             // Allow module to override the shipping cost and return their custom value
             $shipping_cost = $this->getPackageShippingCostFromModule($carrier, $shipping_cost, $products);
+
+            if (Configuration::get('PS_ATCP_SHIPWRAP')) {
+                if (!$use_tax) {
+                    // With PS_ATCP_SHIPWRAP, we deduce the pre-tax price from the post-tax
+                    // price. This is on purpose and required in Germany.
+                    $shipping_cost /= (1 + $this->getAverageProductsTaxRate());
+                }
+            } else {
+                // Apply tax
+                if ($use_tax && isset($carrier_tax)) {
+                    $shipping_cost *= 1 + ($carrier_tax / 100);
+                }
+            }
+
+            $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, Context::getContext()->getComputingPrecision());
             Cache::store($cache_id, $shipping_cost);
 
             return $shipping_cost;
@@ -3609,6 +3624,21 @@ class CartCore extends ObjectModel
             && (float) $configuration['PS_SHIPPING_FREE_WEIGHT'] > 0) {
             // Allow module to override the shipping cost and return their custom value
             $shipping_cost = $this->getPackageShippingCostFromModule($carrier, $shipping_cost, $products);
+
+            if (Configuration::get('PS_ATCP_SHIPWRAP')) {
+                if (!$use_tax) {
+                    // With PS_ATCP_SHIPWRAP, we deduce the pre-tax price from the post-tax
+                    // price. This is on purpose and required in Germany.
+                    $shipping_cost /= (1 + $this->getAverageProductsTaxRate());
+                }
+            } else {
+                // Apply tax
+                if ($use_tax && isset($carrier_tax)) {
+                    $shipping_cost *= 1 + ($carrier_tax / 100);
+                }
+            }
+
+            $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, Context::getContext()->getComputingPrecision());
             Cache::store($cache_id, $shipping_cost);
 
             return $shipping_cost;
