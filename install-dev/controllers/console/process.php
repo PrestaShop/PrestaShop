@@ -344,7 +344,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             return true;
         }
 
-        $result = $this->model_install->finalize();
+        $result = $this->model_install->finalize($this->datas->admin_folder);
 
         if (!$result) {
             $this->printErrors();

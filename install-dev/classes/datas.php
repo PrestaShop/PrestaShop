@@ -45,6 +45,7 @@
  * @property string $admin_lastname
  * @property string $admin_password
  * @property string $admin_email
+ * @property string $admin_folder
  * @property int $show_license
  * @property string $theme
  * @property int $enable_ssl
@@ -163,6 +164,11 @@ class Datas
             'name' => 'email',
             'validate' => 'isEmail',
             'default' => 'pub@prestashop.com',
+        ],
+        'admin_folder' => [
+            'validate' => 'isDirName',
+            'default' => '',
+            'help' => 'the name for the admin folder, useful for provisioning systems, defaults to a randomly generated name',
         ],
         'show_license' => [
             'name' => 'license',

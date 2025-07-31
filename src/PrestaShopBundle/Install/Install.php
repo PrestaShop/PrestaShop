@@ -1210,11 +1210,16 @@ class Install extends AbstractInstall
     {
         $adminFolder = 'admin-dev';
         if (file_exists(_PS_ROOT_DIR_ . '/admin/')) {
-            $randomizedAdminFolderName = $randomizedAdminFolderName ?? sprintf(
-                'admin%03d%s/',
-                mt_rand(0, 999),
-                Tools::strtolower(Tools::passwdGen(16))
-            );
+            if (null === $randomizedAdminFolderName) {
+                $randomizedAdminFolderName = trim(Tools::getValue('admin_folder', null));
+                if (in_array($randomizedAdminFolderName, [null, ''], true)) {
+                    $randomizedAdminFolderName = sprintf(
+                        'admin%03d%s/',
+                        mt_rand(0, 999),
+                        Tools::strtolower(Tools::passwdGen(16))
+                    );
+                }
+            }
             $adminFolder = $randomizedAdminFolderName;
 
             // rename folder
