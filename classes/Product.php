@@ -7598,14 +7598,29 @@ class ProductCore extends ObjectModel
      */
     public static function getIdTaxRulesGroupMostUsed()
     {
-        return Db::getInstance()->getValue(
-            'SELECT product_shop.id_tax_rules_group
-            FROM ' . _DB_PREFIX_ . 'product_shop product_shop
-            INNER JOIN ' . _DB_PREFIX_ . 'tax_rules_group trg ON product_shop.id_tax_rules_group = trg.id_tax_rules_group
-            WHERE trg.active = 1 AND trg.deleted = 0 AND product_shop.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')
-            GROUP BY product_shop.id_tax_rules_group
-            ORDER BY COUNT(*) DESC'
+        static $idTaxRulesGroupMostUsed = null;
+    
+        if ($idTaxRulesGroupMostUsed !== null) {
+            return $idTaxRulesGroupMostUsed;
+        }
+    
+        $idTaxRulesGroupMostUsed = Db::getInstance()->getValue(
+            '
+            SELECT id_tax_rules_group
+            FROM (
+                SELECT COUNT(*) n, product_shop.id_tax_rules_group
+                FROM ' . _DB_PREFIX_ . 'product p
+                ' . Shop::addSqlAssociation('product', 'p') . '
+                JOIN ' . _DB_PREFIX_ . 'tax_rules_group trg 
+                    ON (product_shop.id_tax_rules_group = trg.id_tax_rules_group)
+                WHERE trg.active = 1 AND trg.deleted = 0
+                GROUP BY product_shop.id_tax_rules_group
+                ORDER BY n DESC
+                LIMIT 1
+            ) most_used'
         );
+    
+        return $idTaxRulesGroupMostUsed;
     }
 
     public static function getIdByEan13($ean13)
