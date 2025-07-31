@@ -93,7 +93,6 @@ class GiftOptionsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $atcpShipWrap = (bool) $this->configuration->get('PS_ATCP_SHIPWRAP');
         $currencyIsoCode = $this->defaultCurrencyIsoCode;
 
         $builder
@@ -116,25 +115,21 @@ class GiftOptionsType extends TranslatorAwareType
                 'currency' => $currencyIsoCode,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
                 'multistore_configuration_key' => 'PS_GIFT_WRAPPING_PRICE',
-            ]);
-
-        if (!$atcpShipWrap) {
-            $builder->add('gift_wrapping_tax_rules_group', ChoiceType::class, [
+            ])
+            ->add('gift_wrapping_tax_rules_group', ChoiceType::class, [
                 'required' => false,
                 'label' => $this->trans('Gift-wrapping tax', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Set a tax for gift wrapping.', 'Admin.Shopparameters.Help'),
                 'placeholder' => $this->trans('None', 'Admin.Global'),
                 'choices' => $this->taxChoices,
                 'multistore_configuration_key' => 'PS_GIFT_WRAPPING_TAX_RULES_GROUP',
-            ]);
-        }
-
-        $builder->add('offer_recyclable_pack', SwitchType::class, [
+            ])
+            ->add('offer_recyclable_pack', SwitchType::class, [
             'required' => false,
             'label' => $this->trans('Offer recycled packaging', 'Admin.Shopparameters.Feature'),
             'help' => $this->trans('Suggest recycled packaging to customer.', 'Admin.Shopparameters.Help'),
             'multistore_configuration_key' => 'PS_RECYCLABLE_PACK',
-        ]);
+            ]);
     }
 
     /**

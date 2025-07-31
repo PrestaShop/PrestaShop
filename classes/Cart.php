@@ -2320,25 +2320,20 @@ class CartCore extends ObjectModel
 
     /**
      * @param bool $withTaxes
-     * @param int $type
+     * @param int $type @deprecated since 9.0.1, not used anymore
      *
      * @return float|int
      */
-    protected function calculateWrappingFees($withTaxes, $type)
+    protected function calculateWrappingFees($withTaxes, $type = 0)
     {
         // Wrapping Fees
         $wrapping_fees = 0;
 
-        // With PS_ATCP_SHIPWRAP on the gift wrapping cost computation calls getOrderTotal
-        // with $type === Cart::ONLY_PRODUCTS, so the flag below prevents an infinite recursion.
-        $includeGiftWrapping = (!$this->configuration->get('PS_ATCP_SHIPWRAP') || $type !== Cart::ONLY_PRODUCTS);
-        $computePrecision = Context::getContext()->getComputingPrecision();
-
-        if ($this->gift && $includeGiftWrapping) {
+        if ($this->gift) {
             $wrapping_fees = Tools::convertPrice(
                 Tools::ps_round(
                     $this->getGiftWrappingPrice($withTaxes),
-                    $computePrecision
+                    Context::getContext()->getComputingPrecision()
                 ),
                 Currency::getCurrencyInstance((int) $this->id_currency)
             );
@@ -2370,34 +2365,22 @@ class CartCore extends ObjectModel
         }
 
         if ($with_taxes) {
-            if (Configuration::get('PS_ATCP_SHIPWRAP')) {
-                // With PS_ATCP_SHIPWRAP, wrapping fee is by default tax included
-                // so nothing to do here.
-            } else {
-                if (!isset($address[$this->id])) {
-                    if ($id_address === null) {
-                        $id_address = (int) $this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
-                    }
-
-                    try {
-                        $address[$this->id] = Address::initialize($id_address);
-                    } catch (Exception $e) {
-                        $address[$this->id] = new Address();
-                        $address[$this->id]->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
-                    }
+            if (!isset($address[$this->id])) {
+                if ($id_address === null) {
+                    $id_address = (int) $this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
                 }
 
-                $tax_manager = TaxManagerFactory::getManager($address[$this->id], (int) Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
-                $tax_calculator = $tax_manager->getTaxCalculator();
-                $wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
+                try {
+                    $address[$this->id] = Address::initialize($id_address);
+                } catch (Exception $e) {
+                    $address[$this->id] = new Address();
+                    $address[$this->id]->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+                }
             }
-        } elseif (Configuration::get('PS_ATCP_SHIPWRAP')) {
-            // With PS_ATCP_SHIPWRAP, wrapping fee is by default tax included, so we convert it
-            // when asked for the pre tax price.
-            $wrapping_fees = Tools::ps_round(
-                $wrapping_fees / (1 + $this->getAverageProductsTaxRate()),
-                Context::getContext()->getComputingPrecision()
-            );
+
+            $tax_manager = TaxManagerFactory::getManager($address[$this->id], (int) Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
+            $tax_calculator = $tax_manager->getTaxCalculator();
+            $wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
         }
 
         return $wrapping_fees;
@@ -3556,15 +3539,7 @@ class CartCore extends ObjectModel
         // Select carrier tax
         if ($use_tax && Configuration::get('PS_TAX')) {
             $address = Address::initialize((int) $address_id);
-
-            if (Configuration::get('PS_ATCP_SHIPWRAP')) {
-                // With PS_ATCP_SHIPWRAP, pre-tax price is deduced
-                // from post tax price, so no $carrier_tax here
-                // even though it sounds weird.
-                $carrier_tax = 0;
-            } else {
-                $carrier_tax = $carrier->getTaxesRate($address);
-            }
+            $carrier_tax = $carrier->getTaxesRate($address);
         }
 
         $configuration = Configuration::getMultiple([
@@ -3656,17 +3631,9 @@ class CartCore extends ObjectModel
             return false;
         }
 
-        if (Configuration::get('PS_ATCP_SHIPWRAP')) {
-            if (!$use_tax) {
-                // With PS_ATCP_SHIPWRAP, we deduce the pre-tax price from the post-tax
-                // price. This is on purpose and required in Germany.
-                $shipping_cost /= (1 + $this->getAverageProductsTaxRate());
-            }
-        } else {
-            // Apply tax
-            if ($use_tax && isset($carrier_tax)) {
-                $shipping_cost *= 1 + ($carrier_tax / 100);
-            }
+        // Apply tax
+        if ($use_tax && isset($carrier_tax)) {
+            $shipping_cost *= 1 + ($carrier_tax / 100);
         }
 
         $shipping_cost = (float) Tools::ps_round((float) $shipping_cost, Context::getContext()->getComputingPrecision());

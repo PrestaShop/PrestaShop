@@ -381,10 +381,6 @@ class AdminCarrierWizardControllerCore extends AdminController
             ],
         ];
 
-        if (Configuration::get('PS_ATCP_SHIPWRAP')) {
-            unset($this->fields_form['form']['input']['id_tax_rules_group']);
-        }
-
         $tpl_vars = [];
         $tpl_vars['PS_WEIGHT_UNIT'] = Configuration::get('PS_WEIGHT_UNIT');
 

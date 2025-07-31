@@ -57,7 +57,6 @@ class OrderPreferencesController extends PrestaShopAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'generalForm' => $generalForm->createView(),
             'giftOptionsForm' => $giftOptionsForm->createView(),
-            'isAtcpShipWrapEnabled' => (bool) $this->getConfiguration()->get('PS_ATCP_SHIPWRAP'),
         ]);
     }
 
