@@ -41,29 +41,29 @@ bash: ## Connect to the FrankenPHP container via bash so up and down arrows go t
 
 ## —— Assets 🎨 ———————————————————————————————————————————————————————————————
 assets: admin front ## Build all assets
-	@$(DOCKER_COMP) exec php tools/assets/build.sh all
+	./tools/assets/build.sh all
 
 assets-dev: ## Run dev-server for assets
-	@$(DOCKER_COMP) exec php npx concurrently -c "#93c5fd,#c4b5fd,#fb7185,#fdba74" "cd admin-dev/themes/default && npm run watch" "cd admin-dev/themes/new-theme && npm run watch" "cd themes/classic/_dev && npm run watch" "cd themes/hummingbird && npm run watch" --names=admin-default,admin-new-theme,front-classic,front-hummingbird --kill-others
+	npx concurrently -c "#93c5fd,#c4b5fd,#fb7185,#fdba74" "cd admin-dev/themes/default && npm run watch" "cd admin-dev/themes/new-theme && npm run watch" "cd themes/classic/_dev && npm run watch" "cd themes/hummingbird && npm run watch" --names=admin-default,admin-new-theme,front-classic,front-hummingbird --kill-others
 
 admin: admin-default admin-new-theme ## Build admin assets
 
 front: front-core front-classic ## Build front assets
 
 admin-default: ## Build azssets for default admin theme
-	@$(DOCKER_COMP) exec php tools/assets/build.sh admin-default
+	./tools/assets/build.sh admin-default
 
 admin-new-theme: ## Build azssets for new admin theme
-	@$(DOCKER_COMP) exec php tools/assets/build.sh admin-new-theme
+	./tools/assets/build.sh admin-new-theme
 
 front-core: ## Build assets for core theme
-	@$(DOCKER_COMP) exec php tools/assets/build.sh front-core
+	./tools/assets/build.sh front-core
 
 front-classic: ## Build assets for classic theme
-	@$(DOCKER_COMP) exec php tools/assets/build.sh front-classic
+	./tools/assets/build.sh front-classic
 
 front-hummingbird: ## Build assets for hummingbird theme
-	@$(DOCKER_COMP) exec php tools/assets/build.sh hummingbird
+	./tools/assets/build.sh hummingbird
 
 ## —— PrestaShop 🛒 ————————————————————————————————————————————————————————————
 install-prestashop: ## Install PrestaShop
