@@ -43,74 +43,98 @@ Installation
 
 If you downloaded the source code from GitHub, read our guide on [installing PrestaShop for development][install-guide-dev]. If you intend to install a production shop, make sure to download the latest version from [our releases page][download], then read the [install guide for users][install-guide].
 
-Docker compose
---------
+## 🐳 Docker Development Environment
 
-PrestaShop can also be deployed with Docker and its tool [Docker compose][docker-compose].
+PrestaShop provides a complete Docker-based development environment with a comprehensive Makefile for easy development workflows.
 
-To run the software, use:
+### Quick Start
 
+```bash
+# Start the development environment
+make start
+
+# Access your PrestaShop installation
+# Frontend: http://localhost:8001
+# Backend: http://localhost:8001/admin-dev
+# Email testing: http://localhost:1080
 ```
-docker compose up
+
+**Default Admin Credentials:**
+- Email: `demo@prestashop.com`
+- Password: `Correct Horse Battery Staple`
+
+### Development Tools
+
+The project includes a powerful Makefile with commands for all common development tasks:
+
+```bash
+# Show all available commands
+make help
+
+# Docker management
+make up          # Start containers
+make down        # Stop containers
+make logs        # View logs
+
+# Asset development
+make assets      # Build all assets
+make assets-dev  # Start development servers
+
+# Code quality
+make test        # Run tests
+make php-cs-fixer # Fix code style
+make phpstan     # Static analysis
+
+# Development tools
+make sh          # Access container shell
+make composer    # Run composer commands
+make sf          # Run Symfony console commands
 ```
 
-Then reach your shop on this URL: http://localhost:8001
+### Customization
 
-Or the backoffice on this URL: http://localhost:8001/admin-dev (default access credentials: demo@prestashop.com / Correct Horse Battery Staple)
+You can customize the setup using environment variables:
 
-You can customize the admin credentials by setting the following environment variables before running docker compose:
-```
+```bash
+# Database configuration
+export DB_USER=prestashop
+export DB_PASSWORD=your-secure-password
+export DB_DATABASE=prestashop
+
+# PrestaShop configuration
+export PS_LANGUAGE=en
+export PS_COUNTRY=US
+export PS_INSTALL_DEMO_PRODUCTS=1
+
+# Admin credentials
 export ADMIN_MAIL=your-email@example.com
-export ADMIN_PASSWD=Your-Secure-Password
-docker compose up
+export ADMIN_PASSWORD=Your-Secure-Password
+
+# HTTP port (default: 8001)
+export HTTP_PORT=8001
 ```
 
-Docker will bind your port **8001** to the web server. If you want to use other port, open and modify the file `docker-compose.yml`.
-MySQL credentials can also be found and modified in this file if needed.
+### Advanced Features
 
-**Note:**  Before auto-installing PrestaShop, this container checks the file *app/config/parameters.php* does not exist on startup.
-If you expect the container to (re)install your shop, remove this file if it exists. And make sure the container user `www-data`
-has write access to the whole workspace.
+- **MailDev**: Email testing interface at http://localhost:1080
+- **Database**: MySQL 8 with persistent storage
+- **Xdebug**: Available for debugging (disabled by default)
+- **Asset Development**: Live reloading for CSS/JS development
 
-To fully reset your repo and get a fresh start, run (be careful: this removes all your extra files):
+### Documentation
 
-```
-# clean everything that is not part of the original repository (node_modules, etc.)
-git fetch origin
-git reset --hard origin/develop
-git clean -dfx
+For detailed information about the Docker setup and development workflows, see:
 
-# inform build scripts to reinstall shop
-rm app/config/parameters.php
+- **[📖 Complete Documentation](./docs/README.md)** - Overview of all documentation
+- **[🚀 Installation Guide](./docs/INSTALL.md)** - Step-by-step setup instructions
+- **[🐳 Docker Guide](./docs/DOCKER.md)** - Detailed Docker configuration
+- **[🛠️ Makefile Guide](./docs/MAKEFILE.md)** - All available commands
+- **[🎯 Developer Experience](./docs/DEVELOPER_EXPERIENCE.md)** - Complete development workflows
+- **[🔧 Troubleshooting](./docs/TROUBLESHOOT.md)** - Common issues and solutions
 
-# clear all docker caches and rebuild everything
-docker compose down -v
-docker compose build --no-cache
-docker compose up --build --force-recreate
-```
+### Legacy Docker Information
 
-### PHPMyAdmin
-To add a PHPMyAdmin service to your Docker Compose setup, you can copy the existing `docker-compose.override.yml.dist` to `docker-compose.override.yml` and then start your Docker Compose setup (override file will be included as it is a convention)
-
-```
-cp docker-compose.override.yml.dist docker-compose.override.yml
-docker compose up
-```
-
-### BLACKFIRE
-By default, blackfire will not be installed. During the install process, the installation of blackfire is based on 3 environment variables:
-
-```
-BLACKFIRE_ENABLE: 1
-BLACKFIRE_SERVER_ID: "your_server_id"
-BLACKFIRE_SERVER_TOKEN: "your_blackfire_server_token"
-```
-
-Those env variables are self-explanatory, you can either set them yourself or override the docker-compose default values:
-
-Open the file `docker-compose.override.yml` (copy it from `docker-compose.override.yml.dist`
-if it's not already done, see command just above in the PHPMyadmin section).
-Then uncomment the 3 docker lines and fill the BLACKFIRE_SERVER_ID and BLACKFIRE_SERVER_TOKEN with your account's server id and token.
+For the original Docker setup instructions, see the [legacy Docker documentation](./docs/DOCKER.md#legacy-setup).
 
 Documentation
 --------
