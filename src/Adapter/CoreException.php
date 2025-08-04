@@ -31,6 +31,6 @@ use Exception;
 /**
  * @todo: find why this class have been created and used.
  */
-class CoreException extends Exception
+class CoreException extends \PrestaShopException
 {
 }
