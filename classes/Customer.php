@@ -638,10 +638,13 @@ class CustomerCore extends ObjectModel
      * Return customer addresses.
      *
      * @param int $idLang Language ID
+     * @param bool $refresh Refresh cached entries
      *
      * @return array Addresses
+     *
+     * @throws PrestaShopDatabaseException
      */
-    public function getAddresses($idLang)
+    public function getAddresses($idLang, bool $refresh = false)
     {
         $group = Context::getContext()->shop->getGroup();
         $shareOrder = isset($group->share_order) ? (bool) $group->share_order : false;
@@ -649,7 +652,7 @@ class CustomerCore extends ObjectModel
             . '-' . (int) $this->id
             . '-' . (int) $idLang
             . '-' . ($shareOrder ? 1 : 0);
-        if (!Cache::isStored($cacheId)) {
+        if (true === $refresh || !Cache::isStored($cacheId)) {
             $sql = 'SELECT DISTINCT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
                     FROM `' . _DB_PREFIX_ . 'address` a
                     LEFT JOIN `' . _DB_PREFIX_ . 'country` c ON (a.`id_country` = c.`id_country`)
