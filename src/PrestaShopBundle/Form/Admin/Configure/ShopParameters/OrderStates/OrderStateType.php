@@ -241,6 +241,7 @@ class OrderStateType extends TranslatorAwareType
                     'class' => 'btn btn-primary',
                     'id' => 'order_state_template_preview',
                 ],
+                'only_enabled_locales' => true,
             ])
         ;
     }
