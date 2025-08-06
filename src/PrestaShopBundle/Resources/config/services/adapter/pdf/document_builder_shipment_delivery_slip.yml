@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.pdf.document_builder.shipment_delivery_slip:
+    class: PrestaShop\PrestaShop\Adapter\PDF\Document\ShipmentDeliverySlipPdfDocumentBuilder
+    arguments:
+      - '@prestashop.adapter.pdf.template_resolver'
+      - '@prestashop.adapter.pdf.common_data_builder'
+      - '@translator'
+    tags:
+      - { name: 'prestashop.pdf.document_builder' }

@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.pdf.template_resolver:
+    class: PrestaShop\PrestaShop\Adapter\PDF\PdfTemplateResolver
+    arguments:
+      - '@twig'
+      - '%kernel.project_dir%'
