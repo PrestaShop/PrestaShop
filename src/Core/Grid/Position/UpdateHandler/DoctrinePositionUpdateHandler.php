@@ -77,6 +77,10 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
                 ->setParameter('parentId', $parentId);
         }
 
+        if ($positionDefinition->getTable() === 'carrier') {
+            $qb->andWhere('t.deleted = 0');
+        }
+
         $positions = $qb->executeQuery()->fetchAllAssociative();
         $currentPositions = [];
         foreach ($positions as $position) {
@@ -108,6 +112,10 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
                     $qb
                         ->andWhere('`' . $positionDefinition->getParentIdField() . '` = :parentId')
                         ->setParameter('parentId', $parentId);
+                }
+
+                if ($positionDefinition->getTable() === 'carrier') {
+                    $qb->andWhere('deleted = 0');
                 }
 
                 try {
