@@ -2,39 +2,77 @@ services:
   _defaults:
     public: true
 
+  prestashop.adapter.pdf.renderer:
+    class: PrestaShop\PrestaShop\Adapter\PDF\PDFRenderer
+    arguments:
+      - !tagged_iterator { tag: 'prestashop.pdf.document_builder' }
+      - '@prestashop.adapter.pdf.engine_factory'
+
+  PrestaShop\PrestaShop\Core\PDF\PDFRendererInterface:
+    alias: prestashop.adapter.pdf.renderer
+
   prestashop.adapter.pdf.generator.invoice:
     class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
     arguments:
-      - "@=service('prestashop.adapter.legacy.context').getSmarty()"
       - '@prestashop.adapter.pdf.type_provider.invoice'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@prestashop.adapter.pdf.renderer'
+
+  prestashop.adapter.pdf.generator.credit_slip:
+    class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
+    arguments:
+      - '@prestashop.adapter.pdf.type_provider.credit_slip'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@prestashop.adapter.pdf.renderer'
+
+  prestashop.adapter.pdf.generator.order_return:
+    class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
+    arguments:
+      - '@prestashop.adapter.pdf.type_provider.order_return'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@prestashop.adapter.pdf.renderer'
+
+  prestashop.adapter.pdf.generator.delivery_slip:
+    class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
+    arguments:
+      - '@prestashop.adapter.pdf.type_provider.delivery_slip'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@prestashop.adapter.pdf.renderer'
+
+  prestashop.adapter.pdf.generator.shipment_delivery_slip:
+    class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
+    arguments:
+      - '@prestashop.adapter.pdf.type_provider.shipment_delivery_slip'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@prestashop.adapter.pdf.renderer'
 
   prestashop.adapter.pdf.order_invoice_pdf_generator:
     class: PrestaShop\PrestaShop\Adapter\PDF\OrderInvoicePdfGenerator
     arguments:
       - '@translator'
+      - '@prestashop.adapter.pdf.generator.invoice'
 
   prestashop.adapter.pdf.delivery_slip_pdf_generator:
     class: PrestaShop\PrestaShop\Adapter\PDF\DeliverySlipPdfGenerator
     arguments:
       - '@translator'
+      - '@prestashop.adapter.pdf.generator.delivery_slip'
 
   prestashop.adapter.pdf.shipment_delivery_slip_pdf_generator:
     class: PrestaShop\PrestaShop\Adapter\PDF\ShipmentDeliverySlipPdfGenerator
     arguments:
       - '@translator'
       - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
-
-  prestashop.adapter.pdf.generator.credit_slip:
-    class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
-    arguments:
-      - "@=service('prestashop.adapter.legacy.context').getSmarty()"
-      - '@prestashop.adapter.pdf.type_provider.credit_slip'
+      - '@prestashop.adapter.pdf.generator.shipment_delivery_slip'
 
   prestashop.adapter.pdf.credit_slip_pdf_generator:
     class: PrestaShop\PrestaShop\Adapter\PDF\CreditSlipPdfGenerator
     arguments:
       - '%database_prefix%'
       - '@doctrine.dbal.default_connection'
+      - '@prestashop.adapter.pdf.generator.credit_slip'
 
   prestashop.adapter.pdf.generator.single_invoice:
     class: PrestaShop\PrestaShop\Adapter\PDF\InvoicePdfGenerator
+    arguments:
+      - '@prestashop.adapter.pdf.generator.invoice'

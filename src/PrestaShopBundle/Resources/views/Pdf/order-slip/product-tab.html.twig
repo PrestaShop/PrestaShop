@@ -1,0 +1,102 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<table class="product" width="100%" cellpadding="4" cellspacing="0">
+
+    <thead>
+        <tr>
+            <th class="product header small" width="60%">{{ 'Product / Reference'|trans({}, 'Shop.Pdf') }}</th>
+            <th class="product header small" width="10%">{{ 'Qty'|trans({}, 'Shop.Pdf') }}</th>
+            <th class="product header-right small" width="15%">
+                {{ 'Unit price'|trans({}, 'Shop.Pdf') }}<br />
+                {% if tax_excluded_display %}{{ '(Tax Excl.)'|trans({}, 'Shop.Pdf') }}{% else %}{{ '(Tax Incl.)'|trans({}, 'Shop.Pdf') }}{% endif %}
+            </th>
+            <th class="product header-right small" width="15%">
+                {{ 'Price'|trans({}, 'Shop.Pdf') }}<br />
+                {% if tax_excluded_display %}{{ '(Tax Excl.)'|trans({}, 'Shop.Pdf') }}{% else %}{{ '(Tax Incl.)'|trans({}, 'Shop.Pdf') }}{% endif %}
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% if order_details|length == 0 %}
+            <tr class="product">
+                <td class="product center" colspan="4">
+                    {{ 'No details'|trans({}, 'Shop.Pdf') }}
+                </td>
+            </tr>
+        {% else %}
+            {% for order_detail in order_details %}
+                {% set bgcolor_class = cycle(['color_line_even', 'color_line_odd'], loop.index0) %}
+                <tr class="product {{ bgcolor_class }}">
+                    <td class="product left">
+                        {{ order_detail.product_name }}
+                    </td>
+                    <td class="product center">
+                        {{ order_detail.product_quantity }}
+                    </td>
+                    <td class="product right">
+                        {% if tax_excluded_display %}
+                            - {{ order_detail.unit_price_tax_excl|price_format(currency_iso_code) }}
+                        {% else %}
+                            - {{ order_detail.unit_price_tax_incl|price_format(currency_iso_code) }}
+                        {% endif %}
+                    </td>
+                    <td class="product right">
+                        {% if tax_excluded_display %}
+                            - {{ order_detail.total_price_tax_excl|price_format(currency_iso_code) }}
+                        {% else %}
+                            - {{ order_detail.total_price_tax_incl|price_format(currency_iso_code) }}
+                        {% endif %}
+                    </td>
+                </tr>
+
+                {% for text_customization in order_detail.text_customizations %}
+                    <tr class="customization_data {{ bgcolor_class }}">
+                        <td colspan="4">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td>
+                                        {{ '%s:'|trans({'%s': text_customization.name}, 'Shop.Pdf') }}
+                                        {% if text_customization.is_module %}{{ text_customization.value|raw }}{% else %}{{ text_customization.value }}{% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                {% if order_detail.file_customizations_count %}
+                    <tr class="customization_data {{ bgcolor_class }}">
+                        <td colspan="4">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 70%;">{{ 'image(s):'|trans({}, 'Shop.Pdf') }}</td>
+                                    <td>{{ order_detail.file_customizations_count }}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if cart_rules %}
+            {% for cart_rule in cart_rules %}
+                <tr class="discount">
+                    <td class="white left" colspan="3">{{ cart_rule.name }}</td>
+                    <td class="white right">
+                        {% if tax_excluded_display %}
+                            + {{ cart_rule.value_tax_excl|price_format(currency_iso_code) }}
+                        {% else %}
+                            + {{ cart_rule.value|price_format(currency_iso_code) }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+
+    </tbody>
+
+</table>

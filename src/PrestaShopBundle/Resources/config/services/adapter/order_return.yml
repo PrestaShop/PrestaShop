@@ -58,3 +58,5 @@ services:
 
   prestashop.adapter.pdf.order_return_pdf_generator:
     class: 'PrestaShop\PrestaShop\Adapter\PDF\OrderReturnPdfGenerator'
+    arguments:
+      - '@prestashop.adapter.pdf.generator.order_return'

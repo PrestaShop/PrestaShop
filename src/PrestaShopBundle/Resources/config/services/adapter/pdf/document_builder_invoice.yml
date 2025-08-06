@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.pdf.document_builder.invoice:
+    class: PrestaShop\PrestaShop\Adapter\PDF\Document\InvoicePdfDocumentBuilder
+    arguments:
+      - '@prestashop.adapter.pdf.template_resolver'
+      - '@prestashop.adapter.pdf.common_data_builder'
+      - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
+      - '@translator'
+    tags:
+      - { name: 'prestashop.pdf.document_builder' }

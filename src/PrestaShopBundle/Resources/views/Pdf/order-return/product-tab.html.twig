@@ -1,0 +1,38 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<table class="product" width="100%" cellpadding="4" cellspacing="0">
+
+    <thead>
+        <tr>
+            <th class="product header small" width="60%">{{ 'Items to be returned'|trans({}, 'Shop.Pdf') }}</th>
+            <th class="product header small" width="20%">{{ 'Reference'|trans({}, 'Shop.Pdf') }}</th>
+            <th class="product header small" width="20%">{{ 'Qty'|trans({}, 'Shop.Pdf') }}</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {# PRODUCTS #}
+        {% for product in products %}
+            {% set bgcolor_class = cycle(['color_line_even', 'color_line_odd'], loop.index0) %}
+            <tr class="product {{ bgcolor_class }}">
+                <td class="product left">
+                    {{ product.product_name }}
+                </td>
+                <td class="product left">
+                    {% if product.product_reference is empty %}
+                        ---
+                    {% else %}
+                        {{ product.product_reference }}
+                    {% endif %}
+                </td>
+                <td class="product center">
+                    {{ product.product_quantity }}
+                </td>
+            </tr>
+        {% endfor %}
+        {# END PRODUCTS #}
+    </tbody>
+
+</table>
