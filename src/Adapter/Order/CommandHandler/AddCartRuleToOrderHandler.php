@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
+use Group;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -135,9 +136,13 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         if ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_PERCENT) {
             $cartRuleObj->reduction_percent = (float) (string) $command->getDiscountValue();
         } elseif ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_AMOUNT) {
-            $discountValueTaxIncluded = (float) (string) $command->getDiscountValue();
-            $cartRuleObj->reduction_amount = $discountValueTaxIncluded;
-            $cartRuleObj->reduction_tax = true;
+            $customer = new Customer($order->id_customer);
+            $customerGroup = new Group($customer->id_default_group);
+            $taxExcluded = $customerGroup->price_display_method == PS_TAX_EXC;
+
+            $discountValue = (float) (string) $command->getDiscountValue();
+            $cartRuleObj->reduction_amount = $discountValue;
+            $cartRuleObj->reduction_tax = !$taxExcluded;
         } elseif ($command->getCartRuleType() === OrderDiscountType::FREE_SHIPPING) {
             $cartRuleObj->free_shipping = true;
         }

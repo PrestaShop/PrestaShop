@@ -23,7 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
 
-<div class="modal fade" id="addOrderDiscountModal" tabindex="-1" role="dialog">
+<div
+  class="modal fade"
+  id="addOrderDiscountModal"
+  tabindex="-1"
+  role="dialog"
+  data-is-tax-included="{{ orderForViewing.isTaxIncluded() }}"
+>
     <div class="modal-dialog" role="document">
       {{ form_start(addOrderCartRuleForm, {action: path('admin_orders_add_cart_rule', {orderId: orderForViewing.id})}) }}
         <div class="modal-content">
@@ -66,7 +72,11 @@
                     {{ form_widget(addOrderCartRuleForm.value) }}
                   </div>
                   <small class="text-muted js-cart-rule-value-help d-none">
-                    {{ 'This value must include taxes.'|trans({}, 'Admin.Orderscustomers.Notification') }}
+                    {% if orderForViewing.isTaxIncluded() %}
+                      {{ 'This value must include taxes.'|trans({}, 'Admin.Orderscustomers.Notification') }}
+                    {% else %}
+                      {{ 'This value must exclude taxes.'|trans({}, 'Admin.Orderscustomers.Notification') }}
+                    {% endif %}
                   </small>
                 </div>
               </div>
