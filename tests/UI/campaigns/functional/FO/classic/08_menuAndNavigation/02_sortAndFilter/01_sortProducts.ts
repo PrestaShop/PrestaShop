@@ -162,7 +162,7 @@ describe('FO - Menu and navigation : Sort products', async () => {
         },
       },
       // @todo : https://github.com/PrestaShop/PrestaShop/issues/19810
-      /* {
+      {
          args: {
            testIdentifier: 'sortByPriceDesc',
            sortName: 'Price, high to low',
@@ -170,7 +170,7 @@ describe('FO - Menu and navigation : Sort products', async () => {
            sortBy: 'product.price.desc',
            sortDirection: 'desc',
          },
-       },*/
+       },
     ];
     tests.forEach((test) => {
       it(`should sort by '${test.args.sortName}'`, async function () {
