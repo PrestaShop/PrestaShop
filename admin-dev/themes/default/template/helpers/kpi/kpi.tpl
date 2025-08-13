@@ -77,7 +77,7 @@
 
 {if $chart}
 <script>
-	function set_d3_{$id|str_replace:'-':'_'|addslashes}(jsonObject)
+	function set_d3_{$id|replace:'-':'_'|addslashes}(jsonObject)
 	{
 		var data = new Array;
 		$.each(jsonObject, function (index, value) {
