@@ -44,7 +44,12 @@ class ImageTypeChoiceProvider implements FormChoiceProviderInterface
         $dbImageTypes = $this->imageTypeRepository->findAll();
 
         foreach ($dbImageTypes as $dbImageType) {
-            $imageTypes[$dbImageType->getName()] = $dbImageType->getId();
+            $name = $dbImageType->getName();
+            $themeName = '(default)';
+            if ($dbImageType->getThemeName()) {
+                $themeName = "({$dbImageType->getThemeName()})";
+            }
+            $imageTypes["$name $themeName"] = $dbImageType->getId();
         }
 
         return $imageTypes;

@@ -76,7 +76,8 @@ class ImageThumbnailsRegenerator
         // Prepare regular expression to use when deleting thumbnails
         $regexTypes = [];
         foreach ($types as $type) {
-            $regexTypes[] = $type->getName();
+            $regexTypes[] = $type->getName() .
+                ($type->getThemeName() ? '-' . stripslashes($type->getThemeName()) : '');
         }
         $regexStandard = '/^[0-9]+(|_thumb)\-(' . implode('|', $regexTypes) . ')(|2x)\.(' . implode('|', ImageFormatConfiguration::SUPPORTED_FORMATS) . ')$/';
         $regexPlaceholders = '/^([[:lower:]]{2})\-default\-(' . implode('|', $regexTypes) . ')(|2x)\.(' . implode('|', ImageFormatConfiguration::SUPPORTED_FORMATS) . ')$/';
@@ -154,7 +155,8 @@ class ImageThumbnailsRegenerator
                         }
 
                         foreach ($configuredImageFormats as $imageFormat) {
-                            $thumbnailName = substr($originalImageName, 0, -4) . '-' . stripslashes($imageType->getName()) . '.' . $imageFormat;
+                            $themeName = $imageType->getThemeName() ? '-' . stripslashes($imageType->getThemeName()) : null;
+                            $thumbnailName = substr($originalImageName, 0, -4) . '-' . stripslashes($imageType->getName()) . $themeName . '.' . $imageFormat;
                             // If thumbnail does not exist
                             if (!file_exists($newDir . $thumbnailName)) {
                                 // Check if original image exists
@@ -187,7 +189,8 @@ class ImageThumbnailsRegenerator
                 if (file_exists($originalImageName) && filesize($originalImageName)) {
                     foreach ($type as $imageType) {
                         foreach ($configuredImageFormats as $imageFormat) {
-                            $thumbnailName = $imageObj->getExistingImgPath() . '-' . stripslashes($imageType->getName()) . '.' . $imageFormat;
+                            $themeName = $imageType->getThemeName() ? '-' . stripslashes($imageType->getThemeName()) : null;
+                            $thumbnailName = $imageObj->getExistingImgPath() . '-' . stripslashes($imageType->getName()) . $themeName . '.' . $imageFormat;
 
                             if (!file_exists($dir . $thumbnailName)) {
                                 if (!LegacyImageManager::resize(
@@ -295,10 +298,12 @@ class ImageThumbnailsRegenerator
                 }
 
                 foreach ($configuredImageFormats as $imageFormat) {
-                    if (!file_exists($dir . $language->getIsoCode() . '-default-' . stripslashes($image_type->getName()) . '.' . $imageFormat)) {
+                    $themeName = $image_type->getThemeName() ? '-' . stripslashes($image_type->getThemeName()) : null;
+                    $fileName = $language->getIsoCode() . '-default-' . stripslashes($image_type->getName()) . $themeName . '.' . $imageFormat;
+                    if (!file_exists($dir . $fileName)) {
                         if (!LegacyImageManager::resize(
                             $file,
-                            $dir . $language->getIsoCode() . '-default-' . stripslashes($image_type->getName()) . '.' . $imageFormat,
+                            $dir . $fileName,
                             (int) $image_type->getWidth(),
                             (int) $image_type->getHeight(),
                             $imageFormat
@@ -314,7 +319,7 @@ class ImageThumbnailsRegenerator
     }
 
     /**
-     * Function aim to delete all images from defined image type
+     * Function aim to delete all images from defined image type for any theme name.
      *
      * @throws ImageTypeException
      */
@@ -325,8 +330,28 @@ class ImageThumbnailsRegenerator
                 $this->deleteImagesFromType($imageTypeName, $file . '/');
             } else {
                 if (
-                    preg_match('/\/(\d+|\w{2}-default)-' . $imageTypeName . '\.(jpg|png|webp|avif)$/', $file)
+                    preg_match('/\/(\d+|\w{2}-default)-' . $imageTypeName . '(-\w*)?\.(jpg|png|webp|avif)$/', $file)
                 ) {
+                    if (!unlink($file)) {
+                        throw new ImageNotDeletedException(sprintf('Unable to delete image "%s"', $file));
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Function aim to delete all images from theme name and for any image types.
+     *
+     * @throws ImageTypeException
+     */
+    public function deleteImagesFromTheme(string $themeName, string $path): void
+    {
+        foreach (glob($path . '*', GLOB_BRACE) as $file) {
+            if (is_dir($file)) {
+                $this->deleteImagesFromTheme($themeName, $file . '/');
+            } else {
+                if (preg_match('/\/(\d+|\w{2}-default)-(\w)+-' . preg_quote($themeName, '/') . '\.(jpg|png|webp|avif)$/', $file)) {
                     if (!unlink($file)) {
                         throw new ImageNotDeletedException(sprintf('Unable to delete image "%s"', $file));
                     }
