@@ -2873,6 +2873,11 @@
       <title>Modify checkout process</title>
       <description>This hook is called when constructing the checkout process</description>
     </hook>
+    <hook id="actionCheckoutStepRenderTemplate">
+      <name>actionCheckoutStepRenderTemplate</name>
+      <title>Modify the parameters of the checkout step template rendering</title>
+      <description>This hook is called when rendering every checkout step template</description>
+    </hook>
     <hook id="actionPresentProductListing">
       <name>actionPresentProductListing</name>
       <title>Product Listing Presenter</title>
