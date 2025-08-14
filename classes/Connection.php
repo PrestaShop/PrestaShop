@@ -135,47 +135,18 @@ class ConnectionCore extends ObjectModel
      *
      * @return bool
      */
-public static function isBot()
-{
+    public static function isBot()
+    {
     if (empty($_SERVER['HTTP_USER_AGENT'])) {
         return false;
     }
 
-    $bots = [
-        'AISearchBot', 'ahoy', 'AlkalineBOT', 'anthill', 'appie', 'arale', 'araneo', 'AraybOt',
-        'ariadne', 'arks', 'ATN_Worldwide', 'Atomz', 'bbot', 'Bjaaland', 'borg\-bot/0\.9',
-        'BotLink', 'boxseabot', 'bspider', 'calif', 'christcrawler', 'CMC/0\.01', 'combine',
-        'confuzzledbot', 'CoolBot', 'cosmos', 'crawlpaper', 'cusco', 'cyberspyder',
-        'cydralspider', 'desertrealm', 'digger', 'DIIbot', 'downloadexpress', 'DragonBot',
-        'dwcp', 'ebiness', 'ecollector', 'elfinbot', 'esculapio', 'esther', 'ESI', 'fastcrawler',
-        'FDSE', 'FELIX IDE', 'fido', 'fouineur', 'Freecrawl', 'gammaSpider', 'gazz', 'gcreep',
-        'Getterrobo\-Plus', 'golem', 'googlebot', 'griffon', 'Gromit', 'gulper', 'gulliver',
-        'hambot', 'havIndex', 'Hämähäkki', 'hotwired', 'htdig', 'iajabot', 'image\.kapsi\.net',
-        'INGRID/0\.1', 'Informant', 'InfoSpiders', 'inspectorwww', 'irobot', 'Iron33', 'jcrawler',
-        'JBot', 'Jeeves', 'jobo', 'KDD\-Explorer', 'KIT\-Fireball', 'ko_yappo_robot',
-        'label\-grabber', 'larbin', 'legs', 'Linkidator', 'linkwalker', 'Lockon',
-        'logo_gif_crawler', 'marvin', 'mattie', 'mediafox', 'MerzScope', 'MindCrawler', 'moget',
-        'Motor', 'msnbot', 'muncher', 'muninn', 'MuscatFerret', 'MwdSearch', 'Nederland\.zoek',
-        'NetScoop', 'NetSeer', 'newscan\-online', 'nil', 'none', 'Nutch', 'ObjectsSearch',
-        'Occam', 'Orbsearch/1\.0', 'packrat', 'pageboy', 'ParaSite', 'patric', 'pegasus',
-        'perlcrawler', 'phpdig', 'piltdownman', 'Pimptrain', 'pjspider', 'PlumtreeWebAccessor',
-        'PortalBSpider', 'psbot', 'Raven', 'RHCS', 'RixBot', 'robi', 'Robbie', 'RoboCrawl',
-        'robofox', 'roadrunner', 'Scooter', 'Search\-AU', 'searchprocess', 'Senrigan', 'SeznamBot',
-        'Shagseeker', 'sharp\-info\-agent', 'sift', 'SimBot', 'Site Valet', 'skymob',
-        'SLCrawler/2\.0', 'slurp', 'snooper', 'solbot', 'speedy', 'spider_monkey',
-        'SpiderBot/1\.0', 'spiderline', 'suke', 'sygol\.com', 'tach_bw', 'TechBOT', 'templeton',
-        'Teoma', 'titin', 'topiclink', 'T\-H\-U\-N\-D\-E\-R\-S\-T\-O\-N\-E', 'udmsearch',
-        'UdmSearch', 'Ukonline', 'urlck', 'Valkyrie libwww\-perl', 'verticrawl', 'Victoria',
-        'void\-bot', 'Voyager', 'VWbot_K', 'wapspider', 'WebBandit/1\.0', 'webcatcher',
-        'WebMechanic', 'WebMoose', 'webquest', 'webreaper', 'webs', 'webspider', 'WebWalker',
-        'wget', 'whowhere', 'winona', 'wlm', 'WOLP', 'woriobot', 'woriobot', 'WWWC', 'XGET',
-        'YandexBot'
-    ];
+    $bots = ['AISearchBot', 'ahoy', 'AlkalineBOT', 'anthill', 'appie', 'arale', 'araneo', 'AraybOt', 'ariadne', 'arks', 'ATN_Worldwide', 'Atomz', 'bbot', 'Bjaaland', 'borg\-bot\/0\.9', 'BotLink', 'boxseabot', 'bspider', 'calif', 'christcrawler', 'CMC\/0\.01', 'combine', 'confuzzledbot', 'CoolBot', 'cosmos', 'crawlpaper', 'cusco', 'cyberspyder', 'cydralspider', 'desertrealm', 'digger', 'DIIbot', 'downloadexpress', 'DragonBot', 'dwcp', 'ebiness', 'ecollector', 'elfinbot', 'esculapio', 'esther', 'ESI', 'fastcrawler', 'FDSE', 'FELIX\ IDE', 'fido', 'fouineur', 'Freecrawl', 'gammaSpider', 'gazz', 'gcreep', 'Getterrobo\-Plus', 'golem', 'googlebot', 'griffon', 'Gromit', 'gulper', 'gulliver', 'hambot', 'havIndex', 'Hämähäkki', 'hotwired', 'htdig', 'iajabot', 'image\.kapsi\.net', 'INGRID\/0\.1', 'Informant', 'InfoSpiders', 'inspectorwww', 'irobot', 'Iron33', 'jcrawler', 'JBot', 'Jeeves', 'jobo', 'KDD\-Explorer', 'KIT\-Fireball', 'ko_yappo_robot', 'label\-grabber', 'larbin', 'legs', 'Linkidator', 'linkwalker', 'Lockon', 'logo_gif_crawler', 'marvin', 'mattie', 'mediafox', 'MerzScope', 'MindCrawler', 'moget', 'Motor', 'msnbot', 'muncher', 'muninn', 'MuscatFerret', 'MwdSearch', 'Nederland\.zoek', 'NetScoop', 'NetSeer', 'newscan\-online', 'nil', 'none', 'Nutch', 'ObjectsSearch', 'Occam', 'Orbsearch\/1\.0', 'packrat', 'pageboy', 'ParaSite', 'patric', 'pegasus', 'perlcrawler', 'phpdig', 'piltdownman', 'Pimptrain', 'pjspider', 'PlumtreeWebAccessor', 'PortalBSpider', 'psbot', 'Raven', 'RHCS', 'RixBot', 'robi', 'Robbie', 'RoboCrawl', 'robofox', 'roadrunner', 'Scooter', 'Search\-AU', 'searchprocess', 'Senrigan', 'SeznamBot', 'Shagseeker', 'sharp\-info\-agent', 'sift', 'SimBot', 'Site\ Valet', 'skymob', 'SLCrawler\/2\.0', 'slurp', 'snooper', 'solbot', 'speedy', 'spider_monkey', 'SpiderBot\/1\.0', 'spiderline', 'suke', 'sygol\.com', 'tach_bw', 'TechBOT', 'templeton', 'Teoma', 'titin', 'topiclink', 'T\-H\-U\-N\-D\-E\-R\-S\-T\-O\-N\-E', 'udmsearch', 'UdmSearch', 'Ukonline', 'urlck', 'Valkyrie\ libwww\-perl', 'verticrawl', 'Victoria', 'void\-bot', 'Voyager', 'VWbot_K', 'wapspider', 'WebBandit\/1\.0', 'webcatcher', 'WebMechanic', 'WebMoose', 'webquest', 'webreaper', 'webs', 'webspider', 'WebWalker', 'wget', 'whowhere', 'winona', 'wlm', 'WOLP', 'woriobot', 'WWWC', 'XGET', 'YandexBot'];
 
     $pattern = '/(' . implode('|', $bots) . ')/i';
 
     return (bool) preg_match($pattern, $_SERVER['HTTP_USER_AGENT']);
-}
+    }
 
     /**
      * @param Cookie $cookie
