@@ -5478,5 +5478,15 @@
         <title>Called when configuring HTMLPurifier</title>
         <description>Allows modules to modify the HTMLPurifier definition by adding custom allowed HTML elements or attributes during Tools::purifyHTML().</description>
     </hook>
+    <hook id="actionCategoryProductsTotalBefore">
+      <name>actionCategoryProductsTotalBefore</name>
+      <title>Called before getting the total number of products in a category</title>
+      <description>Allows modules to modify the SQL query used to get the total number of products in a category.</description>
+    </hook>
+    <hook id="actionCategoryProductsBefore">
+      <name>actionCategoryProductsBefore</name>
+      <title>Called before getting the products in a category</title>
+      <description>Allows modules to modify the SQL query used to get the products in a category.</description>
+    </hook>
   </entities>
 </entity_hook>
