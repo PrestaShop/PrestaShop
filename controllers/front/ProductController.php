@@ -311,156 +311,169 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function initContent()
     {
-        if (!$this->errors) {
-            if (Pack::isPack((int) $this->product->id)
-                && !Pack::isInStock((int) $this->product->id, $this->product->minimal_quantity, $this->context->cart)
-            ) {
-                $this->product->quantity = 0;
+        // Check if product is properly loaded and accessible
+        // If product is not valid, don't process product data
+        if (!Validate::isLoadedObject($this->product) || 
+            !$this->product->isAssociatedToShop() || 
+            !$this->product->active) {
+            // If product is not valid, don't process product data
+            parent::initContent();
+            return;
+        }
+
+        // Process product data (including validation errors like image upload issues)
+        if (Pack::isPack((int) $this->product->id)
+            && !Pack::isInStock((int) $this->product->id, $this->product->minimal_quantity, $this->context->cart)
+        ) {
+            $this->product->quantity = 0;
+        }
+
+        $this->product->description = $this->transformDescriptionWithImg($this->product->description);
+
+        $priceDisplay = Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer);
+        $productPrice = 0;
+        $productPriceWithoutReduction = 0;
+
+        if (!$priceDisplay || $priceDisplay == 2) {
+            $productPrice = $this->product->getPrice(true, null, 6);
+            $productPriceWithoutReduction = $this->product->getPriceWithoutReduct(false, null);
+        } elseif ($priceDisplay == 1) {
+            $productPrice = $this->product->getPrice(false, null, 6);
+            $productPriceWithoutReduction = $this->product->getPriceWithoutReduct(true, null);
+        }
+
+        $pictures = [];
+        $text_fields = [];
+        if ($this->product->customizable) {
+            $files = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_FILE, true);
+            foreach ($files as $file) {
+                $pictures['pictures_' . $this->product->id . '_' . $file['index']] = $file['value'];
             }
 
-            $this->product->description = $this->transformDescriptionWithImg($this->product->description);
+            $texts = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_TEXTFIELD, true);
 
-            $priceDisplay = Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer);
-            $productPrice = 0;
-            $productPriceWithoutReduction = 0;
-
-            if (!$priceDisplay || $priceDisplay == 2) {
-                $productPrice = $this->product->getPrice(true, null, 6);
-                $productPriceWithoutReduction = $this->product->getPriceWithoutReduct(false, null);
-            } elseif ($priceDisplay == 1) {
-                $productPrice = $this->product->getPrice(false, null, 6);
-                $productPriceWithoutReduction = $this->product->getPriceWithoutReduct(true, null);
+            foreach ($texts as $text_field) {
+                $text_fields['textFields_' . $this->product->id . '_' . $text_field['index']] = str_replace('<br />', "\n", $text_field['value']);
             }
+        }
 
-            $pictures = [];
-            $text_fields = [];
-            if ($this->product->customizable) {
-                $files = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_FILE, true);
-                foreach ($files as $file) {
-                    $pictures['pictures_' . $this->product->id . '_' . $file['index']] = $file['value'];
+        $this->context->smarty->assign([
+            'pictures' => $pictures,
+            'textFields' => $text_fields, ]);
+
+        $this->product->customization_required = false;
+        $customization_fields = $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false;
+        if (is_array($customization_fields)) {
+            foreach ($customization_fields as &$customization_field) {
+                if ($customization_field['type'] == Product::CUSTOMIZE_FILE) {
+                    $customization_field['key'] = 'pictures_' . $this->product->id . '_' . $customization_field['id_customization_field'];
+                } elseif ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD) {
+                    $customization_field['key'] = 'textFields_' . $this->product->id . '_' . $customization_field['id_customization_field'];
                 }
-
-                $texts = $this->context->cart->getProductCustomization($this->product->id, Product::CUSTOMIZE_TEXTFIELD, true);
-
-                foreach ($texts as $text_field) {
-                    $text_fields['textFields_' . $this->product->id . '_' . $text_field['index']] = str_replace('<br />', "\n", $text_field['value']);
-                }
             }
+            unset($customization_field);
+        }
 
-            $this->context->smarty->assign([
-                'pictures' => $pictures,
-                'textFields' => $text_fields, ]);
+        // Assign template vars related to the category + execute hooks related to the category
+        $this->assignCategory();
+        // Assign template vars related to the price and tax
+        $this->assignPriceAndTax();
 
-            $this->product->customization_required = false;
-            $customization_fields = $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false;
-            if (is_array($customization_fields)) {
-                foreach ($customization_fields as &$customization_field) {
-                    if ($customization_field['type'] == Product::CUSTOMIZE_FILE) {
-                        $customization_field['key'] = 'pictures_' . $this->product->id . '_' . $customization_field['id_customization_field'];
-                    } elseif ($customization_field['type'] == Product::CUSTOMIZE_TEXTFIELD) {
-                        $customization_field['key'] = 'textFields_' . $this->product->id . '_' . $customization_field['id_customization_field'];
-                    }
-                }
-                unset($customization_field);
-            }
+        // Assign attributes combinations to the template
+        $this->assignAttributesCombinations();
 
-            // Assign template vars related to the category + execute hooks related to the category
-            $this->assignCategory();
-            // Assign template vars related to the price and tax
-            $this->assignPriceAndTax();
+        // Pack management
+        $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : [];
 
-            // Assign attributes combinations to the template
-            $this->assignAttributesCombinations();
+        $assembler = new ProductAssembler($this->context);
+        $presenter = new ProductListingPresenter(
+            new ImageRetriever(
+                $this->context->link
+            ),
+            $this->context->link,
+            new PriceFormatter(),
+            new ProductColorsRetriever(),
+            $this->getTranslator()
+        );
+        $presentationSettings = $this->getProductPresentationSettings();
 
-            // Pack management
-            $pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : [];
-
-            $assembler = new ProductAssembler($this->context);
-            $presenter = new ProductListingPresenter(
-                new ImageRetriever(
-                    $this->context->link
-                ),
-                $this->context->link,
-                new PriceFormatter(),
-                new ProductColorsRetriever(),
-                $this->getTranslator()
+        $presentedPackItems = [];
+        foreach ($pack_items as $item) {
+            $presentedPackItems[] = $presenter->present(
+                $this->getProductPresentationSettings(),
+                $assembler->assembleProduct($item),
+                $this->context->language
             );
-            $presentationSettings = $this->getProductPresentationSettings();
+        }
 
-            $presentedPackItems = [];
-            foreach ($pack_items as $item) {
-                $presentedPackItems[] = $presenter->present(
-                    $this->getProductPresentationSettings(),
-                    $assembler->assembleProduct($item),
+        $this->context->smarty->assign('packItems', $presentedPackItems);
+        $this->context->smarty->assign('noPackPrice', $this->product->getNoPackPrice());
+        $this->context->smarty->assign('displayPackPrice', ($pack_items && $productPrice < Pack::noPackPrice((int) $this->product->id)));
+        $this->context->smarty->assign('priceDisplay', $priceDisplay);
+        $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
+
+        $accessories = $this->product->getAccessories($this->context->language->id);
+        if (is_array($accessories)) {
+            foreach ($accessories as &$accessory) {
+                $accessory = $presenter->present(
+                    $presentationSettings,
+                    Product::getProductProperties($this->context->language->id, $accessory, $this->context),
                     $this->context->language
                 );
             }
-
-            $this->context->smarty->assign('packItems', $presentedPackItems);
-            $this->context->smarty->assign('noPackPrice', $this->product->getNoPackPrice());
-            $this->context->smarty->assign('displayPackPrice', ($pack_items && $productPrice < Pack::noPackPrice((int) $this->product->id)));
-            $this->context->smarty->assign('priceDisplay', $priceDisplay);
-            $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
-
-            $accessories = $this->product->getAccessories($this->context->language->id);
-            if (is_array($accessories)) {
-                foreach ($accessories as &$accessory) {
-                    $accessory = $presenter->present(
-                        $presentationSettings,
-                        Product::getProductProperties($this->context->language->id, $accessory, $this->context),
-                        $this->context->language
-                    );
-                }
-                unset($accessory);
-            }
-
-            if ($this->product->customizable) {
-                $customization_datas = $this->context->cart->getProductCustomization($this->product->id, null, true);
-            }
-
-            $product_for_template = $this->getTemplateVarProduct();
-
-            // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
-            $filteredProduct = Hook::exec(
-                'filterProductContent',
-                ['object' => $product_for_template],
-                null,
-                false,
-                true,
-                false,
-                null,
-                true
-            );
-            if (!empty($filteredProduct['object'])) {
-                $product_for_template = $filteredProduct['object'];
-            }
-
-            $productManufacturer = new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id);
-
-            $manufacturerImageUrl = $this->context->link->getManufacturerImageLink($productManufacturer->id);
-            $undefinedImage = $this->context->link->getManufacturerImageLink(0);
-            if ($manufacturerImageUrl === $undefinedImage) {
-                $manufacturerImageUrl = null;
-            }
-
-            $productBrandUrl = $this->context->link->getManufacturerLink($productManufacturer->id);
-
-            $this->context->smarty->assign([
-                'priceDisplay' => $priceDisplay,
-                'productPriceWithoutReduction' => $productPriceWithoutReduction,
-                'customizationFields' => $customization_fields,
-                'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
-                'accessories' => $accessories,
-                'product' => $product_for_template,
-                'displayUnitPrice' => !empty($product_for_template['unit_price_tax_excluded']),
-                'product_manufacturer' => $productManufacturer,
-                'manufacturer_image_url' => $manufacturerImageUrl,
-                'product_brand_url' => $productBrandUrl,
-            ]);
-
-            // Assign attribute groups to the template
-            $this->assignAttributesGroups($product_for_template);
+            unset($accessory);
         }
+
+        if ($this->product->customizable) {
+            $customization_datas = $this->context->cart->getProductCustomization($this->product->id, null, true);
+        }
+
+        $product_for_template = $this->getTemplateVarProduct();
+
+        // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
+        $filteredProduct = Hook::exec(
+            'filterProductContent',
+            ['object' => $product_for_template],
+            null,
+            false,
+            true,
+            false,
+            null,
+            true
+        );
+        if (!empty($filteredProduct['object'])) {
+            $product_for_template = $filteredProduct['object'];
+        }
+
+        $productManufacturer = new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id);
+
+        $manufacturerImageUrl = $this->context->link->getManufacturerImageLink($productManufacturer->id);
+        $undefinedImage = $this->context->link->getManufacturerImageLink(0);
+        if ($manufacturerImageUrl === $undefinedImage) {
+            $manufacturerImageUrl = null;
+        }
+
+        $productBrandUrl = $this->context->link->getManufacturerLink($productManufacturer->id);
+
+        $this->context->smarty->assign([
+            'priceDisplay' => $priceDisplay,
+            'productPriceWithoutReduction' => $productPriceWithoutReduction,
+            'customizationFields' => $customization_fields,
+            'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
+            'accessories' => $accessories,
+            'product' => $product_for_template,
+            'displayUnitPrice' => !empty($product_for_template['unit_price_tax_excluded']),
+            'product_manufacturer' => $productManufacturer,
+            'manufacturer_image_url' => $manufacturerImageUrl,
+            'product_brand_url' => $productBrandUrl,
+            'configuration' => [
+                'PS_PRODUCT_PICTURE_WIDTH' => (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'),
+                'PS_PRODUCT_PICTURE_HEIGHT' => (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'),
+            ],
+        ]);
+
+        // Assign attribute groups to the template
+        $this->assignAttributesGroups($product_for_template);
 
         parent::initContent();
     }
@@ -479,7 +492,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->context->cart->add();
                 $this->context->cookie->id_cart = (int) $this->context->cart->id;
             }
-            $this->pictureUpload();
+            
+            // Process picture upload and check for errors
+            $pictureUploadResult = $this->pictureUpload();
+            if ($pictureUploadResult === false && !empty($this->errors)) {
+                // If picture upload failed and there are errors, don't process text fields
+                return;
+            }
+            
             $this->textRecord();
         } elseif (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture'))) {
             $this->errors[] = $this->trans('An error occurred while deleting the selected picture.', [], 'Shop.Notifications.Error');
@@ -524,6 +544,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'catalog/_partials/product-customization',
                 [
                     'customizations' => $product['customizations'],
+                    'configuration' => [
+                        'PS_PRODUCT_PICTURE_WIDTH' => (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'),
+                        'PS_PRODUCT_PICTURE_HEIGHT' => (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'),
+                    ],
                 ]
             ),
             'product_details' => $this->render('catalog/_partials/product-details'),
@@ -941,14 +965,25 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         foreach ($_FILES as $field_name => $file) {
             if (in_array($field_name, $authorized_file_fields) && isset($file['tmp_name']) && !empty($file['tmp_name'])) {
                 $file_name = md5(uniqid((string) mt_rand(0, mt_getrandmax()), true));
+                
+                // Validate file upload (size, format, etc.)
                 if ($error = ImageManager::validateUpload($file, (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE'))) {
                     $this->errors[] = $error;
+                    return false;
                 }
 
                 $product_picture_width = (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH');
                 $product_picture_height = (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT');
+                
+                // Validate image dimensions
+                if ($dimensionError = ImageManager::validateImageDimensions($file, $product_picture_width, $product_picture_height)) {
+                    $this->errors[] = $dimensionError;
+                    return false;
+                }
+                
                 $tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-                if ($error || (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name))) {
+                if (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
+                    $this->errors[] = $this->trans('An error occurred during the image upload process.', [], 'Shop.Notifications.Error');
                     return false;
                 }
                 /* Original file */
