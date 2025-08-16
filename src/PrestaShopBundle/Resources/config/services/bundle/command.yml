@@ -72,3 +72,10 @@ services:
       - '%kernel.project_dir%/install-dev/data/xml/hook.xml'
     tags:
       - 'console.command'
+
+  PrestaShopBundle\Command\HousekeepingCommand:
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.data_provider.language'
+    tags:
+      - 'console.command'
