@@ -1009,7 +1009,7 @@ class CategoryCore extends ObjectModel
                 'getTotal' => $getTotal,
                 'active' => $active,
                 'random' => $random,
-                'randomNumberProducts' => $randomNumberProducts
+                'randomNumberProducts' => $randomNumberProducts,
             ]);
 
             return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
@@ -1045,63 +1045,63 @@ class CategoryCore extends ObjectModel
         }
 
         $query = new DbQuery();
-        
+
         // Build SELECT clause
         $selectFields = 'p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) AS quantity';
         if (Combination::isFeatureActive()) {
             $selectFields .= ', IFNULL(product_attribute_shop.id_product_attribute, 0) AS id_product_attribute, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity';
         }
         $selectFields .= ', pl.`description`, pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_title`, pl.`name`, image_shop.`id_image` id_image, il.`legend` as legend, m.`name` AS manufacturer_name, cl.`name` AS category_default, DATEDIFF(product_shop.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00", INTERVAL ' . (int) $nbDaysNewProduct . ' DAY)) > 0 AS new, product_shop.price AS orderprice, psales.`quantity` as sales';
-        
+
         $query->select($selectFields);
         $query->from('category_product', 'cp');
         $query->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
-        
+
         // Add shop association
         $query->join(Shop::addSqlAssociation('product', 'p'));
-        
+
         // Add product attribute shop join if combinations are active
         if (Combination::isFeatureActive()) {
             $query->leftJoin('product_attribute_shop', 'product_attribute_shop', 'p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id);
         }
-        
+
         // Add stock join
         $query->join(Product::sqlStock('p', 0));
-        
+
         // Add category lang join
         $query->leftJoin('category_lang', 'cl', 'product_shop.`id_category_default` = cl.`id_category` AND cl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('cl'));
-        
+
         // Add product lang join
         $query->leftJoin('product_lang', 'pl', 'p.`id_product` = pl.`id_product` AND pl.`id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('pl'));
-        
+
         // Add image shop join
         $query->leftJoin('image_shop', 'image_shop', 'image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id);
-        
+
         // Add image lang join
         $query->leftJoin('image_lang', 'il', 'image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $idLang);
-        
+
         // Add manufacturer join
         $query->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
-        
+
         // Add product sale join
         $query->leftJoin('product_sale', 'psales', 'psales.`id_product` = p.`id_product`');
-        
+
         // Add WHERE conditions
         $query->where('product_shop.`id_shop` = ' . (int) $context->shop->id);
         $query->where('cp.`id_category` = ' . (int) $this->id);
-        
+
         if ($active) {
             $query->where('product_shop.`active` = 1');
         }
-        
+
         if ($front) {
             $query->where('product_shop.`visibility` IN ("both", "catalog")');
         }
-        
+
         if ($idSupplier) {
             $query->where('p.id_supplier = ' . (int) $idSupplier);
         }
-        
+
         // Add ORDER BY and LIMIT
         if ($random === true) {
             $query->orderBy('RAND()');
@@ -1109,7 +1109,7 @@ class CategoryCore extends ObjectModel
         } elseif ($orderBy !== 'orderprice') {
             $orderByField = (!empty($orderByPrefix) ? $orderByPrefix . '.' : '') . '`' . bqSQL($orderBy) . '`';
             $query->orderBy($orderByField . ' ' . pSQL($orderWay));
-            $query->limit((int) $productPerPage, (((int) $pageNumber - 1) * (int) $productPerPage));
+            $query->limit((int) $productPerPage, ((int) $pageNumber - 1) * (int) $productPerPage);
         }
 
         Hook::exec('actionCategoryProductsBefore', [
@@ -1123,7 +1123,7 @@ class CategoryCore extends ObjectModel
             'getTotal' => $getTotal,
             'active' => $active,
             'random' => $random,
-            'randomNumberProducts' => $randomNumberProducts
+            'randomNumberProducts' => $randomNumberProducts,
         ]);
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query, true, false);
