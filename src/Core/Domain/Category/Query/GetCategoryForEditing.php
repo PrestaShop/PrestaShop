@@ -41,7 +41,7 @@ class GetCategoryForEditing
     /**
      * @param int $categoryId
      */
-    public function __construct($categoryId)
+    public function __construct(int $categoryId)
     {
         $this->categoryId = new CategoryId($categoryId);
     }
@@ -49,7 +49,7 @@ class GetCategoryForEditing
     /**
      * @return CategoryId
      */
-    public function getCategoryId()
+    public function getCategoryId(): CategoryId
     {
         return $this->categoryId;
     }
