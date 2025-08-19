@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -44,6 +45,7 @@ class CancelProductType extends TranslatorAwareType
         $taxMethod = $options['data']['taxMethod'];
         $precision = $options['data']['precision'];
 
+        /** @var OrderProductForViewing $product */
         foreach ($products as $product) {
             $builder
                 ->add('selected_' . $product->getOrderDetailId(), CheckboxType::class,
@@ -62,7 +64,7 @@ class CancelProductType extends TranslatorAwareType
                     'required' => false,
                     'data' => 0,
                     'scale' => 0,
-                    'unit' => '/ ' . $product->getQuantity(),
+                    'unit' => '/ ' . $product->getQuantityRefundable(),
                 ])
                 ->add('amount_' . $product->getOrderDetailId(), TextType::class, [
                     'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],
