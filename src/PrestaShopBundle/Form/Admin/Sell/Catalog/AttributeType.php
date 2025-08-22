@@ -74,8 +74,9 @@ class AttributeType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $attributeGroupId = $options['attribute_group'];
-
+        $attributeGroup = null;
         $hasAttributeGroupId = false;
+
         if (0 < $attributeGroupId) {
             $attributeGroup = $this->attributeGroupRepository->get(
                 new AttributeGroupId($attributeGroupId)
@@ -92,6 +93,9 @@ class AttributeType extends TranslatorAwareType
                     new LanguageId($this->languageContext->getId())
                 ),
                 'data' => ($hasAttributeGroupId ? $attributeGroupId : ''),
+                'attr' => [
+                    'data-color-groups' => json_encode($this->getColorGroupIds())
+                ],
             ])
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
@@ -106,21 +110,19 @@ class AttributeType extends TranslatorAwareType
                 'help' => $this->trans('Your internal name for this attribute.', 'Admin.Catalog.Help')
                     . '&nbsp;' . $this->trans('Invalid characters:', 'Admin.Notifications.Info')
                     . ' ' . TypedRegexValidator::CATALOG_CHARS,
-            ])
-            ->add('color', ColorType::class, [
-                'label' => $this->trans('Color', 'Admin.Global'),
-                'row_attr' => [
-                    'class' => 'js-attribute-type-color-form-row',
-                ],
-                'required' => false,
-            ])
-            ->add('texture', FileType::class, [
-                'label' => $this->trans('Texture', 'Admin.Global'),
-                'row_attr' => [
-                    'class' => 'js-attribute-type-texture-form-row',
-                ],
-                'required' => false,
             ]);
+
+        if ($hasAttributeGroupId && $attributeGroup !== null && $attributeGroup->group_type === 'color') {
+            $builder
+                ->add('color', ColorType::class, [
+                    'label' => $this->trans('Color', 'Admin.Global'),
+                    'required' => false,
+                ])
+                ->add('texture', FileType::class, [
+                    'label' => $this->trans('Texture', 'Admin.Global'),
+                    'required' => false,
+                ]);
+        }
 
         if ($this->multistoreFeature->isUsed()) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
@@ -165,5 +167,23 @@ class AttributeType extends TranslatorAwareType
         }
 
         return $return;
+    }
+
+    /**
+     * Get array of attribute group IDs that are of type 'color'
+     */
+    private function getColorGroupIds(): array
+    {
+        $shopConstraint = ShopConstraint::shop($this->shopContext->getId());
+        $groups = $this->attributeGroupRepository->getAttributeGroups($shopConstraint);
+        
+        $colorGroupIds = [];
+        foreach ($groups as $group) {
+            if ($group->group_type === 'color') {
+                $colorGroupIds[] = (string) $group->id;
+            }
+        }
+        
+        return $colorGroupIds;
     }
 }

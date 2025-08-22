@@ -44,9 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const attributeTextureRow = document.querySelector(AttributeFormMap.attributeTextureFormRow) as HTMLElement | null;
   const attributeGroupSelectValue = (attributeGroupSelect as HTMLInputElement | null)?.value;
 
+  // Get color group IDs from data attribute
+  const colorGroupIds = getColorGroupIds(attributeGroupSelect);
+
   const toggleDisplay = (value: string | null) => {
     if (attributeColorRow && attributeTextureRow) {
-      const displayValue = value === '2' ? 'flex' : 'none';
+      const isColorGroup = value !== null && colorGroupIds.includes(value);
+      const displayValue = isColorGroup ? 'flex' : 'none';
       attributeColorRow.style.display = displayValue;
       attributeTextureRow.style.display = displayValue;
     }
@@ -64,3 +68,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+/**
+ * Get array of color group IDs from the select element's data attribute
+ */
+function getColorGroupIds(selectElement: HTMLInputElement | null): string[] {
+  if (!selectElement) {
+    return [];
+  }
+  
+  const dataColorGroups = selectElement.dataset.colorGroups;
+  if (!dataColorGroups) {
+    return [];
+  }
+  
+  try {
+    return JSON.parse(dataColorGroups);
+  } catch (e) {
+    console.error('Error parsing color groups data:', e);
+    return [];
+  }
+}
