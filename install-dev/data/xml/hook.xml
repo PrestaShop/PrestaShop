@@ -5486,7 +5486,7 @@
     <hook id="actionCategoryProductsBefore">
       <name>actionCategoryProductsBefore</name>
       <title>Called before getting the products in a category</title>
-      <description>Allows modules to modify the SQL query used to get the products in a category.</description>
+      <description>Allows modules to modify the SQL query used to get the products in a category. This hook works exclusively with the default product provider; if you are using ps_facetedsearch or another custom provider, this hook will not be triggered.</description>
     </hook>
   </entities>
 </entity_hook>
