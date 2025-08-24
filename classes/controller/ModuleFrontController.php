@@ -23,7 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-include_once _PS_CLASS_DIR_ . 'controller' . DIRECTORY_SEPARATOR . 'ModuleFrontControllerTrait.php';
+
+use PrestaShop\PrestaShop\Core\Module\Controller\ModuleFrontControllerTrait;
 
 class ModuleFrontControllerCore extends FrontController
 {
@@ -31,7 +32,7 @@ class ModuleFrontControllerCore extends FrontController
 
     public function __construct()
     {
-        $this->bootModuleFromRequest();
+        $this->initializeModuleFromRequest();
 
         parent::__construct();
     }

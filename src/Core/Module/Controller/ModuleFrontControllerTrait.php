@@ -23,12 +23,27 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+namespace PrestaShop\PrestaShop\Core\Module\Controller;
+
+use Cart;
+use Configuration;
+use Currency;
+use Dispatcher;
+use Hook;
+use Module;
+use Tools;
+
+/**
+ * Trait ModuleFrontControllerTrait centralizes the common behavior shared by
+ * `ModuleFrontControllerCore` and `ModuleProductListingFrontControllerCore`.
+ */
 trait ModuleFrontControllerTrait
 {
     /** @var Module */
     public $module;
 
-    protected function bootModuleFromRequest(): void
+    protected function initializeModuleFromRequest(): void
     {
         $moduleName = (string) Tools::getValue('module');
         $this->module = Module::getInstanceByName($moduleName);
