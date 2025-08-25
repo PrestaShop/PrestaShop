@@ -73,6 +73,7 @@ services:
     class: PrestaShopBundle\Service\Log\LogHandler
     arguments:
       - "@service_container"
+      - !php/const Monolog\Logger::WARNING
 
   # CSRF/XSS additional protection middleware
   PrestaShopBundle\Service\DataProvider\UserProvider:
