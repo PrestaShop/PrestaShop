@@ -4594,5 +4594,10 @@
         <title>Called when checking if an order has been delivered</title>
         <description>Allows modules to override or react to the hasBeenDelivered() method of the Order class.</description>
     </hook>
+    <hook id="actionModifyHtmlPurifierConfig">
+        <name>actionModifyHtmlPurifierConfig</name>
+        <title>Called when configuring HTMLPurifier</title>
+        <description>Allows modules to modify the HTMLPurifier definition by adding custom allowed HTML elements or attributes during Tools::purifyHTML().</description>
+    </hook>
   </entities>
 </entity_hook>

@@ -3972,6 +3972,9 @@ exit;
                     if ($allow_style) {
                         $def->addElement('style', 'Block', 'Flow', 'Common', ['type' => 'Text']);
                     }
+                    Hook::exec('actionModifyHtmlPurifierConfig', [
+                        'config' => &$config,
+                    ]);
                 }
 
                 $purifier = new HTMLPurifier($config);

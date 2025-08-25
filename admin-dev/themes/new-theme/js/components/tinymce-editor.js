@@ -128,6 +128,10 @@ class TinyMCEEditor {
       cfg.selector = `.${cfg.editor_selector}`;
     }
 
+    EventEmitter.emit('initTinyMCE', {
+      config: cfg,
+    });
+
     // Change icons in popups
     $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => {
       this.changeToMaterial();
