@@ -119,4 +119,10 @@ class AmountImmutable
             $this->getTaxExcluded() - $amount->getTaxExcluded()
         );
     }
+
+    public function isGreaterThan(AmountImmutable $allowedMaxDiscount): bool
+    {
+        return $this->getTaxIncluded() > $allowedMaxDiscount->getTaxIncluded()
+            || $this->getTaxExcluded() > $allowedMaxDiscount->getTaxExcluded();
+    }
 }

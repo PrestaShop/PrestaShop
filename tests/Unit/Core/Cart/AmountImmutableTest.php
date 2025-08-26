@@ -75,4 +75,68 @@ class AmountImmutableTest extends TestCase
         $this->assertEquals(2.5, $amount2->getTaxIncluded());
         $this->assertEquals(3.7, $amount2->getTaxExcluded());
     }
+
+    public function testIsGreaterThanWhenBothValuesAreGreater(): void
+    {
+        $amount1 = new AmountImmutable(10.0, 8.0);
+        $amount2 = new AmountImmutable(5.0, 4.0);
+
+        $this->assertTrue($amount1->isGreaterThan($amount2));
+    }
+
+    public function testIsGreaterThanWhenOnlyTaxIncludedIsGreater(): void
+    {
+        $amount1 = new AmountImmutable(10.0, 3.0);
+        $amount2 = new AmountImmutable(5.0, 8.0);
+
+        $this->assertTrue($amount1->isGreaterThan($amount2));
+    }
+
+    public function testIsGreaterThanWhenOnlyTaxExcludedIsGreater(): void
+    {
+        $amount1 = new AmountImmutable(3.0, 10.0);
+        $amount2 = new AmountImmutable(5.0, 4.0);
+
+        $this->assertTrue($amount1->isGreaterThan($amount2));
+    }
+
+    public function testIsGreaterThanWhenBothValuesAreLess(): void
+    {
+        $amount1 = new AmountImmutable(3.0, 2.0);
+        $amount2 = new AmountImmutable(5.0, 4.0);
+
+        $this->assertFalse($amount1->isGreaterThan($amount2));
+    }
+
+    public function testIsGreaterThanWhenBothValuesAreEqual(): void
+    {
+        $amount1 = new AmountImmutable(5.0, 4.0);
+        $amount2 = new AmountImmutable(5.0, 4.0);
+
+        $this->assertFalse($amount1->isGreaterThan($amount2));
+    }
+
+    public function testIsGreaterThanWithZeroValues(): void
+    {
+        $amount1 = new AmountImmutable(0.0, 0.0);
+        $amount2 = new AmountImmutable(0.0, 0.0);
+
+        $this->assertFalse($amount1->isGreaterThan($amount2));
+    }
+
+    public function testIsGreaterThanWithNegativeValues(): void
+    {
+        $amount1 = new AmountImmutable(-5.0, -3.0);
+        $amount2 = new AmountImmutable(-10.0, -8.0);
+
+        $this->assertTrue($amount1->isGreaterThan($amount2));
+    }
+
+    public function testIsGreaterThanWithMixedPositiveNegative(): void
+    {
+        $amount1 = new AmountImmutable(5.0, -3.0);
+        $amount2 = new AmountImmutable(-2.0, 4.0);
+
+        $this->assertTrue($amount1->isGreaterThan($amount2));
+    }
 }

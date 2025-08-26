@@ -249,7 +249,7 @@ class Calculator
             $allowedMaxDiscount = $allowedMaxDiscount->add($shippingDiscount);
         }
         // discount cannot be above total cart price
-        if ($amount > $allowedMaxDiscount) {
+        if ($amount->isGreaterThan($allowedMaxDiscount)) {
             $amount = $allowedMaxDiscount;
         }
 
