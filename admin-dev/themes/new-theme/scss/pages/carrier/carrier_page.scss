@@ -1,11 +1,11 @@
 @media only screen and (min-width: 320px) and (max-width: 1450px) {
   #carrier {
     .nav-tabs {
+      flex-wrap: nowrap;
       width: 100%;
       overflow-x: scroll;
       overflow-y: hidden;
       white-space: nowrap;
-      flex-wrap: nowrap;
 
       .nav-item {
         white-space: nowrap;
