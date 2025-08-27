@@ -52,6 +52,7 @@ module.exports = {
     backup: './js/pages/backup',
     carrier: './js/pages/carrier',
     carrier_form: './js/pages/carrier/form',
+    carriers: './scss/pages/carrier/carrier_page.scss',
     cart: './js/pages/cart',
     cart_rule: './js/pages/cart-rule',
     cart_rule_form: './js/pages/cart-rule/form',

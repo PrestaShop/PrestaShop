@@ -25,6 +25,11 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain 'Admin.Shipping.Feature' %}
 
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/carriers.css') }}" type="text/css" media="all">
+{% endblock %}
+
 {% block content %}
   {% block carrier_form_block %}
     {{ form_start(carrierForm) }}
