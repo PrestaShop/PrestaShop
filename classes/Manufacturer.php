@@ -381,7 +381,7 @@ class ManufacturerCore extends ObjectModel
         }
 
         $front = true;
-        if (!in_array($context->controller->controller_type, ['front', 'modulefront'])) {
+        if (isset($context->controller) && !in_array($context->controller->controller_type, ['front', 'modulefront'])) {
             $front = false;
         }
 
@@ -520,7 +520,7 @@ class ManufacturerCore extends ObjectModel
     {
         $context = Context::getContext();
         $front = true;
-        if (!in_array($context->controller->controller_type, ['front', 'modulefront'])) {
+        if (isset($context->controller) && !in_array($context->controller->controller_type, ['front', 'modulefront'])) {
             $front = false;
         }
 
