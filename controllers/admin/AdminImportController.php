@@ -1951,6 +1951,19 @@ class AdminImportControllerCore extends AdminController
                         $this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->trans('Discount is invalid', [], 'Admin.Advparameters.Notification'));
                     }
                 }
+            } else {
+                $query = new DbQuery();
+                $query->select('*')
+                    ->from(SpecificPrice::$definition['table'], 'sp')
+                    ->where('sp.`to` >= now() OR sp.`to` = "0000-00-00 00:00:00"')
+                    ->where('sp.`id_product` = ' . (int) $product->id);
+
+                $specificPrices = Db::getInstance()->executeS($query);
+
+                foreach ($specificPrices as $specificPrice) {
+                    $specificPrice = new SpecificPrice($specificPrice['id_specific_price']);
+                    $specificPrice->delete();
+                }
             }
 
             if (!$validateOnly && !empty($product->tags)) {
