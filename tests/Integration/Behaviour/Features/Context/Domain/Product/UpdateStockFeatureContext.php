@@ -33,6 +33,7 @@ use Cache;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -60,6 +61,23 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     ): void {
         $shopId = $this->getSharedStorage()->get(trim($shopReference));
         $shopConstraint = ShopConstraint::shop($shopId);
+
+        $this->updateProductStock(
+            $productReference,
+            $table,
+            $shopConstraint
+        );
+    }
+
+    /**
+     * @When I update product :productReference stock for shops :shopReferences with following information:
+     */
+    public function updateProductStockForShopCollection(
+        string $productReference,
+        string $shopReferences,
+        TableNode $table
+    ): void {
+        $shopConstraint = ShopCollection::shops($this->referencesToIds($shopReferences));
 
         $this->updateProductStock(
             $productReference,

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\SetPrivateNoteAboutCustomerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundExcepti
  *
  * @internal
  */
+#[AsCommandHandler]
 final class SetPrivateNoteAboutCustomerHandler implements SetPrivateNoteAboutCustomerHandlerInterface
 {
     /**

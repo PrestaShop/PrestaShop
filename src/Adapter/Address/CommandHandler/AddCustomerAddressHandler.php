@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
 use Address;
 use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\AddCustomerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressExceptio
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShopException;
 
+#[AsCommandHandler]
 final class AddCustomerAddressHandler extends AbstractAddressHandler implements AddCustomerAddressHandlerInterface
 {
     /**
@@ -55,7 +57,7 @@ final class AddCustomerAddressHandler extends AbstractAddressHandler implements 
             if (false === $address->add()) {
                 throw new CannotAddAddressException(sprintf('Failed to add new address "%s"', $command->getAddress()));
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new AddressException(sprintf('An error occurred when adding new address "%s"', $command->getAddress()));
         }
 

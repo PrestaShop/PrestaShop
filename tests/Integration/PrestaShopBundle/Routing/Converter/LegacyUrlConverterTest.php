@@ -28,13 +28,21 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Routing\Converter;
 
+use Dispatcher;
+use Exception;
 use Link;
 use PrestaShopBundle\Routing\Converter\Exception\AlreadyConvertedException;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
+use PrestaShopException;
+use ReflectionException;
+use Symfony\Component\HttpFoundation\Response;
+use Tests\Integration\Utility\LoginTrait;
 use Tests\TestCase\SymfonyIntegrationTestCase;
 
 class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 {
+    use LoginTrait;
+
     /** @var Link|null */
     private $link;
 
@@ -52,6 +60,9 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     public static function getMigratedControllers(): array
     {
         return [
+            'admin_module_configure_action' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['module_name' => 'ps_linklist']],
+            'admin_module_configure_action_legacy' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['configure' => 'ps_linklist']],
+
             'admin_administration' => ['/configure/advanced/administration/', 'AdminAdminPreferences'],
             'admin_administration_general_save' => ['/configure/advanced/administration/general', 'AdminAdminPreferences', 'update'],
 
@@ -171,9 +182,6 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             // 'admin_permissions_update_tab_permissions' => ['/configure/advanced/permissions/update/permissions/tab', 'AdminAccess', 'updateAccess'],
             // 'admin_permissions_update_module_permissions' => ['/configure/advanced/permissions/update/permissions/module', 'AdminAccess', 'updateModuleAccess'],
 
-            //'admin_module_configure_action' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['module_name' => 'ps_linklist']],
-            //'admin_module_configure_action_legacy' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['configure' => 'ps_linklist']],
-
             'admin_sql_request' => ['/configure/advanced/sql-requests/', 'AdminRequestSql'],
             'admin_sql_request_search' => ['/configure/advanced/sql-requests/', 'AdminRequestSql', 'search'],
             'admin_sql_request_process' => ['/configure/advanced/sql-requests/process-settings', 'AdminRequestSql', 'update'],
@@ -252,10 +260,9 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     public static function getLegacyControllers(): array
     {
         return [
-            ['/admin-dev/index.php?controller=AdminLogin', 'AdminLogin'],
+            ['/admin-dev/index.php?controller=AdminDashboard', 'AdminDashboard'],
             ['/admin-dev/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
             ['/admin-dev/index.php?controller=AdminModules', 'AdminModules'],
-            ['/admin-dev/index.php?controller=AdminModules&configure=ps_linklist', 'AdminModules', ['configure' => 'ps_linklist']],
         ];
     }
 
@@ -278,8 +285,8 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     public function testConverterByParameters(
         string $expectedUrl,
         string $controller,
-        string $action = null,
-        array $params = null
+        ?string $action = null,
+        ?array $params = null
     ): void {
         /** @var LegacyUrlConverter $converter */
         $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
@@ -296,39 +303,13 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
                 $parameters = array_merge($parameters, $params);
             }
             $convertedUrl = $converter->convertByParameters($parameters);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $caughtException = $e;
             $caughtExceptionMessage = sprintf('Unexpected exception %s: %s', get_class($e), $e->getMessage());
             $convertedUrl = null;
         }
         $this->assertNull($caughtException, $caughtExceptionMessage);
         $this->assertSameUrl($expectedUrl, $convertedUrl);
-    }
-
-    public function testTabParameter(): void
-    {
-        /** @var LegacyUrlConverter $converter */
-        $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
-        $convertedUrl = $converter->convertByParameters(['tab' => 'AdminCustomers']);
-        $this->assertSameUrl('/sell/customers/', $convertedUrl);
-
-        $convertedUrl = $converter->convertByParameters(
-            [
-                'tab' => 'AdminCustomers',
-                'controller' => 'admincustomers',
-                'id_customer' => 42,
-                'viewcustomer' => '',
-            ]
-        );
-        $this->assertSameUrl('/sell/customers/42/view', $convertedUrl);
-
-        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/index.php?tab=AdminCustomers&id_customer=42&viewcustomer&token=932d64a68d64faff8f692d84fc0e1d89';
-        $convertedUrl = $converter->convertByUrl($legacyUrl);
-        $this->assertSameUrl('/sell/customers/42/view', $convertedUrl);
-
-        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/index.php?tab=AdminCustomers&controller=admincustomers&id_customer=42&viewcustomer&token=932d64a68d64faff8f692d84fc0e1d89';
-        $convertedUrl = $converter->convertByUrl($legacyUrl);
-        $this->assertSameUrl('/sell/customers/42/view', $convertedUrl);
     }
 
     public function testInsensitiveControllersAndActions(): void
@@ -347,7 +328,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
         /** @var LegacyUrlConverter $converter */
         $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
 
-        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . \Dispatcher::getInstance()->createUrl('AdminMeta') . '&id_meta=1&conf=4';
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl('AdminMeta') . '&id_meta=1&conf=4';
         $convertedUrl = $converter->convertByUrl($legacyUrl);
         $this->assertSameUrl('/configure/shop/seo-urls/?id_meta=1&conf=4', $convertedUrl);
     }
@@ -382,8 +363,8 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     public function testLegacyLinkClass(
         string $expectedUrl,
         string $controller,
-        string $action = null,
-        array $params = null
+        ?string $action = null,
+        ?array $params = null
     ): void {
         $parameters = [
             'action' => $action,
@@ -401,11 +382,11 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     public function testLegacyClassParameterAction(
         string $expectedUrl,
         string $controller,
-        string $action = null,
-        array $params = null
+        ?string $action = null,
+        ?array $params = null
     ): void {
         $parameters = null !== $params ? $params : [];
-        if (null != $action) {
+        if (null != $action && !isset($parameters[$action])) {
             $parameters[$action] = '';
         }
         $linkUrl = $this->link->getAdminLink($controller, true, [], $parameters);
@@ -423,10 +404,10 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
      *
      * @return void
      *
-     * @throws \PrestaShopException
-     * @throws \ReflectionException
+     * @throws PrestaShopException
+     * @throws ReflectionException
      */
-    public function testLegacyControllers(string $expectedUrl, string $controller, array $parameters = null)
+    public function testLegacyControllers(string $expectedUrl, string $controller, ?array $parameters = null)
     {
         $parameters = null === $parameters ? [] : $parameters;
         $linkUrl = $this->link->getAdminLink($controller, true, [], $parameters);
@@ -435,20 +416,25 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 
     public function testRedirectionListener(): void
     {
-        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . \Dispatcher::getInstance()->createUrl('AdminAdminPreferences');
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl('AdminAdminPreferences');
         $this->client->request('GET', $legacyUrl);
         $response = $this->client->getResponse();
         $this->assertTrue($response->isRedirection());
+        $this->assertEquals(Response::HTTP_PERMANENTLY_REDIRECT, $response->getStatusCode());
         $location = $response->headers->get('location');
         $this->assertSameUrl('/configure/advanced/administration/', $location);
     }
 
     public function testRedirectionListenerWithoutLoop(): void
     {
-        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . \Dispatcher::getInstance()->createUrl('AdminAdminPreferences');
+        $this->loginUser($this->client);
+        $this->client->disableReboot();
+
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl('AdminAdminPreferences');
         $this->client->request('GET', $legacyUrl);
         $response = $this->client->getResponse();
         $this->assertTrue($response->isRedirection());
+        $this->assertEquals(Response::HTTP_PERMANENTLY_REDIRECT, $response->getStatusCode());
         $location = $response->headers->get('location');
 
         $this->client->request('GET', $location . '&controller=AdminAdminPreferences');
@@ -458,7 +444,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 
     public function testNoRedirectionListener(): void
     {
-        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . \Dispatcher::getInstance()->createUrl('AdminUnkown');
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl('AdminUnkown');
         $this->client->request('GET', $legacyUrl);
         $response = $this->client->getResponse();
         $this->assertFalse($response->isRedirection());
@@ -466,11 +452,27 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 
     public function testPostParameters()
     {
-        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . \Dispatcher::getInstance()->createUrl('AdminModulesPositions');
+        $this->loginUser($this->client);
+        $this->client->disableReboot();
+
+        // submitAddToHook is passed as an action and must be taken into account (meaning it doesn't mean the action is empty which would result into redirection towards
+        // /improve/design/modules/positions mapped to the fallback index action, here the action is addToHook so no redirection - even if it means a 404)
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl('AdminModulesPositions');
         $this->client->request('POST', $legacyUrl, ['submitAddToHook' => '']);
         $response = $this->client->getResponse();
         $this->assertFalse($response->isRedirection());
         $this->assertNull($response->headers->get('location'));
+
+        // If the action posted matches with a route then it must be redirected, the GET parameters stay in the URL
+        // And we use a 308 redirection to keep posted data that remain unchanged
+        $legacyUrl = $this->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . Dispatcher::getInstance()->createUrl('AdminModulesPositions') . '&extra_get_param=test';
+        $this->client->request('POST', $legacyUrl, ['unhook' => '', 'extraPostParam' => 'test']);
+        $response = $this->client->getResponse();
+        $this->assertTrue($response->isRedirection());
+        $this->assertEquals(Response::HTTP_PERMANENTLY_REDIRECT, $response->getStatusCode());
+        $locationUrl = $response->headers->get('location');
+        $this->assertNotNull($locationUrl);
+        $this->assertSameUrl('/improve/design/modules/positions/unhook?extra_get_param=test', $locationUrl);
     }
 
     /**

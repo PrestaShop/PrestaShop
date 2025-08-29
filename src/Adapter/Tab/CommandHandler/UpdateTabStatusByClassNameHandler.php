@@ -29,11 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Tab\CommandHandler;
 
 use Doctrine\ORM\EntityManager;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tab\Command\UpdateTabStatusByClassNameCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tab\CommandHandler\UpdateTabStatusByClassNameHandlerInterface;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Entity\Tab;
 
+#[AsCommandHandler]
 class UpdateTabStatusByClassNameHandler implements UpdateTabStatusByClassNameHandlerInterface
 {
     /**

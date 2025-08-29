@@ -39,12 +39,12 @@ class AddressesControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
 
         if (!Validate::isLoadedObject($this->context->customer)) {
-            die(Tools::displayError($this->trans('The customer could not be found.', [], 'Shop.Notifications.Error')));
+            throw new PrestaShopException($this->trans('The customer could not be found.', [], 'Shop.Notifications.Error'));
         }
     }
 
@@ -53,13 +53,13 @@ class AddressesControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
         $this->setTemplate('customer/addresses');
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

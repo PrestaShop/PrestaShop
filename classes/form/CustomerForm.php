@@ -105,7 +105,7 @@ class CustomerFormCore extends AbstractForm
     }
 
     /**
-     * @return \Customer
+     * @return Customer
      */
     public function getCustomer()
     {
@@ -123,22 +123,11 @@ class CustomerFormCore extends AbstractForm
 
     public function validate()
     {
-        $emailField = $this->getField('email');
-        $id_customer = Customer::customerExists($emailField->getValue(), true, true);
-        $customer = $this->getCustomer();
-        if ($id_customer && $id_customer != $customer->id) {
-            $emailField->addError($this->translator->trans(
-                'The email is already used, please choose another one or sign in',
-                [],
-                'Shop.Notifications.Error'
-            ));
-        }
-
         // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
-        if (!empty($birthdayField) &&
-            !empty($birthdayField->getValue()) &&
-            Validate::isBirthDate($birthdayField->getValue(), $this->context->language->date_format_lite)
+        if (!empty($birthdayField)
+            && !empty($birthdayField->getValue())
+            && Validate::isBirthDate($birthdayField->getValue(), $this->context->language->date_format_lite)
         ) {
             $dateBuilt = DateTime::createFromFormat(
                 $this->context->language->date_format_lite,
@@ -217,9 +206,9 @@ class CustomerFormCore extends AbstractForm
      */
     protected function validateFieldLength($fieldName, $maximumLength, $violationMessage)
     {
-        $emailField = $this->getField($fieldName);
-        if (strlen($emailField->getValue()) > $maximumLength) {
-            $emailField->addError($violationMessage);
+        $field = $this->getField($fieldName);
+        if (strlen($field->getValue()) > $maximumLength) {
+            $field->addError($violationMessage);
         }
     }
 

@@ -26,7 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Employee\EmployeeLanguageUpdater;
 use PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\DeleteLanguageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\DefaultLanguageException;
@@ -38,6 +40,7 @@ use Shop;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class DeleteLanguageHandler extends AbstractLanguageHandler implements DeleteLanguageHandlerInterface
 {
     /**
@@ -46,11 +49,17 @@ final class DeleteLanguageHandler extends AbstractLanguageHandler implements Del
     private $robotsTextFileGenerator;
 
     /**
+     * @var EmployeeLanguageUpdater
+     */
+    private $employeeLanguageUpdater;
+
+    /**
      * @param RobotsTextFileGenerator $robotsTextFileGenerator
      */
-    public function __construct(RobotsTextFileGenerator $robotsTextFileGenerator)
+    public function __construct(RobotsTextFileGenerator $robotsTextFileGenerator, EmployeeLanguageUpdater $employeeLanguageUpdater)
     {
         $this->robotsTextFileGenerator = $robotsTextFileGenerator;
+        $this->employeeLanguageUpdater = $employeeLanguageUpdater;
     }
 
     /**
@@ -62,7 +71,7 @@ final class DeleteLanguageHandler extends AbstractLanguageHandler implements Del
 
         try {
             $this->assertLanguageIsNotDefault($language);
-        } catch (DefaultLanguageException $e) {
+        } catch (DefaultLanguageException) {
             throw new DefaultLanguageException(
                 sprintf(
                     'Default language "%s" cannot be deleted',
@@ -80,6 +89,9 @@ final class DeleteLanguageHandler extends AbstractLanguageHandler implements Del
         if (false === $language->delete()) {
             throw new LanguageException(sprintf('Failed to delete language "%s"', $language->iso_code));
         }
+
         $this->robotsTextFileGenerator->generateFile();
+
+        $this->employeeLanguageUpdater->replaceDeletedLanguage($language->id);
     }
 }

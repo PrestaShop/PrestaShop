@@ -23,10 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-/**
- * @since 1.5
- */
 abstract class HTMLTemplateCore
 {
     /**
@@ -53,6 +49,11 @@ abstract class HTMLTemplateCore
      * @var Shop
      */
     public $shop;
+
+    /**
+     * @var Order|null
+     */
+    public $order;
 
     /**
      * Returns the template's HTML header.

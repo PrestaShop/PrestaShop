@@ -26,37 +26,46 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
-use ConfigurationKPI;
-use Context;
 use HelperKpi;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
  */
 final class NetProfitPerVisitKpi implements KpiInterface
 {
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly ConfigurationInterface $configuration,
+        private readonly LegacyContext $contextAdapter
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
     public function render()
     {
-        $translator = Context::getContext()->getTranslator();
-
         $helper = new HelperKpi();
         $helper->id = 'box-net-profit-visit';
         $helper->icon = 'account_box';
-        $helper->color = 'color1';
-        $helper->title = $translator->trans('Net Profit per Visit', [], 'Admin.Orderscustomers.Feature');
-        $helper->subtitle = $translator->trans('30 days', [], 'Admin.Orderscustomers.Feature');
+        $helper->color = 'color3';
+        $helper->title = $this->translator->trans('Net Profit per Visit', [], 'Admin.Orderscustomers.Feature');
+        $helper->subtitle = $this->translator->trans('30 days', [], 'Admin.Orderscustomers.Feature');
 
-        if (ConfigurationKPI::get('NETPROFIT_VISIT') !== false) {
-            $helper->value = ConfigurationKPI::get('NETPROFIT_VISIT');
+        if ($this->configuration->get('NETPROFIT_VISIT') !== false) {
+            $helper->value = $this->configuration->get('NETPROFIT_VISIT');
         }
 
-        $helper->source = Context::getContext()->link->getAdminLink('AdminStats')
-            . '&ajax=1&action=getKpi&kpi=netprofit_visit';
-        $helper->refresh = (bool) (ConfigurationKPI::get('NETPROFIT_VISIT_EXPIRE') < time());
+        $helper->source = $this->contextAdapter->getAdminLink('AdminStats', true, [
+            'ajax' => 1,
+            'action' => 'getKpi',
+            'kpi' => 'netprofit_visit',
+        ]);
+        $helper->refresh = $this->configuration->get('NETPROFIT_VISIT_EXPIRE') < time();
 
         return $helper->generate();
     }

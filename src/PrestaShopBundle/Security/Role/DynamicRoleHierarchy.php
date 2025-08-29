@@ -38,7 +38,7 @@ class DynamicRoleHierarchy implements RoleHierarchyInterface
      *
      * @return string[] An array of all reachable roles
      */
-    public function getReachableRoleNames(array $roles)
+    public function getReachableRoleNames(array $roles): array
     {
         return [];
     }

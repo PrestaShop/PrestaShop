@@ -30,13 +30,16 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 
 /**
  * Handles the @see UpdateProductCommand using legacy object model
  */
+#[AsCommandHandler]
 class UpdateProductHandler implements UpdateProductHandlerInterface
 {
     /**
@@ -76,6 +79,9 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
     {
         $shopConstraint = $command->getShopConstraint();
         $product = $this->productRepository->getByShopConstraint($command->getProductId(), $shopConstraint);
+        $wasVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
+        $wasActive = (bool) $product->active;
+
         $updatableProperties = $this->productUpdatablePropertyFiller->fillUpdatableProperties(
             $product,
             $command
@@ -101,7 +107,9 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
             // Reindexing is costly operation, so we check if properties impacting indexation have changed and then reindex if needed.
             $this->productIndexationUpdater->isIndexationNeeded($updatableProperties)
             // If multiple shops are impacted it's safer to update indexation, it's more complicated to check if it's needed
-            || !$shopConstraint->getShopId()
+            || $shopConstraint->forAllShops()
+            || $shopConstraint->getShopGroupId()
+            || ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds())
         ) {
             $this->productIndexationUpdater->updateIndexation($product, $command->getShopConstraint());
         }

@@ -1,0 +1,385 @@
+<h2 class="custom">Complex tables</h2>
+
+<!-- Copy & Paste from BO -->
+<div class="table-responsive-row clearfix">
+   <table id="table-carrier" class="table tableDnD carrier">
+      <thead>
+         <tr class="nodrag nodrop">
+            <th class="center fixed-width-xs"></th>
+            <th class="fixed-width-xs center">
+               <span class="title_box">
+               ID
+               <a class="desc-sort-column-id_carrier-link"
+                  href="index.php?controller=AdminCarriers&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w&amp;carrierOrderby=id_carrier&amp;carrierOrderway=desc">
+               <i class="icon-caret-down"></i>
+               </a>
+               <a class="asc-sort-column-id_carrier-link"
+                  href="index.php?controller=AdminCarriers&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w&amp;carrierOrderby=id_carrier&amp;carrierOrderway=asc">
+               <i class="icon-caret-up"></i>
+               </a>
+               </span>
+            </th>
+            <th class="">
+               <span class="title_box">
+               Nom
+               <a class="desc-sort-column-name-link"
+                  href="index.php?controller=AdminCarriers&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w&amp;carrierOrderby=name&amp;carrierOrderway=desc">
+               <i class="icon-caret-down"></i>
+               </a>
+               <a class="asc-sort-column-name-link"
+                  href="index.php?controller=AdminCarriers&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w&amp;carrierOrderby=name&amp;carrierOrderway=asc">
+               <i class="icon-caret-up"></i>
+               </a>
+               </span>
+            </th>
+            <th class="fixed-width-xs center">
+               <span class="title_box">
+               Logo
+               </span>
+            </th>
+            <th class="">
+               <span class="title_box">
+               Délai
+               </span>
+            </th>
+            <th class="fixed-width-sm center">
+               <span class="title_box">
+               État
+               </span>
+            </th>
+            <th class="fixed-width-sm center">
+               <span class="title_box">
+               Livraison gratuite
+               </span>
+            </th>
+            <th class="fixed-width-sm center">
+               <span class="title_box active">
+               Position
+               <a class="desc-sort-column-position-link"
+                  href="index.php?controller=AdminCarriers&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w&amp;carrierOrderby=position&amp;carrierOrderway=desc">
+               <i class="icon-caret-down"></i>
+               </a>
+               <a class="asc-sort-column-position-link active"
+                  href="index.php?controller=AdminCarriers&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w&amp;carrierOrderby=position&amp;carrierOrderway=asc">
+               <i class="icon-caret-up"></i>
+               </a>
+               </span>
+            </th>
+            <th></th>
+         </tr>
+         <tr class="nodrag nodrop filter row_hover">
+            <th class="text-center">
+               --
+            </th>
+            <th class="center">
+               <input type="text" class="filter" name="carrierFilter_id_carrier" value="">
+            </th>
+            <th>
+               <input type="text" class="filter" name="carrierFilter_name" value="">
+            </th>
+            <th class="center">
+               --
+            </th>
+            <th>
+               <input type="text" class="filter" name="carrierFilter_delay" value="">
+            </th>
+            <th class="center">
+               <select class="filter fixed-width-sm center"
+                  onchange="$('#submitFilterButtoncarrier').focus();$('#submitFilterButtoncarrier').click();"
+                  name="carrierFilter_active">
+                  <option value="">-</option>
+                  <option value="1">Oui</option>
+                  <option value="0">Non</option>
+               </select>
+            </th>
+            <th class="center">
+               <select class="filter fixed-width-sm center"
+                  onchange="$('#submitFilterButtoncarrier').focus();$('#submitFilterButtoncarrier').click();"
+                  name="carrierFilter_is_free">
+                  <option value="">-</option>
+                  <option value="1">Oui</option>
+                  <option value="0">Non</option>
+               </select>
+            </th>
+            <th class="center">
+               <input type="text" class="filter" name="carrierFilter_a!position" value="">
+            </th>
+            <th class="actions">
+               <span class="pull-right">
+               <button type="submit" id="submitFilterButtoncarrier" name="submitFilter" class="btn btn-default"
+                  data-list-id="carrier">
+               <i class="icon-search"></i> Rechercher
+               </button>
+               </span>
+            </th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr id="tr_2_1_0" class=" odd">
+            <td class="row-selector text-center">
+               <input type="checkbox" name="carrierBox[]" value="1" class="noborder">
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=1&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               1
+            </td>
+            <td class="pointer										"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=1&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               Click and collect
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=1&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+            </td>
+            <td class="pointer										"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=1&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               Retrait en magasin
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=1&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               <a class="list-action-enable action-enabled"
+                  href="index.php?controller=AdminCarriers&amp;id_carrier=1&amp;statuscarrier&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w"
+                  title="Activé">
+               <i class="icon-check"></i>
+               <i class="icon-remove hidden"></i>
+               </a>
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=1&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               <a class="list-action-enable action-enabled"
+                  href="index.php?controller=AdminCarriers&amp;id_carrier=1&amp;isFreecarrier&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w"
+                  title="Activé">
+               <i class="icon-check"></i>
+               <i class="icon-remove hidden"></i>
+               </a>
+            </td>
+            <td id="td_0_1" class="pointer					 dragHandle					 center">
+               <div class="dragGroup">
+                  <div class="positions">
+                     1
+                  </div>
+               </div>
+            </td>
+            <td class="text-right">
+               <div class="btn-group-action">
+                  <div class="btn-group pull-right">
+                     <a href="https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=1&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w"
+                        title="Modifier" class="edit btn btn-default">
+                     <i class="icon-pencil"></i> Modifier
+                     </a>
+                     <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                     <i class="icon-caret-down"></i>
+                     </button>
+                     <ul class="dropdown-menu">
+                        <li>
+                           <a href="#" title="Supprimer" class="delete"
+                              onclick="confirm_link('', 'Supprimer cet élément ?\n\nNom : Click and collect', 'Oui', 'Non', 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarriers&amp;id_carrier=1&amp;deletecarrier=1&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w', '#')">
+                           <i class="icon-trash"></i> Supprimer
+                           </a>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </td>
+         </tr>
+         <tr id="tr_2_2_1" class=" ">
+            <td class="row-selector text-center">
+               <input type="checkbox" name="carrierBox[]" value="2" class="noborder">
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=2&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               2
+            </td>
+            <td class="pointer										"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=2&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               My carrier
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=2&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               <img src="https://placehold.co/22x22" alt="" class="imgm img-thumbnail">
+            </td>
+            <td class="pointer										"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=2&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               Livraison le lendemain&nbsp;!
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=2&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               <a class="list-action-enable action-enabled"
+                  href="index.php?controller=AdminCarriers&amp;id_carrier=2&amp;statuscarrier&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w"
+                  title="Activé">
+               <i class="icon-check"></i>
+               <i class="icon-remove hidden"></i>
+               </a>
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=2&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               <a class="list-action-enable action-disabled"
+                  href="index.php?controller=AdminCarriers&amp;id_carrier=2&amp;isFreecarrier&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w"
+                  title="Désactivé">
+               <i class="icon-check hidden"></i>
+               <i class="icon-remove"></i>
+               </a>
+            </td>
+            <td id="td_0_2" class="pointer					 dragHandle					 center">
+               <div class="dragGroup">
+                  <div class="positions">
+                     2
+                  </div>
+               </div>
+            </td>
+            <td class="text-right">
+               <div class="btn-group-action">
+                  <div class="btn-group pull-right">
+                     <a href="https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=2&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w"
+                        title="Modifier" class="edit btn btn-default">
+                     <i class="icon-pencil"></i> Modifier
+                     </a>
+                     <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                     <i class="icon-caret-down"></i>
+                     </button>
+                     <ul class="dropdown-menu">
+                        <li>
+                           <a href="#" title="Supprimer" class="delete"
+                              onclick="confirm_link('', 'Supprimer cet élément ?\n\nNom : My carrier', 'Oui', 'Non', 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarriers&amp;id_carrier=2&amp;deletecarrier=1&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w', '#')">
+                           <i class="icon-trash"></i> Supprimer
+                           </a>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </td>
+         </tr>
+         <tr id="tr_2_3_2" class=" odd">
+            <td class="row-selector text-center">
+               <input type="checkbox" name="carrierBox[]" value="3" class="noborder">
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=3&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               3
+            </td>
+            <td class="pointer										"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=3&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               My cheap carrier
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=3&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+            </td>
+            <td class="pointer										"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=3&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               Achetez plus vous paierez moins!
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=3&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               <a class="list-action-enable action-disabled"
+                  href="index.php?controller=AdminCarriers&amp;id_carrier=3&amp;statuscarrier&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w"
+                  title="Désactivé">
+               <i class="icon-check hidden"></i>
+               <i class="icon-remove"></i>
+               </a>
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=3&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               <a class="list-action-enable action-disabled"
+                  href="index.php?controller=AdminCarriers&amp;id_carrier=3&amp;isFreecarrier&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w"
+                  title="Désactivé">
+               <i class="icon-check hidden"></i>
+               <i class="icon-remove"></i>
+               </a>
+            </td>
+            <td id="td_0_3" class="pointer					 dragHandle					 center">
+               <div class="dragGroup">
+                  <div class="positions">
+                     3
+                  </div>
+               </div>
+            </td>
+            <td class="text-right">
+               <div class="btn-group-action">
+                  <div class="btn-group pull-right">
+                     <a href="https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=3&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w"
+                        title="Modifier" class="edit btn btn-default">
+                     <i class="icon-pencil"></i> Modifier
+                     </a>
+                     <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                     <i class="icon-caret-down"></i>
+                     </button>
+                     <ul class="dropdown-menu">
+                        <li>
+                           <a href="#" title="Supprimer" class="delete"
+                              onclick="confirm_link('', 'Supprimer cet élément ?\n\nNom : My cheap carrier', 'Oui', 'Non', 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarriers&amp;id_carrier=3&amp;deletecarrier=1&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w', '#')">
+                           <i class="icon-trash"></i> Supprimer
+                           </a>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </td>
+         </tr>
+         <tr id="tr_2_4_3" class=" ">
+            <td class="row-selector text-center">
+               <input type="checkbox" name="carrierBox[]" value="4" class="noborder">
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=4&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               4
+            </td>
+            <td class="pointer										"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=4&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               My light carrier
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=4&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+            </td>
+            <td class="pointer										"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=4&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               Panier léger, prix allégé!
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=4&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               <a class="list-action-enable action-disabled"
+                  href="index.php?controller=AdminCarriers&amp;id_carrier=4&amp;statuscarrier&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w"
+                  title="Désactivé">
+               <i class="icon-check hidden"></i>
+               <i class="icon-remove"></i>
+               </a>
+            </td>
+            <td class="pointer										 center"
+               onclick="document.location = 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=4&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w'">
+               <a class="list-action-enable action-disabled"
+                  href="index.php?controller=AdminCarriers&amp;id_carrier=4&amp;isFreecarrier&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w"
+                  title="Désactivé">
+               <i class="icon-check hidden"></i>
+               <i class="icon-remove"></i>
+               </a>
+            </td>
+            <td id="td_0_4" class="pointer					 dragHandle					 center">
+               <div class="dragGroup">
+                  <div class="positions">
+                     4
+                  </div>
+               </div>
+            </td>
+            <td class="text-right">
+               <div class="btn-group-action">
+                  <div class="btn-group pull-right">
+                     <a href="https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarrierWizard&amp;id_carrier=4&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w"
+                        title="Modifier" class="edit btn btn-default">
+                     <i class="icon-pencil"></i> Modifier
+                     </a>
+                     <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                     <i class="icon-caret-down"></i>
+                     </button>
+                     <ul class="dropdown-menu">
+                        <li>
+                           <a href="#" title="Supprimer" class="delete"
+                              onclick="confirm_link('', 'Supprimer cet élément ?\n\nNom : My light carrier', 'Oui', 'Non', 'https://prestashop-900:8890/admin-dev/index.php?controller=AdminCarriers&amp;id_carrier=4&amp;deletecarrier=1&amp;token=5c910b263f673aa78da.8pnQ1EI2GddLleM8Viwb0mV68ZTAwyyyvnOxktzKN6Q.xfLkgg9xXJJyrYILEGEuviMiyPCErnrQigTTouT7BsCKq6KaMFNjnCDG0w', '#')">
+                           <i class="icon-trash"></i> Supprimer
+                           </a>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>

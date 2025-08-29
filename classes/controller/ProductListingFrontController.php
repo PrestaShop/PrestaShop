@@ -78,8 +78,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     private function prepareProductForTemplate(array $rawProduct)
     {
         // Enrich data of product
-        $product = (new ProductAssembler($this->context))
-            ->assembleProduct($rawProduct);
+        $product = (new ProductAssembler($this->context))->assembleProduct($rawProduct);
 
         // Prepare configuration
         $presenter = $this->getProductPresenter();
@@ -104,8 +103,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     protected function prepareMultipleProductsForTemplate(array $products)
     {
         // Enrich data set of products
-        $products = (new ProductAssembler($this->context))
-            ->assembleProducts($products);
+        $products = (new ProductAssembler($this->context))->assembleProducts($products);
 
         // Prepare configuration
         $presenter = $this->getProductPresenter();
@@ -153,12 +151,12 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         foreach ($facetsArray['filters'] as &$filter) {
             $filter['facetLabel'] = $facet->getLabel();
             if ($filter['nextEncodedFacets']) {
-                $filter['nextEncodedFacetsURL'] = $this->updateQueryString([
+                $filter['nextEncodedFacetsURL'] = Tools::updateCurrentQueryString([
                     'q' => $filter['nextEncodedFacets'],
                     'page' => null,
                 ]);
             } else {
-                $filter['nextEncodedFacetsURL'] = $this->updateQueryString([
+                $filter['nextEncodedFacetsURL'] = Tools::updateCurrentQueryString([
                     'q' => null,
                 ]);
             }
@@ -202,7 +200,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'js_enabled' => $this->ajax,
             'activeFilters' => $activeFilters,
             'sort_order' => $result->getCurrentSortOrder()->toString(),
-            'clear_all_link' => $this->updateQueryString(['q' => null, 'page' => null]),
+            'clear_all_link' => Tools::updateCurrentQueryString(['q' => null, 'page' => null]),
         ]);
     }
 
@@ -237,7 +235,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         return $this->render('catalog/_partials/active_filters', [
             'activeFilters' => $activeFilters,
-            'clear_all_link' => $this->updateQueryString(['q' => null, 'page' => null]),
+            'clear_all_link' => Tools::updateCurrentQueryString(['q' => null, 'page' => null]),
         ]);
     }
 
@@ -327,7 +325,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         ;
 
         // set the sort order if provided in the URL
-        if (($encodedSortOrder = Tools::getValue('order'))) {
+        if ($encodedSortOrder = Tools::getValue('order')) {
             $query->setSortOrder(SortOrder::newFromString(
                 $encodedSortOrder
             ));
@@ -436,7 +434,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'rendered_facets' => $rendered_facets,
             'rendered_active_filters' => $rendered_active_filters,
             'js_enabled' => $this->ajax,
-            'current_url' => $this->updateQueryString([
+            'current_url' => Tools::updateCurrentQueryString([
                 'q' => $result->getEncodedFacets(),
             ]),
         ];
@@ -509,14 +507,14 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $itemsShownTo = $query->getResultsPerPage() * $query->getPage();
 
         $pages = array_map(function ($link) {
-            $link['url'] = $this->updateQueryString([
+            $link['url'] = Tools::updateCurrentQueryString([
                 'page' => $link['page'] > 1 ? $link['page'] : null,
             ]);
 
             return $link;
         }, $pagination->buildLinks());
 
-        //Filter next/previous link on first/last page
+        // Filter next/previous link on first/last page
         $pages = array_filter($pages, function ($page) use ($pagination) {
             if ('previous' === $page['type'] && 1 === $pagination->getPage()) {
                 return false;
@@ -557,13 +555,30 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         return array_map(function ($sortOrder) use ($currentSortOrderURLParameter) {
             $order = $sortOrder->toArray();
             $order['current'] = $order['urlParameter'] === $currentSortOrderURLParameter;
-            $order['url'] = $this->updateQueryString([
+            $order['url'] = Tools::updateCurrentQueryString([
                 'order' => $order['urlParameter'],
                 'page' => null,
             ]);
 
             return $order;
         }, $sortOrders);
+    }
+
+    /**
+     * Do not index filtered pages or when sorting was used.
+     * This should correlate with robots.txt content. Make sure to update it also,
+     * if you change anything here.
+     */
+    public function getTemplateVarPage()
+    {
+        $page = parent::getTemplateVarPage();
+
+        // If some search parameters are submitted, or user selected some custom sorting,
+        if (Tools::isSubmit('q') || Tools::isSubmit('order')) {
+            $page['meta']['robots'] = 'noindex';
+        }
+
+        return $page;
     }
 
     /**

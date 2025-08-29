@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\DeleteSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierException;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 /**
  * Class DeleteSupplierHandler is responsible for deleting the supplier.
  */
+#[AsCommandHandler]
 final class DeleteSupplierHandler extends AbstractDeleteSupplierHandler implements DeleteSupplierHandlerInterface
 {
     /**
@@ -47,7 +49,7 @@ final class DeleteSupplierHandler extends AbstractDeleteSupplierHandler implemen
         try {
             $this->removeSupplier($supplierId);
         } catch (SupplierException $e) {
-            if (SupplierException::class === get_class($e)) {
+            if (SupplierException::class === $e::class) {
                 throw new CannotDeleteSupplierException(sprintf('Cannot delete Supplier object with id "%s".', $supplierId->getValue()), CannotDeleteSupplierException::FAILED_DELETE);
             }
 

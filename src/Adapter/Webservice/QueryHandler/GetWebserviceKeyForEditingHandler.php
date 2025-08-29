@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Webservice\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\WebserviceKeyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Query\GetWebserviceKeyForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\QueryHandler\GetWebserviceKeyForEditingHandlerInterface;
@@ -38,6 +39,7 @@ use WebserviceKey;
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetWebserviceKeyForEditingHandler implements GetWebserviceKeyForEditingHandlerInterface
 {
     /**

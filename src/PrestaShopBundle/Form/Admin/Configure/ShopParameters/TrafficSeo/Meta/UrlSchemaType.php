@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 use PrestaShop\PrestaShop\Adapter\Routes\DefaultRouteProvider;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
+use PrestaShopException;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -133,7 +135,7 @@ class UrlSchemaType extends TranslatorAwareType
      *
      * @return string
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     private function getKeywords($idRoute)
     {
@@ -150,11 +152,11 @@ class UrlSchemaType extends TranslatorAwareType
         }
 
         return $this->trans(
-                'Keywords: %keywords%',
-                'Admin.Shopparameters.Feature',
-                [
-                    '%keywords%' => implode(', ', $formattedKeyWords),
-                ]
+            'Keywords: %keywords%',
+            'Admin.Shopparameters.Feature',
+            [
+                '%keywords%' => implode(', ', $formattedKeyWords),
+            ]
         );
     }
 

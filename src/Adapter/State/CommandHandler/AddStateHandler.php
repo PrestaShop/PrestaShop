@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\State\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\CommandHandler\AddStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotAddStateException;
@@ -40,6 +41,7 @@ use State;
 /**
  * Handles creation of state
  */
+#[AsCommandHandler]
 class AddStateHandler implements AddStateHandlerInterface
 {
     /**

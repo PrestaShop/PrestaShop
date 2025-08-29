@@ -1,20 +1,18 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import customersPage from '@pages/BO/customers';
-import addCustomerPage from '@pages/BO/customers/add';
-import dashboardPage from '@pages/BO/dashboard';
-
-// Import data
-import CustomerData from '@data/faker/customer';
+import {
+  boCustomersPage,
+  boCustomersCreatePage,
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  FakerCustomer,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_customers_customers_customersBulkActions';
 
@@ -27,42 +25,48 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
   let page: Page;
   let numberOfCustomers: number = 0;
 
-  const firstCustomerData: CustomerData = new CustomerData({firstName: 'todelete'});
-  const secondCustomerData: CustomerData = new CustomerData({firstName: 'todelete'});
+  const firstCustomerData: FakerCustomer = new FakerCustomer({firstName: 'todelete'});
+  const secondCustomerData: FakerCustomer = new FakerCustomer({firstName: 'todelete'});
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Customers > Customers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customersParentLink,
-      dashboardPage.customersLink,
+      boDashboardPage.customersParentLink,
+      boDashboardPage.customersLink,
     );
-    await customersPage.closeSfToolBar(page);
+    await boCustomersPage.closeSfToolBar(page);
 
-    const pageTitle = await customersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customersPage.pageTitle);
+    const pageTitle = await boCustomersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCustomersPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCustomers).to.be.above(0);
+    numberOfCustomers = await boCustomersPage.resetAndGetNumberOfLines(page);
+    expect(numberOfCustomers).to.be.above(0);
   });
 
   // 1 : Create 2 customers In BO
@@ -74,20 +78,20 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
       it('should go to add new customer page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCustomerPage${index + 1}`, baseContext);
 
-        await customersPage.goToAddNewCustomerPage(page);
+        await boCustomersPage.goToAddNewCustomerPage(page);
 
-        const pageTitle = await addCustomerPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+        const pageTitle = await boCustomersCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boCustomersCreatePage.pageTitleCreate);
       });
 
       it(`should create customer n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCustomer${index + 1}`, baseContext);
 
-        const textResult = await addCustomerPage.createEditCustomer(page, test.args.customerToCreate);
-        await expect(textResult).to.equal(customersPage.successfulCreationMessage);
+        const textResult = await boCustomersCreatePage.createEditCustomer(page, test.args.customerToCreate);
+        expect(textResult).to.equal(boCustomersPage.successfulCreationMessage);
 
-        const numberOfCustomersAfterCreation = await customersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + index + 1);
+        const numberOfCustomersAfterCreation = await boCustomersPage.getNumberOfElementInGrid(page);
+        expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + index + 1);
       });
     });
   });
@@ -97,10 +101,10 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
     it('should filter list by firstName', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEdit', baseContext);
 
-      await customersPage.filterCustomers(page, 'input', 'firstname', 'todelete');
+      await boCustomersPage.filterCustomers(page, 'input', 'firstname', 'todelete');
 
-      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'firstname');
-      await expect(textResult).to.contains('todelete');
+      const textResult = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'firstname');
+      expect(textResult).to.contains('todelete');
     });
 
     [
@@ -110,15 +114,15 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
       it(`should ${test.args.action} customers with bulk actions and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Customers`, baseContext);
 
-        const textResult = await customersPage.bulkSetStatus(page, test.args.enabledValue);
-        await expect(textResult).to.be.equal(customersPage.successfulUpdateMessage);
+        const textResult = await boCustomersPage.bulkSetStatus(page, test.args.enabledValue);
+        expect(textResult).to.be.equal(boCustomersPage.successfulUpdateMessage);
 
-        const numberOfCustomersInGrid = await customersPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCustomersInGrid).to.be.at.least(2);
+        const numberOfCustomersInGrid = await boCustomersPage.getNumberOfElementInGrid(page);
+        expect(numberOfCustomersInGrid).to.be.at.least(2);
 
         for (let i = 1; i <= numberOfCustomersInGrid; i++) {
-          const customerStatus = await customersPage.getCustomerStatus(page, i);
-          await expect(customerStatus).to.equals(test.args.enabledValue);
+          const customerStatus = await boCustomersPage.getCustomerStatus(page, i);
+          expect(customerStatus).to.equals(test.args.enabledValue);
         }
       });
     });
@@ -129,24 +133,24 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
     it('should filter list by firstName', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await customersPage.filterCustomers(page, 'input', 'firstname', 'todelete');
+      await boCustomersPage.filterCustomers(page, 'input', 'firstname', 'todelete');
 
-      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'firstname');
-      await expect(textResult).to.contains('todelete');
+      const textResult = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'firstname');
+      expect(textResult).to.contains('todelete');
     });
 
     it('should delete customers', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCustomers', baseContext);
 
-      const deleteTextResult = await customersPage.deleteCustomersBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(customersPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boCustomersPage.deleteCustomersBulkActions(page);
+      expect(deleteTextResult).to.be.equal(boCustomersPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
-      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomersAfterReset).to.be.equal(numberOfCustomers);
+      const numberOfCustomersAfterReset = await boCustomersPage.resetAndGetNumberOfLines(page);
+      expect(numberOfCustomersAfterReset).to.be.equal(numberOfCustomers);
     });
   });
 });

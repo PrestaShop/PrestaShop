@@ -5,7 +5,7 @@
     <field name="active"/>
   </fields>
   <entities>
-    <category id="Root" id_parent="" active="1"/>
-    <category id="Home" id_parent="Root" active="1" is_root_category="1" />
+    <category id="Root" id_parent="" active="1" redirect_type="404"/>
+    <category id="Home" id_parent="Root" active="1" is_root_category="1" redirect_type="404"/>
   </entities>
 </entity_category>

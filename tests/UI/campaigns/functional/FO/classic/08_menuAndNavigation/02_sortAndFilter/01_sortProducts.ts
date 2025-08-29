@@ -1,22 +1,19 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import basicHelper from '@utils/basicHelper';
-
-// Import common tests
-import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import categoryPageFO from '@pages/FO/category';
-import {homePage} from '@pages/FO/home';
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
-import dashboardPage from '@pages/BO/dashboard';
-import productsPage from '@pages/BO/catalog/products';
-import productSettingsPage from '@pages/BO/shopParameters/productSettings';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boProductsPage,
+  boProductSettingsPage,
+  type BrowserContext,
+  foClassicCategoryPage,
+  foClassicHomePage,
+  type Page,
+  utilsCore,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_menuAndNavigation_sortAndFilter_sortProducts';
 
@@ -36,47 +33,50 @@ describe('FO - Menu and navigation : Sort products', async () => {
   let page: Page;
   let numberOfActiveProducts: number;
 
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
-
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // Pre-condition: Get the number of products
   describe('PRE-TEST : Get the number of active products', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.productsLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.productsLink,
       );
-      await productsPage.closeSfToolBar(page);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should filter by Active Status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfActiveProducts', baseContext);
 
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await productsPage.filterProducts(page, 'active', 'Active', 'select');
+      const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
+      await boProductsPage.filterProducts(page, 'active', 'Yes', 'select');
 
-      numberOfActiveProducts = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfActiveProducts).to.within(0, numberOfProducts);
+      numberOfActiveProducts = await boProductsPage.getNumberOfProductsFromList(page);
+      expect(numberOfActiveProducts).to.within(0, numberOfProducts);
     });
   });
 
@@ -85,21 +85,21 @@ describe('FO - Menu and navigation : Sort products', async () => {
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.shopParametersParentLink,
-        dashboardPage.productSettingsLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.productSettingsLink,
       );
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should change the value of products per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeProductPerPage', baseContext);
 
-      const result = await productSettingsPage.setProductsDisplayedPerPage(page, numberOfActiveProducts);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.setProductsDisplayedPerPage(page, numberOfActiveProducts);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
 
@@ -109,28 +109,28 @@ describe('FO - Menu and navigation : Sort products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
       // Click on view my shop
-      page = await productSettingsPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      page = await boProductSettingsPage.viewMyShop(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      const result = await foClassicHomePage.isHomePage(page);
+      expect(result).to.eq(true);
     });
 
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
-      await homePage.changeLanguage(page, 'en');
-      await homePage.goToAllProductsPage(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToAllProductsPage(page);
 
-      const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
-      await expect(isCategoryPageVisible, 'Home category page was not opened').to.be.true;
+      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
+      expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should check that the products as sorted by relevance', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDefaultSort', baseContext);
 
-      const isSortingLinkVisible = await categoryPageFO.getSortByValue(page);
-      await expect(isSortingLinkVisible).to.contain('Relevance');
+      const isSortingLinkVisible = await foClassicCategoryPage.getSortByValue(page);
+      expect(isSortingLinkVisible).to.contain('Relevance');
     });
 
     const tests = [
@@ -161,7 +161,7 @@ describe('FO - Menu and navigation : Sort products', async () => {
           sortDirection: 'asc',
         },
       },
-      // @todo https://github.com/PrestaShop/PrestaShop/issues/19810
+      // @todo : https://github.com/PrestaShop/PrestaShop/issues/19810
       /* {
          args: {
            testIdentifier: 'sortByPriceDesc',
@@ -176,16 +176,16 @@ describe('FO - Menu and navigation : Sort products', async () => {
       it(`should sort by '${test.args.sortName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await categoryPageFO.getAllProductsAttribute(page, test.args.attribute);
-        await categoryPageFO.sortProductsList(page, test.args.sortBy);
-        const sortedTable = await categoryPageFO.getAllProductsAttribute(page, test.args.attribute);
+        const nonSortedTable = await foClassicCategoryPage.getAllProductsAttribute(page, test.args.attribute);
+        await foClassicCategoryPage.sortProductsList(page, test.args.sortBy);
+        const sortedTable = await foClassicCategoryPage.getAllProductsAttribute(page, test.args.attribute);
 
-        const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
+        const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
         if (test.args.sortDirection === 'asc') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
+          expect(sortedTable).to.deep.equal(expectedResult);
         } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       });
     });
@@ -196,20 +196,17 @@ describe('FO - Menu and navigation : Sort products', async () => {
     it('should close the FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeFo', baseContext);
 
-      page = await categoryPageFO.closePage(browserContext, page, 0);
+      page = await foClassicCategoryPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await productSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
     it('should change the value of products per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'ResetProductPerPage', baseContext);
 
-      const result = await productSettingsPage.setProductsDisplayedPerPage(page, 12);
-      await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
+      const result = await boProductSettingsPage.setProductsDisplayedPerPage(page, 12);
+      expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
-
-  // Pre-condition: Enable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 });

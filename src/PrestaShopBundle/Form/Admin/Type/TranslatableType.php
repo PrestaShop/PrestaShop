@@ -124,7 +124,7 @@ class TranslatableType extends TranslatorAwareType
     {
         $errors = iterator_to_array($view->vars['errors']);
 
-        $errorsByLocale = $this->getErrorsByLocale($view, $form, $options['locales']);
+        $errorsByLocale = $this->getErrorsByLocale($form, $options['locales']);
 
         if ($errorsByLocale !== null) {
             foreach ($errorsByLocale as $errorByLocale) {
@@ -205,13 +205,12 @@ class TranslatableType extends TranslatorAwareType
      * If there are more then one locale it gets nested errors and if found prepares the errors for usage in twig.
      * If there are only one error which is not assigned to the default language then the error is being localised.
      *
-     * @param FormView $view
      * @param FormInterface $form
      * @param array $locales
      *
      * @return array|null
      */
-    private function getErrorsByLocale(FormView $view, FormInterface $form, array $locales)
+    private function getErrorsByLocale(FormInterface $form, array $locales)
     {
         $formErrors = $form->getErrors(true);
 

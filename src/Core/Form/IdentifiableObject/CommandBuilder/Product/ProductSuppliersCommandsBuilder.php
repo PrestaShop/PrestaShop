@@ -42,9 +42,9 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
      */
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
-        if (!isset($formData['options']['suppliers']['supplier_ids']) &&
-            !isset($formData['options']['suppliers']['default_supplier_id']) &&
-            !isset($formData['options']['product_suppliers'])) {
+        if (!isset($formData['options']['suppliers']['supplier_ids'])
+            && !isset($formData['options']['suppliers']['default_supplier_id'])
+            && !isset($formData['options']['product_suppliers'])) {
             return [];
         }
 

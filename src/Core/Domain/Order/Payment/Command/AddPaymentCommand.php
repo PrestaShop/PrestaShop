@@ -42,7 +42,7 @@ class AddPaymentCommand
     /**
      * @var string
      */
-    public const INVALID_CHARACTERS_NAME = '<>={}';
+    public const INVALID_CHARACTERS_NAME = '<>{}';
 
     /**
      * @var string

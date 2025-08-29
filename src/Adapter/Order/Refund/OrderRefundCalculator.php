@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order\Refund;
 
 use Currency;
 use Customer;
-use Customization;
 use Group;
 use Order;
 use OrderDetail;
@@ -82,7 +81,7 @@ class OrderRefundCalculator
         $numberZero = new DecimalNumber('0');
 
         $refundedAmount = $numberZero;
-        foreach ($productRefunds as $orderDetailId => $productRefund) {
+        foreach ($productRefunds as $productRefund) {
             $refundedAmount = $refundedAmount->plus(new DecimalNumber((string) $productRefund['amount']));
         }
 
@@ -175,12 +174,7 @@ class OrderRefundCalculator
             /** @var OrderDetail $orderDetail */
             $orderDetail = $orderDetails[$orderDetailId];
             $quantity = $orderDetailRefund->getProductQuantity();
-            if ($orderDetail->id_customization) {
-                $customization = new Customization($orderDetail->id_customization);
-                $quantityLeft = (int) $customization->quantity - (int) $customization->quantity_refunded - $customization->quantity_returned;
-            } else {
-                $quantityLeft = (int) $orderDetail->product_quantity - (int) $orderDetail->product_quantity_refunded - (int) $orderDetail->product_quantity_return;
-            }
+            $quantityLeft = (int) $orderDetail->product_quantity - (int) $orderDetail->product_quantity_refunded - (int) $orderDetail->product_quantity_return;
             if ($quantity > $quantityLeft) {
                 throw new InvalidCancelProductException(InvalidCancelProductException::QUANTITY_TOO_HIGH, $quantityLeft);
             }

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Notification\CommandHandler;
 
 use Notification;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
 use PrestaShop\PrestaShop\Core\Domain\Notification\CommandHandler\UpdateEmployeeNotificationLastElementCommandHandlerInterface;
 
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Notification\CommandHandler\UpdateEmployee
  *
  * @internal
  */
+#[AsCommandHandler]
 final class UpdateEmployeeNotificationLastElementHandler implements UpdateEmployeeNotificationLastElementCommandHandlerInterface
 {
     /**

@@ -29,36 +29,23 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use CartRule;
-use Customer;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class CustomerDiscountGridDataFactory is responsible of returning grid data for customer's discounts.
+ * Class CustomerDiscountGridDataFactory is responsible for returning grid data for customer's discounts.
  */
 final class CustomerDiscountGridDataFactory implements GridDataFactoryInterface
 {
-    /**
-     * @var Customer
-     */
-    private $customer;
-
-    /**
-     * @param Customer $customer
-     */
-    public function __construct(Customer $customer)
-    {
-        $this->customer = $customer;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function getData(SearchCriteriaInterface $searchCriteria)
     {
+        $customerFilters = $searchCriteria->getFilters();
         $allDiscounts = CartRule::getAllCustomerCartRules(
-            $this->customer->id
+            $customerFilters['id_customer']
         );
 
         $discountsToDisplay = array_slice(

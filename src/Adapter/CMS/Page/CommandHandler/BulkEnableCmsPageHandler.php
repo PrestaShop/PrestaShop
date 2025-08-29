@@ -26,16 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler\BulkEnableCmsPageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotEnableCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
+use PrestaShopDatabaseException;
 use PrestaShopException;
 
 /**
  * Enables multiple cms pages.
  */
+#[AsCommandHandler]
 final class BulkEnableCmsPageHandler extends AbstractCmsPageHandler implements BulkEnableCmsPageHandlerInterface
 {
     /**
@@ -58,7 +61,7 @@ final class BulkEnableCmsPageHandler extends AbstractCmsPageHandler implements B
      * @throws CannotEnableCmsPageException
      * @throws CmsPageException
      * @throws PrestaShopException
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      * @throws CmsPageNotFoundException
      */
     private function enableCmsPages(BulkEnableCmsPageCommand $command)

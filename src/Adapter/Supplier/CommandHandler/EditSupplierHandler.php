@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
 use Address;
 use PrestaShop\PrestaShop\Adapter\Supplier\AbstractSupplierHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\EditSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\EditSupplierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
@@ -38,6 +39,7 @@ use Supplier;
 /**
  * Handles command which edits supplier using legacy object model
  */
+#[AsCommandHandler]
 final class EditSupplierHandler extends AbstractSupplierHandler implements EditSupplierHandlerInterface
 {
     /**
@@ -66,7 +68,7 @@ final class EditSupplierHandler extends AbstractSupplierHandler implements EditS
             if (null !== $command->getAssociatedShops()) {
                 $this->associateWithShops($supplier, $command->getAssociatedShops());
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new SupplierException(sprintf('Cannot update supplier with id "%s"', $supplier->id));
         }
     }
@@ -87,9 +89,6 @@ final class EditSupplierHandler extends AbstractSupplierHandler implements EditS
         }
         if (null !== $command->getLocalizedMetaDescriptions()) {
             $supplier->meta_description = $command->getLocalizedMetaDescriptions();
-        }
-        if (null !== $command->getLocalizedMetaKeywords()) {
-            $supplier->meta_keywords = $command->getLocalizedMetaKeywords();
         }
         if (null !== $command->getLocalizedMetaTitles()) {
             $supplier->meta_title = $command->getLocalizedMetaTitles();

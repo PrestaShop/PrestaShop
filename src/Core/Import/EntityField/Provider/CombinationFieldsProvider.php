@@ -84,21 +84,6 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
                 $this->trans('ID / Name of the store', 'Admin.Advparameters.Feature'),
                 $this->trans('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.', 'Admin.Advparameters.Help')
             ),
-            new EntityField(
-                'advanced_stock_management',
-                $this->trans('Advanced stock management', 'Admin.Advparameters.Feature'),
-                $this->trans('Enable advanced stock management on product (0 = No, 1 = Yes)', 'Admin.Advparameters.Help')
-            ),
-            new EntityField(
-                'depends_on_stock',
-                $this->trans('Depends on stock', 'Admin.Advparameters.Feature'),
-                $this->trans('0 = Use quantity set in product, 1 = Use quantity from warehouse.', 'Admin.Advparameters.Help')
-            ),
-            new EntityField(
-                'warehouse',
-                $this->trans('Warehouse', 'Admin.Advparameters.Feature'),
-                $this->trans('ID of the warehouse to set as storage.', 'Admin.Advparameters.Help')
-            ),
         ];
 
         return EntityFieldCollection::createFromArray($fields);

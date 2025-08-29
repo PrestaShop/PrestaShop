@@ -57,9 +57,10 @@ class RadioWithChoiceChildrenType extends AbstractType
                 'row_attr' => [
                     'class' => 'export-translations-child',
                 ],
+                'autocomplete' => $childChoice['autocomplete'] ?? false,
                 'choices' => $childChoice['choices'],
                 'choice_attr' => $childChoiceAttr,
-                'expanded' => $childChoice['multiple'], //same value as multiple. We can only have Select or Checkboxes
+                'expanded' => $childChoice['multiple'], // same value as multiple. We can only have Select or Checkboxes
                 'multiple' => $childChoice['multiple'],
             ]);
         }

@@ -12,10 +12,9 @@ services:
     tags:
       - { name: data_collector, template: '@PrestaShop/Admin/WebProfiler/hooks_collector.html.twig', id: 'ps.hooks_collector' }
 
-  prestashop.bundle.data_collector.commands_and_queries_collector:
-    class: PrestaShopBundle\DataCollector\CommandsAndQueriesDataCollector
-    arguments:
-      - '@prestashop.core.command_bus.executed_command_registry'
+  PrestaShopBundle\DataCollector\CommandsAndQueriesDataCollector:
+    autowire: true
+    public: false
     tags:
       - name: data_collector
         id: ps.commands_and_queries_collector
@@ -23,8 +22,10 @@ services:
 
   # Web Profiler Bundle
   data_collector.config:
-    class: Symfony\Component\HttpKernel\DataCollector\ConfigDataCollector
-    arguments: [ "PrestaShop", "@=service('prestashop.core.foundation.version').getSemVersion()" ]
+    class: PrestaShopBundle\DataCollector\ConfigDataCollector
+    arguments:
+      - 'PrestaShop'
+      - '@PrestaShop\PrestaShop\Core\Foundation\Version'
     public: false
     calls:
       - [ "setKernel", [ "@kernel" ] ]

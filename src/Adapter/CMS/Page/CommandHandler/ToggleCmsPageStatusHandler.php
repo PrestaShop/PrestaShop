@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\ToggleCmsPageStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler\ToggleCmsPageStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotToggleCmsPageException;
@@ -35,6 +36,7 @@ use PrestaShopException;
 /**
  * Changes the status of cms page.
  */
+#[AsCommandHandler]
 final class ToggleCmsPageStatusHandler extends AbstractCmsPageHandler implements ToggleCmsPageStatusHandlerInterface
 {
     /**
@@ -50,7 +52,7 @@ final class ToggleCmsPageStatusHandler extends AbstractCmsPageHandler implements
             if (false === $cms->toggleStatus()) {
                 throw new CannotToggleCmsPageException(sprintf('Failed to toggle cms page with id %s status', $command->getCmsPageId()->getValue()));
             }
-        } catch (PrestaShopException $exception) {
+        } catch (PrestaShopException) {
             throw new CmsPageException(sprintf('An unexpected error occurred when toggling cms page with id %s status', $command->getCmsPageId()->getValue()));
         }
     }

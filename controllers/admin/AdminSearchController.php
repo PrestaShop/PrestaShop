@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Search\SearchPanel;
 use PrestaShop\PrestaShop\Core\Search\SearchPanelInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 
 class AdminSearchControllerCore extends AdminController
 {
@@ -144,7 +145,7 @@ class AdminSearchControllerCore extends AdminController
             if (!$searchType || $searchType == 3) {
                 if (Validate::isUnsignedInt(trim($this->query)) && Validate::isLoadedObject($order = new Order((int) $this->query))) {
                     if ($searchType == 3) {
-                        Tools::redirectAdmin('index.php?tab=AdminOrders&id_order=' . (int) $order->id . '&vieworder' . '&token=' . Tools::getAdminTokenLite('AdminOrders'));
+                        Tools::redirectAdmin($this->context->link->getAdminLink('AdminOrders', true, [], ['id_order' => (int) $order->id, 'vieworder' => '1']));
                     } else {
                         $row = get_object_vars($order);
                         $row['id_order'] = $row['id'];
@@ -158,7 +159,7 @@ class AdminSearchControllerCore extends AdminController
                     $orders = Order::getByReference($this->query);
                     $nb_orders = count($orders);
                     if ($nb_orders == 1 && $searchType == 3) {
-                        Tools::redirectAdmin('index.php?tab=AdminOrders&id_order=' . (int) $orders[0]->id . '&vieworder' . '&token=' . Tools::getAdminTokenLite('AdminOrders'));
+                        Tools::redirectAdmin($this->context->link->getAdminLink('AdminOrders', true, [], ['id_order' => (int) $orders[0]->id, 'vieworder' => '1']));
                     } elseif ($nb_orders) {
                         $this->_list['orders'] = [];
                         foreach ($orders as $order) {
@@ -186,7 +187,7 @@ class AdminSearchControllerCore extends AdminController
                             true,
                             [
                                 'route' => 'admin_orders_generate_invoice_pdf',
-                                'orderId' => (int) ($invoice->id_order),
+                                'orderId' => (int) $invoice->id_order,
                             ]
                         )
                     );
@@ -197,7 +198,7 @@ class AdminSearchControllerCore extends AdminController
             /* Cart */
             if ($searchType == 5) {
                 if (Validate::isUnsignedInt((int) $this->query) && Validate::isLoadedObject($cart = new Cart((int) $this->query))) {
-                    Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart=' . (int) ($cart->id) . '&viewcart' . '&token=' . Tools::getAdminToken('AdminCarts' . (int) (Tab::getIdFromClassName('AdminCarts')) . (int) $this->context->employee->id));
+                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminOrders', true, [], ['id_cart' => (int) $cart->id, 'viewcart' => 1]));
                 }
                 $this->errors[] = $this->trans('No cart was found with this ID:', [], 'Admin.Orderscustomers.Notification') . ' ' . Tools::htmlentitiesUTF8($this->query);
             }
@@ -208,7 +209,8 @@ class AdminSearchControllerCore extends AdminController
             if (!$searchType || $searchType == 7) {
                 /* Handle module name */
                 if ($searchType == 7 && Validate::isModuleName($this->query) && ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module)) {
-                    Tools::redirectAdmin('index.php?tab=AdminModules&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . '&token=' . Tools::getAdminTokenLite('AdminModules'));
+                    // @todo redirect directly to module manager with search prefilled, because this won't work anymore
+                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules', true, [], ['tab_module' => $module->tab, 'module_name' => $module->name, 'anchor' => ucfirst($module->name)]));
                 }
 
                 /* Normal catalog search */
@@ -277,7 +279,6 @@ class AdminSearchControllerCore extends AdminController
         );
         $result = Db::getInstance()->executeS($sql);
         $mainControllers = Dispatcher::getControllers([
-            _PS_ADMIN_DIR_ . '/tabs/',
             _PS_ADMIN_CONTROLLER_DIR_,
             _PS_OVERRIDE_DIR_ . 'controllers/admin/',
         ]);
@@ -288,7 +289,7 @@ class AdminSearchControllerCore extends AdminController
                 continue;
             }
             // Remove pages without access
-            if (!Access::isGranted('ROLE_MOD_TAB_' . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
+            if (!Access::isGranted(Permission::PREFIX_TAB . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
                 continue;
             }
             $tab = Tab::getInstanceFromClassName($row['class_name']);
@@ -333,7 +334,7 @@ class AdminSearchControllerCore extends AdminController
             $genders_icon[$gender->id] = '../genders/' . (int) $gender->id . '.jpg';
             $genders[$gender->id] = $gender->name;
         }
-        $this->fields_list['customers'] = ([
+        $this->fields_list['customers'] = [
             'id_customer' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'width' => 25],
             'id_gender' => ['title' => $this->trans('Social title', [], 'Admin.Global'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders, 'width' => 25],
             'firstname' => ['title' => $this->trans('First name', [], 'Admin.Global'), 'align' => 'left', 'width' => 150],
@@ -344,7 +345,7 @@ class AdminSearchControllerCore extends AdminController
             'date_add' => ['title' => $this->trans('Registration date', [], 'Admin.Shopparameters.Feature'), 'align' => 'center', 'type' => 'date', 'width' => 75],
             'orders' => ['title' => $this->trans('Orders', [], 'Admin.Global'), 'align' => 'center', 'width' => 50],
             'active' => ['title' => $this->trans('Enabled', [], 'Admin.Global'), 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'width' => 25],
-        ]);
+        ];
     }
 
     protected function initProductList()
@@ -541,11 +542,11 @@ class AdminSearchControllerCore extends AdminController
      *
      * @return bool
      */
-    protected function isCountableAndNotEmpty(array $array, $key)
+    protected function isCountableAndNotEmpty(array $array, string $key)
     {
-        return isset($array[$key]) &&
-            is_countable($array[$key]) &&
-            count($array[$key]);
+        return isset($array[$key])
+            && is_countable($array[$key])
+            && count($array[$key]);
     }
 
     /**

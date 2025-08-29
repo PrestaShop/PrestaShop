@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,15 +21,15 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
+  {{ include('@PrestaShop/Admin/Common/multistore-infotip.html.twig') }}
 
   {# Stable feature flags form #}
   {% if stableFeatureFlagsForm %}
-    {{ form_start(stableFeatureFlagsForm, {attr : {class: 'form'} }) }}
+    {{ form_start(stableFeatureFlagsForm, {attr: {class: 'form'}}) }}
     {% block stable_feature_flag_form %}
       <div class="card" id="configuration_fieldset_general">
         <h3 class="card-header">
@@ -57,7 +57,7 @@
 
   {# Beta feature flags form #}
   {% if betaFeatureFlagsForm %}
-    {{ form_start(betaFeatureFlagsForm, {attr : {class: 'form'} }) }}
+    {{ form_start(betaFeatureFlagsForm, {attr: {class: 'form'}}) }}
     {% block beta_feature_flag_form %}
       <div class="card" id="configuration_fieldset_general">
         <h3 class="card-header">
@@ -79,7 +79,7 @@
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-end">
-            {% set widgetVars = betaFeatureFlagsForm.submit.vars|merge({'attr': {
+            {% set widgetVars = betaFeatureFlagsForm.submit.vars|merge({attr: {
               'data-modal-title': 'Are you sure you want to enable this experimental feature?'|trans({}, 'Admin.Advparameters.Notification'),
               'data-modal-message': 'You are about to enable a feature that is not stable yet. This should only be done in a test environment or in full knowledge of the potential risks.'|trans({}, 'Admin.Advparameters.Notification'),
               'data-modal-apply': 'Enable'|trans({}, 'Admin.Actions'),

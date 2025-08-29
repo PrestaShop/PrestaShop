@@ -26,12 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
+use Attribute;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\AddressZipCodeValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**
  * Address zip code validation constraint
  */
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class AddressZipCode extends Constraint
 {
     public $requiredMessage = 'A Zip/Postal code is required.';

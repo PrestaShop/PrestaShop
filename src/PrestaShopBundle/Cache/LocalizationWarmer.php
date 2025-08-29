@@ -48,8 +48,8 @@ class LocalizationWarmer implements CacheWarmerInterface
         if (!is_dir($cacheDir)) {
             try {
                 $fs->mkdir($cacheDir);
-            } catch (IOExceptionInterface $e) {
-                //@todo: log
+            } catch (IOExceptionInterface) {
+                // @todo: log
             }
         }
 
@@ -68,12 +68,12 @@ class LocalizationWarmer implements CacheWarmerInterface
 
             try {
                 $fs->dumpFile($path_cache_file, $localization_file_content);
-            } catch (IOExceptionInterface $e) {
-                //@todo: log
+            } catch (IOExceptionInterface) {
+                // @todo: log
             }
         }
 
-        return $localization_file_content;
+        return [$localization_file_content];
     }
 
     public function isOptional()

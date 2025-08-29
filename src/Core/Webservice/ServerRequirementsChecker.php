@@ -86,7 +86,7 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
      *
      * @return array empty if no errors
      */
-    public function checkForErrors()
+    public function checkForErrors(): array
     {
         $issues = $this->lookForIssues();
 
@@ -123,7 +123,7 @@ final class ServerRequirementsChecker implements ServerRequirementsCheckerInterf
             $issues[] = self::ISSUE_HTTPS_NOT_AVAILABLE;
         }
 
-        if (false === strpos($this->hostingInformation->getServerInformation()['version'], 'Apache')) {
+        if (!str_contains($this->hostingInformation->getServerInformation()['version'], 'Apache')) {
             return $issues;
         }
 

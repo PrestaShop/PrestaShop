@@ -23,6 +23,33 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
 class AdminPdfControllerCore extends AdminController
 {
     public function postProcess()
@@ -55,7 +82,12 @@ class AdminPdfControllerCore extends AdminController
     public function processGenerateInvoicePdf()
     {
         if (Tools::isSubmit('id_order')) {
-            $this->generateInvoicePDFByIdOrder(Tools::getValue('id_order'));
+            $sfContainer = SymfonyContainer::getInstance();
+            $sfRouter = $sfContainer->get('router');
+            Tools::redirectAdmin($sfRouter->generate(
+                'admin_orders_generate_invoice_pdf',
+                ['orderId' => (int) Tools::getValue('id_order')]
+            ));
         } elseif (Tools::isSubmit('id_order_invoice')) {
             $this->generateInvoicePDFByIdOrderInvoice(Tools::getValue('id_order_invoice'));
         } else {
@@ -77,13 +109,21 @@ class AdminPdfControllerCore extends AdminController
 
     public function processGenerateDeliverySlipPDF()
     {
+        $sfContainer = SymfonyContainer::getInstance();
+        $sfRouter = $sfContainer->get('router');
         if (Tools::isSubmit('id_order')) {
-            $this->generateDeliverySlipPDFByIdOrder((int) Tools::getValue('id_order'));
+            Tools::redirectAdmin($sfRouter->generate(
+                'admin_orders_generate_delivery_slip_pdf',
+                ['orderId' => (int) Tools::getValue('id_order')]
+            ));
         } elseif (Tools::isSubmit('id_order_invoice')) {
             $this->generateDeliverySlipPDFByIdOrderInvoice((int) Tools::getValue('id_order_invoice'));
         } elseif (Tools::isSubmit('id_delivery')) {
             $order = Order::getByDelivery((int) Tools::getValue('id_delivery'));
-            $this->generateDeliverySlipPDFByIdOrder((int) $order->id);
+            Tools::redirectAdmin($sfRouter->generate(
+                'admin_orders_generate_delivery_slip_pdf',
+                ['orderId' => (int) $order->id]
+            ));
         } else {
             die($this->trans('The order ID -- or the invoice order ID -- is missing.', [], 'Admin.Orderscustomers.Notification'));
         }
@@ -142,47 +182,16 @@ class AdminPdfControllerCore extends AdminController
         $this->generatePDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP);
     }
 
+    /**
+     * @deprecated Since 9.0 and will be removed in 10.0
+     */
     public function processGenerateSupplyOrderFormPDF()
     {
-        if (!Tools::isSubmit('id_supply_order')) {
-            die($this->trans('The supply order ID is missing.', [], 'Admin.Orderscustomers.Notification'));
-        }
-
-        $id_supply_order = (int) Tools::getValue('id_supply_order');
-        $supply_order = new SupplyOrder($id_supply_order);
-
-        if (!Validate::isLoadedObject($supply_order)) {
-            die($this->trans('The supply order cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
-        }
-
-        $this->generatePDF($supply_order, PDF::TEMPLATE_SUPPLY_ORDER_FORM);
-    }
-
-    /**
-     * @deprecated Since 8.1.0, use the route `admin_orders_generate_delivery_slip_pdf` instead.
-     *
-     * @param int $id_order
-     *
-     * @return void
-     */
-    public function generateDeliverySlipPDFByIdOrder($id_order)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1.0. Use the route %s instead.',
-                __METHOD__,
-                'admin_orders_generate_delivery_slip_pdf'
-            ),
-            E_USER_DEPRECATED
-        );
-
-        $order = new Order((int) $id_order);
-        if (!Validate::isLoadedObject($order)) {
-            throw new PrestaShopException('Can\'t load Order object');
-        }
-
-        $order_invoice_collection = $order->getInvoicesCollection();
-        $this->generatePDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP);
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
+        die;
     }
 
     public function generateDeliverySlipPDFByIdOrderInvoice($id_order_invoice)
@@ -193,34 +202,6 @@ class AdminPdfControllerCore extends AdminController
         }
 
         $this->generatePDF($order_invoice, PDF::TEMPLATE_DELIVERY_SLIP);
-    }
-
-    /**
-     * @deprecated Since 8.1.0, use the route `admin_orders_generate_invoice_pdf` instead.
-     *
-     * @param int $id_order
-     *
-     * @return void
-     */
-    public function generateInvoicePDFByIdOrder($id_order)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1.0. Use the route %s instead.',
-                __METHOD__,
-                'admin_orders_generate_invoice_pdf'
-            ),
-            E_USER_DEPRECATED
-        );
-
-        $order = new Order((int) $id_order);
-        if (!Validate::isLoadedObject($order)) {
-            die($this->trans('The order cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
-        }
-
-        $order_invoice_list = $order->getInvoicesCollection();
-        Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
-        $this->generatePDF($order_invoice_list, PDF::TEMPLATE_INVOICE);
     }
 
     public function generateInvoicePDFByIdOrderInvoice($id_order_invoice)

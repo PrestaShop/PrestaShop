@@ -23,6 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+/**
+ * @deprecated since 9.0 and will be removed in 10.0, this object model is no longer needed
+ */
 class StockMvtReasonCore extends ObjectModel
 {
     /** @var int identifier of the movement reason */
@@ -44,7 +48,6 @@ class StockMvtReasonCore extends ObjectModel
     public $deleted = false;
 
     /**
-     * @since 1.5.0
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -97,8 +100,6 @@ class StockMvtReasonCore extends ObjectModel
     /**
      * Same as StockMvtReason::getStockMvtReasons(), ignoring a specific lists of ids.
      *
-     * @since 1.5.0
-     *
      * @param int $id_lang
      * @param array $ids_ignore
      * @param int $sign optional
@@ -125,8 +126,6 @@ class StockMvtReasonCore extends ObjectModel
 
     /**
      * For a given id_stock_mvt_reason, tells if it exists.
-     *
-     * @since 1.5.0
      *
      * @param int $id_stock_mvt_reason
      *

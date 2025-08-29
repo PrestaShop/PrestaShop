@@ -23,10 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-/**
- * @since 1.5.0
- */
 class ModuleFrontControllerCore extends FrontController
 {
     /** @var Module */
@@ -64,6 +60,11 @@ class ModuleFrontControllerCore extends FrontController
         }
     }
 
+    /**
+     * Assign template vars related to page content.
+     *
+     * @see FrontController::initContent()
+     */
     public function initContent()
     {
         if (Tools::isSubmit('module') && Tools::getValue('controller') == 'payment') {
@@ -73,7 +74,12 @@ class ModuleFrontControllerCore extends FrontController
                 'minimalPurchase' => &$minimalPurchase,
             ]);
             if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimalPurchase) {
-                Tools::redirect('index.php?controller=order&step=1');
+                Tools::redirect($this->context->link->getPageLink(
+                    'order',
+                    null,
+                    null,
+                    ['step' => 1]
+                ));
             }
         }
         parent::initContent();

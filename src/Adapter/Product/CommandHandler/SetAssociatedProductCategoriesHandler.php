@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetAssociatedProductCategoriesHandlerInterface;
 
 /**
  * Handles @var SetAssociatedProductCategoriesCommand using legacy object model
  */
+#[AsCommandHandler]
 final class SetAssociatedProductCategoriesHandler implements SetAssociatedProductCategoriesHandlerInterface
 {
     /**

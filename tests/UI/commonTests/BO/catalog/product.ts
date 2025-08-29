@@ -1,196 +1,158 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import productsPage from '@pages/BO/catalog/products';
-import addProductPage from '@pages/BO/catalog/products/add';
-
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
-import productsV2 from '@pages/BO/catalog/productsV2';
+
+import {
+  boDashboardPage,
+  boLoginPage,
+  boProductsPage,
+  boProductsCreatePage,
+  type BrowserContext,
+  FakerProduct,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
 let numberOfProducts: number;
-let numberOfProductsToDelete: number;
 
 /**
  * Function to create standard product
- * @param productData {ProductData} Data to set to create product
+ * @param productData {FakerProduct} Data to set to create product
  * @param baseContext {string} String to identify the test
  */
-function createProductTest(productData: ProductData, baseContext: string = 'commonTests-createProductTest'): void {
+function createProductTest(productData: FakerProduct, baseContext: string = 'commonTests-createProductTest'): void {
   describe(`PRE-TEST: Create product '${productData.name}'`, async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
-      await productsPage.closeSfToolBar(page);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
-    it('should reset all filters and get number of products', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersBeforeCreate', baseContext);
+    it('should click on \'New product\' button and check new product modal', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
+      expect(isModalVisible).to.be.eq(true);
     });
 
-    it('should go to add product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductPage', baseContext);
+    it(`should choose '${productData.type} product'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseTypeOfProduct', baseContext);
 
-      await productsPage.goToAddProductPage(page);
+      await boProductsPage.selectProductType(page, productData.type);
 
-      const pageTitle = await addProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
+    });
+
+    it('should go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
+
+      await boProductsPage.clickOnAddNewProduct(page);
+
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
     it('should create product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'setProduct', baseContext);
 
-      const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
-      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+      await boProductsCreatePage.closeSfToolBar(page);
+
+      const createProductMessage = await boProductsCreatePage.setProduct(page, productData);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
   });
 }
 
 /**
  * Function to delete product
- * @param productData {ProductData} Data to set to delete product
+ * @param productData {FakerProduct} Data to set to delete product
  * @param baseContext {string} String to identify the test
  */
-function deleteProductTest(productData: ProductData, baseContext: string = 'commonTests-deleteProductTest'): void {
+function deleteProductTest(productData: FakerProduct, baseContext: string = 'commonTests-deleteProductTest'): void {
   describe(`POST-TEST: Delete product '${productData.name}'`, async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDelete', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
-      await productsPage.resetFilter(page);
+      await boProductsPage.resetFilter(page);
 
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
-    });
-
-    it('should delete product from dropdown menu', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
-
-      const deleteTextResult = await productsPage.deleteProduct(page, productData);
-      await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersAfterDelete', baseContext);
-
-      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
-    });
-  });
-}
-
-/**
- * Function to delete product
- * @param productData {ProductData} Data to set to delete product
- * @param baseContext {string} String to identify the test
- */
-function deleteProductV2Test(productData: ProductData, baseContext: string = 'commonTests-deleteProductV2Test'): void {
-  describe(`POST-TEST: Delete product '${productData.name}'`, async () => {
-    // before and after functions
-    before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
-    });
-
-    after(async () => {
-      await helper.closeBrowserContext(browserContext);
-    });
-
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
-
-    it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDelete', baseContext);
-
-      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
-
-      const pageTitle = await productsV2.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsV2.pageTitle);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
-
-      await productsV2.resetFilter(page);
-
-      const numberOfProducts = await productsV2.resetAndGetNumberOfLines(page);
-      await expect(numberOfProducts).to.be.above(0);
+      const numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfProducts).to.be.above(0);
     });
 
     it('should click on delete product button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct', baseContext);
 
-      const isModalVisible: boolean = await productsV2.clickOnDeleteProductButton(page);
-      await expect(isModalVisible).to.be.true;
+      const isModalVisible: boolean = await boProductsPage.clickOnDeleteProductButton(page);
+      expect(isModalVisible).to.eq(true);
     });
 
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const textMessage: string = await productsV2.clickOnConfirmDialogButton(page);
-      await expect(textMessage).to.equal(productsV2.successfulDeleteMessage);
+      const textMessage: string = await boProductsPage.clickOnConfirmDialogButton(page);
+      expect(textMessage).to.equal(boProductsPage.successfulDeleteMessage);
     });
 
     it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      const numberOfProductsAfterReset: number = await productsV2.resetAndGetNumberOfLines(page);
-      await expect(numberOfProductsAfterReset).to.be.above(0);
+      const numberOfProductsAfterReset: number = await boProductsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfProductsAfterReset).to.be.above(0);
     });
   });
 }
@@ -202,64 +164,92 @@ function deleteProductV2Test(productData: ProductData, baseContext: string = 'co
  */
 function bulkDeleteProductsTest(productName: string, baseContext: string = 'commonTests-bulkDeleteProductsTest'): void {
   describe('POST-TEST: Bulk delete created products', async () => {
+    let numberOfProductsAfterFilter: number;
+
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToBulkDelete', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
-    it('should get number of products', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts', baseContext);
+    it('should reset filter and get number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProduct', baseContext);
 
-      numberOfProducts = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfProducts).to.be.at.least(0);
+      numberOfProducts = await boProductsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfProducts).to.be.above(0);
     });
 
-    it('should filter products by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
+    it('should filter list by \'Name\' and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterListByReference', baseContext);
 
-      await productsPage.filterProducts(page, 'name', productName);
+      await boProductsPage.filterProducts(page, 'product_name', productName, 'input');
 
-      numberOfProductsToDelete = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfProductsToDelete).to.be.at.least(0);
+      numberOfProductsAfterFilter = await boProductsPage.getNumberOfProductsFromList(page);
 
-      const textColumn = await productsPage.getProductNameFromList(page, 1);
-      await expect(textColumn).to.contains(productName);
+      const textColumn = await boProductsPage.getTextColumn(page, 'product_name', 1);
+      expect(textColumn).to.contains(productName);
     });
 
-    it('should delete products by bulk actions', async function () {
+    it('should select the products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectProducts', baseContext);
+
+      const isBulkDeleteButtonEnabled = await boProductsPage.bulkSelectProducts(page);
+      expect(isBulkDeleteButtonEnabled).to.be.eq(true);
+    });
+
+    it('should click on bulk actions button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnBulkActionsButton', baseContext);
+
+      const textMessage = await boProductsPage.clickOnBulkActionsProducts(page, 'delete');
+      expect(textMessage).to.equal(`Deleting ${numberOfProductsAfterFilter} products`);
+    });
+
+    it('should bulk delete products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteProducts', baseContext);
 
-      const deleteTextResult = await productsPage.deleteAllProductsWithBulkActions(page);
-      await expect(deleteTextResult).to.equal(productsPage.productMultiDeletedSuccessfulMessage);
+      const textMessage = await boProductsPage.bulkActionsProduct(page, 'delete');
+      expect(textMessage).to.equal(`Deleting ${numberOfProductsAfterFilter} / ${numberOfProductsAfterFilter} products`);
     });
 
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
+    it('should close progress modal', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closeDeleteProgressModal', baseContext);
 
-      const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProductsAfterReset).to.be.equal(numberOfProducts - numberOfProductsToDelete);
+      const isModalVisible = await boProductsPage.closeBulkActionsProgressModal(page, 'delete');
+      expect(isModalVisible).to.be.eq(true);
+    });
+
+    it('should reset filter and get number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProduct', baseContext);
+
+      const numberOfProductAfterBulkActions = await boProductsPage.resetAndGetNumberOfLines(page);
+      expect(numberOfProductAfterBulkActions).to.be.equal(numberOfProducts - numberOfProductsAfterFilter);
     });
   });
 }
 
 export {
-  createProductTest, deleteProductTest, deleteProductV2Test, bulkDeleteProductsTest,
+  createProductTest, deleteProductTest, bulkDeleteProductsTest,
 };

@@ -26,6 +26,10 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Util;
 
+use Exception;
+use ReflectionMethod;
+use ReflectionObject;
+
 class DataTransfer
 {
     /**
@@ -38,7 +42,7 @@ class DataTransfer
      *
      * @return object $object
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public static function transferAttributesFromSubObjectToObject(
         $subObject,
@@ -46,8 +50,8 @@ class DataTransfer
         $throwException = false,
         $blackList = [])
     {
-        $reflectionObject = new \ReflectionObject($subObject);
-        $reflectionMethods = $reflectionObject->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $reflectionObject = new ReflectionObject($subObject);
+        $reflectionMethods = $reflectionObject->getMethods(ReflectionMethod::IS_PUBLIC);
 
         $attributes = [];
         foreach ($reflectionMethods as $method) {
@@ -73,7 +77,7 @@ class DataTransfer
             if (method_exists($object, $setter)) {
                 $object->$setter($value);
             } elseif ($throwException) {
-                throw new \Exception("No such setter : $setter");
+                throw new Exception("No such setter : $setter");
             }
         }
 
@@ -95,7 +99,7 @@ class DataTransfer
             if (method_exists($object, $setter)) {
                 $object->$setter($value);
             } elseif ($throwException) {
-                throw new \Exception("No such setter : $setter");
+                throw new Exception("No such setter : $setter");
             }
         }
 
@@ -105,12 +109,12 @@ class DataTransfer
     /**
      * Code inspired by \Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer::isGetMethod()
      */
-    private static function isGetMethod(\ReflectionMethod $method)
+    private static function isGetMethod(ReflectionMethod $method)
     {
         return
-            0 === strpos($method->name, 'get') &&
-            3 < strlen($method->name) &&
-            0 === $method->getNumberOfRequiredParameters()
+            0 === strpos($method->name, 'get')
+            && 3 < strlen($method->name)
+            && 0 === $method->getNumberOfRequiredParameters()
         ;
     }
 }

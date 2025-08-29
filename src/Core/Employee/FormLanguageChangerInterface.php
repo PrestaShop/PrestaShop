@@ -36,5 +36,5 @@ interface FormLanguageChangerInterface
      *
      * @param string $languageIsoCode two letter iso code of the language
      */
-    public function changeLanguageInCookies($languageIsoCode);
+    public function changeLanguageInCookies(string $languageIsoCode): void;
 }

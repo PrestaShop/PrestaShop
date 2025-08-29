@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 /**
  * Class CustomerMessageCore.
  */
@@ -36,6 +38,9 @@ class CustomerMessageCore extends ObjectModel
 
     /** @var int */
     public $id_employee;
+
+    /** @var int */
+    public $id_product;
 
     /** @var string */
     public $message;
@@ -69,11 +74,12 @@ class CustomerMessageCore extends ObjectModel
         'primary' => 'id_customer_message',
         'fields' => [
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_customer_thread' => ['type' => self::TYPE_INT],
-            'ip_address' => ['type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 15],
-            'message' => ['type' => self::TYPE_HTML, 'required' => true, 'size' => 4194303, 'validate' => 'isCleanHtml'],
-            'file_name' => ['type' => self::TYPE_STRING],
-            'user_agent' => ['type' => self::TYPE_STRING],
+            'ip_address' => ['type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 16],
+            'message' => ['type' => self::TYPE_HTML, 'required' => true, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4, 'validate' => 'isCleanHtml'],
+            'file_name' => ['type' => self::TYPE_STRING, 'size' => 18],
+            'user_agent' => ['type' => self::TYPE_STRING, 'size' => 128],
             'private' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
@@ -86,6 +92,9 @@ class CustomerMessageCore extends ObjectModel
         'fields' => [
             'id_employee' => [
                 'xlink_resource' => 'employees',
+            ],
+            'id_product' => [
+                'xlink_resource' => 'products',
             ],
             'id_customer_thread' => [
                 'xlink_resource' => 'customer_threads',

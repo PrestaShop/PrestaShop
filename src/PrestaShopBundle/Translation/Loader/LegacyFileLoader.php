@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -64,7 +63,7 @@ final class LegacyFileLoader implements LoaderInterface
      *
      * @throws \PrestaShopBundle\Translation\Exception\InvalidLegacyTranslationKeyException
      */
-    public function load($path, $locale, $domain = 'messages')
+    public function load($path, $locale, $domain = 'messages'): MessageCatalogue
     {
         $catalogue = new MessageCatalogue($locale);
 

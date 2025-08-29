@@ -55,7 +55,7 @@ class HookDispatcherTest extends TestCase
 
         $this->hookDispatcherMock = $this
             ->getMockBuilder(HookDispatcher::class)
-            ->setMethods(['getListeners', 'doDispatch'])
+            ->onlyMethods(['getListeners', 'doDispatch'])
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -82,7 +82,7 @@ class HookDispatcherTest extends TestCase
             ->with([$lowerCasedEventName], $eventName, $this->hookEventMock)
         ;
 
-        $this->hookDispatcherMock->dispatch($eventName, $this->hookEventMock);
+        $this->hookDispatcherMock->dispatch($this->hookEventMock, $eventName);
     }
 
     public function getHookEventNames()

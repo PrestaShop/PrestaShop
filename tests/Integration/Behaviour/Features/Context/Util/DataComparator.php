@@ -47,7 +47,7 @@ class DataComparator
             $realElement = $realData[$key];
             $realElementType = gettype($realElement);
 
-            if (($realElementType === 'array') && (array_key_exists('value', $realElement))) {
+            if (($realElementType === 'array') && array_key_exists('value', $realElement)) {
                 $realElement = $realElement['value'];
                 $realElementType = gettype($realElement);
             }

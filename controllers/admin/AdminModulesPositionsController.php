@@ -36,7 +36,7 @@ class AdminModulesPositionsControllerCore extends AdminController
     public function postProcess()
     {
         // Getting key value for display
-        if (Tools::getValue('show_modules') && (string) (Tools::getValue('show_modules')) != 'all') {
+        if (Tools::getValue('show_modules') && (string) Tools::getValue('show_modules') != 'all') {
             $this->display_key = (int) Tools::getValue('show_modules');
         }
 
@@ -237,6 +237,11 @@ class AdminModulesPositionsControllerCore extends AdminController
         }
     }
 
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
     public function initContent()
     {
         $this->addjqueryPlugin('sortable');
@@ -254,12 +259,6 @@ class AdminModulesPositionsControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        $this->page_header_toolbar_btn['save'] = [
-            'href' => self::$currentIndex . '&addToHook' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token,
-            'desc' => $this->trans('Transplant a module', [], 'Admin.Design.Feature'),
-            'icon' => 'process-icon-anchor',
-        ];
-
         return parent::initPageHeaderToolbar();
     }
 
@@ -407,9 +406,9 @@ class AdminModulesPositionsControllerCore extends AdminController
     public function ajaxProcessUpdatePositions()
     {
         if ($this->access('edit')) {
-            $id_module = (int) (Tools::getValue('id_module'));
-            $id_hook = (int) (Tools::getValue('id_hook'));
-            $way = (bool) (Tools::getValue('way'));
+            $id_module = (int) Tools::getValue('id_module');
+            $id_hook = (int) Tools::getValue('id_hook');
+            $way = (bool) Tools::getValue('way');
             $positions = Tools::getValue((string) $id_hook);
             $position = (is_array($positions)) ? array_search($id_hook . '_' . $id_module, $positions) : null;
             $module = Module::getInstanceById($id_module);
@@ -477,7 +476,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             if (_PS_MODE_DEMO_) {
                 die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
             }
-            /* PrestaShop demo mode*/
+            /* PrestaShop demo mode */
 
             $hook_name = Tools::getValue('hook');
             $hookableModulesList = [];

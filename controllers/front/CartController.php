@@ -55,7 +55,7 @@ class CartControllerCore extends FrontController
      *
      * @param string $canonicalURL
      */
-    public function canonicalRedirection($canonicalURL = '')
+    public function canonicalRedirection(string $canonicalURL = ''): void
     {
     }
 
@@ -64,7 +64,7 @@ class CartControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -75,7 +75,7 @@ class CartControllerCore extends FrontController
         $this->id_product = (int) Tools::getValue('id_product', null);
         $this->id_product_attribute = (int) Tools::getValue('id_product_attribute', Tools::getValue('ipa'));
         $this->customization_id = (int) Tools::getValue('id_customization');
-        $this->qty = abs(Tools::getValue('qty', 1));
+        $this->qty = abs((int) Tools::getValue('qty', 1));
         $this->id_address_delivery = (int) Tools::getValue('id_address_delivery');
         $this->preview = ('1' === Tools::getValue('preview'));
 
@@ -83,7 +83,7 @@ class CartControllerCore extends FrontController
         if ('show' === Tools::getValue('action')) {
             $isAvailable = $this->areProductsAvailable();
             if (Tools::getIsset('checkout')) {
-                return Tools::redirect($this->context->link->getPageLink('order'));
+                Tools::redirect($this->context->link->getPageLink('order'));
             }
             if (true !== $isAvailable) {
                 $this->errors[] = $isAvailable;
@@ -92,9 +92,11 @@ class CartControllerCore extends FrontController
     }
 
     /**
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         if (Configuration::isCatalogMode() && Tools::getValue('action') === 'show') {
             Tools::redirect('index.php');
@@ -121,7 +123,7 @@ class CartControllerCore extends FrontController
         parent::initContent();
     }
 
-    public function displayAjaxUpdate()
+    public function displayAjaxUpdate(): void
     {
         if (Configuration::isCatalogMode()) {
             return;
@@ -133,7 +135,7 @@ class CartControllerCore extends FrontController
         $productQuantity = $updatedProduct['quantity'] ?? 0;
 
         if (!$this->errors) {
-            $presentedCart = $this->cart_presenter->present($this->context->cart);
+            $presentedCart = $this->cart_presenter->present($this->context->cart, true);
 
             // filter product output
             $presentedCart['products'] = $this->get('prestashop.core.filter.front_end_object.product_collection')
@@ -161,7 +163,7 @@ class CartControllerCore extends FrontController
         }
     }
 
-    public function displayAjaxRefresh()
+    public function displayAjaxRefresh(): void
     {
         if (Configuration::isCatalogMode()) {
             return;
@@ -186,7 +188,7 @@ class CartControllerCore extends FrontController
      * @deprecated 1.7.3.1 the product link is now accessible
      *                     in #quantity_wanted[data-url-update]
      */
-    public function displayAjaxProductRefresh()
+    public function displayAjaxProductRefresh(): void
     {
         if ($this->id_product) {
             $idProductAttribute = 0;
@@ -226,12 +228,12 @@ class CartControllerCore extends FrontController
         ]));
     }
 
-    public function postProcess()
+    public function postProcess(): void
     {
         $this->updateCart();
     }
 
-    protected function updateCart()
+    protected function updateCart(): void
     {
         // Update the cart ONLY if it's not a bot, in order to avoid ghost carts
         if (!Connection::isBot()
@@ -287,7 +289,7 @@ class CartControllerCore extends FrontController
     /**
      * This process delete a product from the cart.
      */
-    protected function processDeleteProductInCart()
+    protected function processDeleteProductInCart(): void
     {
         $customization_product = Db::getInstance()->executeS(
             'SELECT * FROM `' . _DB_PREFIX_ . 'customization`'
@@ -318,7 +320,7 @@ class CartControllerCore extends FrontController
                     'Shop.Notifications.Error'
                 );
 
-                return false;
+                return;
             }
         }
 
@@ -336,8 +338,7 @@ class CartControllerCore extends FrontController
         if ($this->context->cart->deleteProduct(
             $this->id_product,
             $this->id_product_attribute,
-            $this->customization_id,
-            $this->id_address_delivery
+            $this->customization_id
         )) {
             Hook::exec('actionObjectProductInCartDeleteAfter', $data);
 
@@ -361,7 +362,7 @@ class CartControllerCore extends FrontController
     /**
      * This process add or update a product in the cart.
      */
-    protected function processChangeProductInCart()
+    protected function processChangeProductInCart(): void
     {
         $mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
         $ErrorKey = ('update' === $mode) ? 'updateOperationError' : 'errors';
@@ -476,10 +477,6 @@ class CartControllerCore extends FrontController
         if (!$this->errors) {
             // Add cart if no cart found
             if (!$this->context->cart->id) {
-                if (Context::getContext()->cookie->id_guest) {
-                    $guest = new Guest((int) Context::getContext()->cookie->id_guest);
-                    $this->context->cart->mobile_theme = $guest->mobile_theme;
-                }
                 $this->context->cart->add();
                 if (Validate::isLoadedObject($this->context->cart)) {
                     $this->context->cookie->id_cart = (int) $this->context->cart->id;
@@ -501,7 +498,7 @@ class CartControllerCore extends FrontController
                 $this->id_product_attribute,
                 $this->customization_id,
                 Tools::getValue('op', 'up'),
-                $this->id_address_delivery,
+                0,
                 null,
                 true,
                 true
@@ -558,18 +555,24 @@ class CartControllerCore extends FrontController
      *
      * @return bool
      */
-    public function productInCartMatchesCriteria($productInCart)
+    public function productInCartMatchesCriteria(array $productInCart)
     {
         return (
-            !isset($this->id_product_attribute) ||
-            (
-                $productInCart['id_product_attribute'] == $this->id_product_attribute &&
-                $productInCart['id_customization'] == $this->customization_id
+            !isset($this->id_product_attribute)
+            || (
+                $productInCart['id_product_attribute'] == $this->id_product_attribute
+                && $productInCart['id_customization'] == $this->customization_id
             )
         ) && isset($this->id_product) && $productInCart['id_product'] == $this->id_product;
     }
 
-    public function getTemplateVarPage()
+    /**
+     * Initializes a set of commonly used variables related to the current page, available for use
+     * in the template. @see FrontController::assignGeneralPurposeVariables for more information.
+     *
+     * @return array
+     */
+    public function getTemplateVarPage(): array
     {
         $page = parent::getTemplateVarPage();
 
@@ -594,9 +597,9 @@ class CartControllerCore extends FrontController
      *
      * @return bool
      */
-    protected function shouldAvailabilityErrorBeRaised($product, $qtyToCheck)
+    protected function shouldAvailabilityErrorBeRaised(Product $product, int $qtyToCheck)
     {
-        if (($this->id_product_attribute)) {
+        if ($this->id_product_attribute) {
             return !Product::isAvailableWhenOutOfStock($product->out_of_stock)
                 && !ProductAttribute::checkAttributeQty($this->id_product_attribute, $qtyToCheck);
         } elseif (Product::isAvailableWhenOutOfStock($product->out_of_stock)) {
@@ -631,7 +634,7 @@ class CartControllerCore extends FrontController
      *
      * @return bool|string
      */
-    protected function areProductsAvailable()
+    protected function areProductsAvailable(): bool|string
     {
         $products = $this->context->cart->getProducts();
 
@@ -641,7 +644,7 @@ class CartControllerCore extends FrontController
 
             if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
                 return $this->trans(
-                   'The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
+                    'The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
                     ['%product%' => $product['name']],
                     'Shop.Notifications.Error'
                 );
@@ -675,7 +678,7 @@ class CartControllerCore extends FrontController
     /**
      * Check that minimal quantity conditions are respected for each product in the cart
      */
-    private function checkCartProductsMinimalQuantities()
+    private function checkCartProductsMinimalQuantities(): void
     {
         $productList = $this->context->cart->getProducts();
 

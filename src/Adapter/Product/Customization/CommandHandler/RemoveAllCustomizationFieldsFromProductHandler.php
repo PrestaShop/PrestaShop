@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Customization\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Update\CustomizationFieldDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Update\ProductCustomizationFieldUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\RemoveAllCustomizationFieldsFromProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\Customiz
 /**
  * Handles @see RemoveAllCustomizationFieldsFromProductCommand using legacy object model
  */
+#[AsCommandHandler]
 final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllCustomizationFieldsFromProductHandlerInterface
 {
     /**

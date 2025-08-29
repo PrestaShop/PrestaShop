@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Finder;
 
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Finder\TranslationFinder;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -60,7 +61,7 @@ class DefaultCatalogueFinder extends AbstractCatalogueFinder
         }
 
         if (!$this->assertIsArrayOfString($filenameFilters)) {
-            throw new \InvalidArgumentException('Given filename filters are invalid. An array of strings was expected.');
+            throw new InvalidArgumentException('Given filename filters are invalid. An array of strings was expected.');
         }
 
         $this->defaultCatalogueDirectory = $defaultCatalogueDirectory;
@@ -106,7 +107,7 @@ class DefaultCatalogueFinder extends AbstractCatalogueFinder
     {
         foreach ($messageCatalogue->all() as $domain => $messages) {
             foreach (array_keys($messages) as $translationKey) {
-                $messageCatalogue->set($translationKey, '', $domain);
+                $messageCatalogue->set((string) $translationKey, '', $domain);
             }
         }
 

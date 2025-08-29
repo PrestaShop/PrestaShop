@@ -100,7 +100,7 @@ class TranslationService
      */
     private function getResourcesDirectory()
     {
-        return $this->container->getParameter('kernel.root_dir') . '/Resources';
+        return $this->container->getParameter('kernel.project_dir') . '/app/Resources';
     }
 
     /**
@@ -188,7 +188,9 @@ class TranslationService
      * @return array
      *
      * @throws Exception
+     *
      * @todo: we need module information here
+     *
      * @todo: we need to improve the Vuejs application to send the information
      */
     public function listDomainTranslation(
@@ -242,7 +244,7 @@ class TranslationService
                 ->createQueryBuilder('t')
                 ->where('t.lang = :lang')->setParameter('lang', $lang)
                 ->andWhere('t.domain = :domain')->setParameter('domain', $domain)
-                ->andWhere('t.key LIKE :key')->setParameter('key', $key)
+                ->andWhere('t.key = :key')->setParameter('key', $key)
             ;
             if ($theme !== null) {
                 $queryBuilder->andWhere('t.theme = :theme')->setParameter('theme', $theme);

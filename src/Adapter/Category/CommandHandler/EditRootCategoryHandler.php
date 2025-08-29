@@ -27,25 +27,31 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditRootCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 
 /**
  * Class EditRootCategoryHandler.
  */
-final class EditRootCategoryHandler extends AbstractObjectModelHandler implements EditRootCategoryHandlerInterface
+#[AsCommandHandler]
+final class EditRootCategoryHandler extends AbstractEditCategoryHandler implements EditRootCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
+     * @param EditRootCategoryCommand $command
+     *
      * @throws CannotEditCategoryException
-     * @throws CategoryNotFoundException
      * @throws CannotEditRootCategoryException
+     * @throws CategoryException
+     * @throws CategoryNotFoundException
      */
     public function handle(EditRootCategoryCommand $command)
     {
@@ -60,11 +66,22 @@ final class EditRootCategoryHandler extends AbstractObjectModelHandler implement
         }
 
         $this->updateRootCategoryFromCommandData($category, $command);
+
+        $this->categoryImageUploader->uploadImages(
+            $command->getCategoryId(),
+            $command->getCoverImage(),
+            $command->getThumbnailImage()
+        );
     }
 
     /**
      * @param Category $category
      * @param EditRootCategoryCommand $command
+     *
+     * @throws CannotEditCategoryException
+     * @throws CategoryException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function updateRootCategoryFromCommandData(Category $category, EditRootCategoryCommand $command)
     {
@@ -96,12 +113,12 @@ final class EditRootCategoryHandler extends AbstractObjectModelHandler implement
             $category->meta_description = $command->getLocalizedMetaDescriptions();
         }
 
-        if (null !== $command->getLocalizedMetaKeywords()) {
-            $category->meta_keywords = $command->getLocalizedMetaKeywords();
-        }
-
         if (null !== $command->getAssociatedGroupIds()) {
             $category->groupBox = $command->getAssociatedGroupIds();
+        }
+
+        if (null !== $command->getRedirectOption()) {
+            $this->fillWithRedirectOption($category, $command->getRedirectOption());
         }
 
         if ($command->getAssociatedShopIds()) {

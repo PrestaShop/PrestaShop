@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -27,8 +26,6 @@
 
 /**
  * Determine the best existing template.
- *
- * @since 1.7.0.0
  */
 class TemplateFinderCore
 {

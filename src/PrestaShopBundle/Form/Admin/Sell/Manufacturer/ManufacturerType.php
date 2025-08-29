@@ -71,8 +71,8 @@ class ManufacturerType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $invalidCharactersForCatalogLabel = $this->trans('Invalid characters:', 'Admin.Global') . '<>;=#{}';
-        $invalidCharactersForNameLabel = $this->trans('Invalid characters:', 'Admin.Global') . '<>={}';
+        $invalidCharactersForCatalogLabel = $this->trans('Invalid characters:', 'Admin.Global') . '<>{}';
+        $invalidCharactersForNameLabel = $this->trans('Invalid characters:', 'Admin.Global') . '<>{}';
 
         $builder
             ->add('name', TextType::class, [
@@ -102,6 +102,7 @@ class ManufacturerType extends TranslatorAwareType
                 'type' => FormattedTextareaType::class,
                 'required' => false,
                 'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
                     'constraints' => [
                         new CleanHtml([
                             'message' => $this->trans(
@@ -117,6 +118,7 @@ class ManufacturerType extends TranslatorAwareType
                 'type' => FormattedTextareaType::class,
                 'required' => false,
                 'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
                     'constraints' => [
                         new CleanHtml([
                             'message' => $this->trans(
@@ -170,24 +172,6 @@ class ManufacturerType extends TranslatorAwareType
                                 'Admin.Notifications.Error',
                                 ['%limit%' => 512]
                             ),
-                        ]),
-                    ],
-                ],
-            ])
-            ->add('meta_keyword', TranslatableType::class, [
-                'label' => $this->trans('Meta keywords', 'Admin.Global'),
-                'help' => $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', 'Admin.Shopparameters.Help')
-                 . '<br>' . $invalidCharactersForNameLabel,
-                'type' => TextType::class,
-                'required' => false,
-                'options' => [
-                    'attr' => [
-                        'class' => 'js-taggable-field',
-                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
-                    ],
-                    'constraints' => [
-                        new TypedRegex([
-                            'type' => 'generic_name',
                         ]),
                     ],
                 ],

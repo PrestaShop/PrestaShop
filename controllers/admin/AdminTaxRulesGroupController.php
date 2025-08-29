@@ -174,7 +174,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
     {
         $this->fields_form = [
             'legend' => [
-                'title' => $this->trans('Tax Rules', [], 'Admin.International.Feature'),
+                'title' => $this->trans('Tax rules', [], 'Admin.International.Feature'),
                 'icon' => 'icon-money',
             ],
             'input' => [
@@ -183,7 +183,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                     'label' => $this->trans('Name', [], 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
-                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' <>;=#{}',
+                    'hint' => $this->trans('Invalid characters:', [], 'Admin.Notifications.Info') . ' <>{}',
                 ],
                 [
                     'type' => 'switch',
@@ -515,7 +515,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         $this->deleteTaxRule([Tools::getValue('id_tax_rule')]);
     }
 
-    protected function displayAjaxUpdateTaxRule()
+    public function displayAjaxUpdateTaxRule()
     {
         if ($this->access('view')) {
             $id_tax_rule = Tools::getValue('id_tax_rule');
@@ -568,7 +568,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
      *
      * @return TaxRulesGroup
      */
-    protected function updateTaxRulesGroup($object)
+    protected function updateTaxRulesGroup(TaxRulesGroup $object)
     {
         static $tax_rules_group = null;
         if ($tax_rules_group === null) {

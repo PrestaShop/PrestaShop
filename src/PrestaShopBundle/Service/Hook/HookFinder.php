@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Service\Hook;
 
+use Exception;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 
 /**
@@ -63,7 +64,7 @@ class HookFinder
      *
      * @return array Content returned by modules
      *
-     * @throws \Exception if class doesn't match interface or expected classes
+     * @throws Exception if class doesn't match interface or expected classes
      */
     public function find()
     {
@@ -81,10 +82,10 @@ class HookFinder
                 if (!count($this->expectedInstanceClasses)) {
                     continue;
                 }
-                if (is_object($content) && !in_array(get_class($content), $this->expectedInstanceClasses)) {
-                    throw new \Exception('The module ' . $moduleName . ' did not return expected class. Was ' . get_class($content) . ' instead of ' . implode(' or ', $this->expectedInstanceClasses) . '.');
+                if (is_object($content) && !in_array($content::class, $this->expectedInstanceClasses)) {
+                    throw new Exception('The module ' . $moduleName . ' did not return expected class. Was ' . $content::class . ' instead of ' . implode(' or ', $this->expectedInstanceClasses) . '.');
                 } elseif (!is_object($content)) {
-                    throw new \Exception('The module ' . $moduleName . ' did not return expected type. Was ' . gettype($content) . ' instead of ' . implode(' or ', $this->expectedInstanceClasses) . '.');
+                    throw new Exception('The module ' . $moduleName . ' did not return expected type. Was ' . gettype($content) . ' instead of ' . implode(' or ', $this->expectedInstanceClasses) . '.');
                 }
             }
         }
@@ -108,7 +109,7 @@ class HookFinder
             }
             foreach ($moduleContents as $content) {
                 if (!$content instanceof HookContentClassInterface) {
-                    throw new \Exception('The class returned must implement HookContentClassInterface to be presented');
+                    throw new Exception('The class returned must implement HookContentClassInterface to be presented');
                 }
 
                 $presentedContent = $content->toArray();

@@ -1,6 +1,8 @@
 services:
   _defaults:
     public: true
+    bind:
+      $commandBus: '@prestashop.core.command_bus'
 
   prestashop.core.form.identifiable_object.sql_request_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SqlRequestFormDataHandler'
@@ -13,6 +15,7 @@ services:
       - '@prestashop.core.command_bus'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
+      - '@prestashop.adapter.group.provider.default_groups_provider'
 
   prestashop.core.form.identifiable_object.data_handler.language_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\LanguageFormDataHandler'
@@ -43,7 +46,6 @@ services:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
       - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
-      - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
 
   prestashop.core.form.identifiable_object.data_handler.root_category_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\RootCategoryFormDataHandler'
@@ -51,7 +53,6 @@ services:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.image.uploader.category_cover_image_uploader'
       - '@prestashop.adapter.image.uploader.category_thumbnail_image_uploader'
-      - '@prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader'
 
   prestashop.core.form.identifiable_object.data_handler.contact_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ContactFormDataHandler'
@@ -76,6 +77,7 @@ services:
 
   prestashop.core.form.identifiable_object.data_handler.employee_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\EmployeeFormDataHandler'
+    autowire: true
     arguments:
       - '@prestashop.core.command_bus'
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
@@ -87,6 +89,8 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").getInt(constant("PrestaShop\\PrestaShop\\Core\\Security\\PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH"))'
       - '@=service("prestashop.adapter.legacy.configuration").getInt(constant("PrestaShop\\PrestaShop\\Core\\Security\\PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH"))'
       - '@=service("prestashop.adapter.legacy.configuration").getInt(constant("PrestaShop\\PrestaShop\\Core\\Security\\PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE"))'
+      - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_BO_ALLOW_EMPLOYEE_FORM_LANG")'
+      - '@=service("prestashop.adapter.legacy.context").getContext().cookie'
 
   prestashop.core.form.identifiable_object.data_handler.profile_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProfileFormDataHandler'
@@ -110,10 +114,19 @@ services:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.image.uploader.supplier_image_uploader'
 
-  prestashop.core.form.identifiable_object.data_handler.feature_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AttributeGroupFormDataHandler:
+    autowire: true
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureFormDataHandler:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AttributeFormDataHandler:
+    autowire: true
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FeatureValueFormDataHandler:
+    autowire: true
+    public: false
 
   prestashop.core.form.identifiable_object.data_handler.order_message_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderMessageFormDataHandler'
@@ -257,3 +270,30 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TaxRulesGroupFormDataHandler:
     arguments:
       - '@prestashop.core.command_bus'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartRuleFormDataHandler:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\DiscountFormDataHandler:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TitleFormDataHandler:
+    autowire: true
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ApiClientFormDataHandler:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ImageTypeFormDataHandler:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CarrierFormDataHandler:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AliasFormDataHandler:
+    autowire: true
+    public: false

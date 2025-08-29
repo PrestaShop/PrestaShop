@@ -42,7 +42,10 @@ class PassVsprintfContraintTest extends ConstraintValidatorTestCase
 
     public function testEmptyTranslationIsValid()
     {
-        $this->validator->validate(new Translation(), new PassVsprintf());
+        $translation = (new Translation())
+            ->setKey('')
+            ->setTranslation('');
+        $this->validator->validate($translation, new PassVsprintf());
 
         $this->assertNoViolation();
     }

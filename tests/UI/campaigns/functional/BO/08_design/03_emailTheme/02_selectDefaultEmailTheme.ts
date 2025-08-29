@@ -1,16 +1,15 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import emailThemesPage from '@pages/BO/design/emailThemes';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boDesignEmailThemesPage,
+  boLoginPage,
+  type BrowserContext,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_emailTheme_selectDefaultEmailTheme';
 
@@ -20,30 +19,36 @@ describe('BO - Design - Email Theme : Select default email theme', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Design > Email Theme\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemePage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.designParentLink,
-      dashboardPage.emailThemeLink,
+      boDashboardPage.designParentLink,
+      boDashboardPage.emailThemeLink,
     );
-    await emailThemesPage.closeSfToolBar(page);
+    await boDesignEmailThemesPage.closeSfToolBar(page);
 
-    const pageTitle = await emailThemesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(emailThemesPage.pageTitle);
+    const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
   });
 
   ['classic', 'modern'].forEach((emailTheme: string) => {
@@ -55,8 +60,8 @@ describe('BO - Design - Email Theme : Select default email theme', async () => {
         baseContext,
       );
 
-      const textMessage = await emailThemesPage.selectDefaultEmailTheme(page, emailTheme);
-      await expect(textMessage).to.contains(emailThemesPage.emailThemeConfigurationSuccessfulMessage);
+      const textMessage = await boDesignEmailThemesPage.selectDefaultEmailTheme(page, emailTheme);
+      expect(textMessage).to.contains(boDesignEmailThemesPage.emailThemeConfigurationSuccessfulMessage);
     });
   });
 });

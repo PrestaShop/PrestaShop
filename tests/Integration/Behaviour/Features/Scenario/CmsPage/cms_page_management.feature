@@ -11,7 +11,6 @@ Feature: CmsPage Management
       | meta_title           | Special delivery options                 |
       | head_seo_title       | delivery options                         |
       | meta_description     | Our special delivery options             |
-      | meta_keywords        | delivery,configure,special               |
       | link_rewrite         | delivery-options                         |
       | content              | <div> <h5> Delivery <img src="../delivery/options.jpg" alt="" /></h5> </div>|
       | indexation           | true                                     |
@@ -19,7 +18,6 @@ Feature: CmsPage Management
     Then CMS page "cmspage-1" "meta_title" in default language should be 'Special delivery options'
     And CMS page "cmspage-1" "head_seo_title" in default language should be 'delivery options'
     And CMS page "cmspage-1" "meta_description" in default language should be 'Our special delivery options'
-    And CMS page "cmspage-1" "meta_keywords" in default language should be 'delivery,configure,special'
     And CMS page "cmspage-1" "link_rewrite" in default language should be 'delivery-options'
     And CMS page "cmspage-1" "content" in default language should be '<div> <h5> Delivery <img src="../delivery/options.jpg" alt="" /></h5> </div>'
     And CMS page "cmspage-1" indexation for search engines should be enabled
@@ -34,13 +32,11 @@ Feature: CmsPage Management
     When I edit CMS page "cmspage-1" with following properties:
       | meta_title           | Unusual delivery options              |
       | meta_description     | Our unusual delivery options          |
-      | meta_keywords        | delivery,configure,special,unusual    |
       | content              |                                       |
       | active               | false                                 |
     Then CMS page "cmspage-1" "meta_title" in default language should be 'Unusual delivery options'
     And CMS page "cmspage-1" "head_seo_title" in default language should be 'delivery options'
     And CMS page "cmspage-1" "meta_description" in default language should be 'Our unusual delivery options'
-    And CMS page "cmspage-1" "meta_keywords" in default language should be 'delivery,configure,special,unusual'
     And CMS page "cmspage-1" "link_rewrite" in default language should be 'delivery-options'
     And CMS page "cmspage-1" "content" field in default language should be empty
     And CMS page "cmspage-1" indexation for search engines should be enabled

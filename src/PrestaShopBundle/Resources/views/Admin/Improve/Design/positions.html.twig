@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,9 +21,9 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain "Admin.Design.Feature" %}
+{% trans_default_domain 'Admin.Design.Feature' %}
 
 {% block content %}
     {% if isSingleShopContext %}
@@ -32,19 +32,19 @@
           <div class="card" id="modules-position-selection-panel">
             <h3 class="card-header">
               <i class="material-icons">check</i>
-              {{ 'Selection' | trans({}, 'Admin.Global') }}</h3>
+              {{ 'Selection'|trans({}, 'Admin.Global') }}</h3>
             <div class="card-body">
               <p>
-                <span id="modules-position-single-selection">{{ '1 module selected' | trans }}</span>
+                <span id="modules-position-single-selection">{{ '1 module selected'|trans }}</span>
                 <span id="modules-position-multiple-selection">
                   <span id="modules-position-selection-count"></span>
-                  {{ 'modules selected' | trans({}, 'Admin.Design.Feature') }}
+                  {{ 'modules selected'|trans({}, 'Admin.Design.Feature') }}
                 </span>
               </p>
               <div>
                 <button class="btn btn-primary">
                   <i class="icon-remove"></i>
-                  {{ 'Unhook the selection' | trans }}</button>
+                  {{ 'Unhook the selection'|trans }}</button>
               </div>
             </div>
           </div>
@@ -56,10 +56,10 @@
                 <div class="row">
                   <div class="col-lg-6 mb-2">
                     <div class="row align-items-center">
-                      <label class="form-control-label col-md-4 text-left text-lg-center">{{ 'Show' | trans({}, 'Admin.Actions') }}</label>
+                      <label class="form-control-label col-md-4 text-left text-lg-center">{{ 'Show'|trans({}, 'Admin.Actions') }}</label>
                       <div class="col-md-8">
                         <select id="show-modules" class="filter">
-                          <option value="all">{{ 'All modules' | trans }}&nbsp;</option>
+                          <option value="all">{{ 'All modules'|trans }}&nbsp;</option>
                           {% for module in modules %}
                             <option value="{{ module.id }}" {% if selectedModule == module.id %} selected="selected" {% endif %}>{{ module.displayName }}</option>
                           {% endfor %}
@@ -70,7 +70,7 @@
 
                   <div class="col-lg-6 mb-2">
                     <div class="row align-items-center">
-                      <label class="form-control-label col-md-4 text-left text-lg-center">{{ 'Search for a hook' | trans }}</label>
+                      <label class="form-control-label col-md-4 text-left text-lg-center">{{ 'Search for a hook'|trans }}</label>
                       <div class="input-group col-md-8">
                         <div class="input-group-prepend">
                           <div class="input-group-text">
@@ -89,7 +89,7 @@
                     <label class="selectbox" for="hook-position">
                       <i class="material-icons done">done</i>
                     </label>
-                    {{ 'Display non-positionable hooks' | trans }}
+                    {{ 'Display non-positionable hooks'|trans }}
                   </label>
                 </p>
               </form>
@@ -100,7 +100,9 @@
                   data-update-url="{{ path('api_improve_design_positions_update') }}"
                   data-togglestatus-url="{{ path('admin_modules_positions_toggle_status') }}">
               {% for hook in hooks %}
-                <section class="hook-panel{% if not hook['position'] %} hook-position{% endif %}" {% if not hook['position'] %} style="display:none;" {% endif %}>
+                <section
+                  class="hook-panel{% if not hook['position'] %} hook-position{% else %} hook-visible{% endif %}" {% if not hook['position'] %} style="display:none;" {% endif %}
+                  data-hook-name="{{ hook['name'] }}">
                   <a name="{{ hook['name'] }}"></a>
                   <header class="hook-panel-header">
                     <span class="hook-status">
@@ -113,6 +115,10 @@
                       />
                     </span>
                     <span class="hook-name">{{ hook['name'] }}</span>
+                    {% if hook['title'] is defined %}
+                      <span class="help-box" data-toggle="popover" data-trigger="hover" data-html="true" data-content="{{ hook['title'] }}" data-placement="top">
+ </span>
+                    {% endif %}
                     <label class="badge badge-pill float-right">
                       {% if hook['modules_count'] and isSingleShopContext %}
                         <input type="checkbox" class="hook-checker"
@@ -125,7 +131,7 @@
                       {% endif %}
 
                       {{ hook['modules_count'] }}
-                      {{ ((hook['modules_count'] > 1) ? 'Modules' : 'Module') | trans({}, 'Admin.Global') }}
+                      {{ ((hook['modules_count'] > 1) ? 'Modules' : 'Module')|trans({}, 'Admin.Global') }}
                     </label>
 
                     {% if hook['description'] is defined %}
@@ -143,8 +149,10 @@
 
                             <div class="module-column-select">
                               <i class="material-icons drag_indicator">drag_indicator</i>
-                              <input type="checkbox" id="selecterbox{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"
+                              <input type="checkbox"
+                                     id="selecterbox{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"
                                      data-hook-id="{{ hook['id_hook'] }}"
+                                     data-hook-module="{{ moduleInstance.name }}"
                                      class="modules-position-checkbox hook{{ hook['id_hook'] }}"
                                      name="unhooks[]"
                                      value="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"
@@ -155,20 +163,20 @@
                             </div>
 
                             <div class="module-column-icon">
-                              <img src="{{ asset('../modules/' ~ moduleInstance.name ~ '/logo.png') }}" alt="{{ moduleInstance.displayName| escape }}"/>
+                              <img src="{{ asset('../modules/' ~ moduleInstance.name ~ '/logo.png') }}" alt="{{ moduleInstance.displayName|escape }}"/>
                             </div>
 
                             <div class="module-column-infos">
                               <span class="module-name">
-                                {{ moduleInstance.displayName| escape }}
+                                {{ moduleInstance.displayName|escape }}
                                 {% if moduleInstance.version %}
-                                  <small class="text-muted">&nbsp;-&nbsp;{{ 'v%s' | format(moduleInstance.version) }}</small>
+                                  <small class="text-muted">&nbsp;-&nbsp;{{ 'v%s'|format(moduleInstance.version) }}</small>
                                 {% endif %}
                               </span>
                             </div>
 
                             <div class="module-column-description{% if not selectedModule and hook['modules_count'] > 1 %} hasColumnPosition{% endif %} d-none d-md-table-cell">
-                              <span class="module-description">{{ moduleInstance.description | escape }}</span>
+                              <span class="module-description">{{ moduleInstance.description|escape }}</span>
                             </div>
 
                             {% if not selectedModule and hook['modules_count'] > 1 %}
@@ -183,20 +191,20 @@
                             <div class="module-column-actions">
                               <div class="btn-group">
                                 {% set linkParams = {
-                                  'id_module': moduleInstance.id,
-                                  'id_hook': hook['id_hook'],
-                                  'editGraft': 1
+                                  id_module: moduleInstance.id,
+                                  id_hook: hook['id_hook'],
+                                  editGraft: 1
                                 } %}
                                 {% if selectedModule %}
-                                  {% set linkParams = linkParams|merge({'show_modules': selectedModule}) %}
+                                  {% set linkParams = linkParams|merge({show_modules: selectedModule}) %}
                                 {% endif %}
 
                                 <a class="btn tooltip-link" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}"
-                                   aria-label="{{ 'Edit' | trans({}, 'Admin.Actions') }}" title="{{ 'Edit' | trans({}, 'Admin.Actions') }}">
+                                   aria-label="{{ 'Edit'|trans({}, 'Admin.Actions') }}" title="{{ 'Edit'|trans({}, 'Admin.Actions') }}">
                                   <i class="material-icons">edit</i>
                                 </a>
 
-                                <a class="btn tooltip-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split"
+                                <a class="btn tooltip-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split no-rotate"
                                    data-toggle="dropdown"
                                    aria-haspopup="true"
                                    aria-expanded="false"
@@ -205,14 +213,14 @@
                                 <div class="dropdown-menu">
                                   <a class="dropdown-item" href="{{ path('admin_modules_positions_unhook', {moduleId: moduleInstance.id, hookId: hook['id_hook']}) }}">
                                     <i class="material-icons">indeterminate_check_box</i>
-                                    {{ 'Unhook' | trans({}, 'Admin.Design.Feature') }}
+                                    {{ 'Unhook'|trans({}, 'Admin.Design.Feature') }}
                                   </a>
                                 </div>
                               </div>
                             </div>
 
                             <div class="module-column-description d-block d-md-none w-100">
-                              <span class="module-description">{{ moduleInstance.description | escape }}</span>
+                              <span class="module-description">{{ moduleInstance.description|escape }}</span>
                             </div>
                           </li>
                         {% endfor %}
@@ -225,7 +233,7 @@
               <div id="unhook-button-position-bottom">
                 <button type="submit" class="btn btn-default" name="unhookform">
                   <i class="material-icons">indeterminate_check_box</i>
-                  {{ 'Unhook the selection' | trans({}, 'Admin.Design.Feature') }}
+                  {{ 'Unhook the selection'|trans({}, 'Admin.Design.Feature') }}
                 </button>
               </div>
             </form>
@@ -234,7 +242,7 @@
       </div>
     {% else %}
       <p class="alert alert-info alert-can-move">
-        {{ 'Note that this page is available in a single shop context only. Switch context to work on it.' | trans({}, 'Admin.Notifications.Info') }}
+        {{ 'Note that this page is available in a single shop context only. Switch context to work on it.'|trans({}, 'Admin.Notifications.Info') }}
       </p>
     {% endif %}
 {% endblock %}

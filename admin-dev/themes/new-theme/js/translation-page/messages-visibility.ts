@@ -140,7 +140,7 @@ export default function (callback: () => void): void {
 
   (() => {
     $(`.show-${buttonSuffix}`).each((buttonIndex, button) => {
-      $(button).click((event) => {
+      $(button).on('click', (event) => {
         const showTranslationsFormButton = $(event.target);
 
         const translationDomain = showTranslationsFormButton.parent();
@@ -167,7 +167,7 @@ export default function (callback: () => void): void {
 
     $('.domain-part .delegate-toggle-messages').each(
       (togglerIndex, toggler) => {
-        $(toggler).click((event) => {
+        $(toggler).on('click', (event) => {
           let title = $(event.target);
 
           if (!$(event.target).hasClass('domain-part')) {

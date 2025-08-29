@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepositor
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -60,6 +61,7 @@ use Product;
 /**
  * Handles @see GetCombinationForEditing query using legacy object model
  */
+#[AsQueryHandler]
 class GetCombinationForEditingHandler implements GetCombinationForEditingHandlerInterface
 {
     /**
@@ -279,7 +281,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private function getStock(Combination $combination): CombinationStock
     {
         $stockAvailable = $this->stockAvailableRepository->getForCombination(
-            new Combinationid($combination->id),
+            new CombinationId($combination->id),
             new ShopId($combination->getShopId())
         );
 

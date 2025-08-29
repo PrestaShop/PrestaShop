@@ -87,7 +87,7 @@ class IssuePartialRefundCommand extends AbstractRefundCommand
         );
         try {
             $this->shippingCostRefundAmount = new DecimalNumber($shippingCostRefundAmount);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             throw new InvalidAmountException();
         }
     }

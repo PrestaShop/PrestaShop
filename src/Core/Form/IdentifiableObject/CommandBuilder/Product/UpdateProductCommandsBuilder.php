@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
-use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 
 /**
  * Builds @see UpdateProductCommand for both single and All shops
@@ -217,8 +217,8 @@ class UpdateProductCommandsBuilder implements ProductCommandsBuilderInterface
         if (
             // if low stock threshold switch is falsy, then we must set lowStockThreshold to its disabled value
             // which will end up being 0 after falsy bool to int conversion
-            isset($formData['stock']['options'][$lowStockThresholdSwitchKey]) &&
-            !$formData['stock']['options'][$lowStockThresholdSwitchKey]
+            isset($formData['stock']['options'][$lowStockThresholdSwitchKey])
+            && !$formData['stock']['options'][$lowStockThresholdSwitchKey]
         ) {
             $config->addMultiShopField(sprintf('[stock][options][%s]', $lowStockThresholdSwitchKey), 'setLowStockThreshold', DataField::TYPE_INT);
         } else {
@@ -262,9 +262,9 @@ class UpdateProductCommandsBuilder implements ProductCommandsBuilderInterface
     private function setNameDependingOnStatus(array $formData, UpdateProductCommand $singleShopCommand): void
     {
         if (
-            !empty($formData['header']['active']) &&
-            empty($formData['header'][$this->modifyAllNamePrefix . 'active']) &&
-            isset($formData['header']['name'])
+            !empty($formData['header']['active'])
+            && empty($formData['header'][$this->modifyAllNamePrefix . 'active'])
+            && isset($formData['header']['name'])
         ) {
             $singleShopCommand->setLocalizedNames($formData['header']['name']);
         }

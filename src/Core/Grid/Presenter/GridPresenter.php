@@ -129,7 +129,10 @@ final class GridPresenter implements GridPresenterInterface
                     'id' => $positionColumn->getId() . '_handle',
                     'name' => $positionColumn->getName(),
                     'type' => 'position_handle',
-                    'options' => $positionColumn->getOptions(),
+                    'options' => [
+                        // We force the handle not to be clickable, or it would mess with the drag and drop behavior
+                        'clickable' => false,
+                    ] + $positionColumn->getOptions(),
                 ]);
             }
         }

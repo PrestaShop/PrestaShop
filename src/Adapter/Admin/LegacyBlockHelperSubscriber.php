@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
+use Exception;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -51,12 +52,12 @@ class LegacyBlockHelperSubscriber implements EventSubscriberInterface
      *
      * @param RenderingHookEvent $event
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function renderKpi(RenderingHookEvent $event)
     {
         if (!array_key_exists('kpi_controller', $event->getHookParameters())) {
-            throw new \Exception('The legacy_kpi hook need a kpi_controller parameter (legacy controller full class name).');
+            throw new Exception('The legacy_kpi hook need a kpi_controller parameter (legacy controller full class name).');
         }
 
         $controller = $event->getHookParameters()['kpi_controller'];

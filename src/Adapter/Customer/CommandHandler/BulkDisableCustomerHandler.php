@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDisableCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\BulkDisableCustomerHandlerInterface;
 
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\BulkDisableCustome
  *
  * @internal
  */
+#[AsCommandHandler]
 final class BulkDisableCustomerHandler extends AbstractCustomerHandler implements BulkDisableCustomerHandlerInterface
 {
     /**

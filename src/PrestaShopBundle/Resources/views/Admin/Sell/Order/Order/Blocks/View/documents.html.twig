@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 <table id="documents-grid-table" class="table mb-3{% if orderForViewing.documents.documents is empty %} table-empty{% endif %}">
   <thead>
@@ -44,7 +44,7 @@
   </tr>
   </thead>
   <tbody>
-  {% if  orderForViewing.documents.documents is not empty %}
+  {% if orderForViewing.documents.documents is not empty %}
     {% for document in orderForViewing.documents.documents %}
       <tr>
         <td class="documents-table-column-date">
@@ -62,18 +62,18 @@
         <td class="documents-table-column-download-link">
           {% if document.type == 'invoice' %}
             <a target="_blank" rel="noopener noreferrer nofollow"
-               href="{{ path('admin_orders_generate_invoice_pdf', {'orderId': orderForViewing.id}) }}"
+               href="{{ path('admin_orders_generate_invoice_pdf', {orderId: orderForViewing.id}) }}"
             >
               {{ document.referenceNumber }}
             </a>
           {% elseif document.type == 'delivery_slip' %}
             <a target="_blank" rel="noopener noreferrer nofollow"
-               href="{{ path('admin_orders_generate_delivery_slip_pdf', {'orderId': orderForViewing.id}) }}"
+               href="{{ path('admin_orders_generate_delivery_slip_pdf', {orderId: orderForViewing.id}) }}"
             >
               {{ document.referenceNumber }}
             </a>
           {% elseif document.type == 'credit_slip' %}
-            <a href="{{ getAdminLink('AdminPdf', true, {'submitAction': 'generateOrderSlipPDF', 'id_order_slip': document.id}) }}">
+            <a href="{{ getAdminLink('AdminPdf', true, {submitAction: 'generateOrderSlipPDF', id_order_slip: document.id}) }}">
               {{ document.referenceNumber }}
             </a>
           {% endif %}
@@ -114,8 +114,8 @@
         <tr class="d-none">
           <td colspan="5">
             <form action="{{ path('admin_orders_update_invoice_note', {
-              'orderId': orderForViewing.id,
-              'orderInvoiceId': document.id
+              orderId: orderForViewing.id,
+              orderInvoiceId: document.id
             }) }}" method="post">
               <div class="input-group">
                 <input type="text" class="form-control invoice-note" name="invoice_note" value="{{ document.note }}">
@@ -141,8 +141,8 @@
   </tbody>
 </table>
 
-{% if  orderForViewing.documents.documents is empty and orderForViewing.invoiceManagementIsEnabled %}
-  <form action="{{ path('admin_orders_generate_invoice', {'orderId': orderForViewing.id}) }}" method="POST">
+{% if orderForViewing.documents.documents is empty and orderForViewing.invoiceManagementIsEnabled %}
+  <form action="{{ path('admin_orders_generate_invoice', {orderId: orderForViewing.id}) }}" method="POST">
     <button class="btn btn-primary">
       <i class="material-icons">autorenew</i>
       {{ 'Generate invoice'|trans({}, 'Admin.Orderscustomers.Feature') }}

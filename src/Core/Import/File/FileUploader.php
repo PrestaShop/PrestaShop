@@ -86,7 +86,7 @@ final class FileUploader
                 $this->importDirectory,
                 $uploadedFileName
             );
-        } catch (FileException $e) {
+        } catch (FileException) {
             $error = $this->translator->trans('An error occurred while uploading / copying the file.', [], 'Admin.Advparameters.Notification');
 
             throw new FileUploadException($error);

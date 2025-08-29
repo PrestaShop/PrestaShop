@@ -1,0 +1,125 @@
+# These are services related to ApiPlatform integration, like decorators or services that depend on the ApiPlatform framework
+services:
+  _defaults:
+    public: false
+    bind:
+      $commandsAndQueries: '%prestashop.commands_and_queries%'
+
+  # We have to register the normalizers manually because the autoconfigured priority vie getDefaultPriority doesn't seem to work
+  # Must be the last normalizer executed after all the subtypes hae been handled
+  PrestaShopBundle\ApiPlatform\Normalizer\CQRSApiNormalizer:
+    autowire: true
+    tags:
+      - { name: 'serializer.normalizer', priority: -1 }
+  PrestaShopBundle\ApiPlatform\Normalizer\DateTimeImmutableNormalizer:
+    autowire: true
+    tags:
+      - { name: 'serializer.normalizer', priority: 10 }
+  PrestaShopBundle\ApiPlatform\Normalizer\DecimalNumberNormalizer:
+    autowire: true
+    tags:
+      - { name: 'serializer.normalizer', priority: 10 }
+  PrestaShopBundle\ApiPlatform\Normalizer\ShopConstraintNormalizer:
+    autowire: true
+    tags:
+      - { name: 'serializer.normalizer', priority: 10 }
+  PrestaShopBundle\ApiPlatform\Normalizer\UploadedFileNormalizer:
+    autowire: true
+    tags:
+      - { name: 'serializer.normalizer', priority: 10 }
+  PrestaShopBundle\ApiPlatform\Normalizer\ValueObjectNormalizer:
+    autowire: true
+    tags:
+      - { name: 'serializer.normalizer', priority: 10 }
+
+  PrestaShopBundle\ApiPlatform\NormalizationMapper:
+    autowire: true
+
+  PrestaShopBundle\ApiPlatform\DomainObjectDetector:
+    autowire: true
+    arguments:
+      $domainNamespaces:
+        - 'PrestaShop\PrestaShop\Core\Domain'
+
+  # This is a custom serializer that handles localized values and normalization mapping
+  PrestaShopBundle\ApiPlatform\Serializer\CQRSApiSerializer:
+    autowire: true
+    decorates: 'api_platform.serializer'
+    arguments:
+      $decorated: '@.inner'
+
+  PrestaShopBundle\ApiPlatform\Serializer\DecimalNumberTypeExtractor:
+    autowire: true
+    tags:
+      - { name: 'property_info.type_extractor', priority: 10 }
+
+  PrestaShopBundle\ApiPlatform\ContextParametersProvider:
+    autowire: true
+  PrestaShopBundle\ApiPlatform\LocalizedValueUpdater:
+    autowire: true
+
+  # This is a custom validator for CQRS commands
+  PrestaShopBundle\ApiPlatform\Validator\CQRSApiValidator:
+    autowire: true
+    arguments:
+      $validatorMetadataFactory: '@validator.mapping.class_metadata_factory'
+
+
+  # Decorator of api_platform.state_provider.deserialize DeserializeProvider
+  PrestaShopBundle\ApiPlatform\Provider\EmptyBodyDeserializerProvider:
+    autowire: true
+    public: false
+
+  # Customer provider for CQRS queries
+  PrestaShopBundle\ApiPlatform\Provider\QueryProvider:
+    tags: [ 'api_platform.state_provider' ]
+    autowire: true
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  # Custom processor for CQRS commands
+  PrestaShopBundle\ApiPlatform\Processor\CommandProcessor:
+    tags: [ 'api_platform.state_processor' ]
+    autowire: true
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  # Custom provider for paginated listing
+  PrestaShopBundle\ApiPlatform\Provider\QueryListProvider:
+    tags: [ 'api_platform.state_provider' ]
+    autowire: true
+    arguments:
+      $filtersBuilder: '@prestashop.core.api.search.builder'
+      $requestStack: '@request_stack'
+
+  # This decorator allows modifying the available ApiPlatform resources based on their configuration (using a custom extra property)
+  PrestaShopBundle\ApiPlatform\Metadata\Resource\Factory\ExperimentalOperationsMetadataCollectionFactoryDecorator:
+    decorates: api_platform.metadata.resource.metadata_collection_factory
+    autowire: true
+    arguments:
+      $decorated: '@.inner'
+      $isDebug: '%kernel.debug%'
+
+  # This decorator allows filtering the available ApiPlatform resources when they are base on non existing CQRS classes
+  PrestaShopBundle\ApiPlatform\Metadata\Resource\Factory\CQRSNotFoundMetadataCollectionFactoryDecorator:
+    # It is important to decorate early in the decoration chain, because InputOutputResourceMetadataCollectionFactory checks the existence
+    # of input classes and throws an exception before this one has the chance to clean the CQRS not found
+    decorates: api_platform.metadata.resource.metadata_collection_factory.attributes
+    autowire: true
+    arguments:
+      $decorated: '@.inner'
+
+  # This service depends on ResourceMetadataCollectionFactoryInterface (auto wired) and can extract the scopes defined on operations
+  PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor:
+    autowire: true
+    arguments:
+      $moduleDir: '%prestashop.module_dir%'
+      $installedModules: '%prestashop.installed_modules%'
+      $enabledModules: '%prestashop.active_modules%'
+      $projectDir: '%kernel.project_dir%'
+
+  PrestaShopBundle\ApiPlatform\Scopes\CachedApiResourceScopesExtractor:
+    autowire: true
+    decorates: PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor
+
+  PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface: '@PrestaShopBundle\ApiPlatform\Scopes\CachedApiResourceScopesExtractor'

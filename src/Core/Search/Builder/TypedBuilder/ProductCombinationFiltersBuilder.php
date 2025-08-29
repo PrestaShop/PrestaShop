@@ -58,7 +58,7 @@ class ProductCombinationFiltersBuilder extends AbstractFiltersBuilder implements
     /**
      * {@inheritdoc}
      */
-    public function buildFilters(Filters $filters = null)
+    public function buildFilters(?Filters $filters = null)
     {
         $filterParameters = ProductCombinationFilters::getDefaults();
         if (null !== $filters) {

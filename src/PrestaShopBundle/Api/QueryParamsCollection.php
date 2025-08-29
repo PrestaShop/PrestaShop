@@ -228,8 +228,8 @@ abstract class QueryParamsCollection
         $queryParams['page_index'] = (int) $queryParams['page_index'];
 
         if (
-            $queryParams['page_size'] > $this->getDefaultPageSize() ||
-            $queryParams['page_size'] < 1
+            $queryParams['page_size'] > $this->getDefaultPageSize()
+            || $queryParams['page_size'] < 1
         ) {
             throw new InvalidPaginationParamsException(sprintf('A page size should be an integer greater than 1 and fewer than %s', $this->getDefaultPageSize()));
         }
@@ -316,7 +316,7 @@ abstract class QueryParamsCollection
         $implodableOrder = [];
 
         foreach ($this->queryParams['order'] as $order) {
-            $descendingOrder = false !== strpos($order, 'desc');
+            $descendingOrder = str_contains($order, 'desc');
             $filterColumn = $this->removeDirection($order);
 
             $orderFiltered = '{' . $filterColumn . '}';
@@ -648,7 +648,7 @@ abstract class QueryParamsCollection
         }
 
         array_map(function ($index, $value) use (&$sqlParams) {
-            list($idAttributeGroup, $idAttribute) = explode(':', $value);
+            [$idAttributeGroup, $idAttribute] = explode(':', $value);
             $sqlParams['attribute_id_' . $index] = (string) $idAttribute;
             $sqlParams['attribute_group_id_' . $index] = (string) $idAttributeGroup;
         }, range(0, count($value) - 1), $value);
@@ -658,7 +658,7 @@ abstract class QueryParamsCollection
 
     /**
      * @param array $filters
-     * @param int|array<int>$attributes
+     * @param int|array<int> $attributes
      *
      * @return array
      */
@@ -704,7 +704,7 @@ abstract class QueryParamsCollection
         }
 
         array_map(function ($index, $value) use (&$sqlParams) {
-            list($idFeature, $idFeatureValue) = explode(':', $value);
+            [$idFeature, $idFeatureValue] = explode(':', $value);
             $sqlParams['feature_id_' . $index] = (string) $idFeature;
             $sqlParams['feature_value_id_' . $index] = (string) $idFeatureValue;
         }, range(0, count($value) - 1), $value);
@@ -713,7 +713,7 @@ abstract class QueryParamsCollection
     }
 
     /**
-     * @param array$filters
+     * @param array $filters
      *
      * @return mixed
      */
@@ -728,18 +728,26 @@ abstract class QueryParamsCollection
         }
 
         $parts = array_map(function ($index) {
-            return sprintf(
-                'AND (' .
-                '{supplier_name} LIKE :keyword_%d OR ' .
-                '{product_reference} LIKE :keyword_%d OR ' .
-                '{product_name} LIKE :keyword_%d OR ' .
-                '{combination_name} LIKE :keyword_%d' .
-                ')',
-                $index,
-                $index,
-                $index,
-                $index
-            );
+            $fields = [
+                '{supplier_name}',
+                '{product_reference}',
+                '{product_ean13}',
+                '{combination_ean13}',
+                '{product_isbn}',
+                '{combination_isbn}',
+                '{product_upc}',
+                '{combination_upc}',
+                '{product_mpn}',
+                '{combination_mpn}',
+                '{product_name}',
+                '{combination_name}',
+            ];
+
+            $conditions = array_map(function ($field) use ($index) {
+                return sprintf('%s LIKE :keyword_%d', $field, $index);
+            }, $fields);
+
+            return 'AND (' . implode(' OR ', $conditions) . ')';
         }, range(0, count($this->queryParams['filter']['keywords']) - 1));
 
         $filters[self::SQL_CLAUSE_HAVING] = implode("\n", $parts);

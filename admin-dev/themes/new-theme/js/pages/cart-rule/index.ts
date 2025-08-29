@@ -23,30 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '@components/grid/grid';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
-
-const {$} = window;
-
 $(() => {
-  const cartRuleGrid = new Grid('cart_rule');
+  const cartRuleGrid = new window.prestashop.component.Grid('cart_rule');
 
-  cartRuleGrid.addExtension(new ExportToSqlManagerExtension());
-  cartRuleGrid.addExtension(new ReloadListActionExtension());
-  cartRuleGrid.addExtension(new SortingExtension());
-  cartRuleGrid.addExtension(new FiltersResetExtension());
-  cartRuleGrid.addExtension(new ColumnTogglingExtension());
-  cartRuleGrid.addExtension(new SubmitRowActionExtension());
-  cartRuleGrid.addExtension(new SubmitBulkExtension());
-  cartRuleGrid.addExtension(new BulkActionCheckboxExtension());
-  cartRuleGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  cartRuleGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  cartRuleGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  cartRuleGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  cartRuleGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  cartRuleGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
+  cartRuleGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  cartRuleGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  cartRuleGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  cartRuleGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 });

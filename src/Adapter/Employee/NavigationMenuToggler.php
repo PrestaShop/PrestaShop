@@ -50,7 +50,7 @@ final class NavigationMenuToggler implements NavigationMenuTogglerInterface
     /**
      * {@inheritdoc}
      */
-    public function toggleNavigationMenuInCookies($shouldCollapse)
+    public function toggleNavigationMenuInCookies(bool $shouldCollapse): void
     {
         $this->legacyContext->getContext()->cookie->collapse_menu = (int) $shouldCollapse;
         $this->legacyContext->getContext()->cookie->write();

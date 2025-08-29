@@ -368,7 +368,7 @@ class Version
      */
     private function removeLegacyPrefix($version, $majorVersionString)
     {
-        if ('1.' === substr($version, 0, 2) && substr($version, 0, strlen($majorVersionString)) === $majorVersionString) {
+        if (str_starts_with($version, '1.') && str_starts_with($version, $majorVersionString)) {
             $version = substr($version, 2);
         }
 

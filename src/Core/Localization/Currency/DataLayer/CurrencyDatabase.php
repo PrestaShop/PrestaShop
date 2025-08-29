@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -69,7 +68,7 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
      * When reading data, if nothing is found then it will try to read in the lower data layer
      * When writing data, the data will also be written in the lower data layer.
      *
-     * @param currencyDataLayerInterface $lowerLayer The lower data layer
+     * @param CurrencyDataLayerInterface $lowerLayer The lower data layer
      *
      * @return self
      */

@@ -254,8 +254,6 @@ class GroupCore extends ObjectModel
     /**
      * This method is allow to know if a feature is used or active.
      *
-     * @since 1.5.0.1
-     *
      * @return bool
      */
     public static function isFeatureActive()
@@ -269,8 +267,6 @@ class GroupCore extends ObjectModel
 
     /**
      * This method is allow to know if there are other groups than the default ones.
-     *
-     * @since 1.5.0.1
      *
      * @param string|null $table Name of table linked to entity
      * @param bool $has_active_column True if the table has an active column
@@ -330,7 +326,7 @@ class GroupCore extends ObjectModel
             'DELETE FROM `' . _DB_PREFIX_ . 'module_group`
             WHERE `id_group` = ' . (int) $id_group . '
             AND `id_shop` IN ('
-              . (implode(',', array_map('intval', $shops)))
+              . implode(',', array_map('intval', $shops))
             . ')'
         );
 

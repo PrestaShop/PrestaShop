@@ -73,8 +73,4 @@ if (!defined('_PS_API_DOMAIN_')) {
 if (!defined('_PS_API_URL_')) {
     define('_PS_API_URL_', 'http://' . _PS_API_DOMAIN_);
 }
-/** @deprecated Since 1.7.7 */
-Tools::safeDefine('_PS_TAB_MODULE_LIST_URL_', '');
-/** @deprecated Since 1.7.7 */
-Tools::safeDefine('_PS_API_MODULES_LIST_16_', '');
 Tools::safeDefine('_PS_CURRENCY_FEED_URL_', _PS_API_URL_.'/xml/currencies.xml');

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
+use Attribute;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator;
 use Symfony\Component\Validator\Constraint;
 
@@ -35,6 +36,7 @@ use Symfony\Component\Validator\Constraint;
  *
  * @Annotation
  */
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class IsUrlRewrite extends Constraint
 {
     public $message = '%s is invalid.';

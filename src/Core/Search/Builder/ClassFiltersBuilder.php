@@ -57,7 +57,7 @@ final class ClassFiltersBuilder extends AbstractFiltersBuilder
      *
      * @return Filters
      */
-    public function buildFilters(Filters $filters = null)
+    public function buildFilters(?Filters $filters = null)
     {
         if (null === $this->filtersClass) {
             return $filters;

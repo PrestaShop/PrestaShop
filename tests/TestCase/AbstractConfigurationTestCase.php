@@ -80,7 +80,7 @@ abstract class AbstractConfigurationTestCase extends KernelTestCase
     protected function createConfigurationMock(): Configuration
     {
         return $this->getMockBuilder(Configuration::class)
-            ->setMethods(['get', 'getBoolean', 'set'])
+            ->onlyMethods(['get', 'getBoolean', 'set'])
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -91,7 +91,7 @@ abstract class AbstractConfigurationTestCase extends KernelTestCase
     protected function createShopContextMock()
     {
         return $this->getMockBuilder(ShopContext::class)
-            ->setMethods(['getContextShopGroup', 'getContextShopID', 'isAllShopContext', 'getShopConstraint'])
+            ->onlyMethods(['getContextShopGroup', 'getContextShopID', 'isAllShopContext', 'getShopConstraint'])
             ->getMock();
     }
 

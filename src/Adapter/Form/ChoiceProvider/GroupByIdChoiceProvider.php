@@ -49,7 +49,7 @@ final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
      * @param ConfigurationInterface $configuration
      * @param int $contextLangId
      */
-    public function __construct(ConfigurationInterface $configuration, $contextLangId)
+    public function __construct(ConfigurationInterface $configuration, int $contextLangId)
     {
         $this->configuration = $configuration;
         $this->contextLangId = $contextLangId;
@@ -58,7 +58,7 @@ final class GroupByIdChoiceProvider implements FormChoiceProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getChoices()
+    public function getChoices(): array
     {
         $choices = [];
         $groups = Group::getGroups($this->contextLangId, true);

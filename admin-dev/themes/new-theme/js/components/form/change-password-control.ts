@@ -25,6 +25,7 @@
 
 import ChangePasswordHandler from '../change-password-handler';
 import PasswordValidator from '../password-validator';
+import Router from '../../components/router';
 
 const {$} = window;
 
@@ -48,6 +49,8 @@ export default class ChangePasswordControl {
 
   generatedPasswordDisplaySelector: string;
 
+  generatedPasswordButton: string;
+
   passwordStrengthFeedbackContainerSelector: string;
 
   $newPasswordInputs: JQuery<HTMLElement>;
@@ -60,6 +63,8 @@ export default class ChangePasswordControl {
 
   passwordValidator: PasswordValidator;
 
+  router: Router;
+
   constructor(
     inputsBlockSelector: string,
     showButtonSelector: string,
@@ -69,6 +74,7 @@ export default class ChangePasswordControl {
     confirmNewPasswordInputSelector: string,
     generatedPasswordDisplaySelector: string,
     passwordStrengthFeedbackContainerSelector: string,
+    generatedPasswordButton: string,
   ) {
     // Block that contains password inputs
     this.$inputsBlock = $(inputsBlockSelector);
@@ -93,6 +99,8 @@ export default class ChangePasswordControl {
 
     // Block that displays password strength feedback
     this.passwordStrengthFeedbackContainerSelector = passwordStrengthFeedbackContainerSelector;
+
+    this.generatedPasswordButton = generatedPasswordButton;
 
     // Main input for password generation
     this.$newPasswordInputs = this.$inputsBlock.find(
@@ -121,6 +129,7 @@ export default class ChangePasswordControl {
 
     this.hideInputsBlock();
     this.initEvents();
+    this.router = new Router();
   }
 
   /**
@@ -134,10 +143,16 @@ export default class ChangePasswordControl {
       this.hide($(e.currentTarget));
       this.showInputsBlock();
     });
-
     $(document).on('click', this.hideButtonSelector, () => {
       this.hideInputsBlock();
       this.show($(this.showButtonSelector));
+    });
+    $(document).on('click', this.generatedPasswordButton, () => {
+      const $generatedPasswordDisplay = $(this.generatedPasswordDisplaySelector);
+      $.get(this.router.generate('admin_employees_get_password_generated')).then((response) => {
+        $generatedPasswordDisplay.val(response.password);
+        navigator.clipboard.writeText(response.password);
+      });
     });
 
     // Watch and display feedback about password's strength

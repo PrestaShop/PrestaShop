@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 use Language;
 use PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator;
 use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\AddLanguageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
@@ -41,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class AddLanguageHandler extends AbstractLanguageHandler implements AddLanguageHandlerInterface
 {
     /**

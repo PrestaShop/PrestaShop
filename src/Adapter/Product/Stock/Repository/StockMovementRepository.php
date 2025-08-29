@@ -99,7 +99,7 @@ class StockMovementRepository
 
         // It is CRITICAL to reset the counter before each request
         $this->connection->executeStatement('SET @grouping_id := null');
-        $result = $queryBuilder->execute()->fetchAllAssociative();
+        $result = $queryBuilder->executeQuery()->fetchAllAssociative();
         foreach ($result as $key => $row) {
             $totalQuantity = $row['delta_quantity_positive'] - $row['delta_quantity_negative'];
             if ($totalQuantity === 0) {

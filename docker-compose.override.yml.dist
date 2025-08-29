@@ -1,0 +1,20 @@
+services:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: prestashop
+      MYSQL_ROOT_PASSWORD: prestashop
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    networks:
+      - prestashop-network
+  prestashop-git:
+      environment:
+        # BLACKFIRE_ENABLE: 1
+        # BLACKFIRE_SERVER_ID: "your_server_id"
+        # BLACKFIRE_SERVER_TOKEN: "your_blackfire_server_token"

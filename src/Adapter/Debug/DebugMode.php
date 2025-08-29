@@ -47,6 +47,16 @@ class DebugMode
      */
     public function isDebugModeEnabled()
     {
+        return 'false' !== Tools::strtolower($this->getCurrentDebugMode());
+    }
+
+    /**
+     * Get the current debug mode from the defines file.
+     *
+     * @return string|null
+     */
+    public function getCurrentDebugMode()
+    {
         $definesClean = '';
         $customDefinesPath = _PS_ROOT_DIR_ . '/config/defines_custom.inc.php';
         $definesPath = _PS_ROOT_DIR_ . '/config/defines.inc.php';
@@ -55,14 +65,51 @@ class DebugMode
             $definesClean = php_strip_whitespace($customDefinesPath);
         }
 
-        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $definesClean, $debugModeValue)) {
+        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([^;]+)\);/Ui', $definesClean, $debugModeValue)) {
             $definesClean = php_strip_whitespace($definesPath);
-            if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $definesClean, $debugModeValue)) {
-                return false;
+            if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([^;]+)\);/Ui', $definesClean, $debugModeValue)) {
+                return null;
             }
         }
 
-        return 'true' === Tools::strtolower($debugModeValue[1]);
+        return $debugModeValue[1];
+    }
+
+    /**
+     * Create php code based on the debug mode configuration.
+     * Examples:
+     *  define('_PS_MODE_DEV_', true);
+     *  define('_PS_MODE_DEV_', isset($_COOKIE['debug']) && $_COOKIE['debug'] === 'debug_password');
+     *  define('_PS_MODE_DEV_', isset($_COOKIE['debug']));
+     *  define('_PS_MODE_DEV_', false);
+     *
+     * @param array $configuration {
+     *                             debug_mode: bool
+     *                             debug_cookie_name: string
+     *                             debug_cookie_value: string
+     *                             }
+     *
+     * @return string
+     */
+    public function createDebugModeFromConfiguration(array $configuration)
+    {
+        if (!$configuration['debug_mode']) {
+            return 'false';
+        }
+
+        if (empty($configuration['debug_cookie_name'])) {
+            return 'true';
+        }
+
+        $debug_cookie_name = stripslashes($configuration['debug_cookie_name']);
+
+        if (empty($configuration['debug_cookie_value'])) {
+            return "isset(\$_COOKIE['$debug_cookie_name'])";
+        }
+
+        $debug_cookie_value = stripslashes($configuration['debug_cookie_value']);
+
+        return "isset(\$_COOKIE['$debug_cookie_name']) && \$_COOKIE['$debug_cookie_name'] === '$debug_cookie_value'";
     }
 
     /**
@@ -118,11 +165,11 @@ class DebugMode
         $cleanedFileContent = php_strip_whitespace($filename);
         $fileContent = Tools::file_get_contents($filename);
 
-        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $cleanedFileContent)) {
+        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([^;]+)\);/Ui', $cleanedFileContent)) {
             return self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND;
         }
 
-        $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', ' . $value . ');', $fileContent);
+        $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([^;]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', ' . $value . ');', $fileContent);
         if (!@file_put_contents($filename, $fileContent)) {
             return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS;
         }
@@ -147,10 +194,10 @@ class DebugMode
         $cleanedFileContent = php_strip_whitespace($customFileName);
         $fileContent = Tools::file_get_contents($customFileName);
 
-        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', $cleanedFileContent)) {
+        if (!preg_match('/define\(\'_PS_MODE_DEV_\', ([^;]+)\);/Ui', $cleanedFileContent)) {
             return self::DEBUG_MODE_ERROR_NO_DEFINITION_FOUND;
         }
-        $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([a-zA-Z]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', ' . $value . ');', $fileContent);
+        $fileContent = preg_replace('/define\(\'_PS_MODE_DEV_\', ([^;]+)\);/Ui', 'define(\'_PS_MODE_DEV_\', ' . $value . ');', $fileContent);
 
         if (!@file_put_contents($customFileName, $fileContent)) {
             return self::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM;
@@ -170,7 +217,7 @@ class DebugMode
      *
      * @return int the debug mode
      */
-    private function changePsModeDevValue($value)
+    public function changePsModeDevValue($value)
     {
         // Check custom defines file first
         if ($this->isCustomDefinesReadable()) {

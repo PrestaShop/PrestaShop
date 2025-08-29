@@ -79,7 +79,7 @@ class ImageValidator
      * @throws ImageUploadException
      * @throws UploadedImageConstraintException
      */
-    public function assertIsValidImageType(string $filePath, array $allowedMimeTypes = null): void
+    public function assertIsValidImageType(string $filePath, ?array $allowedMimeTypes = null): void
     {
         if (!$allowedMimeTypes) {
             $allowedMimeTypes = ImageManagerCore::MIME_TYPE_SUPPORTED;

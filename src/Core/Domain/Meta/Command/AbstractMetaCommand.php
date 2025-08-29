@@ -42,7 +42,7 @@ abstract class AbstractMetaCommand
      */
     protected function assertNameMatchesRegexPattern($languageId, $value, $constraintErrorCode)
     {
-        $regex = '/^[^<>={}]*$/u';
+        $regex = '/^[^<>{}]*$/u';
 
         if ($value && !preg_match($regex, $value)) {
             throw new MetaConstraintException(sprintf('Value "%s" for language id %s did not passed the regex expression: %s', $value, $languageId, $regex), $constraintErrorCode);

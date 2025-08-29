@@ -27,7 +27,7 @@
 // Create a fake Db class on the global namespace
 
 namespace {
-    abstract class Db extends \DbCore
+    abstract class Db extends DbCore
     {
         public static function getInstance($master = true)
         {
@@ -143,7 +143,7 @@ namespace Tests\Unit\Classes {
         private function createRequestSqlMock()
         {
             $requestSql = $this->getMockBuilder(RequestSql::class)
-                ->setMethods(['getTables'])
+                ->onlyMethods(['getTables'])
                 ->getMock()
             ;
 

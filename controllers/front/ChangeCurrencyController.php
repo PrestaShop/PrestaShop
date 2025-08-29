@@ -30,7 +30,7 @@ class ChangeCurrencyControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         $currency = new Currency((int) Tools::getValue('id_currency'));
         if (Validate::isLoadedObject($currency) && !$currency->deleted) {

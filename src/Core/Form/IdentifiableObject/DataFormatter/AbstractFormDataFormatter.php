@@ -60,7 +60,7 @@ abstract class AbstractFormDataFormatter
             try {
                 $bulkValue = $propertyAccessor->getValue($formData, $bulkFormPath);
                 $propertyAccessor->setValue($formattedData, $editFormPath, $bulkValue);
-            } catch (AccessException $e) {
+            } catch (AccessException) {
                 // When the bulk data is not found it means the field was disabled, which is the expected behaviour
                 // as the bulk request is a partial request not every data is expected And when it's not present
                 // it means there is no modification to do so this field is simply ignored
@@ -74,7 +74,7 @@ abstract class AbstractFormDataFormatter
                     ModifyAllShopsUtil::prefixFieldPathWithAllShops($editFormPath, $this->modifyAllNamePrefix),
                     $modifyAllShopsValue
                 );
-            } catch (AccessException $e) {
+            } catch (AccessException) {
                 // this means the field does not have related modify_all_shops field, so it is not multiShop field
                 // therefore we don't need to re-format its related modify_all_shops field name
             }

@@ -46,7 +46,7 @@
       <template #footer-confirmation>
         <div
           v-if="isMultiStoreActive"
-          class="md-checkbox md-checkbox-inline"
+          class="md-checkbox md-checkbox-inline w-100 mb-4"
         >
           <label>
             <input

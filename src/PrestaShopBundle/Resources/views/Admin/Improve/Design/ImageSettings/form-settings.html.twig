@@ -1,0 +1,51 @@
+{# **
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * #}
+{% form_theme configForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{{ form_start(configForm, {action: path('admin_image_settings_save_settings')}) }}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">settings</i>
+      {{ 'Images generation options'|trans({}, 'Admin.Design.Feature') }}
+    </h3>
+    <div class="alert alert-info mx-3 mt-3 mb-0">
+      <p>{{ 'The original images of objects you create are almost never used, optimized thumbnails are used instead. In this section, you can define the formats of thumbnails and their quality.'|trans({}, 'Admin.Design.Help') }}</p>
+      <p class="mb-3">{{ 'Most common setup is to have the base JPG/PNG format and one modern WebP or AVIF format - the browser will choose the format it likes the most.'|trans({}, 'Admin.Design.Help') }}</p>
+      <p>{{ 'Beware that to benefit from modern image formats, they must be supported by your theme.'|trans({}, 'Admin.Design.Help') }}</p>
+    </div>
+    <div class="card-body">
+      <div class="form-wrapper">
+        {% block form_image_settings_widget %}
+          {{ form_rest(configForm) }}
+        {% endblock %}
+      </div>
+    </div>
+    <div class="card-footer clearfix">
+      <div class="d-inline-flex float-right">
+        <button class="btn btn-primary" id="save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
+{{ form_end(configForm) }}

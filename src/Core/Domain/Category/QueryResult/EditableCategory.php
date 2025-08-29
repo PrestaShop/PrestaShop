@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Category\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
+use PrestaShop\PrestaShop\Core\Domain\QueryResult\RedirectTargetInformation;
 
 /**
  * Stores category data needed for editing.
@@ -69,10 +69,9 @@ class EditableCategory
      */
     private $metaDescription;
 
-    /**
-     * @var string[]
-     */
-    private $metaKeywords;
+    private string $redirectType;
+
+    private ?RedirectTargetInformation $categoryRedirectTarget;
 
     /**
      * @var string[]
@@ -100,11 +99,6 @@ class EditableCategory
     private $coverImage;
 
     /**
-     * @var array
-     */
-    private $menuThumbnailImages;
-
-    /**
      * @var bool
      */
     private $isRootCategory;
@@ -127,14 +121,14 @@ class EditableCategory
      * @param int $parentId
      * @param string[] $metaTitle
      * @param string[] $metaDescription
-     * @param string[] $metaKeywords
+     * @param string $redirectType
+     * @param ?RedirectTargetInformation $categoryRedirectTarget
      * @param string[] $linkRewrite
      * @param int[] $groupAssociationIds
      * @param int[] $shopAssociationIds
      * @param bool $isRootCategory
      * @param mixed $coverImage
      * @param mixed $thumbnailImage
-     * @param array $menuThumbnailImages
      * @param array $subCategories
      * @param string[] $additionalDescription
      */
@@ -146,14 +140,14 @@ class EditableCategory
         $parentId,
         array $metaTitle,
         array $metaDescription,
-        array $metaKeywords,
         array $linkRewrite,
+        string $redirectType,
+        ?RedirectTargetInformation $categoryRedirectTarget,
         array $groupAssociationIds,
         array $shopAssociationIds,
         $isRootCategory,
         $coverImage = null,
         $thumbnailImage = null,
-        array $menuThumbnailImages = [],
         array $subCategories = [],
         array $additionalDescription = []
     ) {
@@ -164,16 +158,16 @@ class EditableCategory
         $this->parentId = $parentId;
         $this->metaTitle = $metaTitle;
         $this->metaDescription = $metaDescription;
-        $this->metaKeywords = $metaKeywords;
         $this->linkRewrite = $linkRewrite;
         $this->groupAssociationIds = $groupAssociationIds;
         $this->shopAssociationIds = $shopAssociationIds;
         $this->thumbnailImage = $thumbnailImage;
         $this->coverImage = $coverImage;
-        $this->menuThumbnailImages = $menuThumbnailImages;
         $this->isRootCategory = $isRootCategory;
         $this->subCategories = $subCategories;
         $this->additionalDescription = $additionalDescription;
+        $this->redirectType = $redirectType;
+        $this->categoryRedirectTarget = $categoryRedirectTarget;
     }
 
     /**
@@ -243,17 +237,29 @@ class EditableCategory
     /**
      * @return string[]
      */
-    public function getMetaKeywords()
-    {
-        return $this->metaKeywords;
-    }
-
-    /**
-     * @return string[]
-     */
     public function getLinkRewrite()
     {
         return $this->linkRewrite;
+    }
+
+    public function getRedirectType(): string
+    {
+        return $this->redirectType;
+    }
+
+    public function setRedirectType(string $redirectType): void
+    {
+        $this->redirectType = $redirectType;
+    }
+
+    public function getRedirectTarget(): ?RedirectTargetInformation
+    {
+        return $this->categoryRedirectTarget;
+    }
+
+    public function setRedirectTarget(?RedirectTargetInformation $categoryRedirectTarget): void
+    {
+        $this->categoryRedirectTarget = $categoryRedirectTarget;
     }
 
     /**
@@ -289,27 +295,11 @@ class EditableCategory
     }
 
     /**
-     * @return array
-     */
-    public function getMenuThumbnailImages()
-    {
-        return $this->menuThumbnailImages;
-    }
-
-    /**
      * @return bool
      */
     public function isRootCategory()
     {
         return $this->isRootCategory;
-    }
-
-    /**
-     * @return bool
-     */
-    public function canContainMoreMenuThumbnails()
-    {
-        return count($this->getMenuThumbnailImages()) < count(MenuThumbnailId::ALLOWED_ID_VALUES);
     }
 
     /**

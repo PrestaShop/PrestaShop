@@ -30,11 +30,13 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\SetProductShopsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
+#[AsCommandHandler]
 class SetProductShopsHandler implements SetProductShopsHandlerInterface
 {
     /**
@@ -121,8 +123,8 @@ class SetProductShopsHandler implements SetProductShopsHandlerInterface
         $differentShopIds = [];
         foreach ($searchableShopIds as $searchableShopId) {
             if (
-                $searchableShopId->getValue() === $shopToIgnore->getValue() ||
-                $this->shopInArray($searchableShopId, $shopIds)
+                $searchableShopId->getValue() === $shopToIgnore->getValue()
+                || $this->shopInArray($searchableShopId, $shopIds)
             ) {
                 continue;
             }

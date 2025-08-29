@@ -1,17 +1,17 @@
-$color-bright: #fff;
+$color-bright: map-get($map: $cdk-common, $key: "white");
 
-$color-calendar: #00a4e7;
-$color-calendar-compare: #ff8000;
+$color-calendar: map-get($map: $cdk-primary, $key: "primary-800");
+$color-calendar-compare: map-get($map: $cdk-blue, $key: "blue-700");
 
 $color-calendar-day: $color-bright;
 
-$color-calendar-outrange: #ccc;
+$color-calendar-outrange: map-get($map: $cdk-primary, $key: "primary-400");
 
 $color-calendar-day-selected: $color-calendar;
 $color-calendar-day-selected-compare: $color-calendar-compare;
 
-$color-calendar-range: lighten($color-calendar, 10%);
-$color-calendar-range-compare: lighten($color-calendar-compare, 10%);
+$color-calendar-range: map-get($map: $cdk-primary, $key: "primary-600");
+$color-calendar-range-compare: map-get($map: $cdk-blue, $key: "blue-300");
 
 #datepicker {
   .input-selected {
@@ -30,18 +30,18 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
 
   div#datepicker-form {
     #date-range {
-      border: solid 1px darken($color-calendar, 5%);
+      border: solid 1px $color-calendar;
 
       .form-date-heading {
-        background-color: darken($color-calendar, 5%);
+        background-color: $color-calendar;
       }
     }
 
     #date-compare {
-      border: solid 1px darken($color-calendar-compare, 5%);
+      border: solid 1px $color-calendar-compare;
 
       .form-date-heading {
-        background-color: darken($color-calendar-compare, 5%);
+        background-color: $color-calendar-compare;
       }
     }
 
@@ -84,8 +84,8 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
     }
 
     .form-date-actions {
-      background-color: #fcfdfe;
-      border: solid 1px #ccc;
+      padding: 8px;
+      border: solid 1px var(--#{$cdk}primary-400);
 
       .btn.pull-right {
         @extend .btn-primary;
@@ -101,7 +101,6 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         margin-top: 5px;
         font-size: 0.8em;
         font-weight: 700;
-        color: #666;
         text-transform: uppercase;
       }
 
@@ -125,7 +124,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
     position: relative;
     width: 100%;
     font-size: 13px;
-    border: solid 1px #ccc;
+    border: solid 1px var(--#{$cdk}primary-400);
     @include margin(0, 0, 8px, 0);
 
     table {
@@ -138,9 +137,9 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
       tr th {
         height: 1.5em;
         font-size: 0.7em;
-        color: #fff;
+        color: var(--#{$cdk}white);
         text-transform: uppercase;
-        background-color: darken($color-calendar, 5%);
+        background-color: $color-calendar;
       }
 
       tr:first-child th {
@@ -149,7 +148,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         color: $color-calendar-day-selected;
         cursor: pointer;
         background-color: $color-bright;
-        border-bottom: 1px solid darken($color-calendar, 5%);
+        border-bottom: 1px solid $color-calendar;
       }
     }
 
@@ -161,7 +160,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
     }
 
     tr {
-      border-bottom: solid 1px #fff;
+      border-bottom: solid 1px var(--#{$cdk}white);
     }
 
     td {
@@ -200,20 +199,14 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         font-weight: 700;
         color: $color-bright;
         background-color: $color-calendar-day-selected;
-        @include border-left-radius(15px);
 
         &.range-compare {
-          background-color: mix($color-calendar-day-selected, $color-calendar-range-compare, 70%);
-          @include border-left-radius(0);
+          background-color: mix($color-calendar-day-selected, $color-calendar-range-compare, 50%);
         }
 
         &.end-selected-compare,
         &.start-selected-compare {
-          background-color: mix($color-calendar-day-selected, $color-calendar-day-selected-compare, 70%);
-        }
-
-        &.end-selected-compare {
-          @include border-radius(0);
+          background-color: mix($color-calendar-day-selected, $color-calendar-day-selected-compare, 50%);
         }
       }
 
@@ -221,20 +214,14 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         font-weight: 700;
         color: $color-bright;
         background-color: $color-calendar-day-selected;
-        @include border-right-radius(15px);
 
         &.range-compare {
-          background-color: mix($color-calendar-day-selected, $color-calendar-range-compare, 70%);
-          @include border-right-radius(0);
+          background-color: mix($color-calendar-day-selected, $color-calendar-range-compare, 50%);
         }
 
         &.end-selected-compare,
         &.start-selected-compare {
-          background-color: mix($color-calendar-day-selected, $color-calendar-day-selected-compare, 70%);
-        }
-
-        &.start-selected-compare {
-          @include border-radius(0);
+          background-color: mix($color-calendar-day-selected, $color-calendar-day-selected-compare, 50%);
         }
       }
 
@@ -242,11 +229,9 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         font-weight: 700;
         color: $color-bright;
         background-color: $color-calendar-day-selected-compare;
-        @include border-left-radius(15px);
 
         &.range {
-          background-color: mix($color-calendar-day-selected-compare, $color-calendar-range, 70%);
-          @include border-left-radius(0);
+          background-color: mix($color-calendar-day-selected-compare, $color-calendar-range, 50%);
         }
       }
 
@@ -254,11 +239,9 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         font-weight: 700;
         color: $color-bright;
         background-color: $color-calendar-day-selected-compare;
-        @include border-right-radius(15px);
 
         &.range {
-          background-color: mix($color-calendar-day-selected-compare, $color-calendar-range, 70%);
-          @include border-right-radius(0);
+          background-color: mix($color-calendar-day-selected-compare, $color-calendar-range, 50%);
         }
       }
 
@@ -266,11 +249,9 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         font-weight: 700;
         color: $color-bright;
         background-color: $color-calendar-day-selected;
-        @include border-radius(15px);
 
         &.range-compare {
-          background-color: mix($color-calendar-day-selected, $color-calendar-range-compare, 70%);
-          @include border-radius(0);
+          background-color: mix($color-calendar-day-selected, $color-calendar-range-compare, 50%);
         }
       }
 
@@ -278,16 +259,14 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         font-weight: 700;
         color: $color-bright;
         background-color: $color-calendar-day-selected-compare;
-        @include border-radius(15px);
 
         &.range {
-          background-color: mix($color-calendar-day-selected-compare, $color-calendar-range, 70%);
-          @include border-radius(0);
+          background-color: mix($color-calendar-day-selected-compare, $color-calendar-range, 50%);
         }
       }
 
       &.range {
-        color: lighten($color-calendar-range, 35%);
+        color: var(--#{$cdk}white);
         background-color: $color-calendar-range;
 
         &.range-compare {
@@ -296,7 +275,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
       }
 
       &.range-compare {
-        color: lighten($color-calendar-range-compare, 35%);
+        color: var(--#{$cdk}white);
         background-color: $color-calendar-range-compare;
 
         &.range {
@@ -320,12 +299,12 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         cursor: pointer;
 
         &:hover {
-          color: #fff;
+          color: var(--#{$cdk}white);
           background-color: $color-calendar-day-selected;
         }
 
         &.active {
-          color: #fff;
+          color: var(--#{$cdk}white);
           background-color: $color-calendar-day-selected;
         }
 
@@ -354,8 +333,8 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         line-height: 2em;
 
         &:hover {
-          color: #fff;
-          background-color: darken($color-calendar, 5%);
+          color: var(--#{$cdk}white);
+          background-color: $color-calendar;
         }
       }
     }

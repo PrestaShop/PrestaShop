@@ -32,12 +32,14 @@ use Configuration;
 use Context;
 use DateTime;
 use Employee;
+use Exception;
 use Mail;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Entity\StockMvt;
+use PrestaShopException;
 use Product;
 use StockAvailable;
 
@@ -95,7 +97,7 @@ class StockManager
 
     /**
      * This will decrease (if needed) Packs containing this product
-     * (with the right declination) if there is not enough product in stocks.
+     * (with the right combination) if there is not enough product in stocks.
      *
      * @param Product $product A product object to update its quantity
      * @param int $id_product_attribute The product attribute to update
@@ -139,11 +141,11 @@ class StockManager
     }
 
     /**
-     * Will update Product available stock int he given declinaison. If product is a Pack, could decrease the sub products.
+     * Will update Product available stock int he given combination. If product is a Pack, could decrease the sub products.
      * If Product is contained in a Pack, Pack could be decreased or not (only if sub product stocks become not sufficient).
      *
      * @param Product $product The product to update its stockAvailable
-     * @param int $id_product_attribute The declinaison to update (null if not)
+     * @param int|null $id_product_attribute The combination to update (null if not)
      * @param int $delta_quantity The quantity change (positive or negative)
      * @param int|null $id_shop Optional
      * @param bool $add_movement Optional
@@ -276,8 +278,8 @@ class StockManager
      * @param int $id_product_attribute
      * @param int $newQuantity
      *
-     * @throws \Exception
-     * @throws \PrestaShopException
+     * @throws Exception
+     * @throws PrestaShopException
      */
     protected function sendLowStockAlert($product, $id_product_attribute, $newQuantity)
     {
@@ -398,10 +400,6 @@ class StockManager
 
                 if (!empty($params['id_stock_mvt_reason'])) {
                     $stockMvt->setIdStockMvtReason((int) $params['id_stock_mvt_reason']);
-                }
-
-                if (!empty($params['id_supply_order'])) {
-                    $stockMvt->setIdSupplyOrder((int) $params['id_supply_order']);
                 }
 
                 $stockMvt->setSign($deltaQuantity >= 1 ? 1 : -1);

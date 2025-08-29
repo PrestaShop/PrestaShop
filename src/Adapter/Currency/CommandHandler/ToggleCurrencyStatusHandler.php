@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Configuration;
 use Currency;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\ToggleCurrencyStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
@@ -43,6 +44,7 @@ use Shop;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class ToggleCurrencyStatusHandler implements ToggleCurrencyStatusHandlerInterface
 {
     /**

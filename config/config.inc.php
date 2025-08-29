@@ -26,7 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Session\SessionHandler;
 
-/* Custom defines made by users */
+// Custom defines made by users
 if (is_file(__DIR__ . '/defines_custom.inc.php')) {
     include_once __DIR__ . '/defines_custom.inc.php';
 }
@@ -46,7 +46,7 @@ ini_set('default_charset', 'utf-8');
 /* in dev mode - check if composer was executed */
 if (is_dir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'admin-dev') && (!is_dir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'vendor') ||
         !file_exists(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
-    die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
+    die('Config check Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
 /* No settings file? goto installer... */
@@ -55,6 +55,11 @@ if (!file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.yml') && !file_exists(_
 }
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
+// If this const is not defined others are likely to be absent but this one is the most likely to cause a fatal error,
+// the following initialization is going to fail, so we throw an exception early
+if (!defined('_DB_PREFIX_')) {
+    throw new PrestaShopException('Constant _DB_PREFIX_ not defined');
+}
 
 if (defined('_PS_CREATION_DATE_')) {
     $creationDate = _PS_CREATION_DATE_;
@@ -116,28 +121,31 @@ $context = Context::getContext();
 try {
     $context->shop = Shop::initialize();
 } catch (PrestaShopException $e) {
-    $e->displayMessage();
+    // In CLI command the Shop initialization is bound to fail when the shop is not installed, but we don't want to stop
+    // the process or this will break any Symfony command even a simple ./bin/console)
+    $e->displayMessage(!ToolsCore::isPHPCLI());
 }
-define('_THEME_NAME_', $context->shop->theme->getName());
-define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
 
-define('__PS_BASE_URI__', $context->shop->getBaseURI());
+if ($context->shop) {
+    define('__PS_BASE_URI__', $context->shop->getBaseURI());
+} else {
+    define('__PS_BASE_URI__', '/');
+}
+
+if ($context->shop && $context->shop->theme) {
+    define('_THEME_NAME_', $context->shop->theme->getName());
+    define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
+} else {
+    // Not ideal fallback but on install when nothing else is available it does the job, better than not having these const at all
+    define('_THEME_NAME_', 'classic');
+    define('_PARENT_THEME_NAME_', '');
+}
 
 /* Include all defines related to base uri and theme name */
 require_once __DIR__ . '/defines_uri.inc.php';
 
 global $_MODULES;
 $_MODULES = array();
-
-/**
- * @deprecated since 1.7.7
- */
-define('_PS_PRICE_DISPLAY_PRECISION_', 2);
-
-/**
- * @deprecated since 1.7.7
- */
-define('_PS_PRICE_COMPUTE_PRECISION_', 2);
 
 /* Load all languages */
 Language::loadLanguages();
@@ -163,7 +171,7 @@ if ($cookie_lifetime > 0) {
     $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 }
 
-$force_ssl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+$force_ssl = Configuration::get('PS_SSL_ENABLED');
 if (defined('_PS_ADMIN_DIR_')) {
     $cookie = new Cookie('psAdmin', '', $cookie_lifetime, null, false, $force_ssl);
 } else {

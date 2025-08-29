@@ -1,28 +1,25 @@
-// Import utils
-import basicHelper from '@utils/basicHelper';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import attributesPage from '@pages/BO/catalog/attributes';
-import addValuePage from '@pages/BO/catalog/attributes/addValue';
-import viewAttributePage from '@pages/BO/catalog/attributes/view';
-import dashboardPage from '@pages/BO/dashboard';
-
-// Import data
-import AttributeValueData from '@data/faker/attributeValue';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boAttributesPage,
+  boAttributesValueCreatePage,
+  boAttributesViewPage,
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  FakerAttributeValue,
+  type Page,
+  utilsCore,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_attributes_values_sortPaginationAndBulkDelete';
 
 let browserContext: BrowserContext;
 let page: Page;
 let numberOfValues: number = 0;
+let idAttribute: number = 0;
 
 /*
 Go to Attributes & Features page
@@ -35,58 +32,67 @@ Delete the created values by bulk actions
 describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delete attribute values', async () => {
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Catalog > Attributes & Features\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.attributesAndFeaturesLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.attributesAndFeaturesLink,
     );
-    await attributesPage.closeSfToolBar(page);
+    await boAttributesPage.closeSfToolBar(page);
 
-    const pageTitle = await attributesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(attributesPage.pageTitle);
+    const pageTitle = await boAttributesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAttributesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetAttributeFilter', baseContext);
 
-    const numberOfAttributesAfterReset = await attributesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfAttributesAfterReset).to.be.above(0);
+    const numberOfAttributesAfterReset = await boAttributesPage.resetAndGetNumberOfLines(page);
+    expect(numberOfAttributesAfterReset).to.be.above(0);
   });
 
   it('should filter list of attributes by name \'Color\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDeleteAttributes', baseContext);
 
-    await attributesPage.filterTable(page, 'b!name', 'Color');
+    await boAttributesPage.filterTable(page, 'name', 'Color');
 
-    const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
-    await expect(textColumn).to.contains('Color');
+    const textColumn = await boAttributesPage.getTextColumn(page, 1, 'name');
+    expect(textColumn).to.contains('Color');
+
+    idAttribute = parseInt(await boAttributesPage.getTextColumn(page, 1, 'id_attribute_group'), 10);
+    expect(idAttribute).to.be.gt(0);
   });
 
   it('should view attribute \'Color\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'viewAttributeColor1', baseContext);
 
-    await attributesPage.viewAttribute(page, 1);
+    await boAttributesPage.viewAttribute(page, 1);
 
-    const pageTitle = await viewAttributePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} Color`);
+    const pageTitle = await boAttributesViewPage.getPageTitle(page);
+    expect(pageTitle).to.equal(boAttributesViewPage.pageTitle('Color'));
 
-    numberOfValues = await viewAttributePage.resetAndGetNumberOfLines(page);
-    await expect(numberOfValues).to.be.above(0);
+    numberOfValues = await boAttributesViewPage.resetAndGetNumberOfLines(page);
+    expect(numberOfValues).to.be.above(0);
   });
 
   // 1 : Create 7 new values
@@ -95,32 +101,35 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
     it('should go to add new value page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewValuePage', baseContext);
 
-      await viewAttributePage.goToAddNewValuePage(page);
+      await boAttributesViewPage.goToAddNewValuePage(page);
 
-      const pageTitle = await addValuePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addValuePage.createPageTitle);
+      const pageTitle = await boAttributesValueCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAttributesValueCreatePage.createPageTitle);
     });
 
     creationTests.forEach((test: number, index: number) => {
-      const createValueData = new AttributeValueData({attributeName: 'Color', value: `todelete${index}`});
       it(`should create value n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createNewValue${index}`, baseContext);
 
-        const textResult = await addValuePage.addEditValue(page, createValueData, index !== 6);
-        await expect(textResult).to.contains(attributesPage.successfulCreationMessage);
+        const createValueData: FakerAttributeValue = new FakerAttributeValue({
+          attributeID: idAttribute,
+          attributeName: 'Color',
+          value: `todelete${index}`,
+        });
+
+        const textResult = await boAttributesValueCreatePage.addEditValue(page, createValueData, index !== 6);
+        expect(textResult).to.contains(boAttributesPage.successfulCreationMessage);
       });
     });
 
-    it('should view attribute \'Color\' and check number of values after creation', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewAttributeColor2', baseContext);
+    it('should check number of values after creation', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberAfterCreation', baseContext);
 
-      await attributesPage.viewAttribute(page, 1);
+      const pageTitle = await boAttributesViewPage.getPageTitle(page);
+      expect(pageTitle).to.equal(boAttributesViewPage.pageTitle('Color'));
 
-      const pageTitle = await viewAttributePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} Color`);
-
-      const numberOfValuesAfterCreation = await viewAttributePage.resetAndGetNumberOfLines(page);
-      await expect(numberOfValuesAfterCreation).to.equal(numberOfValues + 7);
+      const numberOfValuesAfterCreation = await boAttributesViewPage.resetAndGetNumberOfLines(page);
+      expect(numberOfValuesAfterCreation).to.equal(numberOfValues + 7);
     });
   });
 
@@ -129,29 +138,29 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
-      const paginationNumber = await viewAttributePage.selectPaginationLimit(page, 20);
-      expect(paginationNumber).to.equal('1');
+      const paginationNumber = await boAttributesViewPage.selectPaginationLimit(page, 20);
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await viewAttributePage.paginationNext(page);
-      expect(paginationNumber).to.equal('2');
+      const paginationNumber = await boAttributesViewPage.paginationNext(page);
+      expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await viewAttributePage.paginationPrevious(page);
-      expect(paginationNumber).to.equal('1');
+      const paginationNumber = await boAttributesViewPage.paginationPrevious(page);
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await viewAttributePage.selectPaginationLimit(page, 50);
-      expect(paginationNumber).to.equal('1');
+      const paginationNumber = await boAttributesViewPage.selectPaginationLimit(page, 50);
+      expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
 
@@ -160,42 +169,42 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
     const sortTests = [
       {
         args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_attribute', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_attribute', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameAsc', sortBy: 'b!name', sortDirection: 'up',
+          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameDesc', sortBy: 'b!name', sortDirection: 'down',
+          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByColorAsc', sortBy: 'a!color', sortDirection: 'up',
+          testIdentifier: 'sortByColorAsc', sortBy: 'color', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByColorDesc', sortBy: 'a!color', sortDirection: 'down',
+          testIdentifier: 'sortByColorDesc', sortBy: 'color', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByPositionAsc', sortBy: 'a!position', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByPositionAsc', sortBy: 'position', sortDirection: 'asc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByPositionDesc', sortBy: 'a!position', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByPositionDesc', sortBy: 'position', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_attribute', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_attribute', sortDirection: 'asc', isFloat: true,
         },
       },
     ];
@@ -204,30 +213,30 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable = await viewAttributePage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await boAttributesViewPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-        await viewAttributePage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        await boAttributesViewPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable = await viewAttributePage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boAttributesViewPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+          if (test.args.sortDirection === 'asc') {
+            expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+          if (test.args.sortDirection === 'asc') {
+            expect(sortedTable).to.deep.equal(expectedResult);
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         }
       });
@@ -239,24 +248,24 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
     it('should filter by value name \'toDelete\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await viewAttributePage.filterTable(page, 'b!name', 'toDelete');
+      await boAttributesViewPage.filterTable(page, 'name', 'toDelete');
 
-      const numberOfValuesAfterFilter = await viewAttributePage.getNumberOfElementInGrid(page);
-      await expect(numberOfValuesAfterFilter).to.be.at.most(numberOfValues);
+      const numberOfValuesAfterFilter = await boAttributesViewPage.getNumberOfElementInGrid(page);
+      expect(numberOfValuesAfterFilter).to.be.at.most(numberOfValues);
     });
 
     it('should delete values with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteAttributes', baseContext);
 
-      const deleteTextResult = await viewAttributePage.bulkDeleteValues(page);
-      await expect(deleteTextResult).to.be.contains(viewAttributePage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boAttributesViewPage.bulkDeleteValues(page);
+      expect(deleteTextResult).to.be.contains(boAttributesViewPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      const numberOfValuesAfterReset = await viewAttributePage.resetAndGetNumberOfLines(page);
-      await expect(numberOfValuesAfterReset).to.equal(numberOfValues);
+      const numberOfValuesAfterReset = await boAttributesViewPage.resetAndGetNumberOfLines(page);
+      expect(numberOfValuesAfterReset).to.equal(numberOfValues);
     });
   });
 });

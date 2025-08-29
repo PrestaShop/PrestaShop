@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\CommandHandler\UpdateVirtualProductFileHandlerInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
@@ -37,6 +38,7 @@ use ProductDownload as VirtualProductFile;
 /**
  * Updates VirtualProductFile using legacy object model. (ProductDownload is referenced as VirtualProduct in core)
  */
+#[AsCommandHandler]
 final class UpdateVirtualProductFileHandler implements UpdateVirtualProductFileHandlerInterface
 {
     /**

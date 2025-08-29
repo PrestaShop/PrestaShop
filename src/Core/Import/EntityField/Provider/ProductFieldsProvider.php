@@ -102,7 +102,6 @@ final class ProductFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('description', $this->trans('Description', 'Admin.Global')),
             new EntityField('tags', $this->trans('Tags (x,y,z...)', 'Admin.Advparameters.Feature')),
             new EntityField('meta_title', $this->trans('Meta title', 'Admin.Global')),
-            new EntityField('meta_keywords', $this->trans('Meta keywords', 'Admin.Global')),
             new EntityField('meta_description', $this->trans('Meta description', 'Admin.Global')),
             new EntityField('link_rewrite', $this->trans('Rewritten URL', 'Admin.Advparameters.Feature')),
             new EntityField('available_now', $this->trans('Label when in stock', 'Admin.Catalog.Feature')),
@@ -145,30 +144,6 @@ final class ProductFieldsProvider implements EntityFieldsProviderInterface
                 $this->trans('ID / Name of the store', 'Admin.Advparameters.Feature'),
                 $this->trans(
                     'Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default store will be used.',
-                    'Admin.Advparameters.Help'
-                )
-            ),
-            new EntityField(
-                'advanced_stock_management',
-                $this->trans('Advanced stock management', 'Admin.Advparameters.Feature'),
-                $this->trans(
-                    'Enable advanced stock management on product (0 = No, 1 = Yes).',
-                    'Admin.Advparameters.Help'
-                )
-            ),
-            new EntityField(
-                'depends_on_stock',
-                $this->trans('Depends on stock', 'Admin.Advparameters.Feature'),
-                $this->trans(
-                    '0 = Use quantity set in product, 1 = Use quantity from warehouse.',
-                    'Admin.Advparameters.Help'
-                )
-            ),
-            new EntityField(
-                'warehouse',
-                $this->trans('Warehouse', 'Admin.Advparameters.Feature'),
-                $this->trans(
-                    'ID of the warehouse to set as storage.',
                     'Admin.Advparameters.Help'
                 )
             ),

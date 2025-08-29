@@ -130,15 +130,15 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             ;
         }
 
-        $result = $qb->execute()->fetchAssociative();
+        $result = $qb->executeQuery()->fetchAssociative();
         if (empty($result)) {
             return null;
         }
 
         $productSupplierId = (int) $result['id_product_supplier'];
 
-        if ($association->getProductSupplierId() !== null &&
-            $productSupplierId !== $association->getProductSupplierId()->getValue()) {
+        if ($association->getProductSupplierId() !== null
+            && $productSupplierId !== $association->getProductSupplierId()->getValue()) {
             throw new InvalidProductSupplierAssociationException(sprintf(
                 'Invalid ProductSupplier ID in association: %s Provided is %d but the persisted one is %d.',
                 (string) $association,
@@ -199,7 +199,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             ->where('p.id_product = :productId')
         ;
 
-        $result = $qb->execute()->fetchAssociative();
+        $result = $qb->executeQuery()->fetchAssociative();
 
         if (!$result) {
             return null;
@@ -231,7 +231,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             ->setParameter('productId', $productId->getValue())
         ;
 
-        $result = $qb->execute()->fetch();
+        $result = $qb->executeQuery()->fetchAssociative();
 
         if (empty($result['default_supplier_id'])) {
             return null;
@@ -258,7 +258,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             ->addOrderBy('ps.id_product_supplier', 'ASC')
         ;
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         if (empty($results)) {
             return [];
@@ -289,7 +289,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             ->groupBy('ps.id_supplier')
         ;
 
-        $results = $qb->execute()->fetchAllAssociative();
+        $results = $qb->executeQuery()->fetchAllAssociative();
 
         if (empty($results)) {
             return [];
@@ -348,7 +348,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
         foreach ($productSupplierIds as $productSupplierId) {
             try {
                 $this->delete($productSupplierId);
-            } catch (CannotDeleteProductSupplierException $e) {
+            } catch (CannotDeleteProductSupplierException) {
                 $failedIds[] = $productSupplierId->getValue();
             }
         }
@@ -392,7 +392,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             ;
         }
 
-        return $qb->execute()->fetchAll();
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 
     /**
@@ -408,7 +408,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'supplier', 's')
         ;
 
-        $suppliers = $qb->execute()->fetchAllAssociative();
+        $suppliers = $qb->executeQuery()->fetchAllAssociative();
         $names = [];
         foreach ($suppliers as $supplier) {
             if (in_array($supplier['name'], $names)) {
@@ -445,7 +445,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             ))
         ;
 
-        $uselessProductSupplierIds = $qb->execute()->fetchAllAssociative();
+        $uselessProductSupplierIds = $qb->executeQuery()->fetchAllAssociative();
         if (empty($uselessProductSupplierIds)) {
             return [];
         }

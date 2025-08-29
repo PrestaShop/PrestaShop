@@ -1,15 +1,17 @@
 // Import utils
-import helper from '@utils/helpers';
-import loginCommon from '@commonTests/BO/loginBO';
-import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 
 // Import test context
 import testContext from '@utils/testContext';
 
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import {homePage as foHomePage} from '@pages/FO/home';
+import {
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  foClassicHomePage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_header_viewMyShop';
 
@@ -19,33 +21,36 @@ describe('BO - Header : View My Shop', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
 
-    const numPages = helper.getNumberTabs(browserContext);
-    await expect(numPages).to.be.eq(1);
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
 
-    const pageTitle = await dashboardPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    const numPages = utilsPlaywright.getNumberTabs(browserContext);
+    expect(numPages).to.be.eq(1);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should click on View my shop', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickViewMyShop', baseContext);
 
-    page = await dashboardPage.viewMyShop(page);
+    page = await boDashboardPage.viewMyShop(page);
 
-    const numPages = helper.getNumberTabs(browserContext);
-    await expect(numPages).to.be.eq(2);
+    const numPages = utilsPlaywright.getNumberTabs(browserContext);
+    expect(numPages).to.be.eq(2);
 
-    const pageTitle = await foHomePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(foHomePage.pageTitle);
+    const pageTitle = await foClassicHomePage.getPageTitle(page);
+    expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
   });
 });

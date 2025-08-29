@@ -42,9 +42,12 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRulesGroupForEdi
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult\EditableTaxRulesGroup;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\TaxRuleFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxRulesGroupFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,21 +55,23 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Responsible for handling "Improve > International > Tax Rules" page.
  */
-class TaxRulesGroupController extends FrameworkBundleAdminController
+class TaxRulesGroupController extends PrestaShopAdminController
 {
     /**
      * Show tax rules group page.
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param TaxRulesGroupFilters $filters
      *
      * @return Response
      */
-    public function indexAction(Request $request, TaxRulesGroupFilters $filters): Response
-    {
-        $taxRulesGroupGridFactory = $this->get('prestashop.core.grid.factory.tax_rules_group');
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function indexAction(
+        Request $request,
+        TaxRulesGroupFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.factory.tax_rules_group')]
+        GridFactoryInterface $taxRulesGroupGridFactory
+    ): Response {
         $taxRulesGroupGrid = $taxRulesGroupGridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Improve/International/TaxRulesGroup/index.html.twig', [
@@ -78,24 +83,25 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_tax_rules_groups_index",
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
-    public function createAction(Request $request): Response
-    {
-        $taxRulesGroupForm = $this->getFormBuilder()->getForm();
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.tax_rules_group_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.tax_rules_group_form_handler')]
+        FormHandlerInterface $formHandler
+    ): Response {
+        $taxRulesGroupForm = $formBuilder->getForm();
         $taxRulesGroupForm->handleRequest($request);
 
         try {
-            $handlerResult = $this->getFormHandler()->handle($taxRulesGroupForm);
+            $handlerResult = $formHandler->handle($taxRulesGroupForm);
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_tax_rules_groups_edit', [
                     'taxRulesGroupId' => $handlerResult->getIdentifiableObjectId(),
@@ -109,32 +115,39 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'taxRulesGroupForm' => $taxRulesGroupForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'layoutTitle' => $this->trans('New tax rule', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
     /**
      * Handles tax rules group edit
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_tax_rules_groups_index",
-     * )
-     *
      * @param Request $request
      * @param int $taxRulesGroupId
+     * @param TaxRuleFilters $filters
      *
      * @return Response
      */
-    public function editAction(Request $request, int $taxRulesGroupId): Response
-    {
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
+    public function editAction(
+        Request $request,
+        int $taxRulesGroupId,
+        TaxRuleFilters $filters,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.tax_rules_group_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.tax_rules_group_form_handler')]
+        FormHandlerInterface $formHandler,
+        #[Autowire(service: 'prestashop.core.grid.factory.tax_rule')]
+        GridFactoryInterface $taxRuleGridFactory
+    ): Response {
         $taxRulesGroupForm = null;
 
         try {
-            $taxRulesGroupForm = $this->getFormBuilder()->getFormFor((int) $taxRulesGroupId);
+            $taxRulesGroupForm = $formBuilder->getFormFor((int) $taxRulesGroupId);
             $taxRulesGroupForm->handleRequest($request);
-            $result = $this->getFormHandler()->handleFor((int) $taxRulesGroupId, $taxRulesGroupForm);
+            $result = $formHandler->handleFor((int) $taxRulesGroupId, $taxRulesGroupForm);
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_tax_rules_groups_edit', [
                     'taxRulesGroupId' => $taxRulesGroupId,
@@ -148,33 +161,33 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
+        $filters->addFilter(['taxRulesGroupId' => $taxRulesGroupId]);
+        $taxRuleGrid = $taxRuleGridFactory->getGrid($filters);
+
         return $this->render('@PrestaShop/Admin/Improve/International/TaxRulesGroup/edit.html.twig', [
             'enableSidebar' => true,
-            'layoutTitle' => $this->trans('Edit: %value%', 'Admin.Actions', ['%value%' => $taxRulesGroupForm->getData()['name']]),
+            'layoutTitle' => $this->trans('Editing tax rule %value%', ['%value%' => $taxRulesGroupForm->getData()['name']], 'Admin.Navigation.Menu'),
             'taxRulesGroupForm' => $taxRulesGroupForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'taxRuleGrid' => $this->presentGrid($taxRuleGrid),
         ]);
     }
 
     /**
      * Deletes tax rules group.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_tax_rules_groups_index",
-     * )
-     *
      * @param int $taxRulesGroupId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
     public function deleteAction(int $taxRulesGroupId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteTaxRulesGroupCommand($taxRulesGroupId));
+            $this->dispatchCommand(new DeleteTaxRulesGroupCommand($taxRulesGroupId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -186,30 +199,26 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
     /**
      * Toggles status.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_tax_rules_groups_index",
-     * )
-     *
      * @param int $taxRulesGroupId
      *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
     public function toggleStatusAction(int $taxRulesGroupId): RedirectResponse
     {
         try {
             /** @var EditableTaxRulesGroup $editableTaxRulesGroup */
-            $editableTaxRulesGroup = $this->getQueryBus()->handle(
+            $editableTaxRulesGroup = $this->dispatchQuery(
                 new GetTaxRulesGroupForEditing($taxRulesGroupId)
             );
 
-            $this->getCommandBus()->handle(
+            $this->dispatchCommand(
                 new SetTaxRulesGroupStatusCommand($taxRulesGroupId, !$editableTaxRulesGroup->isActive())
             );
 
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -223,22 +232,18 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_tax_rules_groups_index",
-     * )
-     *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
     public function bulkEnableStatusAction(Request $request): RedirectResponse
     {
         $taxRulesGroupIds = $this->getBulkTaxRulesGroupFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkSetTaxRulesGroupStatusCommand($taxRulesGroupIds, true));
+            $this->dispatchCommand(new BulkSetTaxRulesGroupStatusCommand($taxRulesGroupIds, true));
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -252,22 +257,18 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_tax_rules_groups_index",
-     * )
-     *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
     public function bulkDisableStatusAction(Request $request): RedirectResponse
     {
         $taxRulesGroupIds = $this->getBulkTaxRulesGroupFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkSetTaxRulesGroupStatusCommand($taxRulesGroupIds, false));
+            $this->dispatchCommand(new BulkSetTaxRulesGroupStatusCommand($taxRulesGroupIds, false));
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -281,22 +282,18 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_tax_rules_groups_index",
-     * )
-     *
      * @return RedirectResponse
      */
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $taxRulesGroupIds = $this->getBulkTaxRulesGroupFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteTaxRulesGroupCommand($taxRulesGroupIds));
+            $this->dispatchCommand(new BulkDeleteTaxRulesGroupCommand($taxRulesGroupIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -312,11 +309,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      */
     private function getBulkTaxRulesGroupFromRequest(Request $request): array
     {
-        $taxRulesGroupIds = $request->request->get('tax_rules_group_bulk');
-
-        if (!is_array($taxRulesGroupIds)) {
-            return [];
-        }
+        $taxRulesGroupIds = $request->request->all('tax_rules_group_bulk');
 
         return array_map('intval', $taxRulesGroupIds);
     }
@@ -330,7 +323,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_tax_rules_groups_create'),
-            'desc' => $this->trans('Add new tax rules group', 'Admin.International.Feature'),
+            'desc' => $this->trans('Add new tax rule', [], 'Admin.International.Feature'),
             'icon' => 'add_circle_outline',
         ];
 
@@ -344,20 +337,23 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages(Exception $e = null): array
+    private function getErrorMessages(?Exception $e = null): array
     {
         return [
             CannotDeleteTaxRulesGroupException::class => $this->trans(
                 'An error occurred while deleting the object.',
+                [],
                 'Admin.Notifications.Error'
             ),
             TaxRulesGroupNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotUpdateTaxRulesGroupException::class => [
                 CannotUpdateTaxRulesGroupException::FAILED_TOGGLE_STATUS => $this->trans(
                     'An error occurred while updating the status.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
@@ -365,6 +361,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 '%s: %s',
                 $this->trans(
                     'An error occurred while deleting this selection.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 $e instanceof CannotBulkDeleteTaxRulesGroupException ? implode(', ', $e->getTaxRulesGroupsIds()) : ''
@@ -373,6 +370,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
                 '%s: %s',
                 $this->trans(
                     'An error occurred while updating the status.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 $e instanceof CannotBulkUpdateTaxRulesGroupException ? implode(', ', $e->getTaxRulesGroupsIds()) : ''
@@ -380,25 +378,10 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             TaxRulesGroupConstraintException::class => [
                 TaxRulesGroupConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
         ];
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    protected function getFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.handler.tax_rules_group_form_handler');
-    }
-
-    /**
-     * @return FormBuilderInterface
-     */
-    protected function getFormBuilder(): FormBuilderInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.builder.tax_rules_group_form_builder');
     }
 }

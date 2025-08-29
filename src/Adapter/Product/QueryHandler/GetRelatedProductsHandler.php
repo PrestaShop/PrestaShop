@@ -31,11 +31,13 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetRelatedProductsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
+#[AsQueryHandler]
 class GetRelatedProductsHandler implements GetRelatedProductsHandlerInterface
 {
     /**

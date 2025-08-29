@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Core\Stock;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Product\PackItemsManager;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -38,8 +37,9 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use Product;
 use StockAvailable;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class StockManagerTest extends TestCase
+class StockManagerTest extends KernelTestCase
 {
     /**
      * @var ConfigurationInterface|MockObject
@@ -443,7 +443,7 @@ class FakePackItemsManager4759 extends PackItemsManager
         return $this->items[$item->id][$item_attribute_id];
     }
 
-    public function getStockAvailableByProduct($product, int $id_product_attribute = null, $id_shop = null)
+    public function getStockAvailableByProduct($product, ?int $id_product_attribute = null, $id_shop = null)
     {
         $id_product_attribute = $id_product_attribute ? $id_product_attribute : 0;
 

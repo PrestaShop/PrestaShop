@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Position\ValueObject\RowPosition;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductsPositionsHandlerInterface;
@@ -41,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 /**
  * Updates category position using legacy object model
  */
+#[AsCommandHandler]
 class UpdateProductsPositionsHandler implements UpdateProductsPositionsHandlerInterface
 {
     /**

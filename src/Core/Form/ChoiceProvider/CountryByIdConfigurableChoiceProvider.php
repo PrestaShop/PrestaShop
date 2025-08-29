@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -68,19 +69,16 @@ final class CountryByIdConfigurableChoiceProvider implements ConfigurableFormCho
     {
         $options = $this->resolveOptions($options);
 
-        $countries = $this->countryDataProvider->getCountries(
-            $this->langId,
-            $options['active'],
-            $options['contains_states'],
-            $options['list_states']
+        return FormChoiceFormatter::formatFormChoices(
+            $this->countryDataProvider->getCountries(
+                $this->langId,
+                $options['active'],
+                $options['contains_states'],
+                $options['list_states']
+            ),
+            'id_country',
+            'name'
         );
-
-        $choices = [];
-        foreach ($countries as $country) {
-            $choices[$country['name']] = (int) $country['id_country'];
-        }
-
-        return $choices;
     }
 
     private function resolveOptions(array $options): array

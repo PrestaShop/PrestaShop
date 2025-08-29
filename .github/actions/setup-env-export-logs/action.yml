@@ -36,6 +36,7 @@ runs:
       shell: bash
 
     - name: Export docker logs
+      if: always()
       run: |
         cd ${{ inputs.PRESTASHOP_DIR }}
         mkdir -p ./var/docker-logs
@@ -44,20 +45,23 @@ runs:
       shell: bash
 
     - name: Export front output
+      if: always()
       shell: bash
       env:
         URL_FO: ${{ (inputs.ENABLE_SSL == 'false') && 'http://localhost:8001/' || 'https://localhost:8002/' }}
         URL_PING: ${{ (inputs.INSTALL_AUTO == 'true') && 'en/' || 'install-dev/' }}
       run: |
-        wget -O ${{ inputs.PRESTASHOP_DIR }}/var/logs/front.html ${{ env.URL_FO }}${{ env.URL_PING }}
+        wget -O ${{ inputs.PRESTASHOP_DIR }}/var/logs/front.html ${{ env.URL_FO }}${{ env.URL_PING }} || echo FO not accessible
 
     - name: Sanitize artifact name
       id: sanitize-artifact-name
+      if: always()
       run: echo "ARTIFACT_NAME=$( echo -e '${{ inputs.ARTIFACT_NAME }}' | tr ':' '-' )" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Save logs in case of error
       uses: actions/upload-artifact@v4
+      if: always()
       with:
         name: ${{ steps.sanitize-artifact-name.outputs.ARTIFACT_NAME }}
         path: |

@@ -36,5 +36,5 @@ interface NavigationMenuTogglerInterface
      *
      * @param bool $shouldCollapse if true - collapse the navigation, expand it otherwise
      */
-    public function toggleNavigationMenuInCookies($shouldCollapse);
+    public function toggleNavigationMenuInCookies(bool $shouldCollapse): void;
 }

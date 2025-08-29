@@ -27,9 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type\EventListener;
 
-use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
-use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchTrait;
 use PrestaShopBundle\Form\Admin\Type\DisablingSwitchType;
+use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
+use PrestaShopBundle\Form\Extension\DisablingSwitchTrait;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Event\PreSetDataEvent;

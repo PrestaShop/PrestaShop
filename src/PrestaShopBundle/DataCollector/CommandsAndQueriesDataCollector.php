@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\ExecutedCommandRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Throwable;
 
 /**
  * Collects data about dispatched Commands/Queries during request
@@ -52,7 +53,7 @@ final class CommandsAndQueriesDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, ?Throwable $exception = null)
     {
         $this->data = [
             'executed_commands' => $this->executedCommandRegistry->getExecutedCommands(),

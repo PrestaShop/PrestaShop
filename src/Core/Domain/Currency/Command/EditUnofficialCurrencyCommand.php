@@ -29,29 +29,19 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 
-class EditUnofficialCurrencyCommand extends EditCurrencyCommand
+class EditUnofficialCurrencyCommand extends AbstractEditCurrencyCommand
 {
-    /**
-     * @var AlphaIsoCode|null
-     */
-    private $isoCode;
+    private ?AlphaIsoCode $isoCode = null;
 
-    /**
-     * @return AlphaIsoCode|null
-     */
-    public function getIsoCode()
+    public function getIsoCode(): ?AlphaIsoCode
     {
         return $this->isoCode;
     }
 
     /**
-     * @param string $isoCode
-     *
-     * @return self
-     *
      * @throws CurrencyConstraintException
      */
-    public function setIsoCode($isoCode)
+    public function setIsoCode(string $isoCode): self
     {
         $this->isoCode = new AlphaIsoCode($isoCode);
 

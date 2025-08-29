@@ -1,7 +1,3 @@
-_mail_theme_deprecated:
-  resource: "_mail_theme_deprecated.yml"
-  prefix: /
-
 admin_mail_theme_index:
   path: /
   methods: [ GET ]

@@ -24,8 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-$documentationLink = 'https://devdocs.prestashop.com/';
-$blogLink = 'https://build.prestashop.com/';
+$documentationLink = 'https://devdocs.prestashop-project.org/';
+$blogLink = 'https://build.prestashop-project.org/';
 
 return [
     'links' => [

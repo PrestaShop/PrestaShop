@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\OrderMessage\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\OrderMessage\AbstractOrderMessageHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\BulkDeleteOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\CommandHandler\BulkDeleteOrderMessageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageException;
@@ -37,6 +38,7 @@ use PrestaShopException;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class BulkDeleteOrderMessageHandler extends AbstractOrderMessageHandler implements BulkDeleteOrderMessageHandlerInterface
 {
     /**
@@ -51,7 +53,7 @@ final class BulkDeleteOrderMessageHandler extends AbstractOrderMessageHandler im
                 if (false === $orderMessage->delete()) {
                     throw new OrderMessageException(sprintf('Failed to delete Order message with id "%d" during bulk delete', $orderMessage->id), OrderMessageException::FAILED_BULK_DELETE);
                 }
-            } catch (PrestaShopException $e) {
+            } catch (PrestaShopException) {
                 throw new OrderMessageException(sprintf('Failed to delete Order message with id "%s"', $orderMessage->id));
             }
         }

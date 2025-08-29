@@ -26,6 +26,8 @@
 
 use PrestaShopBundle\Install\Install;
 use PrestaShopBundle\Install\XmlLoader;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 
 class InstallControllerHttpProcess extends InstallControllerHttp implements HttpConfigureInterface
 {
@@ -71,6 +73,11 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         require_once _PS_ROOT_DIR_ . '/config/smarty.config.inc.php';
 
         Context::getContext()->smarty = $smarty;
+
+        $container = SymfonyContainer::getInstance();
+        /** @var ContextBuilderPreparer $preparer */
+        $preparer = $container->get(ContextBuilderPreparer::class);
+        $preparer->prepareFromLegacyContext(Context::getContext());
     }
 
     public function process(): void
@@ -108,6 +115,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                 $this->processInstallFixtures();
             } elseif (Tools::getValue('postInstall') && (!$validateFixturesInstallation || $fixturesInstalled)) {
                 $this->processPostInstall();
+            } elseif (Tools::getValue('finalize') && !empty($this->session->process_validated['postInstall'])) {
+                $this->processFinalize();
             }
         } catch (\Exception $e) {
             if (_PS_MODE_DEV_) {
@@ -212,7 +221,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
         $success = $this->model_install->configureShop([
             'shop_name' => $this->session->shop_name,
-            'shop_activity' => $this->session->shop_activity,
             'shop_country' => $this->session->shop_country,
             'shop_timezone' => $this->session->shop_timezone,
             'admin_firstname' => $this->session->admin_firstname,
@@ -265,6 +273,18 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->ajaxJsonAnswer(true);
     }
 
+    public function processFinalize(): void
+    {
+        $this->initializeContext();
+        $result = $this->model_install->finalize($this->session->adminFolderName);
+
+        if (!$result || $this->model_install->getErrors()) {
+            $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
+        }
+
+        $this->ajaxJsonAnswer(true);
+    }
+
     /**
      * PROCESS : installFixtures
      * Install fixtures (E.g. demo products)
@@ -274,7 +294,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->initializeContext();
 
         $this->model_install->xml_loader_ids = $this->session->xml_loader_ids;
-        if (!$this->model_install->installFixtures(Tools::getValue('entity', null), ['shop_activity' => $this->session->shop_activity, 'shop_country' => $this->session->shop_country]) || $this->model_install->getErrors()) {
+        if (!$this->model_install->installFixtures(Tools::getValue('entity', null), ['shop_country' => $this->session->shop_country]) || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
         $this->session->xml_loader_ids = $this->model_install->xml_loader_ids;
@@ -304,7 +324,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
      */
     public function display(): void
     {
-        $memoryLimit = Tools::getMemoryLimit();
         // We fill the process step used for Ajax queries
         $this->process_steps[] = ['key' => 'generateSettingsFile', 'lang' => $this->translator->trans('Create file parameters', [], 'Install')];
         $this->process_steps[] = ['key' => 'installDatabase', 'lang' => $this->translator->trans('Create database tables', [], 'Install')];
@@ -332,6 +351,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         }
 
         $this->process_steps[] = ['key' => 'postInstall', 'lang' => $this->translator->trans('Post installation scripts', [], 'Install')];
+        $this->process_steps[] = ['key' => 'finalize', 'lang' => $this->translator->trans('Finalization', [], 'Install')];
 
         $this->displayContent('process');
     }

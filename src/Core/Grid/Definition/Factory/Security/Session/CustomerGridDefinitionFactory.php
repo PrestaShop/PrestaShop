@@ -90,7 +90,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName(): string
     {
-        return $this->trans('Customer Sessions', [], 'Admin.Navigation.Menu');
+        return $this->trans('Customer sessions', [], 'Admin.Navigation.Menu');
     }
 
     /**
@@ -213,7 +213,6 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('id_customer_session', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
-                        'size' => 'small',
                         'attr' => [
                             'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
                         ],
@@ -224,9 +223,8 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('id_customer', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
-                        'size' => 'small',
                         'attr' => [
-                            'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                            'placeholder' => $this->trans('Customer ID', [], 'Admin.Actions'),
                         ],
                     ])
                     ->setAssociatedColumn('id_customer')

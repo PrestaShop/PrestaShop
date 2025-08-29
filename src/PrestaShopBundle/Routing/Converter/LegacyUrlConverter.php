@@ -73,14 +73,6 @@ final class LegacyUrlConverter
      */
     public function convertByParameters(array $parameters)
     {
-        //Tab parameter can be used as an alias for controller
-        if (!empty($parameters['tab'])) {
-            if (empty($parameters['controller'])) {
-                $parameters['controller'] = $parameters['tab'];
-            }
-            unset($parameters['tab']);
-        }
-
         if (empty($parameters['controller'])) {
             throw new ArgumentException('Missing required controller argument');
         }
@@ -133,9 +125,22 @@ final class LegacyUrlConverter
         $this->router->getContext()->fromRequest($request);
         $this->checkAlreadyMatchingRoute($request->getRequestUri());
 
-        $parameters = array_merge($request->query->all(), $request->request->all());
+        // We can't use convertByParameters with the combined parameters, or the POST parameters will be added
+        // in the redirection URL, so we do check for the validity of parameters and the matching route based on
+        // all the parameters
+        $allParameters = $request->query->all() + $request->request->all();
+        if (empty($allParameters['controller'])) {
+            throw new ArgumentException('Missing required controller argument');
+        }
 
-        return $this->convertByParameters($parameters);
+        /** @var LegacyRoute $legacyRoute */
+        $legacyRoute = $this->findLegacyRouteNameByParameters($allParameters);
+
+        // But only query parameters are used to generate the new URL, so we clean them (remove controller, action, ...)
+        // the POST parameters will remain unchanged in the 308 redirection
+        $queryParameters = $this->convertLegacyParameters($request->query->all(), $legacyRoute);
+
+        return $this->router->generate($legacyRoute->getRouteName(), $queryParameters, UrlGeneratorInterface::ABSOLUTE_URL);
     }
 
     /**
@@ -149,7 +154,7 @@ final class LegacyUrlConverter
         $legacyAction = $this->getActionFromParameters($parameters);
 
         foreach ($legacyRoute->getRouteParameters() as $legacyParameter => $parameter) {
-            if (isset($parameters[$legacyParameter])) {
+            if (isset($parameters[$legacyParameter]) && !isset($parameters[$parameter])) {
                 $parameters[$parameter] = $parameters[$legacyParameter];
                 unset($parameters[$legacyParameter]);
             }
@@ -192,9 +197,9 @@ final class LegacyUrlConverter
             $legacyAction = $parameters['action'];
         }
 
-        //Actions can be defined as simple query parameter (e.g: ?controller=AdminProducts&save)
+        // Actions can be defined as simple query parameter (e.g: ?controller=AdminProducts&save)
         if (null === $legacyAction) {
-            //We prioritize the actions defined in the migrated routes
+            // We prioritize the actions defined in the migrated routes
             $controllerActions = $this->legacyRouteProvider->getActionsByController($parameters['controller']);
             foreach ($parameters as $parameter => $value) {
                 if (in_array($parameter, $controllerActions)) {
@@ -205,17 +210,17 @@ final class LegacyUrlConverter
             }
         }
 
-        //Last chance if a non migrated action is present (note: a bit risky since any empty parameter can be
-        //interpreted as an action.. but some old link need this feature, ?controller=AdminModulesPositions&addToHook)
+        // Last chance if a non migrated action is present (note: a bit risky since any empty parameter can be
+        // interpreted as an action.. but some old link need this feature, ?controller=AdminModulesPositions&addToHook)
         if (null === $legacyAction) {
             foreach ($parameters as $parameter => $value) {
                 if ($value === '' || $value === '1' || $value === 1) {
-                    //Avoid confusing an entity/row id with an action
+                    // Avoid confusing an entity/row id with an action
                     // e.g.
                     //  create=1 is an action
                     //  id_product=1 is NOT an action
-                    if (false === strpos($parameter, 'id_')
-                        && false === strpos($parameter, '_id')) {
+                    if (!str_contains($parameter, 'id_')
+                        && !str_contains($parameter, '_id')) {
                         $legacyAction = $parameter;
 
                         break;
@@ -243,7 +248,7 @@ final class LegacyUrlConverter
                 $this->router->match($urlPath);
                 throw new AlreadyConvertedException(sprintf('%s is already a converted url', $url));
             }
-        } catch (ExceptionInterface $e) {
+        } catch (ExceptionInterface) {
         }
     }
 }

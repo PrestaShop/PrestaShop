@@ -23,10 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-/**
- * @since 1.5.0
- */
 abstract class ModuleAdminControllerCore extends AdminController
 {
     /** @var Module */
@@ -94,27 +90,5 @@ abstract class ModuleAdminControllerCore extends AdminController
             $templatePath . $this->override_folder,
             $templatePath,
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @deprecated Use $this->trans instead
-     */
-    protected function l($string, $class = null, $addslashes = false, $htmlentities = true)
-    {
-        $translated = parent::l($string, $class, $addslashes, $htmlentities);
-
-        if ($translated === $string) {
-            // legacy fallback
-
-            if ($class === null || $class == 'AdminTab') {
-                $class = get_class($this);
-            }
-
-            $translated = Translate::getModuleTranslation($this->module->name, $string, $class, null, $addslashes, null, true, $htmlentities);
-        }
-
-        return $translated;
     }
 }

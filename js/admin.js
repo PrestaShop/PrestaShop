@@ -228,53 +228,6 @@ function changeFormLanguage(id_language_new, iso_code, employee_cookie)
   updateCurrentText();
 }
 
-function displayFlags(languages, defaultLanguageID, employee_cookie)
-{
-  if ($('.translatable'))
-  {
-    $('.translatable').each(function() {
-      if (!$(this).find('.displayed_flag').length > 0) {
-        $.each(languages, function(key, language) {
-          if (language['id_lang'] == defaultLanguageID)
-          {
-            defaultLanguage = language;
-            return false;
-          }
-        });
-        var displayFlags = $('<div></div>')
-          .addClass('displayed_flag')
-          .append($('<img>')
-            .addClass('language_current')
-            .addClass('pointer')
-            .attr('src', '../img/l/' + defaultLanguage['id_lang'] + '.jpg')
-            .attr('alt', defaultLanguage['name'])
-            .click(function() {
-              toggleLanguageFlags(this);
-            })
-          );
-        var languagesFlags = $('<div></div>')
-          .addClass('language_flags')
-          .html(choose_language_translate+':<br /><br />');
-        $.each(languages, function(key, language) {
-          var img = $('<img>')
-            .addClass('pointer')
-            .css('margin', '2px 2px')
-            .attr('src', '../img/l/' + language['id_lang'] + '.jpg')
-            .attr('alt', language['name'])
-            .click(function() {
-              changeFormLanguage(language['id_lang'], language['iso_code'], employee_cookie);
-            });
-          languagesFlags.append(img);
-        });
-        if ($(this).find('p:last-child').hasClass('clear'))
-          $(this).find('p:last-child').before(displayFlags).before(languagesFlags);
-        else
-          $(this).append(displayFlags).append(languagesFlags);
-      }
-    });
-  }
-}
-
 function checkAll(pForm)
 {
   for (i = 0, n = pForm.elements.length; i < n; i++)
@@ -444,7 +397,6 @@ function stockManagementActivationAuthorization()
     getE('PS_ORDER_OUT_OF_STOCK_on').checked = true;
     getE('PS_ORDER_OUT_OF_STOCK_on').disabled = 'disabled';
     getE('PS_ORDER_OUT_OF_STOCK_off').disabled = 'disabled';
-    getE('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT').disabled = 'disabled';
   }
 }
 
@@ -671,7 +623,7 @@ function showNoticeMessage(msg) {
   $.growl.notice({ title: "", message:msg});
 }
 
-$(document).ready(function()
+$(function()
 {
   if (typeof helper_tabs != 'undefined' && typeof unique_field_id != 'undefined')
   {
@@ -763,10 +715,13 @@ $(document).ready(function()
       clearTimeout(ajax_running_timeout);
     });
 
-  bindTabModuleListAction();
+  // Ensure the spinner is hidden if no AJAX requests are running when the page loads
+  if ($.active === 0) {
+    $('#ajax_running').hide();
+  }
 
   //Check filters value on submit filter
-  $("[name='submitFilter']").click(function(event) {
+  $("[name='submitFilter']").on('click', function(event) {
     var list_id = $(this).data('list-id');
     var empty_filters = true;
 
@@ -789,42 +744,6 @@ $(document).ready(function()
       $('#'+list_id+'-empty-filters-alert').show();
     }
   });
-
-  var message = $('.toolbarHead');
-  var view = $(window);
-
-  // bind only if message exists. placeholder will be its parent
-  view.bind("scroll resize", function(e)
-  {
-    message.each(function(el){
-      if (message.length)
-      {
-        placeholder = $(this).parent();
-        if (e.type == 'resize')
-          $(this).css('width', $(this).parent().width());
-
-        placeholderTop = placeholder.offset().top;
-        var viewTop = view.scrollTop() + 15;
-        // here we force the toolbar to be "not fixed" when
-        // the height of the window is really small (toolbar hiding the page is not cool)
-        window_is_more_than_twice_the_toolbar  = view.height() > message.parent().height() * 2;
-        if (!$(this).hasClass("fix-toolbar") && (window_is_more_than_twice_the_toolbar && (viewTop > placeholderTop)))
-        {
-          $(this).css('width', $(this).width());
-          // fixing parent height will prevent that annoying "pagequake" thing
-          // the order is important : this has to be set before adding class fix-toolbar
-          $(this).parent().css('height', $(this).parent().height());
-          $(this).addClass("fix-toolbar");
-        }
-        else if ($(this).hasClass("fix-toolbar") && (!window_is_more_than_twice_the_toolbar || (viewTop <= placeholderTop)) )
-        {
-          $(this).removeClass("fix-toolbar");
-          $(this).removeAttr('style');
-          $(this).parent().removeAttr('style');
-        }
-      }
-    });
-  }); // end bind
 
   // if count errors
   $('#hideError').on('click', function(e)
@@ -868,7 +787,7 @@ $(document).ready(function()
       bindSwapButton('add', 'available', 'selected', this);
       bindSwapButton('remove', 'selected', 'available', this);
 
-      $('button:submit').click(function() {
+      $('button:submit').on('click', function() {
         bindSwapSave(swap_container);
       });
     }
@@ -903,23 +822,6 @@ function bindSwapButton(prefix_button, prefix_select_remove, prefix_select_add, 
   });
 }
 
-function bindTabModuleListAction()
-{
-  $('.action_tab_module').each( function (){
-    $(this).click(function () {
-      option = $('#'+$(this).data('option')+' :selected');
-      if ($(option).data('onclick') != '')
-      {
-        var f = eval("(function(){ "+$(option).data('onclick')+"})");
-        if (f.call())
-          window.location.href = $(option).data('href');
-      }
-      else
-        window.location.href = $(option).data('href');
-      return false;
-    });
-  });
-}
 
 // Delete all tags HTML
 function stripHTML(oldString)
@@ -1164,86 +1066,27 @@ function getControllerActionMap(force_action) {
   return new Array('back-office',controller, action);
 }
 
-function openModulesList()
-{
-
-  if (!modules_list_loaded)
-  {
-    header = $('#modules_list_container .modal-header').html();
-
-    $.ajax({
-      type: "GET",
-      url : admin_modules_link,
-      async: true,
-      data : {
-        ajax : "1",
-        controller : "AdminModules",
-        action : "getTabModulesList",
-        tab_modules_list : tab_modules_list,
-        back_tab_modules_list : window.location.href,
-        admin_list_from_source : getControllerActionMap().join()
-      },
-      success : function(data)
-      {
-        $('#modules_list_container_tab_modal').html(data).slideDown();
-        $('#modules_list_loader').hide();
-        modules_list_loaded = data;
-        $('.help-tooltip').tooltip();
-        controllerQuickView();
-      }
-    });
-  }
-  else
-  {
-    $('#modules_list_container_tab_modal').html(modules_list_loaded).slideDown();
-    $('#modules_list_loader').hide();
-    $('#modules_list_container .modal-header').html(header);
-    controllerQuickView();
-  }
-  return false;
-}
-
-function controllerQuickView()
-{
-  $('.controller-quick-view').click(function()
-  {
-    $.ajax({
-      type: "POST",
-      url : admin_modules_link,
-      dataType: 'json',
-      async: true,
-      data : {
-        ajax : "1",
-        controller : "AdminModules",
-        action : "GetModuleReadMoreView",
-        module: $(this).data("name"),
-      },
-      success : function(data)
-      {
-        $('#modules_list_container_tab_modal').html(data.body);
-        $('#modules_list_container .modal-header').html(data.header);
-      }
-    });
-  });
-}
-
 function ajaxStates(id_state_selected)
 {
   $.ajax({
-    url: "index.php",
+    url: `${$('#contains_states').data('statesUrl')}&id_country=${$('#id_country').val()}`,
     cache: false,
-    data: "token="+state_token+"&ajax=1&action=states&tab=AdminStates&no_empty=0&id_country="+$('#id_country').val() + "&id_state=" + $('#id_state').val(),
-    success: function(html)
+    success: function(response)
     {
-      if (html == 'false')
-      {
-        $("#contains_states").fadeOut();
+      var $stateIdSelect = $("#id_state");
+      var $stateSelectorRow = $("#contains_states");
+
+      if (!response.states || response.states.length === 0) {
+        $stateSelectorRow.fadeOut();
+        // append initial empty value which is selected (and hidden) when there are no states
+        $stateIdSelect.append(`<option value="0">-</option>`);
         $('#id_state option[value=0]').attr("selected", "selected");
-      }
-      else
-      {
-        $("#id_state").html(html);
-        $("#contains_states").fadeIn();
+      } else {
+        $stateIdSelect.empty();
+        for (const [name, id] of Object.entries(response.states)) {
+          $stateIdSelect.append(`<option value="${id}">${name}</option>`)
+        }
+        $stateSelectorRow.fadeIn();
         $('#id_state option[value=' + id_state_selected + ']').attr("selected", "selected");
       }
     }
@@ -1251,11 +1094,16 @@ function ajaxStates(id_state_selected)
 }
 
 function dniRequired() {
+  var countryId = $('#id_country').val();
+  if (!countryId) {
+    return;
+  }
+
   $.ajax({
     url: 'index.php',
     dataType: 'json',
     cache: false,
-    data: 'token=' + address_token + '&ajax=1&dni_required=1&tab=AdminAddresses&id_country=' + $('#id_country').val(),
+    data: 'token=' + address_token + '&ajax=1&dni_required=1&controller=AdminAddresses&id_country=' + countryId,
     success: function(resp) {
       if (resp && resp.dni_required) {
         $("#dni_required").fadeIn();
@@ -1355,7 +1203,7 @@ function verifyMail(testMsg, testSubject)
         "testSubject" : textSubject,
         "token"     : token_mail,
         "ajax"      : 1,
-        "tab"       : 'AdminEmails',
+        "controller"       : 'AdminEmails',
         "action"      : 'sendMailTest'
       },
        success: function(ret)
@@ -1514,7 +1362,7 @@ function countDown($source, $target) {
   var max = $source.attr("data-maxchar");
   $target.html(max-$source.val().length);
 
-  $source.keyup(function(){
+  $source.on('keyup', function(){
     $target.html(max-$source.val().length);
   });
 }

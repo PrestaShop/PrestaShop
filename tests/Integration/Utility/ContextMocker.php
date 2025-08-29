@@ -120,7 +120,7 @@ class ContextMocker
         Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
         $context->customer = new Customer();
         $context->cookie = new Cookie('mycookie');
-        $context->country = new Country((int) Configuration::get('PS_LANG_DEFAULT'));
+        $context->country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
         $context->language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
         // Use super admin employee by default
         $context->employee = new Employee(1);

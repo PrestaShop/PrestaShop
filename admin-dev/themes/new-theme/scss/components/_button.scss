@@ -2,17 +2,7 @@
   white-space: normal;
 
   &.btn-action {
-    color: #576c72;
-    background-color: $white;
-    @include border-radius(4px);
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-
-    &:disabled,
-    &.disabled {
-      color: $white;
-      background-color: #ddd;
-      box-shadow: none;
-    }
+    @include ps-button-outline-variant(var(--#{$cdk}primary-500), var(--#{$cdk}primary-800), "secondary");
   }
 }
 

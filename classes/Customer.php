@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 
 /***
  * Class CustomerCore
@@ -161,8 +162,8 @@ class CustomerCore extends ObjectModel
             'id_lang' => ['xlink_resource' => 'languages'],
             'newsletter_date_add' => [],
             'ip_registration_newsletter' => [],
-            'last_passwd_gen' => ['setter' => null],
-            'secure_key' => ['setter' => null],
+            'last_passwd_gen' => ['setter' => false],
+            'secure_key' => ['setter' => false],
             'deleted' => [],
             'passwd' => ['setter' => 'setWsPasswd'],
         ],
@@ -178,7 +179,7 @@ class CustomerCore extends ObjectModel
         'table' => 'customer',
         'primary' => 'id_customer',
         'fields' => [
-            'secure_key' => ['type' => self::TYPE_STRING, 'validate' => 'isMd5', 'copy_post' => false],
+            'secure_key' => ['type' => self::TYPE_STRING, 'validate' => 'isMd5', 'copy_post' => false, 'size' => 32],
             'lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'required' => true, 'size' => 255],
             'firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'required' => true, 'size' => 255],
             'email' => ['type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255],
@@ -188,19 +189,19 @@ class CustomerCore extends ObjectModel
             'birthday' => ['type' => self::TYPE_DATE, 'validate' => 'isBirthDate'],
             'newsletter' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'newsletter_date_add' => ['type' => self::TYPE_DATE, 'copy_post' => false],
-            'ip_registration_newsletter' => ['type' => self::TYPE_STRING, 'copy_post' => false],
+            'ip_registration_newsletter' => ['type' => self::TYPE_STRING, 'copy_post' => false, 'size' => 15],
             'optin' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'website' => ['type' => self::TYPE_STRING, 'validate' => 'isUrl'],
-            'company' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
-            'siret' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
-            'ape' => ['type' => self::TYPE_STRING, 'validate' => 'isApe'],
+            'website' => ['type' => self::TYPE_STRING, 'validate' => 'isUrl', 'size' => 128],
+            'company' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
+            'siret' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 14],
+            'ape' => ['type' => self::TYPE_STRING, 'validate' => 'isApe', 'size' => 6],
             'outstanding_allow_amount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'copy_post' => false],
             'show_public_prices' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
             'id_risk' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false],
             'max_payment_days' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'copy_post' => false],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
-            'note' => ['type' => self::TYPE_HTML, 'size' => 4194303, 'copy_post' => false],
+            'note' => ['type' => self::TYPE_HTML, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4, 'copy_post' => false],
             'is_guest' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false],
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false],
             'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false],
@@ -287,12 +288,13 @@ class CustomerCore extends ObjectModel
      */
     public function addWs($autodate = true, $null_values = false)
     {
-        if (Customer::customerExists($this->email)) {
+        // Check if registered customer exists with the email we are trying to add
+        if (!$this->isGuest() && Customer::customerExists($this->email)) {
             WebserviceRequest::getInstance()->setError(
                 500,
                 $this->trans(
                     'The email is already used, please choose another one',
-                     [],
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 140
@@ -321,9 +323,6 @@ class CustomerCore extends ObjectModel
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
         }
-        if (isset(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin') {
-            $this->updateGroup($this->groupBox);
-        }
 
         if ($this->deleted) {
             $addresses = $this->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -334,14 +333,7 @@ class CustomerCore extends ObjectModel
             }
         }
 
-        try {
-            return parent::update(true);
-        } catch (\PrestaShopException $exception) {
-            $message = $exception->getMessage();
-            error_log($message);
-
-            return false;
-        }
+        return parent::update(true);
     }
 
     /**
@@ -356,9 +348,10 @@ class CustomerCore extends ObjectModel
      */
     public function updateWs($nullValues = false)
     {
-        if (Customer::customerExists($this->email)
-            && Customer::customerExists($this->email, true) !== (int) $this->id
-        ) {
+        // Check if registered customer exists with the email we are trying to add.
+        // Also check if the customer found is a different customer than our object.
+        $customerExists = (int) Customer::customerExists($this->email, true);
+        if (!$this->isGuest() && $customerExists > 0 && $customerExists !== (int) $this->id) {
             WebserviceRequest::getInstance()->setError(
                 500,
                 $this->trans(
@@ -395,7 +388,7 @@ class CustomerCore extends ObjectModel
         Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'message WHERE id_customer=' . (int) $this->id);
         Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'specific_price WHERE id_customer=' . (int) $this->id);
 
-        $carts = Db::getInstance()->executeS('SELECT id_cart FROM ' . _DB_PREFIX_ . 'cart WHERE id_customer=' . (int) $this->id);
+        $carts = Db::getInstance()->executeS('SELECT id_cart FROM ' . _DB_PREFIX_ . 'cart WHERE id_customer=' . (int) $this->id . ' AND id_cart NOT IN (SELECT id_cart FROM `' . _DB_PREFIX_ . 'orders`)');
         if ($carts) {
             foreach ($carts as $cart) {
                 Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'cart WHERE id_cart=' . (int) $cart['id_cart']);
@@ -444,12 +437,12 @@ class CustomerCore extends ObjectModel
      *
      * @return bool|Customer|CustomerCore Customer instance
      *
-     * @throws \InvalidArgumentException if given input is not valid
+     * @throws InvalidArgumentException if given input is not valid
      */
     public function getByEmail($email, $plaintextPassword = null, $ignoreGuest = true)
     {
         if (!Validate::isEmail($email)) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Cannot get customer by email as %s is not a valid email',
                 $email
             ));
@@ -475,7 +468,7 @@ class CustomerCore extends ObjectModel
         $passwordHash = Db::getInstance()->getValue($sql);
 
         try {
-            /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+            /** @var PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
             $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
         } catch (CoreException $e) {
             return false;
@@ -829,7 +822,7 @@ class CustomerCore extends ObjectModel
     public static function checkPassword($idCustomer, $passwordHash)
     {
         if (!Validate::isUnsignedId($idCustomer)) {
-            die(Tools::displayError('Customer ID is invalid.'));
+            throw new PrestaShopException('Customer ID is invalid.');
         }
 
         // Check that customers password hasn't changed since last login
@@ -1166,7 +1159,7 @@ class CustomerCore extends ObjectModel
      *
      * @return int Country ID
      */
-    public static function getCurrentCountry($idCustomer, Cart $cart = null)
+    public static function getCurrentCountry($idCustomer, ?Cart $cart = null)
     {
         if (!$cart) {
             $cart = Context::getContext()->cart;
@@ -1217,21 +1210,21 @@ class CustomerCore extends ObjectModel
 
         $this->is_guest = false;
 
+        /** @var PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
+
         /*
         * If this is an anonymous conversion and we want the customer to set his own password,
-        * we set a random one for now.
+        * we set a random one for now. If a password was provided, we check it's validity.
         */
         if (empty($password)) {
-            $password = Tools::passwdGen(16, 'RANDOM');
+            $this->passwd = $crypto->hash(Tools::passwdGen(16, 'RANDOM'));
         } else {
             if (!Validate::isAcceptablePasswordLength($password) || !Validate::isAcceptablePasswordScore($password)) {
                 return false;
             }
+            $this->passwd = $crypto->hash($password);
         }
-
-        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
-        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-        $this->passwd = $crypto->hash($password);
 
         /*
         * Now, we need to update his group. The guest should have had a PS_GUEST_GROUP previously, but if
@@ -1249,27 +1242,61 @@ class CustomerCore extends ObjectModel
             return false;
         }
 
+        // If it's an anonymous conversion, we send him a link to set his new password.
+        // Otherwise, just a welcome email, if configured.
+        if (empty($password)) {
+            $this->sendWelcomeEmail($idLang, true);
+        } elseif (Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {
+            $this->sendWelcomeEmail($idLang);
+        }
+
+        return true;
+    }
+
+    /**
+     * Sends an informational email to the customer, to notify him that
+     * his account was created.
+     *
+     * This email can optionally contain a link to set his new password.
+     *
+     * @param int $idLang Language ID to send the email in
+     * @param bool $sendPasswordLink Should a template with a password reset link be used
+     *
+     * @return bool If the mail was sent successfully
+     */
+    public function sendWelcomeEmail(int $idLang, bool $sendPasswordLink = false)
+    {
+        // Use provided lang ID, or take the one from context
         $language = new Language($idLang);
         if (!Validate::isLoadedObject($language)) {
             $language = Context::getContext()->language;
         }
 
-        /*
-        * Now, we will send out an email where he can set his new password.
-        *
-        * TODO:
-        * This 'guest_to_customer' email should be sent only if password was not provided. Otherwise,
-        * it should send an 'account' email without an URL. This is what CustomerPersister does. (These functions
-        * should be unified.)
-        *
-        * OrderConfirmationController and GuestTrackingController call this logic with a password and user still
-        * receives the below email, that should be changed.
-        */
+        // Build basic email variables
+        $template = 'account';
+        $subject = Context::getContext()->getTranslator()->trans(
+            'Welcome!',
+            [],
+            'Emails.Subject',
+            $language->locale
+        );
         $vars = [
             '{firstname}' => $this->firstname,
             '{lastname}' => $this->lastname,
             '{email}' => $this->email,
-            '{url}' => Context::getContext()->link->getPageLink(
+        ];
+
+        // If we are also sending a link to password, we will alter the template,
+        // change subject and add password URL to variables.
+        if ($sendPasswordLink) {
+            $template = 'guest_to_customer';
+            $subject = Context::getContext()->getTranslator()->trans(
+                'Your guest account has been transformed into a customer account',
+                [],
+                'Emails.Subject',
+                $language->locale
+            );
+            $vars['{url}'] = Context::getContext()->link->getPageLink(
                 'password',
                 null,
                 null,
@@ -1279,17 +1306,13 @@ class CustomerCore extends ObjectModel
                     (int) $this->id,
                     $this->reset_password_token
                 )
-            ),
-        ];
-        Mail::Send(
+            );
+        }
+
+        return Mail::Send(
             (int) $idLang,
-            'guest_to_customer',
-            Context::getContext()->getTranslator()->trans(
-                'Your guest account has been transformed into a customer account',
-                [],
-                'Emails.Subject',
-                $language->locale
-            ),
+            $template,
+            $subject,
             $vars,
             $this->email,
             $this->firstname . ' ' . $this->lastname,
@@ -1301,8 +1324,6 @@ class CustomerCore extends ObjectModel
             false,
             (int) $this->id_shop
         );
-
-        return true;
     }
 
     /**
@@ -1315,7 +1336,7 @@ class CustomerCore extends ObjectModel
      */
     public function setWsPasswd($passwd)
     {
-        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
+        /** @var PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
         $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
         if ($this->id == 0 || $this->passwd != $passwd) {
             $this->passwd = $crypto->hash($passwd);
@@ -1326,8 +1347,6 @@ class CustomerCore extends ObjectModel
 
     /**
      * Check customer information and return customer validity.
-     *
-     * @since 1.5.0
      *
      * @param bool $withGuest
      *
@@ -1351,8 +1370,6 @@ class CustomerCore extends ObjectModel
 
     /**
      * Logout.
-     *
-     * @since 1.5.0
      */
     public function logout()
     {
@@ -1371,8 +1388,6 @@ class CustomerCore extends ObjectModel
     /**
      * Soft logout, delete everything that links to the customer
      * but leave there affiliate's information.
-     *
-     * @since 1.5.0
      */
     public function mylogout()
     {
@@ -1405,27 +1420,6 @@ class CustomerCore extends ObjectModel
         $cart = new Cart((int) $cart['id_cart']);
 
         return $cart->nbProducts() === 0 ? (int) $cart->id : false;
-    }
-
-    /**
-     * Validate controller and check password
-     *
-     * @param bool $htmlentities
-     *
-     * @return array
-     *
-     * @deprecated 8.1.0 The password check has been moved in controllers and this method is not called anywhere since 1.7.0
-     */
-    public function validateController($htmlentities = true)
-    {
-        $errors = parent::validateController($htmlentities);
-        /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
-        $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-        if ($value = Tools::getValue('passwd')) {
-            $this->passwd = $crypto->hash($value);
-        }
-
-        return $errors;
     }
 
     /**

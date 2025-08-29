@@ -1,0 +1,156 @@
+html,
+body {
+  height: auto;
+}
+
+html {
+  scroll-behavior: smooth;
+  padding: 0 0 2rem 0;
+}
+
+body {
+  background-color: #ffffff;
+}
+
+#switch_btn_styles {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  right: 1rem;
+  top: 1rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: #333333;
+  background-color: #ebb6b6;
+  border-radius: 0.5rem;
+  border: none;
+  transition: all 0.3s;
+  
+  &:before {
+    content: '';
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: 1px solid rgba(255 255 255 / 0.85);
+    background-color: red;
+    transition: all 0.3s 0.15s;
+  }
+  
+  &:hover {
+    background-color: #f1cfcf;
+  }
+  
+  &:not(.active) {
+    background-color: #b6ebb7;
+    
+    &:before {
+      content: '';
+      display: block;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+      border: 1px solid rgba(255 255 255 / 0.85);
+      background-color: green;
+      transform: rotateY(180deg);
+    }
+    
+    &:hover {
+      background-color: rgb(203, 245, 204);
+    }
+  }
+}
+
+/* Summary */
+#summary {
+  position: fixed;
+  z-index: 9;
+  left: 1rem;
+  top: 1rem;
+  min-width: 140px;
+  font-size: 0.875rem;
+  padding-block: 0.5rem;
+  color: #333333;
+  background-color: #f3f3f3;
+  border-radius: 0.5rem;
+  border: none;
+  
+  ul {
+    display: flex;
+    gap: 0.125rem;
+    flex-direction: column;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    a {
+      color: #333333;
+      text-decoration: none;
+      transition: all 0.3s;
+      padding: 0.125rem 0.5rem;
+      border-left: 3px solid transparent;
+
+      &:hover {
+        color: blue;
+      }
+
+      &:active,
+      &.active {
+        color: blue;
+        border-color: blue;
+      }
+    }
+  }
+}
+
+/* Dropdown open demo */
+.theme-dropdown .dropdown-menu {
+  position: static;
+  display: block;
+}
+
+/* Title */
+h1, h2, h3, h4, h5, h6 {
+  &.custom {
+    font-weight: 700;
+    color: #222222;
+    padding: 1rem 0;
+    margin: 2.5rem 0 1rem 0;
+    border-bottom: 2px solid #dddddd;
+    clear: both;
+  }
+}
+
+h2, h3, h4, h5, h6 {
+  &.custom {
+    color: #808080;
+    padding-bottom: 0.5rem;
+    margin-top: 1.25rem;
+    border-color: #eeeeee;
+  }
+}
+
+h3 {
+  &.custom {
+    color: #333;
+    padding-bottom: 0.5rem;
+    margin-top: 1rem;
+    border: none;
+  }
+}
+
+/* Tools */
+.d-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.h-spacer {
+  margin-right: 1rem;
+}
+
+.v-spacer {
+  margin-bottom: 1rem;
+}

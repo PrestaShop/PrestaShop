@@ -33,7 +33,7 @@ class IndexControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
         $this->context->smarty->assign([
@@ -45,7 +45,7 @@ class IndexControllerCore extends FrontController
     /**
      * {@inheritdoc}
      */
-    public function getCanonicalURL()
+    public function getCanonicalURL(): string
     {
         return $this->context->link->getPageLink('index');
     }

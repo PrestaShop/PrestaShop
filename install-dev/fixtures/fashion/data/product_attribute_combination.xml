@@ -42,15 +42,15 @@
     <product_attribute_combination id="product_attribute_combination_11_84" id_attribute="Black" id_product_attribute="product_attribute_84"/>
     <product_attribute_combination id="product_attribute_combination_28_85" id_attribute="Ruled" id_product_attribute="product_attribute_85"/>
     <product_attribute_combination id="product_attribute_combination_29_86" id_attribute="Plain" id_product_attribute="product_attribute_86"/>
-    <product_attribute_combination id="product_attribute_combination_30_87" id_attribute="Squarred" id_product_attribute="product_attribute_87"/>
+    <product_attribute_combination id="product_attribute_combination_30_87" id_attribute="Squared" id_product_attribute="product_attribute_87"/>
     <product_attribute_combination id="product_attribute_combination_31_88" id_attribute="Doted" id_product_attribute="product_attribute_88"/>
     <product_attribute_combination id="product_attribute_combination_28_89" id_attribute="Ruled" id_product_attribute="product_attribute_89"/>
     <product_attribute_combination id="product_attribute_combination_29_90" id_attribute="Plain" id_product_attribute="product_attribute_90"/>
-    <product_attribute_combination id="product_attribute_combination_30_91" id_attribute="Squarred" id_product_attribute="product_attribute_91"/>
+    <product_attribute_combination id="product_attribute_combination_30_91" id_attribute="Squared" id_product_attribute="product_attribute_91"/>
     <product_attribute_combination id="product_attribute_combination_31_92" id_attribute="Doted" id_product_attribute="product_attribute_92"/>
     <product_attribute_combination id="product_attribute_combination_28_93" id_attribute="Ruled" id_product_attribute="product_attribute_93"/>
     <product_attribute_combination id="product_attribute_combination_29_94" id_attribute="Plain" id_product_attribute="product_attribute_94"/>
-    <product_attribute_combination id="product_attribute_combination_30_95" id_attribute="Squarred" id_product_attribute="product_attribute_95"/>
+    <product_attribute_combination id="product_attribute_combination_30_95" id_attribute="Squared" id_product_attribute="product_attribute_95"/>
     <product_attribute_combination id="product_attribute_combination_31_96" id_attribute="Doted" id_product_attribute="product_attribute_96"/>
   </entities>
 </entity_product_attribute_combination>

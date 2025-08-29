@@ -35,11 +35,14 @@ use Employee;
 use Hook;
 use Module;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Tests\Integration\Utility\LoginTrait;
 
 /**
  * The controller installs and uninstalls modules so it needs to clear the cache, that's why it's better isolated
@@ -48,6 +51,7 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class PositionsControllerTest extends TestCase
 {
+    use LoginTrait;
     /**
      * @var int
      */
@@ -75,7 +79,9 @@ class PositionsControllerTest extends TestCase
         Module::clearStaticCache();
 
         parent::setUp();
-        self::bootKernel();
+
+        $this->client = self::createClient();
+        $this->loginUser($this->client);
 
         // Unregister all modules hooked on displayHome
         Db::getInstance()->execute(sprintf(
@@ -88,7 +94,7 @@ class PositionsControllerTest extends TestCase
 
         // Mock Congiguration
         $configurationMock = $this->getMockBuilder(Configuration::class)
-            ->setMethods(['get'])
+            ->onlyMethods(['get'])
             ->disableOriginalConstructor()
             ->disableAutoload()
             ->getMock();
@@ -99,9 +105,14 @@ class PositionsControllerTest extends TestCase
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
 
+        // Language context must be initialized because ModuleRepository depends on it
+        /** @var ContextBuilderPreparer $preparer */
+        $preparer = self::$kernel->getContainer()->get(ContextBuilderPreparer::class);
+        $preparer->prepareLanguageId(1);
+
         /** @var ModuleManager */
-        $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
-        $moduleRepository = self::$kernel->getContainer()->get('prestashop.core.admin.module.repository');
+        $moduleManager = self::$kernel->getContainer()->get(ModuleManager::class);
+        $moduleRepository = self::$kernel->getContainer()->get(ModuleRepository::class);
         // We use modules present in tests/resources/modules to be independent with the external API
         // We install two modules that are not present in the test db to be sure every step of the install performs correctly
         // And both modules have a common hook displayHome
@@ -118,8 +129,7 @@ class PositionsControllerTest extends TestCase
         $this->secondModuleId = $moduleRepository->getModule('bankwire')->database->get('id');
         $this->hookId = Hook::getIdByName('displayHome');
 
-        $this->client = self::createClient();
-        $this->router = self::$container->get('router');
+        $this->router = self::getContainer()->get('router');
     }
 
     protected function tearDown(): void

@@ -26,8 +26,24 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 import {psGetRequestParameter} from './common';
 
+const {addressForm} = prestashop.selectors.checkout;
 const editAddress = psGetRequestParameter('editAddress');
 const useSameAddress = psGetRequestParameter('use_same_address');
+
+function updateAddressForm() {
+  const $addressForm = $(`${addressForm} form`);
+  const requestData = $addressForm.serialize();
+  const confirmedRequestData = new URLSearchParams(requestData);
+  confirmedRequestData.append('confirm-addresses', 1);
+
+  $.post($addressForm.data('refresh-url'), confirmedRequestData.toString())
+    .fail((resp) => {
+      prestashop.emit('handleError', {
+        eventType: 'updatedAddressForm',
+        resp,
+      });
+    });
+}
 
 export default function () {
   $(prestashop.selectors.checkout.editAddresses).on('click', (event) => {
@@ -41,6 +57,7 @@ export default function () {
     function () {
       $(prestashop.selectors.checkout.addressItem).removeClass('selected');
       $(prestashop.selectors.checkout.addressItemChecked).addClass('selected');
+      updateAddressForm();
 
       const idFailureAddress = $(prestashop.selectors.checkout.addressError)
         .prop('id')

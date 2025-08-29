@@ -1,0 +1,82 @@
+// Helpers
+
+// Helpers class for fixing input width
+.fixed-width-xs {
+  width: 48px !important;
+}
+
+.fixed-width-sm {
+  width: 80px !important;
+}
+
+.fixed-width-md {
+  width: 120px !important;
+}
+
+.fixed-width-lg {
+  width: 160px !important;
+}
+
+.fixed-width-xl {
+  width: 200px !important;
+}
+
+.fixed-width-xxl {
+  width: 250px !important;
+}
+
+// Quick fix for inline hidden content on device width - waiting for bootstrap update https://github.com/twbs/bootstrap/issues/8869
+.hidden-inline-xs {
+  @media (max-width: $screen-xs) {
+    display: none !important;
+  }
+}
+
+// Helpers for row class
+.row-margin-bottom {
+  margin-bottom: 15px;
+}
+
+.row-margin-top {
+  margin-top: 15px;
+}
+
+.row-padding-top {
+  padding-top: 15px;
+}
+
+// Others
+.highlight {
+  background-color: var(--#{$cdk}amber-500);
+}
+
+.text-orange {
+  color: var(--#{$cdk}yellow-500);
+}
+
+.overflow-y {
+  max-height: 200px;
+  margin-bottom: var(--#{$cdk}size-16);
+  overflow-y: auto;
+}
+
+.modal-content-overflow {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.multiple-checkboxes {
+  padding-left: var(--#{$cdk}size-24);
+}
+
+select[multiple] {
+  overflow: auto;
+
+  option {
+    width: max-content;
+  }
+}

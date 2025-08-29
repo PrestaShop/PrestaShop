@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Security;
 
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSLInterface;
 
 class PasswordGenerator
@@ -56,7 +57,7 @@ class PasswordGenerator
     public function generatePassword(int $length = 8, string $type = self::PASSWORDGEN_FLAG_ALPHANUMERIC): string
     {
         if ($length <= 0) {
-            throw new \InvalidArgumentException('Invalid length for password');
+            throw new InvalidArgumentException('Invalid length for password');
         }
 
         switch ($type) {

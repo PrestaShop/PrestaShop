@@ -1,0 +1,68 @@
+# This workflow allows you to add a comment to the pull request if the label "Needs autoupgrade PR" is present and there are at least 2 approves
+name: Notify for 'Needs autoupgrade PR' label
+
+on:
+  workflow_run:
+    workflows: [ Verify 'Needs autoupgrade PR' label and approvals ]
+    types:
+      - completed
+
+jobs:
+  add_comment:
+    name: Add comment
+    runs-on: ubuntu-latest
+    steps:
+      - id: download_artifact
+        name: Download artifact
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id,
+            });
+            const matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "approval_count"
+            })[0];
+            if (!matchArtifact) {
+              throw new Error("Artifact 'approval_count' not found.");
+            }
+            const download = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: matchArtifact.id,
+              archive_format: 'zip',
+            });
+
+            const fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/approval_count.zip`, Buffer.from(download.data));
+
+      - name: Unzip artifact
+        run: |
+          unzip approval_count.zip
+          echo "approvals=$(cat ./approvals)" >> $GITHUB_ENV
+          echo "label_present=$(cat ./label)" >> $GITHUB_ENV
+          echo "pr_number=$(cat ./pr_number)" >> $GITHUB_ENV
+          echo "author=$(cat ./author)" >> $GITHUB_ENV
+
+      - name: Check diff for label
+        if: ${{ env.approvals >= 2 && env.label_present == '1' }}
+        run: |
+          PR_NUMBER=${{ env.pr_number }}
+          PR_CREATOR=${{ env.author }}
+
+          COMMENT="Hello @$PR_CREATOR,<br/>
+            Please note that the “Needs autoupgrade PR” label has been automatically added to your Pull Request. This means that the changes made in your PR must also be reported in the Autoupgrade module, responsible for running the update process of PrestaShop stores.<br/>
+            When there's a modification to the \`db-structure.sql\` file or if a Doctrine entity has been modified, added, or deleted, it impacts the database structure. Modifying the list of hooks and feature flags has consequences on the update process as well. These changes can affect how the application interacts with the database and how update procedures are handled. It's important to consider these aspects when contributing to ensure a smooth update experience for users.<br/>
+            That's why this contribution should be backported, with another corresponding PR, on the Autoupgrade module's GitHub repository which is available here: [Autoupgrade Repository](https://github.com/PrestaShop/autoupgrade)
+            Contribution to the Autoupgrade module documentation: [Documentation Link](https://devdocs.prestashop-project.org/9/contribute/contribution-guidelines/upgrade-module/)<br/>
+            Don't forget to add a comment in this current thread with the link to this PR once it has been created.<br/>
+            If you are sure that your Pull Request doesn’t require additional actions, ping [committers](https://www.prestashop-project.org/project-organization/people-and-roles/#committers) and it will be checked.<br/>
+            Thank you."
+
+          gh api repos/${{ github.repository }}/issues/$PR_NUMBER/comments \
+            -f body="$COMMENT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}

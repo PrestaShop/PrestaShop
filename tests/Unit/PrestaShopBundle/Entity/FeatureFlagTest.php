@@ -57,6 +57,8 @@ class FeatureFlagTest extends TestCase
         $this->assertEquals('A.B.C', $featureFlag->getDescriptionDomain());
         $this->assertEquals('a b c d', $featureFlag->getLabelWording());
         $this->assertEquals('A.B.L', $featureFlag->getLabelDomain());
+        $this->assertEquals('env,dotenv,db', $featureFlag->getType());
+        $this->assertEquals(['env', 'dotenv', 'db'], $featureFlag->getOrderedTypes());
     }
 
     public function testToggleWorks()

@@ -52,12 +52,12 @@ class TinyMceMaxLength extends Constraint
         parent::__construct($options);
 
         if (null === $this->max) {
-            throw new MissingOptionsException(sprintf('Option "max" must be given for constraint %s', __CLASS__), ['max']);
+            throw new MissingOptionsException(sprintf('Option "max" must be given for constraint %s', self::class), ['max']);
         }
     }
 
     public function validatedBy(): string
     {
-        return get_class($this) . 'Validator';
+        return static::class . 'Validator';
     }
 }

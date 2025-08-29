@@ -112,7 +112,7 @@ class CategoryDisplayNameBuilder
 
         $cacheKey = $this->buildCacheKeyForNameIds($shopId, $languageId);
 
-//      @todo: consider using Symfony\Component\Cache\Adapter\AdapterInterface instead of legacy Cache
+        //      @todo: consider using Symfony\Component\Cache\Adapter\AdapterInterface instead of legacy Cache
         if (Cache::isStored($this->buildCacheKeyForNameIds($shopId, $languageId))) {
             return Cache::retrieve($cacheKey);
         }
@@ -138,7 +138,7 @@ class CategoryDisplayNameBuilder
         }
         $cacheKey = $this->buildCacheKeyForBreadcrumbs($shopId, $languageId);
 
-//      @todo: consider using Symfony\Component\Cache\Adapter\AdapterInterface instead of legacy Cache
+        //      @todo: consider using Symfony\Component\Cache\Adapter\AdapterInterface instead of legacy Cache
         if (Cache::isStored($this->buildCacheKeyForBreadcrumbs($shopId, $languageId))) {
             return Cache::retrieve($cacheKey);
         }

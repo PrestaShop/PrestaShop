@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,8 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block stylesheets %}
@@ -31,17 +30,17 @@
 {% endblock %}
 
 {% block content %}
-  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/change_orders_status_modal.html.twig' %}
+  {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/change_orders_status_modal.html.twig') }}
 
   {% block orders_kpi %}
     {{ render(controller(
-      'PrestaShopBundle:Admin\\Common:renderKpiRow',
-      { 'kpiRow': orderKpi }
+      'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
+      {kpiRow: orderKpi}
     )) }}
   {% endblock %}
 
   {% block order_grid_row %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderGrid} %}
+    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: orderGrid}) }}
   {% endblock %}
 {% endblock %}
 

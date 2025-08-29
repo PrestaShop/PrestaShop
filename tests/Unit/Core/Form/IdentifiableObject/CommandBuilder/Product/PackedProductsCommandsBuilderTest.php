@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsComman
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PackedProductsCommandsBuilder;
 
-class PackedProductsCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class PackedProductsCommandsBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands

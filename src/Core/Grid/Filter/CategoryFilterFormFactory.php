@@ -83,7 +83,7 @@ final class CategoryFilterFormFactory implements GridFilterFormFactoryInterface
         foreach ($categoryFilterForm as $categoryFormItem) {
             $newCategoryFormBuilder->add(
                 $categoryFormItem->getName(),
-                get_class($categoryFormItem->getConfig()->getType()->getInnerType()),
+                $categoryFormItem->getConfig()->getType()->getInnerType()::class,
                 $categoryFormItem->getConfig()->getOptions()
             );
         }
@@ -91,7 +91,7 @@ final class CategoryFilterFormFactory implements GridFilterFormFactoryInterface
         $queryParams = [];
         $request = $this->requestStack->getCurrentRequest();
 
-        if ((null !== $request) && ($request->attributes->has('categoryId'))) {
+        if ((null !== $request) && $request->attributes->has('categoryId')) {
             $queryParams['categoryId'] = $request->attributes->get('categoryId');
         }
 

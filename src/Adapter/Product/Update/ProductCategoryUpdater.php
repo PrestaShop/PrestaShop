@@ -91,7 +91,7 @@ class ProductCategoryUpdater
      * @param ProductId $productId
      * @param CategoryId[] $newCategoryIds
      * @param CategoryId $defaultCategoryId
-     * @param shopConstraint $shopConstraint
+     * @param ShopConstraint $shopConstraint
      *
      * Warning: $categoryIds will replace current categories, erasing previous data, it will only impact the categories
      * matching the shop constraint though
@@ -104,7 +104,7 @@ class ProductCategoryUpdater
         $newCategoryIds = $this->formatCategoryIdsList($newCategoryIds, $defaultCategoryId);
         $this->assertCategoriesExists($newCategoryIds);
 
-        // Get curren categories based on the provided shop constraint
+        // Get current categories based on the provided shop constraint
         $this->deleteCategoriesAssociations($productId, $newCategoryIds, $shopConstraint);
         $this->categoryRepository->addProductAssociations($productId, $newCategoryIds);
         $this->updateDefaultCategory($productId, $defaultCategoryId, $shopConstraint);
@@ -228,7 +228,7 @@ class ProductCategoryUpdater
             foreach ($categoryIds as $categoryId) {
                 $this->categoryRepository->assertCategoryExists($categoryId);
             }
-        } catch (CategoryNotFoundException $e) {
+        } catch (CategoryNotFoundException) {
             throw new CannotUpdateProductException(
                 sprintf('Failed to update product categories. Some of categories doesn\'t exist.'),
                 CannotUpdateProductException::FAILED_UPDATE_CATEGORIES

@@ -92,10 +92,10 @@ class BulkDeleteCategoriesCommand
     /**
      * @param int[] $categoryIds
      *
+     * @return self
+     *
      * @throws CategoryConstraintException
      * @throws CategoryException
-     *
-     * @return self
      */
     private function setCategoryIds(array $categoryIds)
     {

@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Configuration;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\CommandHandler\GenerateOrderInvoiceHandlerInterface;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\CommandHandler\GenerateOrder
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class GenerateInvoiceHandler extends AbstractOrderHandler implements GenerateOrderInvoiceHandlerInterface
 {
     /**

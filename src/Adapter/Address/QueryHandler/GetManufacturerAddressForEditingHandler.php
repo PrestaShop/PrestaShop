@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Address\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryHandler\GetManufacturerAddressForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableManufacturerAddress;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableManufacturerAd
 /**
  * Handles query which gets manufacturer address for editing
  */
+#[AsQueryHandler]
 final class GetManufacturerAddressForEditingHandler extends AbstractAddressHandler implements GetManufacturerAddressForEditingHandlerInterface
 {
     /**

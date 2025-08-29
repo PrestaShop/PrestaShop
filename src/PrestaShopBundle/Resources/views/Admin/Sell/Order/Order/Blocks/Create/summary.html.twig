@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
@@ -79,25 +79,25 @@
       </div>
     </div>
 
-    {{ form_start(summaryForm, {'action': path('admin_orders_place')}) }}
+    {{ form_start(summaryForm, {action: path('admin_orders_place')}) }}
     <div class="mt-4 row">
       <div class="col-lg-11">
 
         <div id="js-order-message-wrap">
           {{ ps.form_group_row(summaryForm.order_message, {}, {
-            'label': 'Order message'|trans({}, 'Admin.Orderscustomers.Feature'),
+            label: 'Order message'|trans({}, 'Admin.Orderscustomers.Feature'),
           }) }}
         </div>
 
         {{ ps.form_group_row(summaryForm.payment_module, {}, {
-          'label': 'Payment'|trans({}, 'Admin.Global'),
+          label: 'Payment'|trans({}, 'Admin.Global'),
         }) }}
 
         {{ ps.form_group_row(summaryForm.order_state, {}, {
-          'label': 'Order status'|trans({}, 'Admin.Orderscustomers.Feature'),
+          label: 'Order status'|trans({}, 'Admin.Orderscustomers.Feature'),
         }) }}
 
-        {{ form_row(summaryForm.cart_id, {'attr': {'class': 'js-place-order-cart-id'}}) }}
+        {{ form_row(summaryForm.cart_id, {attr: {class: 'js-place-order-cart-id'}}) }}
 
         {% block cart_summary_form_rest %}
           {{ form_rest(summaryForm) }}

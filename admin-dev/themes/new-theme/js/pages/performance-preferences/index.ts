@@ -47,4 +47,10 @@ $(() => {
 
     modal.show();
   });
+
+  // Initialize cookie name and value generatable inputs
+  window.prestashop.component.initComponents([
+    'GeneratableInput',
+  ]);
+  window.prestashop.instance.generatableInput.attachOn('.js-generator-btn');
 });

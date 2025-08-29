@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\DeleteTaxRulesGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\DeleteTaxRulesGroupHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotDeleteTaxRulesGroupException;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFo
 /**
  * Handles deletion of single tax rules group
  */
+#[AsCommandHandler]
 final class DeleteTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler implements DeleteTaxRulesGroupHandlerInterface
 {
     /**

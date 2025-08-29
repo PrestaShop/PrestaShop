@@ -38,6 +38,7 @@ use Message;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForOrderCreationHandlerInterface;
@@ -59,6 +60,7 @@ use Tools;
 /**
  * Handles GetCartForOrderCreation query using legacy object models
  */
+#[AsQueryHandler]
 final class GetCartForOrderCreationHandler extends AbstractCartHandler implements GetCartForOrderCreationHandlerInterface
 {
     /**
@@ -238,7 +240,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
 
                 if (isset($cartRules[$giftRuleId])) {
                     // it is possible that one cart rule can have a gift product, but also have other conditions,
-                    //so we need to sum their reduction values
+                    // so we need to sum their reduction values
                     /** @var CartForOrderCreation\CartRule $cartRule */
                     $cartRule = $cartRules[$giftRuleId];
                     $finalValue = $finalValue->plus(new DecimalNumber($cartRule->getValue()));
@@ -271,7 +273,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
         foreach ($legacySummary['products'] as $product) {
             $productKey = $this->generateUniqueProductKey($product);
 
-            //decrease product quantity for each identical product which is marked as gift
+            // decrease product quantity for each identical product which is marked as gift
             if (isset($mergedGifts[$productKey])) {
                 $identicalGiftedProduct = $mergedGifts[$productKey];
                 $product['quantity'] -= $identicalGiftedProduct['quantity'];
@@ -321,7 +323,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
                 $mergedGifts[$productKey] = $giftProduct;
                 $mergedGifts[$productKey]['quantity'] = 1;
             } else {
-                //increase existing gift quantity by 1
+                // increase existing gift quantity by 1
                 ++$mergedGifts[$productKey]['quantity'];
             }
         }
@@ -358,8 +360,8 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
         $deliveryOptionsByAddress = $cart->getDeliveryOptionList();
         $deliveryAddress = (int) $cart->id_address_delivery;
 
-        //Check if there is any delivery options available for cart delivery address
-        if (!array_key_exists($deliveryAddress, $deliveryOptionsByAddress)) {
+        // Check if there is any delivery options available for cart delivery address
+        if (!array_key_exists($deliveryAddress, $deliveryOptionsByAddress) && !$cart->isVirtualCart()) {
             return null;
         }
 
@@ -374,7 +376,8 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             (int) $carrier->id ?: $this->defaultCarrierId ?: null,
             (bool) $cart->gift,
             (bool) $cart->recyclable,
-            $cart->gift_message
+            $cart->gift_message,
+            $cart->isVirtualCart()
         );
     }
 
@@ -389,6 +392,9 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     private function fetchCartDeliveryOptions(array $deliveryOptionsByAddress, int $deliveryAddressId)
     {
         $deliveryOptions = [];
+        if (empty($deliveryOptionsByAddress)) {
+            return $deliveryOptions;
+        }
         // legacy multishipping feature allowed to split cart shipping to multiple addresses.
         // now when the multishipping feature is removed
         // the list of carriers should be shared across whole cart for single delivery address
@@ -404,7 +410,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             }
         }
 
-        //make sure array is not associative
+        // make sure array is not associative
         return array_values($deliveryOptions);
     }
 
@@ -482,7 +488,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             return null;
         }
 
-        return new CartForOrderCreation\Customization($customizationId, $productCustomizedFieldsData);
+        return new Customization($customizationId, $productCustomizedFieldsData);
     }
 
     /**

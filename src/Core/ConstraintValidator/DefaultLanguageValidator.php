@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -36,17 +38,9 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class DefaultLanguageValidator extends ConstraintValidator
 {
-    /**
-     * @var int
-     */
-    private $defaultLanguageId;
-
-    /**
-     * @param int $defaultLanguageId
-     */
-    public function __construct($defaultLanguageId)
-    {
-        $this->defaultLanguageId = $defaultLanguageId;
+    public function __construct(
+        private readonly LanguageContext $defaultLanguageContext,
+    ) {
     }
 
     /**
@@ -58,17 +52,33 @@ class DefaultLanguageValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, DefaultLanguage::class);
         }
 
+        if ($constraint->allowNull) {
+            if (null === $value) {
+                return;
+            }
+        }
+
         if (!is_array($value)) {
             throw new UnexpectedTypeException($value, 'array');
         }
 
-        if (empty($value[$this->defaultLanguageId])) {
+        if ($constraint->allowNull && !isset($value[$this->defaultLanguageContext->getId()]) && !isset($value[$this->defaultLanguageContext->getLocale()])) {
+            // Check that the array actually contains a value for the default language (regardless of its empty value or not), if no index
+            // matching the default language is set it means there is no planned modification
+            return;
+        }
+
+        // Check if value for default language is present, we use language ID for back-office form's usage, and we use the locale
+        // for Admin API usages since the input data is indexed by locale thanks to the LocalizedValue attribute
+        if (empty($value[$this->defaultLanguageContext->getId()]) && empty($value[$this->defaultLanguageContext->getLocale()])) {
+            $fieldName = $constraint->fieldName;
+            if (empty($fieldName) && $this->context->getObject() instanceof Form) {
+                $fieldName = $this->context->getObject()->getName();
+            }
+
             $this->context->buildViolation($constraint->message)
                 ->setTranslationDomain('Admin.Notifications.Error')
-                ->setParameter(
-                    '%field_name%',
-                    $this->context->getObject() ? $this->context->getObject()->getName() : ''
-                )
+                ->setParameter('%field_name%', $fieldName)
                 ->addViolation()
             ;
         }

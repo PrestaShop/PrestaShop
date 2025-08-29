@@ -44,11 +44,17 @@ smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', array('Addre
 smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getWidth'));
 smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
 smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef'));
+smartyRegisterFunction($smarty, 'function', 'isBrightColor', 'isBrightColor');
 smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
 smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
 
 $module_resources['modules'] = _PS_MODULE_DIR_;
 $smarty->registerResource('module', new SmartyResourceModule($module_resources, $isAdmin = true));
+
+function isBrightColor(string $params): bool {
+    $colorBrightnessCalculator = new PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator();
+    return $colorBrightnessCalculator->isBright($params);
+}
 
 function toolsConvertPrice($params, &$smarty)
 {
@@ -71,12 +77,8 @@ function smartyTranslate($params, $smarty)
         $sprintf = $params['sprintf'];
     }
 
-    if (($htmlEntities || $addSlashes)) {
-        $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
-    }
-
     if ($isInPDF && empty($params['d'])) {
-        return Translate::smartyPostProcessTranslation(
+        return Translate::postProcessTranslation(
             Translate::getPdfTranslation(
                 $params['s'],
                 $sprintf
@@ -87,7 +89,7 @@ function smartyTranslate($params, $smarty)
 
     // If the template is part of a module
     if ($isInModule && empty($params['d'])) {
-        return Translate::smartyPostProcessTranslation(
+        return Translate::postProcessTranslation(
             Translate::getModuleTranslation(
                 $params['mod'],
                 $params['s'],

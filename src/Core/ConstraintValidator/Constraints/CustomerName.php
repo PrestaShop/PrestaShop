@@ -26,12 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
+use Attribute;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**
  * Class CustomerName is responsible of validating customer name according to several patterns.
  */
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 final class CustomerName extends Constraint
 {
     public $message = 'The %s field is invalid.';

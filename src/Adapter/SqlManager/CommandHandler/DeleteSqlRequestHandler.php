@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\CommandHandler\DeleteSqlRequestHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotDeleteSqlRequestException;
@@ -39,6 +40,7 @@ use RequestSql;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class DeleteSqlRequestHandler implements DeleteSqlRequestHandlerInterface
 {
     /**
@@ -60,7 +62,7 @@ final class DeleteSqlRequestHandler implements DeleteSqlRequestHandlerInterface
             }
 
             if (false === $entity->delete()) {
-                throw new CannotDeleteSqlRequestException(sprintf('Could not delete SqlRequest with id %s', var_export($entityId)), CannotDeleteSqlRequestException::CANNOT_SINGLE_DELETE);
+                throw new CannotDeleteSqlRequestException(sprintf('Could not delete SqlRequest with id %s', var_export($entityId, true)), CannotDeleteSqlRequestException::CANNOT_SINGLE_DELETE);
             }
         } catch (PrestaShopException $e) {
             throw new SqlRequestException(sprintf('Unexpected error occurred when deleting SqlRequest with id %s', var_export($entityId, true)), 0, $e);

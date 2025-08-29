@@ -18,6 +18,15 @@ ul.entities-list {
     }
 
     .entity-item {
+      &.disabled {
+        cursor: not-allowed;
+        background-color: #eceeef;
+
+        .material-icons {
+          cursor: not-allowed;
+        }
+      }
+
       // thumbnail
       > .media-left {
         img {

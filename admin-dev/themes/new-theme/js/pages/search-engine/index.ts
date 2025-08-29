@@ -22,29 +22,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Grid from '@components/grid/grid';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import ReloadListExtension from '@components/grid/extension/reload-list-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-
-const {$} = window;
 
 $(() => {
-  const searchEngineGrid = new Grid('search_engine');
+  const searchEngineGrid = new window.prestashop.component.Grid('search_engine');
 
-  searchEngineGrid.addExtension(new ExportToSqlManagerExtension());
-  searchEngineGrid.addExtension(new ReloadListExtension());
-  searchEngineGrid.addExtension(new SortingExtension());
-  searchEngineGrid.addExtension(new FiltersResetExtension());
-  searchEngineGrid.addExtension(new SubmitRowActionExtension());
-  searchEngineGrid.addExtension(new SubmitBulkActionExtension());
-  searchEngineGrid.addExtension(new BulkActionCheckboxExtension());
-  searchEngineGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  searchEngineGrid.addExtension(new LinkRowActionExtension());
+  searchEngineGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  searchEngineGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  searchEngineGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  searchEngineGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  searchEngineGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  searchEngineGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  searchEngineGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  searchEngineGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  searchEngineGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
 });

@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\TypeCommandsBuilder;
 
-class TypeCommandBuilderTest extends AbstractProductCommandBuilderTest
+class TypeCommandBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands

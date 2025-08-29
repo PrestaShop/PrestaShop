@@ -71,7 +71,7 @@ interface CurrencyDataProviderInterface
      *                         Set this parameter if you want the currency in a specific language.
      *                         If null, default language will be used
      *
-     * @return currency|null
+     * @return Currency|null
      *                       The asked Currency object, or null if not found
      */
     public function getCurrencyByIsoCode($isoCode, $idLang = null);
@@ -86,7 +86,7 @@ interface CurrencyDataProviderInterface
      *                         Set this parameter if you want the currency in a specific language.
      *                         If null, default language will be used
      *
-     * @return currency
+     * @return Currency
      *                  The asked Currency object, loaded with relevant data if passed ISO code is known
      */
     public function getCurrencyByIsoCodeOrCreate($isoCode, $idLang = null);
@@ -118,4 +118,6 @@ interface CurrencyDataProviderInterface
      * Get Default currency Iso code.
      */
     public function getDefaultCurrencyIsoCode();
+
+    public function getDefaultCurrencySymbol(): string;
 }

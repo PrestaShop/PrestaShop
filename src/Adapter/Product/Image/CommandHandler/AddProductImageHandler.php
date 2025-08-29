@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Image\ProductImageFileValidator;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\AddProductImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 /**
  * Handles @see AddProductImageCommand
  */
+#[AsCommandHandler]
 final class AddProductImageHandler implements AddProductImageHandlerInterface
 {
     /**

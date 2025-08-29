@@ -56,15 +56,15 @@ class FilterCmsPageCategorySearchCriteriaListener
      */
     public function onFilterSearchCriteria(FilterSearchCriteriaEvent $event)
     {
-        $isAvailableFilter = $event->getSearchCriteria() instanceof CmsPageCategoryFilters ||
-            $event->getSearchCriteria() instanceof CmsPageFilters
+        $isAvailableFilter = $event->getSearchCriteria() instanceof CmsPageCategoryFilters
+            || $event->getSearchCriteria() instanceof CmsPageFilters
         ;
 
         if (!$isAvailableFilter) {
             return;
         }
 
-        $searchCriteriaClass = get_class($event->getSearchCriteria());
+        $searchCriteriaClass = $event->getSearchCriteria()::class;
 
         $searchCriteria = $event->getSearchCriteria();
 

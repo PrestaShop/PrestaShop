@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="Modules.Apiresources.Admin.xlf" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4e5cb856035876bcdede1780680df744">
+        <source>Includes the resources allowing using the API for the PrestaShop domain, all endpoints are based on CQRS commands/queries from the Core and we APIPlatform framework is used as a base.</source>
+        <target>Includes the resources allowing using the API for the PrestaShop domain, all endpoints are based on CQRS commands/queries from the Core and we APIPlatform framework is used as a base.</target>
+        <note>File: modules/ps_apiresources/ps_apiresources.php [Line: 37]</note>
+      </trans-unit>
+      <trans-unit id="921f3b87985e6c1ddca7fe12d2ee0d2e">
+        <source>PrestaShop API Resources</source>
+        <target>PrestaShop API Resources</target>
+        <note>File: modules/ps_apiresources/ps_apiresources.php [Line: 36]</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -54,7 +54,7 @@ abstract class AbstractAttributeHandler
             if ($attribute->id !== $idValue) {
                 throw new AttributeNotFoundException(sprintf('Attribute with id "%s" was not found.', $idValue));
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new AttributeException(sprintf('An error occurred when trying to get attribute with id %s', $idValue));
         }
 
@@ -72,7 +72,7 @@ abstract class AbstractAttributeHandler
     {
         try {
             return $attribute->delete();
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new AttributeException(sprintf('An error occurred when trying to delete attribute with id %s', $attribute->id));
         }
     }

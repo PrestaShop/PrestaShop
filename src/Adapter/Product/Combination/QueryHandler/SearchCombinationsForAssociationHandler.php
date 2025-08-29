@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\SearchCombinationsForAssociationHandlerInterface;
@@ -40,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinat
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 
+#[AsQueryHandler]
 class SearchCombinationsForAssociationHandler implements SearchCombinationsForAssociationHandlerInterface
 {
     /**

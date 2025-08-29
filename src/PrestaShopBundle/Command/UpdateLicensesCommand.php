@@ -86,7 +86,7 @@ class UpdateLicensesCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->text = str_replace('{currentYear}', date('Y'), $this->text);
 
@@ -127,6 +127,7 @@ class UpdateLicensesCommand extends Command
                 // admin folders
                 'admin-dev/filemanager',
                 'admin-dev/themes/default/public/',
+                'admin-dev/themes/default/example',
                 'admin-dev/themes/new-theme/public/',
                 // js dependencies
                 'js/tiny_mce',
@@ -194,7 +195,7 @@ class UpdateLicensesCommand extends Command
                         if (count($nodes)) {
                             $this->addLicenseToNode($nodes[0], $file);
                         }
-                    } catch (\PhpParser\Error $exception) {
+                    } catch (\PhpParser\Error) {
                         $output->writeln('Syntax error on file ' . $file->getRelativePathname() . '. Continue ...');
                     }
 
@@ -248,7 +249,7 @@ class UpdateLicensesCommand extends Command
     private function isAFLLicense($fileName)
     {
         foreach ($this->aflLicense as $afl) {
-            if (0 === strpos($fileName, $afl)) {
+            if (str_starts_with($fileName, $afl)) {
                 return true;
             }
         }
@@ -335,7 +336,7 @@ class UpdateLicensesCommand extends Command
         $comments = $node->getAttribute('comments');
         foreach ($comments as $comment) {
             if ($comment instanceof \PhpParser\Comment
-                && strpos($comment->getText(), 'prestashop') !== false) {
+                && str_contains($comment->getText(), 'prestashop')) {
                 file_put_contents($file->getRelativePathname(), str_replace($comment->getText(), $this->license, $file->getContents()));
             }
         }

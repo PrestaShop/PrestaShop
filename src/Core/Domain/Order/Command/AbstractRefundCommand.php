@@ -102,7 +102,7 @@ abstract class AbstractRefundCommand
         if (null !== $voucherRefundAmount) {
             try {
                 $this->voucherRefundAmount = new DecimalNumber($voucherRefundAmount);
-            } catch (InvalidArgumentException $e) {
+            } catch (InvalidArgumentException) {
                 throw new InvalidAmountException();
             }
         }

@@ -30,69 +30,37 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 class ProductForAssociation
 {
-    /**
-     * @var int
-     */
-    private $productId;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $reference;
-
-    /**
-     * @var string
-     */
-    private $imageUrl;
-
-    /**
-     * @param int $productId
-     * @param string $name
-     * @param string $reference
-     * @param string $imageUrl
-     */
-    public function __construct(int $productId, string $name, string $reference, string $imageUrl)
-    {
-        $this->productId = $productId;
-        $this->name = $name;
-        $this->reference = $reference;
-        $this->imageUrl = $imageUrl;
+    public function __construct(
+        private readonly int $productId,
+        private readonly string $name,
+        private readonly string $reference,
+        private readonly string $imageUrl,
+        private readonly string $productType,
+    ) {
     }
 
-    /**
-     * @return int
-     */
     public function getProductId(): int
     {
         return $this->productId;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getReference(): string
     {
         return $this->reference;
     }
 
-    /**
-     * @return string
-     */
     public function getImageUrl(): string
     {
         return $this->imageUrl;
+    }
+
+    public function getProductType(): string
+    {
+        return $this->productType;
     }
 }

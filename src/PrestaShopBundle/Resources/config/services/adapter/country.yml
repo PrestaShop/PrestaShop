@@ -4,11 +4,9 @@ services:
 
   prestashop.adapter.country.query_handler.get_country_required_fields:
     class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryRequiredFieldsHandler'
+    autoconfigure: true
     arguments:
       - '@prestashop.adapter.country.country_required_fields_provider'
-    tags:
-      - name: tactician.handler
-        command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryRequiredFields'
 
   prestashop.adapter.country.country_zip_code_requirements_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Country\CountryZipCodeRequirementsProvider'
@@ -21,10 +19,27 @@ services:
     arguments:
       - '@prestashop.adapter.data_provider.country'
 
-  PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository: ~
+  PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository:
+    autowire: true
 
-  prestashop.adapter.country.command_handler.add_country_handler:
+  PrestaShop\PrestaShop\Adapter\Country\CommandHandler\AddCountryHandler:
     public: true
-    class: 'PrestaShop\PrestaShop\Adapter\Country\CommandHandler\AddCountryHandler'
-    tags:
-      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand' }
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Country\CommandHandler\DeleteCountryHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Country\CommandHandler\EditCountryHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryForEditingHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Country\Validate\CountryValidator:

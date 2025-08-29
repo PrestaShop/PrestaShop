@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use CustomerThread;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Entity\CustomerMessage;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
@@ -37,24 +38,12 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadFor
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tools;
 
 class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default shop id from configs
-     */
-    private $defaultShopId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
-    }
-
     /**
      * @When I add new customer thread :threadReference with following properties:
      *
@@ -69,7 +58,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $customerThread = new CustomerThread();
         $customerThread->id_contact = 2;
         $customerThread->id_customer = 1;
-        $customerThread->id_shop = $this->defaultShopId;
+        $customerThread->id_shop = $this->getDefaultShopId();
         $customerThread->id_order = 0;
         $customerThread->id_lang = 1;
         $customerThread->email = 'test@gmail.com';
@@ -139,7 +128,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update thread :threadReference status to handled
+     * @When I update thread :threadReference status to open
      *
      * @param string $threadReference
      */
@@ -151,17 +140,17 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $this->getCommandBus()->handle(
             new UpdateCustomerThreadStatusCommand(
                 (int) $customerThread->id,
-                CustomerThreadStatus::CLOSED
+                CustomerThreadStatus::OPEN
             )
         );
     }
 
     /**
-     * @Then customer thread :threadReference should be closed
+     * @Then /^customer thread "(.+)" should be (open|closed|pending1|pending2)$/
      *
      * @param string $threadReference
      */
-    public function assertThreadStatus(string $threadReference): void
+    public function assertThreadStatus(string $threadReference, string $expectedStatus): void
     {
         /** @var CustomerThread $customerThread */
         $customerThread = SharedStorage::getStorage()->get($threadReference);
@@ -172,18 +161,12 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         );
 
         $actions = $customerThreadView->getActions();
-
-        if (!array_key_exists(CustomerThreadStatus::OPEN, $actions)) {
-            throw new RuntimeException(sprintf('thread "%s" should have action "%s" possible.', $threadReference, CustomerThreadStatus::OPEN));
-        }
-        if (!array_key_exists(CustomerThreadStatus::PENDING_1, $actions)) {
-            throw new RuntimeException(sprintf('thread "%s" should have action "%s" possible.', $threadReference, CustomerThreadStatus::PENDING_1));
-        }
-        if (!array_key_exists(CustomerThreadStatus::PENDING_2, $actions)) {
-            throw new RuntimeException(sprintf('thread "%s" should have action "%s" possible.', $threadReference, CustomerThreadStatus::PENDING_2));
-        }
-        if (array_key_exists(CustomerThreadStatus::CLOSED, $actions)) {
-            throw new RuntimeException(sprintf('thread "%s" should not have action "%s" possible.', $threadReference, CustomerThreadStatus::CLOSED));
+        foreach ([CustomerThreadStatus::OPEN, CustomerThreadStatus::PENDING_1, CustomerThreadStatus::PENDING_2, CustomerThreadStatus::CLOSED] as $possibleAction) {
+            if ($expectedStatus === $possibleAction) {
+                Assert::assertArrayNotHasKey($possibleAction, $actions, sprintf('thread "%s" should not have action "%s" possible.', $threadReference, CustomerThreadStatus::OPEN));
+            } else {
+                Assert::assertArrayHasKey($possibleAction, $actions, sprintf('thread "%s" should have action "%s" possible.', $threadReference, CustomerThreadStatus::OPEN));
+            }
         }
     }
 

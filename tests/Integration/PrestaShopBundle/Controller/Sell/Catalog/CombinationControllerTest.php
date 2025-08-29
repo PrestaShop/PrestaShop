@@ -31,8 +31,6 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 use Cache;
 use DOMElement;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
@@ -43,15 +41,9 @@ use Tests\Resources\Resetter\ProductResetter;
 
 class CombinationControllerTest extends FormGridControllerTestCase
 {
-    /**
-     * @var bool
-     */
-    private $changedProductFeatureFlag = false;
-
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        static::mockContext();
         ProductResetter::resetProducts();
     }
 
@@ -61,32 +53,13 @@ class CombinationControllerTest extends FormGridControllerTestCase
         ProductResetter::resetProducts();
     }
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $featureFlagRepository = $this->client->getContainer()->get(FeatureFlagRepository::class);
-        if (!$featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2)) {
-            $featureFlagRepository->enable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-            $this->changedProductFeatureFlag = true;
-        }
-    }
-
-    public function tearDown(): void
-    {
-        if ($this->changedProductFeatureFlag) {
-            $featureFlagRepository = $this->client->getContainer()->get(FeatureFlagRepository::class);
-            $featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-        }
-
-        // Call parent tear down later or the kernel will be shut down
-        parent::tearDown();
-    }
-
     /**
      * @return int
      */
     public function testCreate(): int
     {
+        $this->client->disableReboot();
+
         // First create product, we don't check if this works very thoroughly as it is already handled
         // by ProductControllerTest this is only to have a parent for combinations.
         $formData = [
@@ -113,6 +86,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testGenerateCombinations(int $productId): array
     {
+        $this->client->disableReboot();
+
         $this->client->xmlHttpRequest('GET', $this->router->generate('admin_all_attribute_groups'));
         $attributeGroups = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertNotFalse($attributeGroups);
@@ -150,6 +125,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testEditDefaultCombination(array $generatedCombinations): array
     {
+        $this->client->disableReboot();
+
         $defaultCombinationId = $generatedCombinations['combination_ids'][0];
         // First assert that first combination is the default one
         $formData = [
@@ -212,6 +189,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testEditNotDefaultCombination(array $generatedCombinations): array
     {
+        $this->client->disableReboot();
+
         $initialDefaultCombinationId = $generatedCombinations['combination_ids'][0];
         $newDefaultCombinationId = $generatedCombinations['combination_ids'][1];
 
@@ -235,6 +214,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testEditFromList(array $generatedCombinations): array
     {
+        $this->client->disableReboot();
+
         $newDefaultCombinationId = $generatedCombinations['combination_ids'][1];
         $productId = $generatedCombinations['product_id'];
 
@@ -281,6 +262,8 @@ class CombinationControllerTest extends FormGridControllerTestCase
      */
     public function testDefaultFromList(array $generatedCombinations): array
     {
+        $this->client->disableReboot();
+
         $initialDefaultCombinationId = $generatedCombinations['combination_ids'][0];
         $newDefaultCombinationId = $generatedCombinations['combination_ids'][1];
         $productId = $generatedCombinations['product_id'];

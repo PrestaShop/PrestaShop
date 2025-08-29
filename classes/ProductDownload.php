@@ -114,7 +114,7 @@ class ProductDownloadCore extends ObjectModel
     {
         if (parent::update($nullValues)) {
             // Refresh cache of feature detachable because the row can be deactive
-            //Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', ProductDownload::isCurrentlyUsed($this->def['table'], true));
+            // Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', ProductDownload::isCurrentlyUsed($this->def['table'], true));
             return true;
         }
 
@@ -202,8 +202,6 @@ class ProductDownloadCore extends ObjectModel
      * @param string $filename Filename physically
      *
      * @return int Product the id for this virtual product
-     *
-     * @since 1.5.0.1
      */
     public static function getIdFromFilename($filename)
     {
@@ -249,16 +247,12 @@ class ProductDownloadCore extends ObjectModel
     /**
      * Return text link.
      *
-     * @param bool $admin specific to backend (optional)
      * @param string|false $hash hash code in table order detail (optional)
      *
      * @return string Html all the code for print a link to the file
      */
-    public function getTextLink($admin = true, $hash = false)
+    public function getTextLink($hash = false)
     {
-        if ($admin) {
-            return 'get-file-admin.php?file=' . $this->filename;
-        }
         $key = $this->filename . '-' . ($hash ? $hash : 'orderdetail');
 
         return Context::getContext()->link->getPageLink('get-file&key=' . $key);
@@ -268,14 +262,13 @@ class ProductDownloadCore extends ObjectModel
      * Return html link.
      *
      * @param string|bool $class CSS selector
-     * @param bool $admin specific to backend
      * @param string|bool $hash hash code in table order detail
      *
      * @return string Html all the code for print a link to the file
      */
-    public function getHtmlLink($class = false, $admin = true, $hash = false)
+    public function getHtmlLink($class = false, $hash = false)
     {
-        $link = $this->getTextLink($admin, $hash);
+        $link = $this->getTextLink($hash);
         $html = '<a href="' . $link . '" title=""';
         if ($class) {
             $html .= ' class="' . $class . '"';
@@ -329,8 +322,6 @@ class ProductDownloadCore extends ObjectModel
      * This method is allow to know if a feature is used or active.
      *
      * @return bool
-     *
-     * @since 1.5.0.1
      */
     public static function isFeatureActive()
     {

@@ -34,7 +34,7 @@ namespace PrestaShop\PrestaShop\Core\Action;
  * If this is the 1st button or there are only 2 buttons displayed:
  *
  * <a class="btn {{ button.class }}"
- *   {% for tagName, tagContent in button.tags %}
+ *   {% for tagName, tagContent in button.properties %}
  *     {{ tagName }}="{{ tagContent }}"
  *   {% endfor %}
  * >
@@ -44,7 +44,7 @@ namespace PrestaShop\PrestaShop\Core\Action;
  * However if there is more than 2 buttons displayed, then they are rendered into a drop-down list:
  *
  * <a class="dropdown-item btn {{ button.class }}"
- *   {% for tagName, tagContent in button.tags %}
+ *   {% for tagName, tagContent in button.properties %}
  *     {{ tagName }}="{{ tagContent }}"
  *   {% endfor %}
  * >
@@ -64,10 +64,10 @@ interface ActionsBarButtonInterface
      * Use this property to add extra properties to <button> tag
      * Each item of the array will be created as a tag
      *
-     * Example: if $tags is ['href' => '/a/b', 'alt' => 'link']
+     * Example: if $properties is ['href' => '/a/b', 'alt' => 'link']
      * Then following tags will be added: href="/a/b", alt="link"
      *
-     * @return string[]
+     * @return array<string, scalar>
      */
     public function getProperties(): array;
 

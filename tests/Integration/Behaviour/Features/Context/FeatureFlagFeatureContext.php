@@ -72,7 +72,8 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
         /** @var FeatureFlag $featureFlag */
         $featureFlag = $doctrineEntityManager->getRepository(FeatureFlag::class)->findOneBy(['name' => $name]);
 
-        if ($state === 'enable') {
+        // We checking here because StringToBoolTransformContext transform enable/disable to boolean
+        if ($state === '1' || $state === 'enable') {
             $featureFlag->enable();
         } else {
             $featureFlag->disable();
@@ -114,22 +115,6 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @AfterScenario
-     */
-    public function cleanFixtures()
-    {
-        $doctrineEntityManager = $this->getDoctrineEntityManager();
-
-        /** @var array<int, FeatureFlag> $allFlags */
-        $allFlags = $doctrineEntityManager->getRepository(FeatureFlag::class)->findAll();
-        foreach ($allFlags as $flag) {
-            $doctrineEntityManager->remove($flag);
-        }
-
-        $doctrineEntityManager->flush();
-    }
-
-    /**
      * @AfterStep
      */
     public function clearEntityManager()
@@ -142,7 +127,7 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertGotErrorMessage()
     {
-        if (!$this->latestResult instanceof \Exception) {
+        if (!$this->latestResult instanceof Exception) {
             throw new Exception('Latest action did not return an error');
         }
 

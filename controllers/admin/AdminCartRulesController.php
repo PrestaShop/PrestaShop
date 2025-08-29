@@ -283,7 +283,7 @@ class AdminCartRulesControllerCore extends AdminController
     }
 
     /**
-     * @param $current_object
+     * @param CartRule $current_object
      *
      * @return bool|void
      *
@@ -325,7 +325,7 @@ class AdminCartRulesControllerCore extends AdminController
     /**
      * @TODO Move this function into CartRule
      *
-     * @param ObjectModel $currentObject
+     * @param CartRule $currentObject
      *
      * @return bool|void
      *
@@ -639,9 +639,9 @@ class AdminCartRulesControllerCore extends AdminController
         }
     }
 
-    protected function searchProducts($search)
+    protected function searchProducts(string $searchString)
     {
-        if ($products = Product::searchByName((int) $this->context->language->id, $search)) {
+        if ($products = Product::searchByName((int) $this->context->language->id, $searchString)) {
             foreach ($products as &$product) {
                 $combinations = [];
                 $productObj = new Product((int) $product['id_product'], false, (int) $this->context->language->id);
@@ -702,22 +702,22 @@ class AdminCartRulesControllerCore extends AdminController
 
         // All the filter are prefilled with the correct information
         $customer_filter = '';
-        if (Validate::isUnsignedId($current_object->id_customer) &&
-            Validate::isLoadedObject($customer = new Customer($current_object->id_customer))
+        if (Validate::isUnsignedId($current_object->id_customer)
+            && Validate::isLoadedObject($customer = new Customer($current_object->id_customer))
         ) {
             $customer_filter = $customer->firstname . ' ' . $customer->lastname . ' (' . $customer->email . ')';
         }
 
         $gift_product_filter = '';
-        if (Validate::isUnsignedId($current_object->gift_product) &&
-            Validate::isLoadedObject($product = new Product($current_object->gift_product, false, $this->context->language->id))
+        if (Validate::isUnsignedId($current_object->gift_product)
+            && Validate::isLoadedObject($product = new Product($current_object->gift_product, false, $this->context->language->id))
         ) {
             $gift_product_filter = (!empty($product->reference) ? $product->reference : $product->name);
         }
 
         $reduction_product_filter = '';
-        if (Validate::isUnsignedId($current_object->reduction_product) &&
-            Validate::isLoadedObject($product = new Product($current_object->reduction_product, false, $this->context->language->id))
+        if (Validate::isUnsignedId($current_object->reduction_product)
+            && Validate::isLoadedObject($product = new Product($current_object->reduction_product, false, $this->context->language->id))
         ) {
             $reduction_product_filter = (!empty($product->reference) ? $product->reference : $product->name);
         }

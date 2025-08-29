@@ -1,5 +1,7 @@
 import BaseXml from '@webservices/baseXml';
-import xmlHelper from '@utils/xml';
+import {
+  utilsXML,
+} from '@prestashop-core/ui-testing';
 
 export default class CountryXml extends BaseXml {
   private static countriesBasicPath = '/prestashop/countries';
@@ -24,7 +26,7 @@ export default class CountryXml extends BaseXml {
   public static getAllCountries(
     xml: string,
   ): Element[] {
-    return xmlHelper.getNodes(xml, this.countriesPath);
+    return utilsXML.getNodes(xml, this.countriesPath);
   }
 
   /**
@@ -34,7 +36,7 @@ export default class CountryXml extends BaseXml {
   public static getCountryNodes(
     xml: string,
   ): Element[] {
-    return xmlHelper.getNodes(xml, this.countryPath);
+    return utilsXML.getNodes(xml, this.countryPath);
   }
 
   /**
@@ -45,8 +47,8 @@ export default class CountryXml extends BaseXml {
   public static getAttributeValue(
     xml: string,
     attribute: string,
-  ): string {
-    return xmlHelper.getNodeValue(xml, this.attributePath(attribute));
+  ): string|null {
+    return utilsXML.getNodeValue(xml, this.attributePath(attribute));
   }
 
   /**
@@ -59,7 +61,7 @@ export default class CountryXml extends BaseXml {
     xml: string,
     attribute: string,
     lang: string,
-  ): string {
-    return xmlHelper.getNodeValue(xml, this.attributeLangPath(attribute, lang));
+  ): string|null {
+    return utilsXML.getNodeValue(xml, this.attributeLangPath(attribute, lang));
   }
 }

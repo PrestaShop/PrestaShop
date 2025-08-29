@@ -25,24 +25,24 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name=script}
-	$(document).ready(function(){
+	$(function(){
 		fillShopUrl();
 		checkMainUrlInfo();
-		$('#domain, #physical_uri, #virtual_uri').keyup(fillShopUrl);
+		$('#domain, #physical_uri, #virtual_uri').on('keyup', fillShopUrl);
 
 		var change_domain_value = false;
-		$('#domain').keydown(function()
+		$('#domain').on('keydown', function()
 		{
 			if (!$('#domain_ssl').val() || $('#domain_ssl').val() == $('#domain').val())
 				change_domain_value = true;
 		});
 
-		$('#domain_ssl').keydown(function()
+		$('#domain_ssl').on('keydown', function()
 		{
 			change_domain_value = false;
 		});
 
-		$('#domain').blur(function()
+		$('#domain').on('blur', function()
 		{
 			if (change_domain_value)
 			{
@@ -51,7 +51,7 @@
 			}
 		});
 
-		$('#domain, #domain_ssl, #physical_uri, #virtual_uri').blur(function()
+		$('#domain, #domain_ssl, #physical_uri, #virtual_uri').on('blur', function()
 		{
 			$(this).val($.trim($(this).val().replace(/ /g, '-')));
 		});

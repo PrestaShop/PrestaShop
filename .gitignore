@@ -84,10 +84,13 @@ npm-debug.log.*
 tests/Resources/img/*
 tests/Resources/img/tmp/*
 tests/Resources/img/tmp/.gitkeep
+tests/Resources/img/s/.gitkeep
 !tests/Resources/download/.gitkeep
 tests/Resources/download/*
+tests/UI/tsconfig.tsbuildinfo
 tests/Unit/.phpunit.result.cache
 .phpunit.result.cache
+.twig-cs-fixer.cache
 tests/Integration/.phpunit.result.cache
 tests-legacy/.phpunit.result.cache
 
@@ -105,6 +108,8 @@ tests-legacy/.phpunit.result.cache
 /admin-dev/export/*
 !/admin-dev/export/.htaccess
 !/admin-dev/export/index.php
+
+/admin-dev/bundles/*
 
 # Downloaded RTL files
 /admin-dev/themes/default/css/bundle/default_rtl.css
@@ -134,6 +139,10 @@ themes/*-chunk.js.map
 
 # Config
 
+/.env
+/.env.local
+/.env.local.php
+/.env.*.local
 config/defines_custom.inc.php
 config/settings.inc.php
 config/settings.old.php
@@ -214,3 +223,13 @@ tools/build/releases/*
 # Docker configuration
 install.lock
 docker-compose.override.yml
+.docker/ssl.crt
+.docker/ssl.key
+
+# DotEnv files
+/.env.local
+/.env.local.php
+/.env.*.local
+
+# config vscode
+.hintrc

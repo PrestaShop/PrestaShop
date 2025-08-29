@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -56,6 +55,7 @@ class ConfigurationMap
             ShowcaseCard::ATTRIBUTES_CARD => sprintf(self::CLOSED_TEMPLATE, 'ATTRIBUTES'),
             ShowcaseCard::MONITORING_CARD => sprintf(self::CLOSED_TEMPLATE, 'MONITORING'),
             ShowcaseCard::CARRIERS_CARD => sprintf(self::CLOSED_TEMPLATE, 'CARRIERS'),
+            ShowcaseCard::FEATURES_CARD => sprintf(self::CLOSED_TEMPLATE, 'FEATURES'),
         ];
     }
 

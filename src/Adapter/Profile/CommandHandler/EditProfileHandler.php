@@ -26,16 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Profile\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\EditProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\CommandHandler\EditProfileHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Profile;
 
 /**
  * Edits Profile using legacy object model
  */
+#[AsCommandHandler]
 final class EditProfileHandler implements EditProfileHandlerInterface
 {
     /**
@@ -61,8 +65,8 @@ final class EditProfileHandler implements EditProfileHandlerInterface
      * @return Profile
      *
      * @throws ProfileNotFoundException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function getProfile(ProfileId $profileId)
     {

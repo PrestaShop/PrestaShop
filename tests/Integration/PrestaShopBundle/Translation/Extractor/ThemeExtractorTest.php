@@ -71,9 +71,9 @@ class ThemeExtractorTest extends KernelTestCase
         self::bootKernel();
 
         $this->filesystem = new Filesystem();
-        $this->themeExtractor = self::$container->get('prestashop.translation.theme_extractor');
+        $this->themeExtractor = self::getContainer()->get('prestashop.translation.theme_extractor');
 
-        $themeProvider = self::$container->get('prestashop.translation.theme_provider');
+        $themeProvider = self::getContainer()->get('prestashop.translation.theme_provider');
         $this->themeExtractor->setThemeProvider($themeProvider);
     }
 
@@ -88,6 +88,8 @@ class ThemeExtractorTest extends KernelTestCase
         }
 
         $this->themeExtractor = null;
+
+        parent::tearDown();
     }
 
     public function testExtractWithLegacyFormat(): void

@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter;
 use ArrayAccess;
 use ArrayIterator;
 use ArrayObject;
+use Closure;
 use Countable;
 use Iterator;
 use JsonSerializable;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Util\Inflector;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use ReturnTypeWillChange;
 use RuntimeException;
 
 /**
@@ -49,7 +51,7 @@ use RuntimeException;
  *
  *     @arrayAccess
  *
- *     @return array
+ * @return array
  *
  *     public function getAddresses()
  *
@@ -66,8 +68,6 @@ use RuntimeException;
  */
 abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, JsonSerializable
 {
-    private const INDEX_NAME_PATTERN = '/@indexName\s+"([^"]+)"/';
-
     /**
      * @var ArrayObject
      */
@@ -91,22 +91,17 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     public function __construct()
     {
         $this->arrayAccessList = new ArrayObject();
-        $reflectionClass = new ReflectionClass(get_class($this));
+        $reflectionClass = new ReflectionClass(static::class);
         $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
-            $methodDoc = $method->getDocComment();
-            if (strpos($methodDoc, '@arrayAccess') !== false) {
-                if (preg_match(self::INDEX_NAME_PATTERN, $methodDoc, $matches)) {
-                    $indexName = $matches[1];
-                } else {
-                    $indexName = $this->convertMethodNameToIndex($method->getName());
-                }
+            $attributeInstance = $this->getAttributeInstanceFromMethod($method);
+            if ($this->isArrayAccessMethod($attributeInstance, $method)) {
                 $this->arrayAccessList->offsetSet(
-                    $indexName,
+                    $this->getIndexNameFromMethod($attributeInstance, $method),
                     [
                         'type' => 'method',
                         'value' => $method->getName(),
-                        'isRewritable' => strpos($methodDoc, '@isRewritable') !== false,
+                        'isRewritable' => $this->isResultRewritable($reflectionClass, $attributeInstance),
                     ]
                 );
             }
@@ -121,7 +116,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $arrayResult = [];
@@ -155,9 +150,9 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
 
     /**
      * @param mixed $key
-     * @param \Closure $closure
+     * @param Closure $closure
      */
-    public function appendClosure($key, \Closure $closure)
+    public function appendClosure($key, Closure $closure)
     {
         $this->arrayAccessList->offsetSet(
             $key,
@@ -255,7 +250,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($index)
     {
         if (isset($this->arrayAccessList[$index])) {
@@ -328,7 +323,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function current()
     {
         $key = $this->arrayAccessIterator->key();
@@ -349,7 +344,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @return mixed|string
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function key()
     {
         return $this->arrayAccessIterator->key();
@@ -399,17 +394,24 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      */
     public function offsetSet($offset, $value, $force = false): void
     {
+        // verify if the offset exists and is not rewritable, unless forced
         if ($this->arrayAccessList->offsetExists($offset)) {
-            $result = $this->arrayAccessList->offsetGet($offset);
+            $offsetData = $this->arrayAccessList->offsetGet($offset);
 
-            if (!$force && $result['type'] !== 'variable' && !$result['isRewritable']) {
-                throw new RuntimeException('Trying to set the index ' . print_r($offset, true) . ' of the LazyArray ' . get_class($this) . ' already defined by a method is not allowed');
+            if (!$force && $offsetData['type'] !== 'variable' && !$offsetData['isRewritable']) {
+                $errorMessage = sprintf(
+                    'Trying to set the index %s of the LazyArray %s already defined by a method is not allowed.',
+                    print_r($offset, true),
+                    static::class
+                );
+                throw new RuntimeException($errorMessage);
             }
         }
+
         $this->arrayAccessList->offsetSet($offset, [
             'type' => 'variable',
             'value' => $value,
-            'isRewritable' => $result['isRewritable'] ?? false,
+            'isRewritable' => $offsetData['isRewritable'] ?? false,
         ]);
     }
 
@@ -425,7 +427,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         if ($force || $result['type'] === 'variable') {
             $this->arrayAccessList->offsetUnset($offset);
         } else {
-            throw new RuntimeException('Trying to unset the index ' . print_r($offset, true) . ' of the LazyArray ' . get_class($this) . ' already defined by a method is not allowed');
+            throw new RuntimeException('Trying to unset the index ' . print_r($offset, true) . ' of the LazyArray ' . static::class . ' already defined by a method is not allowed');
         }
     }
 
@@ -440,5 +442,62 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         $strippedMethodName = substr($methodName, 3);
 
         return Inflector::getInflector()->tableize($strippedMethodName);
+    }
+
+    private function isResultRewritable(ReflectionClass $reflexionClass, ?LazyArrayAttribute $methodAttributeInstance): bool
+    {
+        if (!is_null($methodAttributeInstance) && !is_null($methodAttributeInstance->isRewritable)) {
+            return $methodAttributeInstance->isRewritable;
+        }
+
+        // no attribute found at method level, let's check at class level
+        $classAttributeInstance = null;
+        $classAttributes = $reflexionClass->getAttributes();
+
+        if (!empty($classAttributes)) {
+            $classAttributeInstance = $classAttributes[0]->newInstance();
+            if (isset($classAttributeInstance->isRewritable)) {
+                return $classAttributeInstance->isRewritable;
+            }
+        }
+
+        return false;
+    }
+
+    private function getAttributeInstanceFromMethod(ReflectionMethod $method): ?LazyArrayAttribute
+    {
+        $attributeInstance = null;
+        $methodAttributes = $method->getAttributes(LazyArrayAttribute::class);
+
+        if (!empty($methodAttributes)) {
+            $attributeInstance = $methodAttributes[0]->newInstance();
+        }
+
+        return $attributeInstance;
+    }
+
+    private function getIndexNameFromMethod(?LazyArrayAttribute $attributeInstance, ReflectionMethod $method): string
+    {
+        if (!is_null($attributeInstance) && !empty($attributeInstance->indexName)) {
+            return $attributeInstance->indexName;
+        }
+
+        return $this->convertMethodNameToIndex($method->getName());
+    }
+
+    private function isArrayAccessMethod($attributeInstance, $method): bool
+    {
+        if (!is_null($attributeInstance)) {
+            return $attributeInstance->arrayAccess;
+        }
+
+        @trigger_error(
+            'Configuring a method as arrayAccess through annotations is deprecated since version 9.0.0, use php attributes instead, using the LazyArrayAttribute class.',
+            E_USER_DEPRECATED
+        );
+
+        $methodDoc = $method->getDocComment();
+
+        return str_contains($methodDoc, '@arrayAccess');
     }
 }

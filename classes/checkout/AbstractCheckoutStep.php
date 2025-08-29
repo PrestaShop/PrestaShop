@@ -86,6 +86,13 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
             'step_is_current' => (int) $this->isCurrent(),
         ];
 
+        Hook::exec('actionCheckoutStepRenderTemplate', [
+            'template' => &$template,
+            'params' => &$params,
+            'extraParams' => &$extraParams,
+            'defaultParams' => &$defaultParams,
+        ]);
+
         $scope = $this->smarty->createData(
             $this->smarty
         );

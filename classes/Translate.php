@@ -26,8 +26,6 @@
 
 /**
  * Class TranslateCore.
- *
- * @since 1.5.0
  */
 class TranslateCore
 {
@@ -70,41 +68,6 @@ class TranslateCore
         }
 
         return $addslashes ? addslashes($str) : stripslashes($str);
-    }
-
-    /**
-     * Get a translation for an admin controller.
-     *
-     * @deprecated Use Context::getContext()->getTranslator()->trans()
-     *
-     * @param string $string
-     * @param string $class
-     * @param bool $addslashes
-     * @param bool $htmlentities
-     * @param array|null $sprintf
-     *
-     * @return string
-     */
-    public static function getAdminTranslation($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true, $sprintf = null)
-    {
-        @trigger_error(__FUNCTION__ . 'is deprecated. Use Context::getContext()->getTranslator()->trans() instead.', E_USER_DEPRECATED);
-
-        $str = Context::getContext()->getTranslator()->trans($string);
-
-        if ($htmlentities) {
-            $str = htmlspecialchars($str, ENT_QUOTES, 'utf-8');
-        }
-        $str = str_replace('"', '&quot;', $str);
-
-        if (
-            $sprintf !== null &&
-            (!is_array($sprintf) || !empty($sprintf)) &&
-            !(count($sprintf) === 1 && isset($sprintf['legacy']))
-        ) {
-            $str = Translate::checkAndReplaceArgs($str, $sprintf);
-        }
-
-        return $addslashes ? addslashes($str) : $str;
     }
 
     /**
@@ -197,9 +160,9 @@ class TranslateCore
             }
 
             if (
-                $sprintf !== null &&
-                (!is_array($sprintf) || !empty($sprintf)) &&
-                !(count($sprintf) === 1 && isset($sprintf['legacy']))
+                $sprintf !== null
+                && (!is_array($sprintf) || !empty($sprintf))
+                && !(count($sprintf) === 1 && isset($sprintf['legacy']))
             ) {
                 $ret = Translate::checkAndReplaceArgs($ret, $sprintf);
             }
@@ -257,7 +220,7 @@ class TranslateCore
         }
 
         if (!isset($_LANGPDF) || !is_array($_LANGPDF)) {
-            return str_replace('"', '&quot;', $string);
+            return str_replace('"', '&quot;', Translate::checkAndReplaceArgs($string, $sprintf));
         }
 
         $string = preg_replace("/\\\*'/", "\'", $string);
@@ -266,9 +229,9 @@ class TranslateCore
         $str = (array_key_exists('PDF' . $key, $_LANGPDF) ? $_LANGPDF['PDF' . $key] : $string);
 
         if (
-            $sprintf !== null &&
-            (!is_array($sprintf) || !empty($sprintf)) &&
-            !(count($sprintf) === 1 && isset($sprintf['legacy']))
+            $sprintf !== null
+            && (!is_array($sprintf) || !empty($sprintf))
+            && !(count($sprintf) === 1 && isset($sprintf['legacy']))
         ) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
@@ -319,28 +282,6 @@ class TranslateCore
         }
 
         return $string;
-    }
-
-    /**
-     * Compatibility method that just calls postProcessTranslation.
-     *
-     * @deprecated renamed this to postProcessTranslation, since it is not only used in relation to smarty
-     */
-    public static function smartyPostProcessTranslation($string, $params)
-    {
-        return Translate::postProcessTranslation($string, $params);
-    }
-
-    /**
-     * Helper function to make calls to postProcessTranslation more readable.
-     *
-     * @deprecated 1.7.1.0
-     */
-    public static function ppTags($string, $tags)
-    {
-        Tools::displayAsDeprecated();
-
-        return Translate::postProcessTranslation($string, ['tags' => $tags]);
     }
 
     /**

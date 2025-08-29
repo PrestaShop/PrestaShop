@@ -1,29 +1,26 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import common tests
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import FO pages
-import checkoutPage from '@pages/FO/checkout';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {homePage as foHomePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import {
+  type BrowserContext,
+  dataCustomers,
+  dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
+  foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
+  foClassicHomePage,
+  foClassicLoginPage,
+  foClassicMyAccountPage,
+  foClassicMyOrderDetailsPage,
+  foClassicMyOrderHistoryPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
-// Import data
-import Customers from '@data/demo/customers';
-import Products from '@data/demo/products';
-import PaymentMethods from '@data/demo/paymentMethods';
-import OrderData from '@data/faker/order';
-
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
-
-// context
 const baseContext: string = 'functional_FO_classic_userAccount_orderHistory_reorderFromOrderList';
 
 /*
@@ -42,15 +39,15 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const orderData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+  const orderData: FakerOrder = new FakerOrder({
+    customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create order
@@ -58,93 +55,93 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Go to order list and proceed reorder', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
-      await foHomePage.goToFo(page);
+      await foClassicHomePage.goToFo(page);
 
-      const isHomePage: boolean = await foHomePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
+      const isHomePage: boolean = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFoPage', baseContext);
 
-      await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
-      const pageHeaderTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
+      const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected: boolean = await myAccountPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      const isCustomerConnected: boolean = await foClassicMyAccountPage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
     });
 
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+      const pageHeaderTitle = await foClassicMyOrderHistoryPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicMyOrderHistoryPage.pageTitle);
     });
 
     it('should reorder the last order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'reorderLastOrder', baseContext);
 
-      await foOrderHistoryPage.clickOnReorderLink(page);
+      await foClassicMyOrderHistoryPage.clickOnReorderLink(page);
 
-      const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-      await expect(isCheckoutPage, 'Browser is not in checkout Page').to.be.true;
+      const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+      expect(isCheckoutPage, 'Browser is not in checkout Page').to.eq(true);
     });
 
     it('should validate Step Address and go to Delivery Step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryStepForReorder', baseContext);
 
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should validate Step Delivery and go to Payment Step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStepForReorder', baseContext);
 
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should Pay by bank wire and confirm order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmReorder', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-      const pageTitle = await orderConfirmationPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
+      const pageTitle = await foClassicCheckoutOrderConfirmationPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicCheckoutOrderConfirmationPage.pageTitle);
 
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
@@ -152,44 +149,44 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToAccountPage', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicMyAccountPage.pageTitle);
     });
 
     it('should go back to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrderHistoryPage', baseContext);
 
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+      const pageHeaderTitle = await foClassicMyOrderHistoryPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foClassicMyOrderHistoryPage.pageTitle);
     });
 
     it('should go to order details page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
 
-      await foOrderHistoryPage.goToDetailsPage(page);
+      await foClassicMyOrderHistoryPage.goToDetailsPage(page);
 
-      const pageTitle = await orderDetailsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
+      const pageTitle = await foClassicMyOrderDetailsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicMyOrderDetailsPage.pageTitle);
     });
 
     it('should check the ordered product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTheOrderedProduct', baseContext);
 
-      const orderedProduct = await orderDetailsPage.getProductName(page);
-      await expect(orderedProduct).to.contain(Products.demo_1.name);
+      const orderedProduct = await foClassicMyOrderDetailsPage.getProductName(page);
+      expect(orderedProduct).to.contain(dataProducts.demo_1.name);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await orderConfirmationPage.logout(page);
+      await foClassicCheckoutOrderConfirmationPage.logout(page);
 
-      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
 });

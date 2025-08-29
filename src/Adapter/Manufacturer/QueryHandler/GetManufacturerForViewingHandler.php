@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Manufacturer\QueryHandler;
 
 use Manufacturer;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
@@ -38,6 +39,7 @@ use Product;
 /**
  * Handles getting manufacturer for viewing query using legacy object model
  */
+#[AsQueryHandler]
 final class GetManufacturerForViewingHandler implements GetManufacturerForViewingHandlerInterface
 {
     /**

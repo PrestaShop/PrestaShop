@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\DataLangFactory;
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\EntityTranslatorFactory;
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\Exception\DataLangClassNameNotFoundException;
@@ -36,7 +37,8 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
-use Symfony\Component\Intl\Intl;
+use PrestaShopBundle\Translation\TranslatorInterface;
+use Symfony\Component\Intl\Countries;
 
 class LanguageCore extends ObjectModel implements LanguageInterface
 {
@@ -130,14 +132,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     protected $webserviceParameters = [
         'objectNodeName' => 'language',
         'objectsNodeName' => 'languages',
-    ];
-
-    protected $translationsFilesAndVars = [
-        'fields' => '_FIELDS',
-        'errors' => '_ERRORS',
-        'admin' => '_LANGADM',
-        'pdf' => '_LANGPDF',
-        'tabs' => 'tabs',
     ];
 
     public static function resetStaticCache()
@@ -362,7 +356,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             $mPath_to = _PS_MAIL_DIR_ . (string) $iso_to . '/';
         }
 
-        $lFiles = ['admin.php', 'errors.php', 'fields.php', 'pdf.php', 'tabs.php'];
+        $lFiles = ['admin.php', 'errors.php', 'pdf.php', 'tabs.php'];
 
         // Added natives mails files
         $mFiles = [
@@ -536,7 +530,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @return bool
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     private function duplicateRowsFromDefaultShopLang($tableName, $shopDefaultLangId, $shopId)
     {
@@ -697,12 +691,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteSelection($selection)
+    public function deleteSelection(array $selection)
     {
-        if (!is_array($selection)) {
-            die(Tools::displayError('Parameter "selection" must be an array.'));
-        }
-
         $result = true;
         foreach ($selection as $id) {
             $language = new Language($id);
@@ -770,7 +760,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
-        return static::$_LANGUAGES[(int) ($id_lang)];
+        return static::$_LANGUAGES[(int) $id_lang];
     }
 
     /**
@@ -1328,6 +1318,13 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $zipArchive->extractTo(self::SF_TRANSLATIONS_DIR);
         $zipArchive->close();
 
+        // As soon as new XLF catalogue is installed the translator catalogues are not up to date
+        // anymore, so we force them to reload
+        self::loadAdminTranslatorLocale($locale, true);
+
+        // Symfony cache must be cleared after new language is installed
+        Tools::clearSf2Cache();
+
         return true;
     }
 
@@ -1483,7 +1480,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         $lang_pack = static::getLangDetails($iso);
         if (!empty($lang_pack['locale'])) {
-            //Update locale field if empty (manually created, or imported without it)
+            // Update locale field if empty (manually created, or imported without it)
             $language = new Language(Language::getIdByIso($iso));
             if ($language->id && empty($language->locale)) {
                 $language->locale = $lang_pack['locale'];
@@ -1504,29 +1501,11 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * Check if more on than one language is activated.
      *
-     * @since 1.5.0
-     *
      * @return bool
      */
     public static function isMultiLanguageActivated($id_shop = null)
     {
         return Language::countActiveLanguages($id_shop) > 1;
-    }
-
-    public static function getLanguagePackListContent($iso, $tar)
-    {
-        $key = 'Language::getLanguagePackListContent_' . $iso;
-        if (!Cache::isStored($key)) {
-            if (!$tar instanceof \Archive_Tar) {
-                return false;
-            }
-            $result = $tar->listContent();
-            Cache::store($key, $result);
-
-            return $result;
-        }
-
-        return Cache::retrieve($key);
     }
 
     /**
@@ -1580,7 +1559,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function updateMultilangTables(Language $language, array $tablesToUpdate)
     {
-        $translator = SymfonyContainer::getInstance()->get('translator');
+        $translator = SymfonyContainer::getInstance()->get(TranslatorInterface::class);
 
         foreach ($tablesToUpdate as $tableName) {
             $className = (new DataLangFactory(_DB_PREFIX_, $translator))
@@ -1640,7 +1619,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function updateMultilangFromClass($table, $className, $lang)
     {
-        $translator = SymfonyContainer::getInstance()->get('translator');
+        $translator = SymfonyContainer::getInstance()->get(TranslatorInterface::class);
 
         try {
             $classObject = (new DataLangFactory(_DB_PREFIX_, $translator))
@@ -1668,25 +1647,41 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param LanguageCore $lang
      * @param Shop $shop
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
     private static function updateMultilangFromClassForShop(DataLangCore $classObject, self $lang, Shop $shop)
     {
         $shopDefaultLangId = (int) Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
-        $shopDefaultLanguage = new Language($shopDefaultLangId);
-
-        $sfContainer = SymfonyContainer::getInstance();
-        $translator = $sfContainer->get('translator');
-        if (!$translator->isLanguageLoaded($shopDefaultLanguage->locale)) {
-            $sfContainer->get('prestashop.translation.translator_language_loader')
-                ->setIsAdminContext(true)
-                ->loadLanguage($translator, $shopDefaultLanguage->locale);
+        // During install process the default language may not be available yet
+        if (!empty($shopDefaultLangId)) {
+            $shopDefaultLanguage = new Language($shopDefaultLangId);
+            self::loadAdminTranslatorLocale($shopDefaultLanguage->locale, false);
         }
 
+        // The provided locale should always be loaded though
+        self::loadAdminTranslatorLocale($lang->locale, false);
+
+        $sfContainer = SymfonyContainer::getInstance();
+        /** @var TranslatorInterface $translator */
+        $translator = $sfContainer->get(TranslatorInterface::class);
         (new EntityTranslatorFactory($translator))
             ->build($classObject)
             ->translate($lang->id, $shop->id);
+    }
+
+    private static function loadAdminTranslatorLocale(string $locale, bool $clearCatalogue): void
+    {
+        $sfContainer = SymfonyContainer::getInstance();
+        if ($sfContainer === null) {
+            return;
+        }
+        $translator = $sfContainer->get(TranslatorInterface::class);
+        if (!$translator->isLanguageLoaded($locale) || $clearCatalogue) {
+            $languageLoader = $sfContainer->get('prestashop.translation.translator_language_loader');
+            $languageLoader->setIsAdminContext(true);
+            $languageLoader->loadLanguage($translator, $locale, true, null, $clearCatalogue);
+        }
     }
 
     /**
@@ -1741,7 +1736,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * @return string return the language locale, or its code by default
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return !empty($this->locale) ?
             $this->locale :
@@ -1751,7 +1746,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * {@inheritdoc}
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -1759,7 +1754,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -1767,7 +1762,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * {@inheritdoc}
      */
-    public function getIsoCode()
+    public function getIsoCode(): string
     {
         return $this->iso_code;
     }
@@ -1775,7 +1770,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * {@inheritdoc}
      */
-    public function getLanguageCode()
+    public function getLanguageCode(): string
     {
         return $this->language_code;
     }
@@ -1783,9 +1778,25 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * {@inheritdoc}
      */
-    public function isRTL()
+    public function isRTL(): bool
     {
         return $this->is_rtl;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDateFormat(): string
+    {
+        return $this->date_format_lite;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDateTimeFormat(): string
+    {
+        return $this->date_format_full;
     }
 
     /**
@@ -1796,7 +1807,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     private function getCountries(string $locale): array
     {
         Locale::setDefault($locale);
-        $countries = Intl::getRegionBundle()->getCountryNames();
+        $countries = Countries::getNames();
         $countries = array_change_key_case($countries, CASE_LOWER);
 
         return $countries;

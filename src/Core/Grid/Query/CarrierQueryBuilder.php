@@ -44,6 +44,7 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
         'active',
         'is_free',
         'position',
+        'external_module_name',
     ];
 
     /**
@@ -88,7 +89,7 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getCarrierQueryBuilder($searchCriteria)
-            ->select('c.id_carrier, c.name, cl.delay, c.active, c.is_free, c.position')
+            ->select('c.id_carrier, c.name, cl.delay, c.active, c.is_free, c.position, c.external_module_name')
             ->groupBy('c.id_carrier');
 
         $this->searchCriteriaApplicator
@@ -159,6 +160,13 @@ final class CarrierQueryBuilder extends AbstractDoctrineQueryBuilder
 
                 $qb->andWhere('c.position = :position');
                 $qb->setParameter($filterName, $filterValue);
+
+                continue;
+            }
+
+            if ($filterName === 'external_module_name') {
+                $qb->andWhere('c.external_module_name LIKE :external_module_name');
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
             }

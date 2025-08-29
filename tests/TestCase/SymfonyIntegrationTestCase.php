@@ -26,34 +26,28 @@
 
 namespace Tests\TestCase;
 
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Integration\Utility\ContextMocker;
+use Tests\Integration\Utility\ContextMockerTrait;
 use Tests\Resources\DatabaseDump;
 
 class SymfonyIntegrationTestCase extends WebTestCase
 {
-    /**
-     * @var ContextMocker
-     */
-    protected $contextMocker;
+    use ContextMockerTrait;
 
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->contextMocker = new ContextMocker();
-        $this->contextMocker->mockContext();
-
+        static::mockContext();
         $this->client = self::createClient();
 
-        //createClient already creates the kernel
-        //$this->bootKernel();
-        self::$container = self::$kernel->getContainer();
+        // createClient already creates the kernel
+        // $this->bootKernel();
 
         // Global var for SymfonyContainer
         global $kernel;
@@ -63,7 +57,7 @@ class SymfonyIntegrationTestCase extends WebTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        $this->contextMocker->resetContext();
+        static::resetContext();
     }
 
     public static function setUpBeforeClass(): void

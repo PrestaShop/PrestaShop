@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\ChoiceProvider;
 
 use Generator;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PackStockTypeChoiceProvider;
 
 class PackStockTypeChoiceProviderTest extends ChoiceProviderTestCase
@@ -40,9 +41,14 @@ class PackStockTypeChoiceProviderTest extends ChoiceProviderTestCase
      */
     public function testItProvidesChoicesAsExpected(int $defaultPackStockType, array $expectedChoices): void
     {
+        $mock = $this->createMock(ShopConfigurationInterface::class);
+        $mock->expects($this->once())
+            ->method('get')
+            ->willReturn($defaultPackStockType);
+
         $choiceProvider = new PackStockTypeChoiceProvider(
             $this->mockTranslator(),
-            $defaultPackStockType
+            $mock
         );
 
         $this->assertEquals($expectedChoices, $choiceProvider->getChoices());

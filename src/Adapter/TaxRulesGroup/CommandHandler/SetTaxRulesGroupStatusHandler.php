@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\SetTaxRulesGroupStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\ToggleTaxRulesGroupStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRulesGroupException;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFo
 /**
  * Handles tax rules group status toggling
  */
+#[AsCommandHandler]
 final class SetTaxRulesGroupStatusHandler extends AbstractTaxRulesGroupHandler implements ToggleTaxRulesGroupStatusHandlerInterface
 {
     /**

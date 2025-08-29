@@ -37,7 +37,7 @@ final class MailOption
     public const METHOD_NATIVE = 1;
 
     /**
-     *  @var int Option defines that emails should be sent using configured SMTP settings
+     * @var int Option defines that emails should be sent using configured SMTP settings
      */
     public const METHOD_SMTP = 2;
 
@@ -60,6 +60,12 @@ final class MailOption
      * @var int Option defines that emails should be sent in both HTML and TXT formats
      */
     public const TYPE_BOTH = 3;
+
+    /**
+     * @var int Option defines that emails should be sent in both HTML and TXT formats,
+     *          with TXT format being automatically generated from HTML content
+     */
+    public const TYPE_BOTH_AUTOMATIC_TEXT = 4;
 
     /**
      * Class should not be initialized as its responsibility is to hold mail method options.

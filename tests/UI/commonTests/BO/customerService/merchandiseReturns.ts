@@ -1,16 +1,14 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import merchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boLoginPage,
+  boMerchandiseReturnsPage,
+  type BrowserContext,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -23,37 +21,43 @@ function enableMerchandiseReturns(baseContext: string = 'commonTests-enableMerch
   describe('PRE-TEST: Enable merchandise returns', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMerchandiseReturnsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.merchandiseReturnsLink,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.merchandiseReturnsLink,
       );
-      await merchandiseReturnsPage.closeSfToolBar(page);
+      await boMerchandiseReturnsPage.closeSfToolBar(page);
 
-      const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+      const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
     });
 
     it('should enable merchandise returns', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableReturns', baseContext);
 
-      const result = await merchandiseReturnsPage.setOrderReturnStatus(page, true);
-      await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
+      const result = await boMerchandiseReturnsPage.setOrderReturnStatus(page, true);
+      expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
     });
   });
 }
@@ -66,36 +70,42 @@ function disableMerchandiseReturns(baseContext: string = 'commonTests-disableMer
   describe('POST-TEST: Disable merchandise returns', async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMerchandiseReturnsPageToDisable', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.merchandiseReturnsLink,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.merchandiseReturnsLink,
       );
 
-      const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+      const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
     });
 
     it('should disable merchandise returns', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableReturns', baseContext);
 
-      const result = await merchandiseReturnsPage.setOrderReturnStatus(page, false);
-      await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
+      const result = await boMerchandiseReturnsPage.setOrderReturnStatus(page, false);
+      expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
     });
   });
 }

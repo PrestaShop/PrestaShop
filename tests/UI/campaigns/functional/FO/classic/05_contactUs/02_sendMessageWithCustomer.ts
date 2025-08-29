@@ -1,157 +1,317 @@
-// Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import customerServicePage from '@pages/BO/customerService/customerService';
-// Import FO pages
-import foContactUsPage from '@pages/FO/contactUs';
-import {homePage as foHomePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-
-// Import data
-import Customers from '@data/demo/customers';
-import Orders from '@data/demo/orders';
-import MessageData from '@data/faker/message';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
+
+import {
+  boCustomerServicePage,
+  boDashboardPage,
+  boLoginPage,
+  boModuleManagerPage,
+  type BrowserContext,
+  dataCustomers,
+  dataModules,
+  dataOrders,
+  FakerContactMessage,
+  foClassicContactUsPage,
+  foClassicHomePage,
+  foClassicLoginPage,
+  type MailDev,
+  type MailDevEmail,
+  modContactFormBoMain,
+  type Page,
+  utilsFile,
+  utilsMail,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_contactUs_sendMessageWithCustomer';
 
 /*
+Pre-condition:
+- Setup SMTP parameters
+- Configure contact form module
+Scenario:
 Go to FO
 Log in with default customer
 Send a message on contact page
+Verify email
 Verify message on customer service page
+Post-condition:
+- Reset config in Contact form module
+- Reset SMTP parameters
  */
 describe('FO - Contact us : Send message from contact us page with customer logged in', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+  let newMail: MailDevEmail;
+  let mailListener: MailDev;
 
-  const contactUsData: MessageData = new MessageData({
-    firstName: Customers.johnDoe.firstName,
-    lastName: Customers.johnDoe.lastName,
+  const contactUsData: FakerContactMessage = new FakerContactMessage({
+    firstName: dataCustomers.johnDoe.firstName,
+    lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
-    emailAddress: Customers.johnDoe.email,
-    reference: Orders.firstOrder.reference,
+    emailAddress: dataCustomers.johnDoe.email,
+    reference: dataOrders.order_1.reference,
   });
+
+  // Pre-Condition : Setup config SMTP
+  setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
-    await files.createFile('.', `${contactUsData.fileName}.txt`, 'new filename');
+    await utilsFile.createFile('.', `${contactUsData.fileName}.txt`, 'new filename');
+
+    // Start listening to maildev server
+    mailListener = utilsMail.createMailListener();
+    utilsMail.startListener(mailListener);
+
+    // Handle every new email
+    mailListener.on('new', (email: MailDevEmail) => {
+      newMail = email;
+    });
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
 
-    await files.deleteFile(`${contactUsData.fileName}.txt`);
+    await utilsFile.deleteFile(`${contactUsData.fileName}.txt`);
+
+    // Stop listening to maildev server
+    utilsMail.stopListener(mailListener);
   });
 
-  it('should open the shop page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
+  describe('PRE-TEST: Configure Contact form module', async () => {
+    it('should login in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
 
-    await foHomePage.goTo(page, global.FO.URL);
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
 
-    const isHomePage = await foHomePage.isHomePage(page);
-    await expect(isHomePage).to.be.true;
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
+    });
+
+    it('should go to \'Modules > Module Manager\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
+      );
+      await boModuleManagerPage.closeSfToolBar(page);
+
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
+    });
+
+    it(`should search the module ${dataModules.contactForm.name}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
+
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.contactForm);
+      expect(isModuleVisible).to.equal(true);
+    });
+
+    it(`should go to the configuration page of the module '${dataModules.contactForm.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
+
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.contactForm.tag);
+
+      const pageTitle = await modContactFormBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modContactFormBoMain.pageTitle);
+    });
+
+    it('should enable Send confirmation email to your customers', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'enableSendConfirmationEmail', baseContext);
+
+      const successMessage = await modContactFormBoMain.setSendConfirmationEmail(page, true);
+      expect(successMessage).to.contains(modContactFormBoMain.successfulUpdateMessage);
+    });
+
+    it('should enable Receive customers\' messages by email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'enableReceiveMessagesByEmail', baseContext);
+
+      const successMessage = await modContactFormBoMain.setReceiveCustomersMessageByEmail(page, true);
+      expect(successMessage).to.contains(modContactFormBoMain.successfulUpdateMessage);
+    });
+
+    it('should logout from BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'logOutBO', baseContext);
+
+      await boDashboardPage.logoutBO(page);
+
+      const pageTitle = await boLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boLoginPage.pageTitle);
+    });
   });
 
-  it('should go to login page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFo', baseContext);
+  describe('FO - Send message from contact us page with customer logged in', async () => {
+    it('should open the shop page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-    await foHomePage.goToLoginPage(page);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-    const pageTitle = await foLoginPage.getPageTitle(page);
-    await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
+    });
+
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFo', baseContext);
+
+      await foClassicHomePage.goToLoginPage(page);
+
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+    });
+
+    it('should sign in with default customer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFo', baseContext);
+
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
+    });
+
+    it('should go on contact us page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
+
+      // Go to contact us page
+      await foClassicLoginPage.goToFooterLink(page, 'Contact us');
+
+      const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
+    });
+
+    it('should send message to customer service', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
+
+      await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+
+      const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
+    });
+
+    it('should check that the confirmation mail is in mailbox', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkMail', baseContext);
+
+      // Translated message looks like this 'Your message no. ct%thread_id% has been correctly sent (thread ID tc%thread_token%)'
+      // so we check the two parts that are not dynamic
+      expect(newMail.subject).to.contains(`[${global.INSTALL.SHOP_NAME}] Your message`);
+      expect(newMail.subject).to.contains('has been correctly sent');
+    });
   });
 
-  it('should sign in with default customer', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'sighInFo', baseContext);
+  describe('BO - Check in Customer Service Page the received message and delete it', async () => {
+    it('should login in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
 
-    await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
 
-    const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
+    });
+
+    it('should go to customer service page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.customerServiceLink,
+      );
+
+      const pageTitle = await boCustomerServicePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
+    });
+
+    it('should check customer name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
+
+      const email = await boCustomerServicePage.getTextColumn(page, 1, 'customer');
+      expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
+    });
+
+    it('should check customer email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
+
+      const email = await boCustomerServicePage.getTextColumn(page, 1, 'a!email');
+      expect(email).to.contain(contactUsData.emailAddress);
+    });
+
+    it('should check message type', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkMessageType', baseContext);
+
+      const subject = await boCustomerServicePage.getTextColumn(page, 1, 'cl!id_contact');
+      expect(subject).to.contain(contactUsData.subject);
+    });
+
+    it('should check message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
+
+      const message = await boCustomerServicePage.getTextColumn(page, 1, 'message');
+      expect(message).to.contain(contactUsData.message);
+    });
+
+    it('should delete the message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
+
+      const textResult = await boCustomerServicePage.deleteMessage(page, 1);
+      expect(textResult).to.contains(boCustomerServicePage.successfulDeleteMessage);
+    });
   });
 
-  it('should go on contact us page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
+  // Post-Condition : Reset contact form module
+  describe('POST-TEST: Reset Contact form module', async () => {
+    it('should go to \'Modules > Module Manager\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage2', baseContext);
 
-    // Go to contact us page
-    await foLoginPage.goToFooterLink(page, 'Contact us');
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
+      );
+      await boModuleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await foContactUsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(foContactUsPage.pageTitle);
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
+    });
+
+    it(`should search the module ${dataModules.contactForm.name}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchModule2', baseContext);
+
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.contactForm);
+      expect(isModuleVisible).to.equal(true);
+    });
+
+    it(`should go to the configuration page of the module '${dataModules.contactForm.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage2', baseContext);
+
+      await boModuleManagerPage.goToConfigurationPage(page, dataModules.contactForm.tag);
+
+      const pageTitle = await modContactFormBoMain.getPageSubtitle(page);
+      expect(pageTitle).to.equal(modContactFormBoMain.pageTitle);
+    });
+
+    it('should disable Send confirmation email to your customers', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableSendConfirmationEmail', baseContext);
+
+      const successMessage = await modContactFormBoMain.setSendConfirmationEmail(page, false);
+      expect(successMessage).to.contains(modContactFormBoMain.successfulUpdateMessage);
+    });
+
+    it('should disable Receive customers\' messages by email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableReceiveMessagesByEmail', baseContext);
+
+      const successMessage = await modContactFormBoMain.setReceiveCustomersMessageByEmail(page, false);
+      expect(successMessage).to.contains(modContactFormBoMain.successfulUpdateMessage);
+    });
   });
 
-  it('should send message to customer service', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
-
-    await foContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
-
-    const validationMessage = await foContactUsPage.getAlertSuccess(page);
-    await expect(validationMessage).to.equal(foContactUsPage.validationMessage);
-  });
-
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
-
-  it('should go to customer service page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
-
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.customerServiceParentLink,
-      dashboardPage.customerServiceLink,
-    );
-
-    const pageTitle = await customerServicePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerServicePage.pageTitle);
-  });
-
-  it('should check customer name', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
-
-    const email = await customerServicePage.getTextColumn(page, 1, 'customer');
-    await expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
-  });
-
-  it('should check customer email', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
-
-    const email = await customerServicePage.getTextColumn(page, 1, 'a!email');
-    await expect(email).to.contain(contactUsData.emailAddress);
-  });
-
-  it('should check message type', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkMessageType', baseContext);
-
-    const subject = await customerServicePage.getTextColumn(page, 1, 'cl!id_contact');
-    await expect(subject).to.contain(contactUsData.subject);
-  });
-
-  it('should check message', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
-
-    const message = await customerServicePage.getTextColumn(page, 1, 'message');
-    await expect(message).to.contain(contactUsData.message);
-  });
-
-  it('should delete the message', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
-
-    const textResult = await customerServicePage.deleteMessage(page, 1);
-    await expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
-  });
+  // Post-Condition : Reset SMTP config
+  resetSmtpConfigTest(`${baseContext}_postTest_2`);
 });

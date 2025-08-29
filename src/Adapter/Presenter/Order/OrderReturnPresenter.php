@@ -30,6 +30,7 @@ use Exception;
 use Hook;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
+use ReflectionException;
 
 class OrderReturnPresenter implements PresenterInterface
 {
@@ -60,7 +61,7 @@ class OrderReturnPresenter implements PresenterInterface
      *
      * @return OrderReturnLazyArray
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function present($orderReturn)
     {

@@ -41,7 +41,6 @@
  * @property string $database_engine
  * @property string $shop_name
  * @property array $xml_loader_ids
- * @property int $shop_activity
  * @property string $shop_country
  * @property string $admin_firstname
  * @property string $admin_lastname
@@ -60,6 +59,7 @@
  * @property string $content_theme
  * @property bool $content_install_fixtures
  * @property int $moduleAction
+ * @property string $adminFolderName
  */
 class InstallSession
 {

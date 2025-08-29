@@ -45,6 +45,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
      */
     private const CONFIGURATION_FIELDS = [
         'friendly_url',
+        'default_language_url_prefix',
         'accented_url',
         'canonical_url_redirection',
         'disable_apache_multiview',
@@ -87,6 +88,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
 
         return [
             'friendly_url' => (bool) $this->configuration->get('PS_REWRITING_SETTINGS', false, $shopConstraint),
+            'default_language_url_prefix' => (bool) $this->configuration->get('PS_DEFAULT_LANGUAGE_URL_PREFIX', false, $shopConstraint),
             'accented_url' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL', false, $shopConstraint),
             'canonical_url_redirection' => (int) $this->configuration->get('PS_CANONICAL_REDIRECT', 0, $shopConstraint),
             'disable_apache_multiview' => (bool) $this->configuration->get('PS_HTACCESS_DISABLE_MULTIVIEWS', false, $shopConstraint),
@@ -105,6 +107,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
             $shopConstraint = $this->getShopConstraint();
 
             $this->updateConfigurationValue('PS_REWRITING_SETTINGS', 'friendly_url', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_DEFAULT_LANGUAGE_URL_PREFIX', 'default_language_url_prefix', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_ALLOW_ACCENTED_CHARS_URL', 'accented_url', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_CANONICAL_REDIRECT', 'canonical_url_redirection', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_HTACCESS_DISABLE_MULTIVIEWS', 'disable_apache_multiview', $configuration, $shopConstraint);
@@ -151,6 +154,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
             ->setAllowedTypes('friendly_url', 'bool')
+            ->setAllowedTypes('default_language_url_prefix', 'bool')
             ->setAllowedTypes('accented_url', 'bool')
             ->setAllowedTypes('canonical_url_redirection', 'int')
             ->setAllowedTypes('disable_apache_multiview', 'bool')

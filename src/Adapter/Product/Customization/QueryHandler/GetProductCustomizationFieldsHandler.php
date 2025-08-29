@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Customization\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Repository\CustomizationFieldRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryHandler\GetProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 /**
  * Defines contract to handle @var GetProductCustomizationFields query
  */
+#[AsQueryHandler]
 final class GetProductCustomizationFieldsHandler implements GetProductCustomizationFieldsHandlerInterface
 {
     /**

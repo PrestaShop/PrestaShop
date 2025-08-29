@@ -142,6 +142,6 @@ class PatternTransformer
      */
     private function getRtlCharacter(string $currencyPattern): string
     {
-        return (false !== strpos($currencyPattern, self::RTL_CHARACTER)) ? self::RTL_CHARACTER : '';
+        return (str_contains($currencyPattern, self::RTL_CHARACTER)) ? self::RTL_CHARACTER : '';
     }
 }

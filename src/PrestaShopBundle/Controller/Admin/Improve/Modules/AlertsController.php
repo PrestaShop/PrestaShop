@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -35,25 +35,24 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AlertsController extends ModuleAbstractController
 {
-    /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @return Response
-     */
-    public function indexAction()
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function indexAction(): Response
     {
         $moduleRepository = $this->getModuleRepository();
 
         return $this->render(
             '@PrestaShop/Admin/Module/alerts.html.twig',
-            $this->getNotificationPageData($moduleRepository->getMustBeConfiguredModules())
+            array_merge(
+                $this->getNotificationPageData($moduleRepository->getMustBeConfiguredModules()),
+                ['layoutTitle' => $this->trans('Module alerts', [], 'Admin.Navigation.Menu')]
+            )
         );
     }
 
     /**
      * @return JsonResponse with number of modules having at least one notification
      */
-    public function notificationsCountAction()
+    public function notificationsCountAction(): JsonResponse
     {
         $moduleRepository = $this->getModuleRepository();
         $toConfigure = count($moduleRepository->getMustBeConfiguredModules());

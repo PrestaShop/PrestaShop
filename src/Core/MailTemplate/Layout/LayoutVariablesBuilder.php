@@ -83,7 +83,7 @@ class LayoutVariablesBuilder implements LayoutVariablesBuilderInterface
             'locale' => $language->getLocale(),
         ]);
 
-        //This hook allows to change the variables of a layout
+        // This hook allows to change the variables of a layout
         $this->hookDispatcher->dispatchWithParameters(
             LayoutVariablesBuilderInterface::BUILD_MAIL_LAYOUT_VARIABLES_HOOK,
             [

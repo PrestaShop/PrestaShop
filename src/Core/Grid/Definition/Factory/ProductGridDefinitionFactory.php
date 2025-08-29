@@ -55,10 +55,10 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\HiddenFilter;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
+use PrestaShopBundle\Form\Admin\Sell\Product\ProductSearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
-use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -276,10 +276,10 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => $this->getRowActions(),
-            ])
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => $this->getRowActions(),
+                ])
             )
         ;
 
@@ -342,44 +342,44 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         $rowActions = new RowActionCollection();
         $rowActions
             ->add((new LinkRowAction('edit'))
-            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-            ->setIcon('edit')
-            ->setOptions([
-                'route' => 'admin_products_edit',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'clickable_row' => true,
-            ])
+                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                ->setIcon('edit')
+                ->setOptions([
+                    'route' => 'admin_products_edit',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'clickable_row' => true,
+                ])
             )
             ->add((new LinkRowAction('preview'))
-            ->setName($this->trans('Preview', [], 'Admin.Actions'))
-            ->setIcon('remove_red_eye')
-            ->setOptions([
-                'route' => 'admin_products_preview',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'target' => '_blank',
-                'accessibility_checker' => $this->singleShopChecker,
-            ])
+                ->setName($this->trans('Preview', [], 'Admin.Actions'))
+                ->setIcon('remove_red_eye')
+                ->setOptions([
+                    'route' => 'admin_products_preview',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'target' => '_blank',
+                    'accessibility_checker' => $this->singleShopChecker,
+                ])
             )
             ->add((new SubmitRowAction('duplicate'))
-            ->setName($duplicateLabel)
-            ->setIcon('content_copy')
-            ->setOptions([
-                'method' => 'POST',
-                'route' => 'admin_products_duplicate_shop',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'extra_route_params' => [
-                    'shopId' => $shopId,
-                ],
-                'confirm_message' => $this->trans('Remember to properly edit all information after duplicating - including SEO information and friendly URL.', [], 'Admin.Catalog.Notification'),
-                'modal_options' => new ModalOptions([
-                    'title' => $this->trans('Duplicate product', [], 'Admin.Actions'),
-                    'confirm_button_label' => $duplicateLabel,
-                    'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
-                ]),
-            ])
+                ->setName($duplicateLabel)
+                ->setIcon('content_copy')
+                ->setOptions([
+                    'method' => 'POST',
+                    'route' => 'admin_products_duplicate_shop',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'extra_route_params' => [
+                        'shopId' => $shopId,
+                    ],
+                    'confirm_message' => $this->trans('Remember to properly edit all information after duplicating - including SEO information and friendly URL.', [], 'Admin.Catalog.Notification'),
+                    'modal_options' => new ModalOptions([
+                        'title' => $this->trans('Duplicate product', [], 'Admin.Actions'),
+                        'confirm_button_label' => $duplicateLabel,
+                        'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+                    ]),
+                ])
             )
             ->add(
                 $this->buildDeleteAction(
@@ -429,61 +429,61 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         $rowActions = new RowActionCollection();
         $rowActions
             ->add((new LinkRowAction('single_shop_edit'))
-            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-            ->setIcon('edit')
-            ->setOptions([
-                'route' => 'admin_products_edit',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'clickable_row' => true,
-                // Only present when product has strictly one shop
-                'accessibility_checker' => $this->singleShopChecker,
-                // We force the shop switching in this case
-                'extra_route_params' => [
-                    'switchToShop' => 'id_shop_default',
-                ],
-            ])
+                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                ->setIcon('edit')
+                ->setOptions([
+                    'route' => 'admin_products_edit',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'clickable_row' => true,
+                    // Only present when product has strictly one shop
+                    'accessibility_checker' => $this->singleShopChecker,
+                    // We force the shop switching in this case
+                    'extra_route_params' => [
+                        'switchToShop' => 'id_shop_default',
+                    ],
+                ])
             )
             ->add((new LinkRowAction('multi_shops_edit'))
-            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-            ->setIcon('edit')
-            ->setOptions([
-                'route' => 'admin_products_edit',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'clickable_row' => true,
-                'attr' => $this->getMultiShopEditionAttributes(),
-                // Only present when product has more than one shop
-                'accessibility_checker' => $this->multipleShopsChecker,
-            ])
+                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                ->setIcon('edit')
+                ->setOptions([
+                    'route' => 'admin_products_edit',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'clickable_row' => true,
+                    'attr' => $this->getMultiShopEditionAttributes(),
+                    // Only present when product has more than one shop
+                    'accessibility_checker' => $this->multipleShopsChecker,
+                ])
             )
             ->add((new LinkRowAction('preview'))
-            ->setName($this->trans('Preview', [], 'Admin.Actions'))
-            ->setIcon('remove_red_eye')
-            ->setOptions([
-                'route' => 'admin_products_preview',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'target' => '_blank',
-                'accessibility_checker' => $this->singleShopChecker,
-            ])
+                ->setName($this->trans('Preview', [], 'Admin.Actions'))
+                ->setIcon('remove_red_eye')
+                ->setOptions([
+                    'route' => 'admin_products_preview',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'target' => '_blank',
+                    'accessibility_checker' => $this->singleShopChecker,
+                ])
             )
             ->add((new SubmitRowAction('duplicate'))
-            ->setName($duplicateLabel)
-            ->setIcon('content_copy')
-            ->setOptions([
-                'method' => 'POST',
-                'route' => $duplicateRouteName,
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'extra_route_params' => $extraRouteParams,
-                'confirm_message' => $this->trans('Remember to properly edit all information after duplicating - including SEO information and friendly URL.', [], 'Admin.Catalog.Notification'),
-                'modal_options' => new ModalOptions([
-                    'title' => $this->trans('Duplicate product', [], 'Admin.Actions'),
-                    'confirm_button_label' => $duplicateLabel,
-                    'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
-                ]),
-            ])
+                ->setName($duplicateLabel)
+                ->setIcon('content_copy')
+                ->setOptions([
+                    'method' => 'POST',
+                    'route' => $duplicateRouteName,
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'extra_route_params' => $extraRouteParams,
+                    'confirm_message' => $this->trans('Remember to properly edit all information after duplicating - including SEO information and friendly URL.', [], 'Admin.Catalog.Notification'),
+                    'modal_options' => new ModalOptions([
+                        'title' => $this->trans('Duplicate product', [], 'Admin.Actions'),
+                        'confirm_button_label' => $duplicateLabel,
+                        'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+                    ]),
+                ])
             )
             ->add(
                 $this->buildDeleteAction(
@@ -498,24 +498,24 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             // Toggle column is disabled when product is associated to more than one shop, so enable/disable actions are handled via the dropdown actions
             ->add((new LinkRowAction('enable'))
-            ->setName($enableLabel)
-            ->setIcon('radio_button_checked')
-            ->setOptions([
-                'route' => $enableRouteName,
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'extra_route_params' => $extraRouteParams,
-            ])
+                ->setName($enableLabel)
+                ->setIcon('radio_button_checked')
+                ->setOptions([
+                    'route' => $enableRouteName,
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'extra_route_params' => $extraRouteParams,
+                ])
             )
             ->add((new LinkRowAction('disable'))
-            ->setName($disableLabel)
-            ->setIcon('radio_button_unchecked')
-            ->setOptions([
-                'route' => $disableRouteName,
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'extra_route_params' => $extraRouteParams,
-            ])
+                ->setName($disableLabel)
+                ->setIcon('radio_button_unchecked')
+                ->setOptions([
+                    'route' => $disableRouteName,
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'extra_route_params' => $extraRouteParams,
+                ])
             )
         ;
 
@@ -582,7 +582,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('position')
             )
             ->add(
-                (new Filter('actions', SearchAndResetType::class))
+                (new Filter('actions', ProductSearchAndResetType::class))
                     ->setTypeOptions([
                         'reset_route' => 'admin_products_reset_grid_search',
                         'redirect_route' => 'admin_products_index',

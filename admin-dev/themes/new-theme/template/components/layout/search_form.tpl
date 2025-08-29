@@ -26,7 +26,7 @@
 <form id="header_search"
       class="bo_search_form dropdown-form js-dropdown-form collapsed"
       method="post"
-      action="{$baseAdminUrl}index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}"
+      action="{$link->getAdminLink('AdminSearch')}"
       role="search">
   <input type="hidden" name="bo_search_type" id="bo_search_type" class="js-search-type" />
   {if isset($show_clear_btn) && $show_clear_btn}
@@ -49,13 +49,13 @@
         <a class="dropdown-item" data-item="{l s='Carts' d='Admin.Global'}" href="#" data-value="5" data-placeholder="{l s='Cart ID' d='Admin.Navigation.Header'}" data-icon="icon-shopping-cart"><i class="material-icons">shopping_cart</i> {l s='Carts' d='Admin.Global'}</a>
         <a class="dropdown-item" data-item="{l s='Modules' d='Admin.Global'}" href="#" data-value="7" data-placeholder="{l s='Module name' d='Admin.Navigation.Header'}" data-icon="icon-puzzle-piece"><i class="material-icons">extension</i> {l s='Modules' d='Admin.Global'}</a>
       </div>
-      <button class="btn btn-primary" type="submit"><span class="d-none">{l s='SEARCH' d='Admin.Navigation.Header'}</span><i class="material-icons">search</i></button>
+      <button class="btn btn-secondary" type="submit"><span class="d-none">{l s='SEARCH' d='Admin.Navigation.Header'}</span><i class="material-icons">search</i></button>
     </div>
   </div>
 </form>
 
 <script type="text/javascript">
- $(document).ready(function(){
+ $(function(){
   {if isset($search_type) && $search_type}
     $('.search-option a[data-value='+{$search_type|intval}+']').click();
   {/if}

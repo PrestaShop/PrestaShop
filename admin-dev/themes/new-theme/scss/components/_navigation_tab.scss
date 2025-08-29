@@ -20,4 +20,15 @@
       margin-bottom: 0;
     }
   }
+
+  &-footer {
+    padding: var(--#{$cdk}size-24) var(--#{$cdk}size-32);
+    background-color: var(--#{$cdk}white);
+    border: 1px solid var(--#{$cdk}primary-400);
+    border-block-start: none;
+
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
 }

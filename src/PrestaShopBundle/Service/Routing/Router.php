@@ -27,9 +27,9 @@
 namespace PrestaShopBundle\Service\Routing;
 
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
-use PrestaShopBundle\Service\DataProvider\UserProvider;
+use PrestaShopBundle\Routing\AnonymousRouteProvider;
+use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
 /**
  * We extends Symfony Router in order to add a token to each url.
@@ -38,49 +38,31 @@ use Symfony\Component\Security\Csrf\CsrfTokenManager;
  */
 class Router extends BaseRouter
 {
-    /**
-     * @var UserProvider
-     */
-    private $userProvider;
+    private UserTokenManager $userTokenManager;
 
-    /**
-     * @var CsrfTokenManager
-     */
-    private $tokenManager;
-
-    /**
-     * @var array
-     */
-    private $tokens = [];
+    private AnonymousRouteProvider $anonymousRouteProvider;
 
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
-        $username = $this->userProvider->getUsername();
-        // Do not generate token each time we want to generate a route for a user
-        if (!isset($this->tokens[$username])) {
-            $this->tokens[$username] = $this->tokenManager->getToken($username)->getValue();
-        }
-
         $url = parent::generate($name, $parameters, $referenceType);
-
-        if (TokenInUrls::isDisabled()) {
+        if (TokenInUrls::isDisabled() || $this->anonymousRouteProvider->isRouteAnonymous($name)) {
             return $url;
         }
 
-        return self::generateTokenizedUrl($url, $this->tokens[$username]);
+        return self::generateTokenizedUrl($url, $this->userTokenManager->getSymfonyToken());
     }
 
-    public function setTokenManager(CsrfTokenManager $tokenManager)
+    public function setUserTokenManager(UserTokenManager $userTokenManager): void
     {
-        $this->tokenManager = $tokenManager;
+        $this->userTokenManager = $userTokenManager;
     }
 
-    public function setUserProvider(UserProvider $userProvider)
+    public function setAnonymousRouteProvider(AnonymousRouteProvider $anonymousRouteProvider): void
     {
-        $this->userProvider = $userProvider;
+        $this->anonymousRouteProvider = $anonymousRouteProvider;
     }
 
     public static function generateTokenizedUrl($url, $token)
@@ -100,6 +82,15 @@ class Router extends BaseRouter
         if (isset($components['fragment']) && $components['fragment'] !== '') {
             /* This copy-paste from Symfony's UrlGenerator */
             $url .= '#' . strtr(rawurlencode($components['fragment']), ['%2F' => '/', '%3F' => '?']);
+        }
+
+        // Keep absolute urls absolute
+        if (!empty($components['scheme']) && !empty($components['host'])) {
+            $baseHost = $components['scheme'] . '://' . $components['host'];
+            if (!empty($components['port'])) {
+                $baseHost .= ':' . $components['port'];
+            }
+            $url = $baseHost . $url;
         }
 
         return $url;

@@ -26,12 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
+use Attribute;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\ExistingCustomerEmailValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**
  * Validation constraint for checking if customer with given email exists in current shop context
  */
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class ExistingCustomerEmail extends Constraint
 {
     public $message = 'This email address is not registered.';

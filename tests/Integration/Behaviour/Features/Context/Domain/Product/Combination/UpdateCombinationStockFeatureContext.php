@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureContext
@@ -60,6 +61,21 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
             $combinationReference,
             $tableNode->getRowsHash(),
             ShopConstraint::shop($this->getSharedStorage()->get($shopReference))
+        );
+    }
+
+    /**
+     * @When I update combination :combinationReference stock for shops :shopReferences with following details:
+     */
+    public function updateStockForShopCollection(
+        string $combinationReference,
+        string $shopReferences,
+        TableNode $tableNode
+    ): void {
+        $this->updateStockAvailable(
+            $combinationReference,
+            $tableNode->getRowsHash(),
+            ShopCollection::shops($this->referencesToIds($shopReferences))
         );
     }
 

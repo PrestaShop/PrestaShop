@@ -63,7 +63,7 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
         $view->vars['template_collection'] = $options['template_collection'];
         $view->vars['limit'] = $options['limit'];
 
-        //if form is submitted, inject datas to display collection
+        // if form is submitted, inject datas to display collection
         if (!empty($view->vars['value']) && !empty($view->vars['value']['data'])) {
             $collection = [];
 
@@ -79,7 +79,7 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
                 ];
                 ++$i;
 
-                //if collection length is up to limit, break
+                // if collection length is up to limit, break
                 if ($options['limit'] != 0 && $i >= $options['limit']) {
                     break;
                 }

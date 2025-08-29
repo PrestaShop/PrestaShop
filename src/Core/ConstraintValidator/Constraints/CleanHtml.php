@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
+use Attribute;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\CleanHtmlValidator;
 use Symfony\Component\Validator\Constraint;
 
@@ -33,6 +34,7 @@ use Symfony\Component\Validator\Constraint;
  * Class CleanHtml is responsible for validating the html content to prevent from having javascript events
  * or script tags.
  */
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 final class CleanHtml extends Constraint
 {
     public $message = '%s is invalid.';

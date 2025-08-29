@@ -54,7 +54,7 @@ class PermissionFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertTabsPermissionForProfile(string $profileReference, TableNode $table): void
     {
-        $configuration = $this->getConfiguration();
+        $configuration = $this->getConfigurablePermissions();
         $tabsPermissionsForAllProfiles = $configuration->getProfilePermissionsForTabs();
         $profileId = $this->getSharedStorage()->get($profileReference);
 
@@ -107,7 +107,7 @@ class PermissionFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertModulesPermissionForProfile(string $profileReference, TableNode $table): void
     {
-        $configuration = $this->getConfiguration();
+        $configuration = $this->getConfigurablePermissions();
         $modulesPermissionsForAllProfiles = $configuration->getProfilePermissionsForModules();
         $profileId = $this->getSharedStorage()->get($profileReference);
 
@@ -227,7 +227,7 @@ class PermissionFeatureContext extends AbstractDomainFeatureContext
      *
      * @return ConfigurablePermissions
      */
-    private function getConfiguration(): ConfigurablePermissions
+    private function getConfigurablePermissions(): ConfigurablePermissions
     {
         return $this->getQueryBus()->handle(new GetPermissionsForConfiguration(self::SUPER_ADMIN_ID));
     }

@@ -35,7 +35,7 @@ class ActionsBarButton implements ActionsBarButtonInterface
     protected $class;
 
     /**
-     * @var string[]
+     * @var array<string, scalar>
      */
     protected $properties;
 
@@ -46,7 +46,7 @@ class ActionsBarButton implements ActionsBarButtonInterface
 
     /**
      * @param string $class
-     * @param string[] $properties
+     * @param array<string, scalar> $properties
      * @param string $content
      */
     public function __construct(string $class = '', array $properties = [], string $content = '')
@@ -65,7 +65,7 @@ class ActionsBarButton implements ActionsBarButtonInterface
     }
 
     /**
-     * @return string[]
+     * @return array<string, scalar>
      */
     public function getProperties(): array
     {

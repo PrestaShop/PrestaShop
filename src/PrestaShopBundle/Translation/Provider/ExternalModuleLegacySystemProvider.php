@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Translation\Provider;
 
 use InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use PrestaShopBundle\Translation\DomainNormalizer;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
@@ -129,7 +129,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
      */
     public function setDomain($domain)
     {
-        throw new InvalidArgumentException(__CLASS__ . ' does not allow calls to setDomain()');
+        throw new InvalidArgumentException(self::class . ' does not allow calls to setDomain()');
     }
 
     /**
@@ -157,7 +157,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
                 ->setLocale($this->locale)
                 ->getXliffCatalogue()
             ;
-        } catch (FileNotFoundException $exception) {
+        } catch (TranslationFilesNotFoundException) {
             $translationCatalogue = $this->buildTranslationCatalogueFromLegacyFiles();
         }
 
@@ -200,7 +200,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
                 $this->getDefaultResourceDirectory(),
                 $this->locale
             );
-        } catch (UnsupportedLocaleException $exception) {
+        } catch (UnsupportedLocaleException) {
             // this happens when there no translation file is found for the desired locale
             return $catalogueFromPhpAndSmartyFiles;
         }
@@ -290,7 +290,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
                 ->setModuleName($this->moduleName)
                 ->setLocale($this->locale)
                 ->getDefaultCatalogue();
-        } catch (FileNotFoundException $exception) {
+        } catch (TranslationFilesNotFoundException) {
             // there are no xliff files for this module in the core
         }
 
@@ -298,7 +298,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
             // analyze files and extract wordings
             $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $this->locale);
             $defaultCatalogue = $this->filterDomains($additionalDefaultCatalogue);
-        } catch (UnsupportedLocaleException $exception) {
+        } catch (UnsupportedLocaleException) {
             // Do nothing as support of legacy files is deprecated
         }
 

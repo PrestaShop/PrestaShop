@@ -26,8 +26,6 @@
 
 /**
  * This class requires the PECL APC extension or PECL APCu extension to be installed.
- *
- * @since 1.5.0
  */
 class CacheApcCore extends Cache
 {

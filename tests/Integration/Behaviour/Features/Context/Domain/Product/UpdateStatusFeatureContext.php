@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
@@ -62,6 +63,18 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
     public function bulkUpdateStatusForSpecificShop(bool $status, string $shopReference, TableNode $productsList): void
     {
         $this->bulkUpdateStatus($status, $productsList, ShopConstraint::shop($this->referenceToId($shopReference)));
+    }
+
+    /**
+     * @When /^I bulk change status to be (enabled|disabled) for following products for shops "([^"]+)":$/
+     *
+     * @param bool $status
+     * @param string $shopReferences
+     * @param TableNode $productsList
+     */
+    public function bulkUpdateStatusForSpecificShopCollection(bool $status, string $shopReferences, TableNode $productsList): void
+    {
+        $this->bulkUpdateStatus($status, $productsList, ShopCollection::shops($this->referencesToIds($shopReferences)));
     }
 
     /**

@@ -32,7 +32,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Contact\Exception;
 class ContactConstraintException extends ContactException
 {
     /**
-     * @var int - error is raised when preg match fails to validate according to regex /^[^<>={}]*$/u
+     * @var int - error is raised when preg match fails to validate according to regex /^[^<>{}]*$/u
      */
     public const INVALID_TITLE = 1;
 

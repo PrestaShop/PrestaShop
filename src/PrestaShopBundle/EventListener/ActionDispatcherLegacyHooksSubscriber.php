@@ -28,9 +28,10 @@ namespace PrestaShopBundle\EventListener;
 
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -71,9 +72,9 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function callActionDispatcherBeforeHook(FilterControllerEvent $event)
+    public function callActionDispatcherBeforeHook(ControllerEvent $event)
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
@@ -84,7 +85,7 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
             : $event->getController()
         ;
 
-        if ($controller instanceof FrameworkBundleAdminController) {
+        if ($controller instanceof FrameworkBundleAdminController || $controller instanceof PrestaShopAdminController) {
             $controllerType = self::BACK_OFFICE_CONTROLLER;
         }
 
@@ -93,12 +94,12 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
         ]);
 
         $requestAttributes->set('controller_type', $controllerType);
-        $requestAttributes->set('controller_name', get_class($controller));
+        $requestAttributes->set('controller_name', $controller::class);
     }
 
-    public function callActionDispatcherAfterHook(FilterResponseEvent $event)
+    public function callActionDispatcherAfterHook(ResponseEvent $event)
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

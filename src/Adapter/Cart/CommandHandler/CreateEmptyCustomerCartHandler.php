@@ -30,6 +30,7 @@ use Cart;
 use Configuration;
 use Currency;
 use Customer;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\CreateEmptyCustomerCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
@@ -38,6 +39,7 @@ use PrestaShopException;
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHandlerInterface
 {
     /**
@@ -83,7 +85,6 @@ final class CreateEmptyCustomerCartHandler implements CreateEmptyCustomerCartHan
         $cart->id_address_delivery = $addressId;
         $cart->id_address_invoice = $addressId;
 
-        $cart->setNoMultishipping();
         $cart->save();
 
         return $cart;

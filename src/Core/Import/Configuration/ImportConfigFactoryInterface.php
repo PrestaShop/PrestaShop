@@ -40,5 +40,5 @@ interface ImportConfigFactoryInterface
      *
      * @return ImportConfigInterface
      */
-    public function buildFromRequest(Request $request);
+    public function buildFromRequest(Request $request): ImportConfigInterface;
 }

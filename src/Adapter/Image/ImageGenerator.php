@@ -28,13 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
-use Configuration;
 use ImageManager;
 use ImageType;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopException;
 
 /**
@@ -42,24 +40,9 @@ use PrestaShopException;
  */
 class ImageGenerator
 {
-    /**
-     * @deprecated since 8.1.2, it was originally introduced in 8.1.0, but ended up no longer needed - will be removed in 9.0
-     *
-     * @var FeatureFlagRepository
-     *
-     * @phpstan-ignore-next-line
-     */
-    private $featureFlagRepository;
-
-    /**
-     * @var ImageFormatConfiguration
-     */
-    private $imageFormatConfiguration;
-
-    public function __construct(FeatureFlagRepository $featureFlagRepository, ImageFormatConfiguration $imageFormatConfiguration)
-    {
-        $this->featureFlagRepository = $featureFlagRepository;
-        $this->imageFormatConfiguration = $imageFormatConfiguration;
+    public function __construct(
+        private readonly ImageFormatConfiguration $imageFormatConfiguration
+    ) {
     }
 
     /**
@@ -80,7 +63,7 @@ class ImageGenerator
             foreach ($imageTypes as $imageType) {
                 $resized &= $this->resize($imagePath, $imageType, $imageId);
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
 
@@ -113,32 +96,15 @@ class ImageGenerator
          */
         $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
 
-        // Should we generate high DPI images?
-        $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
-
         $result = true;
 
         foreach ($configuredImageFormats as $imageFormat) {
-            // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
-            // For webp and avif extensions, we want it to follow our command and ignore the original format.
-            $forceFormat = ($imageFormat !== 'jpg');
             if (!ImageManager::resize(
                 $filePath,
                 sprintf('%s-%s.%s', dirname($filePath) . DIRECTORY_SEPARATOR . $imageId, stripslashes($imageType->name), $imageFormat),
                 $imageType->width,
                 $imageType->height,
-                $imageFormat,
-                $forceFormat
-            )) {
-                $result = false;
-            }
-            if ($generate_high_dpi_images && !ImageManager::resize(
-                $filePath,
-                sprintf('%s-%s.%s', dirname($filePath) . DIRECTORY_SEPARATOR . $imageId, stripslashes($imageType->name) . '2x', $imageFormat),
-                $imageType->width * 2,
-                $imageType->height * 2,
-                $imageFormat,
-                $forceFormat
+                $imageFormat
             )) {
                 $result = false;
             }

@@ -10,7 +10,7 @@ services:
     tags:
       - { name: 'core.product_command_builder', priority: 10 }
     arguments:
-      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
+      - !php/const PrestaShopBundle\Form\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
 
   # VERY IMPORTANT this builder must be the last one, it will avoid conflicts with previous commands
   # that may not be compatible with the updated type, its priority musk be kept lower than others
@@ -21,11 +21,11 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\TagsCommandsBuilder:
     tags: [ 'core.product_command_builder' ]
     arguments:
-      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
+      - !php/const PrestaShopBundle\Form\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CarriersCommandsBuilder:
     arguments:
-      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
+      - !php/const PrestaShopBundle\Form\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags: [ 'core.product_command_builder' ]
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandsBuilder:
@@ -58,7 +58,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductStockAvailableCommandsBuilder:
     arguments:
-      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
+      - !php/const PrestaShopBundle\Form\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags: [ 'core.product_command_builder' ]
 
   # Combination builders
@@ -75,9 +75,9 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationCommandsBuilder:
     tags: [ 'core.combination_command_builder' ]
     arguments:
-      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
+      - !php/const PrestaShopBundle\Form\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationStockAvailableCommandsBuilder:
     tags: [ 'core.combination_command_builder' ]
     arguments:
-      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
+      - !php/const PrestaShopBundle\Form\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX

@@ -39,7 +39,7 @@ $ps-stars: (
         left: -70px;
         float: left;
         margin-right: 0.5em;
-        font-family: "Material Icons", Arial, Helvetica, sans-serif;
+        font-family: var(--#{$cdk}font-family-material-icons);
         font-size: 1.1em;
         color: $gray-light;
         content: "\E838\E838\E838\E838\E838";
@@ -49,7 +49,7 @@ $ps-stars: (
         position: absolute;
         top: 0;
         left: -70px;
-        font-family: "Material Icons", Arial, Helvetica, sans-serif;
+        font-family: var(--#{$cdk}font-family-material-icons);
         font-size: 1.1em;
         color: #ffd100;
         content: $stars;

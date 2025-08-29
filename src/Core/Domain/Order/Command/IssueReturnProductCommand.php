@@ -28,12 +28,15 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 
 /**
  * Issues return product for given order.
  */
-class IssueReturnProductCommand extends IssueStandardRefundCommand
+class IssueReturnProductCommand extends AbstractRefundCommand
 {
+    protected bool $refundShippingCost;
+
     /**
      * The expected format for $orderDetailRefunds is an associative array indexed
      * by OrderDetail id containing one fields quantity
@@ -67,11 +70,31 @@ class IssueReturnProductCommand extends IssueStandardRefundCommand
         parent::__construct(
             $orderId,
             $orderDetailRefunds,
-            $refundShippingCost,
+            true,
             $generateCreditSlip,
             $generateVoucher,
             $voucherRefundType
         );
+        $this->refundShippingCost = $refundShippingCost;
         $this->restockRefundedProducts = $restockRefundedProducts;
+    }
+
+    public function refundShippingCost(): bool
+    {
+        return $this->refundShippingCost;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setOrderDetailRefunds(array $orderDetailRefunds): void
+    {
+        $this->orderDetailRefunds = [];
+        foreach ($orderDetailRefunds as $orderDetailId => $detailRefund) {
+            $this->orderDetailRefunds[] = OrderDetailRefund::createStandardRefund(
+                $orderDetailId,
+                $detailRefund['quantity']
+            );
+        }
     }
 }

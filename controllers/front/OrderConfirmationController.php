@@ -52,7 +52,7 @@ class OrderConfirmationControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         // Test below to prevent unnecessary logs from "parent::init()"
         $this->id_cart = (int) Tools::getValue('id_cart', 0);
@@ -77,10 +77,10 @@ class OrderConfirmationControllerCore extends FrontController
          *
          * It's not implemented yet, however.
          */
-        $this->id_order = Order::getIdByCartId((int) ($this->id_cart));
+        $this->id_order = Order::getIdByCartId((int) $this->id_cart);
         $this->secure_key = Tools::getValue('key', false);
-        $this->order = new Order((int) ($this->id_order));
-        $this->id_module = (int) (Tools::getValue('id_module', 0));
+        $this->order = new Order((int) $this->id_order);
+        $this->id_module = (int) Tools::getValue('id_module', 0);
 
         // This data is kept only for backward compatibility purposes
         $this->reference = (string) $this->order->reference;
@@ -90,7 +90,11 @@ class OrderConfirmationControllerCore extends FrontController
         // The confirmation link must contain a unique order secure key matching the key saved in database,
         // this prevents user to view other customer's order confirmations
         if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
-            Tools::redirect($redirectLink . (Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
+            if (Tools::isSubmit('slowvalidation')) {
+                Tools::redirect($this->context->link->getPageLink('history', null, null, ['slowvalidation' => '1']));
+            } else {
+                Tools::redirect($redirectLink);
+            }
         }
 
         if (!Validate::isLoadedObject($this->order) || $this->secure_key != $this->order->secure_key) {
@@ -104,14 +108,14 @@ class OrderConfirmationControllerCore extends FrontController
             }
         } else {
             // Otherwise we run a normal check that module matches
-            $module = Module::getInstanceById((int) ($this->id_module));
+            $module = Module::getInstanceById((int) $this->id_module);
             if ($this->order->module !== $module->name) {
                 Tools::redirect($redirectLink);
             }
         }
 
         // If checks passed, initialize customer, we will need him anyway
-        $this->customer = new Customer((int) ($this->order->id_customer));
+        $this->customer = new Customer((int) $this->order->id_customer);
     }
 
     /**
@@ -119,7 +123,7 @@ class OrderConfirmationControllerCore extends FrontController
      *
      * @see FrontController::postProcess()
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         if (Tools::isSubmit('submitTransformGuestToCustomer')) {
             // Only variable we need is the password
@@ -219,7 +223,7 @@ class OrderConfirmationControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         parent::initContent();
 
@@ -228,7 +232,7 @@ class OrderConfirmationControllerCore extends FrontController
             'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($this->order),
             'order' => (new OrderPresenter())->present($this->order),
             'order_customer' => $this->objectPresenter->present($this->customer),
-            'registered_customer_exists' => Customer::customerExists($this->customer->email, false, true),
+            'registered_customer_exists' => Customer::customerExists($this->customer->email),
         ]);
         $this->setTemplate('checkout/order-confirmation');
 
@@ -241,7 +245,7 @@ class OrderConfirmationControllerCore extends FrontController
     /**
      * Execute the hook displayPaymentReturn.
      */
-    public function displayPaymentReturn($order)
+    public function displayPaymentReturn(Order $order)
     {
         if (!Validate::isUnsignedId($this->id_module)) {
             return false;
@@ -254,7 +258,7 @@ class OrderConfirmationControllerCore extends FrontController
     /**
      * Execute the hook displayOrderConfirmation.
      */
-    public function displayOrderConfirmation($order)
+    public function displayOrderConfirmation(Order $order)
     {
         return Hook::exec('displayOrderConfirmation', ['order' => $order]);
     }
@@ -262,7 +266,7 @@ class OrderConfirmationControllerCore extends FrontController
     /**
      * Check if an order is free and create it.
      */
-    protected function checkFreeOrder()
+    protected function checkFreeOrder(): void
     {
         $cart = $this->context->cart;
         if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0) {
@@ -296,10 +300,20 @@ class OrderConfirmationControllerCore extends FrontController
         // note the id_module parameter with value -1
         // it acts as a marker for the module check to use "free_payment"
         // for the check
-        Tools::redirect('index.php?controller=order-confirmation&id_cart=' . (int) $cart->id . '&id_module=-1&id_order=' . (int) $order->currentOrder . '&key=' . $cart->secure_key);
+        Tools::redirect($this->context->link->getPageLink(
+            'order-confirmation',
+            null,
+            null,
+            [
+                'id_cart' => (int) $cart->id,
+                'id_module' => '-1',
+                'id_order' => (int) $order->currentOrder,
+                'key' => $cart->secure_key,
+            ]
+        ));
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
@@ -314,7 +328,7 @@ class OrderConfirmationControllerCore extends FrontController
     /**
      * @return Order
      */
-    public function getOrder()
+    public function getOrder(): Order
     {
         return $this->order;
     }
@@ -322,7 +336,7 @@ class OrderConfirmationControllerCore extends FrontController
     /**
      * @return Customer
      */
-    public function getCustomer()
+    public function getCustomer(): Customer
     {
         return $this->customer;
     }

@@ -107,7 +107,7 @@ class ShopGroupRepository extends AbstractObjectModelRepository
             ->setParameter('shopId', $shopId->getValue())
         ;
 
-        $result = $qb->execute()->fetchAssociative();
+        $result = $qb->executeQuery()->fetchAssociative();
         if (false === $result) {
             throw new ShopNotFoundException(sprintf('Could not find shop with id %d', $shopId->getValue()));
         }
@@ -144,7 +144,7 @@ class ShopGroupRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'shop', 's')
             ->where('s.id_shop_group = :shopGroupId')
             ->setParameter('shopGroupId', $shopGroupId->getValue())
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative()
         );
     }

@@ -28,12 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
+use Attribute;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\UniqueStateIsoCodeValidator;
 use Symfony\Component\Validator\Constraint;
 
 /**
  * Unique state iso code validator constraint
  */
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class UniqueStateIsoCode extends Constraint
 {
     /**

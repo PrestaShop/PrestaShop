@@ -47,14 +47,8 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        //We need the list of active modules to load their config, during install the parameter might no be available
-        //if the parameters file has not been generated yet, so we skip this part of the build
-        if (!$container->hasParameter('kernel.active_modules')) {
-            return;
-        }
-
-        $activeModules = $container->getParameter('kernel.active_modules');
-        $compilerPassList = $this->getCompilerPassList($activeModules);
+        $installedModules = $container->getParameter('prestashop.installed_modules');
+        $compilerPassList = $this->getCompilerPassList($installedModules);
         /** @var CompilerPassInterface $compilerPass */
         foreach ($compilerPassList as $compilerResourcePath => $compilerPass) {
             $compilerPass->process($container);
@@ -87,7 +81,7 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
                 }
                 $modulePrefix = 'Module' . Inflector::getInflector()->camelize($moduleFolder->getFilename());
                 $moduleEntityDirectory = realpath($moduleFolder . '/src/Entity');
-                $mappingPass = $this->createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory, $modulePrefix);
+                $mappingPass = $this->createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory);
                 $mappingsPassList[$moduleEntityDirectory] = $mappingPass;
             }
         }
@@ -103,11 +97,10 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
      *
      * @param string $moduleNamespace
      * @param string $moduleEntityDirectory
-     * @param string $modulePrefix
      *
      * @return DoctrineOrmMappingsPass
      */
-    private function createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory, $modulePrefix)
+    private function createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory)
     {
         $reader = new Reference('annotation_reader');
         $driverDefinition = new Definition('Doctrine\ORM\Mapping\Driver\AnnotationDriver', [$reader, [$moduleEntityDirectory]]);
@@ -116,7 +109,7 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
             $driverDefinition->addMethodCall('addExcludePaths', [[$indexFile]]);
         }
 
-        return new DoctrineOrmMappingsPass($driverDefinition, [$moduleNamespace], [], false, [$modulePrefix => $moduleNamespace]);
+        return new DoctrineOrmMappingsPass($driverDefinition, [$moduleNamespace], [], false, []);
     }
 
     /**

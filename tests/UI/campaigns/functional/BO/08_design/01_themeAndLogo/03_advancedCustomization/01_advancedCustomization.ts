@@ -1,24 +1,20 @@
 // Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import advancedCustomizationPage from '@pages/BO/design/themeAndLogo/advancedCustomization';
-import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
-import {moduleManager as moduleManagerPage} from '@pages/BO/modules/moduleManager';
-// Import FO pages
-import {homePage} from '@pages/FO/home';
-
-// Import data
-import Modules from '@data/demo/modules';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boModuleManagerPage,
+  boThemeAndLogoPage,
+  boThemeAdvancedConfigurationPage,
+  type BrowserContext,
+  dataModules,
+  foClassicHomePage,
+  type Page,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_themeAndLogo_advancedCustomization_advancedCustomization';
 
@@ -45,16 +41,22 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   // Pre-condition: Check if the module Theme Customization is installed and enabled
@@ -62,25 +64,25 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should go to \'Modules > Module Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.modulesParentLink,
-        dashboardPage.moduleManagerLink,
+        boDashboardPage.modulesParentLink,
+        boDashboardPage.moduleManagerLink,
       );
     });
 
-    it(`should search for module ${Modules.themeCustomization.name}`, async function () {
+    it(`should search for module ${dataModules.psThemeCusto.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.themeCustomization);
-      await expect(isModuleVisible, `The module ${Modules.themeCustomization.name} is not installed`).to.be.true;
+      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psThemeCusto);
+      expect(isModuleVisible, `The module ${dataModules.psThemeCusto.name} is not installed`).to.eq(true);
     });
 
-    it(`should check the status of the module ${Modules.themeCustomization.name}`, async function () {
+    it(`should check the status of the module ${dataModules.psThemeCusto.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusModule', baseContext);
 
-      const isModuleEnabled = await moduleManagerPage.isModuleStatus(page, Modules.themeCustomization.name, 'enable');
-      await expect(isModuleEnabled, `The module ${Modules.themeCustomization.name} is disabled`).to.be.true;
+      const isModuleEnabled = await boModuleManagerPage.isModuleStatus(page, dataModules.psThemeCusto.name, 'enable');
+      expect(isModuleEnabled, `The module ${dataModules.psThemeCusto.name} is disabled`).to.eq(true);
     });
   });
 
@@ -89,58 +91,58 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should go to \'Design > Theme & Logo\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage_1', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.designParentLink,
-        dashboardPage.themeAndLogoParentLink,
+        boDashboardPage.designParentLink,
+        boDashboardPage.themeAndLogoParentLink,
       );
-      await themeAndLogoPage.closeSfToolBar(page);
+      await boThemeAndLogoPage.closeSfToolBar(page);
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
     });
 
     it('should go to \'Advanced Customization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedCustomizationPage_1', baseContext);
 
-      await themeAndLogoPage.goToSubTabAdvancedCustomization(page);
+      await boThemeAndLogoPage.goToSubTabAdvancedCustomization(page);
 
-      const pageTitle = await advancedCustomizationPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(advancedCustomizationPage.pageTitle);
+      const pageTitle = await boThemeAdvancedConfigurationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAdvancedConfigurationPage.pageTitle);
     });
 
     it('should download theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadTheme', baseContext);
 
-      filePath = await advancedCustomizationPage.downloadTheme(page);
+      filePath = await boThemeAdvancedConfigurationPage.downloadTheme(page);
 
-      const exist = await files.doesFileExist(filePath);
-      await expect(exist, 'Theme was not downloaded').to.be.true;
+      const exist = await utilsFile.doesFileExist(filePath);
+      expect(exist, 'Theme was not downloaded').to.eq(true);
     });
 
     it('should click on upload child theme button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnUploadChildTheme', baseContext);
 
-      const modalTitle = await advancedCustomizationPage.clickOnUploadChildThemeButton(page);
-      await expect(modalTitle, 'Modal \'Upload child theme\' is not displayed')
+      const modalTitle = await boThemeAdvancedConfigurationPage.clickOnUploadChildThemeButton(page);
+      expect(modalTitle, 'Modal \'Upload child theme\' is not displayed')
         .to.contains('Drop your child theme archive here or select file');
     });
 
     it('should upload child theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'uploadChildTheme', baseContext);
 
-      await files.renameFile(filePath, renamedFilePath);
+      await utilsFile.renameFile(filePath, renamedFilePath);
 
-      const uploadTheme = await advancedCustomizationPage.uploadTheme(page, renamedFilePath);
-      await expect(uploadTheme, 'Child theme is not uploaded')
+      const uploadTheme = await boThemeAdvancedConfigurationPage.uploadTheme(page, renamedFilePath);
+      expect(uploadTheme, 'Child theme is not uploaded')
         .to.contains('The child theme has been added successfully.');
     });
 
     it('should close the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeModal', baseContext);
 
-      const isModalClosed = await advancedCustomizationPage.closeModal(page);
-      await expect(isModalClosed, 'Modal not closed').to.be.true;
+      const isModalClosed = await boThemeAdvancedConfigurationPage.closeModal(page);
+      expect(isModalClosed, 'Modal not closed').to.eq(true);
     });
 
     // remove the child_classic.zip from themes folder
@@ -148,21 +150,21 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
       await testContext
         .addContextItem(this, 'testIdentifier', 'removeZipFileChildThemeFromThemesFolder', baseContext);
 
-      const generatedFilePath = await files.getFilePathAutomaticallyGenerated(themesPath, renamedFilePath);
-      await files.deleteFile(generatedFilePath);
+      const generatedFilePath = await utilsFile.getFilePathAutomaticallyGenerated(themesPath, renamedFilePath);
+      await utilsFile.deleteFile(generatedFilePath);
 
-      const doesFileExist = await files.doesFileExist(generatedFilePath);
-      await expect(doesFileExist).to.be.false;
+      const doesFileExist = await utilsFile.doesFileExist(generatedFilePath);
+      expect(doesFileExist).to.eq(false);
     });
 
     it('should remove the zip file of the child theme from the temporary path', async function () {
       await testContext
         .addContextItem(this, 'testIdentifier', 'removeChildThemeFromTemporaryPath', baseContext);
 
-      await files.deleteFile(renamedFilePath);
+      await utilsFile.deleteFile(renamedFilePath);
 
-      const doesFileExist = await files.doesFileExist(renamedFilePath);
-      await expect(doesFileExist).to.be.false;
+      const doesFileExist = await utilsFile.doesFileExist(renamedFilePath);
+      expect(doesFileExist).to.eq(false);
     });
   });
 
@@ -171,41 +173,41 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should go to \'Design > Theme & Logo\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage_2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.designParentLink,
-        dashboardPage.themeAndLogoParentLink,
+        boDashboardPage.designParentLink,
+        boDashboardPage.themeAndLogoParentLink,
       );
-      await themeAndLogoPage.closeSfToolBar(page);
+      await boThemeAndLogoPage.closeSfToolBar(page);
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
     });
 
     it('should use the child theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'useChildTheme', baseContext);
 
-      const successResult = await themeAndLogoPage.useTheme(page);
-      await expect(successResult).to.be.equal(themeAndLogoPage.successfulUpdateMessage);
+      const successResult = await boThemeAndLogoPage.useTheme(page, 'child_classic');
+      expect(successResult).to.be.equal(boThemeAndLogoPage.successfulUpdateMessage);
     });
 
     it('should click on view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewMyShop', baseContext);
 
-      page = await themeAndLogoPage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      page = await boThemeAndLogoPage.viewMyShop(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should close the current page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeCurrentPage', baseContext);
 
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
+      const pageTitle = await boThemeAndLogoPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAndLogoPage.pageTitle);
     });
   });
 
@@ -214,15 +216,15 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should use the classic theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'useClassicTheme', baseContext);
 
-      const successResult = await themeAndLogoPage.useTheme(page);
-      await expect(successResult).to.be.equal(themeAndLogoPage.successfulUpdateMessage);
+      const successResult = await boThemeAndLogoPage.useTheme(page, 'classic');
+      expect(successResult).to.be.equal(boThemeAndLogoPage.successfulUpdateMessage);
     });
 
     it('should delete the child theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteChildTheme', baseContext);
 
-      const successResult = await themeAndLogoPage.deleteTheme(page);
-      await expect(successResult).to.be.equal(themeAndLogoPage.successfulDeleteMessage);
+      const successResult = await boThemeAndLogoPage.deleteTheme(page, 'child_classic');
+      expect(successResult).to.be.equal(boThemeAndLogoPage.successfulDeleteMessage);
     });
   });
 
@@ -231,18 +233,18 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should go to \'Advanced Customization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedCustomizationPage_2', baseContext);
 
-      await themeAndLogoPage.goToSubTabAdvancedCustomization(page);
+      await boThemeAndLogoPage.goToSubTabAdvancedCustomization(page);
 
-      const pageTitle = await advancedCustomizationPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(advancedCustomizationPage.pageTitle);
+      const pageTitle = await boThemeAdvancedConfigurationPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boThemeAdvancedConfigurationPage.pageTitle);
     });
 
     it('should get the How to use parents/child themes link', async function () {
       await testContext
         .addContextItem(this, 'testIdentifier', 'getHowToUseParentsChildThemesLink', baseContext);
 
-      const linkParentChildPage = await advancedCustomizationPage.getHowToUseParentsChildThemesLink(page);
-      await expect(linkParentChildPage)
+      const linkParentChildPage = await boThemeAdvancedConfigurationPage.getHowToUseParentsChildThemesLink(page);
+      expect(linkParentChildPage)
         .to
         .contains('https://devdocs.prestashop.com/1.7/themes/reference/template_inheritance/parent_child_feature/');
     });

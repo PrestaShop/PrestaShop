@@ -304,12 +304,12 @@ class TreeCore
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()
+            $this->getContext()->controller->getTemplatePath()
         ) . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()) .
                 $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()
+            $this->getContext()->controller->getTemplatePath()
         ) . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 . $this->getTemplateDirectory() . $template;
@@ -319,11 +319,11 @@ class TreeCore
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
                 . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                . $this->getTemplateDirectory() . $template)) {
+            . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                    . $this->getTemplateDirectory() . $template;
+                . $this->getTemplateDirectory() . $template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                . $this->getTemplateDirectory() . $template)) {
+            . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
                 . $this->getTemplateDirectory() . $template;
         } else {
@@ -404,7 +404,7 @@ class TreeCore
 
     public function render($data = null)
     {
-        //Adding tree.js
+        // Adding tree.js
         $admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
         $admin_webpath = preg_replace('/^' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/', '', $admin_webpath);
         $bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
@@ -423,14 +423,14 @@ class TreeCore
             $this->getContext()->controller->addJs($js_path);
         }
 
-        //Create Tree Template
+        // Create Tree Template
         $template = $this->getContext()->smarty->createTemplate(
             $this->getTemplateFile($this->getTemplate()),
             $this->getContext()->smarty
         );
 
         if ($this->getTitle() !== null && trim($this->getTitle()) != '' || $this->useToolbar()) {
-            //Create Tree Header Template
+            // Create Tree Header Template
             $headerTemplate = $this->getContext()->smarty->createTemplate(
                 $this->getTemplateFile($this->getHeaderTemplate()),
                 $this->getContext()->smarty
@@ -441,11 +441,11 @@ class TreeCore
                         'title' => $this->getTitle(),
                         'toolbar' => $this->useToolbar() ? $this->renderToolbar() : null,
                     ]
-            );
+                );
             $template->assign('header', $headerTemplate->fetch());
         }
 
-        //Assign Tree nodes
+        // Assign Tree nodes
         $template->assign($this->getAttributes())->assign([
             'id' => $this->getId(),
             'nodes' => $this->renderNodes($data),
@@ -495,9 +495,19 @@ class TreeCore
         return $this->getToolbar()->render();
     }
 
+    /**
+     * @return bool
+     *
+     * @deprecated Since 9.0 and will be removed in 10.0
+     */
     public function useInput()
     {
-        return isset($this->_input_type);
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
+
+        return false;
     }
 
     public function useToolbar()

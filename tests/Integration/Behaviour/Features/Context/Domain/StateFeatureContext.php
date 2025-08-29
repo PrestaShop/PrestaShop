@@ -47,7 +47,6 @@ use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use RuntimeException;
 use State;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -55,17 +54,6 @@ use Zone;
 
 class StateFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default shop id from configs
-     */
-    private $defaultLangId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
-    }
-
     /**
      * @When I add new state :stateReference with following properties:
      *
@@ -79,7 +67,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
         try {
             /** @var StateId $stateId */
             $stateId = $this->getCommandBus()->handle(new AddStateCommand(
-                (int) Country::getIdByName($this->defaultLangId, $data['country']),
+                (int) Country::getIdByName($this->getDefaultLangId(), $data['country']),
                 Zone::getIdByName($data['zone']),
                 $data['name'],
                 $data['iso_code'],
@@ -115,7 +103,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
             $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']));
         }
         if (isset($data['country'])) {
-            $command->setCountryId((int) Country::getIdByName($this->defaultLangId, $data['country']));
+            $command->setCountryId((int) Country::getIdByName($this->getDefaultLangId(), $data['country']));
         }
         if (isset($data['zone'])) {
             $command->setZoneId((int) Zone::getIdByName($data['zone']));
@@ -224,7 +212,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
         $state = new State((int) SharedStorage::getStorage()->get($stateReference));
         $country = new Country($state->id_country);
 
-        if ($country->name[$this->defaultLangId] !== $name) {
+        if ($country->name[$this->getDefaultLangId()] !== $name) {
             throw new RuntimeException(sprintf(
                 'Country "%s" has "%s" name, but "%s" was expected.',
                 $stateReference,
@@ -257,6 +245,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Given /^state "(.*)" is (enabled|disabled)?$/
+     *
      * @Then /^state "(.*)" should be (enabled|disabled)?$/
      *
      * @param string $stateReference

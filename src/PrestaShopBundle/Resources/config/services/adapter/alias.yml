@@ -1,0 +1,32 @@
+services:
+  _defaults:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Alias\Validate\AliasValidator: ~
+
+  PrestaShop\PrestaShop\Adapter\Alias\Repository\AliasRepository:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Alias\QueryHandler\GetAliasForEditingHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Alias\QueryHandler\SearchForSearchTermHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Alias\QueryHandler\GetAliasesBySearchTermForEditingHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\AddSearchTermAliasesHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\DeleteSearchTermAliasesHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\BulkDeleteSearchTermsAliasesHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Alias\CommandHandler\UpdateSearchTermAliasesHandler:
+    autoconfigure: true

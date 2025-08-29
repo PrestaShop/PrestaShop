@@ -3,49 +3,37 @@ services:
     public: true
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\GenerateProductCombinationsHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator'
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationHandler:
     autowire: true
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationStockAvailableHandler:
     autowire: true
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationForEditingHandler:
     autowire: true
     public: false
+    autoconfigure: true
     arguments:
       $contextLanguageId: "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetEditableCombinationsListHandler:
     autowire: true
     public: false
+    autoconfigure: true
     arguments:
       $combinationQueryBuilder: '@PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\SearchCombinationsForAssociationHandler:
     autowire: true
     public: false
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator: ~
 
@@ -83,61 +71,45 @@ services:
       - '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationSuppliersHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationSuppliersHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\SetCombinationImagesHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationImagesUpdater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationImagesCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\RemoveAllCombinationImagesHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationImagesUpdater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllCombinationImagesCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\DeleteCombinationHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\BulkDeleteCombinationHandler:
+    autoconfigure: true
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand
 
   PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\SearchProductCombinationsHandler:
     autowire: true
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationIdsHandler:
     autowire: true
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationIds
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\CombinationFiller:
     arguments:

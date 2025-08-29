@@ -47,30 +47,11 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufactu
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use RuntimeException;
 use stdClass;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
-use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ManufacturerFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default language id from configs
-     */
-    private $defaultLangId;
-
-    /**
-     * @var int default shop id from configs
-     */
-    private $defaultShopId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
-        $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
-    }
-
     /**
      * Needed for getting Viewable objects from handlers, for example ViewableManufacturer
      *
@@ -89,23 +70,31 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I add new manufacturer :reference with following properties:
      */
-    public function createManufacturerWithDefaultLang(string $reference, TableNode $node): void
+    public function createManufacturer(string $reference, TableNode $node): void
     {
-        $data = $node->getRowsHash();
+        $data = $this->localizeByRows($node);
+        $command = new AddManufacturerCommand(
+            $data['name'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']),
+            $data['short_description'] ?? [],
+            $data['description'] ?? [],
+            $data['meta_title'] ?? [],
+            $data['meta_description'] ?? [],
+            [$this->getDefaultShopId()]
+        );
 
-        $this->createManufacturerUsingCommand($reference, $data);
+        /** @var ManufacturerId $manufacturerId */
+        $manufacturerId = $this->getCommandBus()->handle($command);
+        $this->getSharedStorage()->set($reference, $manufacturerId->getValue());
     }
 
     /**
-     * @When I edit manufacturer :reference with following properties:
+     * @When I edit manufacturer :manufacturerReference with following properties:
      */
-    public function editManufacturerWithDefaultLang(string $reference, TableNode $node): void
+    public function editManufacturerWithDefaultLang(string $manufacturerReference, TableNode $node): void
     {
-        /** @var Manufacturer $manufacturer */
-        $manufacturer = SharedStorage::getStorage()->get($reference);
-
-        $manufacturerId = (int) $manufacturer->id;
-        $data = $node->getRowsHash();
+        $manufacturerId = $this->referenceToId($manufacturerReference);
+        $data = $this->localizeByRows($node);
         $command = new EditManufacturerCommand($manufacturerId);
 
         if (isset($data['name'])) {
@@ -115,27 +104,22 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
             $command->setEnabled(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']));
         }
         if (isset($data['short_description'])) {
-            [$this->defaultLangId => $command->setLocalizedShortDescriptions($data['short_description'])];
+            $command->setLocalizedShortDescriptions($data['short_description']);
         }
         if (isset($data['description'])) {
-            [$this->defaultLangId => $command->setLocalizedDescriptions($data['description'])];
+            $command->setLocalizedDescriptions($data['description']);
         }
         if (isset($data['meta_title'])) {
-            [$this->defaultLangId => $command->setLocalizedMetaTitles($data['meta_title'])];
+            $command->setLocalizedMetaTitles($data['meta_title']);
         }
         if (isset($data['meta_description'])) {
-            [$this->defaultLangId => $command->setLocalizedMetaDescriptions($data['meta_description'])];
-        }
-        if (isset($data['meta_keywords'])) {
-            [$this->defaultLangId => $command->setLocalizedMetaKeywords($data['meta_keywords'])];
+            $command->setLocalizedMetaDescriptions($data['meta_description']);
         }
         if (isset($data['logo image'])) {
             $this->pretendImageUploaded(_PS_MANU_IMG_DIR_, $data['logo image'], $manufacturerId);
         }
 
         $this->getCommandBus()->handle($command);
-
-        SharedStorage::getStorage()->set($reference, new Manufacturer($manufacturerId));
     }
 
     /**
@@ -143,10 +127,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
      */
     public function deleteManufacturer(string $manufacturerReference): void
     {
-        /** @var Manufacturer $manufacturer */
-        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
-
-        $this->getCommandBus()->handle(new DeleteManufacturerCommand((int) $manufacturer->id));
+        $this->getCommandBus()->handle(new DeleteManufacturerCommand($this->referenceToId($manufacturerReference)));
     }
 
     /**
@@ -154,12 +135,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
      */
     public function bulkDeleteManufacturers(string $manufacturerReferences): void
     {
-        $manufacturerIds = [];
-        foreach (PrimitiveUtils::castStringArrayIntoArray($manufacturerReferences) as $manufacturerReference) {
-            $manufacturerIds[] = (int) SharedStorage::getStorage()->get($manufacturerReference)->id;
-        }
-
-        $this->getCommandBus()->handle(new BulkDeleteManufacturerCommand($manufacturerIds));
+        $this->getCommandBus()->handle(new BulkDeleteManufacturerCommand($this->referencesToIds($manufacturerReferences)));
     }
 
     /**
@@ -173,85 +149,61 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then manufacturer :reference name should be :name
+     * @Then manufacturer :manufacturerReference should have the following properties:
+     *
+     * @param string $manufacturerReference
+     * @param TableNode $tableNode
      */
-    public function assertManufacturerName(string $reference, string $name): void
+    public function assertManufacturerData(string $manufacturerReference, TableNode $tableNode): void
     {
-        $manufacturer = SharedStorage::getStorage()->get($reference);
+        $manufacturerForEditing = $this->getEditableManufacturer($this->referenceToId($manufacturerReference));
+        $data = $this->localizeByRows($tableNode);
 
-        if ($manufacturer->name !== $name) {
-            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" name, but "%s" was expected.', $reference, $manufacturer->name, $name));
+        if (isset($data['name'])) {
+            Assert::assertEquals($data['name'], $manufacturerForEditing->getName());
         }
-    }
-
-    /**
-     * @Then manufacturer :reference :field in default language should be :value
-     */
-    public function assertFieldValue(string $reference, $field, $value)
-    {
-        /** @var Manufacturer $manufacturer */
-        $manufacturer = SharedStorage::getStorage()->get($reference);
-
-        if ($manufacturer->$field[$this->defaultLangId] !== $value) {
-            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but "%s" was expected.', $reference, $manufacturer->$field[$this->defaultLangId], $field, $value));
+        if (isset($data['enabled'])) {
+            Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']), $manufacturerForEditing->isEnabled());
         }
-    }
-
-    /**
-     * @Then manufacturer :reference :field field in default language should be empty
-     */
-    public function assertFieldIsEmpty(string $reference, $field)
-    {
-        $manufacturer = SharedStorage::getStorage()->get($reference);
-
-        if ($manufacturer->$field[$this->defaultLangId] !== '') {
-            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but it was expected to be empty', $reference, $manufacturer->$field[$this->defaultLangId], $field));
+        if (isset($data['short_description'])) {
+            Assert::assertEquals($data['short_description'], $manufacturerForEditing->getLocalizedShortDescriptions());
+        }
+        if (isset($data['description'])) {
+            Assert::assertEquals($data['description'], $manufacturerForEditing->getLocalizedDescriptions());
+        }
+        if (isset($data['meta_title'])) {
+            Assert::assertEquals($data['meta_title'], $manufacturerForEditing->getLocalizedMetaTitles());
+        }
+        if (isset($data['meta_description'])) {
+            Assert::assertEquals($data['meta_description'], $manufacturerForEditing->getLocalizedMetaDescriptions());
         }
     }
 
     /**
      * @When /^I (enable|disable)? manufacturer "(.*)"$/
      */
-    public function toggleStatus(string $action, string $reference)
+    public function toggleStatus(string $action, string $reference): void
     {
         $expectedStatus = 'enable' === $action;
-
-        /** @var Manufacturer $manufacturer */
-        $manufacturer = SharedStorage::getStorage()->get($reference);
-        $manufacturerId = (int) $manufacturer->id;
-
-        $this->getCommandBus()->handle(new ToggleManufacturerStatusCommand($manufacturerId, $expectedStatus));
-
-        SharedStorage::getStorage()->set($reference, new Manufacturer($manufacturerId));
+        $this->getCommandBus()->handle(new ToggleManufacturerStatusCommand($this->referenceToId($reference), $expectedStatus));
     }
 
     /**
      * @When /^I (enable|disable) multiple manufacturers: "(.+)" using bulk action$/
      */
-    public function bulkToggleStatus(string $action, string $manufacturerReferences)
+    public function bulkToggleStatus(string $action, string $manufacturerReferences): void
     {
         $expectedStatus = 'enable' === $action;
-        $manufacturerIdsByReference = [];
-
-        foreach (PrimitiveUtils::castStringArrayIntoArray($manufacturerReferences) as $manufacturerReference) {
-            $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
-            $manufacturerIdsByReference[$manufacturerReference] = (int) $manufacturer->id;
-        }
-
         $this->getQueryBus()->handle(new BulkToggleManufacturerStatusCommand(
-            $manufacturerIdsByReference,
+            $this->referencesToIds($manufacturerReferences),
             $expectedStatus
         ));
-
-        foreach ($manufacturerIdsByReference as $reference => $id) {
-            SharedStorage::getStorage()->set($reference, new Manufacturer($id));
-        }
     }
 
     /**
      * @Given /^manufacturers: "(.+)" should be (enabled|disabled)$/
      */
-    public function assertMultipleManufacturersStatus(string $manufacturerReferences, string $expectedStatus)
+    public function assertMultipleManufacturersStatus(string $manufacturerReferences, string $expectedStatus): void
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($manufacturerReferences) as $manufacturerReference) {
             $this->assertStatus($manufacturerReference, $expectedStatus);
@@ -260,35 +212,31 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Given /^manufacturer "(.*)" is (enabled|disabled)?$/
+     *
      * @Then /^manufacturer "(.*)" should be (enabled|disabled)?$/
      */
-    public function assertStatus(string $manufacturerReference, string $expectedStatus)
+    public function assertStatus(string $manufacturerReference, string $expectedStatus): void
     {
-        /** @var Manufacturer $manufacturer */
-        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
-
+        $manufacturer = $this->getEditableManufacturer($this->referenceToId($manufacturerReference));
         $isEnabled = 'enabled' === $expectedStatus;
-        $actualStatus = (bool) $manufacturer->active;
-
-        if ($actualStatus !== $isEnabled) {
-            throw new RuntimeException(sprintf('Manufacturer "%s" is %s, but it was expected to be %s', $manufacturerReference, $actualStatus ? 'enabled' : 'disabled', $expectedStatus));
-        }
+        Assert::assertEquals(
+            $manufacturer->isEnabled(),
+            $isEnabled,
+            sprintf('Manufacturer "%s" is %s, but it was expected to be %s', $manufacturerReference, $manufacturer->isEnabled() ? 'enabled' : 'disabled', $expectedStatus)
+        );
     }
 
     /**
      * @Then manufacturer :manufacturerReference should be deleted
      */
-    public function assertManufacturerIsDeleted(string $manufacturerReference)
+    public function assertManufacturerIsDeleted(string $manufacturerReference): void
     {
-        /** @var Manufacturer $manufacturer */
-        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
-
         try {
-            $this->getEditableManufacturer((int) $manufacturer->id);
+            $this->getEditableManufacturer($this->getSharedStorage()->get($manufacturerReference));
 
             throw new NoExceptionAlthoughExpectedException(sprintf('Manufacturer %s exists, but it was expected to be deleted', $manufacturerReference));
         } catch (ManufacturerNotFoundException $e) {
-            SharedStorage::getStorage()->clear($manufacturerReference);
+            $this->getSharedStorage()->clear($manufacturerReference);
         }
     }
 
@@ -324,9 +272,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
      */
     public function deleteCategoryLogoImage(string $manufacturerReference): void
     {
-        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
-
-        $this->getCommandBus()->handle(new DeleteManufacturerLogoImageCommand((int) $manufacturer->id));
+        $this->getCommandBus()->handle(new DeleteManufacturerLogoImageCommand($this->referenceToId($manufacturerReference)));
     }
 
     /**
@@ -336,10 +282,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertManufacturerHasLogoImage(string $manufacturerReference): void
     {
-        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
-
-        $editableManufacturer = $this->getEditableManufacturer((int) $manufacturer->id);
-
+        $editableManufacturer = $this->getEditableManufacturer($this->referenceToId($manufacturerReference));
         Assert::assertNotNull($editableManufacturer->getLogoImage());
     }
 
@@ -348,37 +291,10 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $manufacturerReference
      */
-    public function assertManufacturerHasNotLogoImage(string $manufacturerReference)
+    public function assertManufacturerHasNotLogoImage(string $manufacturerReference): void
     {
-        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
-
-        $editableManufacturer = $this->getEditableManufacturer((int) $manufacturer->id);
+        $editableManufacturer = $this->getEditableManufacturer($this->referenceToId($manufacturerReference));
         Assert::assertNull($editableManufacturer->getLogoImage());
-    }
-
-    /**
-     * @param string $reference
-     * @param array $data
-     */
-    private function createManufacturerUsingCommand(string $reference, array $data): void
-    {
-        $command = new AddManufacturerCommand(
-            $data['name'],
-            PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']),
-            [$this->defaultLangId => $data['short_description']],
-            [$this->defaultLangId => $data['description']],
-            [$this->defaultLangId => $data['meta_title']],
-            [$this->defaultLangId => $data['meta_description']],
-            [$this->defaultLangId => $data['meta_keywords']],
-            [$this->defaultShopId]
-        );
-
-        /**
-         * @var ManufacturerId
-         */
-        $manufacturerId = $this->getCommandBus()->handle($command);
-
-        SharedStorage::getStorage()->set($reference, new Manufacturer($manufacturerId->getValue()));
     }
 
     /**
@@ -391,19 +307,16 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     public function manufacturerShouldHaveAddedAddresses(
         string $manufacturerReference,
         int $countOfAddresses,
-        int $countOfProducts)
+        int $countOfProducts): void
     {
-        /** @var Manufacturer $manufacturer */
-        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
-        /** @var ViewableManufacturer $viewableMaufacturer */
-        $viewableMaufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
-            $manufacturer->id,
+        /** @var ViewableManufacturer $viewableManufacturer */
+        $viewableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
+            $this->referenceToId($manufacturerReference),
             (int) $this->getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_LANG_DEFAULT')
         ));
 
-        Assert::assertSame($manufacturer->name, $viewableMaufacturer->getName());
-        Assert::assertSame($countOfAddresses, count($viewableMaufacturer->getManufacturerAddresses()));
-        Assert::assertSame($countOfProducts, count($viewableMaufacturer->getManufacturerProducts()));
+        Assert::assertSame($countOfAddresses, count($viewableManufacturer->getManufacturerAddresses()));
+        Assert::assertSame($countOfProducts, count($viewableManufacturer->getManufacturerProducts()));
     }
 
     /**

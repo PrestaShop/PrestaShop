@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    bind:
+      $dbPrefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Core\QuickAccess\QuickAccessRepositoryInterface:
+    alias: PrestaShop\PrestaShop\Adapter\QuickAccess\Repository\QuickAccessRepository
+
+  PrestaShop\PrestaShop\Adapter\QuickAccess\Repository\QuickAccessRepository: ~

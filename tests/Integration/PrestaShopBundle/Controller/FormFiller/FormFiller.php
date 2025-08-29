@@ -30,7 +30,7 @@ namespace Tests\Integration\PrestaShopBundle\Controller\FormFiller;
 
 use DOMElement;
 use InvalidArgumentException;
-use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
@@ -51,7 +51,20 @@ class FormFiller
             if (!is_array($formValue)) {
                 /** @var FormField $formField */
                 $formField = $form->get($fieldName);
-                $formField->setValue($formValue);
+                // Checkbox inputs must be used via tick/untick or exceptions are triggered because of invalid choices
+                if ($formField instanceof ChoiceFormField && $formField->getType() === 'checkbox') {
+                    if (boolval($formValue)) {
+                        $formField->tick();
+                    } else {
+                        $formField->untick();
+                    }
+                } else {
+                    // The form component converts boolean values into string ones, so we must do the same thing to remain compatible
+                    if ($formField instanceof ChoiceFormField && is_bool($formValue)) {
+                        $formValue = $formValue ? '1' : '0';
+                    }
+                    $formField->setValue((string) $formValue);
+                }
                 $this->enabledAssociatedField($form, $formField);
 
                 continue;

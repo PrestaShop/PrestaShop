@@ -26,7 +26,7 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 import {refreshCheckoutPage} from './common';
 
-$(document).ready(() => {
+$(() => {
   prestashop.on('updateCart', (event) => {
     prestashop.cart = event.resp.cart;
     const getCartViewUrl = $('.js-cart').data('refresh-url');

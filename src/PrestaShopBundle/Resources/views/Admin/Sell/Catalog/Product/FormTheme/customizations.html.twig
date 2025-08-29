@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {%- block customization_field_row -%}
   <li class="form-group row customization-field-row">
@@ -45,8 +45,8 @@
 {%- endblock customization_field_row -%}
 
 {%- block collection_row -%}
-  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' list-unstyled')|trim }) -%}
+  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name}) -%}
+  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' list-unstyled')|trim}) -%}
   <ul {{ block('widget_attributes') }}>
     {{- block('form_rows') -}}
   </ul>

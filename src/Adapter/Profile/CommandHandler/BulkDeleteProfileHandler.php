@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Profile\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\CommandHandler\BulkDeleteProfileHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminProfileException;
@@ -41,6 +42,7 @@ use Profile;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class BulkDeleteProfileHandler extends AbstractProfileHandler implements BulkDeleteProfileHandlerInterface
 {
     /**
@@ -69,6 +71,7 @@ final class BulkDeleteProfileHandler extends AbstractProfileHandler implements B
     public function handle(BulkDeleteProfileCommand $command)
     {
         $entityIds = $command->getProfileIds();
+        $exceptionToThrowLater = null;
 
         foreach ($entityIds as $entityId) {
             $entityIdValue = $entityId->getValue();
@@ -95,7 +98,17 @@ final class BulkDeleteProfileHandler extends AbstractProfileHandler implements B
                 }
             } catch (PrestaShopException $e) {
                 throw new ProfileException(sprintf('Unexpected error occurred when deleting Profile with id %s', var_export($entityIdValue, true)), 0, $e);
+            } catch (FailedToDeleteProfileException $e) {
+                if ($e->getCode() === FailedToDeleteProfileException::PROFILE_IS_ASSIGNED_TO_CONTEXT_EMPLOYEE) {
+                    $exceptionToThrowLater = $e;
+                    continue;
+                }
+                throw $e;
             }
+        }
+
+        if ($exceptionToThrowLater) {
+            throw $exceptionToThrowLater;
         }
     }
 }

@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductStockAvailableCommandsBuilder;
 
-class ProductStockAvailableCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class ProductStockAvailableCommandsBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands

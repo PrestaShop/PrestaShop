@@ -30,6 +30,7 @@ use Category;
 use ImageManager;
 use ImageType;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
@@ -43,6 +44,11 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 final class CategoryCoverImageUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
+    public function __construct(
+        private readonly ImageFormatConfiguration $imageFormatConfiguration,
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -98,8 +104,7 @@ final class CategoryCoverImageUploader extends AbstractImageUploader implements 
             $temporaryImageName,
             _PS_IMG_DIR_ . 'c' . DIRECTORY_SEPARATOR . $id . '.jpg',
             null,
-            null,
-            'jpg'
+            null
         );
 
         if (!$optimizationSucceeded) {
@@ -120,17 +125,21 @@ final class CategoryCoverImageUploader extends AbstractImageUploader implements 
             return;
         }
 
+        $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
         $imagesTypes = ImageType::getImagesTypes('categories');
-        foreach ($imagesTypes as $k => $imageType) {
-            $generated = ImageManager::resize(
-                _PS_CAT_IMG_DIR_ . $id . '.jpg',
-                _PS_CAT_IMG_DIR_ . $id . '-' . stripslashes($imageType['name']) . '.jpg',
-                (int) $imageType['width'],
-                (int) $imageType['height']
-            );
+        foreach ($imagesTypes as $imageType) {
+            foreach ($configuredImageFormats as $imageFormat) {
+                $generated = ImageManager::resize(
+                    _PS_CAT_IMG_DIR_ . $id . '.jpg',
+                    _PS_CAT_IMG_DIR_ . $id . '-' . stripslashes($imageType['name']) . '.' . $imageFormat,
+                    (int) $imageType['width'],
+                    (int) $imageType['height'],
+                    $imageFormat
+                );
 
-            if (!$generated) {
-                throw new ImageUploadException('Error occurred when uploading image');
+                if (!$generated) {
+                    throw new ImageUploadException('Error occurred when uploading image');
+                }
             }
         }
     }

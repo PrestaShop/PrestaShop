@@ -29,11 +29,14 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use Configuration;
-use Exception;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Feature\QueryResult\EditableFeature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
@@ -44,129 +47,160 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I create product feature :reference with specified properties:
      */
-    public function createFeature($reference, TableNode $node)
+    public function createFeature(string $featureReference, TableNode $tableNode): void
     {
-        $properties = $node->getRowsHash();
-        $featureId = $this->createProductFeature($properties['name']);
-
-        $this->getSharedStorage()->set($reference, (int) $featureId->getValue());
-    }
-
-    /**
-     * @Then /^product feature "([^"]*)" name should be "([^"]*)"$/
-     */
-    public function productFeatureNameShouldBe($reference, $name)
-    {
-        $productFeatureId = $this->getSharedStorage()->get($reference);
-        $this->productFeatureWithIdNameShouldBe($productFeatureId, $name);
-    }
-
-    /**
-     * @Given /^product feature with id "([^"]*)" exists$/
-     */
-    public function productFeatureWithIdExists($featureId)
-    {
-        $this->getQueryBus()->handle(new GetFeatureForEditing((int) $featureId));
-    }
-
-    /**
-     * @Given /^product feature with reference "([^"]*)" exists$/
-     */
-    public function productFeatureWithReferenceExists(string $featureReference): void
-    {
-        $productFeatureId = $this->getSharedStorage()->get($featureReference);
-        $this->getQueryBus()->handle(new GetFeatureForEditing($productFeatureId));
-    }
-
-    /**
-     * @When /^I update product feature with id "([^"]*)" field "name" in default language to "([^"]*)"$/
-     */
-    public function iUpdateProductFeatureWithIdNameTo($featureId, $featureName)
-    {
-        $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
-
-        /** @var EditableFeature $editableFeature */
-        $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing((int) $featureId));
-        $featureNames = $editableFeature->getName();
-        $featureNames[$defaultLanguageId] = $featureName;
+        $localizedData = $this->localizeByRows($tableNode);
 
         try {
-            $editFeatureCommand = new EditFeatureCommand($featureId);
-            $editFeatureCommand->setLocalizedNames($featureNames);
+            /** @var FeatureId $featureId */
+            $featureId = $this->getCommandBus()->handle(new AddFeatureCommand(
+                $localizedData['name'],
+                isset($localizedData['associated shops']) ? $this->referencesToIds($localizedData['associated shops']) : []
+            ));
 
-            $this->getCommandBus()->handle($editFeatureCommand);
-        } catch (Exception $e) {
+            $this->getSharedStorage()->set($featureReference, $featureId->getValue());
+        } catch (FeatureException $e) {
             $this->setLastException($e);
         }
     }
 
     /**
-     * @When /^I update product feature with reference "([^"]*)" field "name" in default language to "([^"]*)"$/
-     */
-    public function iUpdateProductFeatureWithReferenceNameTo(string $featureReference, string $featureName): void
-    {
-        $productFeatureId = $this->getSharedStorage()->get($featureReference);
-        $this->iUpdateProductFeatureWithIdNameTo($productFeatureId, $featureName);
-    }
-
-    /**
-     * @Then /^product feature with id "([^"]*)" field "name" in default language should be "([^"]*)"$/
-     */
-    public function productFeatureWithIdNameShouldBe($featureId, $featureName)
-    {
-        $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
-
-        /** @var EditableFeature $editableFeature */
-        $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing($featureId));
-        $featureNames = $editableFeature->getName();
-
-        if ($featureNames[$defaultLanguageId] !== $featureName) {
-            throw new RuntimeException(sprintf('Product feature with id "%s" has name "%s", but "%s" was expected', $featureId, $featureNames[$defaultLanguageId], $featureName));
-        }
-    }
-
-    /**
-     * @Then /^product feature with reference "([^"]*)" field "name" in default language should be "([^"]*)"$/
-     */
-    public function productFeatureWithReferenceNameShouldBe(string $featureReference, string $featureName): void
-    {
-        $productFeatureId = $this->getSharedStorage()->get($featureReference);
-        $this->productFeatureWithIdNameShouldBe($productFeatureId, $featureName);
-    }
-
-    /**
-     * @Then /^I should get an error that feature name is invalid\.$/
-     */
-    public function iShouldGetAnErrorThatFeatureNameIsInvalid()
-    {
-        $this->assertLastErrorIs(FeatureConstraintException::class);
-    }
-
-    /**
-     * @When /^I create product feature with empty name$/
-     */
-    public function iCreateProductFeatureWithEmptyName1()
-    {
-        try {
-            $this->createProductFeature('');
-        } catch (Exception $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @param string $nameInDefaultLanguage
+     * @When I update product feature :feature with following details:
      *
-     * @return FeatureId
+     * @param string $featureReference
+     * @param TableNode $tableNode
      */
-    private function createProductFeature($nameInDefaultLanguage)
+    public function updateFeature(string $featureReference, TableNode $tableNode): void
     {
-        $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
+        $localizedData = $this->localizeByRows($tableNode);
+        $command = new EditFeatureCommand($this->getSharedStorage()->get($featureReference));
 
-        $command = new AddFeatureCommand(
-            [$defaultLanguageId => $nameInDefaultLanguage]
+        try {
+            if (isset($localizedData['name'])) {
+                $command->setLocalizedNames($localizedData['name']);
+            }
+
+            if (isset($localizedData['associated shops'])) {
+                $command->setAssociatedShopIds($this->referencesToIds($localizedData['associated shops']));
+            }
+
+            $this->getCommandBus()->handle($command);
+        } catch (FeatureException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I delete product feature :featureReference
+     *
+     * @param string $featureReference
+     */
+    public function deleteFeature(string $featureReference): void
+    {
+        $this->getCommandBus()->handle(
+            new DeleteFeatureCommand($this->getSharedStorage()->get($featureReference))
         );
+    }
 
-        return $this->getCommandBus()->handle($command);
+    /**
+     * @When I bulk delete product features :featureReferences
+     *
+     * @param string $featureReferences
+     */
+    public function bulkDeleteFeatures(string $featureReferences): void
+    {
+        $this->getCommandBus()->handle(new BulkDeleteFeatureCommand($this->referencesToIds($featureReferences)));
+    }
+
+    /**
+     * @Given product feature :featureReference exists
+     * @Given product feature :featureReference should exist
+     */
+    public function productFeatureExists(string $featureReference): void
+    {
+        $editableFeature = $this->getFeatureForEditing($featureReference);
+
+        Assert::assertSame(
+            $this->getSharedStorage()->get($featureReference),
+            $editableFeature->getFeatureId()->getValue()
+        );
+    }
+
+    /**
+     * @Then product feature :featureReference should not exist
+     *
+     * @param string $featureReference
+     */
+    public function assertFeatureDoesNotExist(string $featureReference): void
+    {
+        $coughtException = null;
+
+        try {
+            $this->getFeatureForEditing($featureReference);
+        } catch (FeatureNotFoundException $e) {
+            $coughtException = $e;
+        }
+
+        if (null === $coughtException) {
+            throw new RuntimeException(sprintf(
+                'Feature %s was expected not to be found',
+                $featureReference
+            ));
+        }
+    }
+
+    /**
+     * @Then product feature :featureReference should have following details:
+     *
+     * @param string $featureReference
+     * @param TableNode $expectedData
+     */
+    public function assertEditableFeatureDetails(string $featureReference, TableNode $expectedData): void
+    {
+        $expectedLocalizedData = $this->localizeByRows($expectedData);
+        $editableFeature = $this->getFeatureForEditing($featureReference);
+
+        if (isset($expectedLocalizedData['name'])) {
+            Assert::assertSame(
+                $expectedLocalizedData['name'],
+                $editableFeature->getName()
+            );
+        }
+
+        if (isset($expectedLocalizedData['associated shops'])) {
+            Assert::assertSame(
+                $this->referencesToIds($expectedLocalizedData['associated shops']),
+                $editableFeature->getShopAssociationIds()
+            );
+        }
+    }
+
+    /**
+     * @Then I should get an error that feature name is invalid
+     */
+    public function assertLastErrorIsFeatureNameIsInvalid(): void
+    {
+        $this->assertLastErrorIs(
+            FeatureConstraintException::class,
+            FeatureConstraintException::INVALID_NAME
+        );
+    }
+
+    /**
+     * @Then I should get an error that feature shop association is invalid
+     */
+    public function assertLastErrorIsInvalidShopAssociation(): void
+    {
+        $this->assertLastErrorIs(
+            FeatureConstraintException::class,
+            FeatureConstraintException::INVALID_SHOP_ASSOCIATION
+        );
+    }
+
+    private function getFeatureForEditing(string $featureReference): EditableFeature
+    {
+        return $this->getQueryBus()->handle(
+            new GetFeatureForEditing($this->getSharedStorage()->get($featureReference))
+        );
     }
 }

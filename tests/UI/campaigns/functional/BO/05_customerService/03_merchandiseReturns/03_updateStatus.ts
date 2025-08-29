@@ -1,40 +1,40 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
-import date from '@utils/date';
+import {expect} from 'chai';
 
 // Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
+import {disableMerchandiseReturns, enableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
+import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 
-// Import pages
-// Import BO pages
-import merchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
-import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders';
-import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
-import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
-// Import FO pages
-import cartPage from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {homePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
-import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
-
-// Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
-import Products from '@data/demo/products';
-import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
-import Addresses from '@data/demo/address';
-
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boMerchandiseReturnsPage,
+  boMerchandiseReturnsEditPage,
+  boOrdersPage,
+  boOrdersViewBasePage,
+  type BrowserContext,
+  dataAddresses,
+  dataCustomers,
+  dataOrderReturnStatuses,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
+  foClassicHomePage,
+  foClassicLoginPage,
+  foClassicMyAccountPage,
+  foClassicMyMerchandiseReturnsPage,
+  foClassicMyOrderDetailsPage,
+  foClassicMyOrderHistoryPage,
+  type MailDev,
+  type MailDevEmail,
+  type Page,
+  utilsDate,
+  utilsFile,
+  utilsMail,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customerService_merchandiseReturns_updateStatus';
 
@@ -43,160 +43,113 @@ Pre-condition:
 - Create order in FO
 - Activate merchandise returns
 - Change the first order status in the list to shipped
+- Setup SMTP config
 Scenario
 - Create merchandise returns in FO
 - GO to BO > merchandise returns page > Edit
 - Test all return statuses
+- Check received emails
 Post-condition:
 - Deactivate merchandise returns
+- Reset SMTP config
  */
 describe('BO - Customer Service - Merchandise Returns : Update status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let filePath: string|null;
+  let filePath: string | null;
   let returnID: number;
-  const todayDate: string = date.getDateFormat('mm/dd/yyyy');
+  let allEmails: MailDevEmail[];
+  let numberOfEmails: number;
+  let mailListener: MailDev;
+  const todayDate: string = utilsDate.getDateFormat('mm/dd/yyyy');
+  const orderData: FakerOrder = new FakerOrder({
+    customer: dataCustomers.johnDoe,
+    products: [
+      {
+        product: dataProducts.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: dataPaymentMethods.wirePayment,
+  });
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
+
+    // Start listening to maildev server
+    mailListener = utilsMail.createMailListener();
+    utilsMail.startListener(mailListener);
+
+    // get all emails
+    // @ts-ignore
+    mailListener.getAllEmail((err: Error, emails: MailDevEmail[]) => {
+      allEmails = emails;
+    });
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
+
+    // Stop listening to maildev server
+    utilsMail.stopListener(mailListener);
   });
 
-  describe('PRE-TEST: Create order in FO', async () => {
-    it('should go to FO page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+  // Pre-condition: Enable merchandise returns
+  enableMerchandiseReturns(`${baseContext}_preTest_1`);
 
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+  // Pre-condition: Create order
+  createOrderByCustomerTest(orderData, `${baseContext}_preTest_2`);
 
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
-    });
-
-    it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
-
-      await homePage.goToLoginPage(page);
-
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
-    });
-
-    it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
-
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
-
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
-    });
-
-    it('should add the first product to the cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
-
-      await foLoginPage.goToHomePage(page);
-
-      // Add first product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 1, 2);
-      await homePage.proceedToCheckout(page);
-
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(2);
-    });
-
-    it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
-
-      await cartPage.clickOnProceedToCheckout(page);
-
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should go to payment step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
-
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should choose payment method and confirm the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
-
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
-    });
-  });
-
-  describe('PRE-TEST: Enable merchandise returns', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
-
-    it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToMerchandiseReturnsPage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.merchandiseReturnsLink,
-      );
-      await merchandiseReturnsPage.closeSfToolBar(page);
-
-      const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
-    });
-
-    it('should enable merchandise returns', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'enableReturns', baseContext);
-
-      const result = await merchandiseReturnsPage.setOrderReturnStatus(page, true);
-      await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
-    });
-  });
+  // Pre-Condition : Setup config SMTP
+  setupSmtpConfigTest(`${baseContext}_preTest_3`);
 
   describe('PRE-TEST: Change order status to \'Shipped\'', async () => {
+    it('should login in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
+    });
+
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
 
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderBasePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+      const pageTitle = await boOrdersViewBasePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBasePage.pageTitle);
     });
 
-    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await viewOrderBasePage.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      const result = await boOrdersViewBasePage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should check if the button \'Return products\' is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkReturnProductsButton', baseContext);
 
-      const result = await viewOrderBasePage.isReturnProductsButtonVisible(page);
-      await expect(result).to.be.true;
+      const result = await boOrdersViewBasePage.isReturnProductsButtonVisible(page);
+      expect(result).to.eq(true);
     });
   });
 
@@ -204,56 +157,66 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
-      page = await viewOrderBasePage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      page = await boOrdersViewBasePage.viewMyShop(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
+    });
+
+    it('should login in FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
+
+      await foClassicHomePage.goToLoginPage(page);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(myAccountPage.pageTitle);
+      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
     });
 
     it('should go to \'Order history and details\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageTitle = await orderHistoryPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
+      const pageTitle = await foClassicMyOrderHistoryPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyOrderHistoryPage.pageTitle);
     });
 
     it('should go to the first order in the list and check the existence of order return form', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isOrderReturnFormVisible', baseContext);
 
-      await orderHistoryPage.goToDetailsPage(page, 1);
+      await foClassicMyOrderHistoryPage.goToDetailsPage(page, 1);
 
-      const result = await orderDetailsPage.isOrderReturnFormVisible(page);
-      await expect(result).to.be.true;
+      const result = await foClassicMyOrderDetailsPage.isOrderReturnFormVisible(page);
+      expect(result).to.eq(true);
     });
 
     it('should create a merchandise return', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createMerchandiseReturn', baseContext);
 
-      await orderDetailsPage.requestMerchandiseReturn(page, 'test', 1, [{quantity: 1}]);
+      await foClassicMyOrderDetailsPage.requestMerchandiseReturn(page, 'test', 1, [{quantity: 1}]);
 
-      const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+      const pageTitle = await foClassicMyMerchandiseReturnsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyMerchandiseReturnsPage.pageTitle);
     });
 
     it('should close the FO page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeFoAndGoBackToBO', baseContext);
 
-      page = await orderDetailsPage.closePage(browserContext, page, 0);
+      page = await foClassicMyOrderDetailsPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await viewOrderBasePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+      const pageTitle = await boOrdersViewBasePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBasePage.pageTitle);
     });
   });
 
@@ -261,62 +224,79 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
     it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMerchandiseReturnsPage2', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.merchandiseReturnsLink,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.merchandiseReturnsLink,
       );
 
-      const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+      const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
     });
 
     it('should get the return number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getReturnNumber', baseContext);
 
-      returnID = parseInt(await merchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'id_order_return'), 10);
-      await expect(returnID).to.not.equal(0);
+      returnID = parseInt(await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'id_order_return'), 10);
+      expect(returnID).to.not.equal(0);
     });
 
     const tests = [
-      {args: {status: OrderReturnStatuses.waitingForPackage.name}},
-      {args: {status: OrderReturnStatuses.packageReceived.name}},
-      {args: {status: OrderReturnStatuses.returnDenied.name}},
-      {args: {status: OrderReturnStatuses.returnCompleted.name}},
+      {args: {status: dataOrderReturnStatuses.waitingForPackage.name}},
+      {args: {status: dataOrderReturnStatuses.packageReceived.name}},
+      {args: {status: dataOrderReturnStatuses.returnDenied.name}},
+      {args: {status: dataOrderReturnStatuses.returnCompleted.name}},
     ];
     tests.forEach((test, index: number) => {
       describe(`Update returns status to ${test.args.status} and check result`, async () => {
         it('should go to edit merchandise returns page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToEditReturnsPage${index}`, baseContext);
 
-          await merchandiseReturnsPage.goToMerchandiseReturnPage(page);
+          await boMerchandiseReturnsPage.goToMerchandiseReturnPage(page);
 
-          const pageTitle = await editMerchandiseReturnsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
+          const pageTitle = await boMerchandiseReturnsEditPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boMerchandiseReturnsEditPage.pageTitle);
         });
 
         it('should update the status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `editStatus${index}`, baseContext);
 
-          const textResult = await editMerchandiseReturnsPage.setStatus(page, test.args.status, true);
-          await expect(textResult).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
+          const textResult = await boMerchandiseReturnsEditPage.setStatus(page, test.args.status, true);
+          expect(textResult).to.contains(boMerchandiseReturnsEditPage.successfulUpdateMessage);
         });
 
-        if (test.args.status === OrderReturnStatuses.waitingForPackage.name) {
+        it('should check the confirmation email subject', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkConfirmationEmail${index}`, baseContext);
+
+          numberOfEmails = allEmails.length;
+          expect(allEmails[numberOfEmails - 1].subject)
+            .to.equal(`[${global.INSTALL.SHOP_NAME}] Your order return status has changed`);
+        });
+
+        it('should check the confirmation email text', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkConfirmationEmailText${index}`, baseContext);
+
+          numberOfEmails = allEmails.length;
+          expect(allEmails[numberOfEmails - 1].text)
+            .to.contains('We have updated the progress on your return')
+            .and.to.contains(`the new status is: "${test.args.status}".`);
+        });
+
+        if (test.args.status === dataOrderReturnStatuses.waitingForPackage.name) {
           it('should download and check the existence of the PDF print out file', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkPDF', baseContext);
 
-            filePath = await editMerchandiseReturnsPage.downloadPDF(page);
+            filePath = await boMerchandiseReturnsEditPage.downloadPDF(page);
 
-            const exist = await files.doesFileExist(filePath);
-            await expect(exist, 'File does not exist').to.be.true;
+            const exist = await utilsFile.doesFileExist(filePath);
+            expect(exist, 'File does not exist').to.eq(true);
           });
 
           it('should check the file name', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkFileName', baseContext);
 
-            const fileName = await editMerchandiseReturnsPage.getFileName(page);
-            await expect(fileName).to.eq('Print out');
+            const fileName = await boMerchandiseReturnsEditPage.getFileName(page);
+            expect(fileName).to.eq('Print out');
           });
 
           it('should check the header of the return PDF', async function () {
@@ -327,25 +307,25 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
             if (returnID >= 10) {
               returnPrefix = '#RE0000';
             }
-            const isVisible = await files.isTextInPDF(filePath, `ORDER RETURN,,${todayDate},,${returnPrefix}${returnID}`);
-            await expect(isVisible, 'The header of the PDF is not correct!').to.be.true;
+            const isVisible = await utilsFile.isTextInPDF(filePath, `ORDER RETURN,,${todayDate},,${returnPrefix}${returnID}`);
+            expect(isVisible, 'The header of the PDF is not correct!').to.eq(true);
           });
 
           it('should check the billing address in the PDF', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkBillingAddress', baseContext);
 
-            const billingAddressExist = await files.isTextInPDF(
+            const billingAddressExist = await utilsFile.isTextInPDF(
               filePath,
               'Billing & Delivery Address,,'
-              + `${Addresses.second.firstName} ${Addresses.second.lastName},`
-              + `${Addresses.second.company},`
-              + `${Addresses.second.address},`
-              + `${Addresses.second.secondAddress},`
-              + `${Addresses.second.postalCode} ${Addresses.second.city},`
-              + `${Addresses.second.country},`
-              + `${Addresses.second.phone}`,
+              + `${dataAddresses.address_2.firstName} ${dataAddresses.address_2.lastName},`
+              + `${dataAddresses.address_2.company},`
+              + `${dataAddresses.address_2.address},`
+              + `${dataAddresses.address_2.secondAddress},`
+              + `${dataAddresses.address_2.postalCode} ${dataAddresses.address_2.city},`
+              + `${dataAddresses.address_2.country},`
+              + `${dataAddresses.address_2.phone}`,
             );
-            await expect(billingAddressExist, 'Billing address is not correct in PDF!').to.be.true;
+            expect(billingAddressExist, 'Billing address is not correct in PDF!').to.eq(true);
           });
 
           it('should check the return number', async function () {
@@ -357,55 +337,52 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
               returnPrefix = '0000';
             }
 
-            const isVisible = await files.isTextInPDF(
+            const isVisible = await utilsFile.isTextInPDF(
               filePath,
               'We have logged your return request.,Your package must be returned to us within 14 days of receiving your order.'
               + `,,Return Number, ,Date,,${returnPrefix}${returnID}, ,${todayDate}`);
-            await expect(isVisible, 'Order return ID and the date are not correct!').to.be.true;
+            expect(isVisible, 'Order return ID and the date are not correct!').to.eq(true);
           });
 
           it('should check the returned product details', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkReturnedProduct', baseContext);
 
-            const isVisible = await files.isTextInPDF(
+            const isVisible = await utilsFile.isTextInPDF(
               filePath,
-              `Items to be returned, ,Reference, ,Qty,,${Products.demo_1.name} (Size: S - Color: White), ,`
-              + `${Products.demo_1.reference}, ,1`);
-            await expect(isVisible, 'Returned product details are not correct!').to.be.true;
+              `Items to be returned, ,Reference, ,Qty,,${dataProducts.demo_1.name} (Size: S - Color: White), ,`
+              + `${dataProducts.demo_1.reference}, ,1`);
+            expect(isVisible, 'Returned product details are not correct!').to.eq(true);
           });
         } else {
           it('should check that the file is not existing', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkFileNotExisting${index}`, baseContext);
 
-            const fileName = await editMerchandiseReturnsPage.getFileName(page);
-            await expect(fileName).to.eq('--');
+            const fileName = await boMerchandiseReturnsEditPage.getFileName(page);
+            expect(fileName).to.eq('--');
           });
         }
         it('should click on cancel button', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `clickOnCancelButton${index}`, baseContext);
 
-          await editMerchandiseReturnsPage.clickOnCancelButton(page);
+          await boMerchandiseReturnsEditPage.clickOnCancelButton(page);
 
-          const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+          const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
+          expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
         });
 
         it('should check the updated status in the merchandise returns table', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkStatus${index}`, baseContext);
 
-          const status = await merchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'name');
-          await expect(status).to.eq(test.args.status);
+          const status = await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'name');
+          expect(status).to.eq(test.args.status);
         });
       });
     });
   });
 
-  describe('POST-TEST: Disable merchandise returns', async () => {
-    it('should disable merchandise returns', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableReturns', baseContext);
+  // Post-condition: Disable merchandise returns
+  disableMerchandiseReturns(`${baseContext}_postTest_1`);
 
-      const result = await merchandiseReturnsPage.setOrderReturnStatus(page, false);
-      await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
-    });
-  });
+  // Post-Condition : Reset SMTP config
+  resetSmtpConfigTest(`${baseContext}_postTest_2`);
 });

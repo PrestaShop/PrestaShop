@@ -67,8 +67,7 @@ class ProductSaleCore
      * @param int $pageNumber Start from (optional)
      * @param int $nbProducts Number of products to return (optional)
      *
-     * @return array|bool from Product::getProductProperties
-     *                    `false` if failure
+     * @return array|bool
      */
     public static function getBestSales($idLang, $pageNumber = 0, $nbProducts = 10, $orderBy = null, $orderWay = null)
     {
@@ -104,10 +103,10 @@ class ProductSaleCore
         $sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 					' . (Combination::isFeatureActive() ? 'product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity,IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute,' : '') . '
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
-					pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
+					pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
 					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
 					image_shop.`id_image` id_image, il.`legend`,
-					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
+					ps.`quantity` AS sales, t.`rate`, pl.`meta_title`, pl.`meta_description`,
 					DATEDIFF(p.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
 					INTERVAL ' . (int) $interval . ' DAY)) > 0 AS new'
             . ' FROM `' . _DB_PREFIX_ . 'product_sale` ps
@@ -158,7 +157,7 @@ class ProductSaleCore
             return false;
         }
 
-        return Product::getProductsProperties($idLang, $result);
+        return $result;
     }
 
     /**
@@ -170,7 +169,7 @@ class ProductSaleCore
      *
      * @return bool|array keys : id_product, link_rewrite, name, id_image, legend, sales, ean13, upc, link
      */
-    public static function getBestSalesLight($idLang, $pageNumber = 0, $nbProducts = 10, Context $context = null)
+    public static function getBestSalesLight($idLang, $pageNumber = 0, $nbProducts = 10, ?Context $context = null)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -227,7 +226,7 @@ class ProductSaleCore
             return false;
         }
 
-        return Product::getProductsProperties($idLang, $result);
+        return $result;
     }
 
     /**

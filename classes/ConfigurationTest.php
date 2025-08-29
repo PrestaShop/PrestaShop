@@ -29,7 +29,6 @@ class ConfigurationTestCore
         '/classes/log/index.php',
         '/classes/cache/index.php',
         '/config/index.php',
-        '/controllers/admin/AdminLoginController.php',
         '/download/index.php',
         '/js/tools.js',
         '/js/jquery/plugins/fancybox/jquery.fancybox.js',
@@ -208,7 +207,13 @@ class ConfigurationTestCore
 
     public static function test_gd()
     {
-        return function_exists('imagecreatetruecolor');
+        if (function_exists('gd_info')) {
+            $gd = gd_info();
+
+            return !empty($gd['JPEG Support']);
+        }
+
+        return false;
     }
 
     public static function test_json()

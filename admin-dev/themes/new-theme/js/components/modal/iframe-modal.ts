@@ -30,7 +30,7 @@ import {
   ModalContainerType, ModalContainer, ModalType, ModalParams, Modal,
 } from '@components/modal/modal';
 import IframeEvent from '@components/modal/iframe-event';
-import {isUndefined} from '@PSTypes/typeguard';
+import {isUndefined} from '@components/typeguard';
 
 export interface IframeModalContainerType extends ModalContainerType {
   iframe: HTMLIFrameElement;
@@ -138,7 +138,7 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
         this.closeButton.setAttribute('type', 'button');
         this.closeButton.classList.add('btn', 'btn-outline-secondary', 'btn-lg');
         this.closeButton.dataset.dismiss = 'modal';
-        this.closeButton.innerHTML = params.closeButtonLabel;
+        this.closeButton.innerText = params.closeButtonLabel;
         this.footer.append(this.closeButton);
       }
 
@@ -236,8 +236,12 @@ export class IframeModal extends Modal implements IframeModalType {
     }
   }
 
-  render(content: string, hideIframe: boolean = true): this {
-    this.modal.message.innerHTML = content;
+  render(content: string, hideIframe: boolean = true, useInnerText: boolean = false): this {
+    if (useInnerText) {
+      this.modal.message.innerText = content;
+    } else {
+      this.modal.message.innerHTML = content;
+    }
     this.modal.message.classList.remove('d-none');
 
     if (hideIframe) {

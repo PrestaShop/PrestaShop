@@ -32,6 +32,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShopBundle\Command\ConfigCommand;
+use RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class ConfigCommandTest extends TestCase
@@ -112,7 +113,7 @@ class ConfigCommandTest extends TestCase
     public function testExceptionsMissingKey(): void
     {
         $commandTester = $this->getCommandTester();
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->assertEquals(ConfigCommand::STATUS_INVALID_ACTION, $commandTester->execute(['action' => 'get']));
     }
 
@@ -120,7 +121,7 @@ class ConfigCommandTest extends TestCase
     {
         $commandTester = $this->getCommandTester();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $commandTester->execute([]);
     }
 

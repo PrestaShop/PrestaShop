@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandTypeParser;
  */
 final class ExecutedCommandRegistry
 {
-    private const BACKTRACE_LIMIT = 10;
+    private const BACKTRACE_LIMIT = 15;
 
     /**
      * @var array
@@ -64,8 +64,8 @@ final class ExecutedCommandRegistry
      */
     public function register($command, $handler): void
     {
-        $commandClass = get_class($command);
-        $handlerClass = get_class($handler);
+        $commandClass = $command::class;
+        $handlerClass = $handler::class;
 
         $type = $this->commandTypeParser->parse($commandClass);
 
@@ -115,8 +115,8 @@ final class ExecutedCommandRegistry
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, self::BACKTRACE_LIMIT);
 
         foreach ($trace as $step) {
-            if ($step['class'] === TacticianCommandBusAdapter::class
-                && $step['function'] === 'handle'
+            if ($step['function'] === 'handle'
+                && is_a($step['class'], CommandBusInterface::class, true)
             ) {
                 return [
                     'file' => $step['file'],

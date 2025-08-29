@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import PaginationServiceType from '@js/types/services';
-import RendererType from '@js/types/renderers';
+import PaginationServiceType from '@PSTypes/services';
+import RendererType from '@PSTypes/renderers';
 
 const {$} = window;
 
@@ -190,7 +190,7 @@ export default class DynamicPaginator {
     });
     this.$paginationContainer
       .find(this.selectorsMap.jumpToPageInput)
-      .keypress((e) => {
+      .on('keypress', (e) => {
         if (e.which === 13) {
           e.preventDefault();
           const input = <HTMLInputElement>e.currentTarget;

@@ -176,7 +176,7 @@ final class GridDefinition implements GridDefinitionInterface
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         if (!is_string($name)) {
             throw new InvalidDataException('Definition name should be a string.');

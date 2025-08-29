@@ -59,7 +59,6 @@ final class SupplierFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('name', $this->trans('Name', 'Admin.Global'), '', true),
             new EntityField('description', $this->trans('Description', 'Admin.Global')),
             new EntityField('meta_title', $this->trans('Meta title', 'Admin.Global')),
-            new EntityField('meta_keywords', $this->trans('Meta keywords', 'Admin.Global')),
             new EntityField('meta_description', $this->trans('Meta description', 'Admin.Global')),
             new EntityField('image', $this->trans('Image URL', 'Admin.Advparameters.Feature')),
             new EntityField(

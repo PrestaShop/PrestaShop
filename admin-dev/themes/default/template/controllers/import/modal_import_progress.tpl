@@ -63,7 +63,7 @@
                   '[1]' => '<span id="validate_progression_done">',
                   '%percentage%' => '0',
                   '[/1]' => '</span>'
-                  ] d="Admin.Advparameters.Notification"}
+                  ] d="Admin.Advparameters.Notification" html=true}
         </span>
       </div>
       <div class="progress-bar progress-bar-info" role="progressbar" id="validate_progressbar_next" style="opacity: 0.5 ;width: 0%">
@@ -85,7 +85,7 @@
           '[1]' => '<span id="import_progression_done">',
           '%size%' => '0',
           '[/1]' => '</span>'
-          ] d="Admin.Advparameters.Notification"}
+          ] d="Admin.Advparameters.Notification" html=true}
         </span>
       </div>
       <div class="progress-bar progress-bar-success progress-bar-stripes active" role="progressbar" id="import_progressbar_next" style="opacity: 0.5 ;width: 0%">

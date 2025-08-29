@@ -46,9 +46,9 @@ class UploadedImageSizeException extends ImageUploadException
      */
     public static function build(
         int $allowedSizeBytes,
-        string $message = null,
+        ?string $message = null,
         int $code = 0,
-        Throwable $previous = null
+        ?Throwable $previous = null
     ): self {
         if (null === $message) {
             $message = sprintf(
@@ -83,7 +83,7 @@ class UploadedImageSizeException extends ImageUploadException
         int $allowedSizeBytes,
         string $message = '',
         int $code = 0,
-        Throwable $previous = null
+        ?Throwable $previous = null
     ) {
         $this->allowedSizeBytes = $allowedSizeBytes;
         parent::__construct($message, $code, $previous);

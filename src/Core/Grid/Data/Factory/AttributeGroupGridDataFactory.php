@@ -72,7 +72,7 @@ final class AttributeGroupGridDataFactory implements GridDataFactoryInterface
     {
         foreach ($records as &$record) {
             if (null === $record['values']) {
-                $record['values'] = '0';
+                $record['values'] = 0;
             }
         }
 

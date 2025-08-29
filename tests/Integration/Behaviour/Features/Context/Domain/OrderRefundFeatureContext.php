@@ -30,7 +30,7 @@ use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Order;
 use OrderSlip;
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssueReturnProductCommand;

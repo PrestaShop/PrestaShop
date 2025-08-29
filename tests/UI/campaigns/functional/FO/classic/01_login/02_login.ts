@@ -1,17 +1,17 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import FO pages
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
-
-// Import data
-import Customers from '@data/demo/customers';
-import CustomerData from '@data/faker/customer';
+import {
+  type BrowserContext,
+  dataCustomers,
+  FakerCustomer,
+  foClassicHomePage,
+  foClassicLoginPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_classic_login_login';
 
@@ -19,88 +19,88 @@ describe('FO - Login : Login in FO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const firstCredentialsData: CustomerData = new CustomerData();
-  const secondCredentialsData: CustomerData = new CustomerData({password: Customers.johnDoe.password});
-  const thirdCredentialsData: CustomerData = new CustomerData({email: Customers.johnDoe.email});
+  const firstCredentialsData: FakerCustomer = new FakerCustomer();
+  const secondCredentialsData: FakerCustomer = new FakerCustomer({password: dataCustomers.johnDoe.password});
+  const thirdCredentialsData: FakerCustomer = new FakerCustomer({email: dataCustomers.johnDoe.email});
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should open the shop page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-    await homePage.goTo(page, global.FO.URL);
+    await foClassicHomePage.goTo(page, global.FO.URL);
 
-    const result = await homePage.isHomePage(page);
-    await expect(result).to.be.true;
+    const result = await foClassicHomePage.isHomePage(page);
+    expect(result).to.eq(true);
   });
 
   it('should go to login page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-    await homePage.goToLoginPage(page);
+    await foClassicHomePage.goToLoginPage(page);
 
-    const pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(loginPage.pageTitle);
+    const pageTitle = await foClassicLoginPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicLoginPage.pageTitle);
   });
 
   it('should enter an invalid credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidCredentials', baseContext);
 
-    await loginPage.customerLogin(page, firstCredentialsData, false);
+    await foClassicLoginPage.customerLogin(page, firstCredentialsData, false);
 
-    const loginError = await loginPage.getLoginError(page);
-    await expect(loginError).to.contains(loginPage.loginErrorText);
+    const loginError = await foClassicLoginPage.getLoginError(page);
+    expect(loginError).to.contains(foClassicLoginPage.loginErrorText);
   });
 
   it('should enter an invalid email', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidEmail', baseContext);
 
-    await loginPage.customerLogin(page, secondCredentialsData, false);
+    await foClassicLoginPage.customerLogin(page, secondCredentialsData, false);
 
-    const loginError = await loginPage.getLoginError(page);
-    await expect(loginError).to.contains(loginPage.loginErrorText);
+    const loginError = await foClassicLoginPage.getLoginError(page);
+    expect(loginError).to.contains(foClassicLoginPage.loginErrorText);
   });
 
   it('should enter an invalid password', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidPassword', baseContext);
 
-    await loginPage.customerLogin(page, thirdCredentialsData, false);
+    await foClassicLoginPage.customerLogin(page, thirdCredentialsData, false);
 
-    const loginError = await loginPage.getLoginError(page);
-    await expect(loginError).to.contains(loginPage.loginErrorText);
+    const loginError = await foClassicLoginPage.getLoginError(page);
+    expect(loginError).to.contains(foClassicLoginPage.loginErrorText);
   });
 
   it('should check password type', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkPasswordType', baseContext);
 
-    const inputType = await loginPage.getPasswordType(page);
-    await expect(inputType).to.equal('password');
+    const inputType = await foClassicLoginPage.getPasswordType(page);
+    expect(inputType).to.equal('password');
   });
 
   it('should click on show button and check the password', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnShowButton', baseContext);
 
-    const inputType = await loginPage.showPassword(page);
-    await expect(inputType).to.equal('text');
+    const inputType = await foClassicLoginPage.showPassword(page);
+    expect(inputType).to.equal('text');
   });
 
   it('should enter a valid credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
-    await loginPage.customerLogin(page, Customers.johnDoe);
+    await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-    const isCustomerConnected = await loginPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+    const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+    expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
 
-    const result = await homePage.isHomePage(page);
-    await expect(result).to.be.true;
+    const result = await foClassicHomePage.isHomePage(page);
+    expect(result).to.eq(true);
   });
 });

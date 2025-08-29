@@ -1,19 +1,19 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import FO pages
-import cartPage from '@pages/FO/cart';
-import {homePage} from '@pages/FO/home';
-import {loginPage} from '@pages/FO/login';
-import productPage from '@pages/FO/product';
-import checkoutPage from '@pages/FO/checkout';
-
-// Import data
-import Products from '@data/demo/products';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  type BrowserContext,
+  dataProducts,
+  foClassicCartPage,
+  foClassicCheckoutPage,
+  foClassicHomePage,
+  foClassicLoginPage,
+  foClassicModalBlockCartPage,
+  foClassicModalQuickViewPage,
+  foClassicProductPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_checkout_showDetails';
 
@@ -32,111 +32,113 @@ describe('FO - Checkout : Show details', async () => {
   let page: Page;
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should go to FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-    await homePage.goToFo(page);
-    await homePage.changeLanguage(page, 'en');
+    await foClassicHomePage.goToFo(page);
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await homePage.isHomePage(page);
-    await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    const isHomePage = await foClassicHomePage.isHomePage(page);
+    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
   });
 
-  it('should add the first product to cart', async function () {
+  it('should add the first product to cart then close block cart modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
-    await homePage.addProductToCartByQuickView(page, 1, 1);
+    await foClassicHomePage.quickViewProduct(page, 1);
+    await foClassicModalQuickViewPage.addToCartByQuickView(page);
 
-    const isModalClosed = await homePage.closeBlockCartModal(page);
-    await expect(isModalClosed).to.be.true;
+    const isModalClosed = await foClassicModalBlockCartPage.closeBlockCartModal(page);
+    expect(isModalClosed).to.eq(true);
   });
 
   it('should add the third product to cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-    await loginPage.goToHomePage(page);
-    await homePage.addProductToCartByQuickView(page, 3, 2);
-    await homePage.proceedToCheckout(page);
+    await foClassicLoginPage.goToHomePage(page);
+    await foClassicHomePage.quickViewProduct(page, 3);
+    await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
+    await foClassicModalBlockCartPage.proceedToCheckout(page);
 
-    const pageTitle = await cartPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(cartPage.pageTitle);
+    const pageTitle = await foClassicCartPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
   });
 
   it('should proceed to checkout and go to checkout page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
-    await cartPage.clickOnProceedToCheckout(page);
+    await foClassicCartPage.clickOnProceedToCheckout(page);
 
-    const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
-    await expect(isCheckoutPage).to.be.true;
+    const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+    expect(isCheckoutPage).to.eq(true);
   });
 
   it('should check the items number', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkItemsNumber', baseContext);
 
-    const itemsNumber = await checkoutPage.getItemsNumber(page);
-    await expect(itemsNumber).to.equal('3 items');
+    const itemsNumber = await foClassicCheckoutPage.getItemsNumber(page);
+    expect(itemsNumber).to.equal('3 items');
   });
 
   it('should click on \'Show details\' link', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'showDetails', baseContext);
 
-    const isProductsListVisible = await checkoutPage.clickOnShowDetailsLink(page);
-    await expect(isProductsListVisible).to.be.true;
+    const isProductsListVisible = await foClassicCheckoutPage.clickOnShowDetailsLink(page);
+    expect(isProductsListVisible).to.eq(true);
   });
 
   it('should check the first product details', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkFirstProductDetails', baseContext);
-    const result = await checkoutPage.getProductDetails(page, 1);
+    const result = await foClassicCheckoutPage.getProductDetails(page, 1);
     await Promise.all([
-      await expect(result.image).to.contains(Products.demo_1.coverImage),
-      await expect(result.name).to.equal(Products.demo_1.name),
-      await expect(result.quantity).to.equal(1),
-      await expect(result.price).to.equal(Products.demo_1.finalPrice),
+      expect(result.image).to.contains(dataProducts.demo_1.coverImage),
+      expect(result.name).to.equal(dataProducts.demo_1.name),
+      expect(result.quantity).to.equal(1),
+      expect(result.price).to.equal(dataProducts.demo_1.finalPrice),
     ]);
 
-    const attributes = await checkoutPage.getProductAttributes(page, 1);
-    await expect(attributes).to.equal('Size: S');
+    const attributes = await foClassicCheckoutPage.getProductAttributes(page, 1);
+    expect(attributes).to.equal('Size: S');
   });
 
   it('should check the second product details', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSecondProductDetails', baseContext);
-    const result = await checkoutPage.getProductDetails(page, 2);
+    const result = await foClassicCheckoutPage.getProductDetails(page, 2);
     await Promise.all([
-      await expect(result.image).to.contains(Products.demo_6.coverImage),
-      await expect(result.name).to.equal(Products.demo_6.name),
-      await expect(result.quantity).to.equal(2),
-      await expect(result.price).to.equal(Products.demo_6.combinations[0].price),
+      expect(result.image).to.contains(dataProducts.demo_6.coverImage),
+      expect(result.name).to.equal(dataProducts.demo_6.name),
+      expect(result.quantity).to.equal(2),
+      expect(result.price).to.equal(dataProducts.demo_6.combinations[0].price),
     ]);
 
-    const attributes = await checkoutPage.getProductAttributes(page, 2);
-    await expect(attributes).to.equal('Dimension: 40x60cm');
+    const attributes = await foClassicCheckoutPage.getProductAttributes(page, 2);
+    expect(attributes).to.equal('Dimension: 40x60cm');
   });
 
   it('click on first product name', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnFirstProductName', baseContext);
 
-    page = await checkoutPage.clickOnProductName(page, 1);
+    page = await foClassicCheckoutPage.clickOnProductName(page, 1);
 
-    const productInformation = await productPage.getProductInformation(page);
-    await expect(productInformation.name).to.equal(Products.demo_1.name);
+    const productInformation = await foClassicProductPage.getProductInformation(page);
+    expect(productInformation.name).to.equal(dataProducts.demo_1.name);
   });
 
   it('should close the page and click on the first product image', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnFirstProductImage', baseContext);
 
-    page = await productPage.closePage(browserContext, page, 0);
-    await checkoutPage.clickOnProductImage(page, 1);
+    page = await foClassicProductPage.closePage(browserContext, page, 0);
+    await foClassicCheckoutPage.clickOnProductImage(page, 1);
 
-    const productInformation = await productPage.getProductInformation(page);
-    await expect(productInformation.name).to.equal(Products.demo_1.name);
+    const productInformation = await foClassicProductPage.getProductInformation(page);
+    expect(productInformation.name).to.equal(dataProducts.demo_1.name);
   });
 });

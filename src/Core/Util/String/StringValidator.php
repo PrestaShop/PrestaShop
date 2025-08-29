@@ -36,7 +36,7 @@ final class StringValidator implements StringValidatorInterface
      */
     public function startsWith($string, $prefix)
     {
-        return strpos($string, $prefix) === 0;
+        return str_starts_with($string, $prefix);
     }
 
     /**

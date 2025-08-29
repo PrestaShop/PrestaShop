@@ -28,8 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Repository;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 trait ShopConstraintTrait
 {
@@ -52,6 +55,17 @@ trait ShopConstraintTrait
             $queryBuilder
                 ->andWhere('id_shop_group = :shop_group')
                 ->setParameter('shop_group', $shopConstraint->getShopGroupId()->getValue())
+            ;
+        }
+
+        if ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+            $queryBuilder
+                ->andWhere('id_shop IN (:shopIds)')
+                ->setParameter(
+                    'shopIds',
+                    array_map(fn (ShopId $shopId) => $shopId->getValue(), $shopConstraint->getShopIds()),
+                    ArrayParameterType::INTEGER
+                )
             ;
         }
 

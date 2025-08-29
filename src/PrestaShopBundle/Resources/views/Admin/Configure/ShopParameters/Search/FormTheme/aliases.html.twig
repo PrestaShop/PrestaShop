@@ -1,0 +1,46 @@
+{# **
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * #}
+
+{% block aliases_collection_widget %}
+  {{ form_widget(form, {attr: {class: 'js-aliases-collection'}}) }}
+  <button type="button" class="btn btn-outline-secondary js-btn-add-alias">
+    <i class="material-icons">add_circle</i>
+    <span class="btn-label">{{ 'Add alias'|trans({}, 'Admin.Shopparameters.Feature') }}</span>
+  </button>
+{% endblock %}
+
+{% block alias_type_widget %}
+  <div class="row">
+    <div class="col col-6 col-md-7 col-lg-9">
+      {{ form_widget(form.alias) }}
+    </div>
+    <div class="col col-4 col-md-3 col-lg-2">
+      {{ form_widget(form.active, {row_attr: {class: 'small'}}) }}
+    </div>
+    <div class="col col-1 col-md-2 col-lg-1 text-right">
+      <button type="button" class="btn js-btn-delete-alias"><i class="material-icons">delete</i></button>
+    </div>
+  </div>
+{% endblock %}

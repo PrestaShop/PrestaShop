@@ -12,3 +12,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\CustomerAddressFormOptionsProvider'
     arguments:
       - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.option_provider.discount_form_options_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\DiscountFormOptionsProvider'

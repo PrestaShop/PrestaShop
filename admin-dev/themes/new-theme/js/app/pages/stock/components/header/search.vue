@@ -27,7 +27,7 @@
     id="search"
     class="row mb-2"
   >
-    <div class="col-md-8">
+    <div class="col-md-12">
       <div class="mb-2">
         <form
           class="search-form"

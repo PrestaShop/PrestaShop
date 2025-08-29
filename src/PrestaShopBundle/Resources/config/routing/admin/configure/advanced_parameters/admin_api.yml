@@ -1,0 +1,58 @@
+admin_api_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdminAPIController::indexAction
+    _legacy_controller: AdminAdminAPI
+
+admin_api_clients_process_configuration:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdminAPIController::processConfigurationAction
+    _legacy_controller: AdminAdminAPI
+
+admin_api_clients_create:
+  path: /api-clients/create
+  methods: [ GET, POST, PATCH ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdminAPIController::createAction
+    _legacy_controller: AdminAdminAPI
+
+admin_api_clients_edit:
+  path: /api-clients/{apiClientId}/edit
+  methods: [ GET, POST, PATCH ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdminAPIController::editAction
+    _legacy_controller: AdminAdminAPI
+
+admin_api_clients_toggle_active:
+  path: /api-clients/{apiClientId}/toggle-active
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdminAPIController::toggleStatusAction
+    _legacy_controller: AdminAdminAPI
+
+admin_api_clients_delete:
+  path: /api-clients/{apiClientId}/delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdminAPIController::deleteAction
+    _legacy_controller: AdminAdminAPI
+
+admin_api_clients_regenerate_secret:
+  path: /api-clients/{apiClientId}/regenerate-secret
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdminAPIController::regenerateSecretAction
+    _legacy_controller: AdminAdminAPI
+
+api_platform_doc:
+  # We only load the routing for the API Swagger documentation, not the whole bundle routing
+  # because we don't want the API endpoints to be accessible from the back-office but via its
+  # dedicated admin-api base endpoint
+  resource: "@ApiPlatformBundle/Resources/config/routing/docs.xml"
+
+api_platform_jsonld:
+  # We only load the routing for JSON-LD as it's used by OpenApi
+  resource: "@ApiPlatformBundle/Resources/config/routing/jsonld.xml"

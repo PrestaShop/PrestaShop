@@ -3,7 +3,7 @@ $component-name: multistore-dropdown;
 
 .#{$component-name} {
   &.btn-group {
-    height: 2.25rem;
+    height: var(--#{$cdk}size-36);
   }
 
   > .btn {
@@ -14,12 +14,12 @@ $component-name: multistore-dropdown;
 
   &-search {
     min-height: auto;
-    padding: 0.3rem 1rem;
-    padding-left: 2.2rem;
+    padding: var(--#{$cdk}size-5) var(--#{$cdk}size-16);
+    padding-left: var(--#{$cdk}size-36);
 
     &-container {
       position: relative;
-      margin-bottom: 1rem;
+      margin-bottom: var(--#{$cdk}size-16);
 
       @include media-breakpoint-down(sm) {
         display: none;
@@ -27,29 +27,28 @@ $component-name: multistore-dropdown;
 
       i {
         position: absolute;
-        top: 0.5rem;
-        left: 0.75rem;
+        top: var(--#{$cdk}size-8);
+        left: var(--#{$cdk}size-12);
         z-index: 1;
-        font-size: 1.2rem;
-        color: $medium-gray;
+        font-size: var(--#{$cdk}size-20);
+        color: var(--#{$cdk}primary-400);
         pointer-events: none;
       }
 
       .tt-menu {
         width: 100%;
         overflow: hidden;
-        background-color: #fff;
-        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
-        @include border-bottom-radius(4px);
+        background-color: var(--#{$cdk}white);
+        box-shadow: var(--#{$cdk}box-shadow-md);
 
         .tt-dataset > div {
-          padding: 0.5rem 1rem;
+          padding: var(--#{$cdk}size-8) var(--#{$cdk}size-16);
           cursor: pointer;
-          @include transition(0.25s ease-out);
+          transition: var(--#{$cdk}default-transition);
 
           &:hover,
           &.tt-cursor {
-            background-color: #f4fcfd;
+            background-color: var(--#{$cdk}primary-200);
           }
         }
       }
@@ -60,7 +59,7 @@ $component-name: multistore-dropdown;
     width: 100vw;
     max-width: 27.5rem;
     max-height: 50vh;
-    padding: 1.25rem;
+    padding: var(--#{$cdk}size-20);
     overflow: auto;
 
     ul,
@@ -74,25 +73,25 @@ $component-name: multistore-dropdown;
   &-group {
     &-name {
       display: block;
-      margin-bottom: 1rem;
-      font-size: 0.875rem;
+      margin-bottom: var(--#{$cdk}size-16);
+      font-size: var(--#{$cdk}size-14);
       font-weight: 600;
-      color: $gray-dark;
+      color: var(--#{$cdk}primary-800);
     }
 
     li.#{$component-name}-group-item {
       &:not(:first-of-type) {
-        margin-top: 1.25rem;
+        margin-top: var(--#{$cdk}size-20);
       }
     }
   }
 
   ul.#{$component-name}-shops {
-    padding-left: 0.5rem;
+    padding-left: var(--#{$cdk}size-8);
 
     .#{$component-name}-shop {
       &:not(:last-of-type) {
-        margin-bottom: 0.875rem;
+        margin-bottom: var(--#{$cdk}size-14);
       }
     }
   }
@@ -107,26 +106,26 @@ $component-name: multistore-dropdown;
     }
 
     &-name {
-      font-size: 0.875rem;
-      line-height: 19px;
-      color: $gray-dark;
+      font-size: var(--#{$cdk}size-14);
+      line-height: var(--#{$cdk}size-20);
+      color: var(--#{$cdk}primary-800);
       text-decoration: underline;
       letter-spacing: 0;
     }
 
     &-status {
-      font-size: 0.875rem;
+      font-size: var(--#{$cdk}size-14);
       font-weight: 600;
-      line-height: 19px;
+      line-height: var(--#{$cdk}size-20);
       color: $success;
 
       &-locked {
-        color: #000;
-        opacity: 0.35;
+        color: var(--#{$cdk}primary-800);
+        opacity: 0.5;
 
         i.material-icons {
           padding-right: 0;
-          margin-right: 0.5rem;
+          margin-right: var(--#{$cdk}size-8);
         }
       }
     }
@@ -137,6 +136,6 @@ $component-name: multistore-dropdown;
   }
 
   &-no-url:hover {
-    color: #4a4a4a;
+    color: var(--#{$cdk}primary-600);
   }
 }

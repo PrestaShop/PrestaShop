@@ -23,10 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-/**
- * @since 1.5
- */
 class PDFGeneratorCore extends TCPDF
 {
     public const DEFAULT_FONT = 'helvetica';
@@ -86,6 +82,7 @@ class PDFGeneratorCore extends TCPDF
         'lt' => 'dejavusans',
         'lv' => 'dejavusans',
         'tr' => 'dejavusans',
+        'ro' => 'dejavusans',
         'ko' => 'cid0kr',
         'zh' => 'cid0cs',
         'tw' => 'cid0cs',
@@ -196,9 +193,9 @@ class PDFGeneratorCore extends TCPDF
      * @param string $filename
      * @param bool|string $display true:display to user, false:save, 'I','D','S' as fpdf display
      *
-     * @throws PrestaShopException
-     *
      * @return string HTML rendered
+     *
+     * @throws PrestaShopException
      */
     public function render($filename, $display = true)
     {

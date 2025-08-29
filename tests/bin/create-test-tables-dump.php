@@ -30,7 +30,8 @@ use Tests\Resources\DatabaseDump;
 define('_PS_ROOT_DIR_', dirname(__DIR__, 2));
 const _PS_IN_TEST_ = true;
 const __PS_BASE_URI__ = '/';
-const _PS_MODULE_DIR_ = _PS_ROOT_DIR_ . '/modules/';
+const _PS_MODULE_DIR_ = _PS_ROOT_DIR_ . '/tests/Resources/modules/';
+const _PS_ALL_THEMES_DIR_ = _PS_ROOT_DIR_ . '/tests/Resources/themes/';
 
 require_once _PS_ROOT_DIR_ . '/install-dev/init.php';
 

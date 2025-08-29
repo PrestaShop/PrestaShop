@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Zone\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Command\DeleteZoneCommand;
 use PrestaShop\PrestaShop\Core\Domain\Zone\CommandHandler\DeleteZoneHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\DeleteZoneException;
@@ -37,6 +38,7 @@ use Zone;
 /**
  * Handles command that delete zone
  */
+#[AsCommandHandler]
 final class DeleteZoneHandler implements DeleteZoneHandlerInterface
 {
     /**

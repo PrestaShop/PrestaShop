@@ -1,0 +1,77 @@
+volumes:
+  db-data:
+
+services:
+  mariadb:
+    image: mariadb:11.4
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWD:-prestashop}
+      MARIADB_DATABASE: ${DB_NAME:-prestashop}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 5s
+      timeout: 1s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - prestashop-network
+
+  prestashop-git:
+    hostname: ${PS_HOSTNAME:-localhost}
+    build:
+      dockerfile: .docker/Dockerfile
+      context: .
+      args:
+        - VERSION=${VERSION:-8.1-apache}
+        - USER_ID=${USER_ID:-1000}
+        - GROUP_ID=${GROUP_ID:-1000}
+        - NODE_VERSION=${NODE_VERSION:-16.20.1}
+        - INSTALL_XDEBUG=${INSTALL_XDEBUG:-false}
+    environment:
+      DISABLE_MAKE: ${DISABLE_MAKE:-0}
+      PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
+      DB_PASSWD: ${DB_PASSWD:-prestashop}
+      DB_NAME: ${DB_NAME:-prestashop}
+      DB_SERVER: ${DB_SERVER:-mariadb}
+      DB_PREFIX: ${DB_PREFIX:-ps_}
+      PS_DOMAIN: ${PS_DOMAIN:-localhost:8001}
+      PS_FOLDER_INSTALL: ${PS_FOLDER_INSTALL:-install-dev}
+      PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
+      PS_COUNTRY: ${PS_COUNTRY:-fr}
+      PS_LANGUAGE: ${PS_LANGUAGE:-en}
+      PS_DEV_MODE: ${PS_DEV_MODE:-1}
+      PS_ENABLE_SSL: ${PS_ENABLE_SSL:-0}
+      PS_ERASE_DB: ${PS_ERASE_DB:-0}
+      PS_USE_DOCKER_MAILDEV: ${PS_USE_DOCKER_MAILDEV:-1}
+      ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
+      ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
+      BLACKFIRE_ENABLE: ${BLACKFIRE_ENABLE:-0}
+      BLACKFIRE_SERVER_ID: ${BLACKFIRE_SERVER_ID:-0}
+      BLACKFIRE_SERVER_TOKEN: ${BLACKFIRE_SERVER_TOKEN:-0}
+    command: /tmp/docker_run_git.sh
+    ports:
+      - "8001:80"
+      - "8002:443"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    volumes:
+      - ./:/var/www/html:delegated
+    networks:
+      - prestashop-network
+
+  maildev:
+    image: 'maildev/maildev'
+    ports:
+      - "1080:1080"
+    networks:
+      - prestashop-network
+
+networks:
+  prestashop-network:
+    name: prestashop-network

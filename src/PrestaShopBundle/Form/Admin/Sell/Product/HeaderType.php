@@ -102,7 +102,7 @@ class HeaderType extends TranslatorAwareType
                                 'message' => $this->trans(
                                     'This field contains invalid characters: %invalidCharacters%',
                                     'Admin.Catalog.Feature',
-                                    ['%invalidCharacters%' => '<>;=#{}']
+                                    ['%invalidCharacters%' => '<>{}']
                                 ),
                             ]
                         ),

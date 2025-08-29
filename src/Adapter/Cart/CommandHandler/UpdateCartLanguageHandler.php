@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Language;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartLanguageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
@@ -39,6 +40,7 @@ use PrestaShopException;
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class UpdateCartLanguageHandler extends AbstractCartHandler implements UpdateCartLanguageHandlerInterface
 {
     /**
@@ -57,7 +59,7 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
             if (false === $cart->update()) {
                 throw new CartException('Failed to update cart language');
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CartException(sprintf('An error occurred while trying to update language for cart with id "%s"', $cart->id));
         }
     }
@@ -74,7 +76,7 @@ final class UpdateCartLanguageHandler extends AbstractCartHandler implements Upd
     {
         try {
             $lang = new Language($languageId->getValue());
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new LanguageException(
                 sprintf('An error occurred when fetching language object with id %d', $languageId->getValue()),
                 $languageId->getValue()

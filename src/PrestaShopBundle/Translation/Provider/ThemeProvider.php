@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
@@ -175,7 +176,7 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      *
      * Will update translations files of the Theme
      */
@@ -205,7 +206,7 @@ class ThemeProvider extends AbstractProvider
     /**
      * @return MessageCatalogueInterface
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getThemeCatalogue()
     {

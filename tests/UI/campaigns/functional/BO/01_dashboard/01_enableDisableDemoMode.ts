@@ -1,15 +1,14 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-
-// Import common tests
-import loginCommon from '@commonTests/BO/loginBO';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_dashboard_enableDisableDemoMode';
 
@@ -19,33 +18,39 @@ describe('BO - Dashboard : Enable/Disable demo mode & check stats', async () => 
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should enable demo mode and check stats', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableDemoMode', baseContext);
 
-    await dashboardPage.setDemoMode(page, true);
+    await boDashboardPage.setDemoMode(page, true);
 
-    const salesScore = await dashboardPage.getSalesScore(page);
-    await expect(salesScore).to.be.above(400000);
+    const salesScore = await boDashboardPage.getSalesScore(page);
+    expect(salesScore).to.be.above(400000);
   });
 
   it('should disable demo mode and check stats', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableDemoMode', baseContext);
 
-    await dashboardPage.setDemoMode(page, false);
+    await boDashboardPage.setDemoMode(page, false);
 
-    const salesScore = await dashboardPage.getSalesScore(page);
-    await expect(salesScore).to.be.below(50000);
+    const salesScore = await boDashboardPage.getSalesScore(page);
+    expect(salesScore).to.be.below(50000);
   });
 });

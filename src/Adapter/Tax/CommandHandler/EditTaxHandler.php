@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Tax\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\EditTaxHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
@@ -36,6 +37,7 @@ use Tax;
 /**
  * Handles command which is responsible for tax editing
  */
+#[AsCommandHandler]
 final class EditTaxHandler extends AbstractTaxHandler implements EditTaxHandlerInterface
 {
     /**
@@ -65,7 +67,7 @@ final class EditTaxHandler extends AbstractTaxHandler implements EditTaxHandlerI
             if (!$tax->update()) {
                 throw new TaxException(sprintf('Cannot update tax with id "%s"', $tax->id));
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new TaxException(sprintf('Cannot update tax with id "%s"', $tax->id));
         }
     }

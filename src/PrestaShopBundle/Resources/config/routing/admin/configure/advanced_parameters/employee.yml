@@ -106,3 +106,12 @@ admin_employees_get_tabs:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::getAccessibleTabsAction'
     _legacy_controller: AdminEmployees
+
+admin_employees_get_password_generated:
+  path: /password_generated
+  methods: [ GET ]
+  options:
+    expose: true
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::generatePasswordAction'
+    _legacy_controller: AdminEmployees

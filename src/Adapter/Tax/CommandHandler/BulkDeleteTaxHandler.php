@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Tax\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\BulkDeleteTaxHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\DeleteTaxException;
@@ -36,6 +37,7 @@ use PrestaShopException;
 /**
  * Handles command which deletes Taxes on bulk action using legacy object model
  */
+#[AsCommandHandler]
 final class BulkDeleteTaxHandler extends AbstractTaxHandler implements BulkDeleteTaxHandlerInterface
 {
     /**
@@ -51,7 +53,7 @@ final class BulkDeleteTaxHandler extends AbstractTaxHandler implements BulkDelet
                 if (!$tax->delete()) {
                     throw new DeleteTaxException(sprintf('Cannot delete Tax object with id "%s"', $taxIdValue), DeleteTaxException::FAILED_BULK_DELETE);
                 }
-            } catch (PrestaShopException $e) {
+            } catch (PrestaShopException) {
                 throw new TaxException(sprintf('An error occurred when deleting Tax object with id "%s"', $taxIdValue));
             }
         }

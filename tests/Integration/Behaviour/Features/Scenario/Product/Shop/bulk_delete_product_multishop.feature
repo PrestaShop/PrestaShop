@@ -179,6 +179,31 @@ Feature: Bulk delete products when multishop feature is enabled
     And product productWithCombinations is not associated to shop shop3
     And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop3"
 
+  Scenario: I can bulk delete product from shop shop1 and shop3
+    When I bulk delete following products from shops "shop1,shop3":
+      | reference               |
+      | standardProduct         |
+      | productWithCombinations |
+    And product standardProduct is associated to shops "shop2,shop4"
+    And product standardProduct is not associated to shops "shop1,shop3"
+    And default shop for product standardProduct is shop2
+    And product "standardProduct" should have following stock information for shops "shop2,shop4":
+      | quantity | 51 |
+    And product "standardProduct" should have following images for shops "shop2,shop4":
+      | image reference | position | shops        |
+      | image1          | 1        | shop2, shop4 |
+      | image2          | 2        | shop2, shop4 |
+    # Default shop has been updated to first associated one (ordered by ID)
+    And default shop for product productWithCombinations is shop2
+    And product "productWithCombinations" should have the following combinations for shops "shop2,shop4":
+      | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 10       | true       |
+      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 20       | false      |
+      | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 30       | false      |
+    And product productWithCombinations is associated to shops "shop2,shop4"
+    And product productWithCombinations is not associated to shop "shop1,shop3"
+    And combinations "product1LWhite,product1LBlack,product1LBlue" are not associated to shop "shop1,shop3"
+
   Scenario: I can bulk delete product from all shops
     When I bulk delete following products from all shops:
       | reference               |

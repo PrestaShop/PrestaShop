@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
+use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -45,11 +46,17 @@ class UploadQuotaType extends TranslatorAwareType
      * @var ConfigurationInterface
      */
     private $configuration;
+    private UploadSizeConfigurationInterface $uploadSizeConfiguration;
 
-    public function __construct(TranslatorInterface $translator, array $locales, ConfigurationInterface $configuration)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        ConfigurationInterface $configuration,
+        UploadSizeConfigurationInterface $uploadSizeConfiguration
+    ) {
         parent::__construct($translator, $locales);
         $this->configuration = $configuration;
+        $this->uploadSizeConfiguration = $uploadSizeConfiguration;
     }
 
     /**
@@ -71,7 +78,7 @@ class UploadQuotaType extends TranslatorAwareType
                         'Set the maximum size allowed for attachment files (in megabytes). This value has to be lower than or equal to the maximum file upload allotted by your server (currently: %size% MB).',
                         'Admin.Advparameters.Help',
                         [
-                            '%size%' => $configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE'),
+                            '%size%' => round($this->uploadSizeConfiguration->getMaxUploadSizeInBytes() / 1048576),
                         ]
                     ),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),

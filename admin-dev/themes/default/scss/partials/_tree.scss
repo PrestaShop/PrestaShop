@@ -1,22 +1,24 @@
 .tree-panel-heading-controls {
-  padding: 5px;
-  margin: -20px -20px 20px;
-  font-size: 1.1em;
-  line-height: 2.2em;
-  color: $brand-primary;
-  border-bottom: solid 1px #dfdfdf;
+  margin: 0 0 var(--#{$cdk}size-16) 0;
 
-  i {
-    font-size: $icon-size-base;
+  .tree-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--#{$cdk}size-4);
+
+    .pull-right {
+      order: 10;
+    }
   }
 }
 
 .tree {
+  padding: 0 0 0 var(--#{$cdk}size-16);
+  margin: 0;
   list-style: none;
-  @include padding(0, 0, 0, 20px);
 
   input {
-    margin-right: 4px;
+    margin: 0;
     line-height: normal;
     vertical-align: baseline;
   }
@@ -27,48 +29,45 @@
 
   .tree-item-name,
   .tree-folder-name {
-    padding: 2px 5px;
-    @include border-radius(4px);
-
-    label {
-      font-weight: 400;
-    }
+    display: inline-flex;
+    gap: var(--#{$cdk}size-8);
+    align-items: center;
+    padding: var(--#{$cdk}size-2) var(--#{$cdk}size-4);
+    margin: var(--#{$cdk}size-2) 0;
 
     &:hover {
       cursor: pointer;
-      background-color: #eee;
+      background-color: var(--#{$cdk}primary-200);
+    }
+
+    label {
+      margin: 0;
     }
   }
 
   .tree-selected {
-    color: #fff;
-    background-color: $brand-primary;
+    background-color: var(--#{$cdk}primary-200);
 
     &:hover {
-      background-color: darken($brand-primary, 5%);
-    }
-
-    i.tree-dot {
-      background-color: #fff;
+      background-color: var(--#{$cdk}primary-400);
     }
   }
 
   i.tree-dot {
     position: relative;
     display: inline-block;
-    width: 6px;
-    height: 6px;
-    margin: 0 4px;
-    background-color: #ccc;
-    @include border-radius(6px);
+    width: var(--#{$cdk}size-6);
+    height: var(--#{$cdk}size-6);
+    background-color: var(--#{$cdk}primary-500);
+    border-radius: var(--#{$cdk}size-6);
   }
 
   .tree-item-disable,
   .tree-folder-name-disable {
-    color: #ccc;
+    color: var(--#{$cdk}primary-300);
 
     &:hover {
-      color: #ccc;
+      color: var(--#{$cdk}primary-300);
       background-color: none;
     }
   }
@@ -78,20 +77,24 @@
   display: inline-block;
 
   .twitter-typeahead {
-    @include padding(0,0,0,4px);
     position: relative;
-    top: 1px;
+    top: var(--#{$cdk}size-1);
+    padding: 0 0 0 var(--#{$cdk}size-4);
   }
 
   .tt-hint {
     // stylelint-disable-next-line
-    left: 4px !important;
-    color: #ccc;
+    left: var(--#{$cdk}size-4) !important;
+    color: var(--#{$cdk}primary-300);
+  }
+
+  .search-field[type="text"]{
+    margin: 0;
   }
 }
 
 .tree-panel-label-title {
+  padding: 0 0 0 var(--#{$cdk}size-8);
   margin: 0;
   font-weight: 400;
-  @include padding(0, 0, 0, 8px);
 }

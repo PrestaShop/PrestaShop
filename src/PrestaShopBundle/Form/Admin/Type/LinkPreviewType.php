@@ -53,7 +53,7 @@ class LinkPreviewType extends HiddenType
     /**
      * {@inheritDoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'link_preview';
     }

@@ -53,7 +53,7 @@ class DeleteStateException extends StateException
      *
      * @return static
      */
-    public static function createDeleteFailure(StateIdInterface $stateId, Throwable $previous = null): self
+    public static function createDeleteFailure(StateIdInterface $stateId, ?Throwable $previous = null): self
     {
         return new static(
             sprintf('Cannot delete state with id "%d"', $stateId->getValue()),
@@ -68,7 +68,7 @@ class DeleteStateException extends StateException
      *
      * @return static
      */
-    public static function createBulkDeleteFailure(StateId $stateId, Throwable $previous = null): self
+    public static function createBulkDeleteFailure(StateId $stateId, ?Throwable $previous = null): self
     {
         return new static(
             sprintf('An error occurred when deleting state with id "%d"', $stateId->getValue()),

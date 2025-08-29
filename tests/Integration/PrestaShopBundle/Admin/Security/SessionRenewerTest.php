@@ -30,44 +30,49 @@ namespace Tests\Integration\PrestaShopBundle\Admin\Security;
 
 use PrestaShopBundle\Security\Admin\SessionRenewer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Tests\Integration\Utility\ContextMockerTrait;
 
 class SessionRenewerTest extends KernelTestCase
 {
-    /**
-     * @var CsrfTokenManager
-     */
-    private $sessionTokenManager;
+    use ContextMockerTrait;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var object|SessionRenewer|null
-     */
-    private $sessionRenewer;
+    private CsrfTokenManager $sessionTokenManager;
+    private SessionRenewer $sessionRenewer;
+    private Session $session;
 
     protected function setUp(): void
     {
-        self::bootKernel();
-        $container = self::$kernel->getContainer();
-        $this->sessionTokenManager = $container->get('security.csrf.token_manager');
-        $this->session = $container->get('session');
-        $this->sessionRenewer = $container->get(SessionRenewer::class);
+        static::mockContext();
+
+        $this->session = new Session(new MockArraySessionStorage());
+        $request = new Request([], [], [], [], [], [], null);
+
+        $request->setSession($this->session);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+        $clearableTokenStorage = $this->getContainer()->get('security.csrf.token_storage');
+        $this->sessionRenewer = new SessionRenewer($clearableTokenStorage, $requestStack);
+
+        $this->sessionTokenManager = $this->getContainer()->get(CsrfTokenManagerInterface::class);
     }
 
     public function testRenew(): void
     {
-        $this->session->start();
         $originalSessionId = $this->session->getId();
-        $tokenValue = $this->sessionTokenManager->getToken('foo')->getValue();
+        $token = $this->sessionTokenManager->getToken('foo');
+
         self::assertEquals($originalSessionId, $this->session->getId());
-        self::assertEquals($tokenValue, $this->sessionTokenManager->getToken('foo')->getValue());
+        self::assertTrue($this->sessionTokenManager->isTokenValid($token));
+
         $this->sessionRenewer->renew();
+
         self::assertNotEquals($originalSessionId, $this->session->getId());
-        self::assertNotEquals($tokenValue, $this->sessionTokenManager->getToken('foo')->getValue());
+        self::assertFalse($this->sessionTokenManager->isTokenValid($token));
     }
 }

@@ -67,7 +67,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName(): string
     {
-        return $this->trans('Country', [], 'Admin.Global');
+        return $this->trans('Countries', [], 'Admin.Global');
     }
 
     /**
@@ -117,7 +117,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'zone_name',
                     ])
             )
-            //todo: change it to ToggleColumn when toggle status route is created
+            // todo: change it to ToggleColumn when toggle status route is created
             ->add(
                 (new DataColumn('active'))
                     ->setName($this->trans('Enabled', [], 'Admin.Global'))
@@ -228,6 +228,13 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_field' => 'id_country',
                         'clickable_row' => true,
                     ])
+            )
+            ->add(
+                $this->buildDeleteAction(
+                    'admin_countries_delete',
+                    'countryId',
+                    'id_country'
+                )
             );
 
         return $rowActionCollection;
@@ -261,7 +268,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getBulkActions(): BulkActionCollectionInterface
     {
-        //todo: need to implement bulk actions
+        // todo: need to implement bulk actions
         return new BulkActionCollection();
     }
 }

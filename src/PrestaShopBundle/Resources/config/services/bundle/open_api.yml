@@ -1,0 +1,33 @@
+# These decorators are used to generate the OpenApi Json schema automatically for CQRS commands with format and examples
+# matching our expected contract They interact with the implementation of API Platform that handles this Open API doc generation
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  # This decorator's job is to use the CQRS commands constructor scalar inputs in priority in the expected schema (not the Value Objects)
+  PrestaShopBundle\ApiPlatform\Metadata\Property\Factory\CQRSConstructorPropertyMetadataFactory:
+    decorates: 'api_platform.metadata.property.metadata_factory'
+    decoration_priority: !php/const PrestaShopBundle\ApiPlatform\Metadata\Property\Factory\CQRSConstructorPropertyMetadataFactory::DECORATION_PRIORITY
+    arguments:
+      $decorated: '@.inner'
+      $constructorExtractor: '@prestashop_bundle.api_platform.open_api.constructor_extractor'
+      $commandsAndQueries: '%prestashop.commands_and_queries%'
+
+  prestashop_bundle.api_platform.open_api.constructor_extractor:
+    class: Symfony\Component\PropertyInfo\Extractor\ConstructorExtractor
+    arguments:
+      $extractors:
+        - '@prestashop_bundle.api_platform.open_api.reflection_extractor'
+
+  prestashop_bundle.api_platform.open_api.reflection_extractor:
+    class: Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor
+
+  # This decorator applies the CQRSCommandMapping on the full extracted schema
+  PrestaShopBundle\ApiPlatform\OpenApi\Factory\CQRSOpenApiFactory:
+    decorates: 'api_platform.openapi.factory'
+    decoration_on_invalid: ignore
+    arguments:
+      $decorated: '@.inner'
+      $definitionNameFactory: '@api_platform.json_schema.definition_name_factory'

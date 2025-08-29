@@ -50,7 +50,7 @@ class DummyTranslator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return 'not implemented yet';
     }
@@ -58,7 +58,7 @@ class DummyTranslator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function trans($id, array $parameters = [], $domain = null, $locale = null)
+    public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
         return str_replace(
             array_keys($parameters),

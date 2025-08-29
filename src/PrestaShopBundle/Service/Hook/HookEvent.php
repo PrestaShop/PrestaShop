@@ -26,12 +26,12 @@
 
 namespace PrestaShopBundle\Service\Hook;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * HookEvent is used in HookDispatcher.
  *
- * A HookEvent can contains parameters to give to the listeners through getHookParameters.
+ * A HookEvent can contain parameters to give to the listeners through getHookParameters.
  */
 class HookEvent extends Event
 {
@@ -53,7 +53,7 @@ class HookEvent extends Event
      * @param array $contextParameters
      * @param array $hookParameters
      */
-    public function __construct(array $contextParameters = null, array $hookParameters = null)
+    public function __construct(?array $contextParameters = null, ?array $hookParameters = null)
     {
         if (null !== $contextParameters) {
             $this->contextParameters = $contextParameters;

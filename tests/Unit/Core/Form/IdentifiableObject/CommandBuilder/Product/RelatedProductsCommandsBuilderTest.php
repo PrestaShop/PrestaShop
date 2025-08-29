@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCo
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\RelatedProductsCommandsBuilder;
 
-class RelatedProductsCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class RelatedProductsCommandsBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands

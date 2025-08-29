@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
 use CMSCategory;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\BulkEnableCmsPageCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotEnableCmsPageCategoryException;
@@ -37,6 +38,7 @@ use PrestaShopException;
 /**
  * Class BulkEnableCmsPageCategoryCommand is responsible for enabling cms category pages.
  */
+#[AsCommandHandler]
 final class BulkEnableCmsPageCategoryHandler implements BulkEnableCmsPageCategoryHandlerInterface
 {
     /**

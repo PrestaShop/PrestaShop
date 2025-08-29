@@ -194,31 +194,31 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ($filterName === 'contact') {
-                $builder->andWhere('cl.id_contact' . ' = :' . $filterName);
+                $builder->andWhere('cl.id_contact = :' . $filterName);
                 $builder->setParameter($filterName, $filterValue);
                 continue;
             }
 
             if ($filterName === 'shopName') {
-                $builder->andWhere('s.id_shop' . ' = :' . $filterName);
+                $builder->andWhere('s.id_shop = :' . $filterName);
                 $builder->setParameter($filterName, $filterValue);
                 continue;
             }
 
             if ($filterName === 'langName') {
-                $builder->andWhere('l.name' . ' LIKE :' . $filterName);
+                $builder->andWhere('l.name LIKE :' . $filterName);
                 $builder->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }
 
             if ($filterName === 'customer') {
-                $builder->andWhere('CONCAT(c.`firstname`," ",c.`lastname`)' . ' LIKE :' . $filterName);
+                $builder->andWhere('CONCAT(c.`firstname`," ",c.`lastname`) LIKE :' . $filterName);
                 $builder->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }
 
             if ($filterName === 'employee') {
-                $builder->andWhere('CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`)' . ' LIKE :' . $filterName);
+                $builder->andWhere('CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`) LIKE :' . $filterName);
                 $builder->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }

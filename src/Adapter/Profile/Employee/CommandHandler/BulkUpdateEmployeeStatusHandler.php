@@ -27,12 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Employee;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\BulkUpdateEmployeeStatusHandlerInterface;
 
 /**
  * Class BulkUpdateEmployeeStatusHandler.
  */
+#[AsCommandHandler]
 final class BulkUpdateEmployeeStatusHandler extends AbstractEmployeeHandler implements BulkUpdateEmployeeStatusHandlerInterface
 {
     /**

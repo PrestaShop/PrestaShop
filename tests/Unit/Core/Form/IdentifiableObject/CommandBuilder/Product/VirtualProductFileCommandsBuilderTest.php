@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Vi
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tests\Resources\DummyFileUploader;
 
-class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands

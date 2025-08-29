@@ -32,7 +32,7 @@ class StatisticsControllerCore extends FrontController
 
     protected $param_token;
 
-    public function postProcess()
+    public function postProcess(): void
     {
         $this->param_token = Tools::getValue('token');
         if (!$this->param_token) {
@@ -51,7 +51,7 @@ class StatisticsControllerCore extends FrontController
     /**
      * Log statistics on navigation (resolution, plugins, etc.).
      */
-    protected function processNavigationStats()
+    protected function processNavigationStats(): void
     {
         $id_guest = (int) Tools::getValue('id_guest');
         if (sha1($id_guest . _COOKIE_KEY_) != $this->param_token) {
@@ -75,7 +75,7 @@ class StatisticsControllerCore extends FrontController
     /**
      * Log statistics on time spend on pages.
      */
-    protected function processPageTime()
+    protected function processPageTime(): void
     {
         $id_connection = (int) Tools::getValue('id_connections');
         $time = (int) Tools::getValue('time');

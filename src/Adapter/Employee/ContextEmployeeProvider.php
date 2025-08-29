@@ -34,15 +34,12 @@ use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
  */
 final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
 {
-    /**
-     * @var Employee
-     */
-    private $contextEmployee;
+    private ?Employee $contextEmployee;
 
     /**
-     * @param Employee $contextEmployee
+     * @param ?Employee $contextEmployee
      */
-    public function __construct(Employee $contextEmployee)
+    public function __construct(?Employee $contextEmployee)
     {
         $this->contextEmployee = $contextEmployee;
     }
@@ -52,7 +49,7 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
      */
     public function isSuperAdmin()
     {
-        return $this->contextEmployee->isSuperAdmin();
+        return $this->contextEmployee && $this->contextEmployee->isSuperAdmin();
     }
 
     /**
@@ -60,7 +57,7 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
      */
     public function getId()
     {
-        return (int) $this->contextEmployee->id;
+        return (int) $this->contextEmployee?->id;
     }
 
     /**
@@ -68,7 +65,7 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
      */
     public function getLanguageId()
     {
-        return (int) $this->contextEmployee->id_lang;
+        return (int) $this->contextEmployee?->id_lang;
     }
 
     /**
@@ -76,7 +73,7 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
      */
     public function getProfileId()
     {
-        return (int) $this->contextEmployee->id_profile;
+        return (int) $this->contextEmployee?->id_profile;
     }
 
     /**
@@ -85,12 +82,12 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
     public function getData()
     {
         return [
-            'id' => (int) $this->contextEmployee->id,
-            'profileId' => (int) $this->contextEmployee->id_profile,
-            'languageId' => (int) $this->contextEmployee->id_lang,
-            'firstname' => $this->contextEmployee->firstname,
-            'lastname' => $this->contextEmployee->lastname,
-            'email' => $this->contextEmployee->email,
+            'id' => (int) $this->contextEmployee?->id,
+            'profileId' => (int) $this->contextEmployee?->id_profile,
+            'languageId' => (int) $this->contextEmployee?->id_lang,
+            'firstname' => $this->contextEmployee?->firstname,
+            'lastname' => $this->contextEmployee?->lastname,
+            'email' => $this->contextEmployee?->email,
         ];
     }
 }

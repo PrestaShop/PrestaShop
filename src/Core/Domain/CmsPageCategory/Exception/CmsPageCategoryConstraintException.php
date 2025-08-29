@@ -73,11 +73,6 @@ class CmsPageCategoryConstraintException extends CmsPageCategoryException
     public const INVALID_META_DESCRIPTION = 8;
 
     /**
-     * @var int is used to validate meta keywords for specific regex pattern
-     */
-    public const INVALID_META_KEYWORDS = 9;
-
-    /**
      * @var int Is used to validate description according to clean html standard/
      */
     public const INVALID_DESCRIPTION = 10;

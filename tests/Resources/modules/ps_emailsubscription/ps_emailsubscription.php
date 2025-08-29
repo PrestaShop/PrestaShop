@@ -29,6 +29,19 @@ if (!defined('_PS_VERSION_')) {
 
 class Ps_Emailsubscription extends Module
 {
+    /**
+     * @var bool|string
+     */
+    public $error;
+    /**
+     * @var bool|string
+     */
+    public $valid;
+    /**
+     * @var array|array[]|string[][]
+     */
+    public $_files;
+
     public function __construct()
     {
         $this->name = 'ps_emailsubscription';
@@ -65,5 +78,13 @@ class Ps_Emailsubscription extends Module
         }
 
         return true;
+    }
+
+    public function hookDisplayFooterBefore()
+    {
+    }
+
+    public function hookActionCustomerAccountAdd()
+    {
     }
 }

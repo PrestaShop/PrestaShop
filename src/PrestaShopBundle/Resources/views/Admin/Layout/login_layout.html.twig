@@ -1,0 +1,127 @@
+{# **
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * #}
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 lt-ie6"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie7"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie8"> <![endif]-->
+<!--[if gt IE 8]> <html class="no-js ie9"> <![endif]-->
+<html lang="{{ ps.isoUser }}">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  {{ component('LoginHeadTag') }}
+  {% block javascrips %}{% endblock %}
+  {% block stylesheets %}{% endblock %}
+</head>
+
+<body class="lang-{{ ps.isoUser }}{% if ps.isRtlLanguage %} lang-rtl{% endif %} ps_back-office bootstrap ps-bo-rebrand">
+  <div id="login">
+    <div id="content">
+      <div id="login-panel">
+        <div id="login-header">
+          <h1 class="text-center mb-0">
+            <img id="logo" src="{{ ps.baseImgUrl }}prestashop@2x.png" width="128" height="auto" alt="PrestaShop" />
+          </h1>
+        </div>
+
+        <div id="login-content-card" class="card">
+          <div id="shop-img">
+            <img src="{{ ps.baseImgUrl }}prestashop@2x.png" alt="{{ shopName }}" width="200" height="22" />
+          </div>
+
+          <div class="card-body">
+            {% block session_alert %}
+              {% macro alert(type, flashbagContent) %}
+                <div class="alert alert-{{ type }} d-print-none" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true"><i class="material-icons">close</i></span>
+                  </button>
+                  {% if flashbagContent|length > 1 %}
+                    <ul class="alert-text">
+                      {% for flashMessage in flashbagContent %}
+                        <li>{{ flashMessage|raw }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% else %}
+                    <div class="alert-text">
+                      {% for flashMessage in flashbagContent %}
+                        <p>{{ flashMessage|raw }}</p>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              {% endmacro %}
+              {% import _self as layout %}
+
+              {% if app.session.flashbag.peek('error')|length() > 0 %}
+                {{ layout.alert('danger', app.session.flashbag.get('error')) }}
+              {% endif %}
+              {% if app.session.flashbag.peek('failure')|length() > 0 %}
+                {{ layout.alert('danger', app.session.flashbag.get('failure')) }}
+              {% endif %}
+              {% if app.session.flashbag.peek('success')|length() > 0 %}
+                {{ layout.alert('success', app.session.flashbag.get('success')) }}
+              {% endif %}
+              {% if app.session.flashbag.peek('warning')|length() > 0 %}
+                {{ layout.alert('warning', app.session.flashbag.get('warning')) }}
+              {% endif %}
+              {% if app.session.flashbag.peek('info')|length() > 0 %}
+                {{ layout.alert('info', app.session.flashbag.get('info')) }}
+              {% endif %}
+            {% endblock %}
+            {% block content %}{% endblock %}
+          </div>
+        </div>
+
+        <a class='login-back' href='{{ ps.baseUrl }}'>
+          <i class="material-icons rtl-flip">arrow_back</i>
+          <span>{{ 'Back to'|trans({}, 'Admin.Actions') }}</span>
+          <span class="login-back-shop">{{ shopName }}</span>
+        </a>
+
+        {{ renderhook('displayAdminLogin') }}
+
+        <div id="login-footer">
+          <div class="login__copy text-center text-muted">
+            <a href="https://www.prestashop-project.org" onclick="return !window.open(this.href);">
+              &copy; PrestaShop&#8482; 2007-{{ 'now'|date('Y') }} - All rights reserved
+            </a>
+          </div>
+
+          <div class="login__social text-center">
+            <a class="link-social link-twitter _blank" target="_blank" href="https://x.com/PrestaShop" title="X">
+              <twig:ux:icon name="bi:twitter-x" height="16" width="16" aria-hidden="true"/>
+            </a>
+            <a class="link-social link-facebook _blank" target="_blank" href="https://www.facebook.com/prestashop" title="Facebook">
+              <twig:ux:icon name="bi:facebook" height="16" width="16" aria-hidden="true"/>
+            </a>
+            <a class="link-social link-github _blank" target="_blank" href="https://github.com/PrestaShop/PrestaShop" title="Github">
+              <twig:ux:icon name="bi:github" height="16" width="16" aria-hidden="true"/>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

@@ -49,7 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSuppli
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\NoSupplierId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
-use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 use RuntimeException;
 
 class CombinationFormDataProviderTest extends TestCase

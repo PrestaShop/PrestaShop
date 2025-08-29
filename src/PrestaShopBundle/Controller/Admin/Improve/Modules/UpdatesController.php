@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -35,11 +35,10 @@ use Symfony\Component\HttpFoundation\Response;
 class UpdatesController extends ModuleAbstractController
 {
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @return Response
      */
-    public function indexAction()
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function indexAction(): Response
     {
         $moduleList = $this->getModuleRepository()->getUpgradableModules();
         $pageData = $this->getNotificationPageData($moduleList);
@@ -53,6 +52,12 @@ class UpdatesController extends ModuleAbstractController
             }
         }
 
-        return $this->render('@PrestaShop/Admin/Module/updates.html.twig', $pageData);
+        return $this->render(
+            '@PrestaShop/Admin/Module/updates.html.twig',
+            array_merge(
+                $pageData,
+                ['layoutTitle' => $this->trans('Module updates', [], 'Admin.Navigation.Menu')]
+            )
+        );
     }
 }

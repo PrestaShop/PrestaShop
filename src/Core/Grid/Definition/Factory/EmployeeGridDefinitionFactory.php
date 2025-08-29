@@ -113,7 +113,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('profile'))
-                    ->setName($this->trans('Profile', [], 'Admin.Advparameters.Feature'))
+                    ->setName($this->trans('Role', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
                         'field' => 'profile_name',
                     ])
@@ -134,14 +134,14 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'actions' => (new RowActionCollection())
                             ->add((new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_employees_edit',
-                                'route_param_name' => 'employeeId',
-                                'route_param_field' => 'id_employee',
-                                'clickable_row' => true,
-                            ])
+                                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                ->setIcon('edit')
+                                ->setOptions([
+                                    'route' => 'admin_employees_edit',
+                                    'route_param_name' => 'employeeId',
+                                    'route_param_field' => 'id_employee',
+                                    'clickable_row' => true,
+                                ])
                             )
                             ->add(
                                 $this->buildDeleteAction(

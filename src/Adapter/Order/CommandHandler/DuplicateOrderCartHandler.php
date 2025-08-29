@@ -30,6 +30,7 @@ use Cart;
 use Currency;
 use Customer;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\DuplicateOrderCartHandlerInterface;
@@ -39,6 +40,7 @@ use Shop;
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class DuplicateOrderCartHandler implements DuplicateOrderCartHandlerInterface
 {
     /**

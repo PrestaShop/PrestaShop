@@ -23,12 +23,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 class WebserviceKeyCore extends ObjectModel
 {
     /** @var string Key */
     public $key;
 
-    /** @var bool Webservice Account statuts */
+    /** @var bool Webservice Account status */
     public $active = true;
 
     /** @var string Webservice Account description */
@@ -43,7 +46,7 @@ class WebserviceKeyCore extends ObjectModel
         'fields' => [
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'key' => ['type' => self::TYPE_STRING, 'required' => true, 'size' => 32],
-            'description' => ['type' => self::TYPE_STRING, 'size' => 4194303],
+            'description' => ['type' => self::TYPE_STRING, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
         ],
     ];
 

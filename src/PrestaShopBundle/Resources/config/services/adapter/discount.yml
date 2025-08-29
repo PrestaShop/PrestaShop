@@ -1,0 +1,36 @@
+services:
+  _defaults:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\AddDiscountHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\DeleteDiscountHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\UpdateDiscountHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\UpdateDiscountConditionsHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\Update\Filler\DiscountFiller:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\Update\DiscountConditionsUpdater:
+    autoconfigure: true
+    arguments:
+      $dbPrefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Discount\QueryHandler\GetDiscountForEditingHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\Validate\DiscountValidator:
+    calls:
+      - setDiscountRepository: [ '@PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository' ]
+
+  PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'

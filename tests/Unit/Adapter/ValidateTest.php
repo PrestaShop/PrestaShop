@@ -38,14 +38,9 @@ class ValidateTest extends TestCase
      */
     private $validate;
 
-    /**
-     * @param string $name
-     * @param array $data
-     * @param string $dataName
-     */
-    public function __construct($name = null, array $data = [], $dataName = '')
+    public function __construct(?string $name = null)
     {
-        parent::__construct($name, $data, $dataName);
+        parent::__construct($name);
 
         $this->validate = new Validate();
     }
@@ -92,7 +87,7 @@ class ValidateTest extends TestCase
             [false, 'john.doe@prestashop'],
             [true, 'john.doe@сайт.рф'],
             [true, 'john.doe@xn--80aswg.xn--p1ai'],
-            [false, 'иван@prestashop.com'], // rfc6531 valid but not swift mailer compatible
+            [false, 'иван@prestashop.com'], // rfc6531 valid but not cyrillic mailer compatible
             [true, 'xn--80adrw@prestashop.com'],
             [true, 'xn--80adrw@xn--80aswg.xn--p1ai'],
         ];

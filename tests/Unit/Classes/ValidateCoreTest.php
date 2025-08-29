@@ -40,16 +40,6 @@ class ValidateCoreTest extends TestCase
     }
 
     /**
-     * @deprecated since PrestaShop 8.1 and will be removed in Prestashop 9.0
-     *
-     * @return void
-     */
-    public function testIsAnything()
-    {
-        $this->assertTrue(Validate::isAnything());
-    }
-
-    /**
      * @dataProvider isEmailDataProvider
      */
     public function testIsEmail($expected, $input)
@@ -130,6 +120,7 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @depends testIsFloat
+     *
      * @dataProvider isOptFloatDataProvider
      */
     public function testIsOptFloat($expected, $input)
@@ -146,6 +137,25 @@ class ValidateCoreTest extends TestCase
     public function testIsArrayWithIds(bool $expected, $input)
     {
         $this->assertSame($expected, Validate::isArrayWithIds($input));
+    }
+
+    /**
+     * @dataProvider isUrlDataProvider
+     *
+     * @param bool $expected
+     * @param string $url
+     */
+    public function testIsUrl(bool $expected, string $url): void
+    {
+        $this->assertEquals($expected, Validate::isUrl($url));
+    }
+
+    public function isUrlDataProvider(): iterable
+    {
+        yield 'test quick access link' => [
+            true,
+            'index.php?controller=AdminCartRules&addcart_rule',
+        ];
     }
 
     public function isIp2LongDataProvider()
@@ -259,7 +269,7 @@ class ValidateCoreTest extends TestCase
             [false, 'john.doe@prestashop'],
             [true, 'john.doe@сайт.рф'],
             [true, 'john.doe@xn--80aswg.xn--p1ai'],
-            [false, 'иван@prestashop.com'], // rfc6531 valid but not swift mailer compatible
+            [false, 'иван@prestashop.com'], // rfc6531 valid but not cyrillic mailer compatible
             [true, 'xn--80adrw@prestashop.com'],
             [true, 'xn--80adrw@xn--80aswg.xn--p1ai'],
             [false, 123456789],
@@ -305,7 +315,7 @@ class ValidateCoreTest extends TestCase
             [false, date('Y-m-d', strtotime('+1 year +1 month'))],
             [false, date('Y-m-d', strtotime('+1 year +1 month -1 day'))],
             [false, date('Y-m-d', strtotime('+1 year +1 month +1 day'))],
-            [false, date('Y-m-d', strtotime('-201 year'))],
+            [false, date('Y-m-d', strtotime('-121 year'))],
         ];
     }
 

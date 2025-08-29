@@ -1,0 +1,79 @@
+{# **
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * #}
+{# Error 404 page is rendered very early in the process as soon as no route is found, the user is not loaded yet so we cannot display the regular layout, this page is very simple on purpose #}
+{% extends '@PrestaShop/base.html.twig' %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme' ~ rtl_suffix ~ '.css') }}"/>
+{% endblock %}
+
+{% block title %}
+  {{ 'Page not found'|trans({}, 'Admin.Notifications.Error') }}
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="mt-5">
+      <div class="card">
+        <div class="card-body text-center">
+          <img class="img-responsive" src="{{ asset('themes/new-theme/img/error/error.svg') }}" width="320" height="auto" alt="{{ 'Page not found'|trans({}, 'Admin.Notifications.Error') }}">
+
+          <div class="mt-3">
+            <p class="error-header">
+              {{ 'Page not found'|trans({}, 'Admin.Notifications.Error') }}
+            </p>
+
+            <div class="mx-auto">
+              <p class="mb-0">{{ 'The page you\'re looking for could not be found. This might be due to a typo in the URL, an outdated link, or because the page was part of a module that is no longer installed.'|trans({}, 'Admin.Notifications.Error') }}</p>
+            </div>
+
+            {% if exception is defined and exception %}
+              <div class="mx-auto">
+                <p class="mb-0">{{ exception.message }}</p>
+              </div>
+            {% endif %}
+
+            {% if errorMessage is defined %}
+              <div class="mx-auto">
+                <p class="mb-0">{{ errorMessage }}</p>
+              </div>
+            {% endif %}
+
+            <div class="mt-4">
+              <button class="btn btn-primary js-go-back-btn" type="button">
+                <i class="material-icons">arrow_back</i> {{ 'Back to previous page'|trans({}, 'Admin.Actions') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  <script src="{{ asset('themes/new-theme/public/error.bundle.js') }}"></script>
+{% endblock %}

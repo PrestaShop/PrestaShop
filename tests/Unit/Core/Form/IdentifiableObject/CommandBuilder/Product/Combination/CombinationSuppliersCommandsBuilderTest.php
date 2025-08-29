@@ -31,7 +31,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combina
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationSuppliersCommandsBuilder;
 
-class CombinationSuppliersCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
+class CombinationSuppliersCommandsBuilderTest extends AbstractCombinationCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands

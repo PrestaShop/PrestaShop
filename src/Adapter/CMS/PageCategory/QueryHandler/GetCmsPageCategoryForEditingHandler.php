@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\QueryHandler;
 
 use CMSCategory;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryForEditing;
@@ -39,6 +40,7 @@ use PrestaShopException;
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetCmsPageCategoryForEditingHandler implements GetCmsPageCategoryForEditingHandlerInterface
 {
     /**
@@ -66,7 +68,6 @@ final class GetCmsPageCategoryForEditingHandler implements GetCmsPageCategoryFor
             (int) $cmsPageCategory->id_parent,
             $cmsPageCategory->description,
             $cmsPageCategory->meta_description,
-            $cmsPageCategory->meta_keywords,
             $cmsPageCategory->meta_title,
             $cmsPageCategory->link_rewrite,
             $shopIds

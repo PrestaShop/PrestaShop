@@ -41,7 +41,7 @@ class AliasCore extends ObjectModel
         'primary' => 'id_alias',
         'fields' => [
             'search' => ['type' => self::TYPE_STRING, 'validate' => 'isValidSearch', 'required' => true, 'size' => 255],
-            'alias' => ['type' => self::TYPE_STRING, 'validate' => 'isValidSearch', 'required' => true, 'size' => 255],
+            'alias' => ['type' => self::TYPE_STRING, 'validate' => 'isValidSearch', 'required' => true, 'size' => 191],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
         ],
     ];
@@ -56,7 +56,6 @@ class AliasCore extends ObjectModel
     public function __construct($id = null, $alias = null, $search = null)
     {
         $this->def = Alias::getDefinition($this);
-        $this->setDefinitionRetrocompatibility();
 
         if ($id) {
             parent::__construct($id);
@@ -139,8 +138,6 @@ class AliasCore extends ObjectModel
     /**
      * This method is allowed to know if a feature is used or active.
      *
-     * @since 1.5.0.1
-     *
      * @return bool
      */
     public static function isFeatureActive()
@@ -154,8 +151,6 @@ class AliasCore extends ObjectModel
      * @param int $idAlias Alias ID
      *
      * @return bool
-     *
-     * @since 1.5.6.0
      */
     public static function aliasExists($idAlias)
     {

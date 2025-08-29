@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\SetProductDefaultSupplierHandlerInterface;
 
 /**
  * Handles @see SetProductDefaultSupplierCommand using legacy object model
  */
+#[AsCommandHandler]
 class SetProductDefaultSupplierHandler implements SetProductDefaultSupplierHandlerInterface
 {
     /**

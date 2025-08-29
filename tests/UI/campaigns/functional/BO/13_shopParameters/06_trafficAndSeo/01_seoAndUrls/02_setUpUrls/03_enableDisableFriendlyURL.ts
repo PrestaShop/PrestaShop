@@ -1,19 +1,15 @@
-// Import utils
-import helper from '@utils/helpers';
+import {expect} from 'chai';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
-// Import FO pages
-import {homePage as foHomePage} from '@pages/FO/home';
-
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boSeoUrlsPage,
+  type BrowserContext,
+  foClassicHomePage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_setUpUrls_enableDisableFriendlyURL';
 
@@ -21,76 +17,79 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable friendly URL', a
   let browserContext: BrowserContext;
   let page: Page;
 
-  // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Shop Parameters > SEO and Urls\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSeoAndUrlsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.trafficAndSeoLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.trafficAndSeoLink,
     );
-    await seoAndUrlsPage.closeSfToolBar(page);
+    await boSeoUrlsPage.closeSfToolBar(page);
 
-    const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+    const pageTitle = await boSeoUrlsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSeoUrlsPage.pageTitle);
   });
 
   it('should disable friendly URL', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableFriendlyUrl', baseContext);
 
-    const result = await seoAndUrlsPage.enableDisableFriendlyURL(page, false);
-    await expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
+    const result = await boSeoUrlsPage.enableDisableFriendlyURL(page, false);
+    expect(result).to.contains(boSeoUrlsPage.successfulSettingsUpdateMessage);
   });
 
   it('should go to FO and check the URL', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkDisabledFriendlyUrlFO', baseContext);
 
-    // Go to FO
-    page = await seoAndUrlsPage.viewMyShop(page);
+    page = await boSeoUrlsPage.viewMyShop(page);
 
-    const url = await foHomePage.getCurrentURL(page);
-    await expect(url).to.contains('index.php');
+    const url = await foClassicHomePage.getCurrentURL(page);
+    expect(url).to.contains('index.php');
   });
 
   it('should go back to BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-    // Go back to BO
-    page = await foHomePage.closePage(browserContext, page, 0);
+    page = await foClassicHomePage.closePage(browserContext, page, 0);
 
-    const pageTitle = await seoAndUrlsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
+    const pageTitle = await boSeoUrlsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boSeoUrlsPage.pageTitle);
   });
 
   it('should enable friendly URL', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableFriendlyUrl', baseContext);
 
-    const result = await seoAndUrlsPage.enableDisableFriendlyURL(page, true);
-    await expect(result).to.contains(seoAndUrlsPage.successfulSettingsUpdateMessage);
+    const result = await boSeoUrlsPage.enableDisableFriendlyURL(page, true);
+    expect(result).to.contains(boSeoUrlsPage.successfulSettingsUpdateMessage);
   });
 
   it('should go to FO and check the URL', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkEnabledFriendlyUrlFO', baseContext);
 
     // Go to FO
-    page = await seoAndUrlsPage.viewMyShop(page);
-    await foHomePage.changeLanguage(page, 'en');
+    page = await boSeoUrlsPage.viewMyShop(page);
+    await foClassicHomePage.changeLanguage(page, 'en');
 
-    const url = await foHomePage.getCurrentURL(page);
-    await expect(url).to.contains('/en/');
+    const url = await foClassicHomePage.getCurrentURL(page);
+    expect(url).to.not.contains('index.php');
   });
 });

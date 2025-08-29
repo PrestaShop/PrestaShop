@@ -91,7 +91,7 @@ class ContactType extends TranslatorAwareType
                 'options' => [
                     'constraints' => [
                         new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
+                            'pattern' => '/^[^<>{}]*$/u',
                             'message' => $this->trans(
                                 '%s is invalid.',
                                 'Admin.Notifications.Error'

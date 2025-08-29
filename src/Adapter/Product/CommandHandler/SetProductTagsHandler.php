@@ -30,12 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductTagUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductTagsHandlerInterface;
 
 /**
  * Handles UpdateProductTagsCommand using legacy object model
  */
+#[AsCommandHandler]
 final class SetProductTagsHandler implements UpdateProductTagsHandlerInterface
 {
     /**

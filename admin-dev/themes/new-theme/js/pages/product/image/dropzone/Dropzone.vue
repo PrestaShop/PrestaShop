@@ -638,7 +638,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 10rem;
+    min-height: var(--#{$cdk}size-160);
   }
 
   &.dropzone-container {
@@ -648,10 +648,10 @@
 
       .iscover {
         display: none;
-        left: -2px;
-        bottom: -3px;
-        width: calc(100% + 4px);
-        padding: 9px;
+        left: calc(-1 * var(--#{$cdk}size-2));
+        bottom: calc(-1 * var(--#{$cdk}size-2));
+        width: calc(100% + var(--#{$cdk}size-4));
+        padding: var(--#{$cdk}size-8) var(--#{$cdk}size-16);
       }
       &.is-cover {
         .iscover {
@@ -660,17 +660,17 @@
       }
 
       &:not(.openfilemanager) {
-        border: 3px solid transparent;
+        border: var(--#{$cdk}size-3) solid transparent;
 
         &:hover {
-          border: 3px solid $primary;
+          border: var(--#{$cdk}size-3) solid var(--#{$cdk}primary-800);
         }
 
         .dz-image {
-          border: 1px solid $gray-300;
+          border: 1px solid var(--#{$cdk}primary-300);
           width: 130px;
           height: 130px;
-          margin: -3px;
+          margin: calc(-1 * var(--#{$cdk}size-3));
         }
       }
 
@@ -686,7 +686,7 @@
           border: none;
 
           i {
-            font-size: 2.5rem;
+            font-size: var(--#{$cdk}size-40);
           }
         }
       }
@@ -697,7 +697,7 @@
 
       &:hover {
         .dz-hover {
-          background-color: rgba(0, 0, 0, 0.7);
+          background-color: rgba(map-get($map: $cdk-common, $key: "black"), 0.7);
 
           .drag-indicator,
           .md-checkbox {
@@ -715,28 +715,28 @@
 
     .dz-hover {
       position: absolute;
-      top: -3px;
-      left: -3px;
-      width: calc(100% + 6px);
-      height: calc(100% + 6px);
-      background-color: rgba(0, 0, 0, 0);
+      top: calc(-1 * var(--#{$cdk}size-2));
+      left: calc(-1 * var(--#{$cdk}size-2));
+      width: calc(100% + var(--#{$cdk}size-4));
+      height: calc(100% + var(--#{$cdk}size-4));
+      background-color: rgba(map-get($map: $cdk-common, $key: "black"), 0);
       transition: 0.25s ease-out;
       pointer-events: none;
       z-index: 11;
 
       .drag-indicator {
         position: absolute;
-        top: 0.5rem;
-        left: 0.5rem;
-        color: #ffffff;
+        top: var(--#{$cdk}size-8);
+        left: var(--#{$cdk}size-8);
+        color: var(--#{$cdk}white);
         opacity: 0;
         transition: 0.25s ease-out;
       }
 
       .md-checkbox {
         position: absolute;
-        bottom: 0.5rem;
-        left: 0.5rem;
+        bottom: var(--#{$cdk}size-8);
+        left: var(--#{$cdk}size-8);
         opacity: 0;
         transition: 0.25s ease-out;
 
@@ -745,7 +745,7 @@
         }
 
         input:checked + .md-checkbox-control::before {
-          background: $primary;
+          background: var(--#{$cdk}primary-800);
         }
       }
     }
@@ -758,13 +758,15 @@
 }
 
 .product-page #product-images-container {
-  border-radius: 4px;
+  border-radius: var(--#{$cdk}size-4);
+
   @include media-breakpoint-down(xs) {
     flex-wrap: wrap;
   }
 
   #product-images-dropzone.dropzone {
-    border-radius: 4px;
+    border-radius: var(--#{$cdk}size-4);
+
     @include media-breakpoint-down(xs) {
       flex-wrap: wrap;
       justify-content: space-around;
@@ -774,7 +776,7 @@
         width: 100px;
         height: 100px;
         min-height: 100px;
-        margin: 0.5rem;
+        margin: var(--#{$cdk}size-8);
 
         &.openfilemanager {
           min-width: 100px;

@@ -52,7 +52,7 @@ abstract class AbstractContactCommand
      */
     protected function assertIsGenericName($value)
     {
-        return preg_match('/^[^<>={}]*$/u', $value);
+        return preg_match('/^[^<>{}]*$/u', $value);
     }
 
     /**

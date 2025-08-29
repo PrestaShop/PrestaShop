@@ -58,7 +58,7 @@ final class CategoryGridFactoryDecorator implements GridFactoryInterface
      */
     public function __construct(
         GridFactoryInterface $categoryGridFactory,
-        GridFilterFormFactoryInterface $filterFormFactory = null
+        ?GridFilterFormFactoryInterface $filterFormFactory = null
     ) {
         $this->categoryGridFactory = $categoryGridFactory;
         $this->filterFormFactory = $filterFormFactory;
@@ -67,7 +67,7 @@ final class CategoryGridFactoryDecorator implements GridFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getGrid(SearchCriteriaInterface $searchCriteria)
+    public function getGrid(SearchCriteriaInterface $searchCriteria): GridInterface
     {
         $categoryGrid = $this->categoryGridFactory->getGrid($searchCriteria);
 
@@ -112,8 +112,8 @@ final class CategoryGridFactoryDecorator implements GridFactoryInterface
         SearchCriteriaInterface $searchCriteria,
         $categoryGrid
     ) {
-        if ('position' !== $searchCriteria->getOrderBy() ||
-            'asc' !== $searchCriteria->getOrderWay()) {
+        if ('position' !== $searchCriteria->getOrderBy()
+            || 'asc' !== $searchCriteria->getOrderWay()) {
             $categoryGrid->getDefinition()
                 ->getColumns()
                 ->remove('position_drag');

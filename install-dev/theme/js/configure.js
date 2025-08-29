@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-$(document).ready(function() {
+$(function() {
   checkTimeZone($('#infosCountry'));
   // When a country is changed
-  $('#infosCountry').change(function()
+  $('#infosCountry').on('change', function()
 	{
 	  checkTimeZone(this);
   });
@@ -80,6 +80,7 @@ function in_array(needle, haystack) {
  */
 function watchPasswordStrength(element) {
   element.on('keyup', function checkPasswordStrength() {
+    $('.field-password .errorTxt').hide();
     const passwordValue = $(this).val();
     const popoverElement = $('.field-password .popover');
     let $feedbackContainer = $(this).parent().find('.password-strength-feedback');
@@ -200,12 +201,12 @@ function getPasswordStrengthFeedback(
   switch (strength) {
   case 0:
     return {
-      color: '#D5343C',
+      color: '#BA151A',
     };
 
   case 1:
     return {
-      color: '#D5343C',
+      color: '#BA151A',
     };
 
   case 2:
@@ -215,12 +216,12 @@ function getPasswordStrengthFeedback(
 
   case 3:
     return {
-      color: '#21834D',
+      color: '#207F4B',
     };
 
   case 4:
     return {
-      color: '#21834D',
+      color: '#207F4B',
     };
 
   default:

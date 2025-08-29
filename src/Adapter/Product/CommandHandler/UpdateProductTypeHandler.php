@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductTypeUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductTypeHandlerInterface;
 
 /**
  * Handle @see UpdateProductTypeCommand
  */
+#[AsCommandHandler]
 class UpdateProductTypeHandler implements UpdateProductTypeHandlerInterface
 {
     /**

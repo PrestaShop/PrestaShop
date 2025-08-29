@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -64,7 +63,7 @@ class CurrencyCollection implements IteratorAggregate, Countable
     /**
      * Adds a currency at the end of the collection.
      *
-     * @param currency $currency
+     * @param Currency $currency
      *                           The currency to add
      *
      * @return CurrencyCollection

@@ -1,24 +1,18 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-import {setFeatureFlag} from '@commonTests/BO/advancedParameters/newFeatures';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-
-// Import pages
-import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
-import addProductPage from '@pages/BO/catalog/products/add';
-import dashboardPage from '@pages/BO/dashboard';
-import productsPage from '@pages/BO/catalog/products';
-import productPage from '@pages/FO/product';
-
-// Import data
-import ProductData from '@data/faker/product';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boLoginPage,
+  boProductsPage,
+  boProductsCreatePage,
+  type BrowserContext,
+  FakerProduct,
+  foClassicProductPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_FO_classic_menuAndNavigation_navigationAndDisplay_displayOnSaleFlag';
 
@@ -35,57 +29,63 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const onSaleProductData: ProductData = new ProductData({
+  const onSaleProductData: FakerProduct = new FakerProduct({
     name: 'On sale product',
-    type: 'Standard product',
+    type: 'standard',
     onSale: true,
   });
 
-  // Pre-condition: Disable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, false, `${baseContext}_disableNewProduct`);
-
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   // Pre-condition : Create product with on sale flag
   describe('BO - Create product with enabled flag \'On sale\'', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage3', baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
-      await productsPage.closeSfToolBar(page);
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.catalogParentLink, boDashboardPage.productsLink);
+      await boProductsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
+      const pageTitle = await boProductsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
-    it('should go to add product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductPage2', baseContext);
+    it('should click on new product button and go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductPage', baseContext);
 
-      await productsPage.goToAddProductPage(page);
+      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
+      expect(isModalVisible).to.be.eq(true);
 
-      const pageTitle = await addProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+      await boProductsPage.selectProductType(page, onSaleProductData.type);
+
+      await boProductsPage.clickOnAddNewProduct(page);
+
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
-    it(`create product '${onSaleProductData.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+    it('should create standard product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
 
-      await addProductPage.setProduct(page, onSaleProductData);
-
-      const createProductMessage = await addProductPage.displayOnSaleFlag(page, true);
-      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+      const createProductMessage = await boProductsCreatePage.setProduct(page, onSaleProductData);
+      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
     });
   });
 
@@ -93,23 +93,20 @@ describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO2', baseContext);
 
-      page = await addProductPage.previewProduct(page);
+      page = await boProductsCreatePage.previewProduct(page);
 
-      const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(onSaleProductData.name);
+      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(onSaleProductData.name);
     });
 
     it('should check the discount flag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountTag', baseContext);
 
-      const flagText = await productPage.getProductTag(page);
-      await expect(flagText).to.contains('On sale!');
+      const flagText = await foClassicProductPage.getProductTag(page);
+      expect(flagText).to.contains('On sale!');
     });
   });
 
   // Post-condition: Delete created product
   deleteProductTest(onSaleProductData, `${baseContext}_deleteProduct`);
-
-  // Post-condition: Enable new product page
-  setFeatureFlag(featureFlagPage.featureFlagProductPageV2, true, `${baseContext}_enableNewProduct`);
 });

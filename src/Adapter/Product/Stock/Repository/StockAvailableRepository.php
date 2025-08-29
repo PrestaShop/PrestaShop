@@ -154,9 +154,9 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
         $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue(), null, $shopId->getValue());
         if ($stockAvailableId <= 0) {
             throw new StockAvailableNotFoundException(sprintf(
-                    'Cannot find StockAvailable for product #%d',
-                    $productId->getValue()
-                )
+                'Cannot find StockAvailable for product #%d',
+                $productId->getValue()
+            )
             );
         }
 
@@ -200,7 +200,7 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
      */
     public function getStockIdByCombination(CombinationId $combinationId, ShopId $shopId): StockId
     {
-        //@todo: add shop conditions based on shop group sharing stock or not. like in ProductCombinationQueryBuilder
+        // @todo: add shop conditions based on shop group sharing stock or not. like in ProductCombinationQueryBuilder
         $qb = $this
             ->connection
             ->createQueryBuilder()
@@ -212,7 +212,7 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
         ;
         $this->addShopCondition($qb, $shopId->getValue());
 
-        $row = $qb->execute()->fetch();
+        $row = $qb->executeQuery()->fetchAssociative();
         if (empty($row)) {
             throw new StockAvailableNotFoundException(
                 sprintf(
@@ -322,7 +322,7 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
 
         return array_map(static function (array $stock) {
             return new StockId((int) $stock['id_stock_available']);
-        }, $qb->execute()->fetchAllAssociative());
+        }, $qb->executeQuery()->fetchAllAssociative());
     }
 
     /**
@@ -345,7 +345,7 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
             ->where('sa.id_stock_available = :stockId')
             ->setParameter('stockId', $stockId->getValue())
         ;
-        $updateQb->execute();
+        $updateQb->executeStatement();
     }
 
     protected function updateReservedProductQuantity(StockId $stockId, OrderStateId $errorStateId, OrderStateId $canceledStateId): void
@@ -380,7 +380,7 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
             ])
         ;
 
-        $result = $qb->execute()->fetchAssociative();
+        $result = $qb->executeQuery()->fetchAssociative();
         $reservedQuantity = (int) ($result['reserved_quantity'] ?? 0);
 
         if ($reservedQuantity > 0) {
@@ -391,7 +391,7 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
                 ->where('sa.id_stock_available = :stockId')
                 ->setParameter('stockId', $stockId->getValue())
             ;
-            $updateQb->execute();
+            $updateQb->executeStatement();
         }
     }
 }

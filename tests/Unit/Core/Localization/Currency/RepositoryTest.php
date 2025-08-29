@@ -97,7 +97,8 @@ class RepositoryTest extends TestCase
      * @param array $expectedSymbols
      *                               Expected currency symbols, indexed by locale code
      *
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws LocalizationException
+     *
      * @dataProvider provideValidCurrencyCodes
      */
     public function testGetCurrency($currencyCode, $expectedNames, $expectedSymbols)

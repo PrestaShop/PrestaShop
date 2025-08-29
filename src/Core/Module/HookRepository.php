@@ -147,7 +147,7 @@ class HookRepository
             $this->unHookModulesFromHook($hook_name);
 
             $position = 0;
-            foreach ($module_names as $key => $module) {
+            foreach ($module_names as $module) {
                 if (is_array($module)) {
                     $module_name = key($module);
                     $extra_data = current($module);

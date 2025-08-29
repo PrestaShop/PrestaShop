@@ -77,7 +77,7 @@ class CustomerAddressFormCore extends AbstractForm
         }
 
         if (!$context->customer->isLogged() && !$context->customer->isGuest()) {
-            return Tools::redirect('/index.php?controller=authentication');
+            return Tools::redirect($context->link->getPageLink('authentication'));
         }
 
         if ($this->address->id_customer != $context->customer->id) {
@@ -107,8 +107,8 @@ class CustomerAddressFormCore extends AbstractForm
         } elseif ($this->address) {
             $country = $this->formatter->getCountry();
         } elseif (
-            Tools::isCountryFromBrowserAvailable() &&
-            Country::getByIso($countryIsoCode = Tools::getCountryIsoCodeFromHeader(), true)
+            Tools::isCountryFromBrowserAvailable()
+            && Country::getByIso($countryIsoCode = Tools::getCountryIsoCodeFromHeader(), true)
         ) {
             $country = new Country((int) Country::getByIso($countryIsoCode, true), Language::getIdByIso($countryIsoCode));
         } else {
@@ -132,13 +132,13 @@ class CustomerAddressFormCore extends AbstractForm
                     'Invalid postcode - should look like "%zipcode%"',
                     ['%zipcode%' => $country->zip_code_format],
                     'Shop.Forms.Errors'
-               ));
+                ));
                 $is_valid = false;
             }
         }
 
-        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', ['form' => $this])) !== '') {
-            $is_valid &= (bool) $hookReturn;
+        if ($is_valid && Hook::exec('actionValidateCustomerAddressForm', ['form' => $this]) === false) {
+            $is_valid = false;
         }
 
         return $is_valid && parent::validate();
@@ -156,7 +156,9 @@ class CustomerAddressFormCore extends AbstractForm
         );
 
         foreach ($this->formFields as $formField) {
-            $address->{$formField->getName()} = $formField->getValue();
+            if (property_exists($address, $formField->getName())) {
+                $address->{$formField->getName()} = $formField->getValue();
+            }
         }
 
         if (!isset($this->formFields['id_state'])) {

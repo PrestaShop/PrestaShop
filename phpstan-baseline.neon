@@ -1,0 +1,1631 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 6
+			path: src/Core/Addon/Module/ModuleManagerBuilder.php
+
+		-
+			message: "#^Namespace Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Module/ModuleManagerBuilder.php
+
+		-
+			message: "#^Class AbstractAssetManager is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 8
+			path: src/Core/Addon/Theme/Theme.php
+
+		-
+			message: "#^Namespace AbstractAssetManager is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/Theme.php
+
+		-
+			message: "#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeManager.php
+
+		-
+			message: "#^Class Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeManager.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeManager.php
+
+		-
+			message: "#^Namespace Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Addon/Theme/ThemeManager.php
+
+		-
+			message: "#^Namespace PrestaShopLogger is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Addon/Theme/ThemeManager.php
+
+		-
+			message: "#^Namespace Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeManager.php
+
+		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Addon/Theme/ThemeManager.php
+
+		-
+			message: "#^Class Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeManagerBuilder.php
+
+		-
+			message: "#^Class Db is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeManagerBuilder.php
+
+		-
+			message: "#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeManagerBuilder.php
+
+		-
+			message: "#^Class Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeManagerBuilder.php
+
+		-
+			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeManagerBuilder.php
+
+		-
+			message: "#^Namespace Db is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeManagerBuilder.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeManagerBuilder.php
+
+		-
+			message: "#^Namespace Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeManagerBuilder.php
+
+		-
+			message: "#^Class PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeRepository.php
+
+		-
+			message: "#^Class Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeRepository.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeRepository.php
+
+		-
+			message: "#^Namespace Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Addon/Theme/ThemeRepository.php
+
+		-
+			message: "#^Class Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Cart/Calculator.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Cart/Calculator.php
+
+		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Cart/Calculator.php
+
+		-
+			message: "#^Namespace Cart is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Cart/CartRow.php
+
+		-
+			message: "#^Using _DB_PREFIX_ is forbidden, Use dependency injection instead$#"
+			count: 1
+			path: src/Core/Cart/CartRow.php
+
+		-
+			message: "#^Class Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 4
+			path: src/Core/Cart/CartRuleCalculator.php
+
+		-
+			message: "#^Namespace Cart is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Cart/CartRuleCalculator.php
+
+		-
+			message: "#^Namespace CartRule is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Cart/CartRuleCalculator.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Cart/CartRuleCalculator.php
+
+		-
+			message: "#^Namespace Hook is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Cart/CartRuleCalculator.php
+
+		-
+			message: "#^Namespace PrestaShopDatabaseException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Cart/CartRuleCalculator.php
+
+		-
+			message: "#^Namespace CartRule is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Cart/CartRuleData.php
+
+		-
+			message: "#^Namespace Cart is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Cart/Fees.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Cart/Fees.php
+
+		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 5
+			path: src/Core/Cart/Fees.php
+
+		-
+			message: "#^Namespace Cache is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 7
+			path: src/Core/Category/NameBuilder/CategoryDisplayNameBuilder.php
+
+		-
+			message: "#^Class Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/ContextBuilderPreparer.php
+
+		-
+			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/ContextBuilderPreparer.php
+
+		-
+			message: "#^Class Country is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Context/CountryContextBuilder.php
+
+		-
+			message: "#^Class ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/CountryContextBuilder.php
+
+		-
+			message: "#^Namespace Country is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/CountryContextBuilder.php
+
+		-
+			message: "#^Class Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Context/CurrencyContextBuilder.php
+
+		-
+			message: "#^Class ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/CurrencyContextBuilder.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/CurrencyContextBuilder.php
+
+		-
+			message: "#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Context/EmployeeContextBuilder.php
+
+		-
+			message: "#^Class ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/EmployeeContextBuilder.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/EmployeeContextBuilder.php
+
+		-
+			message: "#^Class Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Context/LanguageContextBuilder.php
+
+		-
+			message: "#^Class ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/LanguageContextBuilder.php
+
+		-
+			message: "#^Namespace Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/LanguageContextBuilder.php
+
+		-
+			message: "#^Namespace Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Context/LegacyControllerContext.php
+
+		-
+			message: "#^Namespace Media is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 6
+			path: src/Core/Context/LegacyControllerContext.php
+
+		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Context/LegacyControllerContextBuilder.php
+
+		-
+			message: "#^Namespace ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/LegacyObjectCheckerTrait.php
+
+		-
+			message: "#^Class ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/ShopContextBuilder.php
+
+		-
+			message: "#^Class Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Context/ShopContextBuilder.php
+
+		-
+			message: "#^Namespace Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Context/ShopContextBuilder.php
+
+		-
+			message: "#^Using _COOKIE_KEY_ is forbidden, Use dependency injection instead$#"
+			count: 3
+			path: src/Core/Crypto/Hashing.php
+
+		-
+			message: "#^Class Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Currency/CurrencyDataProviderInterface.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Currency/CurrencyDataProviderInterface.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Currency/CurrencyDataProviderInterface.php
+
+		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Domain/Country/Command/AddCountryCommand.php
+
+		-
+			message: "#^Class Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/Currency/Exception/BulkDeleteCurrenciesException.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/Currency/Exception/BulkDeleteCurrenciesException.php
+
+		-
+			message: "#^Class Customer is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Class CustomerMessage is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Class CustomerThread is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Class Mail is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Class Order is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Namespace Configuration is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Namespace Customer is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Namespace CustomerMessage is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Namespace CustomerThread is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Namespace Mail is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Namespace Order is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Namespace PrestaShopDatabaseException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 4
+			path: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php
+
+		-
+			message: "#^Class Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Class CustomerMessage is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Class Order is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Contact is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace CustomerMessage is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Db is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Mail is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Order is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 7
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Validate is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Using _DB_PREFIX_ is forbidden, Use dependency injection instead$#"
+			count: 5
+			path: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php
+
+		-
+			message: "#^Class Contact is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Class Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Class Customer is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Class CustomerMessage is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Class CustomerThread is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Class Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Contact is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Customer is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace CustomerMessage is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace CustomerThread is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Mail is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace ShopUrl is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 4
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Namespace Validate is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php
+
+		-
+			message: "#^Class Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Class Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Class Customer is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Class CustomerThread is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 5
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Class Order is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Class Product is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Namespace Contact is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Namespace Customer is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Namespace CustomerThread is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Namespace Order is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Namespace Product is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 4
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Namespace Validate is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 4
+			path: src/Core/Domain/CustomerService/QueryHandler/GetCustomerThreadForViewingHandler.php
+
+		-
+			message: "#^Class CustomerThread is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Domain/CustomerService/Repository/CustomerThreadRepository.php
+
+		-
+			message: "#^Namespace CustomerThread is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/CustomerService/Repository/CustomerThreadRepository.php
+
+		-
+			message: "#^Using _THEME_PROD_PIC_DIR_ is forbidden, Use dependency injection instead$#"
+			count: 1
+			path: src/Core/Domain/Order/QueryResult/OrderProductCustomizationForViewing.php
+
+		-
+			message: "#^Class Store is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 4
+			path: src/Core/Domain/Store/Repository/StoreRepository.php
+
+		-
+			message: "#^Namespace Store is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Domain/Store/Repository/StoreRepository.php
+
+		-
+			message: "#^Namespace Configuration is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Feature/TokenInUrls.php
+
+		-
+			message: "#^Namespace ImageManager is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/File/FileUploader.php
+
+		-
+			message: "#^Namespace Contact is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Form/ChoiceProvider/ContactTypeChoiceProvider.php
+
+		-
+			message: "#^Class Cookie is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Form/IdentifiableObject/DataHandler/EmployeeFormDataHandler.php
+
+		-
+			message: "#^Namespace Cookie is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Form/IdentifiableObject/DataHandler/EmployeeFormDataHandler.php
+
+		-
+			message: "#^Class OrderReturn is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Form/IdentifiableObject/DataHandler/OrderReturnFormDataHandler.php
+
+		-
+			message: "#^Namespace OrderReturn is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Form/IdentifiableObject/DataHandler/OrderReturnFormDataHandler.php
+
+		-
+			message: "#^Namespace CartRule is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Grid/Data/Factory/CustomerDiscountGridDataFactory.php
+
+		-
+			message: "#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Grid/Data/Factory/LogDataFactory.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Grid/Data/Factory/LogDataFactory.php
+
+		-
+			message: "#^Class Customer is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Grid/Data/Factory/OutstandingGridDataFactory.php
+
+		-
+			message: "#^Namespace Customer is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Grid/Data/Factory/OutstandingGridDataFactory.php
+
+		-
+			message: "#^Namespace Validate is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Grid/Data/Factory/OutstandingGridDataFactory.php
+
+		-
+			message: "#^Namespace Risk is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Grid/Definition/Factory/OutstandingGridDefinitionFactory.php
+
+		-
+			message: "#^Using _DB_PREFIX_ is forbidden, Use dependency injection instead$#"
+			count: 3
+			path: src/Core/Grid/Query/CustomerThreadQueryBuilder.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Grid/Query/ProductCombinationQueryBuilder.php
+
+		-
+			message: "#^Namespace StockAvailable is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Grid/Query/ProductCombinationQueryBuilder.php
+
+		-
+			message: "#^Class Db is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Image/ImageTypeRepository.php
+
+		-
+			message: "#^Namespace Db is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Image/ImageTypeRepository.php
+
+		-
+			message: "#^Namespace Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Localization/Currency/DataLayer/CurrencyDatabase.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Localization/Currency/DataLayer/CurrencyInstalled.php
+
+		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Localization/RTL/StylesheetGenerator.php
+
+		-
+			message: "#^Class Db is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Module/HookRepository.php
+
+		-
+			message: "#^Class Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Module/HookRepository.php
+
+		-
+			message: "#^Namespace Db is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Module/HookRepository.php
+
+		-
+			message: "#^Namespace Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Module/HookRepository.php
+
+		-
+			message: "#^Class PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Module/ModuleCollection.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Module/ModuleCollection.php
+
+		-
+			message: "#^Class Module is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Module/ModuleInterface.php
+
+		-
+			message: "#^Namespace Module is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Module/ModuleInterface.php
+
+		-
+			message: "#^Namespace Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Module/ModuleManager.php
+
+		-
+			message: "#^Namespace Module is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 6
+			path: src/Core/Module/ModuleManager.php
+
+		-
+			message: "#^Namespace Validate is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Module/ModuleManager.php
+
+		-
+			message: "#^Namespace Module is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Module/ModuleRepository.php
+
+		-
+			message: "#^Namespace OrderInvoice is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Order/InvoiceInterface.php
+
+		-
+			message: "#^Namespace Product is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Product/ProductExtraContentFinder.php
+
+		-
+			message: "#^Class Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Product/Search/ProductSearchContext.php
+
+		-
+			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Product/Search/ProductSearchContext.php
+
+		-
+			message: "#^Class Db is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Repository/AbstractMultiShopObjectModelRepository.php
+
+		-
+			message: "#^Class DbQuery is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Repository/AbstractMultiShopObjectModelRepository.php
+
+		-
+			message: "#^Class ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 5
+			path: src/Core/Repository/AbstractMultiShopObjectModelRepository.php
+
+		-
+			message: "#^Namespace Db is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 5
+			path: src/Core/Repository/AbstractMultiShopObjectModelRepository.php
+
+		-
+			message: "#^Namespace DbQuery is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Repository/AbstractMultiShopObjectModelRepository.php
+
+		-
+			message: "#^Namespace ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Repository/AbstractMultiShopObjectModelRepository.php
+
+		-
+			message: "#^Namespace PrestaShopDatabaseException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Repository/AbstractMultiShopObjectModelRepository.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Repository/AbstractMultiShopObjectModelRepository.php
+
+		-
+			message: "#^Namespace Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Repository/AbstractMultiShopObjectModelRepository.php
+
+		-
+			message: "#^Class ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 8
+			path: src/Core/Repository/AbstractObjectModelRepository.php
+
+		-
+			message: "#^Namespace ObjectModel is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Repository/AbstractObjectModelRepository.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Repository/AbstractObjectModelRepository.php
+
+		-
+			message: "#^Namespace Validate is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Search/Filters.php
+
+		-
+			message: "#^Class PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 7
+			path: src/Core/Shop/LogoUploader.php
+
+		-
+			message: "#^Class Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 17
+			path: src/Core/Shop/LogoUploader.php
+
+		-
+			message: "#^Namespace Configuration is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 27
+			path: src/Core/Shop/LogoUploader.php
+
+		-
+			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Shop/LogoUploader.php
+
+		-
+			message: "#^Namespace ImageManager is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 8
+			path: src/Core/Shop/LogoUploader.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Shop/LogoUploader.php
+
+		-
+			message: "#^Namespace Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 13
+			path: src/Core/Shop/LogoUploader.php
+
+		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Shop/LogoUploader.php
+
+		-
+			message: "#^Class Combination is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Class Pack is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 22
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Class Product is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Namespace Access is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Namespace Combination is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Namespace Configuration is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Namespace Mail is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Namespace Pack is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Namespace Product is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Namespace StockAvailable is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/Core/Stock/StockManager.php
+
+		-
+			message: "#^Class PrestaShopBundle\\\\ApiPlatform\\\\Normalizer\\\\CQRSApiNormalizer extends @final class Symfony\\\\Component\\\\Serializer\\\\Normalizer\\\\ObjectNormalizer\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/ApiPlatform/Normalizer/CQRSApiNormalizer.php
+
+		-
+			message: "#^Method Symfony\\\\Component\\\\Serializer\\\\Normalizer\\\\DenormalizerInterface\\:\\:supportsDenormalization\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/ApiPlatform/Normalizer/CQRSApiNormalizer.php
+
+		-
+			message: "#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Command/AppendConfigurationFileHooksListCommand.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Command/AppendConfigurationFileHooksListCommand.php
+
+		-
+			message: "#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Command/AppendHooksListForSqlUpgradeFileCommand.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Command/AppendHooksListForSqlUpgradeFileCommand.php
+
+		-
+			message: "#^Namespace Validate is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/PrestaShopBundle/Command/ConfigCommand.php
+
+		-
+			message: "#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Command/GenerateMailTemplatesCommand.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Command/GenerateMailTemplatesCommand.php
+
+		-
+			message: "#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Command/ModuleCommand.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Command/ModuleCommand.php
+
+		-
+			message: "#^Namespace Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 4
+			path: src/PrestaShopBundle/Command/ExportModuleTranslationsCommand.php
+
+		-
+			message: "#^Namespace Module is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Command/ExportModuleTranslationsCommand.php
+
+		-
+			message: "#^Class ImageManager is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmployeeController.php
+
+		-
+			message: "#^Namespace ImageManager is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmployeeController.php
+
+		-
+			message: "#^Class ImageManager is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ProfileController.php
+
+		-
+			message: "#^Namespace ImageManager is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/ProfileController.php
+
+		-
+			message: "#^Using _MAIL_DIR_ is forbidden, Use dependency injection instead$#"
+			count: 2
+			path: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/OrderStateController.php
+
+		-
+			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/FrameworkBundleAdminController.php
+
+		-
+			message: "#^Namespace Mail is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Controller/Admin/Improve/Design/MailThemeController.php
+
+		-
+			message: "#^Namespace Db is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php
+
+		-
+			message: "#^Using _DB_PREFIX_ is forbidden, Use dependency injection instead$#"
+			count: 2
+			path: src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php
+
+		-
+			message: "#^Class AdminController is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 5
+			path: src/PrestaShopBundle/Controller/Admin/LegacyController.php
+
+		-
+			message: "#^Class Dispatcher is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Controller/Admin/LegacyController.php
+
+		-
+			message: "#^Namespace AdminController is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/LegacyController.php
+
+		-
+			message: "#^Namespace Dispatcher is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/LegacyController.php
+
+		-
+			message: "#^Class PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/PrestaShopBundle/Controller/Admin/SecuredFileReaderController.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/SecuredFileReaderController.php
+
+		-
+			message: "#^Class Cart is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Address/AddressController.php
+
+		-
+			message: "#^Class Order is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Address/AddressController.php
+
+		-
+			message: "#^Namespace Cart is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Address/AddressController.php
+
+		-
+			message: "#^Namespace Order is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Address/AddressController.php
+
+		-
+			message: "#^Class Category is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php
+
+		-
+			message: "#^Class ImageManager is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php
+
+		-
+			message: "#^Namespace Category is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php
+
+		-
+			message: "#^Namespace Dispatcher is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php
+
+		-
+			message: "#^Namespace ImageManager is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php
+
+		-
+			message: "#^Class Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/OrderMessageController.php
+
+		-
+			message: "#^Namespace Language is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/OrderMessageController.php
+
+		-
+			message: "#^Class Cart is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php
+
+		-
+			message: "#^Class CartRule is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php
+
+		-
+			message: "#^Namespace Cart is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php
+
+		-
+			message: "#^Namespace CartRule is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php
+
+		-
+			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Controller/Api/TranslationController.php
+
+		-
+			message: "#^Namespace PrestaShopDatabaseException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Api/TranslationController.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Controller/Api/TranslationController.php
+
+		-
+			message: "#^Class PrestaShopBundle\\\\DataCollector\\\\ConfigDataCollector extends @final class Symfony\\\\Component\\\\HttpKernel\\\\DataCollector\\\\ConfigDataCollector\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/DataCollector/ConfigDataCollector.php
+
+		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/DependencyInjection/AddOnsConfiguration.php
+
+		-
+			message: "#^Using _THEME_COL_DIR_ is forbidden, Use dependency injection instead$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/AttributeRepository.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/CategoryRepository.php
+
+		-
+			message: "#^Namespace Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/CategoryRepository.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/FeatureAttributeRepository.php
+
+		-
+			message: "#^Namespace Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/FeatureAttributeRepository.php
+
+		-
+			message: "#^Namespace Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/ManufacturerRepository.php
+
+		-
+			message: "#^Class Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/StockManagementRepository.php
+
+		-
+			message: "#^Class Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/StockManagementRepository.php
+
+		-
+			message: "#^Class Product is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Entity/Repository/StockManagementRepository.php
+
+		-
+			message: "#^Class Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/PrestaShopBundle/Entity/Repository/StockManagementRepository.php
+
+		-
+			message: "#^Namespace Context is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/StockManagementRepository.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/StockManagementRepository.php
+
+		-
+			message: "#^Namespace Product is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/StockManagementRepository.php
+
+		-
+			message: "#^Namespace Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/StockManagementRepository.php
+
+		-
+			message: "#^Class Product is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/StockRepository.php
+
+		-
+			message: "#^Namespace Product is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/StockRepository.php
+
+		-
+			message: "#^Namespace Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Entity/Repository/SupplierRepository.php
+
+		-
+			message: "#^Namespace Employee is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/EventListener/Admin/BackUrlRedirectResponseListener.php
+
+		-
+			message: "#^Namespace Tools is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/EventListener/Admin/LegacyParametersListener.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/MetaSettingsShopUrlsFormDataProvider.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/MetaSettingsUrlSchemaFormDataProvider.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php
+
+		-
+			message: "#^Class AttributeGroup is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php
+
+		-
+			message: "#^Namespace AttributeGroup is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php
+
+		-
+			message: "#^Class Validate is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php
+
+		-
+			message: "#^Namespace Validate is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php
+
+		-
+			message: "#^Class Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationItemType.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationItemType.php
+
+		-
+			message: "#^Class Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationPriceImpactType.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationPriceImpactType.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Sell/Product/Options/ProductSupplierType.php
+
+		-
+			message: "#^Class Country is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/RetailPriceType.php
+
+		-
+			message: "#^Class Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/RetailPriceType.php
+
+		-
+			message: "#^Namespace Country is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/RetailPriceType.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/RetailPriceType.php
+
+		-
+			message: "#^Class PrestaShopLogger is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 8
+			path: src/PrestaShopBundle/Form/Admin/Type/LogSeverityChoiceType.php
+
+		-
+			message: "#^Namespace PrestaShopLogger is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Form/Admin/Type/LogSeverityChoiceType.php
+
+		-
+			message: "#^Class Dispatcher is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Routing/LegacyRouterChecker.php
+
+		-
+			message: "#^Class Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 8
+			path: src/PrestaShopBundle/Routing/LegacyRouterChecker.php
+
+		-
+			message: "#^Namespace AdminController is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Routing/LegacyRouterChecker.php
+
+		-
+			message: "#^Namespace Dispatcher is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/PrestaShopBundle/Routing/LegacyRouterChecker.php
+
+		-
+			message: "#^Namespace Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 6
+			path: src/PrestaShopBundle/Routing/LegacyRouterChecker.php
+
+		-
+			message: "#^Namespace Mail is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 3
+			path: src/PrestaShopBundle/Security/Admin/EmployeePasswordResetter.php
+
+		-
+			message: "#^Namespace Db is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 4
+			path: src/PrestaShopBundle/Translation/Loader/SqlTranslationLoader.php
+
+		-
+			message: "#^Namespace PrestaShopException is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Translation/Loader/SqlTranslationLoader.php
+
+		-
+			message: "#^Using _DB_PREFIX_ is forbidden, Use dependency injection instead$#"
+			count: 3
+			path: src/PrestaShopBundle/Translation/Loader/SqlTranslationLoader.php
+
+		-
+			message: "#^Class Link is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Twig/Component/AbstractMultistoreHeader.php
+
+		-
+			message: "#^Namespace Link is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Twig/Component/AbstractMultistoreHeader.php
+
+		-
+			message: "#^Class Shop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Twig/Component/HeadTag.php
+
+		-
+			message: "#^Namespace AdminController is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Twig/Component/Legacy/LegacyControllerTrait.php
+
+		-
+			message: "#^Class AdminController is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Twig/Component/Legacy/LegacyHeadTag.php
+
+		-
+			message: "#^Class HelperShop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Twig/Component/Legacy/LegacyShopList.php
+
+		-
+			message: "#^Namespace HelperShop is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Twig/Component/Legacy/LegacyShopList.php
+
+		-
+			message: "#^Class AdminController is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Twig/Component/Legacy/LegacyToolbar.php
+
+		-
+			message: "#^Namespace Tab is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 2
+			path: src/PrestaShopBundle/Twig/Layout/MenuBuilder.php
+
+		-
+			message: "#^Namespace Currency is forbidden, No legacy calls inside the prestashop bundle\\. Please create an interface and an adapter if you need to\\.$#"
+			count: 1
+			path: src/PrestaShopBundle/Twig/LayoutExtension.php
+
+		-
+			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getClassMetadata\\(\\) expects class\\-string\\<\\\\PrestaShop\\\\Module\\\\Banner\\\\Entity\\\\Banner\\>, string given\\.$#"
+			count: 1
+			path: tests/Integration/Adapter/ContainerBuilderTest.php
+
+		-
+			message: '#^Class PrestaShopBundle\\Command\\AboutCommand extends @final class Symfony\\Bundle\\FrameworkBundle\\Command\\AboutCommand\.$#'
+			count: 1
+			path: src/PrestaShopBundle/Command/AboutCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$extractedModuleProperties of class PrestaShop\\\\PrestaShop\\\\Core\\\\Module\\\\Parser\\\\ModuleParser constructor expects array\\<string\\>, array\\<int, int\\> given\\.$#"
+			count: 1
+			path: tests/Unit/Core/Module/Parser/ModuleParserTest.php
+
+		-
+			message: "#^Cannot access constant PRESTASHOP_VERSIONS on bankwire$#"
+			count: 1
+			path: tests/Unit/Resources/parsed-modules/module-const-array.php
+
+		-
+			message: "#^Cannot access constant DESCRIPTION on bankwire$#"
+			count: 1
+			path: tests/Unit/Resources/parsed-modules/module-self-const.php
+
+		-
+			message: "#^Cannot access constant DISPLAY_NAME on bankwire$#"
+			count: 1
+			path: tests/Unit/Resources/parsed-modules/module-self-const.php
+
+		-
+			message: "#^Cannot access constant ENGLISH_DISPLAY_NAME on bankwire$#"
+			count: 1
+			path: tests/Unit/Resources/parsed-modules/module-self-const.php
+
+		-
+			message: "#^Cannot access constant NAME on bankwire$#"
+			count: 1
+			path: tests/Unit/Resources/parsed-modules/module-self-const.php
+
+		-
+			message: "#^Cannot access constant VERSION on bankwire$#"
+			count: 1
+			path: tests/Unit/Resources/parsed-modules/module-self-const.php
+
+		-
+			message: "#^Cannot access constant DESCRIPTION on bankwire$#"
+			count: 1
+			path: tests/Unit/Resources/parsed-modules/module-static-const.php
+
+		-
+			message: "#^Cannot access constant DISPLAY_NAME on bankwire$#"
+			count: 1
+			path: tests/Unit/Resources/parsed-modules/module-static-const.php
+
+		-
+			message: "#^Cannot access constant ENGLISH_DISPLAY_NAME on bankwire$#"
+			count: 1
+			path: tests/Unit/Resources/parsed-modules/module-static-const.php
+
+		-
+			message: "#^Cannot access constant NAME on bankwire$#"
+			count: 1
+			path: tests/Unit/Resources/parsed-modules/module-static-const.php
+
+		-
+			message: "#^Cannot access constant VERSION on bankwire$#"
+			count: 1
+			path: tests/Unit/Resources/parsed-modules/module-static-const.php
+
+		-
+			message: "#^Unsafe access to private constant bankwire\\:\\:NAME through static\\:\\:\\.$#"
+			count: 1
+			path: tests/Unit/Resources/parsed-modules/module-static-const.php

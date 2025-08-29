@@ -23,10 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div
-    id="search"
-    class="col-md-8 mb-4"
-  >
+  <div id="search">
     <form
       class="search-form"
       @submit.prevent

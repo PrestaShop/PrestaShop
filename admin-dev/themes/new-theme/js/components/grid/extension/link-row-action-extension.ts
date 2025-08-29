@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {Grid} from '@js/types/grid';
+import {Grid} from '@PSTypes/grid';
 import GridMap from '@components/grid/grid-map';
-import {isUndefined} from '@PSTypes/typeguard';
+import {isUndefined} from '@components/typeguard';
 
 const {$} = window;
 
@@ -86,17 +86,17 @@ export default class LinkRowActionExtension {
             $parentCell,
           );
           let isDragging = false;
-          clickableCells.addClass('cursor-pointer').mousedown(() => {
-            $(window).mousemove(() => {
+          clickableCells.addClass('cursor-pointer').on('mousedown', () => {
+            $(window).on('mousemove', () => {
               isDragging = true;
-              $(window).unbind('mousemove');
+              $(window).off('mousemove');
             });
           });
 
-          clickableCells.mouseup(() => {
+          clickableCells.on('mouseup', () => {
             const wasDragging = isDragging;
             isDragging = false;
-            $(window).unbind('mousemove');
+            $(window).off('mousemove');
 
             if (!wasDragging) {
               const confirmMessage = $rowAction.data('confirm-message');

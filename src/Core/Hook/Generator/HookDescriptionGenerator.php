@@ -70,12 +70,12 @@ final class HookDescriptionGenerator implements HookDescriptionGeneratorInterfac
      */
     public function generate($hookName)
     {
-        foreach ($this->hookDescriptions as $hookPlaceholder => $hookDescription) {
+        foreach ($this->hookDescriptions as $hookDescription) {
             $prefix = isset($hookDescription['prefix']) ? $hookDescription['prefix'] : '';
             $suffix = isset($hookDescription['suffix']) ? $hookDescription['suffix'] : '';
 
-            if ($this->stringValidator->startsWithAndEndsWith($hookName, $prefix, $suffix) &&
-                !$this->stringValidator->doesContainsWhiteSpaces($hookName)
+            if ($this->stringValidator->startsWithAndEndsWith($hookName, $prefix, $suffix)
+                && !$this->stringValidator->doesContainsWhiteSpaces($hookName)
             ) {
                 $hookId = $this->extractHookId($hookName, $prefix, $suffix);
 
@@ -144,7 +144,7 @@ final class HookDescriptionGenerator implements HookDescriptionGeneratorInterfac
      */
     private function doesHookDescriptionContainsPlaceholder($description)
     {
-        return false !== strpos($description, '%s');
+        return str_contains($description, '%s');
     }
 
     /**
@@ -156,6 +156,6 @@ final class HookDescriptionGenerator implements HookDescriptionGeneratorInterfac
      */
     private function doesPlaceholderIsTheFirstElementOfTheDescription($description)
     {
-        return 0 === strncmp($description, '%s', 2);
+        return str_starts_with($description, '%s');
     }
 }

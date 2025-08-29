@@ -1,22 +1,21 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
 // Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import localizationPage from '@pages/BO/international/localization';
-import currenciesPage from '@pages/BO/international/currencies';
-import addCurrencyPage from '@pages/BO/international/currencies/add';
-
-// Import data
-import Currencies from '@data/demo/currencies';
+import {
+  boCurrenciesPage,
+  boCurrenciesCreatePage,
+  boDashboardPage,
+  boLocalizationPage,
+  boLoginPage,
+  type BrowserContext,
+  dataCurrencies,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 import {use, expect} from 'chai';
 import chaiString from 'chai-string';
-import type {BrowserContext, Page} from 'playwright';
 
 use(chaiString);
 
@@ -30,139 +29,145 @@ describe('CLDR : Reset symbol / format settings', async () => {
   const customSymbol: string = '@';
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'International > Localization\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.localizationLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.localizationLink,
     );
-    await localizationPage.closeSfToolBar(page);
+    await boLocalizationPage.closeSfToolBar(page);
 
-    const pageTitle = await localizationPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(localizationPage.pageTitle);
+    const pageTitle = await boLocalizationPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boLocalizationPage.pageTitle);
   });
 
   it('should go to Currencies Tab', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesTab0', baseContext);
 
-    await localizationPage.goToSubTabCurrencies(page);
+    await boLocalizationPage.goToSubTabCurrencies(page);
 
-    const pageTitle = await currenciesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+    const pageTitle = await boCurrenciesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCurrenciesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter0', baseContext);
 
-    numberOfCurrencies = await currenciesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCurrencies).to.be.above(0);
+    numberOfCurrencies = await boCurrenciesPage.resetAndGetNumberOfLines(page);
+    expect(numberOfCurrencies).to.be.above(0);
   });
 
-  it(`should filter by iso code of currency '${Currencies.euro.isoCode}'`, async function () {
+  it(`should filter by iso code of currency '${dataCurrencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToEurCurrency0', baseContext);
 
     // Filter
-    await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.euro.isoCode);
+    await boCurrenciesPage.filterTable(page, 'input', 'iso_code', dataCurrencies.euro.isoCode);
 
     // Check number of currencies
-    const numberOfCurrenciesAfterFilter = await currenciesPage.getNumberOfElementInGrid(page);
-    await expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
+    const numberOfCurrenciesAfterFilter = await boCurrenciesPage.getNumberOfElementInGrid(page);
+    expect(numberOfCurrenciesAfterFilter).to.be.equal(1);
 
     // Check currency created
-    const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-    await expect(textColumn).to.contains(Currencies.euro.isoCode);
+    const textColumn = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+    expect(textColumn).to.contains(dataCurrencies.euro.isoCode);
   });
 
-  it(`should edit the currency '${Currencies.euro.isoCode}'`, async function () {
+  it(`should edit the currency '${dataCurrencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEuroCurrencyPage0', baseContext);
 
-    await currenciesPage.goToEditCurrencyPage(page, 1);
+    await boCurrenciesPage.goToEditCurrencyPage(page, 1);
 
-    const pageTitle = await addCurrencyPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+    const pageTitle = await boCurrenciesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCurrenciesCreatePage.pageTitleEdit(dataCurrencies.euro.name));
   });
 
   it('should have multiples currencies formats', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkMultipleFormats', baseContext);
 
-    const numberCurrencyFormats = await addCurrencyPage.getNumberOfElementInGrid(page);
-    await expect(numberCurrencyFormats).to.be.gt(0);
+    const numberCurrencyFormats = await boCurrenciesCreatePage.getNumberOfElementInGrid(page);
+    expect(numberCurrencyFormats).to.be.gt(0);
   });
 
   it('should edit the first currency format and open a modal', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editCurrencyFormat', baseContext);
 
-    const isModalVisible = await addCurrencyPage.editCurrencyFormat(page, 1);
-    await expect(isModalVisible).to.be.true;
+    const isModalVisible = await boCurrenciesCreatePage.editCurrencyFormat(page, 1);
+    expect(isModalVisible).to.eq(true);
   });
 
   it(`should update the symbol by ${customSymbol}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateCurrencyFormatSymbol', baseContext);
 
-    await addCurrencyPage.setCurrencyFormatSymbol(page, customSymbol);
-    await addCurrencyPage.saveCurrencyFormat(page);
+    await boCurrenciesCreatePage.setCurrencyFormatSymbol(page, customSymbol);
+    await boCurrenciesCreatePage.saveCurrencyFormat(page);
 
-    const exampleFormat = await addCurrencyPage.getTextColumnFromTable(page, 1, 2);
-    await expect(exampleFormat).to.startWith(customSymbol);
+    const exampleFormat = await boCurrenciesCreatePage.getTextColumnFromTable(page, 1, 2);
+    expect(exampleFormat).to.startWith(customSymbol);
   });
 
   it('should update the currency', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'saveCurrency', baseContext);
 
-    const result = await addCurrencyPage.saveCurrencyForm(page);
-    await expect(result).to.be.eq(currenciesPage.successfulUpdateMessage);
+    const result = await boCurrenciesCreatePage.saveCurrencyForm(page);
+    expect(result).to.be.eq(boCurrenciesPage.successfulUpdateMessage);
 
-    const symbolCurrency = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'symbol');
-    await expect(symbolCurrency).to.be.eq(customSymbol);
+    const symbolCurrency = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'symbol');
+    expect(symbolCurrency).to.be.eq(customSymbol);
   });
 
-  it(`should edit the currency '${Currencies.euro.isoCode}'`, async function () {
+  it(`should edit the currency '${dataCurrencies.euro.isoCode}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEuroCurrencyPage1', baseContext);
 
-    await currenciesPage.goToEditCurrencyPage(page, 1);
+    await boCurrenciesPage.goToEditCurrencyPage(page, 1);
 
-    const pageTitle = await addCurrencyPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
+    const pageTitle = await boCurrenciesCreatePage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCurrenciesCreatePage.pageTitleEdit(dataCurrencies.euro.name));
   });
 
   it('should reset the currency format', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencyFormat', baseContext);
 
-    const growlMessage = await addCurrencyPage.resetCurrencyFormat(page, 1);
-    await expect(growlMessage).to.be.eq(addCurrencyPage.resetCurrencyFormatMessage);
+    const growlMessage = await boCurrenciesCreatePage.resetCurrencyFormat(page, 1);
+    expect(growlMessage).to.be.eq(boCurrenciesCreatePage.resetCurrencyFormatMessage);
 
-    const exampleFormat = await addCurrencyPage.getTextColumnFromTable(page, 1, 2);
-    await expect(exampleFormat).to.startWith(Currencies.euro.symbol);
+    const exampleFormat = await boCurrenciesCreatePage.getTextColumnFromTable(page, 1, 2);
+    expect(exampleFormat).to.startWith(dataCurrencies.euro.symbol);
   });
 
   it('should update the currency', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetCurrency', baseContext);
 
-    const result = await addCurrencyPage.saveCurrencyForm(page);
-    await expect(result).to.be.eq(currenciesPage.successfulUpdateMessage);
+    const result = await boCurrenciesCreatePage.saveCurrencyForm(page);
+    expect(result).to.be.eq(boCurrenciesPage.successfulUpdateMessage);
 
-    const symbolCurrency = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'symbol');
-    await expect(symbolCurrency).to.be.eq(Currencies.euro.symbol);
+    const symbolCurrency = await boCurrenciesPage.getTextColumnFromTableCurrency(page, 1, 'symbol');
+    expect(symbolCurrency).to.be.eq(dataCurrencies.euro.symbol);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter1', baseContext);
 
-    numberOfCurrencies = await currenciesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCurrencies).to.be.above(0);
+    numberOfCurrencies = await boCurrenciesPage.resetAndGetNumberOfLines(page);
+    expect(numberOfCurrencies).to.be.above(0);
   });
 });

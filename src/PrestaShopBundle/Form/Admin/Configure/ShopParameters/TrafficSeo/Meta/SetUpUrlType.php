@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -96,9 +97,9 @@ class SetUpUrlType extends TranslatorAwareType
         if (!$this->isModRewriteActive) {
             $friendlyUrlHelp .=
                 '<br/>' . $this->trans(
-                'URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.',
+                    'URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.',
                     'Admin.Shopparameters.Help'
-            );
+                );
         }
 
         $builder
@@ -106,6 +107,14 @@ class SetUpUrlType extends TranslatorAwareType
                 'label' => $this->trans('Friendly URL', 'Admin.Global'),
                 'help' => $friendlyUrlHelp,
                 'multistore_configuration_key' => 'PS_REWRITING_SETTINGS',
+            ])
+            ->add('default_language_url_prefix', SwitchType::class, [
+                'label' => $this->trans('Use prefix for default language', 'Admin.Global'),
+                'help' => $this->trans(
+                    'If there are multiple languages enabled on the shop, all URLs are prefixed with the ISO code of the language. Do you want to do this also for the default language, or keep it un-prefixed? If adding a language to a well established single language shop, it\'s a good idea to disable this and avoid changing the URLs.',
+                    'Admin.Shopparameters.Help'
+                ),
+                'multistore_configuration_key' => 'PS_DEFAULT_LANGUAGE_URL_PREFIX',
             ])
             ->add('accented_url', SwitchType::class, [
                 'label' => $this->trans('Accented URL', 'Admin.Shopparameters.Feature'),

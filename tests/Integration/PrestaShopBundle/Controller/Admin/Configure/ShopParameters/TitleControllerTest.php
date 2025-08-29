@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -34,10 +33,12 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\Integration\Utility\ContextMockerTrait;
+use Tests\Integration\Utility\LoginTrait;
 
 class TitleControllerTest extends WebTestCase
 {
     use ContextMockerTrait;
+    use LoginTrait;
 
     /**
      * @var KernelBrowser
@@ -52,9 +53,9 @@ class TitleControllerTest extends WebTestCase
     {
         parent::setUp();
         self::mockContext();
-        self::bootKernel();
 
         $this->client = self::createClient();
+        $this->loginUser($this->client);
         $this->router = self::$kernel->getContainer()->get('router');
     }
 

@@ -81,12 +81,12 @@
 	var {$id|escape:'html':'UTF-8'}_max_files = {$max_files - ($files|count)};
 {/if}
 
-	$(document).ready(function(){
-		$('#{$id|escape:'html':'UTF-8'}-selectbutton').click(function(e) {
+	$(function(){
+		$('#{$id|escape:'html':'UTF-8'}-selectbutton').on('click', function(e) {
 			$('#{$id|escape:'html':'UTF-8'}').trigger('click');
 		});
 
-		$('#{$id|escape:'html':'UTF-8'}-name').click(function(e) {
+		$('#{$id|escape:'html':'UTF-8'}-name').on('click', function(e) {
 			$('#{$id|escape:'html':'UTF-8'}').trigger('click');
 		});
 
@@ -107,7 +107,7 @@
 			$(this).val(files[0].name);
 		});
 
-		$('#{$id|escape:'html':'UTF-8'}').change(function(e) {
+		$('#{$id|escape:'html':'UTF-8'}').on('change', function(e) {
 			if ($(this)[0].files !== undefined)
 			{
 				var files = $(this)[0].files;

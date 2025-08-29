@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="Admin.Modules.Actions.xlf" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
+        <source>Configure</source>
+        <target>Configure</target>
+        <note>File: classes/lang/KeysReference/AdminModuleActionsLang.php [Line: 29]</note>
+      </trans-unit>
+      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
+        <source>Delete</source>
+        <target>Delete</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php [Line: 94]</note>
+      </trans-unit>
+      <trans-unit id="bcfaccebf745acfd5e75351095a5394a">
+        <source>Disable</source>
+        <target>Disable</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php [Line: 91]</note>
+      </trans-unit>
+      <trans-unit id="2faec1f9f8cc7f8f40d521c4dd574f49">
+        <source>Enable</source>
+        <target>Enable</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php [Line: 92]</note>
+      </trans-unit>
+      <trans-unit id="349838fb1d851d3e2014b9fe39203275">
+        <source>Install</source>
+        <target>Install</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php [Line: 89]</note>
+      </trans-unit>
+      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
+        <source>Reset</source>
+        <target>Reset</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php [Line: 93]</note>
+      </trans-unit>
+      <trans-unit id="a27dfe771799a09fd55fea73286eb6ab">
+        <source>Uninstall</source>
+        <target>Uninstall</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/ModuleController.php [Line: 90]</note>
+      </trans-unit>
+      <trans-unit id="06933067aafd48425d67bcb01bba5cb6">
+        <source>Update</source>
+        <target>Update</target>
+        <note>File: classes/lang/KeysReference/AdminModuleActionsLang.php [Line: 28]</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

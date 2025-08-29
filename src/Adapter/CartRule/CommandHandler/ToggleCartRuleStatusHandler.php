@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\ToggleCartRuleStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\UpdateCartRuleException;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\UpdateCartRuleException
 /**
  * Handles command which toggles cart rule status
  */
+#[AsCommandHandler]
 final class ToggleCartRuleStatusHandler extends AbstractCartRuleHandler implements ToggleCartRuleStatusHandlerInterface
 {
     /**

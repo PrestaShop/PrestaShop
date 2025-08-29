@@ -41,7 +41,7 @@ class EditCmsPageCategoryCommandTest extends TestCase
         $command = new EditCmsPageCategoryCommand(1);
 
         $command->setLocalisedName([
-            1 => 'name with #',
+            1 => 'name with >',
         ]);
     }
 
@@ -73,18 +73,6 @@ class EditCmsPageCategoryCommandTest extends TestCase
         $command = new EditCmsPageCategoryCommand(1);
 
         $command->setLocalisedMetaTitle([
-            1 => '{object}',
-        ]);
-    }
-
-    public function testItThrowsAnExceptionWhenMetaKeywordsIsIncorrect()
-    {
-        $this->expectException(CmsPageCategoryConstraintException::class);
-        $this->expectExceptionCode(CmsPageCategoryConstraintException::INVALID_META_KEYWORDS);
-
-        $command = new EditCmsPageCategoryCommand(1);
-
-        $command->setLocalisedMetaKeywords([
             1 => '{object}',
         ]);
     }

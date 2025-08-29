@@ -65,12 +65,6 @@ class GetProductStockMovementsTest extends TestCase
             'offset' => 0,
             'limit' => 0,
         ];
-        yield 'productId is 0' => [
-            'productId' => 0,
-            'shopId' => 1,
-            'offset' => 0,
-            'limit' => 0,
-        ];
         yield 'pagination case' => [
             'productId' => 10,
             'shopId' => 10,
@@ -104,6 +98,13 @@ class GetProductStockMovementsTest extends TestCase
         yield 'productId is negative' => [
             'exceptionClass' => ProductConstraintException::class,
             'productId' => -1,
+            'shopId' => 1,
+            'offset' => 0,
+            'limit' => 0,
+        ];
+        yield 'productId is 0' => [
+            'exceptionClass' => ProductConstraintException::class,
+            'productId' => 0,
             'shopId' => 1,
             'offset' => 0,
             'limit' => 0,

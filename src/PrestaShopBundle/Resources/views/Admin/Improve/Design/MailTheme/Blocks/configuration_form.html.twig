@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,11 +21,11 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block mailThemeConfigurationFormBlock %}
-{{ form_start(mailThemeConfigurationForm, {'action': path('admin_mail_theme_save_configuration')}) }}
+{{ form_start(mailThemeConfigurationForm, {action: path('admin_mail_theme_save_configuration')}) }}
 <div class="card">
   <h3 class="card-header">
     <i class="material-icons">settings</i>

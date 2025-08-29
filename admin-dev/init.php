@@ -24,36 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+/**
+ * This file is currently only used for admin filemanager.
+ * Some things in this file are probably not needed to be initialized anymore.
+ */
+use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
+
 ob_start();
 $timerStart = microtime(true);
 
-//	$_GET['tab'] = $_GET['controller'];
-//	$_POST['tab'] = $_POST['controller'];
-//	$_REQUEST['tab'] = $_REQUEST['controller'];
 try {
     $context = Context::getContext();
-    if (isset($_GET['logout'])) {
-        $context->employee->logout();
-    }
-
-    if (!isset($context->employee) || !$context->employee->isLoggedBack()) {
-        Tools::redirectAdmin('index.php?controller=AdminLogin&redirect='.$_SERVER['REQUEST_URI']);
-    }
-
     $iso = $context->language->iso_code;
-    if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php')) {
-        include _PS_TRANSLATIONS_DIR_.$iso.'/errors.php';
-    }
-    if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php')) {
-        @trigger_error(
-            'Translating ObjectModel fields using fields.php is deprecated since version 8.0.0.',
-            E_USER_DEPRECATED
-        );
-        include _PS_TRANSLATIONS_DIR_.$iso.'/fields.php';
-    }
-    if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php')) {
-        include _PS_TRANSLATIONS_DIR_.$iso.'/admin.php';
-    }
 
     /* Server Params */
     $protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
@@ -96,11 +78,7 @@ try {
     // Change shop context ?
     if (Shop::isFeatureActive() && Tools::getValue('setShopContext') !== false) {
         $context->cookie->shopContext = Tools::getValue('setShopContext');
-        $url = parse_url($_SERVER['REQUEST_URI']);
-        $query = (isset($url['query'])) ? $url['query'] : '';
-        parse_str($query, $parseQuery);
-        unset($parseQuery['setShopContext']);
-        Tools::redirectAdmin($url['path'] . '?' . http_build_query($parseQuery, '', '&'));
+        Tools::redirectAdmin(UrlCleaner::cleanUrl($_SERVER['REQUEST_URI'], ['setShopContext']));
     }
 
     $context->currency = Currency::getDefaultCurrency();

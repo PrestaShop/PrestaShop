@@ -39,5 +39,5 @@ interface AddFeatureHandlerInterface
      *
      * @return FeatureId id of the created feature
      */
-    public function handle(AddFeatureCommand $command);
+    public function handle(AddFeatureCommand $command): FeatureId;
 }

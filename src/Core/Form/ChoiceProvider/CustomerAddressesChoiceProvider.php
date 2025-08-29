@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 
@@ -60,7 +61,7 @@ final class CustomerAddressesChoiceProvider implements ConfigurableFormChoicePro
     public function getChoices(array $options)
     {
         if (!isset($options['customer_id'])) {
-            throw new \InvalidArgumentException('Expected a customer_id option, none found');
+            throw new InvalidArgumentException('Expected a customer_id option, none found');
         }
 
         $addresses = $this->customerDataProvider->getCustomerAddresses($options['customer_id'], $this->langId);
@@ -68,8 +69,9 @@ final class CustomerAddressesChoiceProvider implements ConfigurableFormChoicePro
         $result = [];
         foreach ($addresses as $address) {
             $description = sprintf(
-                '%d- %s %s %s %s',
+                '#%d %s - %s %s %s %s',
                 $address['id_address'],
+                $address['alias'],
                 $address['address1'],
                 $address['address2'] ?: '',
                 $address['postcode'],

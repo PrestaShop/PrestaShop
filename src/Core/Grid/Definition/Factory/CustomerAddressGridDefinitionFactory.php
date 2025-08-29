@@ -124,33 +124,33 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
                     ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add(
-                        (new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_addresses_edit',
-                                'route_param_name' => 'addressId',
-                                'route_param_field' => 'id_address',
-                                'extra_route_params' => [
-                                    'back' => $this->backUrl,
-                                ],
-                                'clickable_row' => true,
-                            ])
-                    )
-                    ->add(
-                        $this->buildDeleteAction(
-                            'admin_addresses_delete',
-                            'addressId',
-                            'id_address',
-                            'POST',
-                            ['back' => $this->backUrl]
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add(
+                            (new LinkRowAction('edit'))
+                                ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                ->setIcon('edit')
+                                ->setOptions([
+                                    'route' => 'admin_addresses_edit',
+                                    'route_param_name' => 'addressId',
+                                    'route_param_field' => 'id_address',
+                                    'extra_route_params' => [
+                                        'back' => $this->backUrl,
+                                    ],
+                                    'clickable_row' => true,
+                                ])
                         )
-                    ),
-            ])
+                        ->add(
+                            $this->buildDeleteAction(
+                                'admin_addresses_delete',
+                                'addressId',
+                                'id_address',
+                                'POST',
+                                ['back' => $this->backUrl]
+                            )
+                        ),
+                ])
             );
     }
 

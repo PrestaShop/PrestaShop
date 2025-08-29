@@ -1,35 +1,31 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import merchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
-import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders';
-import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
-import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
-// Import FO pages
-import cartPage from '@pages/FO/cart';
-import checkoutPage from '@pages/FO/checkout';
-import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
-import {homePage} from '@pages/FO/home';
-import {loginPage as foLoginPage} from '@pages/FO/login';
-import {myAccountPage} from '@pages/FO/myAccount';
-import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
-import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
-import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
-
-// Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boLoginPage,
+  boMerchandiseReturnsPage,
+  boMerchandiseReturnsEditPage,
+  boOrdersPage,
+  boOrdersViewBasePage,
+  type BrowserContext,
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  foClassicCartPage,
+  foClassicCheckoutPage,
+  foClassicCheckoutOrderConfirmationPage,
+  foClassicHomePage,
+  foClassicLoginPage,
+  foClassicModalBlockCartPage,
+  foClassicModalQuickViewPage,
+  foClassicMyAccountPage,
+  foClassicMyMerchandiseReturnsPage,
+  foClassicMyOrderDetailsPage,
+  foClassicMyOrderHistoryPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customerService_merchandiseReturns_deleteProduct';
 
@@ -53,114 +49,123 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('PRE-TEST: Create order in FO', async () => {
     it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToFo(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foClassicHomePage.goToLoginPage(page);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should add 3 products to the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foLoginPage.goToHomePage(page);
+      await foClassicLoginPage.goToHomePage(page);
 
       // Add first product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 1, 2);
-      await homePage.continueShopping(page);
+      await foClassicHomePage.quickViewProduct(page, 1);
+      await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
+      await foClassicModalBlockCartPage.continueShopping(page);
 
       // Add second product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 2, 2);
-      await homePage.continueShopping(page);
+      await foClassicHomePage.quickViewProduct(page, 2);
+      await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
+      await foClassicModalBlockCartPage.continueShopping(page);
 
       // Add third product to cart by quick view
-      await homePage.addProductToCartByQuickView(page, 3, 2);
-      await homePage.proceedToCheckout(page);
+      await foClassicHomePage.quickViewProduct(page, 3);
+      await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
+      await foClassicModalBlockCartPage.proceedToCheckout(page);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(6);
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+      expect(notificationsNumber).to.be.equal(6);
     });
 
     it('should go to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
-      await cartPage.clickOnProceedToCheckout(page);
+      await foClassicCartPage.clickOnProceedToCheckout(page);
 
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+      expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should go to payment step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+      expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should choose payment method and confirm the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+      await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
   describe('PRE-TEST: Enable merchandise returns', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMerchandiseReturnsPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.merchandiseReturnsLink,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.merchandiseReturnsLink,
       );
-      await merchandiseReturnsPage.closeSfToolBar(page);
+      await boMerchandiseReturnsPage.closeSfToolBar(page);
 
-      const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+      const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
     });
 
     it('should enable merchandise returns', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableReturns', baseContext);
 
-      const result = await merchandiseReturnsPage.setOrderReturnStatus(page, true);
-      await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
+      const result = await boMerchandiseReturnsPage.setOrderReturnStatus(page, true);
+      expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
     });
   });
 
@@ -168,37 +173,37 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
 
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderBasePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+      const pageTitle = await boOrdersViewBasePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBasePage.pageTitle);
     });
 
-    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await viewOrderBasePage.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      const result = await boOrdersViewBasePage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should check if the button \'Return products\' is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkReturnProductsButton', baseContext);
 
-      const result = await viewOrderBasePage.isReturnProductsButtonVisible(page);
-      await expect(result).to.be.true;
+      const result = await boOrdersViewBasePage.isReturnProductsButtonVisible(page);
+      expect(result).to.eq(true);
     });
   });
 
@@ -206,116 +211,102 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO2', baseContext);
 
-      page = await viewOrderBasePage.viewMyShop(page);
-      await homePage.changeLanguage(page, 'en');
+      page = await boOrdersViewBasePage.viewMyShop(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foClassicHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(myAccountPage.pageTitle);
+      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
     });
 
     it('should go to \'Order history and details\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageTitle = await orderHistoryPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
+      const pageTitle = await foClassicMyOrderHistoryPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyOrderHistoryPage.pageTitle);
     });
 
     it('should go to the first order in the list and check the existence of order return form', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isOrderReturnFormVisible', baseContext);
 
-      await orderHistoryPage.goToDetailsPage(page, 1);
+      await foClassicMyOrderHistoryPage.goToDetailsPage(page, 1);
 
-      const result = await orderDetailsPage.isOrderReturnFormVisible(page);
-      await expect(result).to.be.true;
+      const result = await foClassicMyOrderDetailsPage.isOrderReturnFormVisible(page);
+      expect(result).to.eq(true);
     });
 
     it('should create a merchandise return', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createMerchandiseReturn', baseContext);
 
-      await orderDetailsPage.requestMerchandiseReturn(page,
+      await foClassicMyOrderDetailsPage.requestMerchandiseReturn(page,
         'test',
         3,
         [{quantity: 1}, {quantity: 1}, {quantity: 2}]);
 
-      const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+      const pageTitle = await foClassicMyMerchandiseReturnsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicMyMerchandiseReturnsPage.pageTitle);
     });
 
     it('should close the FO page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeFoAndGoBackToBO', baseContext);
 
-      page = await orderDetailsPage.closePage(browserContext, page, 0);
+      page = await foClassicMyOrderDetailsPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await viewOrderBasePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
+      const pageTitle = await boOrdersViewBasePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBasePage.pageTitle);
     });
   });
 
   describe('BO : Delete products from merchandise return', async () => {
-    [
-      {args: {understandTheRisk: false, button: 'Take me out of here!'}},
-      {args: {understandTheRisk: true, button: 'I understand the risks and I really want to display this page'}},
-    ].forEach((test, index: number) => {
+    [1, 2].forEach((index: number) => {
       it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToMerchandiseReturnsPage${index}`, baseContext);
 
-        await dashboardPage.goToSubMenu(
+        await boDashboardPage.goToSubMenu(
           page,
-          dashboardPage.customerServiceParentLink,
-          dashboardPage.merchandiseReturnsLink,
+          boDashboardPage.customerServiceParentLink,
+          boDashboardPage.merchandiseReturnsLink,
         );
 
-        const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+        const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
       });
 
       it('should go to edit merchandise returns page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToEditReturnsPage${index}`, baseContext);
 
-        await merchandiseReturnsPage.goToMerchandiseReturnPage(page);
+        await boMerchandiseReturnsPage.goToMerchandiseReturnPage(page);
 
-        const pageTitle = await editMerchandiseReturnsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
+        const pageTitle = await boMerchandiseReturnsEditPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boMerchandiseReturnsEditPage.pageTitle);
       });
 
-      it(`should delete the first returned product and click on '${test.args.button}'`, async function () {
+      it('should delete the first returned product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteFirstProduct${index}`, baseContext);
 
-        const text = await editMerchandiseReturnsPage.deleteProduct(page, 1, test.args.understandTheRisk);
+        const successMessage = await boMerchandiseReturnsEditPage.deleteProduct(page, 1);
+        expect(successMessage).to.contains(boMerchandiseReturnsEditPage.successfulUpdateMessage);
 
-        if (test.args.understandTheRisk) {
-          await expect(text).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
-        } else {
-          await expect(text).to.eq(dashboardPage.pageTitle);
-        }
+        const pageTitle = await boMerchandiseReturnsEditPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boMerchandiseReturnsEditPage.pageTitle);
       });
-    });
-
-    it('should go to edit merchandise returns page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEditReturnsPage3', baseContext);
-
-      await merchandiseReturnsPage.goToMerchandiseReturnPage(page);
-
-      const pageTitle = await editMerchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(editMerchandiseReturnsPage.pageTitle);
     });
 
     it('should try to delete the last returned product and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLastProduct', baseContext);
 
-      const errorMessage = await editMerchandiseReturnsPage.clickOnDeleteLastProductButton(page);
-      await expect(errorMessage).to.contains(merchandiseReturnsPage.errorDeletionMessage);
+      const errorMessage = await boMerchandiseReturnsEditPage.clickOnDeleteLastProductButton(page);
+      expect(errorMessage).to.contains(boMerchandiseReturnsPage.errorDeletionMessage);
     });
   });
 
@@ -323,8 +314,8 @@ describe('BO - Customer Service - Merchandise Returns : Delete product', async (
     it('should disable merchandise returns', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableReturns', baseContext);
 
-      const result = await merchandiseReturnsPage.setOrderReturnStatus(page, false);
-      await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
+      const result = await boMerchandiseReturnsPage.setOrderReturnStatus(page, false);
+      expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
     });
   });
 });

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\AddCustomerHandlerInterface;
@@ -42,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class AddCustomerHandler extends AbstractCustomerHandler implements AddCustomerHandlerInterface
 {
     /**
@@ -69,12 +71,13 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
      */
     public function handle(AddCustomerCommand $command)
     {
+        // Prepare new legacy customer object
         $customer = new Customer();
 
+        // Load it up with the data from the command
         $this->fillCustomerWithCommandData($customer, $command);
 
-        // validateFieldsRequiredDatabase() below is using $_POST
-        // to check if required fields are set
+        // validateFieldsRequiredDatabase() below is using $_POST to check if required fields are set
         $_POST[RequiredField::PARTNER_OFFERS] = $command->isPartnerOffersSubscribed();
 
         $this->assertRequiredFieldsAreNotMissing($customer);
@@ -83,15 +86,27 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
             throw new CustomerException('Customer contains invalid field values');
         }
 
-        $this->assertCustomerWithGivenEmailDoesNotExist($command->getEmail());
+        // If dealing with a registered customer, we need to check if the email does not exist.
+        // Two guests with the same email can co-exist, two registered customers can not.
+        if (!$command->isGuest()) {
+            $this->assertCustomerWithGivenEmailDoesNotExist($command->getEmail());
+        }
+
+        // Check if provided groups contain the correct data (the default group must be in group list)
         $this->assertCustomerCanAccessDefaultGroup($command);
 
         $customer->add();
+        if (null !== $command->getGroupIds()) {
+            $customer->updateGroup($command->getGroupIds());
+        }
 
         return new CustomerId((int) $customer->id);
     }
 
     /**
+     * Checks if a registered customer (is_guest = false) doesn't already exist in the database.
+     * In that case, we refuse the creation, we cannot have two registered customers with the same email.
+     *
      * @param Email $email
      */
     private function assertCustomerWithGivenEmailDoesNotExist(Email $email)
@@ -100,7 +115,10 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
         $customer->getByEmail($email->getValue());
 
         if ($customer->id) {
-            throw new DuplicateCustomerEmailException($email, sprintf('Customer with email "%s" already exists', $email->getValue()));
+            throw new DuplicateCustomerEmailException(
+                $email, sprintf('Registered customer with email "%s" already exists', $email->getValue()),
+                DuplicateCustomerEmailException::ADD
+            );
         }
     }
 
@@ -130,8 +148,9 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
         $customer->optin = $command->isPartnerOffersSubscribed();
         $customer->birthday = $command->getBirthday()->getValue();
         $customer->id_shop = $command->getShopId();
+        $customer->is_guest = $command->isGuest();
 
-        // fill b2b customer fields
+        // Fill B2B customer fields
         $customer->company = $command->getCompanyName();
         $customer->siret = $command->getSiretCode();
         $customer->ape = $apeCode;
@@ -142,6 +161,8 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
     }
 
     /**
+     * Checks if the default group of the customer was provided in the group list
+     *
      * @param AddCustomerCommand $command
      */
     private function assertCustomerCanAccessDefaultGroup(AddCustomerCommand $command)

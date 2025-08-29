@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
  */
 class LocalizedTags
 {
-    public const VALID_TAG_PATTERN = '/^[^<>={}]*$/u';
+    public const VALID_TAG_PATTERN = '/^[^<>{}]*$/u';
 
     /**
      * @var LanguageId
@@ -94,7 +94,7 @@ class LocalizedTags
         $this->tags = [];
 
         foreach ($tags as $tag) {
-            //skip empty value
+            // skip empty value
             if (empty($tag)) {
                 continue;
             }

@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult;
 
 /**
@@ -42,19 +44,29 @@ class GroupInformation
     private $name;
 
     /**
+     * @var bool
+     */
+    private $isDefault;
+
+    /**
      * @param int $groupId
      * @param string $name
+     * @param bool $isDefault
      */
-    public function __construct($groupId, $name)
-    {
+    public function __construct(
+        int $groupId,
+        string $name,
+        bool $isDefault = false
+    ) {
         $this->groupId = $groupId;
         $this->name = $name;
+        $this->isDefault = $isDefault;
     }
 
     /**
      * @return int
      */
-    public function getGroupId()
+    public function getGroupId(): int
     {
         return $this->groupId;
     }
@@ -62,8 +74,16 @@ class GroupInformation
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefault(): bool
+    {
+        return $this->isDefault;
     }
 }

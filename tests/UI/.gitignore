@@ -1,6 +1,7 @@
 ### Node & UI folder rules ###
 
 node_modules
+screenshots
 .doc
 */node_modules
 test/reports/*

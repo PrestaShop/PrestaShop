@@ -183,7 +183,7 @@ export default class OrderViewPage {
         $item.find(OrderViewPageMap.productPackModal.product.name).html(item.name);
         $item.find(OrderViewPageMap.productPackModal.product.link).attr(
           'href',
-          this.router.generate('admin_product_form', {id: item.id}),
+          this.router.generate('admin_products_edit', {productId: item.id}),
         );
         if (item.reference !== '') {
           $item.find(OrderViewPageMap.productPackModal.product.ref).append(item.reference);

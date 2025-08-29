@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\EditUnofficialCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
@@ -45,6 +46,7 @@ use PrestaShopException;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class EditUnofficialCurrencyHandler extends AbstractCurrencyHandler implements EditUnofficialCurrencyHandlerInterface
 {
     /**

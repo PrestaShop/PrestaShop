@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 /**
  * Class StoreCore.
  */
@@ -31,6 +33,9 @@ class StoreCore extends ObjectModel
 {
     /** @var int Store id */
     public $id;
+
+    /** @var int|bool Store id */
+    public $id_image;
 
     /** @var int Country id */
     public $id_country;
@@ -108,8 +113,8 @@ class StoreCore extends ObjectModel
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255],
             'address1' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'required' => true, 'size' => 255],
             'address2' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'size' => 255],
-            'hours' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isJson', 'size' => 4194303],
-            'note' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 4194303],
+            'hours' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isJson', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
+            'note' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
         ],
     ];
 
@@ -144,10 +149,10 @@ class StoreCore extends ObjectModel
     public static function getStores($idLang)
     {
         return Db::getInstance()->executeS(
-            'SELECT s.id_store AS `id`, s.*, sl.*
-            FROM ' . _DB_PREFIX_ . 'store s  ' . Shop::addSqlAssociation('store', 's') . '
-            LEFT JOIN ' . _DB_PREFIX_ . 'store_lang sl ON (sl.id_store = s.id_store AND sl.id_lang = ' . (int) $idLang . ')
-            WHERE s.active = 1
+            'SELECT s.`id_store` AS `id`, s.*, sl.*
+            FROM `' . _DB_PREFIX_ . 'store` s  ' . Shop::addSqlAssociation('store', 's') . '
+            LEFT JOIN `' . _DB_PREFIX_ . 'store_lang` sl ON (sl.`id_store` = s.`id_store` AND sl.`id_lang` = ' . (int) $idLang . ')
+            WHERE s.`active` = 1
             ORDER BY sl.`name` ASC'
         );
     }
@@ -184,19 +189,25 @@ class StoreCore extends ObjectModel
      * This method is allow to know if a store exists for AdminImportController.
      *
      * @return bool
-     *
-     * @since 1.7.0
      */
     public static function storeExists($idStore)
     {
-        $row = Db::getInstance()->getRow(
+        return (bool) Db::getInstance()->getValue(
             '
             SELECT `id_store`
-            FROM ' . _DB_PREFIX_ . 'store a
+            FROM `' . _DB_PREFIX_ . 'store` a
             WHERE a.`id_store` = ' . (int) $idStore,
             false
         );
+    }
 
-        return isset($row['id_store']);
+    /**
+     * This method checks if at least one store is configured
+     *
+     * @return bool
+     */
+    public static function atLeastOneStoreExists()
+    {
+        return (bool) Db::getInstance()->getValue('SELECT `id_store` FROM `' . _DB_PREFIX_ . 'store`', false);
     }
 }

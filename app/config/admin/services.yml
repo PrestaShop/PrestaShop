@@ -1,0 +1,76 @@
+# Dedicated services for Admin app
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  # SECURITY
+  PrestaShopBundle\EventListener\Admin\TokenizedUrlsListener:
+    autowire: true
+    arguments:
+      $map: '@security.access_map'
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  PrestaShopBundle\EventListener\Admin\EmployeeSessionSubscriber:
+    autowire: true
+    autoconfigure: true
+    arguments:
+      $entityManager: '@doctrine.orm.default_entity_manager'
+
+  # Priority 40 to be called before the RouterListener (which has priority 32)
+  PrestaShopBundle\EventListener\Admin\LegacyUrlListener:
+    arguments:
+      - "@prestashop.bundle.routing.converter.legacy_url_converter"
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 40 }
+
+  # Priority 30 to be called after the RouterListener
+  PrestaShopBundle\EventListener\Admin\LegacyParametersListener:
+    arguments:
+      - "@prestashop.bundle.routing.converter.legacy_parameters_converter"
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
+
+  PrestaShopBundle\EventListener\Admin\AccessDeniedListener:
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+  PrestaShopBundle\EventListener\Admin\AdminSecurityListener:
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+  PrestaShopBundle\EventListener\Admin\BackUrlRedirectResponseListener:
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider'
+      - "@prestashop.adapter.legacy.context"
+    tags:
+      - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
+  # Locale listener to define translator locale correctly
+  PrestaShopBundle\EventListener\Admin\UserLocaleSubscriber: ~
+
+  PrestaShopBundle\EventListener\Admin\DemoModeEnabledListener: ~
+
+  # Context listeners, these are event subscribers, so they define their priority themselves
+  PrestaShopBundle\EventListener\Admin\Context\EmployeeContextSubscriber: ~
+  PrestaShopBundle\EventListener\Admin\Context\LanguageContextSubscriber: ~
+  PrestaShopBundle\EventListener\Admin\Context\ShopContextSubscriber: ~
+  PrestaShopBundle\EventListener\Admin\Context\CurrencyContextSubscriber: ~
+  PrestaShopBundle\EventListener\Admin\Context\CountryContextSubscriber: ~
+  PrestaShopBundle\EventListener\Admin\Context\LegacyControllerContextSubscriber: ~
+
+  PrestaShopBundle\EventListener\Admin\Context\LegacyContextSubscriber:
+    autowire: true
+    autoconfigure: true
+    arguments:
+      $legacyBuilders: !tagged_iterator core.legacy_context_builder
+
+  # SSL middleware
+  PrestaShopBundle\EventListener\Admin\SSLMiddlewareListener:
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

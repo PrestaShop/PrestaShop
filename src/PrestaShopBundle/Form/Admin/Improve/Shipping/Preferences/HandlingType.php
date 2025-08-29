@@ -26,11 +26,12 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences;
 
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -46,7 +47,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class HandlingType extends TranslatorAwareType
 {
     /**
-     * @var CurrencyDataProvider
+     * @var CurrencyDataProviderInterface
      */
     private $currencyDataProvider;
 
@@ -59,7 +60,7 @@ class HandlingType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         ConfigurationInterface $configuration,
-        CurrencyDataProvider $currencyDataProvider
+        CurrencyDataProviderInterface $currencyDataProvider
     ) {
         parent::__construct($translator, $locales);
 
@@ -69,13 +70,12 @@ class HandlingType extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $defaultCurrencyId = (int) $this->configuration->get('PS_CURRENCY_DEFAULT');
-        $defaultCurrency = $this->currencyDataProvider->getCurrencyById($defaultCurrencyId);
+        $defaultCurrencyIsoCode = $this->currencyDataProvider->getDefaultCurrencyIsoCode();
         $weightUnit = $this->configuration->get('PS_WEIGHT_UNIT');
 
         $builder
             ->add('shipping_handling_charges', MoneyWithSuffixType::class, [
-                'currency' => $defaultCurrency->iso_code,
+                'currency' => $defaultCurrencyIsoCode,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
                 'required' => false,
                 'empty_data' => '0',
@@ -90,7 +90,7 @@ class HandlingType extends TranslatorAwareType
                 'multistore_configuration_key' => 'PS_SHIPPING_HANDLING',
             ])
             ->add('free_shipping_price', MoneyType::class, [
-                'currency' => $defaultCurrency->iso_code,
+                'currency' => $defaultCurrencyIsoCode,
                 'required' => false,
                 'empty_data' => '0',
                 'constraints' => [

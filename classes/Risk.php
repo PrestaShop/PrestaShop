@@ -26,8 +26,6 @@
 
 /**
  * Class RiskCore.
- *
- * @since 1.5.0
  */
 class RiskCore extends ObjectModel
 {

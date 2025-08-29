@@ -35,6 +35,7 @@ use OrderCarrier;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderShippingDetailsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -44,6 +45,7 @@ use Validate;
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler implements UpdateOrderShippingDetailsHandlerInterface
 {
     /**
@@ -88,7 +90,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
                 throw new OrderException('The tracking number is incorrect.');
             }
 
-            //update carrier - ONLY if changed - then refresh shipping cost
+            // update carrier - ONLY if changed - then refresh shipping cost
             $oldCarrierId = (int) $orderCarrier->id_carrier;
             if ($oldCarrierId !== $carrierId) {
                 $cart = Cart::getCartByOrderId($order->id);
@@ -104,7 +106,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
                 $this->orderAmountUpdater->update($order, $cart);
             }
 
-            //load fresh order carrier because updated just before
+            // load fresh order carrier because updated just before
             $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
 
             // Update order_carrier
@@ -113,7 +115,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
                 throw new OrderException('The order carrier cannot be updated.');
             }
 
-            //send mail only if tracking number is different AND not empty
+            // send mail only if tracking number is different AND not empty
             if (!empty($trackingNumber) && $oldTrackingNumber != $trackingNumber) {
                 if (!$orderCarrier->sendInTransitEmail($order)) {
                     throw new TransistEmailSendingException('An error occurred while sending an email to the customer.');

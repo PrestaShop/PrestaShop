@@ -125,6 +125,7 @@ class StockType extends TranslatorAwareType
                     ],
                 ],
                 'required' => false,
+                'help' => $this->trans('This will be the default displayed availability of a product, if there is at least 1 in stock. If you don\'t enter anything, nothing will be displayed. Further customization is possible for each product.', 'Admin.Catalog.Help'),
             ])
             ->add('oos_allowed_backorders', TranslatableType::class, [
                 'label' => $this->trans(
@@ -139,6 +140,7 @@ class StockType extends TranslatorAwareType
                     ],
                 ],
                 'required' => false,
+                'help' => $this->trans('This will be the default displayed availability of a product, if it\'s not in stock and backordering it is enabled. If you don\'t enter anything, nothing will be displayed. Further customization is possible for each product.', 'Admin.Catalog.Help'),
             ])
             ->add('oos_denied_backorders', TranslatableType::class, [
                 'label' => $this->trans(
@@ -153,6 +155,7 @@ class StockType extends TranslatorAwareType
                     ],
                 ],
                 'required' => false,
+                'help' => $this->trans('This will be the default displayed availability of a product, if it\'s not in stock and backordering it is denied. If you don\'t enter anything, nothing will be displayed. Further customization is possible for each product.', 'Admin.Catalog.Help'),
             ])
             ->add('delivery_time', TranslatableType::class, [
                 'label' => $this->trans(
@@ -160,12 +163,12 @@ class StockType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                        'Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)',
-                        'Admin.Shopparameters.Help'
-                    ) . '<br />' . $this->trans(
-                        'Leave empty to disable',
-                        'Admin.Shopparameters.Feature'
-                    ),
+                    'Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)',
+                    'Admin.Shopparameters.Help'
+                ) . '<br />' . $this->trans(
+                    'Leave empty to disable',
+                    'Admin.Shopparameters.Feature'
+                ),
                 'type' => TextType::class,
                 'only_enabled_locales' => false,
                 'options' => [
@@ -181,12 +184,12 @@ class StockType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                        'Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days)',
-                        'Admin.Shopparameters.Help'
-                    ) . '<br />' . $this->trans(
-                        'Leave empty to disable',
-                        'Admin.Shopparameters.Feature'
-                    ),
+                    'Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days)',
+                    'Admin.Shopparameters.Help'
+                ) . '<br />' . $this->trans(
+                    'Leave empty to disable',
+                    'Admin.Shopparameters.Feature'
+                ),
                 'type' => TextType::class,
                 'only_enabled_locales' => false,
                 'options' => [

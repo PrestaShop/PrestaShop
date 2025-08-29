@@ -78,7 +78,7 @@ class DetailsFillerTest extends CombinationFillerTestCase
         ];
 
         $command = $this->getEmptyCommand()
-            ->setEan13('1234567890111')
+            ->setGtin('1234567890111')
             ->setIsbn('978-3-16-148410-0')
             ->setMpn('HUE222-7')
             ->setReference('ref-HUE222-7')

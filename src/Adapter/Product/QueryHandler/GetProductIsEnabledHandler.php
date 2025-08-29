@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Product;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductIsEnabledHandlerInterface;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductIsEnabledHa
 /**
  * @internal
  */
+#[AsQueryHandler]
 final class GetProductIsEnabledHandler implements GetProductIsEnabledHandlerInterface
 {
     /**

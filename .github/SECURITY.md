@@ -8,7 +8,7 @@ Security updates will typically only be applied to the latest release.
 
 ## Reporting a Vulnerability
 
-Security issues can be reported by sending an email to security@prestashop.com or by our [YesWeHack Bug Bounty Program](https://yeswehack.com/programs/prestashop), which will go to security team members.
+Security issues can be reported by sending an email to security-core@prestashop.com or by our [Bug Bounty Program][bug-bounty], which will go to security team members.
 The team will send a response indicating the next steps in handling your report.
 After the initial reply to your report, the security team will keep you informed of the progress towards a fix and full announcement, and may ask for additional information or guidance.
 
@@ -23,3 +23,5 @@ This person will coordinate the fix and release process, involving the following
 ## Disclosure Policy
 
 In general, public disclosure are made after the issue has been fully identified and a patch is ready to be released.
+
+[bug-bounty]: https://www.prestashop-project.org/security/bug-bounty/

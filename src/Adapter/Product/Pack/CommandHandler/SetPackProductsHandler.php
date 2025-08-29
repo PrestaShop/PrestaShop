@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\CommandHandler\SetPackProductsHandlerInterface;
 
 /**
  * Handles @see SetPackProductsCommand using legacy object model
  */
+#[AsCommandHandler]
 final class SetPackProductsHandler implements SetPackProductsHandlerInterface
 {
     /**

@@ -24,8 +24,8 @@
  */
 
 export default function () {
-  $(document).ready(() => {
-    $('.js-attribute-checkbox').change((event) => {
+  $(() => {
+    $('.js-attribute-checkbox').on('change', (event) => {
       if ($(event.target).is(':checked')) {
         if ($(`.token[data-value="${$(event.target).data('value')}"] .close`).length === 0) {
           $('#form_step3_attributes').tokenfield(

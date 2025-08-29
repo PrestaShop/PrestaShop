@@ -44,10 +44,6 @@ export default class ModuleCard {
 
   moduleActionMenuDisableLinkSelector: string;
 
-  moduleActionMenuEnableMobileLinkSelector: string;
-
-  moduleActionMenuDisableMobileLinkSelector: string;
-
   moduleActionMenuResetLinkSelector: string;
 
   moduleActionMenuUpdateLinkSelector: string;
@@ -55,8 +51,6 @@ export default class ModuleCard {
   moduleActionMenuDeleteLinkSelector: string;
 
   moduleItemListSelector: string;
-
-  moduleItemGridSelector: string;
 
   moduleItemActionsSelector: string;
 
@@ -79,13 +73,10 @@ export default class ModuleCard {
     this.moduleActionMenuEnableLinkSelector = 'button.module_action_menu_enable';
     this.moduleActionMenuUninstallLinkSelector = 'button.module_action_menu_uninstall';
     this.moduleActionMenuDisableLinkSelector = 'button.module_action_menu_disable';
-    this.moduleActionMenuEnableMobileLinkSelector = 'button.module_action_menu_enableMobile';
-    this.moduleActionMenuDisableMobileLinkSelector = 'button.module_action_menu_disableMobile';
     this.moduleActionMenuResetLinkSelector = 'button.module_action_menu_reset';
     this.moduleActionMenuUpdateLinkSelector = 'button.module_action_menu_upgrade';
     this.moduleActionMenuDeleteLinkSelector = 'button.module_action_menu_delete';
     this.moduleItemListSelector = '.module-item-list';
-    this.moduleItemGridSelector = '.module-item-grid';
     this.moduleItemActionsSelector = '.module-actions';
 
     /* Selectors only for modal buttons */
@@ -171,30 +162,6 @@ export default class ModuleCard {
           self.dispatchPreEvent('disable', this)
           && self.confirmAction('disable', this)
           && self.requestToController('disable', $(this))
-        );
-      },
-    );
-
-    $(document).on(
-      'click',
-      this.moduleActionMenuEnableMobileLinkSelector,
-      function () {
-        return (
-          self.dispatchPreEvent('enableMobile', this)
-          && self.confirmAction('enableMobile', this)
-          && self.requestToController('enableMobile', $(this))
-        );
-      },
-    );
-
-    $(document).on(
-      'click',
-      this.moduleActionMenuDisableMobileLinkSelector,
-      function () {
-        return (
-          self.dispatchPreEvent('disableMobile', this)
-          && self.confirmAction('disableMobile', this)
-          && self.requestToController('disableMobile', $(this))
         );
       },
     );
@@ -316,14 +283,6 @@ export default class ModuleCard {
     );
   }
 
-  getModuleItemSelector(): string {
-    if ($(this.moduleItemListSelector).length) {
-      return this.moduleItemListSelector;
-    }
-
-    return this.moduleItemGridSelector;
-  }
-
   confirmAction(action: string, element: string): boolean {
     const modal = $(
       ComponentsMap.confirmModal($(element).data('confirm_modal')),
@@ -371,7 +330,7 @@ export default class ModuleCard {
     }
 
     this.pendingRequest = true;
-    const self = this;
+
     let jqElementObj = element.closest(this.moduleItemActionsSelector);
     const form = element.closest('form');
     const spinnerObj = $(
@@ -426,7 +385,7 @@ export default class ModuleCard {
           return;
         }
 
-        const alteredSelector = self.getModuleItemSelector().replace('.', '');
+        const alteredSelector = this.moduleItemListSelector.replace('.', '');
         let mainElement = null;
 
         if (action === 'delete' && !result[moduleTechName].has_download_url) {

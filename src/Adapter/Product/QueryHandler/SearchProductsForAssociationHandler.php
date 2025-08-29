@@ -30,11 +30,13 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\SearchProductsForAssociationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 
+#[AsQueryHandler]
 class SearchProductsForAssociationHandler implements SearchProductsForAssociationHandlerInterface
 {
     /**
@@ -99,7 +101,8 @@ class SearchProductsForAssociationHandler implements SearchProductsForAssociatio
             (int) $foundProduct['id_product'],
             $foundProduct['name'],
             $foundProduct['reference'] ?? '',
-            $imagePath
+            $imagePath,
+            $foundProduct['product_type'],
         );
     }
 }

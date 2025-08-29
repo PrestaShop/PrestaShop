@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,25 +21,21 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain "Admin.Advparameters.Feature" %}
-
-{% set layoutTitle = 'Webservice'|trans({}, 'Admin.Navigation.Menu') %}
-{% set enableSidebar = true %}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
 {% set layoutHeaderToolbarBtn = {
-  'add': {
-    'href': path('admin_webservice_keys_create'),
-    'desc': 'Add new webservice key'|trans({}, 'Admin.Advparameters.Feature'),
-    'icon': 'add_circle_outline'
+  add: {
+    href: path('admin_webservice_keys_create'),
+    desc: 'Add new webservice key'|trans({}, 'Admin.Advparameters.Feature'),
+    icon: 'add_circle_outline'
   }
 } %}
 
 {% block content %}
 
   {% block webservice_list_notifications %}
-    {% if configurationWarnings is not empty  %}
+    {% if configurationWarnings is not empty %}
       <div class="alert alert-warning" role="alert">
         {% for warning in configurationWarnings %}
           <p class="alert-text">{{ warning }}</p>
@@ -49,16 +45,16 @@
   {% endblock %}
 
   {% block webservice_api_status %}
-    {% set devdocUrl = 'https://devdocs.prestashop.com/8/webservice/' %}
+    {% set devdocUrl = 'https://devdocs.prestashop-project.org/9/webservice/' %}
 
     {% if webserviceStatus.isEnabled == true %}
       <div class="card">
         <h3 class="card-header">
-          <i class="material-icons">info_outline</i> {{ 'Webservice status'|trans }}
+          <i class="material-icons">info</i> {{ 'Webservice status'|trans }}
         </h3>
         <div class="card-body">
           <p>
-            {{ 'Webservice is enabled. Main entry point is' |trans }}
+            {{ 'Webservice is enabled. Main entry point is'|trans }}
             <a href="{{ webserviceStatus.endpoint }}" target="_blank">
               {{ webserviceStatus.endpoint }}
             </a>
@@ -69,8 +65,8 @@
             </p>
           {% endif %}
           <p>
-            {{ "Read the [1]developer documentation[/1]."|trans({
-              '[1]': '<a href="'~devdocUrl~'" target="_blank">', '[/1]': "</a>"
+            {{ 'Read the [1]developer documentation[/1].'|trans({
+              '[1]': '<a href="' ~ devdocUrl ~ '" target="_blank">', '[/1]': '</a>'
             }, 'Admin.Advparameters.Feature')|raw }}
           </p>
         </div>
@@ -78,9 +74,9 @@
     {% endif %}
   {% endblock %}
 
-  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: grid}) }}
 
-  {{ form_start(webserviceConfigurationForm, {'action': path('admin_webservice_save_settings') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
+  {{ form_start(webserviceConfigurationForm, {action: path('admin_webservice_save_settings'), attr: {class: 'form', id: 'configuration_form'}}) }}
 
   {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig') }}
 

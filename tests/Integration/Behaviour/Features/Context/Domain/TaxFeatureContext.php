@@ -43,7 +43,6 @@ use Tax;
 use TaxCalculator;
 use TaxRule;
 use TaxRulesGroup;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -51,18 +50,6 @@ use Tests\Resources\Resetter\TaxesResetter;
 
 class TaxFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default language id from configuration
-     */
-    private $defaultLangId;
-
-    public function __construct()
-    {
-        $this->defaultLangId = CommonFeatureContext::getContainer()
-            ->get('prestashop.adapter.legacy.configuration')
-            ->get('PS_LANG_DEFAULT');
-    }
-
     /**
      * @BeforeFeature @restore-taxes-before-feature
      */
@@ -99,7 +86,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $taxId = (int) $tax->id;
         $command = new EditTaxCommand($taxId);
         if (isset($data['name'])) {
-            $command->setLocalizedNames([$this->defaultLangId => $data['name']]);
+            $command->setLocalizedNames([$this->getDefaultLangId() => $data['name']]);
         }
         if (isset($data['rate'])) {
             $command->setRate($data['rate']);
@@ -211,7 +198,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         /** @var Tax $tax */
         $tax = SharedStorage::getStorage()->get($taxReference);
 
-        if ($tax->name[$this->defaultLangId] !== $name) {
+        if ($tax->name[$this->getDefaultLangId()] !== $name) {
             throw new RuntimeException(sprintf('Tax "%s" has "%s" name, but "%s" was expected.', $taxReference, $tax->name, $name));
         }
     }
@@ -243,6 +230,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then /^tax "(.*)" should be (enabled|disabled)?$/
+     *
      * @Given /^tax "(.*)" is (enabled|disabled)?$/
      */
     public function assertTaxStatus($taxReference, $status)
@@ -264,7 +252,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     private function createTaxUsingCommand(string $taxReference, array $data): void
     {
         $command = new AddTaxCommand(
-            [$this->defaultLangId => $data['name']],
+            [$this->getDefaultLangId() => $data['name']],
             $data['rate'],
             PrimitiveUtils::castStringBooleanIntoBoolean($data['is_enabled'])
         );

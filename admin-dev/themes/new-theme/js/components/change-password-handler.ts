@@ -44,6 +44,8 @@ export default class ChangePasswordHandler {
 
   feedbackSelector: string;
 
+  isValid: boolean;
+
   constructor(
     passwordStrengthFeedbackContainerSelector: string,
     options: ChangePasswordHandlerOptions = {},
@@ -53,6 +55,8 @@ export default class ChangePasswordHandler {
 
     // Feedback container holds messages representing password strength.
     this.feedbackSelector = passwordStrengthFeedbackContainerSelector;
+
+    this.isValid = false;
   }
 
   /**
@@ -99,6 +103,10 @@ export default class ChangePasswordHandler {
         }
       });
     });
+  }
+
+  isPasswordValid(): boolean {
+    return this.isValid;
   }
 
   /**
@@ -159,6 +167,7 @@ export default class ChangePasswordHandler {
       .removeClass()
       .addClass(passwordScoreValid && passwordLengthValid ? 'border-success' : 'border-danger')
       .addClass('form-control border');
+    this.isValid = passwordScoreValid && passwordLengthValid;
 
     const percentage = (result.score * 20) + 20;
     // increase and decrease progress bar

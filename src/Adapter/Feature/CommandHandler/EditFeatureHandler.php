@@ -26,48 +26,48 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
-use Feature;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\EditFeatureHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotEditFeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Handles feature editing.
  */
-final class EditFeatureHandler extends AbstractObjectModelHandler implements EditFeatureHandlerInterface
+#[AsCommandHandler]
+class EditFeatureHandler extends AbstractObjectModelHandler implements EditFeatureHandlerInterface
 {
+    /**
+     * @var FeatureRepository
+     */
+    private $featureRepository;
+
+    public function __construct(
+        FeatureRepository $featureRepository
+    ) {
+        $this->featureRepository = $featureRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function handle(EditFeatureCommand $command)
+    public function handle(EditFeatureCommand $command): void
     {
-        $feature = new Feature($command->getFeatureId()->getValue());
-
-        if (empty($feature->id)) {
-            throw new FeatureNotFoundException('Feature could not be found.');
-        }
+        $feature = $this->featureRepository->get($command->getFeatureId());
 
         if (null !== $command->getLocalizedNames()) {
             $feature->name = $command->getLocalizedNames();
         }
 
+        $this->featureRepository->update($feature);
+
+        // ObjectModel::update doesn't seem to remove unassociated shops, so we must always update them manually afterwards
         if (null !== $command->getAssociatedShopIds()) {
-            $this->associateWithShops($feature, $command->getAssociatedShopIds());
-        }
-
-        if (false === $feature->validateFields(false)) {
-            throw new FeatureConstraintException('Invalid data when updating feature');
-        }
-
-        if (false === $feature->validateFieldsLang(false)) {
-            throw new FeatureConstraintException('Invalid data when updating feature', FeatureConstraintException::INVALID_NAME);
-        }
-
-        if (false === $feature->update()) {
-            throw new CannotEditFeatureException(sprintf('Failed to edit Feature with id "%s".', $feature->id));
+            $this->associateWithShops($feature, array_map(static function (ShopId $shopId) {
+                return $shopId->getValue();
+            }, $command->getAssociatedShopIds()));
         }
     }
 }

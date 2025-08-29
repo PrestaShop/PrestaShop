@@ -27,7 +27,8 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use Doctrine\DBAL\Query\QueryBuilder;
-use PDO;
+use Doctrine\SqlFormatter\NullHighlighter;
+use Doctrine\SqlFormatter\SqlFormatter;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
@@ -39,28 +40,8 @@ use Symfony\Component\DependencyInjection\Container;
 /**
  * Class DoctrineGridDataFactory is responsible for returning grid data using Doctrine query builders.
  */
-final class DoctrineGridDataFactory implements GridDataFactoryInterface
+class DoctrineGridDataFactory implements GridDataFactoryInterface
 {
-    /**
-     * @var DoctrineQueryBuilderInterface
-     */
-    private $gridQueryBuilder;
-
-    /**
-     * @var HookDispatcherInterface
-     */
-    private $hookDispatcher;
-
-    /**
-     * @var QueryParserInterface
-     */
-    private $queryParser;
-
-    /**
-     * @var string
-     */
-    private $gridId;
-
     /**
      * @param DoctrineQueryBuilderInterface $gridQueryBuilder
      * @param HookDispatcherInterface $hookDispatcher
@@ -68,15 +49,11 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
      * @param string $gridId
      */
     public function __construct(
-        DoctrineQueryBuilderInterface $gridQueryBuilder,
-        HookDispatcherInterface $hookDispatcher,
-        QueryParserInterface $queryParser,
-        $gridId
+        protected DoctrineQueryBuilderInterface $gridQueryBuilder,
+        protected HookDispatcherInterface $hookDispatcher,
+        protected QueryParserInterface $queryParser,
+        protected string $gridId
     ) {
-        $this->gridQueryBuilder = $gridQueryBuilder;
-        $this->hookDispatcher = $hookDispatcher;
-        $this->queryParser = $queryParser;
-        $this->gridId = $gridId;
     }
 
     /**
@@ -93,8 +70,8 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
             'search_criteria' => $searchCriteria,
         ]);
 
-        $records = $searchQueryBuilder->execute()->fetchAll();
-        $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
+        $records = $searchQueryBuilder->executeQuery()->fetchAllAssociative();
+        $recordsTotal = (int) $countQueryBuilder->executeQuery()->fetchOne();
 
         $records = new RecordCollection($records);
 
@@ -110,11 +87,20 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
      *
      * @return string
      */
-    private function getRawQuery(QueryBuilder $queryBuilder)
+    private function getRawQuery(QueryBuilder $queryBuilder): string
     {
         $query = $queryBuilder->getSQL();
         $parameters = $queryBuilder->getParameters();
 
-        return $this->queryParser->parse($query, $parameters);
+        $parsedQuery = $this->queryParser->parse($query, $parameters);
+
+        return $this->formatSQL($parsedQuery);
+    }
+
+    protected function formatSQL(string $query): string
+    {
+        $sqlFormatter = new SqlFormatter(new NullHighlighter());
+
+        return $sqlFormatter->format($query);
     }
 }

@@ -57,11 +57,6 @@ class AddCmsPageCommand
     /**
      * @var string[]
      */
-    private $LocalizedMetaKeyword;
-
-    /**
-     * @var string[]
-     */
     private $localizedFriendlyUrl;
 
     /**
@@ -89,7 +84,6 @@ class AddCmsPageCommand
      * @param string[] $localizedTitle
      * @param string[] $localizedMetaTitle
      * @param string[] $localizedMetaDescription
-     * @param string[] $LocalizedMetaKeyword
      * @param string[] $localizedFriendlyUrl
      * @param string[] $localizedContent
      * @param bool $indexedForSearch
@@ -103,7 +97,6 @@ class AddCmsPageCommand
         array $localizedTitle,
         array $localizedMetaTitle,
         array $localizedMetaDescription,
-        array $LocalizedMetaKeyword,
         array $localizedFriendlyUrl,
         array $localizedContent,
         $indexedForSearch,
@@ -114,7 +107,6 @@ class AddCmsPageCommand
         $this->localizedTitle = $localizedTitle;
         $this->localizedMetaTitle = $localizedMetaTitle;
         $this->localizedMetaDescription = $localizedMetaDescription;
-        $this->LocalizedMetaKeyword = $LocalizedMetaKeyword;
         $this->localizedFriendlyUrl = $localizedFriendlyUrl;
         $this->localizedContent = $localizedContent;
         $this->indexedForSearch = $indexedForSearch;
@@ -152,14 +144,6 @@ class AddCmsPageCommand
     public function getLocalizedMetaDescription()
     {
         return $this->localizedMetaDescription;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedMetaKeyword()
-    {
-        return $this->LocalizedMetaKeyword;
     }
 
     /**

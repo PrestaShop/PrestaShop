@@ -49,7 +49,7 @@ Feature: Add basic product from Back Office (BO)
 
   Scenario: I add a product with invalid characters in name
     When I add product "product2" with following information:
-      | name[en-US] | T-shirt #1 |
+      | name[en-US] | T-shirt <3 |
       | type        | standard   |
     Then I should get error that product name is invalid
 

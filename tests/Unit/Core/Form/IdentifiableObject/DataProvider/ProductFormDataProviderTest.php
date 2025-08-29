@@ -35,6 +35,7 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Constraint\LogicalOr;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
@@ -57,7 +58,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductRedirectTarget;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
@@ -75,6 +75,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+use PrestaShop\PrestaShop\Core\Domain\QueryResult\RedirectTargetInformation;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
@@ -119,7 +120,8 @@ class ProductFormDataProviderTest extends TestCase
             $configurationMock,
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            null
+            null,
+            $this->getFeaturesProvider()
         );
 
         $formData = $provider->getData(self::PRODUCT_ID);
@@ -131,7 +133,8 @@ class ProductFormDataProviderTest extends TestCase
             $configurationMock,
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            $contextShopId
+            $contextShopId,
+            $this->getFeaturesProvider()
         );
 
         $formData = $provider->getData(self::PRODUCT_ID);
@@ -809,9 +812,9 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
             'redirect_type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
-            'redirect_target' => new ProductRedirectTarget(
+            'redirect_target' => new RedirectTargetInformation(
                 self::DEFAULT_CATEGORY_ID,
-                ProductRedirectTarget::CATEGORY_TYPE,
+                RedirectTargetInformation::CATEGORY_TYPE,
                 $categoryName,
                 $categoryImage
             ),
@@ -946,21 +949,48 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['details']['features']['feature_values'] = [];
-        $expectedOutputData['details']['features']['feature_values'][] = [
+        $expectedOutputData['details']['features']['feature_collection'] = [];
+
+        $customLocalizedValues = [
+            1 => 'english custom feature',
+            2 => 'propriété personnalisée française',
+        ];
+        $expectedOutputData['details']['features']['feature_collection'][] = [
             'feature_id' => 42,
-            'feature_value_id' => 51,
+            'feature_name' => 'Test feature',
+            'feature_values' => [
+                [
+                    'feature_value_id' => 51,
+                    'feature_value_name' => 'english feature',
+                    'is_custom' => false,
+                ],
+                [
+                    'feature_value_id' => 69,
+                    'feature_value_name' => 'english custom feature',
+                    'is_custom' => true,
+                    'custom_value' => $customLocalizedValues,
+                ],
+            ],
+        ];
+        $expectedOutputData['details']['features']['feature_collection'][] = [
+            'feature_id' => 51,
+            'feature_name' => 'Test feature 2',
+            'feature_values' => [
+                [
+                    'feature_value_id' => 99,
+                    'feature_value_name' => 'other english feature',
+                    'is_custom' => false,
+                ],
+            ],
         ];
 
         $localizedValues = [
-            1 => 'english',
-            2 => 'french',
+            1 => 'english feature',
+            2 => 'propriété française',
         ];
-        $expectedOutputData['details']['features']['feature_values'][] = [
-            'feature_id' => 42,
-            'feature_value_id' => 69,
-            'custom_value' => $localizedValues,
-            'custom_value_id' => 69,
+        $otherLocalizedValues = [
+            1 => 'other english feature',
+            2 => 'autre propriété française',
         ];
 
         $productData = [
@@ -975,7 +1005,13 @@ class ProductFormDataProviderTest extends TestCase
                     'feature_id' => 42,
                     'feature_value_id' => 69,
                     'custom' => true,
-                    'localized_values' => $localizedValues,
+                    'localized_values' => $customLocalizedValues,
+                ],
+                [
+                    'feature_id' => 51,
+                    'feature_value_id' => 99,
+                    'custom' => false,
+                    'localized_values' => $otherLocalizedValues,
                 ],
             ],
         ];
@@ -1111,7 +1147,8 @@ class ProductFormDataProviderTest extends TestCase
             $product['attachments'] ?? [],
             $this->createProductStockInformation($product),
             $this->createVirtualProductFile($product),
-            $product['cover_thumbnail'] ?? self::COVER_URL
+            $product['cover_thumbnail'] ?? self::COVER_URL,
+            [1],
         );
     }
 
@@ -1682,7 +1719,8 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDefaultConfigurationMock(),
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            null
+            null,
+            $this->getFeaturesProvider()
         );
     }
 
@@ -1698,5 +1736,18 @@ class ProductFormDataProviderTest extends TestCase
         ]);
 
         return $configurationMock;
+    }
+
+    private function getFeaturesProvider(): FeaturesChoiceProvider
+    {
+        $featureProviderMock = $this->getMockBuilder(FeaturesChoiceProvider::class)->disableOriginalConstructor()->getMock();
+        $featureProviderMock->method('getChoices')->willReturn([
+            'Feature A' => 1,
+            'Feature B' => 2,
+            'Test feature' => 42,
+            'Test feature 2' => 51,
+        ]);
+
+        return $featureProviderMock;
     }
 }

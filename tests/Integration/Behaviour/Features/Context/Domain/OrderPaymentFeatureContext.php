@@ -28,7 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Context;
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;

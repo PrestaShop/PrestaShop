@@ -25,7 +25,7 @@
 import Bloodhound from 'typeahead.js';
 
 export default function () {
-  $(document).ready(() => {
+  $(() => {
     $('.autocomplete-search').each(function () {
       loadAutocomplete($(this), false);
     });
@@ -96,7 +96,7 @@ export default function () {
           return `<div><img src="${item.image}" style="width:50px" /> ${item.name}</div>`;
         },
       },
-    }).bind('typeahead:select', (e, suggestion) => {
+    }).on('typeahead:select', (e, suggestion) => {
       // if collection length is up to limit, return
 
       const formIdItem = $(`#${autocompleteFormId}-data li`);
@@ -130,7 +130,7 @@ export default function () {
       $(`#${autocompleteFormId}-data`).append(html);
 
       return true;
-    }).bind('typeahead:close', (e) => {
+    }).on('typeahead:close', (e) => {
       $(e.target).val('');
     });
   }

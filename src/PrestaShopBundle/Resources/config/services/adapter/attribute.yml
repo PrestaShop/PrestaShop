@@ -1,18 +1,19 @@
 services:
   _defaults:
-    public: true
-
-  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\DeleteAttributeHandler:
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\DeleteAttributeCommand'
-
-  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\BulkDeleteAttributeHandler:
-    tags:
-      - name: 'tactician.handler'
-        command: 'PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Command\BulkDeleteAttributeCommand'
+    public: false
+    autowire: true
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\DeleteAttributeHandler: ~
+  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\BulkDeleteAttributeHandler: ~
+  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\AddAttributeHandler: ~
+  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\EditAttributeHandler: ~
+  PrestaShop\PrestaShop\Adapter\Attribute\QueryHandler\GetAttributeForEditingHandler: ~
+  PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator: ~
+  PrestaShop\PrestaShop\Adapter\File\Uploader\AttributeFileUploader: ~
+  PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\AttributeFileUploaderInterface: ~

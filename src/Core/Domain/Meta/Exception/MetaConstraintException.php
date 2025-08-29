@@ -50,9 +50,4 @@ class MetaConstraintException extends MetaException
      * When meta description is invalid
      */
     public const INVALID_META_DESCRIPTION = 4;
-
-    /**
-     * When meta keywords is invalids
-     */
-    public const INVALID_META_KEYWORDS = 5;
 }

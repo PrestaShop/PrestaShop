@@ -27,9 +27,11 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShop\PrestaShop\Core\Geolocation\GeoLite\GeoLiteCityCheckerInterface;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,28 +39,35 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Class GeolocationController is responsible for "Improve > International > Localization > Geolocation" page.
  */
-class GeolocationController extends FrameworkBundleAdminController
+class GeolocationController extends PrestaShopAdminController
 {
     /**
      * Show geolocation page.
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
      * @return Response
      */
-    public function indexAction(Request $request)
-    {
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
+    public function indexAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.geolocation.by_ip_address.form_handler')]
+        FormHandlerInterface $geolocationByIpAddressFormHandler,
+        #[Autowire(service: 'prestashop.admin.geolocation.whitelist.form_handler')]
+        FormHandlerInterface $geolocationWhitelistFormHandler,
+        #[Autowire(service: 'prestashop.admin.geolocation.options.form_handler')]
+        FormHandlerInterface $geolocationOptionsFormHandler,
+        #[Autowire(service: 'prestashop.core.geolocation.geo_lite_city.checker')]
+        GeoLiteCityCheckerInterface $geoLiteCityChecker
+    ): Response {
         $legacyController = $request->attributes->get('_legacy_controller');
 
-        $geolocationByIpAddressForm = $this->getGeolocationByIpAddressFormHandler()->getForm();
-        $geolocationIpAddressWhitelistForm = $this->getGeolocationWhitelistFormHandler()->getForm();
-        $geolocationOptionsForm = $this->getGeolocationOptionsFormHandler()->getForm();
-        $geoLiteCityChecker = $this->get('prestashop.core.geolocation.geo_lite_city.checker');
+        $geolocationByIpAddressForm = $geolocationByIpAddressFormHandler->getForm();
+        $geolocationIpAddressWhitelistForm = $geolocationWhitelistFormHandler->getForm();
+        $geolocationOptionsForm = $geolocationOptionsFormHandler->getForm();
 
         return $this->render('@PrestaShop/Admin/Improve/International/Geolocation/index.html.twig', [
-            'layoutTitle' => $this->trans('Geolocation', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Geolocation', [], 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'geolocationByIpAddressForm' => $geolocationByIpAddressForm->createView(),
@@ -71,22 +80,20 @@ class GeolocationController extends FrameworkBundleAdminController
     /**
      * Process the Geolocation ByIpAddress configuration form.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_geolocation_index"
-     * )
-     * @DemoRestricted(redirectRoute="admin_geolocation_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function processByIpAddressFormAction(Request $request)
-    {
+    #[DemoRestricted(redirectRoute: 'admin_geolocation_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_geolocation_index')]
+    public function processByIpAddressFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.geolocation.by_ip_address.form_handler')]
+        FormHandlerInterface $geolocationByIpAddressFormHandler,
+    ): RedirectResponse {
         return $this->processForm(
             $request,
-            $this->getGeolocationByIpAddressFormHandler(),
+            $geolocationByIpAddressFormHandler,
             'ByIpAddress'
         );
     }
@@ -94,22 +101,20 @@ class GeolocationController extends FrameworkBundleAdminController
     /**
      * Process the Geolocation Whitelist configuration form.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_geolocation_index"
-     * )
-     * @DemoRestricted(redirectRoute="admin_geolocation_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function processWhitelistFormAction(Request $request)
-    {
+    #[DemoRestricted(redirectRoute: 'admin_geolocation_index')]
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_geolocation_index')]
+    public function processWhitelistFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.geolocation.whitelist.form_handler')]
+        FormHandlerInterface $geolocationWhitelistFormHandler,
+    ): RedirectResponse {
         return $this->processForm(
             $request,
-            $this->getGeolocationWhitelistFormHandler(),
+            $geolocationWhitelistFormHandler,
             'Whitelist'
         );
     }
@@ -117,22 +122,20 @@ class GeolocationController extends FrameworkBundleAdminController
     /**
      * Process the Geolocation Options configuration form.
      *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_geolocation_index"
-     * )
-     * @DemoRestricted(redirectRoute="admin_geolocation_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function processOptionsFormAction(Request $request)
-    {
+    #[DemoRestricted(redirectRoute: 'admin_geolocation_index')]
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.', redirectRoute: 'admin_geolocation_index')]
+    public function processOptionsFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.geolocation.options.form_handler')]
+        FormHandlerInterface $geolocationOptionsFormHandler
+    ): RedirectResponse {
         return $this->processForm(
             $request,
-            $this->getGeolocationOptionsFormHandler(),
+            $geolocationOptionsFormHandler,
             'Options'
         );
     }
@@ -146,14 +149,14 @@ class GeolocationController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName): RedirectResponse
     {
-        $this->dispatchHook(
+        $this->dispatchHookWithParameters(
             'actionAdminInternationalGeolocationControllerPostProcess' . $hookName . 'Before',
             ['controller' => $this]
         );
 
-        $this->dispatchHook('actionAdminInternationalGeolocationControllerPostProcessBefore', ['controller' => $this]);
+        $this->dispatchHookWithParameters('actionAdminInternationalGeolocationControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
@@ -163,36 +166,12 @@ class GeolocationController extends FrameworkBundleAdminController
             $saveErrors = $formHandler->save($data);
 
             if (0 === count($saveErrors)) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
             } else {
-                $this->flashErrors($saveErrors);
+                $this->addFlashErrors($saveErrors);
             }
         }
 
         return $this->redirectToRoute('admin_geolocation_index');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    protected function getGeolocationByIpAddressFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.admin.geolocation.by_ip_address.form_handler');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    protected function getGeolocationWhitelistFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.admin.geolocation.whitelist.form_handler');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
-    protected function getGeolocationOptionsFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.admin.geolocation.options.form_handler');
     }
 }

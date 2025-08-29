@@ -1,20 +1,16 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import taxesPage from '@pages/BO/international/taxes';
-
-// Import data
-import TaxOptions from '@data/demo/taxOptions';
-import TaxOptionData from '@data/faker/taxOption';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boLoginPage,
+  boTaxesPage,
+  type BrowserContext,
+  dataTaxOptions,
+  FakerTaxOption,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_international_taxes_taxes_taxOptionsForm';
 
@@ -25,35 +21,41 @@ describe('BO - International - Taxes : Edit Tax options with all EcoTax values',
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'International > Taxes\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.internationalParentLink,
-      dashboardPage.taxesLink,
+      boDashboardPage.internationalParentLink,
+      boDashboardPage.taxesLink,
     );
-    await taxesPage.closeSfToolBar(page);
+    await boTaxesPage.closeSfToolBar(page);
 
-    const pageTitle = await taxesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(taxesPage.pageTitle);
+    const pageTitle = await boTaxesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boTaxesPage.pageTitle);
   });
 
   // Testing all options of EcoTax
   describe('Edit tax options', async () => {
-    TaxOptions.forEach((taxOption: TaxOptionData, index: number) => {
+    dataTaxOptions.forEach((taxOption: FakerTaxOption, index: number) => {
       it(`should edit Tax Option,
       \tEnable Tax:${taxOption.enabled},
       \tDisplay tax in the shopping cart: '${taxOption.displayInShoppingCart}',
@@ -62,8 +64,8 @@ describe('BO - International - Taxes : Edit Tax options with all EcoTax values',
       \tEcotax: '${taxOption.ecoTax}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateForm${index + 1}`, baseContext);
 
-        const textResult = await taxesPage.updateTaxOption(page, taxOption);
-        await expect(textResult).to.be.equal('Update successful');
+        const textResult = await boTaxesPage.updateTaxOption(page, taxOption);
+        expect(textResult).to.be.equal('Update successful');
       });
     });
   });

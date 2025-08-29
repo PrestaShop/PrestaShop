@@ -6,6 +6,7 @@
     <tab id="DEFAULT" name="More" />
     <tab id="Addresses" name="Addresses" />
     <tab id="Administration" name="Administration" />
+    <tab id="Aliases" name="Aliases" />
     <tab id="Module_Catalog" name="Module Catalog" />
     <tab id="Module_Page" name="Module Manager" />
     <tab id="Module_Page_Catalog" name="Module Catalog" />
@@ -96,7 +97,7 @@
     <tab id="Products_1" name="Product Settings" />
     <tab id="Products" name="Products" />
     <tab id="Products_v2" name="Products (experimental)" />
-    <tab id="Profiles" name="Profiles" />
+    <tab id="Profiles" name="Roles" />
     <tab id="Quick_Access" name="Quick Access" />
     <tab id="Referrers" name="Referrers" />
     <tab id="Search_1" name="Search" />
@@ -130,9 +131,8 @@
     <tab id="Titles" name="Titles" />
     <tab id="Traffic" name="Traffic &amp; SEO" />
     <tab id="Translations" name="Translations" />
-    <tab id="Warehouses" name="Warehouses" />
     <tab id="Webservice" name="Webservice" />
-    <tab id="AuthorizationServer" name="Authorization Server" />
+    <tab id="AdminAPI" name="Admin API" />
     <tab id="Zones" name="Zones" />
     <tab id="Marketing_tools" name="Module Selections" />
     <tab id="FeatureFlag" name="New &amp; Experimental Features" />

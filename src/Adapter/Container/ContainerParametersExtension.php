@@ -63,25 +63,34 @@ class ContainerParametersExtension implements ContainerBuilderExtensionInterface
      */
     public function build(ContainerBuilder $container)
     {
-        //This script is used in config.yml to init the container parameters
-        //It is also able to generate the parameters.php file if it does not exist
+        // This script is used in config.yml to init the container parameters
+        // It is also able to generate the parameters.php file if it does not exist
         include _PS_ROOT_DIR_ . '/app/config/set_parameters.php';
         $container->addResource(new FileResource(_PS_ROOT_DIR_ . '/app/config/parameters.php'));
 
-        //Most of these parameters are just necessary fro doctrine services definitions
+        // Most of these parameters are just necessary from doctrine services definitions
         $container->setParameter('kernel.bundles', []);
-        $container->setParameter('kernel.root_dir', _PS_ROOT_DIR_ . '/app');
-        $container->setParameter('kernel.project_dir', _PS_ROOT_DIR_);
         $container->setParameter('kernel.name', 'app');
         $container->setParameter('kernel.debug', $this->environment->isDebug());
         $container->setParameter('kernel.environment', $this->environment->getName());
+        $container->setParameter('kernel.app_id', $this->environment->getAppId());
 
-        //Note: this is not the same folder in test env because PS_CACHE_DIR only manages dev and prod env
-        //but it should! So for now let's do it the right way here and let's fix the rest later when EnvironmentInterface
-        //will be correctly/fully integrated.
+        // Note: this is not the same folder in test env because PS_CACHE_DIR only manages dev and prod env
+        // but it should! So for now let's do it the right way here and let's fix the rest later when EnvironmentInterface
+        // will be correctly/fully integrated.
         $container->setParameter('kernel.cache_dir', $this->environment->getCacheDir());
 
-        //Init the active modules
-        $container->setParameter('kernel.active_modules', (new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_))->getActiveModules());
+        // Init the active modules
+        $moduleRepository = new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_);
+        $activeModules = $moduleRepository->getActiveModules();
+        /* @deprecated kernel.active_modules is deprecated. Use prestashop.active_modules instead. */
+        $container->setParameter('kernel.active_modules', $activeModules);
+        $container->setParameter('prestashop.active_modules', $activeModules);
+        $container->setParameter('prestashop.installed_modules', $moduleRepository->getInstalledModules());
+        $container->setParameter('prestashop.module_dir', _PS_MODULE_DIR_);
+
+        if (!$container->hasParameter('kernel.project_dir')) {
+            $container->setParameter('kernel.project_dir', _PS_ROOT_DIR_);
+        }
     }
 }

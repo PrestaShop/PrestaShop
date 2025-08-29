@@ -28,11 +28,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Preferences;
 
-use Cookie;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration;
+use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 
 class PreferencesConfigurationTest extends TestCase
 {
@@ -49,7 +49,7 @@ class PreferencesConfigurationTest extends TestCase
     protected function setUp(): void
     {
         $this->mockConfiguration = $this->getMockBuilder(Configuration::class)
-            ->setMethods(['get', 'getBoolean', 'set'])
+            ->onlyMethods(['get', 'getBoolean', 'set'])
             ->disableOriginalConstructor()
             ->getMock();
         $this->object = new PreferencesConfiguration($this->mockConfiguration);
@@ -63,7 +63,6 @@ class PreferencesConfigurationTest extends TestCase
                 [
                     ['PS_PRICE_ROUND_MODE', null, null, 'test'],
                     ['PS_ROUND_TYPE', null, null, 'test'],
-                    ['PS_SHOP_ACTIVITY', null, null, 'test'],
                 ]
             );
 
@@ -72,7 +71,6 @@ class PreferencesConfigurationTest extends TestCase
             ->willReturnMap(
                 [
                     ['PS_SSL_ENABLED', false, true],
-                    ['PS_SSL_ENABLED_EVERYWHERE', false, true],
                     ['PS_TOKEN_ENABLE', false, true],
                     ['PS_ALLOW_HTML_IFRAME', false, true],
                     ['PS_USE_HTMLPURIFIER', false, true],
@@ -87,7 +85,6 @@ class PreferencesConfigurationTest extends TestCase
         $this->assertSame(
             [
                 'enable_ssl' => true,
-                'enable_ssl_everywhere' => true,
                 'enable_token' => true,
                 'allow_html_iframes' => true,
                 'use_htmlpurifier' => true,
@@ -97,7 +94,6 @@ class PreferencesConfigurationTest extends TestCase
                 'display_manufacturers' => true,
                 'display_best_sellers' => false,
                 'multishop_feature_active' => true,
-                'shop_activity' => 'test',
             ],
             $result
         );
@@ -123,7 +119,7 @@ class PreferencesConfigurationTest extends TestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_COOKIE_SAMESITE', null, null, Cookie::SAMESITE_NONE],
+                    ['PS_COOKIE_SAMESITE', null, null, CookieOptions::SAMESITE_NONE],
                 ]
             );
 
@@ -139,7 +135,6 @@ class PreferencesConfigurationTest extends TestCase
             $this->object->updateConfiguration(
                 [
                     'enable_ssl' => false,
-                    'enable_ssl_everywhere' => false,
                     'enable_token' => true,
                     'allow_html_iframes' => true,
                     'use_htmlpurifier' => true,
@@ -149,7 +144,6 @@ class PreferencesConfigurationTest extends TestCase
                     'display_manufacturers' => true,
                     'display_best_sellers' => false,
                     'multishop_feature_active' => true,
-                    'shop_activity' => 'test',
                 ]
             )
         );
@@ -161,7 +155,7 @@ class PreferencesConfigurationTest extends TestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_COOKIE_SAMESITE', null, null, Cookie::SAMESITE_NONE],
+                    ['PS_COOKIE_SAMESITE', null, null, CookieOptions::SAMESITE_NONE],
                 ]
             );
         $this->mockConfiguration
@@ -169,7 +163,6 @@ class PreferencesConfigurationTest extends TestCase
             ->willReturnMap(
                 [
                     ['PS_SSL_ENABLED', true],
-                    ['PS_SSL_ENABLED_EVERYWHERE', true],
                     ['PS_TOKEN_ENABLE', true],
                     ['PS_ALLOW_HTML_IFRAME', true],
                     ['PS_USE_HTMLPURIFIER', true],
@@ -179,7 +172,6 @@ class PreferencesConfigurationTest extends TestCase
                     ['PS_MULTISHOP_FEATURE_ACTIVE', true],
                     ['PS_PRICE_ROUND_MODE', 'test'],
                     ['PS_ROUND_TYPE', 'test'],
-                    ['PS_SHOP_ACTIVITY', 'test'],
                 ]
             );
 
@@ -195,7 +187,6 @@ class PreferencesConfigurationTest extends TestCase
             $this->object->updateConfiguration(
                 [
                     'enable_ssl' => false,
-                    'enable_ssl_everywhere' => false,
                     'enable_token' => true,
                     'allow_html_iframes' => true,
                     'use_htmlpurifier' => true,
@@ -205,7 +196,6 @@ class PreferencesConfigurationTest extends TestCase
                     'display_manufacturers' => true,
                     'display_best_sellers' => false,
                     'multishop_feature_active' => true,
-                    'shop_activity' => 'test',
                 ]
             )
         );

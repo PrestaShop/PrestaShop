@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\AddCurrencyHandlerInterface;
@@ -47,6 +48,7 @@ use PrestaShopException;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class AddOfficialCurrencyHandler extends AbstractCurrencyHandler implements AddCurrencyHandlerInterface
 {
     /**

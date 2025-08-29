@@ -23,8 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-
 class Cart extends CartCore
 {
     public const BOTH = 999;
@@ -219,4 +217,11 @@ class Cart extends CartCore
             }
         }
     }
+
+    /*
+    * module: testtypedpropertyoverride
+    * date: 2018-12-26 14:14:06
+    * version: 1
+    */
+    private string $testTypedProperty;
 }

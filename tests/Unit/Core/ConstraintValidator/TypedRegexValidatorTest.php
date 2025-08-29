@@ -381,6 +381,37 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     }
 
     /**
+     * @dataProvider getInvalidCharactersForDiscountCode
+     *
+     * @param string $invalidChar
+     */
+    public function testItFailsForDiscountCodeWhenInvalidCharactersGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex(['type' => TypedRegex::TYPE_DISCOUNT_CODE]), $invalidChar);
+    }
+
+    /**
+     * @dataProvider getDataForDiscountCodeTest
+     *
+     * @param string $value
+     *
+     * @return void
+     */
+    public function testDiscountCode(string $value, bool $expectSuccess): void
+    {
+        $constraint = new TypedRegex(TypedRegex::TYPE_DISCOUNT_CODE);
+        $this->validator->validate($value, $constraint);
+
+        if ($expectSuccess) {
+            $this->assertNoViolation();
+        } else {
+            $this->buildViolation($constraint->message)
+                ->setParameter('%s', '"' . $value . '"')
+                ->assertRaised();
+        }
+    }
+
+    /**
      * @dataProvider getDataForLinkRewriteTest
      *
      * @param string $value
@@ -403,6 +434,66 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
             $this->buildViolation($constraint->message)
                 ->setParameter('%s', '"' . $value . '"')
                 ->assertRaised();
+        }
+    }
+
+    /**
+     * @dataProvider getDataForTestHTMLType
+     *
+     * @param string $value
+     * @param bool $expectSuccess
+     */
+    public function testHTMLType(string $value, bool $allowIframe, bool $expectSuccess): void
+    {
+        if ($allowIframe) {
+            $type = TypedRegex::CLEAN_HTML_ALLOW_IFRAME;
+        } else {
+            $type = TypedRegex::CLEAN_HTML_NO_IFRAME;
+        }
+
+        $constraint = new TypedRegex($type);
+
+        $this->validator->validate($value, $constraint);
+
+        if ($expectSuccess) {
+            $this->assertNoViolation();
+        } else {
+            $this->buildViolation($constraint->message)
+                ->setParameter('%s', '"' . $value . '"')
+                ->assertRaised();
+        }
+    }
+
+    public function getDataForTestHTMLType(): iterable
+    {
+        yield ['whatever', false, true];
+        yield ['whatever', true, true];
+        yield ['<html></html>', true, true];
+        yield ['<html></html>', false, true];
+        yield ['<div></div>', true, true];
+        yield ['<div></div>', false, true];
+        yield ['<iframe>', true, true];
+        yield ['<iframe>', false, false];
+        yield ['<script>', true, false];
+        yield ['<script>', false, false];
+
+        $events = [
+            'onmousedown', 'onmousemove', 'onmmouseup', 'onmouseover', 'onmouseout', 'onload', 'onunload', 'onfocus',
+            'onblur', 'onchange', 'onsubmit', 'ondblclick', 'onclick', 'onkeydown', 'onkeyup', 'onkeypress', 'onmouseenter',
+            'onmouseleave', 'onerror', 'onselect', 'onreset', 'onabort', 'ondragdrop', 'onresize', 'onactivate', 'onafterprint',
+            'onmoveend', 'onafterupdate', 'onbeforeactivate', 'onbeforecopyonbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus',
+            'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onmove', 'onbounce', 'oncellchange',
+            'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete',
+            'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'onmousewheel', 'ondragleave', 'ondragover', 'ondragstart',
+            'ondrop', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocusin', 'onfocusout', 'onhashchange', 'onhelp',
+            'oninput', 'onlosecapture', 'onmessage', 'onmouseup', 'onmovestart', 'onoffline', 'ononline', 'onpaste', 'onpropertychange',
+            'onreadystatechange', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted',
+            'onscroll', 'onsearch', 'onselectionchange', 'onselectstart', 'onstart',
+        ];
+
+        foreach ($events as $event) {
+            yield ["<div $event=\"whatever\">", true, false];
+            yield ["<div $event=\"whatever\">", false, false];
         }
     }
 
@@ -438,7 +529,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function getInvalidCharactersForCatalogNameType(): array
     {
         return [
-            ['<'], ['>'], [';'], ['='], ['#'], ['{'], ['}'],
+            ['<'], ['>'], ['{'], ['}'],
         ];
     }
 
@@ -448,7 +539,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function getInvalidCharactersForGenericNameType(): array
     {
         return [
-            ['<'], ['>'], ['='], ['{'], ['}'],
+            ['<'], ['>'], ['{'], ['}'],
         ];
     }
 
@@ -809,6 +900,53 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     }
 
     /**
+     * @return Generator
+     */
+    public function getInvalidCharactersForDiscountCode(): Generator
+    {
+        yield ['!'];
+        yield ['@'];
+        yield ['$'];
+        yield ['^'];
+        yield ['&'];
+        yield ['*'];
+        yield ['('];
+        yield [')'];
+        yield ['+'];
+        yield ['='];
+        yield ['{'];
+        yield ['}'];
+        yield ['['];
+        yield ['['];
+        yield ['<'];
+        yield ['>'];
+        yield ['?'];
+        yield ['/'];
+        yield ['\\'];
+        yield ['\''];
+        yield [';'];
+        yield [':'];
+        yield ['.'];
+        yield [','];
+    }
+
+    /**
+     * @return array[]
+     */
+    public function getDataForDiscountCodeTest(): array
+    {
+        return [
+            ['CODE123', true],
+            ['code123', true],
+            ['CODE-123', true],
+            ['CODE_123', true],
+            ['CODE[]123', false],
+            ['CODE{}123', false],
+            ['CODE)(123', false],
+        ];
+    }
+
+    /**
      * @return TypedRegexValidator
      */
     protected function createValidator(): TypedRegexValidator
@@ -816,10 +954,10 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         $configurationMock = $this->createMock(ConfigurationInterface::class);
         $configurationMock->method('get')
             ->willReturnMap(
-            [
-                ['PS_ALLOW_ACCENTED_CHARS_URL', $this->configurationData['PS_ALLOW_ACCENTED_CHARS_URL']],
-            ]
-        );
+                [
+                    ['PS_ALLOW_ACCENTED_CHARS_URL', $this->configurationData['PS_ALLOW_ACCENTED_CHARS_URL']],
+                ]
+            );
 
         return new TypedRegexValidator($configurationMock);
     }

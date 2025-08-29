@@ -158,7 +158,7 @@ class ProductImageUploader extends AbstractImageUploader
 
         try {
             $this->fileSystem->mkdir($imageFolder, PsFileSystem::DEFAULT_MODE_FOLDER);
-        } catch (IOException $e) {
+        } catch (IOException) {
             throw new ImageUploadException(sprintf(
                 'Error occurred when trying to create directory for product #%d image',
                 $productId

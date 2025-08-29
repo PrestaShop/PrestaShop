@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="Admin.Catalog.Attribute.xlf" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f2bbdf9f72c085adc4d0404e370f0f4c">
+        <source>Attribute</source>
+        <target>Attribute</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/AttributeGroup/Blocks/form.html.twig [Line: 33]</note>
+      </trans-unit>
+      <trans-unit id="1cf8701415bd6858914ef6798b40ac59">
+        <source>Attribute value</source>
+        <target>Attribute value</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Attribute/Blocks/form.html.twig [Line: 33]</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

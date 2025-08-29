@@ -39,7 +39,7 @@ function handleCountryChange(selectors) {
   });
 }
 
-$(document).ready(() => {
+$(() => {
   handleCountryChange({
     country: '.js-country',
     address: '.js-address-form',

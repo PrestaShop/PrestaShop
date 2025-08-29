@@ -67,10 +67,14 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
      */
     public function checkShopAssociation(string $productReference, string $shopReferences): void
     {
-        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+        $shopIds = $this->referencesToIds($shopReferences);
+        foreach ($shopIds as $shopId) {
             $caughtException = null;
             try {
-                $this->getProductForEditing($productReference, $shopId);
+                $product = $this->getProductForEditing($productReference, $shopId);
+                foreach ($shopIds as $checkedShopId) {
+                    Assert::assertTrue(in_array($checkedShopId, $product->getShopIds()));
+                }
             } catch (ProductShopAssociationNotFoundException $e) {
                 $caughtException = $e;
             }

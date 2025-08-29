@@ -1,8 +1,35 @@
 import BaseWS from '@webservices/baseWs';
-import {APIRequestContext, APIResponse} from 'playwright';
+import {
+  type APIRequestContext,
+  type APIResponse,
+} from '@prestashop-core/ui-testing';
 
 export default class CountryWS extends BaseWS {
   public static endpoint = 'api/countries';
+
+  /**
+   * Get Blank
+   * @param apiContext {APIRequestContext}
+   * @param authorization {string}
+   */
+  public static async getBlank(
+    apiContext: APIRequestContext,
+    authorization: string,
+  ): Promise<APIResponse> {
+    return super.getBlank(apiContext, this.endpoint, authorization);
+  }
+
+  /**
+   * Get Synopsis
+   * @param apiContext {APIRequestContext}
+   * @param authorization {string}
+   */
+  public static async getSynopsis(
+    apiContext: APIRequestContext,
+    authorization: string,
+  ): Promise<APIResponse> {
+    return super.getSynopsis(apiContext, this.endpoint, authorization);
+  }
 
   /**
    * Get All Countries

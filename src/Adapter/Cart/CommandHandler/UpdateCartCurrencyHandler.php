@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateCartCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
@@ -39,6 +40,7 @@ use PrestaShopException;
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class UpdateCartCurrencyHandler extends AbstractCartHandler implements UpdateCartCurrencyHandlerInterface
 {
     /**
@@ -58,7 +60,7 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
             if (false === $cart->update()) {
                 throw new CartException('Failed to update cart currency.');
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CartException(sprintf('An error occurred while trying to update currency for cart with id "%s"', $cart->id));
         }
     }

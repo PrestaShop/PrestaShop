@@ -321,10 +321,6 @@
       <alias>actionBeforeCartUpdateQty</alias>
       <name>actionCartUpdateQuantityBefore</name>
     </hook_alias>
-    <hook_alias id="actionBeforeAjaxDie">
-      <alias>actionBeforeAjaxDie</alias>
-      <name>actionAjaxDieBefore</name>
-    </hook_alias>
     <hook_alias id="actionBeforeAuthentication">
       <alias>actionBeforeAuthentication</alias>
       <name>actionAuthenticationBefore</name>

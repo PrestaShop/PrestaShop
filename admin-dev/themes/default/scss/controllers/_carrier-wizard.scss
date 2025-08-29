@@ -1,13 +1,14 @@
 #carrier_wizard {
   position: relative;
   display: block;
+  padding: var(--#{$cdk}size-16);
 
   .translatable-field {
-    color: $main-color;
+    color: var(--#{$cdk}primary-800);
 
     li {
       a {
-        color: $main-color;
+        color: var(--#{$cdk}primary-800);
       }
     }
   }
@@ -36,7 +37,7 @@
     float: left;
     width: 100%;
     padding: 0;
-    margin: 0 0 10px;
+    margin: 0 0 var(--#{$cdk}size-10);
     clear: both;
     list-style: none;
 
@@ -63,31 +64,31 @@
     a {
       position: relative;
       display: block;
-      height: 32px;
-      margin: 0 16px 0 0;
-      color: #ccc;
+      height: var(--#{$cdk}size-32);
+      margin: 0 var(--#{$cdk}size-16) 0 0;
+      color: var(--#{$cdk}primary-500);
       text-decoration: none;
       outline-style: none;
 
       .stepNumber {
         position: relative;
         float: left;
-        width: 24px;
-        height: 32px;
-        padding: 0 5px;
-        margin-right: 3px;
-        font-size: 30px;
-        line-height: 32px;
-        color: #fff;
+        width: var(--#{$cdk}size-24);
+        height: var(--#{$cdk}size-32);
+        padding: 0 var(--#{$cdk}size-4);
+        margin-right: var(--#{$cdk}size-2);
+        font-size: var(--#{$cdk}size-30);
+        line-height: var(--#{$cdk}size-32);
+        color: var(--#{$cdk}white);
         text-align: center;
       }
 
       .stepDesc {
         position: relative;
         display: table-cell;
-        height: 32px;
-        font-size: 13px;
-        line-height: 13px;
+        height: var(--#{$cdk}size-32);
+        font-size: var(--#{$cdk}size-14);
+        line-height: var(--#{$cdk}size-14);
         text-align: left;
         vertical-align: middle;
       }
@@ -95,48 +96,48 @@
       .chevron {
         position: absolute;
         top: 0;
-        right: -16px;
-        border: 16px solid transparent;
+        right: calc(-1 * var(--#{$cdk}size-16));
+        border: var(--#{$cdk}size-16) solid transparent;
         border-right: 0;
-        border-left: 14px solid #fff;
+        border-left: var(--#{$cdk}size-14) solid var(--#{$cdk}white);
 
         &::after {
           position: absolute;
-          top: -16px;
-          right: 2px;
+          top: calc(-1 * var(--#{$cdk}size-16));
+          right: var(--#{$cdk}size-2);
           content: "";
-          border: 16px solid transparent;
+          border: var(--#{$cdk}size-16) solid transparent;
           border-right: 0;
-          border-left: 14px solid #ccc;
+          border-left: var(--#{$cdk}size-14) solid var(--#{$cdk}primary-500);
         }
       }
     }
 
     a.disabled {
-      color: #777;
-      background-color: #ccc;
+      color: var(--#{$cdk}primary-600);
+      background-color: var(--#{$cdk}primary-500);
 
       .chevron::after {
-        border-left: 14px solid #ccc;
+        border-left: var(--#{$cdk}size-14) solid var(--#{$cdk}primary-500);
       }
     }
 
     a.selected {
-      color: #f8f8f8;
+      color: var(--#{$cdk}primary-200);
       cursor: text;
-      background-color: $main-color;
+      background-color: var(--#{$cdk}primary-800);
 
       .chevron::after {
-        border-left: 14px solid $main-color;
+        border-left: var(--#{$cdk}size-14) solid var(--#{$cdk}primary-800);
       }
     }
 
     a.done {
-      color: #fff;
+      color: var(--#{$cdk}white);
       background-color: $brand-success;
 
       .chevron::after {
-        border-left: 14px solid $brand-success;
+        border-left: var(--#{$cdk}size-14) solid $brand-success;
       }
     }
   }
@@ -149,12 +150,11 @@
     position: relative;
     display: none;
     float: left;
-    padding: 5px;
-    margin: 4px 0 0 5px;
-    color: #5a5655;
-    background-color: #ffd;
-    border: 1px solid #ffd700;
-    @include border-radius(5px);
+    padding: var(--#{$cdk}size-4);
+    margin: var(--#{$cdk}size-4) 0 0 var(--#{$cdk}size-4);
+    color: var(--#{$cdk}primary-600);
+    background-color: var(--#{$cdk}primary-200);
+    border: 1px solid var(--#{$cdk}amber-500);
 
     .content {
       float: left;
@@ -163,7 +163,7 @@
   }
 
   #carrier_logo_block {
-    right: 10px;
+    right: var(--#{$cdk}size-10);
   }
 
   .wizard_error {
@@ -173,7 +173,7 @@
 
   .range_inf td,
   .range_sup td {
-    background-color: #ccc;
+    background-color: var(--#{$cdk}primary-500);
   }
 
   .range_type {
@@ -187,8 +187,8 @@
   }
 
   .range_sign {
-    width: 18px;
-    font-size: 20px;
+    width: var(--#{$cdk}size-18);
+    font-size: var(--#{$cdk}size-20);
     text-align: center;
   }
 
@@ -209,7 +209,7 @@
     flex-direction: row-reverse;
 
     a {
-      margin-right: 10px;
+      margin-right: var(--#{$cdk}size-10);
     }
   }
 }

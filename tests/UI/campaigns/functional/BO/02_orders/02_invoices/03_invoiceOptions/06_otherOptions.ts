@@ -1,28 +1,24 @@
-// Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import login steps
-import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
-
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders';
-import invoicesPage from '@pages/BO/orders/invoices';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
-
-// Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
-import Products from '@data/demo/products';
-import InvoiceData from '@data/faker/invoice';
-import OrderData from '@data/faker/order';
-
+import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boInvoicesPage,
+  boLoginPage,
+  boOrdersPage,
+  boOrdersViewBlockTabListPage,
+  type BrowserContext,
+  dataCustomers,
+  dataOrderStatuses,
+  dataPaymentMethods,
+  dataProducts,
+  FakerOrder,
+  FakerOrderInvoice,
+  type Page,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_orders_invoices_invoiceOptions_otherOptions';
 
@@ -41,22 +37,22 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
   let fileName: string;
   let filePath: string|null;
 
-  const invoiceData: InvoiceData = new InvoiceData({legalFreeText: 'Legal free text'});
-  const invoiceDefaultData: InvoiceData = new InvoiceData({
+  const invoiceData: FakerOrderInvoice = new FakerOrderInvoice({legalFreeText: 'Legal free text'});
+  const invoiceDefaultData: FakerOrderInvoice = new FakerOrderInvoice({
     prefix: invoiceData.prefix,
     invoiceNumber: '0',
     legalFreeText: '',
     footerText: '',
   });
-  const orderByCustomerData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
+  const orderByCustomerData: FakerOrder = new FakerOrder({
+    customer: dataCustomers.johnDoe,
     products: [
       {
-        product: Products.demo_1,
+        product: dataProducts.demo_1,
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create order in FO
@@ -64,41 +60,47 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
     // Delete the invoice file
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   describe('Update the Invoice number, Legal free text and Footer text', async () => {
     it('should go to \'Orders > Invoices\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToEditOptions', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.invoicesLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.invoicesLink,
       );
-      await invoicesPage.closeSfToolBar(page);
+      await boInvoicesPage.closeSfToolBar(page);
 
-      const pageTitle = await invoicesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      const pageTitle = await boInvoicesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boInvoicesPage.pageTitle);
     });
 
     it('should change the invoice number, the invoice legal free text and the invoice footer text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOptions', baseContext);
 
-      await invoicesPage.setInputOptions(page, invoiceData);
+      await boInvoicesPage.setInputOptions(page, invoiceData);
 
-      const textMessage = await invoicesPage.saveInvoiceOptions(page);
-      await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+      const textMessage = await boInvoicesPage.saveInvoiceOptions(page);
+      expect(textMessage).to.contains(boInvoicesPage.successfulUpdateMessage);
     });
   });
 
@@ -106,42 +108,42 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageUpdatedOptions', baseContext);
 
-      await invoicesPage.goToSubMenu(
+      await boInvoicesPage.goToSubMenu(
         page,
-        invoicesPage.ordersParentLink,
-        invoicesPage.ordersLink,
+        boInvoicesPage.ordersParentLink,
+        boInvoicesPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should go to the first order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageUpdatedOptions', baseContext);
 
-      await ordersPage.goToOrder(page, 1);
+      await boOrdersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
-    it(`should change the order status to '${OrderStatuses.shipped.name}'`, async function () {
+    it(`should change the order status to '${dataOrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStatusUpdatedOptions', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      const result = await boOrdersViewBlockTabListPage.modifyOrderStatus(page, dataOrderStatuses.shipped.name);
+      expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
     it('should download the invoice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceUpdatedOptions', baseContext);
 
       // Download invoice
-      filePath = await orderPageTabListBlock.downloadInvoice(page);
-      await expect(filePath).to.be.not.null;
+      filePath = await boOrdersViewBlockTabListPage.downloadInvoice(page);
+      expect(filePath).to.not.eq(null);
 
       if (filePath) {
-        const exist = await files.doesFileExist(filePath);
-        await expect(exist).to.be.true;
+        const exist = await utilsFile.doesFileExist(filePath);
+        expect(exist).to.eq(true);
       }
     });
 
@@ -149,7 +151,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedInvoiceNumber', baseContext);
 
       // Get file name
-      fileName = await orderPageTabListBlock.getFileName(page);
+      fileName = await boOrdersViewBlockTabListPage.getFileName(page);
       expect(fileName).to.contains(invoiceData.invoiceNumber);
     });
 
@@ -157,16 +159,16 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedLegalFreeText', baseContext);
 
       // Check the existence of the Legal free text
-      const exist = await files.isTextInPDF(filePath, invoiceData.legalFreeText);
-      await expect(exist, `PDF does not contains this text : ${invoiceData.legalFreeText}`).to.be.true;
+      const exist = await utilsFile.isTextInPDF(filePath, invoiceData.legalFreeText);
+      expect(exist, `PDF does not contains this text : ${invoiceData.legalFreeText}`).to.eq(true);
     });
 
     it('should check that the invoice contain the \'Footer text\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedFooterText', baseContext);
 
       // Check the existence of the Footer text
-      const exist = await files.isTextInPDF(filePath, invoiceData.footerText);
-      await expect(exist, `PDF does not contains this text : ${invoiceData.footerText}`).to.be.true;
+      const exist = await utilsFile.isTextInPDF(filePath, invoiceData.footerText);
+      expect(exist, `PDF does not contains this text : ${invoiceData.footerText}`).to.eq(true);
     });
   });
 
@@ -174,23 +176,23 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
     it('should go to \'Orders > Invoices\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageForDefaultData', baseContext);
 
-      await orderPageTabListBlock.goToSubMenu(
+      await boOrdersViewBlockTabListPage.goToSubMenu(
         page,
-        orderPageTabListBlock.ordersParentLink,
-        orderPageTabListBlock.invoicesLink,
+        boOrdersViewBlockTabListPage.ordersParentLink,
+        boOrdersViewBlockTabListPage.invoicesLink,
       );
 
-      const pageTitle = await invoicesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+      const pageTitle = await boInvoicesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boInvoicesPage.pageTitle);
     });
 
     it('should change the Invoice number, legal free text and the footer text to default data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultData', baseContext);
 
-      await invoicesPage.setInputOptions(page, invoiceDefaultData);
+      await boInvoicesPage.setInputOptions(page, invoiceDefaultData);
 
-      const textMessage = await invoicesPage.saveInvoiceOptions(page);
-      await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
+      const textMessage = await boInvoicesPage.saveInvoiceOptions(page);
+      expect(textMessage).to.contains(boInvoicesPage.successfulUpdateMessage);
     });
   });
 });

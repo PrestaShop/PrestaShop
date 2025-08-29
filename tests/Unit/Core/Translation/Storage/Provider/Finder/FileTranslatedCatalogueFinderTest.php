@@ -64,6 +64,7 @@ class FileTranslatedCatalogueFinderTest extends TestCase
         }
         (new XliffFileDumper())->dump($catalogue, [
             'path' => self::$tempDir . DIRECTORY_SEPARATOR . CatalogueLayersProviderInterface::DEFAULT_LOCALE,
+            'split_files' => false,
         ]);
     }
 

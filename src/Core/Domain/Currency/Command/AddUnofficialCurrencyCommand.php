@@ -29,6 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 /**
  * Class AddUnofficialCurrencyCommand used to add an alternative currency
  */
-class AddUnofficialCurrencyCommand extends AddCurrencyCommand
+class AddUnofficialCurrencyCommand extends AbstractAddCurrencyCommand
 {
 }

@@ -23,10 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-/**
- * @since 1.5.0
- */
 class ShopGroupCore extends ObjectModel
 {
     public $name;
@@ -45,7 +41,7 @@ class ShopGroupCore extends ObjectModel
         'primary' => 'id_shop_group',
         'fields' => [
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
-            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 50],
             'share_customer' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'share_order' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'share_stock' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],

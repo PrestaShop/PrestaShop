@@ -66,16 +66,6 @@
 		var hourText = '{l s='Hour' js=1 d='Admin.Global'}';
 		var minuteText = '{l s='Minute' js=1 d='Admin.Catalog.Feature'}';
 
-		var languages = new Array();
-		{foreach from=$languages item=language key=k}
-			languages[{$k}] = {
-				id_lang: {$language.id_lang},
-				iso_code: '{$language.iso_code|escape:'quotes'}',
-				name: '{$language.name|escape:'quotes'}'
-			};
-		{/foreach}
-		displayFlags(languages, {$id_lang_default});
-
     {if isset($refresh_cart) }
       if (typeof window.parent.order_create !== "undefined") {
         window.parent.order_create.refreshCart();

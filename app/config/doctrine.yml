@@ -6,6 +6,7 @@ doctrine:
     connections:
       default:
         driver: pdo_mysql
+        wrapper_class: PrestaShopBundle\Doctrine\DatabaseConnection
         host: "%database_host%"
         port: "%database_port%"
         dbname: "%database_name%"
@@ -27,3 +28,4 @@ doctrine:
     dql:
       string_functions:
         regexp: DoctrineExtensions\Query\Mysql\Regexp
+        binary: DoctrineExtensions\Query\Mysql\Binary

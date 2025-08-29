@@ -174,7 +174,7 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
 
             // overwrite with the theme's own catalogue
             $coreCatalogue->addCatalogue($fileTranslatedCatalogue);
-        } catch (TranslationFilesNotFoundException $e) {
+        } catch (TranslationFilesNotFoundException) {
             // No translation file was found in the theme, we keep using those from the core
         }
 
@@ -254,7 +254,7 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
             );
             try {
                 $moduleCatalogue->addCatalogue($moduleProvider->getFileTranslatedCatalogue($locale));
-            } catch (Exception $e) {
+            } catch (Exception) {
                 // no translations found
             }
         }
@@ -276,6 +276,6 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
             }
         }
 
-        return $modules;
+        return array_unique($modules);
     }
 }

@@ -119,7 +119,7 @@ abstract class AbstractAttachmentHandler
         $attachmentIdValue = $attachmentId->getValue();
         try {
             $attachment = new Attachment($attachmentIdValue);
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentId->getValue()));
         }
 
@@ -143,7 +143,7 @@ abstract class AbstractAttachmentHandler
     {
         try {
             return $attachment->delete();
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new DeleteAttachmentException(sprintf('An error occurred when deleting Attachment object with id "%s".', $attachment->id));
         }
     }

@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
@@ -66,7 +67,9 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
      */
     public function __construct(
         $langId,
-        CountryDataProvider $countryDataProvider
+        CountryDataProvider $countryDataProvider,
+        private string $psImageDir,
+        private string $psImageBaseUrl
     ) {
         $this->langId = $langId;
         $this->countryDataProvider = $countryDataProvider;
@@ -79,14 +82,11 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
      */
     public function getChoices()
     {
-        $countries = $this->getCountries();
-        $choices = [];
-
-        foreach ($countries as $country) {
-            $choices[$country['name']] = $country['id_country'];
-        }
-
-        return $choices;
+        return FormChoiceFormatter::formatFormChoices(
+            $this->getCountries(),
+            'id_country',
+            'name'
+        );
     }
 
     /**
@@ -105,6 +105,12 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, Fo
             }
             if (in_array($country['id_country'], $postcodeCountriesId)) {
                 $choicesAttributes[$country['name']]['need_postcode'] = 1;
+            }
+
+            $flagPath = 'flags/' . strtolower($country['iso_code']) . '.jpg';
+
+            if (file_exists($this->psImageDir . $flagPath)) {
+                $choicesAttributes[$country['name']]['data-logo'] = $this->psImageBaseUrl . $flagPath;
             }
         }
 

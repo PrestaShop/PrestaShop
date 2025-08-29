@@ -36,6 +36,7 @@ import DateRange from '@js/components/form/date-range';
 import DeltaQuantityInput from '@components/form/delta-quantity-input';
 import DisablingSwitch from '@components/form/disabling-switch';
 import GeneratableInput from '@js/components/generatable-input';
+import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
 import Grid from '@components/grid/grid';
 import ModifyAllShopsCheckbox from '@components/modify-all-shops-checkbox';
 import MultipleChoiceTable from '@js/components/multiple-choice-table';
@@ -49,6 +50,8 @@ import TinyMCEEditor from '@js/components/tinymce-editor';
 import TranslatableField from '@js/components/translatable-field';
 import TranslatableInput from '@js/components/translatable-input';
 import EntitySearchInput from '@js/components/entity-search-input';
+import MultipleZoneChoice from '@js/components/form/multiple-zone-choice';
+import ToggleChildrenChoice from '@js/components/form/toggle-children-choice';
 
 // Grid extensions
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
@@ -71,6 +74,7 @@ import AjaxBulkActionExtension from '@components/grid/extension/ajax-bulk-action
 import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import FormFieldToggler from '@components/form/form-field-toggler';
+import EmailInput from '@components/email-input';
 
 const GridExtensions = {
   AjaxBulkActionExtension,
@@ -153,6 +157,7 @@ const initPrestashopComponents = (): void => {
     MultistoreConfigField,
     PreviewOpener,
     Router,
+    TextWithRecommendedLengthCounter,
     ShopSelector,
     TaggableField,
     TextWithLengthCounter,
@@ -160,6 +165,9 @@ const initPrestashopComponents = (): void => {
     TranslatableField,
     TranslatableInput,
     EntitySearchInput,
+    EmailInput,
+    MultipleZoneChoice,
+    ToggleChildrenChoice,
   };
 };
 export default initPrestashopComponents;

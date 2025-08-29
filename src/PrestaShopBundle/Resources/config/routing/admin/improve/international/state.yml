@@ -5,6 +5,14 @@ admin_country_states:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\StateController::getStatesAction
     _legacy_controller: AdminStates
 
+admin_country_states_options:
+  path: /country-states-options
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Improve\International\StateController::getLegacyStatesOptionsAction
+    _legacy_controller: AdminStates
+    _legacy_link: AdminStates:states
+
 admin_states_index:
   path: /
   methods: [ GET ]
@@ -12,18 +20,16 @@ admin_states_index:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\StateController::indexAction
     _legacy_controller: AdminStates
     _legacy_link: AdminStates
-    _legacy_feature_flag: state
 
 admin_states_filter:
   path: /
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     _legacy_controller: AdminStates
+    _legacy_link: AdminStates:submitFilterstate
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.state
     redirectRoute: admin_states_index
-    _legacy_link: AdminStates:submitFilterstate
-    _legacy_feature_flag: state
 
 admin_states_create:
   path: /new
@@ -32,7 +38,6 @@ admin_states_create:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\StateController::createAction
     _legacy_controller: AdminStates
     _legacy_link: AdminStates:addstate
-    _legacy_feature_flag: state
 
 admin_states_edit:
   path: /{stateId}/edit
@@ -41,7 +46,6 @@ admin_states_edit:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\StateController::editAction
     _legacy_controller: AdminStates
     _legacy_link: AdminStates:updatestate
-    _legacy_feature_flag: state
     _legacy_parameters:
       id_state: stateId
   requirements:
@@ -54,7 +58,6 @@ admin_states_delete_bulk:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\StateController::deleteBulkAction
     _legacy_controller: AdminStates
     _legacy_link: AdminStates:submitBulkdeletestate
-    _legacy_feature_flag: state
 
 admin_states_delete:
   path: /{stateId}/delete
@@ -63,7 +66,6 @@ admin_states_delete:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\StateController::deleteAction
     _legacy_controller: AdminStates
     _legacy_link: AdminStates:deletestate
-    _legacy_feature_flag: state
     _legacy_parameters:
       id_state: stateId
   requirements:
@@ -76,7 +78,6 @@ admin_states_bulk_enable_status:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\StateController::bulkEnableAction
     _legacy_controller: AdminStates
     _legacy_link: AdminStates:submitBulkenableSelectionstate
-    _legacy_feature_flag: state
 
 admin_states_bulk_disable_status:
   path: /bulk-status-disable
@@ -85,7 +86,6 @@ admin_states_bulk_disable_status:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\StateController::bulkDisableAction
     _legacy_controller: AdminStates
     _legacy_link: AdminStates:submitBulkdisableSelectionstate
-    _legacy_feature_flag: state
 
 admin_states_toggle_status:
   path: /{stateId}/toggle-status
@@ -94,6 +94,5 @@ admin_states_toggle_status:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\StateController::toggleStatusAction
     _legacy_controller: AdminStates
     _legacy_link: AdminStates:statusstate
-    _legacy_feature_flag: state
     _legacy_parameters:
       id_state: stateId

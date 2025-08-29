@@ -38,14 +38,14 @@ final class ImportRuntimeConfigFactory implements ImportRuntimeConfigFactoryInte
      */
     public function buildFromRequest(Request $request)
     {
-        $sharedData = $request->request->get('crossStepsVars', []);
+        $sharedData = $request->request->get('crossStepsVars', '');
 
         return new ImportRuntimeConfig(
             $request->request->getBoolean('validateOnly'),
             $request->request->getInt('offset'),
             $request->request->getInt('limit'),
             json_decode($sharedData, true),
-            $request->request->get('type_value', [])
+            $request->request->all('type_value')
         );
     }
 }

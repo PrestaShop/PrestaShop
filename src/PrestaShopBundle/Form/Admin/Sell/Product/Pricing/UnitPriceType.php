@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
-use Currency;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormHelper;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -45,22 +45,22 @@ class UnitPriceType extends TranslatorAwareType
     private const ENABLED_GROUP = 'enabled_group';
 
     /**
-     * @var Currency
+     * @var string
      */
-    private $defaultCurrency;
+    private $defaultCurrencyIsoCode;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param Currency $defaultCurrency
+     * @param string $defaultCurrencyIsoCode
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        Currency $defaultCurrency
+        string $defaultCurrencyIsoCode
     ) {
         parent::__construct($translator, $locales);
-        $this->defaultCurrency = $defaultCurrency;
+        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
     }
 
     /**
@@ -72,8 +72,8 @@ class UnitPriceType extends TranslatorAwareType
             ->add('price_tax_excluded', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Retail price per unit (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
+                'attr' => ['data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION],
+                'currency' => $this->defaultCurrencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
@@ -85,8 +85,8 @@ class UnitPriceType extends TranslatorAwareType
             ->add('price_tax_included', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Retail price per unit (tax incl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
+                'attr' => ['data-display-price-precision' => FormHelper::DEFAULT_PRICE_PRECISION],
+                'currency' => $this->defaultCurrencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),

@@ -177,7 +177,7 @@ class ProductShopUpdater
         // Then try to get the target stock, if it doesn't exist create it
         try {
             $targetStock = $this->stockAvailableRepository->getForProduct($productId, $targetShopId);
-        } catch (StockAvailableNotFoundException $e) {
+        } catch (StockAvailableNotFoundException) {
             $targetStock = $this->stockAvailableRepository->createStockAvailable($productId, $targetShopId);
         }
 
@@ -212,7 +212,7 @@ class ProductShopUpdater
             // Then try to get the target stock, if it doesn't exist create it
             try {
                 $targetStock = $this->stockAvailableRepository->getForCombination($combinationId, $targetShopId);
-            } catch (StockAvailableNotFoundException $e) {
+            } catch (StockAvailableNotFoundException) {
                 $targetStock = $this->stockAvailableRepository->createStockAvailable($productId, $targetShopId, $combinationId);
             }
 

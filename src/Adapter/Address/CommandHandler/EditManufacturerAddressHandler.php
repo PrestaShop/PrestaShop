@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 use Address;
 use Country;
 use PrestaShop\PrestaShop\Adapter\Address\AbstractAddressHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditManufacturerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
@@ -37,6 +38,7 @@ use PrestaShopException;
 /**
  * Handles command which edits manufacturer address
  */
+#[AsCommandHandler]
 final class EditManufacturerAddressHandler extends AbstractAddressHandler implements EditManufacturerAddressHandlerInterface
 {
     /**
@@ -53,7 +55,7 @@ final class EditManufacturerAddressHandler extends AbstractAddressHandler implem
             if (!$address->update()) {
                 throw new AddressException(sprintf('Cannot update address with id "%s"', $address->id));
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new AddressException(sprintf('Cannot update address with id "%s"', $address->id));
         }
     }

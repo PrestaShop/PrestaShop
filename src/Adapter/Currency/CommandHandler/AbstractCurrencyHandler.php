@@ -30,7 +30,9 @@ use Configuration;
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
@@ -112,9 +114,9 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
     /**
      * @param Currency $entity
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws LocalizationException
      */
     protected function refreshLocalizedData(Currency $entity)
     {
@@ -125,7 +127,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
             ];
         }
 
-        //This method will insert the missing localized names/symbols and detect if the currency has been modified
+        // This method will insert the missing localized names/symbols and detect if the currency has been modified
         $entity->refreshLocalizedCurrencyData($languagesData, $this->localeRepoCLDR);
     }
 
@@ -151,7 +153,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
 
     /**
      * @param Currency $entity
-     * @param AddCurrencyCommand $command
+     * @param AddCurrencyCommand|AddUnofficialCurrencyCommand $command
      *
      * @throws CannotCreateCurrencyException
      * @throws LanguageNotFoundException
@@ -159,7 +161,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    protected function addEntity(Currency $entity, AddCurrencyCommand $command)
+    protected function addEntity(Currency $entity, AddCurrencyCommand|AddUnofficialCurrencyCommand $command)
     {
         $entity->iso_code = $command->getIsoCode()->getValue();
         $entity->active = $command->isEnabled();
@@ -174,7 +176,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         $this->refreshLocalizedData($entity);
         $this->validateCurrency($entity);
 
-        //IMPORTANT: specify that we want to save null values
+        // IMPORTANT: specify that we want to save null values
         if (false === $entity->save(true, true)) {
             throw new CannotCreateCurrencyException('Failed to create new currency');
         }
@@ -185,7 +187,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
 
     /**
      * @param Currency $entity
-     * @param EditCurrencyCommand $command
+     * @param EditCurrencyCommand|EditUnofficialCurrencyCommand $command
      *
      * @throws CannotUpdateCurrencyException
      * @throws LanguageNotFoundException
@@ -193,7 +195,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    protected function updateEntity(Currency $entity, EditCurrencyCommand $command)
+    protected function updateEntity(Currency $entity, EditCurrencyCommand|EditUnofficialCurrencyCommand $command)
     {
         if (null !== $command->getExchangeRate()) {
             $entity->conversion_rate = $command->getExchangeRate()->getValue();
@@ -216,7 +218,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         $this->refreshLocalizedData($entity);
         $this->validateCurrency($entity);
 
-        //IMPORTANT: specify that we want to save null values
+        // IMPORTANT: specify that we want to save null values
         if (false === $entity->update(true)) {
             throw new CannotUpdateCurrencyException(
                 sprintf(

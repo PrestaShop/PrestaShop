@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Context;
 use SpecificPriceRule;
 
 class SpecificPriceRuleFeatureContext extends AbstractPrestaShopFeatureContext
@@ -67,7 +68,7 @@ class SpecificPriceRuleFeatureContext extends AbstractPrestaShopFeatureContext
     protected function createSpecificPriceRule($priceRuleName, $type, $value, $minimalQuantity)
     {
         $rule = new SpecificPriceRule();
-        $rule->id_shop = \Context::getContext()->shop->id;
+        $rule->id_shop = Context::getContext()->shop->id;
         $rule->id_currency = 0; // 0 = all
         $rule->id_country = 0; // 0 = all
         $rule->id_group = 0; // 0 = all

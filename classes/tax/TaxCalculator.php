@@ -25,8 +25,6 @@
  */
 
 /**
- * @since 1.5.0
- *
  * TaxCaculator is responsible of the tax computation
  */
 class TaxCalculatorCore
@@ -54,7 +52,7 @@ class TaxCalculatorCore
     public $taxes;
 
     /**
-     * @var int (COMBINE_METHOD | ONE_AFTER_ANOTHER_METHOD)
+     * @var int (COMBINE_METHOD|ONE_AFTER_ANOTHER_METHOD)
      */
     public $computation_method;
 

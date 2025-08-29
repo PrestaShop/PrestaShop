@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,9 +21,9 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
-{% trans_default_domain "Admin.Shipping.Feature" %}
+{% trans_default_domain 'Admin.Shipping.Feature' %}
 {% form_theme handlingForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block shipping_preferences_handling %}
@@ -32,12 +32,12 @@
       <i class="material-icons">filter_none</i>
       {{ 'Handling'|trans }}
 
-      <span class="help-box" 
-            data-container="body" 
-            data-toggle="popover" 
-            data-trigger="hover" 
-            data-placement="right" 
-            data-content="{{ 'If you set these parameters to 0, they will be disabled.'|trans({}, 'Admin.Shipping.Help') }} {{ 'Coupons are not taken into account when calculating free shipping.'|trans({}, 'Admin.Shipping.Help') }}" 
+      <span class="help-box"
+            data-container="body"
+            data-toggle="popover"
+            data-trigger="hover"
+            data-placement="right"
+            data-content="{{ 'If you set these parameters to 0, they will be disabled.'|trans({}, 'Admin.Shipping.Help') }} {{ 'Coupons are not taken into account when calculating free shipping.'|trans({}, 'Admin.Shipping.Help') }}"
             title="">
       </span>
     </h3>

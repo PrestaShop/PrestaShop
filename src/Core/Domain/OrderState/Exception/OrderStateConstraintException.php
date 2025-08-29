@@ -40,4 +40,8 @@ class OrderStateConstraintException extends OrderStateException
      * @var int Code is used when empty name is provided for order state
      */
     public const EMPTY_NAME = 2;
+    /**
+     * @var int
+     */
+    public const INVALID_FILE_SIZE = 3;
 }

@@ -208,8 +208,8 @@ function appendConditionToGroup(html)
 	$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
 }
 
-$(document).ready(function() {
-	$('#leave_bprice_on').click(function() {
+$(function() {
+	$('#leave_bprice_on').on('click', function() {
 		if (this.checked)
 			$('#price').attr('disabled', 'disabled');
 		else
@@ -222,17 +222,17 @@ $(document).ready(function() {
 		$('#conditions').append(html);
 	});
 
-	$('#id_feature').change(function() {
+	$('#id_feature').on('change', function() {
 		$('.id_feature_value').hide();
 		$('#id_feature_'+$(this).val()).show();
 	});
 
-	$('#id_attribute_group').change(function() {
+	$('#id_attribute_group').on('change', function() {
 		$('.id_attribute').hide();
 		$('#id_attribute_'+$(this).val()).show();
 	});
 
-	$('#add_condition_category').click(function() {
+	$('#add_condition_category').on('click', function() {
 		var id_condition = add_condition(current_id_condition_group, 'category', $('#id_category option:selected').val());
 		if (!id_condition)
 			return false;
@@ -243,7 +243,7 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$('#add_condition_manufacturer').click(function() {
+	$('#add_condition_manufacturer').on('click', function() {
 		var id_condition = add_condition(current_id_condition_group, 'manufacturer', $('#id_manufacturer option:selected').val());
 		if (!id_condition)
 			return false;
@@ -254,7 +254,7 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$('#add_condition_supplier').click(function() {
+	$('#add_condition_supplier').on('click', function() {
 		var id_condition = add_condition(current_id_condition_group, 'supplier', $('#id_supplier option:selected').val());
 		if (!id_condition)
 			return false;
@@ -265,7 +265,7 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$('#add_condition_attribute').click(function() {
+	$('#add_condition_attribute').on('click', function() {
 		var id_condition = add_condition(current_id_condition_group, 'attribute', $('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').val());
 		if (!id_condition)
 			return false;
@@ -276,7 +276,7 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$('#add_condition_feature').click(function() {
+	$('#add_condition_feature').on('click', function() {
 		var id_condition = add_condition(current_id_condition_group, 'feature', $('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').val());
 		if (!id_condition)
 			return false;
@@ -287,7 +287,7 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$('#add_condition_group').click(function() {
+	$('#add_condition_group').on('click', function() {
 		new_condition_group();
 		return false;
 	});

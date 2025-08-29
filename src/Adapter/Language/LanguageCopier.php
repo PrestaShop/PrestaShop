@@ -89,7 +89,7 @@ final class LanguageCopier implements LanguageCopierInterface
         foreach ($languageFiles as $source => $destination) {
             try {
                 $this->filesystem->mkdir(dirname($destination));
-            } catch (IOExceptionInterface $exception) {
+            } catch (IOExceptionInterface) {
                 $errors[] = [
                     'key' => 'Cannot create the folder "%folder%". Please check your directory writing permissions.',
                     'domain' => 'Admin.International.Notification',
@@ -103,7 +103,7 @@ final class LanguageCopier implements LanguageCopierInterface
 
             try {
                 $this->filesystem->copy($source, $destination);
-            } catch (IOExceptionInterface $exception) {
+            } catch (IOExceptionInterface) {
                 $errors[] = [
                     'key' => 'Impossible to copy "%source%" to "%dest%".',
                     'domain' => 'Admin.International.Notification',
@@ -175,8 +175,8 @@ final class LanguageCopier implements LanguageCopierInterface
                 'parameters' => [],
             ];
         } elseif (
-            $themeFrom === $themeTo &&
-            $languageFrom === $languageTo
+            $themeFrom === $themeTo
+            && $languageFrom === $languageTo
         ) {
             $errors[] = [
                 'key' => 'There is nothing to copy (same language and theme).',
@@ -224,7 +224,7 @@ final class LanguageCopier implements LanguageCopierInterface
     private function isModuleContext($source, $destination, $language)
     {
         // Legacy condition
-        return false !== strpos($destination, 'modules') && basename($source) === $language . '.php';
+        return str_contains($destination, 'modules') && basename($source) === $language . '.php';
     }
 
     /**

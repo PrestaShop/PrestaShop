@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\RemoveAllAssociatedProductSuppliersHandlerInterface;
 
 /**
  * Handles @see RemoveAllAssociatedProductSuppliersCommand using legacy object model
  */
+#[AsCommandHandler]
 final class RemoveAllAssociatedProductSuppliersHandler implements RemoveAllAssociatedProductSuppliersHandlerInterface
 {
     /**

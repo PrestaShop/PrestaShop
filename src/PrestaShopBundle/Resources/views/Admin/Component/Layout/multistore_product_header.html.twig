@@ -1,0 +1,66 @@
+{# **
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * #}
+{% extends '@PrestaShop/Admin/Component/Layout/multistore_header.html.twig' %}
+
+{% block multishop_header_right %}
+  <a class="header-multishop-view-action product-shops-action" href="{{ url('admin_products_select_shops', {productId: this.productId}) }}" target="_blank" rel="nofollow">
+    {{ 'Select stores'|trans({}, 'Admin.Navigation.Header') }}
+    {{ include('@PrestaShop/Admin/Component/MultiShop/shop_icon.html.twig', {isTitleDark: this.isTitleDark}, false) }}
+  </a>
+  {{ parent() }}
+{% endblock %}
+
+{# We don't display search input in product header #}
+{% block search_shops %}
+{% endblock %}
+
+{# We don't display all shops in product header #}
+{% block all_shops_item %}
+{% endblock %}
+
+{# We don't display shop groups links in product header #}
+{% block shop_group_item %}
+  <span class="multishop-modal-color-container">
+    <span class="multishop-modal-color"{% if group.color is not empty %} style="background-color: {{ group.color }};"{% endif %}>
+    </span>
+  </span>
+  {{ 'Group'|trans({}, 'Admin.Global') ~ ' ' ~ group.name }}
+{% endblock %}
+
+{# We don't display shop links in product header #}
+{% block shop_item %}
+  <div class="multishop-modal-item-left">
+    <span class="multishop-modal-color-container">
+      <span class="multishop-modal-color"{% if shop.color is not empty %} style="background-color: {{ shop.color }};"{% endif %}>
+      </span>
+    </span>
+    <a class="multishop-modal-shop-name{% if shop.hasMainUrl() == false %} multishop-modal-no-url">{{ shop.name }}</a>{% else %}" href="{{ multistore_shop_url(shop) }}">{{ shop.name }}</a>{% endif %}
+  </div>
+  {% if shop.hasMainUrl() %}
+    <a class="multishop-modal-shop-view" href="{{ this.link.getBaseLink(shop.id) }}" target="_blank" rel="noreferrer">{{ 'View my store'|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">visibility</i></a>
+  {% else %}
+    <a class="multishop-modal-shop-view" href="{{ getAdminLink('AdminShopUrl', true, {shop_id: shop.id, addshop_url: 1}) }}" rel="noreferrer">{{ 'Configure URL'|trans({}, 'Admin.Actions') }} <i class="material-icons">visibility</i></a>
+  {% endif %}
+{% endblock %}

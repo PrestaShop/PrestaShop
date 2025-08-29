@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,23 +21,23 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 <div class="ps-dropdown dropdown btn-group bordered mb-1">
   {% for menu in topMenuData %}
     {% set refMenu = menu.refMenu %}
-    <div id="{{refMenu}}" class="dropdown-label" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-flip="false">
+    <div id="{{ refMenu }}" class="dropdown-label" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-flip="false">
       <span class="js-selected-item selected-item module-category-selector-label">
         {{ 'All categories'|trans({}, 'Admin.Modules.Feature') }}
       </span>
       <i class="material-icons arrow-down float-right">keyboard_arrow_down</i>
     </div>
 
-    <div class="ps-dropdown-menu dropdown-menu module-category-selector items-list js-items-list" aria-labelledby="{{refMenu}}">
+    <div class="ps-dropdown-menu dropdown-menu module-category-selector items-list js-items-list" aria-labelledby="{{ refMenu }}">
       <a class="dropdown-item module-category-reset">
         {{ 'All categories'|trans({}, 'Admin.Modules.Feature') }}
       </a>
 
-      <a 
+      <a
         class="dropdown-item module-category-menu module-category-recently-used"
         data-category-ref="recently-used"
         data-category-display-name="{{ 'Recently used'|trans({}, 'Admin.Modules.Feature') }}"
@@ -47,13 +47,13 @@
 
       {% for subMenu in menu.subMenu %}
         {% if subMenu.modules is not empty %}
-          <a 
+          <a
             class="dropdown-item module-category-menu"
-            {% if subMenu.tab %}data-category-tab="{{subMenu.tab}}"{% endif %}
-            data-category-ref="{{subMenu.refMenu}}"
-            data-category-display-name="{{subMenu.name|trans({}, 'Admin.Modules.Feature')}}"
+            {% if subMenu.tab %}data-category-tab="{{ subMenu.tab }}"{% endif %}
+            data-category-ref="{{ subMenu.refMenu }}"
+            data-category-display-name="{{ subMenu.name|trans({}, 'Admin.Modules.Feature') }}"
           >
-            {{subMenu.name|trans({}, 'Admin.Modules.Feature')}}<span class="float-right">{{subMenu.modules|length }}</span>
+            {{ subMenu.name|trans({}, 'Admin.Modules.Feature') }}<span class="float-right">{{ subMenu.modules|length }}</span>
           </a>
         {% endif %}
       {% endfor %}

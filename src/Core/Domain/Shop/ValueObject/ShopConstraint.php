@@ -33,14 +33,15 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 class ShopConstraint
 {
     /**
-     * @var ShopId|null
+     * These are the legacy values used to define the shop context, kept here for backward compatibility
      */
-    protected $shopId;
+    public const SHOP = 1;
+    public const SHOP_GROUP = 2;
+    public const ALL_SHOPS = 4;
 
-    /**
-     * @var ShopGroupId|null
-     */
-    protected $shopGroupId;
+    protected ?ShopId $shopId = null;
+
+    protected ?ShopGroupId $shopGroupId = null;
 
     /**
      * Indicate if the value returned matches the constraints strictly, else it fallbacks to Shop > Group > Global value
@@ -50,7 +51,7 @@ class ShopConstraint
     protected $strict;
 
     /**
-     * Constraint to get configuration for a specific shop
+     * Constraint to target a specific shop
      *
      * @param int $shopId
      * @param bool $isStrict
@@ -65,7 +66,7 @@ class ShopConstraint
     }
 
     /**
-     * Constraint to get configuration for a specific shop group
+     * Constraint to target a specific shop group
      *
      * @param int $shopGroupId
      * @param bool $isStrict
@@ -80,7 +81,7 @@ class ShopConstraint
     }
 
     /**
-     * Constraint to get configuration for all shops (the global value)
+     * Constraint to target all shops
      *
      * @param bool $isStrict
      *
@@ -103,6 +104,20 @@ class ShopConstraint
         $this->shopId = null !== $shopId ? new ShopId($shopId) : null;
         $this->shopGroupId = null !== $shopGroupId ? new ShopGroupId($shopGroupId) : null;
         $this->strict = $strict;
+    }
+
+    /**
+     * Clone the constraint, you can specify a force $strict value, if not set the same value is kept.
+     *
+     * @param bool|null $strict
+     *
+     * @return static
+     *
+     * @throws ShopException
+     */
+    public function clone(?bool $strict = null): self
+    {
+        return new static($this->shopId?->getValue(), $this->shopGroupId?->getValue(), $strict !== null ? $strict : $this->strict);
     }
 
     /**
@@ -135,5 +150,41 @@ class ShopConstraint
     public function isStrict(): bool
     {
         return $this->strict;
+    }
+
+    public function isEqual(self $constraint): bool
+    {
+        if ($this->isStrict() !== $constraint->isStrict()) {
+            return false;
+        }
+
+        if ($this->getShopId() !== null && $constraint->getShopId() !== null && $this->getShopId()->getValue() === $constraint->getShopId()->getValue()) {
+            return true;
+        }
+
+        if ($this->getShopGroupId() !== null && $constraint->getShopGroupId() !== null && $this->getShopGroupId()->getValue() === $constraint->getShopGroupId()->getValue()) {
+            return true;
+        }
+
+        if ($this->forAllShops() && $constraint->forAllShops()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isSingleShopContext(): bool
+    {
+        return null !== $this->shopId;
+    }
+
+    public function isShopGroupContext(): bool
+    {
+        return null !== $this->shopGroupId;
+    }
+
+    public function isAllShopContext(): bool
+    {
+        return $this->forAllShops();
     }
 }

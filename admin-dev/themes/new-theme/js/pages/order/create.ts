@@ -61,7 +61,7 @@ function refreshCart(): void {
   orderPageManager.refreshCart();
 }
 
-$(document).ready(() => {
+$(() => {
   orderPageManager = new CreateOrderPage();
 });
 

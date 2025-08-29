@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductPriceInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateProductPriceInCartHandlerInterface;
 use SpecificPrice;
@@ -36,6 +37,7 @@ use SpecificPrice;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class UpdateProductPriceInCartHandler extends AbstractCartHandler implements UpdateProductPriceInCartHandlerInterface
 {
     /**

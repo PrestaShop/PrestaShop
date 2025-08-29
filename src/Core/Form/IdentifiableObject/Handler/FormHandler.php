@@ -140,14 +140,14 @@ final class FormHandler implements FormHandlerInterface
             'id' => $id,
         ]);
 
-        $this->dataHandler->update($id, $data);
+        $newId = $this->dataHandler->update($id, $data);
 
         $this->hookDispatcher->dispatchWithParameters('actionAfterUpdate' . Container::camelize($form->getName()) . 'FormHandler', [
             'id' => $id,
             'form_data' => &$data,
         ]);
 
-        return FormHandlerResult::createWithId($id);
+        return FormHandlerResult::createWithId($newId ?? $id);
     }
 
     /**

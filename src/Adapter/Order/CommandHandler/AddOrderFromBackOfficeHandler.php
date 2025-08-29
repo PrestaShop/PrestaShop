@@ -39,16 +39,20 @@ use Message;
 use Module;
 use PaymentModule;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderFromBackOfficeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Validate;
 
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler implements AddOrderFromBackOfficeHandlerInterface
 {
     /**
@@ -81,17 +85,21 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
 
         $this->assertAddressesAreNotDisabled($cart);
 
-        //Context country, language and currency is used in PaymentModule::validateOrder (it should rely on cart address country instead)
+        // Context country, language and currency is used in PaymentModule::validateOrder (it should rely on cart address country instead)
         $this->setCartContext($this->contextStateManager, $cart);
 
-        $translator = Context::getContext()->getTranslator();
-        $employee = new Employee($command->getEmployeeId()->getValue());
-        $message = sprintf(
-            '%s %s. %s',
-            $translator->trans('Manual order -- Employee:', [], 'Admin.Orderscustomers.Feature'),
-            $employee->firstname[0],
-            $employee->lastname
-        );
+        if ($command->getEmployeeId()->getValue()) {
+            $translator = Context::getContext()->getTranslator();
+            $employee = new Employee($command->getEmployeeId()->getValue());
+            $message = sprintf(
+                '%s %s. %s',
+                $translator->trans('Manual order -- Employee:', [], 'Admin.Orderscustomers.Feature'),
+                $employee->firstname[0],
+                $employee->lastname
+            );
+        } else {
+            $message = '';
+        }
 
         try {
             $orderMessage = $command->getOrderMessage();
@@ -129,8 +137,8 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
      * @param Cart $cart
      * @param string $orderMessage
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      * @throws OrderConstraintException
      */
     private function addOrderMessage(Cart $cart, string $orderMessage): void

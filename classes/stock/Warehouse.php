@@ -27,7 +27,7 @@
 /**
  * Holds Stock.
  *
- * @since 1.5.0
+ * @deprecated since 9.0 and will be removed in 10.0
  */
 class WarehouseCore extends ObjectModel
 {
@@ -307,8 +307,6 @@ class WarehouseCore extends ObjectModel
     public static function getProductWarehouseList($id_product, $id_product_attribute = 0, $id_shop = null)
     {
         // if it's a pack, returns warehouses if and only if some products use the advanced stock management
-        $share_stock = false;
-        $shop_group_id = false;
         if ($id_shop === null) {
             if (Shop::getContext() == Shop::CONTEXT_GROUP) {
                 $shop_group = Shop::getContextShopGroup();
@@ -326,7 +324,7 @@ class WarehouseCore extends ObjectModel
         }
 
         if ($share_stock && $shop_group_id) {
-            $ids_shop = Shop::getShops(true, (int) $shop_group_id, true);
+            $ids_shop = Shop::getShops(true, $shop_group_id, true);
         } else {
             $ids_shop = [(int) $id_shop];
         }
@@ -526,8 +524,6 @@ class WarehouseCore extends ObjectModel
 
         // warehouses of the pack
         $pack_warehouses = WarehouseProductLocation::getCollection((int) $id_product);
-        // products in the pack
-        $products = Pack::getItems((int) $id_product, Configuration::get('PS_LANG_DEFAULT'));
 
         // array with all warehouses id to check
         $list = [];
@@ -538,34 +534,26 @@ class WarehouseCore extends ObjectModel
             $list['pack_warehouses'][] = (int) $pack_warehouse->id_warehouse;
         }
 
-        // for each products in the pack
-        foreach ($products as $product) {
-            if ($product->advanced_stock_management) {
-                // gets the warehouses of one product
-                $product_warehouses = Warehouse::getProductWarehouseList((int) $product->id, (int) $product->cache_default_attribute, (int) $id_shop);
-                $list[(int) $product->id] = [];
-                // fills array with warehouses for this product
-                foreach ($product_warehouses as $product_warehouse) {
-                    $list[(int) $product->id][] = $product_warehouse['id_warehouse'];
-                }
-            }
-        }
-
         $res = false;
         // returns final list
-        if (count($list) > 1) {
+        if (!empty($list)) {
             $res = call_user_func_array('array_intersect', $list);
         }
 
         return $res;
     }
 
+    /**
+     * @deprecated Since 9.0 and will be removed in 10.0
+     */
     public function resetStockAvailable()
     {
-        $products = WarehouseProductLocation::getProducts((int) $this->id);
-        foreach ($products as $product) {
-            StockAvailable::synchronize((int) $product['id_product']);
-        }
+        @trigger_error(sprintf(
+            '%s is deprecated since 9.0 and will be removed in 10.0.',
+            __METHOD__
+        ), E_USER_DEPRECATED);
+
+        return true;
     }
 
     /*********************************\

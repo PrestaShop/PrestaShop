@@ -63,6 +63,7 @@ admin_orders_export:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::exportAction
     _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders:exportorder
 
 admin_orders_view:
   path: /{orderId}/view
@@ -198,6 +199,26 @@ admin_orders_generate_invoice:
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
+
+admin_orders_shipment_get_merge_form:
+  path: /{orderId}/shipment/merge-form
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getMergeShipmentForm
+  requirements:
+    orderId: \d+
+    shipmentId: \d+
+  options:
+    expose: true
+
+admin_orders_merge_shipment:
+  path: /{orderId}/shipment/merge
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::mergeShipmentAction
+  requirements:
+    orderId: \d+
+    shipmentId: \d+
 
 admin_orders_change_customer_address:
   path: /change-customer-address

@@ -41,11 +41,16 @@ use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Query\GetZoneForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Zone\QueryResult\EditableZone;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ZoneGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ZoneFilters;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,21 +58,23 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * ZoneController is responsible for handling "Improve > International > Locations > Zones"
  */
-class ZoneController extends FrameworkBundleAdminController
+class ZoneController extends PrestaShopAdminController
 {
     /**
      * Show all zones.
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param ZoneFilters $zoneFilters
      *
      * @return Response
      */
-    public function indexAction(Request $request, ZoneFilters $zoneFilters): Response
-    {
-        $zoneGridFactory = $this->get('prestashop.core.grid.factory.zone');
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function indexAction(
+        Request $request,
+        ZoneFilters $zoneFilters,
+        #[Autowire(service: 'prestashop.core.grid.factory.zone')]
+        GridFactoryInterface $zoneGridFactory
+    ): Response {
         $zoneGrid = $zoneGridFactory->getGrid($zoneFilters);
 
         return $this->render('@PrestaShop/Admin/Improve/International/Zone/index.html.twig', [
@@ -81,18 +88,18 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Provides filters functionality.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function searchAction(Request $request): RedirectResponse
-    {
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.zone'),
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function searchAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.grid.definition.factory.zone')]
+        GridDefinitionFactoryInterface $zoneGridDefinitionFactory
+    ): RedirectResponse {
+        return $this->buildSearchResponse(
+            $zoneGridDefinitionFactory,
             $request,
             ZoneGridDefinitionFactory::GRID_ID,
             'admin_zones_index'
@@ -102,21 +109,18 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Show "Add new" zone form and handles its submit.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_zones_index",
-     *     message="You need permission to create new zone."
-     * )
-     *
      * @param Request $request
      *
      * @return Response
      */
-    public function createAction(Request $request): Response
-    {
-        $zoneFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.zone_form_builder');
-        $zoneFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.zone_form_handler');
-
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index', message: 'You need permission to create new zone.')]
+    public function createAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.zone_form_builder')]
+        FormBuilderInterface $zoneFormBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.zone_form_handler')]
+        FormHandlerInterface $zoneFormHandler
+    ): Response {
         $zoneForm = $zoneFormBuilder->getForm();
         $zoneForm->handleRequest($request);
 
@@ -124,7 +128,7 @@ class ZoneController extends FrameworkBundleAdminController
             $handleResult = $zoneFormHandler->handle($zoneForm);
 
             if (null !== $handleResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_zones_index');
             }
@@ -136,31 +140,30 @@ class ZoneController extends FrameworkBundleAdminController
             'zoneForm' => $zoneForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans('New zone', [], 'Admin.Navigation.Menu'),
         ]);
     }
 
     /**
      * Displays zone edit for and handles its submit.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_zones_index",
-     *     message="You need permission to edit this."
-     * )
-     *
      * @param int $zoneId
      * @param Request $request
      *
      * @return Response
      */
-    public function editAction(int $zoneId, Request $request): Response
-    {
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index', message: 'You need permission to edit this.')]
+    public function editAction(
+        int $zoneId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.zone_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.zone_form_handler')]
+        FormHandlerInterface $formHandler
+    ): Response {
         try {
             /** @var EditableZone $editableZone */
-            $editableZone = $this->getQueryBus()->handle(new GetZoneForEditing($zoneId));
-
-            $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.zone_form_builder');
-            $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.zone_form_handler');
+            $editableZone = $this->dispatchQuery(new GetZoneForEditing($zoneId));
 
             $zoneForm = $formBuilder->getFormFor($zoneId);
             $zoneForm->handleRequest($request);
@@ -168,7 +171,7 @@ class ZoneController extends FrameworkBundleAdminController
             $result = $formHandler->handleFor($zoneId, $zoneForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_zones_index');
             }
@@ -180,38 +183,35 @@ class ZoneController extends FrameworkBundleAdminController
             }
         }
 
-        if (!isset($zoneForm)) {
-            return $this->redirectToRoute('admin_zones_index');
-        }
-
         return $this->render('@PrestaShop/Admin/Improve/International/Zone/edit.html.twig', [
             'zoneName' => $editableZone->getName(),
             'zoneForm' => $zoneForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'layoutTitle' => $this->trans(
+                'Editing zone %name%',
+                [
+                    '%name%' => $editableZone->getName(),
+                ],
+                'Admin.Navigation.Menu'
+            ),
         ]);
     }
 
     /**
      * Deletes zone.
      *
-     * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_zones_index",
-     *     message="You need permission to delete this."
-     * )
-     *
-     * @DemoRestricted(redirectRoute="admin_zones_index")
-     *
      * @param int $zoneId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_zones_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index', message: 'You need permission to delete this.')]
     public function deleteAction(int $zoneId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteZoneCommand($zoneId));
-            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+            $this->dispatchCommand(new DeleteZoneCommand($zoneId));
+            $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
         } catch (ZoneException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
@@ -224,27 +224,19 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Toggles zone active status.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_zones_index",
-     *     message="You do not have permission to edit this."
-     * )
-     *
-     * @DemoRestricted(
-     *     redirectRoute="admin_zones_index"
-     * )
-     *
      * @param int $zoneId
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_zones_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index', message: 'You do not have permission to edit this.')]
     public function toggleStatusAction(int $zoneId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new ToggleZoneStatusCommand($zoneId));
+            $this->dispatchCommand(new ToggleZoneStatusCommand($zoneId));
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -256,23 +248,22 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Deletes zones in bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_zones_index")
-     * @DemoRestricted(redirectRoute="admin_zones_index")
-     *
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_zones_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index')]
     public function bulkDeleteAction(Request $request): RedirectResponse
     {
         $zoneIds = $this->getBulkZonesFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteZoneCommand($zoneIds));
+            $this->dispatchCommand(new BulkDeleteZoneCommand($zoneIds));
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
             );
         } catch (ZoneException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -284,27 +275,23 @@ class ZoneController extends FrameworkBundleAdminController
     /**
      * Bulk toggles zones status.
      *
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_zones_index",
-     * )
-     * @DemoRestricted(redirectRoute="admin_zones_index")
-     *
      * @param string $status
      * @param Request $request
      *
      * @return RedirectResponse
      */
+    #[DemoRestricted(redirectRoute: 'admin_zones_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_zones_index')]
     public function bulkToggleStatus(string $status, Request $request): RedirectResponse
     {
         $status = $status === 'enable';
         $zoneIds = $this->getBulkZonesFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkToggleZoneStatusCommand($status, $zoneIds));
+            $this->dispatchCommand(new BulkToggleZoneStatusCommand($status, $zoneIds));
             $this->addFlash(
                 'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
         } catch (ZoneException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -325,33 +312,38 @@ class ZoneController extends FrameworkBundleAdminController
         return [
             CannotEditZoneException::class => $this->trans(
                 'An error occurred while editing the zone.',
+                [],
                 'Admin.International.Notification'
             ),
             MissingZoneRequiredFieldsException::class => $this->trans(
                 'The %s field is required.',
-                'Admin.Notifications.Error',
                 [
                     implode(
                         ', ',
                         $e instanceof MissingZoneRequiredFieldsException ? $e->getMissingRequiredFields() : []
                     ),
-                ]
+                ],
+                'Admin.Notifications.Error'
             ),
             ZoneNotFoundException::class => $this->trans(
                 'This zone does not exist.',
+                [],
                 'Admin.Notifications.Error'
             ),
             CannotToggleZoneStatusException::class => $this->trans(
                 'An error occurred while updating the status.',
+                [],
                 'Admin.Notifications.Error'
             ),
             DeleteZoneException::class => [
                 DeleteZoneException::FAILED_DELETE => $this->trans(
                     'An error occurred while deleting the object.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 DeleteZoneException::FAILED_BULK_DELETE => $this->trans(
                     'An error occurred while deleting this selection.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ],
@@ -367,11 +359,7 @@ class ZoneController extends FrameworkBundleAdminController
      */
     private function getBulkZonesFromRequest(Request $request): array
     {
-        $zoneIds = $request->request->get('zone_bulk');
-
-        if (!is_array($zoneIds)) {
-            return [];
-        }
+        $zoneIds = $request->request->all('zone_bulk');
 
         return array_map('intval', $zoneIds);
     }
@@ -384,7 +372,7 @@ class ZoneController extends FrameworkBundleAdminController
         return [
             'add' => [
                 'href' => $this->generateUrl('admin_zones_create'),
-                'desc' => $this->trans('Add new zone', 'Admin.International.Feature'),
+                'desc' => $this->trans('Add new zone', [], 'Admin.International.Feature'),
                 'icon' => 'add_circle_outline',
             ],
         ];

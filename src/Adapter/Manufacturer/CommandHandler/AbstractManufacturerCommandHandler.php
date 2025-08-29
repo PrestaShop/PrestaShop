@@ -49,7 +49,7 @@ abstract class AbstractManufacturerCommandHandler extends AbstractManufacturerHa
     {
         try {
             return $manufacturer->delete();
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new ManufacturerException(sprintf('An error occurred when deleting Manufacturer object with id "%s".', $manufacturer->id));
         }
     }
@@ -70,7 +70,7 @@ abstract class AbstractManufacturerCommandHandler extends AbstractManufacturerHa
 
         try {
             return $manufacturer->save();
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new ManufacturerException(sprintf('An error occurred when updating manufacturer status with id "%s"', $manufacturer->id));
         }
     }

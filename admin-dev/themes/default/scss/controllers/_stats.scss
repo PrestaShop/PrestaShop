@@ -1,0 +1,43 @@
+.calendar-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--#{$cdk}size-16);
+  justify-content: space-between;
+  margin-bottom: 0;
+
+  &__left {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  &__right {
+    display: flex;
+    flex: 1 2 auto;
+    flex-wrap: wrap;
+    gap: var(--#{$cdk}size-8);
+    align-items: start;
+
+    .input-group {
+      display: flex !important;
+      flex: 1 1 auto;
+      align-items: stretch;
+
+      label {
+        align-content: center;
+        width: auto;
+        margin: 0;
+      }
+
+      .form-control {
+        flex: 1 2 var(--#{$cdk}size-128);
+        width: var(--#{$cdk}size-128) !important;
+      }
+    }
+
+    #submitDatePicker {
+      flex: 1 0 0;
+    }
+  }
+}

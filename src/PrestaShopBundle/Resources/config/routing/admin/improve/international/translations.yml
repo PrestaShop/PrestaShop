@@ -24,7 +24,7 @@ admin_international_translations_show_settings:
 
 admin_international_translations_modify:
   path: /modify
-  methods: [ GET ]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\TranslationsController::modifyTranslationsAction
     _legacy_controller: AdminTranslations

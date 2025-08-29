@@ -27,7 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryImageUploader;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddRootCategoryHandlerInterface;
@@ -38,19 +40,15 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 /**
  * Class AddRootCategoryHandler.
  */
-final class AddRootCategoryHandler extends AbstractObjectModelHandler implements AddRootCategoryHandlerInterface
+#[AsCommandHandler]
+final class AddRootCategoryHandler extends AbstractEditCategoryHandler implements AddRootCategoryHandlerInterface
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @param ConfigurationInterface $configuration
-     */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
+    public function __construct(
+        private readonly ConfigurationInterface $configuration,
+        CategoryImageUploader $categoryImageUploader,
+        CategoryRepository $categoryRepository,
+    ) {
+        parent::__construct($categoryImageUploader, $categoryRepository);
     }
 
     /**
@@ -61,7 +59,15 @@ final class AddRootCategoryHandler extends AbstractObjectModelHandler implements
         /** @var Category $category */
         $category = $this->createRootCategoryFromCommand($command);
 
-        return new CategoryId((int) $category->id);
+        $categoryId = new CategoryId((int) $category->id);
+
+        $this->categoryImageUploader->uploadImages(
+            $categoryId,
+            $command->getCoverImage(),
+            $command->getThumbnailImage()
+        );
+
+        return $categoryId;
     }
 
     /**
@@ -100,10 +106,6 @@ final class AddRootCategoryHandler extends AbstractObjectModelHandler implements
             $category->meta_description = $command->getLocalizedMetaDescriptions();
         }
 
-        if (null !== $command->getLocalizedMetaKeywords()) {
-            $category->meta_keywords = $command->getLocalizedMetaKeywords();
-        }
-
         if (null !== $command->getAssociatedGroupIds()) {
             $category->groupBox = $command->getAssociatedGroupIds();
         }
@@ -114,6 +116,10 @@ final class AddRootCategoryHandler extends AbstractObjectModelHandler implements
 
         if (false === $category->validateFieldsLang(false)) {
             throw new CategoryException('Invalid language data for creating root category.');
+        }
+
+        if (null !== $command->getRedirectOption()) {
+            $this->fillWithRedirectOption($category, $command->getRedirectOption());
         }
 
         if (false === $category->save()) {

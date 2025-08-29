@@ -1,0 +1,68 @@
+.alert {
+  a:not(.btn),
+  p {
+    color: var(--#{$cdk}primary-800);
+  }
+
+  a:not(.btn) {
+    text-decoration: underline;
+  }
+
+  h4 {
+    margin-bottom: var(--#{$cdk}size-16);
+    font-size: var(--#{$cdk}size-24);
+  }
+}
+
+// Alerts mixins
+@mixin alert-panel($icon, $color, $border-color: $color) {
+  position: relative;
+  padding: 16px 15px 16px 56px;
+  font-size: 14px;
+  border: none;
+  border: solid 1px $border-color;
+
+  &::before {
+    position: absolute;
+    top: 13px;
+    display: block;
+    width: 25px;
+    height: 25px;
+    font-size: 24px;
+    color: $border-color;
+    content: "#{$icon}";
+    @include left(15px);
+    @extend .material-icons;
+  }
+}
+
+.alert.alert-warning {
+  @include alert-panel("\e002", $brand-warning, $alert-warning-border);
+}
+
+.alert.alert-danger {
+  @include alert-panel("\e000", $brand-danger, $alert-danger-border);
+}
+
+.alert.alert-success {
+  @include alert-panel("\e86c", $brand-success, $alert-success-border);
+}
+
+.alert.alert-info {
+  @include alert-panel("\e88e", $brand-info, $alert-info-border);
+}
+
+.alert.alert-addons {
+  @include alert-panel("\e887", $brand-info, $alert-info-border);
+  background-color: $alert-info-bg;
+}
+
+.alert.alert-onboarding {
+  @include alert-panel("\e887", $brand-info, $alert-info-border);
+  background-color: $alert-info-bg;
+}
+
+.alert.alert-message {
+  @include alert-panel("\e000", $brand-danger, $alert-danger-border);
+  background-color: $alert-danger-bg;
+}

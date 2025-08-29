@@ -40,7 +40,7 @@ final class EmailLogEraser implements EmailLogEraserInterface
     /**
      * {@inheritdoc}
      */
-    public function erase(array $mailLogIds)
+    public function erase(array $mailLogIds): array
     {
         $errors = [];
 
@@ -78,7 +78,7 @@ final class EmailLogEraser implements EmailLogEraserInterface
     /**
      * {@inheritdoc}
      */
-    public function eraseAll()
+    public function eraseAll(): bool
     {
         return Mail::eraseAllLogs();
     }

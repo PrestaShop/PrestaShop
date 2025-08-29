@@ -23,51 +23,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
-import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
 import FormSubmitButton from '@components/form-submit-button';
-import Grid from '@components/grid/grid';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import SortingExtension from '@components/grid/extension/sorting-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 
 const {$} = window;
 
 $(() => {
-  const employeeSessionGrid = new Grid('security_session_employee');
+  const employeeSessionGrid = new window.prestashop.component.Grid('security_session_employee');
 
-  employeeSessionGrid.addExtension(new ReloadListActionExtension());
-  employeeSessionGrid.addExtension(new ExportToSqlManagerExtension());
-  employeeSessionGrid.addExtension(new FiltersResetExtension());
-  employeeSessionGrid.addExtension(new SortingExtension());
-  employeeSessionGrid.addExtension(new BulkActionCheckboxExtension());
-  employeeSessionGrid.addExtension(new SubmitBulkExtension());
-  employeeSessionGrid.addExtension(new SubmitGridExtension());
-  employeeSessionGrid.addExtension(new SubmitRowActionExtension());
-  employeeSessionGrid.addExtension(new LinkRowActionExtension());
-  employeeSessionGrid.addExtension(new ColumnTogglingExtension());
-  employeeSessionGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
+  employeeSessionGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
-  const customerSessionsGrid = new Grid('security_session_customer');
+  const customerSessionsGrid = new window.prestashop.component.Grid('security_session_customer');
 
-  customerSessionsGrid.addExtension(new ReloadListActionExtension());
-  customerSessionsGrid.addExtension(new ExportToSqlManagerExtension());
-  customerSessionsGrid.addExtension(new FiltersResetExtension());
-  customerSessionsGrid.addExtension(new SortingExtension());
-  customerSessionsGrid.addExtension(new BulkActionCheckboxExtension());
-  customerSessionsGrid.addExtension(new SubmitBulkExtension());
-  customerSessionsGrid.addExtension(new SubmitGridExtension());
-  customerSessionsGrid.addExtension(new SubmitRowActionExtension());
-  customerSessionsGrid.addExtension(new LinkRowActionExtension());
-  customerSessionsGrid.addExtension(new ColumnTogglingExtension());
-  customerSessionsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
+  customerSessionsGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
   new FormSubmitButton();
 });

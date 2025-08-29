@@ -32,6 +32,7 @@ use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImagesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
@@ -43,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 /**
  * Handles @see GetProductImages query
  */
+#[AsQueryHandler]
 final class GetProductImagesHandler implements GetProductImagesHandlerInterface
 {
     /**

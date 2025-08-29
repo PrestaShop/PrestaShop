@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\ToggleSupplierStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\CommandHandler\ToggleSupplierStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotToggleSupplierStatusException;
@@ -37,6 +38,7 @@ use Supplier;
 /**
  * Class ToggleSupplierStatusHandler is responsible for toggling supplier status.
  */
+#[AsCommandHandler]
 final class ToggleSupplierStatusHandler implements ToggleSupplierStatusHandlerInterface
 {
     /**

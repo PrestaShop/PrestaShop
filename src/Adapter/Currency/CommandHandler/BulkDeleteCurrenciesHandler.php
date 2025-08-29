@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
 use Currency;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\BulkDeleteCurrenciesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\BulkDeleteCurrenciesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\BulkDeleteCurrenciesException;
@@ -40,6 +41,7 @@ use PrestaShopException;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class BulkDeleteCurrenciesHandler extends AbstractCurrencyHandler implements BulkDeleteCurrenciesHandlerInterface
 {
     /**
@@ -75,7 +77,7 @@ final class BulkDeleteCurrenciesHandler extends AbstractCurrencyHandler implemen
             try {
                 $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabled($currencyId->getValue(), $this->defaultCurrencyId);
                 $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromAnyShop($entity);
-            } catch (CurrencyException $e) {
+            } catch (CurrencyException) {
                 $faileds[] = $currencyId->getValue();
                 continue;
             }
@@ -84,7 +86,7 @@ final class BulkDeleteCurrenciesHandler extends AbstractCurrencyHandler implemen
                 if (false === $entity->delete()) {
                     $faileds[] = $currencyId->getValue();
                 }
-            } catch (PrestaShopException $e) {
+            } catch (PrestaShopException) {
                 $faileds[] = $currencyId->getValue();
             }
         }

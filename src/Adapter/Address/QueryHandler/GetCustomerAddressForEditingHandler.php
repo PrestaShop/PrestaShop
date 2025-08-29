@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Address\QueryHandler;
 
 use Customer;
 use PrestaShop\PrestaShop\Adapter\Address\AbstractCustomerAddressHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
@@ -46,6 +47,7 @@ use PrestaShopException;
 /**
  * Handles query which gets customer address for editing
  */
+#[AsQueryHandler]
 final class GetCustomerAddressForEditingHandler extends AbstractCustomerAddressHandler implements GetCustomerAddressForEditingHandlerInterface
 {
     /**

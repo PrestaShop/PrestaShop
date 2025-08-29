@@ -43,7 +43,7 @@ class OrderReturnControllerCore extends FrontController
      *
      * @see FrontController::init()
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -55,7 +55,7 @@ class OrderReturnControllerCore extends FrontController
         } else {
             $order_return = new OrderReturn((int) $id_order_return);
             if (Validate::isLoadedObject($order_return) && $order_return->id_customer == $this->context->cookie->id_customer) {
-                $order = new Order((int) ($order_return->id_order));
+                $order = new Order((int) $order_return->id_order);
                 if (Validate::isLoadedObject($order)) {
                     if ($order_return->state == 1) {
                         $this->warning[] = $this->trans('You must wait for confirmation before returning any merchandise.', [], 'Shop.Notifications.Warning');
@@ -82,7 +82,7 @@ class OrderReturnControllerCore extends FrontController
      *
      * @see FrontController::initContent()
      */
-    public function initContent()
+    public function initContent(): void
     {
         if (Configuration::isCatalogMode()) {
             Tools::redirect('index.php');
@@ -92,7 +92,7 @@ class OrderReturnControllerCore extends FrontController
         $this->setTemplate('customer/order-return');
     }
 
-    public function getTemplateVarOrderReturn($orderReturn)
+    public function getTemplateVarOrderReturn(OrderReturn $orderReturn)
     {
         $orderReturns = OrderReturn::getOrdersReturn($orderReturn->id_customer, $orderReturn->id_order, false, null, $orderReturn->id);
 
@@ -108,7 +108,7 @@ class OrderReturnControllerCore extends FrontController
         return $orderReturnPresenter->present(array_shift($orderReturns));
     }
 
-    public function getTemplateVarProducts($order_return_id, $order)
+    public function getTemplateVarProducts(int $order_return_id, Order $order)
     {
         $products = [];
         $return_products = OrderReturn::getOrdersReturnProducts((int) $order_return_id, $order);
@@ -169,7 +169,7 @@ class OrderReturnControllerCore extends FrontController
         return $product_customizations;
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

@@ -46,22 +46,33 @@
  *                                                  // it will generate random value of 16 characters
  *                                                  // for input with id of "my-input-id"
  *
+ * Or if you use '.js-generator-btn' as default selector, you can just do:
+ * new GeneratableInput();
+ *
  * You can attach as many different buttons as you like using "attachOn()" function
  * as long as 2 required data-* attributes are present at each button.
  */
 export default class GeneratableInput {
   /**
-   * Attaches event listener on button than can generate value
+   * Constructor for GeneratableInput component
+   * Attach event listeners on buttons that can generate random values, by default ".js-generator-btn".
    *
-   * @param {String} generatorBtnSelector
-   *
-   * @private
+   * @param {String} generatorButtonsSelector
    */
-  private attachOn(generatorBtnSelector: string): void {
-    const generatorBtn = document.querySelector(generatorBtnSelector);
+  public constructor(generatorButtonsSelector?: string) {
+    this.attachOn(generatorButtonsSelector ?? '.js-generator-btn');
+  }
 
-    if (generatorBtn !== null) {
-      generatorBtn.addEventListener('click', (event: Event): void => {
+  /**
+   * Attaches click event listeners on buttons than can generate random values
+   *
+   * @param {String} generatorButtonsSelector
+   */
+  public attachOn(generatorButtonsSelector: string): void {
+    const generatorButtons = document.querySelectorAll(generatorButtonsSelector);
+
+    generatorButtons.forEach((btn: Element): void => {
+      btn.addEventListener('click', (event: Event): void => {
         const {attributes} = <HTMLButtonElement>event.currentTarget;
 
         const targetInputId = attributes.getNamedItem('data-target-input-id')
@@ -75,8 +86,9 @@ export default class GeneratableInput {
           document.querySelector(`#${targetInputId}`)
         );
         targetInput.value = this.generateValue(generatedValueLength);
+        targetInput.dispatchEvent(new CustomEvent('change', {bubbles: true}));
       });
-    }
+    });
   }
 
   /**

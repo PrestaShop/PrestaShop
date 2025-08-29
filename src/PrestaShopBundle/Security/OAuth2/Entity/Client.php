@@ -41,10 +41,23 @@ class Client implements ClientEntityInterface
 {
     use ClientTrait;
     use EntityTrait;
+    protected ?int $lifetime;
 
     public function __construct()
     {
         // Client Credential Grant allow only confidential clients (rfc6749 section 4.4)
         $this->isConfidential = true;
+    }
+
+    public function getLifetime(): ?int
+    {
+        return $this->lifetime;
+    }
+
+    public function setLifetime(?int $lifetime): self
+    {
+        $this->lifetime = $lifetime;
+
+        return $this;
     }
 }

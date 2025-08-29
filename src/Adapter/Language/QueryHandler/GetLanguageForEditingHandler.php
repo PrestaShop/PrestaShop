@@ -27,19 +27,19 @@
 namespace PrestaShop\PrestaShop\Adapter\Language\QueryHandler;
 
 use Language;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryHandler\GetLanguageForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF;
 
 /**
  * Gets language for editing
  *
  * @internal
  */
+#[AsQueryHandler]
 final class GetLanguageForEditingHandler implements GetLanguageForEditingHandlerInterface
 {
     /**
@@ -50,10 +50,11 @@ final class GetLanguageForEditingHandler implements GetLanguageForEditingHandler
         $language = $this->getLegacyLanguageObject($query->getLanguageId());
 
         return new EditableLanguage(
-            $query->getLanguageId(),
+            $query->getLanguageId()->getValue(),
             $language->name,
-            new IsoCode($language->iso_code),
-            new TagIETF($language->language_code),
+            $language->iso_code,
+            $language->language_code,
+            $language->locale,
             $language->date_format_lite,
             $language->date_format_full,
             (bool) $language->is_rtl,

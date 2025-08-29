@@ -1,0 +1,19 @@
+// stylelint-disable-next-line
+$component-name: skeleton;
+
+.#{$component-name} {
+  width: 100%;
+  height: var(--cdk-size-32);
+  background: linear-gradient(90deg, var(--cdk-primary-400) 40%, var(--cdk-primary-300), var(--cdk-primary-400) 60%);
+  background-position-x: 180%;
+  background-size: 200% 100%;
+  border-radius: var(--cdk-size-2);
+  animation: skeleton-animation 2s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes skeleton-animation {
+  100% {
+    background-position-x: -20%;
+  }
+}

@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 <div class="tab-content p-lg-0 bg-transparent px-0" id="profileTabContents">
   {% set employeeProfileTabPermissions = configurablePermissions.profilePermissionsForTabs[employeeProfileId] %}
@@ -50,25 +50,25 @@
         {% else %}
           {%
             set profileTypes = {
-              'view': {
-                'value': configurablePermissions.isBulkViewConfigurationEnabled(profile.id),
-                'label': ('View'|trans({}, 'Admin.Actions')),
+              view: {
+                value: configurablePermissions.isBulkViewConfigurationEnabled(profile.id),
+                label: ('View'|trans({}, 'Admin.Actions')),
               },
-              'add': {
-                'value': configurablePermissions.isBulkAddConfigurationEnabled(profile.id),
-                'label': ('Add'|trans({}, 'Admin.Actions')),
+              add: {
+                value: configurablePermissions.isBulkAddConfigurationEnabled(profile.id),
+                label: ('Add'|trans({}, 'Admin.Actions')),
               },
-              'edit': {
-                'value': configurablePermissions.isBulkEditConfigurationEnabled(profile.id),
-                'label': ('Edit'|trans({}, 'Admin.Actions')),
+              edit: {
+                value: configurablePermissions.isBulkEditConfigurationEnabled(profile.id),
+                label: ('Edit'|trans({}, 'Admin.Actions')),
               },
-              'delete': {
-                'value': configurablePermissions.isBulkDeleteConfigurationEnabled(profile.id),
-                'label': ('Delete'|trans({}, 'Admin.Actions')),
+              delete: {
+                value: configurablePermissions.isBulkDeleteConfigurationEnabled(profile.id),
+                label: ('Delete'|trans({}, 'Admin.Actions')),
               },
-              'all': {
-                'value': configurablePermissions.isBulkAllConfigurationEnabled(profile.id),
-                'label': ('All'|trans({}, 'Admin.Actions')),
+              all: {
+                value: configurablePermissions.isBulkAllConfigurationEnabled(profile.id),
+                label: ('All'|trans({}, 'Admin.Actions')),
               }
             }
           %}
@@ -78,7 +78,7 @@
               data-update-url="{{ path('admin_permissions_update_tab_permissions') }}"
               data-can-edit="{{ configurablePermissions.hasEmployeeEditPermission ? 'true' : 'false' }}"
               data-types="{{ profileTypes|json_encode }}"
-              data-permissions="{{ configurablePermissions.tabs|json_encode}}"
+              data-permissions="{{ configurablePermissions.tabs|json_encode }}"
               data-title="{{ 'Menu'|trans({}, 'Admin.Advparameters.Feature')|escape }}"
               data-empty="{{ 'No menu'|trans({}, 'Admin.Advparameters.Feature')|escape }}"
             >
@@ -87,17 +87,17 @@
 
           {%
             set moduleTypes = {
-              'view': {
-                'value': configurablePermissions.isBulkViewConfigurationEnabled(profile.id),
-                'label': ('View'|trans({}, 'Admin.Actions')),
+              view: {
+                value: configurablePermissions.isBulkViewConfigurationEnabled(profile.id),
+                label: ('View'|trans({}, 'Admin.Actions')),
               },
-              'configure': {
-                'value': configurablePermissions.isBulkAddConfigurationEnabled(profile.id),
-                'label': ('Configure'|trans({}, 'Admin.Actions')),
+              configure: {
+                value: configurablePermissions.isBulkAddConfigurationEnabled(profile.id),
+                label: ('Configure'|trans({}, 'Admin.Actions')),
               },
-              'uninstall': {
-                'value': configurablePermissions.isBulkEditConfigurationEnabled(profile.id),
-                'label': ('Uninstall'|trans({}, 'Admin.Actions')),
+              uninstall: {
+                value: configurablePermissions.isBulkEditConfigurationEnabled(profile.id),
+                label: ('Uninstall'|trans({}, 'Admin.Actions')),
               }
             }
           %}
@@ -107,7 +107,7 @@
               data-update-url="{{ path('admin_permissions_update_module_permissions') }}"
               data-can-edit="{{ configurablePermissions.hasEmployeeEditPermission ? 'true' : 'false' }}"
               data-types="{{ moduleTypes|json_encode }}"
-              data-permissions="{{ profilePermissionsForModules[profile.id]|json_encode}}"
+              data-permissions="{{ profilePermissionsForModules[profile.id]|json_encode }}"
               data-title="{{ 'Modules'|trans({}, 'Admin.Global')|escape }}"
               data-empty="{{ 'No module'|trans({}, 'Admin.Advparameters.Feature')|escape }}"
             >

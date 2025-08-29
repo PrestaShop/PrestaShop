@@ -1,0 +1,32 @@
+.badge {
+  min-width: var(--#{$cdk}size-20);
+  min-height: var(--#{$cdk}size-20);
+  padding: var(--#{$cdk}size-4) var(--#{$cdk}size-6);
+
+  &.badge-info {
+    background-color: $brand-info;
+  }
+
+  &.badge-success {
+    background-color: $brand-success;
+  }
+
+  &.badge-warning {
+    background-color: $brand-warning;
+  }
+
+  &.badge-danger {
+    background-color: $brand-danger;
+  }
+
+  &.badge-critical {
+    background-color: var(--#{$cdk}red-700);
+  }
+}
+
+// Custom
+.list-group-item.active > .badge,
+.nav-pills > .active > a > .badge {
+  color: $badge-active-color;
+  background-color: $badge-active-bg;
+}

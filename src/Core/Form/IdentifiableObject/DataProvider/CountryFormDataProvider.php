@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 
 /**
  * Provides data for zone add/edit form.
@@ -68,9 +70,31 @@ class CountryFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getData($id): void
+    public function getData($id): array
     {
-        //todo: will be implemented on edit PR
+        /** @var CountryForEditing $editableCountry */
+        $editableCountry = $this->queryBus->handle(new GetCountryForEditing($id));
+
+        $data = [
+            'name' => $editableCountry->getLocalizedNames(),
+            'iso_code' => $editableCountry->getIsoCode(),
+            'call_prefix' => $editableCountry->getCallPrefix(),
+            'default_currency' => $editableCountry->getDefaultCurrency(),
+            'zone' => $editableCountry->getZone(),
+            'need_zip_code' => $editableCountry->isNeedZipCode(),
+            'zip_code_format' => null !== $editableCountry->getZipCodeFormat() ? $editableCountry->getZipCodeFormat()->getValue() : null,
+            'address_format' => $editableCountry->getAddressFormat(),
+            'is_enabled' => $editableCountry->isEnabled(),
+            'contains_states' => $editableCountry->isContainsStates(),
+            'need_identification_number' => $editableCountry->isNeedIdNumber(),
+            'display_tax_label' => $editableCountry->isDisplayTaxLabel(),
+        ];
+
+        if ($this->multistoreEnabled) {
+            $data['shop_association'] = $editableCountry->getShopAssociation();
+        }
+
+        return $data;
     }
 
     /**

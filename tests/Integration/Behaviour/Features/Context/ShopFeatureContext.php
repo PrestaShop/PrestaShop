@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShop;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShopGroup;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopException;
 use RuntimeException;
 use Shop;
 use ShopGroup;
@@ -135,7 +136,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      * @param string $groupName
      * @param string|null $color
      */
-    public function addShopGroup(string $reference, string $groupName, string $color = null): void
+    public function addShopGroup(string $reference, string $groupName, ?string $color = null): void
     {
         $shopGroup = new ShopGroup();
         $shopGroup->name = $groupName;
@@ -301,7 +302,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      * @param int $context
      * @param int $shopId
      *
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     private function setShopContext(int $context, int $shopId): void
     {
@@ -325,8 +326,8 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         $shopUrl->main = true;
         $shopUrl->domain = 'localhost';
         $shopUrl->domain_ssl = 'localhost';
-        $shopUrl->physical_uri = '/prestatest/';
-        $shopUrl->virtual_uri = '/prestatest/';
+        $shopUrl->physical_uri = "/prestatest-$shopReference/";
+        $shopUrl->virtual_uri = "/prestatest-$shopReference/";
         if (!$shopUrl->add()) {
             throw new RuntimeException(sprintf('Could not create shop url: %s', Db::getInstance()->getMsgError()));
         }

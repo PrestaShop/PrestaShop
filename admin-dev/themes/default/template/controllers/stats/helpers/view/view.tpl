@@ -34,7 +34,7 @@
 			if (btn_save_calendar.length > 0 && btn_submit_calendar.length > 0)
 			{
 				btn_submit_calendar.hide();
-				btn_save_calendar.click(function() {
+				btn_save_calendar.on('click', function() {
 					btn_submit_calendar.before('<input type="hidden" name="'+btn_submit_calendar.attr("name")+'" value="1" />');
 
 					$('#calendar_form').submit();
@@ -47,7 +47,7 @@
 			if (btn_save_settings.length > 0 && btn_submit_settings.length > 0)
 			{
 				btn_submit_settings.hide();
-				btn_save_settings.click(function() {
+				btn_save_settings.on('click', function() {
 					btn_submit_settings.before('<input type="hidden" name="'+btn_submit_settings.attr("name")+'" value="1" />');
 
 					$('#settings_form').submit();

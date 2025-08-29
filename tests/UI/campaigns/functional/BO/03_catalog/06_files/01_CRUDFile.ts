@@ -1,21 +1,17 @@
-// Import utils
-import files from '@utils/files';
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import filesPage from '@pages/BO/catalog/files';
-import addFilePage from '@pages/BO/catalog/files/add';
-import dashboardPage from '@pages/BO/dashboard';
-
-// Import data
-import FileData from '@data/faker/file';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boDashboardPage,
+  boFilesPage,
+  boFilesCreatePage,
+  boLoginPage,
+  type BrowserContext,
+  FakerFile,
+  type Page,
+  utilsFile,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_files_CRUDFile';
 
@@ -29,63 +25,69 @@ describe('BO - Catalog - Files : CRUD file', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const createFileData: FileData = new FileData();
-  const editFileData: FileData = new FileData();
+  const createFileData: FakerFile = new FakerFile();
+  const editFileData: FakerFile = new FakerFile();
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
 
     await Promise.all([
-      files.createFile('.', createFileData.filename, `test ${createFileData.filename}`),
-      files.createFile('.', editFileData.filename, `test ${editFileData.filename}`),
+      utilsFile.createFile('.', createFileData.filename, `test ${createFileData.filename}`),
+      utilsFile.createFile('.', editFileData.filename, `test ${editFileData.filename}`),
     ]);
   });
 
   after(async () => {
     await Promise.all([
-      files.deleteFile(createFileData.filename),
-      files.deleteFile(editFileData.filename),
+      utilsFile.deleteFile(createFileData.filename),
+      utilsFile.deleteFile(editFileData.filename),
     ]);
 
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   // Go to files page
   it('should go to \'Catalog > Files\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFilesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.filesLink,
+      boDashboardPage.catalogParentLink,
+      boDashboardPage.filesLink,
     );
-    await filesPage.closeSfToolBar(page);
+    await boFilesPage.closeSfToolBar(page);
 
-    const pageTitle = await filesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(filesPage.pageTitle);
+    const pageTitle = await boFilesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boFilesPage.pageTitle);
   });
 
   describe('Create file', async () => {
     it('should go to new file page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewFilePage', baseContext);
 
-      await filesPage.goToAddNewFilePage(page);
+      await boFilesPage.goToAddNewFilePage(page);
 
-      const pageTitle = await addFilePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addFilePage.pageTitle);
+      const pageTitle = await boFilesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFilesCreatePage.pageTitle);
     });
 
     it('should create file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createFile', baseContext);
 
-      const result = await addFilePage.createEditFile(page, createFileData);
-      await expect(result).to.equal(filesPage.successfulCreationMessage);
+      const result = await boFilesCreatePage.createEditFile(page, createFileData);
+      expect(result).to.equal(boFilesPage.successfulCreationMessage);
     });
   });
 
@@ -93,10 +95,10 @@ describe('BO - Catalog - Files : CRUD file', async () => {
     it('should view file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCreatedFile', baseContext);
 
-      const filePath = await filesPage.viewFile(page, 1);
+      const filePath = await boFilesPage.viewFile(page, 1);
 
-      const found = await files.doesFileExist(filePath);
-      await expect(found, `${createFileData.filename} was not downloaded`).to.be.true;
+      const found = await utilsFile.doesFileExist(filePath);
+      expect(found, `${createFileData.filename} was not downloaded`).to.eq(true);
     });
   });
 
@@ -104,17 +106,17 @@ describe('BO - Catalog - Files : CRUD file', async () => {
     it('should go to edit first file page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditFilePage', baseContext);
 
-      await filesPage.goToEditFilePage(page, 1);
+      await boFilesPage.goToEditFilePage(page, 1);
 
-      const pageTitle = await addFilePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addFilePage.pageTitleEdit);
+      const pageTitle = await boFilesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boFilesCreatePage.pageTitleEdit);
     });
 
     it('should edit file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateFile', baseContext);
 
-      const result = await addFilePage.createEditFile(page, editFileData);
-      await expect(result).to.equal(filesPage.successfulUpdateMessage);
+      const result = await boFilesCreatePage.createEditFile(page, editFileData);
+      expect(result).to.equal(boFilesPage.successfulUpdateMessage);
     });
   });
 
@@ -122,10 +124,10 @@ describe('BO - Catalog - Files : CRUD file', async () => {
     it('should view file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewUpdatedFile', baseContext);
 
-      const filePath = await filesPage.viewFile(page, 1);
+      const filePath = await boFilesPage.viewFile(page, 1);
 
-      const found = await files.doesFileExist(filePath);
-      await expect(found, `${editFileData.filename} was not downloaded`).to.be.true;
+      const found = await utilsFile.doesFileExist(filePath);
+      expect(found, `${editFileData.filename} was not downloaded`).to.eq(true);
     });
   });
 
@@ -134,8 +136,8 @@ describe('BO - Catalog - Files : CRUD file', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteFile', baseContext);
 
       // delete file in first row
-      const result = await filesPage.deleteFile(page, 1);
-      await expect(result).to.be.equal(filesPage.successfulDeleteMessage);
+      const result = await boFilesPage.deleteFile(page, 1);
+      expect(result).to.be.equal(boFilesPage.successfulDeleteMessage);
     });
   });
 });

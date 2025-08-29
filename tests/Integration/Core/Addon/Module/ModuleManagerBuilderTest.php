@@ -82,6 +82,9 @@ class ModuleManagerBuilderTest extends TestCase
         if (is_dir($dirResources . '/Resources/modules_tests/testpropertyconflict')) {
             Tools::recurseCopy($dirResources . '/Resources/modules_tests/testpropertyconflict', _PS_MODULE_DIR_ . '/testpropertyconflict');
         }
+        if (is_dir($dirResources . '/Resources/modules_tests/testtypedpropertyoverride')) {
+            Tools::recurseCopy($dirResources . '/Resources/modules_tests/testtypedpropertyoverride', _PS_MODULE_DIR_ . '/testtypedpropertyoverride');
+        }
     }
 
     public static function tearDownAfterClass(): void
@@ -104,6 +107,9 @@ class ModuleManagerBuilderTest extends TestCase
         if (Module::isInstalled('testpropertyconflict')) {
             Module::getInstanceByName('testpropertyconflict')->uninstall();
         }
+        if (Module::isInstalled('testtypedpropertyoverride')) {
+            Module::getInstanceByName('testtypedpropertyoverride')->uninstall();
+        }
 
         // Remove modules
         if (is_dir(_PS_MODULE_DIR_ . '/pscsx3241')) {
@@ -121,9 +127,12 @@ class ModuleManagerBuilderTest extends TestCase
         if (is_dir(_PS_MODULE_DIR_ . '/testpropertyconflict')) {
             Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testpropertyconflict');
         }
+        if (is_dir(_PS_MODULE_DIR_ . '/testtypedpropertyoverride')) {
+            Tools::deleteDirectory(_PS_MODULE_DIR_ . '/testtypedpropertyoverride');
+        }
 
         // Remove overrides
-        @unlink(_PS_ROOT_DIR_ . '/override/controllers/admin/AdminProductsController.php');
+        @unlink(_PS_ROOT_DIR_ . '/override/controllers/admin/DummyAdminController.php');
         @unlink(_PS_ROOT_DIR_ . '/override/classes/Cart.php');
 
         // Reset modules folder
@@ -142,6 +151,7 @@ class ModuleManagerBuilderTest extends TestCase
         $this->moduleNames = [
             'pscsx32412',
             'pscsx3241',
+            'testtypedpropertyoverride',
         ];
 
         $this->conflictModuleNames = ['testbasicconflict', 'testtrickyconflict', 'testpropertyconflict'];
@@ -166,15 +176,19 @@ class ModuleManagerBuilderTest extends TestCase
         $actual_override_cart = $this->cleanup(file_get_contents(_PS_ROOT_DIR_ . '/override/classes/Cart.php'));
         $expected_override_cart = $this->cleanup(file_get_contents($resource_path . 'classes/Cart.php'));
 
-        $this->assertEquals($expected_override_cart, $actual_override_cart);
+        $this->assertEquals(
+            $expected_override_cart,
+            $actual_override_cart,
+            'Cart.php file different'
+        );
 
-        $actual_override_admin_product = $this->cleanup(file_get_contents(_PS_ROOT_DIR_ . '/override/controllers/admin/AdminProductsController.php'));
-        $expected_override_admin_product = $this->cleanup(file_get_contents($resource_path . '/controllers/admin/AdminProductsController.php'));
+        $actual_override_admin_product = $this->cleanup(file_get_contents(_PS_ROOT_DIR_ . '/override/controllers/admin/DummyAdminController.php'));
+        $expected_override_admin_product = $this->cleanup(file_get_contents($resource_path . '/controllers/admin/DummyAdminController.php'));
 
         $this->assertEquals(
             $actual_override_admin_product,
             $expected_override_admin_product,
-            'AdminProductsController.php file different'
+            'DummyAdminController.php file different'
         );
 
         // Then it checks that the overrides are removed once the modules are uninstalled.
@@ -182,13 +196,8 @@ class ModuleManagerBuilderTest extends TestCase
             $this->assertTrue((bool) $this->moduleManager->uninstall($name));
         }
 
-        if (method_exists($this, 'assertFileDoesNotExist')) {
-            $this->assertFileDoesNotExist($actual_override_cart);
-            $this->assertFileDoesNotExist($actual_override_admin_product);
-        } else {
-            $this->assertFileNotExists($actual_override_cart);
-            $this->assertFileNotExists($actual_override_admin_product);
-        }
+        $this->assertFileDoesNotExist($actual_override_cart);
+        $this->assertFileDoesNotExist($actual_override_admin_product);
     }
 
     public function testOverrideConflictAtInstall(): void

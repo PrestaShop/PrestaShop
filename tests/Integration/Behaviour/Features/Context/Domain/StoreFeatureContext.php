@@ -26,7 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;

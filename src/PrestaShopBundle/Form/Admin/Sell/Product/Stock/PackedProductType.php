@@ -28,10 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
-use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
+use PrestaShopBundle\Form\Admin\Sell\Product\SearchedProductItemType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
@@ -46,21 +45,6 @@ class PackedProductType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('unique_identifier', HiddenType::class, [
-                'label' => false,
-            ])
-            ->add('product_id', HiddenType::class, [
-                'label' => false,
-            ])
-            ->add('image', ImagePreviewType::class, [
-                'label' => false,
-            ])
-            ->add('combination_id', HiddenType::class, [
-                'label' => false,
-            ])
-            ->add('name', TextPreviewType::class, [
-                'label' => false,
-            ])
             ->add('reference', TextPreviewType::class, [
                 'label' => false,
                 'preview_class' => 'reference-preview',
@@ -83,5 +67,10 @@ class PackedProductType extends TranslatorAwareType
                 ],
             ])
         ;
+    }
+
+    public function getParent(): string
+    {
+        return SearchedProductItemType::class;
     }
 }

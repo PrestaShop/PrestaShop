@@ -1,19 +1,15 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import addressesPage from '@pages/BO/customers/addresses';
-import dashboardPage from '@pages/BO/dashboard';
-
-// Import data
-import Addresses from '@data/demo/address';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boAddressesPage,
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  dataAddresses,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_customers_addresses_filterAddresses';
 
@@ -27,36 +23,42 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Customer > Addresses\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.customersParentLink,
-      dashboardPage.addressesLink,
+      boDashboardPage.customersParentLink,
+      boDashboardPage.addressesLink,
     );
 
-    const pageTitle = await addressesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addressesPage.pageTitle);
+    const pageTitle = await boAddressesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boAddressesPage.pageTitle);
   });
 
   it('should reset all filters and get number of addresses in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfAddresses).to.be.above(0);
+    numberOfAddresses = await boAddressesPage.resetAndGetNumberOfLines(page);
+    expect(numberOfAddresses).to.be.above(0);
   });
 
   // Filter addresses with all inputs and selects in grid table
@@ -68,7 +70,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_address',
-            filterValue: Addresses.first.id.toString(),
+            filterValue: dataAddresses.address_1.id.toString(),
           },
       },
       {
@@ -77,7 +79,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterFirstName',
             filterType: 'input',
             filterBy: 'firstname',
-            filterValue: Addresses.second.firstName,
+            filterValue: dataAddresses.address_2.firstName,
           },
       },
       {
@@ -86,7 +88,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterLanstName',
             filterType: 'input',
             filterBy: 'lastname',
-            filterValue: Addresses.third.lastName,
+            filterValue: dataAddresses.address_5.lastName,
           },
       },
       {
@@ -95,7 +97,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterAddress',
             filterType: 'input',
             filterBy: 'address1',
-            filterValue: Addresses.first.address,
+            filterValue: dataAddresses.address_1.address,
           },
       },
       {
@@ -104,7 +106,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterPostCode',
             filterType: 'input',
             filterBy: 'postcode',
-            filterValue: Addresses.second.postalCode,
+            filterValue: dataAddresses.address_2.postalCode,
           },
       },
       {
@@ -113,7 +115,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterCity',
             filterType: 'input',
             filterBy: 'city',
-            filterValue: Addresses.third.city,
+            filterValue: dataAddresses.address_5.city,
           },
       },
       {
@@ -122,7 +124,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterIdCountry',
             filterType: 'select',
             filterBy: 'id_country',
-            filterValue: Addresses.first.country,
+            filterValue: dataAddresses.address_1.country,
           },
       },
     ];
@@ -131,31 +133,31 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        await addressesPage.filterAddresses(
+        await boAddressesPage.filterAddresses(
           page,
           test.args.filterType,
           test.args.filterBy,
           test.args.filterValue,
         );
 
-        const numberOfAddressesAfterFilter = await addressesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfAddressesAfterFilter).to.be.at.most(numberOfAddresses);
+        const numberOfAddressesAfterFilter = await boAddressesPage.getNumberOfElementInGrid(page);
+        expect(numberOfAddressesAfterFilter).to.be.at.most(numberOfAddresses);
 
         for (let i = 1; i <= numberOfAddressesAfterFilter; i++) {
-          const textColumn = await addressesPage.getTextColumnFromTableAddresses(
+          const textColumn = await boAddressesPage.getTextColumnFromTableAddresses(
             page,
             i,
             test.args.filterBy === 'id_country' ? 'country_name' : test.args.filterBy,
           );
-          await expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(test.args.filterValue);
         }
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfAddressesAfterReset = await addressesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfAddressesAfterReset).to.equal(numberOfAddresses);
+        const numberOfAddressesAfterReset = await boAddressesPage.resetAndGetNumberOfLines(page);
+        expect(numberOfAddressesAfterReset).to.equal(numberOfAddresses);
       });
     });
   });

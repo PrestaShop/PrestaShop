@@ -219,7 +219,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                     $this->getWsObject()->executeEntityGetAndHead();
                     break;
                 case 'DELETE':
-                    $attachment = new Attachment((int) $this->getWsObject()->urlSegment[1]);
+                    $attachment = new Attachment((int) $this->getWsObject()->urlSegment[2]);
                     $attachment->delete();
                     break;
             }
@@ -252,9 +252,9 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     /**
      * Handles attachment file download
      *
-     * @throws WebserviceException if attachment is not existing or file not available
-     *
      * @return array<string, string> File details
+     *
+     * @throws WebserviceException if attachment is not existing or file not available
      */
     public function executeFileGetAndHead(): array
     {

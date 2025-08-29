@@ -29,21 +29,21 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller;
 
 use InvalidArgumentException;
-use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Routing\RouterInterface;
 use Tests\Integration\PrestaShopBundle\Controller\FormFiller\FormFiller;
-use Tests\Integration\Utility\ContextMockerTrait;
+use Tests\Integration\Utility\LoginTrait;
 use Tests\Resources\DatabaseDump;
+use Tests\TestCase\SymfonyIntegrationTestCase;
 
-abstract class GridControllerTestCase extends WebTestCase
+abstract class GridControllerTestCase extends SymfonyIntegrationTestCase
 {
-    use ContextMockerTrait;
+    use LoginTrait;
 
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
 
@@ -71,8 +71,8 @@ abstract class GridControllerTestCase extends WebTestCase
 
     public function setUp(): void
     {
-        self::mockContext();
-        $this->client = static::createClient();
+        parent::setUp();
+        $this->loginUser($this->client);
         $this->router = $this->client->getContainer()->get('router');
         $this->formFiller = new FormFiller();
     }
@@ -159,6 +159,8 @@ abstract class GridControllerTestCase extends WebTestCase
      */
     protected function getFilteredEntitiesFromGrid(array $testFilters, array $routeParams = []): TestEntityDTOCollection
     {
+        $this->client->disableReboot();
+
         $gridUrl = $this->generateGridUrl($routeParams);
         $crawler = $this->client->request('GET', $gridUrl);
         $this->assertResponseIsSuccessful();
@@ -180,6 +182,12 @@ abstract class GridControllerTestCase extends WebTestCase
         $this->assertEquals($gridRoute, $redirectionRoute);
 
         return $this->parseEntitiesFromGridTable($crawler);
+    }
+
+    protected function resetGridFilters(): void
+    {
+        // grid filters reset button highly depends on javascript so there is no point trying to test it here
+        DatabaseDump::restoreTables(['admin_filter']);
     }
 
     /**
@@ -230,6 +238,38 @@ abstract class GridControllerTestCase extends WebTestCase
         }, iterator_to_array($entities));
 
         $this->assertContains($searchEntityId, $ids);
+    }
+
+    /**
+     * @param string $deleteRoute
+     * @param array $routeParams
+     */
+    protected function deleteEntityFromPage(string $deleteRoute, array $routeParams): void
+    {
+        // performs the deletion and then redirects to the list
+        $this->client->request('POST', $this->router->generate($deleteRoute, $routeParams));
+        $this->assertResponseRedirects();
+    }
+
+    /**
+     * @param string $route
+     * @param array<string, mixed> $routeParams
+     */
+    protected function toggleStatus(string $route, array $routeParams): void
+    {
+        $this->client->request('POST', $this->router->generate($route, $routeParams));
+        $this->assertResponseRedirects();
+    }
+
+    /**
+     * @param string $route
+     * @param array $requestParams
+     */
+    protected function bulkDeleteEntitiesFromPage(string $route, array $requestParams): void
+    {
+        // Delete url performs the deletion and then redirects to the list
+        $this->client->request('POST', $this->router->generate($route), $requestParams);
+        $this->assertResponseRedirects();
     }
 
     /**

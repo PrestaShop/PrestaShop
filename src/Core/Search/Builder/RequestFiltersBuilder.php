@@ -57,7 +57,7 @@ final class RequestFiltersBuilder extends AbstractFiltersBuilder
     /**
      * {@inheritdoc}
      */
-    public function buildFilters(Filters $filters = null)
+    public function buildFilters(?Filters $filters = null)
     {
         if (null === $this->request) {
             return $filters;
@@ -67,7 +67,7 @@ final class RequestFiltersBuilder extends AbstractFiltersBuilder
         $queryParams = $this->request->query->all();
         $requestParams = $this->request->request->all();
 
-        //If filters have a filterId then parameters are sent in a namespace (eg: grid_id[limit]=10 instead of limit=10)
+        // If filters have a filterId then parameters are sent in a namespace (eg: grid_id[limit]=10 instead of limit=10)
         if (!empty($filterId)) {
             $queryParams = isset($queryParams[$filterId]) ? $queryParams[$filterId] : [];
             $requestParams = isset($requestParams[$filterId]) ? $requestParams[$filterId] : [];

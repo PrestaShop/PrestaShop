@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -51,18 +50,14 @@ final class GridFilterFormFactory implements GridFilterFormFactoryInterface
 
     /**
      * @param FormFactoryInterface $formFactory
-     * @param HookDispatcherInterface|null $hookDispatcher
+     * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(
         FormFactoryInterface $formFactory,
-        HookDispatcherInterface $hookDispatcher = null
+        HookDispatcherInterface $hookDispatcher
     ) {
         $this->formFactory = $formFactory;
-
-        if (null === $hookDispatcher) {
-            @trigger_error('The $hookDispatcher parameter should not be null, inject your main HookDispatcherInterface service, or NullDispatcher if you don\'t need hooks.', E_USER_DEPRECATED);
-        }
-        $this->hookDispatcher = $hookDispatcher ? $hookDispatcher : new NullDispatcher();
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -106,7 +101,7 @@ final class GridFilterFormFactory implements GridFilterFormFactoryInterface
                 $column = $definition->getColumnById($filter->getAssociatedColumn());
                 $filterLabel = !empty($column->getName()) ? $column->getName() : $filterLabel;
             }
-        } catch (ColumnNotFoundException $e) {
+        } catch (ColumnNotFoundException) {
         }
 
         return $filterLabel;

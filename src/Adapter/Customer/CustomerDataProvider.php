@@ -38,9 +38,9 @@ class CustomerDataProvider
     /**
      * @param int $id
      *
-     * @throws LogicException If the customer id is not set
-     *
      * @return object customer
+     *
+     * @throws LogicException If the customer id is not set
      */
     public function getCustomer($id)
     {

@@ -98,6 +98,7 @@ class EmailConfigurationType extends TranslatorAwareType
                     $this->trans('Send email in HTML format', 'Admin.Advparameters.Feature') => MailOption::TYPE_HTML,
                     $this->trans('Send email in text format', 'Admin.Advparameters.Feature') => MailOption::TYPE_TXT,
                     $this->trans('Both', 'Admin.Advparameters.Feature') => MailOption::TYPE_BOTH,
+                    $this->trans('Both, with text format automatically generated', 'Admin.Advparameters.Feature') => MailOption::TYPE_BOTH_AUTOMATIC_TEXT,
                 ],
             ])
             ->add('log_emails', SwitchType::class, [

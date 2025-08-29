@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -121,10 +122,6 @@ class ProductStockUpdater
         }
 
         $this->updateStockByShopConstraint($stockAvailable, $properties, $shopConstraint);
-
-        if ($this->isAdvancedStockEnabled($shopConstraint) && $product->depends_on_stock) {
-            StockAvailable::synchronize($product->id);
-        }
     }
 
     /**
@@ -144,12 +141,14 @@ class ProductStockUpdater
         }
 
         if ($shopConstraint->forAllShops()) {
-            $shops = $this->productRepository->getAssociatedShopIds($productId);
+            $shopIds = $this->productRepository->getAssociatedShopIds($productId);
+        } elseif ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+            $shopIds = $shopConstraint->getShopIds();
         } else {
-            $shops = [$shopConstraint->getShopId()];
+            $shopIds = [$shopConstraint->getShopId()];
         }
 
-        foreach ($shops as $shopId) {
+        foreach ($shopIds as $shopId) {
             $stockAvailable = $this->stockAvailableRepository->getForProduct($productId, $shopId);
             if ((int) $stockAvailable->quantity === 0) {
                 continue;
@@ -185,10 +184,6 @@ class ProductStockUpdater
                 new OrderStateId((int) $this->configuration->get('PS_OS_ERROR', null, $shopConstraint)),
                 new OrderStateId((int) $this->configuration->get('PS_OS_CANCELED', null, $shopConstraint))
             );
-
-            if ($this->isAdvancedStockEnabled($shopConstraint)) {
-                StockAvailable::synchronize($productId->getValue(), $shopId->getValue());
-            }
         }
     }
 
@@ -238,6 +233,13 @@ class ProductStockUpdater
                 $shopStockAvailable = $this->stockAvailableRepository->get($stockId);
                 $this->updateStockAvailable($shopStockAvailable, $properties);
             }
+        } elseif ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+            // For specific list of shops, we get the appropriate stock for each shop and update it
+            $productId = new ProductId((int) $stockAvailable->id_product);
+            foreach ($shopConstraint->getShopIds() as $shopId) {
+                $shopStockAvailable = $this->stockAvailableRepository->getForProduct($productId, $shopId);
+                $this->updateStockAvailable($shopStockAvailable, $properties);
+            }
         } else {
             $this->updateStockAvailable($stockAvailable, $properties);
         }
@@ -273,7 +275,7 @@ class ProductStockUpdater
         $this->stockAvailableRepository->update($stockAvailable, $fallbackShopId);
 
         if ($properties->getStockModification()) {
-            //Save movement only after stock has been updated
+            // Save movement only after stock has been updated
             $this->saveMovement($stockAvailable, $properties->getStockModification(), $previousQuantity, $fallbackShopId->getValue());
 
             // Update reserved and physical quantity for this stock
@@ -322,10 +324,5 @@ class ProductStockUpdater
                 'id_shop' => (int) $affectedShopId,
             ]
         );
-    }
-
-    private function isAdvancedStockEnabled(ShopConstraint $shopConstraint): bool
-    {
-        return (bool) $this->configuration->get('PS_ADVANCED_STOCK_MANAGEMENT', null, $shopConstraint);
     }
 }

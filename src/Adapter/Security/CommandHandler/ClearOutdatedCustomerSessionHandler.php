@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Session\Repository\CustomerSessionRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearOutdatedCustomerSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\ClearOutdatedCustomerSessionHandlerInterface;
 
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\ClearOutdatedCusto
  *
  * @internal
  */
+#[AsCommandHandler]
 class ClearOutdatedCustomerSessionHandler implements ClearOutdatedCustomerSessionHandlerInterface
 {
     /**

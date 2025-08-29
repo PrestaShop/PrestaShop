@@ -1,0 +1,28 @@
+ 
+
+{shop_url}
+
+Hi,
+You have received a new return request for {shop_name}.
+
+Return Details
+
+Order: {order_name} Placed on {date}
+Customer: {firstname} {lastname}, ({email})
+
+Reference	Product	Quantity  {items}
+
+Delivery address
+
+{delivery_block_html}
+
+Billing address
+
+{invoice_block_html}
+
+Customer message:
+
+{message}
+
+[{shop_name}]({shop_url})
+Powered by [PrestaShop](https://www.prestashop-project.org/)

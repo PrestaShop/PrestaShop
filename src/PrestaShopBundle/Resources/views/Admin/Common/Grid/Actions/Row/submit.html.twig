@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 {% set class = 'btn tooltip-link js-submit-row-action' %}
 
@@ -35,11 +35,11 @@
   {% set confirmation_message = dynamic_field|default(action.options.confirm_message) %}
 {% endif %}
 
-{% set route_params = { (action.options.route_param_name) : (record[action.options.route_param_field]) } %}
+{% set route_params = {(action.options.route_param_name): (record[action.options.route_param_field])} %}
 {% set extra_route_params = action.options.extra_route_params %}
 
 {% for name, field in extra_route_params %}
-  {% set route_params = route_params|merge({ (name) : (record[field] ?? field) }) %}
+  {% set route_params = route_params|merge({(name): (record[field] ?? field)}) %}
 {% endfor %}
 
 <a class="{{ class }} grid-{{ action.name|lower }}-row-link"
@@ -49,7 +49,7 @@
    data-method="{{ action.options.method }}"
   {% if action.options.modal_options.options is defined %}
     {% for attribute, value in action.options.modal_options.options %}
-      data-{{ attribute|replace({'_':'-'}) }}="{{ value }}"
+      data-{{ attribute|replace({_: '-'}) }}="{{ value }}"
     {% endfor %}
   {% endif %}
   {% if attributes.tooltip_name %}

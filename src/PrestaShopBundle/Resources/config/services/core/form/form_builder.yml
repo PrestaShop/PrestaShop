@@ -135,6 +135,29 @@ services:
       - 'PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType'
       - '@prestashop.core.form.identifiable_object.data_provider.feature_form_data_provider'
 
+  prestashop.core.form.identifiable_object.builder.attribute_form_builder:
+    autowire: true
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AttributeFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.feature_value_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureValueType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FeatureValueFormDataProvider'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\AttributeGroupFormBuilder:
+    autowire: true
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeGroupType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AttributeGroupFormDataProvider'
+
   prestashop.core.form.identifiable_object.builder.order_message_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
@@ -144,7 +167,7 @@ services:
 
   prestashop.core.form.identifiable_object.builder.order_return_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
-    factory: 'prestashop.core.form.builder.form_builder_factory:create'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
     arguments:
       - 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\OrderReturnType'
       - '@prestashop.core.form.identifiable_object.data_provider.order_return_form_data_provider'
@@ -292,3 +315,53 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType'
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TaxRulesGroupFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.cart_rule_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\CartRule\CartRuleType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CartRuleFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.discount_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Discount\DiscountType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\DiscountFormDataProvider'
+      - '@prestashop.core.form.identifiable_object.option_provider.discount_form_options_provider'
+
+  prestashop.core.form.identifiable_object.builder.title_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\TitleType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TitleFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.api_client_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\AdvancedParameters\AdminAPI\ApiClientType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ApiClientFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.image_type_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageTypeType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ImageTypeFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.carrier_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\CarrierType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CarrierFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.alias_search_term_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search\SearchTermType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AliasFormDataProvider'

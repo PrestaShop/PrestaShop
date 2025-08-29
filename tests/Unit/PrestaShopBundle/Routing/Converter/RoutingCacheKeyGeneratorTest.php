@@ -323,7 +323,7 @@ class RoutingCacheKeyGeneratorTest extends TestCase
     private function generateFiles(array $fileOffsets, $originalTime = null)
     {
         if (null === $originalTime) {
-            //By default original time one hour ago
+            // By default original time one hour ago
             $originalTime = time() - 3600;
         }
 

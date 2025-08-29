@@ -1,9 +1,35 @@
 <?php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
 
 session_start();
 
 if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', dirname(__FILE__).'/../../');
+    // Properly assign admin directory path, we don't want to use relative traversal here,
+    // it creates problems in some methods that use basename(_PS_ADMIN_DIR_), like Link class.
+    define('_PS_ADMIN_DIR_', dirname(__DIR__, 2));
 }
 
 require_once _PS_ADMIN_DIR_.'/../config/config.inc.php';
@@ -15,7 +41,7 @@ $products_accesses = Profile::getProfileAccess(Context::getContext()->employee->
 $cms_accesses = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminCmsContent'));
 
 if (!$products_accesses['edit'] && !$cms_accesses['edit']) {
-    die(Tools::displayError('Access forbidden.'));
+    throw new PrestaShopException('Access forbidden.');
 }
 //------------------------------------------------------------------------------
 // DON'T COPY THIS VARIABLES IN FOLDERS config.php FILES
@@ -36,7 +62,7 @@ if (!$products_accesses['edit'] && !$cms_accesses['edit']) {
 //    |   |   |   |   |- plugin.min.js
 
 $base_url = Tools::getHttpHost(true);  // DON'T TOUCH (base url (only domain) of site (without final /)).
-$base_url = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE') ? $base_url : str_replace('https', 'http', $base_url);
+$base_url = Configuration::get('PS_SSL_ENABLED') ? $base_url : str_replace('https', 'http', $base_url);
 $upload_dir = Context::getContext()->shop->getBaseURI().'img/cms/'; // path from base_url to base of upload folder (with start and final /)
 $current_path = _PS_ROOT_DIR_.'/img/cms/'; // relative path from filemanager folder to upload folder (with final /)
 //thumbs folder can't put inside upload folder

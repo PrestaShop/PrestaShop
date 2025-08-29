@@ -1,19 +1,15 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import categoriesPage from '@pages/BO/catalog/categories';
-
-// Import data
-import {CategoryFilter} from '@data/types/category';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+
+import {
+  boCategoriesPage,
+  boDashboardPage,
+  boLoginPage,
+  type BrowserContext,
+  type CategoryFilter,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -31,60 +27,66 @@ function bulkDeleteCategoriesTest(
   describe(`POST-TEST: Bulk delete categories (filtered by ${categoryData.filterBy} "${categoryData.value}")`, async () => {
     // before and after functions
     before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
     });
 
     after(async () => {
-      await helper.closeBrowserContext(browserContext);
+      await utilsPlaywright.closeBrowserContext(browserContext);
     });
 
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Catalog > Categories\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPageToCheckImport', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.categoriesLink,
+        boDashboardPage.catalogParentLink,
+        boDashboardPage.categoriesLink,
       );
-      await categoriesPage.closeSfToolBar(page);
+      await boCategoriesPage.closeSfToolBar(page);
 
-      const pageTitle = await categoriesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+      const pageTitle = await boCategoriesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCategoriesPage.pageTitle);
     });
 
     it('should reset filter and get number of categories', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-      numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCategories).to.be.above(0);
+      numberOfCategories = await boCategoriesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfCategories).to.be.above(0);
     });
 
     it('should filter list by Name \'category\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterCategoriesTable', baseContext);
 
-      await categoriesPage.filterCategories(page, 'input', categoryData.filterBy, categoryData.value);
+      await boCategoriesPage.filterCategories(page, 'input', categoryData.filterBy, categoryData.value);
 
-      const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, categoryData.filterBy);
-      await expect(textColumn).to.contains(categoryData.value);
+      const textColumn = await boCategoriesPage.getTextColumnFromTableCategories(page, 1, categoryData.filterBy);
+      expect(textColumn).to.contains(categoryData.value);
     });
 
     it('should delete categories', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
 
-      const deleteTextResult = await categoriesPage.deleteCategoriesBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(categoriesPage.successfulMultiDeleteMessage);
+      const deleteTextResult = await boCategoriesPage.deleteCategoriesBulkActions(page);
+      expect(deleteTextResult).to.be.equal(boCategoriesPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      const numberOfCategoriesAfterReset = await categoriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCategoriesAfterReset).to.be.below(numberOfCategories);
+      const numberOfCategoriesAfterReset = await boCategoriesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfCategoriesAfterReset).to.be.below(numberOfCategories);
     });
   });
 }

@@ -33,6 +33,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Defines the integer type two inputs of min and max value - designed to fit grid in grid filter.
@@ -40,6 +41,11 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 final class IntegerMinMaxFilterType extends AbstractType
 {
     use TranslatorAwareTrait;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
 
     /**
      * {@inheritdoc}

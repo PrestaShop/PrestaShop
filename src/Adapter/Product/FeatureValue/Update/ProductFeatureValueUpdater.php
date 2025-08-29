@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\FeatureValue\Update;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use FeatureValue;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
@@ -191,7 +191,7 @@ class ProductFeatureValueUpdater
             )
         ;
 
-        $orphanCustomFeatureValues = $qb->execute()->fetchAll();
+        $orphanCustomFeatureValues = $qb->executeQuery()->fetchAllAssociative();
         if (empty($orphanCustomFeatureValues)) {
             return;
         }
@@ -205,7 +205,7 @@ class ProductFeatureValueUpdater
         $qb->delete($this->dbPrefix . 'feature_value')
             ->where($qb->expr()->in('id_feature_value', $orphanIds))
         ;
-        $qb->execute();
+        $qb->executeStatement();
     }
 
     /**

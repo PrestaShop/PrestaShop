@@ -41,7 +41,7 @@ class IOException extends CoreException
      * @param Throwable $previous
      * @param string|null $path
      */
-    public function __construct($message = '', $code = 0, Throwable $previous = null, $path = null)
+    public function __construct($message = '', $code = 0, ?Throwable $previous = null, $path = null)
     {
         parent::__construct($message, $code, $previous);
         $this->path = $path;

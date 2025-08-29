@@ -1,26 +1,24 @@
-// Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import {expect} from 'chai';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByGuestTest} from '@commonTests/FO/order';
+import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
 
-// Import BO pages
-import viewCustomerPage from '@pages/BO/customers/view';
-import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders';
-
-// Import data
-import PaymentMethods from '@data/demo/paymentMethods';
-import Products from '@data/demo/products';
-import AddressData from '@data/faker/address';
-import CustomerData from '@data/faker/customer';
-import OrderData from '@data/faker/order';
-
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boCustomersViewPage,
+  boDashboardPage,
+  boLoginPage,
+  boOrdersPage,
+  type BrowserContext,
+  dataPaymentMethods,
+  dataProducts,
+  FakerAddress,
+  FakerCustomer,
+  FakerOrder,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_orders_orders_viewGuest';
 
@@ -39,82 +37,88 @@ describe('BO - Orders : View guest from orders page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const customerData: CustomerData = new CustomerData({password: ''});
-  const addressData: AddressData = new AddressData({country: 'France'});
+  const customerData: FakerCustomer = new FakerCustomer({password: ''});
+  const addressData: FakerAddress = new FakerAddress({country: 'France'});
   // New order by guest data
-  const orderByGuestData: OrderData = new OrderData({
+  const orderByGuestData: FakerOrder = new FakerOrder({
     customer: customerData,
     products: [
       {
-        product: Products.demo_5,
+        product: dataProducts.demo_5,
         quantity: 1,
       },
     ],
     deliveryAddress: addressData,
-    paymentMethod: PaymentMethods.wirePayment,
+    paymentMethod: dataPaymentMethods.wirePayment,
   });
 
   // Pre-condition: Create order by guest in FO
   createOrderByGuestTest(orderByGuestData, baseContext);
 
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('View guest from orders page', async () => {
     it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
+      await boDashboardPage.goToSubMenu(
         page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
+        boDashboardPage.ordersParentLink,
+        boDashboardPage.ordersLink,
       );
-      await ordersPage.closeSfToolBar(page);
+      await boOrdersPage.closeSfToolBar(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await boOrdersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersPage.pageTitle);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
-      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrders).to.be.above(0);
+      const numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
+      expect(numberOfOrders).to.be.above(0);
     });
 
     it('should filter order by customer name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer', baseContext);
 
-      await ordersPage.filterOrders(
+      await boOrdersPage.filterOrders(
         page,
         'input',
         'customer',
         customerData.lastName,
       );
 
-      const numberOfOrders = await ordersPage.getNumberOfElementInGrid(page);
-      await expect(numberOfOrders).to.be.at.least(1);
+      const numberOfOrders = await boOrdersPage.getNumberOfElementInGrid(page);
+      expect(numberOfOrders).to.be.at.least(1);
     });
 
     it('should check guest link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCustomer', baseContext);
 
       // Click on customer link first row
-      page = await ordersPage.viewCustomer(page, 1);
+      page = await boOrdersPage.viewCustomer(page, 1);
 
-      const pageTitle = await viewCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to
-        .contains(`${viewCustomerPage.pageTitle} ${customerData.firstName[0]}. ${customerData.lastName}`);
+      const pageTitle = await boCustomersViewPage.getPageTitle(page);
+      expect(pageTitle).to
+        .contains(boCustomersViewPage.pageTitle(`${customerData.firstName[0]}. ${customerData.lastName}`));
     });
   });
 

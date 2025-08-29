@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler;
 
 use CMS;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\AddCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler\AddCmsPageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotAddCmsPageException;
@@ -37,6 +38,7 @@ use PrestaShopException;
 /**
  * Handles AddCmsPageCommand using legacy object model
  */
+#[AsCommandHandler]
 final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPageHandlerInterface
 {
     /**
@@ -77,7 +79,6 @@ final class AddCmsPageHandler extends AbstractCmsPageHandler implements AddCmsPa
         $cms->meta_title = $command->getLocalizedTitle();
         $cms->head_seo_title = $command->getLocalizedMetaTitle();
         $cms->meta_description = $command->getLocalizedMetaDescription();
-        $cms->meta_keywords = $command->getLocalizedMetaKeyword();
         $cms->link_rewrite = $command->getLocalizedFriendlyUrl();
         $cms->content = $command->getLocalizedContent();
         $cms->indexation = $command->isIndexedForSearch();

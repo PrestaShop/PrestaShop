@@ -192,7 +192,7 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
                     ->setName($this->trans('View', [], 'Admin.Actions'))
                     ->setIcon('zoom_in')
                     ->setOptions([
-                        'route' => 'admin_categories_index', //@todo: implement view products of this category
+                        'route' => 'admin_categories_index', // @todo: implement view products of this category
                         'route_param_name' => 'id_category',
                         'route_param_field' => 'id_category',
                     ])

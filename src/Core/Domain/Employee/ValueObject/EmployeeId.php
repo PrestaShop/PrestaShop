@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdExcept
 /**
  * Defines Employee ID with it's constraints.
  */
-class EmployeeId
+class EmployeeId implements EmployeeIdInterface
 {
     /**
      * @var int
@@ -50,10 +50,7 @@ class EmployeeId
         $this->employeeId = $employeeId;
     }
 
-    /**
-     * @return int
-     */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->employeeId;
     }

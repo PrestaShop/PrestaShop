@@ -10,6 +10,7 @@ const common = require('./common.js');
  */
 function prodConfig() {
   const prod = Object.assign(common, {
+    mode: 'production',
     stats: 'minimal',
     optimization: {
       minimize: true,

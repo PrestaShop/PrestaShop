@@ -40,7 +40,7 @@ class BulkDeleteEmployeesSessionHandlerTest extends TestCase
         $sessionId = new BulkDeleteEmployeeSessionsCommand([1, 2, 3]);
 
         $repo = $this->getMockBuilder(EmployeeSessionRepository::class)
-            ->setMethods([
+            ->onlyMethods([
                 'bulkDelete',
             ])
             ->disableOriginalConstructor()

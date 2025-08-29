@@ -50,7 +50,7 @@ class ProductAttributeCore extends ObjectModel
         'multilang' => true,
         'fields' => [
             'id_attribute_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32],
             'position' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
 
             /* Lang fields */
@@ -240,7 +240,7 @@ class ProductAttributeCore extends ObjectModel
      *
      * @return bool Quantity is available or not
      */
-    public static function checkAttributeQty($idProductAttribute, $qty, Shop $shop = null)
+    public static function checkAttributeQty($idProductAttribute, $qty, ?Shop $shop = null)
     {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -386,6 +386,7 @@ class ProductAttributeCore extends ObjectModel
      * @param int $idAttributeGroup AttributeGroup ID
      *
      * @return int $position Position
+     *
      * @todo: Shouldn't this be called getHighestPosition instead?
      */
     public static function getHigherPosition($idAttributeGroup)

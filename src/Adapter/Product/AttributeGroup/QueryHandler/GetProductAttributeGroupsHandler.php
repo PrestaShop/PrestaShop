@@ -32,12 +32,14 @@ use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\QueryHandler\AbstractAttributeGroupQueryHandler;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler\GetProductAttributeGroupsHandlerInterface;
 
 /**
  * Handles the query GetProductAttributeGroups using adapter repository
  */
+#[AsQueryHandler]
 class GetProductAttributeGroupsHandler extends AbstractAttributeGroupQueryHandler implements GetProductAttributeGroupsHandlerInterface
 {
     /**

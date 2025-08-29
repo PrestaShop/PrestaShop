@@ -2,10 +2,20 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.crypto.hashing:
-    class: 'PrestaShop\PrestaShop\Core\Crypto\Hashing'
-
   prestashop.core.security.folder_guard.vendor:
     class: 'PrestaShop\PrestaShop\Core\Security\HtaccessFolderGuard'
     arguments:
-      - '%kernel.root_dir%/Resources/security/.htaccess.dist'
+      - '%kernel.project_dir%/app/Resources/security/.htaccess.dist'
+
+  PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface:
+    alias: 'PrestaShop\PrestaShop\Adapter\Security\Access'
+    public: false
+  PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface:
+    alias: 'PrestaShop\PrestaShop\Adapter\Security\Access'
+    public: false
+
+  PrestaShop\PrestaShop\Core\Security\OAuth2\TokenAuthenticator:
+    public: false
+    autowire: true
+    arguments:
+      $authorizationServers: !tagged_iterator core.oauth2.authorization_server

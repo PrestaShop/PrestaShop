@@ -29,22 +29,25 @@ namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
+use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Form\Admin\Sell\Category\SEO\RedirectOptionType;
+use PrestaShopBundle\Form\Admin\Type\CategorySeoPreviewType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+use PrestaShopBundle\Form\Admin\Type\ImageWithPreviewType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithRecommendedLengthType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -60,7 +63,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     /**
      * @var FeatureInterface
      */
-    private $multistoreFeature;
+    private $multiStoreFeature;
 
     /**
      * @var ConfigurationInterface
@@ -71,20 +74,20 @@ abstract class AbstractCategoryType extends TranslatorAwareType
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
-     * @param FeatureInterface $multistoreFeature
+     * @param FeatureInterface $multiStoreFeature
      * @param ConfigurationInterface $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $customerGroupChoices,
-        FeatureInterface $multistoreFeature,
+        FeatureInterface $multiStoreFeature,
         ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
-        $this->multistoreFeature = $multistoreFeature;
+        $this->multiStoreFeature = $multiStoreFeature;
         $this->configuration = $configuration;
     }
 
@@ -93,27 +96,44 @@ abstract class AbstractCategoryType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $genericCharactersHint = $this->trans('Invalid characters: %s', 'Admin.Notifications.Info', [TypedRegexValidator::CATALOG_CHARS]);
+        /* @var EditableCategory $editableCategory */
         $builder
             ->add('name', TranslatableType::class, [
+                'label' => $this->trans('Name', 'Admin.Global'),
+                'help' => $genericCharactersHint,
                 'type' => TextType::class,
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
                 'options' => [
+                    'attr' => [
+                        'maxlength' => CategorySettings::MAX_TITLE_LENGTH,
+                    ],
                     'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>;=#{}]*$/u',
-                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        new TypedRegex([
+                            'type' => TypedRegex::TYPE_CATALOG_NAME,
+                        ]),
+                        new Length([
+                            'max' => CategorySettings::MAX_TITLE_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters.',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => CategorySettings::MAX_TITLE_LENGTH,
+                                ]
+                            ),
                         ]),
                     ],
                 ],
             ])
-            ->add('description', TranslateType::class, [
+            ->add('description', TranslatableType::class, [
+                'label' => $this->trans('Description', 'Admin.Global'),
+                'help' => $genericCharactersHint,
                 'type' => FormattedTextareaType::class,
-                'locales' => $this->locales,
-                'hideTabs' => false,
                 'required' => false,
                 'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
                     'constraints' => [
                         new CleanHtml([
                             'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
@@ -121,12 +141,13 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('additional_description', TranslateType::class, [
+            ->add('additional_description', TranslatableType::class, [
+                'label' => $this->trans('Additional description', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Text that is usually displayed after the product list on category page. It\'s a good place to put longer SEO related content.', 'Admin.Catalog.Help') . ' ' . $genericCharactersHint,
                 'type' => FormattedTextareaType::class,
-                'locales' => $this->locales,
-                'hideTabs' => false,
                 'required' => false,
                 'options' => [
+                    'limit' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4,
                     'constraints' => [
                         new CleanHtml([
                             'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
@@ -135,19 +156,32 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
             ])
             ->add('active', SwitchType::class, [
+                'label' => $this->trans('Enabled', 'Admin.Global'),
                 'required' => false,
             ])
-            ->add('cover_image', FileType::class, [
+            ->add('cover_image', ImageWithPreviewType::class, [
+                'label' => $this->trans('Category cover image', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Category image that is usually displayed on the category page next to description, depending on your theme.', 'Admin.Catalog.Help'),
                 'required' => false,
+                'can_be_deleted' => true,
+                'show_size' => true,
             ])
-            ->add('thumbnail_image', FileType::class, [
+            ->add('thumbnail_image', ImageWithPreviewType::class, [
+                'label' => $this->trans('Category thumbnail', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Miniature image that is used when displaying subcategories. Could be also used in menus and other places, depending on your theme.', 'Admin.Catalog.Help'),
                 'required' => false,
+                'can_be_deleted' => true,
+                'show_size' => true,
             ])
-            ->add('menu_thumbnail_images', FileType::class, [
-                'multiple' => true,
-                'required' => false,
-            ])
+            ->add('seo_preview', CategorySeoPreviewType::class,
+                [
+                    'label' => $this->trans('SEO preview', 'Admin.Global'),
+                    'required' => false,
+                ]
+            )
             ->add('meta_title', TranslatableType::class, [
+                'label' => $this->trans('Meta title', 'Admin.Global'),
+                'help' => $genericCharactersHint,
                 'type' => TextWithRecommendedLengthType::class,
                 'required' => false,
                 'options' => [
@@ -160,9 +194,8 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                         ),
                     ],
                     'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        new TypedRegex([
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
                         ]),
                         new Length([
                             'max' => SeoSettings::MAX_TITLE_LENGTH,
@@ -178,6 +211,8 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
             ])
             ->add('meta_description', TranslatableType::class, [
+                'label' => $this->trans('Meta description', 'Admin.Global'),
+                'help' => $genericCharactersHint,
                 'required' => false,
                 'type' => TextWithRecommendedLengthType::class,
                 'options' => [
@@ -193,9 +228,8 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                         ),
                     ],
                     'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        new TypedRegex([
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
                         ]),
                         new Length([
                             'max' => SeoSettings::MAX_DESCRIPTION_LENGTH,
@@ -210,37 +244,42 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('meta_keyword', TranslatableType::class, [
-                'required' => false,
-                'options' => [
-                    'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
-                        ]),
-                    ],
-                    'attr' => [
-                        'class' => 'js-taggable-field',
-                        'placeholder' => $this->trans('Add tag', 'Admin.Actions'),
-                    ],
-                    'required' => false,
-                ],
-            ])
             ->add('link_rewrite', TranslatableType::class, [
+                'label' => $this->trans('Friendly URL', 'Admin.Global'),
+                'help' => $this->trans('Allowed characters: letters, numbers, underscores (_) and hyphens (-). To allow more characters, enable the \'Accented URL\' feature in Shop Parameters > Traffic & SEO.', 'Admin.Catalog.Help'),
                 'type' => TextType::class,
                 'constraints' => [
                     new DefaultLanguage(),
                 ],
                 'options' => [
+                    'attr' => [
+                        'maxlength' => SeoSettings::MAX_LINK_REWRITE_LENGTH,
+                    ],
                     'constraints' => [
-                        new Regex([
-                            'pattern' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL') ? '/^[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+$/u' : '/^[^<>={}]*$/u',
-                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        new TypedRegex([
+                            'type' => TypedRegex::TYPE_LINK_REWRITE,
+                        ]),
+                        new Length([
+                            'max' => SeoSettings::MAX_LINK_REWRITE_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters.',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => SeoSettings::MAX_LINK_REWRITE_LENGTH,
+                                ]
+                            ),
                         ]),
                     ],
                 ],
             ])
+            ->add('redirect_option', RedirectOptionType::class, [
+                'id_category' => $options['id_category'] ?? 0,
+                'isRootCategory' => $this instanceof RootCategoryType,
+                'alert_message' => $this->getRedirectionAlertMessages(),
+            ])
             ->add('group_association', MaterialChoiceTableType::class, [
+                'label' => $this->trans('Group access', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Select the customer groups which will have access to this category.', 'Admin.Catalog.Help'),
                 'choices' => $this->customerGroupChoices,
                 'required' => true,
                 'constraints' => [
@@ -250,8 +289,33 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
             ]);
 
-        if ($this->multistoreFeature->isUsed()) {
-            $builder->add('shop_association', ShopChoiceTreeType::class);
+        if ($this->multiStoreFeature->isUsed()) {
+            $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->trans('Store association', 'Admin.Global'),
+            ]);
         }
+    }
+
+    private function getRedirectionAlertMessages(): array
+    {
+        $formatParameters = [
+            '[1]' => '<strong>',
+            '[/1]' => '</strong>',
+            '[2]' => '<br>',
+        ];
+
+        $alertMessages = [
+            $this->trans('[1]No redirection (404), display error page[/1] [2] Do not redirect anywhere and display a 404 "Not Found" page.', 'Admin.Catalog.Help', $formatParameters),
+            $this->trans('[1]No redirection (410), display error page[/1] [2] Do not redirect anywhere and display a 410 "Gone" page.', 'Admin.Catalog.Help', $formatParameters),
+        ];
+
+        if (!$this instanceof RootCategoryType) {
+            $alertMessages = array_merge([
+                $this->trans('[1]Permanent redirection (301)[/1] [2] Permanently display another category instead.', 'Admin.Catalog.Help', $formatParameters),
+                $this->trans('[1]Temporary redirection (302)[/1] [2] Temporarily display another category instead.', 'Admin.Catalog.Help', $formatParameters),
+            ], $alertMessages);
+        }
+
+        return $alertMessages;
     }
 }

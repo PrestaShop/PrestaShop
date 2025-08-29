@@ -363,6 +363,7 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
 
     /**
      * @todo This uses legacy code, should be refactored once we have a CQRS command to get SpecificPriceRule
+     *
      * @When I add following conditions to catalog price rule :catalogPriceRuleName:
      *
      * @param string $catalogPriceRuleReference

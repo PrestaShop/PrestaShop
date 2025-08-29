@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 
+use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
-use Symfony\Component\Cache\DoctrineProvider;
 
 final class DoctrineCacheClearer implements CacheClearerInterface
 {

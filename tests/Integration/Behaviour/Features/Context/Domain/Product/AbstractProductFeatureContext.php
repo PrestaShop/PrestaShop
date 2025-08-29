@@ -306,8 +306,6 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'link_rewrite' => 'productSeoOptions.localizedLinkRewrites',
             'redirect_type' => 'productSeoOptions.redirectType',
             'redirect_target' => 'productSeoOptions.redirectTarget',
-            'use_advanced_stock_management' => 'stockInformation.useAdvancedStockManagement',
-            'depends_on_stock' => 'stockInformation.dependsOnStock',
             'pack_stock_type' => 'stockInformation.packStockType',
             'out_of_stock_type' => 'stockInformation.outOfStockType',
             'quantity' => 'stockInformation.quantity',
@@ -389,17 +387,5 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
         }
 
         return $this->getSharedStorage()->get($manufacturerReference);
-    }
-
-    /**
-     * @param string $shopReferences
-     *
-     * @return int[]
-     */
-    protected function getShopIdsFromReferences(string $shopReferences): array
-    {
-        return array_map(function (string $shopReference) {
-            return (int) $this->getSharedStorage()->get(trim($shopReference));
-        }, explode(',', $shopReferences));
     }
 }

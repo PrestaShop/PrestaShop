@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shop\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand;
@@ -40,6 +41,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Class UploadLogosHandler
  */
+#[AsCommandHandler]
 final class UploadLogosHandler implements UploadLogosHandlerInterface
 {
     /**

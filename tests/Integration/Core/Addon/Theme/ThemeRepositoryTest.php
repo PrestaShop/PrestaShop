@@ -98,7 +98,7 @@ class ThemeRepositoryTest extends ContextStateTestCase
         );
 
         $this->assertCount(
-            (count($themeListWithoutRestrictions) - 1),
+            count($themeListWithoutRestrictions) - 1,
             $themeListWithoutClassic,
             self::NOTICE . sprintf('expected list excluding with classic to list of themes without classic')
         );

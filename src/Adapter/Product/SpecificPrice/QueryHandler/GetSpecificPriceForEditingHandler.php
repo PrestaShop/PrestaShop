@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetSpecificPriceForEditingHandlerInterface;
@@ -45,6 +46,7 @@ use SpecificPrice;
 /**
  * Handles @see GetSpecificPriceForEditing using legacy object model
  */
+#[AsQueryHandler]
 class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHandlerInterface
 {
     /**

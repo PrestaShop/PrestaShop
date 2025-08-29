@@ -159,7 +159,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         // First we search in translation directory in case the module is native
         try {
             $defaultCatalogue = $this->getDefaultCatalogueFinder()->getCatalogue($locale);
-        } catch (TranslationFilesNotFoundException $e) {
+        } catch (TranslationFilesNotFoundException) {
             $defaultCatalogue = new MessageCatalogue($locale);
         }
 
@@ -184,13 +184,13 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     {
         try { // First we search in the module's translation directory
             return $this->getModuleBuiltInFileTranslatedCatalogueFinder()->getCatalogue($locale);
-        } catch (TranslationFilesNotFoundException $exception) {
+        } catch (TranslationFilesNotFoundException) {
             // If no translation file was found in the module, No Exception
             // we search in the Core's files
         }
         try {
             return $this->getCoreFileTranslatedCatalogueFinder()->getCatalogue($locale);
-        } catch (TranslationFilesNotFoundException $exception) {
+        } catch (TranslationFilesNotFoundException) {
             // And finally if no translation was found in the Core files, we search in the legacy files
             return $this->buildTranslationCatalogueFromLegacyFiles($locale);
         }
@@ -296,14 +296,14 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
                 $this->getBuiltInModuleDirectory(),
                 $locale
             );
-        } catch (UnsupportedLocaleException $exception) {
+        } catch (UnsupportedLocaleException) {
             // this happens when there is no translation file found for the desired locale
             return $catalogueFromPhpAndSmartyFiles;
         }
 
         foreach ($catalogueFromPhpAndSmartyFiles->all() as $currentDomain => $items) {
             foreach (array_keys($items) as $translationKey) {
-                $legacyKey = md5($translationKey);
+                $legacyKey = md5((string) $translationKey);
 
                 if ($catalogueFromLegacyTranslationFiles->has($legacyKey, $currentDomain)) {
                     $legacyFilesCatalogue->set(
@@ -366,7 +366,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
             /** @var MessageCatalogue $additionalDefaultCatalogue */
             $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $locale);
             $defaultCatalogue = $this->convertDomainsAndFilterCatalogue($additionalDefaultCatalogue);
-        } catch (UnsupportedLocaleException $exception) {
+        } catch (UnsupportedLocaleException) {
             // Do nothing as support of legacy files is deprecated
         }
 

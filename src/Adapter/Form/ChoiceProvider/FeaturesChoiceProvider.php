@@ -30,20 +30,12 @@ namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 class FeaturesChoiceProvider implements FormChoiceProviderInterface
 {
-    /**
-     * @var FeatureRepository
-     */
-    private $featureRepository;
-
-    /**
-     * @var int
-     */
-    private $contextLanguageId;
-
     /**
      * Cache value to avoid performing the same request multiple times as the value should remain the same inside a request.
      *
@@ -52,11 +44,10 @@ class FeaturesChoiceProvider implements FormChoiceProviderInterface
     private $cacheFeatureChoices;
 
     public function __construct(
-        FeatureRepository $featureRepository,
-        LegacyContext $legacyContext
+        protected readonly FeatureRepository $featureRepository,
+        protected readonly LegacyContext $legacyContext,
+        protected readonly ConfigurationInterface $configuration
     ) {
-        $this->featureRepository = $featureRepository;
-        $this->contextLanguageId = (int) $legacyContext->getLanguage()->getId();
     }
 
     /**
@@ -68,12 +59,20 @@ class FeaturesChoiceProvider implements FormChoiceProviderInterface
             return $this->cacheFeatureChoices;
         }
 
-        $features = $this->featureRepository->getFeaturesByLang($this->contextLanguageId);
-        $this->cacheFeatureChoices = [];
-        foreach ($features as $feature) {
-            $this->cacheFeatureChoices[$feature['localized_names'][$this->contextLanguageId]] = $feature['id_feature'];
+        $contextLangId = (int) $this->legacyContext->getLanguage()->getId();
+
+        $features = [];
+        foreach ($this->featureRepository->getFeaturesByLang($contextLangId) as $feature) {
+            $features[] = [
+                'id_feature' => $feature['id_feature'],
+                'name' => $feature['localized_names'][$contextLangId],
+            ];
         }
 
-        return $this->cacheFeatureChoices;
+        return $this->cacheFeatureChoices = FormChoiceFormatter::formatFormChoices(
+            $features,
+            'id_feature',
+            'name'
+        );
     }
 }

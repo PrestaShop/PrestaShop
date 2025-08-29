@@ -1,0 +1,99 @@
+.enriched-choice {
+  display: flex;
+
+  &.enriched-choice-column {
+    flex-direction: column;
+
+    /* Choices displayed in column hide the bottom border, only displayed on the last one */
+    > .form-check-radio {
+      border-bottom: solid 1px transparent;
+
+      &:has(:checked),
+      &:hover {
+        border-bottom: solid 1px var(--#{$cdk}primary-900);
+      }
+
+      &:last-of-type {
+        border-bottom: solid 1px var(--#{$cdk}primary-400);
+
+        &:has(:checked),
+        &:hover {
+          border-color: var(--#{$cdk}primary-900);
+          border-bottom: solid 1px var(--#{$cdk}primary-900);
+        }
+      }
+    }
+  }
+
+  &.enriched-choice-row {
+    flex-direction: row;
+
+    /* Choices displayed in column hide the right border, only displayed on the last one */
+    > .form-check-radio {
+      border-right: solid 1px transparent;
+
+      &:has(:checked),
+      &:hover {
+        border-right: solid 1px var(--#{$cdk}primary-900);
+      }
+
+      &:last-of-type {
+        border-right: solid 1px var(--#{$cdk}primary-400);
+
+        &:has(:checked),
+        &:hover {
+          border-color: var(--#{$cdk}primary-900);
+          border-right: solid 1px var(--#{$cdk}primary-900);
+        }
+      }
+    }
+  }
+
+  > .form-check-radio {
+    margin-bottom: 0;
+    border: solid 1px var(--#{$cdk}primary-400);
+
+    .form-check-label {
+      padding: 1rem;
+      cursor: pointer;
+
+      .enriched-choice-label {
+        font-weight: 500;
+      }
+
+      .enriched-choice-type-icon {
+        padding: 0.5rem;
+        margin-left: auto;
+        background-color: var(--#{$cdk}primary-200);
+        border: solid 1px var(--#{$cdk}primary-400);
+      }
+    }
+
+    &:has(:checked) {
+      background-color: var(--#{$cdk}primary-200);
+      border-color: var(--#{$cdk}primary-900);
+    }
+
+    &:hover {
+      border-color: var(--#{$cdk}primary-900);
+    }
+
+    &.has-error,
+    &.has-error:last-of-type {
+      color: var(--#{$cdk}red-300);
+      border-color: var(--#{$cdk}red-300);
+
+      &:has(:checked) {
+        border-color: var(--#{$cdk}red-300);
+
+        &:hover {
+          border-color: var(--#{$cdk}primary-900);
+        }
+      }
+
+      .enriched-choice-help {
+        color: var(--#{$cdk}red-300);
+      }
+    }
+  }
+}

@@ -112,7 +112,7 @@ class LocaleTest extends TestCase
      *
      * @dataProvider provideValidNumbers
      *
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws LocalizationException
      */
     public function testFormatNumber($number, $expected)
     {
@@ -171,7 +171,7 @@ class LocaleTest extends TestCase
      *
      * @dataProvider provideValidPriceData
      *
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws LocalizationException
      */
     public function testFormatPrice($number, $currencyCode, $expected)
     {
@@ -221,7 +221,6 @@ class LocaleTest extends TestCase
         return [
             'Invalid number' => ['foobar', 'EUR'],
             'Unknown currency' => [123456.789, 'USD'],
-            'Invalid currency' => [123456.789, 123],
         ];
     }
 }

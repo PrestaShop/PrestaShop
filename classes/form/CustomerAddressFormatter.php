@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CustomerAddressFormatterCore implements FormFormatterInterface
@@ -90,6 +90,10 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                     if ($this->country->need_zip_code) {
                         $formField->setRequired(true);
                     }
+
+                    $formField->setMinLength(
+                        strlen($this->country->zip_code_format)
+                    );
                 } elseif ($field === 'phone') {
                     $formField->setType('tel');
                 } elseif ($field === 'dni' && null !== $this->country) {
@@ -146,7 +150,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
             $format[$formField->getName()] = $formField;
         }
 
-        //To add the extra fields in address form
+        // To add the extra fields in address form
         // An array [module_name => module_output] will be returned
         $additionalAddressFormFields = Hook::exec('additionalCustomerAddressFields', ['fields' => &$format], null, true);
         if (is_array($additionalAddressFormFields)) {
@@ -163,9 +167,9 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         }
 
         return $this->addConstraints(
-                $this->addMaxLength(
-                    $format
-                )
+            $this->addMaxLength(
+                $format
+            )
         );
     }
 

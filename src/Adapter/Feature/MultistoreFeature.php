@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreConfig;
  *
  * @internal
  */
-final class MultistoreFeature implements FeatureInterface
+class MultistoreFeature implements FeatureInterface
 {
     /**
      * @var ConfigurationInterface

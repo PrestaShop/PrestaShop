@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\FeatureFlagSwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\Event\PreSetDataEvent;
@@ -56,7 +56,7 @@ class FeatureFlagType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('enabled', SwitchType::class, [
+            ->add('enabled', FeatureFlagSwitchType::class, [
                 'choices' => [
                     $this->trans('Disabled', 'Admin.Global') => false,
                     $this->trans('Enabled', 'Admin.Global') => true,
@@ -75,6 +75,9 @@ class FeatureFlagType extends TranslatorAwareType
             'label' => $this->trans($featureFlagData['label'], $featureFlagData['label_domain']),
             'help' => $this->trans($featureFlagData['description'], $featureFlagData['description_domain']),
             'attr' => ['disabled' => $featureFlagData['disabled']],
+            'types' => $featureFlagData['type'],
+            'used_type' => $featureFlagData['type_used'],
+            'forced_by_env' => $featureFlagData['forced_by_env'],
         ]));
     }
 

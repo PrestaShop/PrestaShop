@@ -80,11 +80,13 @@ class TinyMCEEditor {
   initTinyMCE(config) {
     const cfg = {
       selector: '.rte',
-      plugins: 'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize',
+      plugins:
+        /* eslint-disable-next-line max-len */
+        'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize hr',
       browser_spellcheck: true,
       toolbar1:
         /* eslint-disable-next-line max-len */
-        'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
+        'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect,hr',
       toolbar2: '',
       language: window.iso_user,
       external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
@@ -96,10 +98,10 @@ class TinyMCEEditor {
       skin: 'prestashop',
       mobile: {
         theme: 'mobile',
-        plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],
+        plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code', 'hr'],
         toolbar:
           /* eslint-disable-next-line max-len */
-          'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect',
+          'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect hr',
       },
       menubar: false,
       statusbar: false,
@@ -127,6 +129,10 @@ class TinyMCEEditor {
     if (typeof cfg.editor_selector !== 'undefined') {
       cfg.selector = `.${cfg.editor_selector}`;
     }
+
+    EventEmitter.emit('initTinyMCE', {
+      config: cfg,
+    });
 
     // Change icons in popups
     $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => {

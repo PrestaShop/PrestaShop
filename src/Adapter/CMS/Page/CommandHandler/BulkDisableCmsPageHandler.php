@@ -26,16 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler\BulkDisableCmsPageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotDisableCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
+use PrestaShopDatabaseException;
 use PrestaShopException;
 
 /**
  * Disables multiple cms pages.
  */
+#[AsCommandHandler]
 final class BulkDisableCmsPageHandler extends AbstractCmsPageHandler implements BulkDisableCmsPageHandlerInterface
 {
     /**
@@ -61,7 +64,7 @@ final class BulkDisableCmsPageHandler extends AbstractCmsPageHandler implements 
      *
      * @throws CannotDisableCmsPageException
      * @throws PrestaShopException
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      * @throws CmsPageException
      * @throws CmsPageNotFoundException
      */

@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Hook\CommandHandler;
 
 use Hook;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Hook\CommandHandler\UpdateHookStatusCommandHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\CannotUpdateHookException;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
 /**
  * @internal
  */
+#[AsCommandHandler]
 class UpdateHookStatusCommandHandler implements UpdateHookStatusCommandHandlerInterface
 {
     /**
@@ -51,7 +53,7 @@ class UpdateHookStatusCommandHandler implements UpdateHookStatusCommandHandlerIn
             throw new HookNotFoundException(sprintf('Hook with id "%d" was not found', $hookId));
         }
 
-        $hook->active = !$command->getStatus();
+        $hook->active = $command->isActive();
         if (!$hook->save()) {
             throw new CannotUpdateHookException(sprintf('Cannot update status for hook with id "%d"', $hookId));
         }

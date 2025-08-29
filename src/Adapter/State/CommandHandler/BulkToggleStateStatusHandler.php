@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\State\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkToggleStateStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\CommandHandler\BulkToggleStateStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotToggleStateStatusException;
@@ -39,6 +40,7 @@ use State;
 /**
  * Handles command that toggles states status in bulk action
  */
+#[AsCommandHandler]
 class BulkToggleStateStatusHandler implements BulkToggleStateStatusHandlerInterface
 {
     /**

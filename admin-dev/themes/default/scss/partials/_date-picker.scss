@@ -64,4 +64,22 @@
     background: $primary-color !important;
     border: solid 1px darken($primary-color, 10%) !important;
   }
+
+  .ui-slider-handle {
+    cursor: pointer !important;
+    background: var(--#{$cdk}primary-300) !important;
+    border: var(--#{$cdk}size-1) solid var(--#{$cdk}primary-800) !important;
+    transition-duration: var(--#{$cdk}default-transition-duration);
+    transition-property: border, background;
+
+    &.ui-state-hover {
+      background: var(--#{$cdk}primary-800) !important;
+      border: var(--#{$cdk}size-1) solid var(--#{$cdk}primary-800) !important;
+    }
+
+    &.ui-state-focus {
+      background: var(--#{$cdk}primary-700) !important;
+      border: var(--#{$cdk}size-1) solid var(--#{$cdk}primary-700) !important;
+    }
+  }
 }

@@ -37,6 +37,8 @@
   </h3>
 <?php } ?>
 
+<hr />
+
 <!-- Display tests results -->
 <?php foreach ($this->tests_render as $type => $categories): ?>
   <ul id="<?php echo $type; ?>">
@@ -53,4 +55,6 @@
   </ul>
 <?php endforeach; ?>
 
-<p><input class="button" value="<?php echo $this->translator->trans('Refresh information', [], 'Install'); ?> " type="submit" id="req_bt_refresh" /></p>
+<hr />
+
+<p><input class="button button--secondary" value="<?php echo $this->translator->trans('Refresh information', [], 'Install'); ?>" type="submit" id="req_bt_refresh" /></p>

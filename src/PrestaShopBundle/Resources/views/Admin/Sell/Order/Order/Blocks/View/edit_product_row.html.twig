@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,14 +21,14 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 <tr id="editProductTableRowTemplate" class="d-none editProductRow">
   <td class="cellProductImg"></td>
   <td class="cellProductName"></td>
   <td class="cellProductTaxes pr-5">
     {{ form_row(editProductRowForm.price_tax_excluded, {
-      'attr': {
+      attr: {
         'data-modal-edit-price-title': 'Edit the price'|trans({}, 'Admin.Orderscustomers.Feature'),
         'data-modal-edit-price-apply': 'Edit'|trans({}, 'Admin.Actions'),
         'data-modal-edit-price-cancel': 'Cancel'|trans({}, 'Admin.Actions'),
@@ -38,7 +38,7 @@
     {{ form_row(editProductRowForm.price_tax_included) }}
   </td>
   <td class="cellProductQuantity pr-5">
-    {{ form_row(editProductRowForm.quantity, {'type':'number'}) }}
+    {{ form_row(editProductRowForm.quantity, {type: 'number'}) }}
   </td>
   <td class="editProductLocation cellProductLocation"></td>
   <td class="editProductRefunded cellProductRefunded"></td>
@@ -47,7 +47,7 @@
   {% if orderForViewing.hasInvoice() %}
     <td class="cellProductInvoice">
       {{ form_row(editProductRowForm.invoice, {
-        'attr': {
+        attr: {
           'data-modal-edit-price-title': 'Edit the price'|trans({}, 'Admin.Orderscustomers.Feature'),
           'data-modal-edit-price-apply': 'Edit'|trans({}, 'Admin.Actions'),
           'data-modal-edit-price-cancel': 'Cancel'|trans({}, 'Admin.Actions'),

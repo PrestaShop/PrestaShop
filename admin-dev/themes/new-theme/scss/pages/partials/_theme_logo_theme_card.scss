@@ -3,12 +3,11 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: $black;
-  opacity: 0.25;
+  background-color: rgba(map-get($map: $cdk-primary, $key: "primary-800"), 0.25);
 }
 
 @mixin card-width() {
-  max-width: 24.1875rem;
+  max-width: var(--#{$cdk}size-320);
 
   @include media-breakpoint-down(sm) {
     max-width: 100%;
@@ -16,28 +15,28 @@
 }
 
 @mixin card-width-and-height() {
-  height: 15.125rem;
+  height: var(--#{$cdk}size-240);
   @include card-width();
 }
 
 @mixin action-button {
-  min-height: 2.5rem;
-  background-color: $white;
-  @include border-radius(1.65rem);
+  min-height: var(--#{$cdk}size-40);
+  background-color: var(--#{$cdk}white);
 }
 
 @mixin theme-name-and-version() {
-  font-size: 1rem;
+  font-size: var(--#{$cdk}size-16);
   font-style: normal;
   font-stretch: normal;
   line-height: normal;
-  color: $gray-700;
+  color: var(--#{$cdk}primary-800);
   text-align: center;
-  letter-spacing: -0.01875rem;
 }
 
 .theme-card {
+  @include card-width-and-height();
   position: relative;
+  overflow-y: hidden;
 
   .active-card-overlay {
     &.active {
@@ -46,11 +45,6 @@
     display: none;
     @include theme-card-overlay();
   }
-
-  @include card-width-and-height();
-
-  overflow-y: hidden;
-  @include border-radius(0.25rem);
 
   img {
     max-width: 100%;
@@ -63,7 +57,7 @@
     left: 50%;
     display: none;
     width: 100%;
-    padding: 0.4rem;
+    padding: var(--#{$cdk}size-8);
     text-align: center;
     transform: translate(-50%, -80%);
 
@@ -77,12 +71,11 @@
       font-weight: 400;
       font-stretch: normal;
       line-height: normal;
-      color: $gray-700;
+      color: var(--#{$cdk}primary-700);
       text-align: center;
-      letter-spacing: -0.0125rem;
 
       .icon-current-theme {
-        color: $primary;
+        color: var(--#{$cdk}primary-800);
       }
     }
 
@@ -95,21 +88,18 @@
 
     .delete-button {
       @include action-button();
-      position: relative;
-      width: 2.5rem;
-
-      i {
-        position: absolute;
-        right: 25%;
-        bottom: 25%;
-      }
     }
 
-    .action-button:not(:first-child):not(:disabled):hover,
+    .action-button:not(:first-child):not(:disabled):hover {
+      color: var(--#{$cdk}white);
+      background-color: var(--#{$cdk}primary-800);
+      box-shadow: var(--#{$cdk}box-shadow-md);
+    }
+
     .delete-button:hover {
-      color: $white;
-      background-color: #3ed1f0;
-      box-shadow: 0 0 0.9375rem 0 rgba(0, 0, 0, 0.2);
+      color: var(--#{$cdk}white);
+      background-color: var(--#{$cdk}red-500);
+      box-shadow: var(--#{$cdk}box-shadow-md);
     }
   }
 }
@@ -152,7 +142,13 @@
 }
 
 // actions
-.theme-card:hover .active-card-overlay,
-.theme-card:hover .actions-container {
+.theme-card:hover .active-card-overlay {
   display: block;
+}
+
+.theme-card:hover .actions-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--#{$cdk}size-8);
+  justify-content: center;
 }

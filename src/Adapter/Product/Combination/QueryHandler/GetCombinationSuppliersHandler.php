@@ -30,9 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationSuppliersHandlerInterface;
 
+#[AsQueryHandler]
 class GetCombinationSuppliersHandler extends AbstractProductSupplierHandler implements GetCombinationSuppliersHandlerInterface
 {
     /**

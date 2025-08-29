@@ -1,17 +1,16 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import emailThemesPage from '@pages/BO/design/emailThemes';
-import previewEmailThemesPage from '@pages/BO/design/emailThemes/preview';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boDesignEmailThemesPage,
+  boDesignEmailThemesPreviewPage,
+  boLoginPage,
+  type BrowserContext,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_design_emailTheme_previewEmailThemes';
 
@@ -21,36 +20,42 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Design > Email Theme\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemePage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.designParentLink,
-      dashboardPage.emailThemeLink,
+      boDashboardPage.designParentLink,
+      boDashboardPage.emailThemeLink,
     );
-    await emailThemesPage.closeSfToolBar(page);
+    await boDesignEmailThemesPage.closeSfToolBar(page);
 
-    const pageTitle = await emailThemesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(emailThemesPage.pageTitle);
+    const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
   });
 
   describe('Preview email theme', async () => {
     [
-      {args: {emailThemeName: 'classic', numberOfLayouts: 50}},
-      {args: {emailThemeName: 'modern', numberOfLayouts: 54}},
+      {args: {emailThemeName: 'classic', numberOfLayouts: 43}},
+      {args: {emailThemeName: 'modern', numberOfLayouts: 43}},
     ].forEach((test) => {
       it(`should preview email theme '${test.args.emailThemeName}'`, async function () {
         await testContext.addContextItem(
@@ -60,11 +65,11 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
           baseContext,
         );
 
-        await emailThemesPage.previewEmailTheme(page, test.args.emailThemeName);
+        await boDesignEmailThemesPage.previewEmailTheme(page, test.args.emailThemeName);
 
-        const pageTitle = await emailThemesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(
-          `${previewEmailThemesPage.pageTitle} ${test.args.emailThemeName}`,
+        const pageTitle = await boDesignEmailThemesPreviewPage.getPageTitle(page);
+        expect(pageTitle).to.contains(
+          `${boDesignEmailThemesPreviewPage.pageTitle} ${test.args.emailThemeName}`,
         );
       });
 
@@ -76,8 +81,8 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
           baseContext,
         );
 
-        const numberOfLayouts = await previewEmailThemesPage.getNumberOfLayoutInGrid(page);
-        await expect(numberOfLayouts).to.equal(test.args.numberOfLayouts);
+        const numberOfLayouts = await boDesignEmailThemesPreviewPage.getNumberOfLayoutInGrid(page);
+        expect(numberOfLayouts).to.equal(test.args.numberOfLayouts);
       });
 
       it('should go back to email themes page', async function () {
@@ -88,10 +93,10 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
           baseContext,
         );
 
-        await previewEmailThemesPage.goBackToEmailThemesPage(page);
+        await boDesignEmailThemesPreviewPage.goBackToEmailThemesPage(page);
 
-        const pageTitle = await emailThemesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(emailThemesPage.pageTitle);
+        const pageTitle = await boDesignEmailThemesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boDesignEmailThemesPage.pageTitle);
       });
     });
   });

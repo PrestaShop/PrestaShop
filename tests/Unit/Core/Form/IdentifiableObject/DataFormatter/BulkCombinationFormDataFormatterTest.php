@@ -30,7 +30,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\DataFormatter;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombinationFormDataFormatter;
-use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 
 class BulkCombinationFormDataFormatterTest extends TestCase
 {

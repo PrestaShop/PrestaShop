@@ -165,7 +165,7 @@ abstract class InstallControllerConsole
     {
     }
 
-    public function printErrors()
+    public function printErrors($context = null)
     {
         $errors = array_merge(
             $this->model_database->getErrors(),
@@ -175,7 +175,7 @@ abstract class InstallControllerConsole
             if (!is_array($errors)) {
                 $errors = [$errors];
             }
-            echo 'Errors :' . PHP_EOL;
+            echo 'Errors ' . ($context === null ?: $context) . ':' . PHP_EOL;
             foreach ($errors as $error_process) {
                 if (!is_array($error_process)) {
                     $error_process = [$error_process];

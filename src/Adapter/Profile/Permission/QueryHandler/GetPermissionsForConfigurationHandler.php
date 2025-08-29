@@ -29,11 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler;
 
 use Module;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ControllerPermission;
-use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use Profile;
 use RuntimeException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -44,6 +45,7 @@ use Tab;
  *
  * @internal
  */
+#[AsQueryHandler]
 class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigurationHandlerInterface
 {
     /**
@@ -96,7 +98,7 @@ class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigur
         $modulePermissionsForProfiles = $this->getModulePermissionsForProfiles($profiles);
 
         $employeeProfileId = $query->getEmployeeProfileId()->getValue();
-        $canEmployeeEditPermissions = $this->authorizationChecker->isGranted(PageVoter::UPDATE, 'AdminAccess');
+        $canEmployeeEditPermissions = $this->authorizationChecker->isGranted(Permission::UPDATE, 'AdminAccess');
 
         $bulkConfigurationPermissions = $this->getBulkConfigurationForProfiles(
             $employeeProfileId,

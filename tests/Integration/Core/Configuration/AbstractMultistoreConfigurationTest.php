@@ -257,7 +257,7 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
     protected function createShopContextMock()
     {
         return $this->getMockBuilder(Context::class)
-            ->setMethods(['getContextShopGroup', 'getContextShopID', 'isAllShopContext', 'getShopConstraint'])
+            ->onlyMethods(['getContextShopGroup', 'getContextShopID', 'isAllShopContext', 'getShopConstraint'])
             ->getMock();
     }
 

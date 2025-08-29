@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Localization\DataLayer;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData as CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyCache as CurrencyCacheDataLayer;
 use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheAdapterInterface;

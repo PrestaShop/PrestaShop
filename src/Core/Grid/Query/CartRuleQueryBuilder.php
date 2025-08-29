@@ -71,14 +71,14 @@ final class CartRuleQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
             ->select(
-            'cr.id_cart_rule,
+                'cr.id_cart_rule,
             crl.name,
             cr.priority,
             cr.code,
             cr.quantity,
             cr.date_to,
             cr.active'
-        );
+            );
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
             ->applySorting($searchCriteria, $qb)

@@ -35,8 +35,9 @@ Tree.prototype = {
   init() {
     const name = this.$element.parent().find('ul.tree input').first().attr('name');
     const idTree = this.$element.parent().find('.cattree.tree').first().attr('id');
-    this.$element.find('label.tree-toggler, .icon-folder-close, .icon-folder-open').unbind('click');
-    this.$element.find('label.tree-toggler, .icon-folder-close, .icon-folder-open').click(
+    this.$element.find('label.tree-toggler, .icon-folder-close, .icon-folder-open').off('click');
+    this.$element.find('label.tree-toggler, .icon-folder-close, .icon-folder-open').on(
+      'click',
       function () {
         if ($(this).parent().parent().children('ul.tree')
           .is(':visible')) {
@@ -96,8 +97,9 @@ Tree.prototype = {
         }
       },
     );
-    this.$element.find('li').unbind('click');
-    this.$element.find('li').click(
+    this.$element.find('li').off('click');
+    this.$element.find('li').on(
+      'click',
       () => {
         $('.tree-selected').removeClass('tree-selected');
         $('li input:checked').parent().addClass('tree-selected');
@@ -106,8 +108,8 @@ Tree.prototype = {
 
     if (typeof (idTree) !== 'undefined') {
       if ($('select#id_category_default').length) {
-        this.$element.find(':input[type=checkbox]').unbind('click');
-        this.$element.find(':input[type=checkbox]').click(function () {
+        this.$element.find(':input[type=checkbox]').off('click');
+        this.$element.find(':input[type=checkbox]').on('click', function () {
           // eslint-disable-next-line
           if ($(this).prop('checked')) addDefaultCategory($(this));
           else {
@@ -120,10 +122,10 @@ Tree.prototype = {
         });
       }
       if (typeof (treeClickFunc) !== 'undefined') {
-        this.$element.find(':input[type=radio]').unbind('click');
+        this.$element.find(':input[type=radio]').off('click');
 
         // eslint-disable-next-line
-        this.$element.find(':input[type=radio]').click(treeClickFunc);
+        this.$element.find(':input[type=radio]').on('click', treeClickFunc);
       }
     }
 

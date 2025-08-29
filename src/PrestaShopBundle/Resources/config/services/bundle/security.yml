@@ -5,33 +5,56 @@ services:
   _defaults:
     public: true
 
+  PrestaShopBundle\Security\Admin\EmployeeProvider:
+    autowire: true
+
   prestashop.security.admin.provider:
-    class: PrestaShopBundle\Security\Admin\EmployeeProvider
+    alias: PrestaShopBundle\Security\Admin\EmployeeProvider
+
+  PrestaShopBundle\Security\Admin\SessionEmployeeProvider:
+    autowire: true
+
+  PrestaShopBundle\Security\Admin\EmployeePasswordResetter:
+    autowire: true
+    lazy: true
     arguments:
-      - "@prestashop.adapter.legacy.context"
-      - "@prestashop.static_cache.adapter"
+      $cookieKey: '%cookie_key%'
+
+  PrestaShopBundle\Security\Admin\EmployeeHomepageProvider:
+    autowire: true
+
+  PrestaShopBundle\Security\Admin\AdminAuthenticationSuccessHandler:
+    autowire: true
+
+  PrestaShopBundle\Security\OAuth2\Provider\ApiClientProvider:
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\ApiClientRepository'
+      - '@Symfony\Component\PasswordHasher\PasswordHasherInterface'
 
   prestashop.security.role.dynamic_role_hierarchy:
     class: PrestaShopBundle\Security\Role\DynamicRoleHierarchy
 
   prestashop.security.voter.product:
     class: "%prestashop.security.voter.product.class%"
+    autowire: true
     tags:
       - { name: security.voter }
     public: false
 
-  PrestaShop\PrestaShop\Core\Security\TokenAuthenticator:
+  PrestaShopBundle\Security\OAuth2\PrestashopAuthorisationServer:
     public: false
-    arguments:
-      - '@PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface'
-      - '@Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory'
-
-  PrestaShopBundle\Security\OAuth2\ResourceServer:
-    public: false
+    autowire: true
+    autoconfigure: true
     arguments:
       - '@League\OAuth2\Server\ResourceServer'
-      - '@security.user.provider.concrete.oauth2'
 
-  PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface:
-    alias: PrestaShopBundle\Security\OAuth2\ResourceServer
-    public: false
+  prestashop.security.password_hasher.factory:
+    class: Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory
+    arguments:
+      -
+        common: { 'algorithm': 'auto' }
+
+  Symfony\Component\PasswordHasher\PasswordHasherInterface:
+    factory: [ '@prestashop.security.password_hasher.factory', 'getPasswordHasher' ]
+    arguments:
+      - 'common'

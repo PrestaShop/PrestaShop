@@ -23,10 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-/**
- * @since 1.5.0
- */
 class HelperFormCore extends Helper
 {
     public $id;
@@ -350,7 +346,7 @@ class HelperFormCore extends Helper
         } else {
             switch (Shop::getContext()) {
                 case Shop::CONTEXT_SHOP:
-                        $assos[Shop::getContextShopID()] = Shop::getContextShopID();
+                    $assos[Shop::getContextShopID()] = Shop::getContextShopID();
 
                     break;
 

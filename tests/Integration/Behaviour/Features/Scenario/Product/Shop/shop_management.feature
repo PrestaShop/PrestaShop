@@ -481,7 +481,7 @@ Feature: Copy product from shop to shop.
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 0        | false      |
     And product "product1" is associated to shop shop2
     And combinations "product1LWhite,product1LBlack,product1LBlue" are associated to shop "shop2"
-    When I delete product "product1" from shops "shop2"
+    When I delete product "product1" from shop "shop2"
     Then product "product1" should have the following combinations for shops "shop1":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
@@ -507,7 +507,7 @@ Feature: Copy product from shop to shop.
     Then product "product1" should have following images for shops "shop1, shop2":
       | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      | shops        |
       | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1, shop2 |
-    When I delete product "product1" from shops "shop2"
+    When I delete product "product1" from shop "shop2"
     Then product "product1" is not associated to shop "shop2"
     And product "product1" should have following images for shops "shop1":
       | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      | shops |

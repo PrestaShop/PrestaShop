@@ -66,7 +66,7 @@ class Attribute
         int $position,
         string $color,
         array $localizedNames,
-        string $textureFilePath = null
+        ?string $textureFilePath = null
     ) {
         $this->attributeId = $attributeId;
         $this->position = $position;

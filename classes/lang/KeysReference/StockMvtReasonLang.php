@@ -31,12 +31,6 @@ trans('Customer Order', 'Admin.Catalog.Feature');
 
 trans('Adjustment following an inventory of stock', 'Admin.Catalog.Feature');
 
-trans('Transfer to another warehouse', 'Admin.Catalog.Feature');
-
-trans('Transfer from another warehouse', 'Admin.Catalog.Feature');
-
-trans('Supply Order', 'Admin.Catalog.Feature');
-
 trans('Product Return', 'Admin.Catalog.Feature');
 
 trans('Manual Entry', 'Admin.Catalog.Feature');

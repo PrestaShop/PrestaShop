@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
@@ -66,6 +67,7 @@ class ProductIndexationUpdater
      * then a new indexation is needed.
      *
      * @param array $updatedFields
+     *
      * @return bool
      */
     public function isIndexationNeeded(array $updatedFields): bool
@@ -132,13 +134,16 @@ class ProductIndexationUpdater
      */
     private function updateProductIndexes(int $productId, ShopConstraint $shopConstraint): void
     {
+        $this->contextStateManager->saveCurrentContext();
         try {
-            $this->adaptShopContext($shopConstraint);
-            if (!Search::indexation(false, $productId)) {
-                throw new CannotUpdateProductException(
-                    sprintf('Cannot update search indexes for product %d', $productId),
-                    CannotUpdateProductException::FAILED_UPDATE_SEARCH_INDEXATION
-                );
+            // If a specific list is provided we update them one by one
+            if ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+                foreach ($shopConstraint->getShopIds() as $shopId) {
+                    $this->updateProductIndexesByShopConstraint($productId, ShopConstraint::shop($shopId->getValue()));
+                }
+            } else {
+                // If not the other types of ShopConstraint are handled by this method
+                $this->updateProductIndexesByShopConstraint($productId, $shopConstraint);
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(
@@ -151,6 +156,17 @@ class ProductIndexationUpdater
         }
     }
 
+    private function updateProductIndexesByShopConstraint(int $productId, ShopConstraint $shopConstraint): void
+    {
+        $this->adaptShopContext($shopConstraint);
+        if (!Search::indexation(false, $productId)) {
+            throw new CannotUpdateProductException(
+                sprintf('Cannot update search indexes for product %d', $productId),
+                CannotUpdateProductException::FAILED_UPDATE_SEARCH_INDEXATION
+            );
+        }
+    }
+
     /**
      * @param int $productId
      * @param ShopConstraint $shopConstraint
@@ -159,9 +175,17 @@ class ProductIndexationUpdater
      */
     private function removeProductIndexes(int $productId, ShopConstraint $shopConstraint): void
     {
+        $this->contextStateManager->saveCurrentContext();
         try {
-            $this->adaptShopContext($shopConstraint);
-            Search::removeProductsSearchIndex([$productId]);
+            // If a specific list is provided we update them one by one
+            if ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds()) {
+                foreach ($shopConstraint->getShopIds() as $shopId) {
+                    $this->removeProductIndexesByShopConstraint($productId, ShopConstraint::shop($shopId->getValue()));
+                }
+            } else {
+                // If not the other types of ShopConstraint are handled by this method
+                $this->removeProductIndexesByShopConstraint($productId, $shopConstraint);
+            }
         } catch (PrestaShopException $e) {
             throw new CoreException(
                 sprintf('Error occurred while removing search indexes for product %d', $productId),
@@ -173,9 +197,14 @@ class ProductIndexationUpdater
         }
     }
 
+    private function removeProductIndexesByShopConstraint(int $productId, ShopConstraint $shopConstraint): void
+    {
+        $this->adaptShopContext($shopConstraint);
+        Search::removeProductsSearchIndex([$productId]);
+    }
+
     private function adaptShopContext(ShopConstraint $shopConstraint): void
     {
-        $this->contextStateManager->saveCurrentContext();
         if ($shopConstraint->getShopId()) {
             $this->contextStateManager->setShop(new Shop($shopConstraint->getShopId()->getValue()));
         } elseif ($shopConstraint->getShopGroupId()) {

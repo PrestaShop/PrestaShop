@@ -33,14 +33,14 @@ use PrestaShop\PrestaShop\Adapter\Security\CommandHandler\BulkDeleteCustomerSess
 use PrestaShop\PrestaShop\Adapter\Session\Repository\CustomerSessionRepository;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomerSessionsCommand;
 
-class BulkDeleteCustomerSessionHandlerTest extends TestCase
+class BulkDeleteCustomersSessionHandlerTest extends TestCase
 {
     public function testHandleDeleteShouldBeCalledOnlyOnce(): void
     {
         $sessionId = new BulkDeleteCustomerSessionsCommand([1, 2, 3]);
 
         $repo = $this->getMockBuilder(CustomerSessionRepository::class)
-            ->setMethods([
+            ->onlyMethods([
                 'bulkDelete',
             ])
             ->disableOriginalConstructor()

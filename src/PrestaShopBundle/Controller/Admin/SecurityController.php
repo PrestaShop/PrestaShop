@@ -27,37 +27,47 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShopBundle\Service\Routing\Router as PrestaShopRouter;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Admin controller to manage security pages.
+ * Security warning controller
  */
-class SecurityController extends FrameworkBundleAdminController
+class SecurityController extends PrestaShopAdminController
 {
-    public function compromisedAccessAction(Request $request)
+    public function __construct(
+        private readonly Security $security,
+        private readonly CsrfTokenManagerInterface $tokenManager,
+        private readonly ValidatorInterface $validator,
+        private readonly RouterInterface $router,
+    ) {
+    }
+
+    public function compromisedAccessAction(Request $request): Response
     {
         $requestUri = urldecode($request->query->get('uri'));
+        if (empty($requestUri)) {
+            $requestUri = $this->router->generate('admin_homepage');
+        }
         $url = new Assert\Url();
-        $violations = $this->get('validator')->validate($requestUri, [$url]);
+        $violations = $this->validator->validate($requestUri, [$url]);
         if ($violations->count()) {
-            return $this->redirect('dashboard');
+            return $this->redirect('admin_homepage');
         }
 
-        // getToken() actually generate a new token
-        $username = $this->get('prestashop.user_provider')->getUsername();
-
-        $newToken = $this->get('security.csrf.token_manager')
-            ->getToken($username)
+        $newToken = $this->tokenManager
+            ->getToken($this->security->getUser()->getUserIdentifier())
             ->getValue();
 
         $newUri = PrestaShopRouter::generateTokenizedUrl($requestUri, $newToken);
 
-        return $this->render(
-            '@PrestaShop/Admin/Security/compromised.html.twig',
-            [
-                'requestUri' => $newUri,
-            ]
-        );
+        return $this->render('@PrestaShop/Admin/Security/compromised.html.twig', [
+            'requestUri' => $newUri,
+        ]);
     }
 }

@@ -30,9 +30,6 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\LanguageFormDataProvider;
 
 class LanguageFormDataProviderTest extends TestCase
@@ -49,6 +46,7 @@ class LanguageFormDataProviderTest extends TestCase
             'name' => 'Lithuanian',
             'iso_code' => 'lt',
             'tag_ietf' => 'lt-LT',
+            'locale' => 'lt-LT',
             'short_date_format' => 'Y-m-d',
             'full_date_format' => 'Y-m-d H:i:s',
             'is_rtl' => false,
@@ -68,6 +66,7 @@ class LanguageFormDataProviderTest extends TestCase
             'name' => 'Lithuanian',
             'iso_code' => 'lt',
             'tag_ietf' => 'lt-LT',
+            'locale' => 'lt-LT',
             'short_date_format' => 'Y-m-d',
             'full_date_format' => 'Y-m-d H:i:s',
             'is_rtl' => false,
@@ -119,10 +118,11 @@ class LanguageFormDataProviderTest extends TestCase
             ->with($this->isInstanceOf(GetLanguageForEditing::class))
             ->willReturn(
                 new EditableLanguage(
-                    new LanguageId(2),
+                    2,
                     'Lithuanian',
-                    new IsoCode('lt'),
-                    new TagIETF('lt-LT'),
+                    'lt',
+                    'lt-LT',
+                    'lt-LT',
                     'Y-m-d',
                     'Y-m-d H:i:s',
                     false,

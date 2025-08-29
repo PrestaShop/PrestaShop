@@ -27,7 +27,7 @@ import Jets from 'jets/jets';
 export default function (): typeof Jets | boolean {
   $(() => {
     const searchSelector = '.search-translation';
-    $(`${searchSelector} form`).submit((event) => {
+    $(`${searchSelector} form`).on('submit', (event) => {
       event.preventDefault();
 
       $('#jetsContent form').addClass('hide');
@@ -57,7 +57,7 @@ export default function (): typeof Jets | boolean {
       return false;
     });
 
-    $(`${searchSelector} input[type=reset]`).click((event) => {
+    $(`${searchSelector} input[type=reset]`).on('click', (event) => {
       event.preventDefault();
 
       $('#jetsSearch').val('');

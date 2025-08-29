@@ -1,21 +1,18 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-// Import BO pages
-import dashboardPage from '@pages/BO/dashboard';
-import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
-// Import FO pages
-import {homePage} from '@pages/FO/home';
-import productPage from '@pages/FO/product';
-import cartPage from '@pages/FO/cart';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boOrderSettingsPage,
+  type BrowserContext,
+  foClassicCartPage,
+  foClassicHomePage,
+  foClassicProductPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_orderSettings_orderSettings_general_minimumPurchaseTotalRequired';
 
@@ -35,30 +32,36 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Shop Parameters > Order Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.shopParametersParentLink,
-      dashboardPage.orderSettingsLink,
+      boDashboardPage.shopParametersParentLink,
+      boDashboardPage.orderSettingsLink,
     );
-    await orderSettingsPage.closeSfToolBar(page);
+    await boOrderSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await orderSettingsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
   });
 
   const tests = [
@@ -70,58 +73,60 @@ describe('BO - Shop Parameters - Order Settings : Test minimum purchase total re
     it('should update Minimum purchase total required in order to validate the order value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `updateMinimumPurchaseTotal_${index}`, baseContext);
 
-      const result = await orderSettingsPage.setMinimumPurchaseRequiredTotal(page, test.args.value);
-      await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+      const result = await boOrderSettingsPage.setMinimumPurchaseRequiredTotal(page, test.args.value);
+      expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       // Click on view my shop
-      page = await orderSettingsPage.viewMyShop(page);
+      page = await boOrderSettingsPage.viewMyShop(page);
 
       // Change Fo language
-      await homePage.changeLanguage(page, 'en');
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage, 'Home page is not displayed').to.eq(true);
+    });
+
+    it('should add product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `addProductToCart_${index}`, baseContext);
+
+      // Go to the first product page
+      await foClassicHomePage.goToProductPage(page, 1);
+
+      // Add the created product to the cart
+      await foClassicProductPage.addProductToTheCart(page);
+
+      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+      expect(notificationsNumber).to.be.equal(index + 1);
     });
 
     it('should verify the minimum purchase total value', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkMinimumPurchaseTotal_${index}`,
-        baseContext,
-      );
-
-      // Go to the first product page
-      await homePage.goToProductPage(page, 1);
-
-      // Add the created product to the cart
-      await productPage.addProductToTheCart(page);
+      await testContext.addContextItem(this, 'testIdentifier', `checkMinimumPurchaseTotal_${index}`, baseContext);
 
       // Check proceed to checkout button enable/disable
-      const isDisabled = await cartPage.isProceedToCheckoutButtonDisabled(page);
-      await expect(isDisabled).to.equal(test.args.disable);
+      const isDisabled = await foClassicCartPage.isProceedToCheckoutButtonDisabled(page);
+      expect(isDisabled).to.equal(test.args.disable);
 
       // Check alert message
-      const isAlertVisible = await cartPage.isAlertWarningForMinimumPurchaseVisible(page);
-      await expect(isAlertVisible).to.equal(test.args.alertMessage);
+      const isAlertVisible = await foClassicCartPage.isAlertWarningForMinimumPurchaseVisible(page);
+      expect(isAlertVisible).to.equal(test.args.alertMessage);
 
       if (isAlertVisible) {
-        const alertText = await cartPage.getAlertWarning(page);
-        await expect(alertText).to.contains(alertMessage);
+        const alertText = await foClassicCartPage.getAlertWarning(page);
+        expect(alertText).to.contains(alertMessage);
       }
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `BackToBO${index}`, baseContext);
 
-      page = await cartPage.closePage(browserContext, page, 0);
+      page = await foClassicCartPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await orderSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+      const pageTitle = await boOrderSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
     });
   });
 });

@@ -31,13 +31,18 @@ use Context;
 use Country;
 use Currency;
 use Customer;
+use Employee;
 use Language;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use Shop;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Tests\Integration\Utility\ContextMockerTrait;
+use Twig\Environment;
 
 abstract class ContextStateTestCase extends TestCase
 {
@@ -58,23 +63,25 @@ abstract class ContextStateTestCase extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $contextMock
-            ->method('getTranslator')
-            ->willReturn(
-                $this
-                    ->getMockBuilder(Translator::class)
-                    ->disableOriginalConstructor()
-                    ->setMethodsExcept([
-                        'setLocale',
-                        'getLocale',
-                    ])
-                    ->getMock()
-            );
+        $locale = 'en';
+        if (isset($contextFields['language']) && $contextFields['language'] instanceof Language) {
+            $locale = $contextFields['language']->locale;
+        }
+        $translator = new Translator($locale);
+        $contextMock->method('getTranslator')->willReturn($translator);
 
         foreach ($contextFields as $fieldName => $contextValue) {
             $contextMock->$fieldName = $contextValue;
             if ($fieldName === 'language' && $contextValue instanceof Language) {
                 $contextMock->getTranslator()->setLocale('test' . $contextValue->id);
+            }
+            if ($fieldName === 'currentLocale') {
+                $contextMock
+                    ->method('getCurrentLocale')
+                    ->willReturnCallback(static function () use ($contextMock) {
+                        return $contextMock->currentLocale;
+                    })
+                ;
             }
         }
         LegacyContext::setInstanceForTesting($contextMock);
@@ -86,7 +93,7 @@ abstract class ContextStateTestCase extends TestCase
      * @param string $className
      * @param int $objectId
      *
-     * @return MockObject|Cart|Country|Currency|Customer|Language|Shop
+     * @return MockObject|Cart|Country|Currency|Customer|Employee|Language|Shop
      */
     protected function createContextFieldMock(string $className, int $objectId)
     {
@@ -102,5 +109,36 @@ abstract class ContextStateTestCase extends TestCase
         }
 
         return $contextField;
+    }
+
+    protected function createLegacyControllerContextMock(string $controllerName): LegacyControllerContext|MockObject
+    {
+        $legacyControllerContextBuilder = $this->getMockBuilder(LegacyControllerContext::class)
+            // Since most fields ar readonly and set via the constructor we must specify them this way
+            ->setConstructorArgs([
+                $this->createMock(ContainerInterface::class),
+                $controllerName,
+                'admin',
+                7,
+                null,
+                42,
+                'token',
+                '',
+                'index.php?controller=' . $controllerName,
+                'configuration',
+                $this->createMock(Request::class),
+                1,
+                'http://localhost',
+                'admin-dev',
+                false,
+                '9.0.0',
+                $this->createMock(Environment::class),
+            ])
+        ;
+
+        /** @var LegacyControllerContext $legacyControllerContext */
+        $legacyControllerContext = $legacyControllerContextBuilder->getMock();
+
+        return $legacyControllerContext;
     }
 }

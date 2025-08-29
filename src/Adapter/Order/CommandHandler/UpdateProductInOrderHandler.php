@@ -37,6 +37,7 @@ use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
@@ -51,6 +52,7 @@ use Validate;
 /**
  * @internal
  */
+#[AsCommandHandler]
 final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler implements UpdateProductInOrderHandlerInterface
 {
     /**
@@ -146,7 +148,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
         UpdateProductInOrderCommand $command,
         OrderDetail $orderDetail,
         Order $order,
-        OrderInvoice $orderInvoice = null
+        ?OrderInvoice $orderInvoice = null
     ) {
         // assert product exists
         $product = new Product($orderDetail->product_id);
@@ -187,7 +189,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
             throw new OrderException('Invalid quantity');
         }
 
-        //check if product is available in stock
+        // check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
             $availableQuantity = StockAvailable::getQuantityAvailableByProduct(
                 $orderDetail->product_id,

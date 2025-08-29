@@ -34,6 +34,16 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 class DuplicateCustomerEmailException extends CustomerException
 {
     /**
+     * @var int Code is used when the check fails during adding the customer
+     */
+    public const ADD = 1;
+
+    /**
+     * @var int Code is used when the check fails during editing the customer
+     */
+    public const EDIT = 2;
+
+    /**
      * @var Email
      */
     private $email;

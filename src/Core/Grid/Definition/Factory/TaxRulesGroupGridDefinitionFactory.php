@@ -67,7 +67,7 @@ final class TaxRulesGroupGridDefinitionFactory extends AbstractFilterableGridDef
      */
     protected function getName()
     {
-        return $this->trans('Tax Rules', [], 'Admin.Navigation.Menu');
+        return $this->trans('Tax rules', [], 'Admin.Navigation.Menu');
     }
 
     /**
@@ -97,13 +97,13 @@ final class TaxRulesGroupGridDefinitionFactory extends AbstractFilterableGridDef
                     ])
             )
             ->add((new ToggleColumn('active'))
-            ->setName($this->trans('Enabled', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'active',
-                'primary_field' => 'id_tax_rules_group',
-                'route' => 'admin_tax_rules_groups_toggle_status',
-                'route_param_name' => 'taxRulesGroupId',
-            ])
+                ->setName($this->trans('Enabled', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'active',
+                    'primary_field' => 'id_tax_rules_group',
+                    'route' => 'admin_tax_rules_groups_toggle_status',
+                    'route_param_name' => 'taxRulesGroupId',
+                ])
             )
             ->add(
                 (new ActionColumn('actions'))

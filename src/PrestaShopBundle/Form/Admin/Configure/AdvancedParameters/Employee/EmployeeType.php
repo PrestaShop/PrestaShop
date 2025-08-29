@@ -26,10 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee;
 
+use PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as EmployeeEmail;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
@@ -48,6 +49,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class EmployeeType defines an employee form.
@@ -60,11 +62,6 @@ final class EmployeeType extends AbstractType
      * @var array
      */
     private $languagesChoices;
-
-    /**
-     * @var array
-     */
-    private $tabChoices;
 
     /**
      * @var array
@@ -93,7 +90,6 @@ final class EmployeeType extends AbstractType
 
     /**
      * @param array $languagesChoices
-     * @param array $tabChoices
      * @param array $profilesChoices
      * @param bool $isMultistoreFeatureActive
      * @param ConfigurationInterface $configuration
@@ -102,20 +98,22 @@ final class EmployeeType extends AbstractType
      */
     public function __construct(
         array $languagesChoices,
-        array $tabChoices,
         array $profilesChoices,
         bool $isMultistoreFeatureActive,
         ConfigurationInterface $configuration,
         int $superAdminProfileId,
-        Router $router
+        Router $router,
+        TranslatorInterface $translator,
+        private readonly TabDataProvider $tabDataProvider,
+        private readonly LanguageContext $languageContext,
     ) {
         $this->languagesChoices = $languagesChoices;
-        $this->tabChoices = $tabChoices;
         $this->profilesChoices = $profilesChoices;
         $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
         $this->configuration = $configuration;
         $this->superAdminProfileId = $superAdminProfileId;
         $this->router = $router;
+        $this->translator = $translator;
     }
 
     /**
@@ -126,6 +124,11 @@ final class EmployeeType extends AbstractType
         $minScore = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE);
         $maxLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH);
         $minLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH);
+
+        $profileId = $builder->getData()['profile'] ?? reset($this->profilesChoices);
+        $viewableTabs = $this->tabDataProvider->getViewableTabs($profileId, $this->languageContext->getId());
+
+        $tabChoices = $this->formatTabs($viewableTabs);
 
         $builder
             ->add('firstname', TextType::class, [
@@ -207,7 +210,7 @@ final class EmployeeType extends AbstractType
                 'required' => false,
             ])
             ->add('profile', ChoiceType::class, [
-                'label' => $this->trans('Permission profile', [], 'Admin.Advparameters.Feature'),
+                'label' => $this->trans('Role', [], 'Admin.Advparameters.Feature'),
                 'attr' => [
                     'data-admin-profile' => $this->superAdminProfileId,
                     'data-get-tabs-url' => $this->router->generate('admin_employees_get_tabs'),
@@ -230,11 +233,9 @@ final class EmployeeType extends AbstractType
                     [],
                     'Admin.Advparameters.Help'
                 ),
-                'attr' => [
-                    'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => 'select2',
-                ],
-                'choices' => $this->tabChoices,
+                'autocomplete' => true,
+                'autocomplete_minimum_choices' => 5,
+                'choices' => $tabChoices,
             ])
         ;
 
@@ -344,5 +345,19 @@ final class EmployeeType extends AbstractType
         return new NotBlank([
             'message' => $this->trans('This field cannot be empty.', [], 'Admin.Notifications.Error'),
         ]);
+    }
+
+    private function formatTabs(array $tabs): array
+    {
+        $tabChoices = [];
+        foreach ($tabs as $tab) {
+            if (empty($tab['children'])) {
+                $tabChoices[$tab['name']] = $tab['id_tab'];
+            } else {
+                $tabChoices[$tab['name']] = $this->formatTabs($tab['children']);
+            }
+        }
+
+        return $tabChoices;
     }
 }

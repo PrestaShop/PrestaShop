@@ -108,7 +108,7 @@ class EditContactCommand extends AbstractContactCommand
 
         foreach ($localisedTitles as $title) {
             if (!$this->assertIsGenericName($title)) {
-                throw new ContactConstraintException(sprintf('Expected value %s to match given regex /^[^<>={}]*$/u but failed', var_export($title, true)), ContactConstraintException::INVALID_TITLE);
+                throw new ContactConstraintException(sprintf('Expected value %s to match given regex /^[^<>{}]*$/u but failed', var_export($title, true)), ContactConstraintException::INVALID_TITLE);
             }
         }
 

@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DuplicateProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * Handles @see DuplicateProductCommand
  */
+#[AsCommandHandler]
 final class DuplicateProductHandler implements DuplicateProductHandlerInterface
 {
     /**

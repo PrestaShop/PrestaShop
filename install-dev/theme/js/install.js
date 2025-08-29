@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-$(document).ready(function()
+$(function()
 {
-	$('#mainForm').submit(function() {
+	$('#mainForm').on('submit', function() {
 		$('#btNext').hide();
 	});
 
@@ -43,20 +43,4 @@ $(document).ready(function()
 	});
 
 	$('select.chosen').not('.no-chosen').chosen();
-
-	// try to pre-compile the smarty templates
-	function compile_smarty_templates(bo)
-	{
-		$.ajax(
-		{
-			url: 'index.php',
-			data: {
-				'compile_templates': 1,
-				'bo':bo
-			},
-			global: false
-		});
-	}
-	compile_smarty_templates(1);
-	compile_smarty_templates(0);
 });

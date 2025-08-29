@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -189,11 +190,16 @@ class CombinationStockUpdater
         ShopConstraint $shopConstraint
     ): void {
         $combinationId = new CombinationId((int) $combination->id);
-        if ($shopConstraint->forAllShops()) {
+        if ($shopConstraint->forAllShops() || ($shopConstraint instanceof ShopCollection && $shopConstraint->hasShopIds())) {
             // Since each stock has a distinct ID we can't use the ObjectModel multi shop feature based on id_shop_list,
             // so we manually loop to update each associated stocks
-            $shops = $this->combinationRepository->getAssociatedShopIds($combinationId);
-            foreach ($shops as $shopId) {
+            if ($shopConstraint instanceof ShopCollection) {
+                $shopIds = $shopConstraint->getShopIds();
+            } else {
+                $shopIds = $this->combinationRepository->getAssociatedShopIds($combinationId);
+            }
+
+            foreach ($shopIds as $shopId) {
                 $this->updateStockAvailable(
                     $this->stockAvailableRepository->getForCombination($combinationId, $shopId),
                     $properties

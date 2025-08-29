@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Util;
 
+use DateTime;
 use Exception;
 use RuntimeException;
 
@@ -64,7 +65,7 @@ class PrimitiveUtils
                 return $element;
 
             case self::TYPE_DATETIME:
-                return new \DateTime($element);
+                return new DateTime($element);
 
             case self::TYPE_ARRAY:
                 if ('empty' === $element) {
@@ -83,7 +84,7 @@ class PrimitiveUtils
                     return $element;
                 }
 
-            // no break
+                // no break
             case self::TYPE_OBJECT:
             case self::TYPE_RESOURCE:
             case self::TYPE_UNKNOWN:
@@ -94,8 +95,8 @@ class PrimitiveUtils
     }
 
     /**
-     * @param mixed $element1
-     * @param mixed $element2
+     * @param mixed|DateTime $element1
+     * @param mixed|DateTime $element2
      *
      * @return bool
      */
@@ -105,12 +106,11 @@ class PrimitiveUtils
             return false;
         }
 
-        $type = gettype($element1);
-        $isADateTime = (($type === self::TYPE_OBJECT) && (get_class($element1) === 'DateTime'));
-        if ($isADateTime) {
-            $type = self::TYPE_DATETIME;
+        if ($element1 instanceof DateTime) {
+            return $element1->format('YmdHis') === $element2->format('YmdHis');
         }
 
+        $type = gettype($element1);
         switch ($type) {
             case self::TYPE_BOOLEAN:
             case self::TYPE_INTEGER:
@@ -120,9 +120,6 @@ class PrimitiveUtils
                 $epsilon = 0.00001;
 
                 return abs($element1 - $element2) < $epsilon;
-
-            case self::TYPE_DATETIME:
-                return $element1->format('YmdHis') === $element2->format('YmdHis');
 
             case self::TYPE_STRING:
                 $cleanedString1 = trim($element1);

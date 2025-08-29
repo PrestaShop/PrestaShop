@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
 use PrestaShop\PrestaShop\Core\Import\Entity;
+use PrestaShopBundle\Form\Admin\Type\LocaleChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -72,9 +73,9 @@ class ImportType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Select a file to import', 'Admin.Advparameters.Feature'),
             ])
-            ->add('iso_lang', ChoiceType::class, [
+            ->add('iso_lang', LocaleChoiceType::class, [
                 'required' => true,
-                'choices' => $this->getLocaleChoices(),
+                'placeholder' => null,
                 'label' => $this->trans('Language of the file', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('The locale must be installed', 'Admin.Advparameters.Notification'),
             ])

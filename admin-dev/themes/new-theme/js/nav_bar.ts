@@ -61,15 +61,17 @@ export default class NavBar {
           });
         }
 
-        $navBar.find('.link-levelone').hover(
-          function onMouseEnter() {
+        $navBar.find('.link-levelone').on(
+          'mouseenter',
+          function () {
             const itemOffsetTop = $(this).position().top;
             $(this).addClass('link-hover');
             $(this)
               .find('ul.submenu')
               .css('top', itemOffsetTop);
           },
-          function onMouseLeave() {
+        ).on('mouseleave',
+          function () {
             $(this).removeClass('link-hover');
           },
         );
@@ -288,7 +290,6 @@ export default class NavBar {
       .removeClass('collapse')
       .addClass('submenu');
     $('.shop-list-title').remove();
-    $('.js-non-responsive').hide();
     $('.mobile-layer')
       .addClass('d-none')
       .removeClass('expanded');

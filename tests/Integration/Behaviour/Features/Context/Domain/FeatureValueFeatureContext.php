@@ -30,7 +30,10 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Language;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureValueCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureValueCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\EditFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueException;
@@ -84,6 +87,30 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
         } catch (FeatureValueException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I delete feature value :featureValueReference
+     *
+     * @param string $featureValueReference
+     *
+     * @return void
+     */
+    public function deleteFeatureValue(string $featureValueReference): void
+    {
+        $this->getCommandBus()->handle(new DeleteFeatureValueCommand($this->getSharedStorage()->get($featureValueReference)));
+    }
+
+    /**
+     * @When I bulk delete feature values :featureValueReferences
+     *
+     * @param string $featureValueReferences
+     *
+     * @return void
+     */
+    public function bulkDeleteFeatureValues(string $featureValueReferences): void
+    {
+        $this->getCommandBus()->handle(new BulkDeleteFeatureValueCommand($this->referencesToIds($featureValueReferences)));
     }
 
     /**
@@ -201,5 +228,27 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
                 $featureValueReference
             ));
         }
+    }
+
+    /**
+     * @Then feature value :featureValueReference should exist
+     *
+     * @param string $featureValueReference
+     */
+    public function featureValueExists(string $featureValueReference): void
+    {
+        $editableFeatureValue = $this->getFeatureValue($featureValueReference);
+
+        Assert::assertEquals(
+            $this->getSharedStorage()->get($featureValueReference),
+            $editableFeatureValue->getFeatureValueId()->getValue()
+        );
+    }
+
+    private function getFeatureValue(string $featureValueReference): EditableFeatureValue
+    {
+        return $this->getQueryBus()->handle(new GetFeatureValueForEditing(
+            $this->getSharedStorage()->get($featureValueReference)
+        ));
     }
 }

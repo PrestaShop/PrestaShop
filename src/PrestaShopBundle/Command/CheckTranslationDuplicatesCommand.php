@@ -53,7 +53,7 @@ class CheckTranslationDuplicatesCommand extends Command
             ->setDescription('Find duplicates of your translations');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Get dependancies
         $catalogue = $this->translator->getCatalogue()->all();

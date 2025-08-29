@@ -42,8 +42,8 @@ class DetailsFiller implements ProductFillerInterface
     {
         $updatableProperties = [];
 
-        if (null !== $command->getEan13()) {
-            $product->ean13 = $command->getEan13()->getValue();
+        if (null !== $command->getGtin()) {
+            $product->ean13 = $command->getGtin()->getValue();
             $updatableProperties[] = 'ean13';
         }
 

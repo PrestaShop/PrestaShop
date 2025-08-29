@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Pack\Repository;
 use Doctrine\DBAL\Connection;
 use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
@@ -79,7 +79,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
      */
     public function getPackedProducts(PackId $productId, LanguageId $languageId, ShopConstraint $shopConstraint): array
     {
-        if ($shopConstraint->getShopGroupId() || $shopConstraint->forAllShops()) {
+        if (!$shopConstraint->isSingleShopContext()) {
             throw new InvalidShopConstraintException('Product Pack has no features related with shop group or all shops, use single shop constraint');
         }
 
@@ -107,7 +107,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
                 ->addGroupBy('product.id_product')
                 ->addGroupBy('attribute.id_product_attribute')
             ;
-            $packedProducts = $qb->execute()->fetchAll();
+            $packedProducts = $qb->executeQuery()->fetchAll();
         } catch (Throwable $exception) {
             throw new CoreException(
                 sprintf(
@@ -140,7 +140,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
                 $productForPacking->getQuantity(),
                 $productForPacking->getCombinationId() ?
                     $productForPacking->getCombinationId()->getValue() :
-                    CombinationId::NO_COMBINATION
+                    NoCombinationId::NO_COMBINATION_ID
             );
             if (!$packed) {
                 throw new ProductPackException(
@@ -199,7 +199,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
             ->setParameter('productId', $productId->getValue())
         ;
 
-        $packs = $qb->execute()->fetchAllAssociative();
+        $packs = $qb->executeQuery()->fetchAllAssociative();
 
         return array_map(function (array $packData) {
             return new PackId((int) $packData['id_product_pack']);

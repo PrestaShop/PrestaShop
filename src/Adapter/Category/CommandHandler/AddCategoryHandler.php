@@ -27,19 +27,21 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 
 /**
  * Adds new category using legacy object model.
  *
  * @internal
  */
-final class AddCategoryHandler extends AbstractObjectModelHandler implements AddCategoryHandlerInterface
+#[AsCommandHandler]
+final class AddCategoryHandler extends AbstractEditCategoryHandler implements AddCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -52,7 +54,15 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
     {
         $category = $this->createCategoryFromCommand($command);
 
-        return new CategoryId((int) $category->id);
+        $categoryId = new CategoryId((int) $category->id);
+
+        $this->categoryImageUploader->uploadImages(
+            $categoryId,
+            $command->getCoverImage(),
+            $command->getThumbnailImage()
+        );
+
+        return $categoryId;
     }
 
     /**
@@ -61,7 +71,8 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
      * @return Category
      *
      * @throws CannotAddCategoryException
-     * @throws CategoryConstraintException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     private function createCategoryFromCommand(AddCategoryCommand $command)
     {
@@ -93,10 +104,6 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
             $category->meta_description = $command->getLocalizedMetaDescriptions();
         }
 
-        if (null !== $command->getLocalizedMetaKeywords()) {
-            $category->meta_keywords = $command->getLocalizedMetaKeywords();
-        }
-
         if (null !== $command->getAssociatedGroupIds()) {
             $category->groupBox = $command->getAssociatedGroupIds();
         }
@@ -107,6 +114,10 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
 
         if (false === $category->validateFieldsLang(false)) {
             throw new CannotAddCategoryException('Invalid language data for creating category.');
+        }
+
+        if (null !== $command->getRedirectOption()) {
+            $this->fillWithRedirectOption($category, $command->getRedirectOption());
         }
 
         if (false === $category->add()) {

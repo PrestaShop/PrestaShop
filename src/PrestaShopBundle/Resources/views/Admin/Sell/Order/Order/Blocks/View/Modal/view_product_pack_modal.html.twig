@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 <div class="modal fade" id="product-pack-modal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
@@ -62,6 +62,9 @@
                 <p class="mb-0 product-name"></p>
                 <p class="mb-0 product-reference">
                   {{ 'Reference number:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                </p>
+                <p class="mb-0 product-mpn">
+                  {{ 'MPN:'|trans({}, 'Admin.Orderscustomers.Feature') }}
                 </p>
                 <p class="mb-0 product-supplier-reference">
                   {{ 'Supplier reference:'|trans({}, 'Admin.Orderscustomers.Feature') }}

@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
@@ -44,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
@@ -58,6 +60,36 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
     use BulkDeleteActionTrait;
 
     public const GRID_ID = 'carrier';
+
+    /**
+     * @var string
+     */
+    protected $dbPrefix;
+
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
+     * @var bool
+     */
+    protected $showExternalModuleColumn;
+
+    /**
+     * @param HookDispatcherInterface $hookDispatcher
+     */
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        $dbPrefix,
+        Connection $connection
+    ) {
+        parent::__construct($hookDispatcher);
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+
+        $this->showExternalModuleColumn = $this->hasActiveExternalModuleCarriers();
+    }
 
     /**
      * {@inheritdoc}
@@ -80,7 +112,9 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        return (new ColumnCollection())
+        $columns = new ColumnCollection();
+
+        $columns
             ->add(
                 (new BulkActionColumn('bulk'))
                     ->setOptions([
@@ -147,7 +181,20 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'update_method' => 'POST',
                         'update_route' => 'admin_carriers_update_position',
                     ])
-            )
+            );
+
+        if ($this->showExternalModuleColumn) {
+            $columns
+                ->add(
+                    (new DataColumn('external_module_name'))
+                        ->setName($this->trans('Module name', [], 'Admin.Global'))
+                        ->setOptions([
+                            'field' => 'external_module_name',
+                        ])
+                );
+        }
+
+        $columns
             ->add(
                 (new ActionColumn('actions'))
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
@@ -155,6 +202,8 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'actions' => $this->getRowActions(),
                     ])
             );
+
+        return $columns;
     }
 
     /**
@@ -162,7 +211,9 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getFilters()
     {
-        return (new FilterCollection())
+        $filters = new FilterCollection();
+
+        $filters
             ->add(
                 (new Filter('id_carrier', TextType::class))
                     ->setAssociatedColumn('id_carrier')
@@ -207,7 +258,20 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('position', ReorderPositionsButtonType::class))
                     ->setAssociatedColumn('position')
-            )
+            );
+
+        if ($this->showExternalModuleColumn) {
+            $filters
+                ->add(
+                    (new Filter('external_module_name', TextType::class))
+                        ->setAssociatedColumn('external_module_name')
+                        ->setTypeOptions([
+                            'required' => false,
+                        ])
+                );
+        }
+
+        $filters
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setAssociatedColumn('actions')
@@ -219,6 +283,8 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'redirect_route' => 'admin_carriers_index',
                     ])
             );
+
+        return $filters;
     }
 
     protected function getGridActions()
@@ -284,5 +350,14 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 $this->buildBulkDeleteAction('admin_carriers_bulk_delete')
             );
+    }
+
+    protected function hasActiveExternalModuleCarriers()
+    {
+        $sql = 'SELECT count(external_module_name)
+                FROM ' . $this->dbPrefix . 'carrier
+                WHERE deleted = 0 AND external_module_name != ""';
+
+        return (int) $this->connection->fetchOne($sql) > 0;
     }
 }

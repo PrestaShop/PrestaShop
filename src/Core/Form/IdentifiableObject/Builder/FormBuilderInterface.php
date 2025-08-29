@@ -46,7 +46,7 @@ interface FormBuilderInterface
     /**
      * Create new form for given object.
      *
-     * @param int $id
+     * @param int|string $id
      * @param array $data
      * @param array $options
      *

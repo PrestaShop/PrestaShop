@@ -188,6 +188,7 @@ export const updateQtyByProductId = async ({commit}: {commit: Commit}, payload: 
   try {
     const res = await fetch(url, {
       method: 'POST',
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({delta}),
     });
     const datas = await res.json();
@@ -206,6 +207,7 @@ export const updateQtyByProductsId = async ({commit, state}: {commit: Commit, st
   try {
     const res = await fetch(url, {
       method: 'POST',
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(productsQty),
     });
     const datas = await res.json();

@@ -33,6 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotGenerateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -64,6 +65,22 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
             $productReference,
             $table,
             ShopConstraint::shop($this->getSharedStorage()->get($shopReference))
+        );
+    }
+
+    /**
+     * @When I generate combinations for product :productReference in shops :shopReferences using following attributes:
+     *
+     * @param string $shopReferences
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function generateCombinationsForShopCollection(string $shopReferences, string $productReference, TableNode $table): void
+    {
+        $this->generateCombinations(
+            $productReference,
+            $table,
+            ShopCollection::shops($this->referencesToIds($shopReferences))
         );
     }
 

@@ -26,42 +26,42 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShop\PrestaShop\Adapter\Presenter\Module\PaymentModulesPresenter;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class PaymentMethodsController is responsible for 'Improve > Payment > Payment Methods' page.
  */
-class PaymentMethodsController extends FrameworkBundleAdminController
+class PaymentMethodsController extends PrestaShopAdminController
 {
     /**
      * Show payment method modules.
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
      * @return Response
      */
-    public function indexAction(Request $request)
-    {
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function indexAction(
+        Request $request,
+        PaymentModulesPresenter $paymentMethodsPresenter
+    ): Response {
         $legacyController = $request->attributes->get('_legacy_controller');
 
-        $shopContext = $this->get('prestashop.adapter.shop.context');
-        $isSingleShopContext = $shopContext->isSingleShopContext();
+        $isSingleShopContext = $this->getShopContext()->getShopConstraint()->isSingleShopContext();
         $paymentModules = [];
 
         if ($isSingleShopContext) {
-            $paymentMethodsPresenter = $this->get('prestashop.adapter.presenter.module.payment');
             $paymentModules = $paymentMethodsPresenter->present();
         }
 
         return $this->render('@PrestaShop/Admin/Improve/Payment/PaymentMethods/payment_methods.html.twig', [
             'paymentModules' => $paymentModules,
             'isSingleShopContext' => $isSingleShopContext,
-            'layoutTitle' => $this->trans('Payment Methods', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Payment methods', [], 'Admin.Navigation.Menu'),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
         ]);

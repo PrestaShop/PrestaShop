@@ -36,8 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -79,6 +79,17 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         $shopId = $this->getSharedStorage()->get(trim($shopReference));
         $shopConstraint = ShopConstraint::shop($shopId);
         $this->updateProduct($productReference, $table, $shopConstraint);
+    }
+
+    /**
+     * @When I update product ":productReference" for shops :shopReferences with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductForShopCollection(string $productReference, string $shopReferences, TableNode $table): void
+    {
+        $this->updateProduct($productReference, $table, ShopCollection::shops($this->referencesToIds($shopReferences)));
     }
 
     /**
@@ -220,6 +231,9 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         $this->fillSeo($command, $data);
         $this->fillShipping($command, $data);
         $this->fillStock($command, $data);
+        if (isset($data['active'])) {
+            $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
+        }
 
         return $command;
     }
@@ -254,7 +268,7 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
             $command->setUpc($data['upc']);
         }
         if (isset($data['ean13'])) {
-            $command->setEan13($data['ean13']);
+            $command->setGtin($data['ean13']);
         }
         if (isset($data['mpn'])) {
             $command->setMpn($data['mpn']);

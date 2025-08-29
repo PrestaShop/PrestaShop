@@ -38,5 +38,5 @@ interface BackupRemoverInterface
      *
      * @return bool True if backup were removed successfully or False otherwise
      */
-    public function remove(BackupInterface $backup);
+    public function remove(BackupInterface $backup): bool;
 }

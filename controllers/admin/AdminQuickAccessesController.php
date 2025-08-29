@@ -87,7 +87,7 @@ class AdminQuickAccessesControllerCore extends AdminController
                     'lang' => true,
                     'maxlength' => 32,
                     'required' => true,
-                    'hint' => $this->trans('Forbidden characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;;=#{}',
+                    'hint' => $this->trans('Forbidden characters:', [], 'Admin.Notifications.Info') . ' &lt;&gt;{}',
                 ],
                 [
                     'type' => 'text',

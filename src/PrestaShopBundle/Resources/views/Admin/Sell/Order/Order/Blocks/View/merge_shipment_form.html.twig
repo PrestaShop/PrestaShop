@@ -1,0 +1,116 @@
+{# **
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * #}
+
+{{ form_start(mergeShipmentForm, {
+  action: path('admin_orders_merge_shipment', {
+    orderId: orderId,
+    shipmentId: shipmentId
+  }),
+  attr: {
+    id: 'merge_shipment',
+    class: 'shipment-form'
+  },
+}) }}
+
+<p class="shipment-form__tooltip-wrapper">
+  {{ 'Select items to merge'|trans({}, 'Admin.Orderscustomers.Feature') }}
+
+  <a
+    href="#"
+    class="tooltip-link"
+    data-toggle="pstooltip"
+    title="{{ 'Choose the products you wish to combine into another shipment. These products will be moved from their current shipment to the selected destination shipment.'|trans({}, 'Admin.Orderscustomers.Notification') }}"
+    data-placement="top"
+  >
+    <i class="material-icons">help_outline</i>
+  </a>
+</p>
+
+<table class="table shipment-form__table">
+  <thead>
+    <tr>
+      <th>{{ 'Products'|trans({}, 'Admin.Global') }}</th>
+      <th class="text-right">{{ 'Select quantity'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for product in products %}
+      <tr>
+        <td class="shipment-form__table-product-cell">
+          <label class="shipment-form__product-label" for="{{ attribute(mergeShipmentForm, 'product_' ~ product.order_detail_id).vars.id }}">
+            {{ form_widget(attribute(mergeShipmentForm, 'product_' ~ product.order_detail_id), {
+              attr: {class: 'form-check-input shipment-form__product-checkbox'},
+              label: false,
+            }) }}
+
+            {% if product.product_image_path %}
+              <img class="shipment-form__product-image" src="{{ product.product_image_path }}" alt="{{ product.product_reference }}" />
+            {% endif %}
+
+            <div class="shipment-form__product-info">
+              <p class="shipment-form__product-name">{{ product.product_name }}</p>
+              <p class="shipment-form__product-reference">{{ 'Reference: %reference%'|trans({'%reference%': product.product_reference}, 'Admin.Global') }}</p>
+            </div>
+          </label>
+        </td>
+        <td class="shipment-form__table-quantity-cell">
+          <div class="shipment-form__quantity-wrapper">
+            {{ form_widget(attribute(mergeShipmentForm, 'quantity_' ~ product.order_detail_id)) }}
+            <span class="shipment-form__quantity-total">/{{ product.quantity }}</span>
+          </div>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="form-group mt-4 mb-0">
+  <div class="shipment-form__tooltip-wrapper">
+    <label class="m-0" for="merge_shipment_merge_to_shipment">
+      {{ 'Select shipment to merge to'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    </label>
+
+    <a
+      href="#"
+      class="tooltip-link"
+      data-toggle="pstooltip"
+      title="{{ 'Select an existing shipment to which the chosen products will be added. All selected products will become part of this shipment.'|trans({}, 'Admin.Orderscustomers.Notification') }}"
+      data-placement="top"
+    >
+      <i class="material-icons">help_outline</i>
+    </a>
+  </div>
+
+  {{ form_widget(mergeShipmentForm.merge_to_shipment, {
+    attr: {
+      class: 'form-control',
+      id: 'merge_shipment_merge_to_shipment',
+    }
+  }) }}
+</div>
+
+{{ form_rest(mergeShipmentForm) }}
+{{ form_end(mergeShipmentForm) }}

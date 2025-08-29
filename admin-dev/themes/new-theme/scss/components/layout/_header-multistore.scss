@@ -12,24 +12,24 @@ $component-name: header-multishop;
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 0.5625rem 1rem;
+    padding: var(--#{$cdk}size-8) var(--#{$cdk}size-16);
     background-color: $multishop-header-default-background;
   }
 
   &-allshops .#{$component-name}-top-bar {
-    background-color: $primary;
+    background-color: var(--#{$cdk}blue-300);
 
     .#{$component-name}-title {
-      color: $white;
+      color: var(--#{$cdk}white);
     }
   }
 
   &-title {
     margin: 0;
-    font-size: 0.8rem;
+    font-size: var(--#{$cdk}size-14);
     font-weight: 600;
-    line-height: 18px;
-    color: $white;
+    line-height: 1;
+    color: var(--#{$cdk}white);
     text-align: center;
   }
 
@@ -39,10 +39,19 @@ $component-name: header-multishop;
     right: 1rem;
     z-index: 1002;
     display: flex;
-    gap: 10px;
+    gap: var(--#{$cdk}size-16);
     transform: translateY(-50%);
 
-    @include media-breakpoint-down(sm) {
+    svg {
+      path {
+        // stylelint-disable-next-line
+        -webkit-mask: none !important;
+        // stylelint-disable-next-line
+        mask: none !important;
+      }
+    }
+
+    @include media-breakpoint-down(md) {
       a {
         font-size: 0;
 
@@ -57,15 +66,16 @@ $component-name: header-multishop;
     .#{$component-name}-title,
     .#{$component-name}-center,
     .#{$component-name}-view-action {
+      font-weight: 600;
       color: $multishop-header-default-color;
 
       i {
-        color: #757575;
+        color: var(--#{$cdk}primary-800);
       }
     }
 
     .#{$component-name}-button {
-      background: $white;
+      background: var(--#{$cdk}white);
     }
 
     .#{$component-name}-center {
@@ -76,31 +86,33 @@ $component-name: header-multishop;
 
     .#{$component-name}-view-action {
       &:hover {
-        color: $multishop-header-default-color;
+        color: $multishop-header-default-color-hover;
       }
     }
   }
 
   &-view-action {
     display: flex;
+    gap: var(--#{$cdk}size-4);
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
-    line-height: 18px;
-    color: $white;
-    @include transition(0.25s ease-out);
+    font-size: var(--#{$cdk}size-12);
+    line-height: 1;
+    color: var(--#{$cdk}white);
+    transition: var(--#{$cdk}default-transition);
 
     i {
-      margin-top: 0.1rem;
-      margin-left: 0.5rem;
-      font-size: 1.25rem;
-      color: $white;
+      font-size: var(--#{$cdk}size-20);
+      color: currentcolor;
     }
 
     &:hover {
-      color: $white;
+      color: var(--#{$cdk}white);
       text-decoration: none;
-      opacity: 0.7;
+
+      i {
+        color: currentcolor;
+      }
     }
   }
 
@@ -108,17 +120,17 @@ $component-name: header-multishop;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
-    margin-left: 1rem;
-    color: $white;
-    background-color: rgba(255, 255, 255, 0.2);
+    width: var(--#{$cdk}size-20);
+    height: var(--#{$cdk}size-20);
+    margin-left: var(--#{$cdk}size-12);
+    color: var(--#{$cdk}primary-800);
+    background-color: rgba(map-get($map: $cdk-common, $key: "white"), 0.5);
     border: none;
-    @include border-radius(3px);
 
     i {
-      font-size: 1.2rem;
-      @include transition(0.25s ease-out);
+      font-size: var(--#{$cdk}size-20);
+      line-height: 1;
+      transition: var(--#{$cdk}default-transition);
     }
 
     &:active,
@@ -133,10 +145,10 @@ $component-name: header-multishop;
     align-items: center;
     justify-content: space-around;
     cursor: pointer;
-    @include transition(0.25s ease-out);
+    transition: var(--#{$cdk}default-transition);
 
     &:hover {
-      opacity: 0.6;
+      opacity: 0.8;
     }
 
     &.active {
@@ -149,8 +161,8 @@ $component-name: header-multishop;
 
     svg {
       position: absolute;
-      right: calc(100% + 0.75rem);
-      bottom: -0.5625rem;
+      right: calc(100% + var(--#{$cdk}size-12));
+      bottom: calc(-1 * var(--#{$cdk}size-8));
 
       @include media-breakpoint-down(sm) {
         display: none;
@@ -160,8 +172,9 @@ $component-name: header-multishop;
 
   .product-shops-action {
     svg {
-      width: 18px;
-      margin-left: 10px;
+      width: var(--#{$cdk}size-18);
+      height: var(--#{$cdk}size-20);
+      margin-top: -3px;
     }
   }
 }

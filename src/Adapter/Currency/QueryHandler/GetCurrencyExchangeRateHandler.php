@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException;
 use PrestaShop\PrestaShop\Core\Currency\ExchangeRateProvider;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\ExchangeRateNotFoundException;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ExchangeRate;
  * Class GetCurrencyExchangeRateHandler handles the GetCurrencyExchangeRate query
  * and returns the exchange rate of a specified currency via a ExchangeRate value object.
  */
+#[AsQueryHandler]
 class GetCurrencyExchangeRateHandler implements GetCurrencyExchangeRateHandlerInterface
 {
     /** @var ExchangeRateProvider */

@@ -101,7 +101,7 @@ final class Backup implements BackupInterface
      */
     public function getDate()
     {
-        list($timestamp) = explode('-', $this->fileName);
+        [$timestamp] = explode('-', $this->fileName);
 
         return new DateTimeImmutable('@' . $timestamp);
     }

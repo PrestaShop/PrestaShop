@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
 
 /**
@@ -43,7 +44,7 @@ class OrderReturnStateNotFoundException extends OrderReturnStateException
     /**
      * @param string $message
      * @param int $code
-     * @param \Exception|null $previous
+     * @param Exception|null $previous
      */
     public function __construct(OrderReturnStateId $orderReturnStateId, $message = '', $code = 0, $previous = null)
     {

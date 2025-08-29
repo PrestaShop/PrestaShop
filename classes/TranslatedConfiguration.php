@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 /**
  * Class TranslatedConfigurationCore.
  */
@@ -46,10 +48,10 @@ class TranslatedConfigurationCore extends Configuration
         'primary' => 'id_configuration',
         'multilang' => true,
         'fields' => [
-            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => 32],
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isConfigName', 'required' => true, 'size' => 254],
             'id_shop_group' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
             'id_shop' => ['type' => self::TYPE_NOTHING, 'validate' => 'isUnsignedId'],
-            'value' => ['type' => self::TYPE_STRING, 'lang' => true],
+            'value' => ['type' => self::TYPE_STRING, 'lang' => true, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],

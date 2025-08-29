@@ -140,9 +140,9 @@ final class Importer implements ImporterInterface
                     $runtimeConfig,
                     $dataRow
                 );
-            } catch (InvalidDataRowException $e) {
+            } catch (InvalidDataRowException) {
                 continue;
-            } catch (SkippedIterationException $e) {
+            } catch (SkippedIterationException) {
                 continue;
             } finally {
                 ++$processedRows;
@@ -175,9 +175,9 @@ final class Importer implements ImporterInterface
         ImportRuntimeConfigInterface $runtimeConfig
     ) {
         return
-            $importConfig->truncate() &&
-            !$runtimeConfig->shouldValidateData() &&
-            $this->isFirstIteration($runtimeConfig)
+            $importConfig->truncate()
+            && !$runtimeConfig->shouldValidateData()
+            && $this->isFirstIteration($runtimeConfig)
         ;
     }
 

@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\MailTheme;
 
+use PrestaShopBundle\Form\Admin\Type\LocaleChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -42,11 +42,7 @@ class TranslateMailsBodyType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('language', ChoiceType::class, [
-                'placeholder' => $this->trans('Language', 'Admin.Global'),
-                'choices' => $this->getLocaleChoices(),
-                'choice_translation_domain' => false,
-            ])
+            ->add('language', LocaleChoiceType::class)
         ;
     }
 }

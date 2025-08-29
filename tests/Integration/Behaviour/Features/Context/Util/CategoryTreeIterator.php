@@ -40,7 +40,7 @@ class CategoryTreeIterator
     /**
      * CategoryTreeIterator constructor.
      *
-     * @param CategoryTreeChoiceProvider$categoryTreeChoiceProvider
+     * @param CategoryTreeChoiceProvider $categoryTreeChoiceProvider
      */
     public function __construct(CategoryTreeChoiceProvider $categoryTreeChoiceProvider)
     {

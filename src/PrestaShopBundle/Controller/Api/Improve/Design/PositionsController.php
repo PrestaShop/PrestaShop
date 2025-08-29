@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Controller\Api\Improve\Design;
 
 use PrestaShopBundle\Controller\Api\ApiController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -36,19 +36,18 @@ class PositionsController extends ApiController
     /**
      * Update positions.
      *
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
-     *
      * @param Request $request
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function updateAction(Request $request)
     {
         $moduleId = $request->request->getInt('moduleId');
         $hookId = $request->request->getInt('hookId');
         $way = $request->request->getInt('way');
-        $positions = $request->request->get('positions');
-        $position = (int) is_array($positions) ? array_search($hookId . '_' . $moduleId, $positions) + 1 : null;
+        $positions = $request->request->all('positions');
+        $position = (int) array_search($hookId . '_' . $moduleId, $positions) + 1;
 
         $module = $this->container->get('prestashop.adapter.legacy.module')->getInstanceById($moduleId);
         if (empty($module)) {

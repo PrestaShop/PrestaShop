@@ -40,64 +40,68 @@ final class FeatureValuesCommandsBuilder implements ProductCommandsBuilderInterf
      */
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
-        if (!isset($formData['details']['features']['feature_values'])) {
+        if (!isset($formData['details']['features']['feature_collection'])) {
             return [];
         }
 
-        $featureValuesData = $formData['details']['features']['feature_values'];
-        if (empty($featureValuesData)) {
+        $featuresCollection = $formData['details']['features']['feature_collection'];
+        if (empty($featuresCollection)) {
             return [new RemoveAllFeatureValuesFromProductCommand($productId->getValue())];
         }
 
         $command = new SetProductFeatureValuesCommand(
             $productId->getValue(),
-            $this->formatFeatureValues($featureValuesData)
+            $this->formatFeatureValues($featuresCollection)
         );
 
         return [$command];
     }
 
     /**
-     * @param array $featureValuesData
+     * @param array $featuresCollection
      *
      * @return array
      */
-    private function formatFeatureValues(array $featureValuesData): array
+    private function formatFeatureValues(array $featuresCollection): array
     {
         $featureValues = [];
-        foreach ($featureValuesData as $featureValueDatum) {
-            if (empty($featureValueDatum['feature_id'])) {
+        foreach ($featuresCollection as $featureData) {
+            if (empty($featureData['feature_id']) || empty($featureData['feature_values'])) {
                 continue;
             }
 
-            $formattedFeature = ['feature_id' => (int) $featureValueDatum['feature_id']];
-            if ($this->hasCustomValues($featureValueDatum)) {
-                $formattedFeature['custom_values'] = $featureValueDatum['custom_value'];
-                if (!empty($featureValueDatum['custom_value_id'])) {
-                    $formattedFeature['feature_value_id'] = (int) $featureValueDatum['custom_value_id'];
-                }
-            } elseif (!empty($featureValueDatum['feature_value_id'])) {
-                $formattedFeature['feature_value_id'] = (int) $featureValueDatum['feature_value_id'];
-            }
+            $featureId = (int) $featureData['feature_id'];
+            foreach ($featureData['feature_values'] as $featureValueData) {
+                $formattedFeature = [
+                    'feature_id' => $featureId,
+                ];
 
-            $featureValues[] = $formattedFeature;
+                if (isset($featureValueData['feature_value_id'])) {
+                    $formattedFeature['feature_value_id'] = (int) $featureValueData['feature_value_id'];
+                }
+                if ($this->hasCustomValues($featureValueData)) {
+                    $formattedFeature['custom_values'] = $featureValueData['custom_value'];
+                }
+
+                $featureValues[] = $formattedFeature;
+            }
         }
 
         return $featureValues;
     }
 
     /**
-     * @param array $featureValueDatum
+     * @param array $featureValueData
      *
      * @return bool
      */
-    private function hasCustomValues(array $featureValueDatum): bool
+    private function hasCustomValues(array $featureValueData): bool
     {
-        if (empty($featureValueDatum['custom_value'])) {
+        if (empty($featureValueData['custom_value']) || empty($featureValueData['is_custom'])) {
             return false;
         }
 
-        foreach ($featureValueDatum['custom_value'] as $localizedValue) {
+        foreach ($featureValueData['custom_value'] as $localizedValue) {
             if (!empty($localizedValue)) {
                 return true;
             }

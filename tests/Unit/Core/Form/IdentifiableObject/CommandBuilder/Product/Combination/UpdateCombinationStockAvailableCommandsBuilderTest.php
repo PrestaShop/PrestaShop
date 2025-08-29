@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinat
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationStockAvailableCommandsBuilder;
 
-class UpdateCombinationStockAvailableCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
+class UpdateCombinationStockAvailableCommandsBuilderTest extends AbstractCombinationCommandBuilderTestCase
 {
     /**
      * @dataProvider getExpectedCommands

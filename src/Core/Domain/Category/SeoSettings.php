@@ -50,4 +50,9 @@ final class SeoSettings
      * Recommended length of SEO description
      */
     public const RECOMMENDED_DESCRIPTION_LENGTH = 160;
+
+    /**
+     * Maximum length of link rewrite (value is constrained by database)
+     */
+    public const MAX_LINK_REWRITE_LENGTH = 128;
 }

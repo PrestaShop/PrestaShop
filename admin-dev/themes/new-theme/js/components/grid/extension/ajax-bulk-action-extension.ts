@@ -106,6 +106,7 @@ export default class AjaxBulkActionExtension {
       },
       closeCallback: () => {
         if (reloadAfterBulk) {
+          $<HTMLInputElement>(GridMap.bulks.checkedCheckbox).filter(':checked').prop('checked', false);
           window.location.reload();
         }
       },

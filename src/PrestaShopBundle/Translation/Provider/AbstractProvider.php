@@ -26,7 +26,8 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Finder\TranslationFinder;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -136,7 +137,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     /**
      * {@inheritdoc}
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     public function getDefaultCatalogue($empty = true)
     {
@@ -161,7 +162,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     /**
      * {@inheritdoc}
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     public function getXliffCatalogue()
     {
@@ -245,7 +246,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
      *
      * @return MessageCatalogue
      *
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     public function getCatalogueFromPaths($paths, $locale, $pattern = null)
     {

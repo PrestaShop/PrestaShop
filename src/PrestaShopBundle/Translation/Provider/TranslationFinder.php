@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -54,7 +53,7 @@ class TranslationFinder
      *
      * @throws FileNotFoundException
      */
-    public function getCatalogueFromPaths(array $paths, string $locale, string $pattern = null): MessageCatalogue
+    public function getCatalogueFromPaths(array $paths, string $locale, ?string $pattern = null): MessageCatalogue
     {
         $translationFiles = $this->getTranslationFilesFromPath($paths, $pattern);
 
@@ -150,7 +149,7 @@ class TranslationFinder
         $basename = $file->getBasename('.xlf');
 
         $domain = $basename;
-        if (strpos($basename, $locale) === false) {
+        if (!str_contains($basename, $locale)) {
             $domain .= '.' . $locale;
         }
 

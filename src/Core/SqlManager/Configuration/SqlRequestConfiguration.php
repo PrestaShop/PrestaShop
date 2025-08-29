@@ -42,15 +42,9 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
     private const CUSTOM_DEFINES_FILE = _PS_ROOT_DIR_ . '/config/defines_custom.inc.php';
     private const PATTERN = '/(define\(\'_PS_ALLOW_MULTI_STATEMENTS_QUERIES_\', )([a-zA-Z]+)(\);)/Ui';
 
-    /**
-     * @var CommandBusInterface
-     */
-    private $commandBus;
+    private CommandBusInterface $commandBus;
 
-    /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
+    private CommandBusInterface $queryBus;
 
     /**
      * @param CommandBusInterface $commandBus
@@ -67,13 +61,14 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration()
+    public function getConfiguration(): array
     {
         /** @var SqlRequestSettings $sqlRequestSettings */
         $sqlRequestSettings = $this->queryBus->handle(new GetSqlRequestSettings());
 
         return [
             'default_file_encoding' => $sqlRequestSettings->getFileEncoding(),
+            'default_file_separator' => $sqlRequestSettings->getFileSeparator(),
             'enable_multi_statements' => $this->getMultiStatementsStatus(),
         ];
     }
@@ -81,14 +76,15 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $configuration)
+    public function updateConfiguration(array $configuration): array
     {
         $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
             try {
                 $command = new SaveSqlRequestSettingsCommand(
-                    $configuration['default_file_encoding']
+                    $configuration['default_file_encoding'],
+                    $configuration['default_file_separator']
                 );
 
                 $this->commandBus->handle($command);
@@ -113,9 +109,9 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function validateConfiguration(array $configuration)
+    public function validateConfiguration(array $configuration): bool
     {
-        return isset($configuration['default_file_encoding']);
+        return isset($configuration['default_file_encoding'], $configuration['default_file_separator']);
     }
 
     private function getMultiStatementsStatus(): bool
@@ -160,7 +156,7 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
      *
      * @return array Array of errors
      */
-    private function handleUpdateException(SqlRequestSettingsConstraintException $e)
+    private function handleUpdateException(SqlRequestSettingsConstraintException $e): array
     {
         $code = $e->getCode();
 
@@ -168,6 +164,11 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
             SqlRequestSettingsConstraintException::INVALID_FILE_ENCODING => [
                 'key' => 'The %s field is invalid.',
                 'parameters' => ['default_file_encoding'],
+                'domain' => 'Admin.Notifications.Error',
+            ],
+            SqlRequestSettingsConstraintException::INVALID_FILE_SEPARATOR => [
+                'key' => 'The %s field is invalid.',
+                'parameters' => ['default_file_separator'],
                 'domain' => 'Admin.Notifications.Error',
             ],
             SqlRequestSettingsConstraintException::NOT_SUPPORTED_FILE_ENCODING => [

@@ -1,20 +1,17 @@
 // Import utils
-import helper from '@utils/helpers';
-import date from '@utils/date';
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import pages
-import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders';
-
-// Import data
-import Orders from '@data/demo/orders';
-
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
+import {
+  boDashboardPage,
+  boLoginPage,
+  boOrdersPage,
+  type BrowserContext,
+  dataOrders,
+  type Page,
+  utilsDate,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_orders_orders_filterOrders';
 
@@ -27,40 +24,46 @@ describe('BO - Orders : Filter the Orders table', async () => {
   let page: Page;
   let numberOfOrders: number;
 
-  const today: string = date.getDateFormat('yyyy-mm-dd');
-  const dateToCheck: string = date.getDateFormat('mm/dd/yyyy');
+  const today: string = utilsDate.getDateFormat('yyyy-mm-dd');
+  const dateToCheck: string = utilsDate.getDateFormat('mm/dd/yyyy');
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+    await boLoginPage.goTo(page, global.BO.URL);
+    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+    const pageTitle = await boDashboardPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
   });
 
   it('should go to \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
+    await boDashboardPage.goToSubMenu(
       page,
-      dashboardPage.ordersParentLink,
-      dashboardPage.ordersLink,
+      boDashboardPage.ordersParentLink,
+      boDashboardPage.ordersLink,
     );
 
-    const pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    const pageTitle = await boOrdersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boOrdersPage.pageTitle);
   });
 
   it('should reset all filters and get number of orders', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
-    numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfOrders).to.be.above(0);
+    numberOfOrders = await boOrdersPage.resetAndGetNumberOfLines(page);
+    expect(numberOfOrders).to.be.above(0);
   });
 
   [
@@ -70,7 +73,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterById',
           filterType: 'input',
           filterBy: 'id_order',
-          filterValue: Orders.firstOrder.id.toString(),
+          filterValue: dataOrders.order_1.id.toString(),
         },
     },
     {
@@ -79,7 +82,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByReference',
           filterType: 'input',
           filterBy: 'reference',
-          filterValue: Orders.fourthOrder.reference,
+          filterValue: dataOrders.order_4.reference,
         },
     },
     {
@@ -88,7 +91,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByNewClient',
           filterType: 'select',
           filterBy: 'new',
-          filterValue: Orders.firstOrder.newClient ? 'Yes' : 'No',
+          filterValue: dataOrders.order_1.newClient ? 'Yes' : 'No',
         },
     },
     {
@@ -97,7 +100,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByDelivery',
           filterType: 'select',
           filterBy: 'country_name',
-          filterValue: Orders.firstOrder.delivery,
+          filterValue: dataOrders.order_1.delivery,
         },
     },
     {
@@ -106,7 +109,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByCustomer',
           filterType: 'input',
           filterBy: 'customer',
-          filterValue: `${Orders.firstOrder.customer.firstName[0]}. ${Orders.firstOrder.customer.lastName.toUpperCase()}`,
+          filterValue: `${dataOrders.order_1.customer.firstName[0]}. ${dataOrders.order_1.customer.lastName.toUpperCase()}`,
         },
     },
     {
@@ -115,7 +118,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByTotalPaid',
           filterType: 'input',
           filterBy: 'total_paid_tax_incl',
-          filterValue: Orders.fourthOrder.totalPaid.toString(),
+          filterValue: dataOrders.order_4.totalPaid.toString(),
         },
     },
     {
@@ -124,7 +127,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByPayment',
           filterType: 'input',
           filterBy: 'payment',
-          filterValue: Orders.firstOrder.paymentMethod.name,
+          filterValue: dataOrders.order_1.paymentMethod.name,
         },
     },
     {
@@ -133,34 +136,34 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterOsName',
           filterType: 'select',
           filterBy: 'osname',
-          filterValue: Orders.thirdOrder.status?.name,
+          filterValue: dataOrders.order_3.status?.name,
         },
     },
   ].forEach((test) => {
     it(`should filter the Orders table by '${test.args.filterBy}' and check the result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
 
-      await ordersPage.filterOrders(
+      await boOrdersPage.filterOrders(
         page,
         test.args.filterType,
         test.args.filterBy,
         test.args.filterValue,
       );
 
-      const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
-      await expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
+      const numberOfOrdersAfterFilter = await boOrdersPage.getNumberOfElementInGrid(page);
+      expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
 
       for (let row = 1; row <= numberOfOrdersAfterFilter; row++) {
-        const textColumn = await ordersPage.getTextColumn(page, test.args.filterBy, row);
-        await expect(textColumn).to.equal(test.args.filterValue);
+        const textColumn = await boOrdersPage.getTextColumn(page, test.args.filterBy, row);
+        expect(textColumn).to.equal(test.args.filterValue);
       }
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.identifier}Reset`, baseContext);
 
-      const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
+      const numberOfOrdersAfterReset = await boOrdersPage.resetAndGetNumberOfLines(page);
+      expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
     });
   });
 
@@ -168,22 +171,22 @@ describe('BO - Orders : Filter the Orders table', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
 
     // Filter orders
-    await ordersPage.filterOrdersByDate(page, today, today);
+    await boOrdersPage.filterOrdersByDate(page, today, today);
 
     // Check number of element
-    const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
-    await expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
+    const numberOfOrdersAfterFilter = await boOrdersPage.getNumberOfElementInGrid(page);
+    expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
 
     for (let i = 1; i <= numberOfOrdersAfterFilter; i++) {
-      const textColumn = await ordersPage.getTextColumn(page, 'date_add', i);
-      await expect(textColumn).to.contains(dateToCheck);
+      const textColumn = await boOrdersPage.getTextColumn(page, 'date_add', i);
+      expect(textColumn).to.contains(dateToCheck);
     }
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-    const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
+    const numberOfOrdersAfterReset = await boOrdersPage.resetAndGetNumberOfLines(page);
+    expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
   });
 });

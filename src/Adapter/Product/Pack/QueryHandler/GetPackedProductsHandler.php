@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
@@ -49,6 +50,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Handles GetPackedProducts query using legacy object model
  */
+#[AsQueryHandler]
 class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
 {
     /**
@@ -183,7 +185,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     {
         try {
             return $this->productImageProvider->getProductCoverUrl($packedItemId, $shopId);
-        } catch (ShopAssociationNotFound $e) {
+        } catch (ShopAssociationNotFound) {
             return $this->productImageProvider->getProductCoverUrl(
                 $packedItemId,
                 $this->productRepository->getProductDefaultShopId($packedItemId)
@@ -195,7 +197,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     {
         try {
             return $this->productImageProvider->getCombinationCoverUrl($packedCombinationId, $shopId);
-        } catch (ShopAssociationNotFound $e) {
+        } catch (ShopAssociationNotFound) {
             return $this->productImageProvider->getCombinationCoverUrl(
                 $packedCombinationId,
                 $this->combinationRepository->getDefaultShopIdForCombination($packedCombinationId)

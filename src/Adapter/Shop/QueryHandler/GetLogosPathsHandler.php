@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop\QueryHandler;
 
 use Configuration;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryHandler\GetLogosPathsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\LogosPaths;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\LogosPaths;
 /**
  * Responsible for providing header, email, invoice and favicon logo paths for specific shop context.
  */
+#[AsQueryHandler]
 final class GetLogosPathsHandler implements GetLogosPathsHandlerInterface
 {
     /**

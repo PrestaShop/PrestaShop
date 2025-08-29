@@ -32,7 +32,14 @@ class RegistrationControllerCore extends FrontController
     /** @var bool */
     public $auth = false;
 
-    public function checkAccess()
+    /**
+     * Check if the controller is available for the current user/visitor.
+     *
+     * @see Controller::checkAccess()
+     *
+     * @return bool
+     */
+    public function checkAccess(): bool
     {
         // If the customer is already logged and he got here by 'accident', we will redirect him away
         if ($this->context->customer->isLogged() && !$this->ajax) {
@@ -43,7 +50,12 @@ class RegistrationControllerCore extends FrontController
         return parent::checkAccess();
     }
 
-    public function initContent()
+    /**
+     * Assign template vars related to page content.
+     *
+     * @see FrontController::initContent()
+     */
+    public function initContent(): void
     {
         $register_form = $this
             ->makeCustomerForm()
@@ -66,16 +78,16 @@ class RegistrationControllerCore extends FrontController
                 // Before that, we need to check if 'back' is legit URL that is on OUR domain, with the right protocol
                 $back = rawurldecode(Tools::getValue('back'));
                 if (Tools::urlBelongsToShop($back)) {
-                    return $this->redirectWithNotifications($back);
+                    $this->redirectWithNotifications($back);
                 }
 
                 // Second option - we will redirect him to authRedirection if set
                 if ($this->authRedirection) {
-                    return $this->redirectWithNotifications($this->authRedirection);
+                    $this->redirectWithNotifications($this->authRedirection);
                 }
 
                 // Third option - we will redirect him to home URL
-                return $this->redirectWithNotifications(__PS_BASE_URI__);
+                $this->redirectWithNotifications(__PS_BASE_URI__);
             }
         }
 
@@ -88,7 +100,7 @@ class RegistrationControllerCore extends FrontController
         parent::initContent();
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
@@ -103,7 +115,7 @@ class RegistrationControllerCore extends FrontController
     /**
      * {@inheritdoc}
      */
-    public function getCanonicalURL()
+    public function getCanonicalURL(): string
     {
         return $this->context->link->getPageLink('registration');
     }

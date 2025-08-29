@@ -29,6 +29,7 @@ namespace PrestaShopBundle\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Throwable;
 
 /**
  * Collect all information about Legacy hooks and make it available
@@ -49,7 +50,7 @@ final class HookDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, ?Throwable $exception = null)
     {
         $hooks = $this->registry->getHooks();
         $calledHooks = $this->registry->getCalledHooks();
@@ -61,15 +62,6 @@ final class HookDataCollector extends DataCollector
             'notCalledHooks' => $this->stringifyHookArguments($notCalledHooks),
             'notRegisteredHooks' => $this->stringifyHookArguments($notRegisteredHooks),
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($data)
-    {
-        // it seems that php 7.3 has a bug with unserialize: https://bugs.php.net/bug.php?id=77302
-        $this->data = is_array($data) ? $data : @unserialize($data);
     }
 
     /**

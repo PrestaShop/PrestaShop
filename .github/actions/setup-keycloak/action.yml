@@ -1,0 +1,16 @@
+name: Setup Keycloak
+description: Checkout Keycloak Module for installation and to launch Keycloak docker
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v4
+      name: Checkout Keycloak module
+      with:
+        repository: PrestaShop/keycloak_connector_demo
+        ref: v1.1.0
+        path: keycloak_connector_demo
+
+    - name: Build Keycloak docker and install module via CLI command
+      run: USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose -f keycloak_connector_demo/docker-compose-ui.yml up -d
+      shell: bash

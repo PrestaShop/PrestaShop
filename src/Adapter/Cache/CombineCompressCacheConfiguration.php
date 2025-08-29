@@ -154,7 +154,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
             $this->filesystem->mkdir($folder, PsFileSystem::DEFAULT_MODE_FOLDER);
 
             return true;
-        } catch (IOExceptionInterface $e) {
+        } catch (IOExceptionInterface) {
             return false;
         }
     }

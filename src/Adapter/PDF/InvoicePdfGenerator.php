@@ -48,7 +48,7 @@ final class InvoicePdfGenerator implements PDFGeneratorInterface
     public function generatePDF(array $invoiceId): void
     {
         if (count($invoiceId) !== 1) {
-            throw new CoreException(sprintf('"%s" supports generating PDF for single invoice only.', get_class($this)));
+            throw new CoreException(sprintf('"%s" supports generating PDF for single invoice only.', self::class));
         }
 
         $invoiceId = reset($invoiceId);

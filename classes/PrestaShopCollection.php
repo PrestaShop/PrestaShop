@@ -26,8 +26,6 @@
 
 /**
  * Create a collection of ObjectModel objects.
- *
- * @since 1.5.0
  */
 class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 {
@@ -450,7 +448,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @return ObjectModel
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function current()
     {
         return isset($this->results[$this->iterator]) ? $this->results[$this->iterator] : null;
@@ -475,7 +473,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @return int
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function key()
     {
         return $this->iterator;
@@ -530,7 +528,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @return ObjectModel
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         $this->getAll();

@@ -33,6 +33,7 @@ use CustomerMessage;
 use CustomerThread;
 use Language;
 use Mail;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
@@ -44,6 +45,7 @@ use Validate;
 /**
  * @internal
  */
+#[AsCommandHandler]
 class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandlerInterface
 {
     /**

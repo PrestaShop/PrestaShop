@@ -19,7 +19,8 @@ jobs:
       matrix:
         BRANCH:
           - develop
-          - 8.0.x
+          - 9.0.x
+          - 8.2.x
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}
 
@@ -32,15 +33,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
 
       - name: Install Composer dependencies
         run: |
-          composer self-update --2.2
-          composer install --prefer-dist
+          composer self-update --stable
+          COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
       - name: Execute script for updating modules
         run: php .github/workflows/cron_update_modules/script.php ${{ env.GH_BRANCH }}
@@ -48,9 +49,13 @@ jobs:
       - name: Update PrestaShop packages
         id: updated-packages
         run: |
-          FILE_CONTENT=$(cat cron_php_update_modules.txt)
-          echo PR_BODY=$FILE_CONTENT >> $GITHUB_OUTPUT
-          rm cron_php_update_modules.txt
+          if [[ -f cron_php_update_modules.txt ]]; then
+            FILE_CONTENT=$(cat cron_php_update_modules.txt)
+            echo PR_BODY=$FILE_CONTENT >> $GITHUB_OUTPUT
+            rm cron_php_update_modules.txt
+          else
+            echo 'Nothing to update'
+          fi
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3

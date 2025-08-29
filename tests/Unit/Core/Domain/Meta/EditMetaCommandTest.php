@@ -83,19 +83,6 @@ class EditMetaCommandTest extends TestCase
         $command->setLocalisedMetaDescriptions($incorrectNames);
     }
 
-    /**
-     * @dataProvider getIncorrectMultiLanguageNames
-     */
-    public function testItThrowsAnExceptionOnIncorrectMetaKeywords($incorrectNames)
-    {
-        $this->expectException(MetaConstraintException::class);
-        $this->expectExceptionCode(MetaConstraintException::INVALID_META_KEYWORDS);
-
-        $command = new EditMetaCommand(1);
-
-        $command->setLocalisedMetaKeywords($incorrectNames);
-    }
-
     public function getIncorrectPageNames()
     {
         return [

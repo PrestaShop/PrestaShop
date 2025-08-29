@@ -112,9 +112,10 @@ class TypedFiltersBuilder extends AbstractFiltersBuilder
     /**
      * {@inheritDoc}
      */
-    public function buildFilters(Filters $filters = null)
+    public function buildFilters(?Filters $filters = null)
     {
         $typedBuilder = $this->findTypedBuilder();
+
         // When a typed builder matches it MUST be used in priority, do not try to manually a filters class that might
         // need some special inputs
         return $typedBuilder ? $typedBuilder->buildFilters($filters) : $this->defaultBuilder->buildFilters($filters);

@@ -2,31 +2,58 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.import.file_uploader:
-    class: 'PrestaShop\PrestaShop\Core\Import\File\FileUploader'
+  PrestaShop\PrestaShop\Core\Import\File\FileUploader:
+    public: false
     arguments:
       - '@translator'
       - '@prestashop.core.import.dir'
 
-  prestashop.core.import.file_finder:
-    class: 'PrestaShop\PrestaShop\Core\Import\File\FileFinder'
+  prestashop.core.import.file_uploader:
+    alias: 'PrestaShop\PrestaShop\Core\Import\File\FileUploader'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
+  PrestaShop\PrestaShop\Core\Import\File\FileFinder:
+    public: false
     arguments:
       - '@prestashop.core.import.dir'
+
+  prestashop.core.import.file_finder:
+    alias: 'PrestaShop\PrestaShop\Core\Import\File\FileFinder'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
+  PrestaShop\PrestaShop\Core\Import\ImportDirectory:
+    public: false
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.core.import.dir:
-    class: 'PrestaShop\PrestaShop\Core\Import\ImportDirectory'
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
+    alias: 'PrestaShop\PrestaShop\Core\Import\ImportDirectory'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
-  prestashop.core.import.file_removal:
-    class: 'PrestaShop\PrestaShop\Core\Import\File\FileRemoval'
+  PrestaShop\PrestaShop\Core\Import\File\FileRemoval:
+    public: false
     arguments:
       - '@prestashop.core.import.dir'
 
-  prestashop.core.import.sample.file_provider:
-    class: 'PrestaShop\PrestaShop\Core\Import\Sample\SampleFileProvider'
+  prestashop.core.import.file_removal:
+    alias: 'PrestaShop\PrestaShop\Core\Import\File\FileRemoval'
+
+  PrestaShop\PrestaShop\Core\Import\Sample\SampleFileProvider:
+    public: false
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.core.import.sample.file_provider:
+    alias: 'PrestaShop\PrestaShop\Core\Import\Sample\SampleFileProvider'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
 
   prestashop.core.import.csv_file_reader:
     class: 'PrestaShop\PrestaShop\Core\Import\File\CsvFileReader'
@@ -42,10 +69,14 @@ services:
     arguments:
       - '@prestashop.core.import.data_row.presenter'
 
+  PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowCollectionPresenterInterface: '@prestashop.core.import.data_row.collection_presenter'
+
   prestashop.core.import.factory.data_row.collection_factory:
     class: 'PrestaShop\PrestaShop\Core\Import\File\DataRow\Factory\DataRowCollectionFactory'
     arguments:
       - '@prestashop.core.import.csv_file_reader'
+
+  PrestaShop\PrestaShop\Core\Import\File\DataRow\Factory\DataRowCollectionFactoryInterface: '@prestashop.core.import.factory.data_row.collection_factory'
 
   prestashop.core.import.fields_provider.product:
     class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\ProductFieldsProvider'
@@ -90,8 +121,8 @@ services:
   prestashop.core.import.normalizer.csv_value_separator:
     class: 'PrestaShop\PrestaShop\Core\Import\CsvValueSeparatorNormalizer'
 
-  prestashop.core.import.fields_provider_finder:
-    class: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\EntityFieldsProviderFinder'
+  PrestaShop\PrestaShop\Core\Import\EntityField\Provider\EntityFieldsProviderFinder:
+    public: false
     arguments:
       - 0: '@prestashop.core.import.fields_provider.category'
         1: '@prestashop.core.import.fields_provider.product'
@@ -103,14 +134,26 @@ services:
         7: '@prestashop.core.import.fields_provider.alias'
         8: '@prestashop.core.import.fields_provider.store_contact'
 
+  prestashop.core.import.fields_provider_finder:
+    alias: 'PrestaShop\PrestaShop\Core\Import\EntityField\Provider\EntityFieldsProviderFinder'
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
   prestashop.core.import.config_factory:
     class: 'PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigFactory'
+
+  PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigFactoryInterface: '@prestashop.core.import.config_factory'
 
   prestashop.core.import.runtime_config_factory:
     class: 'PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigFactory'
 
+  PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigFactoryInterface: '@prestashop.core.import.runtime_config_factory'
+
   prestashop.core.import.request_validator:
     class: 'PrestaShop\PrestaShop\Core\Import\Validator\ImportRequestValidator'
+
+  PrestaShop\PrestaShop\Core\Import\Validator\ImportRequestValidatorInterface: '@prestashop.core.import.request_validator'
 
   prestashop.core.import.access_checker:
     class: 'PrestaShop\PrestaShop\Core\Import\Access\ImportAccessChecker'
@@ -125,3 +168,5 @@ services:
       - '@prestashop.core.import.csv_file_reader'
       - '@prestashop.core.import.dir'
       - '@prestashop.core.configuration.ini_configuration'
+
+  PrestaShop\PrestaShop\Core\Import\ImporterInterface: '@prestashop.core.import.importer'

@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,18 +21,18 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
   {# "By Date" block #}
-  {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/generate_by_date.html.twig' %}
+  {{ include('@PrestaShop/Admin/Sell/Order/Invoices/Blocks/generate_by_date.html.twig') }}
 
   {# "By order status" block #}
-  {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/generate_by_status.html.twig' %}
+  {{ include('@PrestaShop/Admin/Sell/Order/Invoices/Blocks/generate_by_status.html.twig') }}
 
   {# "Invoice options" block #}
-  {% include '@PrestaShop/Admin/Sell/Order/Invoices/Blocks/invoice_options.html.twig' %}
+  {{ include('@PrestaShop/Admin/Sell/Order/Invoices/Blocks/invoice_options.html.twig') }}
 {% endblock %}
 
 {% block javascripts %}

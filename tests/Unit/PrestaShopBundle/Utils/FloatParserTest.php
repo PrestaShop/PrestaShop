@@ -28,9 +28,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\Utils;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\ArabicToLatinDigitConverter;
 use PrestaShopBundle\Utils\FloatParser;
+use stdClass;
 
 class FloatParserTest extends TestCase
 {
@@ -60,7 +62,7 @@ class FloatParserTest extends TestCase
      */
     public function testItThrowsExceptionIfNotValid($value)
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         (new FloatParser(new ArabicToLatinDigitConverter()))->fromString($value);
     }
@@ -115,7 +117,7 @@ class FloatParserTest extends TestCase
             [null],
             [[]],
             [[123]],
-            [new \stdClass()],
+            [new stdClass()],
         ];
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -75,7 +74,7 @@ class NumberCollection implements IteratorAggregate, Countable
      *
      * @param int|string $index
      *                          The item index
-     * @param numberSpecificationInterface $numberSpecification
+     * @param NumberSpecificationInterface $numberSpecification
      *                                                          The Number specification item to add
      *
      * @return NumberCollection

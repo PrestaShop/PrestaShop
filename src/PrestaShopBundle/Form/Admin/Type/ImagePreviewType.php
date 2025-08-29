@@ -65,7 +65,7 @@ class ImagePreviewType extends HiddenType
     /**
      * {@inheritDoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'image_preview';
     }

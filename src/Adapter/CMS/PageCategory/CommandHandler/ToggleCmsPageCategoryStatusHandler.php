@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\PageCategory\CommandHandler;
 
 use CMSCategory;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\ToggleCmsPageCategoryStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\CommandHandler\ToggleCmsPageCategoryStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CannotToggleCmsPageCategoryStatusException;
@@ -37,6 +38,7 @@ use PrestaShopException;
 /**
  * Class ToggleCmsPageCategoryStatusHandler is responsible for turning on and off cms page category status.
  */
+#[AsCommandHandler]
 final class ToggleCmsPageCategoryStatusHandler implements ToggleCmsPageCategoryStatusHandlerInterface
 {
     /**

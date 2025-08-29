@@ -25,7 +25,9 @@
  */
 
 /**
- * @since 1.5.0 It now defines stock movements when the advanced stock management system is available
+ * Defines stock movements
+ *
+ * @deprecated since 9.0 and will be removed in 10.0, this object model is no longer needed
  */
 class StockMvtCore extends ObjectModel
 {
@@ -42,29 +44,21 @@ class StockMvtCore extends ObjectModel
     public $id_employee;
 
     /**
-     * @since 1.5.0
-     *
      * @var string The first name of the employee responsible of the movement
      */
     public $employee_firstname;
 
     /**
-     * @since 1.5.0
-     *
      * @var string The last name of the employee responsible of the movement
      */
     public $employee_lastname;
 
     /**
-     * @since 1.5.0
-     *
      * @var int The stock id on wtich the movement is applied
      */
     public $id_stock;
 
     /**
-     * @since 1.5.0
-     *
      * @var int the quantity of product with is moved
      */
     public $physical_quantity;
@@ -80,43 +74,31 @@ class StockMvtCore extends ObjectModel
     public $id_order = null;
 
     /**
-     * @since 1.5.0
-     *
      * @var int detrmine if the movement is a positive or negative operation
      */
     public $sign;
 
     /**
-     * @since 1.5.0
-     *
      * @var int Used when the movement is due to a supplier order
      */
     public $id_supply_order = null;
 
     /**
-     * @since 1.5.0
-     *
      * @var float Last value of the weighted-average method
      */
     public $last_wa = null;
 
     /**
-     * @since 1.5.0
-     *
      * @var float Current value of the weighted-average method
      */
     public $current_wa = null;
 
     /**
-     * @since 1.5.0
-     *
      * @var float The unit price without tax of the product associated to the movement
      */
     public $price_te;
 
     /**
-     * @since 1.5.0
-     *
      * @var int Refers to an other id_stock_mvt : used for LIFO/FIFO implementation in StockManager
      */
     public $referer;
@@ -129,8 +111,8 @@ class StockMvtCore extends ObjectModel
         'primary' => 'id_stock_mvt',
         'fields' => [
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'employee_firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
-            'employee_lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'employee_firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'size' => 255],
+            'employee_lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'size' => 255],
             'id_stock' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'physical_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
             'id_stock_mvt_reason' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
@@ -160,8 +142,6 @@ class StockMvtCore extends ObjectModel
     /**
      * Gets the negative (decrements the stock) stock mvts that correspond to the given order, for :
      * the given product, in the given quantity.
-     *
-     * @since 1.5.0
      *
      * @param int $id_order
      * @param int $id_product
@@ -210,8 +190,6 @@ class StockMvtCore extends ObjectModel
 
     /**
      * For a given product, gets the last positive stock mvt.
-     *
-     * @since 1.5.0
      *
      * @param int $id_product
      * @param int $id_product_attribute Use 0 if the product does not have attributes

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Order;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\SetInternalOrderNoteHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
@@ -41,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class SetInternalOrderNoteHandler extends AbstractOrderHandler implements SetInternalOrderNoteHandlerInterface
 {
     /**

@@ -26,9 +26,11 @@
 
 namespace Tests\Unit\Core\Domain\Customer\ValueObject;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
+use stdClass;
 
 class BirthdayTest extends TestCase
 {
@@ -53,8 +55,8 @@ class BirthdayTest extends TestCase
     public function getInvalidBirthdays()
     {
         yield ['2150-25-100'];
-        yield [new \stdClass()];
+        yield [new stdClass()];
         yield ['1900-13-33'];
-        yield [(new \DateTime('+10 days'))->format('Y-m-d')];
+        yield [(new DateTime('+10 days'))->format('Y-m-d')];
     }
 }

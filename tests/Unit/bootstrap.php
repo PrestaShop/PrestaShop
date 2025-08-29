@@ -24,15 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 define('_PS_IN_TEST_', true);
-define('_PS_ROOT_DIR_', __DIR__ . '/../..');
-define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests/Resources/modules/');
-require_once __DIR__ . '/../../config/defines.inc.php';
+define('_PS_ROOT_DIR_', dirname(__DIR__, 2));
+const _PS_MODULE_DIR_ = _PS_ROOT_DIR_ . '/tests/Resources/modules/';
+const _PS_ALL_THEMES_DIR_ = _PS_ROOT_DIR_ . '/tests/Resources/themes/';
+require_once dirname(__DIR__, 2) . '/config/defines.inc.php';
 require_once _PS_CONFIG_DIR_ . 'autoload.php';
 
 if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
-    define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../../vendor/autoload.php');
+    define('PHPUNIT_COMPOSER_INSTALL', dirname(__DIR__, 2) . '/vendor/autoload.php');
 }
 
+define('_COOKIE_KEY_', 'cookieKeyValue');
 define('_NEW_COOKIE_KEY_', PhpEncryption::createNewRandomKey());
 
 if (!defined('__PS_BASE_URI__')) {

@@ -1,20 +1,20 @@
 // Import utils
-import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {installHummingbird, uninstallHummingbird} from '@commonTests/FO/hummingbird';
+import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
-// Import FO pages
-import homePage from '@pages/FO/hummingbird/home';
-import loginPage from '@pages/FO/hummingbird/login';
-import myAccountPage from '@pages/FO/hummingbird/myAccount';
-
-// Import data
-import Customers from '@data/demo/customers';
+import {
+  type BrowserContext,
+  dataCustomers,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
+  type Page,
+  utilsPlaywright,
+} from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_hummingbird_login_logout';
 
@@ -23,84 +23,84 @@ describe('FO - Login : Logout from FO', async () => {
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  installHummingbird(`${baseContext}_preTest_1`);
+  enableHummingbird(`${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
+    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+    page = await utilsPlaywright.newTab(browserContext);
   });
 
   after(async () => {
-    await helper.closeBrowserContext(browserContext);
+    await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
   describe('Create account', () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await homePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await homePage.isHomePage(page);
-      await expect(result).to.be.true;
+      const result = await foHummingbirdHomePage.isHomePage(page);
+      expect(result).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
-      const pageTitle = await loginPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(loginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO1', baseContext);
 
-      await loginPage.customerLogin(page, Customers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should logout by the link in the header', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByHeaderLink', baseContext);
 
-      await homePage.logout(page);
+      await foHummingbirdHomePage.logout(page);
 
-      const isCustomerConnected = await homePage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+      const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO2', baseContext);
 
-      await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, Customers.johnDoe);
+      await foHummingbirdHomePage.goToLoginPage(page);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await loginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
     });
 
     it('should go to my account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-      await homePage.goToMyAccountPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(myAccountPage.pageTitle);
+      const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdMyAccountPage.pageTitle);
     });
 
     it('should logout by the link in the footer of account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByFooterLink', baseContext);
 
-      await myAccountPage.logout(page);
+      await foHummingbirdMyAccountPage.logout(page);
 
-      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+      const isCustomerConnected = await foHummingbirdMyAccountPage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
   });
 
   // Post-condition : Uninstall Hummingbird
-  uninstallHummingbird(`${baseContext}_postTest_2`);
+  disableHummingbird(`${baseContext}_postTest_2`);
 });

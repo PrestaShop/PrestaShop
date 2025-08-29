@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 
 ob_start();
 
@@ -83,7 +83,7 @@ if (!defined('_PS_CORE_DIR_')) {
 /* in dev mode - check if composer was executed */
 if ((!is_dir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'vendor') ||
     !file_exists(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
-    die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
+    die('Init Install Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
 require_once _PS_CORE_DIR_ . '/config/defines.inc.php';
@@ -91,28 +91,6 @@ require_once _PS_CORE_DIR_ . '/config/autoload.php';
 
 if (file_exists(_PS_CORE_DIR_ . '/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_ . '/config/bootstrap.php';
-
-    global $kernel;
-    try {
-        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
-        $kernel->boot();
-    } catch (DBALException $e) {
-        /*
-         * Doctrine couldn't be loaded because database settings point to a
-         * non existence database
-         */
-        if (strpos($e->getMessage(), 'You can circumvent this by setting a \'server_version\' configuration value') === false) {
-            throw $e;
-        }
-    } catch (\Symfony\Component\DependencyInjection\Exception\RuntimeException $e) {
-        if (strpos($e->getMessage(), 'You have requested a non-existent parameter') === 0) {
-            die(sprintf('Error: %s', $e->getMessage())
-                . PHP_EOL . 'A missing parameter was detected, which may be caused by old configuration files.'
-                . PHP_EOL . 'Try clearing the /var/cache directory and deleting parameters.php and parameters.yml in the /app/config/ directory.'
-            );
-        }
-        throw $e;
-    }
 }
 
 if (!defined('_THEME_NAME_')) {
@@ -121,7 +99,7 @@ if (!defined('_THEME_NAME_')) {
         define('_THEME_NAME_', getenv('PS_THEME_NAME'));
     } else {
         /**
-         * @deprecated since 1.7.5.x to be removed in 1.8.x
+         * @deprecated since 1.7.5.x to be removed in 9.x
          * Rely on "PS_THEME_NAME" environment variable value
          */
         $dirThemes = dirname(__DIR__) . '/themes/';
@@ -147,6 +125,34 @@ if (!defined('_THEME_NAME_')) {
 }
 
 require_once _PS_CORE_DIR_ . '/config/defines_uri.inc.php';
+
+// Delay kernel instantiation after all the configuration const have been defined, or they won't be usable in the service definitions,
+// especially all the URLs constants
+if (file_exists(_PS_CORE_DIR_ . '/app/config/parameters.php')) {
+    require_once _PS_CORE_DIR_ . '/app/AdminKernel.php';
+
+    global $kernel;
+    try {
+        $kernel = new AdminKernel(_PS_ENV_, _PS_MODE_DEV_);
+        $kernel->boot();
+    } catch (DBALException $e) {
+        /*
+         * Doctrine couldn't be loaded because database settings point to a
+         * non existence database
+         */
+        if (strpos($e->getMessage(), 'You can circumvent this by setting a \'server_version\' configuration value') === false) {
+            throw $e;
+        }
+    } catch (\Symfony\Component\DependencyInjection\Exception\RuntimeException $e) {
+        if (strpos($e->getMessage(), 'You have requested a non-existent parameter') === 0) {
+            die(sprintf('Error: %s', $e->getMessage())
+                . PHP_EOL . 'A missing parameter was detected, which may be caused by old configuration files.'
+                . PHP_EOL . 'Try clearing the /var/cache directory and deleting parameters.php and parameters.yml in the /app/config/ directory.'
+            );
+        }
+        throw $e;
+    }
+}
 
 // Generate common constants
 define('PS_INSTALLATION_IN_PROGRESS', true);

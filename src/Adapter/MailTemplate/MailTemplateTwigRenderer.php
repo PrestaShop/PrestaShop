@@ -85,10 +85,9 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param LayoutInterface $layout
      * @param LanguageInterface $language
      *
-     * @throws TypeException
-     *
      * @return string
      *
+     * @throws TypeException
      * @throws FileNotFoundException
      * @throws TypeException
      */
@@ -101,10 +100,10 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param LayoutInterface $layout
      * @param LanguageInterface $language
      *
+     * @return string
+     *
      * @throws FileNotFoundException
      * @throws TypeException
-     *
-     * @return string
      */
     public function renderTxt(LayoutInterface $layout, LanguageInterface $language)
     {
@@ -137,7 +136,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
 
         try {
             $renderedTemplate = $this->twig->render($layoutPath, $layoutVariables);
-        } catch (LoaderError $e) {
+        } catch (LoaderError) {
             throw new FileNotFoundException(sprintf('Could not find layout file: %s', $layoutPath));
         }
 
@@ -171,7 +170,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         $templateTransformations = new TransformationCollection();
         /** @var TransformationInterface $transformation */
         foreach ($this->transformations as $transformation) {
-            if (get_class($transformation) == 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation' && $themeName == 'modern') {
+            if ($transformation::class == 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation' && $themeName == 'modern') {
                 continue;
             }
             if ($templateType !== $transformation->getType()) {
@@ -181,7 +180,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
             $templateTransformations->add($transformation);
         }
 
-        //This hook allows to add/remove transformations during a layout rendering
+        // This hook allows to add/remove transformations during a layout rendering
         $this->hookDispatcher->dispatchWithParameters(
             MailTemplateRendererInterface::GET_MAIL_LAYOUT_TRANSFORMATIONS,
             [

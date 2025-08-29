@@ -34,7 +34,7 @@
     }
 
     .product th {
-      background-color: #f8f8f8;
+      background-color: var(--#{$cdk}primary-200);
     }
 
     $order-details-text-padding-left: 34px;
@@ -149,16 +149,17 @@
   $private-message-color: #7a8a8f;
 
   .employee-icon {
+    color: var(--#{$cdk}primary-800);
+
     &::before {
-      font-family: "Material Icons", sans-serif;
+      font-family: var(--#{$cdk}font-family-material-icons);
       content: "account_circle";
     }
-    color: #36b9d7;
   }
 
   .employee-icon--private {
     &::before {
-      font-family: "Material Icons", sans-serif;
+      font-family: var(--#{$cdk}font-family-material-icons);
       content: "visibility_off";
     }
     color: $private-message-color;
@@ -178,7 +179,7 @@
     }
 
     &.employee-message {
-      background-color: $primary-disabled;
+      background-color: var(--#{$cdk}primary-300);
     }
 
     &.employee-message--private {
@@ -214,7 +215,7 @@
 
         .message {
           padding: 0.7rem;
-          box-shadow: 0 6px 12px 0 $background-grey;
+          box-shadow: var(--#{$cdk}box-shadow-md);
         }
       }
 

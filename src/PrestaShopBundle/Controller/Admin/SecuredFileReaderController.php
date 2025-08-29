@@ -104,7 +104,7 @@ class SecuredFileReaderController extends AbstractController
         } else {
             try {
                 $response = new BinaryFileResponse($this->uploadDir . $fileName);
-            } catch (FileNotFoundException $e) {
+            } catch (FileNotFoundException) {
                 throw new NotFoundHttpException();
             }
 

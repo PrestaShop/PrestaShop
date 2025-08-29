@@ -53,7 +53,7 @@ class EditOrderMessageCommand
      * @param string[]|null $localizedName Array of localized name or null if name should not be edited
      * @param string[]|null $localizedMessage Array of localized message or null if message should not be edited
      */
-    public function __construct(int $orderMessageId, array $localizedName = null, array $localizedMessage = null)
+    public function __construct(int $orderMessageId, ?array $localizedName = null, ?array $localizedMessage = null)
     {
         $this->orderMessageId = new OrderMessageId($orderMessageId);
         $this->localizedName = $localizedName;

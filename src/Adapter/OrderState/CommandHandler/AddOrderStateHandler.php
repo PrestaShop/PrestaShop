@@ -28,9 +28,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderState\CommandHandler;
 
 use OrderState;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\AddOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\CommandHandler\AddOrderStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateException;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\OrderStateFileUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 
 /**
@@ -38,8 +40,22 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
  *
  * @internal
  */
+#[AsCommandHandler]
 final class AddOrderStateHandler extends AbstractOrderStateHandler implements AddOrderStateHandlerInterface
 {
+    /**
+     * @var OrderStateFileUploaderInterface
+     */
+    protected $fileUploader;
+
+    /**
+     * @param OrderStateFileUploaderInterface $fileUploader
+     */
+    public function __construct(OrderStateFileUploaderInterface $fileUploader)
+    {
+        $this->fileUploader = $fileUploader;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -55,6 +71,9 @@ final class AddOrderStateHandler extends AbstractOrderStateHandler implements Ad
         }
 
         $orderState->add();
+        if ($command->getFilePathName()) {
+            $this->fileUploader->upload($command->getFilePathName(), (int) $orderState->id, $command->getFileSize());
+        }
 
         return new OrderStateId((int) $orderState->id);
     }
@@ -72,6 +91,8 @@ final class AddOrderStateHandler extends AbstractOrderStateHandler implements Ad
         $orderState->shipped = $command->isShipped();
         $orderState->paid = $command->isPaid();
         $orderState->delivery = $command->isDelivery();
-        $orderState->template = $command->getLocalizedTemplates();
+        if ($command->isSendEmailEnabled()) {
+            $orderState->template = $command->getLocalizedTemplates();
+        }
     }
 }

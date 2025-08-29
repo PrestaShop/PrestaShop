@@ -33,8 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryC
  */
 abstract class AbstractCmsPageCategoryCommand
 {
-    public const CATEGORY_NAME_REGEX_PATTERN = '/^[^<>;=#{}]*$/u';
-    public const GENERIC_NAME_REGEX_PATTERN = '/^[^<>={}]*$/u';
+    public const CATEGORY_NAME_REGEX_PATTERN = '/^[^<>{}]*$/u';
+    public const GENERIC_NAME_REGEX_PATTERN = '/^[^<>{}]*$/u';
 
     /**
      * Checks if given names matches pattern.
@@ -77,20 +77,6 @@ abstract class AbstractCmsPageCategoryCommand
 
         if (true !== $assertionResult) {
             throw new CmsPageCategoryConstraintException(sprintf('Given meta description "%s" does not match pattern "%s"', $assertionResult, self::GENERIC_NAME_REGEX_PATTERN), CmsPageCategoryConstraintException::INVALID_META_DESCRIPTION);
-        }
-    }
-
-    /**
-     * @param array $localisedMetaKeywords
-     *
-     * @throws CmsPageCategoryConstraintException
-     */
-    protected function assertIsGenericNameForMetaKeywords(array $localisedMetaKeywords)
-    {
-        $assertionResult = $this->assertIsGenericName($localisedMetaKeywords);
-
-        if (true !== $assertionResult) {
-            throw new CmsPageCategoryConstraintException(sprintf('Given meta keyword "%s" does not match pattern "%s"', $assertionResult, self::GENERIC_NAME_REGEX_PATTERN), CmsPageCategoryConstraintException::INVALID_META_KEYWORDS);
         }
     }
 

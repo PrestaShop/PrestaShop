@@ -40,7 +40,7 @@ class UrlGeneratorTest extends TestCase
         $generator = new UrlGenerator($this->getMockLegacyContext(), $this->getMockRouter());
 
         // the following route contains a "_legacy" equivalent
-        list($controller, $parameters) = $generator->getLegacyOptions('admin_product_catalog');
+        list($controller, $parameters) = $generator->getLegacyOptions('admin_products_index');
         $this->assertEquals('AdminProducts', $controller);
         $this->assertCount(0, $parameters);
     }
@@ -54,11 +54,11 @@ class UrlGeneratorTest extends TestCase
 
     private function getMockRouter(): Router
     {
-        $route = new Route('/{offset}/{limit}/{orderBy}/{sortOrder}');
+        $route = new Route('/');
         $route->setDefault('_legacy_controller', 'AdminProducts');
 
         $routeCollection = new RouteCollection();
-        $routeCollection->add('admin_product_catalog', $route);
+        $routeCollection->add('admin_products_index', $route);
 
         $mock = $this->createMock(Router::class);
         $mock->method('getRouteCollection')->willReturn($routeCollection);

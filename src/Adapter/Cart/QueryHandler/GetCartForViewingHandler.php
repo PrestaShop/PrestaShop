@@ -35,6 +35,7 @@ use Gender;
 use Group;
 use Order;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForViewingHandlerInterface;
@@ -48,6 +49,7 @@ use Validate;
 /**
  * @internal
  */
+#[AsQueryHandler]
 final class GetCartForViewingHandler implements GetCartForViewingHandlerInterface
 {
     /**
@@ -123,6 +125,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
         $products = $sorter->natural($products, Sorter::ORDER_DESC, 'reference', 'supplier_reference');
 
         foreach ($products as &$product) {
+            // Add proper prices depending on customer group price display style
             if ($tax_calculation_method == PS_TAX_EXC) {
                 $product['product_price'] = $product['price'];
                 $product['product_total'] = $product['total'];
@@ -131,12 +134,14 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 $product['product_total'] = $product['total_wt'];
             }
 
+            // Add CURRENT quantity in stock
             $product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct(
                 $product['id_product'],
                 isset($product['id_product_attribute']) ? $product['id_product_attribute'] : null,
                 (int) $id_shop
             );
 
+            // Add customizations for the product
             $customized_datas = Product::getAllCustomizedDatas(
                 $context->cart->id,
                 null,
@@ -145,10 +150,6 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 (int) $product['id_customization']
             );
             $context->cart->setProductCustomizedDatas($product, $customized_datas);
-
-            if ($customized_datas) {
-                Product::addProductCustomizationPrice($product, $customized_datas);
-            }
         }
         unset($product);
 
@@ -237,7 +238,6 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 'reference' => $product['reference'],
                 'supplier_reference' => $product['supplier_reference'],
                 'stock_quantity' => $product['qty_in_stock'],
-                'customization_quantity' => $product['customizationQuantityTotal'],
                 'cart_quantity' => $product['cart_quantity'],
                 'total_price' => $product['product_total'],
                 'unit_price' => $product['product_price'],
@@ -247,27 +247,13 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 'image' => isset($image['id_image']) ? $this->imageManager->getThumbnailForListing($image['id_image']) : '',
             ];
 
-            if (isset($product['customizationQuantityTotal'])) {
-                $formattedProduct['cart_quantity'] =
-                    $product['cart_quantity'] - $product['customizationQuantityTotal'];
-            }
-
             $productCustomization = [];
 
             if ($product['customizedDatas']) {
-                $formattedProduct['unit_price'] = $product['price_wt'];
-                $formattedProduct['unit_price_formatted'] = $this->locale->formatPrice($product['price_wt'], $currency->iso_code);
-                $formattedProduct['total_price'] = $product['total_customization_wt'];
-                $formattedProduct['total_price_formatted'] = $this->locale->formatPrice(
-                    $product['total_customization_wt'],
-                    $currency->iso_code
-                );
-                $formattedProduct['quantity'] = $product['customizationQuantityTotal'];
-
                 foreach ($product['customizedDatas'] as $customizationPerAddress) {
                     foreach ($customizationPerAddress as $customization) {
-                        if (((int) $customization['id_customization'] !== (int) $product['id_customization']) &&
-                            count($customizationPerAddress) === 1
+                        if (((int) $customization['id_customization'] !== (int) $product['id_customization'])
+                            && count($customizationPerAddress) === 1
                         ) {
                             continue;
                         }

@@ -31,7 +31,7 @@ const {$} = window;
 class SqlManager {
   showLastSqlQuery() {
     $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
-    $('#catalog_sql_query_modal .btn-sql-submit').click(() => {
+    $('#catalog_sql_query_modal .btn-sql-submit').on('click', () => {
       $('#catalog_sql_query_modal_content').submit();
     });
     $('#catalog_sql_query_modal').modal('show');

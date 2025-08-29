@@ -1,0 +1,40 @@
+# This workflow aim to run all UI tests on active branches
+# and upload the report on Google cloud platform storage
+name: Nightly tests (Report)
+
+on:
+  schedule:
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  # Add pushed reports to GCP on nightly
+  push-nightly-reports:
+    name: Push reports to nightly.prestashop-project.org
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include:
+          - branch: 8.0.x
+            database: mysql
+          - branch: 8.1.x
+            database: mysql
+          - branch: 8.2.x
+            database: mysql
+          - branch: 9.0.x
+            database: mysql
+          - branch: 9.0.x
+            database: mariadb
+          - branch: develop
+            database: mysql
+          - branch: develop
+            database: mariadb
+
+    steps:
+      - name: Push reports
+        run: |
+          REPORT_NAME="$(date +%Y-%m-%d)-${{ matrix.branch }}-${{matrix.database}}"
+          curl -v "https://api-nightly.prestashop-project.org/hook/reports/import?token=${{ secrets.NIGHTLY_TOKEN }}&filename=${REPORT_NAME}.json&database=${{matrix.database}}"

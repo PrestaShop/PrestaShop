@@ -3,21 +3,18 @@
   <cms id="Delivery">
     <meta_title>אריזה ושילוח</meta_title>
     <meta_description>תנאי השימוש והערות בקשר לאריזה ושילוח</meta_description>
-    <meta_keywords>תנאי, אריזה, שילוח, משלוח, משלוחים, תנאים</meta_keywords>
     <content>&lt;h2&gt;Shipments and returns&lt;/h2&gt;&lt;h3&gt;Your pack shipment&lt;/h3&gt;&lt;p&gt;Packages are generally dispatched within 2 days after receipt of payment and are shipped via UPS with tracking and drop-off without signature. If you prefer delivery by UPS Extra with required signature, an additional cost will be applied, so please contact us before choosing this method. Whichever shipment choice you make, we will provide you with a link to track your package online.&lt;/p&gt;&lt;p&gt;Shipping fees include handling and packing fees as well as postage costs. Handling fees are fixed, whereas transport fees vary according to total weight of the shipment. We advise you to group your items in one order. We cannot group two distinct orders placed separately, and shipping fees will apply to each of them. Your package will be dispatched at your own risk, but special care is taken to protect fragile objects.&lt;br /&gt;&lt;br /&gt;Boxes are amply sized and your items are well-protected.&lt;/p&gt;</content>
     <link_rewrite>אריזה-ושילוח</link_rewrite>
   </cms>
   <cms id="Legal_Notice">
     <meta_title>הבהרות משפטיות</meta_title>
     <meta_description>הבהרות משפטיות</meta_description>
-    <meta_keywords>הבהרות, משפט, חוק, אשראי, זכויות</meta_keywords>
     <content>&lt;h2&gt;Legal&lt;/h2&gt;&lt;h3&gt;Credits&lt;/h3&gt;&lt;p&gt;Concept and production:&lt;/p&gt;&lt;p&gt;This Online store was created using &lt;a href="http://www.prestashop.com"&gt;Prestashop Shopping Cart Software&lt;/a&gt;,check out PrestaShop's &lt;a href="http://www.prestashop.com/blog/en/"&gt;ecommerce blog&lt;/a&gt; for news and advices about selling online and running your ecommerce website.&lt;/p&gt;</content>
     <link_rewrite>הבהרות-משפטיות</link_rewrite>
   </cms>
   <cms id="Terms_and_conditions_of_use">
     <meta_title>מדיניות שימוש באתר החזרות וביטולי מוצרים</meta_title>
     <meta_description>מדיניות שימוש באתר החזרות וביטולי מוצרים ועוד</meta_description>
-    <meta_keywords>תנאי, תנאים, שימוש, הערות, מדיניות, החזרות, ביטולים, ביטול עיסקה</meta_keywords>
     <content>&lt;h1 class=&quot;page-heading&quot;&gt;Terms and conditions of use&lt;/h1&gt;
 &lt;h3 class=&quot;page-subheading&quot;&gt;Rule 1&lt;/h3&gt;
 &lt;p class=&quot;bottom-indent&quot;&gt;Lorem ipsum dolor sit amet conse ctetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;/p&gt;
@@ -30,7 +27,6 @@
   <cms id="About_us">
     <meta_title>אודותינו</meta_title>
     <meta_description>קצת עלינו</meta_description>
-    <meta_keywords>אודותינו, מידע, מי אנחנו</meta_keywords>
     <content>&lt;h1 class=&quot;page-heading bottom-indent&quot;&gt;About us&lt;/h1&gt;
 &lt;div class=&quot;row&quot;&gt;
 &lt;div class=&quot;col-xs-12 col-sm-4&quot;&gt;
@@ -71,7 +67,6 @@
   <cms id="Secure_payment">
     <meta_title>תשלום מאובטח</meta_title>
     <meta_description>אצלנו בתשלום מאובטח אנו מתכוונים אל</meta_description>
-    <meta_keywords>ויזה, מאסטרכארד, פייפאל, SSL</meta_keywords>
     <content>&lt;h2&gt;Secure payment&lt;/h2&gt;&#xD;
 &lt;h3&gt;Our secure payment&lt;/h3&gt;&lt;p&gt;With SSL&lt;/p&gt;&#xD;
 &lt;h3&gt;Using Visa/Mastercard/Paypal&lt;/h3&gt;&lt;p&gt;About this services&lt;/p&gt;</content>

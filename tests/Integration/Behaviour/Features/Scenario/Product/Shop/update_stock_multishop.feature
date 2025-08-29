@@ -19,7 +19,6 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
     And single shop context is loaded
-    And shop configuration for "PS_ADVANCED_STOCK_MANAGEMENT" is set to 0
     And language "french" with locale "fr-FR" exists
     Given I add product "product1" with following information:
       | name[en-US] | magic staff |

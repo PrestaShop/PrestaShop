@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
@@ -41,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 /**
  * Handles @see GetProductImage query
  */
+#[AsQueryHandler]
 class GetProductImageHandler implements GetProductImageHandlerInterface
 {
     /**
@@ -77,7 +79,7 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
         try {
             $image = $this->productImageRepository->getByShopConstraint($imageId, $query->getShopConstraint());
             $isCover = (bool) $image->cover;
-        } catch (ShopAssociationNotFound $e) {
+        } catch (ShopAssociationNotFound) {
             // If image is not associated with certain shop, then fall back to any other shop image (by using all shops constraint).
             $image = $this->productImageRepository->getByShopConstraint($imageId, ShopConstraint::allShops());
             // hardcode cover to false, because image cannot be a cover if it is not associated to this shop.

@@ -80,35 +80,35 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         $columns = (new ColumnCollection())
             ->add((new LinkColumn('id_product'))
-            ->setName($this->trans('ID', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'id_product',
-                'sortable' => false,
-                'route' => 'admin_products_edit',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-            ])
+                ->setName($this->trans('ID', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'id_product',
+                    'sortable' => false,
+                    'route' => 'admin_products_edit',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                ])
             )
             ->add((new LinkColumn('name'))
-            ->setName($this->trans('Name', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'name',
-                'route' => 'admin_products_edit',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'sortable' => false,
-            ])
+                ->setName($this->trans('Name', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'name',
+                    'route' => 'admin_products_edit',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'sortable' => false,
+                ])
             )
             ->add((new LinkColumn('price_tax_excluded'))
-            ->setName($this->trans('Price', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'price_tax_excluded',
-                'route' => 'admin_products_edit',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'route_fragment' => 'tab-product_pricing-tab',
-                'sortable' => false,
-            ])
+                ->setName($this->trans('Price', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'price_tax_excluded',
+                    'route' => 'admin_products_edit',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'route_fragment' => 'tab-product_pricing-tab',
+                    'sortable' => false,
+                ])
             );
 
         if ($this->configuration->get('PS_STOCK_MANAGEMENT')) {

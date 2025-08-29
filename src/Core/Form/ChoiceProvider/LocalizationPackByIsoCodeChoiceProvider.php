@@ -104,7 +104,7 @@ final class LocalizationPackByIsoCodeChoiceProvider implements FormChoiceProvide
             ->name('/^([a-z]{2})\.xml$/');
 
         foreach ($finder as $file) {
-            list($iso) = explode('.', $file->getFilename());
+            [$iso] = explode('.', $file->getFilename());
 
             // if localization pack was not loaded yet and it exists locally
             // then add it to choices list

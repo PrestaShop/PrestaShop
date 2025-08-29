@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Import\EntityField;
 
 use ArrayIterator;
+use ReturnTypeWillChange;
 use Traversable;
 
 /**
@@ -110,7 +111,7 @@ final class EntityFieldCollection implements EntityFieldCollectionInterface
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->entityFields[$offset];

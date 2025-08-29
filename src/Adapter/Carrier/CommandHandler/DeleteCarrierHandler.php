@@ -28,7 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Carrier\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Carrier\AbstractCarrierHandler;
+use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
+use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\DeleteCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\CommandHandler\DeleteCarrierHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotDeleteCarrierException;
@@ -38,20 +39,26 @@ use PrestaShopException;
 /**
  * Handles command that deletes carrier
  */
-class DeleteCarrierHandler extends AbstractCarrierHandler implements DeleteCarrierHandlerInterface
+#[AsCommandHandler]
+class DeleteCarrierHandler implements DeleteCarrierHandlerInterface
 {
+    public function __construct(
+        private readonly CarrierRepository $carrierRepository
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
     public function handle(DeleteCarrierCommand $command)
     {
-        $carrier = $this->getCarrier($command->getCarrierId());
+        $carrier = $this->carrierRepository->get($command->getCarrierId());
 
         try {
             if (!$carrier->delete()) {
                 throw new CannotDeleteCarrierException(sprintf('Cannot delete carrier object with id "%d"', $command->getCarrierId()->getValue()), CannotDeleteCarrierException::SINGLE_DELETE);
             }
-        } catch (PrestaShopException $e) {
+        } catch (PrestaShopException) {
             throw new CarrierException(sprintf('An error occurred when deleting carrier with id "%d"', $command->getCarrierId()->getValue()));
         }
     }

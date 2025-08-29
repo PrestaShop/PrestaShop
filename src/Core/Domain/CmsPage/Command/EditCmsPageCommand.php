@@ -64,11 +64,6 @@ class EditCmsPageCommand
     /**
      * @var string[]|null
      */
-    private $LocalizedMetaKeyword;
-
-    /**
-     * @var string[]|null
-     */
     private $localizedFriendlyUrl;
 
     /**
@@ -194,26 +189,6 @@ class EditCmsPageCommand
     /**
      * @return string[]|null
      */
-    public function getLocalizedMetaKeyword()
-    {
-        return $this->LocalizedMetaKeyword;
-    }
-
-    /**
-     * @param string[] $LocalizedMetaKeyword
-     *
-     * @return self
-     */
-    public function setLocalizedMetaKeyword(array $LocalizedMetaKeyword)
-    {
-        $this->LocalizedMetaKeyword = $LocalizedMetaKeyword;
-
-        return $this;
-    }
-
-    /**
-     * @return string[]|null
-     */
     public function getLocalizedFriendlyUrl()
     {
         return $this->localizedFriendlyUrl;
@@ -304,7 +279,7 @@ class EditCmsPageCommand
      *
      * @return self
      */
-    public function setShopAssociation(array $shopAssociation = null)
+    public function setShopAssociation(?array $shopAssociation = null)
     {
         $this->shopAssociation = $shopAssociation;
 

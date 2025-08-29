@@ -23,21 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ChoiceTree from '@components/form/choice-tree';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import Serp from '@app/utils/serp/index';
-import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
 
 const {$} = window;
 
 $(() => {
-  new ChoiceTree('#cms_page_page_category_id');
+  new window.prestashop.component.ChoiceTree('#cms_page_page_category_id');
 
   window.prestashop.component.initComponents(
     [
       'TranslatableInput',
       'TranslatableField',
       'TinyMCEEditor',
+      'TextWithRecommendedLengthCounter',
     ],
   );
 
@@ -72,7 +71,5 @@ $(() => {
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input.js-copier-destination-friendly-url`,
   });
 
-  new ChoiceTree('#cms_page_shop_association').enableAutoCheckChildren();
-
-  new TextWithRecommendedLengthCounter();
+  new window.prestashop.component.ChoiceTree('#cms_page_shop_association').enableAutoCheckChildren();
 });

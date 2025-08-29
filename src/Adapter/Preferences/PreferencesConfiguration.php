@@ -26,9 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Preferences;
 
-use Cookie;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 
 /**
  * This class will provide Shop Preferences configuration.
@@ -53,7 +53,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
     {
         return [
             'enable_ssl' => $this->configuration->getBoolean('PS_SSL_ENABLED'),
-            'enable_ssl_everywhere' => $this->configuration->getBoolean('PS_SSL_ENABLED_EVERYWHERE'),
             'enable_token' => $this->configuration->getBoolean('PS_TOKEN_ENABLE'),
             'allow_html_iframes' => $this->configuration->getBoolean('PS_ALLOW_HTML_IFRAME'),
             'use_htmlpurifier' => $this->configuration->getBoolean('PS_USE_HTMLPURIFIER'),
@@ -63,7 +62,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
             'display_manufacturers' => $this->configuration->getBoolean('PS_DISPLAY_MANUFACTURERS'),
             'display_best_sellers' => $this->configuration->getBoolean('PS_DISPLAY_BEST_SELLERS'),
             'multishop_feature_active' => $this->configuration->getBoolean('PS_MULTISHOP_FEATURE_ACTIVE'),
-            'shop_activity' => $this->configuration->get('PS_SHOP_ACTIVITY'),
         ];
     }
 
@@ -92,10 +90,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
             ];
         }
 
-        $previousMultistoreFeatureState = $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE');
-
         $this->configuration->set('PS_SSL_ENABLED', $configuration['enable_ssl']);
-        $this->configuration->set('PS_SSL_ENABLED_EVERYWHERE', $configuration['enable_ssl_everywhere']);
         $this->configuration->set('PS_TOKEN_ENABLE', $configuration['enable_token']);
         $this->configuration->set('PS_ALLOW_HTML_IFRAME', $configuration['allow_html_iframes']);
         $this->configuration->set('PS_USE_HTMLPURIFIER', $configuration['use_htmlpurifier']);
@@ -105,7 +100,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
         $this->configuration->set('PS_DISPLAY_MANUFACTURERS', $configuration['display_manufacturers']);
         $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
         $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
-        $this->configuration->set('PS_SHOP_ACTIVITY', $configuration['shop_activity']);
 
         return [];
     }
@@ -120,11 +114,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
      */
     protected function validateSameSiteConfiguration(array $configuration): bool
     {
-        return (
-            $configuration['enable_ssl'] === false
-            || $configuration['enable_ssl_everywhere'] === false
-        )
-            && $this->configuration->get('PS_COOKIE_SAMESITE') === Cookie::SAMESITE_NONE;
+        return $configuration['enable_ssl'] === false && $this->configuration->get('PS_COOKIE_SAMESITE') === CookieOptions::SAMESITE_NONE;
     }
 
     /**
@@ -134,7 +124,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
     {
         return isset(
             $configuration['enable_ssl'],
-            $configuration['enable_ssl_everywhere'],
             $configuration['enable_token'],
             $configuration['allow_html_iframes'],
             $configuration['use_htmlpurifier'],

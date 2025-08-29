@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 
 <div class="card" data-role="order-information">
   <h3 class="card-header">{{ 'Cart information'|trans({}, 'Admin.Orderscustomers.Feature') }}</h3>
@@ -38,11 +38,11 @@
     {% if cartView.orderInformation.id is not empty %}
 
       <p>{{ 'Order %orderid% was created from this cart on %orderdate%.'|trans({}, 'Admin.Orderscustomers.Feature')|replace({
-        '%orderid%': '<a href="' ~ path('admin_orders_view', {'orderId': cartView.orderInformation.id}) ~ '">#' ~ cartView.orderInformation.id|format('"%06d') ~ '</a>',
+        '%orderid%': '<a href="' ~ path('admin_orders_view', {orderId: cartView.orderInformation.id}) ~ '">#' ~ cartView.orderInformation.id|format('"%06d') ~ '</a>',
         '%orderdate%': cartView.orderInformation.placed_date,
       })|raw }}</p>
 
-      <a href="{{ path('admin_orders_view', {'orderId': cartView.orderInformation.id}) }}" class="btn btn-primary">
+      <a href="{{ path('admin_orders_view', {orderId: cartView.orderInformation.id}) }}" class="btn btn-primary">
         <i class="material-icons">remove_red_eye</i>
         {{ 'View order'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </a>

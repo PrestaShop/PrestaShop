@@ -22,9 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
+{if !$order->isVirtual()}
 <table id="shipping-tab" width="100%">
 	<tr>
 		<td class="shipping center small grey bold" width="44%">{l s='Carrier' d='Shop.Pdf' pdf='true'}</td>
 		<td class="shipping center small white" width="56%">{$carrier->name}</td>
 	</tr>
 </table>
+{/if}
