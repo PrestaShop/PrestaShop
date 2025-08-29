@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\EventListener\Admin\Context\ShopContextSubscriber;
 use PrestaShopBundle\Routing\LegacyControllerConstants;
 use PrestaShopBundle\Security\Admin\TokenAttributes;
+use ReflectionClass;
 use Shop;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -51,6 +52,112 @@ use Tests\Unit\PrestaShopBundle\EventListener\ContextEventListenerTestCase;
 
 class ShopContextSubscriberTest extends ContextEventListenerTestCase
 {
+    /**
+     * Tests that `getShopConstraintFromRouteAttribute` returns an all-shop constraint
+     * when the `AllShopContext` attribute is present in the matched controller class/method.
+     */
+    public function testGetShopConstraintFromRouteAttribute(): void
+    {
+        $request = $this->mockRequest('/test-path', [
+            '_controller' => 'Tests\\Resources\\Controller\\TestAllShopContextAttributeController::indexAction',
+        ]);
+
+        $router = $this->createMock(RouterInterface::class);
+        $router->method('match')->willReturn($request->attributes->all());
+
+        $subscriber = new ShopContextSubscriber(
+            $this->mockShopContextBuilder(),
+            $this->mockEmployeeContext(),
+            $this->mockConfiguration(),
+            $this->mockMultistoreFeature(false),
+            $router,
+            $this->mockSecurity(),
+            $this->mockLegacyContext(),
+            $this->createMock(TranslatorInterface::class)
+        );
+
+        $class = new ReflectionClass($subscriber);
+        $method = $class->getMethod('getShopConstraintFromRouteAttribute');
+        $shopConstraint = $method->invokeArgs($subscriber, [$request]);
+
+        $this->assertInstanceOf(ShopConstraint::class, $shopConstraint);
+        $this->assertTrue($shopConstraint->forAllShops());
+    }
+
+    /**
+     * Tests that `getShopConstraintFromRouteAttribute` returns null
+     * when no relevant attributes (`AllShopContext`) are on the controller class or methods.
+     */
+    public function testGetShopConstraintFromRouteAttributeWithNonExistentController(): void
+    {
+        $request = $this->mockRequest('/non-existent-path', [
+            '_controller' => 'PrestaShopBundle\\Controller\\Admin\\NonExistentController::anyMethod',
+        ]);
+
+        $router = $this->createMock(RouterInterface::class);
+        $router->method('match')->willReturn($request->attributes->all());
+
+        $subscriber = new ShopContextSubscriber(
+            $this->mockShopContextBuilder(),
+            $this->mockEmployeeContext(),
+            $this->mockConfiguration(),
+            $this->mockMultistoreFeature(false),
+            $router,
+            $this->mockSecurity(),
+            $this->mockLegacyContext(),
+            $this->createMock(TranslatorInterface::class)
+        );
+
+        $class = new ReflectionClass($subscriber);
+        $method = $class->getMethod('getShopConstraintFromRouteAttribute');
+        $shopConstraint = $method->invokeArgs($subscriber, [$request]);
+
+        $this->assertNull($shopConstraint);
+    }
+
+    /**
+     * Tests that `getShopConstraintFromRouteAttribute` returns null
+     * when "_controller" value is not class::method notation
+     */
+    public function testGetShopConstraintFromRouteAttributeWithInvalidController(): void
+    {
+        $request = $this->mockRequest('/non-existent-path', [
+            '_controller' => 'this_is_not_a_controller_method_notation_using_double_colon',
+        ]);
+
+        $router = $this->createMock(RouterInterface::class);
+        $router->method('match')->willReturn($request->attributes->all());
+
+        $subscriber = new ShopContextSubscriber(
+            $this->mockShopContextBuilder(),
+            $this->mockEmployeeContext(),
+            $this->mockConfiguration(),
+            $this->mockMultistoreFeature(false),
+            $router,
+            $this->mockSecurity(),
+            $this->mockLegacyContext(),
+            $this->createMock(TranslatorInterface::class)
+        );
+
+        $class = new ReflectionClass($subscriber);
+        $method = $class->getMethod('getShopConstraintFromRouteAttribute');
+        $shopConstraint = $method->invokeArgs($subscriber, [$request]);
+
+        $this->assertNull($shopConstraint);
+    }
+
+    /**
+     * Helper to mock an HTTP request with the given attributes and path.
+     */
+    private function mockRequest(string $path, array $attributes): Request
+    {
+        $request = new Request([], [], [], [], [], ['REQUEST_URI' => $path]);
+        foreach ($attributes as $key => $value) {
+            $request->attributes->set($key, $value);
+        }
+
+        return $request;
+    }
     private const PS_SSL_ENABLED = 1;
     private const DEFAULT_SHOP_ID = 42;
     private const EMPLOYEE_DEFAULT_SHOP_ID = 51;
@@ -59,14 +166,9 @@ class ShopContextSubscriberTest extends ContextEventListenerTestCase
     {
         $event = $this->createRequestEvent(new Request());
 
-        $shopContextBuilder = new ShopContextBuilder(
-            $this->mockShopRepository(self::DEFAULT_SHOP_ID),
-            $this->mockContextStateManager(),
-            $this->mockMultistoreFeature(false),
-        );
-
+        $shopContextBuilderMock = $this->mockShopContextBuilder();
         $listener = new ShopContextSubscriber(
-            $shopContextBuilder,
+            $shopContextBuilderMock,
             $this->mockEmployeeContext(),
             $this->mockConfiguration(['PS_SHOP_DEFAULT' => self::DEFAULT_SHOP_ID, 'PS_SSL_ENABLED' => self::PS_SSL_ENABLED]),
             $this->mockMultistoreFeature(false),
@@ -78,8 +180,8 @@ class ShopContextSubscriberTest extends ContextEventListenerTestCase
         $listener->initShopContext($event);
 
         $expectedShopConstraint = ShopConstraint::shop(self::DEFAULT_SHOP_ID);
-        $this->assertEquals(self::DEFAULT_SHOP_ID, $this->getPrivateField($shopContextBuilder, 'shopId'));
-        $this->assertEquals($expectedShopConstraint, $this->getPrivateField($shopContextBuilder, 'shopConstraint'));
+        $this->assertEquals(self::DEFAULT_SHOP_ID, $this->getPrivateField($shopContextBuilderMock, 'shopId'));
+        $this->assertEquals($expectedShopConstraint, $this->getPrivateField($shopContextBuilderMock, 'shopConstraint'));
         $this->assertEquals($expectedShopConstraint, $event->getRequest()->attributes->get('shopConstraint'));
     }
 
@@ -553,6 +655,15 @@ class ShopContextSubscriberTest extends ContextEventListenerTestCase
         ;
 
         return $router;
+    }
+
+    private function mockShopContextBuilder(): ShopContextBuilder|MockObject
+    {
+        return new ShopContextBuilder(
+            $this->mockShopRepository(self::DEFAULT_SHOP_ID),
+            $this->mockContextStateManager(),
+            $this->mockMultistoreFeature(false),
+        );
     }
 
     private function mockMultistoreFeature(bool $multiShopEnabled): MultistoreFeature|MockObject
