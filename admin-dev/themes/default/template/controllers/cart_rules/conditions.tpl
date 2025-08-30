@@ -284,6 +284,8 @@
 			</p>
 			<div id="product_restriction_div">
 				<br />
+				<div class="panel">
+				<h3>{l s='The product(s) are matching one of these:'}</h3>
 				<table id="product_rule_group_table" class="table">
 					{foreach from=$product_rule_groups item='product_rule_group'}
 						{$product_rule_group}
@@ -292,6 +294,7 @@
 				<a href="javascript:addProductRuleGroup();" class="btn btn-default ">
 					<i class="icon-plus-sign"></i> {l s='Product selection' d='Admin.Catalog.Feature'}
 				</a>
+				</div>
 			</div>
 
 		{if ($shops.unselected|@count) + ($shops.selected|@count) > 1}
