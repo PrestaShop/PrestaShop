@@ -62,7 +62,7 @@
 
 		</div>
 
-		{l s='The product(s) are matching one of these:'}
+
 		<table id="product_rule_table_{$product_rule_group_id|intval}" class="table table-bordered">
 			{if isset($product_rules) && $product_rules|@count}
 				{foreach from=$product_rules item='product_rule'}
