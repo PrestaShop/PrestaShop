@@ -1145,17 +1145,16 @@ class CartRuleCore extends ObjectModel
                             return (!$displayError) ? false : $this->trans('Unknown type of product restriction', [], 'Shop.Notifications.Error');       
                     }
                 }
-                //if atleast one condition doesnt match we go to the next rulegroup.
-                if(!empty($matching_products_list) && $condition >0 && $countRulesProduct>1){
-                    continue;
-                }
-
                 //if there are more than one rule inside rule group, we want to keep products matching both
                 if($countRulesProduct>1){
                     $matching_products_list = call_user_func_array('array_intersect',$matching_products_list);     
                 }else{
                     $matching_products_list = call_user_func_array('array_values',$matching_products_list); 
-                }       
+                }   
+                //if atleast one condition doesnt match we go to the next rulegroup.
+                if(!empty($matching_products_list) && $condition >0 && $countRulesProduct>1){
+                    continue;
+                }                
                 /**
                  * we are using ruleType attributes because otherwise it will strip product attribute data which we need to find products matching all rules from rule group 
                  * we filter out product matching both rules and add them to selected_products
