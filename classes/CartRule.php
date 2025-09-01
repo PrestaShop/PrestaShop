@@ -1253,14 +1253,23 @@ class CartRuleCore extends ObjectModel
                 }else{
                     $matching_products_list = call_user_func_array('array_values',$matching_products_list); 
                 }       
-                // we ar using ruleType attributes because otherwise it will strip product attribute data which we need to find products matching all rules from rule group
-                $eligible_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, 'attributes');                 
+                /**
+                 * we are using ruleType attributes because otherwise it will strip product attribute data which we need to find products matching all rules from rule group 
+                 * we filter out product matching both rules and add them to selected_products
+                 */ 
+                $matching_products_list = $this->filterProducts($eligible_products_list, $matching_products_list, 'attributes');                 
                 if ($countRulesProduct !== 1 && $condition == $countRulesProduct) {
                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', [], 'Shop.Notifications.Error');
                 }
-                $selected_products = array_merge($selected_products, $eligible_products_list);
+                // Merge all eligible products for each product rule group
+                $selected_products = array_merge($selected_products, $matching_products_list);
 
             }
+            /**
+             * we are using ruleType attributes because otherwise it will strip product attribute data which we need to find products matching all rules from rule group 
+             * final cart product filtering, keep only matching products
+             */ 
+            $selected_products = $this->filterProducts($eligible_products_list, $selected_products, 'attributes');              
         }
         if ($returnProducts) {
             return $selected_products;
