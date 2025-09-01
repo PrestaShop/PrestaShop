@@ -972,7 +972,7 @@ class CartRuleCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      */
-public function checkProductRestrictionsFromCart(CartCore $cart, $returnProducts = false, $displayError = true, $alreadyInCart = false)
+    public function checkProductRestrictionsFromCart(CartCore $cart, $returnProducts = false, $displayError = true, $alreadyInCart = false)
     {
         $selected_products = [];
 
@@ -1173,7 +1173,7 @@ public function checkProductRestrictionsFromCart(CartCore $cart, $returnProducts
         if ($returnProducts) {
             return $selected_products;
         }
-
+    }
     /**
      * The reduction value is POSITIVE.
      *
