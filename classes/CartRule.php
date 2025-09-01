@@ -673,7 +673,7 @@ class CartRuleCore extends ObjectModel
             return [];
         }
 
-        if(!isset($productRulesCache[$id_product_rule_group])){
+        if(!isset(static::$productRulesCache[$id_product_rule_group])){
             $productRules = [];
             $results = Db::getInstance()->executeS('
     		SELECT *
