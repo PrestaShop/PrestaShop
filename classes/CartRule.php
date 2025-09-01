@@ -1269,7 +1269,12 @@ class CartRuleCore extends ObjectModel
              * we are using ruleType attributes because otherwise it will strip product attribute data which we need to find products matching all rules from rule group 
              * final cart product filtering, keep only matching products
              */ 
-            $selected_products = $this->filterProducts($eligible_products_list, $selected_products, 'attributes');              
+            $selected_products = $this->filterProducts($eligible_products_list, $selected_products, 'attributes'); 
+            // return error if products in cart doesnt match rules 
+            if (!count($selected_products)) {
+                return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', [], 'Shop.Notifications.Error');
+            }
+            
         }
         if ($returnProducts) {
             return $selected_products;
