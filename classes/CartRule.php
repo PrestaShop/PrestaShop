@@ -1104,7 +1104,8 @@ class CartRuleCore extends ObjectModel
 							FROM `' . _DB_PREFIX_ . 'cart_product` cp
 							LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = ' . (int) $cart->id . '
-							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')');
+							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')
+                            AND cp.`id_product` <>  ' . (int) $this->gift_product);
                             $count_matching_products = 0;
 
                             foreach ($cart_manufacturers as $cart_manufacturer) {
@@ -1126,7 +1127,8 @@ class CartRuleCore extends ObjectModel
 							FROM `' . _DB_PREFIX_ . 'cart_product` cp
 							LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = ' . (int) $cart->id . '
-							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')');
+							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')
+                            AND cp.`id_product` <>  ' . (int) $this->gift_product);
                             $count_matching_products = 0;
 
                             foreach ($cart_suppliers as $cart_supplier) {
