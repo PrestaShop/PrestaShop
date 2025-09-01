@@ -1925,7 +1925,22 @@ class AdminImportControllerCore extends AdminController
                 }
             }
 
-            if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0)) {
+            if ((isset($info['reduction_price']) && $info['reduction_price'] == 0)
+                || (isset($info['reduction_percent']) && $info['reduction_percent'] == 0)) {
+                $query = new DbQuery();
+                $query->select('*')
+                    ->from(SpecificPrice::$definition['table'], 'sp')
+                    ->where('sp.`from` <= now()')
+                    ->where('sp.`to` >= now()')
+                    ->where('sp.`id_product` = ' . (int) $product->id);
+
+                $specificPrices = Db::getInstance()->executeS($query);
+
+                foreach ($specificPrices as $specificPrice) {
+                    $specificPrice = new SpecificPrice($specificPrice['id_specific_price']);
+                    $specificPrice->delete();
+                }
+            } elseif ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0)) {
                 foreach ($id_shop_list as $id_shop) {
                     $specific_price = SpecificPrice::getSpecificPrice($product->id, $id_shop, 0, 0, 0, 1, 0, 0, 0, 0);
 
@@ -1950,19 +1965,6 @@ class AdminImportControllerCore extends AdminController
                     if (!$validateOnly && !$specific_price->save()) {
                         $this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->trans('Discount is invalid', [], 'Admin.Advparameters.Notification'));
                     }
-                }
-            } else {
-                $query = new DbQuery();
-                $query->select('*')
-                    ->from(SpecificPrice::$definition['table'], 'sp')
-                    ->where('sp.`to` >= now() OR sp.`to` = "0000-00-00 00:00:00"')
-                    ->where('sp.`id_product` = ' . (int) $product->id);
-
-                $specificPrices = Db::getInstance()->executeS($query);
-
-                foreach ($specificPrices as $specificPrice) {
-                    $specificPrice = new SpecificPrice($specificPrice['id_specific_price']);
-                    $specificPrice->delete();
                 }
             }
 
