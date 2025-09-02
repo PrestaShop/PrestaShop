@@ -1175,16 +1175,18 @@ class CartRuleCore extends ObjectModel
                     }
 
                 }
-                //if there are more than one rule inside rule group, we want to keep products matching both
-                if($countRulesProduct>1){
-                    $matching_products_list = call_user_func_array('array_intersect',$matching_products_list);     
-                }else{
-                    $matching_products_list = call_user_func_array('array_values',$matching_products_list); 
-                }   
-                //if atleast one condition doesnt match we go to the next rulegroup.
-                if(!empty($matching_products_list) && $condition >0 && $countRulesProduct>1){
-                    continue;
-                }                
+                if(!empty($matching_products_list)){
+                    //if there are more than one rule inside rule group, we want to keep products matching both
+                    if($countRulesProduct>1){
+                        $matching_products_list = call_user_func_array('array_intersect',$matching_products_list);
+                    }else{
+                        $matching_products_list = call_user_func_array('array_values',$matching_products_list);
+                    }   
+                    //if atleast one condition doesnt match we go to the next rulegroup.
+                    if($condition >0 && $countRulesProduct>1){
+                        continue;
+                    }   
+                }              
                 /**
                  * we are using ruleType attributes because otherwise it will strip product attribute data which we need to find products matching all rules from rule group 
                  * we filter out product matching both rules and add them to selected_products
@@ -1374,6 +1376,12 @@ class CartRuleCore extends ObjectModel
                 // get a false in some cases. It doesn't matter much though, as long as we check what we got.
                 $selected_products = $this->checkProductRestrictionsFromCart($context->cart, true);
                 if (is_array($selected_products)) {
+                    // get product gifts quantity that are already in cart.
+                    $gifts_in_cart = DB::getInstance()->executeS('
+                        SELECT count(*) as gift_count, cr.`gift_product`,cr.`gift_product_attribute` 
+                        FROM `' . _DB_PREFIX_ . 'cart_cart_rule` ccr
+                        INNER JOIN `' . _DB_PREFIX_ . 'cart_rule` cr ON ccr.`id_cart_rule`=cr.`id_cart_rule` 
+                        WHERE ccr.`id_cart` = '. (int) $context->cart->id . ';');                    
                     foreach ($package_products as $product) {
                         if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
                                 || in_array($product['id_product'] . '-0', $selected_products))
