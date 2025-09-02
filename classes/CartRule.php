@@ -1268,7 +1268,12 @@ class CartRuleCore extends ObjectModel
         if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
-
+        // get product gifts quantity that are already in cart.
+        $gifts_in_cart = Db::getInstance()->executeS('
+            SELECT count(*) as gift_count, cr.`gift_product`,cr.`gift_product_attribute` 
+            FROM `' . _DB_PREFIX_ . 'cart_cart_rule` ccr
+            INNER JOIN `' . _DB_PREFIX_ . 'cart_rule` cr ON ccr.`id_cart_rule`=cr.`id_cart_rule` 
+            WHERE ccr.`id_cart` = '. (int) $context->cart->id . ';');           
         // Free shipping on selected carriers
         $reduction_carrier = 0;
         if ($this->free_shipping && in_array($filter, [CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_SHIPPING])) {
@@ -1349,7 +1354,11 @@ class CartRuleCore extends ObjectModel
                         // use average cart VAT for price_wt
                         $price *= (1 + $context->cart->getAverageProductsTaxRate());
                     }
-
+                    //exclude gift from discount but allow price calculation for product variant or if quantity is higher than gift quantity in cart
+                    $excl_gift_quantity = $this->checkGiftCount($product['id_product'],$product['id_product_attribute'],$product['cart_quantity'],$gifts_in_cart);
+                    if(!$excl_gift_quantity){
+                        continue;
+                    }
                     if ($price > 0 && ($minPrice === false || $minPrice > $price) && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
                         $minPrice = $price;
                         $cheapest_product = $product['id_product'] . '-' . $product['id_product_attribute'];
@@ -1375,13 +1384,7 @@ class CartRuleCore extends ObjectModel
                 // Let's get products this cart rule applies to. We should get an array, but we can also
                 // get a false in some cases. It doesn't matter much though, as long as we check what we got.
                 $selected_products = $this->checkProductRestrictionsFromCart($context->cart, true);
-                if (is_array($selected_products)) {
-                    // get product gifts quantity that are already in cart.
-                    $gifts_in_cart = Db::getInstance()->executeS('
-                        SELECT count(*) as gift_count, cr.`gift_product`,cr.`gift_product_attribute` 
-                        FROM `' . _DB_PREFIX_ . 'cart_cart_rule` ccr
-                        INNER JOIN `' . _DB_PREFIX_ . 'cart_rule` cr ON ccr.`id_cart_rule`=cr.`id_cart_rule` 
-                        WHERE ccr.`id_cart` = '. (int) $context->cart->id . ';');                    
+                if (is_array($selected_products)) {         
                     foreach ($package_products as $product) {
                         if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
                                 || in_array($product['id_product'] . '-0', $selected_products))
