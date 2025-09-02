@@ -1273,7 +1273,7 @@ class CartRuleCore extends ObjectModel
             SELECT count(*) as gift_count, cr.`gift_product`,cr.`gift_product_attribute` 
             FROM `' . _DB_PREFIX_ . 'cart_cart_rule` ccr
             INNER JOIN `' . _DB_PREFIX_ . 'cart_rule` cr ON ccr.`id_cart_rule`=cr.`id_cart_rule` 
-            WHERE ccr.`id_cart` = '. (int) $context->cart->id . ';');           
+            WHERE ccr.`id_cart` = '. (int) $context->cart->id . ' GROUP BY cr.`gift_product`,cr.`gift_product_attribute`;');         
         // Free shipping on selected carriers
         $reduction_carrier = 0;
         if ($this->free_shipping && in_array($filter, [CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_SHIPPING])) {
