@@ -1097,8 +1097,8 @@ class CartRuleCore extends ObjectModel
                                     && !in_array($cart_category['id_product'] . '-' . $cart_category['id_product_attribute'], $matching_products_list)) {
                                     if (
                                         $alreadyInCart
-                                        && $this->gift_product == $cart_categories['id_product']
-                                        && $this->gift_product_attribute == $cart_categories['id_product_attribute']) {
+                                        && $this->gift_product == $cart_category['id_product']
+                                        && $this->gift_product_attribute == $cart_category['id_product_attribute']) {
                                         --$count_matching_products;
                                     }                                           
                                     $count_matching_products += $cart_category['quantity'];
