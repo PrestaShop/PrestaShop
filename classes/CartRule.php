@@ -1175,18 +1175,18 @@ class CartRuleCore extends ObjectModel
                     }
 
                 }
+                //if atleast one condition doesnt match we go to the next rulegroup.
+                if($countRulesProduct>1 && $condition >0){
+                    continue;
+                }                                     
                 if(!empty($matching_products_list)){
                     //if there are more than one rule inside rule group, we want to keep products matching both
-                    if($countRulesProduct>1){
-                        $matching_products_list = call_user_func_array('array_intersect',$matching_products_list);
+                    if($countRulesProduct>1){      
+                        $matching_products_list = call_user_func_array('array_intersect',$matching_products_list);     
                     }else{
-                        $matching_products_list = call_user_func_array('array_values',$matching_products_list);
-                    }   
-                    //if atleast one condition doesnt match we go to the next rulegroup.
-                    if($condition >0 && $countRulesProduct>1){
-                        continue;
-                    }   
-                }              
+                        $matching_products_list = call_user_func_array('array_values',$matching_products_list); 
+                    }
+                }             
                 /**
                  * we are using ruleType attributes because otherwise it will strip product attribute data which we need to find products matching all rules from rule group 
                  * we filter out product matching both rules and add them to selected_products
@@ -1377,7 +1377,7 @@ class CartRuleCore extends ObjectModel
                 $selected_products = $this->checkProductRestrictionsFromCart($context->cart, true);
                 if (is_array($selected_products)) {
                     // get product gifts quantity that are already in cart.
-                    $gifts_in_cart = DB::getInstance()->executeS('
+                    $gifts_in_cart = Db::getInstance()->executeS('
                         SELECT count(*) as gift_count, cr.`gift_product`,cr.`gift_product_attribute` 
                         FROM `' . _DB_PREFIX_ . 'cart_cart_rule` ccr
                         INNER JOIN `' . _DB_PREFIX_ . 'cart_rule` cr ON ccr.`id_cart_rule`=cr.`id_cart_rule` 
@@ -1950,7 +1950,7 @@ class CartRuleCore extends ObjectModel
      * Allow discount for same product as gift or product variant only when it exceeds gift quantity in cart. Handle same gift from multiple cart rules.
      * @param int $id_product
      * @param int $id_product_attribute
-     * @param int $product_count
+     * @param int $product_quantity
      * @param array $gifts_in_cart
      * @return int
      */
