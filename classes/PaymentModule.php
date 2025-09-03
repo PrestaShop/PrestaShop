@@ -1244,7 +1244,7 @@ abstract class PaymentModuleCore extends Module
             if (count($order_list) == 1 && $remainingValue > 0 && $cartRule->partial_use == 1 && $cartRuleReductionAmountConverted > 0) {
                 // Create a new voucher from the original
                 $voucher = new CartRule((int) $cartRule->id); // We need to instantiate the CartRule without lang parameter to allow saving it
-                unset($voucher->id);
+                $voucher->id = 0;
 
                 // Set a new voucher code
                 $voucher->code = empty($voucher->code) ? substr(md5($order->id . '-' . $order->id_customer . '-' . $cartRule->id), 0, 16) : $voucher->code . '-2';
