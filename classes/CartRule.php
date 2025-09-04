@@ -1149,7 +1149,11 @@ class CartRuleCore extends ObjectModel
                 //if atleast one condition doesnt match from $product_rule_group with multiple conditions, we go to the next rulegroup.
                 if($countRulesProduct>1 && $condition >0){            
                     continue;
-                }                                                                     
+                }           
+                //if there is single condition that doesnt match product rule we want to return error       
+                if ($condition >= $countRulesProduct) {
+                    return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', [], 'Shop.Notifications.Error');
+                }                
                 if(count($matching_products_list) !== 0){
                     //if there are more than one rule inside rule group, we want to keep products matching both
                     if($countRulesProduct>1){      
@@ -1167,10 +1171,7 @@ class CartRuleCore extends ObjectModel
                 $selected_products = array_merge($selected_products, $matching_products_list);
 
             }
-            //if there is single condition that doesnt match product rule we want to return error       
-            if ($condition >= $countRulesProduct) {
-                return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', [], 'Shop.Notifications.Error');
-            }
+
             /**
              * we are using ruleType attributes because otherwise it will strip product attribute data which we need to find products matching all rules from rule group 
              * final cart product filtering, keep only matching products
