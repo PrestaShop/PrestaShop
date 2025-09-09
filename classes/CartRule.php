@@ -1147,7 +1147,7 @@ class CartRuleCore extends ObjectModel
                 }
 
                 //if atleast one condition doesnt match from $product_rule_group with multiple conditions, we go to the next rulegroup.
-                if($countRulesProduct>1 && $condition >0){            
+                if($condition >0){            
                     continue;
                 }           
                 //if there is single condition that doesnt match product rule we want to return error       
