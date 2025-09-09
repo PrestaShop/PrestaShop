@@ -991,6 +991,7 @@ class CartRuleCore extends ObjectModel
 
             // Now we load all RULE GROUP.
             $product_rule_groups = $this->getProductRuleGroups();
+            $countRuleGroups = count($product_rule_groups);
             foreach ($product_rule_groups as $id_product_rule_group => $product_rule_group) {
                 /*
                  * Rule group is a set of rules that the cart must meet for this cart rule to be applied.
@@ -1146,10 +1147,10 @@ class CartRuleCore extends ObjectModel
 
                 }
 
-                //if atleast one condition doesnt match from $product_rule_group with multiple conditions, we go to the next rulegroup.
-                if($condition >0){            
+                //if atleast one condition doesnt match from $product_rule_group with multiple conditions, we go to the next rulegroup if there are more groups
+                if($countRuleGroups>1 && $condition >0){
                     continue;
-                }           
+                }
                 //if there is single condition that doesnt match product rule we want to return error       
                 if ($condition >= $countRulesProduct) {
                     return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', [], 'Shop.Notifications.Error');
