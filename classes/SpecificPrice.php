@@ -573,9 +573,71 @@ class SpecificPriceCore extends ObjectModel
 
             $query .= (static::$psQtyDiscountOnCombination || !$id_cart || !$real_quantity) ? (int) $quantity : max(1, (int) $real_quantity);
             $query .= ' ORDER BY `id_product_attribute` DESC, `id_cart` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC';
-            self::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
-        }
-
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(str_replace("AND `id_product_attribute` = 0",'AND `id_product_attribute` >= 0',$query));
+            //cache product variants to limit calls for the same product
+            $variantsId = Product::getProductAttributesIds($id_product);
+            foreach(array_column($variantsId,'id_product_attribute') as $variantId){
+                switch(true){
+                    case in_array($variantId,array_column($result,'id_product_attribute')):
+                        $k=array_search($variantId,array_column($result,'id_product_attribute'));
+                        $key = self::computeKey(
+                            $id_product,
+                            $id_shop,
+                            $id_currency,
+                            $id_country,
+                            $id_group,
+                            $quantity,
+                            (int)$variantId,
+                            $id_customer,
+                            $id_cart,
+                            $real_quantity
+                        );
+                        if(!array_key_exists($key, self::$_specificPriceCache)){
+                            self::$_specificPriceCache[$key] = $result[$k];
+                        }
+                    break; 
+                    case in_array(0,array_column($result,'id_product_attribute')):
+                        $k=array_search(0,array_column($result,'id_product_attribute'));
+                        $key = self::computeKey(
+                            $id_product,
+                            $id_shop,
+                            $id_currency,
+                            $id_country,
+                            $id_group,
+                            $quantity,
+                            (int)$variantId,
+                            $id_customer,
+                            $id_cart,
+                            $real_quantity
+                        );
+                        if(!array_key_exists($key, self::$_specificPriceCache)){
+                            self::$_specificPriceCache[$key] = $result[$k];
+                        }
+                    break;
+                    default:
+                        $key = self::computeKey(
+                            $id_product,
+                            $id_shop,
+                            $id_currency,
+                            $id_country,
+                            $id_group,
+                            $quantity,
+                            (int)$variantId,
+                            $id_customer,
+                            $id_cart,
+                            $real_quantity
+                        );
+                        if(!array_key_exists($key, self::$_specificPriceCache)){
+                            self::$_specificPriceCache[$key] = false;
+                        }
+                }
+            }
+            if(!array_key_exists($key, self::$_specificPriceCache)){
+                
+               self::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+            }
+            
+        }   
         return self::$_specificPriceCache[$key];
     }
 
