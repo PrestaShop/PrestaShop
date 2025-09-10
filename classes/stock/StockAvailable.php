@@ -436,23 +436,6 @@ class StockAvailableCore extends ObjectModel
         if ($id_product_attribute === null) {
             $id_product_attribute = 0;
         }
-
-        //cache quantity available for every combination of provided product id
-        if ($id_product !== null) {
-            $key1 = 'StockAvailable::getQuantityAvailableByProduct_Group_' . (int) $id_product. '-' . (int) $id_shop;
-            if (!Cache::isStored($key1)) {
-                $query = new DbQuery();
-                $query->select('quantity,id_product_attribute');
-                $query->from('stock_available');
-                $query->where('id_product = ' . (int) $id_product);
-                $query = StockAvailable::addSqlShopRestriction($query, $id_shop);
-                $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-                foreach($result as $r){
-                    Cache::store('StockAvailable::getQuantityAvailableByProduct_' . (int) $id_product . '-' . (int) $r['id_product_attribute'] . '-' . (int) $id_shop, (int)$r['quantity']);
-                }
-                Cache::store($key1, $result);
-            }
-        }
         $key = 'StockAvailable::getQuantityAvailableByProduct_' . (int) $id_product . '-' . (int) $id_product_attribute . '-' . (int) $id_shop;
         if (!Cache::isStored($key)) {
             $query = new DbQuery();
