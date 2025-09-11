@@ -37,6 +37,7 @@ class DiscountConditionsType extends TranslatorAwareType
 {
     public const CART_CONDITIONS = 'cart_conditions';
     public const DELIVERY_CONDITIONS = 'delivery_conditions';
+    public const ORDER_CONDITIONS = 'order_conditions';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -56,6 +57,12 @@ class DiscountConditionsType extends TranslatorAwareType
                 'required' => false,
             ]);
         }
+
+        $builder->add(self::ORDER_CONDITIONS, OrderConditionsType::class, [
+            'label' => $this->trans('On order', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h3',
+            'required' => false,
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -74,6 +81,9 @@ class DiscountConditionsType extends TranslatorAwareType
                     ],
                     $this->trans('On delivery', 'Admin.Catalog.Feature') => [
                         'help' => $this->trans('Based on specific carrier(s) or product segment', 'Admin.Catalog.Feature'),
+                    ],
+                    $this->trans('On order', 'Admin.Catalog.Feature') => [
+                        'help' => $this->trans('Based on total amount', 'Admin.Catalog.Feature'),
                     ],
                 ],
                 'placeholder' => $this->trans('None', 'Admin.Catalog.Feature'),

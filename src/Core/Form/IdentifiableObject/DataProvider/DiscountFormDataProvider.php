@@ -53,6 +53,7 @@ use PrestaShopBundle\Form\Admin\Sell\Discount\DeliveryConditionsType;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountConditionsType;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountProductSegmentType;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountUsabilityModeType;
+use PrestaShopBundle\Form\Admin\Sell\Discount\OrderConditionsType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
@@ -107,12 +108,15 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         $selectedCondition = 'none';
         $selectedCartCondition = 'none';
         $selectedDeliveryCondition = 'none';
+        $selectedOrderCondition = 'none';
         if ($discountForEditing->getMinimumProductQuantity()) {
             $selectedCondition = DiscountConditionsType::CART_CONDITIONS;
             $selectedCartCondition = CartConditionsType::MINIMUM_PRODUCT_QUANTITY;
         } elseif ($discountForEditing->getMinimumAmount()) {
-            $selectedCondition = DiscountConditionsType::CART_CONDITIONS;
-            $selectedCartCondition = CartConditionsType::MINIMUM_AMOUNT;
+            // Check if minimum amount is set via order conditions or cart conditions
+            // For now, we'll prioritize order conditions if minimum amount is set
+            $selectedCondition = DiscountConditionsType::ORDER_CONDITIONS;
+            $selectedOrderCondition = OrderConditionsType::MINIMUM_AMOUNT;
         } elseif (!empty($specificProducts)) {
             $selectedCondition = DiscountConditionsType::CART_CONDITIONS;
             $selectedCartCondition = CartConditionsType::SPECIFIC_PRODUCTS;
@@ -168,6 +172,14 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     'children_selector' => $selectedDeliveryCondition,
                     DeliveryConditionsType::CARRIERS => $discountForEditing->getCarrierIds(),
                     DeliveryConditionsType::COUNTRY => $discountForEditing->getCountryIds(),
+                ],
+                DiscountConditionsType::ORDER_CONDITIONS => [
+                    'minimum_amount' => [
+                        'value' => $discountForEditing->getMinimumAmount() ? (float) (string) $discountForEditing->getMinimumAmount() : null,
+                        'currency' => $discountForEditing->getMinimumAmountCurrencyId(),
+                        'tax_included' => $discountForEditing->getMinimumAmountTaxIncluded(),
+                        'shipping_included' => $discountForEditing->getMinimumAmountShippingIncluded(),
+                    ],
                 ],
             ],
             'usability' => [

@@ -47,6 +47,7 @@ use PrestaShopBundle\Form\Admin\Sell\Discount\CartConditionsType;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DeliveryConditionsType;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountConditionsType;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountUsabilityModeType;
+use PrestaShopBundle\Form\Admin\Sell\Discount\OrderConditionsType;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -251,6 +252,18 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
             }
             if ($data['conditions'][DiscountConditionsType::DELIVERY_CONDITIONS]['children_selector'] === DeliveryConditionsType::COUNTRY) {
                 $conditionsCommand->setCountryIds($data['conditions'][DiscountConditionsType::DELIVERY_CONDITIONS][DeliveryConditionsType::COUNTRY]);
+            }
+        } elseif ($data['conditions']['children_selector'] === DiscountConditionsType::ORDER_CONDITIONS) {
+            if (isset($data['conditions'][DiscountConditionsType::ORDER_CONDITIONS][OrderConditionsType::MINIMUM_AMOUNT])) {
+                $minimumAmountData = $data['conditions'][DiscountConditionsType::ORDER_CONDITIONS][OrderConditionsType::MINIMUM_AMOUNT];
+                if ($minimumAmountData['value'] > 0) {
+                    $conditionsCommand->setMinimumAmount(
+                        new DecimalNumber((string) $minimumAmountData['value']),
+                        $minimumAmountData['currency'],
+                        $minimumAmountData['tax_included'],
+                        $minimumAmountData['shipping_included'],
+                    );
+                }
             }
         }
 
