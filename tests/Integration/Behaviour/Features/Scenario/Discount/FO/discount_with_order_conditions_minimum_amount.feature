@@ -83,7 +83,7 @@ Feature: Order-based discount conditions
       | valid_from  | 2025-01-01 11:05:00         |
       | valid_to    | 2025-12-01 00:00:00         |
       | code        | ORDER_DISCOUNT_TAX_EXCLUDED |
-      | reduction_amount | 6.00                    |
+      | reduction_amount | 7.00                    |
       | reduction_currency | usd                   |
       | taxIncluded | true                         |
     When I update discount "order_discount_tax_excluded" with the condition of a minimum amount:
@@ -98,19 +98,19 @@ Feature: Order-based discount conditions
       | minimum_amount_shipping_included | true  |
     Given I create an empty cart "test_cart" for customer "testCustomer"
     When I add 2 product "product2" to the cart "test_cart"
-    And cart "test_cart" total with tax included should be '$36.00'
+    And cart "test_cart" total with tax included should be '$37.00'
     And my cart "test_cart" should have the following details:
       | total_products | $30.00 |
-      | shipping       | $6.00  |
+      | shipping       | $7.00  |
       | total_discount | $0.00  |
-      | total          | $36.00 |
+      | total          | $37.00 |
     When I use a voucher "order_discount_tax_excluded" on the cart "test_cart"
     # The condition is met (30.00 tax excluded) so the discount is applied
     And cart "test_cart" total with tax included should be '$30.00'
     And my cart "test_cart" should have the following details:
       | total_products | $30.00 |
-      | shipping       | $6.00  |
-      | total_discount | -$6.00 |
+      | shipping       | $7.00  |
+      | total_discount | -$7.00 |
       | total          | $30.00 |
 
   Scenario: Test order condition without shipping included
