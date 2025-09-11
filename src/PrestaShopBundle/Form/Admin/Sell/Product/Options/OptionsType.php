@@ -39,7 +39,7 @@ class OptionsType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('visibility', VisibilityType::class)
@@ -51,7 +51,7 @@ class OptionsType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

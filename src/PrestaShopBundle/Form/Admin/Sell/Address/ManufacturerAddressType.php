@@ -92,7 +92,7 @@ class ManufacturerAddressType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $nameHint = $this->trans('Invalid characters:', 'Admin.Global') . ' 0-9!<>,;?=+()@#"�{}_$%:';
         $data = $builder->getData();

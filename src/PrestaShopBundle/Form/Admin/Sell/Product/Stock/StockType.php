@@ -77,7 +77,7 @@ class StockType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('packed_products', ProductSearchType::class, [
@@ -125,7 +125,7 @@ class StockType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

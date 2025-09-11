@@ -37,7 +37,7 @@ class CurrencyExchangeRateType extends CommonAbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
     }
 }

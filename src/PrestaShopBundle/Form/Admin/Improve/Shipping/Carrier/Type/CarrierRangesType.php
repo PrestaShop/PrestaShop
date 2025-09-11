@@ -48,7 +48,7 @@ class CarrierRangesType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('data', HiddenType::class)
@@ -76,7 +76,7 @@ class CarrierRangesType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'label' => $this->trans('Ranges', 'Admin.Shipping.Feature'),

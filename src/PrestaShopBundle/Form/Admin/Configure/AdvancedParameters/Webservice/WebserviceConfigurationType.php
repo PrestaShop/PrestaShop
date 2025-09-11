@@ -41,7 +41,7 @@ class WebserviceConfigurationType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $enableWebservicesHelp = $this->trans(
             'Before activating the webservice, you must be sure to: ',
@@ -85,7 +85,7 @@ class WebserviceConfigurationType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'Admin.Advparameters.Feature',

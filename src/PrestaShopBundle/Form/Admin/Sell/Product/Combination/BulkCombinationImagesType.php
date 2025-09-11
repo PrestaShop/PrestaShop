@@ -36,7 +36,7 @@ class BulkCombinationImagesType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('images', CombinationImagesChoiceType::class, [
             'product_id' => $options['product_id'],
@@ -47,7 +47,7 @@ class BulkCombinationImagesType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

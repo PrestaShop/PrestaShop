@@ -68,7 +68,7 @@ class LocalizationConfigurationType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('default_language', ChoiceType::class, [

@@ -35,7 +35,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class ConditionsType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('customer', CustomerSearchType::class, [

@@ -47,7 +47,7 @@ class AttachmentType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $required = true;
         if (isset($options['data']['file_name']) && $options['data']['file_name']) {

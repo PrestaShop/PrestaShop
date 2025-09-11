@@ -43,7 +43,7 @@ class RequestPasswordResetType extends AbstractType
     ) {
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('email_forgot', EmailType::class, [
@@ -73,7 +73,7 @@ class RequestPasswordResetType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

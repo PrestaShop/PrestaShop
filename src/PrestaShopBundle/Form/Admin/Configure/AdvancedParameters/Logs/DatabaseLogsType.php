@@ -39,7 +39,7 @@ final class DatabaseLogsType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('database_min_logger_level', LogSeverityChoiceType::class, [
@@ -59,7 +59,7 @@ final class DatabaseLogsType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'Admin.Advparameters.Feature',

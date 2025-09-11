@@ -41,12 +41,12 @@ class ApeType extends AbstractType implements DataTransformerInterface
 {
     use TranslatorAwareTrait;
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->addModelTransformer($this);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'constraints' => [

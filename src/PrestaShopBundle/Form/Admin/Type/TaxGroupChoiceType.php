@@ -42,7 +42,7 @@ class TaxGroupChoiceType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         // Set normalizer enables to use closure for choice generation with options
         $resolver->setNormalizer(

@@ -70,7 +70,7 @@ class ShopUrlType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if (!$this->isShopFeatureActive && $this->doesMainShopUrlExist) {
             $builder
@@ -98,7 +98,7 @@ class ShopUrlType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'label' => false,

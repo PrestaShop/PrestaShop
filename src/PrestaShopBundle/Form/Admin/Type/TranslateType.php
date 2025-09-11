@@ -81,7 +81,7 @@ class TranslateType extends CommonAbstractType
      *
      * Builds form fields for each locales
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $i = 0;
         foreach ($options['locales'] as $locale) {
@@ -119,7 +119,7 @@ class TranslateType extends CommonAbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'type' => null,

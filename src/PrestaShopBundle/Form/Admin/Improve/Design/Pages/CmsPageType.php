@@ -86,7 +86,7 @@ class CmsPageType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $invalidCharsText = sprintf('%s <>{}', $this->trans('Invalid characters:', 'Admin.Notifications.Info'));
 
@@ -282,7 +282,7 @@ class CmsPageType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

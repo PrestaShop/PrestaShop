@@ -67,7 +67,7 @@ class CombinationAvailabilityType extends TranslatorAwareType
         $this->router = $router;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('out_of_stock_type', ChoiceType::class, [
@@ -110,7 +110,7 @@ class CombinationAvailabilityType extends TranslatorAwareType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

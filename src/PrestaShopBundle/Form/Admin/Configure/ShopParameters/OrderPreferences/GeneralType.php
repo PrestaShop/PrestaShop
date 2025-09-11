@@ -75,7 +75,7 @@ class GeneralType extends TranslatorAwareType
         $this->currencyDataProvider = $currencyDataProvider;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $configuration = $this->configuration;
         $currencyIsoCode = $this->currencyDataProvider->getDefaultCurrencyIsoCode();
@@ -147,7 +147,7 @@ class GeneralType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'Admin.Shopparameters.Feature',

@@ -60,7 +60,7 @@ class ToggleChildrenChoiceType extends AbstractType
     ) {
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
@@ -90,7 +90,7 @@ class ToggleChildrenChoiceType extends AbstractType
         $form->add('children_selector', $options['choice_type'], $options['choice_options'] + $defaultChoiceOptions);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

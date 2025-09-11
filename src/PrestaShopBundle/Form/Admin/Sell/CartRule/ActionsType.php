@@ -37,7 +37,7 @@ class ActionsType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('free_shipping', SwitchType::class, [

@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class DeleteImageTypeType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('delete_images_files_too', SwitchType::class, [

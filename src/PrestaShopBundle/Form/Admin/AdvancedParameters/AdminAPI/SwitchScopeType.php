@@ -38,7 +38,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SwitchScopeType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('scope', TextPreviewType::class, [
@@ -54,7 +54,7 @@ class SwitchScopeType extends TranslatorAwareType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

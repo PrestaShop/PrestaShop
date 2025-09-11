@@ -38,7 +38,7 @@ class CombineCompressCacheType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('smart_cache_css', SwitchType::class, [

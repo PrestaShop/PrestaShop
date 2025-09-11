@@ -53,7 +53,7 @@ class FeatureFlagType extends TranslatorAwareType
         $this->formCloner = $formCloner;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('enabled', FeatureFlagSwitchType::class, [
@@ -81,7 +81,7 @@ class FeatureFlagType extends TranslatorAwareType
         ]));
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver

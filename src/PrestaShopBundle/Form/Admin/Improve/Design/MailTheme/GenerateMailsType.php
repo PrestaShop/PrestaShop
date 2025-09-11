@@ -73,7 +73,7 @@ class GenerateMailsType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $noTheme = $this->trans('Core (no theme selected)', 'Admin.International.Feature');
 

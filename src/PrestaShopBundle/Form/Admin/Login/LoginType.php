@@ -55,7 +55,7 @@ class LoginType extends AbstractType
         $this->isDemoModeEnabled = $shopConfiguration->getBoolean('_PS_MODE_DEMO_');
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('email', EmailType::class, [
@@ -95,7 +95,7 @@ class LoginType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
