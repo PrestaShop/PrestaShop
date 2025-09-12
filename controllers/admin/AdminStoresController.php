@@ -606,8 +606,11 @@ class AdminStoresControllerCore extends AdminController
      *
      * @return array
      */
-    protected function adaptHoursFormat(array $value)
+    protected function adaptHoursFormat(?array $value)
     {
+        if (null === $value) {
+            return [];
+        }
         $separator = array_fill(0, count($value), ' | ');
 
         return array_map('implode', $separator, $value);
