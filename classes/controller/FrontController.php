@@ -1507,7 +1507,7 @@ class FrontControllerCore extends Controller
                 'address', 'addresses', 'authentication', 'manufacturer', 'cart', 'category', 'cms', 'contact',
                 'discount', 'guest-tracking', 'history', 'identity', 'index', 'my-account',
                 'order-confirmation', 'order-detail', 'order-follow', 'order', 'order-return',
-                'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
+                'order-slip','onepagecheckout', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
                 'prices-drop', 'product', 'registration', 'search', 'sitemap', 'stores', 'supplier', 'new-products',
             ];
             foreach ($p as $page_name) {
@@ -1955,7 +1955,7 @@ class FrontControllerCore extends Controller
         return $this->translator;
     }
 
-    protected function makeLoginForm()
+    protected function makeLoginForm($opc = false)
     {
         $form = new CustomerLoginForm(
             $this->context->smarty,
@@ -1965,12 +1965,32 @@ class FrontControllerCore extends Controller
             $this->getTemplateVarUrls()
         );
 
-        $form->setAction($this->getCurrentURL());
+        $form->setAction($this->getCurrentURL().($opc?'?ajax=1&submitLogin=1':''));
 
         return $form;
     }
 
-    protected function makeCustomerFormatter()
+    protected function makeGuestForm($opc = false)
+    {
+        $form = new GuestForm(
+            $this->context->smarty,
+            $this->context,
+            $this->getTranslator(),
+            new GuestFormatter($this->getTranslator(), $this->context->language),
+            new CustomerPersister(
+                $this->context,
+                $this->get('hashing'),
+                $this->getTranslator(),
+                true
+            ),
+        );
+
+        $form->setAction($this->getCurrentURL().($opc?'?ajax=1&submitCreateGuest=1':''));
+
+        return $form;
+    }
+
+    protected function makeCustomerFormatter($opc = false)
     {
         $formatter = new CustomerFormatter(
             $this->getTranslator(),
@@ -1984,17 +2004,25 @@ class FrontControllerCore extends Controller
             ->setAskForBirthdate(Configuration::get('PS_CUSTOMER_BIRTHDATE'))
             ->setPartnerOptinRequired($customer->isFieldRequired('optin'));
 
+        if($opc){
+            $formatter->setPasswordRequired(true);
+        }
+
         return $formatter;
     }
 
-    protected function makeCustomerForm()
+    protected function makeCustomerForm($opc = false)
     {
-        $guestAllowedCheckout = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
+        if($opc){
+            $guestAllowedCheckout = false;
+        } else {
+            $guestAllowedCheckout = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
+        }
         $form = new CustomerForm(
             $this->context->smarty,
             $this->context,
             $this->getTranslator(),
-            $this->makeCustomerFormatter(),
+            $this->makeCustomerFormatter($opc),
             new CustomerPersister(
                 $this->context,
                 $this->get('hashing'),
@@ -2006,7 +2034,7 @@ class FrontControllerCore extends Controller
 
         $form->setGuestAllowed($guestAllowedCheckout);
 
-        $form->setAction($this->getCurrentURL());
+        $form->setAction($this->getCurrentURL().($opc?'?ajax=1&submitCustomer=1':''));
 
         return $form;
     }

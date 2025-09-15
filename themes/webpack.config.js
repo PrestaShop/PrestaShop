@@ -30,12 +30,13 @@ module.exports = (env, argv) => {
 
   return {
     mode,
-    entry: [
-      './_core/js/theme.js',
-    ],
+    entry: {
+      core: './_core/js/theme.js',
+      'one-page-checkout': './_core/js/one-page-checkout.js',
+    },
     output: {
       path: path.resolve(__dirname),
-      filename: 'core.js',
+      filename: '[name].js',
       chunkFilename: '[chunkhash]-chunk.js',
     },
     module: {

@@ -30,6 +30,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
     protected $template = 'checkout/_partials/steps/personal-information.tpl';
     private $loginForm;
     private $registerForm;
+    private $guestForm;
 
     private $show_login_form = false;
 
@@ -48,11 +49,13 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         Context $context,
         TranslatorInterface $translator,
         CustomerLoginForm $loginForm,
-        CustomerForm $registerForm
+        CustomerForm $registerForm,
+        GuestForm $guestForm = null
     ) {
         parent::__construct($context, $translator);
         $this->loginForm = $loginForm;
         $this->registerForm = $registerForm;
+        $this->guestForm = $guestForm;
     }
 
     public function handleRequest(array $requestParameters = [])
@@ -125,6 +128,7 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
             [
                 'show_login_form' => $this->show_login_form,
                 'login_form' => $this->loginForm->getProxy(),
+                'guest_form' => empty($this->guestForm) ? null : $this->guestForm->getProxy(),
                 'register_form' => $this->registerForm->getProxy(),
                 'guest_allowed' => $this->getCheckoutSession()->isGuestAllowed(),
                 'empty_cart_on_logout' => !Configuration::get('PS_CART_FOLLOWING'),
