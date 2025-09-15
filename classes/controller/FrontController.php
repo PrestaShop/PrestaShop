@@ -944,6 +944,7 @@ class FrontControllerCore extends Controller
         $this->registerJavascript('theme-custom', '/assets/js/custom.js', ['position' => 'bottom', 'priority' => 1000]);
 
         $assets = $this->context->shop->theme->getPageSpecificAssets($this->php_self);
+
         if (!empty($assets)) {
             foreach ($assets['css'] as $css) {
                 $this->registerStylesheet($css['id'], $css['path'], $css);
@@ -1507,7 +1508,7 @@ class FrontControllerCore extends Controller
                 'address', 'addresses', 'authentication', 'manufacturer', 'cart', 'category', 'cms', 'contact',
                 'discount', 'guest-tracking', 'history', 'identity', 'index', 'my-account',
                 'order-confirmation', 'order-detail', 'order-follow', 'order', 'order-return',
-                'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
+                'order-slip','onepagecheckout', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
                 'prices-drop', 'product', 'registration', 'search', 'sitemap', 'stores', 'supplier', 'new-products',
             ];
             foreach ($p as $page_name) {
@@ -1963,6 +1964,26 @@ class FrontControllerCore extends Controller
             $this->getTranslator(),
             new CustomerLoginFormatter($this->getTranslator()),
             $this->getTemplateVarUrls()
+        );
+
+        $form->setAction($this->getCurrentURL());
+
+        return $form;
+    }
+
+    protected function makeGuestForm()
+    {
+        $form = new GuestForm(
+            $this->context->smarty,
+            $this->context,
+            $this->getTranslator(),
+            new GuestFormatter($this->getTranslator(), $this->context->language),
+            new CustomerPersister(
+                $this->context,
+                $this->get('hashing'),
+                $this->getTranslator(),
+                true
+            ),
         );
 
         $form->setAction($this->getCurrentURL());

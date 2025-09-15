@@ -120,6 +120,10 @@
 			<page>cms</page>
 			<configurable>0</configurable>
 		</meta>
+    <meta id="one-page-checkout">
+      <page>one-page-checkout</page>
+      <configurable>1</configurable>
+    </meta>
 		<meta id="module-cheque-payment">
 			<page>module-cheque-payment</page>
 			<configurable>0</configurable>

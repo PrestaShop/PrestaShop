@@ -31,9 +31,9 @@ use ZxcvbnPhp\Zxcvbn;
 /**
  * StarterTheme TODO: B2B fields, Genders, CSRF.
  */
-class CustomerFormCore extends AbstractForm
+class GuestFormCore extends AbstractForm
 {
-    protected $template = 'customer/_partials/customer-form.tpl';
+    protected $template = 'customer/_partials/guest-form.tpl';
 
     /**
      * @var CustomerFormatter
@@ -41,11 +41,8 @@ class CustomerFormCore extends AbstractForm
     protected $formatter;
 
     private $context;
-    private $urls;
 
     private $customerPersister;
-    private $guest_allowed;
-    private $passwordRequired = true;
 
     private $IDNConverter;
 
@@ -53,9 +50,8 @@ class CustomerFormCore extends AbstractForm
         Smarty $smarty,
         Context $context,
         TranslatorInterface $translator,
-        CustomerFormatter $formatter,
+        GuestFormatter $formatter,
         CustomerPersister $customerPersister,
-        array $urls
     ) {
         parent::__construct(
             $smarty,
@@ -63,33 +59,17 @@ class CustomerFormCore extends AbstractForm
             $formatter
         );
 
-        $this->context = $context;
-        $this->urls = $urls;
         $this->customerPersister = $customerPersister;
+        $this->context = $context;
         $this->IDNConverter = new InternationalizedDomainNameConverter();
-    }
-
-    public function setGuestAllowed($guest_allowed = true)
-    {
-        $this->formatter->setPasswordRequired(!$guest_allowed);
-        $this->setPasswordRequired(!$guest_allowed);
-        $this->guest_allowed = $guest_allowed;
-
-        return $this;
-    }
-
-    public function setPasswordRequired($passwordRequired)
-    {
-        $this->passwordRequired = $passwordRequired;
-
-        return $this;
+        if (!$this->formFields) {
+            $this->formFields = $this->formatter->getFormat();
+        }
     }
 
     public function fillWith(array $params = [])
     {
         if (!empty($params['email'])) {
-            // In some cases, browsers convert non ASCII chars (from input type="email") to "punycode",
-            // we need to convert it back
             $params['email'] = $this->IDNConverter->emailToUtf8($params['email']);
         }
 
@@ -99,7 +79,6 @@ class CustomerFormCore extends AbstractForm
     public function fillFromCustomer(Customer $customer)
     {
         $params = get_object_vars($customer);
-        $params['birthday'] = $customer->birthday === '0000-00-00' ? null : Tools::displayDate($customer->birthday);
 
         return $this->fillWith($params);
     }
@@ -123,69 +102,6 @@ class CustomerFormCore extends AbstractForm
 
     public function validate()
     {
-        // check birthdayField against null case is mandatory.
-        $birthdayField = $this->getField('birthday');
-        if (!empty($birthdayField)
-            && !empty($birthdayField->getValue())
-            && Validate::isBirthDate($birthdayField->getValue(), $this->context->language->date_format_lite)
-        ) {
-            $dateBuilt = DateTime::createFromFormat(
-                $this->context->language->date_format_lite,
-                $birthdayField->getValue()
-            );
-            $birthdayField->setValue($dateBuilt->format('Y-m-d'));
-        }
-
-        if ($this->getField('new_password') === null
-            || !empty($this->getField('new_password')->getValue())
-        ) {
-            $passwordField = $this->getField('new_password') ?? $this->getField('password');
-            if (!empty($passwordField->getValue()) || $this->passwordRequired) {
-                if (Validate::isAcceptablePasswordLength($passwordField->getValue()) === false) {
-                    $passwordField->addError($this->translator->trans(
-                        'Password must be between %d and %d characters long',
-                        [
-                            Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH),
-                            Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH),
-                        ],
-                        'Shop.Notifications.Error'
-                    ));
-                }
-
-                if (Validate::isAcceptablePasswordScore($passwordField->getValue()) === false) {
-                    $wordingsForScore = [
-                        $this->translator->trans('Very weak', [], 'Shop.Theme.Global'),
-                        $this->translator->trans('Weak', [], 'Shop.Theme.Global'),
-                        $this->translator->trans('Average', [], 'Shop.Theme.Global'),
-                        $this->translator->trans('Strong', [], 'Shop.Theme.Global'),
-                        $this->translator->trans('Very strong', [], 'Shop.Theme.Global'),
-                    ];
-                    $globalErrorMessage = $this->translator->trans(
-                        'The minimum score must be: %s',
-                        [
-                            $wordingsForScore[(int) Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE)],
-                        ],
-                        'Shop.Notifications.Error'
-                    );
-                    if ($this->context->shop->theme->get('global_settings.new_password_policy_feature') !== true) {
-                        $zxcvbn = new Zxcvbn();
-                        $result = $zxcvbn->passwordStrength($passwordField->getValue());
-                        if (!empty($result['feedback']['warning'])) {
-                            $passwordField->addError($this->translator->trans(
-                                $result['feedback']['warning'], [], 'Shop.Theme.Global'
-                            ));
-                        } else {
-                            $passwordField->addError($globalErrorMessage);
-                        }
-                        foreach ($result['feedback']['suggestions'] as $suggestion) {
-                            $passwordField->addError($this->translator->trans($suggestion, [], 'Shop.Theme.Global'));
-                        }
-                    } else {
-                        $passwordField->addError($globalErrorMessage);
-                    }
-                }
-            }
-        }
         $this->validateFieldsLengths();
         $this->validateByModules();
 
@@ -195,8 +111,6 @@ class CustomerFormCore extends AbstractForm
     protected function validateFieldsLengths()
     {
         $this->validateFieldLength('email', 255, $this->getEmailMaxLengthViolationMessage());
-        $this->validateFieldLength('firstname', 255, $this->getFirstNameMaxLengthViolationMessage());
-        $this->validateFieldLength('lastname', 255, $this->getLastNameMaxLengthViolationMessage());
     }
 
     /**
@@ -206,9 +120,9 @@ class CustomerFormCore extends AbstractForm
      */
     protected function validateFieldLength($fieldName, $maximumLength, $violationMessage)
     {
-        $field = $this->getField($fieldName);
-        if (strlen($field->getValue()) > $maximumLength) {
-            $field->addError($violationMessage);
+        $emailField = $this->getField($fieldName);
+        if (strlen($emailField->getValue()) > $maximumLength) {
+            $emailField->addError($violationMessage);
         }
     }
 
@@ -224,36 +138,11 @@ class CustomerFormCore extends AbstractForm
         );
     }
 
-    protected function getFirstNameMaxLengthViolationMessage()
-    {
-        return $this->translator->trans(
-            'The %1$s field is too long (%2$d chars max).',
-            ['first name', 255],
-            'Shop.Notifications.Error'
-        );
-    }
-
-    protected function getLastNameMaxLengthViolationMessage()
-    {
-        return $this->translator->trans(
-            'The %1$s field is too long (%2$d chars max).',
-            ['last name', 255],
-            'Shop.Notifications.Error'
-        );
-    }
-
     public function submit()
     {
         if ($this->validate()) {
-            $clearTextPassword = $this->getValue('password');
-            $newPassword = $this->getValue('new_password');
 
-            $ok = $this->customerPersister->save(
-                $this->getCustomer(),
-                $clearTextPassword,
-                $newPassword,
-                $this->passwordRequired
-            );
+            $ok = $this->customerPersister->save($this->getCustomer());
 
             if (!$ok) {
                 foreach ($this->customerPersister->getErrors() as $field => $errors) {
@@ -275,7 +164,6 @@ class CustomerFormCore extends AbstractForm
 
         return [
             'action' => $this->action,
-            'urls' => $this->urls,
             'errors' => $this->getErrors(),
             'hook_create_account_form' => Hook::exec('displayCustomerAccountForm'),
             'formFields' => array_map(
