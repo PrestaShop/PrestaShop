@@ -101,6 +101,7 @@ class PrestaShopLoggerCore extends ObjectModel
             'in_all_shops' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'object_type' => ['type' => self::TYPE_STRING, 'validate' => 'isValidObjectClassName', 'size' => 32],
+            'hash' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
@@ -143,10 +144,11 @@ class PrestaShopLoggerCore extends ObjectModel
      * @param string $objectType
      * @param int $objectId
      * @param bool $allowDuplicate if set to true, can log several time the same information (not recommended)
+     * @param string $hash if set, will be used instead of auto calculated hash key if allowDuplicate is false
      *
      * @return bool true if succeed
      */
-    public static function addLog($message, $severity = 1, $errorCode = null, $objectType = null, $objectId = null, $allowDuplicate = false, $idEmployee = null)
+    public static function addLog($message, $severity = 1, $errorCode = null, $objectType = null, $objectId = null, $allowDuplicate = false, $idEmployee = null, $hash = null)
     {
         // Not all logs are relevant in DB so we filter them based on the configuration PS_MIN_LOGGER_LEVEL_IN_DB
         if ($severity < self::getMinimumLevelInDB()) {
@@ -157,6 +159,7 @@ class PrestaShopLoggerCore extends ObjectModel
         $log->severity = (int) $severity;
         $log->error_code = (int) $errorCode;
         $log->message = $message;
+        $log->hash = $allowDuplicate ? null : ($hash ?: $log->getHash());
         $log->date_add = date('Y-m-d H:i:s');
         $log->date_upd = date('Y-m-d H:i:s');
 
@@ -232,20 +235,12 @@ class PrestaShopLoggerCore extends ObjectModel
      */
     protected function isPresent()
     {
-        if (!isset(self::$is_present[md5($this->message)])) {
+        if (!isset(self::$is_present[$this->getHash()])) {
             self::$is_present[$this->getHash()] = Db::getInstance()->getValue(
                 (new DbQuery())
                     ->select('COUNT(*)')
                     ->from('log', 'l')
-                    ->where('message = "' . pSQL($this->message) . '"')
-                    ->where('severity = ' . (int) $this->severity)
-                    ->where('error_code = ' . (int) $this->error_code)
-                    ->where('object_type = "' . pSQL($this->object_type) . '"')
-                    ->where('object_id = ' . (int) $this->object_id)
-                    ->where('id_shop = ' . (int) $this->id_shop)
-                    ->where('id_shop_group = ' . (int) $this->id_shop_group)
-                    ->where('id_lang = ' . (int) $this->id_lang)
-                    ->where('in_all_shops = ' . (int) $this->in_all_shops)
+                    ->where('hash = "' . pSQL($this->getHash()) . '"')
             );
         }
 
