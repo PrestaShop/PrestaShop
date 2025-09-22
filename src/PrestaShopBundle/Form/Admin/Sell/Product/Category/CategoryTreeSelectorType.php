@@ -56,7 +56,7 @@ class CategoryTreeSelectorType extends CollectionType
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('product_categories', CategoryTagsCollectionType::class)
@@ -94,7 +94,7 @@ class CategoryTreeSelectorType extends CollectionType
     /**
      * {@inheritDoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

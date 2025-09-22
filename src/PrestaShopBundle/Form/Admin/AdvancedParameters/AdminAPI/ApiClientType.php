@@ -43,7 +43,7 @@ use Symfony\Component\Validator\Constraints\Positive;
 
 class ApiClientType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // If an external issuer is specified most of the form is not editable or relevant
         $formData = $builder->getData();
@@ -133,7 +133,7 @@ class ApiClientType extends TranslatorAwareType
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

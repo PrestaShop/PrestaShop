@@ -45,7 +45,7 @@ class ImageTypeType extends TranslatorAwareType
     /** Maximum size for width and height in pixels for the image type */
     private const MAX_PX_SIZE = 9999;
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name', TextType::class, [

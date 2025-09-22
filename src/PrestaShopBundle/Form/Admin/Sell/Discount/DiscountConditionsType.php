@@ -38,7 +38,7 @@ class DiscountConditionsType extends TranslatorAwareType
     public const CART_CONDITIONS = 'cart_conditions';
     public const DELIVERY_CONDITIONS = 'delivery_conditions';
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $discountType = $options['discount_type'];
         $builder

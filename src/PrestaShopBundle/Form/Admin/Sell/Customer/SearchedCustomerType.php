@@ -37,7 +37,7 @@ class SearchedCustomerType extends CommonAbstractType
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('id_customer', HiddenType::class, [

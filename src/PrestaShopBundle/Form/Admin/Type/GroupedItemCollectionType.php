@@ -74,7 +74,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class GroupedItemCollectionType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('groups', CollectionType::class, [
@@ -108,7 +108,7 @@ class GroupedItemCollectionType extends TranslatorAwareType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

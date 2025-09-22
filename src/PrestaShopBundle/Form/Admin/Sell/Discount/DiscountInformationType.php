@@ -40,7 +40,7 @@ use Symfony\Component\Validator\Constraints\Length;
 
 class DiscountInformationType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $discountType = $options['discount_type'];
         $builder
@@ -76,7 +76,7 @@ class DiscountInformationType extends TranslatorAwareType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setRequired([

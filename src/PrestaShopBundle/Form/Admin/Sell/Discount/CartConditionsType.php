@@ -45,7 +45,7 @@ class CartConditionsType extends TranslatorAwareType
     public const SPECIFIC_PRODUCTS = 'specific_products';
     public const PRODUCT_SEGMENT = 'product_segment';
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
         $builder

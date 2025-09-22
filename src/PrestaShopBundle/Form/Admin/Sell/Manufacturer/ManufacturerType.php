@@ -69,7 +69,7 @@ class ManufacturerType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $invalidCharactersForCatalogLabel = $this->trans('Invalid characters:', 'Admin.Global') . '<>{}';
         $invalidCharactersForNameLabel = $this->trans('Invalid characters:', 'Admin.Global') . '<>{}';

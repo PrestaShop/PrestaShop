@@ -55,7 +55,7 @@ class IntegerTypeExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // We only want to replace/adapt the IntegerToLocalizedStringTransformer, so we save the current transformers
         // to restore them after replacing the new IntegerToLocalizedStringTransformer.

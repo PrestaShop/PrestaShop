@@ -70,7 +70,7 @@ class PriceReductionType extends TranslatorAwareType
         $this->currencyDataProvider = $currencyDataProvider;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('value', MoneyType::class, [
@@ -107,7 +107,7 @@ class PriceReductionType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

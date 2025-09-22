@@ -42,7 +42,7 @@ use Symfony\Component\Validator\Constraints\Type;
  */
 class GeneralType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('redisplay_cart_at_login', SwitchType::class, [
@@ -131,7 +131,7 @@ class GeneralType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'Admin.Shopparameters.Feature',

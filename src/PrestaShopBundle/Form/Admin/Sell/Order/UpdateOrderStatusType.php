@@ -55,7 +55,7 @@ class UpdateOrderStatusType extends AbstractType
         $this->statusChoiceAttributes = $statusChoiceAttributes;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $choiceProviderParams = [];
         if (!empty($options['data']['new_order_status_id'])) {

@@ -47,7 +47,7 @@ class ImageSettingsType extends TranslatorAwareType
         parent::__construct($translator, $locales);
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // Check if AVIF is enabled on the server
         $avifEnabled = $this->avifExtensionChecker->isAvailable();

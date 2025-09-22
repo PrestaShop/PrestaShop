@@ -87,7 +87,7 @@ class SetUpUrlType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $friendlyUrlHelp = $this->trans(
             'Enable this option only if your server allows URL rewriting (recommended).',

@@ -36,7 +36,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class GroupedItemType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('id', HiddenType::class, [
@@ -56,7 +56,7 @@ class GroupedItemType extends TranslatorAwareType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

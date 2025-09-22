@@ -71,7 +71,7 @@ class DateRangeType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('from', DatePickerType::class, [
@@ -132,7 +132,7 @@ class DateRangeType extends AbstractType
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'date_format' => self::DEFAULT_DATE_FORMAT,

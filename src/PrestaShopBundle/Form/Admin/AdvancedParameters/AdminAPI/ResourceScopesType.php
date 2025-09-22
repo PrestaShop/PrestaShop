@@ -55,7 +55,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         parent::__construct($translator, $locales);
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $resourceScopes = $this->resourceScopeExtractor->getAllApiResourceScopes();
         foreach ($resourceScopes as $resourceScope) {
@@ -101,7 +101,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         $viewData = $associatedScopes;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

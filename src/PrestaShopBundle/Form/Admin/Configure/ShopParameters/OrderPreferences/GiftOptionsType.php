@@ -91,7 +91,7 @@ class GiftOptionsType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $atcpShipWrap = (bool) $this->configuration->get('PS_ATCP_SHIPWRAP');
         $currencyIsoCode = $this->defaultCurrencyIsoCode;
@@ -140,7 +140,7 @@ class GiftOptionsType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'Admin.Shopparameters.Feature',

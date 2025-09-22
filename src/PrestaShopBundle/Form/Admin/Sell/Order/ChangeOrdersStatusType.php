@@ -52,7 +52,7 @@ class ChangeOrdersStatusType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('new_order_status_id', ChoiceType::class, [

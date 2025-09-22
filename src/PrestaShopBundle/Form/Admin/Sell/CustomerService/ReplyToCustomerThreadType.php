@@ -51,7 +51,7 @@ class ReplyToCustomerThreadType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('reply_message', TextareaType::class, [

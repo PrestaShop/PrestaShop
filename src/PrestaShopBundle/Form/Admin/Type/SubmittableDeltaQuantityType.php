@@ -41,7 +41,7 @@ use Symfony\Component\Validator\Constraints\Type;
  */
 class SubmittableDeltaQuantityType extends DeltaQuantityType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
         $builder->add('delta', IntegerType::class, [

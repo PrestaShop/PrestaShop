@@ -50,7 +50,7 @@ class EnrichedChoiceType extends ChoiceType
         $view->vars['flex_direction'] = $options['flex_direction'];
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

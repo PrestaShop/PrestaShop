@@ -35,7 +35,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class ProductCategoryType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('display_name', TextPreviewType::class, [

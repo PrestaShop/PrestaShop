@@ -61,7 +61,7 @@ class BackupOptionsType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $backupAllHelp = $this->trans(
             'Drop existing tables during import.',

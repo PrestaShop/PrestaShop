@@ -93,7 +93,7 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
      *
      * Builds the form.
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('data', 'Symfony\Component\Form\Extension\Core\Type\CollectionType', [
             'entry_type' => 'Symfony\Component\Form\Extension\Core\Type\HiddenType',
@@ -108,7 +108,7 @@ class TypeaheadCustomerCollectionType extends CommonAbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'remote_url' => '',

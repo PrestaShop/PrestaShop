@@ -60,7 +60,7 @@ class EmployeeOptionsType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $optionsLock = [];
         if (!$this->canOptionsBeChanged) {

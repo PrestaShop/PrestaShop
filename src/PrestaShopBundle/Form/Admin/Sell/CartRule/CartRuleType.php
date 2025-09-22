@@ -38,7 +38,7 @@ class CartRuleType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('information', InformationType::class, [
@@ -62,7 +62,7 @@ class CartRuleType extends TranslatorAwareType
         return NavigationTabType::class;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
