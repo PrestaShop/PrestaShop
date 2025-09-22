@@ -672,7 +672,7 @@ CREATE TABLE `PREFIX_customer_message` (
   `message` MEDIUMTEXT NOT NULL,
   `file_name` varchar(18) DEFAULT NULL,
   `ip_address` varchar(16) DEFAULT NULL,
-  `user_agent` varchar(128) DEFAULT NULL,
+  `user_agent` varchar(255) DEFAULT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   `private` TINYINT NOT NULL DEFAULT '0',

@@ -79,7 +79,7 @@ class CustomerMessageCore extends ObjectModel
             'ip_address' => ['type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 16],
             'message' => ['type' => self::TYPE_HTML, 'required' => true, 'size' => FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4, 'validate' => 'isCleanHtml'],
             'file_name' => ['type' => self::TYPE_STRING, 'size' => 18],
-            'user_agent' => ['type' => self::TYPE_STRING, 'size' => 128],
+            'user_agent' => ['type' => self::TYPE_STRING, 'size' => 255],
             'private' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
