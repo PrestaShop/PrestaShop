@@ -169,15 +169,15 @@ class AdminModuleDataProvider implements ModuleInterface
             return false;
         }
 
-        if (in_array($action, ['install', 'upgrade', 'upload'])) {
+        if (in_array($action, [Module::ACTION_INSTALL, Module::ACTION_UPGRADE, 'upload'])) {
             return $this->employee->can('add', 'AdminModulessf');
         }
 
-        if ('delete' === $action) {
+        if (Module::ACTION_DELETE === $action) {
             return $this->employee->can('delete', 'AdminModulessf');
         }
 
-        if ('uninstall' === $action) {
+        if (Module::ACTION_UNINSTALL === $action) {
             return $this->employee->can('delete', 'AdminModulessf') && $this->moduleProvider->can('uninstall', $name);
         }
 

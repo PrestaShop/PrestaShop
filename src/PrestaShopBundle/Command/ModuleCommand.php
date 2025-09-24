@@ -30,6 +30,7 @@ use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
@@ -44,16 +45,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ModuleCommand extends Command
 {
     private $allowedActions = [
-        'install',
-        'uninstall',
-        'enable',
-        'disable',
-        'reset',
-        'upgrade',
-        'configure',
-        'delete',
-        'registerHook',
-        'unregisterHook',
+        Module::ACTION_INSTALL,
+        Module::ACTION_UNINSTALL,
+        Module::ACTION_ENABLE,
+        Module::ACTION_DISABLE,
+        Module::ACTION_RESET,
+        Module::ACTION_UPGRADE,
+        Module::ACTION_CONFIGURE,
+        Module::ACTION_REGISTER_HOOK,
+        Module::ACTION_UNREGISTER_HOOK,
+        Module::ACTION_DELETE,
     ];
 
     /**
