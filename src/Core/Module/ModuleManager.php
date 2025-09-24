@@ -295,28 +295,28 @@ class ModuleManager implements ModuleManagerInterface
     /**
      * Register a module on given hook.
      *
-     * @param string $name The module name
-     * @param array $hooksName The hooks name
+     * @param string $moduleName The module name
+     * @param array $hookNames The hooks name
      *
      * @return bool True for success
      */
     public function registerHook(string $moduleName, array $hookNames)
     {
-        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
-            throw new Exception($this->translator->trans('You are not allowed to register hook on the module %module%.', ['%module%' => $name], 'Admin.Modules.Notification'));
+        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $moduleName)) {
+            throw new Exception($this->translator->trans('You are not allowed to register hook on the module %module%.', ['%module%' => $moduleName], 'Admin.Modules.Notification'));
         }
 
-        $this->assertIsInstalled($name);
+        $this->assertIsInstalled($moduleName);
 
-        $module = $this->moduleRepository->getModule($name);
+        $module = $this->moduleRepository->getModule($moduleName);
 
         try {
             $result = true;
-            foreach ($hooksName as $hookName) {
+            foreach ($hookNames as $hookName) {
                 $result &= $module->onRegisterHook($hookName);
             }
         } catch (Exception $e) {
-            throw new Exception($this->translator->trans('Error when register hook on module %module%. %error_details%', ['%module%' => $name, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
+            throw new Exception($this->translator->trans('Error when register hook on module %module%. %error_details%', ['%module%' => $moduleName, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
         }
 
         return $result;
@@ -325,28 +325,28 @@ class ModuleManager implements ModuleManagerInterface
     /**
      * Unregister a module on given hook.
      *
-     * @param string $name The module name
-     * @param array $hooksName The hooks name
+     * @param string $moduleName The module name
+     * @param array $hookNames The hooks name
      *
      * @return bool True for success
      */
-    public function unregisterHook($name, $hooksName)
+    public function unregisterHook(string $moduleName, array $hookNames)
     {
-        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
-            throw new Exception($this->translator->trans('You are not allowed to unregister hook on the module %module%.', ['%module%' => $name], 'Admin.Modules.Notification'));
+        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $moduleName)) {
+            throw new Exception($this->translator->trans('You are not allowed to unregister hook on the module %module%.', ['%module%' => $moduleName], 'Admin.Modules.Notification'));
         }
 
-        $this->assertIsInstalled($name);
+        $this->assertIsInstalled($moduleName);
 
-        $module = $this->moduleRepository->getModule($name);
+        $module = $this->moduleRepository->getModule($moduleName);
 
         try {
             $result = true;
-            foreach ($hooksName as $hookName) {
+            foreach ($hookNames as $hookName) {
                 $result &= $module->onUnregisterHook($hookName);
             }
         } catch (Exception $e) {
-            throw new Exception($this->translator->trans('Error when unregister hook on module %module% . %error_details%', ['%module%' => $name, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
+            throw new Exception($this->translator->trans('Error when unregister hook on module %module% . %error_details%', ['%module%' => $moduleName, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
         }
 
         return $result;
