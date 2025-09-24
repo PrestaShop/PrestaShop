@@ -300,7 +300,7 @@ class ModuleManager implements ModuleManagerInterface
      *
      * @return bool True for success
      */
-    public function registerHook($name, $hooksName)
+    public function registerHook(string $moduleName, array $hookNames)
     {
         if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception($this->translator->trans('You are not allowed to register hook on the module %module%.', ['%module%' => $name], 'Admin.Modules.Notification'));
