@@ -112,8 +112,8 @@
   "dependencies": {
     "@faker-js/faker": "^9.9.0",
     "@prestashop-core/ui-testing": "https://github.com/PrestaShop/ui-testing-library#main",
-    "chai": "^4.5.0",
-    "chai-string": "^1.6.0",
+    "chai": "^6.0.1",
+    "chai-string": "^2.0.0",
     "dotenv": "^17.2.2",
     "mocha": "^11.7.2",
     "mochawesome": "^7.1.4",
