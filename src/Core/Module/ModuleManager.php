@@ -302,11 +302,11 @@ class ModuleManager implements ModuleManagerInterface
      */
     public function registerHook($name, $hooksName)
     {
-        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
+        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception($this->translator->trans('You are not allowed to register hook on the module %module%.', ['%module%' => $name], 'Admin.Modules.Notification'));
         }
 
-        $this->checkIsInstalled($name);
+        $this->assertIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
 
@@ -318,8 +318,6 @@ class ModuleManager implements ModuleManagerInterface
         } catch (Exception $e) {
             throw new Exception($this->translator->trans('Error when register hook on module %module%. %error_details%', ['%module%' => $name, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
         }
-
-        $this->checkAndClearCache($result);
 
         return $result;
     }
@@ -334,11 +332,11 @@ class ModuleManager implements ModuleManagerInterface
      */
     public function unregisterHook($name, $hooksName)
     {
-        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
+        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception($this->translator->trans('You are not allowed to unregister hook on the module %module%.', ['%module%' => $name], 'Admin.Modules.Notification'));
         }
 
-        $this->checkIsInstalled($name);
+        $this->assertIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
 
@@ -350,8 +348,6 @@ class ModuleManager implements ModuleManagerInterface
         } catch (Exception $e) {
             throw new Exception($this->translator->trans('Error when unregister hook on module %module% . %error_details%', ['%module%' => $name, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
         }
-
-        $this->checkAndClearCache($result);
 
         return $result;
     }
