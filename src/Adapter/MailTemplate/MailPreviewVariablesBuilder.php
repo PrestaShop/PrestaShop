@@ -150,7 +150,7 @@ final class MailPreviewVariablesBuilder
 
         if ($mailLayout->getModuleName() !== '') {
             $moduleTemplateVars = Hook::exec(
-                'actionBuildTemplateVariables',
+                'actionMailPreviewBuildTemplateVariables',
                 [
                     'templateVars' => $templateVars,
                 ],
