@@ -45,6 +45,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
      */
     private const CONFIGURATION_FIELDS = [
         'friendly_url',
+        'friendly_url_identifier',
         'default_language_url_prefix',
         'accented_url',
         'canonical_url_redirection',
@@ -88,6 +89,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
 
         return [
             'friendly_url' => (bool) $this->configuration->get('PS_REWRITING_SETTINGS', false, $shopConstraint),
+            'friendly_url_identifier' => $this->configuration->get('PS_REWRITING_IDENTIFIER', 'id', $shopConstraint),
             'default_language_url_prefix' => (bool) $this->configuration->get('PS_DEFAULT_LANGUAGE_URL_PREFIX', false, $shopConstraint),
             'accented_url' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL', false, $shopConstraint),
             'canonical_url_redirection' => (int) $this->configuration->get('PS_CANONICAL_REDIRECT', 0, $shopConstraint),
@@ -107,6 +109,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
             $shopConstraint = $this->getShopConstraint();
 
             $this->updateConfigurationValue('PS_REWRITING_SETTINGS', 'friendly_url', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_REWRITING_IDENTIFIER', 'friendly_url_identifier', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_DEFAULT_LANGUAGE_URL_PREFIX', 'default_language_url_prefix', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_ALLOW_ACCENTED_CHARS_URL', 'accented_url', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_CANONICAL_REDIRECT', 'canonical_url_redirection', $configuration, $shopConstraint);
@@ -154,6 +157,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
             ->setAllowedTypes('friendly_url', 'bool')
+            ->setAllowedTypes('friendly_url_identifier', 'string')
             ->setAllowedTypes('default_language_url_prefix', 'bool')
             ->setAllowedTypes('accented_url', 'bool')
             ->setAllowedTypes('canonical_url_redirection', 'int')
