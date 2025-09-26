@@ -42,6 +42,7 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
 
     private const VALID_CONFIGURATION = [
         'friendly_url' => true,
+        'friendly_url_identifier' => 'id',
         'default_language_url_prefix' => true,
         'accented_url' => true,
         'canonical_url_redirection' => 2,
@@ -117,6 +118,7 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
             ->willReturnMap(
                 [
                     ['PS_REWRITING_SETTINGS', false, $shopConstraint, true],
+                    ['PS_REWRITING_IDENTIFIER', 'id', $shopConstraint, 'id'],
                     ['PS_DEFAULT_LANGUAGE_URL_PREFIX', false, $shopConstraint, true],
                     ['PS_ALLOW_ACCENTED_CHARS_URL', false, $shopConstraint, true],
                     ['PS_CANONICAL_REDIRECT', 0, $shopConstraint, 2],
@@ -157,6 +159,7 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
         return [
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['friendly_url' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['friendly_url_identifier' => 123])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['default_language_url_prefix' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['accented_url' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['canonical_url_redirection' => 'wrong_type'])],
