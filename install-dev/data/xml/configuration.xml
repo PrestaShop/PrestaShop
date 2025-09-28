@@ -876,6 +876,18 @@ Country</value>
     <configuration id="PS_SECURITY_TOKEN" name="PS_SECURITY_TOKEN">
       <value>1</value>
     </configuration>
+    <configuration id="PS_SECURITY_ADMIN_LOGIN_THROTTLING_ENABLED" name="PS_SECURITY_ADMIN_LOGIN_THROTTLING_ENABLED">
+      <value>1</value>
+    </configuration>
+    <configuration id="PS_SECURITY_ADMIN_LOGIN_THROTTLING_MAX_ATTEMPTS" name="PS_SECURITY_ADMIN_LOGIN_THROTTLING_MAX_ATTEMPTS">
+      <value>5</value>
+    </configuration>
+    <configuration id="PS_SECURITY_ADMIN_LOGIN_THROTTLING_INTERVAL" name="PS_SECURITY_ADMIN_LOGIN_THROTTLING_INTERVAL">
+      <value>15</value>
+    </configuration>
+    <configuration id="PS_SECURITY_ADMIN_LOGIN_THROTTLING_STORAGE" name="PS_SECURITY_ADMIN_LOGIN_THROTTLING_STORAGE">
+      <value/>
+    </configuration>
     <configuration id="PS_SECURITY_PASSWORD_POLICY_MAXIMUM_LENGTH" name="PS_SECURITY_PASSWORD_POLICY_MAXIMUM_LENGTH">
       <value>72</value>
     </configuration>

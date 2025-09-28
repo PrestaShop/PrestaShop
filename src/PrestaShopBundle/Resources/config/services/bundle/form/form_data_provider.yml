@@ -301,6 +301,11 @@ services:
     arguments:
       - '@prestashop.adapter.security.general.configuration'
 
+  prestashop.adapter.security.admin_login_throttling.form_provider:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\FormDataProvider'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Security\AdminLoginFormThrottlingConfiguration'
+
   prestashop.adapter.security.password_policy.form_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\FormDataProvider'
     arguments:

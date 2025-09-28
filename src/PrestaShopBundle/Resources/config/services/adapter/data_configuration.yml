@@ -301,6 +301,11 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
 
+  PrestaShop\PrestaShop\Core\Security\AdminLoginFormThrottlingConfiguration:
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@service_container'
+
   prestashop.adapter.security.password_policy.configuration:
     class: 'PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration'
     arguments:

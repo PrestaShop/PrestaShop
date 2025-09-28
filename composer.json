@@ -163,6 +163,7 @@
         "symfony/property-info": "~6.4.0",
         "symfony/proxy-manager-bridge": "~6.4.0",
         "symfony/psr-http-message-bridge": "~6.4.0",
+        "symfony/rate-limiter": "~6.4.0",
         "symfony/routing": "~6.4.0",
         "symfony/security-bundle": "~6.4.0",
         "symfony/security-core": "~6.4.0",

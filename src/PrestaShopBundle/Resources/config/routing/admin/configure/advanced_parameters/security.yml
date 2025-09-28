@@ -15,6 +15,14 @@ admin_security_general_save:
     _legacy_controller: AdminSecurity
     _legacy_link: AdminSecurity
 
+admin_security_admin_login_throttling_save:
+  path: /admin-throttling
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController::processAdminLoginThrottlingFormAction'
+    _legacy_controller: AdminSecurity
+    _legacy_link: AdminSecurity
+
 admin_security_password_policy_save:
   path: /password-policy
   methods: [ POST ]

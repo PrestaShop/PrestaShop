@@ -72,10 +72,13 @@ class SecurityController extends PrestaShopAdminController
         Request $request,
         #[Autowire(service: 'prestashop.adapter.security.general.form_handler')]
         FormHandlerInterface $generalFormHandler,
+        #[Autowire(service: 'prestashop.adapter.security.admin_login_throttling.form_handler')]
+        FormHandlerInterface $adminLoginThrottlingFormHandler,
         #[Autowire(service: 'prestashop.adapter.security.password_policy.form_handler')]
         FormHandlerInterface $passwordPolicyFormHandler,
     ): Response {
         $generalForm = $generalFormHandler->getForm();
+        $adminLoginThrottlingForm = $adminLoginThrottlingFormHandler->getForm();
         $passwordPolicyForm = $passwordPolicyFormHandler->getForm();
 
         return $this->render(
@@ -86,6 +89,7 @@ class SecurityController extends PrestaShopAdminController
                 'layoutTitle' => $this->trans('Security', [], 'Admin.Navigation.Menu'),
                 'passwordPolicyForm' => $passwordPolicyForm->createView(),
                 'generalForm' => $generalForm->createView(),
+                'adminLoginThrottlingForm' => $adminLoginThrottlingForm->createView(),
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
                     [],
@@ -114,6 +118,22 @@ class SecurityController extends PrestaShopAdminController
             $request,
             $generalFormHandler,
             'actionAdminSecurityControllerPostProcessGeneralBefore'
+        );
+    }
+
+    /**
+     * Process the Security admin throttling configuration form.
+     */
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_security')]
+    public function processAdminLoginThrottlingFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.security.admin_login_throttling.form_handler')]
+        FormHandlerInterface $adminLoginThrottlingFormHandler,
+    ): RedirectResponse {
+        return $this->processForm(
+            $request,
+            $adminLoginThrottlingFormHandler,
+            'actionAdminSecurityControllerPostProcessAdminThrottlingBefore'
         );
     }
 

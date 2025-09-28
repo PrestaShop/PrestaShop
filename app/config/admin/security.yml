@@ -27,6 +27,7 @@ security:
     main:
       lazy: true
       provider: admin
+      login_throttling: '%prestashop.security.login_throttling%'
       form_login:
         login_path: admin_login
         check_path: admin_login
