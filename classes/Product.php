@@ -7263,8 +7263,10 @@ class ProductCore extends ObjectModel
             'WHERE `id_category` = ' . (int) $this->id_category_default . '  ' .
             'ORDER BY `position`'
         );
+        
+        $sizeResult = count($result);
 
-        if ($position > count($result)) {
+        if ($position > $sizeResult && $sizeResult > 0) {
             WebserviceRequest::getInstance()->setError(
                 500,
                 $this->trans(

@@ -384,6 +384,10 @@ class CustomerCore extends ObjectModel
      */
     public function delete()
     {
+        if (empty((int) $this->id)) {
+            return false;
+        }
+
         if (!count(Order::getCustomerOrders((int) $this->id))) {
             $addresses = $this->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
             foreach ($addresses as $address) {

@@ -60,7 +60,7 @@ runs:
           mkcert -install
 
     # Docker to create the shop
-    - name: Build and Run shop with docker
+    - name: Build and Run shop with docker (wait for ${{ env.URL_PING }})
       shell: bash
       env:
         DISABLE_MAKE: ${{ (inputs.DISABLE_MAKE == 'true') && '1' || '0' }}

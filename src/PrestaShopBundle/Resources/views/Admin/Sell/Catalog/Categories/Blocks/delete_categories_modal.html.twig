@@ -37,7 +37,6 @@
   {% block content %}
     <div class="modal-body">
       {{ form_start(deleteCategoriesForm, {'action': path('admin_categories_delete')}) }}
-
       <div class="form-group mb-0">
         {{ form_widget(deleteCategoriesForm.delete_mode) }}
       </div>
@@ -50,6 +49,7 @@
       <div class="d-none">
         {{ form_widget(deleteCategoriesForm.categories_to_delete_parent) }}
       </div>
+      {{ form_end(deleteCategoriesForm) }}
     </div>
   {% endblock %}
 {% endembed %}

@@ -76,6 +76,7 @@ class ThemeExporter
         $this->copyTheme($theme->getDirectory(), $cacheDir);
         $this->copyModuleDependencies((array) $theme->get('dependencies.modules'), $cacheDir);
         $this->copyTranslations($theme, $cacheDir);
+        $this->protectDirectory($cacheDir);
 
         $finalFile = $this->configuration->get('_PS_ALL_THEMES_DIR_') . DIRECTORY_SEPARATOR . $theme->getName() . '.zip';
         $this->createZip($cacheDir, $finalFile);
@@ -89,7 +90,7 @@ class ThemeExporter
      * @param string $themeDir
      * @param string $cacheDir
      */
-    private function copyTheme($themeDir, $cacheDir)
+    private function copyTheme(string $themeDir, string $cacheDir): void
     {
         $fileList = Finder::create()
             ->files()
@@ -152,7 +153,7 @@ class ThemeExporter
      *
      * @return bool
      */
-    private function createZip($sourceDir, $destinationFileName)
+    private function createZip(string $sourceDir, string $destinationFileName): bool
     {
         $zip = new ZipArchive();
         $zip->open($destinationFileName, ZipArchive::CREATE);
@@ -167,5 +168,22 @@ class ThemeExporter
         }
 
         return $zip->close();
+    }
+
+    protected function protectDirectory(string $cacheDir): void
+    {
+        $dirs = Finder::create()
+            ->directories()
+            ->in($cacheDir)
+            ->exclude(['node_modules']);
+
+        $fs = new Filesystem();
+        foreach ($dirs as $dir) {
+            // Copy file
+            $fs->copy(
+                $this->configuration->get('_PS_ALL_THEMES_DIR_') . DIRECTORY_SEPARATOR . 'index.php',
+                $dir->getRealPath() . DIRECTORY_SEPARATOR . 'index.php'
+            );
+        }
     }
 }

@@ -76,7 +76,16 @@ export default class ProductPartialUpdater {
    */
   private watch(): void {
     // Avoid submitting form when pressing Enter
-    this.$productForm.keypress((e) => e.which !== 13);
+    this.$productForm.keypress((event) => {
+      if (event.which === 13) {
+        const target = (event.target as HTMLElement);
+
+        // Allow Enter in textareas and contenteditable elements
+        if (target.tagName.toLocaleLowerCase() !== 'textarea' && !target.isContentEditable) {
+          event.preventDefault(); // Prevent form submit
+        }
+      }
+    });
     this.$productFormSubmitButton.prop('disabled', true);
     this.initialData = this.getFormDataAsObject();
     this.$productForm.submit(() => this.updatePartialForm());

@@ -1341,19 +1341,11 @@ class FrontControllerCore extends Controller
             return false;
         }
 
-        // Initialize this data into cookie, FrontController will use it later
-        $customer->logged = true;
-        $this->context->customer = $customer;
-        $this->context->cookie->id_customer = (int) $customer->id;
-        $this->context->cookie->customer_lastname = $customer->lastname;
-        $this->context->cookie->customer_firstname = $customer->firstname;
-        $this->context->cookie->logged = true;
         $this->context->cookie->check_cgv = 1;
-        $this->context->cookie->is_guest = $customer->isGuest();
-        $this->context->cookie->passwd = $customer->passwd;
-        $this->context->cookie->email = $customer->email;
-        $this->context->cookie->id_guest = (int) $cart->id_guest;
         $this->context->cookie->id_cart = $id_cart;
+
+        // Restore customer session and authentication state (cookie + CustomerSession)
+        $this->context->updateCustomer($customer);
 
         // Return the value for backward compatibility
         return $id_cart;

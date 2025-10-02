@@ -989,6 +989,22 @@ class LinkCore
      */
     public function getImageLink($name, $ids, $type = null, string $extension = 'jpg')
     {
+        $overrideUrl = Hook::exec(
+            'overrideImageLink',
+            [
+                'name' => $name,
+                'ids' => $ids,
+                'type' => $type,
+                'extension' => $extension,
+            ],
+            null,
+            true
+        );
+
+        if (!empty($overrideUrl)) {
+            return $overrideUrl;
+        }
+
         $notDefault = false;
         $psLegacyImages = Configuration::get('PS_LEGACY_IMAGES');
 
@@ -1014,7 +1030,24 @@ class LinkCore
             }
         }
 
-        return $this->protocol_content . Tools::getMediaServer($uriPath) . $uriPath;
+        $mediaServer = Tools::getMediaServer($uriPath);
+        $url = $this->protocol_content . $mediaServer . $uriPath;
+
+        Hook::exec(
+            'adaptImageLink',
+            [
+                'protocol_content' => $this->protocol_content,
+                'media_server' => $mediaServer,
+                'uri_path' => $uriPath,
+                'url' => &$url,
+                'name' => $name,
+                'ids' => $ids,
+                'type' => $type,
+                'extension' => $extension,
+            ]
+        );
+
+        return $url;
     }
 
     /**

@@ -158,13 +158,16 @@ class AdminLoginControllerCore extends AdminController
         }
 
         // For reset password feature
-        if ($reset_token = Tools::getValue('reset_token')) {
+        $reset_token = Tools::getValue('reset_token');
+        $id_employee = Tools::getValue('id_employee');
+        if ($reset_token !== false && $id_employee !== false) {
             $this->context->smarty->assign('reset_token', $reset_token);
-        }
-        if ($id_employee = Tools::getValue('id_employee')) {
             $this->context->smarty->assign('id_employee', $id_employee);
+
             $employee = new Employee($id_employee);
-            if (Validate::isLoadedObject($employee)) {
+            $valid_reset_token = $employee->getValidResetPasswordToken();
+
+            if ($valid_reset_token !== false && $valid_reset_token === $reset_token) {
                 $this->context->smarty->assign('reset_email', $employee->email);
             }
         }

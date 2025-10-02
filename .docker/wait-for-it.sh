@@ -32,7 +32,12 @@ wait_for()
     start_ts=$(date +%s)
     while :
     do
-        if [[ $ISBUSY -eq 1 ]]; then
+        # Special check for mysql
+        if [[ "$PORT" = "3306" ]]; then
+            echoerr "$CMD_NAME: Fetching status from docker mysql"
+            mysql -h$HOST --ssl=0 -uroot -pprestashop -e "status"
+            result=$?
+        elif [[ $ISBUSY -eq 1 ]]; then
             nc -z $HOST $PORT
             result=$?
         else

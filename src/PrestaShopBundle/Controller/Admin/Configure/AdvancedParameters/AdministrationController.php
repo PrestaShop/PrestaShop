@@ -41,6 +41,7 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Tools;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Administration" page display.
@@ -251,6 +252,16 @@ class AdministrationController extends FrameworkBundleAdminController
                 return $this->trans(
                     'The SameSite=None attribute is only available in secure mode.',
                     'Admin.Advparameters.Notification'
+                );
+            case FormDataProvider::ERROR_MAX_SIZE_ATTACHED_FILES:
+                return $this->trans(
+                    '%s is invalid. Please enter an integer between %s and %s.',
+                    'Admin.Advparameters.Notification',
+                    [
+                        $this->getFieldLabel($error->getFieldName()),
+                        0,
+                        (Tools::getMaxUploadSize() / 1048576),
+                    ]
                 );
         }
 

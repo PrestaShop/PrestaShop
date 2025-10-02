@@ -34,6 +34,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tools;
 
 class UploadQuotaType extends TranslatorAwareType
 {
@@ -71,7 +72,7 @@ class UploadQuotaType extends TranslatorAwareType
                         'Set the maximum size allowed for attachment files (in megabytes). This value has to be lower than or equal to the maximum file upload allotted by your server (currently: %size% MB).',
                         'Admin.Advparameters.Help',
                         [
-                            '%size%' => $configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE'),
+                            '%size%' => round(Tools::getMaxUploadSize() / 1048576)
                         ]
                     ),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),

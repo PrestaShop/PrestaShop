@@ -1570,7 +1570,7 @@ services:
     autoconfigure: true
     arguments:
       $locales: "@=service('prestashop.adapter.legacy.context').getLanguages()"
-      $maxFileSizeInMegabytes: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
+      $maxFileSizeInMegabytes: "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LIMIT_UPLOAD_FILE_VALUE')"
       $router: "@router"
       $virtualProductFileListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\VirtualProductFileListener'
     tags:

@@ -48,7 +48,7 @@
         <tr>
           <td>{$data['id']}</td>
           <td class="pre" style="max-width: 60vw"><pre>{preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false))}</pre></td>
-          <td data-value="{$data['time']}">
+          <td data-value="{sprintf('%01.6f', $data['time'])}">
             {load_time data=($data['time'])}
           </td>
 

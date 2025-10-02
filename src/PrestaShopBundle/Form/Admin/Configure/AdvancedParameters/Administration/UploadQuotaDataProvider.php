@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
+use Tools;
 
 /**
  * This class is responsible of managing the data manipulated using Upload Quota form
@@ -80,8 +81,8 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
 
         if (isset($data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES])) {
             $maxSizeAttachedFile = $data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES];
-            if (!is_numeric($maxSizeAttachedFile) || $maxSizeAttachedFile < 0) {
-                $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
+            if (!is_numeric($maxSizeAttachedFile) || $maxSizeAttachedFile < 0 || Tools::convertBytes($maxSizeAttachedFile . 'm') > Tools::getMaxUploadSize()) {
+                $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_MAX_SIZE_ATTACHED_FILES, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
             }
         }
 

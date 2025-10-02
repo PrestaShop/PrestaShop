@@ -35,77 +35,79 @@
 	<tbody>
 		<!-- PRODUCTS -->
 		{foreach $order_details as $order_detail}
-			{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
-			<tr class="product {$bgcolor_class}">
+			{if $order_detail.product_quantity-$order_detail.product_quantity_refunded > 0}
+				{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
+				<tr class="product {$bgcolor_class}">
 
-				<td class="product left">
-					{if empty($order_detail.product_reference)}
-						---
-					{else}
-						{$order_detail.product_reference}
-					{/if}
-				</td>
-				<td class="product left">
-					{if $display_product_images}
-						<table width="100%">
-							<tr>
-								<td width="15%">
-									{if isset($order_detail.image) && $order_detail.image->id}
-										{$order_detail.image_tag}
-									{/if}
-								</td>
-								<td width="5%">&nbsp;</td>
-								<td width="80%">
-									{$order_detail.product_name}
-								</td>
-							</tr>
-						</table>
-					{else}
-						{$order_detail.product_name}
-					{/if}
-				</td>
-				<td class="product center">
-					{$order_detail.product_quantity}
-				</td>
+					<td class="product left">
+						{if empty($order_detail.product_reference)}
+							---
+						{else}
+							{$order_detail.product_reference}
+						{/if}
+					</td>
+					<td class="product left">
+						{if $display_product_images}
+							<table width="100%">
+								<tr>
+									<td width="15%">
+										{if isset($order_detail.image) && $order_detail.image->id}
+											{$order_detail.image_tag}
+										{/if}
+									</td>
+									<td width="5%">&nbsp;</td>
+									<td width="80%">
+										{$order_detail.product_name}
+									</td>
+								</tr>
+							</table>
+						{else}
+							{$order_detail.product_name}
+						{/if}
+					</td>
+					<td class="product center">
+						{$order_detail.product_quantity-$order_detail.product_quantity_refunded}
+					</td>
 
-			</tr>
+				</tr>
 
-			{foreach $order_detail.customizedDatas as $customizationPerAddress}
-				{foreach $customizationPerAddress as $customizationId => $customization}
-					<tr class="customization_data {$bgcolor_class}">
-						<td class="center"> &nbsp;</td>
+				{foreach $order_detail.customizedDatas as $customizationPerAddress}
+					{foreach $customizationPerAddress as $customizationId => $customization}
+						<tr class="customization_data {$bgcolor_class}">
+							<td class="center"> &nbsp;</td>
 
-						<td>
-							{if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
-								<table style="width: 100%;">
-									{foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
+							<td>
+								{if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
+									<table style="width: 100%;">
+										{foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
+											<tr>
+												<td style="width: 30%;">
+													{$customization_infos.name|string_format:{l s='%s:' d='Shop.Pdf' pdf='true'}}
+												</td>
+												<td>{$customization_infos.value}</td>
+											</tr>
+										{/foreach}
+									</table>
+								{/if}
+
+								{if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
+									<table style="width: 100%;">
 										<tr>
-											<td style="width: 30%;">
-												{$customization_infos.name|string_format:{l s='%s:' d='Shop.Pdf' pdf='true'}}
-											</td>
-											<td>{$customization_infos.value}</td>
+											<td style="width: 30%;">{l s='image(s):' d='Shop.Pdf' pdf='true'}</td>
+											<td>{count($customization.datas[Product::CUSTOMIZE_FILE])}</td>
 										</tr>
-									{/foreach}
-								</table>
-							{/if}
+									</table>
+								{/if}
+							</td>
 
-							{if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
-								<table style="width: 100%;">
-									<tr>
-										<td style="width: 30%;">{l s='image(s):' d='Shop.Pdf' pdf='true'}</td>
-										<td>{count($customization.datas[Product::CUSTOMIZE_FILE])}</td>
-									</tr>
-								</table>
-							{/if}
-						</td>
+							<td class="center">
+								({if $customization.quantity == 0}1{else}{$customization.quantity-$order_detail.product_quantity_refunded}{/if})
+							</td>
 
-						<td class="center">
-							({if $customization.quantity == 0}1{else}{$customization.quantity}{/if})
-						</td>
-
-					</tr>
+						</tr>
+					{/foreach}
 				{/foreach}
-			{/foreach}
+			{/if}
 
 
 
