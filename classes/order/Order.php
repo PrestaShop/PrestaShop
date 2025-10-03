@@ -1830,7 +1830,7 @@ class OrderCore extends ObjectModel
         $order_payment->order_reference = $this->reference;
         $order_payment->id_currency = ($currency ? $currency->id : $this->id_currency);
         // we kept the currency rate for historization reasons
-        $order_payment->conversion_rate = ($currency ? $currency->conversion_rate : 1);
+        $order_payment->conversion_rate = ($currency ? $currency->conversion_rate : $this->conversion_rate);
         // if payment_method is define, we used this
         $order_payment->payment_method = ($payment_method ? $payment_method : $this->payment);
         $order_payment->transaction_id = $payment_transaction_id;
