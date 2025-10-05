@@ -134,6 +134,8 @@ class TypedRegexValidator extends ConstraintValidator
                 return IsoCode::PATTERN;
             case TypedRegex::TYPE_LANGUAGE_CODE:
                 return '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/';
+            case TypedRegex::TYPE_LOCALE:
+                return '/^[a-z]{2}-[A-Z]{2}$/';
             case TypedRegex::TYPE_CURRENCY_ISO_CODE:
                 return AlphaIsoCode::PATTERN;
             case TypedRegex::TYPE_FILE_NAME:

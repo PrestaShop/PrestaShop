@@ -124,9 +124,8 @@ class LanguageType extends TranslatorAwareType
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
-                    new Regex([
-                        'pattern' => '/^[a-z]{2}-[A-Z]{2}$/',
-                        'message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
+                    new TypedRegex([
+                        'type' => 'language_locale'
                     ]),
                 ],
             ])

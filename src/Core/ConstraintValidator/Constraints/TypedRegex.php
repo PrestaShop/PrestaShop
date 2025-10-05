@@ -49,6 +49,7 @@ class TypedRegex extends Constraint
     public const TYPE_MESSAGE = 'message';
     public const TYPE_LANGUAGE_ISO_CODE = 'language_iso_code';
     public const TYPE_LANGUAGE_CODE = 'language_code';
+    public const TYPE_LOCALE = 'language_locale';
     public const TYPE_CURRENCY_ISO_CODE = 'currency_iso_code';
     public const TYPE_FILE_NAME = 'file_name';
     public const TYPE_DNI_LITE = 'dni_lite';

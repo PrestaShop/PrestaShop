@@ -321,7 +321,7 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get an error that a language with this ISO code already exists
+     * @Then I should get an error that a language with this Locale already exists
      */
     public function checkDuplicateLocale(): void
     {
