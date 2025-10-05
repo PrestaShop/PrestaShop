@@ -207,7 +207,7 @@ Feature: Language
     And I add a new language "french2" with the following details:
       | name            | Français (French) |
       | isoCode         | ca                |
-      | tagIETF         | ca                |
+      | tagIETF         | ca-ES             |
       | locale          | fr-FR             |
       | shortDateFormat | d/m/Y             |
       | fullDateFormat  | d/m/Y H:i:s       |
