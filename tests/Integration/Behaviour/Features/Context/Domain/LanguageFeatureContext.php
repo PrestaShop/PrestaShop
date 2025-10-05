@@ -74,6 +74,7 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
                 $data['name'],
                 $data['isoCode'],
                 $data['tagIETF'],
+                $data['locale'],
                 $data['shortDateFormat'],
                 $data['fullDateFormat'],
                 _PS_TMP_IMG_DIR_ . $data['isoCode'] . '.jpg',
@@ -109,6 +110,9 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['tagIETF'])) {
             $editableLanguage->setTagIETF($data['tagIETF']);
+        }
+        if (isset($data['locale'])) {
+            $editableLanguage->setLocale($data['locale']);
         }
         if (isset($data['shortDateFormat'])) {
             $editableLanguage->setShortDateFormat($data['shortDateFormat']);
@@ -313,6 +317,17 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(
             LanguageConstraintException::class,
             LanguageConstraintException::DUPLICATE_ISO_CODE
+        );
+    }
+
+    /**
+     * @Then I should get an error that a language with this ISO code already exists
+     */
+    public function checkDuplicateLocale(): void
+    {
+        $this->assertLastErrorIs(
+            LanguageConstraintException::class,
+            LanguageConstraintException::DUPLICATE_LOCALE
         );
     }
 

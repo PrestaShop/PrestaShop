@@ -9,6 +9,7 @@ Feature: Language
       | name            | Français (French) |
       | isoCode         | fr                |
       | tagIETF         | fr                |
+      | locale          | fr-FR             |
       | shortDateFormat | d/m/Y             |
       | fullDateFormat  | d/m/Y H:i:s       |
       | isRtl           | 0                 |
@@ -29,6 +30,7 @@ Feature: Language
       | name            | English GB (English) |
       | isoCode         | gb                   |
       | tagIETF         | en-gb                |
+      | locale          | en-GB                |
       | shortDateFormat | Y-m-d                |
       | fullDateFormat  | Y-m-d H:i:s          |
       | isRtl           | 0                    |
@@ -54,6 +56,7 @@ Feature: Language
       | name            | Español AR (Spanish) |
       | isoCode         | ag                   |
       | tagIETF         | es-ar                |
+      | locale          | es-AR                |
       | shortDateFormat | Y-m-d                |
       | fullDateFormat  | Y-m-d H:i:s          |
       | isRtl           | 0                    |
@@ -78,6 +81,7 @@ Feature: Language
     When I update the language "french" with the following details:
       | name            | Language    |
       | tagIETF         | it          |
+      | locale          | fr-FR       |
       | shortDateFormat | Y-m-d       |
       | fullDateFormat  | Y-m-d H:i:s |
       | isRtl           | 0           |
@@ -185,6 +189,7 @@ Feature: Language
       | name            | Français (French) |
       | isoCode         | fr                |
       | tagIETF         | fr                |
+      | locale          | fr-fr             |
       | shortDateFormat | d/m/Y             |
       | fullDateFormat  | d/m/Y H:i:s       |
       | isRtl           | 0                 |
@@ -196,3 +201,22 @@ Feature: Language
       | name    | Language |
       | isoCode | gb       |
     Then I should get an error that a language with this ISO code already exists
+
+  Scenario: Adding a language with a Locale already in database is forbidden
+    # Adding new language with Locale already existing is forbidden
+    And I add a new language "french2" with the following details:
+      | name            | Français (French) |
+      | isoCode         | fr                |
+      | tagIETF         | fr                |
+      | locale          | fr-FR             |
+      | shortDateFormat | d/m/Y             |
+      | fullDateFormat  | d/m/Y H:i:s       |
+      | isRtl           | 0                 |
+      | isActive        | 1                 |
+      | shop            | shop1             |
+    Then I should get an error that a language with this Locale already exists
+    # Updating a language with Locale already existing is also forbidden
+    When I update the language "french" with the following details:
+      | name    | Language |
+      | locale  | gb       |
+    Then I should get an error that a language with this Locale already exists

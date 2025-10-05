@@ -49,6 +49,7 @@ trait LanguageTrait
             $locale,
             $isoCode,
             $locale,
+            $locale,
             'd/m/Y',
             'd/m/Y H:i:s',
             $tmpFlagImage,
