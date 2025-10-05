@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Language\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\Locale;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF;
 
 /**
@@ -48,6 +49,11 @@ class AddLanguageCommand
      * @var TagIETF IETF language tag, e.g. en-US
      */
     private $tagIETF;
+
+    /**
+     * @var Locale IETF language tag, e.g. en-US
+     */
+    private $locale;
 
     /**
      * @var string
@@ -90,6 +96,7 @@ class AddLanguageCommand
      * @param string $name
      * @param string $isoCode
      * @param string $tagIETF
+     * @param string $locale
      * @param string $shortDateFormat
      * @param string $fullDateFormat
      * @param string $flagImagePath
@@ -102,6 +109,7 @@ class AddLanguageCommand
         $name,
         $isoCode,
         $tagIETF,
+        $locale,
         $shortDateFormat,
         $fullDateFormat,
         $flagImagePath,
@@ -113,6 +121,7 @@ class AddLanguageCommand
         $this->name = $name;
         $this->isoCode = new IsoCode($isoCode);
         $this->tagIETF = new TagIETF($tagIETF);
+        $this->locale = new Locale($locale);
         $this->shortDateFormat = $shortDateFormat;
         $this->fullDateFormat = $fullDateFormat;
         $this->flagImagePath = $flagImagePath;
@@ -144,6 +153,14 @@ class AddLanguageCommand
     public function getTagIETF()
     {
         return $this->tagIETF;
+    }
+
+    /**
+     * @return Locale
+     */
+    public function getLocale()
+    {
+        return $this->locale;
     }
 
     /**

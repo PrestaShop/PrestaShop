@@ -24,40 +24,54 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Language\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Language\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 
 /**
- * Is thrown when invalid data is supplied for language
+ * Stores Locale tag value (e.g. en-US)
  */
-class LanguageConstraintException extends LanguageException
+class Locale
 {
     /**
-     * @var int Code is used when invalid language IETF tag is encountered
+     * Regexp to validate Locale
      */
-    public const INVALID_IETF_TAG = 1;
+    public const LOCALE_REGEXP = '^[a-z]{2}-[A-Z]{2}$';
 
     /**
-     * @var int Code is used when invalid language ISO code in encountered
+     * @var string
      */
-    public const INVALID_ISO_CODE = 2;
+    private $locale;
 
     /**
-     * @var int Code is used when duplicate language ISO code in encountered when creating new language
+     * @param string $locale
+     *
+     * @throws LanguageConstraintException
      */
-    public const DUPLICATE_ISO_CODE = 3;
+    public function __construct($locale)
+    {
+        $this->assertIsLocale($locale);
+
+        $this->locale = $locale;
+    }
 
     /**
-     * @var int Code is used when empty data is used when deleting languages
+     * @return string
      */
-    public const EMPTY_BULK_DELETE = 4;
+    public function getValue()
+    {
+        return $this->locale;
+    }
 
     /**
-     * @var int Code is used when invalid language locale is encountered
+     * @param string $locale
+     *
+     * @throws LanguageConstraintException
      */
-    public const INVALID_LOCALE = 5;
-
-    /**
-     * @var int Code is used when duplicate language Locale in encountered when creating new language
-     */
-    public const DUPLICATE_LOCALE = 6;
+    private function assertIsLocale($locale)
+    {
+        if (!is_string($locale) || empty($locale) || !preg_match(sprintf('/%s/', static::LOCALE_REGEXP), $locale)) {
+            throw new LanguageConstraintException(sprintf('Invalid Locale %s provided', var_export($locale, true)), LanguageConstraintException::INVALID_LOCALE);
+        }
+    }
 }

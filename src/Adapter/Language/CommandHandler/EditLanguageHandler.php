@@ -74,6 +74,8 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
         $language = $this->getLegacyLanguageObject($command->getLanguageId());
 
         $this->assertLanguageWithIsoCodeDoesNotExist($language, $command);
+        $this->assertLanguageWithLocaleDoesNotExist($language, $command);
+
         $this->assertDefaultLanguageIsNotDisabled($command);
 
         $this->updateEmployeeLanguage($command);
@@ -106,6 +108,10 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
 
         if (null !== $command->getTagIETF()) {
             $language->language_code = $command->getTagIETF()->getValue();
+        }
+
+        if (null !== $command->getLocale()) {
+            $language->locale = $command->getLocale()->getValue();
         }
 
         if (null !== $command->getShortDateFormat()) {
@@ -255,6 +261,23 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
 
         if ($language->iso_code !== $command->getIsoCode()->getValue() && Language::getIdByIso($command->getIsoCode()->getValue())) {
             throw new LanguageConstraintException(sprintf('Language with ISO code "%s" already exists', $command->getIsoCode()->getValue()), LanguageConstraintException::DUPLICATE_ISO_CODE);
+        }
+    }
+
+    /**
+     * Assert that language with updated Locale does not exist
+     *
+     * @param Language $language
+     * @param EditLanguageCommand $command
+     */
+    private function assertLanguageWithLocaleDoesNotExist(Language $language, EditLanguageCommand $command)
+    {
+        if (null === $command->getLocale()) {
+            return;
+        }
+
+        if ($language->locale !== $command->getLocale()->getValue() && Language::getIdByLocale($command->getLocale()->getValue())) {
+            throw new LanguageConstraintException(sprintf('Language with Locale "%s" already exists', $command->getLocale()->getValue()), LanguageConstraintException::DUPLICATE_LOCALE);
         }
     }
 }

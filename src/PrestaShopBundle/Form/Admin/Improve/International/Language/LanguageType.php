@@ -115,9 +115,21 @@ class LanguageType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('locale', TextPreviewType::class, [
+            ->add('locale', TextType::class, [
+                'attr' => [
+                    'maxLength' => 5,
+                ],
                 'label' => $this->trans('Locale', 'Admin.International.Feature'),
                 'help' => $this->trans('IETF language tag (e.g. en-US, pt-BR).', 'Admin.International.Help'),
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[a-z]{2}-[A-Z]{2}$/',
+                        'message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
+                    ]),
+                ],
             ])
             ->add('short_date_format', TextType::class, [
                 'label' => $this->trans('Date format', 'Admin.International.Feature'),

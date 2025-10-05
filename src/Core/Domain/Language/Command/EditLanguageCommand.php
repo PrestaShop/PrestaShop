@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Language\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\Locale;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF;
 
 /**
@@ -54,6 +55,11 @@ class EditLanguageCommand
      * @var TagIETF|null
      */
     private $tagIETF;
+
+    /**
+     * @var Locale|null
+     */
+    private $locale;
 
     /**
      * @var string|null
@@ -174,6 +180,26 @@ class EditLanguageCommand
     public function setTagIETF($tagIETF)
     {
         $this->tagIETF = new TagIETF($tagIETF);
+
+        return $this;
+    }
+
+    /**
+     * @return Locale|null
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return self
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = new Locale($locale);
 
         return $this;
     }

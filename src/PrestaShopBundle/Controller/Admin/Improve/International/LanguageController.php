@@ -380,8 +380,18 @@ class LanguageController extends PrestaShopAdminController
                     [sprintf('"%s"', $this->trans('Language code', [], 'Admin.International.Feature'))],
                     'Admin.Notifications.Error'
                 ),
+                LanguageConstraintException::INVALID_LOCALE => $this->trans(
+                    'The %s field is invalid.',
+                    [sprintf('"%s"', $this->trans('Locale', [], 'Admin.International.Feature'))],
+                    'Admin.Notifications.Error'
+                ),
                 LanguageConstraintException::DUPLICATE_ISO_CODE => $this->trans(
                     'This ISO code is already linked to another language.',
+                    [],
+                    'Admin.International.Notification'
+                ),
+                LanguageConstraintException::DUPLICATE_LOCALE => $this->trans(
+                    'This Locale is already linked to another language.',
                     [],
                     'Admin.International.Notification'
                 ),

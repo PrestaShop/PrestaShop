@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\Locale;
 
 /**
  * Handles command which adds new language using legacy object model
@@ -67,6 +68,7 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
     public function handle(AddLanguageCommand $command)
     {
         $this->assertLanguageWithIsoCodeDoesNotExist($command->getIsoCode());
+        $this->assertLanguageWithLocaleDoesNotExist($command->getLocale());
         if ($command->getNoPictureImagePath()) {
             $this->imageValidator->assertFileUploadLimits($command->getNoPictureImagePath());
             $this->imageValidator->assertIsValidImageType($command->getNoPictureImagePath());
@@ -103,6 +105,18 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
     }
 
     /**
+     * @param Locale $locale
+     *
+     * @throws LanguageConstraintException
+     */
+    private function assertLanguageWithLocaleDoesNotExist(Locale $locale)
+    {
+        if (Language::getIdByLocale($locale->getValue())) {
+            throw new LanguageConstraintException(sprintf('Language with Locale "%s" already exists', $locale->getValue()), LanguageConstraintException::DUPLICATE_LOCALE);
+        }
+    }
+
+    /**
      * Add language and shop association
      *
      * @param Language $language
@@ -126,9 +140,7 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
         $language = new Language();
         $language->name = $command->getName();
         $language->iso_code = $command->getIsoCode()->getValue();
-        if (false !== ($languageDetails = Language::getLangDetails($command->getIsoCode()->getValue()))) {
-            $language->locale = $languageDetails['locale'];
-        }
+        $language->locale = $command->getLocale()->getValue();
         $language->language_code = $command->getTagIETF()->getValue();
         $language->date_format_lite = $command->getShortDateFormat();
         $language->date_format_full = $command->getFullDateFormat();

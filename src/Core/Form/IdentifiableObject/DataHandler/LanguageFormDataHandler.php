@@ -69,6 +69,7 @@ final class LanguageFormDataHandler implements FormDataHandlerInterface
             $data['name'],
             $data['iso_code'],
             $data['tag_ietf'],
+            $data['locale'],
             $data['short_date_format'],
             $data['full_date_format'],
             $uploadedFlagImage->getPathname(),
@@ -90,6 +91,7 @@ final class LanguageFormDataHandler implements FormDataHandlerInterface
             ->setName((string) $data['name'])
             ->setIsoCode((string) $data['iso_code'])
             ->setTagIETF((string) $data['tag_ietf'])
+            ->setLocale((string) $data['locale'])
             ->setShortDateFormat((string) $data['short_date_format'])
             ->setFullDateFormat((string) $data['full_date_format'])
             ->setIsRtl($data['is_rtl'])
