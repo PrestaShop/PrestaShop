@@ -206,8 +206,8 @@ Feature: Language
     # Adding new language with Locale already existing is forbidden
     And I add a new language "french2" with the following details:
       | name            | Français (French) |
-      | isoCode         | fr                |
-      | tagIETF         | fr                |
+      | isoCode         | ca                |
+      | tagIETF         | ca                |
       | locale          | fr-FR             |
       | shortDateFormat | d/m/Y             |
       | fullDateFormat  | d/m/Y H:i:s       |
