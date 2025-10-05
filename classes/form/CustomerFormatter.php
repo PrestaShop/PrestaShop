@@ -264,6 +264,11 @@ class CustomerFormatterCore implements FormFormatterInterface
                     $constraints[$field->getName()]['validate']
                 );
             }
+            if (!empty($constraints[$field->getName()]['size'])) {
+                $field->setMaxLength(
+                    $constraints[$field->getName()]['size']
+                );
+            }
         }
 
         return $format;
