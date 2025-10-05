@@ -189,7 +189,7 @@ Feature: Language
       | name            | Français (French) |
       | isoCode         | fr                |
       | tagIETF         | fr                |
-      | locale          | fr-fr             |
+      | locale          | fr-FR             |
       | shortDateFormat | d/m/Y             |
       | fullDateFormat  | d/m/Y H:i:s       |
       | isRtl           | 0                 |
@@ -218,5 +218,5 @@ Feature: Language
     # Updating a language with Locale already existing is also forbidden
     When I update the language "french" with the following details:
       | name    | Language |
-      | locale  | gb       |
+      | locale  | en-GB    |
     Then I should get an error that a language with this Locale already exists
