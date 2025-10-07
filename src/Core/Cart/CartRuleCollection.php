@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Cart;
 
 use Iterator;
+use PrestaShop\PrestaShop\Adapter\Cart\CartRuleSorter;
 use ReturnTypeWillChange;
 
 class CartRuleCollection implements Iterator
@@ -84,5 +85,29 @@ class CartRuleCollection implements Iterator
         } else {
             return $keys[$iteratorPosition];
         }
+    }
+
+    /**
+     * Sort cart rules by priority and discount type.
+     *
+     * Priority sorting follows these rules:
+     * 1. Cart rules with lower priority value are applied first (priority 1 before priority 2)
+     * 2. If priorities are equal, sort by discount type in this order:
+     *    - Product level discounts (catalog discounts)
+     *    - Cart level discounts
+     *    - Order level discounts
+     *    - Free shipping discounts
+     *    - Free gift discounts
+     * 3. If types are also equal, sort by creation date (older first)
+     *
+     * Uses the CartRuleSorter adapter to avoid direct access to legacy CartRule class
+     */
+    public function sortByPriority(): void
+    {
+        $sorter = new CartRuleSorter();
+        $this->cartRules = $sorter->sortByPriority($this->cartRules);
+
+        // Reset iterator after sorting
+        $this->rewind();
     }
 }

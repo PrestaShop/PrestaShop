@@ -683,8 +683,11 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
     Then order "bo_order1" should have 2 cart rule
-    Then order "bo_order1" should have cart rule "discount five-percent" with amount "$18.69"
-    Then order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct1" with amount "$166.25"
+    # With priority-based sorting: product-level (priority 1) applies first, then dynamic discount (priority 10)
+    # Product-level: 50% of $350 = $175
+    # Dynamic: 5% of ($373.80 - $175) = 5% of $198.80 = $9.94
+    Then order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct1" with amount "$175.00"
+    Then order "bo_order1" should have cart rule "discount five-percent" with amount "$9.94"
     Then order "bo_order1" should have following details:
       | total_products           | 373.80 |
       | total_products_wt        | 396.23 |
@@ -698,6 +701,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     When I remove cart rule "discount five-percent" from order "bo_order1"
     Then order "bo_order1" should have 1 cart rule
+    # After removing dynamic discount, only product-level discount remains
     And order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct1" with amount "$175.00"
     And order "bo_order1" should have following details:
       | total_products           | 373.80 |

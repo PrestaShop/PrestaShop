@@ -60,6 +60,7 @@ describe(
       code: 'discount15',
       discountType: 'Percent',
       discountPercent: 15,
+      priority: 1, // Applied first (lower priority number = higher priority)
     });
     const giftCartRule: FakerCartRule = new FakerCartRule({
       name: 'freeGiftMug',
@@ -67,6 +68,7 @@ describe(
       discountType: 'None',
       freeGift: true,
       freeGiftProduct: dataProducts.demo_13,
+      priority: 2, // Applied second
     });
     // Create sql query data to get last order discount and total price
     const sqlQueryData: FakerSqlQuery = new FakerSqlQuery({

@@ -787,6 +787,75 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then cart :cartReference should contain cart rule :cartRuleReference
+     */
+    public function assertCartContainsCartRule(string $cartReference, string $cartRuleReference)
+    {
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference, false);
+        $cartRuleId = $this->getSharedStorage()->get($cartRuleReference);
+
+        foreach ($cartInfo->getCartRules() as $cartRule) {
+            if ($cartRule->getCartRuleId() === $cartRuleId) {
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf(
+            'Cart rule %s is not applied to cart %s',
+            $cartRuleReference,
+            $cartReference
+        ));
+    }
+
+    /**
+     * @Then cart :cartReference should not contain cart rule :cartRuleReference
+     */
+    public function assertCartDoesNotContainCartRule(string $cartReference, string $cartRuleReference)
+    {
+        $cartInfo = $this->getCartForOrderCreationByReference($cartReference, false);
+        $cartRuleId = $this->getSharedStorage()->get($cartRuleReference);
+
+        foreach ($cartInfo->getCartRules() as $cartRule) {
+            if ($cartRule->getCartRuleId() === $cartRuleId) {
+                throw new RuntimeException(sprintf(
+                    'Cart rule %s should not be in cart %s, but it was found',
+                    $cartRuleReference,
+                    $cartReference
+                ));
+            }
+        }
+    }
+
+    /**
+     * @When I apply voucher :voucherCode to cart :cartReference
+     */
+    public function applyVoucherToCart(string $voucherCode, string $cartReference)
+    {
+        $cartRuleId = $this->getSharedStorage()->get($voucherCode);
+        $cartId = $this->getSharedStorage()->get($cartReference);
+
+        try {
+            $this->getCommandBus()->handle(
+                new AddCartRuleToCartCommand($cartId, $cartRuleId)
+            );
+        } catch (CartRuleValidityException $e) {
+            $this->setLastException($e);
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get an error that voucher :voucherCode is not compatible with existing cart rules
+     */
+    public function assertVoucherIncompatibilityError(string $voucherCode)
+    {
+        $this->assertLastErrorIs(
+            CartRuleValidityException::class
+        );
+    }
+
+    /**
      * @Then cart :cartReference should contain product :productName
      * @Then cart :cartReference contains product :productName
      *

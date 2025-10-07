@@ -66,6 +66,9 @@ class CartRuleCalculator
      */
     public function applyCartRules()
     {
+        // Sort cart rules by priority before applying
+        $this->cartRules->sortByPriority();
+
         foreach ($this->cartRules as $cartRule) {
             $this->applyCartRule($cartRule);
         }
@@ -76,6 +79,9 @@ class CartRuleCalculator
      */
     public function applyCartRulesWithoutFreeShipping()
     {
+        // Sort cart rules by priority before applying
+        $this->cartRules->sortByPriority();
+
         foreach ($this->cartRules as $cartRule) {
             $this->applyCartRule($cartRule, false);
         }
@@ -170,8 +176,13 @@ class CartRuleCalculator
                         || !(int) $cartRule->gift_product_attribute)
                     && empty($product['id_customization'])
                 ) {
-                    $cartRuleData->addDiscountApplied($cartRow->getInitialUnitPrice());
-                    $cartRow->applyFlatDiscount($cartRow->getInitialUnitPrice());
+                    $initialPrice = $cartRow->getInitialUnitPrice();
+                    // Only apply gift discount if the product still has a price (hasn't been fully discounted yet)
+                    if ($initialPrice->getTaxIncluded() > 0) {
+                        $cartRuleData->addDiscountApplied($initialPrice);
+                        $cartRow->applyFlatDiscount($initialPrice);
+                        break; // Only apply gift to one product instance
+                    }
                 }
             }
         }
@@ -187,8 +198,12 @@ class CartRuleCalculator
                         && 0 === (int) $product['product_quantity']
                     ) {
                         $cartRuleData->addDiscountApplied(new AmountImmutable(0.0, 0.0));
-                    } elseif (($cartRule->reduction_exclude_special && !$product['reduction_applies'])
-                        || !$cartRule->reduction_exclude_special) {
+                    } elseif (
+                        // Don't apply percentage discount if product price is already 0 (was made a gift)
+                        $cartRow->getFinalUnitPrice()->getTaxIncluded() > 0
+                        && (($cartRule->reduction_exclude_special && !$product['reduction_applies'])
+                        || !$cartRule->reduction_exclude_special)
+                    ) {
                         $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
                         $cartRuleData->addDiscountApplied($amount);
                     }
@@ -198,7 +213,9 @@ class CartRuleCalculator
             // Discount (%) on a specific product
             if ($cartRule->reduction_product > 0) {
                 foreach ($this->cartRows as $cartRow) {
-                    if ($cartRow->getRowData()['id_product'] == $cartRule->reduction_product) {
+                    $product = $cartRow->getRowData();
+                    if ($product['id_product'] == $cartRule->reduction_product
+                        && $cartRow->getFinalUnitPrice()->getTaxIncluded() > 0) {
                         $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
                         $cartRuleData->addDiscountApplied($amount);
                     }
@@ -212,7 +229,8 @@ class CartRuleCalculator
                 foreach ($this->cartRows as $cartRow) {
                     $product = $cartRow->getRowData();
                     if (
-                        (
+                        $cartRow->getFinalUnitPrice()->getTaxIncluded() > 0
+                        && (
                             ($cartRule->reduction_exclude_special && !$product['reduction_applies'])
                             || !$cartRule->reduction_exclude_special
                         ) && (

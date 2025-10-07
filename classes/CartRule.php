@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Discount\Compatibility\DiscountCompatibilityService;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CartRuleSettings;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
+use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountTypeWeight;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 
@@ -181,6 +182,18 @@ class CartRuleCore extends ObjectModel
         static $typeCache = [];
 
         if (!$this->id_cart_rule_type) {
+            // Auto-detect type based on cart rule properties when id_cart_rule_type is not set
+            if ((int) $this->gift_product) {
+                return DiscountType::FREE_GIFT;
+            }
+            if ($this->free_shipping) {
+                return DiscountType::FREE_SHIPPING;
+            }
+            if ((float) $this->reduction_percent > 0 || (float) $this->reduction_amount > 0) {
+                // Default to CART_LEVEL for percentage/amount discounts
+                return DiscountType::CART_LEVEL;
+            }
+
             return null;
         }
 
@@ -1400,6 +1413,45 @@ class CartRuleCore extends ObjectModel
         }
 
         return (!$displayError) ? true : false;
+    }
+
+    /**
+     * Check if this cart rule has higher priority than another cart rule
+     *
+     * Priority is determined by:
+     * 1. Priority field (lower number = higher priority)
+     * 2. Discount type weight (product > cart > free_shipping > free_gift)
+     * 3. Creation date (older = higher priority)
+     *
+     * @param CartRule $otherCartRule The cart rule to compare with
+     *
+     * @return bool True if this cart rule has higher priority
+     */
+    public function hasHigherPriorityThan(CartRule $otherCartRule): bool
+    {
+        // Compare by priority field (lower number = higher priority)
+        if ($this->priority !== $otherCartRule->priority) {
+            return $this->priority < $otherCartRule->priority;
+        }
+
+        // If priorities are equal, compare by discount type
+        $thisTypeWeight = $this->getTypeWeight();
+        $otherTypeWeight = $otherCartRule->getTypeWeight();
+
+        if ($thisTypeWeight !== $otherTypeWeight) {
+            return $thisTypeWeight < $otherTypeWeight;
+        }
+
+        // If types are also equal, compare by creation date (older = higher priority)
+        $thisDate = strtotime($this->date_add);
+        $otherDate = strtotime($otherCartRule->date_add);
+
+        return $thisDate < $otherDate;
+    }
+
+    protected function getTypeWeight(): int
+    {
+        return DiscountTypeWeight::getWeight($this->getType());
     }
 
     /**

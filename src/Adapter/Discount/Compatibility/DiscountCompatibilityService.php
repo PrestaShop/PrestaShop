@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Discount\Compatibility;
 
+use CartRule;
 use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository;
 
 /**
@@ -49,19 +50,69 @@ class DiscountCompatibilityService
     public function validateCompatibility(int $newDiscountId, array $existingDiscountIds): DiscountCompatibilityResult
     {
         $conflictingDiscounts = [];
-        $isIncompatible = false;
+        $canApply = true;
+
+        // Load the new discount to check its priority and type
+        $newDiscount = new CartRule($newDiscountId);
+        if (!$newDiscount->id) {
+            return new DiscountCompatibilityResult(false, []);
+        }
 
         foreach ($existingDiscountIds as $existingDiscountId) {
-            // Check compatibility in both directions
-            if (!$this->discountTypeRepository->areDiscountsCompatible($newDiscountId, $existingDiscountId)
-            || !$this->discountTypeRepository->areDiscountsCompatible($existingDiscountId, $newDiscountId)) {
-                $isIncompatible = true;
+            $existingDiscount = new CartRule($existingDiscountId);
+            if (!$existingDiscount->id) {
+                continue;
+            }
+
+            // Check type compatibility in both directions
+            $areTypesCompatible = $this->discountTypeRepository->areDiscountsCompatible($newDiscountId, $existingDiscountId)
+                && $this->discountTypeRepository->areDiscountsCompatible($existingDiscountId, $newDiscountId);
+
+            if (!$areTypesCompatible) {
+                // Types are incompatible
+                // Check if the new discount should replace the existing one by priority
+                if ($this->shouldReplaceByPriority($newDiscount, $existingDiscount)) {
+                    // Higher priority same-type discount can replace lower priority one
+                    $conflictingDiscounts[] = $existingDiscountId;
+                } else {
+                    // Lower or equal priority - cannot add
+                    $canApply = false;
+                }
+                continue;
+            }
+
+            // Types are compatible - check if priority-based replacement should still happen
+            // (for same-type discounts that are made explicitly compatible)
+            if ($this->shouldReplaceByPriority($newDiscount, $existingDiscount)) {
+                $conflictingDiscounts[] = $existingDiscountId;
             }
         }
 
         return new DiscountCompatibilityResult(
-            !$isIncompatible,
+            $canApply,
             $conflictingDiscounts
         );
+    }
+
+    private function shouldReplaceByPriority(CartRule $newDiscount, CartRule $existingDiscount): bool
+    {
+        // Get types of both discounts
+        $newType = $newDiscount->getType();
+        $existingType = $existingDiscount->getType();
+
+        // If both have no type defined, don't replace based on priority
+        if ($newType === null && $existingType === null) {
+            return false;
+        }
+
+        // If types are different, don't replace based on priority
+        // (they can coexist if type-compatible)
+        if ($newType !== $existingType) {
+            return false;
+        }
+
+        // Both are the same type - check priority
+        // Lower priority number = higher priority
+        return $newDiscount->priority < $existingDiscount->priority;
     }
 }

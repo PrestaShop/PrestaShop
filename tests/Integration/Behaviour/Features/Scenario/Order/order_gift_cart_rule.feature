@@ -1228,7 +1228,7 @@ Feature: Order from Back Office (BO)
     # Create a cart rule : No cade + Product restriction with min quanity + Discount 50%
     And there is a cart rule "cartRulePercentDiscountOnSpecificProduct" with following properties:
       | name[en-US]               | cartRulePercentDiscountOnSpecificProduct |
-      | priority                  | 1                                        |
+      | priority                  | 2                                        |
       | total_quantity            | 100                                      |
       | quantity_per_user         | 100                                      |
       | discount_percentage       | 50                                       |

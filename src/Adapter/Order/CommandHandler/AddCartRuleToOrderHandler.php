@@ -131,6 +131,9 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $cartRuleObj->reduction_currency = (int) $order->id_currency;
         $cartRuleObj->active = false;
         $cartRuleObj->highlight = false;
+        // Dynamically created order discounts should have lower priority (higher number)
+        // to ensure they're applied after existing product-level/cart-level discounts
+        $cartRuleObj->priority = 10;
 
         if ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_PERCENT) {
             $cartRuleObj->reduction_percent = (float) (string) $command->getDiscountValue();
