@@ -194,7 +194,8 @@ class ImageManagerCore
         &$targetHeight = null,
         $quality = 5,
         &$sourceWidth = null,
-        &$sourceHeight = null
+        &$sourceHeight = null,
+        $useCenterCrop = false
     ) {
         clearstatcache(true, $sourceFile);
 
@@ -330,6 +331,41 @@ class ImageManagerCore
             imagecopyresized($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight);
         } else {
             ImageManager::imagecopyresampled($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight, $quality);
+        }
+
+        if ($useCenterCrop) {
+            // Calculate aspect ratios
+            $srcRatio = $sourceWidth / $sourceHeight;
+            $dstRatio = $destinationWidth / $destinationHeight;
+
+            // Determine crop dimensions (centered)
+            if ($srcRatio > $dstRatio) {
+                // Too wide → crop the sides
+                $cropHeight = $sourceHeight;
+                $cropWidth = (int) ($sourceHeight * $dstRatio);
+                $srcX = (int) (($sourceWidth - $cropWidth) / 2);
+                $srcY = 0;
+            } else {
+                // too high → crop at the top and bottom
+                $cropWidth = $sourceWidth;
+                $cropHeight = (int) ($sourceWidth / $dstRatio);
+                $srcX = 0;
+                $srcY = (int) (($sourceHeight - $cropHeight) / 2);
+            }
+
+            ImageManager::imagecopyresampled(
+                $destImage,
+                $srcImage,
+                0,
+                0,
+                $srcX,
+                $srcY,
+                $destinationWidth,
+                $destinationHeight,
+                $cropWidth,
+                $cropHeight,
+                $quality
+            );
         }
         $writeFile = ImageManager::write($destinationFileType, $destImage, $destinationFile);
         Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $destinationFileType]);
