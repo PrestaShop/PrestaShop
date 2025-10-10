@@ -148,7 +148,7 @@ final class MailPreviewVariablesBuilder
         $templateVars['{color}'] = $this->configuration->get('PS_MAIL_COLOR');
         $templateVars = array_merge($templateVars, $this->buildOrderVariables($mailLayout));
 
-        if ($mailLayout->getModuleName() !== '') {
+        if (!empty($mailLayout->getModuleName())) {
             $moduleTemplateVars = Hook::exec(
                 'actionMailPreviewBuildTemplateVariables',
                 [
