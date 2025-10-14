@@ -58,8 +58,8 @@
         <note>File: themes/classic/templates/catalog/_partials/product-customization.tpl [Line: 52]</note>
       </trans-unit>
       <trans-unit id="ae12c6cc3c51c7dfc05571539d8980d9">
-        <source>Only letters and the dot (.) character, followed by a space, are allowed.</source>
-        <target>Only letters and the dot (.) character, followed by a space, are allowed.</target>
+        <source>Only letters, usual name characters (-, ') and the dot (.) character, followed by a space, are allowed.</source>
+        <target>Only letters, usual name characters (-, ') and the dot (.) character, followed by a space, are allowed.</target>
         <note>File: classes/form/CustomerFormatter.php [Line: 139]</note>
       </trans-unit>
       <trans-unit id="ebb061953c0454b2c8ee7b0ac615ebcd">
