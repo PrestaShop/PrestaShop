@@ -73,8 +73,8 @@
         <note>File: controllers/admin/AdminReturnController.php [Line: 131]</note>
       </trans-unit>
       <trans-unit id="ae12c6cc3c51c7dfc05571539d8980d9">
-        <source>Only letters, usual name characters (-, \') and the dot (.) character, followed by a space, are allowed.</source>
-        <target>Only letters, usual name characters (-, \') and the dot (.) character, followed by a space, are allowed.</target>
+        <source>Only letters, usual name characters (-, ') and the dot (.) character, followed by a space, are allowed.</source>
+        <target>Only letters, usual name characters (-, ') and the dot (.) character, followed by a space, are allowed.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 207]</note>
       </trans-unit>
       <trans-unit id="8b7fc06b213f4fb343c72af878e5c64b">
