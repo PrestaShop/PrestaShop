@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer\Symfony;
 
 use AppKernel;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SafeLoggerTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
@@ -92,7 +93,8 @@ class ExecKernelCacheClearer implements KernelCacheClearerInterface
 
     protected function execCommand(AppKernel $kernel, string $command, string $successMessage, $errorMessage): bool
     {
-        $commandLine = 'php -d memory_limit=-1 ' . $kernel->getProjectDir() . '/bin/console ' . $command;
+        $phpPath = $_ENV['PS_PHP_BIN_PATH'] ?? 'php';
+        $commandLine = $phpPath . ' -d memory_limit=-1 ' . $kernel->getProjectDir() . '/bin/console ' . $command;
         $output = [];
         $result = 0;
         exec($commandLine, $output, $result);
