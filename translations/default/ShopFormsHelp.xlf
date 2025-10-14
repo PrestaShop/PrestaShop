@@ -57,7 +57,7 @@
         <target>No selected file</target>
         <note>File: themes/classic/templates/catalog/_partials/product-customization.tpl [Line: 52]</note>
       </trans-unit>
-      <trans-unit id="ae12c6cc3c51c7dfc05571539d8980d9">
+      <trans-unit id="1688b426ada14e70d1140c62d74a1728">
         <source>Only letters, usual name characters (-, ') and the dot (.) character, followed by a space, are allowed.</source>
         <target>Only letters, usual name characters (-, ') and the dot (.) character, followed by a space, are allowed.</target>
         <note>File: classes/form/CustomerFormatter.php [Line: 139]</note>
