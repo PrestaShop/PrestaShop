@@ -36,7 +36,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class CustomerNameValidator extends ConstraintValidator
 {
-    public const PATTERN_NAME = '/^(?!\s*$)(?:[^0-9!<>,;?=+()\/\\\\@#"°*`{}_^$%:¤\[\]|\.。]|[。\.](?:\s|$))*$/u';
+    public const PATTERN_NAME = '/^(?!\s*$)(?:[^0-9!<>,;?=+()\/\\\\@#"°*`{}_^$%:¤\[\]|\.。²~]|[。\.](?:\s|$))*$/u';
     public const PATTERN_DOT_SPACED = '/[\.。](\s{1}[^\ ]|$)/';
 
     /**
