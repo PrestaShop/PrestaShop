@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer\Symfony;
 
 use AppKernel;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SafeLoggerTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
