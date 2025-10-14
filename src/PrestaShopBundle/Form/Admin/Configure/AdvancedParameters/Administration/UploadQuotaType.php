@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -34,7 +35,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Tools;
 
 class UploadQuotaType extends TranslatorAwareType
 {
@@ -46,11 +46,16 @@ class UploadQuotaType extends TranslatorAwareType
      * @var ConfigurationInterface
      */
     private $configuration;
+    /**
+     * @var Tools
+     */
+    private $tools;
 
-    public function __construct(TranslatorInterface $translator, array $locales, ConfigurationInterface $configuration)
+    public function __construct(TranslatorInterface $translator, array $locales, ConfigurationInterface $configuration, Tools $tools)
     {
         parent::__construct($translator, $locales);
         $this->configuration = $configuration;
+        $this->tools = $tools;
     }
 
     /**
@@ -72,7 +77,7 @@ class UploadQuotaType extends TranslatorAwareType
                         'Set the maximum size allowed for attachment files (in megabytes). This value has to be lower than or equal to the maximum file upload allotted by your server (currently: %size% MB).',
                         'Admin.Advparameters.Help',
                         [
-                            '%size%' => round(Tools::getMaxUploadSize() / 1048576)
+                            '%size%' => round($this->tools->getMaxUploadSize() / 1048576)
                         ]
                     ),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),

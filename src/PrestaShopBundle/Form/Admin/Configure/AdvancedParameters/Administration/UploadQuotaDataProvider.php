@@ -28,12 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
-use Tools;
 
 /**
  * This class is responsible of managing the data manipulated using Upload Quota form
@@ -45,11 +45,17 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
      * @var DataConfigurationInterface
      */
     private $dataConfiguration;
+    /**
+     * @var Tools
+     */
+    private $tools;
 
     public function __construct(
-        DataConfigurationInterface $dataConfiguration
+        DataConfigurationInterface $dataConfiguration,
+        Tools $tools
     ) {
         $this->dataConfiguration = $dataConfiguration;
+        $this->tools = $tools;
     }
 
     /**
@@ -81,7 +87,7 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
 
         if (isset($data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES])) {
             $maxSizeAttachedFile = $data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES];
-            if (!is_numeric($maxSizeAttachedFile) || $maxSizeAttachedFile < 0 || Tools::convertBytes($maxSizeAttachedFile . 'm') > Tools::getMaxUploadSize()) {
+            if (!is_numeric($maxSizeAttachedFile) || $maxSizeAttachedFile < 0 || $this->tools->convertBytes($maxSizeAttachedFile . 'm') > $this->tools->getMaxUploadSize()) {
                 $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_MAX_SIZE_ATTACHED_FILES, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
             }
         }

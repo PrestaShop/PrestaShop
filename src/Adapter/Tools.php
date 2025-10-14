@@ -224,4 +224,24 @@ class Tools
     {
         return LegacyTools::truncateString($text, $length, $options);
     }
+
+    /**
+     * @see LegacyTools::convertBytes()
+     *
+     * @return int|string
+     */
+    public function convertBytes($value)
+    {
+        return LegacyTools::convertBytes($value);
+    }
+
+    /**
+     * @see LegacyTools::getMaxUploadSize()
+     *
+     * @return int max file size in bytes
+     */
+    public function getMaxUploadSize()
+    {
+        return LegacyTools::getMaxUploadSize();
+    }
 }

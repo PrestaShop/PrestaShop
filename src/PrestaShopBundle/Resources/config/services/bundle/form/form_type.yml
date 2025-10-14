@@ -407,6 +407,7 @@ services:
     parent: 'form.type.translatable.aware'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Tools'
     public: true
     tags:
       - { name: form.type }
