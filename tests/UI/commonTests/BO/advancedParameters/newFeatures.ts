@@ -23,6 +23,9 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
     case boFeatureFlagPage.featureFlagAdminAPI:
       title = 'Authorization server';
       break;
+    case boFeatureFlagPage.featureFlagImprovedShipment:
+      title = 'Improved shipment';
+      break;
     default:
       throw new Error(`The feature flag ${featureFlag} is not defined`);
   }

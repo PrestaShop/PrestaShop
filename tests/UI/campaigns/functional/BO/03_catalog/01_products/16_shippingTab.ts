@@ -371,7 +371,7 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     it('should select available carrier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectCarrier', baseContext);
 
-      await boProductsCreateTabShippingPage.selectAvailableCarrier(page, 'Click and collect');
+      await boProductsCreateTabShippingPage.selectAvailableCarrier(page, 1);
 
       const message = await boProductsCreatePage.saveProduct(page);
       expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
