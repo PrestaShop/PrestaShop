@@ -199,25 +199,44 @@ class CQRSApiNormalizer extends ObjectNormalizer
             $reflClass = new ReflectionClass(\is_object($object) ? $object::class : $object);
         }
 
-        foreach ($reflClass->getMethods(ReflectionMethod::IS_PUBLIC) as $reflMethod) {
-            if (
-                0 !== $reflMethod->getNumberOfRequiredParameters()
-                || $reflMethod->isStatic()
-                || $reflMethod->isConstructor()
-                || $reflMethod->isDestructor()
-            ) {
-                continue;
-            }
+        // Check all classes in the inheritance hierarchy to handle inherited properties
+        $classesToCheck = [$reflClass];
+        $parentClass = $reflClass->getParentClass();
+        while ($parentClass) {
+            $classesToCheck[] = $parentClass;
+            $parentClass = $parentClass->getParentClass();
+        }
 
-            $methodName = $reflMethod->name;
-            // These type of getters have already been handled by the parent
-            if (str_starts_with($methodName, 'get') || str_starts_with($methodName, 'has') || str_starts_with($methodName, 'is') || str_starts_with($methodName, 'can')) {
-                continue;
-            }
+        foreach ($classesToCheck as $classToCheck) {
+            foreach ($classToCheck->getMethods(ReflectionMethod::IS_PUBLIC) as $reflMethod) {
+                if (
+                    0 !== $reflMethod->getNumberOfRequiredParameters()
+                    || $reflMethod->isStatic()
+                    || $reflMethod->isConstructor()
+                    || $reflMethod->isDestructor()
+                ) {
+                    continue;
+                }
 
-            // Add attributes that match the getter method name exactly
-            if ($reflClass->hasProperty($methodName) && $this->isAllowedAttribute($object, $methodName, $format, $context)) {
-                $attributes[] = $methodName;
+                $methodName = $reflMethod->name;
+                // These type of getters have already been handled by the parent
+                if (str_starts_with($methodName, 'get') || str_starts_with($methodName, 'has') || str_starts_with($methodName, 'is') || str_starts_with($methodName, 'can')) {
+                    continue;
+                }
+
+                // Add attributes that match the getter method name exactly
+                // Check if the property exists in the current class or any parent class
+                $propertyExists = false;
+                foreach ($classesToCheck as $checkClass) {
+                    if ($checkClass->hasProperty($methodName)) {
+                        $propertyExists = true;
+                        break;
+                    }
+                }
+
+                if ($propertyExists && $this->isAllowedAttribute($object, $methodName, $format, $context)) {
+                    $attributes[] = $methodName;
+                }
             }
         }
 

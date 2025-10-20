@@ -200,11 +200,25 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
 
         $metadata = $this->classMetadataFactory->getMetadataFor($type);
         foreach ($metadata->getAttributesMetadata() as $attributeMetadata) {
-            if (!$metadata->getReflectionClass()->hasProperty($attributeMetadata->getName())) {
+            $reflectionClass = $metadata->getReflectionClass();
+
+            // Check if the property exists in the current class or any parent class
+            $propertyExists = false;
+            $propertyClass = $reflectionClass;
+            while ($propertyClass) {
+                if ($propertyClass->hasProperty($attributeMetadata->getName())) {
+                    $propertyExists = true;
+                    $reflectionClass = $propertyClass;
+                    break;
+                }
+                $propertyClass = $propertyClass->getParentClass();
+            }
+
+            if (!$propertyExists) {
                 continue;
             }
 
-            $reflectionProperty = $metadata->getReflectionClass()->getProperty($attributeMetadata->getName());
+            $reflectionProperty = $reflectionClass->getProperty($attributeMetadata->getName());
             if ($reflectionProperty->getType() instanceof ReflectionNamedType && $reflectionProperty->getType()->getName() === 'bool') {
                 $context[AbstractNormalizer::CALLBACKS][$attributeMetadata->getName()] = fn (mixed $value): bool => filter_var($value, FILTER_VALIDATE_BOOLEAN);
             }
