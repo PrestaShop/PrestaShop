@@ -40,7 +40,7 @@
       <trans-unit id="8a7a048a67746f3877ab6cb1bc1d4afd">
         <source>Format: 2011-12-31 (inclusive).</source>
         <target>Format: 2011-12-31 (inclusive).</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Invoices/Blocks/generate_by_date.html.twig [Line: 46]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/Invoices/GenerateByDateType.php [Line: 52]</note>
       </trans-unit>
       <trans-unit id="7b87585267aed27676374641013ab66e">
         <source>Freely definable prefix for invoice number (e.g. #IN00001).</source>
@@ -75,7 +75,7 @@
       <trans-unit id="ae12c6cc3c51c7dfc05571539d8980d9">
         <source>Only letters and the dot (.) character, followed by a space, are allowed.</source>
         <target>Only letters and the dot (.) character, followed by a space, are allowed.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 208]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 207]</note>
       </trans-unit>
       <trans-unit id="8b7fc06b213f4fb343c72af878e5c64b">
         <source>Only the discount for the selected group will be applied to this customer.</source>
@@ -115,7 +115,7 @@
       <trans-unit id="e0c04603cf0d081616d87bc69c92bbb8">
         <source>Quick customers with no password, who don't have access to the privileges of registered ones. You can create as many guests as needed using the same email. It could be helpful if you take phone call orders.</source>
         <target>Quick customers with no password, who don't have access to the privileges of registered ones. You can create as many guests as needed using the same email. It could be helpful if you take phone call orders.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 166]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 165]</note>
       </trans-unit>
       <trans-unit id="166f81a02b692b37820d75e7c0ca2b24">
         <source><![CDATA[Required fields apply to the customer's registration form, you should check the address formats in [1]International > Locations > Countries[/1] before.]]></source>
@@ -230,7 +230,7 @@
       <trans-unit id="fef8859b22e06e4d4918f091612bf958">
         <source>You can also export orders which have not been charged yet.</source>
         <target>You can also export orders which have not been charged yet.</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Invoices/Blocks/generate_by_status.html.twig [Line: 42]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/Invoices/GenerateByStatusType.php [Line: 78]</note>
       </trans-unit>
       <trans-unit id="e7ff9c100be184662fc1ef3f0efc5850">
         <source><![CDATA[[1]Make[/1] sure you enable partner offers in the [2]Shop Parameters > Customer Settings[/2] section of the back office before requiring them. Otherwise, new customers won't be able to create an account and [1]proceed[/1] to checkout.]]></source>
