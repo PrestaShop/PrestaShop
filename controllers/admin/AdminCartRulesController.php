@@ -679,7 +679,7 @@ class AdminCartRulesControllerCore extends AdminController
                         $combination['attributes'] = rtrim($combination['attributes'], ' - ');
                     }
                     $product['combinations'] = $combinations;
-                }else{
+                } else {
                     // if $combinations is empty $product shouldn't be returned
                     unset($products[$k]);
                 }
