@@ -642,15 +642,26 @@ class AdminCartRulesControllerCore extends AdminController
     protected function searchProducts(string $searchString)
     {
         if ($products = Product::searchByName((int) $this->context->language->id, $searchString)) {
-            foreach ($products as &$product) {
+            foreach ($products as $k => &$product) {
                 $combinations = [];
                 $productObj = new Product((int) $product['id_product'], false, (int) $this->context->language->id);
+                // Product with a minimal quantity greater than 1 cannot be gifted
+                if ($productObj->minimal_quantity > 1) {
+                    // Unset so that product isn't returned
+                    unset($products[$k]);
+                    continue;
+                }
                 $attributes = $productObj->getAttributesGroups((int) $this->context->language->id);
                 $product['formatted_price'] = $product['price_tax_incl']
                     ? $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($product['price_tax_incl'], $this->context->currency), $this->context->currency->iso_code)
                     : '';
 
                 foreach ($attributes as $attribute) {
+                    // Combination with a minimal quantity greater than 1 cannot be gifted
+                    if ($attribute['minimal_quantity'] > 1) {
+                        // Using continue is enought because $combination is not fullfiled before
+                        continue;
+                    }
                     if (!isset($combinations[$attribute['id_product_attribute']]['attributes'])) {
                         $combinations[$attribute['id_product_attribute']]['attributes'] = '';
                     }
@@ -663,10 +674,15 @@ class AdminCartRulesControllerCore extends AdminController
                         : '';
                 }
 
-                foreach ($combinations as &$combination) {
-                    $combination['attributes'] = rtrim($combination['attributes'], ' - ');
+                if (!empty($combinations)) {
+                    foreach ($combinations as &$combination) {
+                        $combination['attributes'] = rtrim($combination['attributes'], ' - ');
+                    }
+                    $product['combinations'] = $combinations;
+                }else{
+                    // if $combinations is empty $product shouldn't be returned
+                    unset($products[$k]);
                 }
-                $product['combinations'] = $combinations;
             }
 
             return [
