@@ -96,7 +96,23 @@ class CheckoutProcessCore implements RenderableInterface
     {
         if ($this instanceof CheckoutProcess) {
             $step->setCheckoutProcess($this);
-            $this->steps[] = $step;
+            $this->steps[$step->getIdentifier()] = $step;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param CheckoutStepInterface $step
+     *
+     * @return self
+     */
+    public function removeStep(CheckoutStepInterface $step): self
+    {
+        $id = $step->getIdentifier();
+
+        if (array_key_exists($id, $this->steps)) {
+            unset($this->steps[$id]);
         }
 
         return $this;
