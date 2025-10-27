@@ -2162,7 +2162,7 @@ class AdminControllerCore extends Controller
                 // If the route specified is not accessible we remove the tab (it can happen during module install process
                 // the route should be usable in next request/process once the cache has been cleared - on process shutdown).
                 // This is not ideal, but clearing the cache during a process and restart the whole kernel is quite a challenge.
-                $this->get('logger')->addWarning(
+                $this->get('logger')->warning(
                     sprintf('Route not found in one of the Tab %s', $tab['route_name'] ?? ''),
                     [
                         'message' => $e->getMessage(),
@@ -4385,7 +4385,7 @@ class AdminControllerCore extends Controller
                 'toolbar_extra_buttons_collection' => &$toolbarButtonsCollection,
             ]);
         } catch (Exception $exception) {
-            $this->get('logger')->addWarning(
+            $this->get('logger')->warning(
                 'There was an error retrieving toolbar buttons from Hooks. Toolbar buttons are probably not complete',
                 [
                     'message' => $exception->getMessage(),
