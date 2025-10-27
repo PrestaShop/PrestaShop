@@ -48,6 +48,7 @@ class AdminNotFoundControllerCore extends AdminController
      */
     public function initContent()
     {
+        http_response_code(404);
         $this->errors[] = $this->trans('Page not found', [], 'Admin.Notifications.Error');
         $tpl_vars['controller'] = Tools::getValue('controllerUri', Tools::getValue('controller'));
         $this->context->smarty->assign($tpl_vars);
