@@ -20,7 +20,7 @@ final class ContactRepository implements ContactRepositoryInterface
      * {@inheritdoc}
      */
     public function findAllByLangId($langId)
-    {
+    {//TODO <cnc-notice> capire se può essere rimosso e sostituito con il repository che ho creato
         return Contact::getContacts($langId);
     }
 }

@@ -13,7 +13,7 @@ use PrestaShopCollection;
  * Class ContactDeleter deletes contact records, using legacy code.
  */
 final class ContactDeleter
-{
+{//TODO <cnc-notice> forse va dichiarato @deprecated
     /**
      * Delete contacts by given IDs.
      *

@@ -8,6 +8,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Support\ContactDeleter;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Command\DeleteContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
@@ -138,17 +139,15 @@ class ContactsController extends PrestaShopAdminController
     #[DemoRestricted(redirectRoute: 'admin_contacts_index')]
     #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to delete this.', redirectRoute: 'admin_contacts_index')]
     public function deleteAction(
-        int $contactId,
-        ContactDeleter $contactDeleter,
+        int $contactId
     ): RedirectResponse {
-        if ($errors = $contactDeleter->delete([$contactId])) {
-            $this->addFlashErrors($errors);
-        } else {
-            $this->addFlash(
-                'success',
-                $this->trans('Successful deletion', [], 'Admin.Notifications.Success')
-            );
+        try {// TODO <cnc-notice> >>>>>>>> sono arrivato qui
+            $this->dispatchCommand(new DeleteContactCommand($contactId));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
+
+        $this->addFlash('success', $this->trans('Successful deletion', [], 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_contacts_index');
     }
