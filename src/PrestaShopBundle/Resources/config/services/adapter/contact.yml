@@ -43,3 +43,8 @@ services:
     autowire: true
     public: false
     autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Contact\CommandHandler\BulkDeleteContactHandler:
+    autowire: true
+    public: false
+    autoconfigure: true
