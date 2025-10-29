@@ -210,7 +210,11 @@ class CartPresenter implements PresenterInterface
         $cartLazyArray = new CartLazyArray($cart, $this, $shouldSeparateGifts);
 
         Hook::exec('actionPresentCart',
-            ['presentedCart' => &$cartLazyArray]
+            [
+                'presentedCart' => &$cartLazyArray,
+                'cart' => $cart,
+                'presenter' => $this,
+            ]
         );
 
         Cache::store($cache_id, $cartLazyArray);
