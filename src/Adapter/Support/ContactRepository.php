@@ -10,6 +10,8 @@ use PrestaShop\PrestaShop\Adapter\Entity\Contact;
 use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 
 /**
+ * @deprecated since 9.0.2 and will be removed in 10.0
+ * 
  * Class ContactRepository is responsible for retrieving contact data from database.
  *
  * @internal

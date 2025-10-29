@@ -62,4 +62,12 @@ class ContactRepository extends AbstractMultiShopObjectModelRepository
 
         return $contact;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findAllByLangId($langId)
+    {
+        return Contact::getContacts($langId);
+    }
 }

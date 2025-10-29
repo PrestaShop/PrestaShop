@@ -7,6 +7,8 @@
 namespace PrestaShop\PrestaShop\Core\Support;
 
 /**
+ * @deprecated since 9.0.2 and will be removed in 10.0
+ * 
  * Interface ContactRepositoryInterface defines contract for shop contact repository.
  */
 interface ContactRepositoryInterface
