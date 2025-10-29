@@ -30,12 +30,12 @@ namespace PrestaShop\PrestaShop\Adapter\Contact\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Contact\Repository\ContactRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
-use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\BulkDeleteContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler\BulkDeleteContactHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\BulkContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 
 #[AsCommandHandler]
 class BulkDeleteContactHandler extends AbstractBulkCommandHandler implements BulkDeleteContactHandlerInterface

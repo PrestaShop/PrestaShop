@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Contact\Repository;
 
-use Doctrine\DBAL\Connection;
 use Contact;
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\CannotDeleteContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
