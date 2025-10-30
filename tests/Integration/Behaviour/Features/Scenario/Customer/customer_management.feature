@@ -21,7 +21,7 @@ Feature: Customer Management
       | firstName | Mathieu                    |
       | lastName  | Napoler                    |
       | email     | napoler.dev@prestashop.com |
-      | guest     | false                      |
+      | isGuest   | false                      |
     When I edit customer "CUST-1" and I change the following properties:
       | firstName | Jean |
     When I query customer "CUST-1" I should get a Customer with properties:
@@ -50,7 +50,7 @@ Feature: Customer Management
       | firstName      | Mathieu                     |
       | lastName       | Napoler                     |
       | email          | naapoler.dev@prestashop.com |
-      | guest          | true                        |
+      | isGuest        | true                        |
       | defaultGroupId | Guest                       |
       | groupIds       | [Guest]                     |
 
@@ -72,12 +72,12 @@ Feature: Customer Management
       | email                    | polarn.dev@prestashop.com |
       | defaultGroupId           | Guest                     |
       | groupIds                 | [Guest, Customer]         |
-      | genderId                 | Mrs.                      |
-      | enabled                  | false                     |
-      | partnerOffersSubscribed  | true                      |
-      | newsletterSubscribed     | false                     |
-      | birthday                 | 1987-02-22                |
-      | guest                    | false                     |
+      | genderId                     | Mrs.                      |
+      | isEnabled                    | false                     |
+      | isPartnerOffersSubscribed    | true                      |
+      | isNewsletterSubscribed       | false                     |
+      | birthday                     | 1987-02-22                |
+      | isGuest                      | false                     |
       | companyName              |                           |
       | siretCode                |                           |
       | apeCode                  |                           |
@@ -109,12 +109,12 @@ Feature: Customer Management
       | email                    | jean.reno@prestashop.com  |
       | defaultGroupId           | Customer                  |
       | groupIds                 | [Customer]                |
-      | genderId                 | Mr.                       |
-      | enabled                  | true                      |
-      | partnerOffersSubscribed  | false                     |
-      | newsletterSubscribed     | true                      |
-      | birthday                 | 1987-02-24                |
-      | guest                    | false                     |
+      | genderId                     | Mr.                       |
+      | isEnabled                    | true                      |
+      | isPartnerOffersSubscribed    | false                     |
+      | isNewsletterSubscribed       | true                      |
+      | birthday                     | 1987-02-24                |
+      | isGuest                      | false                     |
       | companyName              | PrestaShop                |
       | siretCode                | 426169                    |
       | apeCode                  | 2845B                     |
