@@ -65,8 +65,9 @@ final class EditAttributeGroupHandler implements EditAttributeGroupHandlerInterf
         }
         if (null !== $command->getType()) {
             $propertiesToUpdate[] = 'group_type';
-            $propertiesToUpdate[] = 'is_color_group';
             $attributeGroup->group_type = $command->getType()->getValue();
+            $propertiesToUpdate[] = 'is_color_group';
+            $attributeGroup->is_color_group = $attributeGroup->group_type === 'color';
         }
         if (null !== $command->getAssociatedShopIds()) {
             $attributeGroup->id_shop_list = $command->getAssociatedShopIds();
