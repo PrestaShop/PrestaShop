@@ -36,6 +36,9 @@ const FontPreloadPlugin = require('webpack-font-preload-plugin');
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 
 module.exports = {
+  watchOptions: {
+    ignored: /node_modules/,
+  },
   externals: {
     jquery: 'jQuery',
   },

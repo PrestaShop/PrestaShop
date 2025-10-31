@@ -38,6 +38,9 @@ module.exports = (env, argv) => {
 
   const config = {
     mode: argv.mode || 'production',
+    watchOptions: {
+      ignored: /node_modules/,
+    },
     entry: {
       theme: './js/theme.js',
       rtl: './scss/rtl.scss',
