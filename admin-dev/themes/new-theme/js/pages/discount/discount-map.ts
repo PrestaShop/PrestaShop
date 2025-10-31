@@ -26,12 +26,12 @@ const discountContainer = '.discount-container';
 
 export default {
   currencySelect: '#discount_value_reduction_currency',
-  currencySelectContainer: '.price-reduction-currency-selector',
+  currencySelectContainer: `${discountContainer} .price-reduction-currency-selector`,
   discountContainer,
   includeTaxInput: '#discount_value_reduction_include_tax',
   reductionTypeSelect: '#discount_value_reduction_type',
   reductionValueSymbol: `${discountContainer} .price-reduction-value .input-group .input-group-append .input-group-text,
-   .price-reduction-value .input-group .input-group-prepend .input-group-text`,
+   ${discountContainer} .price-reduction-value .input-group .input-group-prepend .input-group-text`,
   freeGiftProductSearchContainer: '#discount_free_gift',
   discountTypeRadios: '#discount_type_selector_discount_type_selector input[type="radio"]',
   discountTypeSubmit: '#discountTypeSubmit',
