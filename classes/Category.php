@@ -4,6 +4,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\RedirectType;
@@ -1436,6 +1437,10 @@ class CategoryCore extends ObjectModel
     {
         parent::resetStaticCache();
         Cache::clean('Category::*');
+        $container = SymfonyContainer::getInstance();
+        if ($container) {
+            $container->get('prestashop.core.category.cache.adapter')->clear();
+        }
     }
 
     /**
