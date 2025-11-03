@@ -61,24 +61,32 @@ class EditableAttributeGroup
     private $type;
 
     /**
+     * @var int
+     */
+    private $position;
+
+    /**
      * @param int $attributeGroupId
      * @param string[] $name
      * @param array $publicName
      * @param string $type
      * @param int[] $associatedShopIds
+     * @param int $position
      */
     public function __construct(
         int $attributeGroupId,
         array $name,
         array $publicName,
         string $type,
-        array $associatedShopIds
+        array $associatedShopIds,
+        int $position
     ) {
         $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
         $this->name = $name;
         $this->associatedShopIds = $associatedShopIds;
         $this->publicName = $publicName;
         $this->type = $type;
+        $this->position = $position;
     }
 
     /**
@@ -119,5 +127,13 @@ class EditableAttributeGroup
     public function getType(): string
     {
         return $this->type;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition(): int
+    {
+        return $this->position;
     }
 }

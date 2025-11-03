@@ -61,7 +61,8 @@ final class GetAttributeGroupForEditingHandler implements GetAttributeGroupForEd
             $attributeGroup->name,
             $attributeGroup->public_name,
             $attributeGroup->group_type,
-            $attributeGroup->getAssociatedShops()
+            $attributeGroup->getAssociatedShops(),
+            (int) $attributeGroup->position
         );
     }
 }
