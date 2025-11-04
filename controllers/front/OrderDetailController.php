@@ -87,7 +87,7 @@ class OrderDetailControllerCore extends FrontController
                     $cm->id_customer_thread = $ct->id;
                     $cm->message = $msgText;
                     $cm->id_product = $id_product;
-                    $client_ip_address = Tools::getRemoteAddr();
+                    $client_ip_address = ($ip_address = inet_pton(Tools::getRemoteAddr())) ? $ip_address : '';
                     $cm->ip_address = (string) ip2long($client_ip_address);
                     $cm->add();
 

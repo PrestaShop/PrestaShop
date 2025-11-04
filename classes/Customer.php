@@ -960,7 +960,7 @@ class CustomerCore extends ObjectModel
         FROM `' . _DB_PREFIX_ . 'customer` c
         LEFT JOIN `' . _DB_PREFIX_ . 'guest` g ON g.id_customer = c.id_customer
         LEFT JOIN `' . _DB_PREFIX_ . 'connections` co ON g.id_guest = co.id_guest
-        WHERE co.`ip_address` = \'' . (int) ip2long(trim($ip)) . '\'');
+        WHERE co.`ip_address` = INET_ATON(\'' . pSQL(trim($ip)) . '\') OR co.`ip_address` = INET6_ATON(\'' . pSQL(trim($ip)) . '\')');
     }
 
     /**
@@ -1024,9 +1024,22 @@ class CustomerCore extends ObjectModel
             return [];
         }
 
+        /*
+         * Storing an IPv4 address using the ip2long() function is equivalent to using SQL INET_ATON()
+         * both producing always a 10-byte length integer.
+         *
+         * When using PHP's inet_pton() function, the result is binary data, 4-byte for IPv4 and 16-byte for IPv6.
+         *
+         * Adding a CASE clause to check how ip was stored so can we can convert it accordingly.
+         */
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-            SELECT c.id_connections, c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
+            SELECT c.id_connections, c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,
+            CASE
+            WHEN OCTET_LENGTH(ip_address) = 10 THEN INET_NTOA(ip_address)
+            WHEN OCTET_LENGTH(ip_address) IN (4,16) THEN INET6_NTOA(ip_address)
+            ELSE NULL
+            END AS ipaddress
             FROM `' . _DB_PREFIX_ . 'guest` g
             LEFT JOIN `' . _DB_PREFIX_ . 'connections` c ON c.id_guest = g.id_guest
             LEFT JOIN `' . _DB_PREFIX_ . 'connections_page` cp ON c.id_connections = cp.id_connections

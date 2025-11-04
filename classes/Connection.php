@@ -59,7 +59,7 @@ class ConnectionCore extends ObjectModel
         'fields' => [
             'id_guest' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_page' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'ip_address' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'ip_address' => ['type' => self::TYPE_STRING, 'validate' => 'isIp2Pton', 'size' => 16],
             'http_referer' => ['type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl', 'size' => 255],
             'id_shop' => ['type' => self::TYPE_INT, 'required' => true],
             'id_shop_group' => ['type' => self::TYPE_INT, 'required' => true],
@@ -178,7 +178,7 @@ class ConnectionCore extends ObjectModel
             $connection = new Connection();
             $connection->id_guest = (int) $cookie->id_guest;
             $connection->id_page = Page::getCurrentId();
-            $connection->ip_address = Tools::getRemoteAddr() ? (int) ip2long(Tools::getRemoteAddr()) : '';
+            $connection->ip_address = ($ip_address = inet_pton(Tools::getRemoteAddr())) ? $ip_address : '';
             $connection->id_shop = Context::getContext()->shop->id;
             $connection->id_shop_group = Context::getContext()->shop->id_shop_group;
             $connection->date_add = $cookie->date_add;

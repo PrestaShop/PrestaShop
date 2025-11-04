@@ -54,6 +54,11 @@ class ValidateCore
         return preg_match('#^-?[0-9]+$#', (string) $ip);
     }
 
+    public static function isIp2Pton($ip)
+    {
+        return false !== inet_ntop(trim((string) $ip)) || self::isIp2Long($ip);
+    }
+
     /**
      * Check for e-mail validity.
      *
