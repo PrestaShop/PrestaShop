@@ -421,6 +421,44 @@ class ConfigurationCore extends ObjectModel
     }
 
     /**
+     * Get configuration value directly from database (bypassing cache).
+     *
+     * @param string $key Configuration key
+     * @param int $idLang Language ID (0 for non-multilang)
+     * @param int $idShopGroup Shop Group ID
+     * @param int $idShop Shop ID
+     *
+     * @return string|null Current value in database, or null if not found
+     */
+    private static function getValueFromDatabase($key, $idLang, $idShopGroup, $idShop)
+    {
+        if (!$idLang) {
+            // Non-multilingual configuration
+            $sql = 'SELECT `value`
+                    FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
+                    WHERE `name` = \'' . pSQL($key) . '\''
+                    . self::sqlRestriction($idShopGroup, $idShop);
+
+            $result = Db::getInstance()->getValue($sql);
+
+            return $result !== false ? $result : null;
+        } else {
+            // Multilingual configuration
+            $sql = 'SELECT cl.`value`
+                    FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang` cl
+                    INNER JOIN `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '` c
+                        ON cl.`' . bqSQL(self::$definition['primary']) . '` = c.`' . bqSQL(self::$definition['primary']) . '`
+                    WHERE c.`name` = \'' . pSQL($key) . '\'
+                        AND cl.`id_lang` = ' . (int) $idLang
+                    . self::sqlRestriction($idShopGroup, $idShop);
+
+            $result = Db::getInstance()->getValue($sql);
+
+            return $result !== false ? $result : null;
+        }
+    }
+
+    /**
      * Update configuration key and value into database (automatically insert if key does not exist).
      *
      * Values are inserted/updated directly using SQL, because using (Configuration) ObjectModel
@@ -460,14 +498,30 @@ class ConfigurationCore extends ObjectModel
         }
 
         // Performance optimization: Check if ALL values are identical to current values BEFORE doing anything
-        // This avoids unnecessary hook calls, database writes, and cache invalidations
+        // This avoids unnecessary database writes and cache invalidations
+        // Strategy: First check cache (cheap), then verify with DB only if cache shows no change (guard against cache/DB desync)
         $hasChanges = false;
         foreach ($values as $lang => $value) {
-            $storedValue = Configuration::get($key, $lang, $idShopGroup, $idShop);
-            $valueHasChanged = ((!is_numeric($value) && $value !== $storedValue) || (is_numeric($value) && $value != $storedValue))
-                || !Configuration::hasKey($key, $lang, $idShopGroup, $idShop);
+            // First check against cached value (cheap memory read)
+            $cachedValue = Configuration::get($key, $lang, $idShopGroup, $idShop);
+            $keyExists = Configuration::hasKey($key, $lang, $idShopGroup, $idShop);
 
-            if ($valueHasChanged) {
+            // Compare values: strict for strings, loose for numeric
+            $cacheShowsChange = (!is_numeric($value) && $value !== $cachedValue)
+                || (is_numeric($value) && $value != $cachedValue)
+                || !$keyExists;
+
+            // If cache shows a change, we know we need to update - no need for DB query
+            if ($cacheShowsChange) {
+                $hasChanges = true;
+                break;
+            }
+
+            // Cache shows no change, but verify with DB to guard against cache/DB desynchronization
+            $dbValue = self::getValueFromDatabase($key, $lang, $idShopGroup, $idShop);
+
+            // If DB value differs from cache or new value, we need to update
+            if ($dbValue === null || $dbValue !== $cachedValue) {
                 $hasChanges = true;
                 break;
             }
@@ -477,14 +531,6 @@ class ConfigurationCore extends ObjectModel
         if (!$hasChanges) {
             return true;
         }
-
-        Hook::exec('actionConfigurationUpdateValueBefore', [
-            'key' => $key,
-            'values' => $values,
-            'html' => $html,
-            'idShopGroup' => $idShopGroup,
-            'idShop' => $idShop,
-        ]);
 
         $result = true;
         foreach ($values as $lang => $value) {

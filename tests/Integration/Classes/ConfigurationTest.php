@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Classes;
 
 use Configuration;
+use Db;
 use PHPUnit\Framework\TestCase;
 
 class ConfigurationTest extends TestCase
@@ -62,5 +63,114 @@ class ConfigurationTest extends TestCase
         $this->assertEquals('RESULT_SHOP_OVERRIDDEN', Configuration::getGlobalValue('PS_TEST_SHOP_OVERRIDDEN'));
         $this->assertEquals('RESULT_GROUP_SHOP_OVERRIDDEN', Configuration::getGlobalValue('PS_TEST_GROUP_SHOP_OVERRIDDEN'));
         $this->assertFalse(Configuration::getGlobalValue('PS_TEST_DOES_NOT_EXIST'));
+    }
+
+    /**
+     * Test that updateValue() skips DB operations when value is unchanged
+     * This is a performance optimization to avoid unnecessary writes and cache invalidations
+     */
+    public function testUpdateValueSkipsDbWriteWhenValueUnchanged(): void
+    {
+        $testKey = 'PS_TEST_PERF_UNCHANGED_VALUE';
+        $testValue = 'initial_value_' . time();
+
+        // Initial insert
+        $result = Configuration::updateValue($testKey, $testValue);
+        $this->assertTrue($result);
+        $this->assertEquals($testValue, Configuration::get($testKey));
+
+        // Get initial date_upd to verify DB is not written
+        $initialDateUpd = Db::getInstance()->getValue(
+            'SELECT date_upd FROM ' . _DB_PREFIX_ . 'configuration WHERE name = \'' . pSQL($testKey) . '\''
+        );
+
+        // Wait 1 second to ensure date_upd would change if DB was written
+        sleep(1);
+
+        // Update with same value - should return true but not write to DB
+        $result = Configuration::updateValue($testKey, $testValue);
+        $this->assertTrue($result);
+        $this->assertEquals($testValue, Configuration::get($testKey));
+
+        // Verify date_upd was not changed (no DB write occurred)
+        $newDateUpd = Db::getInstance()->getValue(
+            'SELECT date_upd FROM ' . _DB_PREFIX_ . 'configuration WHERE name = \'' . pSQL($testKey) . '\''
+        );
+        $this->assertEquals(
+            $initialDateUpd,
+            $newDateUpd,
+            'date_upd should not change when value is unchanged - DB write should be skipped'
+        );
+
+        // Cleanup
+        Configuration::deleteByName($testKey);
+    }
+
+    /**
+     * Test that updateValue() performs DB write when value changes
+     */
+    public function testUpdateValueWritesDbWhenValueChanges(): void
+    {
+        $testKey = 'PS_TEST_PERF_CHANGED_VALUE';
+        $initialValue = 'initial_value_' . time();
+        $newValue = 'new_value_' . time();
+
+        // Initial insert
+        Configuration::updateValue($testKey, $initialValue);
+        $initialDateUpd = Db::getInstance()->getValue(
+            'SELECT date_upd FROM ' . _DB_PREFIX_ . 'configuration WHERE name = \'' . pSQL($testKey) . '\''
+        );
+
+        // Wait to ensure date_upd will be different
+        sleep(1);
+
+        // Update with different value - should write to DB
+        $result = Configuration::updateValue($testKey, $newValue);
+        $this->assertTrue($result);
+        $this->assertEquals($newValue, Configuration::get($testKey));
+
+        // Verify date_upd was changed (DB write occurred)
+        $newDateUpd = Db::getInstance()->getValue(
+            'SELECT date_upd FROM ' . _DB_PREFIX_ . 'configuration WHERE name = \'' . pSQL($testKey) . '\''
+        );
+        $this->assertNotEquals(
+            $initialDateUpd,
+            $newDateUpd,
+            'date_upd should change when value changes - DB write should occur'
+        );
+
+        // Cleanup
+        Configuration::deleteByName($testKey);
+    }
+
+    /**
+     * Test that numeric comparison works correctly (== vs ===)
+     */
+    public function testUpdateValueNumericComparison(): void
+    {
+        $testKey = 'PS_TEST_PERF_NUMERIC';
+
+        // Test with string '1'
+        Configuration::updateValue($testKey, '1');
+        $initialDateUpd = Db::getInstance()->getValue(
+            'SELECT date_upd FROM ' . _DB_PREFIX_ . 'configuration WHERE name = \'' . pSQL($testKey) . '\''
+        );
+
+        sleep(1);
+
+        // Update with integer 1 (should be considered same due to == comparison)
+        Configuration::updateValue($testKey, 1);
+        $newDateUpd = Db::getInstance()->getValue(
+            'SELECT date_upd FROM ' . _DB_PREFIX_ . 'configuration WHERE name = \'' . pSQL($testKey) . '\''
+        );
+
+        $this->assertEquals(
+            $initialDateUpd,
+            $newDateUpd,
+            'Numeric values should use loose comparison (==) - "1" and 1 should be considered equal'
+        );
+
+        // Cleanup
+        Configuration::deleteByName($testKey);
     }
 }
