@@ -289,7 +289,6 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         // with the hashes found in the module's legacy translation file.
 
         $legacyFilesCatalogue = new MessageCatalogue($locale);
-        $catalogueFromPhpAndSmartyFiles = $this->getDefaultCatalogue($locale);
 
         try {
             $catalogueFromLegacyTranslationFiles = $this->legacyFileLoader->load(
@@ -298,8 +297,10 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
             );
         } catch (UnsupportedLocaleException) {
             // this happens when there is no translation file found for the desired locale
-            return $catalogueFromPhpAndSmartyFiles;
+            return $legacyFilesCatalogue;
         }
+
+        $catalogueFromPhpAndSmartyFiles = $this->getDefaultCatalogue($locale);
 
         foreach ($catalogueFromPhpAndSmartyFiles->all() as $currentDomain => $items) {
             foreach (array_keys($items) as $translationKey) {
