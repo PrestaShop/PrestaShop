@@ -459,6 +459,33 @@ class ConfigurationCore extends ObjectModel
             }, $values);
         }
 
+        // Performance optimization: Check if ALL values are identical to current values BEFORE doing anything
+        // This avoids unnecessary hook calls, database writes, and cache invalidations
+        $hasChanges = false;
+        foreach ($values as $lang => $value) {
+            $storedValue = Configuration::get($key, $lang, $idShopGroup, $idShop);
+            $valueHasChanged = ((!is_numeric($value) && $value !== $storedValue) || (is_numeric($value) && $value != $storedValue))
+                || !Configuration::hasKey($key, $lang, $idShopGroup, $idShop);
+
+            if ($valueHasChanged) {
+                $hasChanges = true;
+                break;
+            }
+        }
+
+        // Early return if nothing changed - avoids DB writes and cache invalidations
+        if (!$hasChanges) {
+            return true;
+        }
+
+        Hook::exec('actionConfigurationUpdateValueBefore', [
+            'key' => $key,
+            'values' => $values,
+            'html' => $html,
+            'idShopGroup' => $idShopGroup,
+            'idShop' => $idShop,
+        ]);
+
         $result = true;
         foreach ($values as $lang => $value) {
             $storedValue = Configuration::get($key, $lang, $idShopGroup, $idShop);
