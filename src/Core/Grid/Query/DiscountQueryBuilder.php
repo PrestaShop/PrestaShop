@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
@@ -52,16 +53,29 @@ class DiscountQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
+        $filters = $searchCriteria->getFilters();
+
+        $qb = $this->getQueryBuilder($filters)
             ->select(
-                'cr.id_cart_rule AS id_discount,
-                crl.name,
-                crt.type,
-                cr.code,
-                cr.date_from,
-                cr.date_to,
-                cr.active'
+                'cr.id_cart_rule AS id_discount',
+                'crl.name',
+                'crt.type',
+                'cr.code',
+                'cr.date_from',
+                'cr.date_to',
+                'cr.active',
+                'CASE
+                    WHEN cr.date_to < NOW() THEN "expired"
+                    WHEN cr.date_from > NOW() THEN "scheduled"
+                    ELSE "active"
+                END AS period_state',
+                'CASE
+                    WHEN cr.date_to < NOW() THEN "danger"
+                    WHEN cr.date_from > NOW() THEN "info"
+                    ELSE "success"
+                END AS period_state_badge_type'
             );
+
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
             ->applySorting($searchCriteria, $qb)
@@ -75,7 +89,9 @@ class DiscountQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
+        $filters = $searchCriteria->getFilters();
+
+        $qb = $this->getQueryBuilder($filters)
             ->select('COUNT(DISTINCT cr.`id_cart_rule`)')
         ;
 
@@ -133,10 +149,35 @@ class DiscountQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $exactMatchFilters = ['id_discount', 'type', 'active'];
 
+        $periodFilter = $filters['period_filter'] ?? 'all';
+
+        if ($periodFilter !== 'all') {
+            $now = (new DateTime())->format('Y-m-d H:i:s');
+
+            switch ($periodFilter) {
+                case 'active':
+                    $qb->andWhere('cr.date_from <= :now')
+                        ->andWhere('cr.date_to >= :now')
+                        ->setParameter('now', $now);
+                    break;
+
+                case 'scheduled':
+                    $qb->andWhere('cr.date_from > :now')
+                        ->setParameter('now', $now);
+                    break;
+
+                case 'expired':
+                    $qb->andWhere('cr.date_to < :now')
+                        ->setParameter('now', $now);
+                    break;
+            }
+        }
+
         foreach ($filters as $filterName => $value) {
             if (!array_key_exists($filterName, $allowedFiltersAliasMap)
                 && $filterName !== 'date_from_filter'
-                && $filterName !== 'date_to_filter') {
+                && $filterName !== 'date_to_filter'
+                && $filterName !== 'period_filter') {
                 continue;
             }
 
@@ -161,6 +202,10 @@ class DiscountQueryBuilder extends AbstractDoctrineQueryBuilder
                     $qb->andWhere('cr.date_to <= :dateToEnd')
                         ->setParameter('dateToEnd', $value['to']);
                 }
+                continue;
+            }
+
+            if ($filterName === 'period_filter') {
                 continue;
             }
 

@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BadgeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
@@ -146,6 +147,17 @@ final class DiscountGridDefinitionFactory extends AbstractGridDefinitionFactory 
                     ])
             )
             ->add(
+                (new BadgeColumn('period_state'))
+                    ->setName($this->trans('Period state', [], 'Admin.Catalog.Feature'))
+                    ->setOptions([
+                        'field' => 'period_state',
+                        'sortable' => true,
+                        'badge_type' => '',
+                        'badge_type_field' => 'period_state_badge_type',
+                        'alignment' => 'left',
+                    ])
+            )
+            ->add(
                 (new ActionColumn('actions'))
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
                     ->setOptions([
@@ -201,7 +213,6 @@ final class DiscountGridDefinitionFactory extends AbstractGridDefinitionFactory 
             )
             ->add(
                 (new Filter('active', ChoiceType::class))
-                    ->setAssociatedColumn('active')
                     ->setTypeOptions([
                         'choices' => [
                             $this->trans('Enabled', [], 'Admin.Global') => 1,
@@ -211,6 +222,7 @@ final class DiscountGridDefinitionFactory extends AbstractGridDefinitionFactory 
                         'placeholder' => $this->trans('All', [], 'Admin.Global'),
                         'choice_translation_domain' => false,
                     ])
+                    ->setAssociatedColumn('active')
             )
             ->add((new Filter('date_from_filter', DateRangeType::class))
                 ->setTypeOptions([
@@ -228,8 +240,22 @@ final class DiscountGridDefinitionFactory extends AbstractGridDefinitionFactory 
                     ->setAssociatedColumn('date_to')
             )
             ->add(
+                (new Filter('period_filter', ChoiceType::class))
+                    ->setTypeOptions([
+                        'choices' => [
+                            $this->trans('All', [], 'Admin.Global') => 'all',
+                            $this->trans('Active', [], 'Admin.Global') => 'active',
+                            $this->trans('Scheduled', [], 'Admin.Global') => 'scheduled',
+                            $this->trans('Expired', [], 'Admin.Global') => 'expired',
+                        ],
+                        'required' => false,
+                        'placeholder' => false,
+                        'choice_translation_domain' => false,
+                    ])
+                    ->setAssociatedColumn('period_state')
+            )
+            ->add(
                 (new Filter('actions', SearchAndResetType::class))
-                    ->setAssociatedColumn('actions')
                     ->setTypeOptions([
                         'reset_route' => 'admin_common_reset_search_by_filter_id',
                         'reset_route_params' => [
