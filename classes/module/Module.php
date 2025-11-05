@@ -2402,6 +2402,19 @@ abstract class ModuleCore implements ModuleInterface
             $compile_id = $this->getDefaultCompileId();
         }
 
+        // Resolve template path only if not using Smarty's "module:" syntax
+        // When using "module:" format, Smarty handles the path resolution internally via SmartyResourceModule
+        // Calling getTemplatePath() on "module:" templates returns null, which would trigger clearAllCache()
+        if (false !== strpos($template, 'module:')) {
+            // During installation, Smarty's "module" resource isn't registered yet, skip cache clear
+            if (defined('PS_INSTALLATION_IN_PROGRESS')) {
+                return 0;
+            }
+            // Template path is already in the correct format for Smarty, no transformation needed
+        } elseif (!file_exists(_PS_ROOT_DIR_ . '/' . $template)) {
+            $template = $this->getTemplatePath($template);
+        }
+
         if (static::$_batch_mode) {
             if ($ps_smarty_clear_cache == 'never') {
                 return 0;
@@ -2413,7 +2426,7 @@ abstract class ModuleCore implements ModuleInterface
 
             $key = $template . '-' . $cache_id . '-' . $compile_id;
             if (!isset(static::$_defered_clearCache[$key])) {
-                static::$_defered_clearCache[$key] = [$this->getTemplatePath($template), $cache_id, $compile_id];
+                static::$_defered_clearCache[$key] = [$template, $cache_id, $compile_id];
             }
 
             return 0;
@@ -2427,7 +2440,7 @@ abstract class ModuleCore implements ModuleInterface
             }
 
             Tools::enableCache();
-            $number_of_template_cleared = Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
+            $number_of_template_cleared = Tools::clearCache(Context::getContext()->smarty, $template, $cache_id, $compile_id);
             Tools::restoreCacheSettings();
 
             return $number_of_template_cleared;

@@ -129,6 +129,69 @@ class ModuleTest extends TestCase
 
         Module::getInstanceByName('bankwire')->uninstall();
     }
+
+    /**
+     * Test that _clearCache correctly handles templates with "module:" prefix.
+     * Templates using "module:" syntax should be passed directly to Smarty
+     * without transformation via getTemplatePath() to avoid returning null
+     * which would trigger clearAllCache().
+     *
+     * @dataProvider templatePathProvider
+     */
+    public function testClearCacheHandlesModuleTemplatesCorrectly(string $template, bool $shouldTransform): void
+    {
+        $module = $this->getMockBuilder(Module::class)
+            ->onlyMethods(['getTemplatePath', 'getDefaultCompileId'])
+            ->getMock();
+
+        $module->method('getDefaultCompileId')
+            ->willReturn('default');
+
+        if ($shouldTransform) {
+            $module->expects($this->once())
+                ->method('getTemplatePath')
+                ->with($template)
+                ->willReturn('/resolved/path/template.tpl');
+        } else {
+            $module->expects($this->never())
+                ->method('getTemplatePath');
+        }
+
+        $reflection = new ReflectionClass($module);
+        $method = $reflection->getMethod('_clearCache');
+        $method->setAccessible(true);
+
+        $batchModeProperty = $reflection->getProperty('_batch_mode');
+        $batchModeProperty->setAccessible(true);
+        $batchModeProperty->setValue($module, true);
+
+        $result = $method->invoke($module, $template);
+
+        $this->assertEquals(0, $result);
+
+        $batchModeProperty->setValue($module, false);
+    }
+
+    /**
+     * @return array<string, array{string, bool}>
+     */
+    public function templatePathProvider(): array
+    {
+        return [
+            'module template should not transform' => [
+                'module:ps_currencyselector/ps_currencyselector.tpl',
+                false,
+            ],
+            'module template with subpath' => [
+                'module:ps_socialfollow/views/templates/hook/socialfollow.tpl',
+                false,
+            ],
+            'regular template should transform' => [
+                'views/templates/hook/template.tpl',
+                true,
+            ],
+        ];
+    }
 }
 
 define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__, 4) . '/Resources/modules_tests/'));
