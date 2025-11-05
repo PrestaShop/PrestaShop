@@ -228,11 +228,84 @@ export default class FeatureValuesManager {
             const $featureRow = $(ProductMap.featureValues.featureRowByFeatureId(featureId), this.$collectionRowsContainer);
             $featureRow.remove();
           }
+
+          this.reindexCollection();
+
           this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
           this.$collectionContainer.toggleClass('d-none', this.$collectionRowsContainer.children().length === 0);
         },
       );
       modal.show();
+    });
+  }
+
+  private reindexCollection(): void {
+    const $featureRows = $('tr.product-feature-collection', this.$collectionRowsContainer);
+
+    $featureRows.each((i, featureRowEl) => {
+      const $featureRow = $(featureRowEl);
+      const oldIndexMatch = $featureRow.attr('id')?.match(/feature_collection_(\d+)/);
+
+      if (!oldIndexMatch) {
+        return;
+      }
+
+      const oldIndex = oldIndexMatch[1];
+      const newIndex = i;
+
+      // Update ID and NAME of the main row
+      const featureRowId = $featureRow.attr('id') ?? '';
+      const featureRowName = $featureRow.attr('name') ?? '';
+
+      $featureRow.attr('id', featureRowId.replace(`feature_collection_${oldIndex}`, `feature_collection_${newIndex}`));
+      $featureRow.attr('name', featureRowName.replace(`[${oldIndex}]`, `[${newIndex}]`));
+
+      // Update internal fields (id and name)
+      $featureRow.find('[id]').each((_, el) => {
+        const element = el as HTMLElement;
+
+        if (element.id) {
+          element.id = element.id.replace(`feature_collection_${oldIndex}`, `feature_collection_${newIndex}`);
+        }
+      });
+
+      $featureRow.find('[name]').each((_, el) => {
+        const element = el as HTMLInputElement;
+
+        if (element.name) {
+          element.name = element.name.replace(
+            `[feature_collection][${oldIndex}]`,
+            `[feature_collection][${newIndex}]`,
+          );
+        }
+      });
+
+      // Also update any related value rows (product-feature-value)
+      const featureId = $featureRow.attr('feature-id');
+      const $valueRows = $(`tr.product-feature-value[feature-id="${featureId}"]`, this.$collectionRowsContainer);
+
+      $valueRows.each((_, valueRowEl) => {
+        const $valueRow = $(valueRowEl);
+
+        $valueRow.find('[id]').each((__, el) => {
+          const element = el as HTMLElement;
+
+          if (element.id) {
+            element.id = element.id.replace(`feature_collection_${oldIndex}`, `feature_collection_${newIndex}`);
+          }
+        });
+
+        $valueRow.find('[name]').each((__, el) => {
+          const element = el as HTMLInputElement;
+
+          if (element.name) {
+            element.name = element.name.replace(
+              `[feature_collection][${oldIndex}]`,
+              `[feature_collection][${newIndex}]`,
+            );
+          }
+        });
+      });
     });
   }
 
