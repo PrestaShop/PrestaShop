@@ -28,6 +28,10 @@ jobs:
             database: mysql
           - branch: 9.0.x
             database: mariadb
+          - branch: 9.1.x
+            database: mysql
+          - branch: 9.1.x
+            database: mariadb
           - branch: develop
             database: mysql
           - branch: develop
