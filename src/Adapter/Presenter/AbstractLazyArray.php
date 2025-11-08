@@ -150,7 +150,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
 
     /**
      * @param mixed $key
-     * @param Closure $closure
+     * @param Closure $closure the closure is passed an argument being the LazyArray itself, you can use it if you want
      */
     public function appendClosure($key, Closure $closure)
     {
@@ -272,7 +272,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
 
                     if (!$isResultAvailableInCache) {
                         $methodName = $this->arrayAccessList[$index]['value'];
-                        $this->methodCacheResults[$index] = $methodName();
+                        $this->methodCacheResults[$index] = $methodName($this);
                     }
                     $result = $this->methodCacheResults[$index];
 
