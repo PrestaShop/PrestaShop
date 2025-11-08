@@ -569,4 +569,68 @@ class OrderLazyArray extends AbstractLazyArray
 
         return $products;
     }
+
+    /**
+     * @return CartPresenter
+     */
+    public function getCartPresenter(): CartPresenter
+    {
+        return $this->cartPresenter;
+    }
+
+    /**
+     * @return ObjectPresenter
+     */
+    public function getObjectPresenter(): ObjectPresenter
+    {
+        return $this->objectPresenter;
+    }
+
+    /**
+     * @return PriceFormatter
+     */
+    public function getPriceFormatter(): PriceFormatter
+    {
+        return $this->priceFormatter;
+    }
+
+    /**
+     * @return TranslatorComponent
+     */
+    public function getTranslator(): TranslatorComponent
+    {
+        return $this->translator;
+    }
+
+    /**
+     * @return TaxConfiguration
+     */
+    public function getTaxConfiguration(): TaxConfiguration
+    {
+        return $this->taxConfiguration;
+    }
+
+    /**
+     * @return Order
+     */
+    public function getOrder(): Order
+    {
+        return $this->order;
+    }
+
+    /**
+     * @return OrderSubtotalLazyArray
+     */
+    public function getSubTotalsObject(): OrderSubtotalLazyArray
+    {
+        return $this->subTotals;
+    }
+
+    /**
+     * @return ShipmentRepository
+     */
+    public function getShipmentRepository(): ShipmentRepository
+    {
+        return $this->shipmentRepository;
+    }
 }

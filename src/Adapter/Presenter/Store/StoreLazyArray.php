@@ -153,4 +153,36 @@ class StoreLazyArray extends AbstractLazyArray
 
         return $this->store['business_hours'];
     }
+
+    /**
+     * @return ImageRetriever
+     */
+    public function getImageRetriever(): ImageRetriever
+    {
+        return $this->imageRetriever;
+    }
+
+    /**
+     * @return Language
+     */
+    public function getLanguage(): Language
+    {
+        return $this->language;
+    }
+
+    /**
+     * @return TranslatorInterface
+     */
+    public function getTranslator(): TranslatorInterface
+    {
+        return $this->translator;
+    }
+
+    /**
+     * @return array
+     */
+    public function getStore(): array
+    {
+        return $this->store;
+    }
 }

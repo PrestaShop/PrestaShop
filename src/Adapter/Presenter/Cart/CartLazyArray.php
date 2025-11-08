@@ -590,4 +590,60 @@ class CartLazyArray extends AbstractLazyArray
             Context::getContext()->language
         );
     }
+
+    /**
+     * @return bool
+     */
+    public function getShouldSeparateGifts(): bool
+    {
+        return $this->shouldSeparateGifts;
+    }
+
+    /**
+     * @return CartPresenter
+     */
+    public function getCartPresenter(): CartPresenter
+    {
+        return $this->cartPresenter;
+    }
+
+    /**
+     * @return Cart
+     */
+    public function getCart(): Cart
+    {
+        return $this->cart;
+    }
+
+    /**
+     * @return TranslatorInterface
+     */
+    public function getTranslator(): TranslatorInterface
+    {
+        return $this->translator;
+    }
+
+    /**
+     * @return PriceFormatter
+     */
+    public function getPriceFormatter(): PriceFormatter
+    {
+        return $this->priceFormatter;
+    }
+
+    /**
+     * @return Link
+     */
+    public function getLink(): Link
+    {
+        return $this->link;
+    }
+
+    /**
+     * @return ImageRetriever
+     */
+    public function getImageRetriever(): ImageRetriever
+    {
+        return $this->imageRetriever;
+    }
 }

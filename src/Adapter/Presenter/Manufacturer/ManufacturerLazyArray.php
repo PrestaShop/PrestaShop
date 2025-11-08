@@ -115,4 +115,36 @@ class ManufacturerLazyArray extends AbstractLazyArray
 
         return $this->manufacturer['nb_products'];
     }
+
+    /**
+     * @return ImageRetriever
+     */
+    public function getImageRetriever(): ImageRetriever
+    {
+        return $this->imageRetriever;
+    }
+
+    /**
+     * @return Link
+     */
+    public function getLink(): Link
+    {
+        return $this->link;
+    }
+
+    /**
+     * @return Language
+     */
+    public function getLanguage(): Language
+    {
+        return $this->language;
+    }
+
+    /**
+     * @return array
+     */
+    public function getManufacturer(): array
+    {
+        return $this->manufacturer;
+    }
 }
