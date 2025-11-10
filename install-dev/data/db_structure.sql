@@ -2480,6 +2480,10 @@ CREATE TABLE `PREFIX_stock_available` (
   KEY `id_shop_group` (`id_shop_group`),
   KEY `id_product` (`id_product`),
   KEY `id_product_attribute` (`id_product_attribute`),
+  KEY `product_byshop` (
+    `id_product`, `id_shop`,
+    `id_shop_group`
+  ),
   UNIQUE `product_sqlstock` (
     `id_product`, `id_product_attribute`,
     `id_shop`, `id_shop_group`
