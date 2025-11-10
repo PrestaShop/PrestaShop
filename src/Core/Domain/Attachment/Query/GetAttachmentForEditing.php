@@ -40,13 +40,13 @@ class GetAttachmentForEditing
     private $attachmentId;
 
     /**
-     * @param int $attachmentIdValue
+     * @param int $attachmentId
      *
      * @throws AttachmentConstraintException
      */
-    public function __construct(int $attachmentIdValue)
+    public function __construct(int $attachmentId)
     {
-        $this->attachmentId = new AttachmentId($attachmentIdValue);
+        $this->attachmentId = new AttachmentId($attachmentId);
     }
 
     /**

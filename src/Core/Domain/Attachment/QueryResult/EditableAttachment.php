@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use SplFileInfo;
 
 /**
@@ -33,6 +34,11 @@ use SplFileInfo;
  */
 class EditableAttachment
 {
+    /**
+     * @var AttachmentId
+     */
+    private $attachmentId;
+
     /**
      * @var string
      */
@@ -59,10 +65,12 @@ class EditableAttachment
      * @param string[] $description
      */
     public function __construct(
+        AttachmentId $attachmentId,
         string $fileName,
         array $name,
         array $description
     ) {
+        $this->attachmentId = $attachmentId;
         $this->fileName = $fileName;
         $this->name = $name;
         $this->description = $description;
@@ -110,5 +118,10 @@ class EditableAttachment
         $this->file = $file;
 
         return $this;
+    }
+
+    public function getAttachmentId()
+    {
+        return $this->attachmentId;
     }
 }
