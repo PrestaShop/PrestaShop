@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "01030ac3c9fe67217e8b7682a6d3b099",
+    "content-hash": "a5a6c78c3ec779e05f6f7bf398708707",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5265,12 +5265,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "2bfd399966bb9346d0aca8908f1006cf22449c0b"
+                "reference": "884201aefe6a921a99b54f210165e6fc4d5e6774"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/2bfd399966bb9346d0aca8908f1006cf22449c0b",
-                "reference": "2bfd399966bb9346d0aca8908f1006cf22449c0b",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/884201aefe6a921a99b54f210165e6fc4d5e6774",
+                "reference": "884201aefe6a921a99b54f210165e6fc4d5e6774",
                 "shasum": ""
             },
             "require": {
@@ -5326,7 +5326,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/ps_apiresources/tree/dev"
             },
-            "time": "2025-10-30T11:06:47+00:00"
+            "time": "2025-11-07T08:38:41+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -18344,9 +18344,9 @@
         "ext-simplexml": "*",
         "ext-zip": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.6.0"
 }

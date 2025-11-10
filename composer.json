@@ -72,7 +72,7 @@
         "prestashop/hummingbird": "^1.0.1",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^7.0",
-        "prestashop/ps_apiresources": "dev-dev",
+        "prestashop/ps_apiresources": "dev-dev#884201aefe6a921a99b54f210165e6fc4d5e6774",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^1.0",
         "prestashop/ps_brandlist": "^1.0",
