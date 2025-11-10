@@ -542,7 +542,8 @@ CREATE TABLE `PREFIX_connections` (
   PRIMARY KEY (`id_connections`),
   KEY `id_guest` (`id_guest`),
   KEY `date_add` (`date_add`),
-  KEY `id_page` (`id_page`)
+  KEY `id_page` (`id_page`),
+  KEY `id_guestdateadd` (`id_guest`, `date_add`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* User connection pages log. See PS_STATSDATA_CUSTOMER_PAGESVIEWS variable */
@@ -1741,6 +1742,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   KEY `indexed` (
     `indexed`, `active`, `id_product`
   ),
+  KEY `id_shop` (`id_shop`),
   INDEX `shop_tax` (`id_shop`, `id_tax_rules_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
@@ -2481,6 +2483,10 @@ CREATE TABLE `PREFIX_stock_available` (
   KEY `id_shop_group` (`id_shop_group`),
   KEY `id_product` (`id_product`),
   KEY `id_product_attribute` (`id_product_attribute`),
+  KEY `product_byshop` (
+    `id_product`, `id_shop`,
+    `id_shop_group`
+  ),
   UNIQUE `product_sqlstock` (
     `id_product`, `id_product_attribute`,
     `id_shop`, `id_shop_group`
