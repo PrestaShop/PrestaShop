@@ -138,4 +138,32 @@ class AddAttachmentCommand
     {
         return $this->originalName;
     }
+
+    public function setPathName(string $pathName): self
+    {
+        $this->pathName = $pathName;
+
+        return $this;
+    }
+
+    public function setFileSize(int $fileSize): self
+    {
+        $this->fileSize = $fileSize;
+
+        return $this;
+    }
+
+    public function setMimeType(string $mimeType): self
+    {
+        $this->mimeType = $mimeType;
+
+        return $this;
+    }
+
+    public function setOriginalName(string $originalName): self
+    {
+        $this->originalName = $originalName;
+
+        return $this;
+    }
 }
