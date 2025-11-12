@@ -895,6 +895,9 @@ abstract class ModuleCore implements ModuleInterface
      * Uninstalls the module from database.
      *
      * @return bool result
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function uninstall()
     {
@@ -963,6 +966,10 @@ abstract class ModuleCore implements ModuleInterface
 
         // Remove restrictions for client groups
         Group::truncateRestrictionsByModule($this->id);
+
+        // Remove module tabs
+        $tabs = Tab::getCollectionFromModule($this->name)->getResults();
+        array_map(static fn(Tab $tab) => $tab->delete(), $tabs);
 
         // Uninstall the module
         if (Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module` WHERE `id_module` = ' . (int) $this->id)) {
