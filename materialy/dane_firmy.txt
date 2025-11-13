@@ -1,0 +1,265 @@
+Instrukcja
+Prosimy o zebranie poniższych informacji i dokumentów. Zaznacz checkbox przy każdej pozycji, którą masz gotową. Wypełnione dane prześlij nam.
+
+ 1. DANE FIRMY
+# Podstawowe informacje
+- [ ] Pełna nazwa firmy (zgodna z rejestrem):  
+  GOSPODARSTWO EKOLOGICZNE VITA NATURA ECOSUSZ TOMASZ CHLEBEK
+__________________________________________________
+
+- [ ] NIP (Numer Identyfikacji Podatkowej):  
+  ________________-_______________________________________
+
+- [ ] REGON (Numer statystyczny):  
+  ____521515809 ___________________________________________________
+
+- [ ] KRS (dla spółek) lub wpis do CEIDG (dla JDG):  
+  ___________-____________________________________________
+
+- [ ] Forma prawna (np. Sp. z o.o., S.A., JDG, Spółka cywilna):  
+  ____________-___________________________________________
+
+- [ ] Data rozpoczęcia działalności:  
+  _______2015-06-18 ________________________________________________
+
+- [ ] Kapitał zakładowy (dla spółek kapitałowych):  
+  _________________-______________________________________
+
+- [ ] Zarząd firmy (imiona, nazwiska, funkcje):  
+  
+  ______________-_________________________________________
+  _______________________________________________________
+  
+
+ 2. ADRESY
+
+- [ ] Adres siedziby firmy:
+    Ulica: __Wandalin _______________________________________________
+  Nr budynku/lokalu: __129___________________________________
+  Kod pocztowy: ___24-300_______________________________________
+  Miasto: ______Opole Lubelskie__________________________________________
+  Kraj: _____Polska_____________________________________________
+ 
+- [ ] Adres korespondencyjny (jeśli inny niż siedziba):
+  Ulica: _________________j/w________________________________
+  Nr budynku/lokalu: _____________________________________
+  Kod pocztowy: __________________________________________
+  Miasto: ________________________________________________
+  
+- [ ] Adres magazynu/miejsca wysyłki:
+  Ulica: ___________j/w______________________________________
+  Nr budynku/lokalu: _____________________________________
+  Kod pocztowy: __________________________________________
+  Miasto: ________________________________________________
+  
+- [ ] Adres zwrotów (jeśli inny):
+  
+  __________________j/w_____________________________________
+ 
+ 3. DANE KONTAKTOWE
+- [ ] Telefon firmowy:  
+  _______+ 48 791017002, +  48 790236506_______________________________________________
+
+- [ ] Telefon infolinii/obsługi klienta:  
+  _______________________________________________________
+
+
+- [ ] E-mail główny:  
+  _____________biuro@ecosusz.pl__________________________________________
+
+- [ ] E-mail obsługi klienta:  
+  _______________________biuro@ecosusz.pl___________________________________
+
+- [ ] E-mail do zamówień:  
+  ______________________biuro@ecosusz.pl____________________________________
+
+- [ ] Godziny pracy obsługi klienta:  
+  
+  Poniedziałek-Piątek: _____8.00 – 17.00______________________________
+  Sobota: ________8.00 – 14.00________________________________________
+  Niedziela/Święta: _____-_________________________________
+  
+ 4. DANE BANKOWE I PŁATNOŚCI
+# Rachunek bankowy
+- [ ] Nazwa banku:  
+  _________Bank Pocztowy______________________________________________
+
+- [ ] Numer rachunku (IBAN):  
+ 	71132015372911148030000001 ________________________________________________
+
+- [ ] SWIFT/BIC (dla płatności międzynarodowych):  
+  ______________________________________-_________________
+
+Bramki płatności
+- [ ] PayU - dane dostępowe (login, klucze API)
+- [ ] Przelewy24 - dane dostępowe
+- [ ] PayPal - adres e-mail konta biznesowego
+- [ ] Stripe - klucze API
+- [ ] Tpay - dane dostępowe
+- [ ] Inne:  
+5. PODATKI I KSIĘGOWOŚĆ
+- [ ] Status VAT (czynny/zwolniony):  
+  _____________________RACHUNEK   (bez VAT)__________________________________
+
+- [ ] Numer VAT-UE (dla transakcji wewnątrzwspólnotowych):  
+  _______________________________________________________
+
+- [ ] Nazwa i adres Urzędu Skarbowego:
+  
+  ____________________- ___________________________________
+  _______________________________________________________
+  
+- [ ] System księgowy (np. Comarch, InsERT, WAPRO):  
+  ___________________________-____________________________
+- [ ] Format numeracji faktur (np. FV/01/2025):  
+  _________________________-______________________________
+- [ ] Stawki VAT dla produktów:
+  - [ ] Standardowa (23%)
+  - [ ] Obniżona (8%)
+  - [ ] Obniżona (5%)
+  - [ ] Zwolniona (0%)
+  - [ ] Inne: _______________
+- [ ] Mechanizm podzielonej płatności (MPP) - czy dotyczy?  
+  ☐ Tak  ☐ Nie
+- [ ] Rejestracja OSS/IOSS (sprzedaż w UE):  
+  ☐ Tak  ☐ Nie  ☐ Nie dotyczy
+
+
+ 6. DOKUMENTY PRAWNE
+Prosimy o przesłanie gotowych dokumentów lub materiałów do ich przygotowania:
+- [ ] Regulamin sklepu (wzór lub gotowy dokument)
+- [ ] Polityka prywatności (zgodna z RODO)
+- [ ] Polityka cookies
+- [ ] Instrukcja reklamacji i zwrotów
+- [ ] Klauzula informacyjna RODO
+
+# Dane do polityki prywatności
+- [ ] Administrator danych osobowych (nazwa firmy, adres):  
+  _GOSPODARSTWO EKOLOGICZNE VITA NATURA ECOSUSZ TOMASZ CHLEBEK,
+Wandalin 129, 24-300 Opole Lubelskie
+______________________________________________________
+  
+7. WYSYŁKA I LOGISTYKA
+
+# Umowy z kurierami
+- [ ] DPD - numer konta klienta: _________-______________________
+- [ ] InPost - dane dostępowe: ________-_________________________
+- [ ] Poczta Polska - umowa: ☐ Tak  ☐X Nie
+- [ ] UPS - numer konta: ______________-________________________
+- [ ] DHL - numer konta: _________-_____________________________
+- [ ] Inny przewoźnik:  
+  Nazwa: _____________-____________________________________
+  Numer konta: ______-_____________________________________
+  
+# Koszty wysyłki
+- [ ] Cennik wysyłek (kwoty lub sposób kalkulacji):
+  _________Kurier  - 25 zł______________________________________________
+  ____________Paczkomat In-Post -  20 zł___________________________________________
+- [ ] Darmowa wysyłka od kwoty:  
+  ________________________280 zł_______________________________
+- [ ] Czas realizacji (dni robocze):  
+  ______________4 dni_________________________________________
+8. KONTO ADMINISTRATORA SKLEPU
+
+- [ ] Imię i nazwisko głównego admina:  
+  __________________________Jolanta Chlebek_____________________________
+
+- [ ] E-mail administratora:  
+  _____________biuro@ecosusz.pl__________________________________________
+
+- [ ] Preferowany język panelu admin:  
+  ☐X Polski  ☐ Angielski  ☐ Inny: _______________________
+
+- [ ] Strefa czasowa:  
+  ☐X Europe/Warsaw  ☐ Inna: ______________________________
+
+
+
+
+9. KONFIGURACJA SKLEPU
+
+# Podstawowe ustawienia
+- [ ] Nazwa sklepu:  
+  _______________________________________________________
+
+- [ ] Domyślny język:  
+  ☐ Polski  ☐ Angielski  ☐ Inne: _______________________
+
+- [ ] Dodatkowe języki (jeśli wielojęzyczny):  
+  _______________________________________________________
+
+- [ ] Domyślna waluta:  
+  ☐ PLN  ☐ EUR  ☐ USD  ☐ Inna: ________________________
+
+- [ ] Dodatkowe waluty:  
+  _______________________________________________________
+
+# Materiały graficzne
+- [ ] Logo sklepu (formaty: PNG, SVG - przesłać pliki)
+- [ ] Favicon (ikona w przeglądarce - 16x16px, 32x32px)
+- [ ] Logo email (dla wiadomości automatycznych)
+- [ ] Banery (jeśli gotowe)
+
+# SEO
+- [ ] Meta tytuł główny:  
+  _______________________________________________________
+
+- [ ] Meta opis:  
+  
+  _______________________________________________________
+  _______________________________________________________
+  
+
+- [ ] Słowa kluczowe (jeśli opracowane):  
+  _______________________________________________________
+
+# Social Media
+- [ ] Facebook: https://facebook.com/___________________
+- [ ] Instagram: https://instagram.com/__________________
+- [ ] Twitter/X: https://twitter.com/____________________
+- [ ] LinkedIn: https://linkedin.com/___________________
+- [ ] YouTube: https://youtube.com/____________________
+- [ ] TikTok: https://tiktok.com/@_____________________
+
+
+
+ 14. BAZA DANYCH (konfiguracja techniczna)
+
+Uwaga: Te dane zostaną ustalone podczas instalacji, ale jeśli masz preferencje:
+
+- [ ] Preferowany prefix tabel (domyślnie ps_):  
+  _______________________________________________________
+
+- [ ] Czy włączyć SSL:  
+  ☐ Tak  ☐ Nie  ☐ W przyszłości
+
+SPOSÓB PRZESŁANIA DANYCH
+
+Wypełniony formularz wraz z załącznikami prosimy przesłać na adres:
+
+E-mail: _______________________________________________
+
+Alternatywnie (dla dużych plików):
+- WeTransfer
+- Google Drive / Dropbox (link do folderu)
+- Inny uzgodniony sposób
+
+
+
+ ⚠️ WAŻNE UWAGI
+
+1. Wszystkie dane muszą być aktualne i zgodne z dokumentami rejestrowymi
+2. Dokumenty sanitarne są obowiązkowe dla sprzedaży żywności
+3. Brak niektórych informacji może opóźnić uruchomienie sklepu
+4. Dane wrażliwe (hasła, klucze API) przesyłaj bezpiecznym kanałem
+5. Koszty dodatkowe mogą wystąpić, jeśli trzeba będzie uzupełniać rejestracje
+
+
+Data wypełnienia: ____________________
+
+Podpis: ____________________
+
+
+
+*Ten dokument służy do zebrania wszystkich niezbędnych informacji do prawidłowego wdrożenia i uruchomienia sklepu internetowego zgodnie z polskim prawem oraz wymogami dla sprzedaży żywności.*
+

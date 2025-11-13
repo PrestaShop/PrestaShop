@@ -23,6 +23,21 @@ RUN apt update && apt install -y mailutils
 
 ENV NODE_VERSION       $NODE_VERSION
 
+# Install Node.js (for assets build)
+# If NODE_VERSION is provided (e.g. 18, 20), use it; otherwise default to 18
+RUN set -eux; \
+  MAJOR="${NODE_VERSION%%.*}"; \
+  if [ -z "$MAJOR" ] || [ "$MAJOR" = "$NODE_VERSION" -a -z "$NODE_VERSION" ]; then MAJOR=18; fi; \
+  if curl -fsSL "https://deb.nodesource.com/setup_${MAJOR}.x" | bash -; then \
+    apt-get install -y nodejs; \
+  else \
+    echo "Nodesource setup failed, falling back to Debian nodejs+npm"; \
+    apt-get update; apt-get install -y nodejs npm; \
+  fi; \
+  node --version; \
+  if ! command -v npm >/dev/null 2>&1; then apt-get install -y npm; fi; \
+  npm --version
+
 RUN php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');" && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer && rm -rf /tmp/composer-setup.php
 
 RUN if [ "$INSTALL_XDEBUG" = "true" ]; then \
