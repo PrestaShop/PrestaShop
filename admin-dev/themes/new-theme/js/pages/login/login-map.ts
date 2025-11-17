@@ -36,4 +36,5 @@ export default {
   resetNewPasswordConfirmation: '#reset_password_new_password_second',
   resetSubmitButton: '#reset_password_submit_login',
   alertMessages: '.card-body .alert',
+  stayLoggedInCheckbox: '#stay_logged_in',
 };

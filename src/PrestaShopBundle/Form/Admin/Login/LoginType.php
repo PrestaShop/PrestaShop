@@ -82,6 +82,9 @@ class LoginType extends AbstractType
             ->add('stay_logged_in', CheckboxType::class, [
                 'label' => $this->translator->trans('Stay logged in', [], 'Admin.Login.Feature'),
                 'required' => false,
+                'label_attr' => [
+                    'tabindex' => '0',
+                ],
                 'external_link' => [
                     'href' => '#forgotten_password',
                     'text' => $this->translator->trans('I forgot my password', [], 'Admin.Login.Feature'),

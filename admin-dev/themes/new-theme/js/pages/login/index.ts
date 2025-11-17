@@ -52,4 +52,23 @@ onReady(() => {
   });
 
   new EmailInput();
+
+  const checkbox = document.querySelector<HTMLInputElement>(LoginFormMap.stayLoggedInCheckbox);
+
+  if (checkbox) {
+    const label = checkbox.labels?.[0];
+
+    if (label) {
+      label.setAttribute('tabindex', '0');
+
+      label.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Enter') {
+          event.preventDefault();
+          checkbox.checked = !checkbox.checked;
+          label.setAttribute('aria-checked', checkbox.checked ? 'true' : 'false');
+          checkbox.dispatchEvent(new Event('change', {bubbles: true}));
+        }
+      });
+    }
+  }
 });
