@@ -57,6 +57,13 @@ class DateTimeImmutableNormalizer implements DenormalizerInterface, NormalizerIn
             throw new InvalidArgumentException('Expected object to be a ' . DateTimeImmutable::class);
         }
 
+        // If the time portion is 00:00:00, format as date-only to preserve date-only values
+        // This handles the case where a date-only value (e.g., "2026-05-26") is stored
+        // and retrieved, which becomes "2026-05-26 00:00:00" when converted to DateTimeImmutable
+        if ($object->format('H:i:s') === '00:00:00') {
+            return $object->format(DateTimeUtil::DEFAULT_DATE_FORMAT);
+        }
+
         return $object->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
     }
 
