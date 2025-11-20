@@ -109,6 +109,10 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     'children_selector' => DiscountUsabilityModeType::AUTO_MODE,
                     'code' => '',
                 ],
+                'customer_limit' => [
+                    'limit' => 1,
+                    'no_limit' => false,
+                ],
                 'compatibility' => $this->getCompatibilityData(),
                 'priority' => 1,
             ],
@@ -229,6 +233,10 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                 'mode' => [
                     'children_selector' => $discountForEditing->getCode() ? DiscountUsabilityModeType::CODE_MODE : DiscountUsabilityModeType::AUTO_MODE,
                     'code' => $discountForEditing->getCode(),
+                ],
+                'customer_limit' => [
+                    'limit' => $discountForEditing->getQuantityPerUser() ?? 1,
+                    'no_limit' => $discountForEditing->getQuantityPerUser() < 1,
                 ],
                 'compatibility' => $this->getCompatibilityData($id),
                 'priority' => $discountForEditing->getPriority(),
