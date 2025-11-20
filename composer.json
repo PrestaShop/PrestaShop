@@ -250,7 +250,10 @@
         "platform": {
             "php": "8.1.0"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "audit": {
+            "block-insecure": false
+        }
     },
     "extra": {
         "symfony": {
