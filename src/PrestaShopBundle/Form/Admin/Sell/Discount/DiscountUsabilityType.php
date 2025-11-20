@@ -44,6 +44,15 @@ class DiscountUsabilityType extends TranslatorAwareType
                 'label' => $this->trans('Specifiy discount mode', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'required' => false,
+                'choice_options' => [
+                    'label' => false,
+                ],
+            ])
+            ->add('customer_limit', DiscountCustomerLimitType::class, [
+                'label' => $this->trans('Select usage limits per customer', 'Admin.Catalog.Feature'),
+                'label_help_box' => $this->trans('A customer will only be able to use the cart rule "X" time(s).', 'Admin.Catalog.Help'),
+                'label_tag_name' => 'h3',
+                'required' => false,
             ])
             ->add('compatibility', DiscountCompatibilityType::class, [
                 'label_tag_name' => 'h3',
