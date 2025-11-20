@@ -116,4 +116,16 @@ $(() => {
 
   initGroupedItemCollection(DiscountMap.productSegmentAttributes, getAllAttributeGroups);
   initGroupedItemCollection(DiscountMap.productSegmentFeatures, getAllFeatureGroups);
+
+  // Disable quantity per customer limit input if no limit checkbox is checked
+  function checkQuantityPerCustomerlimitCheckbox(): void {
+    $(DiscountMap.quantityPerCustomerInput).prop(
+      'disabled',
+      $(DiscountMap.quantityPerCustomerNolimitCheckbox).is(':checked'),
+    );
+  }
+  $(DiscountMap.quantityPerCustomerNolimitCheckbox).on('change', () => {
+    checkQuantityPerCustomerlimitCheckbox();
+  });
+  checkQuantityPerCustomerlimitCheckbox();
 });
