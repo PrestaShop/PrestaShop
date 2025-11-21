@@ -54,6 +54,9 @@ class DisablingSwitchType extends SwitchType
                 'show_choices' => false,
                 'label' => false,
                 'required' => false,
+                'label_attr' => [
+                    'class' => 'font-weight-normal small mb-0',
+                ],
                 'row_attr' => [
                     'class' => 'ps-disabling-switch',
                 ],

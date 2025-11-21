@@ -55,6 +55,7 @@ class DisablingSwitchExtension extends AbstractTypeExtension
     public const SWITCH_EVENT_OPTION = 'disabling_switch_event';
     public const DISABLED_VALUE_OPTION = 'disabled_value';
     public const SWITCH_STATE_ON_DISABLE_OPTION = 'switch_state_on_disable';
+    public const SWITCH_LABEL = 'disabling_switch_label';
 
     /**
      * @var AddDisablingSwitchListener
@@ -151,12 +152,15 @@ class DisablingSwitchExtension extends AbstractTypeExtension
                 static::SWITCH_EVENT_OPTION => null,
                 // Define the state of the switch component when value is disabled (by default on off)
                 static::SWITCH_STATE_ON_DISABLE_OPTION => 'off',
+                // Define the label of the switch component if needed
+                static::SWITCH_LABEL => false,
             ])
             ->setAllowedTypes(static::SWITCH_OPTION, 'bool')
             ->setAllowedTypes(static::DISABLED_VALUE_OPTION, ['null', 'string', 'int', 'array', 'object', 'bool', 'float', 'callback', Closure::class])
             ->setAllowedTypes(static::SWITCH_EVENT_OPTION, ['string', 'null'])
             ->setAllowedTypes(static::SWITCH_STATE_ON_DISABLE_OPTION, 'string')
             ->setAllowedValues(static::SWITCH_STATE_ON_DISABLE_OPTION, ['off', 'on'])
+            ->setAllowedTypes(static::SWITCH_LABEL, ['bool', 'string'])
         ;
     }
 
