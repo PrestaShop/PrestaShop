@@ -125,7 +125,7 @@
       <trans-unit id="c292d80ff15bf0d38f63af320f9f7839">
         <source>Friendly URLs are currently disabled.</source>
         <target>Friendly URLs are currently disabled.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 233]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 235]</note>
       </trans-unit>
       <trans-unit id="8743e83ee9ec372f40d4a58160bfc1d2">
         <source>If they have no other category, I want to associate them with the parent category and turn them offline.</source>
@@ -475,7 +475,7 @@
       <trans-unit id="3af7787bf8822cfd0cbeab09c9176a54">
         <source>Remember to properly edit all information after duplicating - including SEO information and friendly URL.</source>
         <target>Remember to properly edit all information after duplicating - including SEO information and friendly URL.</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 480]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 494]</note>
       </trans-unit>
       <trans-unit id="4c8eca5abe96ae48ab05070588455d6a">
         <source>Search phrase length is not valid.</source>
@@ -510,7 +510,7 @@
       <trans-unit id="d7e9bf98e857f83943b3b75fce04cea9">
         <source>The "Force update of friendly URL" option is currently enabled.</source>
         <target>The "Force update of friendly URL" option is currently enabled.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 243]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 245]</note>
       </trans-unit>
       <trans-unit id="fc2c8663d58c42bc29edd45a79b4358c">
         <source>The discount was successfully generated.</source>
@@ -590,7 +590,7 @@
       <trans-unit id="14c18063d1497fb156ab73c0d59d354b">
         <source>This file is associated with the following products. Are you sure you want to delete it?</source>
         <target>This file is associated with the following products. Are you sure you want to delete it?</target>
-        <note>File: src/Core/Grid/Data/Factory/AttachmentGridDataFactoryDecorator.php [Line: 120]</note>
+        <note>File: src/Core/Grid/Data/Factory/AttachmentGridDataFactoryDecorator.php [Line: 91]</note>
       </trans-unit>
       <trans-unit id="cf456ee90912d9e25795925d067f8952">
         <source>This value is too long. It should have %limit% characters or less.</source>
@@ -630,12 +630,12 @@
       <trans-unit id="87ffb4b96479e24281064ad98ddfd16f">
         <source>To disable it, go to [1]Product Settings[/1]</source>
         <target>To disable it, go to [1]Product Settings[/1]</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 244]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 246]</note>
       </trans-unit>
       <trans-unit id="517937df76770fb3c4f9e6100ed69ce9">
         <source>To enable it, go to [1]SEO and URLs[/1]</source>
         <target>To enable it, go to [1]SEO and URLs[/1]</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 234]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 236]</note>
       </trans-unit>
       <trans-unit id="323970e84c7dc4bc7432a513f09959b6">
         <source>To put this product online, please enter a name.</source>

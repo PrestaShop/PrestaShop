@@ -1365,7 +1365,7 @@ Best regards,</target>
       <trans-unit id="858591a7d8647b4535c51a4ad506db9c">
         <source>Shipping does not apply to virtual orders</source>
         <target>Shipping does not apply to virtual orders</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig [Line: 79]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig [Line: 80]</note>
       </trans-unit>
       <trans-unit id="4c15f9bb0c76e90180c701b2d39994d8">
         <source>Shipping price (Tax incl.)</source>

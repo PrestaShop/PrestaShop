@@ -400,7 +400,7 @@
       <trans-unit id="cb5feb1b7314637725a2e73bdc9f7295">
         <source>Color</source>
         <target>Color</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 111]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 92]</note>
       </trans-unit>
       <trans-unit id="47ac923d219501859fb68fed8c8db77b">
         <source>Combination</source>
@@ -565,7 +565,7 @@
       <trans-unit id="675056ad1441b6375b2c5abd48c27ef1">
         <source>Depth</source>
         <target>Depth</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 80]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 81]</note>
       </trans-unit>
       <trans-unit id="e3cf5ac19407b1a62c6fccaff675a53b">
         <source>Descending</source>
@@ -625,7 +625,7 @@
       <trans-unit id="86754577897acfb25deb69039d49d9a7">
         <source>Displayed</source>
         <target>Displayed</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php [Line: 256]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php [Line: 259]</note>
       </trans-unit>
       <trans-unit id="f5c493141bb4b2508c5938fd9353291a">
         <source>Displaying %1$s of %2$s</source>
@@ -765,7 +765,7 @@
       <trans-unit id="1dec4f55522b828fe5dacf8478021a9e">
         <source>Friendly URL</source>
         <target>Friendly URL</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php [Line: 212]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php [Line: 215]</note>
       </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
@@ -1490,7 +1490,7 @@
       <trans-unit id="9d55fc80bbb875322aa67fd22fc98469">
         <source>Shop association</source>
         <target>Shop association</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 129]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 110]</note>
       </trans-unit>
       <trans-unit id="9bbf46e755597079e0dddc00952516fe">
         <source>Shop context</source>
@@ -1625,7 +1625,7 @@
       <trans-unit id="a3e8ae43188ae76d38f414b2bdb0077b">
         <source>Texture</source>
         <target>Texture</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 118]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 99]</note>
       </trans-unit>
       <trans-unit id="d721757161f7f70c5b0949fdb6ec2c30">
         <source>Theme</source>

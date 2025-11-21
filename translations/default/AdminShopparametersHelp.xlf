@@ -67,6 +67,11 @@
         <target>Automatically updates the shipping costs when you edit an order.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php [Line: 113]</note>
       </trans-unit>
+      <trans-unit id="dcc9a3ac81d54b27a1e7f522a17a3d2a">
+        <source>Background color of this status label. Used both in backoffice and on order tracking page. HTML colors only.</source>
+        <target>Background color of this status label. Used both in backoffice and on order tracking page. HTML colors only.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 181]</note>
+      </trans-unit>
       <trans-unit id="1122eba5946331d2709712f64fa1d66b">
         <source>By default, if you search "book", you will have "book", "bookcase" and "bookend".</source>
         <target>By default, if you search "book", you will have "book", "bookcase" and "bookend".</target>
@@ -175,7 +180,6 @@
       <trans-unit id="3d034f43e44ee495a11005507185a0a0">
         <source>Email template for both .html and .txt.</source>
         <target>Email template for both .html and .txt.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 231]</note>
       </trans-unit>
       <trans-unit id="daedf9c5c8f38ac4cf641f3fb3e1bdc4">
         <source>Emails will be sent to this address.</source>
@@ -276,6 +280,10 @@
         <source><![CDATA[Forbidden characters: <>;=#{}]]></source>
         <target><![CDATA[Forbidden characters: <>;=#{}]]></target>
       </trans-unit>
+      <trans-unit id="f11c8ae12be3f5a61df2361c0024fc1b">
+        <source><![CDATA[Forbidden characters: <>{}]]></source>
+        <target><![CDATA[Forbidden characters: <>{}]]></target>
+      </trans-unit>
       <trans-unit id="21e445ba767d4fd41332b6eceab2be1a">
         <source>How prices are displayed in the order summary for this customer group.</source>
         <target>How prices are displayed in the order summary for this customer group.</target>
@@ -301,6 +309,11 @@
         <target>If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/Contact/ContactType.php [Line: 127]</note>
       </trans-unit>
+      <trans-unit id="0d30027d8f6516854c9da7469b6d8a49">
+        <source>If order's invoice is not generated yet, this will generate it.</source>
+        <target>If order's invoice is not generated yet, this will generate it.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 197]</note>
+      </trans-unit>
       <trans-unit id="220990e3866bfc3d5d967410e3507ae9">
         <source>If there are multiple languages enabled on the shop, all URLs are prefixed with the ISO code of the language. Do you want to do this also for the default language, or keep it un-prefixed? If adding a language to a well established single language shop, it's a good idea to disable this and avoid changing the URLs.</source>
         <target>If there are multiple languages enabled on the shop, all URLs are prefixed with the ISO code of the language. Do you want to do this also for the default language, or keep it un-prefixed? If adding a language to a well established single language shop, it's a good idea to disable this and avoid changing the URLs.</target>
@@ -325,6 +338,11 @@
         <source>Image height in pixels. Enter "0" to use the original size.</source>
         <target>Image height in pixels. Enter "0" to use the original size.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/CustomerPreferences/TitleType.php [Line: 94]</note>
+      </trans-unit>
+      <trans-unit id="e63a2ccfb58547d1d4dcdb6b96aa42f2">
+        <source>Image of this status used in the backoffice. (File type: .gif, suggested size: 16x16).</source>
+        <target>Image of this status used in the backoffice. (File type: .gif, suggested size: 16x16).</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 176]</note>
       </trans-unit>
       <trans-unit id="62c7ceb6de5c4d39e49c9762af6ddb4d">
         <source>Image width in pixels. Enter "0" to use the original size.</source>
@@ -354,7 +372,7 @@
       <trans-unit id="a4bb440d400f4dc30f148b44d08680b4">
         <source>Invalid characters: numbers and</source>
         <target>Invalid characters: numbers and</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 124]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 144]</note>
       </trans-unit>
       <trans-unit id="4acdb94f4cbc425ad20d457ffa1d81c1">
         <source>It allows you to delay shipping if your customers request it.</source>
@@ -414,7 +432,6 @@
       <trans-unit id="f0fe1aebeace842330fb048126151e06">
         <source>Only letters, numbers and underscores ("_") are allowed.</source>
         <target>Only letters, numbers and underscores ("_") are allowed.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 230]</note>
       </trans-unit>
       <trans-unit id="6392d16e9ae94967fe13716b69e1d0b2">
         <source>Only words fewer or equal to this maximum length will be searched.</source>
@@ -429,7 +446,7 @@
       <trans-unit id="83b262520a65657b95fd686817c56a09">
         <source>Order status (e.g. 'Pending').</source>
         <target>Order status (e.g. 'Pending').</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 123]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 143]</note>
       </trans-unit>
       <trans-unit id="b55197a49e8c4cd8c314bc2aa39d6feb">
         <source>Out of stock</source>
@@ -460,6 +477,11 @@
         <source>Search this word instead.</source>
         <target>Search this word instead.</target>
         <note>File: controllers/admin/AdminSearchConfController.php [Line: 426]</note>
+      </trans-unit>
+      <trans-unit id="e0bbd55d0b2049bb5dd4f88094ad0809">
+        <source>Select an email template that will be sent after setting this status.</source>
+        <target>Select an email template that will be sent after setting this status.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 241]</note>
       </trans-unit>
       <trans-unit id="7b4cd4d72926ab37dc21b9e12b444a1f">
         <source>Select which category to display on the product page breadcrumbs. It can be the product's default category or the category the customer came from.</source>
@@ -509,7 +531,7 @@
       <trans-unit id="00b963b1cb1aad2142ae67ce65329944">
         <source>Status will be highlighted in this color. HTML colors only.</source>
         <target>Status will be highlighted in this color. HTML colors only.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 161]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderReturnStates/OrderReturnStateType.php [Line: 86]</note>
       </trans-unit>
       <trans-unit id="b950eb0054205bc67aa88899eadded22">
         <source>Storefront picture.</source>
@@ -571,6 +593,41 @@
         <target>This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.</target>
         <note>File: controllers/admin/AdminSearchConfController.php [Line: 227]</note>
       </trans-unit>
+      <trans-unit id="d71f4f6669b9df2a1bc83f4bf2a186c5">
+        <source>This will add an entry to order's "Payments" table, if it doesn't exist yet.</source>
+        <target>This will add an entry to order's "Payments" table, if it doesn't exist yet.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 221]</note>
+      </trans-unit>
+      <trans-unit id="8b6f21abb5306a5fa051fdeee4c918e0">
+        <source>This will attach delivery slip PDF to the sent email, if it exists. If it doesn't, it will have no effect.</source>
+        <target>This will attach delivery slip PDF to the sent email, if it exists. If it doesn't, it will have no effect.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 268]</note>
+      </trans-unit>
+      <trans-unit id="e8c9630127603f55eea5e4d89455d7cd">
+        <source>This will attach invoice PDF to the sent email, if it exists. If it doesn't, it will have no effect.</source>
+        <target>This will attach invoice PDF to the sent email, if it exists. If it doesn't, it will have no effect.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 260]</note>
+      </trans-unit>
+      <trans-unit id="d21af1d7df87c9b01b3141840adef2f1">
+        <source>This will create a delivery slip and mark a delivery date on order's invoice.</source>
+        <target>This will create a delivery slip and mark a delivery date on order's invoice.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 229]</note>
+      </trans-unit>
+      <trans-unit id="1645de8c2684266ea78ab325c2fc44c3">
+        <source>This will mark the order as shipped. It will register a stock movement entry, prevent modifying the order and other things.</source>
+        <target>This will mark the order as shipped. It will register a stock movement entry, prevent modifying the order and other things.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 213]</note>
+      </trans-unit>
+      <trans-unit id="72993cc97904585ea4f16aa9d0fda4ef">
+        <source>This will mark the order as successfuly processed - including it in customer's revenue, your shop stats etc.</source>
+        <target>This will mark the order as successfuly processed - including it in customer's revenue, your shop stats etc.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 189]</note>
+      </trans-unit>
+      <trans-unit id="bf1fc852eb4242c369934b81e3117c63">
+        <source>This will send an email to the customer after assigning this status. Make sure to select proper email template below.</source>
+        <target>This will send an email to the customer after assigning this status. Make sure to select proper email template below.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 237]</note>
+      </trans-unit>
       <trans-unit id="14bc1d17bbcf8fb45debf11fb7c5f80b">
         <source>Title of this page.</source>
         <target>Title of this page.</target>
@@ -594,7 +651,11 @@
       <trans-unit id="a9c2e14555131d68a4ac37b604ee52a8">
         <source>Upload an icon from your computer (File type: .gif, suggested size: 16x16).</source>
         <target>Upload an icon from your computer (File type: .gif, suggested size: 16x16).</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 156]</note>
+      </trans-unit>
+      <trans-unit id="7e7c876c57cabc4c3c99034d6b3764b0">
+        <source>Use this if you want this status to be internal only.</source>
+        <target>Use this if you want this status to be internal only.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 205]</note>
       </trans-unit>
       <trans-unit id="122941b469f97a0c0750a62126fba6cd">
         <source>We recommend that you deactivate your store while performing maintenance. Note that it will not disable the webservice.</source>

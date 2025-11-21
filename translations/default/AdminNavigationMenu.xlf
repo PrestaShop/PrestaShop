@@ -385,7 +385,7 @@
       <trans-unit id="f997e0cedf6946f95298ba0830f8d837">
         <source>Editing state %value%</source>
         <target>Editing state %value%</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/StateController.php [Line: 235]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/StateController.php [Line: 239]</note>
       </trans-unit>
       <trans-unit id="72cba91b377120d11a1c99f0780452c4">
         <source>Editing supplier %name%</source>
@@ -405,7 +405,7 @@
       <trans-unit id="b0ada7bf3a1d7af00453c044175db84d">
         <source>Editing webservice key %key%</source>
         <target>Editing webservice key %key%</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/WebserviceController.php [Line: 161]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/WebserviceController.php [Line: 164]</note>
       </trans-unit>
       <trans-unit id="754ff66f97c1812a40a1dadf0dab4263">
         <source>Editing zone %name%</source>
@@ -759,7 +759,7 @@
       <trans-unit id="2ad00a107b7c5572feb9d89a90a21a67">
         <source>New state</source>
         <target>New state</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/StateController.php [Line: 280]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/StateController.php [Line: 284]</note>
       </trans-unit>
       <trans-unit id="993efb6924edde322dfef8ff31340eef">
         <source>New supplier</source>
@@ -779,7 +779,7 @@
       <trans-unit id="d1bb24de3713f9eecce6dd4d55cc816d">
         <source>New webservice key</source>
         <target>New webservice key</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/WebserviceController.php [Line: 117]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/WebserviceController.php [Line: 120]</note>
       </trans-unit>
       <trans-unit id="09462056b43efa6d8213540519406c56">
         <source>New zone</source>
@@ -979,7 +979,7 @@
       <trans-unit id="b8464cdd84b5f068ad72bf5c4f32163d">
         <source>States</source>
         <target>States</target>
-        <note>File: src/Core/Grid/Definition/Factory/StateGridDefinitionFactory.php [Line: 79]</note>
+        <note>File: src/Core/Grid/Definition/Factory/StateGridDefinitionFactory.php [Line: 80]</note>
       </trans-unit>
       <trans-unit id="452a7601dbc6f2c38aa89e68bda8b603">
         <source>Stats</source>

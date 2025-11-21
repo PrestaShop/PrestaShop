@@ -5,7 +5,6 @@
       <trans-unit id="44aa13304026bb46ad79f4151f16634a">
         <source>(waiting for validation)</source>
         <target>(waiting for validation)</target>
-        <note>File: classes/PaymentModule.php [Line: 690]</note>
       </trans-unit>
       <trans-unit id="96dad7f0d711c3408786ba1ee05402b3">
         <source><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="{prestashop_url}">PrestaShop™</a>]]></source>

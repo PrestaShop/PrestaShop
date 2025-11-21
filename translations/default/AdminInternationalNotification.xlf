@@ -180,12 +180,12 @@
       <trans-unit id="05b17ff64944116b14a3ec88f2080a5e">
         <source>Cannot write into the "%file%"</source>
         <target>Cannot write into the "%file%"</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2923]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2931]</note>
       </trans-unit>
       <trans-unit id="c4c005678d26a593268006bc4a44c179">
         <source>Cannot write language file for email subjects. Path is: %folder%</source>
         <target>Cannot write language file for email subjects. Path is: %folder%</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2718]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2726]</note>
       </trans-unit>
       <trans-unit id="299dd7d59920216689a1749def7fd939">
         <source>Cannot write to the theme's language file (%s). Please check writing permissions.</source>
@@ -225,7 +225,7 @@
       <trans-unit id="3eefb74a46023e6c9152c92803750f2b">
         <source>English language files must exist in %folder% folder</source>
         <target>English language files must exist in %folder% folder</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2307]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2311]</note>
       </trans-unit>
       <trans-unit id="6e7f4bf1afc5a374b6ff053430e38929">
         <source>Failed to add customer message.</source>
@@ -355,7 +355,7 @@
       <trans-unit id="fda679a1f72b8a9676b6926a81c5e139">
         <source>No Subject was found for %mail_name% in the database.</source>
         <target>No Subject was found for %mail_name% in the database.</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2269]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2273]</note>
       </trans-unit>
       <trans-unit id="6f3455d187a23443796efdcbe044096b">
         <source>No tax</source>
@@ -455,7 +455,7 @@
       <trans-unit id="a662aa2e6538df75742383c7db8f3bd5">
         <source>There was a problem getting the mail files.</source>
         <target>There was a problem getting the mail files.</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2306]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2310]</note>
       </trans-unit>
       <trans-unit id="b399fb01ee4e0a8ec1681fb9bcb31ce0">
         <source>This %type_content% file extension is not accepted.</source>
@@ -579,7 +579,7 @@
       <trans-unit id="7cf50c9ffecf05f3befc1134eba0ef45">
         <source>missing translation(s)</source>
         <target>missing translation(s)</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2230]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2234]</note>
       </trans-unit>
     </body>
   </file>

@@ -217,7 +217,7 @@ Once you enable the "%generate_rtl_label%" option, any RTL-specific file that yo
       <trans-unit id="27043bc0eeca71692edf6c51fef16ee0">
         <source>Used to override the title tag value. If left blank, the default title value is used.</source>
         <target>Used to override the title tag value. If left blank, the default title value is used.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php [Line: 152]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php [Line: 155]</note>
       </trans-unit>
       <trans-unit id="544cd7788ebd8916e7191e7a8fd0db57">
         <source>Warning: if no invoice logo is available, the main logo will be used instead.</source>

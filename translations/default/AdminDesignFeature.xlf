@@ -215,7 +215,7 @@
       <trans-unit id="ce1e51212c9df52777620dc9de246da0">
         <source>Indexation by search engines</source>
         <target>Indexation by search engines</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php [Line: 252]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php [Line: 255]</note>
       </trans-unit>
       <trans-unit id="d84613cd39906ab9161e1ad513f8947b">
         <source>Invoice logo</source>
@@ -280,7 +280,7 @@
       <trans-unit id="21f93401134586a6c481422bf01fccfd">
         <source>Only letters and the hyphen (-) character are allowed.</source>
         <target>Only letters and the hyphen (-) character are allowed.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php [Line: 203]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php [Line: 206]</note>
       </trans-unit>
       <trans-unit id="b445b07a4ce0e996acaf7ceb6a2547c3">
         <source>Overwrite templates</source>
@@ -300,7 +300,7 @@
       <trans-unit id="45b1bce0ceb1e155fc99d59a21761b9e">
         <source>Page content</source>
         <target>Page content</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php [Line: 236]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageType.php [Line: 239]</note>
       </trans-unit>
       <trans-unit id="453aceb005ceaf54a47da15fee8b2a26">
         <source>Pages</source>
