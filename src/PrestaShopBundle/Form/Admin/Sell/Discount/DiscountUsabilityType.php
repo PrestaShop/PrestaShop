@@ -44,6 +44,57 @@ class DiscountUsabilityType extends TranslatorAwareType
                 'label' => $this->trans('Specifiy discount mode', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'required' => false,
+                'choice_options' => [
+                    'label' => false,
+                ],
+            ])
+            ->add('quantity_total', IntegerType::class, [
+                'required' => false,
+                'label' => $this->trans('Select total usage limits', 'Admin.Catalog.Feature'),
+                'label_help_box' => $this->trans('This discount can be used "X" time(s) in total.', 'Admin.Catalog.Help'),
+                'label_tag_name' => 'h3',
+                'attr' => [
+                    'min' => 0,
+                ],
+                'label_attr' => [
+                    'class' => 'd-flex align-items-center',
+                ],
+                'disabling_switch' => true,
+                'disabling_switch_label' => $this->trans('No limit', 'Admin.Catalog.Feature'),
+                'switch_state_on_disable' => 'on',
+                'default_empty_data' => null,
+                'disabled_value' => function ($data) {
+                    return null === $data;
+                },
+                'constraints' => [
+                    new Assert\GreaterThanOrEqual(0),
+                ],
+            ])
+            ->add('quantity_per_customer', IntegerType::class, [
+                'required' => false,
+                'label' => $this->trans('Select usage limits per customer', 'Admin.Catalog.Feature'),
+                'label_help_box' => $this->trans('A customer will only be able to use this discount "X" time(s).', 'Admin.Catalog.Help'),
+                'label_tag_name' => 'h3',
+                'attr' => [
+                    'min' => 0,
+                ],
+                'label_attr' => [
+                    'class' => 'd-flex align-items-center',
+                ],
+                'disabling_switch' => true,
+                'disabling_switch_label' => $this->trans('No limit', 'Admin.Catalog.Feature'),
+                'switch_state_on_disable' => 'on',
+                'default_empty_data' => null,
+                'disabled_value' => function ($data) {
+                    return null === $data;
+                },
+                'constraints' => [
+                    new Assert\GreaterThanOrEqual(0),
+                    new Assert\LessThanOrEqual([
+                        'propertyPath' => 'parent.all[quantity_total].data',
+                        'message' => $this->trans('The usage limit per customer cannot be higher than the total usage limit.', 'Admin.Catalog.Notification'),
+                    ]),
+                ],
             ])
             ->add('compatibility', DiscountCompatibilityType::class, [
                 'label_tag_name' => 'h3',

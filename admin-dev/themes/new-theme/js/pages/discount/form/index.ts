@@ -40,6 +40,7 @@ $(() => {
       'ChoiceTree',
       'ChoiceTable',
       'EventEmitter',
+      'DisablingSwitch',
     ],
   );
 

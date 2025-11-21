@@ -168,6 +168,14 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
             $command->setPriority((int) $data['usability']['priority']);
         }
 
+        if (array_key_exists('quantity_total', $data['usability'])) {
+            $command->setTotalQuantity($data['usability']['quantity_total']);
+        }
+
+        if (array_key_exists('quantity_per_customer', $data['usability'])) {
+            $command->setQuantityPerUser($data['usability']['quantity_per_customer']);
+        }
+
         /** @var DiscountId $discountId */
         $discountId = $this->commandBus->handle($command);
         $this->updateDiscountConditions($discountId->getValue(), $data);
@@ -272,6 +280,14 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
 
         if (isset($data['usability']['priority']) && $data['usability']['priority'] > 0) {
             $command->setPriority((int) $data['usability']['priority']);
+        }
+
+        if (array_key_exists('quantity_total', $data['usability'])) {
+            $command->setTotalQuantity($data['usability']['quantity_total']);
+        }
+
+        if (array_key_exists('quantity_per_customer', $data['usability'])) {
+            $command->setQuantityPerUser($data['usability']['quantity_per_customer']);
         }
 
         $this->commandBus->handle($command);
