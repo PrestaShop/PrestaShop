@@ -25,12 +25,11 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Contact\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Contact\Repository\ContactRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\DeleteContactCommand;
-use PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler\DeleteContactHandlerInterface;
 
 #[AsCommandHandler]
 class DeleteContactHandler implements DeleteContactHandlerInterface

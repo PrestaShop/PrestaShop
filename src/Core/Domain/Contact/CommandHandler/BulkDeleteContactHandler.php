@@ -25,13 +25,12 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Contact\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Contact\Repository\ContactRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\BulkDeleteContactCommand;
-use PrestaShop\PrestaShop\Core\Domain\Contact\CommandHandler\BulkDeleteContactHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\BulkContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
