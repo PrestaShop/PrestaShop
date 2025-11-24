@@ -49,8 +49,8 @@ class UpdateDiscountCommand
     private ?bool $active = null;
     private ?DateTimeImmutable $validFrom = null;
     private ?DateTimeImmutable $validTo = null;
-    private ?int $totalQuantity = null;
-    private ?int $quantityPerUser = null;
+    private ?int $totalQuantity = -1;
+    private ?int $quantityPerUser = -1;
     private ?string $description = null;
     private ?string $code = null;
     private ?CustomerId $customerId = null;
@@ -177,9 +177,9 @@ class UpdateDiscountCommand
     /**
      * @throws DiscountConstraintException
      */
-    public function setTotalQuantity(int $quantity): self
+    public function setTotalQuantity(?int $quantity): self
     {
-        if (0 > $quantity) {
+        if ($quantity !== null && 0 > $quantity) {
             throw new DiscountConstraintException(sprintf('Quantity cannot be lower than zero, %d given', $quantity), DiscountConstraintException::INVALID_QUANTITY);
         }
 
@@ -196,9 +196,9 @@ class UpdateDiscountCommand
     /**
      * @throws DiscountConstraintException
      */
-    public function setQuantityPerUser(int $quantityPerUser): self
+    public function setQuantityPerUser(?int $quantityPerUser): self
     {
-        if (0 > $quantityPerUser) {
+        if ($quantityPerUser !== null && 0 > $quantityPerUser) {
             throw new DiscountConstraintException(sprintf('Quantity per user cannot be lower than zero, %d given', $quantityPerUser), DiscountConstraintException::INVALID_QUANTITY_PER_USER);
         }
 

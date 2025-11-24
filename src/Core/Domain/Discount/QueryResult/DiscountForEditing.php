@@ -40,8 +40,8 @@ class DiscountForEditing
         private readonly bool $active,
         private readonly ?DateTimeImmutable $validFrom,
         private readonly ?DateTimeImmutable $validTo,
-        private readonly int $totalQuantity,
-        private readonly int $quantityPerUser,
+        private readonly ?int $totalQuantity,
+        private readonly ?int $quantityPerUser,
         private readonly string $description,
         private readonly string $code,
         private readonly ?int $customerId,
@@ -92,12 +92,12 @@ class DiscountForEditing
         return $this->validTo;
     }
 
-    public function getTotalQuantity(): int
+    public function getTotalQuantity(): ?int
     {
         return $this->totalQuantity;
     }
 
-    public function getQuantityPerUser(): int
+    public function getQuantityPerUser(): ?int
     {
         return $this->quantityPerUser;
     }

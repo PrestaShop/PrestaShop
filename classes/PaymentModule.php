@@ -1324,7 +1324,10 @@ abstract class PaymentModuleCore extends Module
 
                 // Create a new instance of Cart Rule without id_lang, in order to update its quantity
                 $cart_rule_to_update = new CartRule((int) $cartRule->id);
-                $cart_rule_to_update->quantity = max(0, $cart_rule_to_update->quantity - 1);
+                // if the cart rule isn't in nolimit mode, we decrease the quantity available
+                if ($cart_rule_to_update->quantity !== null) {
+                    $cart_rule_to_update->quantity = max(0, $cart_rule_to_update->quantity - 1);
+                }
                 $cart_rule_to_update->update();
             }
 
