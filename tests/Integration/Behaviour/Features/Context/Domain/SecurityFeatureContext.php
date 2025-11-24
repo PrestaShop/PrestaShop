@@ -47,6 +47,7 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class SecurityFeatureContext extends AbstractDomainFeatureContext
 {
     private const SECURITY_FORM_KEY = 'security-form';
+    private const SECURITY_ADMIN_LOGIN_THROTTLING_FORM_KEY = 'security-admin-login-throttling-form';
 
     /**
      * @Given I specify following properties for security form
@@ -172,5 +173,92 @@ class SecurityFeatureContext extends AbstractDomainFeatureContext
             'UPDATE ' . _DB_PREFIX_ . $databaseTable . ' SET date_upd = \' ' . pSQL($date->format('Y-m-d H:i:s')) . '\'' .
             'WHERE ' . $databaseIdentifier . ' = ' . $session->id
         );
+    }
+
+    /**
+     * @Given I specify following properties for admin throttling form
+     */
+    public function specifyPropertiesForAdminLoginThrottlingForm(TableNode $node): void
+    {
+        $data = $node->getRowsHash();
+
+        SharedStorage::getStorage()->set(self::SECURITY_ADMIN_LOGIN_THROTTLING_FORM_KEY, $data);
+    }
+
+    /**
+     * @When I submit the admin throttling form
+     */
+    public function submitTheAdminLoginThrottlingForm(): void
+    {
+        $data = SharedStorage::getStorage()->get(self::SECURITY_ADMIN_LOGIN_THROTTLING_FORM_KEY);
+
+        $request = Request::createFromGlobals();
+        $request->setMethod(Request::METHOD_POST);
+        $request->request->set(
+            'admin_login_throttling',
+            $data
+        );
+
+        $formHandler = $this->getContainer()->get('prestashop.adapter.security.admin_login_throttling.form_handler');
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        $data = $form->getData();
+        $saveErrors = $formHandler->save($data);
+
+        if (0 !== count($saveErrors)) {
+            $this->setLastException(new RuntimeException('Unable to save form: ' . print_r($saveErrors, true)));
+        }
+
+        SharedStorage::getStorage()->clear(self::SECURITY_ADMIN_LOGIN_THROTTLING_FORM_KEY);
+    }
+
+    /**
+     * @Then /^the login throttling configuration should be (disabled|enabled)$/
+     */
+    public function loginThrottlingConfigurationIsDisabledOrEnabled(string $status): void
+    {
+        $loginThrottling = $this->getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_SECURITY_ADMIN_LOGIN_THROTTLING_ENABLED');
+        Assert::assertSame($status === 'enabled', (bool) $loginThrottling);
+    }
+
+    /**
+     * @Then /^the login throttling configuration should allow (\d+) attempts every (\d+) minutes$/
+     */
+    public function loginThrottlingConfigurationAllowsAttemptsAndInterval(int $maxAttempts, int $interval): void
+    {
+        $configuration = $this->getContainer()->get('prestashop.adapter.legacy.configuration');
+
+        Assert::assertSame($maxAttempts, (int) $configuration->get('PS_SECURITY_ADMIN_LOGIN_THROTTLING_MAX_ATTEMPTS'));
+        Assert::assertSame($interval, (int) $configuration->get('PS_SECURITY_ADMIN_LOGIN_THROTTLING_INTERVAL'));
+    }
+
+    /**
+     * @Then /^the login throttling configuration should use storage "(.*)"$/
+     */
+    public function loginThrottlingConfigurationUsesStorage(string $storage): void
+    {
+        $configuration = $this->getContainer()->get('prestashop.adapter.legacy.configuration');
+
+        Assert::assertSame($storage, (string) $configuration->get('PS_SECURITY_ADMIN_LOGIN_THROTTLING_STORAGE'));
+    }
+
+    /**
+     * @Then /^the login throttling storage configuration should be "([^"]*)"$/
+     */
+    public function loginThrottlingStorageConfigurationShouldBe(string $storageService): void
+    {
+        $configuration = $this->getContainer()->get('prestashop.adapter.legacy.configuration');
+        $storedValue = $configuration->get('PS_SECURITY_ADMIN_LOGIN_THROTTLING_STORAGE');
+
+        Assert::assertSame($storageService, $storedValue === false ? '' : (string) $storedValue);
+    }
+
+    /**
+     * @Then the admin throttling form is valid
+     */
+    public function adminLoginThrottlingFormIsValid(): void
+    {
+        $this->assertLastErrorIsNull();
     }
 }

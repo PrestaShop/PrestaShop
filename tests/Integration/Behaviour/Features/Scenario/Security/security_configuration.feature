@@ -18,6 +18,26 @@ Feature: Security configuration form
     Then the security form is valid
     Then the token configuration should be disabled
 
+  Scenario: Play with security configuration
+    Given I specify following properties for admin throttling form
+      | login_throttling_enabled      | 0                  |
+      | login_throttling_max_attempts | 7                  |
+      | login_throttling_interval     | 10                 |
+      | login_throttling_storage      | cache.app |
+    And shop configuration for "PS_SECURITY_ADMIN_LOGIN_THROTTLING_ENABLED" is set to 1
+    And shop configuration for "PS_SECURITY_ADMIN_LOGIN_THROTTLING_MAX_ATTEMPTS" is set to 5
+    And shop configuration for "PS_SECURITY_ADMIN_LOGIN_THROTTLING_INTERVAL" is set to 15
+    And shop configuration for "PS_SECURITY_ADMIN_LOGIN_THROTTLING_STORAGE" is set to cache.app
+    And the login throttling configuration should be enabled
+    And the login throttling configuration should allow 5 attempts every 15 minutes
+    And the login throttling configuration should use storage "cache.app"
+    When I submit the admin throttling form
+    Then the admin throttling form is valid
+    And the login throttling configuration should be disabled
+    And the login throttling configuration should allow 7 attempts every 10 minutes
+    And the login throttling configuration should use storage "cache.app"
+
+
   Scenario: Clear outdated customer sessions
     Given there is customer "John Doe" with email "john.doe@prestashop.com"
     And a session for customer named "John Doe" is created 1 hour ago

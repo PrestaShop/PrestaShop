@@ -570,6 +570,16 @@ services:
       - 'SecurityPageGeneral'
       - 'general'
 
+  prestashop.adapter.security.admin_login_throttling.form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.adapter.security.admin_login_throttling.form_provider'
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\AdminLoginFormThrottlingType'
+      - 'SecurityPageAdminThrottling'
+      - 'admin_login_throttling'
+
   prestashop.adapter.security.password_policy.form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\Handler'
     arguments:

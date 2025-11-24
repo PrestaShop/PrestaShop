@@ -29,6 +29,7 @@ namespace PrestaShopBundle\DependencyInjection;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
+use PrestaShop\PrestaShop\Core\Security\AdminLoginFormThrottlingConfiguration;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -43,6 +44,16 @@ use Throwable;
  */
 class PrestaShopExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * @var Configuration
+     */
+    private ConfigurationInterface $configuration;
+
+    public function __construct()
+    {
+        $this->configuration = new Configuration();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -79,6 +90,12 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('prestashop.admin_cookie_lifetime', $this->getAdminCookieLifetime());
         $this->preprendApiConfig($container);
         $this->preprendSessionConfig($container);
+        $this->prependSecurityConfig($container);
+    }
+
+    private function prependSecurityConfig(ContainerBuilder $container): void
+    {
+        $container->setParameter('prestashop.security.login_throttling', $this->getAdminLoginFormThrottlingConfiguration());
     }
 
     protected function preprendSessionConfig(ContainerBuilder $container)
@@ -94,9 +111,7 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
     protected function getCookieSameSite(): string
     {
         try {
-            /** @var ConfigurationInterface $configuration */
-            $configuration = new Configuration();
-            $cookieSamesite = $configuration->get('PS_COOKIE_SAMESITE');
+            $cookieSamesite = $this->configuration->get('PS_COOKIE_SAMESITE');
             $cookieSamesite = match ($cookieSamesite) {
                 CookieOptions::SAMESITE_NONE => Cookie::SAMESITE_NONE,
                 CookieOptions::SAMESITE_STRICT => Cookie::SAMESITE_STRICT,
@@ -112,9 +127,7 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
     protected function getAdminCookieLifetime(): int
     {
         try {
-            /** @var ConfigurationInterface $configuration */
-            $configuration = new Configuration();
-            $cookieLifetimeBo = (int) $configuration->get('PS_COOKIE_LIFETIME_BO');
+            $cookieLifetimeBo = (int) $this->configuration->get('PS_COOKIE_LIFETIME_BO');
             if (empty($cookieLifetimeBo) || $cookieLifetimeBo <= 0) {
                 $cookieLifetimeBo = CookieOptions::MAX_COOKIE_VALUE;
             }
@@ -124,6 +137,18 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
 
         // Configuration value (and default value) are expressed in HOURS, so we convert it into seconds
         return $cookieLifetimeBo * 3600;
+    }
+
+    private function getAdminLoginFormThrottlingConfiguration(): array|bool
+    {
+        try {
+            return (new AdminLoginFormThrottlingConfiguration($this->configuration))->getFirewallConfiguration();
+        } catch (Throwable) {
+            return [
+                'max_attempts' => 5,
+                'interval' => '15 minutes',
+            ];
+        }
     }
 
     protected function preprendApiConfig(ContainerBuilder $container)
