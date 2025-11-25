@@ -353,6 +353,8 @@ default:
         - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
         - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
         - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
 
     catalog_price_rule:
       paths:

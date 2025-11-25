@@ -187,11 +187,18 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
             }
         }
         if (isset($data['total_quantity'])) {
-            $command->setTotalQuantity((int) $data['total_quantity']);
+            if ($data['total_quantity'] === 'null') {
+                $command->setTotalQuantity(null);
+            } else {
+                $command->setTotalQuantity((int) $data['total_quantity']);
+            }
         }
-
         if (isset($data['quantity_per_user'])) {
-            $command->setQuantityPerUser((int) $data['quantity_per_user']);
+            if ($data['quantity_per_user'] === 'null') {
+                $command->setQuantityPerUser(null);
+            } else {
+                $command->setQuantityPerUser((int) $data['quantity_per_user']);
+            }
         }
 
         if (isset($data['description'])) {
@@ -333,11 +340,18 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
             $command->setValidTo(new DateTimeImmutable($data['valid_to']));
         }
         if (isset($data['total_quantity'])) {
-            $command->setTotalQuantity((int) $data['total_quantity']);
+            if ($data['total_quantity'] === 'null') {
+                $command->setTotalQuantity(null);
+            } else {
+                $command->setTotalQuantity((int) $data['total_quantity']);
+            }
         }
-
         if (isset($data['quantity_per_user'])) {
-            $command->setQuantityPerUser((int) $data['quantity_per_user']);
+            if ($data['quantity_per_user'] === 'null') {
+                $command->setQuantityPerUser(null);
+            } else {
+                $command->setQuantityPerUser((int) $data['quantity_per_user']);
+            }
         }
 
         if (isset($data['description'])) {
@@ -495,10 +509,18 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
             );
         }
         if (isset($expectedData['total_quantity'])) {
-            Assert::assertSame((int) $expectedData['total_quantity'], $discountForEditing->getTotalQuantity(), 'Unexpected quantity');
+            if ($expectedData['total_quantity'] === 'null') {
+                Assert::assertNull($discountForEditing->getTotalQuantity(), 'Unexpected total quantity, expected null');
+            } else {
+                Assert::assertSame((int) $expectedData['total_quantity'], $discountForEditing->getTotalQuantity(), 'Unexpected quantity');
+            }
         }
         if (isset($expectedData['quantity_per_user'])) {
-            Assert::assertSame((int) $expectedData['quantity_per_user'], $discountForEditing->getQuantityPerUser(), 'Unexpected quantity_per_user');
+            if ($expectedData['quantity_per_user'] === 'null') {
+                Assert::assertNull($discountForEditing->getQuantityPerUser(), 'Unexpected quantity_per_user, expected null');
+            } else {
+                Assert::assertSame((int) $expectedData['quantity_per_user'], $discountForEditing->getQuantityPerUser(), 'Unexpected quantity_per_user');
+            }
         }
 
         if (isset($expectedData['reduction_percent'])) {
