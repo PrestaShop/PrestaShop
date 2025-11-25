@@ -20,7 +20,7 @@ import {
 
 const baseContext: string = 'functional_BO_catalog_products_pricingTab';
 
-describe('BO - Catalog - Products : Pricing tab', async () => {
+describe('BO - Catalog - Products : Pricing Tab', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 

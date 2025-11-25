@@ -14,7 +14,7 @@ import {
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_changeColor';
 
-describe('FO - Product page - Product page : Change Color', async () => {
+describe('FO - Product page - Product page : Change Color when changing combination', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let firstCoverImageURL: string | null;

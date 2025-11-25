@@ -28,7 +28,7 @@ Scenario:
 - Complete the order
  */
 
-describe('FO - Checkout - Personal information : Order as a guest', async () => {
+describe('FO - Checkout - Personal Information : Order as a guest', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   const guestData: FakerCustomer = new FakerCustomer({password: ''});

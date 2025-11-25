@@ -24,7 +24,7 @@ View new status in order page
 Update order status
 Delete order status
  */
-describe('BO - Shop Parameters - Order Settings - Statuses : CRUD order status', async () => {
+describe('BO - Shop Parameters - Order Settings - Statuses : CRUD Order Status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfOrderStatuses: number = 0;
@@ -33,7 +33,6 @@ describe('BO - Shop Parameters - Order Settings - Statuses : CRUD order status',
   const createOrderStatusData: FakerOrderStatus = new FakerOrderStatus();
   const editOrderStatusData: FakerOrderStatus = new FakerOrderStatus({name: `edit_${createOrderStatusData.name}`});
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);

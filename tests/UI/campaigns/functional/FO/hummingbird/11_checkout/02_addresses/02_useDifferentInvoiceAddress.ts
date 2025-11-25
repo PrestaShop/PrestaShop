@@ -39,7 +39,7 @@ Scenario:
 Post-condition:
 - Uninstall the theme hummingbird
 */
-describe('FO - Checkout - Addresses: Use different invoice address', async () => {
+describe('FO - Checkout - Addresses : Use another address for invoice as a guest', async () => {
   // Create faker data
   const guestData: FakerCustomer = new FakerCustomer({password: ''});
   const deliveryAddress: FakerAddress = new FakerAddress({country: 'France'});

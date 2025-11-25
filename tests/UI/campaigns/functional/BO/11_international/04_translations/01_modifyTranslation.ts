@@ -32,7 +32,7 @@ import {
 
 const baseContext: string = 'functional_BO_international_translations_modifyTranslation';
 
-describe('BO - International - Translation : Modify translation', async () => {
+describe('BO - International - Translations : Modify translations and check result', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let newMail: MailDevEmail;
