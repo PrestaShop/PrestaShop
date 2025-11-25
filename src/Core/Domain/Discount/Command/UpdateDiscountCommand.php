@@ -41,16 +41,19 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinat
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
+use PrestaShop\PrestaShop\Core\Trait\DirtyTrait;
 
 class UpdateDiscountCommand
 {
+    use DirtyTrait;
+
     private ?array $localizedNames = null;
     private ?int $priority = null;
     private ?bool $active = null;
     private ?DateTimeImmutable $validFrom = null;
     private ?DateTimeImmutable $validTo = null;
-    private ?int $totalQuantity = -1;
-    private ?int $quantityPerUser = -1;
+    private ?int $totalQuantity = null;
+    private ?int $quantityPerUser = null;
     private ?string $description = null;
     private ?string $code = null;
     private ?CustomerId $customerId = null;
@@ -74,6 +77,7 @@ class UpdateDiscountCommand
     public function setLocalizedNames(array $localizedNames): self
     {
         $this->localizedNames = $localizedNames;
+        $this->markDirty('localizedNames');
 
         return $this;
     }
@@ -94,6 +98,7 @@ class UpdateDiscountCommand
     public function setActive(bool $active): self
     {
         $this->active = $active;
+        $this->markDirty('active');
 
         return $this;
     }
@@ -111,6 +116,7 @@ class UpdateDiscountCommand
     public function setValidFrom(DateTimeImmutable $validFrom): self
     {
         $this->validFrom = $validFrom;
+        $this->markDirty('validFrom');
 
         return $this;
     }
@@ -118,6 +124,7 @@ class UpdateDiscountCommand
     public function setValidTo(DateTimeImmutable $validTo): self
     {
         $this->validTo = $validTo;
+        $this->markDirty('validTo');
 
         return $this;
     }
@@ -133,6 +140,8 @@ class UpdateDiscountCommand
 
         $this->validFrom = $from;
         $this->validTo = $to;
+        $this->markDirty('validFrom');
+        $this->markDirty('validTo');
 
         return $this;
     }
@@ -155,6 +164,7 @@ class UpdateDiscountCommand
         }
 
         $this->priority = $priority;
+        $this->markDirty('priority');
 
         return $this;
     }
@@ -172,6 +182,7 @@ class UpdateDiscountCommand
     public function setHighlightInCart(bool $highlightInCart): void
     {
         $this->highlightInCart = $highlightInCart;
+        $this->markDirty('highlightInCart');
     }
 
     /**
@@ -184,6 +195,7 @@ class UpdateDiscountCommand
         }
 
         $this->totalQuantity = $quantity;
+        $this->markDirty('totalQuantity');
 
         return $this;
     }
@@ -203,6 +215,7 @@ class UpdateDiscountCommand
         }
 
         $this->quantityPerUser = $quantityPerUser;
+        $this->markDirty('quantityPerUser');
 
         return $this;
     }
@@ -215,6 +228,7 @@ class UpdateDiscountCommand
     public function setDescription(string $description): self
     {
         $this->description = $description;
+        $this->markDirty('description');
 
         return $this;
     }
@@ -227,6 +241,7 @@ class UpdateDiscountCommand
     public function setCode(string $code): self
     {
         $this->code = $code;
+        $this->markDirty('code');
 
         return $this;
     }
@@ -239,6 +254,7 @@ class UpdateDiscountCommand
     public function setAllowPartialUse(bool $allow): self
     {
         $this->allowPartialUse = $allow;
+        $this->markDirty('allowPartialUse');
 
         return $this;
     }
@@ -251,6 +267,7 @@ class UpdateDiscountCommand
     public function setCustomerId(int $customerId): self
     {
         $this->customerId = new CustomerId($customerId);
+        $this->markDirty('customerId');
 
         return $this;
     }
@@ -263,6 +280,7 @@ class UpdateDiscountCommand
     public function setPercentDiscount(DecimalNumber $percentDiscount): self
     {
         $this->percentDiscount = $percentDiscount;
+        $this->markDirty('percentDiscount');
 
         return $this;
     }
@@ -283,6 +301,7 @@ class UpdateDiscountCommand
         }
 
         $this->amountDiscount = new Money($amountDiscount, new CurrencyId($currencyId), $taxIncluded);
+        $this->markDirty('amountDiscount');
 
         return $this;
     }
@@ -298,6 +317,7 @@ class UpdateDiscountCommand
     public function setProductId(int $productId): self
     {
         $this->productId = new ProductId($productId);
+        $this->markDirty('productId');
 
         return $this;
     }
@@ -317,6 +337,7 @@ class UpdateDiscountCommand
         } else {
             $this->combinationId = new CombinationId($combinationId);
         }
+        $this->markDirty('combinationId');
 
         return $this;
     }
@@ -340,6 +361,7 @@ class UpdateDiscountCommand
     public function setReductionProduct(int $reductionProduct): self
     {
         $this->reductionProduct = $reductionProduct;
+        $this->markDirty('reductionProduct');
 
         return $this;
     }
