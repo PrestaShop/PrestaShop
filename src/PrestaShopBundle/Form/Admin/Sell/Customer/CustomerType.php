@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
+use PrestaShop\PrestaShop\Core\Domain\Customer\CustomerSettings;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as DomainEmail;
@@ -85,10 +86,16 @@ class CustomerType extends TranslatorAwareType
      * @var FormCloner
      */
     protected $formCloner;
+
     /**
      * @var GroupByIdChoiceProvider
      */
     private $groupByIdChoiceProvider;
+
+    /**
+     * @var int
+     */
+    private $customerSocialTitleSetting;
 
     /**
      * @param TranslatorInterface $translator
@@ -99,6 +106,7 @@ class CustomerType extends TranslatorAwareType
      * @param bool $isPartnerOffersEnabled
      * @param ConfigurationInterface $configuration
      * @param FormCloner $formCloner
+     * @param int $customerSocialTitleSetting
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -108,7 +116,8 @@ class CustomerType extends TranslatorAwareType
         $isB2bFeatureEnabled,
         $isPartnerOffersEnabled,
         ConfigurationInterface $configuration,
-        FormCloner $formCloner
+        FormCloner $formCloner,
+        int $customerSocialTitleSetting = CustomerSettings::SOCIAL_TITLES_DISABLED
     ) {
         parent::__construct($translator, $locales);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
@@ -117,6 +126,7 @@ class CustomerType extends TranslatorAwareType
         $this->configuration = $configuration;
         $this->formCloner = $formCloner;
         $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
+        $this->customerSocialTitleSetting = $customerSocialTitleSetting;
     }
 
     /**
@@ -169,12 +179,17 @@ class CustomerType extends TranslatorAwareType
                 ]);
         }
 
+        // We show the social title field only when the feature is enabled
+        if ($this->customerSocialTitleSetting !== CustomerSettings::SOCIAL_TITLES_DISABLED) {
+            $builder
+                ->add('gender_id', GenderType::class, [
+                    'expanded' => true,
+                    'required' => false,
+                    'placeholder' => null,
+                ]);
+        }
+
         $builder
-            ->add('gender_id', GenderType::class, [
-                'expanded' => true,
-                'required' => false,
-                'placeholder' => null,
-            ])
             ->add('first_name', TextType::class, [
                 'label' => $this->trans('First name', 'Admin.Global'),
                 'help' => $this->trans(

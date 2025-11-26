@@ -44,6 +44,7 @@ class CustomerConfiguration extends AbstractMultistoreConfiguration
         'enable_b2b_mode',
         'ask_for_birthday',
         'enable_offers',
+        'ask_for_social_title',
     ];
 
     /**
@@ -60,6 +61,7 @@ class CustomerConfiguration extends AbstractMultistoreConfiguration
             'enable_b2b_mode' => (bool) $this->configuration->get('PS_B2B_ENABLE', false, $shopConstraint),
             'ask_for_birthday' => (bool) $this->configuration->get('PS_CUSTOMER_BIRTHDATE', false, $shopConstraint),
             'enable_offers' => (bool) $this->configuration->get('PS_CUSTOMER_OPTIN', false, $shopConstraint),
+            'ask_for_social_title' => (int) $this->configuration->get('PS_CUSTOMER_ASK_FOR_SOCIAL_TITLE', false, $shopConstraint),
         ];
     }
 
@@ -77,6 +79,7 @@ class CustomerConfiguration extends AbstractMultistoreConfiguration
             $this->updateConfigurationValue('PS_B2B_ENABLE', 'enable_b2b_mode', $config, $shopConstraint);
             $this->updateConfigurationValue('PS_CUSTOMER_BIRTHDATE', 'ask_for_birthday', $config, $shopConstraint);
             $this->updateConfigurationValue('PS_CUSTOMER_OPTIN', 'enable_offers', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_CUSTOMER_ASK_FOR_SOCIAL_TITLE', 'ask_for_social_title', $config, $shopConstraint);
         }
 
         return [];
@@ -94,7 +97,8 @@ class CustomerConfiguration extends AbstractMultistoreConfiguration
             ->setAllowedTypes('password_reset_delay', 'int')
             ->setAllowedTypes('enable_b2b_mode', 'bool')
             ->setAllowedTypes('ask_for_birthday', 'bool')
-            ->setAllowedTypes('enable_offers', 'bool');
+            ->setAllowedTypes('enable_offers', 'bool')
+            ->setAllowedTypes('ask_for_social_title', 'int');
 
         return $resolver;
     }

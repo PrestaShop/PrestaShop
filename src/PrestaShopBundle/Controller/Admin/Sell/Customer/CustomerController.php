@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\CustomerSettings;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
@@ -373,6 +374,7 @@ class CustomerController extends PrestaShopAdminController
             'customerBoughtProductGrid' => $this->presentGrid($customerBoughtProductGrid),
             'customerViewedProductGrid' => $this->presentGrid($customerViewedProductGrid),
             'isMultistoreEnabled' => $this->getShopContext()->isMultiShopEnabled(),
+            'displayCustomerSocialTitle' => (int) $this->getConfiguration()->get('PS_CUSTOMER_ASK_FOR_SOCIAL_TITLE') != CustomerSettings::SOCIAL_TITLES_DISABLED,
             'transferGuestAccountForm' => $transferGuestAccountForm,
             'privateNoteForm' => $privateNoteForm->createView(),
             'layoutHeaderToolbarBtn' => $this->getCustomerViewToolbarButtons($customerId),

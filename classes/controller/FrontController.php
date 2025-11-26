@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\CustomerSettings;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -1977,6 +1978,7 @@ class FrontControllerCore extends Controller
         $formatter
             ->setAskForPartnerOptin(Configuration::get('PS_CUSTOMER_OPTIN'))
             ->setAskForBirthdate(Configuration::get('PS_CUSTOMER_BIRTHDATE'))
+            ->setAskForSocialTitle(Configuration::get('PS_CUSTOMER_ASK_FOR_SOCIAL_TITLE') == CustomerSettings::SOCIAL_TITLES_ENABLED_COLLECTED)
             ->setPartnerOptinRequired($customer->isFieldRequired('optin'));
 
         return $formatter;

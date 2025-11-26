@@ -45,6 +45,7 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
         'enable_b2b_mode' => true,
         'ask_for_birthday' => true,
         'enable_offers' => true,
+        'ask_for_social_title' => 2,
     ];
 
     /**
@@ -74,6 +75,7 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
                     ['PS_B2B_ENABLE', false, $shopConstraint, true],
                     ['PS_CUSTOMER_BIRTHDATE', false, $shopConstraint, true],
                     ['PS_CUSTOMER_OPTIN', false, $shopConstraint, true],
+                    ['PS_CUSTOMER_ASK_FOR_SOCIAL_TITLE', 0, $shopConstraint, 2],
                 ]
             );
 
@@ -112,6 +114,7 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_b2b_mode' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['ask_for_birthday' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_offers' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['ask_for_social_title' => 'wrong_type'])],
         ];
     }
 

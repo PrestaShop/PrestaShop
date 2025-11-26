@@ -26,10 +26,12 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\CustomerSettings;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -125,6 +127,23 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'multistore_configuration_key' => 'PS_CUSTOMER_OPTIN',
+            ])
+            ->add('ask_for_social_title', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Customer social titles',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'Specify if you want to use social titles (Mr., Mrs.) for your customers.',
+                    'Admin.Shopparameters.Help'
+                ),
+                'choices' => [
+                    $this->trans('Disabled', 'Admin.Shopparameters.Feature') => CustomerSettings::SOCIAL_TITLES_DISABLED,
+                    $this->trans('Enabled for internal purposes only', 'Admin.Shopparameters.Feature') => CustomerSettings::SOCIAL_TITLES_ENABLED,
+                    $this->trans('Enabled', 'Admin.Shopparameters.Feature') => CustomerSettings::SOCIAL_TITLES_ENABLED_COLLECTED,
+                ],
+                'required' => true,
+                'multistore_configuration_key' => 'PS_CUSTOMER_ASK_FOR_SOCIAL_TITLE',
             ]);
     }
 

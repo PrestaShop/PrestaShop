@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Domain\Customer\CustomerSettings;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\Customer\DeleteCustomersBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
@@ -81,24 +82,32 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $contextDateFormat;
 
     /**
+     * @var int
+     */
+    private $customerSocialTitleSetting;
+
+    /**
      * @param HookDispatcherInterface $hookDispatcher
      * @param bool $isB2bFeatureEnabled
      * @param bool $isMultistoreFeatureEnabled
      * @param string $contextDateFormat
      * @param bool $isGroupsFeatureEnabled
+     * @param int $customerSocialTitleSetting
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         $isB2bFeatureEnabled,
         $isMultistoreFeatureEnabled,
         string $contextDateFormat,
-        bool $isGroupsFeatureEnabled = true
+        bool $isGroupsFeatureEnabled = true,
+        int $customerSocialTitleSetting = CustomerSettings::SOCIAL_TITLES_DISABLED
     ) {
         parent::__construct($hookDispatcher);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
         $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
         $this->contextDateFormat = $contextDateFormat;
         $this->isGroupsFeatureEnabled = $isGroupsFeatureEnabled;
+        $this->customerSocialTitleSetting = $customerSocialTitleSetting;
     }
 
     /**
@@ -134,13 +143,6 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('ID', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'id_customer',
-                    ])
-            )
-            ->add(
-                (new DataColumn('social_title'))
-                    ->setName($this->trans('Social title', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'social_title',
                     ])
             )
             ->add(
@@ -255,6 +257,17 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             );
 
+        if ($this->customerSocialTitleSetting !== CustomerSettings::SOCIAL_TITLES_DISABLED) {
+            $columns->addAfter(
+                'id_customer',
+                (new DataColumn('social_title'))
+                    ->setName($this->trans('Social title', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'social_title',
+                    ])
+            );
+        }
+
         if ($this->isB2bFeatureEnabled) {
             $columns->addAfter(
                 'email',
@@ -307,13 +320,6 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'required' => false,
                     ])
                     ->setAssociatedColumn('id_customer')
-            )
-            ->add(
-                (new Filter('social_title', GenderType::class))
-                    ->setTypeOptions([
-                        'required' => false,
-                    ])
-                    ->setAssociatedColumn('social_title')
             )
             ->add(
                 (new Filter('firstname', TextType::class))
@@ -375,6 +381,16 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('actions')
             );
+
+        if ($this->customerSocialTitleSetting !== CustomerSettings::SOCIAL_TITLES_DISABLED) {
+            $filters->add(
+                (new Filter('social_title', GenderType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('social_title')
+            );
+        }
 
         if ($this->isB2bFeatureEnabled) {
             $filters->add(

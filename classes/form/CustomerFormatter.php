@@ -36,6 +36,7 @@ class CustomerFormatterCore implements FormFormatterInterface
     private $ask_for_password = true;
     private $password_is_required = true;
     private $ask_for_new_password = false;
+    private $ask_for_social_title = true;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -48,6 +49,13 @@ class CustomerFormatterCore implements FormFormatterInterface
     public function setAskForBirthdate($ask_for_birthdate)
     {
         $this->ask_for_birthdate = $ask_for_birthdate;
+
+        return $this;
+    }
+
+    public function setAskForSocialTitle($ask_for_social_title)
+    {
+        $this->ask_for_social_title = $ask_for_social_title;
 
         return $this;
     }
@@ -91,22 +99,24 @@ class CustomerFormatterCore implements FormFormatterInterface
     {
         $format = [];
 
-        $genders = Gender::getGenders($this->language->id);
-        if ($genders->count() > 0) {
-            $genderField = (new FormField())
-                ->setName('id_gender')
-                ->setType('radio-buttons')
-                ->setLabel(
-                    $this->translator->trans(
-                        'Social title',
-                        [],
-                        'Shop.Forms.Labels'
-                    )
-                );
-            foreach ($genders as $gender) {
-                $genderField->addAvailableValue($gender->id, $gender->name);
+        if ($this->ask_for_social_title) {
+            $genders = Gender::getGenders($this->language->id);
+            if ($genders->count() > 0) {
+                $genderField = (new FormField())
+                    ->setName('id_gender')
+                    ->setType('radio-buttons')
+                    ->setLabel(
+                        $this->translator->trans(
+                            'Social title',
+                            [],
+                            'Shop.Forms.Labels'
+                        )
+                    );
+                foreach ($genders as $gender) {
+                    $genderField->addAvailableValue($gender->id, $gender->name);
+                }
+                $format[$genderField->getName()] = $genderField;
             }
-            $format[$genderField->getName()] = $genderField;
         }
 
         $format['firstname'] = (new FormField())

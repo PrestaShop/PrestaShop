@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\CustomerSettings;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
@@ -636,6 +637,7 @@ class OrderController extends PrestaShopAdminController
             'shipmentsGrid' => $this->presentGrid($shipmentsGrid),
             'shipmentsLabel' => $tools->purifyHTML($shipmentsLabel),
             'carriersLabel' => $tools->purifyHTML($carriersLabel),
+            'displayCustomerSocialTitle' => (int) $this->getConfiguration()->get('PS_CUSTOMER_ASK_FOR_SOCIAL_TITLE') != CustomerSettings::SOCIAL_TITLES_DISABLED,
         ]);
     }
 

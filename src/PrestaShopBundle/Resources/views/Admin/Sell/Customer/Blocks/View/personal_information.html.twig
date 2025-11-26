@@ -45,14 +45,16 @@
     </a>
   </h3>
   <div class="card-body">
-    <div class="row mb-1">
-      <div class="col-sm-4 text-sm-right font-weight-bold">
-        {{ 'Social Title'|trans({}, 'Admin.Global') }}
+    {% if displayCustomerSocialTitle %}
+      <div class="row mb-1">
+        <div class="col-sm-4 text-sm-right font-weight-bold">
+          {{ 'Social Title'|trans({}, 'Admin.Global') }}
+        </div>
+        <div class="customer-social-title col-sm-8">
+          {{ customerInformation.personalInformation.socialTitle }}
+        </div>
       </div>
-      <div class="customer-social-title col-sm-8">
-        {{ customerInformation.personalInformation.socialTitle }}
-      </div>
-    </div>
+    {% endif %}
 
     <div class="row mb-1">
       <div class="col-sm-4 text-sm-right font-weight-bold">

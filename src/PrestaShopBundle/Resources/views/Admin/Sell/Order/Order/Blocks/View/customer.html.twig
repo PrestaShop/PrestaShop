@@ -37,7 +37,7 @@
           <div class="col-xxl-7">
             <h2 class="mb-0">
               <i class="material-icons">account_box</i>
-              {{ orderForViewing.customer.gender }}
+              {% if displayCustomerSocialTitle %}{{ orderForViewing.customer.gender }}{% endif %}
               {{ orderForViewing.customer.firstName }}
               {{ orderForViewing.customer.lastName }}
             </h2>
