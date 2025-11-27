@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use Doctrine\Common\Cache\Psr6\DoctrineProvider;
-use Doctrine\ORM\Tools\Setup;
 use Exception;
 use LegacyCompilerPass;
 use PrestaShop\PrestaShop\Adapter\Container\ContainerBuilderExtensionInterface;
@@ -42,7 +40,6 @@ use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\Exception\ServiceContainerException;
 use PrestaShopBundle\PrestaShopBundle;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Config\ConfigCache;
@@ -132,10 +129,6 @@ class ContainerBuilder
         $this->dumpFile = $this->environment->getCacheDir() . DIRECTORY_SEPARATOR . $this->containerClassName . '.php';
         $this->containerConfigCache = new ConfigCache($this->dumpFile, $this->environment->isDebug());
 
-        // These methods load required files like autoload or annotation metadata so we need to load
-        // them at each container creation, this can't be compiled.
-        $this->loadDoctrineAnnotationMetadata();
-
         if ($this->environment->getName() === 'test') {
             $cache = new NullAdapter();
         } else {
@@ -217,19 +210,6 @@ class ContainerBuilder
         );
 
         return $container;
-    }
-
-    /**
-     * In symfony context doctrine classes (like Table, Entity, ...) are available thanks to
-     * the autoloader. In this specific context we don't have the general autoloader, so we need
-     * to include these classes manually. This is performed in Doctrine\ORM\Configuration::newDefaultAnnotationDriver
-     * which is called in Setup::createAnnotationMetadataConfiguration.
-     */
-    private function loadDoctrineAnnotationMetadata()
-    {
-        // IMPORTANT: we need to provide a cache because doctrine tries to init a connection on redis, memcached, ... on its own
-        $cacheProvider = DoctrineProvider::wrap(new ArrayAdapter());
-        Setup::createAnnotationMetadataConfiguration([], $this->environment->isDebug(), null, $cacheProvider);
     }
 
     /**
