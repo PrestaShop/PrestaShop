@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -31,6 +32,11 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
     private $contextShopIds;
 
     /**
+     * @var ShopContext
+     */
+    private $shopContext;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
@@ -42,13 +48,15 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         $contextIdLang,
-        array $contextShopIds
+        array $contextShopIds,
+        ShopContext $shopContext
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->contextIdLang = $contextIdLang;
         $this->contextShopIds = $contextShopIds;
+        $this->shopContext = $shopContext;
     }
 
     /**
@@ -83,18 +91,6 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getEmployeeQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $sub = $this->connection->createQueryBuilder()
-            ->select('1')
-            ->from($this->dbPrefix . 'employee_shop', 'es')
-            ->where('e.id_employee = es.id_employee')
-            ->andWhere('es.id_shop IN (:context_shop_ids)');
-
-        // Subquery to identify employees not linked to any shop
-        $missingShopLinkSubquery = $this->connection->createQueryBuilder()
-            ->select('1')
-            ->from($this->dbPrefix . 'employee_shop', 'es')
-            ->where('e.id_employee = es.id_employee');
-
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'employee', 'e')
             ->leftJoin(
@@ -102,14 +98,34 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'profile_lang',
                 'pl',
                 'e.id_profile = pl.id_profile AND pl.id_lang = ' . (int) $this->contextIdLang
-            )
-            ->andWhere('EXISTS (' . $sub->getSQL() . ')')
-            ->orWhere('NOT EXISTS (' . $missingShopLinkSubquery->getSQL() . ')')
-            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
+            );
+
+        $this->addShopContextRestriction($qb);
 
         $this->applyFilters($qb, $searchCriteria->getFilters());
 
         return $qb;
+    }
+
+    /**
+     * Adds the shop context restriction to the QueryBuilder when required.
+     *
+     * @param QueryBuilder $qb
+     */
+    private function addShopContextRestriction(QueryBuilder $qb): void
+    {
+        if ($this->shopContext->isAllShopContext()) {
+            return;
+        }
+
+        $sub = $this->connection->createQueryBuilder()
+            ->select('1')
+            ->from($this->dbPrefix . 'employee_shop', 'es')
+            ->where('e.id_employee = es.id_employee')
+            ->andWhere('es.id_shop IN (:context_shop_ids)');
+
+        $qb->andWhere('EXISTS (' . $sub->getSQL() . ')')
+            ->setParameter('context_shop_ids', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
     }
 
     /**

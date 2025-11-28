@@ -74,6 +74,7 @@ services:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - "@=service('prestashop.adapter.legacy.context').getContext().shop.getContextListShopID()"
+      - '@PrestaShop\PrestaShop\Core\Context\ShopContext'
     public: true
 
   prestashop.core.grid.query_builder.contact:
