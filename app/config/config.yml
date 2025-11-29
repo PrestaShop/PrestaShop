@@ -59,6 +59,7 @@ framework:
   default_locale: "%locale%"
   trusted_hosts: ~
   session:
+    gc_probability: null
     handler_id: ~
   fragments: ~
   http_method_override: true
