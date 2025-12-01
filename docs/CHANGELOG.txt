@@ -24,6 +24,150 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 9
 
 ####################################
+#   v9.0.2 - (2025-12-01)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #40212: [BC Break] Update module api resources v0.2.0 (by @jolelievre)
+    - #40088: Api normalization mapper indexes (by @jolelievre)
+    - #39938: Add attachment ID to product attachments search and selection (by @Codencode)
+    - #40005: Backport Sort modules and mails templates by name in translations (by @Codencode)
+    - #39422: Improve order status form wording, improve theme selector (by @Hlavtox)
+  - Bug fix:
+    - #40201: Fix path to legacy mail folder (by @Hlavtox)
+    - #40123: Update module api resources with new boolean rule (by @jolelievre)
+    - #40091: Update module ps_apiresources with new conventions (by @jolelievre)
+    - #40052: BO - Multistore : Fixed link "Add new group" (by @Progi1984)
+    - #40082: Fix: Error in updating the state that has an ISO code equal to that of a different country's state (by @Codencode)
+    - #38617: Fix: Hook actionAttributeCombinationSave never triggered (by @Codencode)
+    - #40062: BO - Products Page : Fixed URL for documentation (by @Progi1984)
+    - #40004: BO - Customer Service : Fixed button "Reply to the next unanswered message in this thread" (by @Progi1984)
+    - #39999: BO : Product (Virtual) : Set number of days without expiration date (by @Progi1984)
+    - #39892: Fix order of categories in admin (by @Hlavtox)
+    - #40021: BO - Orders : Fixed amount of order discounts when changing currency (by @Progi1984)
+    - #37841: Fix: Multishop: Deleting and recreating a combination removes the shared reference (new Product Page V2) (by @Codencode)
+    - #39669: Fix grid doctrine query builder to use context language instead of employee language (by @Codencode)
+    - #39982: BO : Fixed anchor target for modules page (by @Progi1984)
+    - #39834: BO Modules : Display only modules if you have the permission (by @Progi1984)
+    - #39976: BO : Adresses : Fixed display of state if there is errors (by @Progi1984)
+    - #39985: BO : Product SEO - Display attribute in SEO preview (by @Progi1984)
+    - #39900: BO - Orders : Optimized Countries Choice (by @Progi1984)
+    - #39833: BO - Orders - View - Carrier Modal : The selected carrier is the correct (by @Progi1984)
+    - #39866: BO - Import : Added missing ISBN field for Products & Combinations (by @Progi1984)
+    - #39897: BO - Categories : The description wasn't displayed by default in SERP (by @Progi1984)
+    - #39914: BO - Permissions : Added authorization role for "More" (by @Progi1984)
+    - #39886: Legacy email template scan (by @tleon)
+    - #39874: BO - Products : Enable/Disable actions depending on permissions (by @Progi1984)
+    - #39877: Add the possibility to bulk assign a new zone (by @nicosomb)
+    - #38301: Fix: AverageTaxOfProductsTaxCalculator, Cannot use a scalar value as an array (by @Codencode)
+    - #39691: Fix: Ensure order status template keeps between saves (by @ChillCode)
+    - #39802: BO: State Grid : Clean unuseful parameters (by @Progi1984)
+    - #39758: Allow attribute groups colors/textures on groups with ID different than 2 (by @ChillCode)
+    - #39578: Fix issue with null values on stores from import (by @Prestaworks)
+    - #39732: Fix order tax update (by @tleon)
+    - #39728: Fix product broken when redirect target is deleted (by @tleon)
+    - #39714: BO: Email Layouts : Set table responsive (by @Progi1984)
+    - #39621: [BO] Added DataCollector for Legacy Profiling (by @Progi1984)
+    - #39637: Ensure cache is cleared on each module action even when they fail (by @jolelievre)
+  - Refactoring:
+    - #39990: Remove extra join (by @Hlavtox)
+    - #39893: Optimize category input (by @Hlavtox)
+    - #39748: BO : Webservice : Refactoring using CQRS (by @Progi1984)
+- Front Office:
+  - Improvement:
+    - #39913: Add new hooks: actionOverrideQuantityAvailableByProduct - actionCheckAttributeQuantity - actionOverrideProductQuantity (by @Codencode)
+    - #39928: Remove very specific text about payment validation (by @Hlavtox)
+    - #39891: Fix: ProductController::findProductCombinationById() incorrect return type (by @Codencode)
+  - Bug fix:
+    - #40044: Multistore : Display countries only those covered by active carriers (by @Progi1984)
+    - #36796: Fix: Product customization text appears as raw HTML in order confirmation email (order_conf) (by @Codencode)
+    - #39817: Improve front office customer form validation to fix issues with guests and emails (by @Hlavtox)
+    - #39572: Fix: Front container lazy service declaration (by @Codencode)
+    - #39525: Fix: Fatal Error : Doctrine proxy classes and cache in production mode Prestashop 9.0.0 (by @Codencode)
+    - #39606: fix(CustomerMessage): increase user_agent length from 128 to 255 to prevent silent validation errors on some mobile contact form (by @yebor974)
+    - #39651: Fix the canonical redirection when category slug is wrong but id is correct (by @aomaxime)
+  - Refactoring:
+    - #39941: Improve confirmation logic and remove module check (by @Hlavtox)
+    - #39934: Make sure address IDs are returned consistently (by @Hlavtox)
+    - #39935: Comment address save process (by @Hlavtox)
+    - #39666: Explain parent initialization for future generation (by @Hlavtox)
+- Core:
+  - Improvement:
+    - #40136: Add more logs in database dumping script (by @nicosomb)
+    - #40100: Manual verifications release 902 (by @mattgoud)
+    - #40068: Chore: [release-9.0.2][preliminary-task]- update composer (classic-theme 3.0.4) (by @mattgoud)
+    - #40047: Bump version to 9.0.2 (by @tleon)
+    - #39775: Corrects the date in the change log (by @Touxten)
+    - #39742: Merge release-9.0.1 into 9.0.x (by @tyloo)
+    - #39589: Improved generation of queries and commands (by @kpodemski)
+  - Bug fix:
+    - #39905: Fixed swagger property filter system for mapped properties (by @tleon)
+    - #40030: Initialize dispatcher early and fix all $_FILES issues (by @Hlavtox)
+    - #39835: Fix Manufacturer/Supplier controllers return types for their respective getters (by @prestamodule)
+    - #40017: Check if function exec is disabled in ExecKernelCacheClearer (by @jolelievre)
+    - #39674: Fix log level create test db for `9.0.x` (by @boherm)
+  - Refactoring:
+    - #39950: Cookie account_created - absolete code from PS 1.6 (by @ShaiMagal)
+- Installer:
+  - Improvement:
+    - #40127: Update default catalog 9.0.x (by @ps-jarvis)
+    - #39305: Rework Docker Developer Experience and Added documentation (by @tyloo)
+    - #39619: Update default catalog 9.0.x (by @ps-jarvis)
+  - Bug fix:
+    - #39959: Chore: fix docker entrypoint wait assets script (by @tyloo)
+- Web Services:
+  - Bug fix:
+    - #39904: Add DateImmutable for api type consistency (by @tleon)
+- Localization:
+  - Improvement:
+    - #39012: Update italian provinces as of June 2025 (by @mavalentin)
+- Tests:
+  - Improvement:
+    - #40121: Functional Tests : Improve UI Tests after #40088 (by @Progi1984)
+    - #39940: Functional Tests : Added new endpoints (by @Progi1984)
+    - #40029: Functional Tests : API : GET /admin-api/zones (by @Progi1984)
+    - #40012: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40016: Functional Tests : API : DELETE /admin-api/product/image/{imageId} (by @Progi1984)
+    - #39987: Functional Tests : API : DELETE /admin-api/search-alias/{search} (by @Progi1984)
+    - #39965: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39902: Functional Tests : BO - Cart rules - Conditions : Case 9 - Compatibility with other cart rules (by @Progi1984)
+    - #39812: TE: Bump behat/behat (v3.16.0 => v3.25.0) (by @Progi1984)
+    - #39875: Functional Tests : BO - Cart rules - Condition : Case 2 - Valid Date Time (by @Progi1984)
+    - #39871: Bump prestashop/ps_apiresources (by @Progi1984)
+    - #39870: Functional Tests : BO - Cart rules - Condition : Case 2 bis - Invalid Date Time (by @Progi1984)
+    - #39856: Functional Tests : API : DELETE /admin-api/category/{categoryId}/cover (by @Progi1984)
+    - #39844: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39846: Functional Tests : API : GET /attributes/attribute/{attributeId} (by @Progi1984)
+    - #39828: Functional Tests : API : POST /admin-api/attributes/attribute (by @Progi1984)
+    - #39815: Functional Tests : API : DELETE /admin-api/category/{categoryId} (by @Progi1984)
+    - #39806: Functional Tests : API : DELETE /attributes/attribute/{attributeId} (by @Progi1984)
+    - #39794: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39777: Functional Tests : API : GET /categories (by @Progi1984)
+    - #39768: Functional Tests : Update new endpoints (by @Progi1984)
+    - #39767: Functional Tests : API : PUT /attributes/groups/delete (by @Progi1984)
+    - #39754: Functional Tests : API : GET /attributes/groups (by @Progi1984)
+    - #39749: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39738: Functional Tests : API : PUT /hook/{hookId}/status (by @Progi1984)
+    - #39731: Functional Tests : API : POST /attributes/group (by @Progi1984)
+    - #39718: Functional Tests : API : PATCH /attributes/group/{attributeGroupId} (by @Progi1984)
+    - #39701: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39681: Github Action `setup-env` : Retry 5 times the download of MkCert (by @Progi1984)
+    - #39677: Functional Tests : GET /attributes/group/{attributeGroupId} (by @Progi1984)
+    - #39675: Functional Tests : Added new endpoints (by @Progi1984)
+    - #39661: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39593: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+  - Bug fix:
+    - #40042: Functional Tests : Unskip Test (Linked to issue #38787) (by @Progi1984)
+    - #39901: BO - Categories : Responsive of the SERP block (by @Progi1984)
+    - #39671: Functional Tests : Fix for ps_accounts (by @Progi1984)
+  - Refactoring:
+    - #40086: Functional Tests : API : DELETE /admin-api/category/{categoryId}/{mode} (by @Progi1984)
+    - #39829: UI tests - Fix random errors in functional:BO:advanced-parameters:07-10  & functional:FO:hummingbird:08-12 (by @nesrineabdmouleh)
+    - #39807: Functional tests - Fix random error in Orders > Credit slips > Create filter credit slip (by @nesrineabdmouleh)
+    - #39702: Removed pdiddy occurences in PrestaShop project (by @nicosomb)
+
+####################################
 #   v9.0.1 - (2025-10-13)
 ####################################
 
