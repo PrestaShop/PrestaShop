@@ -219,13 +219,15 @@ class GroupCore extends ObjectModel
         }
 
         if (parent::delete()) {
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'cart_rule_group` WHERE `id_group` = ' . (int) $this->id);
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customer_group` WHERE `id_group` = ' . (int) $this->id);
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'category_group` WHERE `id_group` = ' . (int) $this->id);
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'group_reduction` WHERE `id_group` = ' . (int) $this->id);
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache` WHERE `id_group` = ' . (int) $this->id);
 
             $this->truncateModulesRestrictions($this->id);
+
+            // Disable cart rules which are only associated to this group
+            $this->disableAssociatedCartRules(true);
 
             // Add default group (id 3) to customers without groups
             Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customer_group` (
@@ -434,5 +436,41 @@ class GroupCore extends ObjectModel
 				ON (g.`id_group` = gl.`id_group`)
 			WHERE `name` = \'' . pSQL($query) . '\'
 		');
+    }
+
+    /**
+     * Disable cart rules which are associated to this group.
+     *
+     * @param bool $strict either the group is the only one associated to the cart rule or not
+     *
+     * @return void
+     *
+     * @throws PrestaShopDatabaseException
+     *
+     * @throws PrestaShopException
+     */
+    public function disableAssociatedCartRules(bool $strict = false): void
+    {
+        // Get all cart rules associated to this group
+        $cart_rule_ids = Db::getInstance()->executeS('SELECT cr.id_cart_rule FROM `' . _DB_PREFIX_ . 'cart_rule` cr INNER JOIN `' . _DB_PREFIX_ . 'cart_rule_group` crg ON cr.id_cart_rule = crg.id_cart_rule WHERE crg.id_group = ' . (int) $this->id);
+
+        foreach ($cart_rule_ids as $cart_rule_id) {
+            $cart_rule = new CartRule((int) $cart_rule_id['id_cart_rule']);
+
+            // If strict mode is enabled, the cart rule must be associated to one group only
+            if($strict) {
+                $groups = Db::getInstance()->executeS('SELECT crg.id_group FROM `' . _DB_PREFIX_ . 'cart_rule_group` crg WHERE crg.id_cart_rule = ' . (int) $cart_rule->id);
+
+                if(count($groups) == 1) {
+                    $cart_rule->active = 0;
+                }
+            } else {
+                $cart_rule->active = 0;
+            }
+
+            $cart_rule->update();
+        }
+
+        Db::getInstance()->delete('cart_rule_group','id_group = ' . (int) $this->id);
     }
 }
