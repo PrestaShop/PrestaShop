@@ -227,11 +227,11 @@ class GroupCore extends ObjectModel
             $this->truncateModulesRestrictions($this->id);
 
             // Disable cart rules which are only associated to this group
-            if(!$this->disableAssociatedCartRules()) {
+            if (!$this->disableAssociatedCartRules()) {
                 return false;
             }
 
-            Db::getInstance()->delete('cart_rule_group','id_group = ' . (int) $this->id);
+            Db::getInstance()->delete('cart_rule_group', 'id_group = ' . (int) $this->id);
 
             // Add default group (id 3) to customers without groups
             Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customer_group` (
