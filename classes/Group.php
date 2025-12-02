@@ -441,32 +441,22 @@ class GroupCore extends ObjectModel
     /**
      * Disable cart rules which are associated to this group.
      *
-     * @param bool $strict either the group is the only one associated to the cart rule or not
-     *
      * @return void
-     *
-     * @throws PrestaShopDatabaseException
-     *
-     * @throws PrestaShopException
      */
-    public function disableAssociatedCartRules(bool $strict = false): void
+    public function disableAssociatedCartRules(): void
     {
         // Get all cart rules associated to this group
-        $cart_rule_ids = Db::getInstance()->executeS('SELECT cr.id_cart_rule FROM `' . _DB_PREFIX_ . 'cart_rule` cr INNER JOIN `' . _DB_PREFIX_ . 'cart_rule_group` crg ON cr.id_cart_rule = crg.id_cart_rule WHERE crg.id_group = ' . (int) $this->id);
+        $cart_rule_ids = Db::getInstance()->executeS('SELECT cr.id_cart_rule
+            FROM ' . _DB_PREFIX_ . 'cart_rule cr
+            INNER JOIN ' . _DB_PREFIX_ . 'cart_rule_group crg ON crg.id_cart_rule = cr.id_cart_rule AND crg.id_group = ' . (int) $this->id . '
+            LEFT JOIN ' . _DB_PREFIX_ . 'cart_rule_group crg_other ON crg_other.id_cart_rule = cr.id_cart_rule AND crg_other.id_group != ' . (int) $this->id . '
+            WHERE crg_other.id_group IS NULL AND cr.group_restriction = 1
+        ');
 
         foreach ($cart_rule_ids as $cart_rule_id) {
             $cart_rule = new CartRule((int) $cart_rule_id['id_cart_rule']);
 
-            // If strict mode is enabled, the cart rule must be associated to one group only
-            if($strict) {
-                $groups = Db::getInstance()->executeS('SELECT crg.id_group FROM `' . _DB_PREFIX_ . 'cart_rule_group` crg WHERE crg.id_cart_rule = ' . (int) $cart_rule->id);
-
-                if(count($groups) == 1) {
-                    $cart_rule->active = 0;
-                }
-            } else {
-                $cart_rule->active = 0;
-            }
+            $cart_rule->active = false;
 
             $cart_rule->update();
         }
