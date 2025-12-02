@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Command\CloseShowcaseCardCommand;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCardIsClosed;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class ShowcaseCardFeatureContext extends AbstractDomainFeatureContext
@@ -55,9 +56,10 @@ class ShowcaseCardFeatureContext extends AbstractDomainFeatureContext
     {
         $employeeId = SharedStorage::getStorage()->get($employeeReference);
 
+        /** @var ShowcaseCardIsClosed $showcaseCardIsClosed */
         $showcaseCardIsClosed = $this->getQueryBus()->handle(
             new GetShowcaseCardIsClosed((int) $employeeId, $cardName)
         );
-        Assert::assertTrue($showcaseCardIsClosed);
+        Assert::assertTrue($showcaseCardIsClosed->getValue());
     }
 }

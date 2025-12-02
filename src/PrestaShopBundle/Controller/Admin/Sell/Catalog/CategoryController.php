@@ -55,6 +55,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory;
@@ -111,6 +112,7 @@ class CategoryController extends PrestaShopAdminController
 
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class, ['categories_to_delete_parent' => $currentCategoryId], []);
 
+        /** @var ShowcaseCardIsClosed $showcaseCardIsClosed */
         $showcaseCardIsClosed = $this->dispatchQuery(
             new GetShowcaseCardIsClosed($this->getEmployeeContext()->getEmployee()->getId(), ShowcaseCard::CATEGORIES_CARD)
         );
@@ -130,7 +132,7 @@ class CategoryController extends PrestaShopAdminController
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
             'isSingleShopContext' => $this->getShopContext()->getShopConstraint()->isSingleShopContext(),
             'showcaseCardName' => ShowcaseCard::CATEGORIES_CARD,
-            'isShowcaseCardClosed' => $showcaseCardIsClosed,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed->getValue(),
             'layoutTitle' => $layoutTitle,
         ]);
     }

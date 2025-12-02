@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CarrierGridDefinitionFactory;
@@ -85,7 +86,8 @@ class CarrierController extends PrestaShopAdminController
         $carrierGrid = $carrierGridFactory->getGrid($filters);
         $showHeaderAlert = $carrierModuleAdviceAlertChecker->isAlertDisplayed();
 
-        $showcaseCardIsClose = $this->dispatchQuery(
+        /** @var ShowcaseCardIsClosed $showcaseCardIsClosed */
+        $showcaseCardIsClosed = $this->dispatchQuery(
             new GetShowcaseCardIsClosed($employeeContext->getEmployee()->getId(), ShowcaseCard::CARRIERS_CARD)
         );
 
@@ -94,7 +96,7 @@ class CarrierController extends PrestaShopAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'showHeaderAlert' => $showHeaderAlert,
             'showcaseCardName' => ShowcaseCard::CARRIERS_CARD,
-            'isShowcaseCardClosed' => $showcaseCardIsClose,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed->getValue(),
             'layoutHeaderToolbarBtn' => $this->getLayoutHeaderToolbarButtons(),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Carriers', [], 'Admin.Navigation.Menu'),

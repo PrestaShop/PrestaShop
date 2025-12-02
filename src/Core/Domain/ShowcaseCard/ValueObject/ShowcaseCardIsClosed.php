@@ -24,22 +24,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\QueryHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
-use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCardIsClosed;
+namespace PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject;
 
-/**
- * Contract for handling GetShowcaseCardIsClosed
- */
-interface GetShowcaseCardIsClosedHandlerInterface
+class ShowcaseCardIsClosed
 {
-    /**
-     * Returns the "closed state" of a showcase command
-     *
-     * @param GetShowcaseCardIsClosed $query
-     *
-     * @return ShowcaseCardIsClosed
-     */
-    public function handle(GetShowcaseCardIsClosed $query): ShowcaseCardIsClosed;
+    protected bool $isClosed;
+
+    public function __construct(bool $isClosed)
+    {
+        $this->isClosed = $isClosed;
+    }
+
+    public function getValue(): bool
+    {
+        return $this->isClosed;
+    }
 }

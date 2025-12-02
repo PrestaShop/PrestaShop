@@ -57,6 +57,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageParentCate
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory;
@@ -117,6 +118,7 @@ class CmsPageController extends PrestaShopAdminController
 
         $cmsGrid = $cmsGridFactory->getGrid($cmsFilters);
 
+        /** @var ShowcaseCardIsClosed $showcaseCardIsClosed */
         $showcaseCardIsClosed = $this->dispatchQuery(
             new GetShowcaseCardIsClosed(
                 (int) $this->getEmployeeContext()->getEmployee()->getId(),
@@ -135,7 +137,7 @@ class CmsPageController extends PrestaShopAdminController
                 'helperDocLink' => $helperBlockLinkProvider->getLink('cms_pages'),
                 'cmsPageShowcaseCardName' => ShowcaseCard::CMS_PAGES_CARD,
                 'layoutHeaderToolbarBtn' => $this->getCmsPageIndexToolbarButtons($cmsCategoryParentId),
-                'showcaseCardIsClosed' => $showcaseCardIsClosed,
+                'showcaseCardIsClosed' => $showcaseCardIsClosed->getValue(),
             ]
         );
     }

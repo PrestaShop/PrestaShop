@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface as IdentifiableFormHandlerInterface;
@@ -392,6 +393,7 @@ class MetaController extends PrestaShopAdminController
         /** @var MetaDataProviderInterface $metaDataProvider */
         $metaDataProvider = $this->container->get(MetaDataProviderInterface::class);
 
+        /** @var ShowcaseCardIsClosed $showcaseCardIsClosed */
         $showcaseCardIsClosed = $this->dispatchQuery(
             new GetShowcaseCardIsClosed($this->getEmployeeContext()->getEmployee()->getId(), ShowcaseCard::SEO_URLS_CARD)
         );
@@ -427,7 +429,7 @@ class MetaController extends PrestaShopAdminController
                 'helperDocLink' => $helperBlockLinkProvider->getLink('meta'),
                 'indexPageId' => $metaDataProvider->getIdByPage('index'),
                 'metaShowcaseCardName' => ShowcaseCard::SEO_URLS_CARD,
-                'showcaseCardIsClosed' => $showcaseCardIsClosed,
+                'showcaseCardIsClosed' => $showcaseCardIsClosed->getValue(),
             ]
         );
     }

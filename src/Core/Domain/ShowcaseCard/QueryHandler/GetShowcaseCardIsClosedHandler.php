@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ConfigurationMap;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Exception\ShowcaseCardException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCardIsClosed;
 
 /**
  * Finds out if a showcase card has been closed
@@ -60,14 +61,14 @@ final class GetShowcaseCardIsClosedHandler implements GetShowcaseCardIsClosedHan
     /**
      * @param GetShowcaseCardIsClosed $query
      *
-     * @return bool
+     * @return ShowcaseCardIsClosed
      *
      * @throws ShowcaseCardException
      */
-    public function handle(GetShowcaseCardIsClosed $query)
+    public function handle(GetShowcaseCardIsClosed $query): ShowcaseCardIsClosed
     {
         $configurationName = $this->configurationMap->getConfigurationNameForClosedStatus($query->getShowcaseCard());
 
-        return (bool) $this->configuration->get($configurationName);
+        return new ShowcaseCardIsClosed((bool) $this->configuration->get($configurationName));
     }
 }

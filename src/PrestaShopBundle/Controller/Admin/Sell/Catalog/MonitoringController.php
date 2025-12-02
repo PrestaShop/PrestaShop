@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\DisabledProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\EmptyCategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\NoQtyProductWithCombinationGridDefinitionFactory;
@@ -121,7 +122,8 @@ class MonitoringController extends PrestaShopAdminController
         $productWithoutDescriptionGrid = $productWithoutDescriptionGrid->getGrid($productWithoutDescriptionFilters);
         $productWithoutPriceGrid = $productWithoutPriceGrid->getGrid($productWithoutPriceFilters);
 
-        $isShowcaseCardClosed = $this->dispatchQuery(
+        /** @var ShowcaseCardIsClosed $showcaseCardIsClosed */
+        $showcaseCardIsClosed = $this->dispatchQuery(
             new GetShowcaseCardIsClosed($this->getEmployeeContext()->getEmployee()->getId(), ShowcaseCard::MONITORING_CARD)
         );
 
@@ -137,7 +139,7 @@ class MonitoringController extends PrestaShopAdminController
             'productWithoutDescriptionGrid' => $this->presentGrid($productWithoutDescriptionGrid),
             'productWithoutPriceGrid' => $this->presentGrid($productWithoutPriceGrid),
             'showcaseCardName' => ShowcaseCard::MONITORING_CARD,
-            'isShowcaseCardClosed' => $isShowcaseCardClosed,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed->getValue(),
             'layoutTitle' => $this->trans('Monitoring', [], 'Admin.Navigation.Menu'),
         ]);
     }

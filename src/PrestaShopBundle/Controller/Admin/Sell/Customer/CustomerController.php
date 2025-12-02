@@ -59,6 +59,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
@@ -112,6 +113,7 @@ class CustomerController extends PrestaShopAdminController
 
         $deleteCustomerForm = $this->createForm(DeleteCustomersType::class);
 
+        /** @var ShowcaseCardIsClosed $showcaseCardIsClosed */
         $showcaseCardIsClosed = $this->dispatchQuery(
             new GetShowcaseCardIsClosed($this->getEmployeeContext()->getEmployee()->getId(), ShowcaseCard::CUSTOMERS_CARD)
         );
@@ -124,7 +126,7 @@ class CustomerController extends PrestaShopAdminController
             'isSingleShopContext' => $this->getShopContext()->getShopConstraint()->isSingleShopContext(),
             'deleteCustomersForm' => $deleteCustomerForm->createView(),
             'showcaseCardName' => ShowcaseCard::CUSTOMERS_CARD,
-            'isShowcaseCardClosed' => $showcaseCardIsClosed,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed->getValue(),
             'layoutHeaderToolbarBtn' => $this->getCustomerIndexToolbarButtons(),
             'enableSidebar' => true,
         ]);

@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
@@ -70,6 +71,7 @@ class FeatureController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.grid.grid_factory.feature')]
         GridFactoryInterface $featureGridFactory,
     ): Response {
+        /** @var ShowcaseCardIsClosed $showcaseCardIsClosed */
         $showcaseCardIsClosed = $this->dispatchQuery(
             new GetShowcaseCardIsClosed(
                 $this->getEmployeeContext()->getEmployee()->getId(),
@@ -83,7 +85,7 @@ class FeatureController extends PrestaShopAdminController
             'featureGrid' => $this->presentGrid($featureGridFactory->getGrid($filters)),
             'settingsTipMessage' => $this->getSettingsTipMessage(),
             'showcaseCardName' => ShowcaseCard::FEATURES_CARD,
-            'isShowcaseCardClosed' => $showcaseCardIsClosed,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed->getValue(),
             'layoutHeaderToolbarBtn' => [
                 'add_feature' => [
                     'href' => $this->generateUrl('admin_features_add'),

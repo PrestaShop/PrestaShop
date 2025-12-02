@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\CannotAddAttribut
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Exception\DeleteAttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Exception\TranslatableCoreException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -69,6 +70,7 @@ class AttributeGroupController extends PrestaShopAdminController
     ): Response {
         $attributeGroupGrid = $attributeGroupGridFactory->getGrid($attributeGroupFilters);
 
+        /** @var ShowcaseCardIsClosed $showcaseCardIsClosed */
         $showcaseCardIsClosed = $this->dispatchQuery(
             new GetShowcaseCardIsClosed((int) $this->getEmployeeContext()->getEmployee()->getId(), ShowcaseCard::ATTRIBUTES_CARD)
         );
@@ -78,7 +80,7 @@ class AttributeGroupController extends PrestaShopAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'showcaseCardName' => ShowcaseCard::ATTRIBUTES_CARD,
-            'isShowcaseCardClosed' => $showcaseCardIsClosed,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed->getValue(),
             'layoutTitle' => $this->trans('Attributes', [], 'Admin.Navigation.Menu'),
         ]);
     }

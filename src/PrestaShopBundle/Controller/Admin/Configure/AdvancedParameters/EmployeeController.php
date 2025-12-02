@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationE
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\FormLanguageChangerInterface;
 use PrestaShop\PrestaShop\Core\Employee\NavigationMenuTogglerInterface;
@@ -88,6 +89,7 @@ class EmployeeController extends PrestaShopAdminController
         $employeeOptionsForm = $employeeOptionsFormHandler->getForm();
         $employeeGrid = $employeeGridFactory->getGrid($filters);
 
+        /** @var ShowcaseCardIsClosed $showcaseCardIsClosed */
         $showcaseCardIsClosed = $this->dispatchQuery(
             new GetShowcaseCardIsClosed($this->getEmployeeContext()->getEmployee()->getId(), ShowcaseCard::EMPLOYEES_CARD)
         );
@@ -99,7 +101,7 @@ class EmployeeController extends PrestaShopAdminController
             'employeeGrid' => $this->presentGrid($employeeGrid),
             'helperCardDocumentationLink' => $helperCardDocumentationLinkProvider->getLink('team'),
             'showcaseCardName' => ShowcaseCard::EMPLOYEES_CARD,
-            'isShowcaseCardClosed' => $showcaseCardIsClosed,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed->getValue(),
             'enableSidebar' => true,
         ]);
     }
