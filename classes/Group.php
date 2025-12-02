@@ -227,7 +227,11 @@ class GroupCore extends ObjectModel
             $this->truncateModulesRestrictions($this->id);
 
             // Disable cart rules which are only associated to this group
-            $this->disableAssociatedCartRules(true);
+            if(!$this->disableAssociatedCartRules()) {
+                return false;
+            }
+
+            Db::getInstance()->delete('cart_rule_group','id_group = ' . (int) $this->id);
 
             // Add default group (id 3) to customers without groups
             Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customer_group` (
@@ -441,9 +445,9 @@ class GroupCore extends ObjectModel
     /**
      * Disable cart rules which are associated to this group.
      *
-     * @return void
+     * @return bool
      */
-    public function disableAssociatedCartRules(): void
+    public function disableAssociatedCartRules(): bool
     {
         // Get all cart rules associated to this group
         $cart_rule_ids = Db::getInstance()->executeS('SELECT cr.id_cart_rule
@@ -461,6 +465,6 @@ class GroupCore extends ObjectModel
             $cart_rule->update();
         }
 
-        Db::getInstance()->delete('cart_rule_group','id_group = ' . (int) $this->id);
+        return true;
     }
 }
