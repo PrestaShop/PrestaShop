@@ -20,7 +20,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_module_putModuleTechnicalNameStatus';
 
-describe('API : PUT /module/{technicalName}/status', async () => {
+describe('API : PUT /modules/{technicalName}/status', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -84,10 +84,10 @@ describe('API : PUT /module/{technicalName}/status', async () => {
     true,
   ].forEach((argStatus: boolean, index: number) => {
     describe(`API : Check Data with status = ${argStatus}`, async () => {
-      it('should request the endpoint /module/{technicalName}/status', async function () {
+      it('should request the endpoint /modules/{technicalName}/status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `requestEndpoint${index}`, baseContext);
 
-        const apiResponse = await apiContext.put(`module/${moduleInfo.technicalName}/status`, {
+        const apiResponse = await apiContext.put(`modules/${moduleInfo.technicalName}/status`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

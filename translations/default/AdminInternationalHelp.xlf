@@ -35,7 +35,7 @@
       <trans-unit id="473d5a5e7a18ca5e30b399ae0dfda18e">
         <source>1 to 4 letter ISO code.</source>
         <target>1 to 4 letter ISO code.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 118]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 122]</note>
       </trans-unit>
       <trans-unit id="1e817248a18ffae64e10be49a46fa9ee">
         <source>Activate this language.</source>
@@ -65,7 +65,7 @@
       <trans-unit id="0f6ca10753a64573af4ae286c7421e62">
         <source>Country where the state is located.</source>
         <target>Country where the state is located.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 148]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 153]</note>
       </trans-unit>
       <trans-unit id="a84047cec2a677153211d701853a65b4">
         <source>Define the ecotax (e.g. French ecotax: 20%).</source>
@@ -119,7 +119,7 @@
       <trans-unit id="15c5d5dd58a9e70b8b86a7447dd00f70">
         <source>Geographical region where this state is located.</source>
         <target>Geographical region where this state is located.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 163]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 168]</note>
       </trans-unit>
       <trans-unit id="92de0162cbdfa60f671ba3cad1d392a1">
         <source>Geographical region.</source>
@@ -194,12 +194,12 @@
       <trans-unit id="68240d02aad03eed41bc52305688a035">
         <source>Only the countries with the option "contains states" enabled are displayed.</source>
         <target>Only the countries with the option "contains states" enabled are displayed.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 150]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 155]</note>
       </trans-unit>
       <trans-unit id="b6ff06f41cb66b5b89be6a3670e40d63">
         <source>Provide the state name to be displayed in addresses and on invoices.</source>
         <target>Provide the state name to be displayed in addresses and on invoices.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 92]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 96]</note>
       </trans-unit>
       <trans-unit id="abb056fd74a8bdf858dbe3e68c5ea97c">
         <source>Restrict country selections in front office to those covered by active carriers</source>
@@ -379,7 +379,7 @@
       <trans-unit id="ec92dbe75bbcc2fbf4cad6302df97c19">
         <source>Used for shipping</source>
         <target>Used for shipping</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 165]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 170]</note>
       </trans-unit>
       <trans-unit id="3cd0f0cce3990de970f803ffc19f68e1">
         <source>Warning: This will replace all of the existing data inside the destination language.</source>
@@ -404,7 +404,7 @@
       <trans-unit id="d44080730b4d80fb65b9018d57c058b3">
         <source>You can prefix it with the country ISO code if needed.</source>
         <target>You can prefix it with the country ISO code if needed.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 120]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/StateType.php [Line: 124]</note>
       </trans-unit>
       <trans-unit id="ce9c5fc1032ac5aa03a3d248022773df">
         <source>You must define the behavior if an address matches multiple rules:</source>

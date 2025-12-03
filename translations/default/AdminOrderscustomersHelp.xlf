@@ -170,7 +170,7 @@
       <trans-unit id="3c1c7064989da051f0b4b904bcb408cf">
         <source>This customer will receive your newsletter via email.</source>
         <target>This customer will receive your newsletter via email.</target>
-        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 1446]</note>
+        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 1449]</note>
       </trans-unit>
       <trans-unit id="395b64636636e968c756f7514313f760">
         <source>This group will be the user's default group.</source>

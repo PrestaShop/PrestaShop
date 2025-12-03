@@ -31,6 +31,10 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationIds;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
@@ -133,7 +137,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'details' => $this->extractDetailsData($productForEditing, $shopConstraint),
             'stock' => $this->extractStockData($productForEditing, $shopConstraint),
             'pricing' => $this->extractPricingData($productForEditing),
-            'seo' => $this->extractSEOData($productForEditing),
+            'seo' => $this->extractSEOData($productForEditing, $shopConstraint),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
         ];
@@ -507,17 +511,34 @@ class ProductFormDataProvider implements FormDataProviderInterface
      *
      * @return array
      */
-    private function extractSEOData(ProductForEditing $productForEditing): array
+    private function extractSEOData(ProductForEditing $productForEditing, ShopConstraint $shopConstraint): array
     {
         $seoOptions = $productForEditing->getProductSeoOptions();
 
-        return [
+        $seoData = [
             'meta_title' => $seoOptions->getLocalizedMetaTitles(),
             'meta_description' => $seoOptions->getLocalizedMetaDescriptions(),
             'link_rewrite' => $seoOptions->getLocalizedLinkRewrites(),
             'redirect_option' => $this->extractRedirectOptionData($productForEditing),
             'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
         ];
+        if ($productForEditing->getType() === ProductType::TYPE_COMBINATIONS) {
+            if ((bool) $this->configuration->get('PS_PRODUCT_ATTRIBUTES_IN_TITLE')) {
+                /** @var CombinationId[] $combinationIds */
+                $combinationIds = $this->queryBus->handle(
+                    new GetCombinationIds($productForEditing->getProductId(), $shopConstraint, 1)
+                );
+                if (!empty($combinationIds)) {
+                    /** @var CombinationForEditing $combinationForEditing */
+                    $combinationForEditing = $this->queryBus->handle(
+                        new GetCombinationForEditing($combinationIds[0]->getValue(), $shopConstraint)
+                    );
+                    $seoData['combination_title'] = $combinationForEditing->getName();
+                }
+            }
+        }
+
+        return $seoData;
     }
 
     /**

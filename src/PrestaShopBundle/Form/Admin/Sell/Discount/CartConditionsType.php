@@ -26,37 +26,35 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Discount;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DiscountProductSegment;
-use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
-use PrestaShopBundle\Form\Admin\Type\ProductSearchType;
 use PrestaShopBundle\Form\Admin\Type\ToggleChildrenChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Collection;
-use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\When;
 
 class CartConditionsType extends TranslatorAwareType
 {
+    public const NONE = 'none';
     public const MINIMUM_AMOUNT = 'minimum_amount';
     public const MINIMUM_PRODUCT_QUANTITY = 'minimum_product_quantity';
-    public const SPECIFIC_PRODUCTS = 'specific_products';
-    public const PRODUCT_SEGMENT = 'product_segment';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
         $builder
+            ->add(self::NONE, HiddenType::class, [
+                'label' => $this->trans('None', 'Admin.Catalog.Feature'),
+            ])
             ->add(self::MINIMUM_AMOUNT, MinimumAmountType::class, [
                 'label' => $this->trans('Minimum purchase amount', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'constraints' => [
                     new When(
                         expression: sprintf(
-                            'this.getParent().getParent().get("children_selector").getData() === "%s" && this.getParent().get("children_selector").getData() === "%s"',
-                            DiscountConditionsType::CART_CONDITIONS,
+                            'this.getParent().get("children_selector").getData() === "%s"',
                             self::MINIMUM_AMOUNT
                         ),
                         constraints: new Collection(
@@ -75,51 +73,12 @@ class CartConditionsType extends TranslatorAwareType
                 'constraints' => [
                     new When(
                         expression: sprintf(
-                            'this.getParent().getParent().get("children_selector").getData() === "%s" && this.getParent().get("children_selector").getData() === "%s"',
-                            DiscountConditionsType::CART_CONDITIONS,
+                            'this.getParent().get("children_selector").getData() === "%s"',
                             self::MINIMUM_PRODUCT_QUANTITY
                         ),
                         constraints: [
                             new GreaterThan(0),
                         ],
-                    ),
-                ],
-            ])
-            ->add(self::SPECIFIC_PRODUCTS, ProductSearchType::class, [
-                'layout' => EntitySearchInputType::LIST_LAYOUT,
-                'entry_type' => SpecificProductType::class,
-                'limit' => 0,
-                'label' => $this->trans('Specific products', 'Admin.Catalog.Feature'),
-                'include_combinations' => false,
-                'required' => false,
-                'constraints' => [
-                    new When(
-                        expression: sprintf(
-                            'this.getParent().getParent().get("children_selector").getData() === "%s" && this.getParent().get("children_selector").getData() === "%s"',
-                            DiscountConditionsType::CART_CONDITIONS,
-                            self::SPECIFIC_PRODUCTS
-                        ),
-                        constraints: [
-                            new Count(
-                                min: 1,
-                                minMessage: $this->trans('You need to select at least one product.', 'Admin.Catalog.Notification'),
-                            ),
-                        ],
-                    ),
-                ],
-            ])
-            ->add(self::PRODUCT_SEGMENT, DiscountProductSegmentType::class, [
-                'label' => $this->trans('Product segment', 'Admin.Catalog.Feature'),
-                'constraints' => [
-                    new When(
-                        expression: sprintf(
-                            'this.getParent().getParent().get("children_selector").getData() === "%s" && this.getParent().get("children_selector").getData() === "%s"',
-                            DiscountConditionsType::CART_CONDITIONS,
-                            self::PRODUCT_SEGMENT
-                        ),
-                        constraints: [
-                            new DiscountProductSegment(),
-                        ]
                     ),
                 ],
             ])

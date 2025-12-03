@@ -41,7 +41,7 @@ class ApiClientEndpointTest extends ApiTestCase
     {
         yield 'get endpoint' => [
             'GET',
-            '/api-client/infos',
+            '/api-clients/infos',
             'application/json',
             // The endpoint is protected when you have no token, however it doesn't require any particular scope
             false,
@@ -51,7 +51,7 @@ class ApiClientEndpointTest extends ApiTestCase
     public function testGetInfos()
     {
         $bearerToken = $this->getBearerToken();
-        $response = static::createClient()->request('GET', '/api-client/infos', [
+        $response = static::createClient()->request('GET', '/api-clients/infos', [
             'auth_bearer' => $bearerToken,
         ]);
         self::assertResponseStatusCodeSame(200);

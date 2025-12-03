@@ -5,7 +5,7 @@
       <trans-unit id="f4abc77d498c89880f67331609406774">
         <source>Alright</source>
         <target>Alright</target>
-        <note>File: modules/statscheckup/statscheckup.php [Line: 172]</note>
+        <note>File: modules/statscheckup/statscheckup.php [Line: 171]</note>
       </trans-unit>
       <trans-unit id="b1897515d548a960afe49ecf66a29021">
         <source>Average</source>
@@ -25,12 +25,12 @@
       <trans-unit id="3f74e68055b1123e5d7deb32cd8b0b1b">
         <source>Desc.</source>
         <target>Desc.</target>
-        <note>File: modules/statscheckup/statscheckup.php [Line: 313]</note>
+        <note>File: modules/statscheckup/statscheckup.php [Line: 312]</note>
       </trans-unit>
       <trans-unit id="8bc84316c4078bf66723fd019616d920">
         <source>Descriptions</source>
         <target>Descriptions</target>
-        <note>File: modules/statscheckup/statscheckup.php [Line: 156]</note>
+        <note>File: modules/statscheckup/statscheckup.php [Line: 155]</note>
       </trans-unit>
       <trans-unit id="80bf50a3c43fa186661f32f53a1b7692">
         <source>Enrich your stats, give your catalog a quick evaluation to better analyze your activity.</source>
@@ -40,7 +40,7 @@
       <trans-unit id="4cc6684df7b4a92b1dec6fce3264fac8">
         <source>Global</source>
         <target>Global</target>
-        <note>File: modules/statscheckup/statscheckup.php [Line: 319]</note>
+        <note>File: modules/statscheckup/statscheckup.php [Line: 318]</note>
       </trans-unit>
       <trans-unit id="0c6ad70beb3a7e76c3fc7adab7c46acc">
         <source>Good</source>
@@ -50,42 +50,42 @@
       <trans-unit id="05824b7be006782aaefd1fdb97c71e06">
         <source>Greater than</source>
         <target>Greater than</target>
-        <note>File: modules/statscheckup/statscheckup.php [Line: 194]</note>
+        <note>File: modules/statscheckup/statscheckup.php [Line: 193]</note>
       </trans-unit>
       <trans-unit id="ad647e4ae904c7ed54ee93040d8298c7">
         <source>Less than</source>
         <target>Less than</target>
-        <note>File: modules/statscheckup/statscheckup.php [Line: 185]</note>
+        <note>File: modules/statscheckup/statscheckup.php [Line: 184]</note>
       </trans-unit>
       <trans-unit id="619a1efbedc7855aa27c0a50579c104e">
         <source>No product was found.</source>
         <target>No product was found.</target>
-        <note>File: modules/statscheckup/statscheckup.php [Line: 152]</note>
+        <note>File: modules/statscheckup/statscheckup.php [Line: 151]</note>
       </trans-unit>
       <trans-unit id="dc270bcf468689b19074a5eef7581b52">
         <source>Not enough</source>
         <target>Not enough</target>
-        <note>File: modules/statscheckup/statscheckup.php [Line: 171]</note>
+        <note>File: modules/statscheckup/statscheckup.php [Line: 170]</note>
       </trans-unit>
       <trans-unit id="01fda57aa6c7e9f07f5aa36b108e95cb">
         <source>Order by</source>
         <target>Order by</target>
-        <note>File: modules/statscheckup/statscheckup.php [Line: 211]</note>
+        <note>File: modules/statscheckup/statscheckup.php [Line: 210]</note>
       </trans-unit>
       <trans-unit id="5cd1930570823694abdd596f29c8943d">
         <source>chars (without HTML)</source>
         <target>chars (without HTML)</target>
-        <note>File: modules/statscheckup/statscheckup.php [Line: 156]</note>
+        <note>File: modules/statscheckup/statscheckup.php [Line: 155]</note>
       </trans-unit>
       <trans-unit id="691d502cfd0e0626cd3b058e5682ad1c">
         <source>items</source>
         <target>items</target>
-        <note>File: modules/statscheckup/statscheckup.php [Line: 159]</note>
+        <note>File: modules/statscheckup/statscheckup.php [Line: 158]</note>
       </trans-unit>
       <trans-unit id="c3917e1f7138a24c6dc954fe81b86679">
         <source>orders / month</source>
         <target>orders / month</target>
-        <note>File: modules/statscheckup/statscheckup.php [Line: 158]</note>
+        <note>File: modules/statscheckup/statscheckup.php [Line: 157]</note>
       </trans-unit>
     </body>
   </file>

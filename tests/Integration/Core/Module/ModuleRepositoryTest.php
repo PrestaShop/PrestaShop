@@ -49,11 +49,12 @@ class ModuleRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $moduleDataProvider = $this->createMock(ModuleDataProvider::class);
-        $moduleDataProvider->method('findByName')->willReturn([
+        $mockModuleDataProvider = $this->createMock(ModuleDataProvider::class);
+        $mockModuleDataProvider->method('findByName')->willReturn([
             'installed' => 0,
             'active' => true,
         ]);
+        $mockModuleDataProvider->method('can')->willReturn(true);
 
         $translator = $this->createMock(Translator::class);
         $translator->method('trans')->willReturnArgument(0);
@@ -96,7 +97,7 @@ class ModuleRepositoryTest extends TestCase
         $cacheProvider = DoctrineProvider::wrap(new ArrayAdapter());
 
         $this->moduleRepository = new ModuleRepository(
-            $moduleDataProvider,
+            $mockModuleDataProvider,
             $this->createMock(AdminModuleDataProvider::class),
             $cacheProvider,
             $hookManager,

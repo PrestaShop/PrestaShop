@@ -42,6 +42,15 @@ trait SafeLoggerTrait
         }
     }
 
+    protected function logWarning(string $message): void
+    {
+        try {
+            $this->logger->warning($message);
+        } catch (Throwable) {
+            // Prevent the logger from raising an exception and breaking the cache clear
+        }
+    }
+
     protected function logInfo(string $message): void
     {
         try {

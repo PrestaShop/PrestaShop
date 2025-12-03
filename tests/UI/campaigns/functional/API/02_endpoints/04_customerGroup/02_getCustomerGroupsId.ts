@@ -20,7 +20,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_customerGroup_getCustomerGroupsId';
 
-describe('API : GET /customers/group/{customerGroupId}', async () => {
+describe('API : GET /customers/groups/{customerGroupId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -127,10 +127,10 @@ describe('API : GET /customers/group/{customerGroupId}', async () => {
   });
 
   describe('API : Check Data', async () => {
-    it('should request the endpoint /customers/group/{customerGroupId}', async function () {
+    it('should request the endpoint /customers/groups/{customerGroupId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get(`customers/group/${idCustomerGroup}`, {
+      const apiResponse = await apiContext.get(`customers/groups/${idCustomerGroup}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

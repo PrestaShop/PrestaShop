@@ -20,7 +20,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_module_postModuleUploadSource';
 
-describe('API : POST /module/upload-source', async () => {
+describe('API : POST /modules/upload-source', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -76,11 +76,11 @@ describe('API : POST /module/upload-source', async () => {
     });
   });
 
-  describe('API : POST module/upload-source', async () => {
-    it('should request the endpoint /module/upload-source', async function () {
+  describe('API : POST modules/upload-source', async () => {
+    it('should request the endpoint /modules/upload-source', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.post('module/upload-source', {
+      const apiResponse = await apiContext.post('modules/upload-source', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

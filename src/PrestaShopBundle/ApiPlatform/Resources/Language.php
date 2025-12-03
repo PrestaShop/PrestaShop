@@ -42,7 +42,8 @@ use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
                 '[language_code]' => '[languageCode]',
                 '[date_format_lite]' => '[dateFormat]',
                 '[date_format_full]' => '[dateTimeFormat]',
-                '[is_rtl]' => '[isRtl]',
+                '[is_rtl]' => '[rtl]',
+                '[active]' => '[enabled]',
             ],
             gridDataFactory: 'prestashop.core.grid.factory.language_decorator',
             filtersMapping: [
@@ -51,7 +52,8 @@ use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
                 '[languageCode]' => '[language_code]',
                 '[dateFormat]' => '[date_format_lite]',
                 '[dateTimeFormat]' => '[date_format_full]',
-                '[isRtl]' => '[is_rtl]',
+                '[rtl]' => '[is_rtl]',
+                '[enabled]' => '[active]',
             ],
         ),
     ],
@@ -73,9 +75,9 @@ class Language
 
     public string $dateTimeFormat;
 
-    public bool $isRtl;
+    public bool $rtl;
 
-    public bool $active;
+    public bool $enabled;
 
     public string $flag;
 }

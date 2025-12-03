@@ -23,7 +23,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_attribute_postAttributesGroup';
 
-describe('API : POST /attributes/group', async () => {
+describe('API : POST /attributes/groups', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -57,10 +57,10 @@ describe('API : POST /attributes/group', async () => {
   });
 
   describe('API : Create the API Access', async () => {
-    it('should request the endpoint /attributes/group', async function () {
+    it('should request the endpoint /attributes/groups', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.post('attributes/group', {
+      const apiResponse = await apiContext.post('attributes/groups', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

@@ -78,7 +78,7 @@ if [ "${DISABLE_MAKE}" != "1" ]; then
   runuser -g www-data -u www-data -- /var/www/html/tools/assets/build.sh
 
   echo "\n* Wait for assets built...";
-  /usr/bin/make wait-assets
+  runuser -g www-data -u www-data -- /var/www/html/tools/assets/wait-build.sh
 else
   echo "\n* Build of assets was disabled...";
 fi

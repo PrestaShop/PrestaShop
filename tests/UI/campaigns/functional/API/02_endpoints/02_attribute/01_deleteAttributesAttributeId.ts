@@ -22,11 +22,11 @@ import {expect} from 'chai';
 
 const baseContext: string = 'functional_API_endpoints_attribute_deleteAttributesAttributeId';
 
-describe('API : DELETE /attributes/attribute/{attributeId}', async () => {
+describe('API : DELETE /attributes/attributes/{attributeId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
-  let idAttribute: number;
+  let attributeId: number;
   let accessToken: string;
 
   const clientScope: string = 'attribute_write';
@@ -125,16 +125,16 @@ describe('API : DELETE /attributes/attribute/{attributeId}', async () => {
       const textColumn = await boAttributesViewPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(createAttributeValue.value);
 
-      idAttribute = parseInt(await boAttributesViewPage.getTextColumn(page, 1, 'id_attribute'), 10);
-      expect(idAttribute).to.greaterThan(0);
+      attributeId = parseInt(await boAttributesViewPage.getTextColumn(page, 1, 'id_attribute'), 10);
+      expect(attributeId).to.greaterThan(0);
     });
   });
 
   describe('API : Delete the Attribute', async () => {
-    it('should request the endpoint /attributes/attribute/{attributeId}', async function () {
+    it('should request the endpoint /attributes/attributes/{attributeId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.delete(`attributes/attribute/${idAttribute}`, {
+      const apiResponse = await apiContext.delete(`attributes/attributes/${attributeId}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -148,7 +148,7 @@ describe('API : DELETE /attributes/attribute/{attributeId}', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAfterDeletion', baseContext);
 
       await boAttributesViewPage.resetAndGetNumberOfLines(page);
-      await boAttributesViewPage.filterTable(page, 'id_attribute', idAttribute.toString());
+      await boAttributesViewPage.filterTable(page, 'id_attribute', attributeId.toString());
 
       const numberOfAttributesAfterDelete = await boAttributesViewPage.getNumberOfElementInGrid(page);
       expect(numberOfAttributesAfterDelete).to.equal(0);

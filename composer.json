@@ -71,7 +71,7 @@
         "prestashop/hummingbird": "^1.0.1",
         "prestashop/pagesnotfound": "^2",
         "prestashop/productcomments": "^7.0",
-        "prestashop/ps_apiresources": "dev-dev",
+        "prestashop/ps_apiresources": "^0.2",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^1.0",
         "prestashop/ps_brandlist": "^1.0",
@@ -246,6 +246,9 @@
             "phpstan/extension-installer": true,
             "phpunit/phpunit": true,
             "symfony/phpunit-bridge": true
+        },
+        "audit": {
+            "block-insecure": false
         },
         "platform": {
             "php": "8.1.0"

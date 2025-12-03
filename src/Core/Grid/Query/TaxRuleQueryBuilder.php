@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -37,11 +38,6 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
  */
 class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
 {
-    /**
-     * @var int
-     */
-    private $employeeIdLang;
-
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
      */
@@ -51,18 +47,17 @@ class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param int $employeeIdLang
+     * @param LanguageContext $languageContext
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        int $employeeIdLang
+        private LanguageContext $languageContext
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->employeeIdLang = $employeeIdLang;
     }
 
     /**
@@ -142,7 +137,7 @@ class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
                 'tr.`id_tax` = t.`id_tax`'
             )
             ->andWhere('tr.`id_tax_rules_group` = :idTaxRulesGroup')
-            ->setParameter('idLang', $this->employeeIdLang)
+            ->setParameter('idLang', $this->languageContext->getId())
             ->setParameter('idTaxRulesGroup', $filters['taxRulesGroupId']);
     }
 }

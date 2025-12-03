@@ -19,7 +19,7 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_displaySpecificDeliveryTime';
 
-describe('FO - Product page - Product page : Display specific delivery time', async () => {
+describe('FO - Product page - Product page : Display Specific delivery time', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 

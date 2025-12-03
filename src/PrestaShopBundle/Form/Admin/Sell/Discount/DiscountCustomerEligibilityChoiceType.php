@@ -26,15 +26,19 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Discount;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CustomerSearchType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
+use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ToggleChildrenChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\When;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DiscountCustomerEligibilityChoiceType extends TranslatorAwareType
 {
@@ -42,17 +46,44 @@ class DiscountCustomerEligibilityChoiceType extends TranslatorAwareType
     public const CUSTOMER_GROUPS = 'customer_groups';
     public const SINGLE_CUSTOMER = 'single_customer';
 
+    private FormChoiceProviderInterface $groupByIdChoiceProvider;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        FormChoiceProviderInterface $groupByIdChoiceProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add(self::ALL_CUSTOMERS, HiddenType::class, [
                 'label' => $this->trans('All customers', 'Admin.Catalog.Feature'),
             ])
-            ->add(self::CUSTOMER_GROUPS, HiddenType::class, [
+            ->add(self::CUSTOMER_GROUPS, MaterialChoiceTableType::class, [
                 'label' => $this->trans('Customer groups', 'Admin.Catalog.Feature'),
-                'disabled' => true,
-                'attr' => [
-                    'class' => 'js-customer-groups-placeholder',
+                'required' => false,
+                'choices' => $this->groupByIdChoiceProvider->getChoices(),
+                'display_total_items' => true,
+                'constraints' => [
+                    new When(
+                        expression: sprintf(
+                            'this.getParent().get("children_selector").getData() === "%s"',
+                            self::CUSTOMER_GROUPS,
+                        ),
+                        constraints: [
+                            new Count([
+                                'min' => 1,
+                                'minMessage' => $this->trans(
+                                    'Please select at least one group.',
+                                    'Admin.Catalog.Notification'
+                                ),
+                            ]),
+                        ],
+                    ),
                 ],
             ])
             ->add(self::SINGLE_CUSTOMER, CustomerSearchType::class, [

@@ -17,7 +17,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_module_putModuleTechnicalNameUpgrade';
 
-describe('API : PUT /module/{technicalName}/upgrade', async () => {
+describe('API : PUT /modules/{technicalName}/upgrade', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -84,12 +84,12 @@ describe('API : PUT /module/{technicalName}/upgrade', async () => {
     });
   });
 
-  describe('API : PUT /module/{technicalName}/upgrade', async () => {
+  describe('API : PUT /modules/{technicalName}/upgrade', async () => {
     // Upload the module before upgrading
-    it('should request the endpoint /module/upload-source', async function () {
+    it('should request the endpoint /modules/upload-source', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointUploadSource', baseContext);
 
-      const apiResponse = await apiContext.post('module/upload-source', {
+      const apiResponse = await apiContext.post('modules/upload-source', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -102,10 +102,10 @@ describe('API : PUT /module/{technicalName}/upgrade', async () => {
       expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
     });
 
-    it('should request the endpoint /module/{technicalName}/upgrade', async function () {
+    it('should request the endpoint /modules/{technicalName}/upgrade', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.put(`module/${dataModules.psCashOnDelivery.tag}/upgrade`, {
+      const apiResponse = await apiContext.put(`modules/${dataModules.psCashOnDelivery.tag}/upgrade`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

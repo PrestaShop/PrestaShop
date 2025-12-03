@@ -125,7 +125,6 @@
       <trans-unit id="3cb48b3ca35479dd423c409bd7df0572">
         <source>Allow a customer to download and view PDF versions of their invoices.</source>
         <target>Allow a customer to download and view PDF versions of their invoices.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 172]</note>
       </trans-unit>
       <trans-unit id="913d66c5648cf0317ed371371fe44534">
         <source>Allow iframes on HTML fields</source>
@@ -155,12 +154,16 @@
       <trans-unit id="53343ccca7ba90caa497d4c4b40f3ec7">
         <source>Attach delivery slip PDF to email.</source>
         <target>Attach delivery slip PDF to email.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 200]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 264]</note>
+      </trans-unit>
+      <trans-unit id="08ed5d04921cfd73a5ff1341e175e1d6">
+        <source>Attach invoice PDF to email</source>
+        <target>Attach invoice PDF to email</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 256]</note>
       </trans-unit>
       <trans-unit id="05ffab376e5c4a64caa28a1c4bd9fc0d">
         <source>Attach invoice PDF to email.</source>
         <target>Attach invoice PDF to email.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 193]</note>
       </trans-unit>
       <trans-unit id="1b25f9ffbf4d185dbb985380a04732cc">
         <source>Attributes weight</source>
@@ -235,7 +238,7 @@
       <trans-unit id="cb5feb1b7314637725a2e73bdc9f7295">
         <source>Color</source>
         <target>Color</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 160]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 180]</note>
       </trans-unit>
       <trans-unit id="9b2028adefe19782be9eaa370a067e53">
         <source>Configure index page</source>
@@ -245,7 +248,6 @@
       <trans-unit id="192b587e5fc71cd5f25a6089c03bff87">
         <source>Consider the associated order as validated.</source>
         <target>Consider the associated order as validated.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 165]</note>
       </trans-unit>
       <trans-unit id="bbaff12800505b22a853e8b7f4eb6a22">
         <source>Contact</source>
@@ -443,6 +445,11 @@ Customer service</target>
         <target>Displayed in emails and page titles.</target>
         <note>File: controllers/admin/AdminStoresController.php [Line: 461]</note>
       </trans-unit>
+      <trans-unit id="9ad759927e1113cfa25fca7a0edd6751">
+        <source>Don't display this status to the customer on order tracking page.</source>
+        <target>Don't display this status to the customer on order tracking page.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 201]</note>
+      </trans-unit>
       <trans-unit id="17fff6fb6f5586934eba6d349118f341">
         <source>Edit aliases for %s</source>
         <target>Edit aliases for %s</target>
@@ -553,6 +560,11 @@ Customer service</target>
         <target>General product settings</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/product_preferences_general.html.twig [Line: 33]</note>
       </trans-unit>
+      <trans-unit id="11c5f61e69912ccab68f3c6c4acfab84">
+        <source>Generate an invoice when order is assigned this status.</source>
+        <target>Generate an invoice when order is assigned this status.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 193]</note>
+      </trans-unit>
       <trans-unit id="7959e21ff0b83542251ca0b4e9a62eea">
         <source>Generate robots.txt file</source>
         <target>Generate robots.txt file</target>
@@ -596,7 +608,6 @@ Customer service</target>
       <trans-unit id="9529bbf156fbe6c23b5fbd8b32900f68">
         <source>Hide this status in all customer orders.</source>
         <target>Hide this status in all customer orders.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 179]</note>
       </trans-unit>
       <trans-unit id="ad179a1071ebd8b00e0ff4718301dcea">
         <source>Hours:</source>
@@ -606,7 +617,7 @@ Customer service</target>
       <trans-unit id="817434295a673aed431435658b65d9a7">
         <source>Icon</source>
         <target>Icon</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 155]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 175]</note>
       </trans-unit>
       <trans-unit id="e335310ef456f61ede772356e5ece2aa">
         <source>If a technical problem occurs on this website</source>
@@ -1045,7 +1056,7 @@ Customer service</target>
       <trans-unit id="a28735af01fbb1e35371cb120985ac47">
         <source>Registrations</source>
         <target>Registrations</target>
-        <note>File: modules/statsforecast/statsforecast.php [Line: 222]</note>
+        <note>File: modules/statsforecast/statsforecast.php [Line: 229]</note>
       </trans-unit>
       <trans-unit id="8eea62084ca7e541d918e823422bd82e">
         <source>Result</source>
@@ -1225,7 +1236,11 @@ Customer service</target>
       <trans-unit id="ac0c8170cd427d89a52d168ef723fe76">
         <source>Send an email to the customer when their order status has changed.</source>
         <target>Send an email to the customer when their order status has changed.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 186]</note>
+      </trans-unit>
+      <trans-unit id="70233aedad0981fc18c41955103275eb">
+        <source>Send an email to the customer.</source>
+        <target>Send an email to the customer.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 233]</note>
       </trans-unit>
       <trans-unit id="c9f59be398981c130408612e51464e14">
         <source>Send email to customer</source>
@@ -1252,20 +1267,37 @@ Customer service</target>
         <target>Set shop URL</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/shop_urls_configuration.html.twig [Line: 31]</note>
       </trans-unit>
+      <trans-unit id="0a3bd3749119bacfab2778e9834f3691">
+        <source>Set the associated order as delivered.</source>
+        <target>Set the associated order as delivered.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 225]</note>
+      </trans-unit>
+      <trans-unit id="1d56713aec6d65998c44363cdf6ec0cf">
+        <source>Set the associated order as paid.</source>
+        <target>Set the associated order as paid.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 217]</note>
+      </trans-unit>
+      <trans-unit id="e5ed58826085d4f3a73e59ca73aa9217">
+        <source>Set the associated order as shipped.</source>
+        <target>Set the associated order as shipped.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 209]</note>
+      </trans-unit>
+      <trans-unit id="6d1fb388f7db3dd120181855474bc2af">
+        <source>Set the associated order as validated.</source>
+        <target>Set the associated order as validated.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 185]</note>
+      </trans-unit>
       <trans-unit id="ad89dc1e17a54e49190100a943564189">
         <source>Set the order as in transit.</source>
         <target>Set the order as in transit.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 221]</note>
       </trans-unit>
       <trans-unit id="67a8390e9643cecbac9d149da4242bf5">
         <source>Set the order as paid.</source>
         <target>Set the order as paid.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 214]</note>
       </trans-unit>
       <trans-unit id="5fe3d2e4d87dccabf5c9c1d81baf995c">
         <source>Set the order as shipped.</source>
         <target>Set the order as shipped.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 207]</note>
       </trans-unit>
       <trans-unit id="3cb0403ba2ec65e9030c1013b5edb42d">
         <source>Set up URLs</source>
@@ -1315,7 +1347,7 @@ Customer service</target>
       <trans-unit id="e93c33bd1341ab74195430daeb63db13">
         <source>Shop name</source>
         <target>Shop name</target>
-        <note>File: modules/ps_mainmenu/ps_mainmenu.php [Line: 1397]</note>
+        <note>File: modules/ps_mainmenu/ps_mainmenu.php [Line: 1404]</note>
       </trans-unit>
       <trans-unit id="6af0a6ff1f2f2a61cbd8b98232314b03">
         <source>Short description weight</source>
@@ -1345,7 +1377,7 @@ Customer service</target>
       <trans-unit id="69a31da4cb502aa192d07ae4a8f48613">
         <source>Status name</source>
         <target>Status name</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 120]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 140]</note>
       </trans-unit>
       <trans-unit id="2315a2ebf1ec2420376642ce9b792076">
         <source>Store coordinates (e.g. 45.265469/-47.226478).</source>
@@ -1385,7 +1417,7 @@ Customer service</target>
       <trans-unit id="278c491bdd8a53618c149c4ac790da34">
         <source>Template</source>
         <target>Template</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 227]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php [Line: 240]</note>
       </trans-unit>
       <trans-unit id="e4045598261988d9988c594243a9434d">
         <source>Terms of service</source>
@@ -1440,12 +1472,12 @@ Customer service</target>
       <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
         <source>Undefined</source>
         <target>Undefined</target>
-        <note>File: modules/statsforecast/statsforecast.php [Line: 529]</note>
+        <note>File: modules/statsforecast/statsforecast.php [Line: 536]</note>
       </trans-unit>
       <trans-unit id="88183b946cc5f0e8c96b2e66e1c74a7e">
         <source>Unknown</source>
         <target>Unknown</target>
-        <note>File: modules/statspersonalinfos/statspersonalinfos.php [Line: 339]</note>
+        <note>File: modules/statspersonalinfos/statspersonalinfos.php [Line: 338]</note>
       </trans-unit>
       <trans-unit id="06918a784fb394b84de012810120b75c">
         <source>Use HTMLPurifier Library</source>
@@ -1475,7 +1507,7 @@ Customer service</target>
       <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
         <source>Visits</source>
         <target>Visits</target>
-        <note>File: modules/statsforecast/statsforecast.php [Line: 221]</note>
+        <note>File: modules/statsforecast/statsforecast.php [Line: 228]</note>
       </trans-unit>
       <trans-unit id="33846fa0095bd29abbc2a8b742669b25">
         <source>We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.</source>

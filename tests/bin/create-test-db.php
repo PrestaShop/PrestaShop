@@ -122,3 +122,4 @@ $resourceResetter->backupDownloads();
 $resourceResetter->backupTestModules();
 
 $logger->log('Test DB was successfully created');
+$logger->log('Clearing cache in progress, please wait...');

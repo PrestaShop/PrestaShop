@@ -639,37 +639,43 @@ class CarrierCore extends ObjectModel
      */
     public static function getDeliveredCountries(int $id_lang, bool $active_countries = false, bool $active_carriers = false, $contain_states = null)
     {
-        $states = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-            SELECT s.*
-            FROM `' . _DB_PREFIX_ . 'state` s
-            ORDER BY s.`name` ASC');
+        $result = [];
 
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-            SELECT cl.*,c.*, cl.`name` AS country, zz.`name` AS zone
+        $countries = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            'SELECT cl.*, c.*, cl.`name` AS country, zz.`name` AS zone
             FROM `' . _DB_PREFIX_ . 'country` c' .
             Shop::addSqlAssociation('country', 'c') . '
-            LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = ' . (int) $id_lang . ')
-            INNER JOIN (`' . _DB_PREFIX_ . 'carrier_zone` cz INNER JOIN `' . _DB_PREFIX_ . 'carrier` cr ON ( cr.id_carrier = cz.id_carrier AND cr.deleted = 0 ' .
-            ($active_carriers ? 'AND cr.active = 1) ' : ') ') . '
-            LEFT JOIN `' . _DB_PREFIX_ . 'zone` zz ON cz.id_zone = zz.id_zone) ON zz.`id_zone` = c.`id_zone`
+            LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl ON c.`id_country` = cl.`id_country` AND cl.`id_lang` = ' . (int) $id_lang . '
+            INNER JOIN `' . _DB_PREFIX_ . 'carrier_zone` cz ON cz.id_zone = c.id_zone
+            LEFT JOIN `' . _DB_PREFIX_ . 'zone` zz ON zz.id_zone = c.id_zone
+            INNER JOIN `' . _DB_PREFIX_ . 'carrier` cr ON cr.id_carrier = cz.id_carrier ' . ($active_carriers ? 'AND cr.active = 1 ' : '') . ' AND cr.deleted = 0
+            INNER JOIN `' . _DB_PREFIX_ . 'carrier_shop` cs ON cr.id_carrier = cs.id_carrier AND cs.id_shop = ' . (int) Shop::getContextShopID() . '
             WHERE 1
             ' . ($active_countries ? 'AND c.active = 1' : '') . '
             ' . (null !== $contain_states ? 'AND c.`contains_states` = ' . (int) $contain_states : '') . '
-            ORDER BY cl.name ASC');
-
-        $countries = [];
-        foreach ($result as $country) {
-            $countries[$country['id_country']] = $country;
+            GROUP BY c.`id_country`
+            ORDER BY cl.name ASC'
+        );
+        foreach ($countries as $country) {
+            $result[$country['id_country']] = $country;
         }
+        if (empty($result)) {
+            return $result;
+        }
+
+        // Fetch active states linked to delivered countries
+        $states = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            SELECT s.*
+            FROM `' . _DB_PREFIX_ . 'state` s
+            WHERE s.id_country IN (' . implode(',', array_keys($countries)) . ')
+              AND s.active = 1
+            ORDER BY s.`name` ASC'
+        );
         foreach ($states as $state) {
-            if (isset($countries[$state['id_country']])) { /* Does not keep the state if its country has been disabled and not selected */
-                if ($state['active'] == 1) {
-                    $countries[$state['id_country']]['states'][] = $state;
-                }
-            }
+            $result[$state['id_country']]['states'][] = $state;
         }
 
-        return $countries;
+        return $result;
     }
 
     /**

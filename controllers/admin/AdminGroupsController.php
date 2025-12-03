@@ -163,7 +163,7 @@ class AdminGroupsControllerCore extends AdminController
     {
         if (Group::isFeatureActive() && empty($this->display)) {
             $this->page_header_toolbar_btn['new_group'] = [
-                'href' => self::$currentIndex . '&addgroup&token=' . $this->token,
+                'href' => $this->context->link->getAdminLink('AdminGroups', true, [], ['addgroup' => 1]),
                 'desc' => $this->trans('Add new group', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'process-icon-new',
             ];

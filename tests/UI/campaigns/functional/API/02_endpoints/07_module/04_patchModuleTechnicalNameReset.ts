@@ -21,7 +21,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_module_patchModuleTechnicalNameReset';
 
-describe('API : PATCH /module/{technicalName}/reset', async () => {
+describe('API : PATCH /modules/{technicalName}/reset', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -108,7 +108,7 @@ describe('API : PATCH /module/{technicalName}/reset', async () => {
     null,
   ].forEach((argKeepData: boolean|null, index: number) => {
     describe(`API : Check Data with keepData = ${argKeepData}`, async () => {
-      it('should request the endpoint /module/{technicalName}/reset', async function () {
+      it('should request the endpoint /modules/{technicalName}/reset', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `requestEndpoint${index}`, baseContext);
 
         // keepData == true => trigger onReset method (if exists, else keepData == false)
@@ -133,7 +133,7 @@ describe('API : PATCH /module/{technicalName}/reset', async () => {
           };
         }
 
-        const apiResponse = await apiContext.patch(`module/${moduleInfo.technicalName}/reset`, apiData);
+        const apiResponse = await apiContext.patch(`modules/${moduleInfo.technicalName}/reset`, apiData);
         expect(apiResponse.status()).to.eq(200);
         expect(utilsAPI.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
         expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');

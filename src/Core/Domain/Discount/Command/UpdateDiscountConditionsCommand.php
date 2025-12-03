@@ -30,6 +30,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ProductRuleGroup;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountId;
@@ -53,6 +54,11 @@ class UpdateDiscountConditionsCommand
     private ?array $carrierIds = null;
 
     private ?array $countryIds = null;
+
+    /**
+     * @var GroupId[]|null
+     */
+    private ?array $customerGroupIds = null;
 
     public function __construct(int $discountId)
     {
@@ -180,6 +186,24 @@ class UpdateDiscountConditionsCommand
     public function setCountryIds(?array $countryIds): self
     {
         $this->countryIds = array_map(fn (int $countryId) => new CountryId($countryId), $countryIds);
+
+        return $this;
+    }
+
+    /**
+     * @return GroupId[]|null
+     */
+    public function getCustomerGroupIds(): ?array
+    {
+        return $this->customerGroupIds;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setCustomerGroupIds(?array $customerGroupIds): self
+    {
+        $this->customerGroupIds = $customerGroupIds ? array_map(fn (int $groupId) => new GroupId($groupId), $customerGroupIds) : null;
 
         return $this;
     }

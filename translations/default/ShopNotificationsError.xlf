@@ -5,7 +5,7 @@
       <trans-unit id="e9c8b958cbfb895182fe7eeeeadd1121">
         <source>A customer account has already been created from this guest account. Please sign in.</source>
         <target>A customer account has already been created from this guest account. Please sign in.</target>
-        <note>File: controllers/front/OrderConfirmationController.php [Line: 193]</note>
+        <note>File: controllers/front/OrderConfirmationController.php [Line: 191]</note>
       </trans-unit>
       <trans-unit id="7cc92687130ea12abb80556681538001">
         <source>An error occurred during the image upload process.</source>
@@ -30,7 +30,7 @@
       <trans-unit id="97f79d53b078e529949d5c3c8b676d52">
         <source>An unexpected error occurred while creating your account.</source>
         <target>An unexpected error occurred while creating your account.</target>
-        <note>File: controllers/front/OrderConfirmationController.php [Line: 213]</note>
+        <note>File: controllers/front/OrderConfirmationController.php [Line: 211]</note>
       </trans-unit>
       <trans-unit id="802b207b05fe5cea22e11b9db804b33d">
         <source>Authentication failed.</source>
@@ -65,7 +65,7 @@
       <trans-unit id="cb3bf6b78b0297d94c00187dcafd77a3">
         <source>Expiration date has passed, you cannot download this product.</source>
         <target>Expiration date has passed, you cannot download this product.</target>
-        <note>File: controllers/front/GetFileController.php [Line: 349]</note>
+        <note>File: controllers/front/GetFileController.php [Line: 351]</note>
       </trans-unit>
       <trans-unit id="1819b587867a9c604a4d21c753756b4a">
         <source>For each product you wish to add, please specify the desired quantity.</source>
@@ -85,7 +85,7 @@
       <trans-unit id="456e77e04e2e26231ee352304627b26d">
         <source>Invalid key.</source>
         <target>Invalid key.</target>
-        <note>File: controllers/front/GetFileController.php [Line: 342]</note>
+        <note>File: controllers/front/GetFileController.php [Line: 344]</note>
       </trans-unit>
       <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
         <source>Invalid message</source>
@@ -180,7 +180,7 @@
       <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
         <source>The %1$s field is too long (%2$d chars max).</source>
         <target>The %1$s field is too long (%2$d chars max).</target>
-        <note>File: classes/form/CustomerForm.php [Line: 253]</note>
+        <note>File: classes/form/CustomerForm.php [Line: 259]</note>
       </trans-unit>
       <trans-unit id="fd1126287a58ab175c3b0897e7edd58c">
         <source>The %1$s field is too short (%2$d chars min).</source>
@@ -260,12 +260,12 @@
       <trans-unit id="2d30f823fe8f59bbcbec1fec853e4549">
         <source>The product deadline is in the past.</source>
         <target>The product deadline is in the past.</target>
-        <note>File: controllers/front/GetFileController.php [Line: 347]</note>
+        <note>File: controllers/front/GetFileController.php [Line: 349]</note>
       </trans-unit>
       <trans-unit id="d5304279c07642327b2909efd15ff539">
         <source>The product expiration date has passed, preventing you from download this product.</source>
         <target>The product expiration date has passed, preventing you from download this product.</target>
-        <note>File: controllers/front/GetFileController.php [Line: 348]</note>
+        <note>File: controllers/front/GetFileController.php [Line: 350]</note>
       </trans-unit>
       <trans-unit id="417d63b1effb110e438d4b4b9f0fbd95">
         <source>The voucher code is invalid.</source>
@@ -290,22 +290,22 @@
       <trans-unit id="914aabd65a536be202b28dc1ac5dd1af">
         <source>This cart has expired.</source>
         <target>This cart has expired.</target>
-        <note>File: classes/controller/FrontController.php [Line: 1304]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1299]</note>
       </trans-unit>
       <trans-unit id="1e65dae319656efa0e4d3f49be9fdfda">
         <source>This cart was already used in an order and has expired.</source>
         <target>This cart was already used in an order and has expired.</target>
-        <note>File: classes/controller/FrontController.php [Line: 1311]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1306]</note>
       </trans-unit>
       <trans-unit id="79658ac80c7883992c8a1963edf9a15b">
         <source>This category is no longer available.</source>
         <target>This category is no longer available.</target>
-        <note>File: controllers/front/listing/CategoryController.php [Line: 134]</note>
+        <note>File: controllers/front/listing/CategoryController.php [Line: 139]</note>
       </trans-unit>
       <trans-unit id="c9615dc36879116ef8c5f1ab08543191">
         <source>This file no longer exists.</source>
         <target>This file no longer exists.</target>
-        <note>File: controllers/front/GetFileController.php [Line: 345]</note>
+        <note>File: controllers/front/GetFileController.php [Line: 347]</note>
       </trans-unit>
       <trans-unit id="a3c5d3c6953c588760d90657e4f0b790">
         <source>This order cannot be returned</source>
@@ -320,17 +320,17 @@
       <trans-unit id="1347119d36ae31564a89763f21476c1a">
         <source>This product does not exist in our store.</source>
         <target>This product does not exist in our store.</target>
-        <note>File: controllers/front/GetFileController.php [Line: 343]</note>
+        <note>File: controllers/front/GetFileController.php [Line: 345]</note>
       </trans-unit>
       <trans-unit id="38d5595927b80b331239ef904341b07c">
         <source>This product has been deleted.</source>
         <target>This product has been deleted.</target>
-        <note>File: controllers/front/GetFileController.php [Line: 344]</note>
+        <note>File: controllers/front/GetFileController.php [Line: 346]</note>
       </trans-unit>
       <trans-unit id="b1046eaca37cbbd3b53d17c33299bfab">
         <source>This product has been refunded.</source>
         <target>This product has been refunded.</target>
-        <note>File: controllers/front/GetFileController.php [Line: 346]</note>
+        <note>File: controllers/front/GetFileController.php [Line: 348]</note>
       </trans-unit>
       <trans-unit id="80d889c08e270f0016d61b963e13fec1">
         <source>This product is no longer available for sale.</source>
@@ -410,7 +410,7 @@
       <trans-unit id="b5617edd6c80a257d3cb7bbc9b3e5bdf">
         <source>You can't transform your account into a customer account, because a registered customer with the same email already exists.</source>
         <target>You can't transform your account into a customer account, because a registered customer with the same email already exists.</target>
-        <note>File: controllers/front/OrderConfirmationController.php [Line: 200]</note>
+        <note>File: controllers/front/OrderConfirmationController.php [Line: 198]</note>
       </trans-unit>
       <trans-unit id="194496a52d41fba1c9e6140c4eb34f83">
         <source>You cannot regenerate the password for this account.</source>
@@ -460,7 +460,7 @@
       <trans-unit id="ba2bfa3216ea97ec1e454239610d089a">
         <source>You do not have access to this category.</source>
         <target>You do not have access to this category.</target>
-        <note>File: controllers/front/listing/CategoryController.php [Line: 149]</note>
+        <note>File: controllers/front/listing/CategoryController.php [Line: 154]</note>
       </trans-unit>
       <trans-unit id="a5df8bfce318a15ea55f18082b9b56c0">
         <source>You do not have access to this product.</source>
@@ -480,7 +480,7 @@
       <trans-unit id="98bc3b9df6852d17661209b9c969128b">
         <source>You have reached the maximum number of downloads allowed.</source>
         <target>You have reached the maximum number of downloads allowed.</target>
-        <note>File: controllers/front/GetFileController.php [Line: 350]</note>
+        <note>File: controllers/front/GetFileController.php [Line: 352]</note>
       </trans-unit>
       <trans-unit id="8b84452c494aa9106d26b20c9df0e431">
         <source>You must add %quantity% minimum quantity</source>

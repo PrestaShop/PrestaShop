@@ -412,7 +412,7 @@ class Module implements ModuleInterface
             AddonListFilterOrigin::ADDONS_MUST_HAVE => 'addonsMustHave',
         ];
 
-        return isset($conversionTable[$value]) ? $conversionTable[$value] : '';
+        return is_null($value) ? '' : (isset($conversionTable[$value]) ? $conversionTable[$value] : '');
     }
 
     /**

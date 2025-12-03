@@ -29,7 +29,12 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Command\BulkDeleteDiscountsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Command\BulkUpdateDiscountsStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\DeleteDiscountCommand;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\CannotUpdateDiscountException;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Query\GetDiscountForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Discount\QueryResult\DiscountForEditing;
@@ -38,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\DiscountFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountTypeSelectorType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
@@ -48,6 +54,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DiscountController extends PrestaShopAdminController
 {
+    use BulkActionsTrait;
+
     /**
      * Displays discount listing page.
      *
@@ -235,6 +243,105 @@ class DiscountController extends PrestaShopAdminController
     private function getErrorMessages(Exception $e): array
     {
         return [
+            DiscountNotFoundException::class => $this->trans('The object cannot be loaded (or found).', [], 'Admin.Notifications.Error'),
+            // todo: use more specific message for constraint exceptions
+            DiscountConstraintException::class => $e->getMessage(),
+            CannotUpdateDiscountException::class => $this->trans('An error occurred while updating the discount.', [], 'Admin.Notifications.Error'),
         ];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return int[]
+     */
+    private function getBulkDiscountsFromRequest(Request $request): array
+    {
+        return array_map('intval', $request->request->all('discount_bulk'));
+    }
+
+    /**
+     * Process bulk action for discount status enabling.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[DemoRestricted(redirectRoute: 'admin_discounts_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_discounts_index', message: 'You do not have permission to update this.')]
+    public function bulkEnableStatusAction(Request $request): RedirectResponse
+    {
+        return $this->bulkUpdateStatus($request, true);
+    }
+
+    /**
+     * Process bulk action for discount status disabling.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[DemoRestricted(redirectRoute: 'admin_discounts_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_discounts_index', message: 'You do not have permission to update this.')]
+    public function bulkDisableStatusAction(Request $request): RedirectResponse
+    {
+        return $this->bulkUpdateStatus($request, false);
+    }
+
+    /**
+     * Process bulk action for discount status enabling/disabling.
+     *
+     * @param Request $request
+     * @param bool $enable
+     *
+     * @return RedirectResponse
+     */
+    protected function bulkUpdateStatus(Request $request, bool $enable): RedirectResponse
+    {
+        try {
+            $discountIds = $this->getBulkDiscountsFromRequest($request);
+
+            $command = new BulkUpdateDiscountsStatusCommand($discountIds, $enable);
+
+            $this->dispatchCommand($command);
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
+            );
+        } catch (DiscountException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_discounts_index');
+    }
+
+    /**
+     * Processes bulk discounts deleting.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[DemoRestricted(redirectRoute: 'admin_discounts_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_discounts_index', message: 'You do not have permission to delete this.')]
+    public function bulkDeleteAction(Request $request): RedirectResponse
+    {
+        try {
+            $discountIds = $this->getBulkDiscountsFromRequest($request);
+
+            $command = new BulkDeleteDiscountsCommand($discountIds);
+
+            $this->dispatchCommand($command);
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
+            );
+        } catch (DiscountException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_discounts_index');
     }
 }

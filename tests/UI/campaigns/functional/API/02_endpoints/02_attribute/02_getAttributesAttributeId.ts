@@ -22,13 +22,13 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_attribute_getAttributesAttributeId';
 
-describe('API : GET /attributes/attribute/{attributeId}', async () => {
+describe('API : GET /attributes/attributes/{attributeId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
   let accessToken: string;
   let jsonResponse: any;
-  let idAttribute: number;
+  let attributeId: number;
   let attributeNameEN: string;
   let attributeNameFR: string;
   let attributeColor: string;
@@ -103,8 +103,8 @@ describe('API : GET /attributes/attribute/{attributeId}', async () => {
       const numberOfAttributes = await boAttributesViewPage.resetAndGetNumberOfLines(page);
       expect(numberOfAttributes).to.be.above(0);
 
-      idAttribute = parseInt(await boAttributesViewPage.getTextColumn(page, 1, 'id_attribute'), 10);
-      expect(idAttribute).to.be.gt(0);
+      attributeId = parseInt(await boAttributesViewPage.getTextColumn(page, 1, 'id_attribute'), 10);
+      expect(attributeId).to.be.gt(0);
 
       attributeNameEN = await boAttributesViewPage.getTextColumn(page, 1, 'name');
       expect(attributeNameEN).to.be.a('string');
@@ -127,10 +127,10 @@ describe('API : GET /attributes/attribute/{attributeId}', async () => {
   });
 
   describe('API : Check Data', async () => {
-    it('should request the endpoint /attributes/attribute/{attributeId}', async function () {
+    it('should request the endpoint /attributes/attributes/{attributeId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get(`attributes/attribute/${idAttribute}`, {
+      const apiResponse = await apiContext.get(`attributes/attributes/${attributeId}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -167,7 +167,7 @@ describe('API : GET /attributes/attribute/{attributeId}', async () => {
 
       expect(jsonResponse).to.have.property('attributeId');
       expect(jsonResponse.attributeId).to.be.a('number');
-      expect(jsonResponse.attributeId).to.be.equal(idAttribute);
+      expect(jsonResponse.attributeId).to.be.equal(attributeId);
     });
 
     it('should check the JSON Response : `color`', async function () {

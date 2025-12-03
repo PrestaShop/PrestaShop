@@ -23,7 +23,7 @@ Feature: Discount priority - Incompatible auto discounts
       | active             | true                                |
       | priority           | 5                                   |
       | valid_from         | 2025-01-01 10:00:00                 |
-      | valid_to           | 2025-12-31 23:59:59                 |
+      | valid_to           | 2026-12-31 23:59:59                 |
       | reduction_amount   | 25.0                                |
       | reduction_currency | usd                                 |
       | taxIncluded        | true                                |
@@ -40,7 +40,7 @@ Feature: Discount priority - Incompatible auto discounts
       | active            | true                                 |
       | priority          | 3                                    |
       | valid_from        | 2025-01-01 10:00:00                  |
-      | valid_to          | 2025-12-31 23:59:59                  |
+      | valid_to          | 2026-12-31 23:59:59                  |
       | reduction_percent | 15.0                                 |
     And I update discount "auto_incompat_percent_prio3" with the condition of a minimum amount:
       | minimum_amount                   | 1.00  |

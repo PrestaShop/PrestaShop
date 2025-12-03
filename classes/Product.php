@@ -4078,6 +4078,28 @@ class ProductCore extends ObjectModel
         ?CartCore $cart = null,
         $idCustomization = null
     ) {
+        $result = Hook::exec(
+            'actionOverrideProductQuantity',
+            [
+                'id_product' => $idProduct,
+                'id_product_attribute' => $idProductAttribute,
+                'cart' => $cart,
+                'cacheIsPack' => $cacheIsPack,
+                'idCustomization' => $idCustomization,
+                'isCartProvided' => $cart !== null, // true if $cart is passed to reduce the quantity by the amount in cart
+            ],
+            null,
+            false,
+            true,
+            false,
+            null,
+            true
+        );
+
+        if (is_int($result)) {
+            return $result;
+        }
+
         // If the product is pack, we will handle the logic in another method, because pack stocks can be calculated
         // in multiple ways, depending on the configuration of the pack.
         if (Pack::isPack((int) $idProduct)) {

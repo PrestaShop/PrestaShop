@@ -98,6 +98,9 @@ export default class AttachmentsManager {
       onSelectedContent: () => {
         this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
       },
+      suggestionTemplate: (entity: any): string => `
+        <div class="search-suggestion">${entity.attachment_id} - ${entity.name}</div>
+      `,
     });
   }
 }

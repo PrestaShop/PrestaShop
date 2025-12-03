@@ -23,12 +23,12 @@ import {expect} from 'chai';
 
 const baseContext: string = 'functional_API_endpoints_attribute_patchAttributesGroupId';
 
-describe('API : PATCH /attributes/group/{attributeGroupId}', async () => {
+describe('API : PATCH /attributes/groups/{attributeGroupId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfAttributes: number = 0;
-  let idAttributeGroup: number;
+  let attributeGroupId: number;
   let accessToken: string;
 
   const clientScope: string = 'attribute_group_write';
@@ -121,8 +121,8 @@ describe('API : PATCH /attributes/group/{attributeGroupId}', async () => {
       const textColumn = await boAttributesPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(attributeData.name);
 
-      idAttributeGroup = parseInt(await boAttributesPage.getTextColumn(page, 1, 'id_attribute_group'), 10);
-      expect(idAttributeGroup).to.be.gt(0);
+      attributeGroupId = parseInt(await boAttributesPage.getTextColumn(page, 1, 'id_attribute_group'), 10);
+      expect(attributeGroupId).to.be.gt(0);
     });
 
     it('should go to edit attribute page', async function () {
@@ -156,13 +156,13 @@ describe('API : PATCH /attributes/group/{attributeGroupId}', async () => {
     },
   ].forEach((data: { propertyName: string, propertyValue: boolean|number|string|string[] }) => {
     describe(`Update the property \`${data.propertyName}\` with API and check in BO`, async () => {
-      it('should request the endpoint /attributes/group/{attributeGroupId}', async function () {
+      it('should request the endpoint /attributes/groups/{attributeGroupId}', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `requestEndpoint${data.propertyName}`, baseContext);
 
         const dataPatch: any = {};
         dataPatch[data.propertyName] = data.propertyValue;
 
-        const apiResponse = await apiContext.patch(`attributes/group/${idAttributeGroup}`, {
+        const apiResponse = await apiContext.patch(`attributes/groups/${attributeGroupId}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

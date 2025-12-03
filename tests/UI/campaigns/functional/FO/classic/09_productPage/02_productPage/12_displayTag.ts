@@ -20,7 +20,7 @@ import {
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_displayTag';
 
-describe('FO - Product page - Product page : Display tag products', async () => {
+describe('FO - Product page - Product page : Display tag products (New, On sale, Pack...)', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let productsNumber: number;

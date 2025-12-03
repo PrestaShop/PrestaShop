@@ -5,7 +5,7 @@
       <trans-unit id="5cf5bf2c9fc4975745fbad4e88fdf2c0">
         <source>%error_count% errors occurred. You can download the logs for future reference.</source>
         <target>%error_count% errors occurred. You can download the logs for future reference.</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 788]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 802]</note>
       </trans-unit>
       <trans-unit id="7bc873cba11f035df692c3549366c722">
         <source>-- Choose --</source>
@@ -15,32 +15,32 @@
       <trans-unit id="7bbd046ab824701b2e019e5d07d6ab99">
         <source>Activate selection</source>
         <target>Activate selection</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 680]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 694]</note>
       </trans-unit>
       <trans-unit id="d5b222faa1823c8e4d04afd75ff6c2bc">
         <source>Activate selection for associated stores</source>
         <target>Activate selection for associated stores</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 703]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 717]</note>
       </trans-unit>
       <trans-unit id="1c243c87944087740ab5299d77fbd168">
         <source>Activate selection for current store</source>
         <target>Activate selection for current store</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 675]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 689]</note>
       </trans-unit>
       <trans-unit id="1e1a5f89016cd24bab9dca4185b1d20c">
         <source>Activate selection for group</source>
         <target>Activate selection for group</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 693]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 707]</note>
       </trans-unit>
       <trans-unit id="cb5e3fc1d0200111c8503c71b5b1d477">
         <source>Activating %done% / %total% products</source>
         <target>Activating %done% / %total% products</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 715]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 729]</note>
       </trans-unit>
       <trans-unit id="b53a8953e8e6acd7c6bdcfeb273205e1">
         <source>Activating %total% products</source>
         <target>Activating %total% products</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 714]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 728]</note>
       </trans-unit>
       <trans-unit id="ec211f7c20af43e742bf2570c3cb84f9">
         <source>Add</source>
@@ -115,7 +115,7 @@
       <trans-unit id="9c69fa21979cbe7490c20c19537cf08f">
         <source>Back to processing</source>
         <target>Back to processing</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 789]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 803]</note>
       </trans-unit>
       <trans-unit id="1b9abf135ccb7ed2f2cd9c155137c351">
         <source>Browse</source>
@@ -255,32 +255,32 @@
       <trans-unit id="fa870a208f7f70af5ead1f1992f6d9e2">
         <source>Deactivate selection</source>
         <target>Deactivate selection</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 681]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 695]</note>
       </trans-unit>
       <trans-unit id="233851e4f395a6b90a0089cddcd4ec4c">
         <source>Deactivate selection for associated stores</source>
         <target>Deactivate selection for associated stores</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 704]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 718]</note>
       </trans-unit>
       <trans-unit id="aaa160593a1ea03304ec8e9a19cfef57">
         <source>Deactivate selection for current store</source>
         <target>Deactivate selection for current store</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 676]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 690]</note>
       </trans-unit>
       <trans-unit id="d0455053dec68eefc9cb4f0a9a124d07">
         <source>Deactivate selection for group</source>
         <target>Deactivate selection for group</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 694]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 708]</note>
       </trans-unit>
       <trans-unit id="7270c4647a8c9922f2ca68d80a89cf1d">
         <source>Deactivating %done% / %total% products</source>
         <target>Deactivating %done% / %total% products</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 724]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 738]</note>
       </trans-unit>
       <trans-unit id="dc25c50da5ea253bb5c1f1886d5c652d">
         <source>Deactivating %total% products</source>
         <target>Deactivating %total% products</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 723]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 737]</note>
       </trans-unit>
       <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
         <source>Delete</source>
@@ -295,12 +295,12 @@
       <trans-unit id="19a286e24891b70bc6e057c06c453bf2">
         <source>Delete from group</source>
         <target>Delete from group</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 413]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 427]</note>
       </trans-unit>
       <trans-unit id="c40866bf5ca2b49813c7cbfe784bdeb5">
         <source>Delete from store</source>
         <target>Delete from store</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 338]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 343]</note>
       </trans-unit>
       <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
         <source>Delete selected</source>
@@ -320,27 +320,27 @@
       <trans-unit id="29e9208da05986148e6885af76194cfd">
         <source>Delete selection for associated stores</source>
         <target>Delete selection for associated stores</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 706]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 720]</note>
       </trans-unit>
       <trans-unit id="cf11b5907651bdea34e9eb453f8cd49c">
         <source>Delete selection for current store</source>
         <target>Delete selection for current store</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 678]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 692]</note>
       </trans-unit>
       <trans-unit id="a9c3ba8ef0ccefe1fa99c9440082ca2e">
         <source>Delete selection for group</source>
         <target>Delete selection for group</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 696]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 710]</note>
       </trans-unit>
       <trans-unit id="4cc50568814398473acb8ffe9521213f">
         <source>Deleting %done% / %total% products</source>
         <target>Deleting %done% / %total% products</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 742]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 756]</note>
       </trans-unit>
       <trans-unit id="cd1e162098b1097e380a99e433920e62">
         <source>Deleting %total% products</source>
         <target>Deleting %total% products</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 741]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 755]</note>
       </trans-unit>
       <trans-unit id="bcfaccebf745acfd5e75351095a5394a">
         <source>Disable</source>
@@ -350,12 +350,12 @@
       <trans-unit id="fd46880b0f6676aabd736fd43d29d177">
         <source>Disable for group</source>
         <target>Disable for group</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 415]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 429]</note>
       </trans-unit>
       <trans-unit id="16495664a0c1be80bb6a7ab5fe09ea7e">
         <source>Disable on all stores</source>
         <target>Disable on all stores</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 425]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 439]</note>
       </trans-unit>
       <trans-unit id="ab7fd6e250b64a46027a996088fdff74">
         <source>Disable selection</source>
@@ -390,7 +390,7 @@
       <trans-unit id="07176ccdd3cd24acb62ab4323fc68a51">
         <source>Download error log</source>
         <target>Download error log</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 790]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 804]</note>
       </trans-unit>
       <trans-unit id="d5ef96e383d376beeec28da7acfea516">
         <source>Download file</source>
@@ -410,7 +410,7 @@
       <trans-unit id="a321af8d01df4e048d991f25883fa7a4">
         <source>Duplicate all stores</source>
         <target>Duplicate all stores</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 426]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 440]</note>
       </trans-unit>
       <trans-unit id="8fd2671b48c70424d8a77bb26515c8af">
         <source>Duplicate for current store</source>
@@ -420,42 +420,42 @@
       <trans-unit id="748010ad83c088b58e6bd2a34b6acb40">
         <source>Duplicate group</source>
         <target>Duplicate group</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 416]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 430]</note>
       </trans-unit>
       <trans-unit id="ef59c24bfd6376c1d8d097f8f3c0c1d9">
         <source>Duplicate product</source>
         <target>Duplicate product</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 482]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 496]</note>
       </trans-unit>
       <trans-unit id="e2afd6b97d2eac4817170845d26b9c9b">
         <source>Duplicate selection</source>
         <target>Duplicate selection</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 682]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 696]</note>
       </trans-unit>
       <trans-unit id="e1d05d390b563d1948e5b67005f4831b">
         <source>Duplicate selection for associated stores</source>
         <target>Duplicate selection for associated stores</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 705]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 719]</note>
       </trans-unit>
       <trans-unit id="2b2ad86747770f6809ff0f54fbfe9acc">
         <source>Duplicate selection for current store</source>
         <target>Duplicate selection for current store</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 677]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 691]</note>
       </trans-unit>
       <trans-unit id="573ab5804215026d2e0b02dcd67ab3b9">
         <source>Duplicate selection for group</source>
         <target>Duplicate selection for group</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 695]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 709]</note>
       </trans-unit>
       <trans-unit id="1e1680f351d3808149ae22da65fd5c6b">
         <source>Duplicating %done% / %total% products</source>
         <target>Duplicating %done% / %total% products</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 733]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 747]</note>
       </trans-unit>
       <trans-unit id="6a0f1156c55d16958749b67d853d3117">
         <source>Duplicating %total% products</source>
         <target>Duplicating %total% products</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 732]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 746]</note>
       </trans-unit>
       <trans-unit id="7dce122004969d56ae2e0245cb754d35">
         <source>Edit</source>
@@ -495,12 +495,12 @@
       <trans-unit id="6fea30723d77ed0ce44ab2a93ed64590">
         <source>Enable for group</source>
         <target>Enable for group</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 414]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 428]</note>
       </trans-unit>
       <trans-unit id="2bd9f1bf950529f42692ef91f7581438">
         <source>Enable on all stores</source>
         <target>Enable on all stores</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 424]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 438]</note>
       </trans-unit>
       <trans-unit id="ede4759c9afae620fd586628789fa304">
         <source>Enable selection</source>
@@ -525,7 +525,7 @@
       <trans-unit id="dbb392a2dc9b38722e69f6032faea73e">
         <source>Export .CSV file</source>
         <target>Export .CSV file</target>
-        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 1194]</note>
+        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 1197]</note>
       </trans-unit>
       <trans-unit id="351b6d570b6ba15fe66e85c1eaf9ec64">
         <source>Export to SQL Manager</source>
@@ -740,7 +740,7 @@
       <trans-unit id="56b533c60a6c6d0b172c4ba5ec971eeb">
         <source>Search ISO code</source>
         <target>Search ISO code</target>
-        <note>File: src/Core/Grid/Definition/Factory/StateGridDefinitionFactory.php [Line: 197]</note>
+        <note>File: src/Core/Grid/Definition/Factory/StateGridDefinitionFactory.php [Line: 198]</note>
       </trans-unit>
       <trans-unit id="7c480b91e2c6ef389674bec0e31458e5">
         <source>Search Name</source>
@@ -985,7 +985,7 @@
       <trans-unit id="6567238975275105f4e51e99ee3b4e17">
         <source>Stop processing</source>
         <target>Stop processing</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 787]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 801]</note>
       </trans-unit>
       <trans-unit id="f3b350b739134cb26b57ee8e5d9269b5">
         <source>Toggle Fullscreen</source>
@@ -1060,7 +1060,7 @@
       <trans-unit id="2048fe880813217b00797eafa12e00a4">
         <source>View %error_count% error logs</source>
         <target>View %error_count% error logs</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 791]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 805]</note>
       </trans-unit>
       <trans-unit id="21c411dbe2b2a636f05d20fd4bfa8129">
         <source>View customer details</source>

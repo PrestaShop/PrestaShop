@@ -82,6 +82,11 @@
         <target>Define which condition should apply first when a customer is eligible for multiple specific prices.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 118]</note>
       </trans-unit>
+      <trans-unit id="d052f4d5e3abd3ce257a51cafbc59746">
+        <source>Defines the product's primary placement, usually the deepest category in the hierarchy. It's used in breadcrumbs, URLs, structured data and many other parts of the shop.</source>
+        <target>Defines the product's primary placement, usually the deepest category in the hierarchy. It's used in breadcrumbs, URLs, structured data and many other parts of the shop.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Category/CategoriesType.php [Line: 86]</note>
+      </trans-unit>
       <trans-unit id="e9d5cadd20f10058a5bb0823aed17584">
         <source>Delete messages after synchronization. If you do not enable this option, the synchronization will take more time.</source>
         <target>Delete messages after synchronization. If you do not enable this option, the synchronization will take more time.</target>
@@ -225,7 +230,7 @@
       <trans-unit id="bf8d04437124c71dcf4c8c9d067c59a4">
         <source>Public title that may appear in the browser and search engines. The recommended length is about 60 characters (including spaces). If you leave it blank, the product name will be used.</source>
         <target>Public title that may appear in the browser and search engines. The recommended length is about 60 characters (including spaces). If you leave it blank, the product name will be used.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 117]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 119]</note>
       </trans-unit>
       <trans-unit id="82e3cb7a4be4e299701a182197dc9410">
         <source>Save the product and stay on the current page: ALT+SHIFT+S</source>
@@ -240,7 +245,7 @@
       <trans-unit id="84645920bd0fb266cb4acdbc00003e62">
         <source>Search category</source>
         <target>Search category</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 564]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 578]</note>
       </trans-unit>
       <trans-unit id="01551d2cf1e9ca414b6c81189ad807a5">
         <source>Search file</source>
@@ -250,7 +255,7 @@
       <trans-unit id="542f59279cd5d73dfbdb069ce0833b0a">
         <source>Search name</source>
         <target>Search name</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 544]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 558]</note>
       </trans-unit>
       <trans-unit id="0834dbec80c240be5b2fda7c96b79b50">
         <source>Search product</source>
@@ -260,7 +265,7 @@
       <trans-unit id="d56b081f1e66fdf5130276c68d528780">
         <source>Search reference</source>
         <target>Search reference</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 554]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 568]</note>
       </trans-unit>
       <trans-unit id="dbf7ca6ce67648b790f71e6ae2f5c8dd">
         <source>Select the customer groups which will have access to this category.</source>
@@ -270,7 +275,7 @@
       <trans-unit id="a132c5ad0de6c917b5422b923608c87b">
         <source>Separate each tag with a comma or press the Enter key.</source>
         <target>Separate each tag with a comma or press the Enter key.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 201]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 203]</note>
       </trans-unit>
       <trans-unit id="127a2d0e467657187c3a043fb6179b17">
         <source>Set specific prices for customers meeting certain conditions.</source>
@@ -280,7 +285,7 @@
       <trans-unit id="73e5c34274fdcc69469b9185f7c3fd96">
         <source>Summary for robots, that could appear in search engines. The recommended length is about 160 characters (including spaces). If you leave it blank, an excerpt from the short description will be used.</source>
         <target>Summary for robots, that could appear in search engines. The recommended length is about 160 characters (including spaces). If you leave it blank, an excerpt from the short description will be used.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 146]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 148]</note>
       </trans-unit>
       <trans-unit id="a5b0a810681c7fca4581d7f7524009f4">
         <source>Take me out of there!</source>
@@ -330,7 +335,7 @@
       <trans-unit id="580de47d3bc3e99a0b6aba55066a983a">
         <source>The way the attribute's values will be presented to the customers in the product's page.</source>
         <target>The way the attribute's values will be presented to the customers in the product's page.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 89]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 72]</note>
       </trans-unit>
       <trans-unit id="762d425093de542e7ab628b44ff68515">
         <source>This interface allows you to specify the suppliers of the current combination.</source>
@@ -340,7 +345,7 @@
       <trans-unit id="c533675166b567256cae22139534b713">
         <source>This is the human-readable URL, as generated from the product's name. You can change it if you want.</source>
         <target>This is the human-readable URL, as generated from the product's name. You can change it if you want.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 175]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 177]</note>
       </trans-unit>
       <trans-unit id="ced8a99398578936b21103cba545cd66">
         <source>This restriction applies to the country of delivery.</source>
@@ -505,7 +510,7 @@
       <trans-unit id="f2d1c5443636295e9720caac90ea8d93">
         <source>Your internal name for this attribute.</source>
         <target>Your internal name for this attribute.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 106]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 87]</note>
       </trans-unit>
       <trans-unit id="d24ec28b066e46d9d9ec3c1f39aa89ee">
         <source>[1]Invalid token[/1]: direct access to this link may lead to a potential security breach.</source>

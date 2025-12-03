@@ -85,234 +85,280 @@ describe('API : Check endpoints', async () => {
       // Dear developers, the CI is broken when you update the module ps_apiresources on the Core.
       // It's normal : it's time to add them UI Tests.
       expect(endpoints).to.deep.equals([
+        // @todo: add tests
+        '/addresses/bulk-delete: DELETE',
+        // @todo: add tests
+        '/addresses/customers/{addressId}: GET',
+        // @todo: add tests
+        '/addresses/customers/{addressId}: PATCH',
+        // @todo: add tests
+        '/addresses/customers: POST',
+        // @todo: add tests
+        '/addresses/{addressId}: DELETE',
+        // @todo: add tests
+        '/addresses: GET',
         // tests/UI/campaigns/functional/API/02_endpoints/01_apiClient/01_getApiClientInfos.ts
-        '/api-client/infos: GET',
+        '/api-clients/infos: GET',
         // tests/UI/campaigns/functional/API/02_endpoints/01_apiClient/02_deleteApiClientId.ts
-        '/api-client/{apiClientId}: DELETE',
+        '/api-clients/{apiClientId}: DELETE',
         // tests/UI/campaigns/functional/API/02_endpoints/01_apiClient/03_getApiClientId.ts
-        '/api-client/{apiClientId}: GET',
+        '/api-clients/{apiClientId}: GET',
         // tests/UI/campaigns/functional/API/02_endpoints/01_apiClient/04_patchApiClientId.ts
-        '/api-client/{apiClientId}: PATCH',
-        // tests/UI/campaigns/functional/API/02_endpoints/01_apiClient/05_postApiClient.ts
-        '/api-client: POST',
+        '/api-clients/{apiClientId}: PATCH',
         // tests/UI/campaigns/functional/API/02_endpoints/01_apiClient/06_getApiClients.ts
         '/api-clients: GET',
+        // tests/UI/campaigns/functional/API/02_endpoints/01_apiClient/05_postApiClient.ts
+        '/api-clients: POST',
+        // @todo: add tests
+        '/attributes/attributes/bulk-delete: DELETE',
         // tests/UI/campaigns/functional/API/02_endpoints/02_attribute/01_deleteAttributesAttributeId.ts
-        '/attributes/attribute/{attributeId}: DELETE',
+        '/attributes/attributes/{attributeId}: DELETE',
         // tests/UI/campaigns/functional/API/02_endpoints/02_attribute/02_getAttributesAttributeId.ts
-        '/attributes/attribute/{attributeId}: GET',
+        '/attributes/attributes/{attributeId}: GET',
         // @todo: add tests
-        '/attributes/attribute/{attributeId}: PATCH',
-        // tests/UI/campaigns/functional/API/02_endpoints/02_attribute/04_postAttributesAttribute.ts
-        '/attributes/attribute: POST',
+        '/attributes/attributes/{attributeId}: PATCH',
+        // tests/UI/campaigns/functional/API/02_endpoints/02_attributes/04_postAttributesAttribute.ts
+        '/attributes/attributes: POST',
+        // tests/UI/campaigns/functional/API/02_endpoints/02_attribute/11_deleteAttributesGroupsBulkDelete.ts
+        '/attributes/groups/bulk-delete: DELETE',
         // @todo: add tests
-        '/attributes/attributes/delete: PUT',
-        // @todo: add tests
-        '/attributes/group/{attributeGroupId}/attributes: GET',
+        '/attributes/groups/{attributeGroupId}/attributes: GET',
         // tests/UI/campaigns/functional/API/02_endpoints/02_attribute/07_deleteAttributesGroupId.ts
-        '/attributes/group/{attributeGroupId}: DELETE',
+        '/attributes/groups/{attributeGroupId}: DELETE',
         // tests/UI/campaigns/functional/API/02_endpoints/02_attribute/08_getAttributesGroupId.ts
-        '/attributes/group/{attributeGroupId}: GET',
+        '/attributes/groups/{attributeGroupId}: GET',
         // tests/UI/campaigns/functional/API/02_endpoints/02_attribute/09_patchAttributesGroupId.ts
-        '/attributes/group/{attributeGroupId}: PATCH',
-        // tests/UI/campaigns/functional/API/02_endpoints/02_attribute/10_postAttributesGroup.ts
-        '/attributes/group: POST',
-        // tests/UI/campaigns/functional/API/02_endpoints/02_attribute/11_putAttributesGroupsDelete.ts
-        '/attributes/groups/delete: PUT',
+        '/attributes/groups/{attributeGroupId}: PATCH',
         // tests/UI/campaigns/functional/API/02_endpoints/02_attribute/12_getAttributesGroups.ts
         '/attributes/groups: GET',
+        // tests/UI/campaigns/functional/API/02_endpoints/02_attribute/10_postAttributesGroup.ts
+        '/attributes/groups: POST',
         // @todo: add tests
-        '/categories/delete: PUT',
+        '/categories/bulk-delete/{deleteMode}: DELETE',
         // @todo: add tests
-        '/categories/toggle-status: PUT',
-        // tests/UI/campaigns/functional/API/02_endpoints/03_category/01_getCategories.ts
+        '/categories/bulk-update-status: PUT',
+        // tests/UI/campaigns/functional/API/02_endpoints/03_category/04_deleteCategoryIdCover.ts
+        '/categories/{categoryId}/cover: DELETE',
+        // @todo: add tests
+        '/categories/{categoryId}/status: PATCH',
+        // @todo: add tests
+        '/categories/{categoryId}/thumbnail: DELETE',
+        // tests/UI/campaigns/functional/API/02_endpoints/03_category/07_deleteCategoryIdMode.ts
+        '/categories/{categoryId}/{mode}: DELETE',
+        // @todo: add tests
+        '/categories/{categoryId}: GET',
+        // @todo: add tests
+        '/categories/{categoryId}: PATCH',
+        // tests/UI/campaigns/functional/API/02_endpoints/03_category/03_getCategories.ts
         '/categories: GET',
-        // tests/UI/campaigns/functional/API/02_endpoints/03_category/02_deleteCategoryIdCover.ts
-        '/category/{categoryId}/cover: DELETE',
         // @todo: add tests
-        '/category/{categoryId}/status: PATCH',
+        '/categories: POST',
         // @todo: add tests
-        '/category/{categoryId}/thumbnail: DELETE',
-        // tests/UI/campaigns/functional/API/02_endpoints/03_category/05_deleteCategoryId.ts
-        '/category/{categoryId}: DELETE',
+        '/contacts/{contactId}: GET',
         // @todo: add tests
-        '/category/{categoryId}: GET',
+        '/contacts/{contactId}: PATCH',
         // @todo: add tests
-        '/category/{categoryId}: PATCH',
+        '/contacts: GET',
         // @todo: add tests
-        '/category: POST',
+        '/contacts: POST',
         // tests/UI/campaigns/functional/API/02_endpoints/04_customerGroup/01_deleteCustomerGroupsId.ts
-        '/customers/group/{customerGroupId}: DELETE',
+        '/customers/groups/{customerGroupId}: DELETE',
         // tests/UI/campaigns/functional/API/02_endpoints/04_customerGroup/02_getCustomerGroupsId.ts
-        '/customers/group/{customerGroupId}: GET',
+        '/customers/groups/{customerGroupId}: GET',
         // tests/UI/campaigns/functional/API/02_endpoints/04_customerGroup/03_putCustomerGroupsId.ts
-        '/customers/group/{customerGroupId}: PUT',
-        // tests/UI/campaigns/functional/API/02_endpoints/04_customerGroup/04_postCustomersGroup.ts
-        '/customers/group: POST',
+        '/customers/groups/{customerGroupId}: PUT',
         // tests/UI/campaigns/functional/API/02_endpoints/04_customerGroup/05_getCustomersGroups.ts
         '/customers/groups: GET',
+        // tests/UI/campaigns/functional/API/02_endpoints/04_customerGroup/04_postCustomersGroup.ts
+        '/customers/groups: POST',
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/39682
-        '/discount/{discountId}/conditions: GET',
+        '/discounts/{discountId}/conditions: GET',
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/39682
-        '/discount/{discountId}/conditions: PATCH',
+        '/discounts/{discountId}/conditions: PATCH',
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
-        '/discount/{discountId}: DELETE',
+        '/discounts/{discountId}: DELETE',
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/38647
-        '/discount/{discountId}: GET',
+        '/discounts/{discountId}: GET',
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/39682
-        '/discount/{discountId}: PATCH',
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
-        '/discount: POST',
+        '/discounts/{discountId}: PATCH',
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
         '/discounts: GET',
-        // tests/UI/campaigns/functional/API/02_endpoints/04_hook/01_putHookIdStatus.ts
-        '/hook/{hookId}/status: PUT',
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
+        '/discounts: POST',
+        // @todo: add tests
+        '/features/bulk-delete: DELETE',
+        // @todo: add tests
+        '/features/values/bulk-delete: DELETE',
+        // @todo: add tests
+        '/features/values/{featureValueId}: DELETE',
+        // @todo: add tests
+        '/features/values/{featureValueId}: GET',
+        // @todo: add tests
+        '/features/values/{featureValueId}: PATCH',
+        // @todo: add tests
+        '/features/values: POST',
+        // @todo: add tests
+        '/features/{featureId}/values: GET',
+        // @todo: add tests
+        '/features/{featureId}: DELETE',
+        // @todo: add tests
+        '/features/{featureId}: GET',
+        // @todo: add tests
+        '/features/{featureId}: PATCH',
+        // @todo: add tests
+        '/features: GET',
+        // @todo: add tests
+        '/features: POST',
+        // @todo: add tests
+        '/hooks/{hookId}/status: GET',
+        // tests/UI/campaigns/functional/API/02_endpoints/05_hook/01_putHookIdStatus.ts
+        '/hooks/{hookId}/status: PUT',
         // tests/UI/campaigns/functional/API/02_endpoints/05_hook/02_getHookId.ts
-        '/hook/{hookId}: GET',
+        '/hooks/{hookId}: GET',
         // tests/UI/campaigns/functional/API/02_endpoints/05_hook/03_getHooks.ts
         '/hooks: GET',
         // tests/UI/campaigns/functional/API/02_endpoints/06_language/01_getLanguages.ts
         '/languages: GET',
+        // tests/UI/campaigns/functional/API/02_endpoints/07_module/10_putModulesBulkUninstall.ts
+        '/modules/bulk-uninstall: PUT',
+        // tests/UI/campaigns/functional/API/02_endpoints/07_module/09_putModulesBulkUpdateStatus.ts
+        '/modules/bulk-update-status: PUT',
         // tests/UI/campaigns/functional/API/02_endpoints/07_module/01_postModuleUploadArchive.ts
-        '/module/upload-archive: POST',
+        '/modules/upload-archive: POST',
         // tests/UI/campaigns/functional/API/02_endpoints/07_module/02_postModuleUploadSource.ts
-        '/module/upload-source: POST',
+        '/modules/upload-source: POST',
         // tests/UI/campaigns/functional/API/02_endpoints/07_module/03_putModuleTechnicalNameInstall.ts
-        '/module/{technicalName}/install: PUT',
+        '/modules/{technicalName}/install: PUT',
         // tests/UI/campaigns/functional/API/02_endpoints/07_module/04_patchModuleTechnicalNameReset.ts
-        '/module/{technicalName}/reset: PATCH',
+        '/modules/{technicalName}/reset: PATCH',
         // tests/UI/campaigns/functional/API/02_endpoints/07_module/05_putModuleTechnicalNameStatus.ts
-        '/module/{technicalName}/status: PUT',
+        '/modules/{technicalName}/status: PUT',
         // tests/UI/campaigns/functional/API/02_endpoints/07_module/06_putModuleTechnicalNameUninstall.ts
-        '/module/{technicalName}/uninstall: PUT',
+        '/modules/{technicalName}/uninstall: PUT',
         // tests/UI/campaigns/functional/API/02_endpoints/07_module/07_putModuleTechnicalNameUpgrade.ts
-        '/module/{technicalName}/upgrade: PUT',
+        '/modules/{technicalName}/upgrade: PUT',
         // tests/UI/campaigns/functional/API/02_endpoints/07_module/08_getModuleTechnicalName.ts
-        '/module/{technicalName}: GET',
-        // tests/UI/campaigns/functional/API/02_endpoints/07_module/09_putModulesToggleStatus.ts
-        '/modules/toggle-status: PUT',
-        // tests/UI/campaigns/functional/API/02_endpoints/07_module/10_putModulesUninstall.ts
-        '/modules/uninstall: PUT',
+        '/modules/{technicalName}: GET',
         // tests/UI/campaigns/functional/API/02_endpoints/07_module/11_getModules.ts
         '/modules: GET',
-        // @todo: add tests for delete and shopIds
-        '/product/image/{imageId}: DELETE',
-        // tests/UI/campaigns/functional/API/02_endpoints/08_product/01_getProductImageId.ts
-        '/product/image/{imageId}: GET',
-        // tests/UI/campaigns/functional/API/02_endpoints/08_product/02_postProductImageId.ts
-        '/product/image/{imageId}: POST',
-        // tests/UI/campaigns/functional/API/02_endpoints/08_product/03_postProductIdImage.ts
-        '/product/{productId}/image: POST',
-        // tests/UI/campaigns/functional/API/02_endpoints/08_product/04_getProductIdImages.ts
-        '/product/{productId}/images: GET',
-        // tests/UI/campaigns/functional/API/02_endpoints/08_product/05_patchProductIdShops.ts
-        '/product/{productId}/shops: PATCH',
-        // tests/UI/campaigns/functional/API/02_endpoints/08_product/06_deleteProductId.ts
-        '/product/{productId}: DELETE',
-        // tests/UI/campaigns/functional/API/02_endpoints/08_product/07_getProductId.ts
-        '/product/{productId}: GET',
-        // tests/UI/campaigns/functional/API/02_endpoints/08_product/08_patchProductId.ts
-        '/product/{productId}: PATCH',
-        // tests/UI/campaigns/functional/API/02_endpoints/08_product/09_postProduct.ts
-        '/product: POST',
-        // tests/UI/campaigns/functional/API/02_endpoints/08_product/10_getProductsSearch.ts
-        '/products/search/{phrase}/{resultsLimit}/{isoCode}: GET',
-        // tests/UI/campaigns/functional/API/02_endpoints/08_product/11_getProducts.ts
+        // tests/UI/campaigns/functional/API/02_endpoints/08_product/01_deleteProductImageId.ts
+        '/products/images/{imageId}: DELETE',
+        // tests/UI/campaigns/functional/API/02_endpoints/08_product/02_getProductImageId.ts
+        '/products/images/{imageId}: GET',
+        // tests/UI/campaigns/functional/API/02_endpoints/08_product/03_postProductImageId.ts
+        '/products/images/{imageId}: POST',
+        // tests/UI/campaigns/functional/API/02_endpoints/08_product/11_getProductsSearch.ts
+        '/products/search: GET',
+        // tests/UI/campaigns/functional/API/02_endpoints/08_product/05_getProductIdImages.ts
+        '/products/{productId}/images: GET',
+        // tests/UI/campaigns/functional/API/02_endpoints/08_product/04_postProductIdImage.ts
+        '/products/{productId}/images: POST',
+        // tests/UI/campaigns/functional/API/02_endpoints/08_product/06_patchProductIdShops.ts
+        '/products/{productId}/shops: PATCH',
+        // tests/UI/campaigns/functional/API/02_endpoints/08_product/07_deleteProductId.ts
+        '/products/{productId}: DELETE',
+        // tests/UI/campaigns/functional/API/02_endpoints/08_product/08_getProductId.ts
+        '/products/{productId}: GET',
+        // tests/UI/campaigns/functional/API/02_endpoints/08_product/09_patchProductId.ts
+        '/products/{productId}: PATCH',
+        // tests/UI/campaigns/functional/API/02_endpoints/08_product/12_getProducts.ts
         '/products: GET',
+        // tests/UI/campaigns/functional/API/02_endpoints/08_product/10_postProduct.ts
+        '/products: POST',
         // @todo: add tests
-        '/search-alias/{search}: DELETE',
+        // '/search-aliases/bulk-delete: DELETE',
         // @todo: add tests
-        '/search-alias/{search}: GET',
+        // '/search-aliases/{searchTerm}: GET',
         // @todo: add tests
-        '/search-alias/{search}: PUT',
+        // '/search-aliases/{searchTerm}: PUT',
+        // tests/UI/campaigns/functional/API/02_endpoints/09_searchAlias/01_deleteSearch.ts
+        // '/search-aliases: DELETE',
         // @todo: add tests
-        '/search-alias: POST',
+        // '/search-aliases: GET',
         // @todo: add tests
-        '/search-aliases/delete: DELETE',
+        // '/search-aliases: POST',
         // @todo: add tests
-        '/search-aliases: GET',
+        '/stores/bulk-delete: DELETE',
         // @todo: add tests
-        '/store/{storeId}/toggle-status: PUT',
+        '/stores/bulk-update-status: PUT',
         // @todo: add tests
-        '/store/{storeId}: DELETE',
+        '/stores/{storeId}/toggle-status: PUT',
         // @todo: add tests
-        '/store/{storeId}: GET',
+        '/stores/{storeId}: DELETE',
         // @todo: add tests
-        '/stores/delete: PUT',
+        '/stores/{storeId}: GET',
         // @todo: add tests
-        '/stores/set-status: PUT',
+        '/suppliers/bulk-delete: DELETE',
         // @todo: add tests
-        '/supplier/{supplierId}/logo: DELETE',
+        '/suppliers/bulk-disable: PUT',
         // @todo: add tests
-        '/supplier/{supplierId}/toggle-status: PUT',
+        '/suppliers/bulk-enable: PUT',
         // @todo: add tests
-        '/supplier/{supplierId}: DELETE',
+        '/suppliers/{supplierId}/logo: DELETE',
         // @todo: add tests
-        '/supplier/{supplierId}: GET',
+        '/suppliers/{supplierId}/toggle-status: PUT',
         // @todo: add tests
-        '/supplier/{supplierId}: PATCH',
+        '/suppliers/{supplierId}: DELETE',
         // @todo: add tests
-        '/supplier: POST',
+        '/suppliers/{supplierId}: GET',
         // @todo: add tests
-        '/suppliers/delete: PUT',
-        // @todo: add tests
-        '/suppliers/disable: PUT',
-        // @todo: add tests
-        '/suppliers/enable: PUT',
+        '/suppliers/{supplierId}: PATCH',
         // @todo: add tests
         '/suppliers: GET',
         // @todo: add tests
-        '/tab/{className}: PUT',
+        '/suppliers: POST',
         // @todo: add tests
-        '/tax-rules-group/{taxRulesGroupId}: DELETE',
+        '/tabs/{className}: PUT',
         // @todo: add tests
-        '/tax-rules-group/{taxRulesGroupId}: GET',
+        '/tax-rules-groups/bulk-delete: DELETE',
         // @todo: add tests
-        '/tax-rules-group/{taxRulesGroupId}: PATCH',
+        '/tax-rules-groups/bulk-update-status: PUT',
         // @todo: add tests
-        '/tax-rules-group: POST',
+        '/tax-rules-groups/{taxRulesGroupId}: DELETE',
         // @todo: add tests
-        '/tax-rules-groups/delete: PUT',
+        '/tax-rules-groups/{taxRulesGroupId}: GET',
         // @todo: add tests
-        '/tax-rules-groups/set-status: PUT',
+        '/tax-rules-groups/{taxRulesGroupId}: PATCH',
         // @todo: add tests
         '/tax-rules-groups: GET',
         // @todo: add tests
-        '/title/{titleId}: DELETE',
+        '/tax-rules-groups: POST',
         // @todo: add tests
-        '/title/{titleId}: GET',
+        '/titles/bulk-delete: DELETE',
         // @todo: add tests
-        '/title/{titleId}: PATCH',
+        '/titles/{titleId}: DELETE',
         // @todo: add tests
-        '/title: POST',
+        '/titles/{titleId}: GET',
         // @todo: add tests
-        '/titles/delete: PUT',
+        '/titles/{titleId}: PATCH',
         // @todo: add tests
         '/titles: GET',
         // @todo: add tests
-        '/webservice-key/{webserviceKeyId}: GET',
+        '/titles: POST',
         // @todo: add tests
-        '/webservice-key/{webserviceKeyId}: PATCH',
+        '/webservice-keys/{webserviceKeyId}: GET',
         // @todo: add tests
-        '/webservice-key: POST',
+        '/webservice-keys/{webserviceKeyId}: PATCH',
         // @todo: add tests
         '/webservice-keys: GET',
         // @todo: add tests
-        '/zone/{zoneId}/toggle-status: PUT',
+        '/webservice-keys: POST',
         // @todo: add tests
-        '/zone/{zoneId}: DELETE',
+        '/zones/bulk-delete: DELETE',
         // @todo: add tests
-        '/zone/{zoneId}: GET',
+        '/zones/bulk-update-status: PUT',
         // @todo: add tests
-        '/zone/{zoneId}: PUT',
+        '/zones/{zoneId}/toggle-status: PUT',
         // @todo: add tests
-        '/zone: POST',
+        '/zones/{zoneId}: DELETE',
         // @todo: add tests
-        '/zones/delete: PUT',
+        '/zones/{zoneId}: GET',
         // @todo: add tests
-        '/zones/toggle-status: PUT',
-        // @todo: add tests
+        '/zones/{zoneId}: PUT',
+        // tests/UI/campaigns/functional/API/02_endpoints/16_zone/08_getZones.ts
         '/zones: GET',
+        // @todo: add tests
+        '/zones: POST',
       ]);
     });
   });

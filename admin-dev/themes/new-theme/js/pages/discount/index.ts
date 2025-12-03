@@ -38,6 +38,8 @@ $(() => {
   discountGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
   discountGrid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
+  new window.prestashop.component.GridExtensions.FilterLinkGroup();
+
   // Check the type selected and update the submit button state
   const discountTypeRadios = document.querySelectorAll<HTMLInputElement>(DiscountMap.discountTypeRadios);
   discountTypeRadios.forEach((discountTypeRadio: HTMLInputElement) => {

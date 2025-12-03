@@ -237,6 +237,26 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
+     * @param CombinationId $combinationId
+     *
+     * @return string
+     */
+    private function getCombinationReference(CombinationId $combinationId): string
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pa.reference')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->andWhere('pa.id_product_attribute = :combinationId')
+            ->setParameter('combinationId', $combinationId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+
+        return $result['reference'] ?? '';
+    }
+
+    /**
      * Creates a new combination in product_attribute_shop assuming it already exists in product_attribute table
      *
      * @param CombinationId $combinationId
@@ -251,6 +271,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         $combination->force_id = true;
         $combination->id_product = $productId->getValue();
         $combination->default_on = false;
+        $combination->reference = $this->getCombinationReference($combinationId);
 
         $this->updateObjectModelForShops($combination, [$shopId], CannotUpdateCombinationException::class);
     }

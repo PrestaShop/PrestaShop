@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Tag\CommandHandler\AddTagHandler:
+
+  PrestaShop\PrestaShop\Adapter\Tag\CommandHandler\BulkDeleteTagHandler:
+
+  PrestaShop\PrestaShop\Adapter\Tag\CommandHandler\EditTagHandler:
+
+  PrestaShop\PrestaShop\Adapter\Tag\CommandHandler\DeleteTagHandler:
+
+  PrestaShop\PrestaShop\Adapter\Tag\QueryHandler\GetTagForEditingHandler:

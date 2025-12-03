@@ -22,14 +22,14 @@ Feature: Full UX discount test
       | name[fr-FR] | Promotion_fr        |
       | active      | true                |
       | valid_from  | 2025-01-01 11:05:00 |
-      | valid_to    | 2025-12-01 00:00:00 |
+      | valid_to    | 2026-12-01 00:00:00 |
       | code        | PROMO_2025          |
     And discount "complete_free_shipping_discount" should have the following properties:
       | name[en-US] | Promotion           |
       | name[fr-FR] | Promotion_fr        |
       | active      | true                |
       | valid_from  | 2025-01-01 11:05:00 |
-      | valid_to    | 2025-12-01 00:00:00 |
+      | valid_to    | 2026-12-01 00:00:00 |
       | code        | PROMO_2025          |
     And I add 1 product "product1" to the cart "dummy_cart"
     And cart "dummy_cart" total with tax included should be '$26.81'

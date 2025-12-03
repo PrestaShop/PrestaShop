@@ -69,9 +69,12 @@ class ModuleRepositoryTest extends TestCase
 
     public function setUp(): void
     {
+        $mockModuleDataProvider = $this->createMock(ModuleDataProvider::class);
+        $mockModuleDataProvider->method('can')->willReturn(true);
+
         $this->moduleRepository = $this->getMockBuilder(ModuleRepository::class)
             ->setConstructorArgs([
-                $this->createMock(ModuleDataProvider::class),
+                $mockModuleDataProvider,
                 $this->createMock(AdminModuleDataProvider::class),
                 $this->createMock(CacheProvider::class),
                 $this->createMock(HookManager::class),

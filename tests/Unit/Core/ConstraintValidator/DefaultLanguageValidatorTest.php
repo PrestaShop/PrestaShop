@@ -69,25 +69,41 @@ class DefaultLanguageValidatorTest extends ConstraintValidatorTestCase
     /**
      * @dataProvider getIncorrectTypes
      */
-    public function testItDetectsIncorrectValueType($incorrectType)
+    public function testItDetectsIncorrectValueType($incorrectType, bool $expectViolation = false)
     {
-        $this->expectException(UnexpectedTypeException::class);
-        $this->validator->validate($incorrectType, new DefaultLanguage());
+        $constraint = new DefaultLanguage();
+
+        if ($expectViolation) {
+            // For null values, we expect a violation instead of an exception
+            $this->validator->validate($incorrectType, $constraint);
+            $this->buildViolation($constraint->message)
+                ->setParameter('%field_name%', '')
+                ->assertRaised()
+            ;
+        } else {
+            // For other incorrect types (string, boolean), we expect an exception
+            $this->expectException(UnexpectedTypeException::class);
+            $this->validator->validate($incorrectType, $constraint);
+        }
     }
 
     public static function getIncorrectTypes(): iterable
     {
         yield 'string value' => [
             '',
+            false,
         ];
 
         yield 'boolean value' => [
             false,
+            false,
         ];
 
         // Not allowed unless allowNull is set (see in getValidValues)
+        // Null values now raise a violation instead of throwing an exception
         yield 'null value' => [
             null,
+            true,
         ];
     }
 

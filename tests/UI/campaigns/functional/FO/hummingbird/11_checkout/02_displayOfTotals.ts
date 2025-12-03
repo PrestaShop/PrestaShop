@@ -39,7 +39,7 @@ Post-condition:
 - Delete created cart rule
  */
 
-describe('FO - Checkout : Display of totals', async () => {
+describe('FO - Checkout : Display of total (price, vouchers, shipping)', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   const pastDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'past');

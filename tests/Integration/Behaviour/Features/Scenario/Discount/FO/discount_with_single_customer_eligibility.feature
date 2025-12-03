@@ -22,7 +22,7 @@ Feature: Customer using discount with single customer eligibility
       | name[en-US]              | VIP Discount for John |
       | active                   | true                  |
       | valid_from               | 2025-01-01 00:00:00   |
-      | valid_to                 | 2025-12-31 23:59:59   |
+      | valid_to                 | 2026-12-31 23:59:59   |
       | code                     | JOHN_VIP_20           |
       | reduction_percent        | 20.0                  |
       | customer                 | john_doe              |
@@ -52,7 +52,7 @@ Feature: Customer using discount with single customer eligibility
       | name[en-US]              | VIP Discount for Jane |
       | active                   | true                  |
       | valid_from               | 2025-01-01 00:00:00   |
-      | valid_to                 | 2025-12-31 23:59:59   |
+      | valid_to                 | 2026-12-31 23:59:59   |
       | code                     | JANE_VIP_25           |
       | reduction_percent        | 25.0                  |
       | customer                 | jane_smith            |
@@ -84,7 +84,7 @@ Feature: Customer using discount with single customer eligibility
       | name[en-US]              | VIP Discount for Bob |
       | active                   | true                 |
       | valid_from               | 2025-01-01 00:00:00  |
-      | valid_to                 | 2025-12-31 23:59:59  |
+      | valid_to                 | 2026-12-31 23:59:59  |
       | code                     | BOB_VIP_30           |
       | reduction_percent        | 30.0                 |
       | customer                 | bob_johnson          |
@@ -112,7 +112,7 @@ Feature: Customer using discount with single customer eligibility
       | name[en-US]              | Public Summer Sale  |
       | active                   | true                |
       | valid_from               | 2025-01-01 00:00:00 |
-      | valid_to                 | 2025-12-31 23:59:59 |
+      | valid_to                 | 2026-12-31 23:59:59 |
       | code                     | SUMMER_10           |
       | reduction_percent        | 10.0                |
       | total_quantity           | 100                 |
@@ -146,7 +146,7 @@ Feature: Customer using discount with single customer eligibility
       | name[en-US]              | Free Shipping for Jane |
       | active                   | true                   |
       | valid_from               | 2025-01-01 00:00:00    |
-      | valid_to                 | 2025-12-31 23:59:59    |
+      | valid_to                 | 2026-12-31 23:59:59    |
       | code                     | FREESHIP_JANE          |
       | customer                 | jane_smith             |
       | total_quantity           | 100                    |

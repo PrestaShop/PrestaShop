@@ -35,6 +35,7 @@ use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Configuration;
 use Context;
+use Currency;
 use FrontController;
 use Order;
 use OrderInvoice;
@@ -45,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscount
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand;
@@ -110,6 +112,26 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $adminControllerTestDouble->controller_type = 'admin';
         $adminControllerTestDouble->php_self = 'dummyTestDouble';
         Context::getContext()->controller = $adminControllerTestDouble;
+    }
+
+    /**
+     * @Given I change for the order :orderReference the currency :oldCurrency to :newCurrency
+     *
+     * @param string $orderReference
+     * @param string $oldCurrency
+     * @param string $newCurrency
+     */
+    public function changeOrderCurrency(string $orderReference, string $oldCurrency, string $newCurrency): void
+    {
+        $oldCurrencyId = Currency::getIdByIsoCode($oldCurrency, 0, true);
+        $newCurrencyId = Currency::getIdByIsoCode($newCurrency, 0, true);
+
+        $this->getCommandBus()->handle(
+            new ChangeOrderCurrencyCommand(
+                (int) SharedStorage::getStorage()->get($orderReference),
+                $newCurrencyId
+            )
+        );
     }
 
     /**

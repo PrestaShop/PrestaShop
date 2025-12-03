@@ -62,6 +62,7 @@ use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountConditionsType;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountCustomerEligibilityChoiceType;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountProductSegmentType;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountUsabilityModeType;
+use PrestaShopBundle\Form\Admin\Sell\Discount\ProductConditionsType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
@@ -100,6 +101,7 @@ class DiscountFormDataProvider implements FormDataProviderInterface
             'customer_eligibility' => [
                 'eligibility' => [
                     'children_selector' => DiscountCustomerEligibilityChoiceType::ALL_CUSTOMERS,
+                    DiscountCustomerEligibilityChoiceType::CUSTOMER_GROUPS => [],
                     DiscountCustomerEligibilityChoiceType::SINGLE_CUSTOMER => [],
                 ],
             ],
@@ -110,6 +112,17 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                 ],
                 'compatibility' => $this->getCompatibilityData(),
                 'priority' => 1,
+            ],
+            'conditions' => [
+                DiscountConditionsType::PRODUCT_CONDITIONS => [
+                    'children_selector' => ProductConditionsType::NONE,
+                ],
+                DiscountConditionsType::CART_CONDITIONS => [
+                    'children_selector' => ProductConditionsType::NONE,
+                ],
+                DiscountConditionsType::DELIVERY_CONDITIONS => [
+                    'children_selector' => ProductConditionsType::NONE,
+                ],
             ],
         ];
     }
@@ -136,26 +149,25 @@ class DiscountFormDataProvider implements FormDataProviderInterface
             || !empty($productSegment[DiscountProductSegmentType::FEATURES]['groups'])
         ;
 
-        $selectedCondition = null;
-        $selectedCartCondition = null;
-        $selectedDeliveryCondition = null;
+        $selectedProductCondition = ProductConditionsType::NONE;
+        $selectedCartCondition = CartConditionsType::NONE;
+        $selectedDeliveryCondition = DeliveryConditionsType::NONE;
+
+        if (!empty($specificProducts)) {
+            $selectedProductCondition = ProductConditionsType::SPECIFIC_PRODUCTS;
+        } elseif ($productSegmentDefined) {
+            $selectedProductCondition = ProductConditionsType::PRODUCT_SEGMENT;
+        }
+
         if ($discountForEditing->getMinimumProductQuantity()) {
-            $selectedCondition = DiscountConditionsType::CART_CONDITIONS;
             $selectedCartCondition = CartConditionsType::MINIMUM_PRODUCT_QUANTITY;
         } elseif ($discountForEditing->getMinimumAmount()) {
-            $selectedCondition = DiscountConditionsType::CART_CONDITIONS;
             $selectedCartCondition = CartConditionsType::MINIMUM_AMOUNT;
-        } elseif (!empty($specificProducts)) {
-            $selectedCondition = DiscountConditionsType::CART_CONDITIONS;
-            $selectedCartCondition = CartConditionsType::SPECIFIC_PRODUCTS;
-        } elseif ($productSegmentDefined) {
-            $selectedCondition = DiscountConditionsType::CART_CONDITIONS;
-            $selectedCartCondition = CartConditionsType::PRODUCT_SEGMENT;
-        } elseif (!empty($discountForEditing->getCarrierIds())) {
-            $selectedCondition = DiscountConditionsType::DELIVERY_CONDITIONS;
+        }
+
+        if (!empty($discountForEditing->getCarrierIds())) {
             $selectedDeliveryCondition = DeliveryConditionsType::CARRIERS;
         } elseif (!empty($discountForEditing->getCountryIds())) {
-            $selectedCondition = DiscountConditionsType::DELIVERY_CONDITIONS;
             $selectedDeliveryCondition = DeliveryConditionsType::COUNTRY;
         }
 
@@ -164,6 +176,7 @@ class DiscountFormDataProvider implements FormDataProviderInterface
             'information' => [
                 'discount_type' => $discountForEditing->getType()->getValue(),
                 'names' => $discountForEditing->getLocalizedNames(),
+                'description' => $discountForEditing->getDescription(),
             ],
             'value' => [
                 'reduction' => [
@@ -184,7 +197,11 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                 ],
             ],
             'conditions' => [
-                'children_selector' => $selectedCondition,
+                DiscountConditionsType::PRODUCT_CONDITIONS => [
+                    'children_selector' => $selectedProductCondition,
+                    'specific_products' => $specificProducts,
+                    ProductConditionsType::PRODUCT_SEGMENT => $productSegment,
+                ],
                 DiscountConditionsType::CART_CONDITIONS => [
                     'children_selector' => $selectedCartCondition,
                     'minimum_product_quantity' => $discountForEditing->getMinimumProductQuantity(),
@@ -193,8 +210,6 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                         'currency' => $discountForEditing->getMinimumAmountCurrencyId(),
                         'include_tax' => $discountForEditing->getMinimumAmountTaxIncluded(),
                     ],
-                    'specific_products' => $specificProducts,
-                    CartConditionsType::PRODUCT_SEGMENT => $productSegment,
                 ],
                 DiscountConditionsType::DELIVERY_CONDITIONS => [
                     'children_selector' => $selectedDeliveryCondition,
@@ -434,39 +449,39 @@ class DiscountFormDataProvider implements FormDataProviderInterface
     private function getCustomerEligibilityData(DiscountForEditing $discountForEditing): array
     {
         $customerId = $discountForEditing->getCustomerId();
+        $customerGroupIds = $discountForEditing->getCustomerGroupIds();
 
-        if (!$customerId) {
-            return [
-                'children_selector' => DiscountCustomerEligibilityChoiceType::ALL_CUSTOMERS,
-                DiscountCustomerEligibilityChoiceType::SINGLE_CUSTOMER => [],
-            ];
-        }
-
-        try {
-            $customer = $this->customerRepository->get(new CustomerId($customerId));
-        } catch (CustomerNotFoundException $e) {
-            return [
-                'children_selector' => DiscountCustomerEligibilityChoiceType::ALL_CUSTOMERS,
-                DiscountCustomerEligibilityChoiceType::SINGLE_CUSTOMER => [],
-            ];
-        }
-
-        $fullnameAndEmail = sprintf(
-            '%s %s - %s',
-            $customer->firstname,
-            $customer->lastname,
-            $customer->email
-        );
-
-        return [
-            'children_selector' => DiscountCustomerEligibilityChoiceType::SINGLE_CUSTOMER,
-            DiscountCustomerEligibilityChoiceType::SINGLE_CUSTOMER => [
-                [
-                    'id_customer' => $customerId,
-                    'fullname_and_email' => $fullnameAndEmail,
-                ],
-            ],
+        $data = [
+            'children_selector' => DiscountCustomerEligibilityChoiceType::ALL_CUSTOMERS,
+            DiscountCustomerEligibilityChoiceType::CUSTOMER_GROUPS => [],
+            DiscountCustomerEligibilityChoiceType::SINGLE_CUSTOMER => [],
         ];
+
+        if (!empty($customerGroupIds)) {
+            $data['children_selector'] = DiscountCustomerEligibilityChoiceType::CUSTOMER_GROUPS;
+            $data[DiscountCustomerEligibilityChoiceType::CUSTOMER_GROUPS] = $customerGroupIds;
+        } elseif ($customerId) {
+            try {
+                $customer = $this->customerRepository->get(new CustomerId($customerId));
+                $fullnameAndEmail = sprintf(
+                    '%s %s - %s',
+                    $customer->firstname,
+                    $customer->lastname,
+                    $customer->email
+                );
+
+                $data['children_selector'] = DiscountCustomerEligibilityChoiceType::SINGLE_CUSTOMER;
+                $data[DiscountCustomerEligibilityChoiceType::SINGLE_CUSTOMER] = [
+                    [
+                        'id_customer' => $customerId,
+                        'fullname_and_email' => $fullnameAndEmail,
+                    ],
+                ];
+            } catch (CustomerNotFoundException $e) {
+            }
+        }
+
+        return $data;
     }
 
     /**

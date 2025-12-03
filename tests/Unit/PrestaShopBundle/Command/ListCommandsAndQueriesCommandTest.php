@@ -145,7 +145,7 @@ class ListCommandsAndQueriesCommandTest extends TestCase
     {
         // Create a real core ApiClient GET operation
         $getCoreOperation = new Get(
-            uriTemplate: '/api-client/infos',
+            uriTemplate: '/api-clients/infos',
             extraProperties: [
                 'CQRSQuery' => 'PrestaShop\PrestaShop\Core\Domain\ApiClient\Query\GetApiClientForEditing',
             ]
@@ -188,7 +188,7 @@ class ListCommandsAndQueriesCommandTest extends TestCase
         $output = $commandTester->getDisplay();
 
         // Verify the core ApiClient endpoint is correctly detected
-        $this->assertStringContainsString('GET /api-client/infos', $output);
+        $this->assertStringContainsString('GET /api-clients/infos', $output);
         $this->assertStringContainsString('GetApiClientForEditing', $output);
         $this->assertStringContainsString('PrestaShop\PrestaShop\Core\Domain\ApiClient\Query\GetApiClientForEditing', $output);
     }

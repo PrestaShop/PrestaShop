@@ -22,7 +22,7 @@ import {expect} from 'chai';
 
 const baseContext: string = 'functional_API_endpoints_customerGroup_putCustomerGroupsId';
 
-describe('API : PUT /customers/group/{customerGroupId}', async () => {
+describe('API : PUT /customers/groups/{customerGroupId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -139,10 +139,10 @@ describe('API : PUT /customers/group/{customerGroupId}', async () => {
   });
 
   describe('API : Update the Customer Group', async () => {
-    it('should request the endpoint /customers/group/{customerGroupId}', async function () {
+    it('should request the endpoint /customers/groups/{customerGroupId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.put(`customers/group/${idCustomerGroup}`, {
+      const apiResponse = await apiContext.put(`customers/groups/${idCustomerGroup}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

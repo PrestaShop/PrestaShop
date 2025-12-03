@@ -23,7 +23,7 @@ Feature: Discount priority - Creation date ordering
       | active            | true                   |
       | priority          | 1                      |
       | valid_from        | 2025-01-01 10:00:00    |
-      | valid_to          | 2025-12-31 23:59:59    |
+      | valid_to          | 2026-12-31 23:59:59    |
       | code              | OLDER_PCT              |
       | reduction_percent | 15.0                   |
     And I set compatible types for discount "older_percent" to:
@@ -34,7 +34,7 @@ Feature: Discount priority - Creation date ordering
       | active             | true                  |
       | priority           | 1                     |
       | valid_from         | 2025-01-01 10:00:00   |
-      | valid_to           | 2025-12-31 23:59:59   |
+      | valid_to           | 2026-12-31 23:59:59   |
       | code               | NEWER_AMT             |
       | reduction_amount   | 25.0                  |
       | reduction_currency | usd                   |
@@ -65,7 +65,7 @@ Feature: Discount priority - Creation date ordering
       | active             | true                      |
       | priority           | 1                         |
       | valid_from         | 2025-01-01 10:00:00       |
-      | valid_to           | 2025-12-31 23:59:59       |
+      | valid_to           | 2026-12-31 23:59:59       |
       | code               | OLDER_AMT_IC              |
       | reduction_amount   | 35.0                      |
       | reduction_currency | usd                       |
@@ -78,7 +78,7 @@ Feature: Discount priority - Creation date ordering
       | active            | true                       |
       | priority          | 1                          |
       | valid_from        | 2025-01-01 10:00:00        |
-      | valid_to          | 2025-12-31 23:59:59        |
+      | valid_to          | 2026-12-31 23:59:59        |
       | code              | NEWER_PCT_IC               |
       | reduction_percent | 25.0                       |
     And I set compatible types for discount "newer_percent_incompat" to:

@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -41,26 +42,20 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @var string
-     */
-    private $employeeIdLang;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param string $employeeIdLang
+     * @param LanguageContext $languageContext
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        string $employeeIdLang
+        private LanguageContext $languageContext
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->employeeIdLang = $employeeIdLang;
     }
 
     /**
@@ -126,7 +121,7 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
             'a.`id_attachment` = virtual_product_attachment.`id_attachment`');
 
         $qb->andWhere('al.`id_lang` = :employee_id_lang');
-        $qb->setParameter('employee_id_lang', $this->employeeIdLang);
+        $qb->setParameter('employee_id_lang', $this->languageContext->getId());
         $this->applyFilters($qb, $filters);
 
         return $qb;

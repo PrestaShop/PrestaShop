@@ -26,8 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Container;
 
+use PrestaShop\PrestaShop\Adapter\Module\Repository\CachedModuleRepository;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -81,7 +84,15 @@ class ContainerParametersExtension implements ContainerBuilderExtensionInterface
         $container->setParameter('kernel.cache_dir', $this->environment->getCacheDir());
 
         // Init the active modules
-        $moduleRepository = new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_);
+        if ($this->environment->getName() === 'test') {
+            $cache = new NullAdapter();
+        } else {
+            $cache = new FilesystemAdapter('modules', 0, $this->environment->getCacheDir());
+        }
+        $moduleRepository = new CachedModuleRepository(
+            new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_),
+            $cache
+        );
         $activeModules = $moduleRepository->getActiveModules();
         /* @deprecated kernel.active_modules is deprecated. Use prestashop.active_modules instead. */
         $container->setParameter('kernel.active_modules', $activeModules);

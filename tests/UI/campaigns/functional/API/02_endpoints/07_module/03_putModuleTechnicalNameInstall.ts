@@ -20,7 +20,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_module_putModuleTechnicalNameInstall';
 
-describe('API : PUT /module/{technicalName}/install', async () => {
+describe('API : PUT /modules/{technicalName}/install', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -76,12 +76,12 @@ describe('API : PUT /module/{technicalName}/install', async () => {
     });
   });
 
-  describe('API : PUT /module/{technicalName}/install', async () => {
+  describe('API : PUT /modules/{technicalName}/install', async () => {
     // Upload the module before installing
-    it('should request the endpoint /module/upload-source', async function () {
+    it('should request the endpoint /modules/upload-source', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointUploadSource', baseContext);
 
-      const apiResponse = await apiContext.post('module/upload-source', {
+      const apiResponse = await apiContext.post('modules/upload-source', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -94,10 +94,10 @@ describe('API : PUT /module/{technicalName}/install', async () => {
       expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
     });
 
-    it('should request the endpoint /module/{technicalName}/install', async function () {
+    it('should request the endpoint /modules/{technicalName}/install', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.put(`module/${dataModules.keycloak.tag}/install`, {
+      const apiResponse = await apiContext.put(`modules/${dataModules.keycloak.tag}/install`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

@@ -26,6 +26,10 @@
 
 {% block content %}
   {% block discount_listing %}
+    {{ include('@PrestaShop/Admin/Common/Grid/Blocks/filter_link_group.html.twig', {
+      grid: discountGrid,
+      filter_name: 'period_filter',
+    }) }}
     {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: discountGrid}) }}
   {% endblock %}
 

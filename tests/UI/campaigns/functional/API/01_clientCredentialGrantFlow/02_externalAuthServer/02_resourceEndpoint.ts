@@ -203,10 +203,10 @@ describe('API : External Auth Server - Resource Endpoint', async () => {
       databaseDynamicID = apiClient.apiClientId;
     });
 
-    it('should request the endpoint /api-client/{apiClientId} with valid access token', async function () {
+    it('should request the endpoint /api-clients/{apiClientId} with valid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestSingleEndpointWithValidAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get(`api-client/${databaseDynamicID}`, {
+      const apiResponse = await apiContext.get(`api-clients/${databaseDynamicID}`, {
         headers: {
           Authorization: `Bearer ${accessTokenKeycloak}`,
         },

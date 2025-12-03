@@ -33,16 +33,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DiscountCustomerEligibilityType extends TranslatorAwareType
 {
-    public const ALL_CUSTOMERS = 'all_customers';
-    public const CUSTOMER_GROUPS = 'customer_groups';
-    public const SINGLE_CUSTOMER = 'single_customer';
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('eligibility', DiscountCustomerEligibilityChoiceType::class, [
-                'required' => false,
-            ])
+            ->add('eligibility', DiscountCustomerEligibilityChoiceType::class)
         ;
     }
 

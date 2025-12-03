@@ -56,14 +56,32 @@ class CustomerAddressPersisterCore
         return true;
     }
 
+    /*
+     * Saves or updates an address for the current customer.
+     */
     public function save(Address $address, $token)
     {
+        /*
+         * First, we need to validate if the customer is allowed to change this address.
+         * It must belong to him and the token must match.
+         */
         if (!$this->authorizeChange($address, $token)) {
             return false;
         }
 
+        /*
+         * Ensure the address is linked to the current customer.
+         * We check this in authorizeChange already, but here we set it for new addresses,
+         * that don't have id_customer set yet.
+         */
         $address->id_customer = $this->customer->id;
 
+        /*
+         * If the address has already been used in a placed order,
+         * we cannot update it directly, we need to create copy instead.
+         *
+         * Otherwise, just call a regular save().
+         */
         if ($address->isUsed()) {
             return $this->updateUsedAddress($address);
         }
@@ -71,19 +89,28 @@ class CustomerAddressPersisterCore
         return $address->save();
     }
 
+    /*
+     * Handles deletion of an address for the current customer from my account zone
+     * or during checkout.
+     */
     public function delete(Address $address, $token)
     {
         if (!$this->authorizeChange($address, $token)) {
             return false;
         }
 
-        // We mark the address ID we are deleting
+        // First, we mark the address ID we are deleting, we will need it to update a cart
         $id = $address->id;
+
+        /*
+         * And run the deletion process. The address may be hard or soft deleted, depending
+         * on whether it has been used in orders already.
+         */
         $ok = $address->delete();
 
         /*
          * If the address was successfully deleted, we need to update the current cart.
-         * Deleted address ID was already unassigned from all non-ordered carts in the database in delete() method,
+         * Deleted address ID was already unassigned from all non-ordered carts in the database in Address:delete() method,
          * but we can still have the deleted ID assigned in context->cart.
          */
         if ($ok) {
@@ -95,10 +122,9 @@ class CustomerAddressPersisterCore
             if ($this->cart->id_address_delivery == $id) {
                 unset($this->cart->id_address_delivery);
             }
-            $this->cart->updateAddressId(
-                $id,
-                Address::getFirstCustomerAddressId($this->customer->id)
-            );
+
+            // Now we update the cart to use another address (the first one) instead of the deleted one
+            $this->cart->updateAddressId($id, Address::getFirstCustomerAddressId($this->customer->id));
         }
 
         return $ok;
@@ -115,16 +141,27 @@ class CustomerAddressPersisterCore
      */
     private function updateUsedAddress(Address $address)
     {
-        $old_address = new Address($address->id);
+        // We load the current data of this address
+        $oldAddress = new Address($address->id);
+
+        // Reset the ID to create a new address
         $address->id = $address->id_address = null;
 
-        if ($address->save() && $old_address->delete()) {
+        // Save the new address and delete the old one
+        if ($address->save() && $oldAddress->delete()) {
             /*
-             * If the address was successfully changed, we need to update the current cart.
-             * Old address ID was already unassigned from all non-ordered carts in the database in delete() method,
+             * If the address was successfully changed, we need to update the current cart. Old address ID
+             * was already unassigned from all non-ordered carts in the database in Address:delete() method,
              * but we can still have the deleted ID assigned in context->cart.
+             *
+             * Please note that even if we assign a new address ID to the cart here, if the cart is not saved
+             * later and the customer logs out and logs in again, the cart may receive Address::getFirstCustomerAddressId
+             * instead of this $address->id.
+             *
+             * In PrestaShop, we don't have any functionality to remember which address was last used in the cart,
+             * if the cart is not saved.
              */
-            $this->cart->updateAddressId($old_address->id, $address->id);
+            $this->cart->updateAddressId($oldAddress->id, $address->id);
 
             return true;
         }

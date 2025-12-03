@@ -115,7 +115,6 @@
       <trans-unit id="5deec35f9bfc92d125dfaf8dccc39308">
         <source>Add categories</source>
         <target>Add categories</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Category/CategoriesType.php [Line: 83]</note>
       </trans-unit>
       <trans-unit id="643202d7ee8cb01d888e058b5341455a">
         <source>Add condition</source>
@@ -155,7 +154,7 @@
       <trans-unit id="d0d4e3688fdaee5afa292083b855e143">
         <source>Add new category</source>
         <target>Add new category</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 819]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 813]</note>
       </trans-unit>
       <trans-unit id="5f46be79c24b6cde1ff2176a2ce917e9">
         <source>Add new feature</source>
@@ -180,7 +179,7 @@
       <trans-unit id="5f573e91e5eaa092e00a4c4df393c0cb">
         <source>Add new root category</source>
         <target>Add new root category</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 802]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 796]</note>
       </trans-unit>
       <trans-unit id="094ada406018db9fe3601b65e7502c82">
         <source>Add new supplier</source>
@@ -310,7 +309,7 @@
       <trans-unit id="0e010c6b3fb88bf4277c880d1657787a">
         <source>Attribute group</source>
         <target>Attribute group</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 88]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 71]</note>
       </trans-unit>
       <trans-unit id="1caa6ff629641a4eb20f190f7a0539ca">
         <source>Attribute name</source>
@@ -487,6 +486,11 @@
         <target>Choose a value or provide a customized one</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Details/FeaturesType.php [Line: 94]</note>
       </trans-unit>
+      <trans-unit id="b58a3d4efee900d4f1d572e4483bf5cc">
+        <source>Choose categories</source>
+        <target>Choose categories</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Category/CategoriesType.php [Line: 77]</note>
+      </trans-unit>
       <trans-unit id="7e7371345a3de6936d16388f2f1315e2">
         <source>Choose the suppliers associated with this product</source>
         <target>Choose the suppliers associated with this product</target>
@@ -570,7 +574,7 @@
       <trans-unit id="9e2941b3c81256fac10392aaca4ccfde">
         <source>Condition</source>
         <target>Condition</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 119]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 120]</note>
       </trans-unit>
       <trans-unit id="e43e4f8aab3dbe1127082747a86a2120">
         <source>Condition group</source>
@@ -685,7 +689,7 @@
       <trans-unit id="a17f5bc22553d897f6363867c0165256">
         <source>Default category</source>
         <target>Default category</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Category/CategoriesType.php [Line: 79]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Category/CategoriesType.php [Line: 85]</note>
       </trans-unit>
       <trans-unit id="7c52393eaa879dd8c3081f4c3c847846">
         <source>Default combination</source>
@@ -860,7 +864,7 @@
       <trans-unit id="e92cfa244b5eb9025d07522080468445">
         <source>Ecotax</source>
         <target>Ecotax</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 77]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 78]</note>
       </trans-unit>
       <trans-unit id="4fc9f49cb85af9ba5caab7747fe35846">
         <source>Ecotax (tax excl.)</source>
@@ -890,7 +894,7 @@
       <trans-unit id="31b301a8c6227ac735de084114f6fc36">
         <source>Edit category</source>
         <target>Edit category</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 795]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 789]</note>
       </trans-unit>
       <trans-unit id="67807cb1dab01895451b62f4d07b395e">
         <source>Edit combination: </source>
@@ -960,7 +964,7 @@
       <trans-unit id="9fc6bd144fcd9f843fe8a7985eb8111c">
         <source>Enter the keywords that customers might search for when looking for this product.</source>
         <target>Enter the keywords that customers might search for when looking for this product.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 198]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 200]</note>
       </trans-unit>
       <trans-unit id="9b2fb753b169b94ab4de6a97d81e18d2">
         <source>Enter threshold value</source>
@@ -1065,7 +1069,7 @@
       <trans-unit id="1dec4f55522b828fe5dacf8478021a9e">
         <source>Friendly URL</source>
         <target>Friendly URL</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 170]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 172]</note>
       </trans-unit>
       <trans-unit id="fc7b398d4af2074cfe73febdb5971153">
         <source>From quantity</source>
@@ -1235,7 +1239,7 @@
       <trans-unit id="926b7b9f596e468ebce7da2c42c1e27c">
         <source>Improve your ranking and how your product page will appear in search engines results.</source>
         <target>Improve your ranking and how your product page will appear in search engines results.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 265]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 267]</note>
       </trans-unit>
       <trans-unit id="aac247ca22789872bad95dc8f6c45d37">
         <source>Increase</source>
@@ -1455,12 +1459,12 @@
       <trans-unit id="3f64b2beede1082fd32ddb0bf11a641f">
         <source>Meta description</source>
         <target>Meta description</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 141]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 143]</note>
       </trans-unit>
       <trans-unit id="9e11e4b371570340ca07913bc4783a7a">
         <source>Meta title</source>
         <target>Meta title</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 112]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 114]</note>
       </trans-unit>
       <trans-unit id="9f6e99bdd4184b83dc478d0ab1b4cbf7">
         <source>Minimum amount</source>
@@ -1860,7 +1864,7 @@
       <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
         <source>Reference</source>
         <target>Reference</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 187]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 192]</note>
       </trans-unit>
       <trans-unit id="d95867deadfe690e40f42068d6b59df8">
         <source>References</source>
@@ -1935,7 +1939,7 @@
       <trans-unit id="d88946b678e4c2f251d4e292e8142291">
         <source>SEO</source>
         <target>SEO</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 262]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 264]</note>
       </trans-unit>
       <trans-unit id="76e2082ba7b0d7b16661f4996549a675">
         <source>Save list</source>
@@ -1965,7 +1969,7 @@
       <trans-unit id="817161b30a911b973d46b87f939ecc58">
         <source>Search engine optimization</source>
         <target>Search engine optimization</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 263]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 265]</note>
       </trans-unit>
       <trans-unit id="11f460b8c2fddf1d1448d03266f3a408">
         <source>Search for attributes...</source>
@@ -2165,7 +2169,7 @@
       <trans-unit id="290612199861c31d1036b185b4e69b75">
         <source>Summary</source>
         <target>Summary</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 102]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 103]</note>
       </trans-unit>
       <trans-unit id="8284ae5df53e6e7ffc1f2cc67ae68765">
         <source>Supplier reference</source>
@@ -2180,7 +2184,7 @@
       <trans-unit id="189f63f277cd73395561651753563065">
         <source>Tags</source>
         <target>Tags</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 196]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 198]</note>
       </trans-unit>
       <trans-unit id="f66b691f01d53d5af582136ebb63cfc5">
         <source>Target category</source>
@@ -2485,7 +2489,7 @@
       <trans-unit id="bb7c46b779f6ba64d687ce4574510fc3">
         <source>[1]Manage all tags[/1]</source>
         <target>[1]Manage all tags[/1]</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 206]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 208]</note>
       </trans-unit>
       <trans-unit id="80a89ee0da3159377ac824c758b54f01">
         <source>[1]Manage catalog price rules[/1]</source>
@@ -2550,7 +2554,7 @@
       <trans-unit id="fc1ff5390ecc7efd695f697f3d6b7e4b">
         <source>product(s)</source>
         <target>product(s)</target>
-        <note>File: src/Core/Grid/Data/Factory/AttachmentGridDataFactoryDecorator.php [Line: 128]</note>
+        <note>File: src/Core/Grid/Data/Factory/AttachmentGridDataFactoryDecorator.php [Line: 99]</note>
       </trans-unit>
       <trans-unit id="e2e79605fc9450ec17957cf0e910f5c6">
         <source>tax incl.</source>

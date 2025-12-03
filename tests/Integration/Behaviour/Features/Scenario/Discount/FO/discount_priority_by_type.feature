@@ -24,7 +24,7 @@ Feature: Discount priority by type
             | active            | true                |
             | priority          | 5                   |
             | valid_from        | 2025-01-01 10:00:00 |
-            | valid_to          | 2025-12-31 23:59:59 |
+            | valid_to          | 2026-12-31 23:59:59 |
             | code              | PROD10              |
             | reduction_percent | 10.0                |
             | reduction_product | -1                  |
@@ -37,7 +37,7 @@ Feature: Discount priority by type
             | active             | true                |
             | priority           | 1                   |
             | valid_from         | 2025-01-01 10:00:00 |
-            | valid_to           | 2025-12-31 23:59:59 |
+            | valid_to           | 2026-12-31 23:59:59 |
             | code               | CART20              |
             | reduction_amount   | 20.0                |
             | reduction_currency | usd                 |
@@ -85,7 +85,7 @@ Feature: Discount priority by type
             | active            | true                    |
             | priority          | 3                       |
             | valid_from        | 2025-01-01 10:00:00     |
-            | valid_to          | 2025-12-31 23:59:59     |
+            | valid_to          | 2026-12-31 23:59:59     |
             | code              | PROD5                   |
             | reduction_percent | 5.0                     |
             | reduction_product | -1                      |
@@ -98,7 +98,7 @@ Feature: Discount priority by type
             | active             | true                   |
             | priority           | 2                      |
             | valid_from         | 2025-01-01 10:00:00    |
-            | valid_to           | 2025-12-31 23:59:59    |
+            | valid_to           | 2026-12-31 23:59:59    |
             | code               | CART10                 |
             | reduction_amount   | 10.0                   |
             | reduction_currency | usd                    |
@@ -113,7 +113,7 @@ Feature: Discount priority by type
             | active             | true                  |
             | priority           | 4                     |
             | valid_from         | 2025-01-01 10:00:00   |
-            | valid_to           | 2025-12-31 23:59:59   |
+            | valid_to           | 2026-12-31 23:59:59   |
             | code               | CART5                 |
             | reduction_amount   | 5.0                   |
             | reduction_currency | usd                   |
@@ -128,7 +128,7 @@ Feature: Discount priority by type
             | active      | true                   |
             | priority    | 1                      |
             | valid_from  | 2025-01-01 10:00:00    |
-            | valid_to    | 2025-12-31 23:59:59    |
+            | valid_to    | 2026-12-31 23:59:59    |
             | code        | FREESHIP               |
         And I set compatible types for discount "free_ship_prio1" to:
             | product_level |

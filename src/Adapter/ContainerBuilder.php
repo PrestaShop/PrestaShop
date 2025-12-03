@@ -36,11 +36,15 @@ use PrestaShop\PrestaShop\Adapter\Container\DoctrineBuilderExtension;
 use PrestaShop\PrestaShop\Adapter\Container\LegacyContainer;
 use PrestaShop\PrestaShop\Adapter\Container\LegacyContainerBuilder;
 use PrestaShop\PrestaShop\Adapter\Doctrine\FrontDoctrineProxyWarmer;
+use PrestaShop\PrestaShop\Adapter\Module\Repository\CachedModuleRepository;
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\Exception\ServiceContainerException;
 use PrestaShopBundle\PrestaShopBundle;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\FileResource;
@@ -49,11 +53,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-/**
- * Build the Container for PrestaShop Legacy.
- *
- * @deprecated since 9.0. Please use SymfonyContainer instead.
- */
 class ContainerBuilder
 {
     /**
@@ -137,11 +136,20 @@ class ContainerBuilder
         // them at each container creation, this can't be compiled.
         $this->loadDoctrineAnnotationMetadata();
 
+        if ($this->environment->getName() === 'test') {
+            $cache = new NullAdapter();
+        } else {
+            $cache = new FilesystemAdapter('modules', 0, _PS_CACHE_DIR_);
+        }
+        $moduleRepository = new CachedModuleRepository(
+            new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_),
+            $cache
+        );
+        $this->loadModulesAutoloader($moduleRepository->getInstalledModules());
+
         $container = $this->loadDumpedContainer();
         if (null === $container) {
             $container = $this->compileContainer();
-        } else {
-            $this->loadModulesAutoloader($container);
         }
 
         // synthetic definitions can't be compiled
@@ -190,7 +198,7 @@ class ContainerBuilder
         }
 
         $this->loadServicesFromConfig($container);
-        $this->loadModulesAutoloader($container);
+        $this->loadModulesAutoloader($container->getParameter('prestashop.installed_modules'));
         $container->compile();
 
         if ($this->environment->isDebug() === false) {
@@ -247,13 +255,12 @@ class ContainerBuilder
      * be done in a compiler pass because they are only executed on compilation and this needs to
      * be done at each container instanciation.
      *
-     * @param ContainerInterface $container
+     * @param array $installedModules
      *
      * @throws Exception
      */
-    private function loadModulesAutoloader(ContainerInterface $container)
+    private function loadModulesAutoloader(array $installedModules)
     {
-        $installedModules = $container->getParameter('prestashop.installed_modules');
         /** @var array<string> $installedModules */
         foreach ($installedModules as $module) {
             $autoloader = _PS_MODULE_DIR_ . $module . '/vendor/autoload.php';

@@ -58,6 +58,22 @@ class DefaultLanguageValidator extends ConstraintValidator
             }
         }
 
+        // If allowNull is false and value is null, we should build a violation instead of throwing an exception
+        if (null === $value) {
+            $fieldName = $constraint->fieldName;
+            if (empty($fieldName) && $this->context->getObject() instanceof Form) {
+                $fieldName = $this->context->getObject()->getName();
+            }
+
+            $this->context->buildViolation($constraint->message)
+                ->setTranslationDomain('Admin.Notifications.Error')
+                ->setParameter('%field_name%', $fieldName)
+                ->addViolation()
+            ;
+
+            return;
+        }
+
         if (!is_array($value)) {
             throw new UnexpectedTypeException($value, 'array');
         }

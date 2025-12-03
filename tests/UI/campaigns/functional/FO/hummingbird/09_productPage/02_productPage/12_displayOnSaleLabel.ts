@@ -20,7 +20,7 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_displayOnSaleLabel';
 
-describe('FO - Product page - Product page : Display on sale label', async () => {
+describe('FO - Product page - Product page : Display "On sale" label', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let productsNumber: number;

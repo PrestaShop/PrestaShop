@@ -2169,6 +2169,10 @@ class AdminTranslationsControllerCore extends AdminController
             );
         }
 
+        if (!empty($arr_return['files'])) {
+            ksort($arr_return['files']);
+        }
+
         return $arr_return;
     }
 
@@ -2448,6 +2452,10 @@ class AdminTranslationsControllerCore extends AdminController
                     }
                 }
             }
+        }
+
+        if (!empty($arr_modules)) {
+            ksort($arr_modules);
         }
 
         return $arr_modules;

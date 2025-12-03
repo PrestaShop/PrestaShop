@@ -427,14 +427,14 @@ class CQRSApiSerializerTest extends KernelTestCase
 
         $hook = new Hook();
         $hook->hookId = 1;
-        $hook->active = true;
+        $hook->enabled = true;
         $hook->name = 'testHook';
         $hook->title = 'testHookTitle';
         $hook->description = '';
         yield 'denormalize an APIPlatform DTO with specified mapping' => [
             [
                 'id_hook' => 1,
-                'active' => true,
+                'enabled' => true,
                 'name' => 'testHook',
                 'title' => 'testHookTitle',
                 'description' => '',

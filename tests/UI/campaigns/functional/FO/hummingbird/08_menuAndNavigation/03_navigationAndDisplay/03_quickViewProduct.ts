@@ -26,7 +26,7 @@ quick view the product demo_14 and check information
 Post-condition:
 - Uninstall the theme hummingbird
  */
-describe('FO - Navigation and display : Quick view products', async () => {
+describe('FO - Menu and Navigation - Navigate and display : Quickview of product', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 

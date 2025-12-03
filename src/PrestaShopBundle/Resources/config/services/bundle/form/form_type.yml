@@ -439,6 +439,10 @@ services:
     arguments:
       $featuresChoiceProvider: '@prestashop.adapter.form.choice_provider.features_choice_provider'
 
+  PrestaShopBundle\Form\Admin\Sell\Discount\DiscountCustomerEligibilityChoiceType:
+    arguments:
+      $groupByIdChoiceProvider: '@prestashop.core.form.choice_provider.group_by_id'
+
   PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType:
     arguments:
       $defaultCategoryChoiceProvider: '@prestashop.adapter.form.choice_provider.product_default_category_choice_provider'
@@ -707,3 +711,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Order\Shipment\SplitShipmentType: ~
 
   PrestaShopBundle\Form\Admin\Sell\Order\Shipment\EditShipmentType: ~
+
+  PrestaShopBundle\Form\Admin\Configure\ShopParameters\Tag\TagType:
+    arguments:
+      $languagesChoices: '@=service("prestashop.core.form.choice_provider.all_languages").getChoices()'

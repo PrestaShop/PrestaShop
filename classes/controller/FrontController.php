@@ -256,11 +256,6 @@ class FrontControllerCore extends Controller
             $this->display_footer = false;
         }
 
-        // If account created with the 2 steps register process, remove 'account_created' from cookie
-        if (isset($this->context->cookie->account_created)) {
-            unset($this->context->cookie->account_created);
-        }
-
         ob_start();
 
         // Initialize URL provider in context, depending on SSL mode

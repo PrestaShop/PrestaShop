@@ -82,8 +82,8 @@ describe('API : GET /languages', async () => {
           'locale',
           'dateFormat',
           'dateTimeFormat',
-          'isRtl',
-          'active',
+          'rtl',
+          'enabled',
           'flag',
         );
       }
@@ -160,7 +160,7 @@ describe('API : GET /languages', async () => {
         expect(langDateTimeFormat).to.equal(jsonResponse.items[idxItem].dateTimeFormat);
 
         const langActive = await boLanguagesPage.getStatus(page, 1);
-        expect(langActive).to.equal(jsonResponse.items[idxItem].active);
+        expect(langActive).to.equal(jsonResponse.items[idxItem].enabled);
 
         const langFlag = await boLanguagesPage.getImgSrc(page, 1);
         expect(langFlag.split('?')[0]).to.equal(jsonResponse.items[idxItem].flag.split('?')[0]);
@@ -172,7 +172,7 @@ describe('API : GET /languages', async () => {
         expect(pageTitleEdit).to.contains(boLanguagesCreatePage.pageEditTitle);
 
         const langIsRTL = await boLanguagesCreatePage.isRTL(page);
-        expect(langIsRTL).to.equal(jsonResponse.items[idxItem].isRtl);
+        expect(langIsRTL).to.equal(jsonResponse.items[idxItem].rtl);
 
         // Return languages tab
         await boLocalizationPage.goToSubTabLanguages(page);

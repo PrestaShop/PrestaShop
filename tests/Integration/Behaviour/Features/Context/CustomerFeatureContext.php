@@ -66,6 +66,19 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^customer "(.+)" belongs to group "(.+)"$/
+     */
+    public function assignCustomerToGroup(string $customerReference, string $groupReference): void
+    {
+        $customerId = SharedStorage::getStorage()->get($customerReference);
+        $groupId = SharedStorage::getStorage()->get($groupReference);
+
+        $customer = new Customer($customerId);
+        // Add the group to the customer's groups
+        $customer->addGroups([$groupId]);
+    }
+
+    /**
      * @Given there is customer :reference with email :customerEmail
      */
     public function customerExists($reference, $customerEmail)

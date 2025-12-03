@@ -110,7 +110,7 @@
       <trans-unit id="7cc92687130ea12abb80556681538001">
         <source>An error occurred during the image upload process.</source>
         <target>An error occurred during the image upload process.</target>
-        <note>File: modules/ps_imageslider/ps_imageslider.php [Line: 522]</note>
+        <note>File: modules/ps_imageslider/ps_imageslider.php [Line: 523]</note>
       </trans-unit>
       <trans-unit id="3fa720301fb9c9badc23c00c1e88b4f7">
         <source>An error occurred on saving.</source>
@@ -200,7 +200,7 @@
       <trans-unit id="1da2e8106b3a2171fbb7193a24b91526">
         <source>An unexpected error occurred.</source>
         <target>An unexpected error occurred.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/StateController.php [Line: 435]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/StateController.php [Line: 470]</note>
       </trans-unit>
       <trans-unit id="e8ae00af8575f645bf6e4358f120cba3">
         <source>An unexpected error occurred. [%type% code %code%]</source>
@@ -450,7 +450,7 @@
       <trans-unit id="c8c0514e93ea92be8895754e128348a0">
         <source>Image format not recognized, allowed formats are: %s</source>
         <target>Image format not recognized, allowed formats are: %s</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 869]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 863]</note>
       </trans-unit>
       <trans-unit id="c4ae3afc5d4c01919142f8b39cc5c1c5">
         <source>Image format not recognized, allowed formats are: .gif, .jpg, .png</source>
@@ -485,7 +485,7 @@
       <trans-unit id="f9c7939a8397ee022fefee2bdb3407af">
         <source>Invalid URL</source>
         <target>Invalid URL</target>
-        <note>File: modules/ps_socialfollow/ps_socialfollow.php [Line: 397]</note>
+        <note>File: modules/ps_socialfollow/ps_socialfollow.php [Line: 400]</note>
       </trans-unit>
       <trans-unit id="dbf373dd3565accf2d2fd19700f6a5ae">
         <source>Invalid action</source>
@@ -1148,7 +1148,7 @@
       <trans-unit id="10f97f4fea6d1ff9ffd1ed3260d6220d">
         <source>Unable to delete associated images.</source>
         <target>Unable to delete associated images.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 835]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 829]</note>
       </trans-unit>
       <trans-unit id="5d1994bf28899a87795983875a98c2e1">
         <source>Unable to update settings.</source>

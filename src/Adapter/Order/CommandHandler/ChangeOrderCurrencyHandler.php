@@ -31,6 +31,7 @@ use Currency;
 use ObjectModel;
 use Order;
 use OrderCarrier;
+use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
@@ -73,6 +74,7 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
             $this->updateInvoices($order->getInvoicesCollection(), $oldCurrency, $newCurrency);
             $this->updateCart($order->id_cart, $newCurrency);
             $this->updateOrder($order, $oldCurrency, $newCurrency);
+            $this->updateOrderDiscounts($order->getCartRules(), $oldCurrency, $newCurrency);
         } catch (PrestaShopException $e) {
             throw new OrderException(
                 sprintf(
@@ -158,6 +160,15 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
         foreach ($invoices as $invoice) {
             $this->convertPriceFields($invoice, $this->getSharedAmountFields(), $oldCurrency, $newCurrency);
             $invoice->save();
+        }
+    }
+
+    protected function updateOrderDiscounts(array $orderCartRules, Currency $oldCurrency, Currency $newCurrency): void
+    {
+        foreach ($orderCartRules as $orderCartRule) {
+            $orderCartRule = new OrderCartRule($orderCartRule['id_order_cart_rule']);
+            $this->convertPriceFields($orderCartRule, ['value', 'value_tax_excl'], $oldCurrency, $newCurrency);
+            $orderCartRule->save();
         }
     }
 

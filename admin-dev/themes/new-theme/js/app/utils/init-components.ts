@@ -52,6 +52,7 @@ import TranslatableInput from '@js/components/translatable-input';
 import EntitySearchInput from '@js/components/entity-search-input';
 import MultipleZoneChoice from '@js/components/form/multiple-zone-choice';
 import ToggleChildrenChoice from '@js/components/form/toggle-children-choice';
+import FilterLinkGroup from '@components/filter/filter-link-group';
 
 // Grid extensions
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
@@ -84,6 +85,7 @@ const GridExtensions = {
   ChoiceExtension,
   ColumnTogglingExtension,
   ExportToSqlManagerExtension,
+  FilterLinkGroup,
   FiltersResetExtension,
   FiltersSubmitButtonEnablerExtension,
   LinkRowActionExtension,

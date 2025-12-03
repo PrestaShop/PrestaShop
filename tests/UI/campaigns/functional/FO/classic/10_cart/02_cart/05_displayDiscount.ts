@@ -21,7 +21,7 @@ import {
 
 const baseContext: string = 'functional_FO_classic_cart_cart_displayDiscount';
 
-describe('FO - cart : Display discount', async () => {
+describe('FO - Cart : Display discount on product', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 

@@ -59,6 +59,14 @@ if (isset($_ENV['PS_FF_FRONT_CONTAINER_V2']) && filter_var($_ENV['PS_FF_FRONT_CO
     $kernel = new FrontKernel(_PS_ENV_, _PS_MODE_DEV_);
     $request = Request::createFromGlobals();
 
+    /*
+     * Initialize legacy dispatcher request at the initial stage of the request. If we don't do it now,
+     * the dispatcher could be created later by legacy classes. But, at that point, the request
+     * could already be modified, for examply by move_uploaded_file. That would cause createFromGlobals
+     * to crash.
+     */
+    Dispatcher::setRequest($request);
+
     // Try to handle request
     try {
         $response = $kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, false);

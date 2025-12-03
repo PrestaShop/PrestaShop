@@ -27,33 +27,50 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Discount;
 
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
-use PrestaShopBundle\Form\Admin\Type\EnrichedChoiceType;
-use PrestaShopBundle\Form\Admin\Type\ToggleChildrenChoiceType;
+use PrestaShopBundle\Form\Admin\Type\CardType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DiscountConditionsType extends TranslatorAwareType
 {
-    public const CART_CONDITIONS = 'cart_conditions';
-    public const DELIVERY_CONDITIONS = 'delivery_conditions';
+    public const PRODUCT_CONDITIONS = 'product';
+    public const CART_CONDITIONS = 'cart';
+    public const DELIVERY_CONDITIONS = 'delivery';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $discountType = $options['discount_type'];
         $builder
-            ->add(self::CART_CONDITIONS, CartConditionsType::class, [
-                'label' => $this->trans('Cart conditions', 'Admin.Catalog.Feature'),
+            ->add(self::PRODUCT_CONDITIONS, ProductConditionsType::class, [
+                'label' => $this->trans('Product conditions', 'Admin.Catalog.Feature'),
+                'label_subtitle' => $this->trans('Require a single product or product segment in the cart for the discount to become active.', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'required' => false,
+                'choice_options' => [
+                    'label' => false,
+                ],
+            ])
+            ->add(self::CART_CONDITIONS, CartConditionsType::class, [
+                'label' => $this->trans('Cart conditions', 'Admin.Catalog.Feature'),
+                'label_subtitle' => $this->trans('Set a minimum purchase amount or product quantity for the discount to become active.', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h3',
+                'required' => false,
+                'choice_options' => [
+                    'label' => false,
+                ],
             ])
         ;
 
         if (in_array($discountType, [DiscountType::FREE_SHIPPING, DiscountType::ORDER_LEVEL, DiscountType::FREE_GIFT])) {
             $builder->add(self::DELIVERY_CONDITIONS, DeliveryConditionsType::class, [
-                'label' => $this->trans('On delivery', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Delivery conditions', 'Admin.Catalog.Feature'),
+                'label_subtitle' => $this->trans('Limit the discount\'s availability based on the customer\'s country or chosen delivery method.', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'required' => false,
+                'choice_options' => [
+                    'label' => false,
+                ],
             ]);
         }
     }
@@ -63,24 +80,6 @@ class DiscountConditionsType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'required' => false,
-            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Discount/FormTheme/conditions_form_theme.html.twig',
-            // Override the ToggleChildrenChoiceType choice type
-            'choice_type' => EnrichedChoiceType::class,
-            'choice_options' => [
-                'flex_direction' => 'row',
-                'choice_attr' => [
-                    $this->trans('Cart conditions', 'Admin.Catalog.Feature') => [
-                        'help' => $this->trans('Based on specific product(s) or product segment', 'Admin.Catalog.Feature'),
-                    ],
-                    $this->trans('On delivery', 'Admin.Catalog.Feature') => [
-                        'help' => $this->trans('Based on specific carrier(s) or product segment', 'Admin.Catalog.Feature'),
-                    ],
-                ],
-                'placeholder' => $this->trans('None', 'Admin.Catalog.Feature'),
-                'placeholder_attr' => [
-                    'help' => $this->trans('No condition applied.', 'Admin.Catalog.Feature'),
-                ],
-            ],
         ]);
         $resolver->setRequired([
             'discount_type',
@@ -90,6 +89,6 @@ class DiscountConditionsType extends TranslatorAwareType
 
     public function getParent()
     {
-        return ToggleChildrenChoiceType::class;
+        return CardType::class;
     }
 }

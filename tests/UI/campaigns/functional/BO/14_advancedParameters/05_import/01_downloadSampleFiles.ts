@@ -68,7 +68,7 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
           type: 'products_import',
           textToCheck: 'Product ID;Active (0/1);Name *;Categories (x,y,z...);Price tax excluded;Tax rules ID;'
             + 'Wholesale price;On sale (0/1);Discount amount;Discount percent;Discount from (yyyy-mm-dd);'
-            + 'Discount to (yyyy-mm-dd);Reference #;Supplier reference #;Supplier;Manufacturer;EAN13;UPC;MPN;Ecotax;'
+            + 'Discount to (yyyy-mm-dd);Reference #;Supplier reference #;Supplier;Manufacturer;EAN13;ISBN;UPC;MPN;Ecotax;'
             + 'Width;Height;Depth;Weight;Delivery time of in-stock products;'
             + 'Delivery time of out-of-stock products with allowed',
         },
@@ -78,7 +78,7 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
         {
           type: 'combinations_import',
           textToCheck: 'Product ID*;Attribute (Name:Type:Position)*;Value (Value:Position)*;'
-            + 'Supplier reference;Reference;EAN13;UPC;Wholesale price;Impact on price;Ecotax;Quantity;'
+            + 'Supplier reference;Reference;EAN13;ISBN;UPC;Wholesale price;Impact on price;Ecotax;Quantity;'
             + 'Minimal quantity;Low stock level;Impact on',
         },
     },

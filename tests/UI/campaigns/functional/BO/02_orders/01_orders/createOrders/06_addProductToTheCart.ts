@@ -172,7 +172,6 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
     product: productWithCartRule.name,
     freeShipping: true,
     discountType: 'Amount',
-    discountPercent: 20,
     discountAmount: {
       value: 20,
       currency: 'EUR',

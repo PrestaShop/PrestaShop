@@ -80,9 +80,12 @@ class HelpProvider implements UrlProviderInterface
             $title = $this->translator->trans('Help', [], 'Admin.Global');
         }
 
-        return $this->router->generate('admin_common_sidebar', [
+        $url = $this->router->generate('admin_common_sidebar', [
             'url' => $this->documentation->generateLink($section, $this->legacyContext->getEmployeeLanguageIso()),
             'title' => $title,
         ]);
+
+        // this line is allow to revert a new behaviour introduce in sf 5.4 which break the result we used to have
+        return strtr($url, ['%2F' => '%252F']);
     }
 }

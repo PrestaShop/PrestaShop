@@ -50,6 +50,33 @@ admin_discount_toggle_status:
   requirements:
     discountId: \d+
 
+admin_discount_bulk_enable_status:
+  path: /bulk-status-enable
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::bulkEnableStatusAction
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
+    _legacy_link: AdminCartRules:statuscart_rule
+
+admin_discount_bulk_disable_status:
+  path: /bulk-status-disable
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::bulkDisableStatusAction
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
+    _legacy_link: AdminCartRules:statuscart_rule
+
+admin_discount_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::bulkDeleteAction
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
+    _legacy_link: AdminCartRules:submitBulkdeletecart_rule
+
 admin_discounts_delete:
   path: /{discountId}/delete
   methods: [ POST, DELETE ]

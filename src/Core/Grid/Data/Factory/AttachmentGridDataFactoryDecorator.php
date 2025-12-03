@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
@@ -42,49 +43,19 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
     use TranslatorAwareTrait;
 
     /**
-     * @var GridDataFactoryInterface
-     */
-    private $attachmentDoctrineGridDataFactory;
-
-    /**
-     * @var int
-     */
-    private $employeeIdLang;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    /**
-     * @var FileSizeConverter
-     */
-    private $fileSizeConverter;
-
-    /**
      * @param GridDataFactoryInterface $attachmentDoctrineGridDataFactory
-     * @param int $employeeIdLang
+     * @param LanguageContext $languageContext
      * @param Connection $connection
      * @param string $dbPrefix
      * @param FileSizeConverter $fileSizeConverter
      */
     public function __construct(
-        GridDataFactoryInterface $attachmentDoctrineGridDataFactory,
-        int $employeeIdLang,
-        Connection $connection,
-        string $dbPrefix,
-        FileSizeConverter $fileSizeConverter
+        private GridDataFactoryInterface $attachmentDoctrineGridDataFactory,
+        private LanguageContext $languageContext,
+        private Connection $connection,
+        private string $dbPrefix,
+        private FileSizeConverter $fileSizeConverter
     ) {
-        $this->attachmentDoctrineGridDataFactory = $attachmentDoctrineGridDataFactory;
-        $this->employeeIdLang = $employeeIdLang;
-        $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
-        $this->fileSizeConverter = $fileSizeConverter;
     }
 
     /**
@@ -152,7 +123,7 @@ final class AttachmentGridDataFactoryDecorator implements GridDataFactoryInterfa
             )
             ->where('pa.`id_attachment` = :attachmentId')
             ->setParameter('attachmentId', $attachmentId)
-            ->setParameter('langId', $this->employeeIdLang);
+            ->setParameter('langId', $this->languageContext->getId());
 
         return $qb->executeQuery()->fetchFirstColumn();
     }

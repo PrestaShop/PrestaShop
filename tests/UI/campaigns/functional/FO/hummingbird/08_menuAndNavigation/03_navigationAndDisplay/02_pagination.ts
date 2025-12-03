@@ -33,7 +33,7 @@ Post-condition:
 - Reset 'Number of products per page'
 - Uninstall the theme hummingbird
  */
-describe('FO - Navigation and display : Pagination', async () => {
+describe('FO - Menu and Navigation - Navigate and display : Pagination', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 

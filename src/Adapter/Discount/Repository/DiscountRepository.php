@@ -176,6 +176,22 @@ class DiscountRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @return int[]
+     */
+    public function getCustomerGroups(DiscountId $discountId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('*')
+            ->from($this->dbPrefix . 'cart_rule_group', 'crg')
+            ->where('crg.id_cart_rule = :discountId')
+            ->setparameter('discountId', $discountId->getValue())
+        ;
+
+        return array_map(fn (array $row) => (int) $row['id_group'], $qb->executeQuery()->fetchAllAssociative());
+    }
+
+    /**
      * Returns the ID of a discount by its code.
      * null is returned if the discount does not exist.
      */

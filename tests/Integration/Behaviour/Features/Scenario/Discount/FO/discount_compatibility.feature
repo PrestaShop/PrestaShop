@@ -27,7 +27,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Cart 10% Off        |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | CART10              |
       | reduction_percent | 10.0                |
     And I set compatible types for discount "cart_discount_10" to:
@@ -36,7 +36,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Cart 5% Off         |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | CART5               |
       | reduction_percent | 5.0                 |
     And I set compatible types for discount "cart_discount_5" to:
@@ -52,7 +52,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Cart 20% Off        |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | CART20              |
       | reduction_percent | 20.0                |
     And I set compatible types for discount "cart_discount_20" to:
@@ -61,7 +61,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Cart 15% Off        |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | CART15              |
       | reduction_percent | 15.0                |
     And I set compatible types for discount "cart_discount_15" to:
@@ -77,7 +77,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Cart Combo          |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | CARTCOMBO           |
       | reduction_percent | 10.0                |
     And I set compatible types for discount "cart_discount_combo" to:
@@ -86,7 +86,7 @@ Feature: Discount compatibility in cart
       | name[en-US] | Free Shipping       |
       | active      | true                |
       | valid_from  | 2025-01-01 00:00:00 |
-      | valid_to    | 2025-12-31 23:59:59 |
+      | valid_to    | 2026-12-31 23:59:59 |
       | code        | FREESHIP            |
     And I set compatible types for discount "free_ship" to:
       | cart_level |
@@ -101,7 +101,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Product 15% Off     |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | PROD15              |
       | reduction_percent | 15.0                |
       | reduction_product | product1            |
@@ -111,7 +111,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Cart with Product   |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | CARTWPROD           |
       | reduction_percent | 5.0                 |
     And I set compatible types for discount "cart_for_product" to:
@@ -127,7 +127,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Exclusive 50% Off   |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | EXCLUSIVE50         |
       | reduction_percent | 50.0                |
     And I set compatible types for discount "exclusive_50" to:
@@ -136,7 +136,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Cart Any            |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | CARTANY             |
       | reduction_percent | 10.0                |
     And I set compatible types for discount "cart_any" to:
@@ -152,7 +152,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Multi Cart 5%       |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | MULTI5              |
       | reduction_percent | 5.0                 |
     And I set compatible types for discount "multi_cart" to:
@@ -162,7 +162,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Multi Product 10%   |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | MULTIPROD10         |
       | reduction_percent | 10.0                |
       | reduction_product | product1            |
@@ -173,7 +173,7 @@ Feature: Discount compatibility in cart
       | name[en-US] | Multi Free Ship     |
       | active      | true                |
       | valid_from  | 2025-01-01 00:00:00 |
-      | valid_to    | 2025-12-31 23:59:59 |
+      | valid_to    | 2026-12-31 23:59:59 |
       | code        | MULTISHIP           |
     And I set compatible types for discount "multi_ship" to:
       | cart_level    |
@@ -190,7 +190,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | First Discount      |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | FIRST               |
       | reduction_percent | 10.0                |
     And I set compatible types for discount "first_discount" to:
@@ -199,7 +199,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Order Discount      |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | ORDERDISC           |
       | reduction_percent | 15.0                |
     And I set compatible types for discount "order_discount" to:
@@ -215,7 +215,7 @@ Feature: Discount compatibility in cart
       | name[en-US]  | Gift Promotion      |
       | active       | true                |
       | valid_from   | 2025-01-01 00:00:00 |
-      | valid_to     | 2025-12-31 23:59:59 |
+      | valid_to     | 2026-12-31 23:59:59 |
       | code         | GIFTPROMO           |
       | gift_product | gift_product        |
     And I set compatible types for discount "gift_promo" to:
@@ -224,7 +224,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Cart with Gift      |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | CARTWGIFT           |
       | reduction_percent | 10.0                |
     And I set compatible types for discount "cart_with_gift" to:
@@ -240,7 +240,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Order 20% Off       |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | ORDER20             |
       | reduction_percent | 20.0                |
     And I set compatible types for discount "order_20" to:
@@ -249,7 +249,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Product 25% Off     |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | PROD25              |
       | reduction_percent | 25.0                |
       | reduction_product | product1            |
@@ -266,7 +266,7 @@ Feature: Discount compatibility in cart
       | name[en-US]        | Amount 20 Off       |
       | active             | true                |
       | valid_from         | 2025-01-01 00:00:00 |
-      | valid_to           | 2025-12-31 23:59:59 |
+      | valid_to           | 2026-12-31 23:59:59 |
       | code               | AMOUNT20            |
       | reduction_amount   | 20.0                |
       | reduction_currency | usd                 |
@@ -277,7 +277,7 @@ Feature: Discount compatibility in cart
       | name[en-US]       | Percent 5% Off      |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | PERCENT5            |
       | reduction_percent | 5.0                 |
     And I set compatible types for discount "percent_discount" to:

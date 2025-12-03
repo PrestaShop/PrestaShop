@@ -44,7 +44,7 @@ Post-condition:
 - Enable new product page
 - Uninstall the theme hummingbird
  */
-describe('FO - Navigation and display : Display tags', async () => {
+describe('FO - Menu and Navigation - Navigate and display : Display of tag products (New, Promo, Pack...)', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 

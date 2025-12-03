@@ -91,9 +91,8 @@ class DiscountProductSegmentType extends TranslatorAwareType
                 'constraints' => [
                     new When(
                         expression: sprintf(
-                            'this.getParent().getParent().getParent().get("children_selector").getData() === "%s" && this.getParent().getParent().get("children_selector").getData() === "%s"',
-                            DiscountConditionsType::CART_CONDITIONS,
-                            CartConditionsType::PRODUCT_SEGMENT,
+                            'this.getParent().getParent().get("children_selector").getData() === "%s"',
+                            ProductConditionsType::PRODUCT_SEGMENT,
                         ),
                         constraints: [
                             new NotBlank(),

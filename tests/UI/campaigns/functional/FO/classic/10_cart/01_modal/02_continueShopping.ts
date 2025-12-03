@@ -14,7 +14,7 @@ import {
 
 const baseContext: string = 'functional_FO_classic_cart_modal_continueShopping';
 
-describe('FO - cart : Continue shopping / Proceed to checkout / Close', async () => {
+describe('FO - Cart - Modal : Continue shopping / Proceed to checkout / Close', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 

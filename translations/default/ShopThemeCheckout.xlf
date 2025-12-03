@@ -20,7 +20,7 @@
       <trans-unit id="4c4cfffa1e5022b41e4871b27ede1f25">
         <source>%productName% product quantity field</source>
         <target>%productName% product quantity field</target>
-        <note>File: themes/classic/templates/checkout/_partials/cart-detailed-product-line.tpl [Line: 147]</note>
+        <note>File: themes/classic/templates/checkout/_partials/cart-detailed-product-line.tpl [Line: 148]</note>
       </trans-unit>
       <trans-unit id="e3e83a01990288b492a11a955723343d">
         <source>%product_count% item in your cart</source>
@@ -81,6 +81,11 @@
         <source>Carrier</source>
         <target>Carrier</target>
         <note>File: themes/hummingbird/templates/customer/order-detail.tpl [Line: 189]</note>
+      </trans-unit>
+      <trans-unit id="2d0a942984a469523c573a23728cf0ff">
+        <source>Carrier: </source>
+        <target>Carrier: </target>
+        <note>File: themes/classic/templates/checkout/_partials/order-confirmation-table-multishipment.tpl [Line: 62]</note>
       </trans-unit>
       <trans-unit id="22f885cc13bb6558bc746134fa5b3474">
         <source>Carrier: %carrierName%</source>
@@ -280,7 +285,7 @@
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
         <target>Order confirmation</target>
-        <note>File: controllers/front/OrderConfirmationController.php [Line: 321]</note>
+        <note>File: controllers/front/OrderConfirmationController.php [Line: 331]</note>
       </trans-unit>
       <trans-unit id="f5d74ea75357b5e139854c14f8e24fe3">
         <source>Order details</source>

@@ -20,7 +20,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_module_getModuleTechnicalName';
 
-describe('API : GET /module/{technicalName}', async () => {
+describe('API : GET /modules/{technicalName}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -80,10 +80,10 @@ describe('API : GET /module/{technicalName}', async () => {
   });
 
   describe('API : Check Data', async () => {
-    it('should request the endpoint /module/{technicalName}', async function () {
+    it('should request the endpoint /modules/{technicalName}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get(`module/${moduleInfo.technicalName}`, {
+      const apiResponse = await apiContext.get(`modules/${moduleInfo.technicalName}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

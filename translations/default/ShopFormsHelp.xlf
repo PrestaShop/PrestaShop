@@ -40,7 +40,7 @@
       <trans-unit id="4e46ead161638465b5f8cc4351e559a3">
         <source>Enter a password to transform your guest account into a customer account.</source>
         <target>Enter a password to transform your guest account into a customer account.</target>
-        <note>File: controllers/front/OrderConfirmationController.php [Line: 135]</note>
+        <note>File: controllers/front/OrderConfirmationController.php [Line: 133]</note>
       </trans-unit>
       <trans-unit id="8307fac59310d028334df0306c7b29ad">
         <source>How can we help?</source>

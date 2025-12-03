@@ -18,7 +18,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_hook_putHookIdStatus';
 
-describe('API : PUT /hook/{hookId}/status', async () => {
+describe('API : PUT /hooks/{hookId}/status', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -88,15 +88,15 @@ describe('API : PUT /hook/{hookId}/status', async () => {
     true,
   ].forEach((argStatus: boolean, index: number) => {
     describe(`API : Check Data with status = ${argStatus}`, async () => {
-      it('should request the endpoint /hook/{technicalName}/status', async function () {
+      it('should request the endpoint /hooks/{technicalName}/status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `requestEndpoint${index}`, baseContext);
 
-        const apiResponse = await apiContext.put(`hook/${hookId}/status`, {
+        const apiResponse = await apiContext.put(`hooks/${hookId}/status`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
           data: {
-            active: argStatus,
+            enabled: argStatus,
           },
         });
         expect(apiResponse.status()).to.eq(200);
@@ -111,7 +111,7 @@ describe('API : PUT /hook/{hookId}/status', async () => {
 
         expect(jsonResponse).to.have.all.keys(
           'hookId',
-          'active',
+          'enabled',
           'name',
           'title',
           'description',
@@ -126,12 +126,12 @@ describe('API : PUT /hook/{hookId}/status', async () => {
         expect(jsonResponse.hookId).to.be.equal(hookId);
       });
 
-      it('should check the JSON Response : `active`', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkResponseActive${index}`, baseContext);
+      it('should check the JSON Response : `enabled`', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkResponseEnabled${index}`, baseContext);
 
-        expect(jsonResponse).to.have.property('active');
-        expect(jsonResponse.active).to.be.a('boolean');
-        expect(jsonResponse.active).to.be.equal(argStatus);
+        expect(jsonResponse).to.have.property('enabled');
+        expect(jsonResponse.enabled).to.be.a('boolean');
+        expect(jsonResponse.enabled).to.be.equal(argStatus);
       });
 
       it('should go to \'Design > Positions\' page', async function () {

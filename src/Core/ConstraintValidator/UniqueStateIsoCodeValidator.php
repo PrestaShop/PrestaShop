@@ -47,7 +47,7 @@ class UniqueStateIsoCodeValidator extends ConstraintValidator
             return;
         }
         $countryStateByIsoCodeProvider = new CountryStateByIsoCodeProvider();
-        $stateId = $countryStateByIsoCodeProvider->getStateIdByIsoCode($value);
+        $stateId = $countryStateByIsoCodeProvider->getStateIdByIsoCode($value, (int) $constraint->countryId);
 
         if ($stateId && ($constraint->excludeStateId === null || $stateId !== $constraint->excludeStateId)) {
             $this->context

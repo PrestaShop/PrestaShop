@@ -31,6 +31,11 @@ services:
     autowire: true
     tags:
       - { name: 'serializer.normalizer', priority: 10 }
+  # DateImmutableNormalizer needs a higher priority than DateTimeImmutableNormalizer, or DateImmutable are normalized by DateTimeImmutableNormalizer
+  PrestaShopBundle\ApiPlatform\Normalizer\DateImmutableNormalizer:
+    autowire: true
+    tags:
+      - { name: 'serializer.normalizer', priority: 20 }
 
   PrestaShopBundle\ApiPlatform\NormalizationMapper:
     autowire: true

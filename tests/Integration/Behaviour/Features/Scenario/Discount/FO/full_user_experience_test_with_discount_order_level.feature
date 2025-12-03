@@ -28,7 +28,7 @@ Feature: Full UX discount test
       | name[fr-FR]        | Promotion_fr        |
       | active             | true                |
       | valid_from         | 2025-01-01 11:05:00 |
-      | valid_to           | 2025-12-01 00:00:00 |
+      | valid_to           | 2026-12-01 00:00:00 |
       | code               | PROMO_order_2025    |
       | reduction_amount   | 10.0                |
       | reduction_currency | usd                 |
@@ -38,7 +38,7 @@ Feature: Full UX discount test
       | name[fr-FR]        | Promotion_fr        |
       | active             | true                |
       | valid_from         | 2025-01-01 11:05:00 |
-      | valid_to           | 2025-12-01 00:00:00 |
+      | valid_to           | 2026-12-01 00:00:00 |
       | code               | PROMO_order_2025    |
       | reduction_amount   | 10.0                |
       | reduction_currency | usd                 |
@@ -65,7 +65,7 @@ Feature: Full UX discount test
       | name[fr-FR]        | Promotion_fr             |
       | active             | true                     |
       | valid_from         | 2025-01-01 11:05:00      |
-      | valid_to           | 2025-12-01 00:00:00      |
+      | valid_to           | 2026-12-01 00:00:00      |
       | code               | PROMO_order_greater_2025 |
       | reduction_amount   | 45.0                     |
       | reduction_currency | usd                      |
@@ -75,7 +75,7 @@ Feature: Full UX discount test
       | name[fr-FR]        | Promotion_fr             |
       | active             | true                     |
       | valid_from         | 2025-01-01 11:05:00      |
-      | valid_to           | 2025-12-01 00:00:00      |
+      | valid_to           | 2026-12-01 00:00:00      |
       | code               | PROMO_order_greater_2025 |
       | reduction_amount   | 45.0                     |
       | reduction_currency | usd                      |
@@ -102,7 +102,7 @@ Feature: Full UX discount test
       | name[fr-FR]        | Promotion_fr              |
       | active             | true                      |
       | valid_from         | 2025-01-01 11:05:00       |
-      | valid_to           | 2025-12-01 00:00:00       |
+      | valid_to           | 2026-12-01 00:00:00       |
       | code               | PROMO_order_generous_2025 |
       | reduction_amount   | 55.0                      |
       | reduction_currency | usd                       |
@@ -112,7 +112,7 @@ Feature: Full UX discount test
       | name[fr-FR]        | Promotion_fr              |
       | active             | true                      |
       | valid_from         | 2025-01-01 11:05:00       |
-      | valid_to           | 2025-12-01 00:00:00       |
+      | valid_to           | 2026-12-01 00:00:00       |
       | code               | PROMO_order_generous_2025 |
       | reduction_amount   | 55.0                      |
       | reduction_currency | usd                       |
@@ -138,7 +138,7 @@ Feature: Full UX discount test
       | name[fr-FR]       | Promotion_fr        |
       | active            | true                |
       | valid_from        | 2025-01-01 11:05:00 |
-      | valid_to          | 2025-12-01 00:00:00 |
+      | valid_to          | 2026-12-01 00:00:00 |
       | code              | PROMO_order_2025_2  |
       | reduction_percent | 50.0                |
     And discount "complete_percent_order_level_discount" should have the following properties:
@@ -146,7 +146,7 @@ Feature: Full UX discount test
       | name[fr-FR]       | Promotion_fr        |
       | active            | true                |
       | valid_from        | 2025-01-01 11:05:00 |
-      | valid_to          | 2025-12-01 00:00:00 |
+      | valid_to          | 2026-12-01 00:00:00 |
       | code              | PROMO_order_2025_2  |
       | reduction_percent | 50.0                |
     And I add 1 product "product3" to the cart "dummy_cart_2"

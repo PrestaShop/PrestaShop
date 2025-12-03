@@ -123,13 +123,19 @@ class CustomerFormCore extends AbstractForm
 
     public function validate()
     {
-        // If email is being changed, check if it's free to use and doesn't belong to another customer
-        if (!$this->context->customer->is_guest) {
-            $emailField = $this->getField('email');
-            $id_customer = Customer::customerExists($emailField->getValue(), true);
-            $customer = $this->getCustomer();
-            if ($id_customer && $id_customer != $customer->id) {
-                $emailField->addError($this->translator->trans(
+        /*
+         * If email is being changed, check if it's free to use and doesn't belong to another customer.
+         * We only do this if we have a valid customer in the context (logged in user) and if it's not a guest account.
+         * We cannot just check for is_guest only, because an empty customer object will return false for is_guest.
+         */
+        /* @phpstan-ignore-next-line */
+        if (!empty($this->context->customer->id) && !$this->context->customer->is_guest) {
+            // We check if there is a customer with the same email, registered only
+            $id_customer = Customer::customerExists($this->getField('email')->getValue(), true);
+
+            // If we found a customer and it's not the current one, it's an error
+            if ($id_customer && $id_customer != $this->getCustomer()->id) {
+                $this->getField('email')->addError($this->translator->trans(
                     'The email is already used, please choose another one or sign in',
                     [],
                     'Shop.Notifications.Error'

@@ -20,7 +20,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_apiClient_getApiClientId';
 
-describe('API : GET /api-client/{apiClientId}', async () => {
+describe('API : GET /api-clients/{apiClientId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -155,10 +155,10 @@ describe('API : GET /api-client/{apiClientId}', async () => {
   });
 
   describe('API : Check Data', async () => {
-    it('should request the endpoint /api-client/{apiClientId}', async function () {
+    it('should request the endpoint /api-clients/{apiClientId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get(`api-client/${idApiClient}`, {
+      const apiResponse = await apiContext.get(`api-clients/${idApiClient}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

@@ -54,6 +54,16 @@ class ExecKernelCacheClearer implements KernelCacheClearerInterface
 
     public function clearKernelCache(AppKernel $kernel, string $environment): bool
     {
+        if ($this->isExecDisabled()) {
+            $this->logWarning(sprintf(
+                'ExecKernelCacheClearer: Could not clear cache for %s env %s because exec function is disabled',
+                $kernel->getAppId(),
+                $environment,
+            ));
+
+            return false;
+        }
+
         if (!$this->clearCache($kernel, $environment)) {
             return false;
         }
@@ -106,5 +116,13 @@ class ExecKernelCacheClearer implements KernelCacheClearerInterface
         $this->logInfo(sprintf($successMessage, $kernel->getAppId()));
 
         return true;
+    }
+
+    protected function isExecDisabled(): bool
+    {
+        $disabledFunctions = explode(',', ini_get('disable_functions'));
+        array_walk($disabledFunctions, fn ($disabledFunction) => trim($disabledFunction));
+
+        return in_array('exec', $disabledFunctions);
     }
 }

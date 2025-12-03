@@ -177,10 +177,8 @@ services:
   prestashop.core.grid.query_builder.tax:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\TaxQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'
-    arguments:
-      - '@prestashop.core.query.doctrine_search_criteria_applicator'
-      - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
     public: true
+    autowire: true
 
   prestashop.core.grid.query_builder.manufacturer:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\ManufacturerQueryBuilder'
@@ -193,10 +191,8 @@ services:
   prestashop.core.grid.query_builder.manufacturer_address:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\ManufacturerAddressQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'
-    arguments:
-      - '@prestashop.core.query.doctrine_search_criteria_applicator'
-      - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
     public: true
+    autowire: true
 
   prestashop.core.grid.query_builder.category:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\CategoryQueryBuilder'
@@ -322,10 +318,8 @@ services:
   prestashop.core.grid.query_builder.attachment:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\AttachmentQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'
-    arguments:
-      - '@prestashop.core.query.doctrine_search_criteria_applicator'
-      - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
     public: true
+    autowire: true
 
   prestashop.core.grid.query_builder.attribute:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\AttributeQueryBuilder'
@@ -478,9 +472,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\StateQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'
     public: true
-    arguments:
-      - '@prestashop.core.query.doctrine_search_criteria_applicator'
-      - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
+    autowire: true
 
   prestashop.core.grid.query.builder.title:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\TitleQueryBuilder'
@@ -515,10 +507,8 @@ services:
 
   PrestaShop\PrestaShop\Core\Grid\Query\TaxRuleQueryBuilder:
     parent: 'prestashop.core.grid.abstract_query_builder'
-    arguments:
-      - '@prestashop.core.query.doctrine_search_criteria_applicator'
-      - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
     public: false
+    autowire: true
 
   PrestaShop\PrestaShop\Core\Grid\Query\AliasQueryBuilder:
     parent: 'prestashop.core.grid.abstract_query_builder'

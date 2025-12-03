@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -41,26 +42,20 @@ final class TaxQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @var int
-     */
-    private $employeeIdLang;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param int $employeeIdLang
+     * @param LanguageContext $languageContext
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        $employeeIdLang
+        private LanguageContext $languageContext
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->employeeIdLang = $employeeIdLang;
     }
 
     /**
@@ -115,7 +110,7 @@ final class TaxQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->andWhere('tl.`id_lang` = :employee_id_lang');
         $qb->andWhere('t.`deleted` = 0');
 
-        $qb->setParameter('employee_id_lang', $this->employeeIdLang);
+        $qb->setParameter('employee_id_lang', $this->languageContext->getId());
         $this->applyFilters($qb, $filters);
 
         return $qb;

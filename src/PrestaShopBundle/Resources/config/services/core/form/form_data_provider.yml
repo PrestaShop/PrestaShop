@@ -268,3 +268,7 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AliasFormDataProvider:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TagFormDataProvider:
+    autowire: true
+    public: false

@@ -80,8 +80,8 @@ class LanguageEndpointTest extends ApiTestCase
                 'locale' => 'en-US',
                 'dateFormat' => 'm/d/Y',
                 'dateTimeFormat' => 'm/d/Y H:i:s',
-                'isRtl' => false,
-                'active' => true,
+                'rtl' => false,
+                'enabled' => true,
                 'flag' => '/img/tmp/lang_mini_1_1.jpg',
             ],
             [
@@ -92,8 +92,8 @@ class LanguageEndpointTest extends ApiTestCase
                 'locale' => 'fr-FR',
                 'dateFormat' => 'd/m/Y',
                 'dateTimeFormat' => 'd/m/Y H:i:s',
-                'isRtl' => false,
-                'active' => true,
+                'rtl' => false,
+                'enabled' => true,
                 'flag' => '/img/tmp/lang_mini_' . static::$frenchLangId . '_1.jpg',
             ],
         ], $items);

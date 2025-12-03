@@ -28,7 +28,7 @@ Post-condition:
 - Delete created product
 - Uninstall the theme hummingbird
  */
-describe('FO - Navigation and display : Display \'On sale\' flag', async () => {
+describe('FO - Menu and Navigation - Navigate and display : Display "On sale!" bandeau', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 

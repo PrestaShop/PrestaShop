@@ -26,7 +26,7 @@ Scenario:
 - Filter products by composition and availability
 - Clear filters
  */
-describe('FO - Menu and navigation : Clear filters', async () => {
+describe('FO - Menu and Navigation - Sort and filter : Clear filters', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfActiveProducts: number;

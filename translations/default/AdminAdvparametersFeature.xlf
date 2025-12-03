@@ -115,7 +115,7 @@
       <trans-unit id="63a293f69541c07a826ac0e8f35e6222">
         <source>Accessories (x,y,z...)</source>
         <target>Accessories (x,y,z...)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 151]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 152]</note>
       </trans-unit>
       <trans-unit id="004bf6c9a40003140292e97330236c53">
         <source>Action</source>
@@ -125,7 +125,7 @@
       <trans-unit id="27cb4532e39ccfac2114be6223cf3534">
         <source>Action when out of stock</source>
         <target>Action when out of stock</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 123]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 124]</note>
       </trans-unit>
       <trans-unit id="a10d0bff85112a2b35f885a38088cd20">
         <source>Active  (0/1)</source>
@@ -205,7 +205,7 @@
       <trans-unit id="7bbdd372c9d171174e3ce1ba9d97d5f6">
         <source>Additional shipping cost</source>
         <target>Additional shipping cost</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 99]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 100]</note>
       </trans-unit>
       <trans-unit id="783cb853aae6984e51583b3bb80c09d2">
         <source>Address (2)</source>
@@ -270,12 +270,12 @@
       <trans-unit id="cf7a1f189bbd1f48db0ece1da9cc0802">
         <source>Available for order (0 = No, 1 = Yes)</source>
         <target>Available for order (0 = No, 1 = Yes)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 110]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 111]</note>
       </trans-unit>
       <trans-unit id="446e04d1ed3b8fca04274d7c726a3fd5">
         <source>Available online only (0 = No, 1 = Yes)</source>
         <target>Available online only (0 = No, 1 = Yes)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 118]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 119]</note>
       </trans-unit>
       <trans-unit id="cf173b732a2a0377698d631db6185836">
         <source>Available quantities for sale</source>
@@ -400,7 +400,7 @@
       <trans-unit id="657645fae83ad1673b25d3c027b77ed8">
         <source>Choose among product images by position (1,2,3...)</source>
         <target>Choose among product images by position (1,2,3...)</target>
-        <note>File: src/Core/Import/EntityField/Provider/CombinationFieldsProvider.php [Line: 79]</note>
+        <note>File: src/Core/Import/EntityField/Provider/CombinationFieldsProvider.php [Line: 80]</note>
       </trans-unit>
       <trans-unit id="1d92a46c4e14c43c3096d85c9f26fc4e">
         <source>Choose data to import</source>
@@ -455,7 +455,7 @@
       <trans-unit id="e933b93c26b14c12ac7818867e54c5d9">
         <source>Combination availability date</source>
         <target>Combination availability date</target>
-        <note>File: src/Core/Import/EntityField/Provider/CombinationFieldsProvider.php [Line: 78]</note>
+        <note>File: src/Core/Import/EntityField/Provider/CombinationFieldsProvider.php [Line: 79]</note>
       </trans-unit>
       <trans-unit id="ae5977a08e8a3d45283789d99c67c3c3">
         <source>Combination reference</source>
@@ -535,7 +535,7 @@
       <trans-unit id="f53c39de16dea1ee2352ab566702eb27">
         <source>Customizable (0 = No, 1 = Yes)</source>
         <target>Customizable (0 = No, 1 = Yes)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 120]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 121]</note>
       </trans-unit>
       <trans-unit id="fedcd10e34629cb88bd99a274dc7a023">
         <source>DKIM domain</source>
@@ -595,7 +595,7 @@
       <trans-unit id="5db5f3f0c5f233fbc13f08c052e98281">
         <source>Default (0 = No, 1 = Yes)</source>
         <target>Default (0 = No, 1 = Yes)</target>
-        <note>File: src/Core/Import/EntityField/Provider/CombinationFieldsProvider.php [Line: 77]</note>
+        <note>File: src/Core/Import/EntityField/Provider/CombinationFieldsProvider.php [Line: 78]</note>
       </trans-unit>
       <trans-unit id="b0869dd58b90ec940e91a195d754a155">
         <source>Default group ID</source>
@@ -630,7 +630,7 @@
       <trans-unit id="4f5dc004cdd01ec9cf7fbbcf9f812aa7">
         <source>Delete existing images (0 = No, 1 = Yes)</source>
         <target>Delete existing images (0 = No, 1 = Yes)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 116]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 117]</note>
       </trans-unit>
       <trans-unit id="b0778bfd9332089cdb4468bd9f04e031">
         <source>Delete selected sessions?</source>
@@ -645,7 +645,7 @@
       <trans-unit id="f6db0ad0a1b6aff800f260a83bc06584">
         <source>Delivery time of out-of-stock products with allowed orders:</source>
         <target>Delivery time of out-of-stock products with allowed orders:</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 88]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 89]</note>
       </trans-unit>
       <trans-unit id="2fa165ecfa7ca3d29d17c598c7b267fc">
         <source>Disable all non-built-in modules?</source>
@@ -810,7 +810,7 @@
       <trans-unit id="8b155133fee28ec212ccf75a28e0711e">
         <source>Expiration date (yyyy-mm-dd)</source>
         <target>Expiration date (yyyy-mm-dd)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 134]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 135]</note>
       </trans-unit>
       <trans-unit id="f883a6dd8e5ef6452bf01659c44f1800">
         <source>External issuer</source>
@@ -825,7 +825,7 @@
       <trans-unit id="2fe5beaf842ddac297ade8ef5ba379cc">
         <source>Feature (Name:Value:Position:Customized)</source>
         <target>Feature (Name:Value:Position:Customized)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 117]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 118]</note>
       </trans-unit>
       <trans-unit id="35ebd0ba1ead54eee9c5684437aa519b">
         <source>Field separator</source>
@@ -835,7 +835,7 @@
       <trans-unit id="b3d2db69feecaedff30f1e0bc60206d6">
         <source>File URL</source>
         <target>File URL</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 125]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 126]</note>
       </trans-unit>
       <trans-unit id="1908624a0bca678cd26b99bfd405324e">
         <source>File size</source>
@@ -920,17 +920,17 @@
       <trans-unit id="4d2589e1bcd4263cb99927b59f0f88d2">
         <source>Image URLs (x,y,z...)</source>
         <target>Image URLs (x,y,z...)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 114]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 115]</note>
       </trans-unit>
       <trans-unit id="7a2ec0911e94664f3dfcc8cbefb0e908">
         <source>Image alt texts (x,y,z...)</source>
         <target>Image alt texts (x,y,z...)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 115]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 116]</note>
       </trans-unit>
       <trans-unit id="2415390fb5052bb8221a93c9fc51b17f">
         <source>Import .CSV data</source>
         <target>Import .CSV data</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 786]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 790]</note>
       </trans-unit>
       <trans-unit id="c8cfbbbe4253e14390b2b14d7e60d9c8">
         <source>Import data</source>
@@ -975,7 +975,7 @@
       <trans-unit id="6be65deefdf4fae21955e2c060815530">
         <source>Label when backorder allowed</source>
         <target>Label when backorder allowed</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 109]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 110]</note>
       </trans-unit>
       <trans-unit id="2a1a026f56b4c51cc839e513370379fd">
         <source>Language of the file</source>
@@ -1155,7 +1155,7 @@
       <trans-unit id="ac0b7d0703609cbbfa09b53f8d793d29">
         <source>Minimal quantity</source>
         <target>Minimal quantity</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 91]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 92]</note>
       </trans-unit>
       <trans-unit id="65be4bb9e294bfb3e8b7c09ca0017ef4">
         <source>Minimum length</source>
@@ -1335,7 +1335,7 @@
       <trans-unit id="3b0649c72650c313a357338dcdfb64ec">
         <source>Note</source>
         <target>Note</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 498]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 502]</note>
       </trans-unit>
       <trans-unit id="a274f4d4670213a9045ce258c6c56b80">
         <source>Notifications</source>
@@ -1345,7 +1345,7 @@
       <trans-unit id="58fd2b2308056ad80255a322b305742b">
         <source>Number of days</source>
         <target>Number of days</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 137]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 138]</note>
       </trans-unit>
       <trans-unit id="d95fc016a6eee828f434ed5f55504427">
         <source>Object ID</source>
@@ -1485,7 +1485,7 @@
       <trans-unit id="d24a6864b6139a2423c8f3004c8f7751">
         <source>Product availability date</source>
         <target>Product availability date</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 111]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 112]</note>
       </trans-unit>
       <trans-unit id="4ae24b703273d53941a17737bb2b1a9a">
         <source>Product combinations</source>
@@ -1495,7 +1495,7 @@
       <trans-unit id="21f7b5b011f253b35340528b7f190282">
         <source>Product creation date</source>
         <target>Product creation date</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 112]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 113]</note>
       </trans-unit>
       <trans-unit id="75ed578ac3cb02b0ba40002a25bc0403">
         <source>Product reference</source>
@@ -1570,7 +1570,7 @@
       <trans-unit id="db72e24b402e8baf8df6ca786a59e4de">
         <source>Rewritten URL</source>
         <target>Rewritten URL</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 107]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 108]</note>
       </trans-unit>
       <trans-unit id="bbbabdbe1b262f75d99d62880b953be1">
         <source>Role</source>
@@ -1814,7 +1814,7 @@
       <trans-unit id="76aeea9f48196068e6b47d46d41e7618">
         <source>Show price (0 = No, 1 = Yes)</source>
         <target>Show price (0 = No, 1 = Yes)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 113]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 114]</note>
       </trans-unit>
       <trans-unit id="ff4ba5e49465c8bc4fb9ac41e57ae73d">
         <source>Skip thumbnails regeneration</source>
@@ -1929,7 +1929,7 @@
       <trans-unit id="bede52f418b34b1ab0db65f9450bdfc3">
         <source>Tags (x,y,z...)</source>
         <target>Tags (x,y,z...)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 104]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 105]</note>
       </trans-unit>
       <trans-unit id="8a1cabdfd802aa4ea2ec774feb832a1e">
         <source>Tax rule ID</source>
@@ -1974,7 +1974,7 @@
       <trans-unit id="6bfdfdf56a73c0726864489f78e4f91b">
         <source>Text fields (0 = No, 1 = Yes)</source>
         <target>Text fields (0 = No, 1 = Yes)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 122]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 123]</note>
       </trans-unit>
       <trans-unit id="f43333ea2272fed37fc121a2e09755c3">
         <source>The minimum score must be: %s</source>
@@ -2051,7 +2051,7 @@
       <trans-unit id="fbd99ad01b92dbafc686772a39e3d065">
         <source>UPC</source>
         <target>UPC</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 75]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 76]</note>
       </trans-unit>
       <trans-unit id="bfc70beddce99a8ab159563d4e03f7af">
         <source>URL options</source>
@@ -2061,7 +2061,7 @@
       <trans-unit id="0246175f81454bc445f908bac64f354c">
         <source>Unit for the price per unit</source>
         <target>Unit for the price per unit</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 100]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 101]</note>
       </trans-unit>
       <trans-unit id="3d8a3c1f364b4767769b36eedbe66bb0">
         <source>Upload Max File size:</source>
@@ -2076,7 +2076,7 @@
       <trans-unit id="da505e5a6dd5678894aa9f8663bf4db0">
         <source>Uploadable files (0 = No, 1 = Yes)</source>
         <target>Uploadable files (0 = No, 1 = Yes)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 121]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 122]</note>
       </trans-unit>
       <trans-unit id="f2fc8e9d7dc8852da27437d55be02453">
         <source>Use /usr/sbin/sendmail (recommended; works in most cases)</source>
@@ -2136,7 +2136,7 @@
       <trans-unit id="81188f605f25cfc48952bb6b754cf69f">
         <source>Virtual product (0 = No, 1 = Yes)</source>
         <target>Virtual product (0 = No, 1 = Yes)</target>
-        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 124]</note>
+        <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 125]</note>
       </trans-unit>
       <trans-unit id="7324e3727807d95037eb19d304fd91ec">
         <source>Weak</source>

@@ -5508,5 +5508,20 @@
       <title>Modify database logs options form saved data</title>
       <description>This hook allows to modify data of database logs options form after it was saved</description>
     </hook>
+    <hook id="actionOverrideQuantityAvailableByProduct">
+      <name>actionOverrideQuantityAvailableByProduct</name>
+      <title>Override available quantity by product</title>
+      <description>Allows modules to override the available quantity returned by StockAvailable::getQuantityAvailableByProduct().</description>
+    </hook>
+    <hook id="actionCheckAttributeQuantity">
+      <name>actionCheckAttributeQuantity</name>
+      <title>Check product attribute quantity availability</title>
+      <description>Allows modules to validate or override the stock availability check for a specific product combination.</description>
+    </hook>
+    <hook id="actionOverrideProductQuantity">
+      <name>actionOverrideProductQuantity</name>
+      <title>Override product quantity calculation</title>
+      <description>Allows modules to override the final product quantity returned by Product::getQuantity(), including cart-aware calculations.</description>
+    </hook>
   </entities>
 </entity_hook>

@@ -24,7 +24,7 @@ Feature: Full UX discount test
       | name[fr-FR]  | Promotion_fr              |
       | active       | true                      |
       | valid_from   | 2025-01-01 11:05:00       |
-      | valid_to     | 2025-12-01 00:00:00       |
+      | valid_to     | 2026-12-01 00:00:00       |
       | code         | FREE_GIFT_2025            |
       | gift_product | hummingbird-tshirt-simple |
     And discount "complete_free_gift_discount" should have the following properties:
@@ -32,7 +32,7 @@ Feature: Full UX discount test
       | name[fr-FR]  | Promotion_fr              |
       | active       | true                      |
       | valid_from   | 2025-01-01 11:05:00       |
-      | valid_to     | 2025-12-01 00:00:00       |
+      | valid_to     | 2026-12-01 00:00:00       |
       | code         | FREE_GIFT_2025            |
       | gift_product | hummingbird-tshirt-simple |
     And I add 1 product "product1" to the cart "dummy_cart"
@@ -98,7 +98,7 @@ Feature: Full UX discount test
       | name[fr-FR]      | Promotion_2_fr      |
       | active           | true                |
       | valid_from       | 2025-01-01 11:05:00 |
-      | valid_to         | 2025-12-01 00:00:00 |
+      | valid_to         | 2026-12-01 00:00:00 |
       | code             | FREE_COMBI_2025     |
       | gift_product     | hummingbird-tshirt  |
       | gift_combination | product1MWhite      |
@@ -107,7 +107,7 @@ Feature: Full UX discount test
       | name[fr-FR]      | Promotion_2_fr      |
       | active           | true                |
       | valid_from       | 2025-01-01 11:05:00 |
-      | valid_to         | 2025-12-01 00:00:00 |
+      | valid_to         | 2026-12-01 00:00:00 |
       | code             | FREE_COMBI_2025     |
       | gift_product     | hummingbird-tshirt  |
       | gift_combination | product1MWhite      |

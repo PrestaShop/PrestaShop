@@ -50,7 +50,7 @@
       <trans-unit id="c402321a8e5818b776007e8a2d00474a">
         <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
         <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
-        <note>File: classes/controller/FrontController.php [Line: 289]</note>
+        <note>File: classes/controller/FrontController.php [Line: 284]</note>
       </trans-unit>
       <trans-unit id="01d51bf7619b2c4c234be88fa06ac16b">
         <source>Delete the images linked to this image setting</source>

@@ -111,7 +111,7 @@ abstract class ApiTestCase extends ApiPlatformTestCase
         // Before we could return a EmptyIterator but now PHPUnit forces at least one element in the iterable
         yield 'infos endpoint' => [
             'GET',
-            '/api-client/infos',
+            '/api-clients/infos',
             'application/json',
             // The endpoint is protected when you have no token, however it doesn't require any particular scope
             false,

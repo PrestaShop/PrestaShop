@@ -33,6 +33,7 @@ use PrestaShopBundle\Form\Admin\Type\CardType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -71,6 +72,27 @@ class DiscountInformationType extends TranslatorAwareType
                             ),
                         ]),
                     ],
+                ],
+            ])
+            ->add('description', TextareaType::class, [
+                'label' => $this->trans('Discount description', 'Admin.Global'),
+                'required' => false,
+                'label_help_box' => $this->trans(
+                    'For your eyes only. This will never be displayed to the customer.',
+                    'Admin.Catalog.Help'
+                ),
+                'constraints' => [
+                    new TypedRegex([
+                        'type' => TypedRegex::CLEAN_HTML_NO_IFRAME,
+                    ]),
+                    new Length([
+                        'max' => DiscountSettings::MAX_DESCRIPTION_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => DiscountSettings::MAX_DESCRIPTION_LENGTH]
+                        ),
+                    ]),
                 ],
             ])
         ;

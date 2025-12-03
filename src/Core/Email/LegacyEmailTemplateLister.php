@@ -52,7 +52,7 @@ class LegacyEmailTemplateLister
     {
         $templates = [];
 
-        $corePath = $this->mailsDir . $isoCode . '/';
+        $corePath = $this->mailsDir . '/' . $isoCode . '/';
         if (is_dir($corePath)) {
             $templates = array_merge($templates, $this->scanDirectory($corePath, '', true));
         }

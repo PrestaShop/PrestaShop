@@ -36,7 +36,7 @@ use PrestaShopBundle\ApiPlatform\Metadata\CQRSGet;
 #[ApiResource(
     operations: [
         new CQRSGet(
-            uriTemplate: '/api-client/infos',
+            uriTemplate: '/api-clients/infos',
             CQRSQuery: GetApiClientForEditing::class,
             scopes: [],
             CQRSQueryMapping: [

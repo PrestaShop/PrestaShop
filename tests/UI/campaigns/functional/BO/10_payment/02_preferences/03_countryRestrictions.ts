@@ -6,6 +6,7 @@ import {
   boLoginPage,
   boPaymentPreferencesPage,
   type BrowserContext,
+  dataCountries,
   dataCustomers,
   foClassicCartPage,
   foClassicCheckoutPage,
@@ -21,9 +22,6 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
   let browserContext: BrowserContext;
   let page: Page;
 
-  const countryID: number = 73;
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -68,7 +66,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
 
       const result = await boPaymentPreferencesPage.setCountryRestriction(
         page,
-        countryID,
+        dataCountries.france.id,
         test.args.paymentModule,
         test.args.exist,
       );

@@ -274,9 +274,9 @@ class ManufacturerControllerCore extends ProductListingFrontController
     }
 
     /**
-     * @return Manufacturer
+     * @return Manufacturer|null
      */
-    public function getManufacturer(): Manufacturer
+    public function getManufacturer(): ?Manufacturer
     {
         return $this->manufacturer;
     }

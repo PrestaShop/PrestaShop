@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ModulePermission;
 use Symfony\Component\Finder\Finder;
 use Throwable;
 
@@ -109,7 +110,9 @@ class ModuleRepository implements ModuleRepositoryInterface
             $modules->add($this->getModule($moduleName));
         }
 
-        return $this->addModulesFromHook($modules);
+        $modules = $this->addModulesFromHook($modules);
+
+        return $this->filterModulesByPermissions($modules);
     }
 
     public function getInstalledModules(): ModuleCollection
@@ -377,5 +380,24 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         return $module;
+    }
+
+    /**
+     * Filter modules if the current employee has the right to see it
+     */
+    protected function filterModulesByPermissions(ModuleCollection $modules): ModuleCollection
+    {
+        foreach ($modules as $key => $module) {
+            $moduleName = $module->getAttributes()->get('name');
+            if ($this->moduleDataProvider->isInstalled($moduleName)
+                && !$this->moduleDataProvider->can(
+                    ModulePermission::VIEW,
+                    $moduleName
+                )) {
+                unset($modules[$key]);
+            }
+        }
+
+        return $modules;
     }
 }

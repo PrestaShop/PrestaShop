@@ -18,7 +18,7 @@ Feature: Full UX discount test
       | name[fr-FR] | Quatre produit donne envoi gratuit |
       | active      | true                               |
       | valid_from  | 2025-01-01 11:05:00                |
-      | valid_to    | 2025-12-01 00:00:00                |
+      | valid_to    | 2026-12-01 00:00:00                |
       | code        | FREE_SHIPPING_4                    |
     When I update discount "free_shipping_discount_with_minimum_quantity" with the condition it requires at least 4 products
     And discount "free_shipping_discount_with_minimum_quantity" should have the following properties:
@@ -26,7 +26,7 @@ Feature: Full UX discount test
       | name[fr-FR]              | Quatre produit donne envoi gratuit |
       | active                   | true                               |
       | valid_from               | 2025-01-01 11:05:00                |
-      | valid_to                 | 2025-12-01 00:00:00                |
+      | valid_to                 | 2026-12-01 00:00:00                |
       | code                     | FREE_SHIPPING_4                    |
       | minimum_product_quantity | 4                                  |
     Given I create an empty cart "dummy_cart" for customer "testCustomer"

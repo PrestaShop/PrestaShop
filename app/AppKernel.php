@@ -24,11 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\Module\Repository\CachedModuleRepository;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Version;
 use PrestaShop\TranslationToolsBundle\TranslationToolsBundle;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileExistenceResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -43,7 +46,7 @@ abstract class AppKernel extends Kernel
     public const RELEASE_VERSION = Version::RELEASE_VERSION;
 
     /**
-     * @var ModuleRepository
+     * @var CachedModuleRepository
      */
     protected $moduleRepository = null;
 
@@ -300,10 +303,18 @@ abstract class AppKernel extends Kernel
         return realpath(__DIR__ . '/..');
     }
 
-    protected function getModuleRepository(): ModuleRepository
+    protected function getModuleRepository(): CachedModuleRepository
     {
         if ($this->moduleRepository === null) {
-            $this->moduleRepository = new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_);
+            if ($this->getEnvironment() === 'test') {
+                $cache = new NullAdapter();
+            } else {
+                $cache = new FilesystemAdapter('modules', 0, $this->getCacheDir());
+            }
+            $this->moduleRepository = new CachedModuleRepository(
+                new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_),
+                $cache
+            );
         }
 
         return $this->moduleRepository;

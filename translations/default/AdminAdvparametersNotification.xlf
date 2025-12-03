@@ -5,7 +5,7 @@
       <trans-unit id="b06766963f3b27f47f5e6ddf68d8f07e">
         <source>"%email%" is not a valid email address.</source>
         <target>"%email%" is not a valid email address.</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3038]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3042]</note>
       </trans-unit>
       <trans-unit id="8ff8844bb02822975904934598298987">
         <source>"%key%" is an unauthorized keyword.</source>
@@ -30,12 +30,12 @@
       <trans-unit id="597cf702e07f3b35431d2a499b00cefd">
         <source>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved</source>
         <target>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3062]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3066]</note>
       </trans-unit>
       <trans-unit id="14118fbc7d8c233f0ac36ffb31716605">
         <source>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated</source>
         <target>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3052]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3056]</note>
       </trans-unit>
       <trans-unit id="1123af3eab25b7475419fcaecc6c3beb">
         <source>%category_name% (ID: %id%) cannot be saved</source>
@@ -60,7 +60,7 @@
       <trans-unit id="5b8f192b08644fdc9fd1fd86bcbbc57b">
         <source>(click to open "Generators" page)</source>
         <target>(click to open "Generators" page)</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 694]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 698]</note>
       </trans-unit>
       <trans-unit id="02b5205ddff3073efc5c8b5b9cc165ba">
         <source>(from %s to %s)</source>
@@ -115,7 +115,7 @@
       <trans-unit id="3cc21b7970c348679cb6a1323a2dc173">
         <source>Alias is invalid</source>
         <target>Alias is invalid</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3492]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3496]</note>
       </trans-unit>
       <trans-unit id="fd4adc19ae7e0f0391f617451f3729cf">
         <source>All caches cleared successfully</source>
@@ -195,7 +195,7 @@
       <trans-unit id="243c959202a4f6ce7f1ccba6bc19ff08">
         <source>Cannot read the .CSV file</source>
         <target>Cannot read the .CSV file</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3736]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3740]</note>
       </trans-unit>
       <trans-unit id="c49d6d58d1c98f34a15bbd169f82961a">
         <source>Changed/missing files have been detected.</source>
@@ -240,17 +240,17 @@
       <trans-unit id="e8b6f82eaf10566aa372329388e13e39">
         <source>EAN-13 "%ean13%" has incorrect value for product with ID %id%.</source>
         <target>EAN-13 "%ean13%" has incorrect value for product with ID %id%.</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 2455]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 2459]</note>
       </trans-unit>
       <trans-unit id="9a19980e3db9fa010269bb72d31ee42a">
         <source>Email address %1$s (ID: %2$s) cannot be saved.</source>
         <target>Email address %1$s (ID: %2$s) cannot be saved.</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 2863]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 2867]</note>
       </trans-unit>
       <trans-unit id="fd6d9d3ba7d4aaacc49f53c2e8c082c0">
         <source>Email address %1$s (ID: %2$s) cannot be validated.</source>
         <target>Email address %1$s (ID: %2$s) cannot be validated.</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 2854]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 2858]</note>
       </trans-unit>
       <trans-unit id="4a344651fb10eb9e339838fab7bb97ae">
         <source>Enable GZIP compression on your server.</source>
@@ -410,7 +410,7 @@
       <trans-unit id="931bbbb741d025e3ff25ee3c2e72f414">
         <source>Linking Accessories...</source>
         <target>Linking Accessories...</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 4012]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 4016]</note>
       </trans-unit>
       <trans-unit id="f438c83e3ff4dd40a3fc1bf4bb3e79f5">
         <source>Linking accessories...</source>
@@ -465,7 +465,7 @@
       <trans-unit id="5c8707f79dbdd3abb28a8aa09e34f02f">
         <source>No image was found for combination with id_product = %s and image position = %s.</source>
         <target>No image was found for combination with id_product = %s and image position = %s.</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 2334]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 2338]</note>
       </trans-unit>
       <trans-unit id="a12b8823ac5b71b9d09f9c7b09e54c48">
         <source>No valid tables were found to backup.</source>
@@ -525,7 +525,7 @@
       <trans-unit id="0d96ef3283e08deb509dfe7bdf2a03ef">
         <source>Product with reference %1$s (ID: %2$s) could not be saved because the product name is missing.</source>
         <target>Product with reference %1$s (ID: %2$s) could not be saved because the product name is missing.</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 1542]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 1546]</note>
       </trans-unit>
       <trans-unit id="4798b868d51d8e259321deff0452c0f9">
         <source>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</source>
@@ -625,12 +625,12 @@
       <trans-unit id="52629716aa86c04b8d81bc7e9522463f">
         <source>Store is invalid</source>
         <target>Store is invalid</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3668]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3672]</note>
       </trans-unit>
       <trans-unit id="964e5a863ba051181f8f537626f5c953">
         <source>Supplier is invalid</source>
         <target>Supplier is invalid</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3413]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3417]</note>
       </trans-unit>
       <trans-unit id="664d4132fc8dc3a158be4692b4246528">
         <source>Tags list is invalid</source>
@@ -710,17 +710,17 @@
       <trans-unit id="32de857e46ef2b55ce3582004fef7a95">
         <source>The confirmation email couldn't be sent, but the import is successful. Yay!</source>
         <target>The confirmation email couldn't be sent, but the import is successful. Yay!</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 4220]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 4224]</note>
       </trans-unit>
       <trans-unit id="608ec99cc3ef74d962769c1958a1fa62">
         <source>The customer ID #%d does not exist in the database, and therefore cannot be saved.</source>
         <target>The customer ID #%d does not exist in the database, and therefore cannot be saved.</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3083]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3087]</note>
       </trans-unit>
       <trans-unit id="4a69d9da990728e003654d32a0b283a4">
         <source>The customer ID #%d does not exist in the database, and therefore cannot be validated.</source>
         <target>The customer ID #%d does not exist in the database, and therefore cannot be validated.</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 3075]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 3079]</note>
       </trans-unit>
       <trans-unit id="cfe45dd92c1b71a640ea19767578f38c">
         <source>The employee must be associated with at least one shop.</source>
@@ -815,7 +815,7 @@
       <trans-unit id="441006dbdaef41a163047624fe1241ab">
         <source>This key already exists.</source>
         <target>This key already exists.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/WebserviceController.php [Line: 381]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/WebserviceController.php [Line: 385]</note>
       </trans-unit>
       <trans-unit id="197f1953efd11637a634a7f9b269eac3">
         <source>To proceed, please upload a file first.</source>
@@ -955,7 +955,7 @@
       <trans-unit id="613260718349db00d0b7b9c1eb77c76c">
         <source>Your file has been successfully imported into your shop. Don't forget to re-build the products' search index.</source>
         <target>Your file has been successfully imported into your shop. Don't forget to re-build the products' search index.</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 564]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 568]</note>
       </trans-unit>
       <trans-unit id="95fdb0ead4798ff27cce78fac3fd3c11">
         <source>[1]%percentage%[/1]% validated</source>

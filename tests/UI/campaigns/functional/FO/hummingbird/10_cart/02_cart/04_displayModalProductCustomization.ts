@@ -17,7 +17,7 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_cart_cart_displayModalProductCustomization';
 
-describe('FO - cart : Display modal of product customization', async () => {
+describe('FO - Cart : Display modal of product customization', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   const customText: string = 'Hello world!';

@@ -246,6 +246,25 @@ class StockAvailableCore extends ObjectModel
      */
     public static function getQuantityAvailableByProduct($id_product = null, $id_product_attribute = null, $id_shop = null)
     {
+        $quantity = Hook::exec(
+            'actionOverrideQuantityAvailableByProduct',
+            [
+                'id_product' => $id_product,
+                'id_product_attribute' => $id_product_attribute,
+                'id_shop' => $id_shop,
+            ],
+            null,
+            false,
+            true,
+            false,
+            null,
+            true
+        );
+
+        if (is_int($quantity)) {
+            return $quantity;
+        }
+
         // if null, it's a product without attributes
         if ($id_product_attribute === null) {
             $id_product_attribute = 0;

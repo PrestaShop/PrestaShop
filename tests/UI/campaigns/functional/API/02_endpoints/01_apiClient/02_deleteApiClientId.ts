@@ -17,7 +17,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_apiClient_deleteApiClientId';
 
-describe('API : DELETE /api-client/{apiClientId}', async () => {
+describe('API : DELETE /api-clients/{apiClientId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -154,10 +154,10 @@ describe('API : DELETE /api-client/{apiClientId}', async () => {
   });
 
   describe('API : Delete the API Access', async () => {
-    it('should request the endpoint /api-client/{apiClientId}', async function () {
+    it('should request the endpoint /api-clients/{apiClientId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.delete(`api-client/${idApiClient}`, {
+      const apiResponse = await apiContext.delete(`api-clients/${idApiClient}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

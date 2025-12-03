@@ -25,7 +25,7 @@ Feature: Discount priority - Verify application order
       | active             | true                |
       | priority           | 5                   |
       | valid_from         | 2025-01-01 10:00:00 |
-      | valid_to           | 2025-12-31 23:59:59 |
+      | valid_to           | 2026-12-31 23:59:59 |
       | code               | AMOUNT5             |
       | reduction_amount   | 20.0                |
       | reduction_currency | usd                 |
@@ -38,7 +38,7 @@ Feature: Discount priority - Verify application order
       | active            | true                |
       | priority          | 3                   |
       | valid_from        | 2025-01-01 10:00:00 |
-      | valid_to          | 2025-12-31 23:59:59 |
+      | valid_to          | 2026-12-31 23:59:59 |
       | code              | PERCENT3            |
       | reduction_percent | 10.0                |
     And I set compatible types for discount "percent_prio3" to:
@@ -67,7 +67,7 @@ Feature: Discount priority - Verify application order
       | active             | true                    |
       | priority           | 5                       |
       | valid_from         | 2025-01-01 10:00:00     |
-      | valid_to           | 2025-12-31 23:59:59     |
+      | valid_to           | 2026-12-31 23:59:59     |
       | code               | INCOMPAT_AMT30          |
       | reduction_amount   | 30.0                    |
       | reduction_currency | usd                     |
@@ -80,7 +80,7 @@ Feature: Discount priority - Verify application order
       | active            | true                     |
       | priority          | 3                        |
       | valid_from        | 2025-01-01 10:00:00      |
-      | valid_to          | 2025-12-31 23:59:59      |
+      | valid_to          | 2026-12-31 23:59:59      |
       | code              | INCOMPAT_PCT15           |
       | reduction_percent | 15.0                     |
     And I set compatible types for discount "incompat_percent15" to:

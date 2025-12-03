@@ -20,7 +20,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_apiClient_getApiClientInfos';
 
-describe('API : GET /api-client/infos', async () => {
+describe('API : GET /api-clients/infos', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -155,10 +155,10 @@ describe('API : GET /api-client/infos', async () => {
   });
 
   describe('API : Check Data', async () => {
-    it('should request the endpoint /api-client/infos', async function () {
+    it('should request the endpoint /api-clients/infos', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get('api-client/infos', {
+      const apiResponse = await apiContext.get('api-clients/infos', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

@@ -590,7 +590,7 @@
       <trans-unit id="71754079aaeefc5c6e745ddd59f8a35f">
         <source>Free order</source>
         <target>Free order</target>
-        <note>File: controllers/front/OrderConfirmationController.php [Line: 291]</note>
+        <note>File: controllers/front/OrderConfirmationController.php [Line: 300]</note>
       </trans-unit>
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
@@ -875,7 +875,7 @@ Best regards,</target>
       <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">
         <source>Newsletter</source>
         <target>Newsletter</target>
-        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 1428]</note>
+        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 1431]</note>
       </trans-unit>
       <trans-unit id="d7eb752a5f38ab96a8dcf110aeb9f8b3">
         <source>Newsletter Registrations</source>
@@ -1365,7 +1365,7 @@ Best regards,</target>
       <trans-unit id="858591a7d8647b4535c51a4ad506db9c">
         <source>Shipping does not apply to virtual orders</source>
         <target>Shipping does not apply to virtual orders</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig [Line: 79]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig [Line: 80]</note>
       </trans-unit>
       <trans-unit id="4c15f9bb0c76e90180c701b2d39994d8">
         <source>Shipping price (Tax incl.)</source>

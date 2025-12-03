@@ -18,7 +18,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_hook_getHookId';
 
-describe('API : GET /hook/{hookId}', async () => {
+describe('API : GET /hooks/{hookId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -96,10 +96,10 @@ describe('API : GET /hook/{hookId}', async () => {
   });
 
   describe('API : Check Data', async () => {
-    it('should request the endpoint /hook/{hookId}', async function () {
+    it('should request the endpoint /hooks/{hookId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get(`hook/${hookId}`, {
+      const apiResponse = await apiContext.get(`hooks/${hookId}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -116,7 +116,7 @@ describe('API : GET /hook/{hookId}', async () => {
 
       expect(jsonResponse).to.have.all.keys(
         'hookId',
-        'active',
+        'enabled',
         'name',
         'title',
         'description',
@@ -131,12 +131,12 @@ describe('API : GET /hook/{hookId}', async () => {
       expect(jsonResponse.hookId).to.be.equal(hookId);
     });
 
-    it('should check the JSON Response : `active`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseActive', baseContext);
+    it('should check the JSON Response : `enabled`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseEnabled', baseContext);
 
-      expect(jsonResponse).to.have.property('active');
-      expect(jsonResponse.active).to.be.a('boolean');
-      expect(jsonResponse.active).to.be.equal(statusHook);
+      expect(jsonResponse).to.have.property('enabled');
+      expect(jsonResponse.enabled).to.be.a('boolean');
+      expect(jsonResponse.enabled).to.be.equal(statusHook);
     });
 
     it('should check the JSON Response : `name`', async function () {

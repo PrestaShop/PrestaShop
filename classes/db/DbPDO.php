@@ -61,16 +61,36 @@ class DbPDOCore extends Db
         }
         $dsn .= ';charset=utf8mb4';
 
+        $options = [
+            PDO::ATTR_TIMEOUT => $timeout,
+        ];
+        /*
+         * PHP 8.5 deprecated the driver specific PDO:: prefixed constants due to security concerns. Their
+         * replacements are the new Pdo\Mysql:: constants, introduced in PHP 8.4. Unfortunately, we don't
+         * have one solution that fits all supported PHP versions.
+         */
+        if (PHP_VERSION_ID >= 80500) {
+            $options = array_merge($options, [
+                /* @phpstan-ignore-next-line */
+                Pdo\Mysql::ATTR_USE_BUFFERED_QUERY => true,
+                /* @phpstan-ignore-next-line */
+                Pdo\Mysql::ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
+                /* @phpstan-ignore-next-line */
+                Pdo\Mysql::ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
+            ]);
+        } else {
+            $options = array_merge($options, [
+                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
+                PDO::MYSQL_ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
+            ]);
+        }
+
         return new PDO(
             $dsn,
             $user,
             $password,
-            [
-                PDO::ATTR_TIMEOUT => $timeout,
-                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
-                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
-                PDO::MYSQL_ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
-            ]
+            $options
         );
     }
 

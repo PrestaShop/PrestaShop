@@ -365,3 +365,10 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search\SearchTermType'
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AliasFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.tag_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Tag\TagType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TagFormDataProvider'

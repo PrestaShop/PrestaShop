@@ -30,7 +30,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 use PrestaShopBundle\Form\Admin\Type\EntityItemType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class AttachedFileType extends TranslatorAwareType
@@ -38,9 +37,10 @@ class AttachedFileType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->remove('name')
             ->remove('image')
-            ->add('attachment_id', HiddenType::class, [
-                'label' => false,
+            ->add('attachment_id', TextPreviewType::class, [
+                'label' => $this->trans('ID', 'Admin.Global'),
             ])
             ->add('name', TextPreviewType::class, [
                 'label' => $this->trans('Title', 'Admin.Global'),

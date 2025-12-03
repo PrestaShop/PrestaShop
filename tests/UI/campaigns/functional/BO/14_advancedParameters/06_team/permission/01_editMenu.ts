@@ -157,7 +157,7 @@ describe('BO - Advanced Parameters - Team - Permission : Edit menu', async () =>
         await testContext.addContextItem(this, 'testIdentifier', `checkAfterRefreshPage${index}`, baseContext);
 
         const number = await boPermissionsPage.getNumberOfPagesUnChecked(page, test.args.action);
-        expect(number).to.eq(1);
+        expect(number).to.eq(0);
       });
     });
   });

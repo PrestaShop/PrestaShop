@@ -45,7 +45,7 @@ Post-condition:
 - Disable merchandise returns
 - uninstall the theme hummingbird
  */
-describe('FO - Account : Consult return details', async () => {
+describe('FO - User account - Merchandise Returns : Consult return details', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let orderID: number;

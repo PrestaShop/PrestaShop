@@ -38,7 +38,7 @@ Scenario:
 Post-condition:
 - Uninstall the theme hummingbird
  */
-describe('FO - Account - Order details : Download invoice', async () => {
+describe('FO - User account - Order history - Order details : Download invoice from order details', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let fileName: string;

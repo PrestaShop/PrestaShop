@@ -258,7 +258,7 @@ class CustomerThreadCore extends ObjectModel
 			SELECT id_customer_thread
 			FROM ' . _DB_PREFIX_ . 'customer_thread ct
 			WHERE ct.status = "open"
-			AND ct.date_upd = (
+			AND ct.date_upd > (
 				SELECT date_add FROM ' . _DB_PREFIX_ . 'customer_message
 				WHERE (id_employee IS NULL OR id_employee = 0)
 					AND id_customer_thread = ' . (int) $id_customer_thread . '

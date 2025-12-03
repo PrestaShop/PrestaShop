@@ -246,7 +246,24 @@ class ProductAttributeCore extends ObjectModel
             $shop = Context::getContext()->shop;
         }
 
-        $result = StockAvailable::getQuantityAvailableByProduct(null, (int) $idProductAttribute, $shop->id);
+        $result = Hook::exec(
+            'actionCheckAttributeQuantity',
+            [
+                'id_product_attribute' => $idProductAttribute,
+                'qty' => $qty,
+                'shop' => $shop,
+            ],
+            null,
+            false,
+            true,
+            false,
+            null,
+            true
+        );
+
+        if (!is_int($result)) {
+            $result = StockAvailable::getQuantityAvailableByProduct(null, (int) $idProductAttribute, $shop->id);
+        }
 
         return $result && $qty <= $result;
     }

@@ -18,7 +18,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_customerGroup_postCustomersGroup';
 
-describe('API : POST /customers/group', async () => {
+describe('API : POST /customers/groups', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -59,10 +59,10 @@ describe('API : POST /customers/group', async () => {
       expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
-    it('should request the endpoint /customers/group', async function () {
+    it('should request the endpoint /customers/groups', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.post('customers/group', {
+      const apiResponse = await apiContext.post('customers/groups', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

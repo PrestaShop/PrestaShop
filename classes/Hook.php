@@ -1084,7 +1084,8 @@ class HookCore extends ObjectModel
                     'authentication' => 'auth',
                 ];
                 if (
-                    isset($matching_name[$controller])
+                    !is_null($controller)
+                    && isset($matching_name[$controller])
                     && in_array($matching_name[$controller], $exceptions)
                 ) {
                     continue;

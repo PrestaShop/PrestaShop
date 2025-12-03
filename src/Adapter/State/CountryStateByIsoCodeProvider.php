@@ -34,11 +34,12 @@ class CountryStateByIsoCodeProvider
 {
     /**
      * @param string $isoCode
+     * @param int|null $countryId
      *
      * @return int
      */
-    public function getStateIdByIsoCode(string $isoCode): int
+    public function getStateIdByIsoCode(string $isoCode, ?int $countryId = null): int
     {
-        return (int) State::getIdByIso($isoCode);
+        return (int) State::getIdByIso($isoCode, $countryId);
     }
 }

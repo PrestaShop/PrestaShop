@@ -40,7 +40,7 @@
       <trans-unit id="228289d31b9bf52373066156f9b0190e">
         <source>Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.</source>
         <target>Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.</target>
-        <note>File: controllers/front/OrderConfirmationController.php [Line: 207]</note>
+        <note>File: controllers/front/OrderConfirmationController.php [Line: 205]</note>
       </trans-unit>
       <trans-unit id="19b1f74d6e96f3db9805e8d5c9301b7a">
         <source>Your password has been successfully reset and a confirmation has been sent to your email address: %s</source>

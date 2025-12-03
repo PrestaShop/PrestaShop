@@ -1,0 +1,60 @@
+{# **
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * #}
+
+{% set filter = grid.filter_form[filter_name] %}
+{% set filter_name = filter_name|default(filter.vars.name) %}
+{% set filter_options = filter.vars.filter_options|default([]) %}
+{% set filter_field_selector = filter.vars.filter_field_selector|default('[data-role="' ~ filter_name ~ '-filter-field"]') %}
+{% set default_value = filter.vars.default_value|default('') %}
+{% set current_value = grid.filters[filter_name]|default(app.request.get(grid.form_prefix) is iterable
+  ? app.request.get(grid.form_prefix).filters[filter_name]|default(app.request.get(grid.form_prefix)[filter_name]|default(default_value))
+  : default_value
+) %}
+{% set container_class = container_class|default('filter-link-group') %}
+{% set item_class = item_class|default('filter-link-group__item') %}
+{% set active_class = active_class|default('is-active') %}
+
+<div
+  class="{{ container_class }}"
+  data-filter-link-group
+  data-filter-field-selector="{{ filter_field_selector }}"
+  data-filter-submit-button-selector=".grid-search-button"
+  data-filter-active-class="{{ active_class }}"
+  data-filter-form-prefix="{{ grid.form_prefix }}"
+  data-filter-initial-value="{{ current_value }}"
+  data-role="{{ filter_name }}-filter"
+>
+  {% for value, label in filter_options %}
+    <a href="#"
+       class="{{ item_class }}{% if current_value == value %} {{ active_class }}{% endif %}"
+       data-filter-value="{{ value }}"
+       role="button"
+       aria-pressed="{{ current_value == value ? 'true' : 'false' }}"
+       style="text-decoration: none;"
+    >
+      {{ label }}
+    </a>
+  {% endfor %}
+</div>

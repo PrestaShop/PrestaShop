@@ -62,7 +62,8 @@ export default class CountryStateSelectionToggler {
     this.$countryStateSelector = $(countryStateSelector);
     this.$countryInput = $(countryInputSelector);
 
-    this.$countryInput.on('change', () => this.change());
+    this.$countryInput.on('change', () => this.onChange());
+    this.onChange();
   }
 
   /**
@@ -70,7 +71,7 @@ export default class CountryStateSelectionToggler {
    *
    * @private
    */
-  private change(): void {
+  private onChange(): void {
     const countryId = this.$countryInput.val();
 
     if (countryId === '') {
@@ -104,9 +105,13 @@ export default class CountryStateSelectionToggler {
   }
 
   toggle(): void {
+    // Display the field State if:
+    // - there is options in the select
+    // - (OR)
+    // - there is error for the field
     this.$stateSelectionBlock.toggleClass(
       'd-none',
-      this.$countryStateSelector.find('option').length === 0,
+      this.$countryStateSelector.find('option').length === 0 && !this.$stateSelectionBlock.hasClass('has-error'),
     );
   }
 }

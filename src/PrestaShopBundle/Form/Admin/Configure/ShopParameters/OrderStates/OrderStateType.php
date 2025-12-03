@@ -77,8 +77,9 @@ class OrderStateType extends TranslatorAwareType
         LegacyEmailTemplateLister $legacyTemplateLister
     ) {
         parent::__construct($translator, $locales);
-        $mailTheme = $configuration->get('PS_MAIL_THEME', 'modern');
 
+        // Load all layouts for the current mail theme
+        $mailTheme = $configuration->get('PS_MAIL_THEME', 'modern');
         $mailLayouts = $themeCatalog->getByName($mailTheme)->getLayouts();
 
         foreach ($locales as $locale) {
@@ -88,7 +89,11 @@ class OrderStateType extends TranslatorAwareType
             /** @var Layout $mailLayout */
             foreach ($mailLayouts as $mailLayout) {
                 $templateName = $mailLayout->getName();
+
+                // Add all templates as a choice for order status email.
                 $this->templates[$languageId][$templateName] = $templateName;
+
+                // Add preview URL for each template
                 $this->templateAttributes[$languageId][$templateName] = [
                     'data-preview' => $routing->generate(
                         empty($mailLayout->getModuleName()) ?
@@ -105,6 +110,7 @@ class OrderStateType extends TranslatorAwareType
                 ];
             }
 
+            // Add legacy templates that are missing in the current mail theme
             $legacyTemplates = $legacyTemplateLister->getLegacyTemplates($locale['iso_code']);
             foreach ($legacyTemplates as $templateName => $templateInfo) {
                 if (!isset($this->templates[$languageId][$templateName])) {
@@ -116,6 +122,12 @@ class OrderStateType extends TranslatorAwareType
                 }
             }
         }
+
+        // Sort templates alpabetically
+        foreach ($this->templates as &$templatesByLanguageId) {
+            asort($templatesByLanguageId);
+        }
+        unset($templatesByLanguageId);
     }
 
     /**
@@ -161,83 +173,72 @@ class OrderStateType extends TranslatorAwareType
             ->add('icon', FileType::class, [
                 'required' => false,
                 'label' => $this->trans('Icon', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Upload an icon from your computer (File type: .gif, suggested size: 16x16).', 'Admin.Shopparameters.Help'),
+                'help' => $this->trans('Image of this status used in the backoffice. (File type: .gif, suggested size: 16x16).', 'Admin.Shopparameters.Help'),
             ])
             ->add('color', ColorPickerType::class, [
                 'required' => false,
                 'label' => $this->trans('Color', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Status will be highlighted in this color. HTML colors only.', 'Admin.Shopparameters.Help'),
+                'help' => $this->trans('Background color of this status label. Used both in backoffice and on order tracking page. HTML colors only.', 'Admin.Shopparameters.Help'),
             ])
             ->add('loggable', CheckboxType::class, [
                 'required' => false,
-                'label' => $this->trans('Consider the associated order as validated.', 'Admin.Shopparameters.Feature'),
+                'label' => $this->trans('Set the associated order as validated.', 'Admin.Shopparameters.Feature'),
                 'attr' => [
                     'material_design' => true,
                 ],
+                'help' => $this->trans('This will mark the order as successfuly processed - including it in customer\'s revenue, your shop stats etc.', 'Admin.Shopparameters.Help'),
             ])
             ->add('invoice', CheckboxType::class, [
                 'required' => false,
-                'label' => $this->trans('Allow a customer to download and view PDF versions of their invoices.', 'Admin.Shopparameters.Feature'),
+                'label' => $this->trans('Generate an invoice when order is assigned this status.', 'Admin.Shopparameters.Feature'),
                 'attr' => [
                     'material_design' => true,
                 ],
+                'help' => $this->trans('If order\'s invoice is not generated yet, this will generate it.', 'Admin.Shopparameters.Help'),
             ])
             ->add('hidden', CheckboxType::class, [
                 'required' => false,
-                'label' => $this->trans('Hide this status in all customer orders.', 'Admin.Shopparameters.Feature'),
+                'label' => $this->trans('Don\'t display this status to the customer on order tracking page.', 'Admin.Shopparameters.Feature'),
                 'attr' => [
                     'material_design' => true,
                 ],
-            ])
-            ->add('send_email', CheckboxType::class, [
-                'required' => false,
-                'label' => $this->trans('Send an email to the customer when their order status has changed.', 'Admin.Shopparameters.Feature'),
-                'attr' => [
-                    'material_design' => true,
-                ],
-            ])
-            ->add('pdf_invoice', CheckboxType::class, [
-                'required' => false,
-                'label' => $this->trans('Attach invoice PDF to email.', 'Admin.Shopparameters.Feature'),
-                'attr' => [
-                    'material_design' => true,
-                ],
-            ])
-            ->add('pdf_delivery', CheckboxType::class, [
-                'required' => false,
-                'label' => $this->trans('Attach delivery slip PDF to email.', 'Admin.Shopparameters.Feature'),
-                'attr' => [
-                    'material_design' => true,
-                ],
+                'help' => $this->trans('Use this if you want this status to be internal only.', 'Admin.Shopparameters.Help'),
             ])
             ->add('shipped', CheckboxType::class, [
                 'required' => false,
-                'label' => $this->trans('Set the order as shipped.', 'Admin.Shopparameters.Feature'),
+                'label' => $this->trans('Set the associated order as shipped.', 'Admin.Shopparameters.Feature'),
                 'attr' => [
                     'material_design' => true,
                 ],
+                'help' => $this->trans('This will mark the order as shipped. It will register a stock movement entry, prevent modifying the order and other things.', 'Admin.Shopparameters.Help'),
             ])
             ->add('paid', CheckboxType::class, [
                 'required' => false,
-                'label' => $this->trans('Set the order as paid.', 'Admin.Shopparameters.Feature'),
+                'label' => $this->trans('Set the associated order as paid.', 'Admin.Shopparameters.Feature'),
                 'attr' => [
                     'material_design' => true,
                 ],
+                'help' => $this->trans('This will add an entry to order\'s "Payments" table, if it doesn\'t exist yet.', 'Admin.Shopparameters.Help'),
             ])
             ->add('delivery', CheckboxType::class, [
                 'required' => false,
-                'label' => $this->trans('Set the order as in transit.', 'Admin.Shopparameters.Feature'),
+                'label' => $this->trans('Set the associated order as delivered.', 'Admin.Shopparameters.Feature'),
                 'attr' => [
                     'material_design' => true,
                 ],
+                'help' => $this->trans('This will create a delivery slip and mark a delivery date on order\'s invoice.', 'Admin.Shopparameters.Help'),
+            ])
+            ->add('send_email', CheckboxType::class, [
+                'required' => false,
+                'label' => $this->trans('Send an email to the customer.', 'Admin.Shopparameters.Feature'),
+                'attr' => [
+                    'material_design' => true,
+                ],
+                'help' => $this->trans('This will send an email to the customer after assigning this status. Make sure to select proper email template below.', 'Admin.Shopparameters.Help'),
             ])
             ->add('template', TranslatableChoiceType::class, [
                 'label' => $this->trans('Template', 'Admin.Shopparameters.Feature'),
-                'hint' => sprintf(
-                    '%s<br>%s',
-                    $this->trans('Only letters, numbers and underscores ("_") are allowed.', 'Admin.Shopparameters.Help'),
-                    $this->trans('Email template for both .html and .txt.', 'Admin.Shopparameters.Help')
-                ),
+                'hint' => $this->trans('Select an email template that will be sent after setting this status.', 'Admin.Shopparameters.Help'),
                 'required' => false,
                 'choices' => $this->templates,
                 'row_attr' => $this->templateAttributes + [
@@ -249,6 +250,22 @@ class OrderStateType extends TranslatorAwareType
                     'class' => 'btn btn-primary',
                     'id' => 'order_state_template_preview',
                 ],
+            ])
+            ->add('pdf_invoice', CheckboxType::class, [
+                'required' => false,
+                'label' => $this->trans('Attach invoice PDF to email', 'Admin.Shopparameters.Feature'),
+                'attr' => [
+                    'material_design' => true,
+                ],
+                'help' => $this->trans('This will attach invoice PDF to the sent email, if it exists. If it doesn\'t, it will have no effect.', 'Admin.Shopparameters.Help'),
+            ])
+            ->add('pdf_delivery', CheckboxType::class, [
+                'required' => false,
+                'label' => $this->trans('Attach delivery slip PDF to email.', 'Admin.Shopparameters.Feature'),
+                'attr' => [
+                    'material_design' => true,
+                ],
+                'help' => $this->trans('This will attach delivery slip PDF to the sent email, if it exists. If it doesn\'t, it will have no effect.', 'Admin.Shopparameters.Help'),
             ])
         ;
     }

@@ -85,6 +85,10 @@ class StateType extends AbstractType
             $builder->getData()['id_state']->getValue() :
             null;
 
+        $countryIdValue = isset($builder->getData()['id_country']) && $builder->getData()['id_country'] ?
+            $builder->getData()['id_country'] :
+            null;
+
         $builder
             ->add('name', TextType::class, [
                 'required' => true,
@@ -137,6 +141,7 @@ class StateType extends AbstractType
                     new CleanHtml(),
                     new UniqueStateIsoCode([
                         'excludeStateId' => $stateIdValue,
+                        'countryId' => $countryIdValue,
                     ]),
                 ],
                 'attr' => [

@@ -330,12 +330,12 @@
       <trans-unit id="23358893750daf48d62120b4478b06b5">
         <source>The module %module% is invalid and cannot be loaded.</source>
         <target>The module %module% is invalid and cannot be loaded.</target>
-        <note>File: src/Core/Module/ModuleManager.php [Line: 326]</note>
+        <note>File: src/Core/Module/ModuleManager.php [Line: 340]</note>
       </trans-unit>
       <trans-unit id="83a812de8784135990c57d25d0f9b34b">
         <source>The module %module% must be installed first</source>
         <target>The module %module% must be installed first</target>
-        <note>File: src/Core/Module/ModuleManager.php [Line: 424]</note>
+        <note>File: src/Core/Module/ModuleManager.php [Line: 438]</note>
       </trans-unit>
       <trans-unit id="4762b130ddcc0e4d2eacf0c59a8b17a2">
         <source>The module is not installed.</source>
@@ -430,7 +430,7 @@
       <trans-unit id="51efcbeb7c19dd51c9fe8ed9c7216285">
         <source>Unfortunately, the module %module% did not return additional details.</source>
         <target>Unfortunately, the module %module% did not return additional details.</target>
-        <note>File: src/Core/Module/ModuleManager.php [Line: 317]</note>
+        <note>File: src/Core/Module/ModuleManager.php [Line: 331]</note>
       </trans-unit>
       <trans-unit id="8095c31813f8e77d292bf6bec964169b">
         <source>Unknown archive type.</source>
@@ -475,17 +475,17 @@
       <trans-unit id="68c020e02cc93287d21c247e5526c526">
         <source>You are not allowed to delete the module %module%.</source>
         <target>You are not allowed to delete the module %module%.</target>
-        <note>File: src/Core/Module/ModuleManager.php [Line: 179]</note>
+        <note>File: src/Core/Module/ModuleManager.php [Line: 185]</note>
       </trans-unit>
       <trans-unit id="87c10be2be869072e9d1e7cbca858445">
         <source>You are not allowed to disable the module %module%.</source>
         <target>You are not allowed to disable the module %module%.</target>
-        <note>File: src/Core/Module/ModuleManager.php [Line: 249]</note>
+        <note>File: src/Core/Module/ModuleManager.php [Line: 260]</note>
       </trans-unit>
       <trans-unit id="42874189778a946c2a51911076474ad4">
         <source>You are not allowed to enable the module %module%.</source>
         <target>You are not allowed to enable the module %module%.</target>
-        <note>File: src/Core/Module/ModuleManager.php [Line: 228]</note>
+        <note>File: src/Core/Module/ModuleManager.php [Line: 237]</note>
       </trans-unit>
       <trans-unit id="f2715f72988009e4f50e94d88b3df89f">
         <source>You are not allowed to install modules.</source>
@@ -495,17 +495,17 @@
       <trans-unit id="e65dccd7380f1af807453a7afdf3f427">
         <source>You are not allowed to reset the module %module%.</source>
         <target>You are not allowed to reset the module %module%.</target>
-        <note>File: src/Core/Module/ModuleManager.php [Line: 273]</note>
+        <note>File: src/Core/Module/ModuleManager.php [Line: 286]</note>
       </trans-unit>
       <trans-unit id="21f1ba3ca9bb026443f8dea1127f2f0b">
         <source>You are not allowed to uninstall the module %module%.</source>
         <target>You are not allowed to uninstall the module %module%.</target>
-        <note>File: src/Core/Module/ModuleManager.php [Line: 152]</note>
+        <note>File: src/Core/Module/ModuleManager.php [Line: 156]</note>
       </trans-unit>
       <trans-unit id="b09ef7cfc0d14e9cda28259db10e5b67">
         <source>You are not allowed to update the module %module%.</source>
         <target>You are not allowed to update the module %module%.</target>
-        <note>File: src/Core/Module/ModuleManager.php [Line: 199]</note>
+        <note>File: src/Core/Module/ModuleManager.php [Line: 206]</note>
       </trans-unit>
       <trans-unit id="4d373e9888aff2340f84ff4d11256e7b">
         <source>You are not allowed to upload modules.</source>

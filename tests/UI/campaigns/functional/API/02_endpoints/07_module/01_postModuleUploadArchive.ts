@@ -22,7 +22,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_module_postModuleUploadArchive';
 
-describe('API : POST /module/upload-archive', async () => {
+describe('API : POST /modules/upload-archive', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -79,7 +79,7 @@ describe('API : POST /module/upload-archive', async () => {
     });
   });
 
-  describe('API : POST module/upload-source', async () => {
+  describe('API : POST modules/upload-source', async () => {
     it(`should download the zip of the module '${dataModules.keycloak.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadModule', baseContext);
 
@@ -89,10 +89,10 @@ describe('API : POST /module/upload-archive', async () => {
       expect(found).to.eq(true);
     });
 
-    it('should request the endpoint /module/upload-archive', async function () {
+    it('should request the endpoint /modules/upload-archive', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.post('module/upload-archive', {
+      const apiResponse = await apiContext.post('modules/upload-archive', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           ContentType: 'multipart/form-data',

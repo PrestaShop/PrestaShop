@@ -47,7 +47,7 @@ Feature: Full UX discount test
       | name[fr-FR] | Trois bière et/ou chips donne envoi gratuit  |
       | active      | true                                         |
       | valid_from  | 2025-01-01 11:05:00                          |
-      | valid_to    | 2025-12-01 00:00:00                          |
+      | valid_to    | 2026-12-01 00:00:00                          |
       | code        | FREE_SHIPPING_THREE_PRODUCTS                 |
     And I update discount "free_shipping_discount_with_restricted_products" with following conditions matching at least 3 products:
       | condition_type | items                              |
@@ -57,7 +57,7 @@ Feature: Full UX discount test
       | name[fr-FR]              | Trois bière et/ou chips donne envoi gratuit  |
       | active                   | true                                         |
       | valid_from               | 2025-01-01 11:05:00                          |
-      | valid_to                 | 2025-12-01 00:00:00                          |
+      | valid_to                 | 2026-12-01 00:00:00                          |
       | code                     | FREE_SHIPPING_THREE_PRODUCTS                 |
       | minimum_product_quantity | 0                                            |
     And discount "free_shipping_discount_with_restricted_products" should have the following product conditions matching at least 3 products:

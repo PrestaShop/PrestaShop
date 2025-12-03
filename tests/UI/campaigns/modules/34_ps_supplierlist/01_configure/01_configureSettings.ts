@@ -6,6 +6,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boModuleManagerPage,
+  boShopParametersPage,
   type BrowserContext,
   dataModules,
   foClassicCategoryPage,
@@ -40,6 +41,27 @@ describe('ps_supplierlist - Configure Settings',
 
       const pageTitle = await boDashboardPage.getPageTitle(page);
       expect(pageTitle).to.contains(boDashboardPage.pageTitle);
+    });
+
+    it('should go to \'Shop parameters > General\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.shopParametersGeneralLink,
+      );
+      await boShopParametersPage.closeSfToolBar(page);
+
+      const pageTitle = await boShopParametersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
+    });
+
+    it('should enable display suppliers', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'enableDisplaySuppliers', baseContext);
+
+      const result = await boShopParametersPage.setDisplaySuppliers(page, true);
+      expect(result).to.contains(boShopParametersPage.successfulUpdateMessage);
     });
 
     it('should go to \'Modules > Module Manager\' page', async function () {
@@ -97,6 +119,9 @@ describe('ps_supplierlist - Configure Settings',
       const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible).to.equal(true);
 
+      const hasFiltersSuppliers = await foClassicCategoryPage.hasFiltersSuppliers(page);
+      expect(hasFiltersSuppliers).to.equal(true);
+
       const isSupplierListDropdown = await foClassicCategoryPage.isSupplierListDropdown(page);
       expect(isSupplierListDropdown).to.equal(true);
     });
@@ -119,7 +144,46 @@ describe('ps_supplierlist - Configure Settings',
       const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible).to.equal(true);
 
+      const hasFiltersSuppliers = await foClassicCategoryPage.hasFiltersSuppliers(page);
+      expect(hasFiltersSuppliers).to.equal(true);
+
       const isSupplierListDropdown = await foClassicCategoryPage.isSupplierListDropdown(page);
       expect(isSupplierListDropdown).to.equal(false);
+    });
+
+    it('should go to \'Shop parameters > General\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToGeneralPage', baseContext);
+
+      page = await foClassicCategoryPage.changePage(browserContext, 0);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.shopParametersGeneralLink,
+      );
+      await boShopParametersPage.closeSfToolBar(page);
+
+      const pageTitle = await boShopParametersPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
+    });
+
+    it('should disable display suppliers', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableDisplaySuppliers', baseContext);
+
+      const result = await boShopParametersPage.setDisplaySuppliers(page, false);
+      expect(result).to.contains(boShopParametersPage.successfulUpdateMessage);
+    });
+
+    it('should go to all products page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToAllProductsAfterDisable', baseContext);
+
+      page = await foClassicCategoryPage.changePage(browserContext, 1);
+      await foClassicCategoryPage.reloadPage(page);
+
+      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
+      expect(isCategoryPageVisible).to.equal(true);
+
+      const hasFiltersSuppliers = await foClassicCategoryPage.hasFiltersSuppliers(page);
+      expect(hasFiltersSuppliers).to.equal(false);
     });
   });

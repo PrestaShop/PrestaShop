@@ -63,7 +63,9 @@ default:
         - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\CustomerGroupFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Discount\DiscountFeatureContext
         - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
         - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
         - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
@@ -226,6 +228,16 @@ default:
         - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
         - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
         - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+    tag:
+      paths:
+        - "%paths.base%/Features/Scenario/Tag"
+      contexts:
+        - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\TagFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\TagFeatureContext
     webservice:
       paths:
         - "%paths.base%/Features/Scenario/Webservice"
@@ -308,6 +320,7 @@ default:
         - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\CustomerGroupFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\Discount\DiscountConditionsFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\Discount\DiscountFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
@@ -338,6 +351,8 @@ default:
         - Tests\Integration\Behaviour\Features\Context\Domain\FeatureValueFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\FeatureFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
+        - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
+        - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
 
     catalog_price_rule:
       paths:

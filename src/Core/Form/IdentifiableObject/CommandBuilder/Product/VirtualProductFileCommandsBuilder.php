@@ -89,7 +89,9 @@ final class VirtualProductFileCommandsBuilder implements ProductCommandsBuilderI
             $virtualProductFileData['name'],
             isset($virtualProductFileData['access_days_limit']) ? (int) $virtualProductFileData['access_days_limit'] : null,
             isset($virtualProductFileData['download_times_limit']) ? (int) $virtualProductFileData['download_times_limit'] : null,
-            isset($virtualProductFileData['expiration_date']) ? new DateTime($virtualProductFileData['expiration_date']) : null
+            isset($virtualProductFileData['expiration_date']) && $virtualProductFileData['expiration_date'] !== ''
+             ? new DateTime($virtualProductFileData['expiration_date'])
+             : null
         );
     }
 

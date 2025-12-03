@@ -17,7 +17,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_module_putModuleTechnicalNameUninstall';
 
-describe('API : PUT /module/{technicalName}/uninstall', async () => {
+describe('API : PUT /modules/{technicalName}/uninstall', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -81,11 +81,11 @@ describe('API : PUT /module/{technicalName}/uninstall', async () => {
     });
   });
 
-  describe('API : PUT /module/{technicalName}/uninstall with deleteFiles = false', async () => {
-    it('should request the endpoint /module/{technicalName}/uninstall', async function () {
+  describe('API : PUT /modules/{technicalName}/uninstall with deleteFiles = false', async () => {
+    it('should request the endpoint /modules/{technicalName}/uninstall', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointDeleteFilesFalse', baseContext);
 
-      const apiResponse = await apiContext.put(`module/${dataModules.keycloak.tag}/uninstall`, {
+      const apiResponse = await apiContext.put(`modules/${dataModules.keycloak.tag}/uninstall`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -121,11 +121,11 @@ describe('API : PUT /module/{technicalName}/uninstall', async () => {
     });
   });
 
-  describe('API : PUT /module/{technicalName}/uninstall with deleteFiles = true', async () => {
-    it('should request the endpoint /module/{technicalName}/uninstall', async function () {
+  describe('API : PUT /modules/{technicalName}/uninstall with deleteFiles = true', async () => {
+    it('should request the endpoint /modules/{technicalName}/uninstall', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointDeleteFilesTrue', baseContext);
 
-      const apiResponse = await apiContext.put(`module/${dataModules.keycloak.tag}/uninstall`, {
+      const apiResponse = await apiContext.put(`modules/${dataModules.keycloak.tag}/uninstall`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

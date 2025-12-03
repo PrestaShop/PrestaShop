@@ -47,7 +47,7 @@ Post-condition
 - Delete the theme hummingbird
  */
 
-describe('FO - Account - Order history : Consult details and reorder', async () => {
+describe('FO - User account - Order history : Consult details and Reorder', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 

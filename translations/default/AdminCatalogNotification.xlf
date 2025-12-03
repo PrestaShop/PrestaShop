@@ -35,17 +35,17 @@
       <trans-unit id="3d85438a25723cc56bd4aefb9b368bc0">
         <source>An error occurred while creating the category.</source>
         <target>An error occurred while creating the category.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 846]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 840]</note>
       </trans-unit>
       <trans-unit id="175ad2b319a95a0b7c580dbc4205fdac">
         <source>An error occurred while editing the category.</source>
         <target>An error occurred while editing the category.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 856]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 850]</note>
       </trans-unit>
       <trans-unit id="a874ef298164bbd4d00d55901225cd87">
         <source>An error occurred while uploading the image:</source>
         <target>An error occurred while uploading the image:</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 867]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 861]</note>
       </trans-unit>
       <trans-unit id="b164de93448b61c61dd1c0f68c2c5884">
         <source>An order has already been placed with this cart.</source>
@@ -125,7 +125,7 @@
       <trans-unit id="c292d80ff15bf0d38f63af320f9f7839">
         <source>Friendly URLs are currently disabled.</source>
         <target>Friendly URLs are currently disabled.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 233]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 235]</note>
       </trans-unit>
       <trans-unit id="8743e83ee9ec372f40d4a58160bfc1d2">
         <source>If they have no other category, I want to associate them with the parent category and turn them offline.</source>
@@ -475,7 +475,7 @@
       <trans-unit id="3af7787bf8822cfd0cbeab09c9176a54">
         <source>Remember to properly edit all information after duplicating - including SEO information and friendly URL.</source>
         <target>Remember to properly edit all information after duplicating - including SEO information and friendly URL.</target>
-        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 480]</note>
+        <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 494]</note>
       </trans-unit>
       <trans-unit id="4c8eca5abe96ae48ab05070588455d6a">
         <source>Search phrase length is not valid.</source>
@@ -510,7 +510,7 @@
       <trans-unit id="d7e9bf98e857f83943b3b75fce04cea9">
         <source>The "Force update of friendly URL" option is currently enabled.</source>
         <target>The "Force update of friendly URL" option is currently enabled.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 243]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 245]</note>
       </trans-unit>
       <trans-unit id="fc2c8663d58c42bc29edd45a79b4358c">
         <source>The discount was successfully generated.</source>
@@ -545,7 +545,7 @@
       <trans-unit id="17668cbc24213c8d43211a67139c3939">
         <source>The root category of a shop cannot be edited.</source>
         <target>The root category of a shop cannot be edited.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 851]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 845]</note>
       </trans-unit>
       <trans-unit id="801982917ddd7afd63f9e103ba4699bd">
         <source>The root category of the shop %shop% is not associated with the current shop. You can't access this page. Please change the root category of the shop.</source>
@@ -590,7 +590,7 @@
       <trans-unit id="14c18063d1497fb156ab73c0d59d354b">
         <source>This file is associated with the following products. Are you sure you want to delete it?</source>
         <target>This file is associated with the following products. Are you sure you want to delete it?</target>
-        <note>File: src/Core/Grid/Data/Factory/AttachmentGridDataFactoryDecorator.php [Line: 120]</note>
+        <note>File: src/Core/Grid/Data/Factory/AttachmentGridDataFactoryDecorator.php [Line: 91]</note>
       </trans-unit>
       <trans-unit id="cf456ee90912d9e25795925d067f8952">
         <source>This value is too long. It should have %limit% characters or less.</source>
@@ -630,12 +630,12 @@
       <trans-unit id="87ffb4b96479e24281064ad98ddfd16f">
         <source>To disable it, go to [1]Product Settings[/1]</source>
         <target>To disable it, go to [1]Product Settings[/1]</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 244]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 246]</note>
       </trans-unit>
       <trans-unit id="517937df76770fb3c4f9e6100ed69ce9">
         <source>To enable it, go to [1]SEO and URLs[/1]</source>
         <target>To enable it, go to [1]SEO and URLs[/1]</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 234]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 236]</note>
       </trans-unit>
       <trans-unit id="323970e84c7dc4bc7432a513f09959b6">
         <source>To put this product online, please enter a name.</source>
@@ -663,17 +663,17 @@
       <trans-unit id="b50f440e3c9f14988bd0086683e77095">
         <source>You cannot remove this category because one of your shops uses it as a root category.</source>
         <target>You cannot remove this category because one of your shops uses it as a root category.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 841]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php [Line: 835]</note>
       </trans-unit>
       <trans-unit id="30a367ba686890c829937e768d588b8f">
         <source>You cannot set 0 or a negative position, the minimum is 1.</source>
         <target>You cannot set 0 or a negative position, the minimum is 1.</target>
-        <note>File: classes/Product.php [Line: 6886]</note>
+        <note>File: classes/Product.php [Line: 6908]</note>
       </trans-unit>
       <trans-unit id="cf99dad7d7306d9ac01ba5a2e2d2c715">
         <source>You cannot set a position greater than the total number of products in the category, starting at 1.</source>
         <target>You cannot set a position greater than the total number of products in the category, starting at 1.</target>
-        <note>File: classes/Product.php [Line: 6909]</note>
+        <note>File: classes/Product.php [Line: 6931]</note>
       </trans-unit>
       <trans-unit id="e602c06958cd934ccc238913f51282aa">
         <source>You must select some products before</source>

@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -41,26 +42,20 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @var int
-     */
-    private $contextLangId;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param int $contextLangId
+     * @param LanguageContext $languageContext
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        $contextLangId
+        private LanguageContext $languageContext
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -108,7 +103,7 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
                 'cl',
                 'cl.id_country = a.id_country AND cl.id_lang = :lang'
             )
-            ->setParameter('lang', $this->contextLangId)
+            ->setParameter('lang', $this->languageContext->getId())
             ->leftJoin(
                 'a',
                 $this->dbPrefix . 'manufacturer',

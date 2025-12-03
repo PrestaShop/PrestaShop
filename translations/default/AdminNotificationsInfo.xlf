@@ -35,7 +35,7 @@
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
         <source>Invalid characters:</source>
         <target>Invalid characters:</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 107]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 88]</note>
       </trans-unit>
       <trans-unit id="9ba3c0bbfa1072eb7cf7b38749e5c69d">
         <source>Invalid characters: %chars%</source>
@@ -45,7 +45,7 @@
       <trans-unit id="6fe11d39747aff42159920688f59f575">
         <source>Invalid characters: %s</source>
         <target>Invalid characters: %s</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 202]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 204]</note>
       </trans-unit>
       <trans-unit id="bcc5aa7d20ec5e8bfa75d7754753e35b">
         <source>Note that this feature is only available in the "all stores" context. It will be added to all your stores.</source>

@@ -28,9 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Domain\Discount\DiscountSettings;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -133,7 +135,15 @@ class DiscountQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $exactMatchFilters = ['id_discount', 'type', 'active'];
 
+        $now = new DateTimeImmutable();
+
         foreach ($filters as $filterName => $value) {
+            if ($filterName === 'period_filter') {
+                $this->applyPeriodFilter($qb, $value, $now);
+
+                continue;
+            }
+
             if (!array_key_exists($filterName, $allowedFiltersAliasMap)
                 && $filterName !== 'date_from_filter'
                 && $filterName !== 'date_to_filter') {
@@ -172,6 +182,42 @@ class DiscountQueryBuilder extends AbstractDoctrineQueryBuilder
 
             $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' LIKE :' . $filterName);
             $qb->setParameter($filterName, "%$value%");
+        }
+    }
+
+    private function applyPeriodFilter(QueryBuilder $qb, mixed $value, DateTimeImmutable $now): void
+    {
+        if (!is_string($value) || $value === '' || $value === DiscountSettings::PERIOD_FILTER_ALL) {
+            return;
+        }
+
+        $formattedNow = $now->format('Y-m-d H:i:s');
+
+        switch ($value) {
+            case DiscountSettings::PERIOD_FILTER_ACTIVE:
+                $qb->andWhere('cr.date_from <= :period_now_active');
+                $qb->andWhere('(
+                    cr.date_to >= :period_now_active
+                    OR cr.date_to IS NULL
+                    OR UNIX_TIMESTAMP(cr.date_to) IS NULL
+                )');
+                $qb->setParameter('period_now_active', $formattedNow);
+
+                break;
+
+            case DiscountSettings::PERIOD_FILTER_SCHEDULED:
+                $qb->andWhere('cr.date_from > :period_now_scheduled');
+                $qb->setParameter('period_now_scheduled', $formattedNow);
+
+                break;
+
+            case DiscountSettings::PERIOD_FILTER_EXPIRED:
+                $qb->andWhere('cr.date_to < :period_now_expired');
+                $qb->andWhere('cr.date_to IS NOT NULL');
+                $qb->andWhere('UNIX_TIMESTAMP(cr.date_to) IS NOT NULL');
+                $qb->setParameter('period_now_expired', $formattedNow);
+
+                break;
         }
     }
 }

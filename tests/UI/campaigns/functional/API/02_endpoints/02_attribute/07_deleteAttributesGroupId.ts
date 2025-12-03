@@ -20,12 +20,12 @@ import {expect} from 'chai';
 
 const baseContext: string = 'functional_API_endpoints_attribute_deleteAttributesGroupId';
 
-describe('API : DELETE /attributes/group/{attributeGroupId}', async () => {
+describe('API : DELETE /attributes/groups/{attributeGroupId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfAttributes: number = 0;
-  let idAttributeGroup: number;
+  let attributeGroupId: number;
   let accessToken: string;
 
   const clientScope: string = 'attribute_group_write';
@@ -108,16 +108,16 @@ describe('API : DELETE /attributes/group/{attributeGroupId}', async () => {
       const textColumn = await boAttributesPage.getTextColumn(page, 1, 'name');
       expect(textColumn).to.contains(createAttributeData.name);
 
-      idAttributeGroup = parseInt(await boAttributesPage.getTextColumn(page, 1, 'id_attribute_group'), 10);
-      expect(idAttributeGroup).to.be.gt(0);
+      attributeGroupId = parseInt(await boAttributesPage.getTextColumn(page, 1, 'id_attribute_group'), 10);
+      expect(attributeGroupId).to.be.gt(0);
     });
   });
 
   describe('API : Delete the Attribute Group', async () => {
-    it('should request the endpoint /attributes/group/{attributeGroupId}', async function () {
+    it('should request the endpoint /attributes/groups/{attributeGroupId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.delete(`attributes/group/${idAttributeGroup}`, {
+      const apiResponse = await apiContext.delete(`attributes/groups/${attributeGroupId}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -43,25 +44,19 @@ class StateQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @var int
-     */
-    private $employeeIdLang;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param int $employeeIdLang
+     * @param LanguageContext $languageContext
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        int $employeeIdLang
+        private LanguageContext $languageContext
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->employeeIdLang = $employeeIdLang;
     }
 
     /**
@@ -134,7 +129,7 @@ class StateQueryBuilder extends AbstractDoctrineQueryBuilder
             's.`id_country` = cl.`id_country` AND cl.`id_lang` = :idLang '
         );
 
-        $qb->setParameter('idLang', $this->employeeIdLang);
+        $qb->setParameter('idLang', $this->languageContext->getId());
         $this->applyFilters($qb, $filters);
 
         return $qb;

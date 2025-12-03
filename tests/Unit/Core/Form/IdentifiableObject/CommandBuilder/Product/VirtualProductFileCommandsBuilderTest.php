@@ -92,6 +92,30 @@ class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilde
             $dummyFile->getPathname(),
             'The file',
             1,
+            5
+        );
+        yield [
+            [
+                'stock' => [
+                    'virtual_product_file' => [
+                        'has_file' => true,
+                        'virtual_product_file_id' => null,
+                        'file' => $dummyFile,
+                        'name' => 'The file',
+                        'access_days_limit' => 1,
+                        'download_times_limit' => 5,
+                        'expiration_date' => null,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new AddVirtualProductFileCommand(
+            $this->getProductId()->getValue(),
+            $dummyFile->getPathname(),
+            'The file',
+            1,
             5,
             new DateTimeImmutable('2020-10-20')
         );

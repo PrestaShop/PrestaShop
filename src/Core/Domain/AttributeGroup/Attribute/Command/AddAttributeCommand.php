@@ -62,25 +62,20 @@ class AddAttributeCommand
     private $pathName;
 
     /**
-     * @param int $attributeGroupId
-     * @param array $localizedValue
-     * @param string $color
+     * @param array $localizedNames
      * @param int[] $associatedShopIds
      *
      * @throws AttributeConstraintException
      */
-    public function __construct(int $attributeGroupId, array $localizedValue, string $color, array $associatedShopIds = [])
+    public function __construct(int $attributeGroupId, array $localizedNames, string $color, array $associatedShopIds = [])
     {
-        $this->assertValuesAreValid($localizedValue);
+        $this->assertValuesAreValid($localizedNames);
         $this->attributeGroupId = new AttributeGroupId($attributeGroupId);
-        $this->localizedNames = $localizedValue;
+        $this->localizedNames = $localizedNames;
         $this->color = $color;
         $this->associatedShopIds = $associatedShopIds;
     }
 
-    /**
-     * @return AttributeGroupId
-     */
     public function getAttributeGroupId(): AttributeGroupId
     {
         return $this->attributeGroupId;
@@ -94,9 +89,6 @@ class AddAttributeCommand
         return $this->localizedNames;
     }
 
-    /**
-     * @return string
-     */
     public function getColor(): string
     {
         return $this->color;
@@ -110,9 +102,6 @@ class AddAttributeCommand
         return $this->associatedShopIds;
     }
 
-    /**
-     * @param string $pathName
-     */
     public function setTextureFilePath(
         string $pathName,
     ): void {

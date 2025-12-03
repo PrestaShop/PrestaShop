@@ -272,6 +272,7 @@ export default {
     container: '#product_seo_serp',
     defaultTitle: '.serp-default-title:input',
     watchedTitle: '.serp-watched-title:input',
+    appendTitle: '#product_seo_combination_title',
     defaultDescription: '.serp-default-description',
     watchedDescription: '.serp-watched-description',
     watchedMetaUrl: '.serp-watched-url:input',

@@ -59,7 +59,6 @@ describe('BO - Catalog - Cart rules : Product selection', async () => {
     discountPercent: 20,
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);

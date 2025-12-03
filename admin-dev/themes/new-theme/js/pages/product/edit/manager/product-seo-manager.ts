@@ -70,6 +70,7 @@ export default class ProductSEOManager {
         container: ProductMap.seo.container,
         defaultTitle: ProductMap.seo.defaultTitle,
         watchedTitle: ProductMap.seo.watchedTitle,
+        appendTitle: ProductMap.seo.appendTitle,
         defaultDescription: ProductMap.seo.defaultDescription,
         watchedDescription: ProductMap.seo.watchedDescription,
         watchedMetaUrl: ProductMap.seo.watchedMetaUrl,

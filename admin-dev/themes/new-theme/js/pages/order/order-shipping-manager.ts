@@ -38,6 +38,9 @@ export default class OrderShippingManager {
 
       $(OrderViewPageMap.updateOrderShippingTrackingNumberInput).val($btn.data('order-tracking-number'));
       $(OrderViewPageMap.updateOrderShippingCurrentOrderCarrierIdInput).val($btn.data('order-carrier-id'));
+      $(OrderViewPageMap.updateOrderShippingNewCarrierIdSelect)
+        .val($btn.data('carrier-id'))
+        .trigger('change');
     });
   }
 

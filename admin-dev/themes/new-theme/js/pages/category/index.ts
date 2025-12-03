@@ -85,7 +85,7 @@ $(() => {
       container: '#serp-app',
       defaultTitle: 'input[name*="category[name]"]',
       watchedTitle: 'input[name*="category[meta_title]"]',
-      defaultDescription: 'textarea[name*="category[description]"]',
+      defaultDescription: '#category_description .translation-field.active textarea',
       watchedDescription: 'textarea[name*="category[meta_description]"]',
       watchedMetaUrl: 'input[name*="category[link_rewrite]"]',
       multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,

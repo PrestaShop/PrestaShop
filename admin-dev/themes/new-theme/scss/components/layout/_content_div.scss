@@ -14,7 +14,8 @@
       [class*="dropdown"],
       [class*="list-group-item"],
       [class*="kpi-container"],
-      [class*="nav-link"]) {
+      [class*="nav-link"],
+      [data-filter-link-group] a) {
         text-decoration: underline;
         text-underline-offset: var(--#{$cdk}size-2);
         transition: var(--#{$cdk}default-transition);

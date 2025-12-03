@@ -394,8 +394,7 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Request to check if DNI field is required
-     * depending on the current selected country.
+     * Checks if DNI field is required for a given country.
      *
      * @param int $idCountry
      *
@@ -411,7 +410,7 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Check if Address is used (at least one order placed).
+     * Checks if the address has been used in an order as delivery on invoice address.
      *
      * @return int|bool Order count for this Address
      */
@@ -484,7 +483,7 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Check if the address is valid.
+     * Check if the address is valid - active and not deleted.
      *
      * @param int $id_address Address id
      *
@@ -520,7 +519,8 @@ class AddressCore extends ObjectModel
                 '
 				SELECT `id_address`
 				FROM `' . _DB_PREFIX_ . 'address`
-				WHERE `id_customer` = ' . (int) $id_customer . ' AND `deleted` = 0' . ($active ? ' AND `active` = 1' : '')
+				WHERE `id_customer` = ' . (int) $id_customer . ' AND `deleted` = 0' . ($active ? ' AND `active` = 1' : '') . '
+                ORDER BY `id_address` ASC'
             );
             Cache::store($cache_id, $result);
 

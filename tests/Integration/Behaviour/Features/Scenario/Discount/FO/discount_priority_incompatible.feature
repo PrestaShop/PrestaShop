@@ -25,7 +25,7 @@ Feature: Discount priority - Incompatible discounts
             | active             | true                           |
             | priority           | 5                              |
             | valid_from         | 2025-01-01 10:00:00            |
-            | valid_to           | 2025-12-31 23:59:59            |
+            | valid_to           | 2026-12-31 23:59:59            |
             | code               | INCOMPAT_AMT5                  |
             | reduction_amount   | 15.0                           |
             | reduction_currency | usd                            |
@@ -38,7 +38,7 @@ Feature: Discount priority - Incompatible discounts
             | active            | true                            |
             | priority          | 3                               |
             | valid_from        | 2025-01-01 10:00:00             |
-            | valid_to          | 2025-12-31 23:59:59             |
+            | valid_to          | 2026-12-31 23:59:59             |
             | code              | INCOMPAT_PCT3                   |
             | reduction_percent | 20.0                            |
         And I set compatible types for discount "incompat_percent_prio3" to:

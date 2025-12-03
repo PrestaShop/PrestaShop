@@ -25,7 +25,7 @@ Feature: Full UX discount test
       | name[fr-FR]        | Promotion_fr        |
       | active             | true                |
       | valid_from         | 2025-01-01 11:05:00 |
-      | valid_to           | 2025-12-01 00:00:00 |
+      | valid_to           | 2026-12-01 00:00:00 |
       | code               | PROMO_CART_2025     |
       | reduction_amount   | 10.0                |
       | reduction_currency | usd                 |
@@ -35,7 +35,7 @@ Feature: Full UX discount test
       | name[fr-FR]        | Promotion_fr        |
       | active             | true                |
       | valid_from         | 2025-01-01 11:05:00 |
-      | valid_to           | 2025-12-01 00:00:00 |
+      | valid_to           | 2026-12-01 00:00:00 |
       | code               | PROMO_CART_2025     |
       | reduction_amount   | 10.0                |
       | reduction_currency | usd                 |
@@ -45,7 +45,7 @@ Feature: Full UX discount test
       | name[fr-FR]        | Promotion_fr        |
       | active             | true                |
       | valid_from         | 2025-01-01 11:05:00 |
-      | valid_to           | 2025-12-01 00:00:00 |
+      | valid_to           | 2026-12-01 00:00:00 |
       | code               | PROMO_CART_2025_2   |
       | reduction_amount   | 10.0                |
       | reduction_currency | usd                 |
@@ -55,7 +55,7 @@ Feature: Full UX discount test
       | name[fr-FR]        | Promotion_fr        |
       | active             | true                |
       | valid_from         | 2025-01-01 11:05:00 |
-      | valid_to           | 2025-12-01 00:00:00 |
+      | valid_to           | 2026-12-01 00:00:00 |
       | code               | PROMO_CART_2025_2   |
       | reduction_amount   | 10.0                |
       | reduction_currency | usd                 |

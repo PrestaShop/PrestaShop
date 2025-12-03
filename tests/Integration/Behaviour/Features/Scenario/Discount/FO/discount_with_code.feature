@@ -18,7 +18,7 @@ Feature: Full UX discount test
       | name[fr-FR] | Montant minimum donne envoi gratuit |
       | active      | true                                |
       | valid_from  | 2025-01-01 11:05:00                 |
-      | valid_to    | 2025-12-01 00:00:00                 |
+      | valid_to    | 2026-12-01 00:00:00                 |
       | code        | FREE_SHIPPING_MIN_AMOUNT            |
     When I update discount "free_shipping_discount_with_minimum_amount_code" with the condition of a minimum amount:
       | minimum_amount                   | 40.00 |
@@ -30,7 +30,7 @@ Feature: Full UX discount test
       | name[fr-FR]                      | Montant minimum donne envoi gratuit |
       | active                           | true                                |
       | valid_from                       | 2025-01-01 11:05:00                 |
-      | valid_to                         | 2025-12-01 00:00:00                 |
+      | valid_to                         | 2026-12-01 00:00:00                 |
       | code                             | FREE_SHIPPING_MIN_AMOUNT            |
       | minimum_amount                   | 40.00                               |
       | minimum_amount_currency          | usd                                 |
@@ -77,7 +77,7 @@ Feature: Full UX discount test
       | name[fr-FR] | Montant minimum donne envoi gratuit |
       | active      | true                                |
       | valid_from  | 2025-01-01 11:05:00                 |
-      | valid_to    | 2025-12-01 00:00:00                 |
+      | valid_to    | 2026-12-01 00:00:00                 |
       | code        |                                     |
     When I update discount "free_shipping_discount_with_minimum_amount_auto" with the condition of a minimum amount:
       | minimum_amount                   | 40.00 |
@@ -89,7 +89,7 @@ Feature: Full UX discount test
       | name[fr-FR]                      | Montant minimum donne envoi gratuit |
       | active                           | true                                |
       | valid_from                       | 2025-01-01 11:05:00                 |
-      | valid_to                         | 2025-12-01 00:00:00                 |
+      | valid_to                         | 2026-12-01 00:00:00                 |
       | code                             |                                     |
       | minimum_amount                   | 40.00                               |
       | minimum_amount_currency          | usd                                 |

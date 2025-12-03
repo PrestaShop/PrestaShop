@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository;
 class DiscountFormOptionsProvider implements FormOptionsProviderInterface
 {
     public function __construct(
-        private readonly DiscountTypeRepository $discountTypeRepository
+        private readonly DiscountTypeRepository $discountTypeRepository,
     ) {
     }
 

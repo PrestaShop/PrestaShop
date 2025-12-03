@@ -61,7 +61,7 @@ Feature: Full UX discount test
       | name[fr-FR] | Livraison offerte pour Trois tshirt taille M ou L |
       | active      | true                                              |
       | valid_from  | 2025-01-01 11:05:00                               |
-      | valid_to    | 2025-12-01 00:00:00                               |
+      | valid_to    | 2026-12-01 00:00:00                               |
       | code        | FREE_SHIPPING_THREE_COMBINATIONS                  |
     And I update discount "free_shipping_discount_with_restricted_combinations" with following conditions matching at least 3 products:
       | condition_type | items                      |
@@ -71,7 +71,7 @@ Feature: Full UX discount test
       | name[fr-FR]              | Livraison offerte pour Trois tshirt taille M ou L |
       | active                   | true                                              |
       | valid_from               | 2025-01-01 11:05:00                               |
-      | valid_to                 | 2025-12-01 00:00:00                               |
+      | valid_to                 | 2026-12-01 00:00:00                               |
       | code                     | FREE_SHIPPING_THREE_COMBINATIONS                  |
       | minimum_product_quantity | 0                                                 |
     And discount "free_shipping_discount_with_restricted_combinations" should have the following product conditions matching at least 3 products:

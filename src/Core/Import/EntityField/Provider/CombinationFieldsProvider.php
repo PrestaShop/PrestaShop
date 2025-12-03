@@ -61,6 +61,7 @@ final class CombinationFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('supplier_reference', $this->trans('Supplier reference', 'Admin.Advparameters.Feature')),
             new EntityField('reference', $this->trans('Reference', 'Admin.Global')),
             new EntityField('ean13', $this->trans('EAN-13', 'Admin.Advparameters.Feature')),
+            new EntityField('isbn', $this->trans('ISBN', 'Admin.Catalog.Feature')),
             new EntityField('upc', $this->trans('UPC', 'Admin.Advparameters.Feature')),
             new EntityField('mpn', $this->trans('MPN', 'Admin.Catalog.Feature')),
             new EntityField('wholesale_price', $this->trans('Cost price', 'Admin.Catalog.Feature')),
