@@ -65,7 +65,7 @@ Feature: Discount compatibility in cart
       | code              | CART15              |
       | reduction_percent | 15.0                |
     And I set compatible types for discount "cart_discount_15" to:
-      | product_level |
+      | catalog_level |
     And I add 1 product "product1" to the cart "dummy_cart2"
     When I use a voucher "cart_discount_20" on the cart "dummy_cart2"
     And I use a voucher "cart_discount_15" on the cart "dummy_cart2"
@@ -97,7 +97,7 @@ Feature: Discount compatibility in cart
 
   Scenario: Apply compatible product level and cart level discounts
     Given I create an empty cart "dummy_cart4" for customer "testCustomer"
-    When I create a "product_level" discount "product_discount" with following properties:
+    When I create a "catalog_level" discount "product_discount" with following properties:
       | name[en-US]       | Product 15% Off     |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
@@ -115,7 +115,7 @@ Feature: Discount compatibility in cart
       | code              | CARTWPROD           |
       | reduction_percent | 5.0                 |
     And I set compatible types for discount "cart_for_product" to:
-      | product_level |
+      | catalog_level |
     And I add 1 product "product1" to the cart "dummy_cart4"
     When I use a voucher "product_discount" on the cart "dummy_cart4"
     And I use a voucher "cart_for_product" on the cart "dummy_cart4"
@@ -156,9 +156,9 @@ Feature: Discount compatibility in cart
       | code              | MULTI5              |
       | reduction_percent | 5.0                 |
     And I set compatible types for discount "multi_cart" to:
-      | product_level |
+      | catalog_level |
       | free_shipping |
-    When I create a "product_level" discount "multi_product" with following properties:
+    When I create a "catalog_level" discount "multi_product" with following properties:
       | name[en-US]       | Multi Product 10%   |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
@@ -177,7 +177,7 @@ Feature: Discount compatibility in cart
       | code        | MULTISHIP           |
     And I set compatible types for discount "multi_ship" to:
       | cart_level    |
-      | product_level |
+      | catalog_level |
     And I add 1 product "product1" to the cart "dummy_cart6"
     When I use a voucher "multi_cart" on the cart "dummy_cart6"
     And I use a voucher "multi_product" on the cart "dummy_cart6"
@@ -245,7 +245,7 @@ Feature: Discount compatibility in cart
       | reduction_percent | 20.0                |
     And I set compatible types for discount "order_20" to:
       | cart_level |
-    When I create a "product_level" discount "product_25" with following properties:
+    When I create a "catalog_level" discount "product_25" with following properties:
       | name[en-US]       | Product 25% Off     |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |

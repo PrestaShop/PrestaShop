@@ -33,7 +33,7 @@ Feature: Discount priority - Incompatible auto discounts
       | minimum_amount_tax_included      | true  |
       | minimum_amount_shipping_included | false |
     And I set compatible types for discount "auto_incompat_amount_prio5" to:
-      | product_level |
+      | catalog_level |
     # Priority 3 (higher priority): 15% percentage discount
     When I create a "cart_level" discount "auto_incompat_percent_prio3" with following properties:
       | name[en-US]       | Auto Incompatible Percent Priority 3 |
@@ -48,7 +48,7 @@ Feature: Discount priority - Incompatible auto discounts
       | minimum_amount_tax_included      | true  |
       | minimum_amount_shipping_included | false |
     And I set compatible types for discount "auto_incompat_percent_prio3" to:
-      | product_level |
+      | catalog_level |
     Given I create an empty cart "cart_auto_incompat" for customer "testCustomer"
     When I add 1 product "product1" to the cart "cart_auto_incompat"
     # Only priority 3 (15% percent) should be applied, not priority 5 ($25 amount)

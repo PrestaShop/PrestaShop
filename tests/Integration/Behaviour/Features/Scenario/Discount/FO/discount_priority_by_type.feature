@@ -19,7 +19,7 @@ Feature: Discount priority by type
     @restore-cart-rules-before-scenario
     Scenario: Different discount types - Product level applies before Cart level
         # PRODUCT_LEVEL Discount - Priority 5 (lower field priority): 10% OFF product
-        When I create a "product_level" discount "product_10pct_prio5" with following properties:
+        When I create a "catalog_level" discount "product_10pct_prio5" with following properties:
             | name[en-US]       | Product 10% OFF     |
             | active            | true                |
             | priority          | 5                   |
@@ -43,7 +43,7 @@ Feature: Discount priority by type
             | reduction_currency | usd                 |
             | taxIncluded        | true                |
         And I set compatible types for discount "cart_20dollar_prio1" to:
-            | product_level |
+            | catalog_level |
 
         # Create cart and add products BEFORE applying discounts
         Given I create an empty cart "cart_type_test" for customer "testCustomer"
@@ -80,7 +80,7 @@ Feature: Discount priority by type
         # Create multiple discounts of different types to test comprehensive type priority
 
         # PRODUCT_LEVEL Discount 1 - Priority 3: 5% OFF product
-        When I create a "product_level" discount "product_5pct_prio3" with following properties:
+        When I create a "catalog_level" discount "product_5pct_prio3" with following properties:
             | name[en-US]       | Product 5% OFF (Prio 3) |
             | active            | true                    |
             | priority          | 3                       |
@@ -104,7 +104,7 @@ Feature: Discount priority by type
             | reduction_currency | usd                    |
             | taxIncluded        | true                   |
         And I set compatible types for discount "cart_10dollar_prio2" to:
-            | product_level |
+            | catalog_level |
             | cart_level    |
 
         # CART_LEVEL Discount 2 - Priority 4: $5 OFF cart (lower field priority, same type)
@@ -119,7 +119,7 @@ Feature: Discount priority by type
             | reduction_currency | usd                   |
             | taxIncluded        | true                  |
         And I set compatible types for discount "cart_5dollar_prio4" to:
-            | product_level |
+            | catalog_level |
             | cart_level    |
 
         # FREE_SHIPPING Discount - Priority 1 (highest field priority)
@@ -131,7 +131,7 @@ Feature: Discount priority by type
             | valid_to    | 2026-12-31 23:59:59    |
             | code        | FREESHIP               |
         And I set compatible types for discount "free_ship_prio1" to:
-            | product_level |
+            | catalog_level |
             | cart_level    |
 
         # Create cart

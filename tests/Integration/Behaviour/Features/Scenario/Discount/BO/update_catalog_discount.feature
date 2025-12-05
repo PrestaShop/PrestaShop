@@ -18,7 +18,7 @@ Feature: Update discount
     And language "french" with locale "fr-FR" exists
 
   Scenario: Create a complete cart level discount
-    When I create a "product_level" discount "complete_percent_product_level_discount" with following properties:
+    When I create a "catalog_level" discount "complete_percent_catalog_level_discount" with following properties:
       | name[en-US]       | Promotion           |
       | name[fr-FR]       | Promotion_fr        |
       | active            | true                |
@@ -27,23 +27,23 @@ Feature: Update discount
       | code              | PROMO_PRODUCT_2019  |
       | reduction_percent | 10.0                |
       | reduction_product | product1            |
-    And discount "complete_percent_product_level_discount" should have the following properties:
+    And discount "complete_percent_catalog_level_discount" should have the following properties:
       | name[en-US]       | Promotion           |
       | name[fr-FR]       | Promotion_fr        |
-      | type              | product_level       |
+      | type              | catalog_level       |
       | active            | true                |
       | valid_from        | 2019-01-01 11:05:00 |
       | valid_to          | 2019-12-01 00:00:00 |
       | code              | PROMO_PRODUCT_2019  |
       | reduction_percent | 10.0                |
       | reduction_product | product1            |
-    Then I update discount "complete_percent_product_level_discount" with the following properties:
+    Then I update discount "complete_percent_catalog_level_discount" with the following properties:
       | reduction_percent | 15.0                |
       | reduction_product | product2            |
-    Then discount "complete_percent_product_level_discount" should have the following properties:
+    Then discount "complete_percent_catalog_level_discount" should have the following properties:
       | name[en-US]       | Promotion           |
       | name[fr-FR]       | Promotion_fr        |
-      | type              | product_level       |
+      | type              | catalog_level       |
       | active            | true                |
       | valid_from        | 2019-01-01 11:05:00 |
       | valid_to          | 2019-12-01 00:00:00 |

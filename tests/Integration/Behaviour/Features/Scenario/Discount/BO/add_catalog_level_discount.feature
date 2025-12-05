@@ -1,11 +1,11 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s discount --tags add-product-level-discount
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s discount --tags add-catalog-level-discount
 @restore-all-tables-before-feature
 @restore-languages-after-feature
-@add-product-level-discount
-Feature: Add discount
-  PrestaShop allows BO users to create discounts
+@add-catalog-level-discount
+Feature: Add catalog level discount
+  PrestaShop allows BO users to create catalog level discounts
   As a BO user
-  I must be able to create discounts
+  I must be able to create catalog discounts
 
   Background:
     Given shop "shop1" with name "test_shop" exists
@@ -16,8 +16,8 @@ Feature: Add discount
     And language with iso code "en" is the default one
     And language "french" with locale "fr-FR" exists
 
-  Scenario: Create a complete product level discount
-    When I create a "product_level" discount "complete_percent_product_level_discount" with following properties:
+  Scenario: Create a complete catalog level discount
+    When I create a "catalog_level" discount "complete_percent_catalog_level_discount" with following properties:
       | name[en-US]       | Promotion           |
       | name[fr-FR]       | Promotion_fr        |
       | active            | true                |
@@ -26,10 +26,10 @@ Feature: Add discount
       | code              | PROMO_PRODUCT_2019  |
       | reduction_percent | 10.0                |
       | reduction_product | product1            |
-    And discount "complete_percent_product_level_discount" should have the following properties:
+    And discount "complete_percent_catalog_level_discount" should have the following properties:
       | name[en-US]       | Promotion           |
       | name[fr-FR]       | Promotion_fr        |
-      | type              | product_level       |
+      | type              | catalog_level       |
       | active            | true                |
       | valid_from        | 2019-01-01 11:05:00 |
       | valid_to          | 2019-12-01 00:00:00 |

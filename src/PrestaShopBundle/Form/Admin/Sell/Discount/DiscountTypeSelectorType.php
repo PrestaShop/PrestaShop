@@ -44,7 +44,7 @@ class DiscountTypeSelectorType extends TranslatorAwareType
                 'placeholder' => null,
                 'choices' => [
                     $this->trans('On cart amount', 'Admin.Catalog.Feature') => DiscountType::CART_LEVEL,
-                    $this->trans('On catalog products', 'Admin.Catalog.Feature') => DiscountType::PRODUCT_LEVEL,
+                    $this->trans('On catalog products', 'Admin.Catalog.Feature') => DiscountType::CATALOG_LEVEL,
                     $this->trans('Free gift', 'Admin.Catalog.Feature') => DiscountType::FREE_GIFT,
                     $this->trans('On free shipping', 'Admin.Catalog.Feature') => DiscountType::FREE_SHIPPING,
                     // $this->trans('On total order', 'Admin.Catalog.Feature') => DiscountType::ORDER_LEVEL,

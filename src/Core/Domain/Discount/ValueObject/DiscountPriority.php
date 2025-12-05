@@ -32,12 +32,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject;
  * Defines the priority order for discount application
  *
  * Lower priority value = applied first
- * Priority order: 1. Catalog (product_level), 2. Cart (cart_level), 3. Shipping (free_shipping), 4. Free gift (free_gift)
+ * Priority order: 1. Catalog (catalog_level), 2. Cart (cart_level), 3. Shipping (free_shipping), 4. Free gift (free_gift)
  */
 class DiscountPriority
 {
     // Priority values - lower number = higher priority (applied first)
-    public const PRODUCT_LEVEL_PRIORITY = 1; // Catalog discounts
+    public const CATALOG_LEVEL_PRIORITY = 1; // Catalog discounts
     public const CART_LEVEL_PRIORITY = 2;    // Cart discounts
     public const ORDER_LEVEL_PRIORITY = 2;   // Order discounts (same as cart)
     public const FREE_SHIPPING_PRIORITY = 3; // Shipping discounts
@@ -49,7 +49,7 @@ class DiscountPriority
     public static function getPriorityForType(string $discountType): int
     {
         return match ($discountType) {
-            DiscountType::PRODUCT_LEVEL => self::PRODUCT_LEVEL_PRIORITY,
+            DiscountType::CATALOG_LEVEL => self::CATALOG_LEVEL_PRIORITY,
             DiscountType::CART_LEVEL => self::CART_LEVEL_PRIORITY,
             DiscountType::ORDER_LEVEL => self::ORDER_LEVEL_PRIORITY,
             DiscountType::FREE_SHIPPING => self::FREE_SHIPPING_PRIORITY,

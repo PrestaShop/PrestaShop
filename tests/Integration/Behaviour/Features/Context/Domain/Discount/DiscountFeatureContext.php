@@ -98,6 +98,22 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get error that catalog discount must target specific products
+     */
+    public function assertCatalogDiscountMustTargetProducts(): void
+    {
+        $this->assertLastErrorIs(DiscountConstraintException::class, DiscountConstraintException::INVALID_PRODUCT_DISCOUNT_PROPERTIES);
+    }
+
+    /**
+     * @Then I should get error that catalog discount must have a discount value
+     */
+    public function assertCatalogDiscountMustHaveValue(): void
+    {
+        $this->assertLastErrorIs(DiscountConstraintException::class, DiscountConstraintException::INVALID_PRODUCT_DISCOUNT_PROPERTIES);
+    }
+
+    /**
      * @Then discount :discountReference should have the following properties:
      *
      * @param string $discountReference
@@ -185,7 +201,7 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
         }
 
         if ($command->getDiscountType()->getValue() === DiscountType::CART_LEVEL
-            || $command->getDiscountType()->getValue() === DiscountType::PRODUCT_LEVEL
+            || $command->getDiscountType()->getValue() === DiscountType::CATALOG_LEVEL
             || $command->getDiscountType()->getValue() === DiscountType::ORDER_LEVEL
         ) {
             if (!empty($data['reduction_percent'])) {
@@ -205,7 +221,7 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
             }
         }
 
-        if ($command->getDiscountType()->getValue() === DiscountType::PRODUCT_LEVEL) {
+        if ($command->getDiscountType()->getValue() === DiscountType::CATALOG_LEVEL) {
             if (!empty($data['reduction_product'])) {
                 if ((int) $data['reduction_product'] === -1 || (int) $data['reduction_product'] === -2) {
                     $command->setReductionProduct((int) $data['reduction_product']);
@@ -237,6 +253,24 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
                 $this->getCommandBus()->handle($conditionsCommand);
             }
         } catch (DiscountConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I try to create a :discountType discount :discountReference with following properties:
+     *
+     * @param string $discountReference
+     * @param string $discountType
+     * @param TableNode $node
+     */
+    public function tryToCreateDiscount(string $discountReference, string $discountType, TableNode $node): void
+    {
+        try {
+            $this->createDiscount($discountReference, $discountType, $node);
+        } catch (DiscountConstraintException $e) {
+            $this->setLastException($e);
+        } catch (DiscountException $e) {
             $this->setLastException($e);
         }
     }

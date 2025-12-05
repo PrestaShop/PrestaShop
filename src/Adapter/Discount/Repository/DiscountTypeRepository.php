@@ -67,22 +67,11 @@ class DiscountTypeRepository
      */
     public function addDefaultTypes(): void
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('COUNT(*) as count')
-            ->from($this->dbPrefix . 'cart_rule_type')
-        ;
-        $result = $qb->executeQuery()->fetchAssociative();
-
-        if ($result['count'] > 0) {
-            return;
-        }
-
         $defaultTypes = [
             ['type' => DiscountType::FREE_SHIPPING, 'name' => 'On free shipping', 'description' => 'Discount that provides free shipping to the order'],
             ['type' => DiscountType::CART_LEVEL, 'name' => 'On cart amount', 'description' => 'Discount applied to cart'],
             ['type' => DiscountType::ORDER_LEVEL, 'name' => 'On total order', 'description' => 'Discount applied to the order'],
-            ['type' => DiscountType::PRODUCT_LEVEL, 'name' => 'On catalog products', 'description' => 'Discount applied to specific products'],
+            ['type' => DiscountType::CATALOG_LEVEL, 'name' => 'On catalog products', 'description' => 'Discount applied per product unit (multiplies by quantity)'],
             ['type' => DiscountType::FREE_GIFT, 'name' => 'On free gift', 'description' => 'Discount that provides a free gift product'],
         ];
 

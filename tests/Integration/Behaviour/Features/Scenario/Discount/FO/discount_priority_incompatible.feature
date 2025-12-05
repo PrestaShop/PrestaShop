@@ -31,7 +31,7 @@ Feature: Discount priority - Incompatible discounts
             | reduction_currency | usd                            |
             | taxIncluded        | true                           |
         And I set compatible types for discount "incompat_amount_prio5" to:
-            | product_level |
+            | catalog_level |
         # Priority 3 (higher priority): 20% percentage discount
         When I create a "cart_level" discount "incompat_percent_prio3" with following properties:
             | name[en-US]       | Incompatible Percent Priority 3 |
@@ -42,7 +42,7 @@ Feature: Discount priority - Incompatible discounts
             | code              | INCOMPAT_PCT3                   |
             | reduction_percent | 20.0                            |
         And I set compatible types for discount "incompat_percent_prio3" to:
-            | product_level |
+            | catalog_level |
         When I use a voucher "incompat_amount_prio5" on the cart "cart1"
         And I use a voucher "incompat_percent_prio3" on the cart "cart1"
         # Priority 3 (20%) should win and replace priority 5 ($15)

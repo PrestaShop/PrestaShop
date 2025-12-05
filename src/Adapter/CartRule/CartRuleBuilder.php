@@ -63,7 +63,7 @@ class CartRuleBuilder
         $cartRule->id_cart_rule_type = $this->discountTypeRepository->getTypeIdByString($discountType);
         $cartRule->free_shipping = $discountType === DiscountType::FREE_SHIPPING;
 
-        if ($command->getDiscountType()->getValue() === DiscountType::CART_LEVEL || $command->getDiscountType()->getValue() === DiscountType::ORDER_LEVEL || $command->getDiscountType()->getValue() === DiscountType::PRODUCT_LEVEL) {
+        if ($command->getDiscountType()->getValue() === DiscountType::CART_LEVEL || $command->getDiscountType()->getValue() === DiscountType::ORDER_LEVEL || $command->getDiscountType()->getValue() === DiscountType::CATALOG_LEVEL) {
             if ($command->getPercentDiscount()) {
                 $cartRule->reduction_percent = (float) (string) $command->getPercentDiscount();
                 $cartRule->reduction_amount = 0;
@@ -80,7 +80,7 @@ class CartRuleBuilder
             $cartRule->gift_product_attribute = $command->getCombinationId()?->getValue() ?? 0;
         }
 
-        if ($command->getDiscountType()->getValue() === DiscountType::PRODUCT_LEVEL) {
+        if ($command->getDiscountType()->getValue() === DiscountType::CATALOG_LEVEL) {
             if ($command->getPercentDiscount()) {
                 $cartRule->reduction_percent = (float) (string) $command->getPercentDiscount();
                 $cartRule->reduction_amount = 0;

@@ -94,7 +94,7 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
                     throw new RuntimeException('Unknown discount value type ' . $data['value']['reduction']['type']);
                 }
                 break;
-            case DiscountType::PRODUCT_LEVEL:
+            case DiscountType::CATALOG_LEVEL:
                 if (!isset($data['value']['reduction']['type'])) {
                     throw new DiscountConstraintException(
                         'Discount value is required for catalog products discount.',
@@ -201,7 +201,7 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
                     throw new RuntimeException('Unknown discount value type ' . $data['value']['reduction']['type']);
                 }
                 break;
-            case DiscountType::PRODUCT_LEVEL:
+            case DiscountType::CATALOG_LEVEL:
                 if (!isset($data['value']['reduction']['type'])) {
                     throw new DiscountConstraintException(
                         'Discount value is required for catalog products discount.',

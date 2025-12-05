@@ -255,7 +255,7 @@ class CartRuleCalculator
 
         // Amount discount (¤) : weighted calculation on all concerned rows
         //                weight factor got from price with same tax (incl/excl) as voucher
-        if ((float) $cartRule->reduction_amount > 0) {
+        if ((float) $cartRule->reduction_amount > 0 && $cartRule->getType() !== DiscountType::CATALOG_LEVEL) {
             $concernedRows = new CartRowCollection();
             if ($cartRule->reduction_product > 0) {
                 // discount on single product
@@ -349,6 +349,64 @@ class CartRuleCalculator
                         $cartRuleData->addDiscountApplied($shippingDiscountAmount);
                     }
                 }
+            }
+        }
+
+        if ($cartRule->getType() === DiscountType::CATALOG_LEVEL && (float) $cartRule->reduction_amount > 0) {
+            $discountPerUnit = $this->convertAmountBetweenCurrencies(
+                $cartRule->reduction_amount,
+                new Currency($cartRule->reduction_currency),
+                new Currency($cart->id_currency)
+            );
+
+            $matchingRows = [];
+            if ($cartRule->reduction_product > 0) {
+                // Discount on specific product
+                foreach ($this->cartRows as $cartRow) {
+                    if ($cartRow->getRowData()['id_product'] == $cartRule->reduction_product) {
+                        $matchingRows[] = $cartRow;
+                    }
+                }
+            } elseif ($cartRule->reduction_product == -2) {
+                // Discount on product segment
+                $selected_products = $cartRule->checkProductRestrictionsFromCart($cart, true);
+                if (is_array($selected_products)) {
+                    foreach ($this->cartRows as $cartRow) {
+                        $product = $cartRow->getRowData();
+                        if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
+                                || in_array($product['id_product'] . '-0', $selected_products))
+                            && (($cartRule->reduction_exclude_special && !$product['reduction_applies'])
+                                || !$cartRule->reduction_exclude_special)) {
+                            $matchingRows[] = $cartRow;
+                        }
+                    }
+                }
+            }
+
+            // Apply flat discount multiplied by quantity to each matching row
+            foreach ($matchingRows as $cartRow) {
+                $quantity = (int) $cartRow->getRowData()['cart_quantity'];
+                $taxRate = $this->getTaxRateFromRow($cartRow);
+                $totalDiscount = $discountPerUnit * $quantity;
+
+                if ($cartRule->reduction_tax) {
+                    $discountTaxIncluded = $totalDiscount;
+                    $discountTaxExcluded = $totalDiscount / (1 + $taxRate);
+                } else {
+                    $discountTaxExcluded = $totalDiscount;
+                    $discountTaxIncluded = $totalDiscount * (1 + $taxRate);
+                }
+
+                $maxDiscountTaxIncluded = $cartRow->getFinalTotalPrice()->getTaxIncluded();
+                $maxDiscountTaxExcluded = $cartRow->getFinalTotalPrice()->getTaxExcluded();
+                if ($discountTaxIncluded > $maxDiscountTaxIncluded) {
+                    $discountTaxIncluded = $maxDiscountTaxIncluded;
+                    $discountTaxExcluded = $maxDiscountTaxExcluded;
+                }
+
+                $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
+                $cartRow->applyFlatDiscount($amount);
+                $cartRuleData->addDiscountApplied($amount);
             }
         }
     }

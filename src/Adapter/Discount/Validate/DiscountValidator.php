@@ -125,13 +125,23 @@ class DiscountValidator extends AbstractObjectModelValidator
                     }
                 }
                 break;
-            case DiscountType::PRODUCT_LEVEL:
+            case DiscountType::CATALOG_LEVEL:
                 if ($command->getReductionProduct() === 0) {
-                    throw new DiscountConstraintException('Product discount must have reduction product set.', DiscountConstraintException::INVALID_PRODUCT_DISCOUNT_PROPERTIES);
+                    throw new DiscountConstraintException('Catalog discount must have reduction product set.', DiscountConstraintException::INVALID_PRODUCT_DISCOUNT_PROPERTIES);
                 }
                 // Must have either amount or percent discount
                 if ($command->getAmountDiscount() === null && $command->getPercentDiscount() === null) {
-                    throw new DiscountConstraintException('Product discount must have a discount value (amount or percent).', DiscountConstraintException::INVALID_PRODUCT_DISCOUNT_PROPERTIES);
+                    throw new DiscountConstraintException('Catalog discount must have a discount value (amount or percent).', DiscountConstraintException::INVALID_PRODUCT_DISCOUNT_PROPERTIES);
+                }
+                if ($command->getAmountDiscount() !== null) {
+                    if ($command->getAmountDiscount()->getAmount()->isLowerThanZero()) {
+                        throw new DiscountConstraintException('Discount value can not be negative', DiscountConstraintException::INVALID_DISCOUNT_VALUE_CANNOT_BE_NEGATIVE);
+                    }
+                }
+                if ($command->getPercentDiscount() !== null) {
+                    if ($command->getPercentDiscount()->isLowerThanZero() || $command->getPercentDiscount()->isGreaterThan(new DecimalNumber('100'))) {
+                        throw new DiscountConstraintException('Discount value can not be negative or above 100', DiscountConstraintException::INVALID_DISCOUNT_VALUE_CANNOT_BE_NEGATIVE);
+                    }
                 }
                 break;
             case DiscountType::FREE_GIFT:

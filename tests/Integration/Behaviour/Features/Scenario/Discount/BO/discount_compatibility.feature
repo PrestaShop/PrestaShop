@@ -36,10 +36,10 @@ Feature: Discount compatibility management
       | reduction_percent | 10.0                |
     When I set compatible types for discount "cart_discount_1" to:
       | free_shipping |
-      | product_level |
+      | catalog_level |
     Then discount "cart_discount_1" should be compatible with types:
       | free_shipping |
-      | product_level |
+      | catalog_level |
 
   Scenario: Update discount compatible types
     When I create a "cart_level" discount "cart_discount_2" with following properties:
@@ -55,11 +55,11 @@ Feature: Discount compatibility management
       | free_shipping |
     When I set compatible types for discount "cart_discount_2" to:
       | free_shipping |
-      | product_level |
+      | catalog_level |
       | order_level   |
     Then discount "cart_discount_2" should be compatible with types:
       | free_shipping |
-      | product_level |
+      | catalog_level |
       | order_level   |
 
   Scenario: Create multiple discounts with different compatible types
@@ -81,14 +81,14 @@ Feature: Discount compatibility management
       | code        | FREESHIP            |
     When I set compatible types for discount "free_ship_discount" to:
       | cart_level    |
-      | product_level |
+      | catalog_level |
       | order_level   |
     Then discount "cart_discount_3" should be compatible with types:
       | free_shipping |
       | free_gift     |
     And discount "free_ship_discount" should be compatible with types:
       | cart_level    |
-      | product_level |
+      | catalog_level |
       | order_level   |
 
   Scenario: Create discount with no compatible types (exclusive discount)
@@ -106,7 +106,7 @@ Feature: Discount compatibility management
 
   Scenario: Create product level discount with compatible types
     Given there is a product in the catalog named "product1" with a price of 100.0 and 1000 items in stock
-    When I create a "product_level" discount "product_discount_1" with following properties:
+    When I create a "catalog_level" discount "product_discount_1" with following properties:
       | name[en-US]       | Product 25% Off     |
       | active            | true                |
       | valid_from        | 2025-01-01 00:00:00 |
@@ -162,11 +162,11 @@ Feature: Discount compatibility management
       | reduction_percent | 10.0                |
     When I set compatible types for discount "cart_discount_4" to:
       | free_shipping |
-      | product_level |
+      | catalog_level |
       | order_level   |
     Then discount "cart_discount_4" should be compatible with types:
       | free_shipping |
-      | product_level |
+      | catalog_level |
       | order_level   |
     When I set compatible types for discount "cart_discount_4" to:
       ||
@@ -184,12 +184,12 @@ Feature: Discount compatibility management
     When I set compatible types for discount "universal_discount" to:
       | cart_level    |
       | order_level   |
-      | product_level |
+      | catalog_level |
       | free_shipping |
       | free_gift     |
     Then discount "universal_discount" should be compatible with types:
       | cart_level    |
       | order_level   |
-      | product_level |
+      | catalog_level |
       | free_shipping |
       | free_gift     |
