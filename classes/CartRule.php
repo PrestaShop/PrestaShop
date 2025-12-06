@@ -1013,6 +1013,25 @@ class CartRuleCore extends ObjectModel
         if ($check_carrier) {
             $otherCartRules = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
         }
+
+        // Check if the gift product is available for order
+        if ($this->gift_product) {
+            $shopId = (int) Context::getContext()->shop->id;
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct(
+                $this->gift_product,
+                $this->gift_product_attribute,
+                $shopId
+            );
+
+            if ($availableQuantity < 1 && !Product::isAvailableWhenOutOfStock(
+                StockAvailable::outOfStock($this->gift_product, $shopId)
+            )) {
+                return (!$display_error)
+                    ? false
+                    : $this->trans('This voucher is no longer available.', [], 'Shop.Notifications.Error');
+            }
+        }
+
         $nbOfCartRules = 0;
         if (count($otherCartRules)) {
             foreach ($otherCartRules as $otherCartRule) {
