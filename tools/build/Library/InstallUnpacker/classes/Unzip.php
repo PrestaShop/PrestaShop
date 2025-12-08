@@ -71,7 +71,7 @@ class Unzip
             if (false === mkdir($toDir)) {
                 throw new PrestashopCouldNotUnzipLatestVersionException('Unzip destination folder cannot be used');
             }
-            chmod($toDir, 0775);
+            chmod($toDir, _PS_DIR_GROUP_PERMISSIONS_);
         }
 
         $this->extractWithZipArchive($fromFile, $toDir);

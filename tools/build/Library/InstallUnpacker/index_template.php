@@ -186,9 +186,9 @@ if (isset($_POST['extract'])) {
         }
     }
 
-    @chmod('install/index.php', 0644);
-    @chmod('admin/index.php', 0644);
-    @chmod('index.php', 0644);
+    @chmod('install/index.php', _PS_FILE_DEFAULT_PERMISSIONS_);
+    @chmod('admin/index.php', _PS_FILE_DEFAULT_PERMISSIONS_);
+    @chmod('index.php', _PS_FILE_DEFAULT_PERMISSIONS_);
 
     $zip->close();
 

@@ -713,7 +713,7 @@ class AdminImportControllerCore extends AdminController
             || !@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath() . $filename_prefix . str_replace("\0", '', $_FILES['file']['name']))) {
             $_FILES['file']['error'] = $this->trans('An error occurred while uploading / copying the file.', [], 'Admin.Advparameters.Notification');
         } else {
-            @chmod(AdminImportController::getPath() . $filename_prefix . $_FILES['file']['name'], 0664);
+            @chmod(AdminImportController::getPath() . $filename_prefix . $_FILES['file']['name'], _PS_FILE_GROUP_PERMISSIONS_);
             $_FILES['file']['filename'] = $filename_prefix . str_replace('\0', '', $_FILES['file']['name']);
         }
 

@@ -59,7 +59,7 @@ class ImageCore extends ObjectModel
     protected $existing_path;
 
     /** @var int access rights of created folders (octal) */
-    protected static $access_rights = 0775;
+    protected static $access_rights = _PS_DIR_GROUP_PERMISSIONS_;
 
     /**
      * @see ObjectModel::$definition

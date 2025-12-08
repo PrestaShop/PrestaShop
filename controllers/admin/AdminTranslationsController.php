@@ -1560,7 +1560,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         $$var = [];
         if (!Tools::file_exists_cache($dir)) {
-            if (!mkdir($dir, 0700)) {
+            if (!mkdir($dir, _PS_DIR_PERMISSIONS_)) {
                 throw new PrestaShopException('Directory ' . $dir . ' cannot be created.');
             }
         }
@@ -2713,7 +2713,7 @@ class AdminTranslationsControllerCore extends AdminController
     protected function writeSubjectTranslationFile(array $sub, string $path)
     {
         if (!Tools::file_exists_cache(dirname($path))) {
-            if (!mkdir(dirname($path), 0700)) {
+            if (!mkdir(dirname($path), _PS_DIR_PERMISSIONS_)) {
                 throw new PrestaShopException('Directory ' . dirname($path) . ' cannot be created.');
             }
         }

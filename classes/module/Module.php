@@ -2609,7 +2609,7 @@ abstract class ModuleCore implements ModuleInterface
                     @file_put_contents($file, $xml);
                 }
             }
-            @chmod($file, 0664);
+            @chmod($file, _PS_FILE_GROUP_PERMISSIONS_);
         }
     }
 
