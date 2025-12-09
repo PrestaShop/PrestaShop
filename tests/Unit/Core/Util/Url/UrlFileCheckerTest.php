@@ -43,11 +43,11 @@ class UrlFileCheckerTest extends TestCase
     {
         $this->root = vfsStream::setup('foo');
 
-        vfsStream::newFile('not_writable_files/.htaccess', _PS_OWNER_READONLY_)->at($this->root);
-        vfsStream::newFile('not_writable_files/robots.txt', _PS_OWNER_READONLY_)->at($this->root);
+        vfsStream::newFile('not_writable_files/.htaccess', _PS_PERM_FILE_PRIVATE_READ_)->at($this->root);
+        vfsStream::newFile('not_writable_files/robots.txt', _PS_PERM_FILE_PRIVATE_READ_)->at($this->root);
 
-        vfsStream::newFile('writable_files/.htaccess', _PS_FILE_DEFAULT_PERMISSIONS_)->at($this->root);
-        vfsStream::newFile('writable_files/robots.txt', _PS_FILE_DEFAULT_PERMISSIONS_)->at($this->root);
+        vfsStream::newFile('writable_files/.htaccess', _PS_PERM_FILE_DEFAULT_)->at($this->root);
+        vfsStream::newFile('writable_files/robots.txt', _PS_PERM_FILE_DEFAULT_)->at($this->root);
     }
 
     public function testIsValidImplementation()

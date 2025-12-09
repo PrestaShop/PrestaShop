@@ -275,7 +275,7 @@ class ReleaseCreator
      */
     public function createRelease()
     {
-        if (!file_exists($this->destinationDir) && !mkdir($this->destinationDir, _PS_DIR_FULL_PERMISSIONS_, true)) {
+        if (!file_exists($this->destinationDir) && !mkdir($this->destinationDir, _PS_PERM_DIR_WORLD_WRITABLE_, true)) {
             throw new BuildException("ERROR: can not create directory '{$this->destinationDir}'");
         }
         $startTime = date('H:i:s');
@@ -596,11 +596,11 @@ class ReleaseCreator
     protected function createAndRenameFolders()
     {
         if (!file_exists($this->tempProjectPath . '/var/cache/')) {
-            mkdir($this->tempProjectPath . '/var/cache', _PS_DIR_FULL_PERMISSIONS_, true);
+            mkdir($this->tempProjectPath . '/var/cache', _PS_PERM_DIR_WORLD_WRITABLE_, true);
         }
 
         if (!file_exists($this->tempProjectPath . '/var/logs/')) {
-            mkdir($this->tempProjectPath . '/var/logs', _PS_DIR_FULL_PERMISSIONS_, true);
+            mkdir($this->tempProjectPath . '/var/logs', _PS_PERM_DIR_WORLD_WRITABLE_, true);
         }
         $itemsToRename = ['admin-dev' => 'admin', 'install-dev' => 'install'];
         $basePath = $this->tempProjectPath;

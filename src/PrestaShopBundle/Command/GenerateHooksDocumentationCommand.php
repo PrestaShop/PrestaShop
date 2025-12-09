@@ -164,7 +164,7 @@ final class GenerateHooksDocumentationCommand extends Command
     {
         $outputDir = $mdDir;
         if (!is_dir($outputDir)) {
-            mkdir($outputDir, _PS_DIR_FULL_PERMISSIONS_, true);
+            mkdir($outputDir, _PS_PERM_DIR_WORLD_WRITABLE_, true);
         }
         $outputDir = rtrim($outputDir, '/') . '/';
 

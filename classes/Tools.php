@@ -2894,7 +2894,7 @@ exit;
     public static function ZipExtract($from_file, $to_dir)
     {
         if (!file_exists($to_dir)) {
-            mkdir($to_dir, PsFileSystem::DEFAULT_MODE_FOLDER);
+            mkdir($to_dir, PsFileSystem::_PS_PERM_DIR_DEFAULT_);
         }
 
         $zip = new ZipArchive();
@@ -3674,7 +3674,7 @@ exit;
                 $config = HTMLPurifier_Config::createDefault();
                 $cacheDir = _PS_CACHE_DIR_ . 'purifier';
                 // Make sure the cache directory exists, as the purifier won't create it automatically
-                if (!file_exists($cacheDir) && !mkdir($cacheDir, PsFileSystem::DEFAULT_MODE_FOLDER, true) && !is_dir($cacheDir)) {
+                if (!file_exists($cacheDir) && !mkdir($cacheDir, PsFileSystem::_PS_PERM_DIR_DEFAULT_, true) && !is_dir($cacheDir)) {
                     throw new RuntimeException(sprintf('HTML purifier directory "%s" can not be created', $cacheDir));
                 }
 

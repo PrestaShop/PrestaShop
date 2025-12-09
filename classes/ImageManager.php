@@ -714,7 +714,7 @@ class ImageManagerCore
         }
         // @phpstan-ignore-next-line
         imagedestroy($resource);
-        @chmod($filename, _PS_FILE_GROUP_PERMISSIONS_);
+        @chmod($filename, _PS_PERM_FILE_GROUP_WRITABLE_);
 
         return $success;
     }

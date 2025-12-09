@@ -229,6 +229,6 @@ class StylesheetGenerator
             throw new GenerationException(sprintf('Unable to write file to: %s', $rtlFilePath));
         }
 
-        @chmod($rtlFilePath, FileSystem::DEFAULT_MODE_FILE);
+        @chmod($rtlFilePath, FileSystem::_PS_PERM_FILE_DEFAULT_);
     }
 }
