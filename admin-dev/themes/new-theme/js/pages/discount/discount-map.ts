@@ -46,4 +46,6 @@ export default {
   customerSearchContainer: '#discount_customer_eligibility_eligibility_single_customer',
   productSegmentAttributes: '#discount_conditions_product_product_segment_attributes',
   productSegmentFeatures: '#discount_conditions_product_product_segment_features',
+  quantityPerCustomerInput: '#discount_usability_quantity_per_customer',
+  customerEligibilityInput: '#discount_customer_eligibility_eligibility',
 };
