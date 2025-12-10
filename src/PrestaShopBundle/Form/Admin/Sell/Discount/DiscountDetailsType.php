@@ -24,29 +24,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider;
+namespace PrestaShopBundle\Form\Admin\Sell\Discount;
 
-use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DiscountFormOptionsProvider implements FormOptionsProviderInterface
+class DiscountDetailsType extends AbstractType
 {
-    public function __construct(
-        private readonly DiscountTypeRepository $discountTypeRepository,
-    ) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('information', DiscountInformationType::class, [
+                'discount_type' => $options['discount_type'],
+            ])
+            ->add('period', DiscountPeriodType::class)
+        ;
     }
 
-    public function getOptions(int $id, array $data): array
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return [
-            'discount_type' => $data['details']['information']['discount_type'] ?? '',
-            'available_cart_rule_types' => $this->discountTypeRepository->getAllActiveTypes(),
-        ];
+        $resolver->setDefaults([
+            'label' => false,
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Discount/Blocks/discount_details_widget.html.twig',
+        ]);
+        $resolver->setRequired([
+            'discount_type',
+        ]);
+        $resolver->setAllowedTypes('discount_type', ['string']);
     }
 
-    public function getDefaultOptions(array $data): array
+    public function getBlockPrefix(): string
     {
-        return [
-            'available_cart_rule_types' => $this->discountTypeRepository->getAllActiveTypes(),
-        ];
+        return 'discount_details';
     }
 }

@@ -50,10 +50,9 @@ class DiscountType extends TranslatorAwareType
 
         $discountType = $options['discount_type'];
         $builder
-            ->add('information', DiscountInformationType::class, [
+            ->add('details', DiscountDetailsType::class, [
                 'discount_type' => $discountType,
             ])
-            ->add('period', DiscountPeriodType::class)
             ->add('customer_eligibility', DiscountCustomerEligibilityType::class)
             ->add('conditions', DiscountConditionsType::class, [
                 'label' => $this->trans('Select discount conditions', 'Admin.Catalog.Feature'),

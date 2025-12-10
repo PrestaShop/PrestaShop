@@ -75,8 +75,8 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
     public function create(array $data)
     {
         // For the moment the names are not sent by the form so we continue to generate it as we did later in the method.
-        $discountType = $data['information']['discount_type'];
-        $command = new AddDiscountCommand($discountType, $data['information']['names'] ?? []);
+        $discountType = $data['details']['information']['discount_type'];
+        $command = new AddDiscountCommand($discountType, $data['details']['information']['names'] ?? []);
         switch ($discountType) {
             case DiscountType::FREE_SHIPPING:
                 break;
@@ -136,7 +136,7 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
 
         $command->setActive(true);
 
-        $command->setDescription($data['information']['description'] ?? '');
+        $command->setDescription($data['details']['information']['description'] ?? '');
 
         if ($data['usability']['mode']['children_selector'] === DiscountUsabilityModeType::CODE_MODE) {
             $command->setCode($data['usability']['mode']['code'] ?? '');
@@ -144,11 +144,11 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
             $command->setCode('');
         }
 
-        if (!empty($data['period']['valid_date_range'])) {
-            $dateRange = $data['period']['valid_date_range'];
+        if (!empty($data['details']['period']['valid_date_range'])) {
+            $dateRange = $data['details']['period']['valid_date_range'];
             $validFrom = $this->parseDateWithDefaultTime($dateRange['from'] ?? null, '00:00');
 
-            $neverExpires = !empty($data['period']['period_never_expires']);
+            $neverExpires = !empty($data['details']['period']['period_never_expires']);
             if ($neverExpires) {
                 $validTo = (new DateTime())->modify('+100 years')->setTime(23, 59, 59);
                 $validTo = DateTimeImmutable::createFromMutable($validTo);
@@ -184,7 +184,7 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
     public function update($id, array $data): void
     {
         $command = new UpdateDiscountCommand($id);
-        $discountType = $data['information']['discount_type'];
+        $discountType = $data['details']['information']['discount_type'];
         switch ($discountType) {
             case DiscountType::FREE_SHIPPING:
             case DiscountType::CART_LEVEL:
@@ -240,8 +240,8 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
             default:
                 throw new RuntimeException('Unknown discount type ' . $discountType);
         }
-        $command->setLocalizedNames($data['information']['names']);
-        $command->setDescription($data['information']['description'] ?? '');
+        $command->setLocalizedNames($data['details']['information']['names']);
+        $command->setDescription($data['details']['information']['description'] ?? '');
 
         if ($data['usability']['mode']['children_selector'] === DiscountUsabilityModeType::CODE_MODE) {
             $command->setCode($data['usability']['mode']['code'] ?? '');
@@ -249,12 +249,12 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
             $command->setCode('');
         }
 
-        if (!empty($data['period']['valid_date_range'])) {
-            $dateRange = $data['period']['valid_date_range'];
+        if (!empty($data['details']['period']['valid_date_range'])) {
+            $dateRange = $data['details']['period']['valid_date_range'];
             $validFrom = $this->parseDateWithDefaultTime($dateRange['from'] ?? null, '00:00');
 
             // Check if "never expires" checkbox is checked
-            $neverExpires = !empty($data['period']['period_never_expires']);
+            $neverExpires = !empty($data['details']['period']['period_never_expires']);
             if ($neverExpires) {
                 // Set expiration date to 100 years in the future
                 $validTo = (new DateTime())->modify('+100 years')->setTime(23, 59, 59);

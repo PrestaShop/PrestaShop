@@ -36,6 +36,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -132,6 +134,11 @@ class DateRangeType extends AbstractType
         }
     }
 
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['column_class'] = $options['column_class'];
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
@@ -141,12 +148,14 @@ class DateRangeType extends AbstractType
             'default_end_value' => (new DateTime())->format('Y-m-d'),
             'label_from' => $this->translator->trans('Start date', [], 'Admin.Global'),
             'label_to' => $this->translator->trans('End date', [], 'Admin.Global'),
+            'column_class' => 'col-md-4',
         ]);
         $resolver
             ->setAllowedTypes('date_format', 'string')
             ->setAllowedTypes('placeholder', 'string')
             ->setAllowedTypes('label_from', 'string')
             ->setAllowedTypes('label_to', 'string')
+            ->setAllowedTypes('column_class', 'string')
         ;
     }
 

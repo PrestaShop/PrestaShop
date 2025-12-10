@@ -1,5 +1,4 @@
-<?php
-/**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,31 +21,17 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ * #}
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider;
+{% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
-use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository;
-
-class DiscountFormOptionsProvider implements FormOptionsProviderInterface
-{
-    public function __construct(
-        private readonly DiscountTypeRepository $discountTypeRepository,
-    ) {
-    }
-
-    public function getOptions(int $id, array $data): array
-    {
-        return [
-            'discount_type' => $data['details']['information']['discount_type'] ?? '',
-            'available_cart_rule_types' => $this->discountTypeRepository->getAllActiveTypes(),
-        ];
-    }
-
-    public function getDefaultOptions(array $data): array
-    {
-        return [
-            'available_cart_rule_types' => $this->discountTypeRepository->getAllActiveTypes(),
-        ];
-    }
-}
+{% block discount_details_row %}
+  <div class="row">
+    <div class="col-lg-6">
+      {{ form_row(form.information) }}
+    </div>
+    <div class="col-lg-6">
+      {{ form_row(form.period) }}
+    </div>
+  </div>
+{% endblock %}

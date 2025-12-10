@@ -49,6 +49,7 @@ class DiscountPeriodType extends TranslatorAwareType
                 'date_format' => DateRangeType::DEFAULT_DATE_TIME_FORMAT,
                 'placeholder' => DateRangeType::DEFAULT_DATE_TIME_FORMAT,
                 'default_end_value' => (new DateTime())->modify('+1 month')->setTime(23, 59, 59)->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                'column_class' => 'col-md-6',
                 'constraints' => [
                     new DateRange([
                         'message' => $this->trans(

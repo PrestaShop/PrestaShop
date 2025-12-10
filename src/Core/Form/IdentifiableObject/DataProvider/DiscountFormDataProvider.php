@@ -91,12 +91,18 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         $endDate = (clone $now)->modify('+1 month')->setTime(23, 59);
 
         return [
-            'period' => [
-                'valid_date_range' => [
-                    'from' => $startDate->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
-                    'to' => $endDate->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+            'details' => [
+                'information' => [
+                    'names' => [],
+                    'description' => '',
                 ],
-                'period_never_expires' => false,
+                'period' => [
+                    'valid_date_range' => [
+                        'from' => $startDate->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                        'to' => $endDate->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                    ],
+                    'period_never_expires' => false,
+                ],
             ],
             'customer_eligibility' => [
                 'eligibility' => [
@@ -173,10 +179,19 @@ class DiscountFormDataProvider implements FormDataProviderInterface
 
         return [
             'id' => $id,
-            'information' => [
-                'discount_type' => $discountForEditing->getType()->getValue(),
-                'names' => $discountForEditing->getLocalizedNames(),
-                'description' => $discountForEditing->getDescription(),
+            'details' => [
+                'information' => [
+                    'discount_type' => $discountForEditing->getType()->getValue(),
+                    'names' => $discountForEditing->getLocalizedNames(),
+                    'description' => $discountForEditing->getDescription(),
+                ],
+                'period' => [
+                    'valid_date_range' => [
+                        'from' => $discountForEditing->getValidFrom() ? $discountForEditing->getValidFrom()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) : null,
+                        'to' => $discountForEditing->getValidTo() ? $discountForEditing->getValidTo()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) : null,
+                    ],
+                    'period_never_expires' => $this->isPeriodNeverExpires($discountForEditing->getValidFrom(), $discountForEditing->getValidTo()),
+                ],
             ],
             'value' => [
                 'reduction' => [
@@ -217,13 +232,6 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     DeliveryConditionsType::CARRIERS => $discountForEditing->getCarrierIds(),
                     DeliveryConditionsType::COUNTRY => $discountForEditing->getCountryIds(),
                 ],
-            ],
-            'period' => [
-                'valid_date_range' => [
-                    'from' => $discountForEditing->getValidFrom() ? $discountForEditing->getValidFrom()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) : null,
-                    'to' => $discountForEditing->getValidTo() ? $discountForEditing->getValidTo()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) : null,
-                ],
-                'period_never_expires' => $this->isPeriodNeverExpires($discountForEditing->getValidFrom(), $discountForEditing->getValidTo()),
             ],
             'customer_eligibility' => [
                 'eligibility' => $this->getCustomerEligibilityData($discountForEditing),

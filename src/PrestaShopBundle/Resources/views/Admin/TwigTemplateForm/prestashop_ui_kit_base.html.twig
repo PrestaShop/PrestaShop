@@ -534,11 +534,12 @@
 
 {% block date_range_widget %}
   {% apply spaceless %}
+    {% set columnClass = column_class|default('col-md-4') %}
     <div class="input-group date-range row">
-      <div class="col col-md-4">
+      <div class="col {{ columnClass }}">
         {{ form_row(form.from) }}
       </div>
-      <div class="col col-md-4">
+      <div class="col {{ columnClass }}">
         {{ form_row(form.to) }}
         {% if form.unlimited is defined %}
           {{ form_widget(form.unlimited) }}
