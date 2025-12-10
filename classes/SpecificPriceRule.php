@@ -54,7 +54,7 @@ class SpecificPriceRuleCore extends ObjectModel
             'id_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'from_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
             'price' => ['type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true],
-            'reduction' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'reduction' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPositivePrice', 'required' => true],
             'reduction_tax' => ['type' => self::TYPE_INT, 'validate' => 'isBool', 'required' => true],
             'reduction_type' => ['type' => self::TYPE_STRING, 'validate' => 'isReductionType', 'required' => true],
             'from' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => false],

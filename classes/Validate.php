@@ -318,6 +318,18 @@ class ValidateCore
     }
 
     /**
+     * Check for price validity (including positive price).
+     *
+     * @param string $price Price to validate
+     *
+     * @return bool Validity is ok or not
+     */
+    public static function isPositivePrice($price)
+    {
+        return self::isPrice($price) && (float) $price > 0;
+    }
+
+    /**
      * Check for language code (ISO) validity.
      *
      * @param string $iso_code Language code (ISO) to validate
