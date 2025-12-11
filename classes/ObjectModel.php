@@ -1121,7 +1121,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
                 throw new PrestaShopException($this->trans('Validation function not found: %s.', [$data['validate']], 'Admin.Notifications.Error'));
             }
 
-            if (!empty($value)) {
+            if (!empty($value) || $value === '0') {
                 $res = true;
                 if (Tools::strtolower($data['validate']) === 'iscleanhtml') {
                     if (!call_user_func(['Validate', $data['validate']], $value, $ps_allow_html_iframe)) {
