@@ -200,6 +200,19 @@ jobs:
             CAMPAIGN: 'functional:productV2'
           - BRANCH: 9.0.x
             CAMPAIGN: 'modules'
+          ## 9.1.x
+          - BRANCH: 9.1.x
+            CAMPAIGN: 'functional:FO:01-03'
+          - BRANCH: 9.1.x
+            CAMPAIGN: 'functional:FO:04-07'
+          - BRANCH: 9.1.x
+            CAMPAIGN: 'functional:FO:08-12'
+          - BRANCH: 9.1.x
+            CAMPAIGN: 'sanity:productV2'
+          - BRANCH: 9.1.x
+            CAMPAIGN: 'functional:productV2'
+          - BRANCH: 9.1.x
+            CAMPAIGN: 'modules'
           ## develop
           - BRANCH: develop
             CAMPAIGN: 'functional:FO:01-03'
@@ -250,14 +263,14 @@ jobs:
 
       # Create API Client for API campaign
       - name: Create API client
-        if: ${{ (env.GH_BRANCH == '9.0.x' || env.GH_BRANCH == 'develop') && env.TEST_CAMPAIGN == 'functional:API' }}
+        if: ${{ (startsWith(env.GH_BRANCH, '9.') || env.GH_BRANCH == 'develop') && env.TEST_CAMPAIGN == 'functional:API' }}
         run: |
           docker exec prestashop-prestashop-git-1 php ./bin/console prestashop:api-client create ${{ env.CLIENT_ID_API }} --all-scopes --name='Test client' --description='Test client with all scopes' --timeout=3600 --secret=${{ env.CLIENT_SECRET_API }}
 
       # Keycloak is only needed for API campaign
       - name: Setup Keycloak
         uses: ./.github/actions/setup-keycloak
-        if: ${{ (env.GH_BRANCH == '9.0.x' || env.GH_BRANCH == 'develop') && env.TEST_CAMPAIGN == 'functional:API' }}
+        if: ${{ (startsWith(env.GH_BRANCH, '9.') || env.GH_BRANCH == 'develop') && env.TEST_CAMPAIGN == 'functional:API' }}
 
       - name: Run Tests
         continue-on-error: true

@@ -15,6 +15,7 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 9.1.x
           - 9.0.x
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}
