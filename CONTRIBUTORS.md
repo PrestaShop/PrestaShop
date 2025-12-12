@@ -159,6 +159,7 @@ GitHub contributors:
 - Charly Caillon
 - Chedly Farhani
 - Chen.Zhidong
+- ChillCode
 - Chris
 - Chris Gurk
 - Christian Kubitza
@@ -475,7 +476,9 @@ GitHub contributors:
 - Julian Eberius
 - Julie Varisellaz
 - Julien Bouchez
+- Julien Bonvarlet
 - Julien Bourdeau
+- Julien Boyer
 - Julien Deniau
 - Julien Fenaille
 - Julien Gissinger
@@ -560,6 +563,7 @@ GitHub contributors:
 - Manfredi Petruso
 - maniT4c
 - Manuel Jose Pulgar Anguita
+- Manuel Valentin
 - manuelbcd
 - Marc González Majoral
 - Marcin Kurek
@@ -616,6 +620,7 @@ GitHub contributors:
 - Maxime Morel-Bailly
 - Maxime Vasse
 - Maxime Poulain
+- Maxime Sieczkowski
 - mchelh
 - mchojnacki
 - mdomenjoud
@@ -1027,6 +1032,7 @@ GitHub contributors:
 - Yannick Armand
 - Yneet
 - yo7hli
+- Yoan Ballesteros
 - Yohann Tilotti
 - Yolandavdvegt
 - Yoozio
