@@ -269,7 +269,7 @@ class StockAvailableCore extends ObjectModel
         if ($id_product_attribute === null) {
             $id_product_attribute = 0;
         }
-        //cache quantity available for every combination of provided product id
+        // cache quantity available for every combination of provided product id
         if ($id_product !== null) {
             $key1 = 'StockAvailable::getQuantityAvailableByProduct_Group_' . (int) $id_product. '-' . (int) $id_shop;
             if (!Cache::isStored($key1)) {
