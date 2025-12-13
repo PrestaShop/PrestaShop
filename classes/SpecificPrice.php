@@ -586,7 +586,7 @@ class SpecificPriceCore extends ObjectModel
             $query .= $query_extra;
             $query .= $conditions;
             if ($id_product_attribute) {
-                // we want to get specific prices for all product variants	
+                // we want to get specific prices for all product variants
                 $query_extraAll = self::computeExtraConditions($id_product, null, $id_customer, $id_cart);
                 $queryAll .= $query_extraAll;
                 $queryAll .= $conditions;
@@ -605,7 +605,7 @@ class SpecificPriceCore extends ObjectModel
                                 $id_country,
                                 $id_group,
                                 $quantity,
-                                (int)$variantId,
+                                (int) $variantId,
                                 $id_customer,
                                 $id_cart,
                                 $real_quantity
@@ -624,7 +624,7 @@ class SpecificPriceCore extends ObjectModel
                                 $id_country,
                                 $id_group,
                                 $quantity,
-                                (int)$variantId,
+                                (int) $variantId,
                                 $id_customer,
                                 $id_cart,
                                 $real_quantity
@@ -642,23 +642,23 @@ class SpecificPriceCore extends ObjectModel
                                 $id_country,
                                 $id_group,
                                 $quantity,
-                                (int)$variantId,
+                                (int) $variantId,
                                 $id_customer,
                                 $id_cart,
                                 $real_quantity
                             );
-                            if (!array_key_exists($key, self::$_specificPriceCache)){
+                            if (!array_key_exists($key, self::$_specificPriceCache)) {
                                 self::$_specificPriceCache[$key] = false;
                             }
                         }
                     }
-                }
-            if (!array_key_exists($key, self::$_specificPriceCache)){
+            }
+            if (!array_key_exists($key, self::$_specificPriceCache)) {
                 // keep the old query as a fallback
                 self::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
             }
 
-        } 
+        }
         return self::$_specificPriceCache[$key];
     }
 
