@@ -62,6 +62,8 @@ export default class FeatureValuesManager {
 
   featureValues: Array<FeatureValue[]> = [];
 
+  nextIndex: number = 0;
+
   /**
    * @param eventEmitter {EventEmitter}
    */
@@ -80,6 +82,8 @@ export default class FeatureValuesManager {
 
     this.$collectionContainer = $(ProductMap.featureValues.collectionContainer);
     this.$collectionRowsContainer = $(ProductMap.featureValues.collectionRowsContainer);
+
+    this.nextIndex = $(ProductMap.featureValues.featureRow, this.$collectionRowsContainer).length;
 
     this.watchFeatureSelectors();
     this.watchDeleteButtons();
@@ -121,9 +125,10 @@ export default class FeatureValuesManager {
       if (!$featureRow.length) {
         const featurePrototype = this.$collectionContainer.data('prototype');
         const featurePrototypeName = this.$collectionContainer.data('prototypeName');
-        const newIndex = $(ProductMap.featureValues.featureRow, this.$collectionRowsContainer).length;
 
-        const $newFeatureRow = $(featurePrototype.replace(new RegExp(featurePrototypeName, 'g'), newIndex)).first();
+        const $newFeatureRow = $(featurePrototype.replace(new RegExp(featurePrototypeName, 'g'), this.nextIndex)).first();
+        this.nextIndex += 1;
+
         $newFeatureRow.attr('feature-id', featureId);
         this.$collectionRowsContainer.append($newFeatureRow);
         $(ProductMap.featureValues.featureIdInput, $newFeatureRow).val(featureId);
