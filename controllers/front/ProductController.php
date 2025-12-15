@@ -316,104 +316,102 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function initContent(): void
     {
-        if (!$this->errors) {
-            // Assign template vars related to the category + execute hooks related to the category
-            $this->assignCategory();
+        // Assign template vars related to the category + execute hooks related to the category
+        $this->assignCategory();
 
-            // Assign template vars related to manufacturer of the product
-            $this->assignManufacturer();
+        // Assign template vars related to manufacturer of the product
+        $this->assignManufacturer();
 
-            // Assign template vars related to the price and tax
-            $this->assignPriceAndTax();
+        // Assign template vars related to the price and tax
+        $this->assignPriceAndTax();
 
-            // Assign attributes combinations to the template
-            $this->assignAttributesCombinations();
+        // Assign attributes combinations to the template
+        $this->assignAttributesCombinations();
 
-            // Add notification about this product being in cart
-            $this->addCartQuantityNotification();
+        // Add notification about this product being in cart
+        $this->addCartQuantityNotification();
 
-            // Get our product itself
-            // At this phase, it's already a presented lazy array, ready to go
-            $product_for_template = $this->getTemplateVarProduct();
+        // Get our product itself
+        // At this phase, it's already a presented lazy array, ready to go
+        $product_for_template = $this->getTemplateVarProduct();
 
-            // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
-            $filteredProduct = Hook::exec(
-                'filterProductContent',
-                ['object' => $product_for_template],
-                null,
-                false,
-                true,
-                false,
-                null,
-                true
+        // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
+        $filteredProduct = Hook::exec(
+            'filterProductContent',
+            ['object' => $product_for_template],
+            null,
+            false,
+            true,
+            false,
+            null,
+            true
+        );
+        if (!empty($filteredProduct['object'])) {
+            $product_for_template = $filteredProduct['object'];
+        }
+
+        // Prepare product presenter for related items like packs and accessories
+        $assembler = new ProductAssembler($this->context);
+        $presenter = new ProductListingPresenter(
+            new ImageRetriever(
+                $this->context->link
+            ),
+            $this->context->link,
+            new PriceFormatter(),
+            new ProductColorsRetriever(),
+            $this->getTranslator()
+        );
+        $presentationSettings = $this->getProductPresentationSettings();
+
+        // Presenting pack items
+        $pack_items = $product_for_template['pack'] ? $product_for_template['packItems'] : [];
+        $pack_items = $assembler->assembleProducts($pack_items);
+        $presentedPackItems = [];
+        foreach ($pack_items as $item) {
+            $presentedPackItems[] = $presenter->present(
+                $presentationSettings,
+                $item,
+                $this->context->language
             );
-            if (!empty($filteredProduct['object'])) {
-                $product_for_template = $filteredProduct['object'];
-            }
+        }
 
-            // Prepare product presenter for related items like packs and accessories
-            $assembler = new ProductAssembler($this->context);
-            $presenter = new ProductListingPresenter(
-                new ImageRetriever(
-                    $this->context->link
-                ),
-                $this->context->link,
-                new PriceFormatter(),
-                new ProductColorsRetriever(),
-                $this->getTranslator()
-            );
-            $presentationSettings = $this->getProductPresentationSettings();
-
-            // Presenting pack items
-            $pack_items = $product_for_template['pack'] ? $product_for_template['packItems'] : [];
-            $pack_items = $assembler->assembleProducts($pack_items);
-            $presentedPackItems = [];
-            foreach ($pack_items as $item) {
-                $presentedPackItems[] = $presenter->present(
+        // Assign accessories
+        $accessories = $this->product->getAccessories($this->context->language->id);
+        if (is_array($accessories)) {
+            $accessories = $assembler->assembleProducts($accessories);
+            foreach ($accessories as &$accessory) {
+                $accessory = $presenter->present(
                     $presentationSettings,
-                    $item,
+                    $accessory,
                     $this->context->language
                 );
             }
-
-            // Assign accessories
-            $accessories = $this->product->getAccessories($this->context->language->id);
-            if (is_array($accessories)) {
-                $accessories = $assembler->assembleProducts($accessories);
-                foreach ($accessories as &$accessory) {
-                    $accessory = $presenter->present(
-                        $presentationSettings,
-                        $accessory,
-                        $this->context->language
-                    );
-                }
-                unset($accessory);
-            }
-
-            // Assign everything to the template
-            $this->context->smarty->assign([
-                'product' => $product_for_template,
-                // How to display prices, tax or no tax?
-                'priceDisplay' => Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer),
-                // If product is customized but not added to cart, ID of the customization
-                'id_customization' => empty($product_for_template['id_customization']) ? null : $product_for_template['id_customization'],
-                // Related products
-                'accessories' => $accessories,
-                // Should price per unit be displayed?
-                'displayUnitPrice' => !empty($product_for_template['unit_price_tax_excluded']),
-                // If product is a pack, pack contents
-                'packItems' => $presentedPackItems,
-                // Price of the product if it wasn't in the pack (should be migrated to lazy array)
-                'noPackPrice' => $product_for_template['nopackprice_to_display'],
-                // Should display the price of product if it wasn't in the pack?
-                'displayPackPrice' => !empty($product_for_template['pack']) && $product_for_template['price_amount'] < $product_for_template['nopackprice'],
-                // Variable containing information about a pack that this product belongs to
-                'packs' => Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1),
-            ]);
-
-            // Assign attribute groups to the template
-            $this->assignAttributesGroups($product_for_template);
+            unset($accessory);
         }
+
+        // Assign everything to the template
+        $this->context->smarty->assign([
+            'product' => $product_for_template,
+            // How to display prices, tax or no tax?
+            'priceDisplay' => Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer),
+            // If product is customized but not added to cart, ID of the customization
+            'id_customization' => empty($product_for_template['id_customization']) ? null : $product_for_template['id_customization'],
+            // Related products
+            'accessories' => $accessories,
+            // Should price per unit be displayed?
+            'displayUnitPrice' => !empty($product_for_template['unit_price_tax_excluded']),
+            // If product is a pack, pack contents
+            'packItems' => $presentedPackItems,
+            // Price of the product if it wasn't in the pack (should be migrated to lazy array)
+            'noPackPrice' => $product_for_template['nopackprice_to_display'],
+            // Should display the price of product if it wasn't in the pack?
+            'displayPackPrice' => !empty($product_for_template['pack']) && $product_for_template['price_amount'] < $product_for_template['nopackprice'],
+            // Variable containing information about a pack that this product belongs to
+            'packs' => Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1),
+        ]);
+
+        // Assign attribute groups to the template
+        $this->assignAttributesGroups($product_for_template);
 
         parent::initContent();
     }

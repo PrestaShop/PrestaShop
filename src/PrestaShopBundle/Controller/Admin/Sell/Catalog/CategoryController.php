@@ -375,7 +375,7 @@ class CategoryController extends PrestaShopAdminController
                 $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'categoryId' => (int) $this->getConfiguration()->get('PS_ROOT_CATEGORY'),
+                    'categoryId' => $categoryId,
                 ]);
             }
         } catch (Exception $e) {
