@@ -115,6 +115,9 @@ else
   echo "error_log=/var/www/html/var/logs/php.log" >> /usr/local/etc/php/php.ini
 fi
 
+# Disable deprecated warnings
+echo "error_reporting=E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED" >> /usr/local/etc/php/php.ini
+
 if [ ! -f ./app/config/parameters.php ]; then
     if [ $PS_INSTALL_AUTO = 1 ]; then
 
