@@ -503,7 +503,8 @@ class SpecificPriceCore extends ObjectModel
      * @param int $id_customer
      * @param int $id_cart
      * @param int $real_quantity
-     *
+     * @param int $all_variants set to false if you only want to get a single combination with provided $id_product_attribute
+     * 
      * @return array
      */
     public static function getSpecificPrice(
@@ -516,7 +517,8 @@ class SpecificPriceCore extends ObjectModel
         $id_product_attribute = null,
         $id_customer = 0,
         $id_cart = 0,
-        $real_quantity = 0
+        $real_quantity = 0,
+        $all_variants = true
     ) {
         if (!SpecificPrice::isFeatureActive()) {
             return [];
@@ -585,7 +587,7 @@ class SpecificPriceCore extends ObjectModel
             // keep the old query as a fallback
             $query .= $query_extra;
             $query .= $conditions;
-            if ($id_product_attribute) {
+            if ($id_product_attribute && $all_variants) {
                 // we want to get specific prices for all product variants
                 $query_extraAll = self::computeExtraConditions($id_product, null, $id_customer, $id_cart);
                 $queryAll .= $query_extraAll;
@@ -593,7 +595,7 @@ class SpecificPriceCore extends ObjectModel
                 // cache all product variants to limit calls for the same product
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($queryAll);
 
-                foreach (array_column(Product::getProductAttributesIds($id_product), 'id_product_attribute') as $variantId) {
+                foreach (array_column(Product::getProductAttributesIds($id_product,true), 'id_product_attribute') as $variantId) {
                     switch (true) {
                         // product variant matching specific price
                         case in_array($variantId, array_column($result, 'id_product_attribute')):
@@ -610,7 +612,7 @@ class SpecificPriceCore extends ObjectModel
                                 $id_cart,
                                 $real_quantity
                             );
-                            if(!array_key_exists($key, self::$_specificPriceCache)){
+                            if (!array_key_exists($key, self::$_specificPriceCache)) {
                                 self::$_specificPriceCache[$key] = $result[$k];
                             }
                             break;
@@ -629,7 +631,7 @@ class SpecificPriceCore extends ObjectModel
                                 $id_cart,
                                 $real_quantity
                             );
-                            if (!array_key_exists($key, self::$_specificPriceCache)){
+                            if (!array_key_exists($key, self::$_specificPriceCache)) {
                                 self::$_specificPriceCache[$key] = $result[$k];
                             }
                             break;
@@ -650,8 +652,8 @@ class SpecificPriceCore extends ObjectModel
                             if (!array_key_exists($key, self::$_specificPriceCache)) {
                                 self::$_specificPriceCache[$key] = false;
                             }
-                        }
                     }
+                }
             }
             if (!array_key_exists($key, self::$_specificPriceCache)) {
                 // keep the old query as a fallback
