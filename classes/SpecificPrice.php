@@ -503,7 +503,7 @@ class SpecificPriceCore extends ObjectModel
      * @param int $id_customer
      * @param int $id_cart
      * @param int $real_quantity
-     * @param int $all_variants set to false if you only want to get a single combination with provided $id_product_attribute
+     * @param bool $all_variants set to false if you only want to get a single combination with provided $id_product_attribute
      * 
      * @return array
      */
@@ -595,7 +595,7 @@ class SpecificPriceCore extends ObjectModel
                 // cache all product variants to limit calls for the same product
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($queryAll);
 
-                foreach (array_column(Product::getProductAttributesIds($id_product,true), 'id_product_attribute') as $variantId) {
+                foreach (array_column(Product::getProductAttributesIds($id_product, true), 'id_product_attribute') as $variantId) {
                     switch (true) {
                         // product variant matching specific price
                         case in_array($variantId, array_column($result, 'id_product_attribute')):
