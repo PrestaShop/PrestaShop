@@ -503,7 +503,7 @@ class SpecificPriceCore extends ObjectModel
      * @param int $id_customer
      * @param int $id_cart
      * @param int $real_quantity
-     * @param bool $all_variants set to false if you only want to get a single combination with provided $id_product_attribute
+     * @param bool $cache_all_variants set to false if you only want to cache a single combination with provided $id_product_attribute
      * 
      * @return array
      */
@@ -518,7 +518,7 @@ class SpecificPriceCore extends ObjectModel
         $id_customer = 0,
         $id_cart = 0,
         $real_quantity = 0,
-        $all_variants = true
+        $cache_all_variants = true
     ) {
         if (!SpecificPrice::isFeatureActive()) {
             return [];
@@ -587,7 +587,7 @@ class SpecificPriceCore extends ObjectModel
             // keep the old query as a fallback
             $query .= $query_extra;
             $query .= $conditions;
-            if ($id_product_attribute && $all_variants) {
+            if ($id_product_attribute && $cache_all_variants) {
                 // we want to get specific prices for all product variants
                 $query_extraAll = self::computeExtraConditions($id_product, null, $id_customer, $id_cart);
                 $queryAll .= $query_extraAll;
@@ -659,8 +659,8 @@ class SpecificPriceCore extends ObjectModel
                 // keep the old query as a fallback
                 self::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
             }
-
         }
+ 
         return self::$_specificPriceCache[$key];
     }
 
