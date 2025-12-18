@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShop\PrestaShop\Core\Module\Controller\ModuleFrontControllerTrait;
+use PrestaShop\PrestaShop\Adapter\Module\Controller\ModuleFrontControllerTrait;
 
 abstract class ModuleProductListingFrontControllerCore extends ProductListingFrontController
 {

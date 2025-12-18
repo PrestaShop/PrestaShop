@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Module\Controller;
+namespace PrestaShop\PrestaShop\Adapter\Module\Controller;
 
 use Cart;
 use Configuration;
@@ -32,6 +32,7 @@ use Currency;
 use Dispatcher;
 use Hook;
 use Module;
+use PrestaShopException;
 use Tools;
 
 /**
@@ -97,9 +98,6 @@ trait ModuleFrontControllerTrait
         parent::initContent();
     }
 
-    /**
-     * Legacy helper. Preferisci $this->trans() dove possibile.
-     */
     protected function l($string, $specific = false, $class = null, $addslashes = false, $htmlentities = true)
     {
         return $this->module ? $this->module->l($string, $specific) : $string;
