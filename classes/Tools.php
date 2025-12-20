@@ -363,12 +363,12 @@ class ToolsCore
             if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')) {
                 $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
 
-                return $ips[0];
+                return pSQL($ips[0]);
             } else {
-                return $_SERVER['HTTP_X_FORWARDED_FOR'];
+                return pSQL($_SERVER['HTTP_X_FORWARDED_FOR']);
             }
         } else {
-            return $_SERVER['REMOTE_ADDR'];
+            return pSQL($_SERVER['REMOTE_ADDR']);
         }
     }
 
