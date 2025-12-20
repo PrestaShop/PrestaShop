@@ -40,7 +40,7 @@
       <li class="employee-wrapper-profile"><a class="admin-link" href="{{ path('admin_employees_edit', {employeeId: this.employee.id}) }}"><i class="material-icons">edit</i> {{ 'Your profile'|trans({}, 'Admin.Navigation.Header') }}</a></li>
       <li class="divider"></li>
 
-      {% for menuItem in displayBackOfficeEmployeeMenu %}
+      {% for menuItem in this.displayBackOfficeEmployeeMenu %}
         {% set menuItemProperties = menuItem.getProperties %}
         <li class="{{ menuItem.getClass }}">
           <a class="dropdown-item" href="{{ menuItemProperties.link }}" {% if menuItemProperties.isExternalLink %} target="_blank"{% endif %} rel="noopener noreferrer nofollow">

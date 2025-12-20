@@ -37,7 +37,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/employee_dropdown.html.twig')]
 class EmployeeDropdown
 {
-    public ?ActionsBarButtonsCollection $displayBackOfficeEmployeeMenu = null;
+    protected ?ActionsBarButtonsCollection $displayBackOfficeEmployeeMenu = null;
 
     public function __construct(
         protected readonly HookDispatcherInterface $hookDispatcher,
@@ -45,12 +45,18 @@ class EmployeeDropdown
     ) {
     }
 
+    /**
+     * @return Employee|null
+     */
     public function getEmployee(): ?Employee
     {
         return $this->employeeContext->getEmployee();
     }
 
-    public function getDisplayBackOfficeEmployeeMenu()
+    /**
+     * @return ActionsBarButtonsCollection|null
+     */
+    public function getDisplayBackOfficeEmployeeMenu(): ?ActionsBarButtonsCollection
     {
         if ($this->displayBackOfficeEmployeeMenu === null) {
             $menuLinksCollections = new ActionsBarButtonsCollection();

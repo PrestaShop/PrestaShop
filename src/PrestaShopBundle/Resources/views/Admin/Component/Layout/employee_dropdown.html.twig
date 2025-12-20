@@ -48,7 +48,7 @@
 
         <p class="divider"></p>
 
-        {% for menuItem in displayBackOfficeEmployeeMenu %}
+        {% for menuItem in this.displayBackOfficeEmployeeMenu %}
           {% set menuItemProperties = menuItem.getProperties %}
           <a class="dropdown-item {{ menuItem.getClass }}" href="{{ menuItemProperties.link }}" {% if menuItemProperties.isExternalLink %} target="_blank"{% endif %} rel="noopener noreferrer nofollow">
             {% if menuItemProperties.icon is defined %}
