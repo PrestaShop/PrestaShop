@@ -55,15 +55,27 @@ class DateRangeCore extends ObjectModel
     public static function getCurrentRange()
     {
         $result = Db::getInstance()->getRow('
-		SELECT `id_date_range`, `time_end`
-		FROM `' . _DB_PREFIX_ . 'date_range`
-		WHERE `time_end` = (SELECT MAX(`time_end`) FROM `' . _DB_PREFIX_ . 'date_range`)');
-        if (!isset($result['id_date_range']) || strtotime($result['time_end']) < strtotime(date('Y-m-d H:i:s'))) {
-            // The default range is set to 1 day less 1 second (in seconds)
+            SELECT `id_date_range`, `time_end`
+            FROM `' . _DB_PREFIX_ . 'date_range`
+            WHERE `time_end` = (
+                SELECT MAX(`time_end`)
+                FROM `' . _DB_PREFIX_ . 'date_range`
+            )'
+        );
+
+        if (!isset($result['id_date_range']) ||
+            strtotime($result['time_end']) < time()
+        ) {
+            // 1 día menos 1 segundo
             $rangeSize = 86399;
+
             $dateRange = new DateRange();
             $dateRange->time_start = date('Y-m-d');
-            $dateRange->time_end = strftime('%Y-%m-%d %H:%M:%S', strtotime($dateRange->time_start) + $rangeSize);
+
+            $start = new DateTime($dateRange->time_start);
+            $start->modify('+' . $rangeSize . ' seconds');
+            $dateRange->time_end = $start->format('Y-m-d H:i:s');
+
             $dateRange->add();
 
             return $dateRange->id;

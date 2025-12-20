@@ -72,7 +72,7 @@ class SmartyLazyRegister
 
         foreach ($arguments as $a => $argument) {
             if ($a == 0) {
-                $args[] = $arguments[0];
+                $args[] = $argument ?? '';
             } else {
                 $args[] = &$arguments[$a];
             }

@@ -341,7 +341,7 @@ class MetaCore extends ObjectModel
         if (Validate::isLoadedObject($product) && $product->active) {
             $row = Meta::getPresentedObject($product);
             if (empty($row['meta_description'])) {
-                $row['meta_description'] = strip_tags($row['description_short']);
+                $row['meta_description'] = strip_tags($row['description_short']  ?? '');
             }
 
             return Meta::completeMetaTags($row, $row['name']);
