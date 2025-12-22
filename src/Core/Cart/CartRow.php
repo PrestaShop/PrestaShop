@@ -458,8 +458,8 @@ class CartRow
         if ($percent < 0 || $percent > 100) {
             throw new Exception('Invalid percentage discount given: ' . $percent);
         }
-        $discountTaxIncluded = $this->finalTotalPrice->getTaxIncluded() * $percent / 100;
-        $discountTaxExcluded = $this->finalTotalPrice->getTaxExcluded() * $percent / 100;
+        $discountTaxIncluded = $this->initialTotalPrice->getTaxIncluded() * $percent / 100;
+        $discountTaxExcluded = $this->initialTotalPrice->getTaxExcluded() * $percent / 100;
         $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
         $this->applyFlatDiscount($amount);
 
