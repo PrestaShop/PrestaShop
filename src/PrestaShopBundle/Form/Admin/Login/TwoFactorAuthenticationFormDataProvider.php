@@ -24,59 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Employee;
+namespace PrestaShopBundle\Form\Admin\Login;
 
-/**
- * Interface ContextEmployeeProviderInterface describes a context employee provider.
- */
-interface ContextEmployeeProviderInterface
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+
+class TwoFactorAuthenticationFormDataProvider implements FormDataProviderInterface
 {
-    /**
-     * Check if context employee is super admin.
-     *
-     * @return bool
-     */
-    public function isSuperAdmin();
+    public function getData()
+    {
+        return [
+        ];
+    }
 
-    /**
-     * Get context employee's ID.
-     *
-     * @return int
-     */
-    public function getId();
-
-    /**
-     * Get context employee's selected language ID.
-     *
-     * @return int
-     */
-    public function getLanguageId();
-
-    /**
-     * Get context employee's profile ID.
-     *
-     * @return int
-     */
-    public function getProfileId();
-
-    /**
-     * Get context employee's data as an array
-     *
-     * @return array
-     */
-    public function getData();
-
-    /**
-     * Checks whether the current context employee has a stored 2FA secret.
-     *
-     * @return bool
-     */
-    public function hasTwoFactorSecret(): bool;
-
-    /**
-     * Get 2FA secret.
-     *
-     * @return string
-     */
-    public function getTwoFactorSecret(): string;
+    public function setData(array $data)
+    {
+        return [];
+    }
 }

@@ -48,6 +48,7 @@ class Employee
         protected int $defaultShopId,
         protected array $associatedShopIds,
         protected array $associatedShopGroupIds,
+        protected bool $twoFactorEnabled,
     ) {
     }
 
@@ -109,5 +110,10 @@ class Employee
     public function getAssociatedShopGroupIds(): array
     {
         return $this->associatedShopGroupIds;
+    }
+
+    public function getTwoFactorEnabled(): bool
+    {
+        return $this->twoFactorEnabled;
     }
 }

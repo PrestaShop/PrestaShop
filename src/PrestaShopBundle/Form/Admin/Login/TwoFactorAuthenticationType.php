@@ -24,59 +24,59 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShopBundle\Form\Admin\Login;
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security;
-
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\GoogleAuthenticatorCode;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class GeneralType extends TranslatorAwareType
+/**
+ * Two factor authentication form
+ */
+class TwoFactorAuthenticationType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
+    public function __construct(
+        protected readonly TranslatorInterface $translator,
+        protected readonly ConfigurationInterface $configuration,
+    ) {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add(
-                'token',
-                SwitchType::class,
-                [
-                    'required' => true,
-                    'label' => $this->trans('Back office token protection', 'Admin.Advparameters.Feature'),
-                    'help' => $this->trans('Back office pages require the use of a token. This protection can be disabled if needed.', 'Admin.Advparameters.Help'),
-                ]
-            )
-            ->add(
-                '2fa',
-                SwitchType::class,
-                [
-                    'required' => true,
-                    'label' => $this->trans('Back office two-factor authentication (2FA)', 'Admin.Advparameters.Feature'),
-                    'help' => $this->trans('When enabled, administrators must confirm login with a one-time code from Google Authenticator (or any compatible app). Disable only if necessary.', 'Admin.Advparameters.Help'),
-                ]
-        )
+            ->add('code', TextType::class, [
+                'label' => $this->translator->trans('Code', [], 'Admin.Global'),
+                'required' => true,
+                'constraints' => [
+                    new GoogleAuthenticatorCode()
+                ],
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => $this->translator->trans('Send', [], 'Admin.Login.Feature'),
+            ])
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature',
+            'label' => $this->translator->trans('Two-factor authentication', [], 'Admin.Global'),
+            'label_tag_name' => 'h4',
+            'form_theme' => '@PrestaShop/Admin/Login/form_theme.html.twig',
+            'attr' => [
+                'id' => 'two_factor_form',
+            ],
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBlockPrefix()
     {
-        return 'security_general_block';
+        return '';
     }
 }

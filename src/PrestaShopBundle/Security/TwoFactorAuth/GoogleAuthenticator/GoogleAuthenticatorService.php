@@ -24,27 +24,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Security\Admin;
+namespace PrestaShopBundle\Security\TwoFactorAuth\GoogleAuthenticator;
 
-class TokenAttributes
+use OTPHP\TOTP;
+
+final class GoogleAuthenticatorService
 {
-    /**
-     * Used to store the IP address as an integer to compare if it changed (to avoid copying/stealing the cookie session)
-     */
-    public const IP_ADDRESS = '_ip_address';
+    public function generateSecret(): string
+    {
+        $totp = TOTP::create();
 
-    /**
-     * Used to store the serialized EmployeeSession object which is then used to check if is still valid (in the DB).
-     */
-    public const EMPLOYEE_SESSION = '_employee_session';
+        return $totp->getSecret();
+    }
 
-    /**
-     * Used to store a ShopConstraint object that represents the current Shop context (All shops, single shop, shop group).
-     */
-    public const SHOP_CONSTRAINT = '_shop_constraint';
+    public function getProvisioningUri(string $issuer, string $username, string $secret): string
+    {
+        $totp = TOTP::create($secret);
+        $totp->setIssuer($issuer);
+        $totp->setLabel($username);
 
-    /**
-     * Used to store back office two-factor authentication state/attributes.
-     */
-    public const BACKOFFICE_2FA = '_backoffice_2fa';
+        return $totp->getProvisioningUri();
+    }
+
+    public function verifyCode(string $secret, string $code): bool
+    {
+        $code = preg_replace('/\s+/', '', $code ?? '');
+
+        if ($code === '' || !ctype_digit($code)) {
+            return false;
+        }
+
+        $totp = TOTP::create($secret);
+
+        return $totp->verify($code);
+    }
 }

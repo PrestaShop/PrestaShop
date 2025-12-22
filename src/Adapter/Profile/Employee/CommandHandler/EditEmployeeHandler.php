@@ -138,6 +138,8 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
             $employee->active = $command->isActive();
         }
 
+        $employee->two_factor_enabled = $command->getTwoFactorEnabled();
+
         $shopAssociation = $command->getShopAssociation();
 
         if (!$employee->isSuperAdmin() && empty($shopAssociation)) {

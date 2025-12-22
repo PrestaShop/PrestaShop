@@ -92,6 +92,16 @@ class EditableEmployee
     private $hasEnabledGravatar;
 
     /**
+     * @var bool
+     */
+    private $twoFactorEnabled;
+
+    /**
+     * @var string
+     */
+    private $twoFactorSecret;
+
+    /**
      * @param EmployeeId $employeeId
      * @param FirstName $firstName
      * @param LastName $lastName
@@ -115,7 +125,8 @@ class EditableEmployee
         $active,
         $profileId,
         array $shopAssociation,
-        bool $hasEnabledGravatar = false
+        bool $hasEnabledGravatar = false,
+        bool $twoFactorEnabled = false,
     ) {
         $this->employeeId = $employeeId;
         $this->firstName = $firstName;
@@ -128,6 +139,7 @@ class EditableEmployee
         $this->shopAssociation = $shopAssociation;
         $this->avatarUrl = $avatarUrl;
         $this->hasEnabledGravatar = $hasEnabledGravatar;
+        $this->twoFactorEnabled = $twoFactorEnabled;
     }
 
     /**
@@ -216,5 +228,13 @@ class EditableEmployee
     public function hasEnabledGravatar()
     {
         return $this->hasEnabledGravatar;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTwoFactorEnabled()
+    {
+        return $this->twoFactorEnabled;
     }
 }

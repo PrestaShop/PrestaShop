@@ -27,16 +27,23 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee;
 
 use PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\GoogleAuthenticatorCode;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SetEmployeeTwoFactorSecretCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as EmployeeEmail;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
+use PrestaShopBundle\Form\Admin\Type\CustomContentType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Security\TwoFactorAuth\GoogleAuthenticator\GoogleAuthenticatorService;
+use PrestaShopBundle\Security\TwoFactorAuth\GoogleAuthenticator\QrCodeGenerator;
 use PrestaShopBundle\Service\Routing\Router;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
@@ -106,6 +113,11 @@ final class EmployeeType extends AbstractType
         TranslatorInterface $translator,
         private readonly TabDataProvider $tabDataProvider,
         private readonly LanguageContext $languageContext,
+        private readonly GoogleAuthenticatorService $googleAuthService,
+        private readonly QrCodeGenerator $qrCodeGenerator,
+        private int $loggedEmployeeId,
+        private readonly ContextEmployeeProviderInterface $contextEmployeeProvider,
+        private readonly CommandBusInterface $commandBus,
     ) {
         $this->languagesChoices = $languagesChoices;
         $this->profilesChoices = $profilesChoices;
@@ -246,6 +258,8 @@ final class EmployeeType extends AbstractType
                 ->remove('profile')
                 ->remove('shop_association')
             ;
+
+            $this->addTwoFactorFields($builder, $options);
         } else {
             $builder
                 ->remove('change_password')
@@ -256,6 +270,53 @@ final class EmployeeType extends AbstractType
                 ;
             }
         }
+    }
+
+    private function addTwoFactorFields(FormBuilderInterface $builder, array $options): void
+    {
+        if (!(bool) $this->configuration->get('PS_BACKOFFICE_2FA') || (bool) $options['data']['two_factor_enabled']) {
+            return;
+        }
+
+        if ($this->contextEmployeeProvider->hasTwoFactorSecret()) {
+            $secret = $this->contextEmployeeProvider->getTwoFactorSecret();
+        } else {
+            $secret = $this->googleAuthService->generateSecret();
+            $this->commandBus->handle(
+                new SetEmployeeTwoFactorSecretCommand(
+                    $this->contextEmployeeProvider->getId(),
+                    $secret
+                )
+            );
+        }
+
+        $qrCodeSrc = $this->qrCodeGenerator->generateDataUri(
+            $this->googleAuthService->getProvisioningUri(
+                $this->configuration->get('PS_SHOP_NAME'),
+                $options['data']['email'], 
+                $secret
+            )
+        );
+
+        $builder
+            ->add('google_auth_qr_code', CustomContentType::class, [
+                'label' => false,
+                'mapped' => false,
+                'required' => false,
+                'template' => '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/google_auth_qr_code.html.twig',
+                'data' => [
+                    'qrCodeSrc' => $qrCodeSrc,
+                    'twoFactorEnabled' => (bool) $options['data']['two_factor_enabled']
+                ],
+            ])
+            ->add('google_auth_verification_code', TextType::class, [
+                'label' => $this->trans('Verification code', [], 'Admin.Global'),
+                'required' => false,
+                'constraints' => [
+                    new GoogleAuthenticatorCode()
+                ],
+            ])
+        ;
     }
 
     /**

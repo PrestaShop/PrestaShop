@@ -24,27 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Security\Admin;
+namespace PrestaShopBundle\Security\TwoFactorAuth\GoogleAuthenticator;
 
-class TokenAttributes
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Writer\PngWriter;
+
+final class QrCodeGenerator
 {
-    /**
-     * Used to store the IP address as an integer to compare if it changed (to avoid copying/stealing the cookie session)
-     */
-    public const IP_ADDRESS = '_ip_address';
+    public function generateDataUri(string $text, int $size = 300, int $margin = 10): string
+    {
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->data($text)
+            ->size($size)
+            ->margin($margin)
+            ->build();
 
-    /**
-     * Used to store the serialized EmployeeSession object which is then used to check if is still valid (in the DB).
-     */
-    public const EMPLOYEE_SESSION = '_employee_session';
-
-    /**
-     * Used to store a ShopConstraint object that represents the current Shop context (All shops, single shop, shop group).
-     */
-    public const SHOP_CONSTRAINT = '_shop_constraint';
-
-    /**
-     * Used to store back office two-factor authentication state/attributes.
-     */
-    public const BACKOFFICE_2FA = '_backoffice_2fa';
+        return $result->getDataUri();
+    }
 }

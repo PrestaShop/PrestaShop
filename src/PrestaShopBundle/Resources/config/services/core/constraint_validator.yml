@@ -86,3 +86,9 @@ services:
   PrestaShop\PrestaShop\Core\ConstraintValidator\NotCustomizableProductValidator:
     autowire: true
     autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\ConstraintValidator\GoogleAuthenticatorCodeValidator:
+    autowire: true
+    autoconfigure: true
+    arguments:
+      $contextEmployeeProvider: '@prestashop.adapter.data_provider.employee'

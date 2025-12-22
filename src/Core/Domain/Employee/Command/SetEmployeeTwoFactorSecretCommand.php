@@ -24,59 +24,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Employee;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 
 /**
- * Interface ContextEmployeeProviderInterface describes a context employee provider.
+ * Sets the two-factor authentication secret
  */
-interface ContextEmployeeProviderInterface
+class SetEmployeeTwoFactorSecretCommand
 {
     /**
-     * Check if context employee is super admin.
-     *
-     * @return bool
+     * @var EmployeeId
      */
-    public function isSuperAdmin();
+    private $employeeId;
 
     /**
-     * Get context employee's ID.
-     *
-     * @return int
+     * @param int $employeeId
      */
-    public function getId();
+    public function __construct(
+        int $employeeId,
+        private string $secret
+    ) {
+        $this->employeeId = new EmployeeId($employeeId);
+    }
 
-    /**
-     * Get context employee's selected language ID.
-     *
-     * @return int
-     */
-    public function getLanguageId();
+    public function getSecret()
+    {
+        return $this->secret;
+    }
 
-    /**
-     * Get context employee's profile ID.
-     *
-     * @return int
-     */
-    public function getProfileId();
-
-    /**
-     * Get context employee's data as an array
-     *
-     * @return array
-     */
-    public function getData();
-
-    /**
-     * Checks whether the current context employee has a stored 2FA secret.
-     *
-     * @return bool
-     */
-    public function hasTwoFactorSecret(): bool;
-
-    /**
-     * Get 2FA secret.
-     *
-     * @return string
-     */
-    public function getTwoFactorSecret(): string;
+    public function getEmployeeId()
+    {
+        return $this->employeeId;
+    }
 }

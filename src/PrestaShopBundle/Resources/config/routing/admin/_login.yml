@@ -37,3 +37,11 @@ admin_homepage:
   condition: request.getMethod() == 'GET' and not request.query.has('controller')
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\LoginController::homepageAction'
+
+two_factor_authentication:
+  path: /two_factor_authentication
+  methods: [ GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\TwoFactorAuthenticationController::authAction'
+    _legacy_controller: AdminTwoFactorAuthentication
+    _legacy_link: AdminTwoFactorAuthentication

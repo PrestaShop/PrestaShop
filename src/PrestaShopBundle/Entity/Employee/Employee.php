@@ -212,6 +212,11 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
      */
     private int $lastCustomerId;
 
+    /**
+     * @ORM\Column(name="two_factor_enabled", type="boolean")
+     */
+    private ?bool $twoFactorEnabled;
+
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
@@ -665,6 +670,18 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
     public function setLastCustomerId(int $lastCustomerId): static
     {
         $this->lastCustomerId = $lastCustomerId;
+
+        return $this;
+    }
+
+    public function getTwoFactorEnabled(): ?bool
+    {
+        return $this->twoFactorEnabled;
+    }
+
+    public function setTwoFactorEnabled(?bool $twoFactorEnabled): self
+    {
+        $this->twoFactorEnabled = $twoFactorEnabled;
 
         return $this;
     }

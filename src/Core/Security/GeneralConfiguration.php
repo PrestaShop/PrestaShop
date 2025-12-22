@@ -56,6 +56,7 @@ class GeneralConfiguration implements DataConfigurationInterface
     {
         return [
             'token' => $this->configuration->get('PS_SECURITY_TOKEN'),
+            '2fa' => $this->configuration->get('PS_BACKOFFICE_2FA'),
         ];
     }
 
@@ -66,6 +67,7 @@ class GeneralConfiguration implements DataConfigurationInterface
     {
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_SECURITY_TOKEN', $configuration['token']);
+            $this->configuration->set('PS_BACKOFFICE_2FA', $configuration['2fa']);
         }
 
         return [];

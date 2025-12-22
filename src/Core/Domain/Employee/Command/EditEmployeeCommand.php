@@ -93,6 +93,11 @@ class EditEmployeeCommand
     private $hasEnabledGravatar = false;
 
     /**
+     * @var bool
+     */
+    private $twoFactorEnabled = false;
+
+    /**
      * @param int $employeeId
      */
     public function __construct($employeeId)
@@ -321,5 +326,25 @@ class EditEmployeeCommand
         $this->hasEnabledGravatar = $hasEnabledGravatar;
 
         return $this;
+    }
+
+    /**
+     * @param bool $twoFactorEnabled
+     *
+     * @return EditEmployeeCommand
+     */
+    public function setTwoFactorEnabled(bool $twoFactorEnabled)
+    {
+        $this->twoFactorEnabled = $twoFactorEnabled;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getTwoFactorEnabled(): bool
+    {
+        return $this->twoFactorEnabled;
     }
 }

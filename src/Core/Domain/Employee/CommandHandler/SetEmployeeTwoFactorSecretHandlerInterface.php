@@ -24,59 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Employee;
+namespace PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SetEmployeeTwoFactorSecretCommand;
 
 /**
- * Interface ContextEmployeeProviderInterface describes a context employee provider.
+ * Interface for services that handle the command responsible for
+ * storing a two-factor authentication secret.
  */
-interface ContextEmployeeProviderInterface
+interface SetEmployeeTwoFactorSecretHandlerInterface
 {
     /**
-     * Check if context employee is super admin.
-     *
-     * @return bool
+     * @param SetEmployeeTwoFactorSecretCommand $command
      */
-    public function isSuperAdmin();
-
-    /**
-     * Get context employee's ID.
-     *
-     * @return int
-     */
-    public function getId();
-
-    /**
-     * Get context employee's selected language ID.
-     *
-     * @return int
-     */
-    public function getLanguageId();
-
-    /**
-     * Get context employee's profile ID.
-     *
-     * @return int
-     */
-    public function getProfileId();
-
-    /**
-     * Get context employee's data as an array
-     *
-     * @return array
-     */
-    public function getData();
-
-    /**
-     * Checks whether the current context employee has a stored 2FA secret.
-     *
-     * @return bool
-     */
-    public function hasTwoFactorSecret(): bool;
-
-    /**
-     * Get 2FA secret.
-     *
-     * @return string
-     */
-    public function getTwoFactorSecret(): string;
+    public function handle(SetEmployeeTwoFactorSecretCommand $command);
 }

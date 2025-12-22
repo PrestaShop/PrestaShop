@@ -1,5 +1,4 @@
-<?php
-/**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,29 +21,12 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ * #}
+{% extends '@PrestaShop/Admin/Layout/login_layout.html.twig' %}
 
-namespace PrestaShopBundle\Security\Admin;
+{% block content %}
+  {{ form_start(twoFactorAuthenticationForm, {action: path('two_factor_authentication')}) }}
+    {{ form_row(twoFactorAuthenticationForm) }}
+  {{ form_end(twoFactorAuthenticationForm) }}
 
-class TokenAttributes
-{
-    /**
-     * Used to store the IP address as an integer to compare if it changed (to avoid copying/stealing the cookie session)
-     */
-    public const IP_ADDRESS = '_ip_address';
-
-    /**
-     * Used to store the serialized EmployeeSession object which is then used to check if is still valid (in the DB).
-     */
-    public const EMPLOYEE_SESSION = '_employee_session';
-
-    /**
-     * Used to store a ShopConstraint object that represents the current Shop context (All shops, single shop, shop group).
-     */
-    public const SHOP_CONSTRAINT = '_shop_constraint';
-
-    /**
-     * Used to store back office two-factor authentication state/attributes.
-     */
-    public const BACKOFFICE_2FA = '_backoffice_2fa';
-}
+{% endblock %}

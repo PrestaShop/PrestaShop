@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Employee;
 
 use Employee;
+use PhpEncryption;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 
 /**
@@ -35,13 +36,23 @@ use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
 {
     private ?Employee $contextEmployee;
+    private string $twoFactorSecret;
 
     /**
      * @param ?Employee $contextEmployee
      */
-    public function __construct(?Employee $contextEmployee)
-    {
+    public function __construct(
+        ?Employee $contextEmployee,
+        private string $newCookieKey
+    ) {
         $this->contextEmployee = $contextEmployee;
+
+        if ($contextEmployee->two_factor_secret) {
+            $cipherTool = new PhpEncryption($this->newCookieKey);
+            $this->twoFactorSecret = $cipherTool->decrypt($contextEmployee->two_factor_secret);
+        } else {
+             $this->twoFactorSecret = '';
+        }
     }
 
     /**
@@ -74,6 +85,24 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
     public function getProfileId()
     {
         return (int) $this->contextEmployee?->id_profile;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasTwoFactorSecret(): bool
+    {
+        $secret = $this->contextEmployee?->two_factor_secret;
+
+        return is_string($secret) && trim($secret) !== '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTwoFactorSecret(): string
+    {
+        return $this->twoFactorSecret;
     }
 
     /**

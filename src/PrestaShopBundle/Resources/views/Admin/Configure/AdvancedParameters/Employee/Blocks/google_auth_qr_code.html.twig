@@ -1,5 +1,4 @@
-<?php
-/**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,29 +21,22 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ * #}
 
-namespace PrestaShopBundle\Security\Admin;
+<div class="form-group row select-widget">
 
-class TokenAttributes
-{
-    /**
-     * Used to store the IP address as an integer to compare if it changed (to avoid copying/stealing the cookie session)
-     */
-    public const IP_ADDRESS = '_ip_address';
+    <label class="form-control-label"></label>
 
-    /**
-     * Used to store the serialized EmployeeSession object which is then used to check if is still valid (in the DB).
-     */
-    public const EMPLOYEE_SESSION = '_employee_session';
-
-    /**
-     * Used to store a ShopConstraint object that represents the current Shop context (All shops, single shop, shop group).
-     */
-    public const SHOP_CONSTRAINT = '_shop_constraint';
-
-    /**
-     * Used to store back office two-factor authentication state/attributes.
-     */
-    public const BACKOFFICE_2FA = '_backoffice_2fa';
-}
+    <div class="col-sm input-container">
+        <h3>{{ 'Two-factor authentication'|trans({}, 'Admin.Advparameters.Notification') }}</h3>
+        {% if not twoFactorEnabled %}
+            <p>
+                {{ 'Scan the following QR code with the "Google Authenticator" app to generate an account and enter the generated verification code in the "Verification code" field to activate the account.'|trans({}, 'Admin.Advparameters.Notification') }}<br/>
+                {{ 'If an account is already active, repeating the process will generate and activate a new account.'|trans({}, 'Admin.Advparameters.Notification') }}
+            </p>
+            <img src="{{ qrCodeSrc }}">
+        {% else %}
+            {{ 'Two-factor authentication is already activated for this account.'|trans({}, 'Admin.Advparameters.Notification') }}
+        {% endif %}
+    </div>
+</div>

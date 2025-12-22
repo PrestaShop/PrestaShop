@@ -58,3 +58,11 @@ services:
     factory: [ '@prestashop.security.password_hasher.factory', 'getPasswordHasher' ]
     arguments:
       - 'common'
+
+  PrestaShopBundle\Security\TwoFactorAuth\GoogleAuthenticator\GoogleAuthenticatorService:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShopBundle\Security\TwoFactorAuth\GoogleAuthenticator\QrCodeGenerator:
+    autowire: true
+    autoconfigure: true

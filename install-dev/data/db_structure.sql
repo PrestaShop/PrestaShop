@@ -861,6 +861,8 @@ CREATE TABLE `PREFIX_employee` (
   `reset_password_token` varchar(40) DEFAULT NULL,
   `reset_password_validity` datetime DEFAULT NULL,
   `has_enabled_gravatar` TINYINT UNSIGNED DEFAULT 0 NOT NULL,
+  `two_factor_enabled` TINYINT UNSIGNED DEFAULT 0 NOT NULL,
+  `two_factor_secret` varchar(400) DEFAULT NULL,
   PRIMARY KEY (`id_employee`),
   KEY `employee_login` (`email`, `passwd`),
   KEY `id_employee_passwd` (`id_employee`, `passwd`),

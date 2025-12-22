@@ -118,7 +118,19 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
         // this we replace the URL token at the last minute with a fresh token that will be valid for the redirected url
         $eventResponse = $event->getResponse();
         if ($eventResponse instanceof RedirectResponse) {
-            $tokenizedUrl = Router::generateTokenizedUrl($eventResponse->getTargetUrl(), $this->tokenManager->refreshToken($event->getAuthenticatedToken()->getUserIdentifier())->getValue());
+            /** @var Employee $employee */
+            $employee = $this->security->getUser();
+            
+            // If Back Office 2FA is enabled and the employee already has 2FA configured,
+            // force the redirection to the 2FA authentication route instead of the
+            // originally requested page.            
+            if ((bool) $this->configuration->get('PS_BACKOFFICE_2FA') && $employee->getTwoFactorEnabled()) {
+                $url = $this->router->generate('two_factor_authentication');
+            } else {
+                $url = $eventResponse->getTargetUrl();
+            }
+
+            $tokenizedUrl = Router::generateTokenizedUrl($url, $this->tokenManager->refreshToken($event->getAuthenticatedToken()->getUserIdentifier())->getValue());
             $eventResponse->setTargetUrl($tokenizedUrl);
             $event->setResponse($eventResponse);
         }
@@ -164,6 +176,27 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
             return;
         }
 
+        if ((bool) $this->configuration->get('PS_BACKOFFICE_2FA') && !$event->getRequest()->isXmlHttpRequest()) {
+            // Avoid redirect loops: do not enforce 2FA redirect when the user is already on the 2FA route.
+            $currentRoute = $event->getRequest()->attributes->get('_route');
+
+            if ($currentRoute !== 'two_factor_authentication' && $employee->getTwoFactorEnabled()) {
+                $token = $this->security->getToken();
+
+                // When Back Office 2FA is enabled, we must block access to protected BO routes until the user
+                // successfully enters the OTP code. The token attribute BACKOFFICE_2FA is set to true only
+                // after the 2FA challenge is completed; if it's missing or false, we redirect to the 2FA page.
+                $isTwoFactorValidated = $token
+                    && $token->hasAttribute(TokenAttributes::BACKOFFICE_2FA)
+                    && $token->getAttribute(TokenAttributes::BACKOFFICE_2FA, false) === true;
+
+                if (!$isTwoFactorValidated) {
+                    $event->setResponse(new RedirectResponse($this->router->generate('two_factor_authentication')));
+                    return;
+                }
+            }
+        }
+
         // Update the legacy cookie on each request in case it has been modified, this way we make sure the legacy modules and
         // legacy controllers that rely on it always have up-to-date info
         $this->updateLegacyCookie($event->getRequest());
@@ -200,6 +233,11 @@ class EmployeeSessionSubscriber implements EventSubscriberInterface
             /** @var Employee $employee */
             $employee = $this->employeeProvider->loadUserByIdentifier($user->getUserIdentifier());
             $employee->removeSessionById($employeeSession->getId());
+
+            if ((bool) $this->configuration->get('PS_BACKOFFICE_2FA') && $event->getToken()->hasAttribute(TokenAttributes::BACKOFFICE_2FA)) {
+                $event->getToken()->setAttribute(TokenAttributes::BACKOFFICE_2FA, null);
+            }
+
             $this->entityManager->flush();
         }
 

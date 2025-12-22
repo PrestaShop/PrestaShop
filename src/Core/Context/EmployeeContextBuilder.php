@@ -67,7 +67,8 @@ class EmployeeContextBuilder implements LegacyContextBuilderInterface
                 defaultTabId: (int) $legacyEmployee->default_tab,
                 defaultShopId: (int) $legacyEmployee->getDefaultShopID(),
                 associatedShopIds: $legacyEmployee->getAssociatedShopIds(),
-                associatedShopGroupIds: $legacyEmployee->getAssociatedShopGroupIds()
+                associatedShopGroupIds: $legacyEmployee->getAssociatedShopGroupIds(),
+                twoFactorEnabled: (bool) $legacyEmployee->two_factor_enabled
             );
         }
 

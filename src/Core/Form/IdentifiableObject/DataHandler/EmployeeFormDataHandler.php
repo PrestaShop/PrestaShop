@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterfac
 use PrestaShop\PrestaShop\Core\Employee\EmployeeDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
+use PrestaShopBundle\Security\Admin\TokenAttributes;
 use PrestaShopBundle\Security\Admin\UserTokenManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -187,6 +188,11 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             ->setProfileId((int) $data['profile'])
             ->setHasEnabledGravatar((bool) $data['has_enabled_gravatar'])
         ;
+
+        if ($this->employeeContext->getEmployee()->getTwoFactorEnabled() || $data['google_auth_verification_code']) {
+            $command->setTwoFactorEnabled(true);
+            $this->tokenStorage->getToken()->setAttribute(TokenAttributes::BACKOFFICE_2FA, true);
+        }
 
         if ($this->employeeFormAccessChecker->isRestrictedAccess((int) $id)) {
             if ($this->shouldChangePassword($data)) {

@@ -325,3 +325,6 @@ services:
 
   PrestaShopBundle\Form\Admin\Login\ResetPasswordFormDataProvider:
     autowire: true
+
+  PrestaShopBundle\Form\Admin\Login\TwoFactorAuthenticationFormDataProvider:
+    autowire: true

@@ -92,6 +92,7 @@ final class EmployeeFormDataProvider implements FormDataProviderInterface
             'shop_association' => $editableEmployee->getShopAssociation(),
             'has_enabled_gravatar' => $editableEmployee->hasEnabledGravatar(),
             'avatar_url' => $editableEmployee->getAvatarUrl(),
+            'two_factor_enabled' => $editableEmployee->isTwoFactorEnabled(),
         ];
     }
 

@@ -288,6 +288,8 @@ services:
       $languagesChoices: '@=service("prestashop.core.form.choice_provider.all_languages").getChoices()'
       $profilesChoices: '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
       $superAdminProfileId: !php/const _PS_ADMIN_PROFILE_
+      $loggedEmployeeId: "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
+      $contextEmployeeProvider: '@prestashop.adapter.data_provider.employee'
 
   PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageType:
     arguments:
