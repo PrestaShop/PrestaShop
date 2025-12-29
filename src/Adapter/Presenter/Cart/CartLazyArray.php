@@ -417,13 +417,23 @@ class CartLazyArray extends AbstractLazyArray
 
     private function getTemplateVarVouchers(): array
     {
-        $cartVouchers = $this->cart->getCartRules();
+        $calculator = $this->cart->newCalculator(
+            $this->cart->getProducts(),
+            $this->cart->getCartRules(CartRule::FILTER_ACTION_ALL, false),
+            null,
+            Context::getContext()->getComputingPrecision()
+        );
+        $calculator->processCalculation();
+
         $vouchers = [];
 
         $cartHasTax = null === $this->cart->id ? false : $this->cart->getAverageProductsTaxRate() * 100;
         $freeShippingAlreadySet = false;
         /** @var array{id_cart_rule:int, name: string, code: string, reduction_percent: float, reduction_currency: int, free_shipping: bool, reduction_tax: bool, reduction_amount:float, value_real:float|int|string, value_tax_exc:float|int|string} $cartVoucher */
-        foreach ($cartVouchers as $cartVoucher) {
+        foreach ($calculator->getCartRulesData() as $cartRuleData) {
+            $cartVoucher = $cartRuleData->getRuleData();
+            $discountApplied = $cartRuleData->getDiscountApplied();
+
             $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];
             $vouchers[$cartVoucher['id_cart_rule']]['name'] = $cartVoucher['name'];
             $vouchers[$cartVoucher['id_cart_rule']]['code'] = $cartVoucher['code'];
@@ -455,7 +465,7 @@ class CartLazyArray extends AbstractLazyArray
                 }
             } else {
                 $freeShippingOnly = false;
-                $totalCartVoucherReduction = $this->cartPresenter->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
+                $totalCartVoucherReduction = $this->cartPresenter->includeTaxes() ? $discountApplied->getTaxIncluded() : $discountApplied->getTaxExcluded();
             }
 
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
