@@ -545,11 +545,14 @@ class AddressCore extends ObjectModel
     {
         $context = Context::getContext();
 
+        /*
+         * To save performance, we cache the result, here we resolve a unique hash
+         * depending on the parameters used to initialize the address.
+         */
         if ($id_address) {
             $context_hash = (int) $id_address;
         } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
-            $context_hash = md5((int) $context->customer->geoloc_id_country . '-' . (int) $context->customer->id_state . '-' .
-                                $context->customer->postcode);
+            $context_hash = md5((int) $context->customer->geoloc_id_country . '-' . (int) $context->customer->id_state . '-' . $context->customer->postcode);
         } else {
             $context_hash = md5((string) $context->country->id);
         }
@@ -557,29 +560,49 @@ class AddressCore extends ObjectModel
         $cache_id = 'Address::initialize_' . $context_hash;
 
         if (!Cache::isStored($cache_id)) {
-            // if an id_address has been specified retrieve the address
+            /*
+             * Case 1 - Specific address ID is provided. We just load it.
+             */
             if ($id_address) {
                 $address = new Address((int) $id_address);
 
                 if (!Validate::isLoadedObject($address)) {
                     throw new PrestaShopException('Invalid address #' . (int) $id_address);
                 }
+            /*
+             * Case 2 - We try to use geolocation information if allowed. However, geoloc_id_country
+             * is not set to the customer anywhere in the current codebase. Most geolocation logic either
+             * native or from modules depend on setting the country directly in the context. So, this will
+             * probably never work.
+             */
             } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
                 $address = new Address();
                 $address->id_country = (int) $context->customer->geoloc_id_country;
                 $address->id_state = (int) $context->customer->id_state;
                 $address->postcode = $context->customer->postcode;
+            /*
+             * Case 3 - There is already a country set in the context and it's not the shop country.
+             * This is pretty common if you either use geolocation modules or let the user select his country
+             * via a custom country selector on the front office.
+             */
             } elseif ((int) $context->country->id && ((int) $context->country->id != Configuration::get('PS_SHOP_COUNTRY_ID'))) {
                 $address = new Address();
                 $address->id_country = (int) $context->country->id;
                 $address->id_state = 0;
                 $address->postcode = '0';
+            /*
+             * Case 4 - If there is no country in the context, or the country is the same, we use the shop country.
+             * We also assign the state and postcode if available.
+             */
             } elseif ((int) Configuration::get('PS_SHOP_COUNTRY_ID')) {
                 // set the default address
                 $address = new Address();
                 $address->id_country = (int) Configuration::get('PS_SHOP_COUNTRY_ID');
                 $address->id_state = (int) Configuration::get('PS_SHOP_STATE_ID');
                 $address->postcode = Configuration::get('PS_SHOP_CODE');
+            /*
+             * Case 5 - As a last resort, we just use the default country. It will most likely be the shop country anyway.
+             */
             } else {
                 // set the default address
                 $address = new Address();
@@ -587,6 +610,8 @@ class AddressCore extends ObjectModel
                 $address->id_state = 0;
                 $address->postcode = '0';
             }
+
+            // Store it in cache, so we don't have to re-initialize it again
             Cache::store($cache_id, $address);
 
             return $address;

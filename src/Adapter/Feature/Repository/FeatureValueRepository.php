@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundExce
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureValueIdException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
@@ -157,15 +158,17 @@ class FeatureValueRepository extends AbstractObjectModelRepository
         return $this->getFeatureValues($limit, $offset, array_merge($filters ?? [], ['id_product' => $productId->getValue()]));
     }
 
-    public function getAllProductFeatureValues(ProductId $productId): array
+    public function getAllProductFeatureValues(ProductId $productId, ShopId $shopId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->from($this->dbPrefix . 'feature_value', 'fv')
             ->innerJoin('fv', $this->dbPrefix . 'feature_product', 'fp', 'fp.id_feature_value = fv.id_feature_value AND fp.id_product = :productId')
+            ->innerJoin('fp', $this->dbPrefix . 'feature_shop', 'fs', 'fp.id_feature = fs.id_feature AND fs.id_shop = :shopId')
             ->leftJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value')
             ->select('fv.*, fvl.*')
             ->setParameter('productId', $productId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
         ;
 
         $result = $qb->execute()->fetchAllAssociative();

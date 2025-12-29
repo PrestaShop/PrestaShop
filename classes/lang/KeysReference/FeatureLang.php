@@ -27,6 +27,6 @@ trans('Height', 'Shop.Demo.Catalog');
 trans('Width', 'Shop.Demo.Catalog');
 trans('Depth', 'Shop.Demo.Catalog');
 trans('Weight', 'Shop.Demo.Catalog');
-trans('Compositions', 'Shop.Demo.Catalog');
+trans('Composition', 'Shop.Demo.Catalog');
 trans('Styles', 'Shop.Demo.Catalog');
-trans('Properties', 'Shop.Demo.Catalog');
+trans('Property', 'Shop.Demo.Catalog');

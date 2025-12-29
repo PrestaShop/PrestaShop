@@ -101,7 +101,7 @@ class CarrierRangeRepository
 
         // Get carrier
         $carrier = $this->carrierRepository->get($carrierId);
-        $rangeTable = $this->getRangeMethodTable($carrier->shipping_method);
+        $rangeTable = $this->getRangeMethodTable((int) $carrier->shipping_method);
 
         // Use transaction to ensure data consistency
         $this->connection->beginTransaction();
@@ -203,7 +203,7 @@ class CarrierRangeRepository
     private function applyRangeTypeForQuery(QueryBuilder $queryBuilder, Carrier $carrier): QueryBuilder
     {
         // Define which table to join based on carrier shipping method
-        $tableRange = $this->getRangeMethodTable($carrier->shipping_method);
+        $tableRange = $this->getRangeMethodTable((int) $carrier->shipping_method);
 
         // Join the range table and order by range
         $queryBuilder->innerJoin(

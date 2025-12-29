@@ -51,7 +51,7 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'After a customer logs in, you can recall and display the content of his/her last shopping cart.',
+                    'If this option is enabled, the customer\'s last cart will be restored when they log back in. Otherwise, a new, empty cart will be created.',
                     'Admin.Shopparameters.Help'
                 ),
                 'multistore_configuration_key' => 'PS_CART_FOLLOWING',

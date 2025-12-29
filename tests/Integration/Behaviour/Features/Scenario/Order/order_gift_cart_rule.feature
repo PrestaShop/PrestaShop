@@ -1225,7 +1225,7 @@ Feature: Order from Back Office (BO)
   I remove all cart rules,
   I remove the product
     Given there is a product in the catalog named "Product 12345" with a price of 12.0 and 100 items in stock
-    # Create a cart rule : No cade + Product restriction with min quanity + Discount 50%
+    # Create a cart rule : No code + Product restriction with min quanity + Discount 50%
     And there is a cart rule "cartRulePercentDiscountOnSpecificProduct" with following properties:
       | name[en-US]               | cartRulePercentDiscountOnSpecificProduct |
       | priority                  | 1                                        |
@@ -1237,7 +1237,7 @@ Feature: Order from Back Office (BO)
       | discount_product          | Product 12345                            |
     # @todo: restrictions are not yet implemented using CQRS, so we use old step. (the step itself is as well unclear- it is a mix between specific product and product restriction features)
     And cart rule "cartRulePercentDiscountOnSpecificProduct" is restricted to product "Product 12345" with a quantity of 2
-    # Create a cart rule : No cade + no conditions + free gift = demo_6
+    # Create a cart rule : No code + no conditions + free gift = demo_6
     And there is a cart rule "cartRuleFreeGift" with following properties:
       | name[en-US]       | cartRuleFreeGift |
       | priority          | 1                |
@@ -1337,7 +1337,7 @@ Feature: Order from Back Office (BO)
     And country "FR" is enabled
     And there is a product in the catalog named "Product 12345" with a price of 12.0 and 100 items in stock
     And there is a product in the catalog named "Gift product" with a price of 13.0 and 100 items in stock
-    # Create a cart rule : No cade + no conditions + free gift = demo_6
+    # Create a cart rule : No code + no conditions + free gift = demo_6
     And there is a cart rule "cartRuleFreeGift" with following properties:
       | name[en-US]       | cartRuleFreeGift |
       | priority          | 1                |
@@ -1467,7 +1467,7 @@ Feature: Order from Back Office (BO)
 
     Given there is a product in the catalog named "Product 12345" with a price of 12.0 and 100 items in stock
     And there is a product in the catalog named "Gift product" with a price of 13.0 and 100 items in stock
-    # Create a cart rule : No cade + no conditions + free gift = demo_6
+    # Create a cart rule : No code + no conditions + free gift = demo_6
     And there is a cart rule "cartRuleFreeGift" with following properties:
       | name[en-US]                      | cartRuleFreeGift |
       | priority                         | 1                |
@@ -1582,7 +1582,7 @@ Feature: Order from Back Office (BO)
 
     Given there is a product in the catalog named "Product 12345" with a price of 12.0 and 100 items in stock
     And there is a product in the catalog named "Gift product" with a price of 13.0 and 100 items in stock
-    # Create a cart rule : No cade + no conditions + free gift = demo_6
+    # Create a cart rule : No code + no conditions + free gift = demo_6
     And there is a cart rule "cartRuleFreeGift" with following properties:
       | name[en-US]                      | cartRuleFreeGift |
       | priority                         | 1                |

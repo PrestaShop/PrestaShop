@@ -261,7 +261,15 @@ class LoginController extends PrestaShopAdminController
             }
 
             if (!$isMaintainer) {
-                $securedUrl = rtrim(str_replace('http://', 'https://', $this->shopContext->getBaseURL()), '/') . '/' . trim($this->generateUrl('admin_login'), '/');
+                $securedUrl = str_replace('http://', 'https://', $this->shopContext->getBaseURL());
+
+                $physicalUri = $this->shopContext->getPhysicalUri();
+                if (str_ends_with($securedUrl, $physicalUri)) {
+                    $securedUrl = substr($securedUrl, 0, -strlen($physicalUri));
+                }
+
+                $securedUrl .= $this->generateUrl('admin_login');
+
                 $requiredActions[] = $this->trans(
                     'SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]',
                     ['[1]' => '<a href="' . $securedUrl . '">', '[/1]' => '</a>'],

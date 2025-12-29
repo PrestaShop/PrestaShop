@@ -28,5 +28,13 @@
     {{ 'Order'|trans({}, 'Admin.Global') }}
     <strong class="text-muted" data-role="order-id">#{{ orderForViewing.id }}</strong>
     <strong data-role="order-reference">{{ orderForViewing.reference }}</strong>
+    <strong>{{ 'from'|trans({}, 'Admin.Global') }}
+    {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 %}
+      {{ orderForViewing.customer.firstName }}
+      {{ orderForViewing.customer.lastName }}
+    {% else %}
+      {{ 'Deleted customer'|trans({}, 'Admin.Global') }}
+    {% endif %}
+    </strong>
   </h1>
 </div>

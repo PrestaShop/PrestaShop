@@ -131,6 +131,10 @@ class SetUpUrlType extends TranslatorAwareType
                     'choices' => $this->canonicalUrlChoices,
                     'translation_domain' => false,
                     'label' => $this->trans('Redirect to the canonical URL', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'If a visitor accesses a page using a non-canonical URL, this option defines how the shop should respond. For SEO reasons, we recommend choosing "301 Moved Permanently".',
+                        'Admin.Shopparameters.Help'
+                    ),
                     'multistore_configuration_key' => 'PS_CANONICAL_REDIRECT',
                 ]
             );

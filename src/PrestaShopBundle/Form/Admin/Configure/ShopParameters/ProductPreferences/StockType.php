@@ -101,7 +101,7 @@ class StockType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.',
+                    'Allow or deny customers to order products that are out of stock. Further customization is possible for each product.',
                     'Admin.Shopparameters.Help',
                     [
                         '%add_to_cart_label%' => $this->trans(

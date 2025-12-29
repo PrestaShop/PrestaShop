@@ -129,7 +129,10 @@ class UpdateProductFeatureValuesFeatureContext extends AbstractProductFeatureCon
      */
     public function assertProductFeatureValues(string $productReference, TableNode $table): void
     {
-        $query = new GetProductFeatureValues($this->getSharedStorage()->get($productReference));
+        $query = new GetProductFeatureValues(
+            $this->getSharedStorage()->get($productReference),
+            $this->getDefaultShopId()
+        );
         /** @var ProductFeatureValue[] $productFeatureValues */
         $productFeatureValues = $this->getQueryBus()->handle($query);
 
@@ -194,7 +197,10 @@ class UpdateProductFeatureValuesFeatureContext extends AbstractProductFeatureCon
      */
     public function assertProductHasNoFeatureValues(string $productReference): void
     {
-        $query = new GetProductFeatureValues($this->getSharedStorage()->get($productReference));
+        $query = new GetProductFeatureValues(
+            $this->getSharedStorage()->get($productReference),
+            $this->getDefaultShopId()
+        );
         /** @var ProductFeatureValue[] $productFeatureValues */
         $productFeatureValues = $this->getQueryBus()->handle($query);
 
