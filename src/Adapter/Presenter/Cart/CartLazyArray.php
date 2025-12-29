@@ -420,7 +420,7 @@ class CartLazyArray extends AbstractLazyArray
         $calculator = $this->cart->newCalculator(
             $this->cart->getProducts(),
             $this->cart->getCartRules(CartRule::FILTER_ACTION_ALL, false),
-            null,
+            0,
             Context::getContext()->getComputingPrecision()
         );
         $calculator->processCalculation();
@@ -429,8 +429,8 @@ class CartLazyArray extends AbstractLazyArray
 
         $cartHasTax = null === $this->cart->id ? false : $this->cart->getAverageProductsTaxRate() * 100;
         $freeShippingAlreadySet = false;
-        /** @var array{id_cart_rule:int, name: string, code: string, reduction_percent: float, reduction_currency: int, free_shipping: bool, reduction_tax: bool, reduction_amount:float, value_real:float|int|string, value_tax_exc:float|int|string} $cartVoucher */
         foreach ($calculator->getCartRulesData() as $cartRuleData) {
+            /* @var array{id_cart_rule:int, name: string, code: string, reduction_percent: float, reduction_currency: int, free_shipping: bool, reduction_tax: bool, reduction_amount:float, value_real:float|int|string, value_tax_exc:float|int|string} $cartVoucher */
             $cartVoucher = $cartRuleData->getRuleData();
             $discountApplied = $cartRuleData->getDiscountApplied();
 
