@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {expect} from 'chai';
 import {
@@ -21,7 +21,7 @@ describe('FO - Menu and Navigation - Navigate in Categories : Breadcrumb', async
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -59,7 +59,7 @@ describe('FO - Menu and Navigation - Navigate in Categories : Breadcrumb', async
       expect(breadcrumbText).to.equal('Home Clothes');
     });
 
-    it('should go to the subcategory Men', async function () {
+    it(`should go to the subcategory "${dataCategories.men.name}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMenLink', baseContext);
 
       await foHummingbirdHomePage.goToSubCategory(page, dataCategories.clothes.id, dataCategories.men.id);
@@ -143,5 +143,5 @@ describe('FO - Menu and Navigation - Navigate in Categories : Breadcrumb', async
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
+  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

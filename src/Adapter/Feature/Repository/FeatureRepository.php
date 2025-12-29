@@ -122,14 +122,17 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param int $langId
+     * @param int $shopId
      *
      * @return array<int, array<string, mixed>>
      */
-    public function getFeaturesByLang(int $langId): array
+    public function getFeaturesByLang(int $langId, int $shopId): array
     {
         $qb = $this->getFeaturesQueryBuilder()
             ->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature AND fl.id_lang = :languageId')
+            ->innerJoin('f', $this->dbPrefix . 'feature_shop', 'fs', 'fs.id_feature = f.id_feature AND fs.id_shop = :shopId')
             ->setParameter('languageId', $langId)
+            ->setParameter('shopId', $shopId)
             ->select('f.*, fl.*')
             ->addOrderBy('fl.name', 'ASC')
         ;

@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {disableHummingbird, enableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {disableTheme, enableTheme} from '@commonTests/BO/design/hummingbird';
 import testContext from '@utils/testContext';
 
 import {
@@ -35,7 +35,7 @@ describe('Check FO public pages', async () => {
   let page: Page;
 
   // Pre-condition : Enable Hummingbird
-  enableHummingbird(`${baseContext}_preTest_0`);
+  enableTheme('hummingbird', `${baseContext}_preTest_0`);
 
   describe('Check FO public pages', async () => {
     before(async function () {
@@ -183,5 +183,5 @@ describe('Check FO public pages', async () => {
   });
 
   // Post-condition : Disable Hummingbird
-  disableHummingbird(`${baseContext}_postTest_0`);
+  disableTheme('hummingbird', `${baseContext}_postTest_0`);
 });

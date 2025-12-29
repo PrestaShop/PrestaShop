@@ -30,6 +30,7 @@ use Exception;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Hook\Extractor\HookExtractor;
 use PrestaShop\PrestaShop\Core\Hook\Provider\GridDefinitionHookByServiceIdsProvider;
+use PrestaShop\PrestaShop\Core\Version;
 use SimpleXMLElement;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -167,7 +168,8 @@ final class GenerateHooksDocumentationCommand extends Command
         }
         $outputDir = rtrim($outputDir, '/') . '/';
 
-        $githubBaseUrl = 'https://github.com/PrestaShop/PrestaShop/blob/9.0.x/';
+        // Create default base url based on the PrestaShop Version
+        $githubBaseUrl = sprintf('https://github.com/PrestaShop/PrestaShop/blob/%d.%d.x/', Version::MAJOR_VERSION, Version::MINOR_VERSION);
         $generatedHooks = 0;
         foreach ($hooks as $hook) {
             $hookName = $hook['hook'];

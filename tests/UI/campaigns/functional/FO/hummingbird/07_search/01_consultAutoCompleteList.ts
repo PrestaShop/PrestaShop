@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {expect} from 'chai';
 import {
@@ -32,9 +32,8 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -98,8 +97,15 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
 
         const inputValue = await foHummingbirdHomePage.getSearchValue(page);
         expect(inputValue).equal(search.searchValue);
+      });
+
+      it('should close the autocomplete list', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `closeAutocompleteList_${index}`, baseContext);
 
         await foHummingbirdHomePage.closeAutocompleteSearch(page);
+
+        const hasAutocompleteList = await foHummingbirdHomePage.isAutocompleteSearchResultVisible(page);
+        expect(hasAutocompleteList).to.eq(false);
       });
     });
 
@@ -112,5 +118,5 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
+  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

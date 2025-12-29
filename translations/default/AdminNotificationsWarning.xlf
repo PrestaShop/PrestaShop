@@ -5,7 +5,7 @@
       <trans-unit id="80ebdccece38141cd9c0f9b3b623091f">
         <source>Are you sure you want to delete this item?</source>
         <target>Are you sure you want to delete this item?</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Type/EntitySearchInputType.php [Line: 224]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/EntitySearchInputType.php [Line: 226]</note>
       </trans-unit>
       <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
         <source>Are you sure you want to uninstall this module?</source>
@@ -20,7 +20,7 @@
       <trans-unit id="e8cf85cec621489ec026f7e06c67eb4e">
         <source>Delete item</source>
         <target>Delete item</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Type/EntitySearchInputType.php [Line: 223]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/EntitySearchInputType.php [Line: 225]</note>
       </trans-unit>
       <trans-unit id="4304f7a01c82c28f5a42a5f0d4c7bcc7">
         <source>Delete selected item from all stores?</source>

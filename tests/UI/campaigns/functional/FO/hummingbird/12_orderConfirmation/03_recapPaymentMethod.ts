@@ -1,7 +1,7 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boDashboardPage,
@@ -41,7 +41,7 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
   let orderReference: string;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_0`);
+  enableTheme('hummingbird', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -207,5 +207,5 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
+  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

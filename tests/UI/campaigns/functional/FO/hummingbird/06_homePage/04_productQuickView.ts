@@ -2,7 +2,7 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -61,7 +61,7 @@ describe('FO - Home Page : Product quick view', async () => {
   createProductTest(productOutOfStockNotAllowed, `${baseContext}_preTest_0`);
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_1`);
+  enableTheme('hummingbird', `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
@@ -156,10 +156,19 @@ describe('FO - Home Page : Product quick view', async () => {
   });
 
   describe('Quick view simple product', async () => {
+    it('should go to the All products page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFeaturedProductsPage', baseContext);
+
+      await foHummingbirdHomePage.goToAllProductsPage(page, 'ps-featuredproducts');
+
+      const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
+      expect(isCategoryPageVisible).to.eq(true);
+    });
+
     it(`should quick view the product '${dataProducts.demo_11.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct2', baseContext);
 
-      await foHummingbirdHomePage.quickViewProduct(page, 6);
+      await foHummingbirdCategoryPage.quickViewProduct(page, 6);
 
       const isModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
@@ -198,15 +207,6 @@ describe('FO - Home Page : Product quick view', async () => {
   });
 
   describe('Quick view customized product', async () => {
-    it('should go to all products page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
-
-      await foHummingbirdHomePage.goToAllProductsPage(page);
-
-      const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
-      expect(isCategoryPageVisible, 'Home category page was not opened').to.equal(true);
-    });
-
     it(`should go to the second page and quick view the product '${dataProducts.demo_14.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewCustomizedProduct', baseContext);
 
@@ -282,5 +282,5 @@ describe('FO - Home Page : Product quick view', async () => {
   deleteProductTest(productOutOfStockNotAllowed, `${baseContext}_postTest_0`);
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
+  disableTheme('hummingbird', `${baseContext}_postTest_1`);
 });

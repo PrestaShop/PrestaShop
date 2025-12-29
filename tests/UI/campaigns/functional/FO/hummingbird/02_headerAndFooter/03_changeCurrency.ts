@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/currency';
 
 // Import pages
@@ -43,7 +43,7 @@ describe('FO - Header and Footer : Change currency', async () => {
   let exchangeRateValue: number = 0;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_1`);
+  enableTheme('hummingbird', `${baseContext}_preTest_1`);
 
   describe('Check links in header page', async () => {
     before(async function () {
@@ -191,5 +191,5 @@ describe('FO - Header and Footer : Change currency', async () => {
   deleteCurrencyTest(dataCurrencies.mad, `${baseContext}_postTest_1`);
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
+  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

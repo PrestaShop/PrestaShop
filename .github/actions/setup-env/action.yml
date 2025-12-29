@@ -9,7 +9,7 @@ inputs:
   NODE_VERSION:
     required: false
     description: Node Version to Build Themes
-    default: 16.20.1
+    default: 20.19.5
   DB_SERVER:
     required: false
     description: Database Server for PrestaShop (mysql/mariadb)

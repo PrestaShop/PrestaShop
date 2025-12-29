@@ -134,6 +134,11 @@ table .column-filters {
   }
 }
 
+.table thead .column-filters td,
+.table thead .column-filters th {
+  padding-block: var(--#{$cdk}size-8);
+}
+
 .grid {
   table.grid-table {
     thead {
@@ -291,7 +296,7 @@ table .column-filters {
 
           &.image-type {
             img {
-              max-width: 3rem;
+              max-width: 2rem;
               height: auto;
             }
           }
@@ -358,6 +363,11 @@ table {
         input {
           max-width: 6rem;
         }
+      }
+
+      td,
+      th {
+        padding: var(--#{$cdk}size-4);
       }
 
       td {

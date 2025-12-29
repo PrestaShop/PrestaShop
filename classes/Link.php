@@ -177,6 +177,20 @@ class LinkCore
             $params['id'] = $product->id;
         }
 
+        // Preserve preview parameters if they exist in the current request and we're generating a link for the same product
+        if (isset($_GET['preview']) && $_GET['preview'] == '1' && !isset($extraParams['preview'])) {
+            $currentProductId = isset($_GET['id_product']) ? (int) $_GET['id_product'] : null;
+            if ($currentProductId && $currentProductId === (int) $params['id']) {
+                if (isset($_GET['adtoken'])) {
+                    $extraParams['adtoken'] = $_GET['adtoken'];
+                }
+                if (isset($_GET['id_employee'])) {
+                    $extraParams['id_employee'] = $_GET['id_employee'];
+                }
+                $extraParams['preview'] = '1';
+            }
+        }
+
         // Attribute equal to 0 or empty is useless, so we force it to null so that it won't be inserted in query parameters
         if (empty($idProductAttribute)) {
             $idProductAttribute = null;

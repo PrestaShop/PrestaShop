@@ -2,7 +2,7 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomersPage,
@@ -91,7 +91,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   const createCustomerName: string = `${customerData.firstName[0]}. ${customerData.lastName}`;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -1010,5 +1010,5 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
+  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

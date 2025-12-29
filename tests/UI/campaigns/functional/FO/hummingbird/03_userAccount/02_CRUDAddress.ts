@@ -3,7 +3,7 @@ import {expect} from 'chai';
 
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -55,7 +55,7 @@ describe('FO - Account : CRUD address', async () => {
   createAccountTest(newCustomerData, `${baseContext}_preTest_1`);
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_2`);
+  enableTheme('hummingbird', `${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -320,7 +320,7 @@ describe('FO - Account : CRUD address', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
+  disableTheme('hummingbird', `${baseContext}_postTest_1`);
 
   // Post-condition: Delete created customer
   deleteCustomerTest(newCustomerData, `${baseContext}_postTest_2`);

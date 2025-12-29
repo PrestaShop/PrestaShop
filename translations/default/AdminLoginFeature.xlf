@@ -40,7 +40,7 @@
       <trans-unit id="bfb30c807cd2ae0ece3a44d2e8cbf74d">
         <source>You have been logged out for security reasons</source>
         <target>You have been logged out for security reasons</target>
-        <note>File: src/PrestaShopBundle/EventListener/Admin/EmployeeSessionSubscriber.php [Line: 227]</note>
+        <note>File: src/PrestaShopBundle/EventListener/Admin/EmployeeSessionSubscriber.php [Line: 230]</note>
       </trans-unit>
     </body>
   </file>

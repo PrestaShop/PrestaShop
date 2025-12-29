@@ -12,6 +12,11 @@
         <target>Add new specific price</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/SpecificPricesType.php [Line: 47]</note>
       </trans-unit>
+      <trans-unit id="13afe23d5f8f35f842ed67ae75ac2968">
+        <source>All existing identifiers of the product. We recommend filling in every relevant field you can obtain, as it will improve the product's searchability and management.</source>
+        <target>All existing identifiers of the product. We recommend filling in every relevant field you can obtain, as it will improve the product's searchability and management.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Details/ReferencesType.php [Line: 112]</note>
+      </trans-unit>
       <trans-unit id="7db5022f86dda7b39e31e754afd5c6a0">
         <source>Allow customers to upload files using the contact page.</source>
         <target>Allow customers to upload files using the contact page.</target>
@@ -80,7 +85,7 @@
       <trans-unit id="5a533ff8b0bb46f6ddbe100864e44771">
         <source>Define which condition should apply first when a customer is eligible for multiple specific prices.</source>
         <target>Define which condition should apply first when a customer is eligible for multiple specific prices.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 118]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 119]</note>
       </trans-unit>
       <trans-unit id="d052f4d5e3abd3ce257a51cafbc59746">
         <source>Defines the product's primary placement, usually the deepest category in the hierarchy. It's used in breadcrumbs, URLs, structured data and many other parts of the shop.</source>
@@ -172,14 +177,28 @@
         <target>Instructions, size guide, or any file you want to add to a product.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Options/ProductAttachmentsType.php [Line: 105]</note>
       </trans-unit>
+      <trans-unit id="67065d7314000c61a6176c4e588e613f">
+        <source>Internal purchase price of the product. You can use it for margin calculations, statistics, and internal reporting. This value is not shown to customers.</source>
+        <target>Internal purchase price of the product. You can use it for margin calculations, statistics, and internal reporting. This value is not shown to customers.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 82]</note>
+      </trans-unit>
       <trans-unit id="607e1d854783c8229998ac2b5b6923d3">
         <source>Invalid token</source>
         <target>Invalid token</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Security/compromised.html.twig [Line: 33]</note>
       </trans-unit>
+      <trans-unit id="0d42fdc56a0571e75383a990bde2ce67">
+        <source>Lower numbers indicate higher priority. When multiple discounts are applied, lower priority numbers are processed first.</source>
+        <target>Lower numbers indicate higher priority. When multiple discounts are applied, lower priority numbers are processed first.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityType.php [Line: 57]</note>
+      </trans-unit>
       <trans-unit id="c268a2747d5680c617c361cd505c4576">
         <source>MPN is used internationally to identify the Manufacturer Part Number.</source>
         <target>MPN is used internationally to identify the Manufacturer Part Number.</target>
+      </trans-unit>
+      <trans-unit id="4d843fd9d56800175ccdab1c264d9233">
+        <source>Manufacturer part number that allows to identify this product internationally.</source>
+        <target>Manufacturer part number that allows to identify this product internationally.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Details/ReferencesType.php [Line: 64]</note>
       </trans-unit>
       <trans-unit id="c35f3106689f99788eed211e0d6fbc20">
@@ -201,6 +220,11 @@
         <source>Only applicable if the voucher value is greater than the cart total.</source>
         <target>Only applicable if the voucher value is greater than the cart total.</target>
         <note>File: admin-dev/themes/default/template/controllers/cart_rules/informations.tpl [Line: 111]</note>
+      </trans-unit>
+      <trans-unit id="39fe0bb83d46a90711119bd7b5807a34">
+        <source>Optional detailed information about the product, such as its features, specifications, images, videos, or package contents. Use this field when you need to provide more details beyond the short summary.</source>
+        <target>Optional detailed information about the product, such as its features, specifications, images, videos, or package contents. Use this field when you need to provide more details beyond the short summary.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Description/DescriptionType.php [Line: 118]</note>
       </trans-unit>
       <trans-unit id="3fde87028c9327c15017b46e6d84ac80">
         <source>Optional: The cart rule will be available to everyone if you leave this field blank.</source>
@@ -226,6 +250,11 @@
         <source>Port to use to connect to your IMAP server.</source>
         <target>Port to use to connect to your IMAP server.</target>
         <note>File: controllers/admin/AdminCustomerThreadsController.php [Line: 174]</note>
+      </trans-unit>
+      <trans-unit id="83817e901c79cb88317d36da8ee882d5">
+        <source>Products closely connected to this item, such as accessories or complementary goods. Adding them helps customers discover relevant items and improves product navigation.</source>
+        <target>Products closely connected to this item, such as accessories or complementary goods. Adding them helps customers discover relevant items and improves product navigation.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Description/DescriptionType.php [Line: 136]</note>
       </trans-unit>
       <trans-unit id="bf8d04437124c71dcf4c8c9d067c59a4">
         <source>Public title that may appear in the browser and search engines. The recommended length is about 60 characters (including spaces). If you leave it blank, the product name will be used.</source>
@@ -272,6 +301,11 @@
         <target>Select the customer groups which will have access to this category.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Catalog/Category/AbstractCategoryType.php [Line: 282]</note>
       </trans-unit>
+      <trans-unit id="9576640520abce2594645f2a4436b7fd">
+        <source>Select which discount types this discount is compatible with.</source>
+        <target>Select which discount types this discount is compatible with.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountCompatibilityType.php [Line: 65]</note>
+      </trans-unit>
       <trans-unit id="a132c5ad0de6c917b5422b923608c87b">
         <source>Separate each tag with a comma or press the Enter key.</source>
         <target>Separate each tag with a comma or press the Enter key.</target>
@@ -280,7 +314,12 @@
       <trans-unit id="127a2d0e467657187c3a043fb6179b17">
         <source>Set specific prices for customers meeting certain conditions.</source>
         <target>Set specific prices for customers meeting certain conditions.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 104]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 105]</note>
+      </trans-unit>
+      <trans-unit id="a05ce821cab187eec53725269340bb28">
+        <source>Short description of the product. We recommend two to three sentences or a few clear phrases that describe the item. It's displayed near the product name, used in the meta description, and shown in several other places. Avoid duplicating this text across different products.</source>
+        <target>Short description of the product. We recommend two to three sentences or a few clear phrases that describe the item. It's displayed near the product name, used in the meta description, and shown in several other places. Avoid duplicating this text across different products.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Description/DescriptionType.php [Line: 104]</note>
       </trans-unit>
       <trans-unit id="73e5c34274fdcc69469b9185f7c3fd96">
         <source>Summary for robots, that could appear in search engines. The recommended length is about 160 characters (including spaces). If you leave it blank, an excerpt from the short description will be used.</source>
@@ -327,6 +366,11 @@
         <target>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/QuantityType.php [Line: 127]</note>
       </trans-unit>
+      <trans-unit id="9e393b7c3a8d54af9dc3684086ca365d">
+        <source>The product's worldwide barcode. Filling this field improves product traceability, catalog management, and overall searchability.</source>
+        <target>The product's worldwide barcode. Filling this field improves product traceability, catalog management, and overall searchability.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Details/ReferencesType.php [Line: 83]</note>
+      </trans-unit>
       <trans-unit id="b5e6921c2d093fbcb0088c9466ee9983">
         <source>The public name for this attribute, displayed to the customers.</source>
         <target>The public name for this attribute, displayed to the customers.</target>
@@ -355,7 +399,6 @@
       <trans-unit id="0041a5c39ca241f883f4e0516a32d290">
         <source>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</source>
         <target>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Details/ReferencesType.php [Line: 83]</note>
       </trans-unit>
       <trans-unit id="39bd7eba8aa2033579b5ae60bf0c774d">
         <source>This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.</source>
@@ -492,10 +535,20 @@
         <target>Yes, I understand the risks</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Security/compromised.html.twig [Line: 48]</note>
       </trans-unit>
+      <trans-unit id="86b310a95aa85957a00acb1415e40772">
+        <source>You can choose a free gift.</source>
+        <target>You can choose a free gift.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountType.php [Line: 84]</note>
+      </trans-unit>
       <trans-unit id="5b41d7dc2da5ea15baf3e2d62d820ac2">
         <source>You can choose a minimum amount for the cart either with or without the taxes and shipping.</source>
         <target>You can choose a minimum amount for the cart either with or without the taxes and shipping.</target>
         <note>File: admin-dev/themes/default/template/controllers/cart_rules/conditions.tpl [Line: 74]</note>
+      </trans-unit>
+      <trans-unit id="190a25c3f15e1544ed2bd6efbafb1a97">
+        <source>You can choose a minimum amount for the cart either with or without the taxes.</source>
+        <target>You can choose a minimum amount for the cart either with or without the taxes.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountValueType.php [Line: 42]</note>
       </trans-unit>
       <trans-unit id="738971709fcd7de4b5f8a87eb1e663a1">
         <source>You can specify product reference(s) for each associated supplier. Click "%save_label%" after changing selected suppliers to display the associated product references.</source>

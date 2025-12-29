@@ -6,7 +6,7 @@ import {createAddressTest} from '@commonTests/BO/customers/address';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import createAccountTest from '@commonTests/FO/hummingbird/account';
 import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -69,7 +69,7 @@ describe('FO - User account - Order history : Consult details and Reorder', asyn
   const today: string = utilsDate.getDateFormat('mm/dd/yyyy');
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_1`);
+  enableTheme('hummingbird', `${baseContext}_preTest_1`);
 
   // Pre-condition: Create new account
   createAccountTest(customerData, `${baseContext}_enableNewProduct`);
@@ -163,7 +163,7 @@ describe('FO - User account - Order history : Consult details and Reorder', asyn
         expect(result.price).to.equal(`€${dataProducts.demo_1.finalPrice}`),
         expect(result.paymentType).to.equal(dataPaymentMethods.wirePayment.displayName),
         expect(result.status).to.equal(dataOrderStatuses.awaitingBankWire.name),
-        expect(result.invoice).to.equal('-'),
+        expect(result.invoice).to.equal('--'),
       ]);
     });
 
@@ -227,5 +227,5 @@ describe('FO - User account - Order history : Consult details and Reorder', asyn
   deleteCustomerTest(customerData, `${baseContext}_postText_1`);
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
+  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

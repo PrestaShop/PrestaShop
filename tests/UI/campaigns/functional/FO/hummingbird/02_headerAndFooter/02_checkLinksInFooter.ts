@@ -4,7 +4,7 @@ import {expect} from 'chai';
 import deleteCacheTest from '@commonTests/BO/advancedParameters/cache';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -65,188 +65,191 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
   createAccountTest(createCustomerData, `${baseContext}_preTest_1`);
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_2`);
+  enableTheme('hummingbird', `${baseContext}_preTest_2`);
 
   // Pre-condition: Delete cache
   deleteCacheTest(`${baseContext}_preTest_3`);
 
-  // before and after functions
-  before(async function () {
-    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
-    page = await utilsPlaywright.newTab(browserContext);
-  });
+  describe('Check links in footer page', async () => {
+    before(async function () {
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
+    });
 
-  after(async () => {
-    await utilsPlaywright.closeBrowserContext(browserContext);
-  });
+    after(async () => {
+      await utilsPlaywright.closeBrowserContext(browserContext);
+    });
 
-  it('should go to FO home page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+    it('should go to FO home page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-    await foHummingbirdHomePage.goToFo(page);
+      await foHummingbirdHomePage.goToFo(page);
 
-    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-    expect(isHomePage).to.be.eq(true);
-  });
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage).to.be.eq(true);
+    });
 
-  describe('Check \'Products\' footer links', async () => {
-    [
-      {linkSelector: 'Prices drop', pageTitle: foHummingbirdPricesDropPage.pageTitle},
-      {linkSelector: 'New products', pageTitle: foHummingbirdNewProductsPage.pageTitle},
-      {linkSelector: 'Best sellers', pageTitle: foHummingbirdBestSalesPage.pageTitle},
-    ].forEach((args, index: number) => {
-      it(`should check '${args.linkSelector}' footer links`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkProductsFooterLinks${index}`, baseContext);
+    describe('Check \'Products\' footer links', async () => {
+      [
+        {linkSelector: 'Prices drop', pageTitle: foHummingbirdPricesDropPage.pageTitle},
+        {linkSelector: 'New products', pageTitle: foHummingbirdNewProductsPage.pageTitle},
+        {linkSelector: 'Best sellers', pageTitle: foHummingbirdBestSalesPage.pageTitle},
+      ].forEach((args, index: number) => {
+        it(`should check '${args.linkSelector}' footer links`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkProductsFooterLinks${index}`, baseContext);
 
-        // Check prices drop link
-        await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
+          // Check prices drop link
+          await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
 
-        const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
-        expect(pageTitle).to.equal(args.pageTitle);
+          const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+          expect(pageTitle).to.equal(args.pageTitle);
+        });
       });
     });
-  });
 
-  describe('Check \'Our Company\' footer links', async () => {
-    [
-      {linkSelector: 'Delivery', pageTitle: foHummingbirdDeliveryPage.pageTitle},
-      {linkSelector: 'Legal Notice', pageTitle: foHummingbirdLegalNoticePage.pageTitle},
-      {linkSelector: 'Terms and conditions of use', pageTitle: foHummingbirdTermsAndConditionsOfUsePage.pageTitle},
-      {linkSelector: 'About us', pageTitle: foHummingbirdAboutUsPage.pageTitle},
-      {linkSelector: 'Secure payment', pageTitle: foHummingbirdSecurePaymentPage.pageTitle},
-      {linkSelector: 'Contact us', pageTitle: foHummingbirdContactUsPage.pageTitle},
-      {linkSelector: 'Sitemap', pageTitle: foHummingbirdSitemapPage.pageTitle},
-      {linkSelector: 'Stores', pageTitle: foHummingbirdStoresPage.pageTitle},
-    ].forEach((args, index: number) => {
-      it(`should check '${args.linkSelector}' footer links`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkOurCompanyFooterLinks${index}`, baseContext);
+    describe('Check \'Our Company\' footer links', async () => {
+      [
+        {linkSelector: 'Delivery', pageTitle: foHummingbirdDeliveryPage.pageTitle},
+        {linkSelector: 'Legal Notice', pageTitle: foHummingbirdLegalNoticePage.pageTitle},
+        {linkSelector: 'Terms and conditions of use', pageTitle: foHummingbirdTermsAndConditionsOfUsePage.pageTitle},
+        {linkSelector: 'About us', pageTitle: foHummingbirdAboutUsPage.pageTitle},
+        {linkSelector: 'Secure payment', pageTitle: foHummingbirdSecurePaymentPage.pageTitle},
+        {linkSelector: 'Contact us', pageTitle: foHummingbirdContactUsPage.pageTitle},
+        {linkSelector: 'Sitemap', pageTitle: foHummingbirdSitemapPage.pageTitle},
+        {linkSelector: 'Stores', pageTitle: foHummingbirdStoresPage.pageTitle},
+      ].forEach((args, index: number) => {
+        it(`should check '${args.linkSelector}' footer links`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkOurCompanyFooterLinks${index}`, baseContext);
 
-        // Check prices drop link
-        await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
+          // Check prices drop link
+          await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
 
-        const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
-        expect(pageTitle).to.equal(args.pageTitle);
+          const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+          expect(pageTitle).to.equal(args.pageTitle);
+        });
       });
     });
-  });
 
-  describe('Check \'Your Account\' footer links before login', async () => {
-    [
-      {linkSelector: 'Order tracking', pageTitle: foHummingbirdGuestOrderTrackingPage.pageTitle},
-      {linkSelector: 'Sign in', pageTitle: foHummingbirdLoginPage.pageTitle},
-      {linkSelector: 'Create account', pageTitle: foHummingbirdCreateAccountPage.formTitle},
-    ].forEach((args, index: number) => {
-      it(`should check '${args.linkSelector}' footer links`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks1${index}`, baseContext);
+    describe('Check \'Your Account\' footer links before login', async () => {
+      [
+        {linkSelector: 'Order tracking', pageTitle: foHummingbirdGuestOrderTrackingPage.pageTitle},
+        {linkSelector: 'Sign in', pageTitle: foHummingbirdLoginPage.pageTitle},
+        {linkSelector: 'Create account', pageTitle: foHummingbirdCreateAccountPage.formTitle},
+      ].forEach((args, index: number) => {
+        it(`should check '${args.linkSelector}' footer links`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks1${index}`, baseContext);
 
-        // Check prices drop link
-        await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
+          // Check prices drop link
+          await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
 
-        if (args.linkSelector === 'Create account') {
-          pageTitle = await foHummingbirdCreateAccountPage.getHeaderTitle(page);
-        } else {
-          pageTitle = await foHummingbirdHomePage.getPageTitle(page);
-        }
-        expect(pageTitle).to.equal(args.pageTitle);
+          if (args.linkSelector === 'Create account') {
+            pageTitle = await foHummingbirdCreateAccountPage.getHeaderTitle(page);
+          } else {
+            pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+          }
+          expect(pageTitle).to.equal(args.pageTitle);
+        });
       });
     });
-  });
 
-  describe('Check \'Your Account\' footer links after login with default customer', async () => {
-    it('should login to FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
+    describe('Check \'Your Account\' footer links after login with default customer', async () => {
+      it('should login to FO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
-      await foHummingbirdHomePage.goToLoginPage(page);
-      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
+        await foHummingbirdHomePage.goToLoginPage(page);
+        await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
-      expect(isCustomerConnected, 'Customer is not connected').to.equal(true);
-    });
+        const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
+        expect(isCustomerConnected, 'Customer is not connected').to.equal(true);
+      });
 
-    [
-      {linkSelector: 'Information', pageTitle: foHummingbirdMyInformationsPage.pageTitle},
-      {linkSelector: 'Addresses', pageTitle: foHummingbirdMyAddressesPage.pageTitle},
-      {linkSelector: 'Orders', pageTitle: foHummingbirdMyOrderHistoryPage.pageTitle},
-      {linkSelector: 'Credit slips', pageTitle: foHummingbirdMyCreditSlipsPage.pageTitle},
-      {linkSelector: 'Wishlist', pageTitle: foHummingbirdMyWishlistsPage.pageTitle},
-      {linkSelector: 'Sign out', pageTitle: foHummingbirdLoginPage.pageTitle},
-    ].forEach((args, index: number) => {
-      it(`should check '${args.linkSelector}' footer links`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks2${index}`, baseContext);
+      [
+        {linkSelector: 'Information', pageTitle: foHummingbirdMyInformationsPage.pageTitle},
+        {linkSelector: 'Addresses', pageTitle: foHummingbirdMyAddressesPage.pageTitle},
+        {linkSelector: 'Orders', pageTitle: foHummingbirdMyOrderHistoryPage.pageTitle},
+        {linkSelector: 'Credit slips', pageTitle: foHummingbirdMyCreditSlipsPage.pageTitle},
+        // @todo : https://github.com/PrestaShop/hummingbird/issues/834
+        // {linkSelector: 'Wishlist', pageTitle: foHummingbirdMyWishlistsPage.pageTitle},
+        {linkSelector: 'Sign out', pageTitle: foHummingbirdLoginPage.pageTitle},
+      ].forEach((args, index: number) => {
+        it(`should check '${args.linkSelector}' footer links`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks2${index}`, baseContext);
 
-        // Check prices drop link
-        await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
+          // Check prices drop link
+          await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
 
-        if (args.linkSelector === 'Wishlist') {
-          pageTitle = await foHummingbirdMyWishlistsPage.getPageTitle(page);
-        } else {
-          pageTitle = await foHummingbirdHomePage.getPageTitle(page);
-        }
-        expect(pageTitle).to.equal(args.pageTitle);
+          if (args.linkSelector === 'Wishlist') {
+            pageTitle = await foHummingbirdMyWishlistsPage.getPageTitle(page);
+          } else {
+            pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+          }
+          expect(pageTitle).to.equal(args.pageTitle);
+        });
       });
     });
-  });
 
-  // Pre-condition: Delete cache
-  deleteCacheTest(`${baseContext}_preTest3`);
+    // Pre-condition: Delete cache
+    deleteCacheTest(`${baseContext}_preTest3`);
 
-  describe('Check \'Your Account\' footer links after login with new customer without address', async () => {
-    it('should login to FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'loginFONewCustomer', baseContext);
+    describe('Check \'Your Account\' footer links after login with new customer without address', async () => {
+      it('should login to FO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'loginFONewCustomer', baseContext);
 
-      await foHummingbirdHomePage.goToLoginPage(page);
-      await foHummingbirdLoginPage.customerLogin(page, createCustomerData);
+        await foHummingbirdHomePage.goToLoginPage(page);
+        await foHummingbirdLoginPage.customerLogin(page, createCustomerData);
 
-      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
-      expect(isCustomerConnected, 'Customer is not connected').to.equal(true);
-    });
+        const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
+        expect(isCustomerConnected, 'Customer is not connected').to.equal(true);
+      });
 
-    [
-      {linkSelector: 'Information', pageTitle: foHummingbirdMyInformationsPage.pageTitle},
-      {linkSelector: 'Add first address', pageTitle: foHummingbirdMyAddressesCreatePage.pageTitle},
-      {linkSelector: 'Orders', pageTitle: foHummingbirdMyOrderHistoryPage.pageTitle},
-      {linkSelector: 'Credit slips', pageTitle: foHummingbirdMyCreditSlipsPage.pageTitle},
-      {linkSelector: 'Wishlist', pageTitle: foHummingbirdMyWishlistsPage.pageTitle},
-      {linkSelector: 'Sign out', pageTitle: foHummingbirdLoginPage.pageTitle},
-    ].forEach((args, index: number) => {
-      it(`should check '${args.linkSelector}' footer links`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks3${index}`, baseContext);
+      [
+        {linkSelector: 'Information', pageTitle: foHummingbirdMyInformationsPage.pageTitle},
+        {linkSelector: 'Add first address', pageTitle: foHummingbirdMyAddressesCreatePage.pageTitle},
+        {linkSelector: 'Orders', pageTitle: foHummingbirdMyOrderHistoryPage.pageTitle},
+        {linkSelector: 'Credit slips', pageTitle: foHummingbirdMyCreditSlipsPage.pageTitle},
+        // @todo : https://github.com/PrestaShop/hummingbird/issues/834
+        // {linkSelector: 'Wishlist', pageTitle: foHummingbirdMyWishlistsPage.pageTitle},
+        {linkSelector: 'Sign out', pageTitle: foHummingbirdLoginPage.pageTitle},
+      ].forEach((args, index: number) => {
+        it(`should check '${args.linkSelector}' footer links`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks3${index}`, baseContext);
 
-        // Check prices drop link
-        await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
+          // Check prices drop link
+          await foHummingbirdHomePage.goToFooterLink(page, args.linkSelector);
 
-        if (args.linkSelector === 'Wishlist') {
-          pageTitle = await foHummingbirdMyWishlistsPage.getPageTitle(page);
-        } else {
-          pageTitle = await foHummingbirdHomePage.getPageTitle(page);
-        }
-        expect(pageTitle).to.equal(args.pageTitle);
+          if (args.linkSelector === 'Wishlist') {
+            pageTitle = await foHummingbirdMyWishlistsPage.getPageTitle(page);
+          } else {
+            pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+          }
+          expect(pageTitle).to.equal(args.pageTitle);
+        });
       });
     });
-  });
 
-  describe('Check \'Store Information\'', async () => {
-    it('should check \'Store Information\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkStoreInformation', baseContext);
+    describe('Check \'Store Information\'', async () => {
+      it('should check \'Store Information\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkStoreInformation', baseContext);
 
-      const storeInformation = await foHummingbirdHomePage.getStoreInformation(page);
-      expect(storeInformation).to.contains(global.INSTALL.SHOP_NAME)
-        .and.to.contain(global.INSTALL.COUNTRY)
-        .and.to.contains(global.BO.EMAIL);
+        const storeInformation = await foHummingbirdHomePage.getStoreInformation(page);
+        expect(storeInformation).to.contains(global.INSTALL.SHOP_NAME)
+          .and.to.contain(global.INSTALL.COUNTRY)
+          .and.to.contains(global.BO.EMAIL);
+      });
     });
-  });
 
-  describe('Check the copyright', async () => {
-    it('should check the copyright', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCopyright', baseContext);
+    describe('Check the copyright', async () => {
+      it('should check the copyright', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkCopyright', baseContext);
 
-      const copyright = await foHummingbirdHomePage.getCopyright(page);
-      expect(copyright).to.equal(`© ${currentYear} - Ecommerce software by PrestaShop™`);
+        const copyright = await foHummingbirdHomePage.getCopyright(page);
+        expect(copyright).to.equal(`© ${currentYear} - Ecommerce software by PrestaShop™`);
+      });
     });
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
+  disableTheme('hummingbird', `${baseContext}_postTest_1`);
 
   // Post-condition: Delete the created customer account
   deleteCustomerTest(createCustomerData, `${baseContext}_postTest_2`);

@@ -154,15 +154,16 @@ describe('BO - Catalog - Products : Seo tab', async () => {
       expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
-    it(`should preview product and check '${dataProducts.demo_1.name}' page`, async function () {
+    it('should preview disabled product and check base product page (redirect should not work)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
 
       // Click on preview button
       page = await boProductsCreatePage.previewProduct(page);
       await foClassicProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(dataProducts.demo_1.name);
+      // When product is disabled, redirect should work
+      const productInformation = await foClassicProductPage.getProductInformation(page);
+      expect(productInformation.name).to.equal(newProductData.name);
     });
 
     it('should go back to BO', async function () {
@@ -227,15 +228,17 @@ describe('BO - Catalog - Products : Seo tab', async () => {
       expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
-    it('should preview product', async function () {
+    it('should preview product and check original product page (redirect should not work when enabled)', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct3', baseContext);
 
       // Click on preview button
       page = await boProductsCreatePage.previewProduct(page);
       await foClassicProductPage.changeLanguage(page, 'en');
 
+      // When product is enabled, redirect should NOT work, so we should see the original product
+      // The page title uses the metaTitle ('lorem ipsum') that was set earlier
       const pageTitle = await foClassicProductPage.getPageTitle(page);
-      expect(pageTitle).to.contains(dataProducts.demo_1.name);
+      expect(pageTitle).to.contains(editProductData.metaTitle!);
     });
 
     it('should search the new tag \'welcome\' from the search bar', async function () {

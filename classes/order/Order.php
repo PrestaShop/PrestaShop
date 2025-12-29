@@ -1204,7 +1204,8 @@ class OrderCore extends ObjectModel
             WHERE `id_cart` = ' . (int) $id_cart .
             Shop::addSqlRestriction();
 
-        $result = Db::getInstance()->getValue($sql);
+        // No cache to avoid getting a wrong result in clustered environments
+        $result = Db::getInstance()->getValue($sql, false);
 
         return !empty($result) ? (int) $result : false;
     }

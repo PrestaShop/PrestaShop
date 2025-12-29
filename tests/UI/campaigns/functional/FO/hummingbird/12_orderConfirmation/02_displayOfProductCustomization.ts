@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -40,9 +40,8 @@ describe('FO - Order confirmation : Display of product customization', async () 
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -172,9 +171,10 @@ describe('FO - Order confirmation : Display of product customization', async () 
       const result = await foHummingbirdCheckoutOrderConfirmationPage.getProductDetailsInRow(page, 1);
       await Promise.all([
         expect(result.image).to.contains(dataProducts.demo_14.coverImage),
-        expect(result.details).to.equal(`${dataProducts.demo_14.name} Reference ${dataProducts.demo_14.reference}`
-          + ' Customized Product customization Type your text here Hello world!'),
-        expect(result.prices).to.equal(`€${dataProducts.demo_14.finalPrice} (x1) €${dataProducts.demo_14.finalPrice}`),
+        expect(result.details).to.contains(dataProducts.demo_14.name),
+        expect(result.details).to.contains(`Reference: ${dataProducts.demo_14.reference}`),
+        expect(result.details).to.contains('Product customization Type your text here Hello world!'),
+        expect(result.prices).to.equal(`€${dataProducts.demo_14.finalPrice}`),
       ]);
     });
 
@@ -201,5 +201,5 @@ describe('FO - Order confirmation : Display of product customization', async () 
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
+  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

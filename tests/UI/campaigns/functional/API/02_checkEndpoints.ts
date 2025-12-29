@@ -88,11 +88,21 @@ describe('API : Check endpoints', async () => {
         // @todo: add tests
         '/addresses/bulk-delete: DELETE',
         // @todo: add tests
+        '/addresses/carts/{cartId}: PATCH',
+        // @todo: add tests
         '/addresses/customers/{addressId}: GET',
         // @todo: add tests
         '/addresses/customers/{addressId}: PATCH',
         // @todo: add tests
         '/addresses/customers: POST',
+        // @todo: add tests
+        '/addresses/manufacturers/{addressId}: GET',
+        // @todo: add tests
+        '/addresses/manufacturers/{addressId}: PATCH',
+        // @todo: add tests
+        '/addresses/manufacturers: POST',
+        // @todo: add tests
+        '/addresses/orders/{orderId}: PATCH',
         // @todo: add tests
         '/addresses/{addressId}: DELETE',
         // @todo: add tests

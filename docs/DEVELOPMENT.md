@@ -150,7 +150,7 @@ make help # Show all available commands
 | **Admin** | `ADMIN_MAIL` | `demo@prestashop.com` | Admin email |
 | | `ADMIN_PASSWD` | `Correct Horse Battery Staple` | Admin password |
 | **Development** | `VERSION` | `8.1-apache` | PHP version |
-| | `NODE_VERSION` | `20.17.0` | Node.js version |
+| | `NODE_VERSION` | `20.19.5` | Node.js version |
 | | `INSTALL_XDEBUG` | `false` | Install Xdebug |
 | | `BLACKFIRE_ENABLE` | `0` | Enable Blackfire profiling |
 | | `BLACKFIRE_SERVER_ID` | `0` | Blackfire server ID |

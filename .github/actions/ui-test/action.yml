@@ -73,6 +73,7 @@ runs:
         URL_INSTALL: ${{ (inputs.ENABLE_SSL == 'false') && 'http://localhost:8001/install-dev/' || 'https://localhost:8002/install-dev/' }}
         DB_SERVER: ${{ inputs.DB_SERVER }}
         LANG: 'en-GB'
+        PS_VERSION: 9.0.x
         # DEBUG: 'pw:api'
       shell: bash
       run: npm run test:${{ inputs.TEST_CAMPAIGN }}

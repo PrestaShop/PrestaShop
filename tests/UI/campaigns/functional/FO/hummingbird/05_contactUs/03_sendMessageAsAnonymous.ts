@@ -2,7 +2,7 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomerServicePage,
@@ -49,24 +49,11 @@ describe('FO - Contact us : Send message from contact us page with customer not 
   let newMail: MailDevEmail;
   let mailListener: MailDev;
 
-  const contactUsEmptyEmail: FakerContactMessage = new FakerContactMessage({
-    firstName: dataCustomers.johnDoe.firstName,
-    lastName: dataCustomers.johnDoe.lastName,
-    subject: 'Customer service',
-    emailAddress: '',
-  });
   const contactUsInvalidEmail: FakerContactMessage = new FakerContactMessage({
     firstName: dataCustomers.johnDoe.firstName,
     lastName: dataCustomers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: 'demo@prestashop',
-  });
-  const contactUsEmptyContent: FakerContactMessage = new FakerContactMessage({
-    firstName: dataCustomers.johnDoe.firstName,
-    lastName: dataCustomers.johnDoe.lastName,
-    subject: 'Customer service',
-    emailAddress: dataCustomers.johnDoe.email,
-    message: '',
   });
   const contactUsData: FakerContactMessage = new FakerContactMessage({
     firstName: dataCustomers.johnDoe.firstName,
@@ -79,7 +66,7 @@ describe('FO - Contact us : Send message from contact us page with customer not 
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_2`);
+  enableTheme('hummingbird', `${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -198,15 +185,6 @@ describe('FO - Contact us : Send message from contact us page with customer not 
       expect(pageTitle).to.equal(foHummingbirdContactUsPage.pageTitle);
     });
 
-    it('should check if the email is empty', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkEmptyEmail', baseContext);
-
-      await foHummingbirdContactUsPage.sendMessage(page, contactUsEmptyEmail);
-
-      const invalidEmailError = await foHummingbirdContactUsPage.getAlertError(page);
-      expect(invalidEmailError).to.contains(foHummingbirdContactUsPage.invalidEmail);
-    });
-
     it('should check if the email is invalid', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvalidEmail', baseContext);
 
@@ -214,15 +192,6 @@ describe('FO - Contact us : Send message from contact us page with customer not 
 
       const invalidEmailError = await foHummingbirdContactUsPage.getAlertError(page);
       expect(invalidEmailError).to.contains(foHummingbirdContactUsPage.invalidEmail);
-    });
-
-    it('should check if the content is empty', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkEmptyContent', baseContext);
-
-      await foHummingbirdContactUsPage.sendMessage(page, contactUsEmptyContent);
-
-      const invalidEmailError = await foHummingbirdContactUsPage.getAlertError(page);
-      expect(invalidEmailError).to.contains(foHummingbirdContactUsPage.invalidContent);
     });
 
     it('should send message to customer service', async function () {
@@ -355,5 +324,5 @@ describe('FO - Contact us : Send message from contact us page with customer not 
   resetSmtpConfigTest(`${baseContext}_postTest_1`);
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
+  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

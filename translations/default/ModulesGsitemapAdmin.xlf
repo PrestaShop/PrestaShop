@@ -20,7 +20,7 @@
       <trans-unit id="b52bf50c73995780892b9945ddc98708">
         <source>An error occured while trying to check your file permissions. Please adjust your permissions to allow PrestaShop to write a file in your root directory.</source>
         <target>An error occured while trying to check your file permissions. Please adjust your permissions to allow PrestaShop to write a file in your root directory.</target>
-        <note>File: modules/gsitemap/gsitemap.php [Line: 727]</note>
+        <note>File: modules/gsitemap/gsitemap.php [Line: 873]</note>
       </trans-unit>
       <trans-unit id="03f772c9541dddad66266c0cf698bba6">
         <source>Ask your hosting provider to setup a "Cron job" to load the following URL at the time you would like:</source>
@@ -55,6 +55,10 @@
       <trans-unit id="400b56170a529d4644b068ade0a6e84f">
         <source>Generate your Google sitemap file and keep it up to date with this module.</source>
         <target>Generate your Google sitemap file and keep it up to date with this module.</target>
+      </trans-unit>
+      <trans-unit id="6b3a8f8541afcb60f79f5634ed90a53b">
+        <source>Generates an XML sitemap for your shop and keeps it up to date. Compatible with all major search engines.</source>
+        <target>Generates an XML sitemap for your shop and keeps it up to date. Compatible with all major search engines.</target>
         <note>File: modules/gsitemap/gsitemap.php [Line: 69]</note>
       </trans-unit>
       <trans-unit id="53fdf9abbbe9a13fccaf2a6dd5b6220f">
@@ -92,10 +96,14 @@
         <target>Manually:</target>
         <note>File: modules/gsitemap/views/templates/admin/configuration.tpl [Line: 125]</note>
       </trans-unit>
+      <trans-unit id="0be24c789efbdfdbdce8f55a9a73cd36">
+        <source>Please set up the following sitemap URL in your Google Search Console account:</source>
+        <target>Please set up the following sitemap URL in your Google Search Console account:</target>
+        <note>File: modules/gsitemap/views/templates/admin/configuration.tpl [Line: 47]</note>
+      </trans-unit>
       <trans-unit id="bdf0482e95f48fd33fae3765df4dcf06">
         <source>Please set up the following sitemap URL in your Google Webmaster account:</source>
         <target>Please set up the following sitemap URL in your Google Webmaster account:</target>
-        <note>File: modules/gsitemap/views/templates/admin/configuration.tpl [Line: 47]</note>
       </trans-unit>
       <trans-unit id="94880e11ec8ba05c8b71353e9281851f">
         <source>Several sitemap files will be generated depending on how your server is configured and on the number of activated products in your catalog.</source>
@@ -167,10 +175,14 @@
         <target>hourly</target>
         <note>File: modules/gsitemap/views/templates/admin/configuration.tpl [Line: 89]</note>
       </trans-unit>
+      <trans-unit id="c59ae781beef0d7ecb95dfbac38b4b13">
+        <source>in your Google Search Console account.</source>
+        <target>in your Google Search Console account.</target>
+        <note>File: modules/gsitemap/views/templates/admin/configuration.tpl [Line: 31]</note>
+      </trans-unit>
       <trans-unit id="9d934413d2737c2a15f58de573657ce3">
         <source>in your Google Webmaster account.</source>
         <target>in your Google Webmaster account.</target>
-        <note>File: modules/gsitemap/views/templates/admin/configuration.tpl [Line: 31]</note>
       </trans-unit>
       <trans-unit id="708638881f3bac9d9c8c742c79502811">
         <source>monthly</source>

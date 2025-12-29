@@ -30,7 +30,7 @@
       <trans-unit id="a333339eb21abf3d5a04f5ede8f73ae9">
         <source>%s deletion</source>
         <target>%s deletion</target>
-        <note>File: classes/controller/AdminController.php [Line: 3966]</note>
+        <note>File: classes/controller/AdminController.php [Line: 3971]</note>
       </trans-unit>
       <trans-unit id="93f04304c09d561ed79442ea9ee722d4">
         <source>%s group</source>
@@ -618,6 +618,11 @@ Before deleting any data, we recommend you to download all the invoices of the i
         <target>Make your store comply with the General Data Protection Regulation (GDPR).</target>
         <note>File: modules/psgdpr/psgdpr.php [Line: 139]</note>
       </trans-unit>
+      <trans-unit id="64b97937216217bc208e215b2a860b9d">
+        <source>Manage carriers</source>
+        <target>Manage carriers</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/split_shipment_form.html.twig [Line: 122]</note>
+      </trans-unit>
       <trans-unit id="7ce6b2286a5396e614b8484105d277e0">
         <source>Mar</source>
         <target>Mar</target>
@@ -897,6 +902,11 @@ They can, however, contact you anytime via your contact form, in this case, you 
         <target>Product(s) still in cart</target>
         <note>File: modules/psgdpr/controllers/front/ExportDataToCsv.php [Line: 255]</note>
       </trans-unit>
+      <trans-unit id="068f80c7519d0528fb08e82137a72131">
+        <source>Products</source>
+        <target>Products</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/split_shipment_form.html.twig [Line: 62]</note>
+      </trans-unit>
       <trans-unit id="c8be451a5698956a0e78b5c2caab4821">
         <source>Products bought</source>
         <target>Products bought</target>
@@ -996,6 +1006,16 @@ They can, however, contact you anytime via your contact form, in this case, you 
         <source>Select all</source>
         <target>Select all</target>
         <note>File: admin-dev/themes/default/template/helpers/list/list_footer.tpl [Line: 37]</note>
+      </trans-unit>
+      <trans-unit id="bef7a703b57f594877ee057052345617">
+        <source>Select quantity</source>
+        <target>Select quantity</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/split_shipment_form.html.twig [Line: 63]</note>
+      </trans-unit>
+      <trans-unit id="b3dca7346c6c4287de27b560c6ad1c2e">
+        <source>Select the carrier in charge</source>
+        <target>Select the carrier in charge</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/split_shipment_form.html.twig [Line: 103]</note>
       </trans-unit>
       <trans-unit id="81f32b96f6626b8968e6a0f4a9bce62e">
         <source>Select the fields you would like to be required for this section.</source>

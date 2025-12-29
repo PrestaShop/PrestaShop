@@ -205,17 +205,31 @@
       <trans-unit id="ba40d461815161e3564db4c519f5ba32">
         <source>Enable / Disable the module configuration page.</source>
         <target>Enable / Disable the module configuration page.</target>
-        <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 92]</note>
+      </trans-unit>
+      <trans-unit id="aa98968d82b215222dd5e4b3518050a9">
+        <source>Enable / Disable the new discount system.</source>
+        <target>Enable / Disable the new discount system.</target>
+        <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 95]</note>
       </trans-unit>
       <trans-unit id="15298e67b30b928fd857c6d2625debda">
         <source>Enable / Disable the new front container.</source>
         <target>Enable / Disable the new front container.</target>
         <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 80]</note>
       </trans-unit>
+      <trans-unit id="619c636194b7d9017b2f76f37ae7e781">
+        <source>Enable / Disable the newly improved shipment system.</source>
+        <target>Enable / Disable the newly improved shipment system.</target>
+        <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 92]</note>
+      </trans-unit>
       <trans-unit id="437ad32eb05dae211c16bff63c093e05">
         <source>Enable / Disable the store page.</source>
         <target>Enable / Disable the store page.</target>
         <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 86]</note>
+      </trans-unit>
+      <trans-unit id="791671e0c5bc533d24d236d1f03c554a">
+        <source>Enable / Disable the tag page.</source>
+        <target>Enable / Disable the tag page.</target>
+        <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 98]</note>
       </trans-unit>
       <trans-unit id="3d24e5589702a2ecfd1d65813b4a892e">
         <source>Enable DKIM, fill in the fields and give it a try. If no email is sent, check logs.</source>
@@ -320,7 +334,7 @@
       <trans-unit id="b8dc7c80939667637db7ac31ece215b9">
         <source>Fabulous</source>
         <target>Fabulous</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1619]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1673]</note>
       </trans-unit>
       <trans-unit id="6fe4a9d3d016ffb7ac0c79b9b34f759b">
         <source>Fill in the fields and click "%save_label%".</source>
@@ -344,7 +358,7 @@
       <trans-unit id="0c6ad70beb3a7e76c3fc7adab7c46acc">
         <source>Good</source>
         <target>Good</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1618]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1672]</note>
       </trans-unit>
       <trans-unit id="68db67219aa1fd6e5f8820e20fd78b25">
         <source>How do I create a new SQL query?</source>
@@ -404,7 +418,7 @@
       <trans-unit id="4bbb8f967da6d1a610596d7257179c2b">
         <source>Invalid</source>
         <target>Invalid</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1616]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1670]</note>
       </trans-unit>
       <trans-unit id="a5d35e0a66d41c7d12c0df6e643fa0ff">
         <source>Leave blank if not applicable.</source>
@@ -444,7 +458,7 @@
       <trans-unit id="26b63f278101527e06a5547719568bb5">
         <source>Okay</source>
         <target>Okay</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1617]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1671]</note>
       </trans-unit>
       <trans-unit id="059a6f0b1a0a28d15ee51fe80670f6f2">
         <source>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</source>

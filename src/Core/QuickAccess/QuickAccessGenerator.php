@@ -125,7 +125,7 @@ class QuickAccessGenerator
             }
 
             // Preparation of the link to display in component view.
-            $quick['link'] = '/' . basename(_PS_ADMIN_DIR_) . '/' . $cleanLink;
+            $quick['link'] = $this->legacyContext->getContext()->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . $cleanLink;
 
             // Add token if needed
             $quick['link'] = $this->getTokenizedUrl($quick['link']);

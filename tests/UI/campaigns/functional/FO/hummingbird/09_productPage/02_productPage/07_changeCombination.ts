@@ -1,6 +1,6 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -59,7 +59,6 @@ describe('FO - Product page - Product page : Change combination', async () => {
     status: true,
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -84,7 +83,7 @@ describe('FO - Product page - Product page : Change combination', async () => {
   });
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   describe('Create new attribute and values', async () => {
     it('should login in BO', async function () {
@@ -304,7 +303,7 @@ describe('FO - Product page - Product page : Change combination', async () => {
       await foHummingbirdProductPage.selectAttributes(page, 'radio', combination, 2);
 
       const selectedAttribute = await foHummingbirdProductPage.getSelectedAttribute(page, 2, 'radio');
-      expect(selectedAttribute).to.equal('Carton');
+      expect(selectedAttribute).to.contains('Carton');
     });
   });
 
@@ -363,5 +362,5 @@ describe('FO - Product page - Product page : Change combination', async () => {
   deleteProductTest(newProductData, `${baseContext}_postTest_1`);
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
+  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

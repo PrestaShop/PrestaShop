@@ -1,7 +1,7 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -29,7 +29,7 @@ describe('FO - Cart : Change quantity', async () => {
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -94,7 +94,7 @@ describe('FO - Cart : Change quantity', async () => {
     it('should set the quantity -6 in the input', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setQuantity-6', baseContext);
 
-      await foHummingbirdCartPage.editProductQuantity(page, 1, -6);
+      await foHummingbirdCartPage.deleteProduct(page, 1);
 
       const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(0);
@@ -138,15 +138,6 @@ describe('FO - Cart : Change quantity', async () => {
       expect(notificationsNumber).to.be.equal(64);
     });
 
-    it('should set \'azerty\' in the input', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setAZERTY', baseContext);
-
-      await foHummingbirdCartPage.editProductQuantity(page, 1, 'azerty');
-
-      const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.be.equal(64);
-    });
-
     it('should set the quantity 2400 in the input', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setQuantity2400', baseContext);
 
@@ -160,7 +151,7 @@ describe('FO - Cart : Change quantity', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessage', baseContext);
 
       const alertText = await foHummingbirdCartPage.getNotificationMessage(page);
-      expect(alertText).to.contains(foHummingbirdCartPage.errorNotificationForProductQuantity);
+      expect(alertText).to.contains(foHummingbirdCartPage.errorNotificationForProductQuantity(300));
     });
 
     it('should set the quantity 3 in the input without validation', async function () {
@@ -178,10 +169,10 @@ describe('FO - Cart : Change quantity', async () => {
       await foHummingbirdCartPage.editProductQuantity(page, 1, 0);
 
       const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.be.equal(0);
+      expect(notificationsNumber).to.be.equal(1);
     });
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
+  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

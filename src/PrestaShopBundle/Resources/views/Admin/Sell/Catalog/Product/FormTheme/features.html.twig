@@ -58,7 +58,7 @@
     {%- set attr = attr|merge({class: (attr.class|default('') ~ ' d-none')|trim}) -%}
   {% endif %}
 
-  <table {{ block('widget_attributes') }}>
+  <table {{ block('widget_attributes') }} data-row-index="{{ form.children|length }}">
     <thead class="thead-default">
     <tr>
       <th>{{ 'Feature'|trans({}, 'Admin.Catalog.Feature') }}</th>
@@ -78,7 +78,7 @@
   {%- set attr = attr|merge({class: (attr.class|default('') ~ ' product-feature-collection')|trim, 'feature-id': featureId}) -%}
   {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
   {%- set attr = attr|merge({'data-prototype': form_row(form.feature_values.vars.prototype), 'data-prototype-name': form.feature_values.vars.prototype.vars.name}) -%}
-  <tr {{ block('widget_attributes') }}>
+  <tr {{ block('widget_attributes') }} data-row-index="{{ form.feature_values|length }}">
     <td colspan="3">
       {{ form_widget(form.feature_id) }}
       {{ form_widget(form.feature_name) }}

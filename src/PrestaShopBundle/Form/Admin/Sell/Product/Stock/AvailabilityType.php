@@ -162,6 +162,7 @@ class AvailabilityType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => $this->trans('When out of stock', 'Admin.Catalog.Feature'),
+            'label_help_box' => $this->trans('Choose what should happen when this product is not in stock. Can it be ordered? Use the default store setting or override it for this product.', 'Admin.Catalog.Help'),
             'label_tag_name' => 'h3',
             'required' => false,
             'columns_number' => 3,

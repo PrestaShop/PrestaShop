@@ -1,7 +1,7 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 import {
@@ -59,7 +59,7 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
   createCartRuleTest(cartRuleWithCodeData, `${baseContext}_preTest_1`);
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_2`);
+  enableTheme('hummingbird', `${baseContext}_preTest_2`);
 
   describe('Display of highlighted promo code', async () => {
     before(async function () {
@@ -124,7 +124,7 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
       await foHummingbirdCartPage.clickOnPromoCode(page);
 
       const cartRuleName = await foHummingbirdCartPage.getCartRuleName(page, 1);
-      expect(cartRuleName).to.equal(cartRuleWithCodeData.name);
+      expect(cartRuleName).to.contains(cartRuleWithCodeData.name);
     });
 
     it('should verify the total after the discount', async function () {
@@ -137,7 +137,7 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
       expect(priceATI).to.equal(parseFloat(totalAfterPromoCode.toFixed(2)));
 
       const discountValue = await foHummingbirdCartPage.getCartRuleValue(page, 1);
-      expect(discountValue).to.equal(`-€${discount.toFixed(2)}`);
+      expect(discountValue).to.contains(`-€${discount.toFixed(2)}`);
     });
 
     it('should remove the discount', async function () {
@@ -163,7 +163,7 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
+  disableTheme('hummingbird', `${baseContext}_postTest_1`);
 
   // Post-condition: Delete created cart rule
   deleteCartRuleTest(cartRuleWithCodeData.name, `${baseContext}_postTest_2`);

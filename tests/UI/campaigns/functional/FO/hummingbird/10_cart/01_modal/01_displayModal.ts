@@ -1,7 +1,7 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -16,12 +16,12 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_cart_modal_displayModal';
 
-describe('FO - cart : Display modal when adding a product to cart', async () => {
+describe('FO - Cart : Display modal when adding a product to cart', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -83,5 +83,5 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
+  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

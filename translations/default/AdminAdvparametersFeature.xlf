@@ -662,6 +662,11 @@
         <target>Disable non built-in modules</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig [Line: 103]</note>
       </trans-unit>
+      <trans-unit id="104d9898c04874d0fbac36e125fa1369">
+        <source>Discount</source>
+        <target>Discount</target>
+        <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 94]</note>
+      </trans-unit>
       <trans-unit id="b30690be173bcd4a83df0cd68f89a385">
         <source>Discount amount</source>
         <target>Discount amount</target>
@@ -840,7 +845,7 @@
       <trans-unit id="1908624a0bca678cd26b99bfd405324e">
         <source>File size</source>
         <target>File size</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1669]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1723]</note>
       </trans-unit>
       <trans-unit id="1dcec4396291e2fbdc02c03526fe2b88">
         <source>Final URL</source>
@@ -941,6 +946,11 @@
         <source>Import data from another shop</source>
         <target>Import data from another shop</target>
         <note>File: admin-dev/themes/default/template/controllers/shop/helpers/form/form.tpl [Line: 75]</note>
+      </trans-unit>
+      <trans-unit id="baba9773a8fa8c4c7c1a3bebb71ebc07">
+        <source>Improved shipment</source>
+        <target>Improved shipment</target>
+        <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 91]</note>
       </trans-unit>
       <trans-unit id="225ba2bdb1c56af16651110411fc21b1">
         <source>Indicate how many of the first rows of your file should be skipped when importing the data. For instance set it to 1 if the first row of your file contains headers.</source>
@@ -1180,7 +1190,6 @@
       <trans-unit id="b04f2c8a90cfc485fc990dc8dc4ba293">
         <source>Module configuration</source>
         <target>Module configuration</target>
-        <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 91]</note>
       </trans-unit>
       <trans-unit id="b71593973c58bb41eb302d037f6b1230">
         <source>Module hooks</source>
@@ -1925,6 +1934,11 @@
         <source>Tables prefix:</source>
         <target>Tables prefix:</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig [Line: 94]</note>
+      </trans-unit>
+      <trans-unit id="c101058e7ea21bbbf2a5ac893088e90b">
+        <source>Tag</source>
+        <target>Tag</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Tags/form.html.twig [Line: 33]</note>
       </trans-unit>
       <trans-unit id="bede52f418b34b1ab0db65f9450bdfc3">
         <source>Tags (x,y,z...)</source>

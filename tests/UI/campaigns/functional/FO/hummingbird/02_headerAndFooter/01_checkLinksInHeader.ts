@@ -1,7 +1,7 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -34,10 +34,9 @@ describe('FO - Header and Footer : Check links in header page', async () => {
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_1`);
+  enableTheme('hummingbird', `${baseContext}_preTest_1`);
 
   describe('Check links in header page', async () => {
-    // before and after functions
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
       page = await utilsPlaywright.newTab(browserContext);
@@ -155,5 +154,5 @@ describe('FO - Header and Footer : Check links in header page', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
+  disableTheme('hummingbird', `${baseContext}_postTest_1`);
 });

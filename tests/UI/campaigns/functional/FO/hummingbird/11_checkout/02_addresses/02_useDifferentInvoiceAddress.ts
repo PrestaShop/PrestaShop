@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -49,7 +49,7 @@ describe('FO - Checkout - Addresses: Use different invoice address', async () =>
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -136,5 +136,5 @@ describe('FO - Checkout - Addresses: Use different invoice address', async () =>
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
+  disableTheme('hummingbird', `${baseContext}_postTest`);
 });
