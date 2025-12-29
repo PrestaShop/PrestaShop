@@ -4,7 +4,7 @@ import {faker} from '@faker-js/faker';
 
 // Import commonTests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomerServicePage,
@@ -65,7 +65,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
   setupSmtpConfigTest(`${baseContext}_preTest_0`);
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_1`);
+  enableTheme('hummingbird', `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
@@ -332,5 +332,5 @@ describe('FO - Account : Send a message with an ordered product', async () => {
   resetSmtpConfigTest(`${baseContext}_postTest_0`);
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
+  disableTheme('hummingbird', `${baseContext}_postTest_1`);
 });

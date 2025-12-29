@@ -30,7 +30,7 @@
       <trans-unit id="0c478a7069ab13f446e9e765cffd1550">
         <source>Message successfully sent</source>
         <target>Message successfully sent</target>
-        <note>File: controllers/front/OrderDetailController.php [Line: 195]</note>
+        <note>File: controllers/front/OrderDetailController.php [Line: 199]</note>
       </trans-unit>
       <trans-unit id="56d3db43fb7f323139022a29d57276d8">
         <source>No addresses are available.</source>
@@ -40,7 +40,7 @@
       <trans-unit id="228289d31b9bf52373066156f9b0190e">
         <source>Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.</source>
         <target>Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.</target>
-        <note>File: controllers/front/OrderConfirmationController.php [Line: 205]</note>
+        <note>File: controllers/front/OrderConfirmationController.php [Line: 208]</note>
       </trans-unit>
       <trans-unit id="19b1f74d6e96f3db9805e8d5c9301b7a">
         <source>Your password has been successfully reset and a confirmation has been sent to your email address: %s</source>

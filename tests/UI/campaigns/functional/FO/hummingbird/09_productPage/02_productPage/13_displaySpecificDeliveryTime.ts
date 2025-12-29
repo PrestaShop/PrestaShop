@@ -1,6 +1,6 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -23,7 +23,6 @@ describe('FO - Product page - Product page : Display Specific delivery time', as
   let browserContext: BrowserContext;
   let page: Page;
 
-  // Data to create new product
   const newProductData: FakerProduct = new FakerProduct({
     name: 'test',
     type: 'standard',
@@ -35,9 +34,8 @@ describe('FO - Product page - Product page : Display Specific delivery time', as
   });
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -147,7 +145,8 @@ describe('FO - Product page - Product page : Display Specific delivery time', as
       expect(pageTitle).to.contains(newProductData.name);
     });
 
-    it('should check the delivery time out of stock product', async function () {
+    // @todo : https://github.com/PrestaShop/hummingbird/issues/850
+    it.skip('should check the delivery time out of stock product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryTimeOutOfStock', baseContext);
 
       const deliveryTimeText = await foHummingbirdProductPage.getDeliveryInformationText(page);
@@ -196,7 +195,8 @@ describe('FO - Product page - Product page : Display Specific delivery time', as
       expect(pageTitle).to.contains(newProductData.name);
     });
 
-    it('should check the delivery time out of stock product', async function () {
+    // @todo : https://github.com/PrestaShop/hummingbird/issues/851
+    it.skip('should check the delivery time out of stock product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryTimeInStock2', baseContext);
 
       const deliveryTimeText = await foHummingbirdProductPage.getDeliveryInformationText(page);
@@ -208,5 +208,5 @@ describe('FO - Product page - Product page : Display Specific delivery time', as
   deleteProductTest(newProductData, `${baseContext}_postTest_1`);
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
+  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

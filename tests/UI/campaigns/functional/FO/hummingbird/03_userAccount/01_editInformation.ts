@@ -4,7 +4,7 @@ import {expect} from 'chai';
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/classic/account';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -64,10 +64,9 @@ describe('FO - Account : Edit information', async () => {
   createAccountTest(createCustomerData, `${baseContext}_preTest_0`);
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_1`);
+  enableTheme('hummingbird', `${baseContext}_preTest_1`);
 
   describe('Edit the created account in FO', async () => {
-    // before and after functions
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
       page = await utilsPlaywright.newTab(browserContext);
@@ -178,6 +177,7 @@ describe('FO - Account : Edit information', async () => {
 
       const textResult = await foHummingbirdMyInformationsPage.getInvalidNewPasswordAlert(page);
       expect(textResult).to.contains(foHummingbirdMyInformationsPage.noRepeatMessage);
+      expect(textResult).to.contains(foHummingbirdMyInformationsPage.addAnotherMessage);
       expect(textResult).to.contains(foHummingbirdMyInformationsPage.noCommonWordsMessage);
       expect(textResult).to.contains(foHummingbirdMyInformationsPage.noRepeatedWordsMessage);
     });
@@ -197,13 +197,9 @@ describe('FO - Account : Edit information', async () => {
     it('should check the error alerts on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts4', baseContext);
 
-      let textResult = await foHummingbirdMyInformationsPage.getInvalidNewPasswordAlert(page);
-      expect(textResult, 'Invalid number of characters words alert is not visible!').to
-        .contains(foHummingbirdMyInformationsPage.invalidNumberOfCharacters);
-
-      textResult = await foHummingbirdMyInformationsPage.getInvalidNewPasswordAlert(page);
-      expect(textResult, 'Minimum score alert is not visible!').to
-        .contains(foHummingbirdMyInformationsPage.minimumScoreAlertMessage);
+      const textResult = await foHummingbirdMyInformationsPage.getInvalidNewPasswordAlert(page);
+      expect(textResult).to.contains(foHummingbirdMyInformationsPage.invalidNumberOfCharacters);
+      expect(textResult).to.contains(foHummingbirdMyInformationsPage.minimumScoreAlertMessage);
     });
 
     it('Case 5 - should edit the account information ** enter a new password with an old similar password',
@@ -323,5 +319,5 @@ describe('FO - Account : Edit information', async () => {
   deleteCustomerTest(editCustomerData9, `${baseContext}_postTest_0`);
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
+  disableTheme('hummingbird', `${baseContext}_postTest_1`);
 });

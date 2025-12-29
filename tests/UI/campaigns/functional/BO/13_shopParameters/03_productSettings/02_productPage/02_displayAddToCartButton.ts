@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {expect} from 'chai';
 import {
@@ -10,6 +10,7 @@ import {
   boLoginPage,
   boProductSettingsPage,
   type BrowserContext,
+  foHummingbirdCategoryPage,
   foHummingbirdHomePage,
   type Page,
   utilsPlaywright,
@@ -22,9 +23,8 @@ describe('BO - Shop Parameters - Product Settings : Display the "add to cart" bu
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}-preTest`);
+  enableTheme('hummingbird', `${baseContext}-preTest`);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -59,16 +59,14 @@ describe('BO - Shop Parameters - Product Settings : Display the "add to cart" bu
       expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
     });
 
-    const tests = [
-      {args: {action: 'disable', enable: false}},
-      {args: {action: 'enable', enable: true}},
-    ];
+    [
+      {action: 'disable', enable: false},
+      {action: 'enable', enable: true},
+    ].forEach((args: {action: string, enable: boolean}, index: number) => {
+      it(`should ${args.action} Add to cart button when product has attributes`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${args.action}DisplayAddToCartButton`, baseContext);
 
-    tests.forEach((test, index: number) => {
-      it(`should ${test.args.action} Add to cart button when product has attributes`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}DisplayAddToCartButton`, baseContext);
-
-        const result = await boProductSettingsPage.setDisplayAddToCartButton(page, test.args.enable);
+        const result = await boProductSettingsPage.setDisplayAddToCartButton(page, args.enable);
         expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
       });
 
@@ -81,17 +79,26 @@ describe('BO - Shop Parameters - Product Settings : Display the "add to cart" bu
         expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
-      it('should check the add to cart button in the second popular product', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkAddToCartButton${index}`, baseContext);
+      it('should go to the All products page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToFeaturedProductsPage${index}`, baseContext);
 
-        const isAddToCartButtonVisible = await foHummingbirdHomePage.isAddToCartButtonVisible(page, 2);
-        expect(isAddToCartButtonVisible).to.eq(test.args.enable);
+        await foHummingbirdHomePage.goToAllProductsPage(page, 'ps-featuredproducts');
+
+        const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
+        expect(isCategoryPageVisible).to.eq(true);
       });
 
-      it('should check that the add to cart button in the sixth popular product is visible', async function () {
+      it('should check the add to cart button in the 2nd popular product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkAddToCartButton${index}`, baseContext);
+
+        const isAddToCartButtonVisible = await foHummingbirdCategoryPage.isAddToCartButtonVisible(page, 2);
+        expect(isAddToCartButtonVisible).to.eq(args.enable);
+      });
+
+      it('should check that the add to cart button in the 6th popular product is visible', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkAddToCartButton2${index}`, baseContext);
 
-        const isAddToCartButtonVisible = await foHummingbirdHomePage.isAddToCartButtonVisible(page, 6);
+        const isAddToCartButtonVisible = await foHummingbirdCategoryPage.isAddToCartButtonVisible(page, 6);
         expect(isAddToCartButtonVisible).to.eq(true);
       });
 
@@ -107,5 +114,5 @@ describe('BO - Shop Parameters - Product Settings : Display the "add to cart" bu
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}-postTest`);
+  disableTheme('hummingbird', `${baseContext}-postTest`);
 });

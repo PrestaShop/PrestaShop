@@ -30,7 +30,7 @@
       <trans-unit id="381fc38b470ed543424afbd43f224453">
         <source>Message from a customer</source>
         <target>Message from a customer</target>
-        <note>File: controllers/front/OrderDetailController.php [Line: 114]</note>
+        <note>File: controllers/front/OrderDetailController.php [Line: 118]</note>
       </trans-unit>
       <trans-unit id="9e03c4150db1c72add84ba520ee589aa">
         <source>Message from contact form</source>
@@ -65,7 +65,7 @@
       <trans-unit id="fca7e8d1c86db11246e429e40aa10c81">
         <source>New voucher for your order %s</source>
         <target>New voucher for your order %s</target>
-        <note>File: classes/PaymentModule.php [Line: 1231]</note>
+        <note>File: classes/PaymentModule.php [Line: 1298]</note>
       </trans-unit>
       <trans-unit id="efabbb0eb84d3c8e487a72e879953673">
         <source>Newsletter confirmation</source>
@@ -80,7 +80,7 @@
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
         <target>Order confirmation</target>
-        <note>File: classes/PaymentModule.php [Line: 728]</note>
+        <note>File: classes/PaymentModule.php [Line: 764]</note>
       </trans-unit>
       <trans-unit id="87405e011a2c4166bb685336827fbe81">
         <source>Package in transit</source>
@@ -120,12 +120,12 @@
       <trans-unit id="9a843f20677a52ca79af903123147af0">
         <source>Welcome!</source>
         <target>Welcome!</target>
-        <note>File: classes/Customer.php [Line: 1313]</note>
+        <note>File: classes/Customer.php [Line: 1314]</note>
       </trans-unit>
       <trans-unit id="32e8a8d9ed872f16d6dae0dc5fd4bb71">
         <source>Your guest account has been transformed into a customer account</source>
         <target>Your guest account has been transformed into a customer account</target>
-        <note>File: classes/Customer.php [Line: 1329]</note>
+        <note>File: classes/Customer.php [Line: 1330]</note>
       </trans-unit>
       <trans-unit id="d40cb87db94e750405e7b20a8a043d81">
         <source>Your message has been correctly sent</source>

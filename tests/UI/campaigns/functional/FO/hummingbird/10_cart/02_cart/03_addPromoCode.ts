@@ -1,7 +1,7 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 import {
@@ -38,7 +38,7 @@ describe('FO - Cart : Add promo code', async () => {
   createCartRuleTest(newCartRuleData, `${baseContext}_PreTest_1`);
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_2`);
+  enableTheme('hummingbird', `${baseContext}_preTest_2`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -84,14 +84,14 @@ describe('FO - Cart : Add promo code', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCartRuleName', baseContext);
 
       const cartRuleName = await foHummingbirdCartPage.getCartRuleName(page);
-      expect(cartRuleName).to.equal(newCartRuleData.name);
+      expect(cartRuleName).to.contains(newCartRuleData.name);
     });
 
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue', baseContext);
 
       const totalBeforeDiscount = await foHummingbirdCartPage.getCartRuleValue(page);
-      expect(totalBeforeDiscount).to.equal(`-€${newCartRuleDiscount.toFixed(2)}`);
+      expect(totalBeforeDiscount).to.contains(`-€${newCartRuleDiscount.toFixed(2)}`);
     });
 
     it('should set the same promo code and check the error message', async function () {
@@ -124,7 +124,7 @@ describe('FO - Cart : Add promo code', async () => {
       await foHummingbirdCartPage.addPromoCode(page, '', false);
 
       const voucherErrorText = await foHummingbirdCartPage.getCartRuleErrorMessage(page);
-      expect(voucherErrorText).to.equal(foHummingbirdCartPage.cartRuleMustEnterVoucherErrorText);
+      expect(voucherErrorText).to.contains(foHummingbirdCartPage.cartRuleMustEnterVoucherErrorText);
     });
   });
 
@@ -132,5 +132,5 @@ describe('FO - Cart : Add promo code', async () => {
   deleteCartRuleTest(newCartRuleData.name, `${baseContext}_PostTest_1`);
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
+  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

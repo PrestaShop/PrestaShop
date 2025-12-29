@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {expect} from 'chai';
 import {
@@ -38,7 +38,8 @@ describe('FO - Product page - Quick view : Change combination', async () => {
     }, {
       name: 'color',
       value: 'White',
-    }];
+    },
+  ];
   const secondAttributes: ProductAttribute[] = [
     {
       name: 'size',
@@ -46,16 +47,16 @@ describe('FO - Product page - Quick view : Change combination', async () => {
     }, {
       name: 'color',
       value: 'Black',
-    }];
+    },
+  ];
   const thirdAttributes: ProductAttribute = {
     name: 'dimension',
     value: '40x60cm',
   };
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -93,7 +94,7 @@ describe('FO - Product page - Quick view : Change combination', async () => {
         expect(productAttributesFromQuickView[0].name).to.equal('size'),
         expect(productAttributesFromQuickView[0].value).to.equal('S M L XL'),
         expect(productAttributesFromQuickView[1].name).to.equal('color'),
-        expect(productAttributesFromQuickView[1].value).to.equal('White Black'),
+        expect(productAttributesFromQuickView[1].value).to.equal('Color - White Color - Black'),
       ]);
     });
 
@@ -168,5 +169,5 @@ describe('FO - Product page - Quick view : Change combination', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
+  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

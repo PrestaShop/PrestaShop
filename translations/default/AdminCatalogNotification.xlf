@@ -115,7 +115,7 @@
       <trans-unit id="b49b6a333fc4422d8fbfad546c47b97c">
         <source>Error for product %product_id%: %error_message%</source>
         <target>Error for product %product_id%: %error_message%</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1486]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1487]</note>
       </trans-unit>
       <trans-unit id="8a23b9ee3a4502a0de3fc32c5ba7aa65">
         <source>Failed to copy the file.</source>
@@ -222,95 +222,100 @@
         <target>Permanently delete this product?</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/FooterType.php [Line: 156]</note>
       </trans-unit>
+      <trans-unit id="b572a87c59a75e0cf343a12e4efeab5a">
+        <source>Please select at least one group.</source>
+        <target>Please select at least one group.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountCustomerEligibilityChoiceType.php [Line: 81]</note>
+      </trans-unit>
       <trans-unit id="d2d713a1c1699c2f9611fe6e25ecf68b">
         <source>Product "Available for order" settings is invalid.</source>
         <target>Product "Available for order" settings is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1538]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1539]</note>
       </trans-unit>
       <trans-unit id="e2cfc4af500264af9ddf061114c92f13">
         <source>Product "Low stock alert" settings is invalid.</source>
         <target>Product "Low stock alert" settings is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1713]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1714]</note>
       </trans-unit>
       <trans-unit id="b94cc31a376ed0792254145cc16d649b">
         <source>Product "Redirection when offline" behavior is invalid.</source>
         <target>Product "Redirection when offline" behavior is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1543]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1544]</note>
       </trans-unit>
       <trans-unit id="5998262a3099d0195e03e412f7c55177">
         <source>Product "Redirection when offline" target is invalid.</source>
         <target>Product "Redirection when offline" target is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1528]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1529]</note>
       </trans-unit>
       <trans-unit id="2e089bfb25f9387ab74a013e23cbb93a">
         <source>Product "Show condition" settings is invalid.</source>
         <target>Product "Show condition" settings is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1733]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1734]</note>
       </trans-unit>
       <trans-unit id="759c4b6d6a90d6d2cd1bde2d88647955">
         <source>Product "Show price" settings is invalid.</source>
         <target>Product "Show price" settings is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1548]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1549]</note>
       </trans-unit>
       <trans-unit id="5faf397d27e98c7cb8e41505e7016821">
         <source>Product "Web only" settings is invalid.</source>
         <target>Product "Web only" settings is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1553]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1554]</note>
       </trans-unit>
       <trans-unit id="948b91be48c723c69f48780437b88142">
         <source>Product EAN13 field is invalid.</source>
         <target>Product EAN13 field is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1618]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1619]</note>
       </trans-unit>
       <trans-unit id="b3f5ee43ddfca227c354bce57947d86d">
         <source>Product GTIN field is invalid.</source>
         <target>Product GTIN field is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1633]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1634]</note>
       </trans-unit>
       <trans-unit id="2f564a1e48464e911c20e2a54a7c8421">
         <source>Product ID is invalid.</source>
         <target>Product ID is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1643]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1644]</note>
       </trans-unit>
       <trans-unit id="2e944c485b4d0ac8f9f5db0049ac49de">
         <source>Product ISBN field is invalid.</source>
         <target>Product ISBN field is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1648]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1649]</note>
       </trans-unit>
       <trans-unit id="29822989e466992e19360cb4182e54d7">
         <source>Product MPN field is invalid.</source>
         <target>Product MPN field is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1673]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1674]</note>
       </trans-unit>
       <trans-unit id="21310e1e61eafdd50ef78b2cf9ba846f">
         <source>Product UPC field is invalid.</source>
         <target>Product UPC field is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1758]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1759]</note>
       </trans-unit>
       <trans-unit id="03f3585c22ed5220109e5c9e4c54d039">
         <source>Product additional shipping cost is invalid.</source>
         <target>Product additional shipping cost is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1558]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1559]</note>
       </trans-unit>
       <trans-unit id="c8c3fed0119c0aededee0b6bc352e785">
         <source>Product availability date is invalid.</source>
         <target>Product availability date is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1563]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1564]</note>
       </trans-unit>
       <trans-unit id="a60b15b643e9cc26dc38a68f8b74b32d">
         <source>Product availability label when in stock is invalid.</source>
         <target>Product availability label when in stock is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1568]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1569]</note>
       </trans-unit>
       <trans-unit id="73796f857b61ef54c5d8278c001473c1">
         <source>Product availability label when out of stock is invalid.</source>
         <target>Product availability label when out of stock is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1573]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1574]</note>
       </trans-unit>
       <trans-unit id="bcf9b5e96c9d8d884c71848a2b66c48a">
         <source>Product condition is invalid.</source>
         <target>Product condition is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1578]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1579]</note>
       </trans-unit>
       <trans-unit id="891d308560a0cca2452fd2f482dded8c">
         <source><![CDATA[Product customization could not be found. Go to Catalog > Products to customize the product.]]></source>
@@ -320,147 +325,147 @@
       <trans-unit id="03808f17793d55bcaac4bff14fe1951f">
         <source>Product customization fields are invalid.</source>
         <target>Product customization fields are invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1583]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1584]</note>
       </trans-unit>
       <trans-unit id="76ed6e20800f4ed12d36533b9835d9dd">
         <source>Product delivery time when in stock are invalid.</source>
         <target>Product delivery time when in stock are invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1588]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1589]</note>
       </trans-unit>
       <trans-unit id="3a8f5904c8f3c7ccd43ae5f0c68f879a">
         <source>Product delivery times are invalid.</source>
         <target>Product delivery times are invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1598]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1599]</note>
       </trans-unit>
       <trans-unit id="29fa822509fb56f74b6792b1d37a6507">
         <source>Product delivery times when out of stock are invalid.</source>
         <target>Product delivery times when out of stock are invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1603]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1604]</note>
       </trans-unit>
       <trans-unit id="390a846c81058820f6947aee25d43fa4">
         <source>Product depth is invalid.</source>
         <target>Product depth is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1608]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1609]</note>
       </trans-unit>
       <trans-unit id="84615d536416c146c3785e46f0a4ac94">
         <source>Product description is invalid.</source>
         <target>Product description is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1613]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1614]</note>
       </trans-unit>
       <trans-unit id="29fa0fef1d18e44bc01843583209e1ab">
         <source>Product doesn't have the minimum data to go online.</source>
         <target>Product doesn't have the minimum data to go online.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1533]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1534]</note>
       </trans-unit>
       <trans-unit id="e42d13aa4727d3404d62fb290fbcd6a2">
         <source>Product ecotax is invalid.</source>
         <target>Product ecotax is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1623]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1624]</note>
       </trans-unit>
       <trans-unit id="6650d29a7f7e86c9fe0dd7c2993ad0b5">
         <source>Product file customization fields is invalid.</source>
         <target>Product file customization fields is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1763]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1764]</note>
       </trans-unit>
       <trans-unit id="8a7fc16cf7e196a93d6b55e25a0d705c">
         <source>Product friendly URL is invalid.</source>
         <target>Product friendly URL is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1628]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1629]</note>
       </trans-unit>
       <trans-unit id="7dc63130f1b8853b3b9d05c80b7ec7ca">
         <source>Product height is invalid.</source>
         <target>Product height is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1638]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1639]</note>
       </trans-unit>
       <trans-unit id="834c360c99d8c7ac078a7bca19b8f76e">
         <source>Product low stock alert treshold is invalid.</source>
         <target>Product low stock alert treshold is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1718]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1719]</note>
       </trans-unit>
       <trans-unit id="9c79b3b8d9fe5336affe8fa19e146247">
         <source>Product manufacturer is invalid.</source>
         <target>Product manufacturer is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1653]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1654]</note>
       </trans-unit>
       <trans-unit id="5cd770704c2b54e20a79db03ddb529af">
         <source>Product meta description is invalid.</source>
         <target>Product meta description is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1658]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1659]</note>
       </trans-unit>
       <trans-unit id="6224699dc0bd579032405f0e284ebb7d">
         <source>Product meta title is invalid.</source>
         <target>Product meta title is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1663]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1664]</note>
       </trans-unit>
       <trans-unit id="54b078925e94011d10b0a9fc3b364980">
         <source>Product minimum quantity for sale is invalid.</source>
         <target>Product minimum quantity for sale is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1668]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1669]</note>
       </trans-unit>
       <trans-unit id="05df02db4aec263706b55c287f16d88c">
         <source>Product name is invalid.</source>
         <target>Product name is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1678]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1679]</note>
       </trans-unit>
       <trans-unit id="174171e1f553ae1d18fc023ce0197e76">
         <source>Product reference is invalid.</source>
         <target>Product reference is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1683]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1684]</note>
       </trans-unit>
       <trans-unit id="1ce8a7091534298207a41f3391040812">
         <source>Product short description is invalid.</source>
         <target>Product short description is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1688]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1689]</note>
       </trans-unit>
       <trans-unit id="5de1fb2a67254cd2f53a618c91d2cdc9">
         <source>Product status (active/inactive) is invalid.</source>
         <target>Product status (active/inactive) is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1738]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1739]</note>
       </trans-unit>
       <trans-unit id="6120b5bfd846b83cce802b20e9f515cb">
         <source>Product tags are invalid.</source>
         <target>Product tags are invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1743]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1744]</note>
       </trans-unit>
       <trans-unit id="f4ae52021a2228b92d6627910b9cfd91">
         <source>Product text customization fields are invalid.</source>
         <target>Product text customization fields are invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1748]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1749]</note>
       </trans-unit>
       <trans-unit id="a7054efba76e3f7008f2ec2374a7d363">
         <source>Product type is invalid.</source>
         <target>Product type is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1693]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1694]</note>
       </trans-unit>
       <trans-unit id="f203b06fdd87dc5830d3ea20845b7858">
         <source>Product unit in "price per unit" is invalid.</source>
         <target>Product unit in "price per unit" is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1753]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1754]</note>
       </trans-unit>
       <trans-unit id="8fd0e3dbb873e83373cfc50fb1bc214d">
         <source>Product visibility settings is invalid.</source>
         <target>Product visibility settings is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1698]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1699]</note>
       </trans-unit>
       <trans-unit id="3e8c7064d4bb7f753df71cecece99580">
         <source>Product weight is invalid.</source>
         <target>Product weight is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1703]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1704]</note>
       </trans-unit>
       <trans-unit id="01145dfeb077a2c6e0e33e22f196deae">
         <source>Product wholesale price is invalid.</source>
         <target>Product wholesale price is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1768]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1769]</note>
       </trans-unit>
       <trans-unit id="fe2327e5361f322493d93a818cc6d312">
         <source>Product width is invalid.</source>
         <target>Product width is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1708]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1709]</note>
       </trans-unit>
       <trans-unit id="e9e6c1ea4c16a7bd1b64b53209a8659f">
         <source>Product with required customization fields cannot be used as a gift.</source>
         <target>Product with required customization fields cannot be used as a gift.</target>
-        <note>File: controllers/admin/AdminCartRulesController.php [Line: 244]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountType.php [Line: 91]</note>
       </trans-unit>
       <trans-unit id="a3ad09e600d30676504b705e29be782d">
         <source>Reduction amount cannot be lower than zero.</source>
@@ -477,20 +482,25 @@
         <target>Remember to properly edit all information after duplicating - including SEO information and friendly URL.</target>
         <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 494]</note>
       </trans-unit>
+      <trans-unit id="06430c125dde1297792cbfdba133c1af">
+        <source>Remember to properly edit all information after duplicating.</source>
+        <target>Remember to properly edit all information after duplicating.</target>
+        <note>File: src/Core/Grid/Definition/Factory/DiscountGridDefinitionFactory.php [Line: 177]</note>
+      </trans-unit>
       <trans-unit id="4c8eca5abe96ae48ab05070588455d6a">
         <source>Search phrase length is not valid.</source>
         <target>Search phrase length is not valid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1728]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1729]</note>
       </trans-unit>
       <trans-unit id="243d463cea6695ac162ce01ea6ac02f0">
         <source>Search phrase limit is not valid.</source>
         <target>Search phrase limit is not valid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1723]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1724]</note>
       </trans-unit>
       <trans-unit id="4fce600d4fc0429af2f5bc5861eefb3e">
         <source>Selected products were successfully canceled.</source>
         <target>Selected products were successfully canceled.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1620]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1985]</note>
       </trans-unit>
       <trans-unit id="65d09c7dfa652d616875eddb50c18d2b">
         <source>Stock Manager class not found [%s]</source>
@@ -530,7 +540,7 @@
       <trans-unit id="f568d0f89a82fd70eaec65a461fbcc88">
         <source><![CDATA[The features are disabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.]]></source>
         <target><![CDATA[The features are disabled on your store. Go to %sAdvanced Parameters > Performance%s to edit settings.]]></target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 352]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 391]</note>
       </trans-unit>
       <trans-unit id="4ee37b458043e7739815acb9571d5e73">
         <source>The file was successfully added.</source>
@@ -560,7 +570,7 @@
       <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
         <source>There are not enough products in stock.</source>
         <target>There are not enough products in stock.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1919]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2284]</note>
       </trans-unit>
       <trans-unit id="b385b71f1d14c0afa6d7ca6cb18927b3">
         <source>There is no attachment yet.</source>
@@ -668,17 +678,27 @@
       <trans-unit id="30a367ba686890c829937e768d588b8f">
         <source>You cannot set 0 or a negative position, the minimum is 1.</source>
         <target>You cannot set 0 or a negative position, the minimum is 1.</target>
-        <note>File: classes/Product.php [Line: 6908]</note>
+        <note>File: classes/Product.php [Line: 6904]</note>
       </trans-unit>
       <trans-unit id="cf99dad7d7306d9ac01ba5a2e2d2c715">
         <source>You cannot set a position greater than the total number of products in the category, starting at 1.</source>
         <target>You cannot set a position greater than the total number of products in the category, starting at 1.</target>
-        <note>File: classes/Product.php [Line: 6931]</note>
+        <note>File: classes/Product.php [Line: 6927]</note>
+      </trans-unit>
+      <trans-unit id="c66dabfc7eef924ee6319911a0f3e3a3">
+        <source>You must select a customer when using the "Single customer" option.</source>
+        <target>You must select a customer when using the "Single customer" option.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountCustomerEligibilityChoiceType.php [Line: 102]</note>
       </trans-unit>
       <trans-unit id="e602c06958cd934ccc238913f51282aa">
         <source>You must select some products before</source>
         <target>You must select some products before</target>
         <note>File: admin-dev/themes/default/template/controllers/cart_rules/actions.tpl [Line: 125]</note>
+      </trans-unit>
+      <trans-unit id="c29a17eb8f5e0d85a09204574d8889d3">
+        <source>You need to select at least one product.</source>
+        <target>You need to select at least one product.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/ProductConditionsType.php [Line: 68]</note>
       </trans-unit>
     </body>
   </file>

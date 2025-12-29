@@ -1,7 +1,7 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -32,7 +32,7 @@ describe('FO - Product page : Change quantity', async () => {
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -131,37 +131,10 @@ describe('FO - Product page : Change quantity', async () => {
       expect(notificationsNumber).to.equal(15);
     });
 
-    it('should set \'-24\' in the quantity input and check the quantity in the cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput2', baseContext);
+    it('should go to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCart', baseContext);
 
-      await foHummingbirdProductPage.setQuantity(page, '-24');
-      await foHummingbirdProductPage.clickOnAddToCartButton(page);
-
-      const notificationsNumber = await foHummingbirdProductPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.equal(16);
-    });
-
-    it('should click on continue shopping', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinueShopping3', baseContext);
-
-      const isNotVisible = await foHummingbirdModalBlockCartPage.continueShopping(page);
-      expect(isNotVisible).to.equal(true);
-    });
-
-    it('should set \'Prestashop\' in the quantity input and proceed to checkout', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput3', baseContext);
-
-      await foHummingbirdProductPage.setQuantity(page, 'Prestashop');
-      await foHummingbirdProductPage.clickOnAddToCartButton(page);
-
-      const notificationsNumber = await foHummingbirdProductPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.equal(17);
-    });
-
-    it('should proceed to checkout', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
-
-      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
+      await foHummingbirdProductPage.clickOnHeaderLink(page, 'Cart');
 
       const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
@@ -178,5 +151,5 @@ describe('FO - Product page : Change quantity', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
+  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

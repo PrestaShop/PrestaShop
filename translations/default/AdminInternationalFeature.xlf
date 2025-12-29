@@ -10,7 +10,7 @@
       <trans-unit id="6b13904f9eecabe20d88f942e84e1cb8">
         <source>%1$s (Language: %2$s, Theme: %3$s)</source>
         <target>%1$s (Language: %2$s, Theme: %3$s)</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 137]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 140]</note>
       </trans-unit>
       <trans-unit id="c949bd6d096b356fc06f55ec5205e3b6">
         <source>%d missing</source>
@@ -195,7 +195,7 @@
       <trans-unit id="e1686cbdbfefdc838c58469866922b6c">
         <source>Close all fieldsets</source>
         <target>Close all fieldsets</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1588]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1593]</note>
       </trans-unit>
       <trans-unit id="e7b3c0acb7168c7969b03e8aebc67ce7">
         <source>Combine</source>
@@ -365,7 +365,7 @@
       <trans-unit id="b040fe53badd6b3784735f3d102df0bd">
         <source>Edit HTML version</source>
         <target>Edit HTML version</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2279]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2284]</note>
       </trans-unit>
       <trans-unit id="f7b45c7bf4ddee5d2270a74866d3fb52">
         <source>Edit symbol / format</source>
@@ -385,7 +385,7 @@
       <trans-unit id="80ab38b942fb2da88ca496f8bbe237f7">
         <source>Email subject</source>
         <target>Email subject</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2255]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2260]</note>
       </trans-unit>
       <trans-unit id="6df6a1378a5ddcdef978aadf494cef5d">
         <source>Email translations</source>
@@ -410,7 +410,7 @@
       <trans-unit id="6e4fd86b4ea240672daa3c2fe1118fe0">
         <source>Expand all fieldsets</source>
         <target>Expand all fieldsets</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1585]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1590]</note>
       </trans-unit>
       <trans-unit id="6700e23ddf33bd4421249c9ef94d6295">
         <source>Export a language</source>
@@ -645,7 +645,7 @@
       <trans-unit id="4dca8188ef80c1e68c7cfc96fdeb3abe">
         <source>Select the type of email content</source>
         <target>Select the type of email content</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 115]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 116]</note>
       </trans-unit>
       <trans-unit id="c96f531c0eda2dece593a2f8df3a58a8">
         <source>Select your language</source>
@@ -655,12 +655,12 @@
       <trans-unit id="dd317a8b9f3ecfc5317c2cb586274145">
         <source>Select your module</source>
         <target>Select your module</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 135]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 136]</note>
       </trans-unit>
       <trans-unit id="84a63a234d9b35094275bfb41ad46b47">
         <source>Select your theme</source>
         <target>Select your theme</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 126]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 127]</note>
       </trans-unit>
       <trans-unit id="e93c6cb824cab26f82d9b3446dc8e563">
         <source>Set default country from browser language</source>
@@ -730,7 +730,7 @@
       <trans-unit id="445518ee6de9f01f5203fa05e5b83236">
         <source>Themes translations</source>
         <target>Themes translations</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1175]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1180]</note>
       </trans-unit>
       <trans-unit id="5f84bb6ac28a101588f1b2876198f811">
         <source>This country does not exist.</source>
@@ -760,7 +760,7 @@
       <trans-unit id="021257190c6e64120915e008a94a06f8">
         <source>Type of translation</source>
         <target>Type of translation</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 107]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Translations/ModifyTranslationsType.php [Line: 108]</note>
       </trans-unit>
       <trans-unit id="892a326e935b414a79a1eb938afd6ba5">
         <source>Units (e.g. weight, volume, distance)</source>
@@ -785,7 +785,7 @@
       <trans-unit id="3b54d45d2c221c50e916f3be1fc12f2a">
         <source>Update translations</source>
         <target>Update translations</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 177]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 180]</note>
       </trans-unit>
       <trans-unit id="73f85b56f49330c8187cd96b5f747d73">
         <source>Update zone</source>
@@ -815,12 +815,12 @@
       <trans-unit id="673a349a39148b988e9aabf651d31a96">
         <source>View HTML version</source>
         <target>View HTML version</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2278]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2283]</note>
       </trans-unit>
       <trans-unit id="5f986174fa9cf6c0ddd927e11b68254a">
         <source>View/Edit TXT version</source>
         <target>View/Edit TXT version</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2280]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2285]</note>
       </trans-unit>
       <trans-unit id="3850c8049741085bef77450dc5f0dc9a">
         <source>Visitors can see your catalog but cannot place an order.</source>

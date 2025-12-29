@@ -19,15 +19,13 @@ import {
 
 const baseContext: string = 'functional_BO_catalog_categories_editHomeCategory';
 
-// Edit home category
 describe('BO - Catalog - Categories : Edit home category', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let categoryID: number;
 
-  const editCategoryData: FakerCategory = new FakerCategory({name: 'Home'});
+  const editCategoryData: FakerCategory = new FakerCategory({name: 'Home 123'});
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -77,14 +75,14 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
   it('should update the category', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateCategory', baseContext);
 
+    categoryID = await boCategoriesCreatePage.getIDCategory(page);
+
     const textResult = await boCategoriesCreatePage.editHomeCategory(page, editCategoryData);
-    expect(textResult).to.equal(boCategoriesPage.pageRootTitle);
+    expect(textResult).to.equal(boCategoriesPage.pageTitle);
   });
 
   it('should go to FO and check the updated category', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCategoryFO', baseContext);
-
-    categoryID = parseInt(await boCategoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category'), 10);
     // View Shop
     page = await boCategoriesPage.viewMyShop(page);
     // Change FO language
@@ -125,15 +123,6 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
     page = await foClassicCategoryPage.closePage(browserContext, page, 0);
 
     const pageTitle = await boCategoriesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(boCategoriesPage.pageRootTitle);
-  });
-
-  it('should click on view category', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToViewCreatedCategoryPage', baseContext);
-
-    await boCategoriesPage.goToViewSubCategoriesPage(page, 1);
-
-    const pageTitle = await boCategoriesPage.getPageTitle(page);
     expect(pageTitle).to.contains(boCategoriesPage.pageTitle);
   });
 
@@ -150,6 +139,6 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'resetUpdateCategory', baseContext);
 
     const textResult = await boCategoriesCreatePage.editHomeCategory(page, dataCategories.home);
-    expect(textResult).to.equal(boCategoriesPage.pageRootTitle);
+    expect(textResult).to.equal(boCategoriesPage.pageTitle);
   });
 });

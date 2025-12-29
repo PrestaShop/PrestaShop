@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {disableHummingbird, enableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {disableTheme, enableTheme} from '@commonTests/BO/design/hummingbird';
 import testContext from '@utils/testContext';
 
 import {
@@ -25,7 +25,7 @@ describe('Check FO pages in the checkout process', async () => {
   let page: Page;
 
   // Pre-condition : Enable Hummingbird
-  enableHummingbird(`${baseContext}_preTest_0`);
+  enableTheme('hummingbird', `${baseContext}_preTest_0`);
 
   describe('Check FO pages in the checkout process', async () => {
     const orderData: FakerOrder = new FakerOrder({
@@ -152,5 +152,5 @@ describe('Check FO pages in the checkout process', async () => {
   });
 
   // Post-condition : Disable Hummingbird
-  disableHummingbird(`${baseContext}_postTest_0`);
+  disableTheme('hummingbird', `${baseContext}_postTest_0`);
 });

@@ -101,8 +101,8 @@ class GeneralType extends TranslatorAwareType
             ])
             ->add('purchase_minimum_value', MoneyWithSuffixType::class, [
                 'required' => false,
-                'label' => $this->trans('Minimum purchase total required in order to validate the order', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Set to 0 to disable this feature.', 'Admin.Shopparameters.Help'),
+                'label' => $this->trans('Minimum order value', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Set the minimum order value required to proceed to checkout. Customers won’t be able to continue if their cart total is below this amount. Set to 0 to disable this restriction.', 'Admin.Shopparameters.Help'),
                 'currency' => $currencyIsoCode,
                 'suffix' => $this->trans('(tax excl.)', 'Admin.Global'),
                 'multistore_configuration_key' => 'PS_PURCHASE_MINIMUM',
@@ -110,7 +110,7 @@ class GeneralType extends TranslatorAwareType
             ->add('recalculate_shipping_cost', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Recalculate shipping costs after editing the order', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Automatically updates the shipping costs when you edit an order.', 'Admin.Shopparameters.Help'),
+                'help' => $this->trans('Automatically updates the shipping costs when an order is edited in the back office. If you disable this option, make sure to review the shipping costs whenever you make changes to an order.', 'Admin.Shopparameters.Help'),
                 'multistore_configuration_key' => 'PS_ORDER_RECALCULATE_SHIPPING',
             ]);
 
@@ -124,7 +124,7 @@ class GeneralType extends TranslatorAwareType
             ->add('enable_tos', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Terms of service', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Require customers to accept or decline terms of service before processing an order.', 'Admin.Shopparameters.Help'),
+                'help' => $this->trans('Require customers to accept terms of service before processing an order.', 'Admin.Shopparameters.Help'),
                 'multistore_configuration_key' => 'PS_CONDITIONS',
             ])
             ->add('tos_cms_id', ChoiceType::class, [

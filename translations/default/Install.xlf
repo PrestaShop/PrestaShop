@@ -5,17 +5,17 @@
       <trans-unit id="e1120cceb6bcfd9596161e3912b2ad9d">
         <source>"%class%" must be an instance of "InstallXmlLoader"</source>
         <target>"%class%" must be an instance of "InstallXmlLoader"</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 1117]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 1120]</note>
       </trans-unit>
       <trans-unit id="13cd0b09fa253a2b524ca2345638aacf">
         <source>%file% file is not writable (check permissions)</source>
         <target>%file% file is not writable (check permissions)</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 257]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 260]</note>
       </trans-unit>
       <trans-unit id="5b0aceda64c33fa187bdd138c42de909">
         <source>%folder% folder is not writable (check permissions)</source>
         <target>%folder% folder is not writable (check permissions)</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 180]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 183]</note>
       </trans-unit>
       <trans-unit id="e1a83d307c77f54bc40ff911943669f1">
         <source><![CDATA[<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %version% installed</b>.<br /><br />If you want to upgrade to the latest version, please use the 1-Click Upgrade module and follow its instructions.]]></source>
@@ -45,7 +45,7 @@
       <trans-unit id="0557fa923dcee4d0f86b1409f5c2167f">
         <source>Back</source>
         <target>Back</target>
-        <note>File: install-dev/theme/views/layout.php [Line: 115]</note>
+        <note>File: install-dev/theme/views/layout.php [Line: 117]</note>
       </trans-unit>
       <trans-unit id="eed2839c1e3e5f7069ed03b2f6d4c6dd">
         <source>Back Office</source>
@@ -65,17 +65,17 @@
       <trans-unit id="258057c839ab36aa9e3bb60550348c5e">
         <source>Cannot copy flag language "%flag%"</source>
         <target>Cannot copy flag language "%flag%"</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 678]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 681]</note>
       </trans-unit>
       <trans-unit id="27654955bc85150712aa0bc53bcc6224">
         <source>Cannot create admin account</source>
         <target>Cannot create admin account</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 889]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 892]</note>
       </trans-unit>
       <trans-unit id="f726c29f41d9b6ab3d61f6f4e41959a3">
         <source>Cannot create group shop</source>
         <target>Cannot create group shop</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 558]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 561]</note>
       </trans-unit>
       <trans-unit id="44a700a0c9496b4436c16c5e46351707">
         <source>Cannot create image "%1$s" for entity "%2$s"</source>
@@ -105,12 +105,12 @@
       <trans-unit id="19de782cabcc5cc12fa9730264cd5325">
         <source>Cannot create shop</source>
         <target>Cannot create shop</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 573]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 576]</note>
       </trans-unit>
       <trans-unit id="90ae323fee3fa743290c6ebdbd7fea65">
         <source>Cannot create shop URL</source>
         <target>Cannot create shop URL</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 589]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 592]</note>
       </trans-unit>
       <trans-unit id="8532ab270c96503d3d646da3485c251a">
         <source>Cannot create the database automatically</source>
@@ -120,22 +120,22 @@
       <trans-unit id="54c23cef7fbebba7ee1267cc0cf97b2a">
         <source>Cannot download language pack "%iso%"</source>
         <target>Cannot download language pack "%iso%"</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 657]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 660]</note>
       </trans-unit>
       <trans-unit id="c2c8925b8e5c7cfc0d83fa3f7342b48d">
         <source>Cannot execute post install on module "%module%"</source>
         <target>Cannot execute post install on module "%module%"</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 1031]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 1034]</note>
       </trans-unit>
       <trans-unit id="9d321a378efc308c33c5f345f623dd90">
         <source>Cannot install language "%iso%"</source>
         <target>Cannot install language "%iso%"</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 667]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 670]</note>
       </trans-unit>
       <trans-unit id="26b901ba3ecdcb91823f05ce15a70ce4">
         <source>Cannot install module "%module%"</source>
         <target>Cannot install module "%module%"</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 1005]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 1008]</note>
       </trans-unit>
       <trans-unit id="a69c52258e44151f43f0d4bf17526d3e">
         <source>Cannot open external URLs (requires allow_url_fopen as On)</source>
@@ -150,7 +150,7 @@
       <trans-unit id="da766b8e6f70454b5fdde126ba5c761c">
         <source>Cannot write app/config/parameters.yml file</source>
         <target>Cannot write app/config/parameters.yml file</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 271]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 274]</note>
       </trans-unit>
       <trans-unit id="fa6724c724e5524034b09c9bbac81f07">
         <source>Choose your language</source>
@@ -160,7 +160,7 @@
       <trans-unit id="039c15f5a6879d4a65fb0f67f8f90f09">
         <source>Configure shop information</source>
         <target>Configure shop information</target>
-        <note>File: install-dev/controllers/http/process.php [Line: 333]</note>
+        <note>File: install-dev/controllers/http/process.php [Line: 334]</note>
       </trans-unit>
       <trans-unit id="b66ad3bc67c20939fb6f5c8f866ce366">
         <source>Configure your database by filling out the following fields</source>
@@ -190,17 +190,17 @@
       <trans-unit id="0b1b557a66c34f8467d364c5f6ac36a5">
         <source>Create database tables</source>
         <target>Create database tables</target>
-        <note>File: install-dev/controllers/http/process.php [Line: 329]</note>
+        <note>File: install-dev/controllers/http/process.php [Line: 330]</note>
       </trans-unit>
       <trans-unit id="22242e741d52f57289ac8b72b9e8c96d">
         <source>Create default shop and languages</source>
         <target>Create default shop and languages</target>
-        <note>File: install-dev/controllers/http/process.php [Line: 330]</note>
+        <note>File: install-dev/controllers/http/process.php [Line: 331]</note>
       </trans-unit>
       <trans-unit id="cdc5a0619e8dadc368c1d5feb2d83986">
         <source>Create file parameters</source>
         <target>Create file parameters</target>
-        <note>File: install-dev/controllers/http/process.php [Line: 328]</note>
+        <note>File: install-dev/controllers/http/process.php [Line: 329]</note>
       </trans-unit>
       <trans-unit id="ce799e40a5e7b523d011b80868fe4ca4">
         <source>Database Server is not found. Please verify the login, password and server fields</source>
@@ -240,7 +240,7 @@
       <trans-unit id="453faec2c85b2b9c0b9c2b474b30bd21">
         <source>Database structure file not found</source>
         <target>Database structure file not found</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 324]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 327]</note>
       </trans-unit>
       <trans-unit id="75b105f67d0774e4bb7b69de06d20dbb">
         <source>Demo products are a good way to learn how to use PrestaShop. You should install them if you are not familiar with it.</source>
@@ -315,12 +315,12 @@
       <trans-unit id="53d7a51998faa87f513eb974a2a596f2">
         <source>File "language.xml" not found for language iso "%iso%"</source>
         <target>File "language.xml" not found for language iso "%iso%"</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 626]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 629]</note>
       </trans-unit>
       <trans-unit id="9972ad1ade2906747dbb39490a96b191">
         <source>File "language.xml" not valid for language iso "%iso%"</source>
         <target>File "language.xml" not valid for language iso "%iso%"</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 630]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 633]</note>
       </trans-unit>
       <trans-unit id="110b26012a01ad5604e5b9ac39b585ba">
         <source>Fileinfo extension is not enabled</source>
@@ -335,7 +335,7 @@
       <trans-unit id="54f1d2c740c2bc4f7866c1cdb42ae9c9">
         <source>Finalization</source>
         <target>Finalization</target>
-        <note>File: install-dev/controllers/http/process.php [Line: 354]</note>
+        <note>File: install-dev/controllers/http/process.php [Line: 355]</note>
       </trans-unit>
       <trans-unit id="20db0bfeecd8fe60533206a2b5e9891a">
         <source>First name</source>
@@ -345,7 +345,7 @@
       <trans-unit id="4a85cd1d84d691a2e0b73a5f08cd3483">
         <source>Fixtures class "%class%" not found</source>
         <target>Fixtures class "%class%" not found</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 1110]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 1113]</note>
       </trans-unit>
       <trans-unit id="1725f045dbcb8e6e77a7ade8c476a879">
         <source>For security purposes, you must delete the "install" folder.</source>
@@ -390,22 +390,22 @@
       <trans-unit id="23de8b7f5abcac68c426e405975411bb">
         <source>Install demonstration data</source>
         <target>Install demonstration data</target>
-        <note>File: install-dev/controllers/http/process.php [Line: 339]</note>
+        <note>File: install-dev/controllers/http/process.php [Line: 340]</note>
       </trans-unit>
       <trans-unit id="e819ad111fcd4023d34b419946936265">
         <source>Install modules</source>
         <target>Install modules</target>
-        <note>File: install-dev/controllers/http/process.php [Line: 336]</note>
+        <note>File: install-dev/controllers/http/process.php [Line: 337]</note>
       </trans-unit>
       <trans-unit id="7ad8960b5505289cf368e247f7ac72ef">
         <source>Install theme</source>
         <target>Install theme</target>
-        <note>File: install-dev/controllers/http/process.php [Line: 335]</note>
+        <note>File: install-dev/controllers/http/process.php [Line: 336]</note>
       </trans-unit>
       <trans-unit id="301fedbe35369c411966a9e6a396ee95">
         <source>Installation Assistant</source>
         <target>Installation Assistant</target>
-        <note>File: install-dev/theme/views/layout.php [Line: 75]</note>
+        <note>File: install-dev/theme/views/layout.php [Line: 77]</note>
       </trans-unit>
       <trans-unit id="1ee54bd7ea05ef3b4534568b2f765959">
         <source>Installation of demo products</source>
@@ -485,7 +485,7 @@
       <trans-unit id="10ac3d04253ef7e1ddc73e6091c0cd55">
         <source>Next</source>
         <target>Next</target>
-        <note>File: install-dev/theme/views/layout.php [Line: 110]</note>
+        <note>File: install-dev/theme/views/layout.php [Line: 112]</note>
       </trans-unit>
       <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
         <source>No</source>
@@ -555,12 +555,12 @@
       <trans-unit id="33f1b48d4dac0408b87bb952b6b0799f">
         <source>Populate database tables</source>
         <target>Populate database tables</target>
-        <note>File: install-dev/controllers/http/process.php [Line: 332]</note>
+        <note>File: install-dev/controllers/http/process.php [Line: 333]</note>
       </trans-unit>
       <trans-unit id="cb64700c69079f0f605130a3e4b62d0a">
         <source>Post installation scripts</source>
         <target>Post installation scripts</target>
-        <note>File: install-dev/controllers/http/process.php [Line: 353]</note>
+        <note>File: install-dev/controllers/http/process.php [Line: 354]</note>
       </trans-unit>
       <trans-unit id="5baf40a1b7c7500b92aff1c73d88a579">
         <source>PrestaShop Installation Assistant</source>
@@ -715,7 +715,7 @@
       <trans-unit id="c331bfefd5fde2616161931bcc9e0c3c">
         <source>The admin folder could not be renamed into %folderName%</source>
         <target>The admin folder could not be renamed into %folderName%</target>
-        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 1229]</note>
+        <note>File: src/PrestaShopBundle/Install/Install.php [Line: 1232]</note>
       </trans-unit>
       <trans-unit id="bc4b85255c14de3bf09748a093c63529">
         <source>The default port is 3306. To use a different port, add the port number at the end of your server's address i.e ":4242".</source>
@@ -770,7 +770,7 @@
       <trans-unit id="bf66566854c3a0177681632a7839105d">
         <source>To install PrestaShop, you need to have JavaScript enabled in your browser.</source>
         <target>To install PrestaShop, you need to have JavaScript enabled in your browser.</target>
-        <note>File: install-dev/theme/views/layout.php [Line: 91]</note>
+        <note>File: install-dev/theme/views/layout.php [Line: 93]</note>
       </trans-unit>
       <trans-unit id="2c1443814274bb61e95631e43a85d642">
         <source><![CDATA[To use PrestaShop, you must <a href="https://devdocs.prestashop-project.org/9/basics/installation/#creating-a-database-for-your-shop" target="_blank">create a database</a> to collect all of your store's data-related activities.]]></source>
@@ -880,7 +880,7 @@
       <trans-unit id="9d90b6827ed904399354488b99074a4b">
         <source>https://enable-javascript.com/</source>
         <target>https://enable-javascript.com/</target>
-        <note>File: install-dev/theme/views/layout.php [Line: 92]</note>
+        <note>File: install-dev/theme/views/layout.php [Line: 94]</note>
       </trans-unit>
       <trans-unit id="8ad75c5a8821cc294f189181722acb56">
         <source>lastname</source>

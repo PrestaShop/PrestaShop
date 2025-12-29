@@ -1,6 +1,6 @@
 import testContext from '@utils/testContext';
 import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -28,7 +28,7 @@ const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_
 
 /*
 Pre-condition:
-_ Install the theme hummingbird
+- Install the theme hummingbird
 - Create 2 orders by default customer
 Scenario:
 - Change the first order status to Shipped
@@ -54,7 +54,7 @@ describe('FO - User account - Order history : Download invoice from orders list'
   });
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_0`);
+  enableTheme('hummingbird', `${baseContext}_preTest_0`);
 
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
@@ -193,5 +193,5 @@ describe('FO - User account - Order history : Download invoice from orders list'
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
+  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

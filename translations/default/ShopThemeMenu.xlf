@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="Shop.Theme.Menu.xlf" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="53cf9609c3f096b51f92cac8af8d1de2">
+        <source>%s submenu</source>
+        <target>%s submenu</target>
+        <note>File: themes/hummingbird/modules/ps_mainmenu/ps_mainmenu.tpl [Line: 33]</note>
+      </trans-unit>
+      <trans-unit id="a056afaf4998db653ed57f02aad237ec">
+        <source>%s submenu tabs</source>
+        <target>%s submenu tabs</target>
+        <note>File: themes/hummingbird/modules/ps_mainmenu/ps_mainmenu.tpl [Line: 39]</note>
+      </trans-unit>
+      <trans-unit id="83d4431dca11753a77bbd5244a17e1ac">
+        <source>Go back to main menu</source>
+        <target>Go back to main menu</target>
+        <note>File: themes/hummingbird/modules/ps_mainmenu/ps_mainmenu.tpl [Line: 219]</note>
+      </trans-unit>
+      <trans-unit id="807ef262ee6473b75b97d3e58d2ac848">
+        <source>Main navigation</source>
+        <target>Main navigation</target>
+        <note>File: themes/hummingbird/modules/ps_mainmenu/ps_mainmenu.tpl [Line: 193]</note>
+      </trans-unit>
+      <trans-unit id="730af6cd5da82736dd03445f4195292e">
+        <source>Open %s submenu</source>
+        <target>Open %s submenu</target>
+        <note>File: themes/hummingbird/modules/ps_mainmenu/ps_mainmenu.tpl [Line: 119]</note>
+      </trans-unit>
+      <trans-unit id="6131ff381b252de4baec6496dd27f987">
+        <source>Open mobile menu</source>
+        <target>Open mobile menu</target>
+        <note>File: themes/hummingbird/modules/ps_mainmenu/ps_mainmenu.tpl [Line: 204]</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

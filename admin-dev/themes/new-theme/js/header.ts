@@ -58,13 +58,20 @@ export default class Header {
         const url = $(e.target).data('url');
         const icon = $(e.target).data('icon');
 
+        const postUrl = new URL(postLink, window.location.origin);
+        postUrl.searchParams.append('action', 'GetUrl');
+        postUrl.searchParams.append('rand', String(rand));
+        postUrl.searchParams.append('ajax', '1');
+        postUrl.searchParams.append('method', String(method));
+        postUrl.searchParams.append('id_quick_access', String(quickLinkId));
+
         $.ajax({
           type: 'POST',
           headers: {
             'cache-control': 'no-cache',
           },
           async: true,
-          url: `${postLink}&action=GetUrl&rand=${rand}&ajax=1&method=${method}&id_quick_access=${quickLinkId}`,
+          url: postUrl.toString(),
           data: {
             url,
             name,

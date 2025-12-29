@@ -152,9 +152,9 @@ class DimensionsType extends TranslatorAwareType
         $resolver->setDefaults([
             'label' => $this->trans('Package dimension', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h3',
-            'label_subtitle' => $this->trans('Adjust your shipping costs by filling in the product dimensions.', 'Admin.Catalog.Feature'),
+            'label_subtitle' => $this->trans('If you use carrier restrictions based on dimensions or weight ranges, these values must be filled in for the rules to apply. Enter dimensions and weight including the packaging.', 'Admin.Catalog.Feature'),
             'required' => false,
-            'columns_number' => 6,
+            'columns_number' => 4,
         ]);
     }
 }

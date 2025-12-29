@@ -2,25 +2,30 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="Shop.Forms.Labels.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="e4d334912a865fca8ba6a4b76ca0fecc">
+        <source>-- choose a product --</source>
+        <target>-- choose a product --</target>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-messages.tpl [Line: 42]</note>
+      </trans-unit>
       <trans-unit id="93332134fd11cffbe680dd8afaa521fc">
         <source>-- day --</source>
         <target>-- day --</target>
-        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 115]</note>
+        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 117]</note>
       </trans-unit>
       <trans-unit id="9180b4d5ab8103f244c2d4fd661934e2">
         <source>-- month --</source>
         <target>-- month --</target>
-        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 116]</note>
+        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 118]</note>
       </trans-unit>
       <trans-unit id="1625e29c02062efe5dbc42c3efeeebc4">
         <source>-- please choose --</source>
         <target>-- please choose --</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-messages.tpl [Line: 37]</note>
+        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 42]</note>
       </trans-unit>
       <trans-unit id="ae1cc541ba45ce670ea7e0e3a30e3205">
         <source>-- year --</source>
         <target>-- year --</target>
-        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 117]</note>
+        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 119]</note>
       </trans-unit>
       <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
         <source>Address</source>
@@ -40,7 +45,7 @@
       <trans-unit id="e9cb217697088a98b1937d111d936281">
         <source>Attachment</source>
         <target>Attachment</target>
-        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 59]</note>
+        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 67]</note>
       </trans-unit>
       <trans-unit id="ccd41dac2cc2284362975a05bd9ce363">
         <source>Birthdate</source>
@@ -60,7 +65,7 @@
       <trans-unit id="f4d1ea475eaa85102e2b4e6d95da84bd">
         <source>Confirmation</source>
         <target>Confirmation</target>
-        <note>File: themes/hummingbird/templates/customer/password-new.tpl [Line: 51]</note>
+        <note>File: themes/hummingbird/templates/customer/password-new.tpl [Line: 52]</note>
       </trans-unit>
       <trans-unit id="59716c97497eb9694541f7c3d37b1a4d">
         <source>Country</source>
@@ -70,17 +75,17 @@
       <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
         <source>Email</source>
         <target>Email</target>
-        <note>File: classes/form/CustomerLoginFormatter.php [Line: 49]</note>
+        <note>File: themes/hummingbird/templates/customer/guest-login.tpl [Line: 39]</note>
       </trans-unit>
       <trans-unit id="b357b524e740bc85b9790a0712d84a30">
         <source>Email address</source>
         <target>Email address</target>
-        <note>File: themes/hummingbird/templates/customer/password-email.tpl [Line: 29]</note>
+        <note>File: themes/hummingbird/templates/customer/password-email.tpl [Line: 31]</note>
       </trans-unit>
       <trans-unit id="6a1e265f92087bb6dd18194833fe946b">
         <source>Email:</source>
         <target>Email:</target>
-        <note>File: themes/hummingbird/templates/customer/guest-login.tpl [Line: 43]</note>
+        <note>File: themes/classic/templates/customer/guest-login.tpl [Line: 61]</note>
       </trans-unit>
       <trans-unit id="20db0bfeecd8fe60533206a2b5e9891a">
         <source>First name</source>
@@ -100,7 +105,7 @@
       <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
         <source>Message</source>
         <target>Message</target>
-        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 68]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-messages.tpl [Line: 50]</note>
       </trans-unit>
       <trans-unit id="41c2fff4867cc204120f001e7af20f7a">
         <source>Mobile phone</source>
@@ -115,17 +120,22 @@
       <trans-unit id="ebb061953c0454b2c8ee7b0ac615ebcd">
         <source>Optional</source>
         <target>Optional</target>
-        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 209]</note>
+        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 215]</note>
+      </trans-unit>
+      <trans-unit id="1e860e56970a81a1ba3e1fcb7fccc846">
+        <source>Order Reference</source>
+        <target>Order Reference</target>
+        <note>File: themes/hummingbird/templates/customer/guest-login.tpl [Line: 21]</note>
       </trans-unit>
       <trans-unit id="63c193f613dd3d9d6c16da7678efda2a">
         <source>Order Reference:</source>
         <target>Order Reference:</target>
-        <note>File: themes/hummingbird/templates/customer/guest-login.tpl [Line: 24]</note>
+        <note>File: themes/classic/templates/customer/guest-login.tpl [Line: 43]</note>
       </trans-unit>
       <trans-unit id="5d4710f9a8250b13164a82c94d5b00d1">
         <source>Order reference</source>
         <target>Order reference</target>
-        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 44]</note>
+        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 52]</note>
       </trans-unit>
       <trans-unit id="6311ae17c1ee52b36e68aaf4ad066387">
         <source>Other</source>
@@ -150,12 +160,22 @@
       <trans-unit id="deb10517653c255364175796ace3553f">
         <source>Product</source>
         <target>Product</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-messages.tpl [Line: 35]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-messages.tpl [Line: 39]</note>
+      </trans-unit>
+      <trans-unit id="1c536a0e7f5216f230b92bf92c37d895">
+        <source>Return notes</source>
+        <target>Return notes</target>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-detail-return.tpl [Line: 190]</note>
       </trans-unit>
       <trans-unit id="3b6bf3c0c07b89dc86f415117a1f0b80">
         <source>Set your password:</source>
         <target>Set your password:</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/account-transformation-form.tpl [Line: 15]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/account-transformation-form.tpl [Line: 21]</note>
+      </trans-unit>
+      <trans-unit id="23962b3f83d5ef0fd0f41cdae1528fe7">
+        <source>Shipment </source>
+        <target>Shipment</target>
+        <note>File: src/Adapter/Shipment/QueryHandler/ListAvailableShipmentsHandler.php [Line: 79]</note>
       </trans-unit>
       <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
         <source>Social title</source>
@@ -170,7 +190,7 @@
       <trans-unit id="c7892ebbb139886662c6f2fc8c450710">
         <source>Subject</source>
         <target>Subject</target>
-        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 23]</note>
+        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 24]</note>
       </trans-unit>
       <trans-unit id="7cb32e708d6b961d476baced73d362bb">
         <source>VAT number</source>
@@ -180,7 +200,7 @@
       <trans-unit id="198584454b0ce1101ff5b50323325aa8">
         <source>Your email address</source>
         <target>Your email address</target>
-        <note>File: themes/hummingbird/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl [Line: 23]</note>
+        <note>File: themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl [Line: 50]</note>
       </trans-unit>
       <trans-unit id="e4eb5dadb6ee84c5c55a8edf53f6e554">
         <source>Zip/Postal Code</source>

@@ -35,7 +35,7 @@
       <trans-unit id="1078d7e980a5a2fe78762cafd8480f0a">
         <source>A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%</source>
         <target>A mail directory exists for the "%iso_code%" language, but not for the default language (%language%) in %folder%</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2166]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2171]</note>
       </trans-unit>
       <trans-unit id="c7254dc1193c25493aa0a09df285b43c">
         <source>A part of the data has been copied but some of the language files could not be found.</source>
@@ -180,17 +180,17 @@
       <trans-unit id="05b17ff64944116b14a3ec88f2080a5e">
         <source>Cannot write into the "%file%"</source>
         <target>Cannot write into the "%file%"</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2931]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2936]</note>
       </trans-unit>
       <trans-unit id="c4c005678d26a593268006bc4a44c179">
         <source>Cannot write language file for email subjects. Path is: %folder%</source>
         <target>Cannot write language file for email subjects. Path is: %folder%</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2726]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2731]</note>
       </trans-unit>
       <trans-unit id="299dd7d59920216689a1749def7fd939">
         <source>Cannot write to the theme's language file (%s). Please check writing permissions.</source>
         <target>Cannot write to the theme's language file (%s). Please check writing permissions.</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 801]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 806]</note>
       </trans-unit>
       <trans-unit id="98c9ecc73936314c6b619fd01842688d">
         <source>Check the [a]developer documentation[/a] for setup instructions.</source>
@@ -215,17 +215,17 @@
       <trans-unit id="40f5c232e433d178a4f912b3092d7df1">
         <source>Directory "%folder%" cannot be created</source>
         <target>Directory "%folder%" cannot be created</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1505]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1510]</note>
       </trans-unit>
       <trans-unit id="5dc4babbd10d00e89d8e46a12942d394">
         <source>Empty string found, please edit: "%file%"</source>
         <target>Empty string found, please edit: "%file%"</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1663]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1668]</note>
       </trans-unit>
       <trans-unit id="3eefb74a46023e6c9152c92803750f2b">
         <source>English language files must exist in %folder% folder</source>
         <target>English language files must exist in %folder% folder</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2311]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2316]</note>
       </trans-unit>
       <trans-unit id="6e7f4bf1afc5a374b6ff053430e38929">
         <source>Failed to add customer message.</source>
@@ -270,7 +270,7 @@
       <trans-unit id="b5f3291b6db7481e8ca0da4a00718cf9">
         <source>Impossible to create the directory "%folder%".</source>
         <target>Impossible to create the directory "%folder%".</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 438]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 441]</note>
       </trans-unit>
       <trans-unit id="07b33077111c506cf81b6cc5ef42a170">
         <source>Impossible to translate "%dest%".</source>
@@ -295,7 +295,7 @@
       <trans-unit id="7d65d1400b9d08c5c638682170ff4d7c">
         <source>Invalid iso code "%iso_code%"</source>
         <target>Invalid iso code "%iso_code%"</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1253]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1258]</note>
       </trans-unit>
       <trans-unit id="753200ddd6c25c2b4875afc70bb6d4fc">
         <source>Invalid language ISO code (%s)</source>
@@ -305,12 +305,12 @@
       <trans-unit id="c68e9fe9015c5779289f32e2bdef0a7b">
         <source>Invalid mail name "%mail%"</source>
         <target>Invalid mail name "%mail%"</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1488]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1493]</note>
       </trans-unit>
       <trans-unit id="1e5ec3cd42b5bac1b06b99f67cba41dd">
         <source>Invalid module name "%module%"</source>
         <target>Invalid module name "%module%"</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1484]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1489]</note>
       </trans-unit>
       <trans-unit id="be9fddade234ff9b16a1d92d62963b8e">
         <source>Invalid state properties.</source>
@@ -325,7 +325,7 @@
       <trans-unit id="78973deca6d26ce225f6f66c6c30dd54">
         <source>Invalid theme "%theme%"</source>
         <target>Invalid theme "%theme%"</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1632]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1637]</note>
       </trans-unit>
       <trans-unit id="0861a67f819158c5690a1844d95390b4">
         <source>Invalid whitelist</source>
@@ -355,7 +355,7 @@
       <trans-unit id="fda679a1f72b8a9676b6926a81c5e139">
         <source>No Subject was found for %mail_name% in the database.</source>
         <target>No Subject was found for %mail_name% in the database.</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2273]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2278]</note>
       </trans-unit>
       <trans-unit id="6f3455d187a23443796efdcbe044096b">
         <source>No tax</source>
@@ -400,7 +400,7 @@
       <trans-unit id="02ae08296d544eb7c674182122645631">
         <source>Tab "%s" is not valid</source>
         <target>Tab "%s" is not valid</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 693]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 698]</note>
       </trans-unit>
       <trans-unit id="20eb7f9857d85d1d0c8a1e0ddf8545b8">
         <source>Tax Manager class not found [%s]</source>
@@ -420,7 +420,7 @@
       <trans-unit id="616d8e7e6c0dc755a7e932c4db698317">
         <source>The module directory must be writable.</source>
         <target>The module directory must be writable.</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1998]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2003]</note>
       </trans-unit>
       <trans-unit id="bb01c8c21884e974df8517110c92b22a">
         <source>The translation was added successfully, but the language has not been created.</source>
@@ -445,7 +445,7 @@
       <trans-unit id="f2aca97fb94315864fd2fa52f3100f1e">
         <source>There is an error in template, an empty string has been found. Please edit: "%file%"</source>
         <target>There is an error in template, an empty string has been found. Please edit: "%file%"</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1935]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1940]</note>
       </trans-unit>
       <trans-unit id="0a7402299bf78a7624da443a12cd78ab">
         <source>There is nothing to copy (same language and theme).</source>
@@ -455,12 +455,12 @@
       <trans-unit id="a662aa2e6538df75742383c7db8f3bd5">
         <source>There was a problem getting the mail files.</source>
         <target>There was a problem getting the mail files.</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2310]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2315]</note>
       </trans-unit>
       <trans-unit id="b399fb01ee4e0a8ec1681fb9bcb31ce0">
         <source>This %type_content% file extension is not accepted.</source>
         <target>This %type_content% file extension is not accepted.</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1475]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1480]</note>
       </trans-unit>
       <trans-unit id="e07a23e507642ef04f449a7a78f59d38">
         <source>This ISO code already exists.You cannot create two countries with the same ISO code.</source>
@@ -564,12 +564,12 @@
       <trans-unit id="f1c030f2fd8f1b382a4bffd04af59c2d">
         <source>Your HTML email templates cannot contain JavaScript code.</source>
         <target>Your HTML email templates cannot contain JavaScript code.</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1517]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1522]</note>
       </trans-unit>
       <trans-unit id="ccdf1aa6f4cb029f9846e53006115905">
         <source>Your email translations contain some invalid HTML and cannot be saved. Please check your content.</source>
         <target>Your email translations contain some invalid HTML and cannot be saved. Please check your content.</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1511]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 1516]</note>
       </trans-unit>
       <trans-unit id="5607dc45ebdfc0baaab64d944aa88f47">
         <source>for max_input_vars.</source>
@@ -579,7 +579,7 @@
       <trans-unit id="7cf50c9ffecf05f3befc1134eba0ef45">
         <source>missing translation(s)</source>
         <target>missing translation(s)</target>
-        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2234]</note>
+        <note>File: controllers/admin/AdminTranslationsController.php [Line: 2239]</note>
       </trans-unit>
     </body>
   </file>

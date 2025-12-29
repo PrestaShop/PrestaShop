@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 
 import {expect} from 'chai';
@@ -43,7 +43,7 @@ describe('FO - Product page - Quick view : Change image', async () => {
   });
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_0`);
+  enableTheme('hummingbird', `${baseContext}_preTest_0`);
 
   // Pre-condition : Create product out of stock not allowed
   createProductTest(productWith2Images, `${baseContext}_preTest_1`);
@@ -110,7 +110,7 @@ describe('FO - Product page - Quick view : Change image', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_0`);
+  disableTheme('hummingbird', `${baseContext}_postTest_0`);
 
   // Post-condition : Delete created product
   deleteProductTest(productWith2Images, `${baseContext}_postTest_1`);

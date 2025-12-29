@@ -25,17 +25,17 @@
       <trans-unit id="d3f5baf7537ec2a40ade00599a8da8c6">
         <source>You do not have any vouchers.</source>
         <target>You do not have any vouchers.</target>
-        <note>File: themes/hummingbird/templates/customer/discount.tpl [Line: 86]</note>
+        <note>File: themes/hummingbird/templates/customer/discount.tpl [Line: 56]</note>
       </trans-unit>
       <trans-unit id="5acc2ceeb883ba07cef2d02ea382f242">
         <source>You have not placed any orders.</source>
         <target>You have not placed any orders.</target>
-        <note>File: themes/hummingbird/templates/customer/history.tpl [Line: 123]</note>
+        <note>File: themes/hummingbird/templates/customer/history.tpl [Line: 88]</note>
       </trans-unit>
       <trans-unit id="0ba830b7ca1513a4882ce5aac84030b8">
         <source>You have not received any credit slips.</source>
         <target>You have not received any credit slips.</target>
-        <note>File: themes/hummingbird/templates/customer/order-slip.tpl [Line: 70]</note>
+        <note>File: themes/hummingbird/templates/customer/order-slip.tpl [Line: 47]</note>
       </trans-unit>
       <trans-unit id="44a9edeffb86277f007fa90d96689a6d">
         <source>You must wait for confirmation before returning any merchandise.</source>

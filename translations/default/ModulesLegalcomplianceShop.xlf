@@ -5,7 +5,7 @@
       <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
         <source>Information</source>
         <target>Information</target>
-        <note>File: themes/hummingbird/modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl [Line: 11]</note>
+        <note>File: themes/classic/modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl [Line: 29]</note>
       </trans-unit>
     </body>
   </file>

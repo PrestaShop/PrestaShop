@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
 
-<div class="card mt-2" id="view_order_payments_block">
+<div class="card" id="view_order_payments_block">
   <div class="card-header">
     <h3 class="card-header-title">
-      {{ 'Payment'|trans({}, 'Admin.Global') }} ({{ orderForViewing.payments.payments|length }})
+      <i class="material-icons">payments</i> {{ 'Payment'|trans({}, 'Admin.Global') }} ({{ orderForViewing.payments.payments|length }})
     </h3>
   </div>
 
@@ -36,7 +36,7 @@
         linkedOrders: orderForViewing.linkedOrders
     }) }}
 
-    <table class="table" data-role="payments-grid-table">
+    <table class="table mb-0" data-role="payments-grid-table">
       <thead>
         <tr>
           <th class="table-head-date">{{ 'Date'|trans({}, 'Admin.Global') }}</th>

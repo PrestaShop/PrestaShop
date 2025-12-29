@@ -121,6 +121,9 @@ final class GetSqlRequestExecutionResultHandler implements GetSqlRequestExecutio
                 while (is_array($selectField['sub_tree'])) {
                     $selectField = $selectField['sub_tree'][0];
                 }
+                if (!isset($selectField['no_quotes']['parts'])) {
+                    continue;
+                }
                 $field = end($selectField['no_quotes']['parts']);
                 if (array_key_exists($field, $sensitiveAttributes)) {
                     $alias = str_replace(['"', "'", '`'], '', $alias);

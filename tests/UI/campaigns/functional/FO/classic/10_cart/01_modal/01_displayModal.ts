@@ -14,7 +14,7 @@ import {
 
 const baseContext: string = 'functional_FO_classic_cart_modal_displayModal';
 
-describe('FO - cart : Display modal when adding a product to cart', async () => {
+describe('FO - Cart : Display modal when adding a product to cart', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 

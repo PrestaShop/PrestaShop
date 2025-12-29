@@ -5,7 +5,7 @@
       <trans-unit id="5728ff6d5efd64ef7db72028eefc7262">
         <source>(Max %amount_refundable% %tax_method%)</source>
         <target>(Max %amount_refundable% %tax_method%)</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/product.html.twig [Line: 145]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/product.html.twig [Line: 152]</note>
       </trans-unit>
       <trans-unit id="ac0ea97486388b2b153381c5fb10e147">
         <source>Add an image before the product name on delivery slips.</source>

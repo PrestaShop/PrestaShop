@@ -1,7 +1,7 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 import {
@@ -13,16 +13,14 @@ import {
   boStoresPage,
   boTranslationsPage,
   type BrowserContext,
-  dataCustomers,
   dataLanguages,
   dataModules,
   FakerCustomer,
   foClassicCreateAccountPage,
   foClassicHomePage,
   foClassicLoginPage,
-  foClassicModalWishlistPage,
+  foHummingbirdContactUsPage,
   foHummingbirdHomePage,
-  foHummingbirdLoginPage,
   type MailDev,
   type MailDevEmail,
   type Page,
@@ -42,7 +40,6 @@ describe('BO - International - Translation : Modify translation', async () => {
   // Pre-Condition: Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -187,7 +184,7 @@ describe('BO - International - Translation : Modify translation', async () => {
   });
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_2`);
+  enableTheme('hummingbird', `${baseContext}_preTest_2`);
 
   describe('Case 3 - Front office translations with hummingbird theme', async () => {
     it('should go back to BO', async function () {
@@ -226,9 +223,9 @@ describe('BO - International - Translation : Modify translation', async () => {
     it('should search \'Popular Products\' expression and modify the french translation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'translateExpression3', baseContext);
 
-      await boTranslationsPage.searchTranslation(page, 'Add to wishlist');
+      await boTranslationsPage.searchTranslation(page, 'Send your message');
 
-      const textResult = await boTranslationsPage.translateExpression(page, 'Add to wishlist now');
+      const textResult = await boTranslationsPage.translateExpression(page, 'Send your message now');
       expect(textResult).to.equal(boTranslationsPage.validationMessage);
     });
 
@@ -239,40 +236,28 @@ describe('BO - International - Translation : Modify translation', async () => {
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
-    it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
+    it('should check \'Contact us\' header link', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkContactUsHeaderLink', baseContext);
 
-      await foClassicHomePage.goToLoginPage(page);
+      await foHummingbirdHomePage.clickOnHeaderLink(page, 'Contact us');
 
-      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
-      expect(pageTitle).to.equal(foHummingbirdLoginPage.pageTitle);
+      const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdContactUsPage.pageTitle);
     });
 
-    it('should login by default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'login', baseContext);
+    it('should get the "Send" button label', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getSendButtonLabel', baseContext);
 
-      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
-
-      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
-      expect(isCustomerConnected, 'Customer is not connected!').to.eq(true);
-    });
-
-    it('should click on add product to wishlist icon', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnAddToWishlist', baseContext);
-
-      await foHummingbirdHomePage.clickAddWishListProduct(page, 1);
-
-      // @todo : Move to foHummingbirdModalWishlistPage
-      const wishlistModalTitle = await foClassicModalWishlistPage.getModalAddToTitle(page);
-      expect(wishlistModalTitle).to.equal('Add to wishlist now');
+      const sendButtonLabel = await foHummingbirdContactUsPage.getSendButtonLabel(page);
+      expect(sendButtonLabel).to.equal('Send your message now');
     });
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
+  disableTheme('hummingbird', `${baseContext}_postTest_1`);
 
   describe('Case 4 - Installed modules translations', async () => {
     it('should go back to BO', async function () {
@@ -398,12 +383,6 @@ describe('BO - International - Translation : Modify translation', async () => {
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
       expect(isHomePage, 'Fail to open FO home page').to.eq(true);
-    });
-
-    it('should logout by the link in the header', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByHeaderLink', baseContext);
-
-      await foClassicHomePage.logout(page);
 
       const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);

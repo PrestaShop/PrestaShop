@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {expect} from 'chai';
 import {
@@ -34,7 +34,7 @@ describe('FO - Search Page : Sort results list', async () => {
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -84,7 +84,7 @@ describe('FO - Search Page : Sort results list', async () => {
         args: {
           testIdentifier: 'sortByNameAsc',
           sortName: 'Name, A to Z',
-          attribute: 'miniature__infos__top',
+          attribute: 'miniature__title',
           sortBy: 'product.name.asc',
           sortDirection: 'asc',
         },
@@ -93,7 +93,7 @@ describe('FO - Search Page : Sort results list', async () => {
         args: {
           testIdentifier: 'sortByNameDesc',
           sortName: 'Name, Z to A',
-          attribute: 'miniature__infos__top',
+          attribute: 'miniature__title',
           sortBy: 'product.name.desc',
           sortDirection: 'desc',
         },
@@ -137,5 +137,5 @@ describe('FO - Search Page : Sort results list', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
+  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

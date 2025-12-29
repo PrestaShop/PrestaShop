@@ -75,7 +75,12 @@
       <trans-unit id="3fa8c89ef63fbb7056fc1d8d1b67f97a">
         <source>Add new product</source>
         <target>Add new product</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1383]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1384]</note>
+      </trans-unit>
+      <trans-unit id="9fc8691fab39cc1433cd39430edb0501">
+        <source>Add new tag</source>
+        <target>Add new tag</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/TagController.php [Line: 204]</note>
       </trans-unit>
       <trans-unit id="b1c94ca2fbc3e78fc30069c8d0f01680">
         <source>All</source>
@@ -412,6 +417,11 @@
         <target>Duplicate all stores</target>
         <note>File: src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php [Line: 440]</note>
       </trans-unit>
+      <trans-unit id="b94e76919b866513cebaeddd9eb165f8">
+        <source>Duplicate discount</source>
+        <target>Duplicate discount</target>
+        <note>File: src/Core/Grid/Definition/Factory/DiscountGridDefinitionFactory.php [Line: 179]</note>
+      </trans-unit>
       <trans-unit id="8fd2671b48c70424d8a77bb26515c8af">
         <source>Duplicate for current store</source>
         <target>Duplicate for current store</target>
@@ -617,10 +627,30 @@
         <target>Load</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ImportDataConfiguration/Blocks/import_data_configuration.html.twig [Line: 55]</note>
       </trans-unit>
+      <trans-unit id="4e746548dda329384d7de95cdf0923d0">
+        <source>Loading items</source>
+        <target>Loading items</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/GroupedItemCollectionType.php [Line: 122]</note>
+      </trans-unit>
+      <trans-unit id="68be4837f6c739877233e527a996dd00">
+        <source>Merge</source>
+        <target>Merge</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Common/Grid/Actions/Row/additional_shipment_row_action.html.twig [Line: 76]</note>
+      </trans-unit>
+      <trans-unit id="2f1812d7e666f007a4faca95781a5453">
+        <source>Merge shipment</source>
+        <target>Merge shipment</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/merge_shipment_modal.html.twig [Line: 46]</note>
+      </trans-unit>
       <trans-unit id="7f090bbab1cc7f9c08bf4e54d932d3c0">
         <source>Modify</source>
         <target>Modify</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig [Line: 58]</note>
+      </trans-unit>
+      <trans-unit id="d3da97e2d9aee5c8fbe03156ad051c99">
+        <source>More</source>
+        <target>More</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Common/Grid/Actions/Row/additional_shipment_row_action.html.twig [Line: 51]</note>
       </trans-unit>
       <trans-unit id="faeb44014d2b370971666cf03fc3d31a">
         <source>Next (arrow right)</source>
@@ -822,6 +852,11 @@
         <target>Search first name</target>
         <note>File: src/Core/Grid/Definition/Factory/ManufacturerAddressGridDefinitionFactory.php [Line: 180]</note>
       </trans-unit>
+      <trans-unit id="23c18c8cb319464f4d85df76b19e4fff">
+        <source>Search for item...</source>
+        <target>Search for item...</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/GroupedItemCollectionType.php [Line: 118]</note>
+      </trans-unit>
       <trans-unit id="e480b018a3b81eb00b88d5bc11b78663">
         <source>Search key</source>
         <target>Search key</target>
@@ -932,15 +967,30 @@
         <target>Select all results (%combinations_number%)</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/FormTheme/combination_listing.html.twig [Line: 85]</note>
       </trans-unit>
+      <trans-unit id="ba7144e008dfcd7a273108647d7d5153">
+        <source>Select all values ({valuesNb})</source>
+        <target>Select all values ({valuesNb})</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/GroupedItemCollectionType.php [Line: 117]</note>
+      </trans-unit>
       <trans-unit id="9fd1fd8420be3ace7cba8b711181345f">
         <source>Select another address</source>
         <target>Select another address</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/customer.html.twig [Line: 147]</note>
       </trans-unit>
+      <trans-unit id="dea1b1b9f386e0948cd51ae3efa63d70">
+        <source>Select items</source>
+        <target>Select items</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/GroupedItemCollectionType.php [Line: 119]</note>
+      </trans-unit>
       <trans-unit id="cc14223cb00cfa2ca0783b72890b1343">
         <source>Select results on this page (%combinations_number%)</source>
         <target>Select results on this page (%combinations_number%)</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/FormTheme/combination_listing.html.twig [Line: 75]</note>
+      </trans-unit>
+      <trans-unit id="601e2c0a1525c9bf0f4c73224fb460ca">
+        <source>Select {selectedItemsNb} items</source>
+        <target>Select {selectedItemsNb} items</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/GroupedItemCollectionType.php [Line: 121]</note>
       </trans-unit>
       <trans-unit id="94966d90747b97d1f0f206c98a8b1ac3">
         <source>Send</source>
@@ -981,6 +1031,16 @@
         <source>Sort order</source>
         <target>Sort order</target>
         <note>File: modules/ps_categorytree/ps_categorytree.php [Line: 219]</note>
+      </trans-unit>
+      <trans-unit id="8a9e64d86ed12ad40de129bc7f4683b2">
+        <source>Split</source>
+        <target>Split</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Common/Grid/Actions/Row/additional_shipment_row_action.html.twig [Line: 65]</note>
+      </trans-unit>
+      <trans-unit id="2e60dcf2bc7ec6003ffd1560fb5f3ef0">
+        <source>Split shipment</source>
+        <target>Split shipment</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/split_shipment_modal.html.twig [Line: 49]</note>
       </trans-unit>
       <trans-unit id="6567238975275105f4e51e99ee3b4e17">
         <source>Stop processing</source>
@@ -1080,7 +1140,7 @@
       <trans-unit id="1dda0a32a88a31cac7f6b103ff13e2ac">
         <source>View pack content</source>
         <target>View pack content</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/product.html.twig [Line: 182]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/product.html.twig [Line: 189]</note>
       </trans-unit>
       <trans-unit id="7347b01499b2a4023b8806e12212de6a">
         <source>Zoom in/out</source>

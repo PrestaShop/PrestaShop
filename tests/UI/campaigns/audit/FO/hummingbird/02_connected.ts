@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {disableHummingbird, enableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {disableTheme, enableTheme} from '@commonTests/BO/design/hummingbird';
 import testContext from '@utils/testContext';
 
 import {
@@ -28,7 +28,7 @@ describe('Check FO connected pages', async () => {
   let page: Page;
 
   // Pre-condition : Enable Hummingbird
-  enableHummingbird(`${baseContext}_preTest_0`);
+  enableTheme('hummingbird', `${baseContext}_preTest_0`);
 
   describe('Check FO connected pages', async () => {
     before(async function () {
@@ -169,7 +169,8 @@ describe('Check FO connected pages', async () => {
       expect(jsErrors.length).to.equals(0);
     });
 
-    it('should go to the "My wishlists" page', async function () {
+    // @todo : https://github.com/PrestaShop/hummingbird/issues/834
+    it.skip('should go to the "My wishlists" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyWishlistsPage', baseContext);
 
       await foHummingbirdMyInformationsPage.goToMyAccountPage(page);
@@ -182,7 +183,8 @@ describe('Check FO connected pages', async () => {
       expect(jsErrors.length).to.equals(0);
     });
 
-    it('should go to the "My wishlist" page', async function () {
+    // @todo : https://github.com/PrestaShop/hummingbird/issues/834
+    it.skip('should go to the "My wishlist" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToWishlistPage', baseContext);
 
       await foHummingbirdMyWishlistsPage.goToWishlistPage(page, 1);
@@ -221,5 +223,5 @@ describe('Check FO connected pages', async () => {
   });
 
   // Post-condition : Disable Hummingbird
-  disableHummingbird(`${baseContext}_postTest_0`);
+  disableTheme('hummingbird', `${baseContext}_postTest_0`);
 });

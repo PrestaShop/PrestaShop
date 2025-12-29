@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f3a07b6749362e468416d0ea2165b1e6",
+    "content-hash": "4a909806fc5806b3c60c8d77fb06443b",
     "packages": [
         {
             "name": "api-platform/core",
@@ -342,28 +342,28 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.3.7",
+            "version": "1.5.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "76e46335014860eec1aa5a724799a00a2e47cc85"
+                "reference": "1905981ee626e6f852448b7aaa978f8666c5bc54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/76e46335014860eec1aa5a724799a00a2e47cc85",
-                "reference": "76e46335014860eec1aa5a724799a00a2e47cc85",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/1905981ee626e6f852448b7aaa978f8666c5bc54",
+                "reference": "1905981ee626e6f852448b7aaa978f8666c5bc54",
                 "shasum": ""
             },
             "require": {
                 "ext-openssl": "*",
                 "ext-pcre": "*",
-                "php": "^5.3.2 || ^7.0 || ^8.0"
+                "php": "^7.2 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.12.55",
-                "psr/log": "^1.0",
-                "symfony/phpunit-bridge": "^4.2 || ^5",
-                "symfony/process": "^2.5 || ^3.0 || ^4.0 || ^5.0 || ^6.0"
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^8 || ^9",
+                "psr/log": "^1.0 || ^2.0 || ^3.0",
+                "symfony/process": "^4.0 || ^5.0 || ^6.0 || ^7.0"
             },
             "type": "library",
             "extra": {
@@ -398,7 +398,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.3.7"
+                "source": "https://github.com/composer/ca-bundle/tree/1.5.9"
             },
             "funding": [
                 {
@@ -408,13 +408,9 @@
                 {
                     "url": "https://github.com/composer",
                     "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
-                    "type": "tidelift"
                 }
             ],
-            "time": "2023-08-30T09:31:38+00:00"
+            "time": "2025-11-06T11:46:17+00:00"
         },
         {
             "name": "composer/installers",
@@ -4666,16 +4662,16 @@
         },
         {
             "name": "prestashop/classic",
-            "version": "3.0.4",
+            "version": "3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "b84c8548e15fea8052364aa88c0b5944c0333e01"
+                "reference": "09a8934bcb5e8f0cc0a3e234d5e9b18a61c27ec2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/b84c8548e15fea8052364aa88c0b5944c0333e01",
-                "reference": "b84c8548e15fea8052364aa88c0b5944c0333e01",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/09a8934bcb5e8f0cc0a3e234d5e9b18a61c27ec2",
+                "reference": "09a8934bcb5e8f0cc0a3e234d5e9b18a61c27ec2",
                 "shasum": ""
             },
             "require-dev": {
@@ -4699,9 +4695,10 @@
             ],
             "description": "Classic theme for develop PrestaShop version",
             "support": {
-                "source": "https://github.com/PrestaShop/classic-theme/tree/3.0.4"
+                "issues": "https://github.com/PrestaShop/classic-theme/issues",
+                "source": "https://github.com/PrestaShop/classic-theme/tree/3.0.5"
             },
-            "time": "2025-10-31T11:00:29+00:00"
+            "time": "2025-12-15T16:49:50+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -5042,16 +5039,16 @@
         },
         {
             "name": "prestashop/gsitemap",
-            "version": "v4.4.0",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/gsitemap.git",
-                "reference": "2f9f69f9a06d864c7e7ed8a89cdee5d23b2c91ca"
+                "reference": "44ad0f5eafdabe641fb204ef1780c9ed586e39c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/gsitemap/zipball/2f9f69f9a06d864c7e7ed8a89cdee5d23b2c91ca",
-                "reference": "2f9f69f9a06d864c7e7ed8a89cdee5d23b2c91ca",
+                "url": "https://api.github.com/repos/PrestaShop/gsitemap/zipball/44ad0f5eafdabe641fb204ef1780c9ed586e39c0",
+                "reference": "44ad0f5eafdabe641fb204ef1780c9ed586e39c0",
                 "shasum": ""
             },
             "require": {
@@ -5079,22 +5076,22 @@
             "description": "PrestaShop module gsitemap",
             "homepage": "https://github.com/PrestaShop/gsitemap",
             "support": {
-                "source": "https://github.com/PrestaShop/gsitemap/tree/v4.4.0"
+                "source": "https://github.com/PrestaShop/gsitemap/tree/v5.0.0"
             },
-            "time": "2024-01-10T17:10:01+00:00"
+            "time": "2025-11-24T07:24:20+00:00"
         },
         {
             "name": "prestashop/hummingbird",
-            "version": "v1.0.1",
+            "version": "v2.0.0-beta.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/hummingbird.git",
-                "reference": "d1b73eee052a206ff9a9bf472c2ca9e647392c11"
+                "reference": "d2576caa72ca08468ea372ce6f133f8ac52dacb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/d1b73eee052a206ff9a9bf472c2ca9e647392c11",
-                "reference": "d1b73eee052a206ff9a9bf472c2ca9e647392c11",
+                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/d2576caa72ca08468ea372ce6f133f8ac52dacb2",
+                "reference": "d2576caa72ca08468ea372ce6f133f8ac52dacb2",
                 "shasum": ""
             },
             "require-dev": {
@@ -5116,29 +5113,29 @@
                     "homepage": "https://contributors.prestashop-project.org/"
                 }
             ],
-            "description": "Hummingbird theme for develop PrestaShop version",
+            "description": "Hummingbird development theme for PrestaShop",
             "support": {
                 "issues": "https://github.com/PrestaShop/hummingbird/issues",
-                "source": "https://github.com/PrestaShop/hummingbird/tree/v1.0.1"
+                "source": "https://github.com/PrestaShop/hummingbird/tree/v2.0.0-beta.2"
             },
-            "time": "2025-06-16T12:52:34+00:00"
+            "time": "2025-12-15T17:19:33+00:00"
         },
         {
             "name": "prestashop/pagesnotfound",
-            "version": "v2.0.3",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/pagesnotfound.git",
-                "reference": "cf05fc7770f9beff2a5c2f17bdfe2da7652744db"
+                "reference": "3e6a5526d708c0f8b5914b8dd3213e1dd20ec0dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/pagesnotfound/zipball/cf05fc7770f9beff2a5c2f17bdfe2da7652744db",
-                "reference": "cf05fc7770f9beff2a5c2f17bdfe2da7652744db",
+                "url": "https://api.github.com/repos/PrestaShop/pagesnotfound/zipball/3e6a5526d708c0f8b5914b8dd3213e1dd20ec0dc",
+                "reference": "3e6a5526d708c0f8b5914b8dd3213e1dd20ec0dc",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.0"
+                "php": ">=7.1.3"
             },
             "require-dev": {
                 "prestashop/php-dev-tools": "^4.3"
@@ -5157,22 +5154,22 @@
             "description": "PrestaShop module pagesnotfound",
             "homepage": "https://github.com/PrestaShop/pagesnotfound",
             "support": {
-                "source": "https://github.com/PrestaShop/pagesnotfound/tree/v2.0.3"
+                "source": "https://github.com/PrestaShop/pagesnotfound/tree/v3.0.0"
             },
-            "time": "2023-06-16T10:59:52+00:00"
+            "time": "2025-10-28T17:14:50+00:00"
         },
         {
             "name": "prestashop/productcomments",
-            "version": "v7.0.0",
+            "version": "v8.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productcomments.git",
-                "reference": "7287476cb44969af58721cb9ad7b5cb89393b2c8"
+                "reference": "9e6a1f63b70cd2cfc416faea56aa000c3c220eec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/7287476cb44969af58721cb9ad7b5cb89393b2c8",
-                "reference": "7287476cb44969af58721cb9ad7b5cb89393b2c8",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/9e6a1f63b70cd2cfc416faea56aa000c3c220eec",
+                "reference": "9e6a1f63b70cd2cfc416faea56aa000c3c220eec",
                 "shasum": ""
             },
             "require": {
@@ -5204,22 +5201,22 @@
             "description": "PrestaShop module productcomments",
             "homepage": "https://github.com/PrestaShop/productcomments",
             "support": {
-                "source": "https://github.com/PrestaShop/productcomments/tree/v7.0.0"
+                "source": "https://github.com/PrestaShop/productcomments/tree/v8.0.0"
             },
-            "time": "2024-04-24T14:10:24+00:00"
+            "time": "2025-11-13T14:46:03+00:00"
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-fix-discount-with-discount_type",
+            "version": "dev-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/boherm/ps_apiresources.git",
-                "reference": "8acc16bed3508936bb8841e319a1f3e85c967288"
+                "url": "https://github.com/PrestaShop/ps_apiresources.git",
+                "reference": "9b22f4e8c9848705132455ac623c369e0ec63d64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/boherm/ps_apiresources/zipball/8acc16bed3508936bb8841e319a1f3e85c967288",
-                "reference": "8acc16bed3508936bb8841e319a1f3e85c967288",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/9b22f4e8c9848705132455ac623c369e0ec63d64",
+                "reference": "9b22f4e8c9848705132455ac623c369e0ec63d64",
                 "shasum": ""
             },
             "require": {
@@ -5233,6 +5230,7 @@
                 "prestashop/php-dev-tools": "^4.3",
                 "rector/rector": "^2.0"
             },
+            "default-branch": true,
             "type": "prestashop-module",
             "autoload": {
                 "psr-4": {
@@ -5283,9 +5281,10 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/boherm/ps_apiresources/tree/fix-discount-with-discount_type"
+                "source": "https://github.com/PrestaShop/ps_apiresources/tree/dev",
+                "issues": "https://github.com/PrestaShop/ps_apiresources/issues"
             },
-            "time": "2025-12-12T11:00:32+00:00"
+            "time": "2025-12-16T08:18:10+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -5370,16 +5369,16 @@
         },
         {
             "name": "prestashop/ps_brandlist",
-            "version": "v1.0.4",
+            "version": "v1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_brandlist.git",
-                "reference": "b593c68a091f8b8243a39d829ff9d1977285648d"
+                "reference": "a7164a5029dd48f8f4e9c01f6c2bde2955947f95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_brandlist/zipball/b593c68a091f8b8243a39d829ff9d1977285648d",
-                "reference": "b593c68a091f8b8243a39d829ff9d1977285648d",
+                "url": "https://api.github.com/repos/PrestaShop/ps_brandlist/zipball/a7164a5029dd48f8f4e9c01f6c2bde2955947f95",
+                "reference": "a7164a5029dd48f8f4e9c01f6c2bde2955947f95",
                 "shasum": ""
             },
             "require": {
@@ -5402,9 +5401,9 @@
             "description": "PrestaShop - Brand list",
             "homepage": "https://github.com/PrestaShop/ps_brandlist",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_brandlist/tree/v1.0.4"
+                "source": "https://github.com/PrestaShop/ps_brandlist/tree/v1.0.5"
             },
-            "time": "2025-11-18T15:51:18+00:00"
+            "time": "2025-11-27T14:48:40+00:00"
         },
         {
             "name": "prestashop/ps_cashondelivery",
@@ -6055,16 +6054,16 @@
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
-            "version": "v2.1.3",
+            "version": "v2.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_faviconnotificationbo.git",
-                "reference": "1f077c2eb47037a3ad7ae8381684c341b7042942"
+                "reference": "eea7b50d8acd2f77d44a6a37bf1cc15878ff26dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_faviconnotificationbo/zipball/1f077c2eb47037a3ad7ae8381684c341b7042942",
-                "reference": "1f077c2eb47037a3ad7ae8381684c341b7042942",
+                "url": "https://api.github.com/repos/PrestaShop/ps_faviconnotificationbo/zipball/eea7b50d8acd2f77d44a6a37bf1cc15878ff26dd",
+                "reference": "eea7b50d8acd2f77d44a6a37bf1cc15878ff26dd",
                 "shasum": ""
             },
             "require": {
@@ -6093,9 +6092,9 @@
             "description": "PrestaShop - Favicon notification BO",
             "homepage": "https://github.com/PrestaShop/ps_faviconnotificationbo",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_faviconnotificationbo/tree/v2.1.3"
+                "source": "https://github.com/PrestaShop/ps_faviconnotificationbo/tree/v2.1.4"
             },
-            "time": "2023-02-03T14:47:24+00:00"
+            "time": "2025-12-02T19:59:26+00:00"
         },
         {
             "name": "prestashop/ps_featuredproducts",
@@ -18269,9 +18268,9 @@
         "ext-simplexml": "*",
         "ext-zip": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.2.0"
 }

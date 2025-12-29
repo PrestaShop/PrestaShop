@@ -85,7 +85,7 @@
       <trans-unit id="c91e596246bbf8fdff9dae7b349d71d9">
         <source>Carrier name</source>
         <target>Carrier name</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 64]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 65]</note>
       </trans-unit>
       <trans-unit id="ba44d024ba9eec02cc432a36dcffb9d9">
         <source>Carrier name:</source>
@@ -100,7 +100,12 @@
       <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
         <source>Carriers</source>
         <target>Carriers</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/details.html.twig [Line: 35]</note>
+        <note>File: src/Core/Grid/Definition/Factory/CarrierGridDefinitionFactory.php [Line: 107]</note>
+      </trans-unit>
+      <trans-unit id="b6507ffa2e172923aeed7e87e29bd611">
+        <source>Carriers ([1]%carriers_count%[/1])</source>
+        <target>Carriers ([1]%carriers_count%[/1])</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 596]</note>
       </trans-unit>
       <trans-unit id="47727de83838bb7df93877b04b5efdf7">
         <source>Create carriers to let your customers choose their best shipping option in terms of delivery dates or fees. Start with editing/deleting the default "My carrier", and add as many options as you need.</source>
@@ -170,7 +175,7 @@
       <trans-unit id="920bd1fb6d54c93fca528ce941464225">
         <source>Group access</source>
         <target>Group access</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 123]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 131]</note>
       </trans-unit>
       <trans-unit id="2605fbb693837be42d0cd0e701cb5aa3">
         <source>Handling</source>
@@ -300,7 +305,7 @@
       <trans-unit id="8e6c64a901e609a97351f999949d90d3">
         <source>Please upload a valid jpeg file</source>
         <target>Please upload a valid jpeg file</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 106]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 114]</note>
       </trans-unit>
       <trans-unit id="2ae7cf0472e9c76dee8c098e635b4c87">
         <source>Price (VAT excl.)</source>
@@ -321,6 +326,11 @@
         <source>Set ranges and prices</source>
         <target>Set ranges and prices</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 135]</note>
+      </trans-unit>
+      <trans-unit id="5ebb0b7b0f6589c76c134c303df2ffaf">
+        <source>Shipments ([1]%shipment_count%[/1])</source>
+        <target>Shipments ([1]%shipment_count%[/1])</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 586]</note>
       </trans-unit>
       <trans-unit id="7589dfa9a5a899e9701335164c9ab520">
         <source>Shipping and handling</source>
@@ -360,7 +370,7 @@
       <trans-unit id="c8b462f779749d2e27abed2e9501b2bd">
         <source>Speed grade</source>
         <target>Speed grade</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 84]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 85]</note>
       </trans-unit>
       <trans-unit id="4b78ac8eb158840e9638a3aeb26c4a9d">
         <source>Tax</source>
@@ -370,7 +380,7 @@
       <trans-unit id="f39b85edce7f4e450d01829da2b70c44">
         <source>The file is too large. Allowed maximum size is 8MB.</source>
         <target>The file is too large. Allowed maximum size is 8MB.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 107]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 115]</note>
       </trans-unit>
       <trans-unit id="343bf3bbd8b70fd2d04bb095ad2418f9">
         <source>The shipping cost is calculated %1$s and the tax rule %2$s will be applied.</source>
@@ -395,7 +405,7 @@
       <trans-unit id="0979779c4569141b98591d326d343ec2">
         <source>Tracking URL</source>
         <target>Tracking URL</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 113]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 121]</note>
       </trans-unit>
       <trans-unit id="5068c162a60b5859f973f701333f45c5">
         <source>Tracking number</source>
@@ -405,7 +415,7 @@
       <trans-unit id="dde695268ea519ababd83f0ca3d274fc">
         <source>Transit time</source>
         <target>Transit time</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 72]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 73]</note>
       </trans-unit>
       <trans-unit id="07018153f387118b1dacafee609f13b1">
         <source>Will be applied when the price is</source>

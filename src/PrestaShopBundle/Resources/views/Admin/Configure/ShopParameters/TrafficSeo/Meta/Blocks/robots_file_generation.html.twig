@@ -31,35 +31,37 @@
     <i class="material-icons">settings</i>
     {{ 'Robots file generation'|trans }}
   </h3>
-
   <div class="card-body">
     <div class="form-wrapper">
       <div class="alert alert-info" role="alert">
         <div class="alert-text">
-          {% set defaultDescription = 'Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.example.com/robots.txt).'|trans({}, 'Admin.Shopparameters.Notification') %}
-            {% if isRobotsTextFileValid %}
-              {{ defaultDescription }} <br>
-              {{ 'Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)'|trans({}, 'Admin.Shopparameters.Notification') }}
-            {% else %}
-              {{ defaultDescription }} <br>
-              {{ 'Before you can use this tool, you need to:'|trans({}, 'Admin.Shopparameters.Notification') }} <br>
-              {{ '1) Create a blank robots.txt file in your root directory.'|trans({}, 'Admin.Shopparameters.Notification') }} <br>
-              {{ '2) Give it write permissions (CHMOD 666 on Unix system).'|trans({}, 'Admin.Shopparameters.Notification') }}
-            {% endif %}
+          {{ 'robots.txt defines the rules that bots and crawlers should follow. It is automatically generated and stored in your website\'s root directory (e.g. http://www.example.com/robots.txt).'|trans({}, 'Admin.Shopparameters.Notification') }}<br>
+          {{ 'It\'s regenerated automatically during certain actions in the back office, but you can manually regenerate it using the button below if needed.'|trans({}, 'Admin.Shopparameters.Notification') }}<br>
+          {{ 'Don\'t edit this file manually - use the appropriate hooks to modify its content.'|trans({}, 'Admin.Shopparameters.Notification') }}
+        </div>
+      </div>
+
+      {% block meta_robots_file_form_rest %}
+        {{ form_rest(setUpUrlsForm) }}
+      {% endblock %}
+
+      {% if not isRobotsTextFileValid %}
+        <div class="alert alert-danger" role="alert">
+          <div class="alert-text">
+            {{ 'There seems to be a problem with your current robots.txt file. Before you can use this tool, you need to:'|trans({}, 'Admin.Shopparameters.Notification') }} <br>
+            {{ '1) Create a blank robots.txt file in your root directory.'|trans({}, 'Admin.Shopparameters.Notification') }} <br>
+            {{ '2) Give it write permissions (CHMOD 666 on Unix system).'|trans({}, 'Admin.Shopparameters.Notification') }}
           </div>
         </div>
-
-        {% block meta_robots_file_form_rest %}
-          {{ form_rest(setUpUrlsForm) }}
-        {% endblock %}
-      </div>
-    </div>
-    <div class="card-footer">
-      <div class="d-flex justify-content-end">
-        {% if isRobotsTextFileValid %}
-          <button class="btn btn-primary">{{ 'Generate robots.txt file'|trans }}</button>
-        {% endif %}
-      </div>
+      {% endif %}
     </div>
   </div>
+  <div class="card-footer">
+    <div class="d-flex justify-content-end">
+      {% if isRobotsTextFileValid %}
+        <button class="btn btn-primary">{{ 'Generate robots.txt file'|trans }}</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}

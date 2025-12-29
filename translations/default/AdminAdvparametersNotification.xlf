@@ -152,6 +152,16 @@
         <target>An error occurred while creating the API Client.</target>
         <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/AdminAPIController.php [Line: 351]</note>
       </trans-unit>
+      <trans-unit id="c1c3aceb250362ac812a707301c23951">
+        <source>An error occurred while creating the tag.</source>
+        <target>An error occurred while creating the tag.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/TagController.php [Line: 226]</note>
+      </trans-unit>
+      <trans-unit id="8c0a2789fdadc0101f0a2cec08140b3b">
+        <source>An error occurred while updating the tag.</source>
+        <target>An error occurred while updating the tag.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/TagController.php [Line: 231]</note>
+      </trans-unit>
       <trans-unit id="50844c635a86264cc59d737d532df573">
         <source>An error occurred while uploading / copying the file.</source>
         <target>An error occurred while uploading / copying the file.</target>

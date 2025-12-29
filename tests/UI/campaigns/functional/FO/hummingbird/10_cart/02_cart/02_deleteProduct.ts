@@ -1,7 +1,7 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -15,12 +15,12 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_cart_cart_deleteProduct';
 
-describe('FO - cart : Delete product', async () => {
+describe('FO - Cart : Delete product', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -128,7 +128,7 @@ describe('FO - cart : Delete product', async () => {
     it('should set the quantity 0 in the input', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setQuantity0', baseContext);
 
-      await foHummingbirdCartPage.editProductQuantity(page, 1, 0);
+      await foHummingbirdCartPage.deleteProduct(page, 1);
 
       const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(0);
@@ -143,5 +143,5 @@ describe('FO - cart : Delete product', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
+  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

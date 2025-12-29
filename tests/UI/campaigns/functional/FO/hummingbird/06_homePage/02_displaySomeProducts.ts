@@ -3,7 +3,7 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 // Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -32,9 +32,8 @@ describe('FO - Home Page : Display some products', async () => {
   let page: Page;
 
   // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
+  enableTheme('hummingbird', `${baseContext}_preTest`);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -59,21 +58,21 @@ describe('FO - Home Page : Display some products', async () => {
 
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const popularProductTitle = await foHummingbirdHomePage.getBlockTitle(page, 'featured-products');
-      expect(popularProductTitle).to.equal('Popular Products');
+      const popularProductTitle = await foHummingbirdHomePage.getBlockTitle(page, 'ps-featuredproducts');
+      expect(popularProductTitle).to.equal('Featured products');
     });
 
     it('should check the number of popular products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProductsNumber', baseContext);
 
-      const productsNumber = await foHummingbirdHomePage.getProductsBlockNumber(page, 'featured-products');
-      expect(productsNumber).to.equal(8);
+      const productsNumber = await foHummingbirdHomePage.getProductsBlockNumber(page, 'ps-featuredproducts');
+      expect(productsNumber).to.equal(4);
     });
 
     it('should check All products link', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllPopularProductsLink', baseContext);
 
-      await foHummingbirdHomePage.goToAllProductsPage(page, 'featured-products');
+      await foHummingbirdHomePage.goToAllProductsPage(page, 'ps-featuredproducts');
 
       const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
@@ -109,21 +108,21 @@ describe('FO - Home Page : Display some products', async () => {
     it('should check new products title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewProductsBlock', baseContext);
 
-      const popularProductTitle = await foHummingbirdHomePage.getBlockTitle(page, 'new-products');
-      expect(popularProductTitle).to.equal('New products');
+      const popularProductTitle = await foHummingbirdHomePage.getBlockTitle(page, 'ps-newproducts');
+      expect(popularProductTitle).to.equal('Latest arrivals');
     });
 
     it('should check the number of new products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewProductsNumber', baseContext);
 
-      const productsNumber = await foHummingbirdHomePage.getProductsBlockNumber(page, 'new-products');
-      expect(productsNumber).to.equal(8);
+      const productsNumber = await foHummingbirdHomePage.getProductsBlockNumber(page, 'ps-newproducts');
+      expect(productsNumber).to.equal(4);
     });
 
     it('should check All new products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAllNewProductsLink', baseContext);
 
-      await foHummingbirdHomePage.goToAllProductsPage(page, 'new-products');
+      await foHummingbirdHomePage.goToAllProductsPage(page, 'ps-newproducts');
 
       const pageTitle = await foHummingbirdNewProductsPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdNewProductsPage.pageTitle);
@@ -131,5 +130,5 @@ describe('FO - Home Page : Display some products', async () => {
   });
 
   // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
+  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

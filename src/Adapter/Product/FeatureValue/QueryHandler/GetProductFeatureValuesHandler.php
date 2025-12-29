@@ -55,7 +55,10 @@ class GetProductFeatureValuesHandler implements GetProductFeatureValuesHandlerIn
      */
     public function handle(GetProductFeatureValues $query): array
     {
-        $featureValuesData = $this->featureValueRepository->getAllProductFeatureValues($query->getProductId());
+        $featureValuesData = $this->featureValueRepository->getAllProductFeatureValues(
+            $query->getProductId(),
+            $query->getShopId()
+        );
         $productFeatureValues = [];
         foreach ($featureValuesData as $featureValuesDatum) {
             $productFeatureValues[] = new ProductFeatureValue(

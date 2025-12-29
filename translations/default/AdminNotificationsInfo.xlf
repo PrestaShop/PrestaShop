@@ -90,12 +90,12 @@
       <trans-unit id="0269f018a765e0d969747a1871c109a1">
         <source>This page is only compatible in a single-store context. Please select a store in the multistore header.</source>
         <target>This page is only compatible in a single-store context. Please select a store in the multistore header.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1832]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1833]</note>
       </trans-unit>
       <trans-unit id="d522a12a111ad26cc15c16da99cebef6">
         <source>This product is not associated with the store selected in the multistore header, please select another one.</source>
         <target>This product is not associated with the store selected in the multistore header, please select another one.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1815]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1816]</note>
       </trans-unit>
       <trans-unit id="cf302b9739d595c09a469b014afff252">
         <source>This secret value will only be displayed once. Don't forget to make a copy in a secure location.</source>

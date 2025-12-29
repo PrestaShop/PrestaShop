@@ -87,6 +87,11 @@
         <target>Actions</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/CartRule/CartRuleType.php [Line: 51]</note>
       </trans-unit>
+      <trans-unit id="4d3d769b812b6faa6b76e1a8abaece2d">
+        <source>Active</source>
+        <target>Active</target>
+        <note>File: src/Core/Grid/Definition/Factory/DiscountGridDefinitionFactory.php [Line: 245]</note>
+      </trans-unit>
       <trans-unit id="513987b37a2501ed83af5686ed34624e">
         <source>Add a customization field</source>
         <target>Add a customization field</target>
@@ -159,7 +164,7 @@
       <trans-unit id="5f46be79c24b6cde1ff2176a2ce917e9">
         <source>Add new feature</source>
         <target>Add new feature</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 90]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 93]</note>
       </trans-unit>
       <trans-unit id="7aad0283b11e41230d9d1fc7372c3862">
         <source>Add new feature value</source>
@@ -231,6 +236,11 @@
         <target>All</target>
         <note>File: src/PrestaShopBundle/Translation/Api/StockApi.php [Line: 53]</note>
       </trans-unit>
+      <trans-unit id="7e3a51a56ddd2846e21c33f05e0aea6f">
+        <source>All customers</source>
+        <target>All customers</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountCustomerEligibilityChoiceType.php [Line: 64]</note>
+      </trans-unit>
       <trans-unit id="42d99bbf0d1cd9ffe4a5ff746d177aba">
         <source>Allow file uploading</source>
         <target>Allow file uploading</target>
@@ -275,6 +285,26 @@
         <source>Apply new quantity</source>
         <target>Apply new quantity</target>
         <note>File: src/PrestaShopBundle/Translation/Api/StockApi.php [Line: 40]</note>
+      </trans-unit>
+      <trans-unit id="4304bdbfa678a7fd815c1096ba885c54">
+        <source>Apply on catalog products</source>
+        <target>Apply on catalog products</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountTypeSelectorType.php [Line: 60]</note>
+      </trans-unit>
+      <trans-unit id="b95a608431a64a99837371e6b812514a">
+        <source>Apply on free gift</source>
+        <target>Apply on free gift</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountTypeSelectorType.php [Line: 64]</note>
+      </trans-unit>
+      <trans-unit id="b86b1fc69beddba07aee3a32d097e331">
+        <source>Apply on shipping fees</source>
+        <target>Apply on shipping fees</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountTypeSelectorType.php [Line: 68]</note>
+      </trans-unit>
+      <trans-unit id="fd044f7a6e8e43f6424151fe23b3fa72">
+        <source>Apply on total cart</source>
+        <target>Apply on total cart</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountTypeSelectorType.php [Line: 56]</note>
       </trans-unit>
       <trans-unit id="768678dd6637e9466e187158e6ddfbf5">
         <source>Apply to %combinations_number% combinations</source>
@@ -324,7 +354,7 @@
       <trans-unit id="287234a1ff35a314b5b6bc4e5828e745">
         <source>Attributes</source>
         <target>Attributes</target>
-        <note>File: src/Core/Grid/Definition/Factory/AttributeGroupGridDefinitionFactory.php [Line: 70]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountProductSegmentType.php [Line: 67]</note>
       </trans-unit>
       <trans-unit id="2438bf77baed0680f816ca0f4a7d0321">
         <source>Availability date</source>
@@ -401,6 +431,11 @@
         <target>Cart Rules</target>
         <note>File: controllers/admin/AdminCartRulesController.php [Line: 794]</note>
       </trans-unit>
+      <trans-unit id="41e117ea7f23233cf071b82507d9bd72">
+        <source>Cart conditions</source>
+        <target>Cart conditions</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountConditionsType.php [Line: 55]</note>
+      </trans-unit>
       <trans-unit id="48bc4d0ad8c02bb7d116b43d907570e2">
         <source>Cart rule</source>
         <target>Cart rule</target>
@@ -465,6 +500,11 @@
         <source>Choose Time</source>
         <target>Choose Time</target>
         <note>File: admin-dev/themes/default/template/controllers/cart_rules/form.tpl [Line: 64]</note>
+      </trans-unit>
+      <trans-unit id="43e97b3b2f1b4a7b80e5bad4267ea404">
+        <source>Choose a discount value</source>
+        <target>Choose a discount value</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountType.php [Line: 73]</note>
       </trans-unit>
       <trans-unit id="5ebd6e1c1cdeac7a7c1896ab842d98da">
         <source>Choose a feature</source>
@@ -571,6 +611,11 @@
         <target>Compatibility with other cart rules</target>
         <note>File: admin-dev/themes/default/template/controllers/cart_rules/conditions.tpl [Line: 251]</note>
       </trans-unit>
+      <trans-unit id="9ea3d955b9109834e4ec98126eeae223">
+        <source>Compatible with discounts</source>
+        <target>Compatible with discounts</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountCompatibilityType.php [Line: 64]</note>
+      </trans-unit>
       <trans-unit id="9e2941b3c81256fac10392aaca4ccfde">
         <source>Condition</source>
         <target>Condition</target>
@@ -616,6 +661,16 @@
         <target>Create attributes</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/AttributeGroup/Blocks/showcase_card.html.twig [Line: 32]</note>
       </trans-unit>
+      <trans-unit id="9c4bfc2a266525fe1f360423aa8068e2">
+        <source>Create automatic discount</source>
+        <target>Create automatic discount</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityModeType.php [Line: 50]</note>
+      </trans-unit>
+      <trans-unit id="0050cc8095adee674fb13828ba009a32">
+        <source>Create discount</source>
+        <target>Create discount</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Discount/create_discount_modal.html.twig [Line: 44]</note>
+      </trans-unit>
       <trans-unit id="8afef240e612f7872eac56d356eb2f2b">
         <source>Create new product</source>
         <target>Create new product</target>
@@ -640,6 +695,11 @@
         <source>Customer group selection</source>
         <target>Customer group selection</target>
         <note>File: admin-dev/themes/default/template/controllers/cart_rules/conditions.tpl [Line: 217]</note>
+      </trans-unit>
+      <trans-unit id="517a8a7dbf1f6e371509817de328e396">
+        <source>Customer groups</source>
+        <target>Customer groups</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountCustomerEligibilityChoiceType.php [Line: 67]</note>
       </trans-unit>
       <trans-unit id="0e9470c5e6bfee40004f22f543b8b2a6">
         <source>Customer service options</source>
@@ -751,6 +811,11 @@
         <target>Delivered within 5-7 days</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Shipping/DeliveryTimeNotesType.php [Line: 65]</note>
       </trans-unit>
+      <trans-unit id="7283dc55553a6f5424376b4ea9279fd9">
+        <source>Delivery conditions</source>
+        <target>Delivery conditions</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountConditionsType.php [Line: 67]</note>
+      </trans-unit>
       <trans-unit id="7320268d3e6def915f7a462afd0e5738">
         <source>Delivery time</source>
         <target>Delivery time</target>
@@ -779,7 +844,7 @@
       <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
         <source>Description</source>
         <target>Description</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Description/DescriptionType.php [Line: 157]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Description/DescriptionType.php [Line: 160]</note>
       </trans-unit>
       <trans-unit id="3ec365dd533ddb7ef3d1c111186ce872">
         <source>Details</source>
@@ -806,6 +871,56 @@
         <target>Discount (tax incl.)</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/SpecificPrice/Blocks/list.html.twig [Line: 42]</note>
       </trans-unit>
+      <trans-unit id="2295fa1ce03369f498809b8af73f71dd">
+        <source>Discount Name</source>
+        <target>Discount Name</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountInformationType.php [Line: 54]</note>
+      </trans-unit>
+      <trans-unit id="f908785bb66160c04bddc024d3dc4c71">
+        <source>Discount Type</source>
+        <target>Discount Type</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountInformationType.php [Line: 50]</note>
+      </trans-unit>
+      <trans-unit id="0b600fe7e0936fee326f54cd696bd92e">
+        <source>Discount applied to cart</source>
+        <target>Discount applied to cart</target>
+        <note>File: classes/lang/KeysReference/CartRuleTypeLang.php [Line: 30]</note>
+      </trans-unit>
+      <trans-unit id="ae4887eae4618fbee33c4b3eed3a6ce3">
+        <source>Discount applied to specific products</source>
+        <target>Discount applied to specific products</target>
+        <note>File: classes/lang/KeysReference/CartRuleTypeLang.php [Line: 36]</note>
+      </trans-unit>
+      <trans-unit id="b5554f53251cad48e15a8a362a6a44f7">
+        <source>Discount applied to the order</source>
+        <target>Discount applied to the order</target>
+        <note>File: classes/lang/KeysReference/CartRuleTypeLang.php [Line: 33]</note>
+      </trans-unit>
+      <trans-unit id="d2e91c2e88f43d240d23aa4cd871a9cc">
+        <source>Discount information</source>
+        <target>Discount information</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountInformationType.php [Line: 109]</note>
+      </trans-unit>
+      <trans-unit id="375a8936fe9131ba7f9f6f8841cf48c9">
+        <source>Discount that provides a free gift product</source>
+        <target>Discount that provides a free gift product</target>
+        <note>File: classes/lang/KeysReference/CartRuleTypeLang.php [Line: 39]</note>
+      </trans-unit>
+      <trans-unit id="b7e27cb0f83cb5e0b0e7a54d58e90d13">
+        <source>Discount that provides free shipping to the order</source>
+        <target>Discount that provides free shipping to the order</target>
+        <note>File: classes/lang/KeysReference/CartRuleTypeLang.php [Line: 27]</note>
+      </trans-unit>
+      <trans-unit id="bbdb13db09a6e1ad1e651c04aaad29f0">
+        <source>Discount value</source>
+        <target>Discount value</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountValueType.php [Line: 41]</note>
+      </trans-unit>
+      <trans-unit id="9d5bf15117441a1b52eb1f0808e4aad3">
+        <source>Discounts</source>
+        <target>Discounts</target>
+        <note>File: src/Core/Grid/Definition/Factory/DiscountGridDefinitionFactory.php [Line: 85]</note>
+      </trans-unit>
       <trans-unit id="527618353332c282892ba960ef1f0230">
         <source>Display condition on product page</source>
         <target>Display condition on product page</target>
@@ -824,7 +939,7 @@
       <trans-unit id="133bc9aa44eaaf809041c01ea1361a07">
         <source>Display the "On sale!" flag on the product page, and on product listings.</source>
         <target>Display the "On sale!" flag on the product page, and on product listings.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 96]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 97]</note>
       </trans-unit>
       <trans-unit id="f92965e2c8a7afb3c1b9a5c09a263636">
         <source>Done</source>
@@ -854,7 +969,6 @@
       <trans-unit id="c8effe37e0fefd95ff0cc4873de6e6a6">
         <source>EAN-13 or JAN barcode</source>
         <target>EAN-13 or JAN barcode</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/BulkCombinationReferencesType.php [Line: 82]</note>
       </trans-unit>
       <trans-unit id="00481fc2b38b4f5a85040e2afaba9762">
         <source>EAN-13:</source>
@@ -991,6 +1105,16 @@
         <target>Expiration date</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/payments.html.twig [Line: 85]</note>
       </trans-unit>
+      <trans-unit id="24fe48030f7d3097d5882535b04c3fa8">
+        <source>Expired</source>
+        <target>Expired</target>
+        <note>File: src/Core/Grid/Definition/Factory/DiscountGridDefinitionFactory.php [Line: 247]</note>
+      </trans-unit>
+      <trans-unit id="95b16127e70e8a90220404fb48343182">
+        <source>Expiry date</source>
+        <target>Expiry date</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountPeriodType.php [Line: 47]</note>
+      </trans-unit>
       <trans-unit id="8273cff9da36d1ddc5ee3f19b1283f0c">
         <source>Export data into CSV</source>
         <target>Export data into CSV</target>
@@ -1066,6 +1190,11 @@
         <target>For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/SpecificPriceImpactType.php [Line: 74]</note>
       </trans-unit>
+      <trans-unit id="4c1185179f4302791b8da8cc0a6ade24">
+        <source>Free gift</source>
+        <target>Free gift</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountTypeSelectorType.php [Line: 62]</note>
+      </trans-unit>
       <trans-unit id="1dec4f55522b828fe5dacf8478021a9e">
         <source>Friendly URL</source>
         <target>Friendly URL</target>
@@ -1095,6 +1224,11 @@
         <source>Generate combinations|Generate combination|Generate {combinationsNb} combinations</source>
         <target>Generate combinations|Generate combination|Generate {combinationsNb} combinations</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig [Line: 56]</note>
+      </trans-unit>
+      <trans-unit id="097e195f5aa4a0d8514ae5f11ca86a76">
+        <source>Generate discount code</source>
+        <target>Generate discount code</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityModeType.php [Line: 53]</note>
       </trans-unit>
       <trans-unit id="c5cc1fd4333cd32baa65a5574de05186">
         <source>Generate product combinations</source>
@@ -1139,7 +1273,7 @@
       <trans-unit id="269940c3dcde1663c0ad653f1a387ba7">
         <source>Hide catalog price rules</source>
         <target>Hide catalog price rules</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 110]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 111]</note>
       </trans-unit>
       <trans-unit id="0b90582f4589d84be89f5b847d4d1ed1">
         <source>Highlight</source>
@@ -1291,6 +1425,11 @@
         <target>Leave initial price</target>
         <note>File: controllers/admin/AdminSpecificPriceRuleController.php [Line: 269]</note>
       </trans-unit>
+      <trans-unit id="2b9fd8d7c40948fdfbc27fc95aa7d4b1">
+        <source>Limit the discount's availability based on the customer's country or chosen delivery method.</source>
+        <target>Limit the discount's availability based on the customer's country or chosen delivery method.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountConditionsType.php [Line: 68]</note>
+      </trans-unit>
       <trans-unit id="8f36b08eb9ebba13ef930c9dd719ff7c">
         <source>Limit to a single customer</source>
         <target>Limit to a single customer</target>
@@ -1331,6 +1470,11 @@
         <target>List of products without price</target>
         <note>File: src/Core/Grid/Definition/Factory/Monitoring/ProductWithoutPriceGridDefinitionFactory.php [Line: 41]</note>
       </trans-unit>
+      <trans-unit id="9d502811504138ed4828a82101cce886">
+        <source>Loading attributes</source>
+        <target>Loading attributes</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountProductSegmentType.php [Line: 73]</note>
+      </trans-unit>
       <trans-unit id="fb7ce3873cd060f6b88ca953a98191f3">
         <source>Loading catalog price rules</source>
         <target>Loading catalog price rules</target>
@@ -1345,6 +1489,11 @@
         <source>Loading feature values...</source>
         <target>Loading feature values...</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/FormTheme/features.html.twig [Line: 35]</note>
+      </trans-unit>
+      <trans-unit id="28c4da5051a18de03662817a2c39d410">
+        <source>Loading features</source>
+        <target>Loading features</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountProductSegmentType.php [Line: 83]</note>
       </trans-unit>
       <trans-unit id="a7a22a52c946c3b479a00edfb4eba7a5">
         <source>Loading specific prices</source>
@@ -1481,6 +1630,16 @@
         <target>Minimum order quantity</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/BulkCombinationStockType.php [Line: 95]</note>
       </trans-unit>
+      <trans-unit id="31528169ac9afeb1e0db2baeff9ae7e0">
+        <source>Minimum product quantity</source>
+        <target>Minimum product quantity</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountProductSegmentType.php [Line: 87]</note>
+      </trans-unit>
+      <trans-unit id="906b9dacfcbc66bfc3e7675264c66dea">
+        <source>Minimum purchase amount</source>
+        <target>Minimum purchase amount</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/CartConditionsType.php [Line: 52]</note>
+      </trans-unit>
       <trans-unit id="6014344a66ff2f266fb4bc987178493f">
         <source>Minimum quantity for sale</source>
         <target>Minimum quantity for sale</target>
@@ -1521,6 +1680,16 @@
         <target>Next combination</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/paginated_list_header.html.twig [Line: 119]</note>
       </trans-unit>
+      <trans-unit id="4026ded8c73a66dcd6552a8a8042bcde">
+        <source>No Features</source>
+        <target>No Features</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountFeaturesType.php [Line: 55]</note>
+      </trans-unit>
+      <trans-unit id="24ee9c75326c33f9f975361393db2ed3">
+        <source>No Supplier</source>
+        <target>No Supplier</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountSupplierType.php [Line: 60]</note>
+      </trans-unit>
       <trans-unit id="8e41eae149ff3fa38cc9c4fde945f2c3">
         <source>No brand</source>
         <target>No brand</target>
@@ -1530,6 +1699,11 @@
         <source>No files attached</source>
         <target>No files attached</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Options/ProductAttachmentsType.php [Line: 73]</note>
+      </trans-unit>
+      <trans-unit id="5a7fb74f2705f154b1e8d2ac7f5405c5">
+        <source>No product selected</source>
+        <target>No product selected</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountType.php [Line: 86]</note>
       </trans-unit>
       <trans-unit id="3343aa2d119a121d3964cc68ee4eaf63">
         <source>No redirection (200), display product</source>
@@ -1595,6 +1769,36 @@
         <source>Number of products required in the cart to enjoy the discount:</source>
         <target>Number of products required in the cart to enjoy the discount:</target>
         <note>File: admin-dev/themes/default/template/controllers/cart_rules/product_rule_group.tpl [Line: 34]</note>
+      </trans-unit>
+      <trans-unit id="de74bebf82eb42517745c3693c7713c4">
+        <source>On cart amount</source>
+        <target>On cart amount</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountTypeSelectorType.php [Line: 54]</note>
+      </trans-unit>
+      <trans-unit id="22d86d0b26c9e2834a45c3317b0ce424">
+        <source>On catalog products</source>
+        <target>On catalog products</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountTypeSelectorType.php [Line: 58]</note>
+      </trans-unit>
+      <trans-unit id="aa7bdf8ff61001411220b22f26c65f34">
+        <source>On delivery</source>
+        <target>On delivery</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DeliveryConditionsType.php [Line: 92]</note>
+      </trans-unit>
+      <trans-unit id="a0c9ae05536ecd7395d1349e54bdb0f0">
+        <source>On free gift</source>
+        <target>On free gift</target>
+        <note>File: classes/lang/KeysReference/CartRuleTypeLang.php [Line: 38]</note>
+      </trans-unit>
+      <trans-unit id="9f2096e129a4101da4615859536ba6ef">
+        <source>On free shipping</source>
+        <target>On free shipping</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountTypeSelectorType.php [Line: 66]</note>
+      </trans-unit>
+      <trans-unit id="7c5a00c9b2b284bad4cfad81e321d068">
+        <source>On total order</source>
+        <target>On total order</target>
+        <note>File: classes/lang/KeysReference/CartRuleTypeLang.php [Line: 32]</note>
       </trans-unit>
       <trans-unit id="fb860a85df1273a52a57c78d00f93704">
         <source>Only customers with the link can access the product.</source>
@@ -1681,6 +1885,11 @@
         <target>Percent (%)</target>
         <note>File: admin-dev/themes/default/template/controllers/cart_rules/actions.tpl [Line: 48]</note>
       </trans-unit>
+      <trans-unit id="55cf66450895e119a318d976e5916be8">
+        <source>Period never expires</source>
+        <target>Period never expires</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountPeriodType.php [Line: 62]</note>
+      </trans-unit>
       <trans-unit id="34c6d1495d38f91ae785bc94849dc771">
         <source>Permanent redirection to a category (301)</source>
         <target>Permanent redirection to a category (301)</target>
@@ -1724,17 +1933,17 @@
       <trans-unit id="e22ac25b066b201473de7aa700ef5d92">
         <source>Pricing</source>
         <target>Pricing</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 130]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 131]</note>
       </trans-unit>
       <trans-unit id="502996d9790340c5fd7b86a5b93b1c9f">
         <source>Priority</source>
         <target>Priority</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/CartRule/InformationType.php [Line: 121]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityType.php [Line: 54]</note>
       </trans-unit>
       <trans-unit id="8e99fa97ef8d51d9215028842c7ad57c">
         <source>Priority management</source>
         <target>Priority management</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 116]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 117]</note>
       </trans-unit>
       <trans-unit id="47f9082fc380ca62d531096aa1d110f1">
         <source>Private</source>
@@ -1745,6 +1954,11 @@
         <source>Product Return</source>
         <target>Product Return</target>
         <note>File: classes/lang/KeysReference/StockMvtReasonLang.php [Line: 34]</note>
+      </trans-unit>
+      <trans-unit id="9195353929a16b94936ffd258e526c34">
+        <source>Product conditions</source>
+        <target>Product conditions</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountConditionsType.php [Line: 46]</note>
       </trans-unit>
       <trans-unit id="6253e193e6e17cb8255eb66deff72289">
         <source>Product deleted</source>
@@ -1766,6 +1980,11 @@
         <target>Product name</target>
         <note>File: admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl [Line: 54]</note>
       </trans-unit>
+      <trans-unit id="37701e6d893d81d755624942eeff27da">
+        <source>Product segment</source>
+        <target>Product segment</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/ProductConditionsType.php [Line: 75]</note>
+      </trans-unit>
       <trans-unit id="7f36b7eac5872d757b315ed431c4ad92">
         <source>Product selection</source>
         <target>Product selection</target>
@@ -1784,7 +2003,7 @@
       <trans-unit id="068f80c7519d0528fb08e82137a72131">
         <source>Products</source>
         <target>Products</target>
-        <note>File: src/Core/Grid/Definition/Factory/ManufacturerGridDefinitionFactory.php [Line: 111]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/Tag/TagType.php [Line: 78]</note>
       </trans-unit>
       <trans-unit id="d274013ea65428454962a59b7b373a41">
         <source>Public name</source>
@@ -1879,12 +2098,17 @@
       <trans-unit id="38070661d5ad384d9c7d21895dc4e784">
         <source>Related products</source>
         <target>Related products</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Description/DescriptionType.php [Line: 132]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Description/DescriptionType.php [Line: 134]</note>
       </trans-unit>
       <trans-unit id="dab57a3f740e26922519aebc7e3d602a">
         <source>Reply to the next unanswered message in this thread</source>
         <target>Reply to the next unanswered message in this thread</target>
         <note>File: controllers/admin/AdminCustomerThreadsController.php [Line: 689]</note>
+      </trans-unit>
+      <trans-unit id="c87cd889656b58b0a0b873088c2a2fb1">
+        <source>Require a single product or product segment in the cart for the discount to become active.</source>
+        <target>Require a single product or product segment in the cart for the discount to become active.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountConditionsType.php [Line: 47]</note>
       </trans-unit>
       <trans-unit id="942d4e37dd5607ab68e54755540d4a47">
         <source>Reserved</source>
@@ -1951,6 +2175,11 @@
         <target>Save then add another value</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Features/FeatureValue/Blocks/form.html.twig [Line: 47]</note>
       </trans-unit>
+      <trans-unit id="2b7dabba0077abe3732e0418b048a56b">
+        <source>Scheduled</source>
+        <target>Scheduled</target>
+        <note>File: src/Core/Grid/Definition/Factory/DiscountGridDefinitionFactory.php [Line: 246]</note>
+      </trans-unit>
       <trans-unit id="d0f06038b6b3aa5edc07c7a6fd3ca3f9">
         <source>Search a category</source>
         <target>Search a category</target>
@@ -1971,10 +2200,20 @@
         <target>Search engine optimization</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 265]</note>
       </trans-unit>
+      <trans-unit id="3fbdb614f6e462a0ccca51ea5b6197aa">
+        <source>Search for attribute...</source>
+        <target>Search for attribute...</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountProductSegmentType.php [Line: 70]</note>
+      </trans-unit>
       <trans-unit id="11f460b8c2fddf1d1448d03266f3a408">
         <source>Search for attributes...</source>
         <target>Search for attributes...</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig [Line: 58]</note>
+      </trans-unit>
+      <trans-unit id="fcb1c0e303cfaf0e1e4da9c76407b40a">
+        <source>Search for feature...</source>
+        <target>Search for feature...</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountProductSegmentType.php [Line: 80]</note>
       </trans-unit>
       <trans-unit id="2ba18b8df558ceaabcc89f3a16772a9b">
         <source>Search only</source>
@@ -1986,15 +2225,65 @@
         <target>Search products (search by name, reference, supplier)</target>
         <note>File: src/PrestaShopBundle/Translation/Api/StockApi.php [Line: 67]</note>
       </trans-unit>
+      <trans-unit id="ba77a40db1fbb5da204ed291f690d455">
+        <source>Select a Period</source>
+        <target>Select a Period</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountPeriodType.php [Line: 78]</note>
+      </trans-unit>
       <trans-unit id="a4838f49c5701e128d7695c3dc45083c">
         <source>Select a store</source>
         <target>Select a store</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1851]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1852]</note>
       </trans-unit>
       <trans-unit id="ba7144e008dfcd7a273108647d7d5153">
         <source>Select all values ({valuesNb})</source>
         <target>Select all values ({valuesNb})</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig [Line: 57]</note>
+      </trans-unit>
+      <trans-unit id="98b9fbc0e51e7054255d4ff1c6a8e2c9">
+        <source>Select attributes</source>
+        <target>Select attributes</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountProductSegmentType.php [Line: 71]</note>
+      </trans-unit>
+      <trans-unit id="7a95f8d291a7ef99b2015884e7bdd913">
+        <source>Select carriers</source>
+        <target>Select carriers</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DeliveryConditionsType.php [Line: 55]</note>
+      </trans-unit>
+      <trans-unit id="bc878e0316f10916dcdea04c1ddebfad">
+        <source>Select countries</source>
+        <target>Select countries</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DeliveryConditionsType.php [Line: 73]</note>
+      </trans-unit>
+      <trans-unit id="894ec7c68ba2ea78102bcbaf12f6f363">
+        <source>Select customer eligibility</source>
+        <target>Select customer eligibility</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountCustomerEligibilityType.php [Line: 47]</note>
+      </trans-unit>
+      <trans-unit id="6f78dfebf44128a81cbf4e18e39b7f85">
+        <source>Select discount conditions</source>
+        <target>Select discount conditions</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountType.php [Line: 59]</note>
+      </trans-unit>
+      <trans-unit id="c45c941393c91f934013bd5b7a872646">
+        <source>Select discount type</source>
+        <target>Select discount type</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Discount/create_discount_modal.html.twig [Line: 31]</note>
+      </trans-unit>
+      <trans-unit id="9af6bd2245886042f23df49ac77fe053">
+        <source>Select features</source>
+        <target>Select features</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountProductSegmentType.php [Line: 81]</note>
+      </trans-unit>
+      <trans-unit id="120773f76db9dd0444d2b43e9c459640">
+        <source>Select {selectedItemsNb} attribute(s)</source>
+        <target>Select {selectedItemsNb} attribute(s)</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountProductSegmentType.php [Line: 72]</note>
+      </trans-unit>
+      <trans-unit id="c6a3a3720160cc52f045951304356ead">
+        <source>Select {selectedItemsNb} feature(s)</source>
+        <target>Select {selectedItemsNb} feature(s)</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountProductSegmentType.php [Line: 82]</note>
       </trans-unit>
       <trans-unit id="bd544756bba84765ddf991b01d7120d1">
         <source>Selected carriers</source>
@@ -2030,6 +2319,11 @@
         <source>Send me an email when the quantity is below or equals this level</source>
         <target>Send me an email when the quantity is below or equals this level</target>
         <note>File: src/PrestaShopBundle/Controller/Api/StockController.php [Line: 186]</note>
+      </trans-unit>
+      <trans-unit id="a256a6cd98631feb7a6a8036e75e3a56">
+        <source>Set a minimum purchase amount or product quantity for the discount to become active.</source>
+        <target>Set a minimum purchase amount or product quantity for the discount to become active.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountConditionsType.php [Line: 56]</note>
       </trans-unit>
       <trans-unit id="048d6660ebe2ebd42adea9efed97aa7d">
         <source>Set a specific order for this product</source>
@@ -2089,17 +2383,32 @@
       <trans-unit id="6d3cf4eef56dedca42e159097b0be7cd">
         <source>Show catalog price rules</source>
         <target>Show catalog price rules</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 111]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 112]</note>
       </trans-unit>
       <trans-unit id="e1a5e653bc356ed6745d6814d50213eb">
         <source>Show price</source>
         <target>Show price</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Options/VisibilityType.php [Line: 86]</note>
       </trans-unit>
+      <trans-unit id="11d02208376dde7eb543353903caeda5">
+        <source>Single customer</source>
+        <target>Single customer</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountCustomerEligibilityChoiceType.php [Line: 90]</note>
+      </trans-unit>
       <trans-unit id="d6c88db9c7c9e17dd19361fd0cd109a2">
         <source>Sold products</source>
         <target>Sold products</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/StockMovementType.php [Line: 68]</note>
+      </trans-unit>
+      <trans-unit id="ba3186ffceb490d2ff65f6f05baad601">
+        <source>Specific carriers</source>
+        <target>Specific carriers</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DeliveryConditionsType.php [Line: 52]</note>
+      </trans-unit>
+      <trans-unit id="4a9a0e9594b1a90d6f6e0104151d59ca">
+        <source>Specific countries</source>
+        <target>Specific countries</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DeliveryConditionsType.php [Line: 68]</note>
       </trans-unit>
       <trans-unit id="078448d4b487ad94565d5d18739c317a">
         <source>Specific delivery time for this product</source>
@@ -2114,22 +2423,37 @@
       <trans-unit id="5b14ab8904d8a735edd6ea4cff8f7b7c">
         <source>Specific prices</source>
         <target>Specific prices</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 102]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php [Line: 103]</note>
       </trans-unit>
       <trans-unit id="1b343552de249749420ddd0fff731e0c">
         <source>Specific product</source>
         <target>Specific product</target>
         <note>File: admin-dev/themes/default/template/controllers/cart_rules/actions.tpl [Line: 113]</note>
       </trans-unit>
+      <trans-unit id="0134930cd8de5ba2ea50e5a843bea37d">
+        <source>Specific products</source>
+        <target>Specific products</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/ProductConditionsType.php [Line: 56]</note>
+      </trans-unit>
       <trans-unit id="4c43a60b8005e29697dfbcf647f8096e">
         <source>Specific references</source>
         <target>Specific references</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/BulkCombinationReferencesType.php [Line: 109]</note>
       </trans-unit>
+      <trans-unit id="507ab0e213b2d6601ff8b6dffdf2785d">
+        <source>Specifiy discount mode</source>
+        <target>Specifiy discount mode</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityType.php [Line: 44]</note>
+      </trans-unit>
       <trans-unit id="2b5d1ce10d1df2892eb6033604e4df0b">
         <source>Standard product</source>
         <target>Standard product</target>
         <note>File: src/Core/Form/ChoiceProvider/ProductTypeChoiceProvider.php [Line: 92]</note>
+      </trans-unit>
+      <trans-unit id="4d34f1097f6c8b9cee28bca8b78bbee9">
+        <source>Start date</source>
+        <target>Start date</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountPeriodType.php [Line: 46]</note>
       </trans-unit>
       <trans-unit id="24a23d787190f2c4812ff9ab11847a72">
         <source>Status:</source>
@@ -2170,6 +2494,11 @@
         <source>Summary</source>
         <target>Summary</target>
         <note>File: src/Core/Import/EntityField/Provider/ProductFieldsProvider.php [Line: 103]</note>
+      </trans-unit>
+      <trans-unit id="ec136b444eede3bc85639fac0dd06229">
+        <source>Supplier</source>
+        <target>Supplier</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountSupplierType.php [Line: 64]</note>
       </trans-unit>
       <trans-unit id="8284ae5df53e6e7ffc1f2cc67ae68765">
         <source>Supplier reference</source>
@@ -2231,6 +2560,21 @@
         <target>These modules are relative to the product page of your store.</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Blocks/modules-preview.html.twig [Line: 29]</note>
       </trans-unit>
+      <trans-unit id="b19567b184d22726818b594fabe342f8">
+        <source>This discount applies on cart.</source>
+        <target>This discount applies on cart.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountType.php [Line: 66]</note>
+      </trans-unit>
+      <trans-unit id="ec733a41c0f2be0fcdf6c94afefc7423">
+        <source>This discount applies on catalog products.</source>
+        <target>This discount applies on catalog products.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountType.php [Line: 68]</note>
+      </trans-unit>
+      <trans-unit id="596466652213872dd60b36d30e8596da">
+        <source>This discount applies on order.</source>
+        <target>This discount applies on order.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountType.php [Line: 67]</note>
+      </trans-unit>
       <trans-unit id="6fbafa1f93546890214b4d08845ae6f9">
         <source>This field contains invalid characters: %invalidCharacters%</source>
         <target>This field contains invalid characters: %invalidCharacters%</target>
@@ -2240,6 +2584,11 @@
         <source>This product is below the low stock level you have defined.</source>
         <target>This product is below the low stock level you have defined.</target>
         <note>File: src/PrestaShopBundle/Translation/Api/StockApi.php [Line: 68]</note>
+      </trans-unit>
+      <trans-unit id="06d4504fc3aa0da5497eaedec428afe9">
+        <source>This type cannot be modified after being saved.</source>
+        <target>This type cannot be modified after being saved.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountTypeSelectorType.php [Line: 42]</note>
       </trans-unit>
       <trans-unit id="068f62c804cc9c4cd4f6dfc5b5d3ecaa">
         <source>Threads pending</source>
@@ -2350,6 +2699,11 @@
         <source>Upload files here</source>
         <target>Upload files here</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Common/Grid/Blocks/EmptyState/attachment.html.twig [Line: 29]</note>
+      </trans-unit>
+      <trans-unit id="e5f70d14bbbfce79dd513af7c74b1e31">
+        <source>Usability conditions</source>
+        <target>Usability conditions</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountType.php [Line: 99]</note>
       </trans-unit>
       <trans-unit id="9aa217c615451b017ed6f2c1bbb31004">
         <source>Use as cover image</source>

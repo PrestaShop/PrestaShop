@@ -103,7 +103,7 @@ class PreferencesType extends TranslatorAwareType
             $builder->add('enable_ssl', SwitchType::class, [
                 'label' => $this->trans('Enable SSL', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
-                    'If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for all the pages of your shop.',
+                    'Enables or disables SSL encryption (https://) for your shop. This is a security standard and you should always keep this option enabled, unless there is a specific technical issue.',
                     'Admin.Shopparameters.Help'
                 ),
             ]);
@@ -127,7 +127,7 @@ class PreferencesType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'Allow iframes on text fields like product description. We recommend that you leave this option disabled.',
+                    'Allows the use of iframes in rich text fields such as product descriptions. It is recommended to keep this option disabled unless you specifically need iframes for video embeds or other external content.',
                     'Admin.Shopparameters.Help'
                 ),
             ])
@@ -137,7 +137,7 @@ class PreferencesType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'Clean the HTML content on text fields. We recommend that you leave this option enabled.',
+                    'Cleans the HTML content in rich text fields before saving. It is recommended to keep this option enabled to ensure safe and valid content is saved into the database.',
                     'Admin.Shopparameters.Help'
                 ),
             ])
@@ -175,7 +175,7 @@ class PreferencesType extends TranslatorAwareType
                 'display_suppliers', SwitchType::class, [
                     'label' => $this->trans('Display suppliers', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
-                        'Enable suppliers page on your front office even when its module is disabled.',
+                        'Enables or disables the suppliers listing in your shop. When disabled, suppliers are also removed from the sitemap and other related sections.',
                         'Admin.Shopparameters.Help'
                     ),
                 ])
@@ -183,7 +183,7 @@ class PreferencesType extends TranslatorAwareType
                 'display_manufacturers', SwitchType::class, [
                     'label' => $this->trans('Display brands', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
-                        'Enable brands page on your front office even when its module is disabled.',
+                        'Enables or disables the brands listing in your shop. When disabled, brands are also removed from the sitemap and other related sections.',
                         'Admin.Shopparameters.Help'
                     ),
                 ])
@@ -191,7 +191,7 @@ class PreferencesType extends TranslatorAwareType
                 'display_best_sellers', SwitchType::class, [
                     'label' => $this->trans('Display best sellers', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
-                        'Enable best sellers page on your front office even when its respective module is disabled.',
+                        'Enables or disables the best sellers page in your shop. When disabled, the page and related links are also removed from the sitemap and other sections.',
                         'Admin.Shopparameters.Help'
                     ),
                 ])
