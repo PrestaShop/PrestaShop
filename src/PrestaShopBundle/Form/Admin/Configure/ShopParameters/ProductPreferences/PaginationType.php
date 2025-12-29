@@ -58,7 +58,7 @@ class PaginationType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'The order in which products are displayed in the product list.',
+                    'The default order in which products are displayed in listings. The available sorting methods differ based on the page type.',
                     'Admin.Shopparameters.Help'
                 ),
                 'choices' => [

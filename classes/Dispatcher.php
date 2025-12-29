@@ -537,7 +537,14 @@ class DispatcherCore
         // If friendly URLs are activated and there are more than one languages on the shop, we handle the language
         // Set $_GET['isolang'] and remove the language part from the request URI
         if ($this->use_routes && $isMultiLanguageActivated) {
-            // If we find a language in the URL, we assign it and remove it from the URL
+            /*
+             * If we find a language in the URL, we assign it and remove it from the URL
+             *
+             * @todo Please note that this does not validate the language code in any way.
+             * It would be better to check if the language actually exists in the shop directly.
+             * If not, the default language remains used and the url is redirected to the URL of
+             * the default language later, but only because of the canonical redirect.
+             */
             if (preg_match('#^/([a-z]{2})(?:/.*)?$#', $requestUri, $matches)) {
                 $_GET['isolang'] = $matches[1];
                 $requestUri = substr($requestUri, 3);

@@ -284,6 +284,19 @@ class FrontControllerCore extends Controller
             throw new PrestaShopException($this->trans('Current theme is unavailable. Please check your theme\'s directory name ("%s") and permissions.', [htmlspecialchars(basename(rtrim(_PS_THEME_DIR_, '/\\')))], 'Admin.Design.Notification'));
         }
 
+        /*
+         * The default country is already set in config.inc.php before loading the front controller. This country will be used
+         * to display prices, taxes, delivery options and other country specific data.
+         *
+         * Here, the country can get modified based on geolocation or browser's preferred country.
+         *
+         * The country may also be changed further down in this method, if we have a cart with an address assigned to it.
+         * If there is a cart already, the context country is set to the country of that cart.
+         *
+         * If you are looking to override the country selection logic, you can use actionFrontControllerInitBefore above
+         * and pre-set the things in beforehand or actionFrontControllerInitContextCountryAfter below, if you want to use the built
+         * in geolocation logic and just modify the result.
+         */
         if (Configuration::get('PS_GEOLOCATION_ENABLED')) {
             if (($new_default = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($new_default)) {
                 $this->context->country = $new_default;
@@ -309,7 +322,7 @@ class FrontControllerCore extends Controller
                     $id_country = Tools::getCountry();
                 }
 
-                $country = new Country($id_country, (int) $this->context->cookie->id_lang);
+                $country = new Country($id_country, (int) $this->context->language->id);
 
                 if (!$has_currency && Validate::isLoadedObject($country) && $this->context->country->id !== $country->id) {
                     $this->context->country = $country;
@@ -320,13 +333,34 @@ class FrontControllerCore extends Controller
         }
 
         /*
+         * Allow modules to override the country selection logic after running geolocation, if needed. Just do whatever you need
+         * and assign proper country to context->country.
+         */
+        Hook::exec(
+            'actionFrontControllerDetectContextCountryAfter',
+            [
+                'controller' => $this,
+            ]
+        );
+
+        /*
          * Get proper currency from the cookie and $_GET parameters. It will provide us with a requested currency
          * or a default currency, if the requested one is not valid anymore.
+         * Assign that currency to the context, so we can immediately use it for calculations.
          */
-        $currency = Tools::setCurrency($this->context->cookie);
+        $this->context->currency = Tools::setCurrency($this->context->cookie);
 
-        // Assign that currency to the context, so we can immediately use it for calculations.
-        $this->context->currency = $currency;
+        /*
+         * Allow modules to override the currency selection logic if needed. Just do whatever you need
+         * and assign proper currency to context->currency and context->cookie->id_currency. Useful if you want
+         * to implement custom currency selection logic, for example always force a currency based on country.
+         */
+        Hook::exec(
+            'actionFrontControllerInitContextCurrencyAfter',
+            [
+                'controller' => $this,
+            ]
+        );
 
         if (isset($_GET['logout']) || ($this->context->customer->logged && Customer::isBanned($this->context->customer->id))) {
             $this->context->customer->logout();
@@ -376,15 +410,15 @@ class FrontControllerCore extends Controller
              */
             } elseif (
                 $this->context->cookie->id_customer != $cart->id_customer
-                || $this->context->cookie->id_lang != $cart->id_lang
-                || $currency->id != $cart->id_currency
+                || $this->context->language->id != $cart->id_lang
+                || $this->context->currency->id != $cart->id_currency
             ) {
                 // update cart values
                 if ($this->context->cookie->id_customer) {
                     $cart->id_customer = (int) $this->context->cookie->id_customer;
                 }
-                $cart->id_lang = (int) $this->context->cookie->id_lang;
-                $cart->id_currency = (int) $currency->id;
+                $cart->id_lang = (int) $this->context->language->id;
+                $cart->id_currency = (int) $this->context->currency->id;
                 $cart->update();
             }
 
@@ -423,8 +457,8 @@ class FrontControllerCore extends Controller
          */
         if (!isset($cart) || !$cart->id) {
             $cart = new Cart();
-            $cart->id_lang = (int) $this->context->cookie->id_lang;
-            $cart->id_currency = (int) $this->context->cookie->id_currency;
+            $cart->id_lang = (int) $this->context->language->id;
+            $cart->id_currency = (int) $this->context->currency->id;
             $cart->id_guest = (int) $this->context->cookie->id_guest;
             $cart->id_shop_group = (int) $this->context->shop->id_shop_group;
             $cart->id_shop = $this->context->shop->id;
@@ -459,10 +493,13 @@ class FrontControllerCore extends Controller
 
         Product::initPricesComputation();
 
+        /*
+         * If there is an address assigned to the cart in context, the context->country MUST be set to the country of that address.
+         * We use delivery or invoice address, depending on PS_TAX_ADDRESS_TYPE configuration.
+         */
         if (isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
             $infos = Address::getCountryAndState((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-            $country = new Country((int) $infos['id_country']);
-            $this->context->country = $country;
+            $this->context->country = new Country((int) $infos['id_country']);
         }
 
         if (!Tools::isPHPCLI()) {

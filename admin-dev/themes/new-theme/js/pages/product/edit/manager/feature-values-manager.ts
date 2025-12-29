@@ -121,9 +121,11 @@ export default class FeatureValuesManager {
       if (!$featureRow.length) {
         const featurePrototype = this.$collectionContainer.data('prototype');
         const featurePrototypeName = this.$collectionContainer.data('prototypeName');
-        const newIndex = $(ProductMap.featureValues.featureRow, this.$collectionRowsContainer).length;
+        // The container keeps track of the next index to use, we increment it right away
+        const rowIndex = this.$collectionContainer.data('rowIndex');
+        this.$collectionContainer.data('rowIndex', rowIndex + 1);
 
-        const $newFeatureRow = $(featurePrototype.replace(new RegExp(featurePrototypeName, 'g'), newIndex)).first();
+        const $newFeatureRow = $(featurePrototype.replace(new RegExp(featurePrototypeName, 'g'), rowIndex)).first();
         $newFeatureRow.attr('feature-id', featureId);
         this.$collectionRowsContainer.append($newFeatureRow);
         $(ProductMap.featureValues.featureIdInput, $newFeatureRow).val(featureId);
@@ -156,9 +158,11 @@ export default class FeatureValuesManager {
   private addFeatureValueRow($featureRow: JQuery, featureId: string, featureName: string, featureValueId: string): void {
     const rowValuePrototype = $featureRow.data('prototype');
     const rowValuePrototypeName = $featureRow.data('prototypeName');
+    // The feature row keeps track of the next index to use for its values, we increment it right away
+    const rowIndex = $featureRow.data('rowIndex');
+    $featureRow.data('rowIndex', rowIndex + 1);
     const $featureValueRows = $(ProductMap.featureValues.featureValueRowByFeatureId(featureId), this.$collectionRowsContainer);
-
-    const $newFeatureValueRow = $(rowValuePrototype.replace(new RegExp(rowValuePrototypeName, 'g'), $featureValueRows.length));
+    const $newFeatureValueRow = $(rowValuePrototype.replace(new RegExp(rowValuePrototypeName, 'g'), rowIndex));
     $newFeatureValueRow.attr('feature-id', featureId);
 
     if ($featureValueRows.length === 0) {

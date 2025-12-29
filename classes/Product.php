@@ -3423,22 +3423,47 @@ class ProductCore extends ObjectModel
             }
         }
 
+        /*
+         * Instantiate currency - either by using the one in the context or by getting the default currency
+         */
         $id_currency = Validate::isLoadedObject($context->currency) ? (int) $context->currency->id : Currency::getDefaultCurrencyId();
 
+        /*
+         * Now, we need to retrieve address information. We need it to precisely calculate the price,
+         * without it, we cannot resolve proper tax, special prices to be used etc.
+         *
+         * First, if no address ID has been provided, we try to get it from the cart in the context.
+         */
         if (!$id_address && Validate::isLoadedObject($cur_cart)) {
             $id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
         }
 
-        // retrieve address informations
+        /*
+         * Now, we either have the address ID or still null - which is not a problem.
+         *
+         * Address::initialize will take care of everything and just return an address with required data.
+         * We either get a filled Address object if we had an ID.
+         * Or, we get a blank Address object with a country, sometimes even state and postcode. Depends on
+         * geolocation enabled or if we already assigned some country to the context. See the method insides
+         * to see the logic.
+         */
         $address = Address::initialize($id_address, true);
+
+        // Now, we extract other required data from the address
         $id_country = (int) $address->id_country;
         $id_state = (int) $address->id_state;
         $zipcode = $address->postcode;
 
+        // Check if tax has been enabled in configuration, if not, it will be always false
         if (!Configuration::get('PS_TAX')) {
             $usetax = false;
         }
 
+        /*
+         * If the customer has a valid VAT number, we calculate the price without tax.
+         * @TODO - This is historic and should be totally refactored for multiple reasons.
+         * No validation, only one address considered, dependence on configuration from legacy module.
+         */
         if (
             $usetax != false
             && !empty($address->vat_number)
@@ -3448,6 +3473,7 @@ class ProductCore extends ObjectModel
             $usetax = false;
         }
 
+        // If no customer ID has been provided, we try to get it from the context, if set
         if (null === $id_customer && Validate::isLoadedObject($context->customer)) {
             $id_customer = $context->customer->id;
         }
@@ -6556,6 +6582,11 @@ class ProductCore extends ObjectModel
      */
     public function getTaxesRate(?Address $address = null)
     {
+        /*
+         * If no address is provided, we let Address::initialize instantiate one blank
+         * for us with the all default/fallback data we can get. We get a blank Address
+         * object with a country, sometimes even state and postcode.
+         */
         if (!$address || !$address->id_country) {
             $address = Address::initialize();
         }

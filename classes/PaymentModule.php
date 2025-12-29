@@ -980,8 +980,15 @@ abstract class PaymentModuleCore extends Module
      */
     protected function getEmailTemplateContent($template_name, $mail_type, $var)
     {
-        $email_configuration = Configuration::get('PS_MAIL_TYPE');
-        if ($email_configuration != $mail_type && $email_configuration != Mail::TYPE_BOTH) {
+        $configuration = Configuration::get('PS_MAIL_TYPE');
+
+        // Do not render TXT if not needed
+        if ($mail_type === Mail::TYPE_TEXT && !in_array($configuration, [Mail::TYPE_TEXT, Mail::TYPE_BOTH])) {
+            return '';
+        }
+
+        // Do not render HTML if not needed
+        if ($mail_type === Mail::TYPE_HTML && !in_array($configuration, [Mail::TYPE_HTML, Mail::TYPE_BOTH, Mail::TYPE_BOTH_AUTOMATIC_TEXT])) {
             return '';
         }
 

@@ -280,8 +280,7 @@ describe('BO - Catalog - Products list : Bulk actions, Enable/Disable, 3-dot but
         productName = await boProductsPage.getTextColumn(page, 'product_name', 1) as string;
 
         page = await boProductsPage.clickOnPreviewProductButton(page);
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/34191
-        // await foClassicProductPage.changeLanguage(page, 'en');
+        await foClassicProductPage.changeLanguage(page, 'en');
 
         const result = await foClassicProductPage.getProductInformation(page);
         expect(result.name).to.contains(productName);

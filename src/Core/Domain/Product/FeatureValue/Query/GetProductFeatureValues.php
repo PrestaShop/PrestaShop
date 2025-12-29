@@ -29,27 +29,30 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Get FeatureValue associated to a Product
  */
 class GetProductFeatureValues
 {
-    /**
-     * @var ProductId
-     */
-    private $productId;
+    private ProductId $productId;
 
-    public function __construct(int $productId)
+    protected ShopId $shopId;
+
+    public function __construct(int $productId, int $shopId)
     {
         $this->productId = new ProductId($productId);
+        $this->shopId = new ShopId($shopId);
     }
 
-    /**
-     * @return ProductId
-     */
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    public function getShopId(): ShopId
+    {
+        return $this->shopId;
     }
 }

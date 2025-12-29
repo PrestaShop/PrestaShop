@@ -252,7 +252,7 @@ class TranslationService
             } else {
                 $queryBuilder->andWhere('t.theme IS NULL');
             }
-            $translation = $queryBuilder->getQuery()->getSingleResult();
+            $translation = $queryBuilder->getQuery()->getOneOrNullResult();
         } catch (Exception $exception) {
             $logger->error($exception->getMessage(), $log_context);
         }

@@ -536,7 +536,10 @@ class ToolsCore
     }
 
     /**
-     * Change language in cookie while clicking on a flag.
+     * This method was named "Change language in cookie while clicking on a flag.",
+     * but as of 25.12.2025, it does not really work at all. Language detection will
+     * never work because the language is exclusively determined by the URL, the isolang
+     * is always set and the HTTP_ACCEPT_LANGUAGE is not parsed properly anyway.
      *
      * @return string iso code
      */
@@ -592,7 +595,17 @@ class ToolsCore
     }
 
     /**
-     * If necessary change cookie language ID and context language.
+     * Detects proper id_language by the isolang parameter in the request and assigns
+     * it to the context and cookie. The method naming is a bit confusing as it does
+     * not switch anything. Language is exclusively determined by the URL.
+     *
+     * @todo - The behavior is a bit non stable, it should probably throw exceptions
+     * or somehow notify that nonsense is being present. If you for example pass a non
+     * existent language in the URL and you get "zz" in isolang, you will end up with:
+     * $_GET['isolang'] = zz
+     * $_GET['id_lang'] = null
+     * $context->cookie->id_lang = default language id from config.inc.php
+     * $context->language = default language from config.inc.php
      *
      * @param Context|null $context
      *
@@ -611,6 +624,11 @@ class ToolsCore
             return;
         }
 
+        /*
+         * This takes the isolang parameter from $_GET, converts it to an id_lang
+         * and assigns it into the GET. The isolang in the request always set by the Dispatcher.
+         * Either to a language code from the URL or the default language.
+         */
         if (
             ($iso = Tools::getValue('isolang'))
             && Validate::isLanguageIsoCode($iso)
@@ -622,6 +640,16 @@ class ToolsCore
         // Only switch if new ID is different from old ID
         $newLanguageId = (int) Tools::getValue('id_lang');
 
+        /*
+         * If we got a sensible language ID from the request, we will set it into the cookie
+         * and set it as the context language. There is already a default language set in the
+         * context from config.inc.php.
+         *
+         * @todo Please note that the cookie language ID has no effect as the language
+         * is exclusively determined by the URL. It may only by accessed by some really old
+         * codebase to read the language ID, but they should be updated to use the context
+         * language directly.
+         */
         if (
             Validate::isUnsignedId($newLanguageId)
             && $newLanguageId !== 0

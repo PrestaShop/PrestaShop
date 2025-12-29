@@ -1359,6 +1359,11 @@ class CarrierCore extends ObjectModel
      */
     public function getTaxesRate(?Address $address = null)
     {
+        /*
+         * If no address is provided, we let Address::initialize instantiate one blank
+         * for us with the all default/fallback data we can get. We get a blank Address
+         * object with a country, sometimes even state and postcode.
+         */
         if (!$address || !$address->id_country) {
             $address = Address::initialize();
         }
