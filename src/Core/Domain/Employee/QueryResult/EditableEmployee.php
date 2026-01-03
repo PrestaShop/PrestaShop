@@ -72,6 +72,21 @@ class EditableEmployee
     private $hasEnabledGravatar;
 
     /**
+     * @var bool
+     */
+    private $twoFactorEnabled = false;
+
+    /**
+     * @var bool
+     */
+    private $twoFactorTotEnabled = false;
+
+    /**
+     * @var bool
+     */
+    private $twoFactorEmailEnabled = false;
+
+    /**
      * @param EmployeeId $employeeId
      * @param FirstName $firstName
      * @param LastName $lastName
@@ -83,6 +98,9 @@ class EditableEmployee
      * @param int $profileId
      * @param array $shopAssociation
      * @param bool $hasEnabledGravatar
+     * @param bool $twoFactorEnabled
+     * @param bool $twoFactorTotEnabled
+     * @param bool $twoFactorEmailEnabled
      */
     public function __construct(
         EmployeeId $employeeId,
@@ -95,7 +113,10 @@ class EditableEmployee
         $active,
         $profileId,
         array $shopAssociation,
-        bool $hasEnabledGravatar = false
+        bool $hasEnabledGravatar = false,
+        bool $twoFactorEnabled = false,
+        bool $twoFactorTotEnabled = false,
+        bool $twoFactorEmailEnabled = false
     ) {
         $this->employeeId = $employeeId;
         $this->firstName = $firstName;
@@ -108,6 +129,9 @@ class EditableEmployee
         $this->shopAssociation = $shopAssociation;
         $this->avatarUrl = $avatarUrl;
         $this->hasEnabledGravatar = $hasEnabledGravatar;
+        $this->twoFactorEnabled = $twoFactorEnabled;
+        $this->twoFactorTotEnabled = $twoFactorTotEnabled;
+        $this->twoFactorEmailEnabled = $twoFactorEmailEnabled;
     }
 
     /**
@@ -196,5 +220,29 @@ class EditableEmployee
     public function hasEnabledGravatar()
     {
         return $this->hasEnabledGravatar;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getTwoFactorEnabled()
+    {
+        return $this->twoFactorEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getTwoFactorTotEnabled()
+    {
+        return $this->twoFactorTotEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getTwoFactorEmailEnabled()
+    {
+        return $this->twoFactorEmailEnabled;
     }
 }

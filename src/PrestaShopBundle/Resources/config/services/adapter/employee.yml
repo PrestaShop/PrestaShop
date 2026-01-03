@@ -86,3 +86,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Employee\EmployeeContextInitializer:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\SetEmployeeTwoFactorSecretHandler:
+    autoconfigure: true
+    autowire: true

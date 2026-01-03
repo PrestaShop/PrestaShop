@@ -6,12 +6,16 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Writer\PngWriter;
 use Exception;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SetEmployeeTwoFactorSecretCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AdminEmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteEmployeeException;
@@ -41,8 +45,12 @@ use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsCheckerInterface;
 use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Entity\Employee\Employee;
+use PrestaShopBundle\Entity\Repository\EmployeeRepository;
+use PrestaShopBundle\SchebTwoFactor\TotpSecretEncryptor;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -259,6 +267,10 @@ class EmployeeController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.employee_form_handler')]
         FormHandlerInterface $formHandler,
         EmployeeFormAccessCheckerInterface $formAccessChecker,
+        TotpAuthenticatorInterface $totpAuthenticator,
+        EmployeeRepository $employeeRepository,
+        TotpSecretEncryptor $totpSecretEncryptor,
+        ConfigurationInterface $configuration,
     ): Response {
         // If employee is editing his own profile - he doesn't need to have access to the edit form.
         if ($this->getEmployeeContext()->getEmployee()->getId() != $employeeId) {
@@ -287,10 +299,20 @@ class EmployeeController extends PrestaShopAdminController
 
         $isRestrictedAccess = $formAccessChecker->isRestrictedAccess((int) $employeeId);
 
+        $twoFactorData = $this->buildTwoFactorFormData(
+            $isRestrictedAccess,
+            $configuration,
+            $employeeRepository,
+            $totpAuthenticator,
+            $totpSecretEncryptor,
+        );
+
         try {
             $employeeForm = $formBuilder->getFormFor((int) $employeeId, [], [
                 'is_restricted_access' => $isRestrictedAccess,
                 'is_for_editing' => true,
+                'qr_code_src' => $twoFactorData['qr_code_src'],
+                'two_factor_totp_secret' => $twoFactorData['two_factor_totp_secret'],
             ]);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -337,6 +359,54 @@ class EmployeeController extends PrestaShopAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/edit.html.twig',
             $templateVars
         );
+    }
+
+    private function buildTwoFactorFormData(
+        bool $isRestrictedAccess,
+        $configuration,
+        EmployeeRepository $employeeRepository,
+        TotpAuthenticatorInterface $totpAuthenticator,
+        $totpSecretEncryptor
+    ): array {
+        if (!$isRestrictedAccess || !$configuration->get('PS_BACKOFFICE_2FA')) {
+            return [
+                'qr_code_src' => '',
+                'two_factor_totp_secret' => '',
+            ];
+        }
+
+        $employeeId = (int) $this->getEmployeeContext()->getEmployee()->getId();
+
+        /** @var Employee $employee */
+        $employee = $employeeRepository->findOneBy(['id' => $employeeId]);
+
+        if ($employee->getTwoFactorSecret()) {
+            $twoFactorTotpSecretPlain = $employee->getTwoFactorTotpSecretPlain();
+        } else {
+            $twoFactorTotpSecretPlain = $totpAuthenticator->generateSecret();
+
+            $this->dispatchCommand(
+                new SetEmployeeTwoFactorSecretCommand(
+                    $employeeId,
+                    $totpSecretEncryptor->encrypt($twoFactorTotpSecretPlain),
+                    $twoFactorTotpSecretPlain
+                )
+            );
+        }
+
+        $qrCodeContent = $totpAuthenticator->getQRContent($employee);
+
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->data($qrCodeContent)
+            ->size(220)
+            ->margin(10)
+            ->build();
+
+        return [
+            'qr_code_src' => 'data:image/png;base64,' . base64_encode($result->getString()),
+            'two_factor_totp_secret' => $twoFactorTotpSecretPlain,
+        ];
     }
 
     public function toggleNavigationMenuAction(
