@@ -73,6 +73,21 @@ class EditEmployeeCommand
     private $hasEnabledGravatar = false;
 
     /**
+     * @var bool
+     */
+    private $twoFactorEnabled = false;
+
+    /**
+     * @var bool
+     */
+    private $twoFactorTotEnabled = false;
+
+    /**
+     * @var bool
+     */
+    private $twoFactorEmailEnabled = false;
+
+    /**
      * @param int $employeeId
      */
     public function __construct($employeeId)
@@ -299,6 +314,51 @@ class EditEmployeeCommand
     public function setHasEnabledGravatar(bool $hasEnabledGravatar)
     {
         $this->hasEnabledGravatar = $hasEnabledGravatar;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getTwoFactorEnabled()
+    {
+        return $this->twoFactorEnabled;
+    }
+
+    public function setTwoFactorEnabled($twoFactorEnabled): self
+    {
+        $this->twoFactorEnabled = $twoFactorEnabled;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getTwoFactorTotEnabled()
+    {
+        return $this->twoFactorTotEnabled;
+    }
+
+    public function setTwoFactorTotEnabled($twoFactorTotEnabled): self
+    {
+        $this->twoFactorTotEnabled = $twoFactorTotEnabled;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getTwoFactorEmailEnabled()
+    {
+        return $this->twoFactorEmailEnabled;
+    }
+
+    public function setTwoFactorEmailEnabled($twoFactorEmailEnabled): self
+    {
+        $this->twoFactorEmailEnabled = $twoFactorEmailEnabled;
 
         return $this;
     }
