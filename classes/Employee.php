@@ -85,6 +85,26 @@ class EmployeeCore extends ObjectModel
     public $has_enabled_gravatar = false;
 
     /**
+     * @var bool
+     */
+    public $two_factor_enabled = false;
+
+    /**
+     * @var bool
+     */
+    public $two_factor_totp_enabled = false;
+
+    /**
+     * @var bool
+     */
+    public $two_factor_email_enabled = false;
+
+    /**
+     * @var string|null
+     */
+    public $two_factor_totp_secret;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -117,6 +137,10 @@ class EmployeeCore extends ObjectModel
             'reset_password_token' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false],
             'reset_password_validity' => ['type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false],
             'has_enabled_gravatar' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'two_factor_enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'two_factor_totp_enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'two_factor_email_enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'two_factor_totp_secret' => ['type' => self::TYPE_STRING, 'required' => false, 'size' => 512],
         ],
     ];
 

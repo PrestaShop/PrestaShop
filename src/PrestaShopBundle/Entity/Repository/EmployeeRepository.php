@@ -67,4 +67,24 @@ class EmployeeRepository extends EntityRepository
 
         return $this;
     }
+
+    public function getTwoFactorDataByEmail(string $email): array
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('e.twoFactorEnabled', 'e.twoFactorTotpSecretEncrypted')
+            ->andWhere('e.email = :email')
+            ->setParameter('email', $email)
+            ->setMaxResults(1);
+
+        $row = $qb->getQuery()->getOneOrNullResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        if (!$row) {
+            return ['enabled' => false, 'secret' => null];
+        }
+
+        return [
+            'enabled' => (bool) $row['twoFactorEnabled'],
+            'secret' => $row['twoFactorTotpSecretEncrypted'] ?? null,
+        ];
+    }
 }

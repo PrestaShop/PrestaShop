@@ -7,6 +7,7 @@
 namespace PrestaShopBundle\Security\Admin;
 
 use PrestaShopBundle\Entity\Employee\Employee;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,6 +32,10 @@ class AdminAuthenticationSuccessHandler implements AuthenticationSuccessHandlerI
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): ?Response
     {
+        if ($token instanceof TwoFactorTokenInterface) {
+            return new RedirectResponse($this->router->generate('2fa_login'));
+        }
+
         if ($request->hasPreviousSession()) {
             $redirectUrl = $this->getTargetPath($request->getSession(), 'main');
         }

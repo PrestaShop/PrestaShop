@@ -12,6 +12,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Security\Admin\SessionEmployeeInterface;
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface as EmailTwoFactorInterface;
+use Scheb\TwoFactorBundle\Model\Totp\TotpConfiguration;
+use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -28,7 +31,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     },
  *  )
  */
-class Employee implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface, SessionEmployeeInterface
+class Employee implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface, SessionEmployeeInterface, TotpTwoFactorInterface, EmailTwoFactorInterface
 {
     public const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
 
@@ -191,6 +194,33 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
      * @ORM\Column(name="id_last_customer", type="integer", options={"default": 0, "unsigned": true})
      */
     private int $lastCustomerId;
+
+    /**
+     * @ORM\Column(name="two_factor_enabled", type="boolean", options={"default": 0})
+     */
+    private bool $twoFactorEnabled = false;
+
+    /**
+     * @ORM\Column(name="two_factor_totp_enabled", type="boolean", options={"default": 0})
+     */
+    private bool $twoFactorTotEnabled = false;
+
+    /**
+     * @ORM\Column(name="two_factor_email_enabled", type="boolean", options={"default": 0})
+     */
+    private bool $twoFactorEmailEnabled = false;
+
+    /**
+     * @ORM\Column(name="two_factor_totp_secret", type="string", length=512, nullable=true)
+     */
+    private ?string $twoFactorTotpSecretEncrypted = null;
+
+    /**
+     * @ORM\Column(name="two_factor_email_auth_code", type="string", length=255, nullable=true)
+     */
+    private ?string $twoFactorEmailAuthCode = null;
+
+    private ?string $twoFactorTotpSecretPlain = null;
 
     public function __construct()
     {
@@ -675,5 +705,131 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
         $this->profile = new Profile($data['profileId'] ?? 0);
         $this->defaultLanguage = new Lang();
         $this->defaultLanguage->setLocale($data['defaultLocale'] ?? 'en');
+    }
+
+    public function getTwoFactorSecret(): ?string
+    {
+        return $this->twoFactorTotpSecretEncrypted;
+    }
+
+    public function setTwoFactorSecret(?string $twoFactorTotpSecretEncrypted): self
+    {
+        $this->twoFactorTotpSecretEncrypted = $twoFactorTotpSecretEncrypted;
+
+        return $this;
+    }
+
+    public function isTotpAuthenticationEnabled(): bool
+    {
+        return $this->twoFactorEnabled
+            && $this->twoFactorTotEnabled
+        ;
+    }
+
+    public function getTotpAuthenticationUsername(): string
+    {
+        return $this->getUserIdentifier();
+    }
+
+    public function getTotpAuthenticationConfiguration(): TotpConfiguration
+    {
+        return new TotpConfiguration(
+            $this->twoFactorTotpSecretPlain,
+            TotpConfiguration::ALGORITHM_SHA1,
+            30,
+            6,
+        );
+    }
+
+    public function isEmailAuthEnabled(): bool
+    {
+        return $this->twoFactorEnabled && $this->twoFactorEmailEnabled;
+    }
+
+    public function getEmailAuthRecipient(): string
+    {
+        return $this->getEmail();
+    }
+
+    public function getEmailAuthCode(): ?string
+    {
+        return $this->twoFactorEmailAuthCode;
+    }
+
+    public function setEmailAuthCode(?string $code): void
+    {
+        $this->twoFactorEmailAuthCode = $code;
+    }
+
+    /**
+     * Get the value of twoFactorEnabled
+     *
+     * @return bool
+     */
+    public function getTwoFactorEnabled(): bool
+    {
+        return $this->twoFactorEnabled;
+    }
+
+    /**
+     * Set the value of twoFactorEnabled
+     *
+     * @param bool $twoFactorEnabled
+     *
+     * @return self
+     */
+    public function setTwoFactorEnabled(bool $twoFactorEnabled): self
+    {
+        $this->twoFactorEnabled = $twoFactorEnabled;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of twoFactorEmailEnabled
+     *
+     * @return bool
+     */
+    public function getTwoFactorEmailEnabled(): bool
+    {
+        return $this->twoFactorEmailEnabled;
+    }
+
+    /**
+     * Set the value of twoFactorEmailEnabled
+     *
+     * @param bool $twoFactorEmailEnabled
+     *
+     * @return self
+     */
+    public function setTwoFactorEmailEnabled(bool $twoFactorEmailEnabled): self
+    {
+        $this->twoFactorEmailEnabled = $twoFactorEmailEnabled;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of twoFactorTotpSecretPlain
+     *
+     * @return ?string
+     */
+    public function getTwoFactorTotpSecretPlain(): ?string
+    {
+        return $this->twoFactorTotpSecretPlain;
+    }
+
+    /**
+     * Set the value of twoFactorTotpSecretPlain
+     *
+     * @param ?string $twoFactorTotpSecretPlain
+     *
+     * @return self
+     */
+    public function setTwoFactorTotpSecretPlain(?string $twoFactorTotpSecretPlain): self
+    {
+        $this->twoFactorTotpSecretPlain = $twoFactorTotpSecretPlain;
+
+        return $this;
     }
 }
