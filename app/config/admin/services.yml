@@ -101,3 +101,22 @@ services:
     arguments:
       # Same $locales expression as the form types bind in services/bundle/form/form_type.yml.
       $locales: "@=service('prestashop.adapter.legacy.context').getLanguages(false)"
+
+  PrestaShopBundle\Twig\TwoFactorGlobalsExtension:
+    autowire: true
+    autoconfigure: true
+    public: false
+    tags: [ 'twig.extension' ]
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeTotpSecretSubscriber:
+    autowire: true
+    autoconfigure: true
+    tags: [ 'doctrine.event_subscriber' ]
+
+  PrestaShopBundle\SchebTwoFactor\TotpSecretEncryptor:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer:
+    autowire: true
+    autoconfigure: true

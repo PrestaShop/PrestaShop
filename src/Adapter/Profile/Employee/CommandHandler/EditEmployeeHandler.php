@@ -130,6 +130,14 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
             $employee->has_enabled_gravatar = $command->hasEnabledGravatar();
         }
 
+        $employee->two_factor_enabled = $command->getTwoFactorEnabled();
+        $employee->two_factor_totp_enabled = $command->getTwoFactorTotEnabled();
+        $employee->two_factor_email_enabled = $command->getTwoFactorEmailEnabled();
+
+        if (!$command->getTwoFactorTotEnabled()) {
+            $employee->two_factor_totp_secret = null;
+        }
+
         // Allow changing profile and active status only when editing not own account.
         if ((int) $employee->id !== $this->contextEmployeeProvider->getId()) {
             if (null !== $command->getProfileId()) {

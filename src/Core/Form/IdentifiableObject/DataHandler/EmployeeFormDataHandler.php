@@ -166,6 +166,9 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             ->setActive((bool) $data['active'])
             ->setProfileId((int) $data['profile'])
             ->setHasEnabledGravatar((bool) $data['has_enabled_gravatar'])
+            ->setTwoFactorEnabled((bool) $data['two_factor_enabled'])
+            ->setTwoFactorTotEnabled((bool) $data['two_factor_totp_enabled'])
+            ->setTwoFactorEmailEnabled((bool) $data['two_factor_email_enabled'])
         ;
 
         if ($this->employeeFormAccessChecker->isRestrictedAccess((int) $id)) {

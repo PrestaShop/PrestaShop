@@ -20,15 +20,26 @@ class GeneralType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(
-            'token',
-            SwitchType::class,
-            [
-                'required' => true,
-                'label' => $this->trans('Back office token protection', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Back office pages require the use of a token. This protection can be disabled if needed.', 'Admin.Advparameters.Help'),
-            ]
-        );
+        $builder
+            ->add(
+                'token',
+                SwitchType::class,
+                [
+                    'required' => true,
+                    'label' => $this->trans('Back office token protection', 'Admin.Advparameters.Feature'),
+                    'help' => $this->trans('Back office pages require the use of a token. This protection can be disabled if needed.', 'Admin.Advparameters.Help'),
+                ]
+            )
+            ->add(
+                '2fa',
+                SwitchType::class,
+                [
+                    'required' => true,
+                    'label' => $this->trans('Back office two-factor authentication (2FA)', 'Admin.Advparameters.Feature'),
+                    'help' => $this->trans('When enabled, administrators must confirm login with a one-time code.', 'Admin.Advparameters.Help'),
+                ]
+            )
+        ;
     }
 
     /**

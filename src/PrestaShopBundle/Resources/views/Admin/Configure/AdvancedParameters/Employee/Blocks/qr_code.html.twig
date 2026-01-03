@@ -1,0 +1,21 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+<div class="form-group row select-widget">
+
+    <label class="form-control-label"></label>
+
+    <div class="col-sm input-container">
+        <h3>{{ 'Two-factor authentication'|trans({}, 'Admin.Advparameters.Notification') }}</h3>
+        {% if not twoFactorTotpEnabled %}
+            <p>
+                {{ 'Scan this QR code with your authenticator app.'|trans({}, 'Admin.Admin.Global') }}<br/>
+            </p>
+            <img id="employee_two_factor_tot_qr_code" src="{{ qrCodeSrc }}">
+        {% else %}
+            {{ 'Two-factor authentication is already activated for this account.'|trans({}, 'Admin.Global') }}
+        {% endif %}
+    </div>
+</div>
