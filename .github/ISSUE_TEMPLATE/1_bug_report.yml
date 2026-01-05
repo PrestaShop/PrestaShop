@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
          ### ❗️ Read this before submitting your bug report:
-        - **Make sure that the problem is indeed related to PrestaShop Core.** To ensure your issue is dealt with as quickly as possible by QA and the community, it is important to make sure that the issue you create is in the right place!
+        - **Check whether the problem might come from PrestaShop Core. If you're unsure, go ahead and describe the issue as clearly as possible. If you know it comes from a module, please report it in that module’s repository. The community and QA team will help identify the right place if needed.
          - **Write in English.** Reports in all other languages will be closed.
          - **Provide as much detail as possible** - error logs, screenshots, your exact configuration. If the issue cannot be reproduced, it cannot be fixed.
          - **Follow the [bug report guidelines](https://devdocs.prestashop-project.org/9/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue).** This will help issue managers qualify your report faster.
