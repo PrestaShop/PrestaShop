@@ -1,17 +1,18 @@
 name: 🐛 Bug Report
-description: Report an issue in PrestaShop or one of the native modules. DO NOT disclose security issues here, contact security@prestashop.com instead!
-labels: [ "Bug", "New" ]
+description: Report an issue in PrestaShop. DO NOT disclose security issues here, contact security@prestashop.com instead!
+type: 'Bug'
+projects: ['PrestaShop/48']
 body:
   - type: markdown
     attributes:
       value: |
          ### ❗️ Read this before submitting your bug report:
+        - **Make sure that the problem is indeed related to PrestaShop Core.** To ensure your issue is dealt with as quickly as possible by QA and the community, it is important to make sure that the issue you create is in the right place!
          - **Write in English.** Reports in all other languages will be closed.
          - **Provide as much detail as possible** - error logs, screenshots, your exact configuration. If the issue cannot be reproduced, it cannot be fixed.
          - **Follow the [bug report guidelines](https://devdocs.prestashop-project.org/9/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue).** This will help issue managers qualify your report faster.
          - As explained [in this page](https://www.prestashop-project.org/security/sharing-third-party-distributions/), the team behind the project only maintains distribution under the official PrestaShop or PrestaShopCorp GitHub organizations. Please mention how you installed PrestaShop. If you used a third-party distribution and experience issues not reproducible with the official version, we might redirect you to that distribution's maintainers.
          - **Avoid reporting "error 500" or "white page" errors** - this is a universal error message that does not provide enough information to qualify the issue. Enable debug mode in the Performance section of PrestaShop or manually in `/config/defines.inc.php` and try again. You should get a proper error message.
-         - If reporting a problem with the upgrade process, open `/admin/autoupgrade/tmp` and attach the last part of `log.txt` to the issue. It may contain information about the upgrade errors helpful in resolving the issue. Do not upload the entire `log.txt` as it contains sensitive data.
   - type: checkboxes
     attributes:
       label: Prerequisites
@@ -50,7 +51,6 @@ body:
     id: prestashop-version
     attributes:
       label: PrestaShop version(s) where the bug happened
-      description: If the issue concerns upgrade, specify which versions you upgrading FROM and upgrading TO
       placeholder: "e.g., 1.7.5.2 or 1.7.8.0"
     validations:
       required: true
@@ -67,13 +67,6 @@ body:
     attributes:
       label: PHP version(s) where the bug happened
       placeholder: "e.g., 7.1 or 8.0"
-    validations:
-      required: false
-  - type: input
-    id: module
-    attributes:
-      label: If your bug is related to a module, specify its name and its version
-      placeholder: "e.g., ps_facetedsearch v7.0"
     validations:
       required: false
   - type: input
