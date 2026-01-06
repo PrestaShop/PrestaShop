@@ -464,14 +464,11 @@ class ProductLazyArray extends AbstractLazyArray
     public function getSupplierReferenceToDisplay(): ?string
     {
         $combinationData = $this->getCombinationSpecificData();
-        if (
-            isset($combinationData['supplier_reference'])
-            && !empty($combinationData['supplier_reference'])
-        ) {
+        if (!empty($combinationData['supplier_reference'])) {
             return $combinationData['supplier_reference'];
         }
 
-        if (isset($this->product['supplier_reference']) && '' !== $this->product['supplier_reference']) {
+        if (!empty($this->product['supplier_reference'])) {
             return $this->product['supplier_reference'];
         }
 
