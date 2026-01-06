@@ -6,13 +6,13 @@ body:
   - type: markdown
     attributes:
       value: |
-         ### ❗️ Read this before submitting your bug report:
+        ### ❗️ Read this before submitting your bug report:
         - **Check whether the problem might come from PrestaShop Core.** If you're unsure, go ahead and describe the issue as clearly as possible. If you know it comes from a module, please report it in that module’s repository. The community and QA team will help identify the right place if needed.
-         - **Write in English.** Reports in all other languages will be closed.
-         - **Provide as much detail as possible** - error logs, screenshots, your exact configuration. If the issue cannot be reproduced, it cannot be fixed.
-         - **Follow the [bug report guidelines](https://devdocs.prestashop-project.org/9/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue).** This will help issue managers qualify your report faster.
-         - As explained [in this page](https://www.prestashop-project.org/security/sharing-third-party-distributions/), the team behind the project only maintains distribution under the official PrestaShop or PrestaShopCorp GitHub organizations. Please mention how you installed PrestaShop. If you used a third-party distribution and experience issues not reproducible with the official version, we might redirect you to that distribution's maintainers.
-         - **Avoid reporting "error 500" or "white page" errors** - this is a universal error message that does not provide enough information to qualify the issue. Enable debug mode in the Performance section of PrestaShop or manually in `/config/defines.inc.php` and try again. You should get a proper error message.
+        - **Write in English.** Reports in all other languages will be closed.
+        - **Provide as much detail as possible** - error logs, screenshots, your exact configuration. If the issue cannot be reproduced, it cannot be fixed.
+        - **Follow the [bug report guidelines](https://devdocs.prestashop-project.org/9/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue).** This will help issue managers qualify your report faster.
+        - As explained [in this page](https://www.prestashop-project.org/security/sharing-third-party-distributions/), the team behind the project only maintains distribution under the official PrestaShop or PrestaShopCorp GitHub organizations. Please mention how you installed PrestaShop. If you used a third-party distribution and experience issues not reproducible with the official version, we might redirect you to that distribution's maintainers.
+        - **Avoid reporting "error 500" or "white page" errors** - this is a universal error message that does not provide enough information to qualify the issue. Enable debug mode in the Performance section of PrestaShop or manually in `/config/defines.inc.php` and try again. You should get a proper error message.
   - type: checkboxes
     attributes:
       label: Prerequisites
