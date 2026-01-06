@@ -487,7 +487,7 @@ class ThemeManager implements AddonManagerInterface
     {
         if (!isset($this->sandbox)) {
             $this->sandbox = $this->configuration->get('_PS_CACHE_DIR_') . 'sandbox/' . uniqid() . '/';
-            $this->filesystem->mkdir($this->sandbox, PsFileSystem::_PS_PERM_DIR_DEFAULT_);
+            $this->filesystem->mkdir($this->sandbox, PsFileSystem::DEFAULT_MODE_FOLDER);
         }
 
         return $this->sandbox;
@@ -500,7 +500,7 @@ class ThemeManager implements AddonManagerInterface
     {
         $jsonConfigFolder = $this->configuration->get('_PS_CONFIG_DIR_') . 'themes/' . $theme->getName();
         if (!$this->filesystem->exists($jsonConfigFolder) && !is_dir($jsonConfigFolder)) {
-            mkdir($jsonConfigFolder, PsFileSystem::_PS_PERM_DIR_DEFAULT_, true);
+            mkdir($jsonConfigFolder, PsFileSystem::DEFAULT_MODE_FOLDER, true);
         }
 
         file_put_contents(

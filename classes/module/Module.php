@@ -3171,7 +3171,7 @@ abstract class ModuleCore implements ModuleInterface
         $fs = new SfFileSystem();
 
         // Create directory (in recursive mode)
-        $fs->mkdir($directoryPath, FileSystem::_PS_PERM_DIR_DEFAULT_);
+        $fs->mkdir($directoryPath, FileSystem::DEFAULT_MODE_FOLDER);
 
         // Copy index.php to each directory
         $splDir = new SplFileInfo($directoryPath . DIRECTORY_SEPARATOR . 'index.php');

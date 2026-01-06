@@ -31,6 +31,16 @@ use SplFileInfo;
 class FileSystem
 {
     /**
+     * Default mode for directories
+     */
+    public const DEFAULT_MODE_FOLDER = _PS_PERM_DIR_DEFAULT_;
+
+    /**
+     * Default mode for files
+     */
+    public const DEFAULT_MODE_FILE = _PS_PERM_FILE_DEFAULT_;
+
+    /**
      * Replaces directory separators with the system's native one
      * and trims the trailing separator.
      */

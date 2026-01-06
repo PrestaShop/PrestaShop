@@ -151,7 +151,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     {
         try {
             $folder = $this->getThemeCacheFolder();
-            $this->filesystem->mkdir($folder, PsFileSystem::_PS_PERM_DIR_DEFAULT_);
+            $this->filesystem->mkdir($folder, PsFileSystem::DEFAULT_MODE_FOLDER);
 
             return true;
         } catch (IOExceptionInterface) {
