@@ -454,6 +454,31 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * Returns the supplier reference to display.
+     * For combinations, returns the combination's supplier reference if available.
+     * Falls back to the product's supplier reference.
+     *
+     * @return string|null
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getSupplierReferenceToDisplay(): ?string
+    {
+        $combinationData = $this->getCombinationSpecificData();
+        if (
+            isset($combinationData['supplier_reference'])
+            && !empty($combinationData['supplier_reference'])
+        ) {
+            return $combinationData['supplier_reference'];
+        }
+
+        if (isset($this->product['supplier_reference']) && '' !== $this->product['supplier_reference']) {
+            return $this->product['supplier_reference'];
+        }
+
+        return null;
+    }
+
+    /**
      * Returns all product features, not grouped yet for performance reasons.
      *
      * @return array
@@ -1603,6 +1628,7 @@ class ProductLazyArray extends AbstractLazyArray
             'reduction',
             'reference',
             'reference_to_display',
+            'supplier_reference_to_display',
             'show_availability',
             'show_condition',
             'show_price',
