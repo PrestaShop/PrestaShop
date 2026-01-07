@@ -34,9 +34,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ImageTypeRepository")
  *
- * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(columns={"name","theme_name"})})
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(columns={"name"})})
  *
- * @UniqueEntity({"name", "theme_name"})
+ * @UniqueEntity({"name"})
  */
 class ImageType
 {
