@@ -324,9 +324,18 @@ class ShopContextSubscriber implements EventSubscriberInterface
         }
         $legacyCookie->write();
 
+        // Rebuild the current URI from the Request components to avoid relying on /index.php in the raw URL
+        $request = $requestEvent->getRequest();
+
+        $uri = $request->getSchemeAndHttpHost() . $request->getBasePath() . $request->getPathInfo();
+        $queryString = $request->getQueryString();
+        if ($queryString) {
+            $uri .= '?' . $queryString;
+        }
+
         // Redirect to same url but remove setShopContext and conf parameters
         return new RedirectResponse(UrlCleaner::cleanUrl(
-            $requestEvent->getRequest()->getUri(),
+            $uri,
             ['setShopContext', 'conf']
         ));
     }

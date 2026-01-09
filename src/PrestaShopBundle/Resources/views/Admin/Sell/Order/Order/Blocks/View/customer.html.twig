@@ -26,12 +26,12 @@
 <div id="customerCard" class="customer card">
   <div class="card-header">
     <h3 class="card-header-title">
-      {{ 'Customer'|trans({}, 'Admin.Global') }}
+      <i class="material-icons">person</i> {{ 'Customer'|trans({}, 'Admin.Global') }}
     </h3>
   </div>
 
   <div class="card-body">
-    <div id="customerInfo" class="info-block">
+    <div id="customerInfo" class="info-block mb-2">
       <div class="row">
         {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 %}
           <div class="col-xxl-7">
@@ -64,7 +64,7 @@
 
     </div>
     {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 %}
-      <div class="info-block mt-2">
+      <div class="info-block mb-2">
         <p class="mb-0" id="customerId"><strong>{{ 'ID:'|trans({}, 'Admin.Global') }}</strong> {{ orderForViewing.customer.id }}</p>
         <p class="mb-0" id="customerEmail"><strong>{{ 'Email:'|trans({}, 'Admin.Global') }}</strong> <a href="mailto:{{ orderForViewing.customer.email }}">{{ orderForViewing.customer.email }}</a></p>
         <p class="mb-0"><strong>{{ 'Customer type:'|trans({}, 'Admin.Global') }}</strong>
@@ -87,7 +87,7 @@
         {% endif %}
       </div>
     {% endif %}
-    <div class="info-block mt-2">
+    <div class="info-block mb-2">
       <div class="row">
         {% if orderForViewing.virtual is same as(false) %}
           <div id="addressShipping" class="info-block-col col-xl-6">
