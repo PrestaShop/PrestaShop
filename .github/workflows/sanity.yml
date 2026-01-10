@@ -39,7 +39,7 @@ jobs:
           - php: 8.4
             browser: firefox
             db: mysql
-          ## @todo : https://github.com/PrestaShop/PrestaShop/issues/37680
+            ## @todo : https://github.com/PrestaShop/PrestaShop/issues/37680
           # - php: 8.4
           #   browser: webkit
           #   db: mysql
