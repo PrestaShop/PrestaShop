@@ -180,6 +180,7 @@ class StockController extends ApiController
             'supplier_name' => $this->translator->trans('Supplier', [], 'Admin.Global'),
             'active' => $this->translator->trans('Status', [], 'Admin.Global'),
             'product_physical_quantity' => $this->translator->trans('Physical quantity', [], 'Admin.Catalog.Feature'),
+            'stock_location' => $translator->trans('Stock location', [], 'Admin.Catalog.Feature'),
             'product_reserved_quantity' => $this->translator->trans('Reserved quantity', [], 'Admin.Catalog.Feature'),
             'product_available_quantity' => $this->translator->trans('Available quantity', [], 'Admin.Catalog.Feature'),
             'product_low_stock_threshold' => $this->translator->trans('Low stock level', [], 'Admin.Catalog.Feature'),
