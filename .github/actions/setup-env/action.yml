@@ -42,6 +42,11 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    # Create .env from .env.example
+    - name: Create .env
+      shell: bash
+      run: cp .env.example .env
+
     # Certificate for SSL
     - name: Generate a Certificate
       if: inputs.ENABLE_SSL == 'true'
