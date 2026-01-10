@@ -138,10 +138,6 @@ themes/*-chunk.js.map
 !/install-dev/theme/custom/.gitkeep
 
 # Config
-/.env
-/.env.local
-/.env.local.php
-/.env.*.local
 config/defines_custom.inc.php
 config/settings.inc.php
 config/settings.old.php
@@ -226,6 +222,7 @@ docker-compose.override.yml
 .docker/ssl.key
 
 # DotEnv files
+/.env
 /.env.local
 /.env.local.php
 /.env.*.local
