@@ -276,6 +276,7 @@ class StockRepository extends StockManagementRepository
           sa.quantity                                                                       AS product_available_quantity,
           sa.physical_quantity                                                              AS product_physical_quantity,
           sa.reserved_quantity                                                              AS product_reserved_quantity,
+          sa.location                                                                       AS stock_location,
           IF(COALESCE(pa.id_product_attribute, 0) > 0, COALESCE(pas.low_stock_threshold, "N/A"),
              COALESCE(ps.low_stock_threshold,
                       "N/A"))                                                               AS product_low_stock_threshold,
