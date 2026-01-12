@@ -5,12 +5,12 @@ services:
   mariadb:
     image: mariadb:11.4
     ports:
-      - "3306:3306"
+      - "3308:3308"
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MARIADB_ROOT_PASSWORD: ${DB_PASSWD:-prestashop}
-      MARIADB_DATABASE: ${DB_NAME:-prestashop}
+      MARIADB_ROOT_PASSWORD: ${Fer21Gon72+}
+      MARIADB_DATABASE: ${papercorp}
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       start_period: 10s
