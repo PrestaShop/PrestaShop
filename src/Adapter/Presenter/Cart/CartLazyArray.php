@@ -41,9 +41,9 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
+use PrestaShop\PrestaShop\Core\Cart\Calculator;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
-use PrestaShop\PrestaShop\Core\Cart\Calculator;
 
 #[LazyArrayAttribute(isRewritable: true)]
 class CartLazyArray extends AbstractLazyArray
@@ -321,25 +321,20 @@ class CartLazyArray extends AbstractLazyArray
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getDiscounts(): array
     {
-        $vouchers = $this->getVouchers();
-        $cartRulesIds = array_flip(array_map(
-            function ($voucher) {
-                return $voucher['id_cart_rule'];
-            },
-            $vouchers['added']
-        ));
+        $vouchers = $this->getTemplateVarVouchers();
+        $cartRulesIds = array_keys($vouchers['added']);
 
         $discounts = $this->cart->getDiscounts();
-        $cart = $this->cart;
-        $discounts = array_filter($discounts, function ($discount) use ($cartRulesIds, $cart) {
+        $customerId = $this->cart->id_customer;
+        $discounts = array_filter($discounts, function ($discount) use ($cartRulesIds, $customerId) {
             $voucherCustomerId = (int) $discount['id_customer'];
             $voucherIsRestrictedToASingleCustomer = ($voucherCustomerId !== 0);
             $voucherIsEmptyCode = empty($discount['code']);
-            if ($voucherIsRestrictedToASingleCustomer && $cart->id_customer !== $voucherCustomerId && $voucherIsEmptyCode) {
+            if ($voucherIsRestrictedToASingleCustomer && $customerId !== $voucherCustomerId && $voucherIsEmptyCode) {
                 return false;
             }
 
-            return !array_key_exists($discount['id_cart_rule'], $cartRulesIds);
+            return !in_array($discount['id_cart_rule'], $cartRulesIds);
         });
 
         $this->discounts = $discounts;
@@ -432,9 +427,21 @@ class CartLazyArray extends AbstractLazyArray
         $cartHasTax = null === $this->cart->id ? false : $this->cart->getAverageProductsTaxRate() * 100;
         $freeShippingAlreadySet = false;
         foreach ($this->calculator->getCartRulesData() as $cartRuleData) {
-            /* @var array{id_cart_rule:int, name: string, code: string, reduction_percent: float, reduction_currency: int, free_shipping: bool, reduction_tax: bool, reduction_amount:float, value_real:float|int|string, value_tax_exc:float|int|string} $cartVoucher */
             $cartVoucher = $cartRuleData->getRuleData();
             $discountApplied = $cartRuleData->getDiscountApplied();
+
+            $freeShippingOnly = false;
+            $totalCartVoucherReduction = 0;
+
+            if ($this->cartVoucherHasFreeShippingOnly($cartVoucher)) {
+                $freeShippingOnly = true;
+                if ($freeShippingAlreadySet) {
+                    continue;
+                }
+                $freeShippingAlreadySet = true;
+            } else {
+                $totalCartVoucherReduction = $this->cartPresenter->includeTaxes() ? $discountApplied->getTaxIncluded() : $discountApplied->getTaxExcluded();
+            }
 
             $vouchers[$cartVoucher['id_cart_rule']]['id_cart_rule'] = $cartVoucher['id_cart_rule'];
             $vouchers[$cartVoucher['id_cart_rule']]['name'] = $cartVoucher['name'];
@@ -455,32 +462,11 @@ class CartLazyArray extends AbstractLazyArray
                 $cartVoucher['reduction_amount'] = $cartVoucher['value_real'];
             }
 
-            $totalCartVoucherReduction = 0;
-
-            if ($this->cartVoucherHasFreeShippingOnly($cartVoucher)) {
-                $freeShippingOnly = true;
-                if ($freeShippingAlreadySet) {
-                    unset($vouchers[$cartVoucher['id_cart_rule']]);
-                    continue;
-                } else {
-                    $freeShippingAlreadySet = true;
-                }
-            } else {
-                $freeShippingOnly = false;
-                $totalCartVoucherReduction = $this->cartPresenter->includeTaxes() ? $discountApplied->getTaxIncluded() : $discountApplied->getTaxExcluded();
-            }
-
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
-            if ($freeShippingOnly) {
-                $cartVoucher['reduction_formatted'] = $this->translator->trans(
-                    'Free shipping',
-                    [],
-                    'Shop.Theme.Checkout'
-                );
-            } else {
-                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->format($totalCartVoucherReduction);
-            }
-            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
+            $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $freeShippingOnly
+                ? $this->translator->trans('Free shipping', [], 'Shop.Theme.Checkout')
+                : '-' . $this->priceFormatter->format($totalCartVoucherReduction);
+
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
                 'cart',
                 null,
