@@ -97,7 +97,7 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
 
         if ($is_img) {
             move_uploaded_file($tempFile, $targetFile);
-            chmod($targetFile, _PS_PERM_DIR_DEFAULT_);
+            chmod($targetFile, FileSystem::PERM_DIR_DEFAULT);
 
             $memory_error = false;
             if (!create_img_gd($targetFile, $targetFileThumb, 122, 91)) {
@@ -150,7 +150,7 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
             }
         } else {
             move_uploaded_file($tempFile, $targetFile);
-            chmod($targetFile, _PS_PERM_DIR_DEFAULT_);
+            chmod($targetFile, FileSystem::PS_PERM_DIR_DEFAULT);
         }
     } else {
         header('HTTP/1.1 406 file not permitted', true, 406);

@@ -2609,7 +2609,7 @@ abstract class ModuleCore implements ModuleInterface
                     @file_put_contents($file, $xml);
                 }
             }
-            @chmod($file, _PS_PERM_FILE_GROUP_WRITABLE_);
+            @chmod($file, FileSystem::PERM_FILE_GROUP_WRITABLE);
         }
     }
 
@@ -3171,7 +3171,7 @@ abstract class ModuleCore implements ModuleInterface
         $fs = new SfFileSystem();
 
         // Create directory (in recursive mode)
-        $fs->mkdir($directoryPath, FileSystem::DEFAULT_MODE_FOLDER);
+        $fs->mkdir($directoryPath, FileSystem::PERM_DIR_DEFAULT);
 
         // Copy index.php to each directory
         $splDir = new SplFileInfo($directoryPath . DIRECTORY_SEPARATOR . 'index.php');

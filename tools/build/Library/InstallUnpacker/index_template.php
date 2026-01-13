@@ -186,9 +186,9 @@ if (isset($_POST['extract'])) {
         }
     }
 
-    @chmod('install/index.php', _PS_PERM_FILE_DEFAULT_);
-    @chmod('admin/index.php', _PS_PERM_FILE_DEFAULT_);
-    @chmod('index.php', _PS_PERM_FILE_DEFAULT_);
+    @chmod('install/index.php', \PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem::PERM_FILE_DEFAULT);
+    @chmod('admin/index.php', \PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem::PERM_FILE_DEFAULT);
+    @chmod('index.php', \PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem::PERM_FILE_DEFAULT);
 
     $zip->close();
 

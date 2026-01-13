@@ -30,15 +30,15 @@ use SplFileInfo;
 
 class FileSystem
 {
-    /**
-     * Default mode for directories
-     */
-    public const DEFAULT_MODE_FOLDER = _PS_PERM_DIR_DEFAULT_;
-
-    /**
-     * Default mode for files
-     */
-    public const DEFAULT_MODE_FILE = _PS_PERM_FILE_DEFAULT_;
+    public const PERM_FILE_PRIVATE_READ = 0400;
+    public const PERM_FILE_PRIVATE = 0600;
+    public const PERM_FILE_DEFAULT = 0644;
+    public const PERM_FILE_GROUP_WRITABLE = 0664;
+    public const PERM_FILE_WORLD_WRITABLE = 0666;
+    public const PERM_DIR_PRIVATE = 0700;
+    public const PERM_DIR_DEFAULT = 0755;
+    public const PERM_DIR_GROUP_WRITABLE = 0775;
+    public const PERM_DIR_WORLD_WRITABLE = 0777;
 
     /**
      * Replaces directory separators with the system's native one

@@ -217,13 +217,3 @@ define('_PS_SMARTY_CHECK_COMPILE_', 1);
 define('_PS_SMARTY_FORCE_COMPILE_', 2);
 
 define('_PS_CACHE_CA_CERT_FILE_', _PS_CACHE_DIR_.'cacert.pem');
-
-define('_PS_PERM_FILE_PRIVATE_READ_',   0400);
-define('_PS_PERM_FILE_PRIVATE_',        0600);
-define('_PS_PERM_FILE_DEFAULT_',        0644);
-define('_PS_PERM_FILE_GROUP_WRITABLE_', 0664);
-define('_PS_PERM_FILE_WORLD_WRITABLE_', 0666);
-define('_PS_PERM_DIR_PRIVATE_',         0700);
-define('_PS_PERM_DIR_DEFAULT_',         0755);
-define('_PS_PERM_DIR_GROUP_WRITABLE_',  0775);
-define('_PS_PERM_DIR_WORLD_WRITABLE_',  0777);

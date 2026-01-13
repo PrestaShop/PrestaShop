@@ -183,10 +183,10 @@ function create_folder($path=false, $path_thumbs=false)
 {
     $oldumask = umask(0);
     if ($path && !file_exists($path)) {
-        mkdir($path, _PS_PERM_DIR_WORLD_WRITABLE_, true);
+        mkdir($path, FileSystem::PERM_DIR_WORLD_WRITABLE, true);
     } // or even 01777 so you get the sticky bit set
     if ($path_thumbs && !file_exists($path_thumbs)) {
-        mkdir($path_thumbs, _PS_PERM_DIR_WORLD_WRITABLE_, true) || die("$path_thumbs cannot be found");
+        mkdir($path_thumbs, FileSystem::PERM_DIR_WORLD_WRITABLE, true) || die("$path_thumbs cannot be found");
     } // or even 01777 so you get the sticky bit set
     umask($oldumask);
 }

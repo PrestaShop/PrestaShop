@@ -772,7 +772,7 @@ class XmlLoader
                             )
                         );
                     }
-                    @chmod($target_file, FileSystem::DEFAULT_MODE_FILE);
+                    @chmod($target_file, FileSystem::PERM_FILE_DEFAULT);
                 } elseif (!ImageManager::resize(
                     $from_path . $identifier . '.' . $extension,
                     $target_file,
@@ -844,7 +844,7 @@ class XmlLoader
 
             return;
         }
-        @chmod($dst_path . '.' . $image->image_format, FileSystem::DEFAULT_MODE_FILE);
+        @chmod($dst_path . '.' . $image->image_format, FileSystem::PERM_FILE_DEFAULT);
 
         $types = ImageType::getImagesTypes('products');
         foreach ($types as $type) {
@@ -872,7 +872,7 @@ class XmlLoader
                         )
                     );
                 }
-                @chmod($target_file, FileSystem::DEFAULT_MODE_FILE);
+                @chmod($target_file, FileSystem::PERM_FILE_DEFAULT);
             } elseif (!ImageManager::resize($path . $identifier . '.jpg', $target_file, $type['width'], $type['height'])) {
                 // Resize the image if no cache was prepared in fixtures
                 $this->setError(
