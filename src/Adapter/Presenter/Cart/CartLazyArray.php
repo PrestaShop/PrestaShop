@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
+use PrestaShop\PrestaShop\Core\Cart\Calculator;
 
 #[LazyArrayAttribute(isRewritable: true)]
 class CartLazyArray extends AbstractLazyArray
@@ -56,6 +57,8 @@ class CartLazyArray extends AbstractLazyArray
     private TranslatorInterface $translator;
 
     private PriceFormatter $priceFormatter;
+
+    private Calculator $calculator;
 
     private array $products;
 
@@ -97,6 +100,13 @@ class CartLazyArray extends AbstractLazyArray
         $this->link = $context->link;
         $this->imageRetriever = new ImageRetriever($this->link);
         $this->priceFormatter = new PriceFormatter();
+        $this->calculator = $this->cart->newCalculator(
+            $this->cart->getProducts(true),
+            $this->cart->getCartRules(CartRule::FILTER_ACTION_ALL, false),
+            null,
+            $context->getComputingPrecision()
+        );
+        $this->calculator->processCalculation();
         parent::__construct();
     }
 
@@ -417,19 +427,11 @@ class CartLazyArray extends AbstractLazyArray
 
     private function getTemplateVarVouchers(): array
     {
-        $calculator = $this->cart->newCalculator(
-            $this->cart->getProducts(),
-            $this->cart->getCartRules(CartRule::FILTER_ACTION_ALL, false),
-            0,
-            Context::getContext()->getComputingPrecision()
-        );
-        $calculator->processCalculation();
-
         $vouchers = [];
 
         $cartHasTax = null === $this->cart->id ? false : $this->cart->getAverageProductsTaxRate() * 100;
         $freeShippingAlreadySet = false;
-        foreach ($calculator->getCartRulesData() as $cartRuleData) {
+        foreach ($this->calculator->getCartRulesData() as $cartRuleData) {
             /* @var array{id_cart_rule:int, name: string, code: string, reduction_percent: float, reduction_currency: int, free_shipping: bool, reduction_tax: bool, reduction_amount:float, value_real:float|int|string, value_tax_exc:float|int|string} $cartVoucher */
             $cartVoucher = $cartRuleData->getRuleData();
             $discountApplied = $cartRuleData->getDiscountApplied();
