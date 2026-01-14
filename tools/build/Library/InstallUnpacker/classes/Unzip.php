@@ -29,6 +29,9 @@
  *
  * Most methods are copied from https://github.com/PrestaShop/autoupgrade/blob/master/classes/TaskRunner/Upgrade/Unzip.php
  */
+
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
+
 class Unzip
 {
     /**

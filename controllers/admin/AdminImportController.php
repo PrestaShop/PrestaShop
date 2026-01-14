@@ -25,6 +25,7 @@
  */
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 
 @ini_set('max_execution_time', '0');
 /* No max line limit since the lines can be more than 4096. Performance impact is not significant. */

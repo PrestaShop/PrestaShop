@@ -28,6 +28,9 @@
  * This class is used to create a release of PrestaShop,
  * see ReleaseCreator::createRelease() function.
  */
+
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
+
 class ReleaseCreator
 {
     /**
