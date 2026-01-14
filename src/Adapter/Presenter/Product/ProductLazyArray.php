@@ -1202,11 +1202,27 @@ class ProductLazyArray extends AbstractLazyArray
         if (
             $settings->stock_management_enabled
             && !$product['allow_oosp']
-            && ($product['quantity'] <= 0
-                || $product['quantity'] - $this->getQuantityWanted() < 0
-                || $product['quantity'] - $this->getMinimalQuantity() < 0)
         ) {
-            $shouldEnable = false;
+            // Check if product is available in stock
+            if ($product['quantity'] <= 0 || $product['quantity'] - $this->getQuantityWanted() < 0) {
+                return false;
+            }
+
+            // Check if the minimal quantity is respected
+            // We need to check if the product is already in the cart
+            $cart = Context::getContext()->cart;
+            $quantityInCart = 0;
+            if ($cart && isset($product['id_product'])) {
+                $cartProduct = $cart->getProductQuantity(
+                    (int) $product['id_product'],
+                    isset($product['id_product_attribute']) ? (int) $product['id_product_attribute'] : 0
+                );
+                $quantityInCart = (int) $cartProduct['quantity'];
+            }
+
+            if (($product['quantity'] + $quantityInCart) < $this->getMinimalQuantity()) {
+                return false;
+            }
         }
 
         return $shouldEnable;
