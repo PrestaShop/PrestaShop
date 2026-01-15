@@ -24,42 +24,34 @@
  * #}
 
   {% if orderForViewing.sources.sources is not empty %}
-    <div class="card mt-2 d-print-none">
+    <div class="card d-print-none">
       <div class="card-header">
-        <div class="row">
-          <div class="col-md-6">
-            <i class="material-icons">public</i>
-            {{ 'Sources'|trans({}, 'Admin.Orderscustomers.Feature') }}
-            <span class="badge badge-primary rounded">{{ orderForViewing.sources.sources|length }}</span>
-          </div>
-        </div>
+        <i class="material-icons">public</i>
+        {{ 'Sources'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        <span class="badge badge-primary rounded">{{ orderForViewing.sources.sources|length }}</span>
       </div>
 
       <div class="card-body">
-        <ul id="order-sources-list">
-          {% for source in orderForViewing.sources.sources %}
-            <li>
-              {{ source.addedAt|date_format_full }}
-              <br/>
-              <b>{{ 'From'|trans({}, 'Admin.Orderscustomers.Feature') }}</b>
-              {% if source.httpReferer != '' %}
-                <a href="{{ source.httpReferer }}">{{ source.httpReferer }}</a>
-              {% else %}
-                -
-              {% endif %}
-              <br/>
-              <b>{{ 'To'|trans({}, 'Admin.Orderscustomers.Feature') }}</b>
-              <a href="http://{{ source.requestUri }}">{{ source.requestUri|slice(0, 100) }}</a>
-              <br/>
-              {% if source.keywords != '' %}
-                <b>{{ 'Keywords'|trans({}, 'Admin.Global') }}</b>
-                <br/>
-                {{ source.keywords }}
-              {% endif %}
-              <br/>
-            </li>
-          {% endfor %}
-        </ul>
+        <table class="table" id="order-sources-list">
+          <thead>
+            <tr>
+              <th scope="col">{{ 'Date'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+              <th scope="col">{{ 'From'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+              <th scope="col">{{ 'To'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+              <th scope="col">{{ 'Keywords'|trans({}, 'Admin.Global') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for source in orderForViewing.sources.sources %}
+              <tr>
+                <td>{{ source.addedAt|date_format_full }}</td>
+                <td>{% if source.httpReferer != '' %}<a href="{{ source.httpReferer }}">{{ source.httpReferer }}</a>{% else %}{{ 'Unknown'|trans({}, 'Admin.Orderscustomers.Feature') }}{% endif %}</td>
+                <td><a href="http://{{ source.requestUri }}">{{ source.requestUri|slice(0, 100) }}</a></td>
+                <td>{% if source.keywords != '' %}{{ source.keywords }}{% endif %}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   {% endif %}

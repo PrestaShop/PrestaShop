@@ -119,7 +119,7 @@ class AdminCountriesControllerCore extends AdminController
     {
         if (empty($this->display)) {
             $this->page_header_toolbar_btn['new_country'] = [
-                'href' => self::$currentIndex . '&addcountry&token=' . $this->token,
+                'href' => $this->context->link->getAdminLink('AdminCountries', true, [], ['addcountry' => 1]),
                 'desc' => $this->trans('Add new country', [], 'Admin.International.Feature'),
                 'icon' => 'process-icon-new',
             ];

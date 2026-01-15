@@ -33,26 +33,33 @@ import {
 const isParamInvalid = (value: any) => isNil(value) || value.length <= 0;
 
 export const getStock = async ({commit}: {commit: Commit}, payload: Record<string, any>): Promise<void> => {
-  const url = window.data.apiStockUrl;
-  const params = new URLSearchParams(omitBy({
+  const url = new URL(window.data.apiStockUrl, window.location.origin);
+  const queryParams = omitBy({
     order: payload.order,
     page_size: payload.page_size,
     page_index: payload.page_index,
     keywords: payload.keywords,
     active: payload.active,
     low_stock: payload.low_stock,
-  }, isParamInvalid));
+  }, isParamInvalid);
+
+  Object.entries(queryParams).forEach(([key, value]) => {
+    url.searchParams.append(key, String(value));
+  });
 
   if (payload.suppliers) {
-    payload.suppliers.forEach((v: string) => params.append('supplier_id[]', v));
+    payload.suppliers.forEach((v: string) => {
+      url.searchParams.append('supplier_id[]', v);
+    });
   }
   if (payload.categories) {
-    payload.categories.forEach((v: string) => params.append('category_id[]', v));
+    payload.categories.forEach((v: string) => {
+      url.searchParams.append('category_id[]', v);
+    });
   }
-  const fetchUrl = `${url}${url.includes('?') ? '&' : '?'}${params.toString()}`;
 
   try {
-    const response = await fetch(fetchUrl);
+    const response = await fetch(url);
     const datas = await response.json();
 
     commit(types.LOADING_STATE, false);
@@ -88,8 +95,9 @@ export const getCategories = async ({commit}: {commit: Commit}): Promise<void> =
 };
 
 export const getMovements = async ({commit}: {commit: Commit}, payload: Record<string, any>): Promise<void> => {
-  const url = window.data.apiMovementsUrl;
-  const params = new URLSearchParams(omitBy({
+  const url = new URL(window.data.apiMovementsUrl, window.location.origin);
+
+  const queryParams = omitBy({
     order: payload.order,
     page_size: payload.page_size,
     page_index: payload.page_index,
@@ -98,20 +106,22 @@ export const getMovements = async ({commit}: {commit: Commit}, payload: Record<s
     category_id: payload.categories,
     id_stock_mvt_reason: payload.id_stock_mvt_reason,
     id_employee: payload.id_employee,
-  }, isParamInvalid));
+  }, isParamInvalid);
+
+  Object.entries(queryParams).forEach(([key, value]) => {
+    url.searchParams.append(key, String(value));
+  });
 
   if (payload.date_add?.sup) {
-    params.append('date_add[sup]', payload.date_add.sup);
+    url.searchParams.append('date_add[sup]', payload.date_add.sup);
   }
 
   if (payload.date_add?.inf) {
-    params.append('date_add[inf]', payload.date_add.inf);
+    url.searchParams.append('date_add[inf]', payload.date_add.inf);
   }
 
-  const fetchUrl = `${url}${url.includes('?') ? '&' : '?'}${params.toString()}`;
-
   try {
-    const response = await fetch(fetchUrl);
+    const response = await fetch(url);
     const datas = await response.json();
 
     commit(types.LOADING_STATE, false);

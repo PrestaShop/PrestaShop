@@ -5628,5 +5628,15 @@
       <title>Modify discount grid template data</title>
       <description>This hook allows to modify data which is about to be used in template for discount grid</description>
     </hook>
+    <hook id="actionFrontControllerDetectContextCountryAfter">
+      <name>actionFrontControllerDetectContextCountryAfter</name>
+      <title>Action after detecting context country</title>
+      <description>Allows modules to modify the context country after it has been detected via geolocation.</description>
+    </hook>
+    <hook id="actionFrontControllerInitContextCurrencyAfter">
+      <name>actionFrontControllerInitContextCurrencyAfter</name>
+      <title>Action after initializing context currency</title>
+      <description>Allows modules to modify the context currency after it has been initialized.</description>
+    </hook>
   </entities>
 </entity_hook>
