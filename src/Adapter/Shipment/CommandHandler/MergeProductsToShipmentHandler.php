@@ -32,58 +32,96 @@ use PrestaShop\PrestaShop\Core\Domain\Shipment\CommandHandler\MergeProductsToShi
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\CannotEditShipmentShippedException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\CannotMergeProductToShipmentException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Service\ShipmentMergerInterface;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use PrestaShopBundle\Entity\ShipmentProduct;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 #[AsCommandHandler]
 class MergeProductsToShipmentHandler implements MergeProductsToShipmentHandlerInterface
 {
     public function __construct(
-        private readonly ShipmentRepository $repository,
+        private ShipmentRepository $repository,
+        private ShipmentMergerInterface $merger,
+        private TranslatorInterface $translator,
     ) {
     }
 
-    /**
-     * @param MergeProductsToShipment $command
-     */
-    public function handle(MergeProductsToShipment $command)
+    public function handle(MergeProductsToShipment $command): void
     {
         $sourceId = $command->getSourceShipmentId()->getValue();
         $targetId = $command->getTargetShipmentId()->getValue();
-        $products = $command->getOrderDetailQuantity()->getValue();
+
         $sourceShipment = $this->repository->findById($sourceId);
         $targetShipment = $this->repository->findById($targetId);
-        $shipmentProducts = [];
 
         if (!$sourceShipment) {
-            throw new ShipmentNotFoundException(sprintf('Shipment with id "%s" was not found', $sourceId));
+            throw new ShipmentNotFoundException(
+                $this->translator->trans(
+                    'Cannot find product with order detail id %id%.',
+                    ['%id%' => $sourceId],
+                    'Admin.Shipment.Error'
+                )
+            );
         }
 
         if (!empty($sourceShipment->getTrackingNumber())) {
-            throw new CannotEditShipmentShippedException(sprintf('Cannot merge shipment "%s" because it has already been shipped.', $sourceId));
+            throw new CannotEditShipmentShippedException(
+                $this->translator->trans(
+                    'Cannot merge shipment "%id%" because it has already been shipped.',
+                    ['%id%' => $sourceId],
+                    'Admin.Shipment.Error'
+                )
+            );
         }
 
         if (!$targetShipment) {
-            throw new ShipmentNotFoundException(sprintf('Shipment with id "%s" was not found', $targetId));
+            throw new ShipmentNotFoundException(
+                $this->translator->trans(
+                    'Cannot find product with order detail id %id%.',
+                    ['%id%' => $targetId],
+                    'Admin.Shipment.Error'
+                )
+            );
         }
 
         if (!empty($targetShipment->getTrackingNumber())) {
-            throw new CannotEditShipmentShippedException(sprintf('Cannot merge into shipment "%s" because it has already been shipped.', $targetId));
+            throw new CannotEditShipmentShippedException(
+                $this->translator->trans(
+                    'Cannot merge into shipment "%id%" because it has already been shipped.',
+                    ['%id%' => $targetId],
+                    'Admin.Shipment.Error'
+                )
+            );
         }
 
-        $shipmentProducts = array_map(function ($product) {
-            $shipmentProduct = new ShipmentProduct();
-            $shipmentProduct->setOrderDetailId($product['id_order_detail']);
-            $shipmentProduct->setQuantity($product['quantity']);
-
-            return $shipmentProduct;
-        }, $products);
+        $productsToMove = array_map(function ($product) {
+            return (new ShipmentProduct())
+                ->setOrderDetailId($product['id_order_detail'])
+                ->setQuantity($product['quantity']);
+        }, $command->getOrderDetailQuantity()->getValue());
 
         try {
-            $this->repository->mergeProductsToShipment($sourceShipment, $targetShipment, $shipmentProducts);
+            $this->merger->merge($sourceShipment, $targetShipment, $productsToMove);
+
+            $this->repository->save($targetShipment);
+
+            if ($sourceShipment->getProducts()->isEmpty()) {
+                $this->repository->delete($sourceShipment);
+            } else {
+                $this->repository->save($sourceShipment);
+            }
         } catch (Throwable $e) {
-            throw new CannotMergeProductToShipmentException(sprintf('Cannot merge products to shipment with id "%s"', $targetId), 0, $e);
+            throw new CannotMergeProductToShipmentException(
+                $this->translator->trans(
+                    'Cannot merge products to shipment with id "%id%".',
+                    ['%id%' => $targetId],
+                    'Admin.Shipment.Error'
+                ),
+                0,
+                $e
+            );
         }
     }
 }

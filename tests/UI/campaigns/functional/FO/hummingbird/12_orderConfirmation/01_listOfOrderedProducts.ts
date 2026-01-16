@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -26,22 +24,15 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_orderConfirmation_listOfOrderedProducts';
 
 /*
-Pre-condition:
-- Install the theme hummingbird
 Scenario:
 - Add 3 products to cart
 - Proceed to checkout and confirm the order
 - Check the payment confirmation details
-Post-condition:
-- Uninstall the theme hummingbird
 */
 describe('FO - Order confirmation : List of ordered products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let orderReference: string;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -274,7 +265,4 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       ]);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

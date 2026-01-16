@@ -31,48 +31,66 @@ use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\SplitShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\CommandHandler\SplitShipmentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\CannotEditShipmentShippedException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Service\ShipmentSplitterInterface;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use PrestaShopBundle\Entity\ShipmentProduct;
-use Throwable;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsCommandHandler()]
+#[AsCommandHandler]
 class SplitShipmentHandler implements SplitShipmentHandlerInterface
 {
     public function __construct(
-        private readonly ShipmentRepository $repository,
+        private ShipmentRepository $repository,
+        private ShipmentSplitterInterface $splitter,
+        private TranslatorInterface $translator,
     ) {
     }
 
-    /**
-     * @param SplitShipment $command
-     */
     public function handle(SplitShipment $command): void
     {
+        $shipmentId = $command->getShipmentId()->getValue();
         $carrierId = $command->getCarrierId()->getValue();
-        $shipmentToRemoveProductId = $command->getShipmentId()->getValue();
-        $products = $command->getOrderDetailQuantity()->getValue();
-        $findShipment = $this->repository->findOneBy(['id' => $shipmentToRemoveProductId]);
 
-        if (!$findShipment) {
-            throw new ShipmentNotFoundException(sprintf('Could not find shipment with id "%s"', $shipmentToRemoveProductId));
+        $shipment = $this->repository->findById($shipmentId);
+
+        if (!$shipment) {
+            throw new ShipmentNotFoundException(
+                $this->translator->trans(
+                    'Could not find shipment with id "%id%".',
+                    ['%id%' => $shipmentId],
+                    'Admin.Shipment.Error'
+                )
+            );
         }
 
-        if (!empty($findShipment->getTrackingNumber())) {
-            throw new CannotEditShipmentShippedException(sprintf('Cannot split the shipment "%s" because is already shipped', $shipmentToRemoveProductId));
+        if (!empty($shipment->getTrackingNumber())) {
+            throw new CannotEditShipmentShippedException(
+                $this->translator->trans(
+                    'Cannot split the shipment "%id%" because it has already been shipped.',
+                    ['%id%' => $shipmentId],
+                    'Admin.Shipment.Error'
+                )
+            );
         }
 
-        $shipmentProducts = array_map(function ($product) {
-            $shipmentProduct = new ShipmentProduct();
-            $shipmentProduct->setOrderDetailId($product['id_order_detail']);
-            $shipmentProduct->setQuantity($product['quantity']);
+        $productsToMove = array_map(function ($product) {
+            return (new ShipmentProduct())
+                ->setOrderDetailId($product['id_order_detail'])
+                ->setQuantity($product['quantity']);
+        }, $command->getOrderDetailQuantity()->getValue());
 
-            return $shipmentProduct;
-        }, $products);
+        $newShipment = $this->splitter->split(
+            $shipment,
+            $carrierId,
+            $productsToMove
+        );
 
-        try {
-            $this->repository->splitShipment($carrierId, $findShipment, $shipmentProducts);
-        } catch (Throwable $e) {
-            throw new ShipmentNotFoundException();
+        $this->repository->save($newShipment);
+
+        if ($shipment->getProducts()->isEmpty()) {
+            $this->repository->delete($shipment);
+        } else {
+            $this->repository->save($shipment);
         }
     }
 }

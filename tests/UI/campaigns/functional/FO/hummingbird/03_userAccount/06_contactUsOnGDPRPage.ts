@@ -1,9 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import commonTests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   boCustomerServicePage,
   boDashboardPage,
@@ -35,9 +32,6 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     emailAddress: dataCustomers.johnDoe.email,
     reference: dataOrders.order_1.reference,
   });
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -154,7 +148,4 @@ describe('FO - Account : Contact us on GDPR page', async () => {
       expect(textResult).to.contains(boCustomerServicePage.successfulDeleteMessage);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

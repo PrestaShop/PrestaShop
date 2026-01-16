@@ -4,9 +4,8 @@ import {expect} from 'chai';
 // Import common tests
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import createAccountTest from '@commonTests/FO/hummingbird/account';
+import {createAccountTest} from '@commonTests/FO/hummingbird/account';
 import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -32,7 +31,6 @@ const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_
 
 /*
 Pre-condition:
-_ Install the theme hummingbird
 - Create customer
 - Create address
 Scenario:
@@ -44,7 +42,6 @@ Scenario:
 - Click on reorder link and reorder
 Post-condition
 - Delete customer
-- Delete the theme hummingbird
  */
 
 describe('FO - User account - Order history : Consult details and Reorder', async () => {
@@ -68,11 +65,8 @@ describe('FO - User account - Order history : Consult details and Reorder', asyn
   });
   const today: string = utilsDate.getDateFormat('mm/dd/yyyy');
 
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_1`);
-
   // Pre-condition: Create new account
-  createAccountTest(customerData, `${baseContext}_enableNewProduct`);
+  createAccountTest(customerData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create new address
   createAddressTest(addressData, `${baseContext}_preTest_2`);
@@ -224,8 +218,5 @@ describe('FO - User account - Order history : Consult details and Reorder', asyn
   });
 
   // Post-condition : Delete customer
-  deleteCustomerTest(customerData, `${baseContext}_postText_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_2`);
+  deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
 });

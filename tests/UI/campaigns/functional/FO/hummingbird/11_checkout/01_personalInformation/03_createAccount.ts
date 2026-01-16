@@ -4,7 +4,6 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -30,7 +29,6 @@ const baseContext: string = 'functional_FO_hummingbird_checkout_personalInformat
 /*
 Pre-condition:
 - Setup SMTP parameters
-- Install hummingbird them
 Scenario:
 - Open FO page
 - Add first product to the cart
@@ -41,7 +39,6 @@ Scenario:
 Post-condition:
 - Reset SMTP parameters
 - Delete customer
-- Uninstall hummingbird theme
  */
 
 describe('FO - Checkout - Personal information : Create account', async () => {
@@ -76,9 +73,6 @@ describe('FO - Checkout - Personal information : Create account', async () => {
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_0`);
 
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_1`);
-
   describe('Create account', async () => {
     it('should open FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
@@ -88,7 +82,7 @@ describe('FO - Checkout - Personal information : Create account', async () => {
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should add product to cart', async function () {
@@ -162,7 +156,4 @@ describe('FO - Checkout - Personal information : Create account', async () => {
 
   // Post-condition : Reset SMTP config
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_3`);
 });

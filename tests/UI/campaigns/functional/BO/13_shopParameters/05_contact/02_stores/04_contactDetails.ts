@@ -9,7 +9,7 @@ import {
   type BrowserContext,
   dataStores,
   FakerStore,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -77,16 +77,16 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
 
     // View my shop and init pages
     page = await boStoresPage.viewMyShop(page);
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
-    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+    expect(isHomePage).to.eq(true);
   });
 
   it('should check contact details in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkContactDetailsInFO', baseContext);
 
-    const storeInformation = await foClassicHomePage.getStoreInformation(page);
+    const storeInformation = await foHummingbirdHomePage.getStoreInformation(page);
     expect(storeInformation).to.contains(storesContactToCreate.name);
     expect(storeInformation).to.contains(storesContactToCreate.email);
     expect(storeInformation).to.not.contains(storesContactToCreate.registrationNumber);
@@ -103,7 +103,7 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
     await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
     // Close tab and init other page objects with new current tab
-    page = await foClassicHomePage.closePage(browserContext, page, 0);
+    page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
     const pageTitle = await boStoresPage.getPageTitle(page);
     expect(pageTitle).to.contains(boStoresPage.pageTitle);

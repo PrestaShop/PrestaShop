@@ -9,10 +9,10 @@ import {
   type BrowserContext,
   dataCarriers,
   dataCustomers,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsCore,
   utilsPlaywright,
@@ -155,9 +155,9 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         // Click on view my shop
         page = await boShippingPreferencesPage.viewMyShop(page);
         // Change FO language
-        await foClassicHomePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await foClassicHomePage.isHomePage(page);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage, 'Home page is not displayed').to.eq(true);
       });
 
@@ -165,20 +165,20 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         await testContext.addContextItem(this, 'testIdentifier', `checkFinalSummary${index}`, baseContext);
 
         // Go to the first product page
-        await foClassicHomePage.goToProductPage(page, 1);
+        await foHummingbirdHomePage.goToProductPage(page, 1);
         // Add the product to the cart
-        await foClassicProductPage.addProductToTheCart(page);
+        await foHummingbirdProductPage.addProductToTheCart(page);
         // Proceed to checkout the shopping cart
-        await foClassicCartPage.clickOnProceedToCheckout(page);
+        await foHummingbirdCartPage.clickOnProceedToCheckout(page);
         // Checkout the order
         if (index === 0) {
           // Personal information step - Login
-          await foClassicCheckoutPage.clickOnSignIn(page);
-          await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+          await foHummingbirdCheckoutPage.clickOnSignIn(page);
+          await foHummingbirdCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
         }
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+        const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
         expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -186,7 +186,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         await testContext.addContextItem(this, 'testIdentifier', `checkSort${index}`, baseContext);
 
         if (test.args.sortBy === 'Price') {
-          const sortedCarriers = await foClassicCheckoutPage.getAllCarriersPrices(page);
+          const sortedCarriers = await foHummingbirdCheckoutPage.getAllCarriersPrices(page);
           const expectedResult = await utilsCore.sortArray(sortedCarriers);
 
           if (test.args.orderBy === 'Ascending') {
@@ -195,7 +195,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
             expect(sortedCarriers).to.deep.equal(expectedResult.reverse());
           }
         } else if (test.args.sortBy === 'Position') {
-          const sortedCarriers = await foClassicCheckoutPage.getAllCarriersNames(page);
+          const sortedCarriers = await foHummingbirdCheckoutPage.getAllCarriersNames(page);
 
           if (test.args.orderBy === 'Ascending') {
             expect(sortedCarriers).to.deep.equal(sortByPosition);
@@ -208,7 +208,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
-        page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
+        page = await foHummingbirdCheckoutPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boShippingPreferencesPage.getPageTitle(page);
         expect(pageTitle).to.contains(boShippingPreferencesPage.pageTitle);

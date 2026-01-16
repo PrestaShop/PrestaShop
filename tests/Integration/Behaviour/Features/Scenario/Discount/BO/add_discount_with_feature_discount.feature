@@ -21,17 +21,12 @@ Feature: Add discount with supplier feature
     When I create feature value "fire" for feature "element" with following properties:
       | value[en-US] | Fire |
     When I create a "free_shipping" discount "discount_with_feature_trigger" with following properties:
-      | name[en-US] | Promotion |
+      | name[en-US]                | Promotion |
+      | productConditionQuantity   | 42        |
+      | productCondition[features] | fire      |
     Then discount "discount_with_feature_trigger" should have the following properties:
-      | name[en-US] | Promotion     |
-      | type        | free_shipping |
-    When I update discount "discount_with_feature_trigger" with following conditions matching at least 42 products:
-      | condition_type | items |
-      | features        | fire  |
-    Then discount "discount_with_feature_trigger" should have the following properties:
-      | name[en-US]              | Promotion     |
-      | type                     | free_shipping |
-      | minimum_product_quantity | 0             |
-    Then discount "discount_with_feature_trigger" should have the following product conditions matching at least 42 products:
-      | condition_type | items |
-      | features        | fire  |
+      | name[en-US]                | Promotion     |
+      | type                       | free_shipping |
+      | minimum_product_quantity   | 0             |
+      | productConditionQuantity   | 42            |
+      | productCondition[features] | fire          |

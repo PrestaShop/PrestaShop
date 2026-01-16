@@ -2,7 +2,6 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomerServicePage,
@@ -64,9 +63,6 @@ describe('FO - Contact us : Send message from contact us page with customer not 
 
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -322,7 +318,4 @@ describe('FO - Contact us : Send message from contact us page with customer not 
 
   // Post-Condition : Reset SMTP config
   resetSmtpConfigTest(`${baseContext}_postTest_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

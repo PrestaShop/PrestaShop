@@ -8,7 +8,7 @@ import {
   boModuleManagerPage,
   type BrowserContext,
   dataModules,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   modPsNewProductsBoMain,
   type Page,
   utilsPlaywright,
@@ -99,23 +99,23 @@ describe('New products block module - Reset module', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTheFo', baseContext);
 
     page = await modPsNewProductsBoMain.viewMyShop(page);
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should check the number of products in the "New Products" block', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
-    const numProductsInBlock = await foClassicHomePage.getProductsBlockNumber(page, 'newproducts');
+    const numProductsInBlock = await foHummingbirdHomePage.getProductsBlockNumber(page, 'newproducts');
     expect(numProductsInBlock).to.be.equal(numProducts);
   });
 
   it('should return to the back office', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToBO', baseContext);
 
-    page = await foClassicHomePage.closePage(browserContext, page, 0);
+    page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
     const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
     expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);
@@ -169,16 +169,16 @@ describe('New products block module - Reset module', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTheFoAfterReset', baseContext);
 
     page = await modPsNewProductsBoMain.viewMyShop(page);
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should check the number of products in the "New Products" block', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProductsAfterReset', baseContext);
 
-    const numProductsInBlock = await foClassicHomePage.getProductsBlockNumber(page, 'newproducts');
+    const numProductsInBlock = await foHummingbirdHomePage.getProductsBlockNumber(page, 'newproducts');
     expect(numProductsInBlock).to.be.equal(defaultValue);
   });
 });

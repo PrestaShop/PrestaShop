@@ -7,8 +7,8 @@ import {
   boLoginPage,
   boProductSettingsPage,
   type BrowserContext,
-  foClassicCategoryPage,
-  foClassicHomePage,
+  foHummingbirdCategoryPage,
+  foHummingbirdHomePage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -89,24 +89,24 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
 
         page = await boProductSettingsPage.viewMyShop(page);
 
-        const isHomePage = await foClassicHomePage.isHomePage(page);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
       it('should go to all products page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToHomeCategory${index + 1}`, baseContext);
 
-        await foClassicHomePage.changeLanguage(page, 'en');
-        await foClassicHomePage.goToAllProductsPage(page);
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.goToAllProductsPage(page);
 
-        const isCategoryPage = await foClassicCategoryPage.isCategoryPage(page);
+        const isCategoryPage = await foHummingbirdCategoryPage.isCategoryPage(page);
         expect(isCategoryPage, 'Home category page was not opened');
       });
 
       it(`should check that number of products is equal to '${test.args.numberOfProductsPerPage}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkNumberOfProduct${index + 1}`, baseContext);
 
-        const numberOfProducts = await foClassicCategoryPage.getNumberOfProductsDisplayed(page);
+        const numberOfProducts = await foHummingbirdCategoryPage.getNumberOfProductsDisplayed(page);
 
         expect(
           numberOfProducts,
@@ -117,7 +117,7 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
       it('should close the page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index + 1}`, baseContext);
 
-        page = await foClassicHomePage.closePage(browserContext, page, 0);
+        page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await boProductSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);

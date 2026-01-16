@@ -1,6 +1,5 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -23,7 +22,6 @@ const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_c
 
 /*
 Pre-condition:
-- Install the theme hummingbird
 - Create product with 7 images
 Scenario:
 - Go to FO
@@ -33,7 +31,6 @@ Scenario:
 - Zoom the cover image and change image
 Post-condition:
 - Delete created product
-- Uninstall the theme hummingbird
  */
 describe('FO - Product page - Quick view : Change image', async () => {
   let browserContext: BrowserContext;
@@ -45,9 +42,6 @@ describe('FO - Product page - Quick view : Change image', async () => {
     coverImage: 'coverImage.jpg',
     thumbImage: 'thumbImage.jpg',
   });
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -248,7 +242,4 @@ describe('FO - Product page - Quick view : Change image', async () => {
 
   // Post-condition : Delete created product
   deleteProductTest(newProductData, `${baseContext}_postTest`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest2`);
 });

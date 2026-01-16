@@ -3,7 +3,7 @@ import {expect} from 'chai';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
+import {createOrderByGuestTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boCustomersViewPage,

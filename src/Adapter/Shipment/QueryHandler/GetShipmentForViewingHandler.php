@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use PrestaShopBundle\Entity\Shipment;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsQueryHandler]
 class GetShipmentForViewingHandler implements GetShipmentForViewingHandlerInterface
@@ -55,7 +56,8 @@ class GetShipmentForViewingHandler implements GetShipmentForViewingHandlerInterf
         private readonly CarrierRepository $carrierRepository,
         private readonly CountryRepository $countryRepository,
         private readonly AddressRepository $addressRepository,
-        private readonly StateRepository $stateRepository
+        private readonly StateRepository $stateRepository,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -71,8 +73,15 @@ class GetShipmentForViewingHandler implements GetShipmentForViewingHandlerInterf
         $shipment = $this->shipmentRepository->find($id);
 
         if ($shipment === null) {
-            throw new ShipmentNotFoundException(sprintf('Could not find shipment with id "%s"', $id));
+            throw new ShipmentNotFoundException(
+                $this->translator->trans(
+                    'Could not find shipment with id "%id%".',
+                    ['%id%' => $id],
+                    'Admin.Shipment.Error'
+                )
+            );
         }
+
         $order = $this->orderRepository->get(new OrderId($shipment->getOrderId()));
         $carrier = $this->carrierRepository->get(new CarrierId($shipment->getCarrierId()));
         $address = $this->addressRepository->get(new AddressId($shipment->getAddressId()));

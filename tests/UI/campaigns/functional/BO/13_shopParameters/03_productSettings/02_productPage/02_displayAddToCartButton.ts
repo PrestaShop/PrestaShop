@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   boDashboardPage,
@@ -21,9 +18,6 @@ const baseContext: string = 'functional_BO_shopParameters_productSettings_produc
 describe('BO - Shop Parameters - Product Settings : Display the "add to cart" button when a product has attributes', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}-preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -112,7 +106,4 @@ describe('BO - Shop Parameters - Product Settings : Display the "add to cart" bu
       });
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}-postTest`);
 });

@@ -2,6 +2,7 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -20,6 +21,7 @@ const baseContext: string = 'functional_FO_classic_homePage_productQuickView';
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Create product out of stock not allowed
 Scenario:
 - Quick view product with combinations
@@ -28,6 +30,7 @@ Scenario:
 - Quick view product out of stock not allowed
 Post-condition:
 - Delete created product
+- Disable the theme classic
  */
 describe('FO - Home Page : Product quick view', async () => {
   let browserContext: BrowserContext;
@@ -54,10 +57,12 @@ describe('FO - Home Page : Product quick view', async () => {
     behaviourOutOfStock: 'Deny orders',
   });
 
-  // Pre-condition : Create product out of stock not allowed
-  createProductTest(productOutOfStockNotAllowed, `${baseContext}_preTest`);
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
-  // before and after functions
+  // Pre-condition : Create product out of stock not allowed
+  createProductTest(productOutOfStockNotAllowed, `${baseContext}_preTest_1`);
+
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -143,10 +148,19 @@ describe('FO - Home Page : Product quick view', async () => {
   });
 
   describe('Quick view simple product', async () => {
+    it('should go to all products page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
+
+      await foClassicHomePage.goToAllProductsPage(page);
+
+      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
+      expect(isCategoryPageVisible, 'Home category page was not opened').to.equal(true);
+    });
+
     it(`should quick view the product '${dataProducts.demo_11.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct2', baseContext);
 
-      await foClassicHomePage.quickViewProduct(page, 6);
+      await foClassicCategoryPage.quickViewProduct(page, 6);
 
       const isModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isModalVisible).to.equal(true);
@@ -185,15 +199,6 @@ describe('FO - Home Page : Product quick view', async () => {
   });
 
   describe('Quick view customized product', async () => {
-    it('should go to all products page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
-
-      await foClassicHomePage.goToAllProductsPage(page);
-
-      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
-      expect(isCategoryPageVisible, 'Home category page was not opened').to.equal(true);
-    });
-
     it(`should go to the second page and quick view the product '${dataProducts.demo_14.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewCustomizedProduct', baseContext);
 
@@ -266,5 +271,8 @@ describe('FO - Home Page : Product quick view', async () => {
   });
 
   // Post-condition : Delete the created product
-  deleteProductTest(productOutOfStockNotAllowed, `${baseContext}_postTest`);
+  deleteProductTest(productOutOfStockNotAllowed, `${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

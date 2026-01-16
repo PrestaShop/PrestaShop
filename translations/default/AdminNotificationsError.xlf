@@ -400,7 +400,7 @@
       <trans-unit id="355f26b47eff3302c93a1c49676f078e">
         <source>Fatal error</source>
         <target>Fatal error</target>
-        <note>File: classes/Tools.php [Line: 1029]</note>
+        <note>File: classes/Tools.php [Line: 1057]</note>
       </trans-unit>
       <trans-unit id="bcfa9fd034fffbe5aa1a9c9e306386f1">
         <source>Fatal error: The module directory does not exist.</source>

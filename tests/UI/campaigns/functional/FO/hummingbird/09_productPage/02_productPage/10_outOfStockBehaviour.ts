@@ -2,7 +2,6 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boDashboardPage,
@@ -35,9 +34,6 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
     minimumQuantity: 0,
     status: true,
   });
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -292,9 +288,6 @@ describe('FO - Product page - Product page : Out of stock behaviour', async () =
     });
   });
 
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_1`);
-
   // Post-condition: Delete created product
-  deleteProductTest(newProductData, `${baseContext}_postTest_2`);
+  deleteProductTest(newProductData, `${baseContext}_postTest`);
 });

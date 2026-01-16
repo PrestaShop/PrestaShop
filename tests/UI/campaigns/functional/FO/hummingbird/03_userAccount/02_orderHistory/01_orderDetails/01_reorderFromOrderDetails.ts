@@ -3,7 +3,6 @@ import {expect} from 'chai';
 
 // Import common tests
 import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -26,7 +25,6 @@ const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_
 
 /*
 Pre-condition:
-- Install hummingbird
 - Create order by default customer
 Scenario:
 - Go to userAccount > order history > order detail
@@ -36,8 +34,6 @@ Scenario:
 - Check if the reorder is displayed
 - Go to the order detail
 - Check if the reorder contain the same product as the "original" order
-Post-condition:
-- Uninstall hummingbird
  */
 describe('FO - User Account - Order History - Order details : Reorder from order detail', async () => {
   let browserContext: BrowserContext;
@@ -53,9 +49,6 @@ describe('FO - User Account - Order History - Order details : Reorder from order
     ],
     paymentMethod: dataPaymentMethods.wirePayment,
   });
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_1`);
 
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
@@ -205,7 +198,4 @@ describe('FO - User Account - Order History - Order details : Reorder from order
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

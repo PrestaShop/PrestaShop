@@ -7,8 +7,8 @@ import {
   boLoginPage,
   boShopParametersPage,
   type BrowserContext,
-  foClassicHomePage,
-  foClassicSitemapPage,
+  foHummingbirdHomePage,
+  foHummingbirdSitemapPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -101,21 +101,21 @@ describe('BO - Shop Parameters - General : Enable/Disable display brands', async
         page = await boBrandsPage.viewMyShop(page);
 
         // Change FO language
-        await foClassicHomePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await foClassicHomePage.isHomePage(page);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage).to.eq(true);
       });
 
       it('should verify the existence of the brands page link', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkBrandsPage_${test.args.action}`, baseContext);
 
-        await foClassicHomePage.goToFooterLink(page, 'Sitemap');
+        await foHummingbirdHomePage.goToFooterLink(page, 'Sitemap');
 
-        const pageTitle = await foClassicSitemapPage.getPageTitle(page);
-        expect(pageTitle).to.equal(foClassicSitemapPage.pageTitle);
+        const pageTitle = await foHummingbirdSitemapPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foHummingbirdSitemapPage.pageTitle);
 
-        const exist = await foClassicSitemapPage.isBrandsLinkVisible(page);
+        const exist = await foHummingbirdSitemapPage.isBrandsLinkVisible(page);
         expect(exist).to.be.equal(test.args.exist);
       });
 
@@ -123,7 +123,7 @@ describe('BO - Shop Parameters - General : Enable/Disable display brands', async
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo_${test.args.action}`, baseContext);
 
-          page = await foClassicSitemapPage.closePage(browserContext, page, 0);
+          page = await foHummingbirdSitemapPage.closePage(browserContext, page, 0);
 
           const pageTitle = await boBrandsPage.getPageTitle(page);
           expect(pageTitle).to.contains(boBrandsPage.pageTitle);

@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -18,24 +15,17 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_search_consultProductQuickView';
 
 /*
-Pre-condition:
-- Install hummingbird themeProducts
 Scenario:
 - Go to FO
 - Search Mug value and see result
 - Quick view the first product
 - Check product information
 - Close quick view modal
-Post-condition:
-- Uninstall hummingbird theme
 */
 
 describe('FO - Search Page : Consult product quick view', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -103,7 +93,4 @@ describe('FO - Search Page : Consult product quick view', async () => {
       expect(isQuickViewModalClosed).to.equal(true);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   type CartProductDetails,
@@ -20,16 +18,12 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_productPage_quickView_addToCart';
 
 /*
-Pre-condition:
-- Install hummingbird theme
 Scenario:
 - Go to FO and add first product to cart by quick view
 - Check product details in the cart modal
 - Proceed to checkout and check product details in the cart
 - Go to home page and search a customized product
 - Check that add to cart button is disabled
-Post-condition:
-- Uninstall hummingbird theme
  */
 describe('FO - Product page - Quick view : Add to cart', async () => {
   let browserContext: BrowserContext;
@@ -55,9 +49,6 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
       value: 'White',
     },
   ];
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -173,7 +164,4 @@ describe('FO - Product page - Quick view : Add to cart', async () => {
       expect(isDisabled).to.eq(true);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

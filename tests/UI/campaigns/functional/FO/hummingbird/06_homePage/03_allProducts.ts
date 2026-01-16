@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   boDashboardPage,
@@ -23,9 +20,6 @@ describe('FO - Home Page : Display all products', async () => {
   let page: Page;
   let numberOfActiveProducts: number;
   let numberOfProducts: number;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -138,7 +132,4 @@ describe('FO - Home Page : Display all products', async () => {
       expect(listOfProductDisplayed).to.be.above(0);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

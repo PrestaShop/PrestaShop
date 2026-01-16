@@ -12,9 +12,6 @@ services:
   PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\UpdateDiscountHandler:
     autoconfigure: true
 
-  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\UpdateDiscountConditionsHandler:
-    autoconfigure: true
-
   PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\BulkUpdateDiscountsStatusHandler:
     autoconfigure: true
 
@@ -22,6 +19,9 @@ services:
     autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\DuplicateDiscountHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\Update\DiscountBuilder:
     autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Discount\Update\Filler\DiscountFiller:

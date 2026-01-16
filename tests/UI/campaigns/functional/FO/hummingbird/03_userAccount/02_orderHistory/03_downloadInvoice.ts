@@ -1,6 +1,5 @@
 import testContext from '@utils/testContext';
 import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -28,14 +27,11 @@ const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_
 
 /*
 Pre-condition:
-- Install the theme hummingbird
 - Create 2 orders by default customer
 Scenario:
 - Change the first order status to Shipped
 - Go to FO and check the invoice for the first order
 - Check that no invoice is visible for the second order
-Post-condition:
-- Delete the theme hummingbird
  */
 describe('FO - User account - Order history : Download invoice from orders list', async () => {
   let browserContext: BrowserContext;
@@ -52,9 +48,6 @@ describe('FO - User account - Order history : Download invoice from orders list'
     ],
     paymentMethod: dataPaymentMethods.wirePayment,
   });
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_0`);
 
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
@@ -191,7 +184,4 @@ describe('FO - User account - Order history : Download invoice from orders list'
       expect(isVisible).to.eq(false);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

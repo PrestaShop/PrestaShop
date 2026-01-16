@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -19,9 +16,6 @@ const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_navigat
 describe('FO - Menu and Navigation - Navigate in Categories : Breadcrumb', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -141,7 +135,4 @@ describe('FO - Menu and Navigation - Navigate in Categories : Breadcrumb', async
       expect(isHomePage).to.equal(true);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

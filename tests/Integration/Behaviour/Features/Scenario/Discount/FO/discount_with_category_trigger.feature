@@ -60,30 +60,27 @@ Feature: Add discount with category trigger on FO
     And I update product "product2" with following values:
       | price | 10.00 |
     When I create a "cart_level" discount "discount_with_category_trigger" with following properties:
-      | name[en-US]        | Promotion                   |
-      | name[fr-FR]        | Promotion                   |
-      | code               | CART_LEVEL_CATEGORY_TRIGGER |
-      | active             | true                        |
-      | reduction_amount   | 3.0                         |
-      | reduction_currency | usd                         |
-      | taxIncluded        | true                        |
+      | name[en-US]                  | Promotion                   |
+      | name[fr-FR]                  | Promotion                   |
+      | code                         | CART_LEVEL_CATEGORY_TRIGGER |
+      | active                       | true                        |
+      | reduction_amount             | 3.0                         |
+      | reduction_currency           | usd                         |
+      | reduction_tax_included       | true                        |
+      | productConditionQuantity     | 1                           |
+      | productCondition[categories] | clothes                     |
     Then discount "discount_with_category_trigger" should have the following properties:
-      | name[en-US]        | Promotion                   |
-      | name[fr-FR]        | Promotion                   |
-      | type               | cart_level                  |
-      | code               | CART_LEVEL_CATEGORY_TRIGGER |
-      | active             | true                        |
-      | reduction_amount   | 3.0                         |
-      | reduction_currency | usd                         |
-      | taxIncluded        | true                        |
-    When I update discount "discount_with_category_trigger" with following conditions matching at least 1 products:
-      | condition_type | items   |
-      | categories     | clothes |
-    Then discount "discount_with_category_trigger" should have the following properties:
-      | minimum_product_quantity | 0 |
-    And discount "discount_with_category_trigger" should have the following product conditions matching at least 1 products:
-      | condition_type | items   |
-      | categories     | clothes |
+      | name[en-US]                  | Promotion                   |
+      | name[fr-FR]                  | Promotion                   |
+      | type                         | cart_level                  |
+      | code                         | CART_LEVEL_CATEGORY_TRIGGER |
+      | active                       | true                        |
+      | reduction_amount             | 3.0                         |
+      | reduction_currency           | usd                         |
+      | reduction_tax_included       | true                        |
+      | minimum_product_quantity     | 0                           |
+      | productConditionQuantity     | 1                           |
+      | productCondition[categories] | clothes                     |
 
   Scenario: Reduction with category trigger on FO
     Given I create an empty cart "dummy_cart" for customer "testCustomer"
@@ -113,30 +110,27 @@ Feature: Add discount with category trigger on FO
 
   Scenario: Discount on category that is not default:
     When I create a "cart_level" discount "discount_with_category_trigger_2" with following properties:
-      | name[en-US]        | Promotion                     |
-      | name[fr-FR]        | Promotion                     |
-      | code               | CART_LEVEL_CATEGORY_TRIGGER_2 |
-      | active             | true                          |
-      | reduction_amount   | 3.0                           |
-      | reduction_currency | usd                           |
-      | taxIncluded        | true                          |
+      | name[en-US]                  | Promotion                     |
+      | name[fr-FR]                  | Promotion                     |
+      | code                         | CART_LEVEL_CATEGORY_TRIGGER_2 |
+      | active                       | true                          |
+      | reduction_amount             | 3.0                           |
+      | reduction_currency           | usd                           |
+      | reduction_tax_included       | true                          |
+      | productConditionQuantity     | 1                             |
+      | productCondition[categories] | home                          |
     Then discount "discount_with_category_trigger_2" should have the following properties:
-      | name[en-US]        | Promotion                     |
-      | name[fr-FR]        | Promotion                     |
-      | type               | cart_level                    |
-      | code               | CART_LEVEL_CATEGORY_TRIGGER_2 |
-      | active             | true                          |
-      | reduction_amount   | 3.0                           |
-      | reduction_currency | usd                           |
-      | taxIncluded        | true                          |
-    When I update discount "discount_with_category_trigger_2" with following conditions matching at least 1 products:
-      | condition_type | items |
-      | categories     | home  |
-    Then discount "discount_with_category_trigger_2" should have the following properties:
-      | minimum_product_quantity | 0 |
-    And discount "discount_with_category_trigger_2" should have the following product conditions matching at least 1 products:
-      | condition_type | items |
-      | categories     | home  |
+      | name[en-US]                  | Promotion                     |
+      | name[fr-FR]                  | Promotion                     |
+      | type                         | cart_level                    |
+      | code                         | CART_LEVEL_CATEGORY_TRIGGER_2 |
+      | active                       | true                          |
+      | reduction_amount             | 3.0                           |
+      | reduction_currency           | usd                           |
+      | reduction_tax_included       | true                          |
+      | minimum_product_quantity     | 0                             |
+      | productConditionQuantity     | 1                             |
+      | productCondition[categories] | home                          |
 
   Scenario: Reduction with category trigger on FO
     Given I create an empty cart "dummy_cart" for customer "testCustomer"

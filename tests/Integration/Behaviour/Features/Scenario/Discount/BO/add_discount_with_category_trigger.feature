@@ -15,17 +15,12 @@ Feature: Add discount with category trigger
 
   Scenario: Create discount with category trigger
     When I create a "free_shipping" discount "discount_with_category_trigger" with following properties:
-      | name[en-US] | Promotion |
+      | name[en-US]                  | Promotion |
+      | productConditionQuantity     | 42        |
+      | productCondition[categories] | home      |
     Then discount "discount_with_category_trigger" should have the following properties:
-      | name[en-US] | Promotion     |
-      | type        | free_shipping |
-    When I update discount "discount_with_category_trigger" with following conditions matching at least 42 products:
-      | condition_type | items  |
-      | categories     | home  |
-    Then discount "discount_with_category_trigger" should have the following properties:
-      | name[en-US]              | Promotion     |
-      | type                     | free_shipping |
-      | minimum_product_quantity | 0             |
-    Then discount "discount_with_category_trigger" should have the following product conditions matching at least 42 products:
-      | condition_type | items  |
-      | categories     | home  |
+      | name[en-US]                  | Promotion     |
+      | type                         | free_shipping |
+      | minimum_product_quantity     | 0             |
+      | productConditionQuantity     | 42            |
+      | productCondition[categories] | home          |

@@ -77,6 +77,8 @@ describe('API : PATCH /modules/{technicalName}/reset', async () => {
       expect(isModuleVisible).to.be.equal(true);
 
       moduleInfo = await boModuleManagerPage.getModuleInformationNth(page, 1);
+      // blockwishlist should be disabled by default
+      expect(moduleInfo.enabled).to.be.equal(false);
     });
 
     it(`should go to the configuration page of the module '${dataModules.blockwishlist.name}'`, async function () {
@@ -87,8 +89,9 @@ describe('API : PATCH /modules/{technicalName}/reset', async () => {
       const pageTitle = await modBlockwishlistBoMain.getPageTitle(page);
       expect(pageTitle).to.eq(modBlockwishlistBoMain.pageTitle);
 
+      // This module is disabled by Hummingbird 2.0, so the active tab should be "enable"
       const isConfigurationTabActive = await modBlockwishlistBoMain.isTabActive(page, 'Configuration');
-      expect(isConfigurationTabActive).to.eq(true);
+      expect(isConfigurationTabActive).to.eq(false);
 
       const wishlistDefaultTitle = await modBlockwishlistBoMain.getInputValue(page, 'wishlistDefaultTitle');
       expect(wishlistDefaultTitle).to.equals(modBlockwishlistBoMain.defaultValueWishlistDefaultTitle);
@@ -190,7 +193,8 @@ describe('API : PATCH /modules/{technicalName}/reset', async () => {
 
         expect(jsonResponse).to.have.property('enabled');
         expect(jsonResponse.enabled).to.be.a('boolean');
-        expect(jsonResponse.enabled).to.be.equal(moduleInfo.enabled);
+        // Since the module was reset it is now enabled
+        expect(jsonResponse.enabled).to.be.equal(true);
       });
 
       it('should check the JSON Response : `installed`', async function () {
@@ -218,6 +222,25 @@ describe('API : PATCH /modules/{technicalName}/reset', async () => {
           expect(textResult).to.contains(modBlockwishlistBoMain.successfulUpdateMessage);
         });
       }
+    });
+  });
+
+  describe('Disable the module so it goes back to its original state', async () => {
+    it('should go to \'Modules > Module Manager\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToModulesPageToDisable', baseContext);
+
+      await boDashboardPage.goToSubMenu(page, boDashboardPage.modulesParentLink, boDashboardPage.moduleManagerLink);
+      await boModuleManagerPage.closeSfToolBar(page);
+
+      const pageTitle = await boModuleManagerPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
+    });
+
+    it('should disabled blockwishlist module', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableBlockwishlistModule', baseContext);
+
+      const successMessage = await boModuleManagerPage.setActionInModule(page, dataModules.blockwishlist, 'disable');
+      expect(successMessage).to.eq(boModuleManagerPage.disableModuleSuccessMessage(dataModules.blockwishlist.tag));
     });
   });
 });

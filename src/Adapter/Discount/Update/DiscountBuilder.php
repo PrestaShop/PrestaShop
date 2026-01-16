@@ -24,16 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CartRule;
+namespace PrestaShop\PrestaShop\Adapter\Discount\Update;
 
 use CartRule;
 use DateTimeImmutable;
 use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\AddDiscountCommand;
+use PrestaShop\PrestaShop\Core\Domain\Discount\DiscountSettings;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
-class CartRuleBuilder
+class DiscountBuilder
 {
     public function __construct(
         private readonly DiscountTypeRepository $discountTypeRepository
@@ -58,36 +59,56 @@ class CartRuleBuilder
         $cartRule->date_to = $validTo->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
         $cartRule->quantity = $command->getTotalQuantity();
         $cartRule->quantity_per_user = $command->getQuantityPerUser();
+        $cartRule->reduction_amount = 0;
+        $cartRule->reduction_currency = 0;
+        $cartRule->reduction_tax = false;
+        $cartRule->reduction_percent = 0;
 
         $discountType = $command->getDiscountType()->getValue();
         $cartRule->id_cart_rule_type = $this->discountTypeRepository->getTypeIdByString($discountType);
         $cartRule->free_shipping = $discountType === DiscountType::FREE_SHIPPING;
 
-        if ($command->getDiscountType()->getValue() === DiscountType::CART_LEVEL || $command->getDiscountType()->getValue() === DiscountType::ORDER_LEVEL || $command->getDiscountType()->getValue() === DiscountType::PRODUCT_LEVEL) {
-            if ($command->getPercentDiscount()) {
-                $cartRule->reduction_percent = (float) (string) $command->getPercentDiscount();
-                $cartRule->reduction_amount = 0;
-                $cartRule->reduction_currency = 0;
-                $cartRule->reduction_tax = false;
-            } elseif ($command->getAmountDiscount()) {
-                $cartRule->reduction_percent = 0;
-                $cartRule->reduction_amount = (float) (string) $command->getAmountDiscount()->getAmount();
-                $cartRule->reduction_currency = $command->getAmountDiscount()->getCurrencyId()->getValue();
-                $cartRule->reduction_tax = $command->getAmountDiscount()->isTaxIncluded();
+        if (in_array($command->getDiscountType()->getValue(), [
+            DiscountType::CART_LEVEL,
+            DiscountType::ORDER_LEVEL,
+            DiscountType::PRODUCT_LEVEL]
+        )) {
+            if ($command->getReductionPercent()) {
+                $cartRule->reduction_percent = (float) (string) $command->getReductionPercent();
+            }
+            if ($command->getReductionAmount()) {
+                $cartRule->reduction_amount = (float) (string) $command->getReductionAmount()->getAmount();
+                $cartRule->reduction_currency = $command->getReductionAmount()->getCurrencyId()->getValue();
+                $cartRule->reduction_tax = $command->getReductionAmount()->isTaxIncluded();
             }
         } elseif ($command->getDiscountType()->getValue() === DiscountType::FREE_GIFT) {
-            $cartRule->gift_product = $command->getProductId()?->getValue() ?? 0;
-            $cartRule->gift_product_attribute = $command->getCombinationId()?->getValue() ?? 0;
+            $cartRule->gift_product = $command->getGiftProductId()?->getValue() ?? 0;
+            $cartRule->gift_product_attribute = $command->getGiftCombinationId()?->getValue() ?? 0;
         }
 
         if ($command->getDiscountType()->getValue() === DiscountType::PRODUCT_LEVEL) {
-            if ($command->getPercentDiscount()) {
-                $cartRule->reduction_percent = (float) (string) $command->getPercentDiscount();
-                $cartRule->reduction_amount = 0;
-                $cartRule->reduction_currency = 0;
-                $cartRule->reduction_tax = false;
+            if ($command->getCheapestProduct()) {
+                // If cheapest product is enabled we set the specific value
+                $cartRule->reduction_product = DiscountSettings::CHEAPEST_PRODUCT;
+            } elseif (null !== $command->getReductionProductId()) {
+                $cartRule->reduction_product = $command->getReductionProductId()->getValue();
             }
-            $cartRule->reduction_product = $command->getReductionProduct();
+        }
+
+        if (null !== $command->getMinimumProductQuantity()) {
+            $cartRule->minimum_product_quantity = $command->getMinimumProductQuantity();
+        }
+
+        if (null !== $command->getMinimumAmount()) {
+            $cartRule->minimum_amount = (float) (string) $command->getMinimumAmount()->getAmount();
+            $cartRule->minimum_amount_currency = $command->getMinimumAmount()->getCurrencyId()->getValue();
+            $cartRule->minimum_amount_tax = $command->getMinimumAmount()->isTaxIncluded();
+            $cartRule->minimum_amount_shipping = $command->getMinimumAmount()->isShippingIncluded();
+        } else {
+            $cartRule->minimum_amount = 0;
+            $cartRule->minimum_amount_currency = 0;
+            $cartRule->minimum_amount_tax = false;
+            $cartRule->minimum_amount_shipping = false;
         }
 
         return $cartRule;

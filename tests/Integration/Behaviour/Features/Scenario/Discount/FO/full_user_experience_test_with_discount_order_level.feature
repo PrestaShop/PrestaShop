@@ -3,7 +3,6 @@
 @full-ux-discount-test-order-level
 @clear-cache-before-feature
 @clear-cache-after-feature
-
 Feature: Full UX discount test
   PrestaShop allows BO users to create discounts
   As a BO user
@@ -24,25 +23,25 @@ Feature: Full UX discount test
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 20.0 and 1000 items in stock
     When I create a "order_level" discount "complete_amount_order_level_discount" with following properties:
-      | name[en-US]        | Promotion           |
-      | name[fr-FR]        | Promotion_fr        |
-      | active             | true                |
-      | valid_from         | 2025-01-01 11:05:00 |
-      | valid_to           | 2026-12-01 00:00:00 |
-      | code               | PROMO_order_2025    |
-      | reduction_amount   | 10.0                |
-      | reduction_currency | usd                 |
-      | taxIncluded        | true                |
+      | name[en-US]            | Promotion           |
+      | name[fr-FR]            | Promotion_fr        |
+      | active                 | true                |
+      | valid_from             | 2025-01-01 11:05:00 |
+      | valid_to               | 2026-12-01 00:00:00 |
+      | code                   | PROMO_order_2025    |
+      | reduction_amount       | 10.0                |
+      | reduction_currency     | usd                 |
+      | reduction_tax_included | true                |
     And discount "complete_amount_order_level_discount" should have the following properties:
-      | name[en-US]        | Promotion           |
-      | name[fr-FR]        | Promotion_fr        |
-      | active             | true                |
-      | valid_from         | 2025-01-01 11:05:00 |
-      | valid_to           | 2026-12-01 00:00:00 |
-      | code               | PROMO_order_2025    |
-      | reduction_amount   | 10.0                |
-      | reduction_currency | usd                 |
-      | taxIncluded        | true                |
+      | name[en-US]            | Promotion           |
+      | name[fr-FR]            | Promotion_fr        |
+      | active                 | true                |
+      | valid_from             | 2025-01-01 11:05:00 |
+      | valid_to               | 2026-12-01 00:00:00 |
+      | code                   | PROMO_order_2025    |
+      | reduction_amount       | 10.0                |
+      | reduction_currency     | usd                 |
+      | reduction_tax_included | true                |
     And I add 1 product "product1" to the cart "dummy_cart"
     And I add 1 product "product2" to the cart "dummy_cart"
     And cart "dummy_cart" total with tax included should be '$46.81'
@@ -61,25 +60,25 @@ Feature: Full UX discount test
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 20.0 and 1000 items in stock
     When I create a "order_level" discount "complete_amount_order_level_discount_greater" with following properties:
-      | name[en-US]        | Promotion                |
-      | name[fr-FR]        | Promotion_fr             |
-      | active             | true                     |
-      | valid_from         | 2025-01-01 11:05:00      |
-      | valid_to           | 2026-12-01 00:00:00      |
-      | code               | PROMO_order_greater_2025 |
-      | reduction_amount   | 45.0                     |
-      | reduction_currency | usd                      |
-      | taxIncluded        | true                     |
+      | name[en-US]            | Promotion                |
+      | name[fr-FR]            | Promotion_fr             |
+      | active                 | true                     |
+      | valid_from             | 2025-01-01 11:05:00      |
+      | valid_to               | 2026-12-01 00:00:00      |
+      | code                   | PROMO_order_greater_2025 |
+      | reduction_amount       | 45.0                     |
+      | reduction_currency     | usd                      |
+      | reduction_tax_included | true                     |
     And discount "complete_amount_order_level_discount_greater" should have the following properties:
-      | name[en-US]        | Promotion                |
-      | name[fr-FR]        | Promotion_fr             |
-      | active             | true                     |
-      | valid_from         | 2025-01-01 11:05:00      |
-      | valid_to           | 2026-12-01 00:00:00      |
-      | code               | PROMO_order_greater_2025 |
-      | reduction_amount   | 45.0                     |
-      | reduction_currency | usd                      |
-      | taxIncluded        | true                     |
+      | name[en-US]            | Promotion                |
+      | name[fr-FR]            | Promotion_fr             |
+      | active                 | true                     |
+      | valid_from             | 2025-01-01 11:05:00      |
+      | valid_to               | 2026-12-01 00:00:00      |
+      | code                   | PROMO_order_greater_2025 |
+      | reduction_amount       | 45.0                     |
+      | reduction_currency     | usd                      |
+      | reduction_tax_included | true                     |
     And I add 1 product "product1" to the cart "dummy_cart"
     And I add 1 product "product2" to the cart "dummy_cart"
     And cart "dummy_cart" total with tax included should be '$46.81'
@@ -98,25 +97,25 @@ Feature: Full UX discount test
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product2" with a price of 20.0 and 1000 items in stock
     When I create a "order_level" discount "complete_amount_order_level_discount_too_generous" with following properties:
-      | name[en-US]        | Promotion                 |
-      | name[fr-FR]        | Promotion_fr              |
-      | active             | true                      |
-      | valid_from         | 2025-01-01 11:05:00       |
-      | valid_to           | 2026-12-01 00:00:00       |
-      | code               | PROMO_order_generous_2025 |
-      | reduction_amount   | 55.0                      |
-      | reduction_currency | usd                       |
-      | taxIncluded        | true                      |
+      | name[en-US]            | Promotion                 |
+      | name[fr-FR]            | Promotion_fr              |
+      | active                 | true                      |
+      | valid_from             | 2025-01-01 11:05:00       |
+      | valid_to               | 2026-12-01 00:00:00       |
+      | code                   | PROMO_order_generous_2025 |
+      | reduction_amount       | 55.0                      |
+      | reduction_currency     | usd                       |
+      | reduction_tax_included | true                      |
     And discount "complete_amount_order_level_discount_too_generous" should have the following properties:
-      | name[en-US]        | Promotion                 |
-      | name[fr-FR]        | Promotion_fr              |
-      | active             | true                      |
-      | valid_from         | 2025-01-01 11:05:00       |
-      | valid_to           | 2026-12-01 00:00:00       |
-      | code               | PROMO_order_generous_2025 |
-      | reduction_amount   | 55.0                      |
-      | reduction_currency | usd                       |
-      | taxIncluded        | true                      |
+      | name[en-US]            | Promotion                 |
+      | name[fr-FR]            | Promotion_fr              |
+      | active                 | true                      |
+      | valid_from             | 2025-01-01 11:05:00       |
+      | valid_to               | 2026-12-01 00:00:00       |
+      | code                   | PROMO_order_generous_2025 |
+      | reduction_amount       | 55.0                      |
+      | reduction_currency     | usd                       |
+      | reduction_tax_included | true                      |
     And I add 1 product "product1" to the cart "dummy_cart"
     And I add 1 product "product2" to the cart "dummy_cart"
     And cart "dummy_cart" total with tax included should be '$46.81'

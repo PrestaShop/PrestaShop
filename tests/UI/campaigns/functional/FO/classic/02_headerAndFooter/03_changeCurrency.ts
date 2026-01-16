@@ -3,6 +3,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/currency';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 // Import pages
 import {
@@ -24,8 +25,10 @@ import {expect} from 'chai';
 const baseContext: string = 'functional_FO_classic_headerAndFooter_changeCurrency';
 
 /*
-Pre-condition: Check the block currencies is not displayed in header of FO
-Pre-condition: Create a new currency
+Pre-condition:
+- Enable the theme classic
+- Check the block currencies is not displayed in header of FO
+- Create a new currency
 Scenario:
  - Go to FO and check that the currencies list is not visible in the header
  - Create new currency
@@ -34,6 +37,7 @@ Scenario:
  - Switch back to the original currency and check the price of the first product
 Post-condition:
 - Delete the created currency
+- Disable the theme classic
 */
 
 describe('FO - Header and Footer : Change currency', async () => {
@@ -49,6 +53,9 @@ describe('FO - Header and Footer : Change currency', async () => {
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // Pre-condition: Check the block currencies is not displayed in header of FO
   describe('PRE-TEST: Check that the block currencies is not displayed in header of FO', async () => {
@@ -183,4 +190,7 @@ describe('FO - Header and Footer : Change currency', async () => {
 
   // Post-condition - Delete currency
   deleteCurrencyTest(dataCurrencies.mad, `${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

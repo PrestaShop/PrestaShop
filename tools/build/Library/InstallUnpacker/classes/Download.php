@@ -106,7 +106,6 @@ class Download
                 }
             }
             $content = curl_exec($curl);
-            curl_close($curl);
 
             return $content;
         }

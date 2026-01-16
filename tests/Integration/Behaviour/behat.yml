@@ -321,7 +321,6 @@ default:
         - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\CustomerGroupFeatureContext
-        - Tests\Integration\Behaviour\Features\Context\Domain\Discount\DiscountConditionsFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\Discount\DiscountFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
@@ -353,6 +352,8 @@ default:
         - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
         - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
         - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
 
     catalog_price_rule:
       paths:

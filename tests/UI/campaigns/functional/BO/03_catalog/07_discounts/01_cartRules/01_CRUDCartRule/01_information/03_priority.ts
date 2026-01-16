@@ -9,9 +9,9 @@ import {
   type BrowserContext,
   dataProducts,
   FakerCartRule,
-  foClassicCartPage,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsDate,
   utilsPlaywright,
@@ -60,7 +60,6 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
     },
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -137,38 +136,38 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
 
       // View my shop and init pages
       page = await boCartRulesCreatePage.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to the first product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage1', baseContext);
 
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
-      await foClassicProductPage.addProductToTheCart(page);
+      await foHummingbirdProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should check that the cart rule priority 1 is applied before priority 2', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCartRule', baseContext);
 
-      const firstCartRule = await foClassicCartPage.getCartRuleName(page, 1);
-      expect(firstCartRule).to.equal(cartRulePriority1.name);
+      const firstCartRule = await foHummingbirdCartPage.getCartRuleName(page, 1);
+      expect(firstCartRule).to.contains(cartRulePriority1.name);
 
-      const secondCartRule = await foClassicCartPage.getCartRuleName(page, 2);
-      expect(secondCartRule).to.equal(cartRulePriority2.name);
+      const secondCartRule = await foHummingbirdCartPage.getCartRuleName(page, 2);
+      expect(secondCartRule).to.contains(cartRulePriority2.name);
     });
 
     it('should check the total after discount', async function () {
@@ -180,7 +179,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
           + parseFloat(cartRulePriority1.discountAmount!.value.toString())
         );
 
-      const priceATI = await foClassicCartPage.getATIPrice(page);
+      const priceATI = await foHummingbirdCartPage.getATIPrice(page);
       expect(priceATI).to.equal(parseFloat(totalAfterDiscount.toFixed(2)));
     });
 
@@ -189,23 +188,23 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
 
       const discount1: number = parseFloat(cartRulePriority1.discountAmount!.value.toString());
       const discount2: number = parseFloat(cartRulePriority2.discountAmount!.value.toString());
-      const totalDiscountValue = await foClassicCartPage.getSubtotalDiscountValue(page);
+      const totalDiscountValue = await foHummingbirdCartPage.getSubtotalDiscountValue(page);
       expect(totalDiscountValue)
         .to.equal(-(discount2 + discount1));
 
-      const firstDiscountValue = await foClassicCartPage.getCartRuleValue(page, 1);
+      const firstDiscountValue = await foHummingbirdCartPage.getCartRuleValue(page, 1);
       expect(firstDiscountValue).to.equal(`-€${discount1.toFixed(2)}`);
 
-      const secondDiscountValue = await foClassicCartPage.getCartRuleValue(page, 1);
+      const secondDiscountValue = await foHummingbirdCartPage.getCartRuleValue(page, 1);
       expect(secondDiscountValue).to.equal(`-€${discount2.toFixed(2)}`);
     });
 
     it('should remove product from shopping cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeProduct1', baseContext);
 
-      await foClassicCartPage.deleteProduct(page, 1);
+      await foHummingbirdCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.be.equal(0);
     });
   });
@@ -215,7 +214,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with priority', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
 
       // Close tab and init other page objects with new current tab
-      page = await foClassicHomePage.closePage(browserContext, page, 0);
+      page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await boCartRulesPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCartRulesPage.pageTitle);

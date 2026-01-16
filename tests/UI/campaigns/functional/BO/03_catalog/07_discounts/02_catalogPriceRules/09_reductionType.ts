@@ -12,9 +12,9 @@ import {
   dataProducts,
   dataTaxes,
   FakerCatalogPriceRule,
-  foClassicHomePage,
-  foClassicProductPage,
-  foClassicSearchResultsPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsCore,
   utilsDate,
@@ -140,19 +140,19 @@ describe('BO - Catalog price Rules : CRUD - Reduction type', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       page = await boCatalogPriceRulesPage.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it(`should search for the product '${dataProducts.demo_6.name}' and go to product page`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await foClassicHomePage.searchProduct(page, dataProducts.demo_6.name);
-      await foClassicSearchResultsPage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.searchProduct(page, dataProducts.demo_6.name);
+      await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_6.name);
     });
 
@@ -165,14 +165,14 @@ describe('BO - Catalog price Rules : CRUD - Reduction type', async () => {
           + utilsCore.percentage(catalogPriceRuleData0.reduction, parseInt(dataTaxes.DefaultFrTax.rate, 10))
         );
 
-      const productPrice = await foClassicProductPage.getProductPrice(page);
+      const productPrice = await foHummingbirdProductPage.getProductPrice(page);
       expect(productPrice).to.eq(`€${calculatedPrice.toFixed(2)}`);
     });
 
     it('should return to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToBO', baseContext);
 
-      page = await foClassicProductPage.changePage(browserContext, 0);
+      page = await foHummingbirdProductPage.changePage(browserContext, 0);
 
       const pageTitle = await boCatalogPriceRulesPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCatalogPriceRulesPage.pageTitle);
@@ -195,26 +195,26 @@ describe('BO - Catalog price Rules : CRUD - Reduction type', async () => {
 
       page = await boCatalogPriceRulesPage.changePage(browserContext, 1);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_6.name);
     });
 
     it('should check the product price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice0', baseContext);
 
-      await foClassicProductPage.reloadPage(page);
+      await foHummingbirdProductPage.reloadPage(page);
 
       // Price - 20€
       const calculatedPrice = dataProducts.demo_6.combinations[0].price - catalogPriceRuleData0.reduction;
 
-      const productPrice = await foClassicProductPage.getProductPrice(page);
+      const productPrice = await foHummingbirdProductPage.getProductPrice(page);
       expect(productPrice).to.eq(`€${calculatedPrice.toFixed(2)}`);
     });
 
     it('should return to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToBO1', baseContext);
 
-      page = await foClassicProductPage.changePage(browserContext, 0);
+      page = await foHummingbirdProductPage.changePage(browserContext, 0);
 
       const pageTitle = await boCatalogPriceRulesPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCatalogPriceRulesPage.pageTitle);
@@ -237,14 +237,14 @@ describe('BO - Catalog price Rules : CRUD - Reduction type', async () => {
 
       page = await boCatalogPriceRulesPage.changePage(browserContext, 1);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_6.name);
     });
 
     it('should check the product price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice1', baseContext);
 
-      await foClassicProductPage.reloadPage(page);
+      await foHummingbirdProductPage.reloadPage(page);
 
       // (Price Without Tax - 20% Catalog Price) + 20% Tax
       const calculatedPriceWOTax = dataProducts.demo_6.combinations[0].price / (
@@ -257,14 +257,14 @@ describe('BO - Catalog price Rules : CRUD - Reduction type', async () => {
         parseInt(dataTaxes.DefaultFrTax.rate, 10),
       );
 
-      const productPrice = await foClassicProductPage.getProductPrice(page);
+      const productPrice = await foHummingbirdProductPage.getProductPrice(page);
       expect(productPrice).to.eq(`€${calculatedPrice.toFixed(2)}`);
     });
 
     it('should return to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToBO2', baseContext);
 
-      page = await foClassicProductPage.changePage(browserContext, 0);
+      page = await foHummingbirdProductPage.changePage(browserContext, 0);
 
       const pageTitle = await boCatalogPriceRulesPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCatalogPriceRulesPage.pageTitle);
@@ -287,14 +287,14 @@ describe('BO - Catalog price Rules : CRUD - Reduction type', async () => {
 
       page = await boCatalogPriceRulesPage.changePage(browserContext, 1);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_6.name);
     });
 
     it('should check the product price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice2', baseContext);
 
-      await foClassicProductPage.reloadPage(page);
+      await foHummingbirdProductPage.reloadPage(page);
 
       // Price - (20% Price)
       const calculatedPricePercent = utilsCore.percentage(
@@ -303,14 +303,14 @@ describe('BO - Catalog price Rules : CRUD - Reduction type', async () => {
       );
       const calculatedPrice = dataProducts.demo_6.combinations[0].price - calculatedPricePercent;
 
-      const productPrice = await foClassicProductPage.getProductPrice(page);
+      const productPrice = await foHummingbirdProductPage.getProductPrice(page);
       expect(productPrice).to.eq(`€${calculatedPrice.toFixed(2)}`);
     });
 
     it('should return to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToBO3', baseContext);
 
-      page = await foClassicProductPage.changePage(browserContext, 0);
+      page = await foHummingbirdProductPage.changePage(browserContext, 0);
 
       const pageTitle = await boCatalogPriceRulesPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCatalogPriceRulesPage.pageTitle);

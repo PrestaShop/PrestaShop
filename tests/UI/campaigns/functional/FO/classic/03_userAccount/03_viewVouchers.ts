@@ -4,7 +4,8 @@ import {expect} from 'chai';
 // Import commonTests
 import {createCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/classic/account';
+import {createAccountTest} from '@commonTests/FO/hummingbird/account';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -23,6 +24,7 @@ const baseContext: string = 'functional_FO_classic_userAccount_viewVouchers';
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Create customer
 - Create 2 cart rules for the customer
 Scenario:
@@ -30,6 +32,7 @@ Scenario:
 - Check vouchers in account page
 Post-condition:
 - Delete customer
+- Disable the theme classic
  */
 describe('FO - Account : View vouchers', async () => {
   let browserContext: BrowserContext;
@@ -57,7 +60,10 @@ describe('FO - Account : View vouchers', async () => {
   });
 
   // Pre-condition: Create new account on FO
-  createAccountTest(customerData, `${baseContext}_preTest_1`);
+  createAccountTest(customerData, `${baseContext}_preTest_0`);
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_1`);
 
   // Pre-condition: Create 2 cart rules for the created customer
   [firstCartRule, secondCartRule].forEach((cartRule: FakerCartRule, index: number) => {
@@ -90,7 +96,7 @@ describe('FO - Account : View vouchers', async () => {
       await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+      expect(pageTitle).to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with created customer', async function () {
@@ -142,5 +148,8 @@ describe('FO - Account : View vouchers', async () => {
   });
 
   // Post-condition: Delete created customer
-  deleteCustomerTest(customerData, `${baseContext}_postTest`);
+  deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

@@ -2,6 +2,7 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomerServicePage,
@@ -28,6 +29,7 @@ const baseContext: string = 'functional_FO_classic_contactUs_sendMessageAsAnonym
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Setup SMTP parameters
 - Configure contact form module
 Scenario:
@@ -41,6 +43,7 @@ Verify message on customer service page
 Post-condition:
 - Reset config in Contact form module
 - Reset SMTP parameters
+- Disable the theme classic
  */
 describe('FO - Contact us : Send message from contact us page with customer not logged', async () => {
   let browserContext: BrowserContext;
@@ -73,6 +76,9 @@ describe('FO - Contact us : Send message from contact us page with customer not 
     subject: 'Customer service',
     emailAddress: dataCustomers.johnDoe.email,
   });
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
@@ -349,4 +355,7 @@ describe('FO - Contact us : Send message from contact us page with customer not 
 
   // Post-Condition : Reset SMTP config
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_3`);
 });

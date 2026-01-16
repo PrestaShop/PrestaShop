@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryHandler\GetShipmentForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForEditing;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 #[AsQueryHandler]
@@ -40,6 +41,7 @@ class GetShipmentForEditingHandler implements GetShipmentForEditingHandlerInterf
 {
     public function __construct(
         private readonly ShipmentRepository $shipmentRepository,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -59,11 +61,22 @@ class GetShipmentForEditingHandler implements GetShipmentForEditingHandlerInterf
             $shipmentProducts = $result->getProducts()->toArray();
             $shipmentDetails['tracking_number'] = $result->getTrackingNumber();
             $shipmentDetails['carrier'] = $result->getCarrierId();
+
             foreach ($shipmentProducts as $shipmentProduct) {
-                $shipmentDetails['selectedProducts'][(new OrderDetail($shipmentProduct->getOrderDetailId()))->product_id] = 0;
+                $shipmentDetails['selectedProducts'][
+                    (new OrderDetail($shipmentProduct->getOrderDetailId()))->product_id
+                ] = 0;
             }
         } catch (Throwable $e) {
-            throw new ShipmentNotFoundException(sprintf('Could not find shipment for order with id "%s"', $orderId), 0, $e);
+            throw new ShipmentNotFoundException(
+                $this->translator->trans(
+                    'Could not find shipment for order with id "%id%".',
+                    ['%id%' => $orderId],
+                    'Admin.Shipment.Error'
+                ),
+                0,
+                $e
+            );
         }
 
         return new ShipmentForEditing(

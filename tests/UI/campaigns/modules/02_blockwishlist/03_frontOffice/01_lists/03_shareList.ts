@@ -5,12 +5,12 @@ import {
   type BrowserContext,
   dataCustomers,
   dataModules,
-  foClassicHomePage,
-  foClassicLoginPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
   foClassicModalWishlistPage,
-  foClassicMyAccountPage,
-  foClassicMyWishlistsPage,
-  foClassicMyWishlistsViewPage,
+  foHummingbirdMyAccountPage,
+  foHummingbirdMyWishlistsPage,
+  foHummingbirdMyWishlistsViewPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -41,52 +41,52 @@ describe('Wishlist module - Share a list', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await foClassicHomePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
 
-      await foClassicHomePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
-      const pageTitle = await foClassicLoginPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicLoginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should login', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'foLogin', baseContext);
 
-      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
     });
 
     it('should go to "My Account" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccount1', baseContext);
 
-      await foClassicHomePage.goToMyAccountPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
+      const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdMyAccountPage.pageTitle);
     });
 
     it('should go to "My Wishlists" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyWishlists1', baseContext);
 
-      await foClassicMyAccountPage.goToMyWishlistsPage(page);
+      await foHummingbirdMyAccountPage.goToMyWishlistsPage(page);
 
-      const pageTitle = await foClassicMyWishlistsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicMyWishlistsPage.pageTitle);
+      const pageTitle = await foHummingbirdMyWishlistsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdMyWishlistsPage.pageTitle);
     });
 
     it('should click on the share icon and cancel the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickShareAndCancel', baseContext);
 
-      await foClassicMyWishlistsPage.clickShareWishlistButton(page, 1);
+      await foHummingbirdMyWishlistsPage.clickShareWishlistButton(page, 1);
 
       const hasModalShare = await foClassicModalWishlistPage.hasModalShare(page);
       expect(hasModalShare).to.equal(true);
@@ -98,7 +98,7 @@ describe('Wishlist module - Share a list', async () => {
     it('should click on the share icon and copy the text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickShareAndCopyText', baseContext);
 
-      await foClassicMyWishlistsPage.clickShareWishlistButton(page, 1);
+      await foHummingbirdMyWishlistsPage.clickShareWishlistButton(page, 1);
 
       const hasModalLogin = await foClassicModalWishlistPage.hasModalShare(page);
       expect(hasModalLogin).to.equal(true);
@@ -110,7 +110,7 @@ describe('Wishlist module - Share a list', async () => {
     it('should click on the Create new list link and cancel', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewListAndCancel', baseContext);
 
-      await foClassicMyWishlistsPage.clickCreateWishlistButton(page);
+      await foHummingbirdMyWishlistsPage.clickCreateWishlistButton(page);
 
       const hasModalCreate = await foClassicModalWishlistPage.hasModalCreate(page);
       expect(hasModalCreate).to.equal(true);
@@ -122,7 +122,7 @@ describe('Wishlist module - Share a list', async () => {
     it('should click on the Create new list link and create it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewListAndCreate', baseContext);
 
-      await foClassicMyWishlistsPage.clickCreateWishlistButton(page);
+      await foHummingbirdMyWishlistsPage.clickCreateWishlistButton(page);
 
       const hasModalCreate = await foClassicModalWishlistPage.hasModalCreate(page);
       expect(hasModalCreate).to.equal(true);
@@ -136,7 +136,7 @@ describe('Wishlist module - Share a list', async () => {
     it('should click on the share icon (in dropdown) and cancel the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickDropdownShareAndCancel', baseContext);
 
-      await foClassicMyWishlistsPage.clickShareWishlistButton(page, 2);
+      await foHummingbirdMyWishlistsPage.clickShareWishlistButton(page, 2);
 
       const hasModalShare = await foClassicModalWishlistPage.hasModalShare(page);
       expect(hasModalShare).to.equal(true);
@@ -148,7 +148,7 @@ describe('Wishlist module - Share a list', async () => {
     it('should click on the share icon (in dropdown) and copy the text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickDropdownShareAndCopyText', baseContext);
 
-      await foClassicMyWishlistsPage.clickShareWishlistButton(page, 2);
+      await foHummingbirdMyWishlistsPage.clickShareWishlistButton(page, 2);
 
       const hasModalLogin = await foClassicModalWishlistPage.hasModalShare(page);
       expect(hasModalLogin).to.equal(true);
@@ -156,7 +156,7 @@ describe('Wishlist module - Share a list', async () => {
       const textToast = await foClassicModalWishlistPage.clickShareOnModalShare(page);
       expect(textToast).to.equal(foClassicModalWishlistPage.messageLinkSharedWishlist);
 
-      wishlistUrl = await foClassicMyWishlistsPage.getClipboardText(page);
+      wishlistUrl = await foHummingbirdMyWishlistsPage.getClipboardText(page);
       expect(wishlistUrl).to.be.a('string');
       expect(wishlistUrl.length).to.be.gt(0);
     });
@@ -164,34 +164,34 @@ describe('Wishlist module - Share a list', async () => {
     it('should go to the shared wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToSharedWishlistLogged', baseContext);
 
-      await foClassicMyWishlistsPage.goTo(page, wishlistUrl);
+      await foHummingbirdMyWishlistsPage.goTo(page, wishlistUrl);
 
-      const pageTitle = await foClassicMyWishlistsViewPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdMyWishlistsViewPage.getPageTitle(page);
       expect(pageTitle).to.contains(wishlistName);
 
-      const numProducts = await foClassicMyWishlistsViewPage.countProducts(page);
+      const numProducts = await foHummingbirdMyWishlistsViewPage.countProducts(page);
       expect(numProducts).to.equal(0);
     });
 
     it('should logout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'logout', baseContext);
 
-      await foClassicMyWishlistsViewPage.logout(page);
-      await foClassicMyWishlistsViewPage.clickOnHeaderLink(page, 'Logo');
+      await foHummingbirdMyWishlistsViewPage.logout(page);
+      await foHummingbirdMyWishlistsViewPage.clickOnHeaderLink(page, 'Logo');
 
-      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(false);
     });
 
     it('should return to the shared wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToSharedWishlistUnlogged', baseContext);
 
-      await foClassicLoginPage.goTo(page, wishlistUrl);
+      await foHummingbirdLoginPage.goTo(page, wishlistUrl);
 
-      const pageTitle = await foClassicMyWishlistsViewPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdMyWishlistsViewPage.getPageTitle(page);
       expect(pageTitle).to.contains(wishlistName);
 
-      const numProducts = await foClassicMyWishlistsViewPage.countProducts(page);
+      const numProducts = await foHummingbirdMyWishlistsViewPage.countProducts(page);
       expect(numProducts).to.equal(0);
     });
   });

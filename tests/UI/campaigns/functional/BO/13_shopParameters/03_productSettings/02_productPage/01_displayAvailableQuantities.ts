@@ -8,8 +8,8 @@ import {
   boProductSettingsPage,
   type BrowserContext,
   dataProducts,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -83,30 +83,30 @@ describe('BO - Shop Parameters - Product Settings : Display available quantities
 
       page = await boProductSettingsPage.viewMyShop(page);
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page was not opened').to.eq(true);
     });
 
     it('should go to the first product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
 
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
     });
 
     it('should check the product quantity on the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkQuantity${index}`, baseContext);
 
-      const quantityIsVisible = await foClassicProductPage.isQuantityDisplayed(page);
+      const quantityIsVisible = await foHummingbirdProductPage.isQuantityDisplayed(page);
       expect(quantityIsVisible).to.be.equal(test.args.enable);
     });
 
     it('should close the page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
-      page = await foClassicProductPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boProductSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);

@@ -5,12 +5,12 @@
       <trans-unit id="d999a32b68fd420ce389f774c231c637">
         <source>1) Create a blank robots.txt file in your root directory.</source>
         <target>1) Create a blank robots.txt file in your root directory.</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig [Line: 46]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig [Line: 52]</note>
       </trans-unit>
       <trans-unit id="1a53c64bc79e181125e94976211eb401">
         <source>2) Give it write permissions (CHMOD 666 on Unix system).</source>
         <target>2) Give it write permissions (CHMOD 666 on Unix system).</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig [Line: 47]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig [Line: 53]</note>
       </trans-unit>
       <trans-unit id="d2317f906b956432eebb5c8814bfb65e">
         <source>Aliases and results are both required.</source>
@@ -65,7 +65,6 @@
       <trans-unit id="73ca86c0d6a5d58e868c54c3a1524c6c">
         <source>Before you can use this tool, you need to:</source>
         <target>Before you can use this tool, you need to:</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig [Line: 45]</note>
       </trans-unit>
       <trans-unit id="57f51ca7c7ae71c5ac955cbce1942622">
         <source>Caution: The discount applied to a category does not stack with the overall reduction but instead replaces it.</source>
@@ -82,10 +81,14 @@
         <target>Create a blank .htaccess in your root directory.</target>
         <note>File: src/Adapter/Meta/SetUpUrlsDataConfiguration.php [Line: 129]</note>
       </trans-unit>
+      <trans-unit id="c1d0027c2c86a79e4fcc4b08fadeb4fc">
+        <source>Don't edit this file manually - use the appropriate hooks to modify its content.</source>
+        <target>Don't edit this file manually - use the appropriate hooks to modify its content.</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig [Line: 40]</note>
+      </trans-unit>
       <trans-unit id="54a81582e2ea2a98cebaabab9c454957">
         <source>Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)</source>
         <target>Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig [Line: 42]</note>
       </trans-unit>
       <trans-unit id="5dab5160dfb25b3a4d6c51416dac5c87">
         <source>Give it write permissions (CHMOD 666 on Unix system).</source>
@@ -106,6 +109,11 @@
         <source>Is not a valid result</source>
         <target>Is not a valid result</target>
         <note>File: controllers/admin/AdminSearchConfController.php [Line: 448]</note>
+      </trans-unit>
+      <trans-unit id="6b37d563275825e3befa9d24d28548e4">
+        <source>It's regenerated automatically during certain actions in the back office, but you can manually regenerate it using the button below if needed.</source>
+        <target>It's regenerated automatically during certain actions in the back office, but you can manually regenerate it using the button below if needed.</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig [Line: 39]</note>
       </trans-unit>
       <trans-unit id="43b7df4a7c26d5cc6256dad5ef1508c6">
         <source>Keywords must be in braces {keyword}</source>
@@ -166,6 +174,11 @@
         <source>There are several available keywords for each route listed below; note that keywords with * are required!</source>
         <target>There are several available keywords for each route listed below; note that keywords with * are required!</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/url_schema_configuration.html.twig [Line: 40]</note>
+      </trans-unit>
+      <trans-unit id="cdca0d1cbe3d615447cf05876124e1fe">
+        <source>There seems to be a problem with your current robots.txt file. Before you can use this tool, you need to:</source>
+        <target>There seems to be a problem with your current robots.txt file. Before you can use this tool, you need to:</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig [Line: 51]</note>
       </trans-unit>
       <trans-unit id="ef553500695e07c58644bbdd166581be">
         <source>This is not a valid IP address:</source>
@@ -240,7 +253,11 @@
       <trans-unit id="10ebcb160107c452a2fc3c51804fc780">
         <source>Your robots.txt file MUST be in your website's root directory and nowhere else (e.g. http://www.example.com/robots.txt).</source>
         <target>Your robots.txt file MUST be in your website's root directory and nowhere else (e.g. http://www.example.com/robots.txt).</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig [Line: 39]</note>
+      </trans-unit>
+      <trans-unit id="107962885a27f17b5a8a4712d2ae1bc5">
+        <source>robots.txt defines the rules that bots and crawlers should follow. It is automatically generated and stored in your website's root directory (e.g. http://www.example.com/robots.txt).</source>
+        <target>robots.txt defines the rules that bots and crawlers should follow. It is automatically generated and stored in your website's root directory (e.g. http://www.example.com/robots.txt).</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig [Line: 38]</note>
       </trans-unit>
     </body>
   </file>

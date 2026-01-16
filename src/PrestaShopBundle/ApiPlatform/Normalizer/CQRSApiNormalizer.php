@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
+use BackedEnum;
 use PrestaShopBundle\ApiPlatform\DomainObjectDetector;
 use PrestaShopBundle\ApiPlatform\LocalizedValueUpdater;
 use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
@@ -131,6 +132,8 @@ class CQRSApiNormalizer extends ObjectNormalizer
     {
         return [
             'object' => true,
+            // Enum normalization remains handled by the native BackedEnumNormalizer
+            BackedEnum::class => null,
         ];
     }
 
@@ -292,7 +295,7 @@ class CQRSApiNormalizer extends ObjectNormalizer
         foreach ($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
             // We only look into public method that can be setters with multiple parameters
             if (
-                $reflectionMethod->getNumberOfRequiredParameters() <= 1
+                $reflectionMethod->getNumberOfParameters() <= 1
                 || $reflectionMethod->isStatic()
                 || $reflectionMethod->isConstructor()
                 || $reflectionMethod->isDestructor()

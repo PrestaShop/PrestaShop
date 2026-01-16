@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\CannotSaveShipmentExcep
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentNotFoundException;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use PrestaShopBundle\Entity\Shipment;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 /**
@@ -44,7 +45,8 @@ use Throwable;
 class SwitchShipmentCarrierHandler implements SwitchShipmentCarrierHandlerInterface
 {
     public function __construct(
-        private readonly ShipmentRepository $shipmentRepository
+        private readonly ShipmentRepository $shipmentRepository,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -63,11 +65,25 @@ class SwitchShipmentCarrierHandler implements SwitchShipmentCarrierHandlerInterf
             /** @var Shipment|null $shipment */
             $shipment = $this->shipmentRepository->findOneBy(['id' => $shipmentId]);
         } catch (Throwable $e) {
-            throw new ShipmentNotFoundException(sprintf('Could not find shipment with id "%s"', $shipmentId), 0, $e);
+            throw new ShipmentNotFoundException(
+                $this->translator->trans(
+                    'Could not find shipment with id "%id%".',
+                    ['%id%' => $shipmentId],
+                    'Admin.Shipment.Error'
+                ),
+                0,
+                $e
+            );
         }
 
         if ($shipment === null) {
-            throw new ShipmentNotFoundException(sprintf('Could not find shipment with id "%s"', $shipmentId), 0);
+            throw new ShipmentNotFoundException(
+                $this->translator->trans(
+                    'Could not find shipment with id "%id%".',
+                    ['%id%' => $shipmentId],
+                    'Admin.Shipment.Error'
+                )
+            );
         }
 
         $shipment->setCarrierId($carrierId);
@@ -75,7 +91,15 @@ class SwitchShipmentCarrierHandler implements SwitchShipmentCarrierHandlerInterf
         try {
             $this->shipmentRepository->save($shipment);
         } catch (Throwable $e) {
-            throw new CannotSaveShipmentException(sprintf('Could not save shipment update with id "%s"', $shipmentId), 0, $e);
+            throw new CannotSaveShipmentException(
+                $this->translator->trans(
+                    'Could not save shipment update with id "%id%".',
+                    ['%id%' => $shipmentId],
+                    'Admin.Shipment.Error'
+                ),
+                0,
+                $e
+            );
         }
     }
 }

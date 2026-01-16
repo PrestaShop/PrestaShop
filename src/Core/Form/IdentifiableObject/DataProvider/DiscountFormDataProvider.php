@@ -30,7 +30,6 @@ use DateTime;
 use DateTimeInterface;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
-use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
@@ -79,7 +78,6 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         private readonly FeatureValueRepository $featureValueRepository,
         private readonly ShopContext $shopContext,
         private readonly RequestStack $requestStack,
-        private readonly DiscountTypeRepository $discountTypeRepository,
         private readonly CustomerRepository $customerRepository,
     ) {
     }
@@ -110,7 +108,9 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     'children_selector' => DiscountUsabilityModeType::AUTO_MODE,
                     'code' => '',
                 ],
-                'compatibility' => $this->getCompatibilityData(),
+                'quantity_total' => null,
+                'quantity_per_customer' => null,
+                'compatibility' => [],
                 'priority' => 1,
             ],
             'conditions' => [
@@ -137,7 +137,7 @@ class DiscountFormDataProvider implements FormDataProviderInterface
     {
         /** @var DiscountForEditing $discountForEditing */
         $discountForEditing = $this->queryBus->handle(new GetDiscountForEditing($id));
-        $isAmountDiscount = $discountForEditing->getAmountDiscount() !== null;
+        $isAmountDiscount = $discountForEditing->getReductionAmount() !== null;
         $details = $this->getGiftDetails($discountForEditing);
         $specificProducts = $this->getSpecificProducts($discountForEditing);
         $productSegment = $this->getProductSegmentDetails($discountForEditing);
@@ -157,6 +157,8 @@ class DiscountFormDataProvider implements FormDataProviderInterface
             $selectedProductCondition = ProductConditionsType::SPECIFIC_PRODUCTS;
         } elseif ($productSegmentDefined) {
             $selectedProductCondition = ProductConditionsType::PRODUCT_SEGMENT;
+        } elseif ($discountForEditing->getCheapestProduct()) {
+            $selectedProductCondition = ProductConditionsType::CHEAPEST_PRODUCT;
         }
 
         if ($discountForEditing->getMinimumProductQuantity()) {
@@ -182,10 +184,10 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                 'reduction' => [
                     'type' => $isAmountDiscount ? DiscountSettings::AMOUNT : DiscountSettings::PERCENT,
                     'value' => $isAmountDiscount
-                        ? (float) (string) $discountForEditing->getAmountDiscount()
-                        : (float) (string) $discountForEditing->getPercentDiscount(),
-                    'currency' => $discountForEditing->getCurrencyId(),
-                    'include_tax' => $discountForEditing->isTaxIncluded(),
+                        ? (float) (string) $discountForEditing->getReductionAmount()->getAmount()
+                        : (float) (string) $discountForEditing->getReductionPercent(),
+                    'currency' => $discountForEditing->getReductionAmount()?->getCurrencyId(),
+                    'include_tax' => $discountForEditing->getReductionAmount()?->isTaxIncluded(),
                 ],
             ],
             'free_gift' => [
@@ -206,10 +208,10 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     'children_selector' => $selectedCartCondition,
                     'minimum_product_quantity' => $discountForEditing->getMinimumProductQuantity(),
                     'minimum_amount' => [
-                        'value' => $discountForEditing->getMinimumAmount() ? (float) (string) $discountForEditing->getMinimumAmount() : null,
-                        'currency' => $discountForEditing->getMinimumAmountCurrencyId(),
-                        'tax_included' => $discountForEditing->getMinimumAmountTaxIncluded(),
-                        'shipping_included' => $discountForEditing->getMinimumAmountShippingIncluded(),
+                        'value' => $discountForEditing->getMinimumAmount() ? (float) (string) $discountForEditing->getMinimumAmount()->getAmount() : null,
+                        'currency' => $discountForEditing->getMinimumAmount()?->getCurrencyId(),
+                        'tax_included' => $discountForEditing->getMinimumAmount()?->isTaxIncluded(),
+                        'shipping_included' => $discountForEditing->getMinimumAmount()?->isShippingIncluded(),
                     ],
                 ],
                 DiscountConditionsType::DELIVERY_CONDITIONS => [
@@ -233,7 +235,9 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     'children_selector' => $discountForEditing->getCode() ? DiscountUsabilityModeType::CODE_MODE : DiscountUsabilityModeType::AUTO_MODE,
                     'code' => $discountForEditing->getCode(),
                 ],
-                'compatibility' => $this->getCompatibilityData($id),
+                'quantity_total' => $discountForEditing->getTotalQuantity(),
+                'quantity_per_customer' => $discountForEditing->getQuantityPerUser(),
+                'compatibility' => $discountForEditing->getCompatibleDiscountTypeIds(),
                 'priority' => $discountForEditing->getPriority(),
             ],
         ];
@@ -241,6 +245,10 @@ class DiscountFormDataProvider implements FormDataProviderInterface
 
     private function getSpecificProducts(DiscountForEditing $discountForEditing): array
     {
+        if (empty($discountForEditing->getProductConditions())) {
+            return [];
+        }
+
         $specificProducts = [];
         foreach ($discountForEditing->getProductConditions() as $conditions) {
             foreach ($conditions->getRules() as $rule) {
@@ -362,6 +370,10 @@ class DiscountFormDataProvider implements FormDataProviderInterface
             'quantity' => 0,
         ];
 
+        if (empty($discountForEditing->getProductConditions())) {
+            return $productSegment;
+        }
+
         // We can loop through all the rule groups but there should be only one anyway
         foreach ($discountForEditing->getProductConditions() as $condition) {
             foreach ($condition->getRules() as $rule) {
@@ -422,29 +434,6 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         }
 
         return $productSegment;
-    }
-
-    private function getCompatibilityData(?int $discountId = null): array
-    {
-        $compatibilityData = [];
-
-        // Get all available cart rule types
-        $availableTypes = $this->discountTypeRepository->getAllActiveTypes();
-
-        // If editing an existing discount, get its compatible types
-        $compatibleTypeIds = [];
-        if ($discountId) {
-            $compatibleTypes = $this->discountTypeRepository->getCompatibleTypesForDiscount($discountId);
-            $compatibleTypeIds = array_column($compatibleTypes, 'id_cart_rule_type');
-        }
-
-        // Build compatibility data for form
-        foreach ($availableTypes as $type) {
-            $fieldName = 'compatible_type_' . $type['id_cart_rule_type'];
-            $compatibilityData[$fieldName] = in_array($type['id_cart_rule_type'], $compatibleTypeIds);
-        }
-
-        return $compatibilityData;
     }
 
     private function getCustomerEligibilityData(DiscountForEditing $discountForEditing): array

@@ -1,7 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 import {
@@ -37,9 +36,6 @@ describe('FO - Cart : Add promo code', async () => {
   // Pre-condition: Create cart rule and apply the discount to 'productWithCartRule'
   createCartRuleTest(newCartRuleData, `${baseContext}_PreTest_1`);
 
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_2`);
-
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -57,7 +53,7 @@ describe('FO - Cart : Add promo code', async () => {
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should add the first product to cart and proceed to checkout', async function () {
@@ -130,7 +126,4 @@ describe('FO - Cart : Add promo code', async () => {
 
   // Post-Condition: Delete cart rule
   deleteCartRuleTest(newCartRuleData.name, `${baseContext}_PostTest_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

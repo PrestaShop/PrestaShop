@@ -66,21 +66,25 @@ class DiscountTypeRepository
      *
      * @return array
      */
-    public function getCompatibleTypesForDiscount(int $discountId): array
+    public function getCompatibleTypesIdsForDiscount(int $discountId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select('crt.id_cart_rule_type', 'crt.discount_type', 'crt.is_core', 'crt.active', 'crtl.name', 'crtl.description', 'crtl.id_lang')
+            ->select('crt.id_cart_rule_type')
             ->from($this->dbPrefix . 'cart_rule_compatible_types', 'crct')
             ->innerJoin('crct', $this->dbPrefix . 'cart_rule_type', 'crt', 'crct.id_cart_rule_type = crt.id_cart_rule_type')
-            ->leftJoin('crt', $this->dbPrefix . 'cart_rule_type_lang', 'crtl', 'crt.id_cart_rule_type = crtl.id_cart_rule_type')
             ->where('crct.id_cart_rule = :discountId')
             ->andWhere('crt.active = 1')
-            ->orderBy('crtl.name')
+            ->orderBy('crt.id_cart_rule_type')
             ->setParameter('discountId', $discountId)
         ;
 
-        return $qb->executeQuery()->fetchAllAssociative();
+        $result = $qb->executeQuery()->fetchAllAssociative();
+        if (empty($result)) {
+            return [];
+        }
+
+        return array_map(fn (array $discountType) => $discountType['id_cart_rule_type'], $result);
     }
 
     /**

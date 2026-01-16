@@ -13,8 +13,8 @@ import {
   type BrowserContext,
   dataModules,
   FakerShop,
-  foClassicContactUsPage,
-  foClassicHomePage,
+  foHummingbirdContactUsPage,
+  foHummingbirdHomePage,
   modPsGdprBoMain,
   modPsGdprBoTabDataConsent,
   type Page,
@@ -108,7 +108,7 @@ describe('BO - Modules - GDPR : Multistore', async () => {
       // View my shop and get the new tab
       page = await modPsGdprBoTabDataConsent.viewMyShop(page);
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
@@ -116,21 +116,21 @@ describe('BO - Modules - GDPR : Multistore', async () => {
     it('should check on Contact Form the GDPR Label', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkContactFormGDPRLabel', baseContext);
 
-      await foClassicHomePage.goToFooterLink(page, 'Contact us');
+      await foHummingbirdHomePage.goToFooterLink(page, 'Contact us');
 
-      const pageTitle = await foClassicContactUsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
+      const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdContactUsPage.pageTitle);
 
       this.skip();
 
-      const hasGDPRLabel = await foClassicContactUsPage.hasGDPRLabel(page);
+      const hasGDPRLabel = await foHummingbirdContactUsPage.hasGDPRLabel(page);
       expect(hasGDPRLabel).to.equal(false);
     });
 
     it('should go to \'Shop parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
 
-      page = await foClassicContactUsPage.changePage(browserContext, 0);
+      page = await foHummingbirdContactUsPage.changePage(browserContext, 0);
       await boDashboardPage.goToSubMenu(
         page,
         boDashboardPage.shopParametersParentLink,

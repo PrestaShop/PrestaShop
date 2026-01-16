@@ -11,8 +11,8 @@ import {
   boProductSettingsPage,
   type BrowserContext,
   FakerProduct,
-  foClassicCartPage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdProductPage,
   type Page,
   type ProductAttribute,
   utilsPlaywright,
@@ -207,13 +207,13 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
       await testContext.addContextItem(this, 'testIdentifier', 'previewProductAndCheckPriceATI', baseContext);
 
       page = await boProductsCreatePage.previewProduct(page);
-      await foClassicProductPage.addProductToTheCart(page, 1, firstAttributeToChoose, false);
-      await foClassicProductPage.addProductToTheCart(page, 1, secondAttributeToChoose, true);
+      await foHummingbirdProductPage.addProductToTheCart(page, 1, firstAttributeToChoose, false);
+      await foHummingbirdProductPage.addProductToTheCart(page, 1, secondAttributeToChoose, true);
 
-      const priceATI = await foClassicCartPage.getATIPrice(page);
+      const priceATI = await foHummingbirdCartPage.getATIPrice(page);
       expect(priceATI).to.equal(firstCartTotalATI);
 
-      page = await foClassicCartPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCartPage.closePage(browserContext, page, 0);
     });
 
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
@@ -240,16 +240,16 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
       await testContext.addContextItem(this, 'testIdentifier', 'ViewMyShopAndCheckPriceATI', baseContext);
 
       page = await boProductSettingsPage.viewMyShop(page);
-      await foClassicProductPage.goToCartPage(page);
+      await foHummingbirdProductPage.goToCartPage(page);
 
-      const priceATI = await foClassicCartPage.getATIPrice(page);
+      const priceATI = await foHummingbirdCartPage.getATIPrice(page);
       expect(priceATI).to.equal(secondCartTotalATI);
     });
 
     it('should close the page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closePageAndBackToBO', baseContext);
 
-      page = await foClassicCartPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCartPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boProductSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);

@@ -80,8 +80,9 @@ describe('API : PUT /modules/{technicalName}/status', async () => {
   });
 
   [
-    false,
     true,
+    // Leave the module as disabled after the test is finished (initial state)
+    false,
   ].forEach((argStatus: boolean, index: number) => {
     describe(`API : Check Data with status = ${argStatus}`, async () => {
       it('should request the endpoint /modules/{technicalName}/status', async function () {

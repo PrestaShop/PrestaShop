@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/employee';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/classic/order';
+import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boDashboardPage,

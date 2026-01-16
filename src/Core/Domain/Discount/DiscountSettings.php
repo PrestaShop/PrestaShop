@@ -40,4 +40,8 @@ class DiscountSettings
     public const PERIOD_FILTER_ACTIVE = 'active';
     public const PERIOD_FILTER_SCHEDULED = 'scheduled';
     public const PERIOD_FILTER_EXPIRED = 'expired';
+
+    // Special values for CartRule::reduction_product (used for product level discount)
+    public const CHEAPEST_PRODUCT = -1;
+    public const PRODUCT_SEGMENT = -2;
 }

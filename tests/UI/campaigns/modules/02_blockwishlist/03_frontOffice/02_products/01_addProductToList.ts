@@ -9,14 +9,14 @@ import {
   dataCustomers,
   dataProducts,
   FakerProduct,
-  foClassicHomePage,
-  foClassicLoginPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
   foClassicModalWishlistPage,
-  foClassicMyAccountPage,
-  foClassicMyWishlistsPage,
-  foClassicMyWishlistsViewPage,
-  foClassicProductPage,
-  foClassicSearchResultsPage,
+  foHummingbirdMyAccountPage,
+  foHummingbirdMyWishlistsPage,
+  foHummingbirdMyWishlistsViewPage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -66,25 +66,25 @@ describe('Wishlist module - Add a product to a list', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await foClassicHomePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
 
-      const productInformations = await foClassicProductPage.getProductInformation(page);
+      const productInformations = await foHummingbirdProductPage.getProductInformation(page);
       expect(productInformations.name).to.eq(dataProducts.demo_1.name);
     });
 
     it('should click on the button "Add to wishlist" and cancel', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickAddToWishlistAndCancel', baseContext);
 
-      await foClassicProductPage.clickAddToWishlistButton(page);
+      await foHummingbirdProductPage.clickAddToWishlistButton(page);
 
       const hasModalLogin = await foClassicModalWishlistPage.hasModalLogin(page);
       expect(hasModalLogin).to.equal(true);
@@ -96,78 +96,78 @@ describe('Wishlist module - Add a product to a list', async () => {
     it('should click on the button "Add to wishlist" and login', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickAddToWishlistAndLogin', baseContext);
 
-      await foClassicProductPage.clickAddToWishlistButton(page);
+      await foHummingbirdProductPage.clickAddToWishlistButton(page);
 
       const hasModalLogin = await foClassicModalWishlistPage.hasModalLogin(page);
       expect(hasModalLogin).to.equal(true);
 
       await foClassicModalWishlistPage.clickLoginOnModalLogin(page);
 
-      const pageTitle = await foClassicLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should login', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'foLogin', baseContext);
 
-      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
     });
 
     it('should go to "My Account" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccount1', baseContext);
 
-      await foClassicHomePage.goToMyAccountPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
+      const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdMyAccountPage.pageTitle);
     });
 
     it('should go to "My wishlists" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyWishlists1', baseContext);
 
-      await foClassicMyAccountPage.goToMyWishlistsPage(page);
+      await foHummingbirdMyAccountPage.goToMyWishlistsPage(page);
 
-      const pageTitle = await foClassicMyWishlistsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicMyWishlistsPage.pageTitle);
+      const pageTitle = await foHummingbirdMyWishlistsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdMyWishlistsPage.pageTitle);
 
-      wishlistName = await foClassicMyWishlistsPage.getWishlistName(page, 1);
+      wishlistName = await foHummingbirdMyWishlistsPage.getWishlistName(page, 1);
     });
 
     it('should click on the first wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickFirstWishlist1', baseContext);
 
-      await foClassicMyWishlistsPage.goToWishlistPage(page, 1);
+      await foHummingbirdMyWishlistsPage.goToWishlistPage(page, 1);
 
-      const pageTitle = await foClassicMyWishlistsViewPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdMyWishlistsViewPage.getPageTitle(page);
       expect(pageTitle).to.contains(wishlistName);
     });
 
     it('should check the wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWishlist1', baseContext);
 
-      const numProducts = await foClassicMyWishlistsViewPage.countProducts(page);
+      const numProducts = await foHummingbirdMyWishlistsViewPage.countProducts(page);
       expect(numProducts).to.equal(0);
     });
 
     it(`should search the product ${dataProducts.demo_3.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProductDemo3', baseContext);
 
-      await foClassicMyWishlistsViewPage.searchProduct(page, dataProducts.demo_3.name);
-      await foClassicSearchResultsPage.goToProductPage(page, 1);
+      await foHummingbirdMyWishlistsViewPage.searchProduct(page, dataProducts.demo_3.name);
+      await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.equal(dataProducts.demo_3.name);
 
-      await foClassicProductPage.setQuantityByArrowUpDown(page, 5, 'up');
+      await foHummingbirdProductPage.setQuantityByArrowUpDown(page, 5, 'up');
     });
 
     it('should add to the wishlist and select the first wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addToWishlist1', baseContext);
 
-      await foClassicProductPage.clickAddToWishlistButton(page);
+      await foHummingbirdProductPage.clickAddToWishlistButton(page);
 
       const textResult = await foClassicModalWishlistPage.addWishlist(page, 1);
       expect(textResult).to.equal(foClassicModalWishlistPage.messageAddedToWishlist);
@@ -176,60 +176,60 @@ describe('Wishlist module - Add a product to a list', async () => {
     it('should go to "My Account" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccount2', baseContext);
 
-      await foClassicHomePage.goToMyAccountPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
+      const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdMyAccountPage.pageTitle);
     });
 
     it('should go to "My wishlists" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyWishlists2', baseContext);
 
-      await foClassicMyAccountPage.goToMyWishlistsPage(page);
+      await foHummingbirdMyAccountPage.goToMyWishlistsPage(page);
 
-      const pageTitle = await foClassicMyWishlistsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicMyWishlistsPage.pageTitle);
+      const pageTitle = await foHummingbirdMyWishlistsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdMyWishlistsPage.pageTitle);
     });
 
     it('should click on the first wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickFirstWishlist2', baseContext);
 
-      await foClassicMyWishlistsPage.goToWishlistPage(page, 1);
+      await foHummingbirdMyWishlistsPage.goToWishlistPage(page, 1);
 
-      const pageTitle = await foClassicMyWishlistsViewPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdMyWishlistsViewPage.getPageTitle(page);
       expect(pageTitle).to.contains(wishlistName);
     });
 
     it('should check the wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWishlist2', baseContext);
 
-      const numProducts = await foClassicMyWishlistsViewPage.countProducts(page);
+      const numProducts = await foHummingbirdMyWishlistsViewPage.countProducts(page);
       expect(numProducts).to.equal(1);
 
-      const nameProduct = await foClassicMyWishlistsViewPage.getProductName(page, 1);
+      const nameProduct = await foHummingbirdMyWishlistsViewPage.getProductName(page, 1);
       expect(nameProduct).to.equal(dataProducts.demo_3.name);
 
-      const qtyProduct = await foClassicMyWishlistsViewPage.getProductQuantity(page, 1);
+      const qtyProduct = await foHummingbirdMyWishlistsViewPage.getProductQuantity(page, 1);
       expect(qtyProduct).to.equal(5);
 
-      const sizeProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 1, 'Size');
+      const sizeProduct = await foHummingbirdMyWishlistsViewPage.getProductAttribute(page, 1, 'Size');
       expect(sizeProduct).to.equal('S');
     });
 
     it(`should search the product ${productOutOfStockNotAllowed.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProductOutOfStockNotAllowed', baseContext);
 
-      await foClassicMyWishlistsViewPage.searchProduct(page, productOutOfStockNotAllowed.name);
-      await foClassicSearchResultsPage.goToProductPage(page, 1);
+      await foHummingbirdMyWishlistsViewPage.searchProduct(page, productOutOfStockNotAllowed.name);
+      await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.equal(productOutOfStockNotAllowed.name);
     });
 
     it('should add to the wishlist and select the first wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addToWishlist2', baseContext);
 
-      await foClassicProductPage.clickAddToWishlistButton(page);
+      await foHummingbirdProductPage.clickAddToWishlistButton(page);
 
       const textResult = await foClassicModalWishlistPage.addWishlist(page, 1);
       expect(textResult).to.equal(foClassicModalWishlistPage.messageAddedToWishlist);
@@ -238,63 +238,63 @@ describe('Wishlist module - Add a product to a list', async () => {
     it('should go to "My Account" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccount3', baseContext);
 
-      await foClassicHomePage.goToMyAccountPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
+      const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdMyAccountPage.pageTitle);
     });
 
     it('should go to "My wishlists" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyWishlists3', baseContext);
 
-      await foClassicMyAccountPage.goToMyWishlistsPage(page);
+      await foHummingbirdMyAccountPage.goToMyWishlistsPage(page);
 
-      const pageTitle = await foClassicMyWishlistsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicMyWishlistsPage.pageTitle);
+      const pageTitle = await foHummingbirdMyWishlistsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdMyWishlistsPage.pageTitle);
     });
 
     it('should click on the first wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickFirstWishlist3', baseContext);
 
-      await foClassicMyWishlistsPage.goToWishlistPage(page, 1);
+      await foHummingbirdMyWishlistsPage.goToWishlistPage(page, 1);
 
-      const pageTitle = await foClassicMyWishlistsViewPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdMyWishlistsViewPage.getPageTitle(page);
       expect(pageTitle).to.contains(wishlistName);
     });
 
     it('should check the wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWishlist3', baseContext);
 
-      const numProducts = await foClassicMyWishlistsViewPage.countProducts(page);
+      const numProducts = await foHummingbirdMyWishlistsViewPage.countProducts(page);
       expect(numProducts).to.equal(2);
 
-      const nameProduct = await foClassicMyWishlistsViewPage.getProductName(page, 2);
+      const nameProduct = await foHummingbirdMyWishlistsViewPage.getProductName(page, 2);
       expect(nameProduct).to.equal(productOutOfStockNotAllowed.name);
 
-      const qtyProduct = await foClassicMyWishlistsViewPage.getProductQuantity(page, 2);
+      const qtyProduct = await foHummingbirdMyWishlistsViewPage.getProductQuantity(page, 2);
       expect(qtyProduct).to.equal(1);
 
-      const isProductOutOfStock = await foClassicMyWishlistsViewPage.isProductOutOfStock(page, 2);
+      const isProductOutOfStock = await foHummingbirdMyWishlistsViewPage.isProductOutOfStock(page, 2);
       expect(isProductOutOfStock).to.equal(true);
 
-      const hasButtonAddToCartDisabled = await foClassicMyWishlistsViewPage.hasButtonAddToCartDisabled(page, 2);
+      const hasButtonAddToCartDisabled = await foHummingbirdMyWishlistsViewPage.hasButtonAddToCartDisabled(page, 2);
       expect(hasButtonAddToCartDisabled).to.equal(true);
     });
 
     it(`should search the product ${productLowStock.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProductLowStock', baseContext);
 
-      await foClassicMyWishlistsViewPage.searchProduct(page, productLowStock.name);
-      await foClassicSearchResultsPage.goToProductPage(page, 1);
+      await foHummingbirdMyWishlistsViewPage.searchProduct(page, productLowStock.name);
+      await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.equal(productLowStock.name);
     });
 
     it('should add to the wishlist and select the first wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addToWishlist3', baseContext);
 
-      await foClassicProductPage.clickAddToWishlistButton(page);
+      await foHummingbirdProductPage.clickAddToWishlistButton(page);
 
       const textResult = await foClassicModalWishlistPage.addWishlist(page, 1);
       expect(textResult).to.equal(foClassicModalWishlistPage.messageAddedToWishlist);
@@ -303,73 +303,73 @@ describe('Wishlist module - Add a product to a list', async () => {
     it('should go to "My Account" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccount4', baseContext);
 
-      await foClassicHomePage.goToMyAccountPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
+      const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdMyAccountPage.pageTitle);
     });
 
     it('should go to "My wishlists" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyWishlists4', baseContext);
 
-      await foClassicMyAccountPage.goToMyWishlistsPage(page);
+      await foHummingbirdMyAccountPage.goToMyWishlistsPage(page);
 
-      const pageTitle = await foClassicMyWishlistsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicMyWishlistsPage.pageTitle);
+      const pageTitle = await foHummingbirdMyWishlistsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdMyWishlistsPage.pageTitle);
     });
 
     it('should click on the first wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickFirstWishlist4', baseContext);
 
-      await foClassicMyWishlistsPage.goToWishlistPage(page, 1);
+      await foHummingbirdMyWishlistsPage.goToWishlistPage(page, 1);
 
-      const pageTitle = await foClassicMyWishlistsViewPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdMyWishlistsViewPage.getPageTitle(page);
       expect(pageTitle).to.contains(wishlistName);
     });
 
     it('should check the wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWishlist4', baseContext);
 
-      const numProducts = await foClassicMyWishlistsViewPage.countProducts(page);
+      const numProducts = await foHummingbirdMyWishlistsViewPage.countProducts(page);
       expect(numProducts).to.equal(3);
 
-      const nameProduct = await foClassicMyWishlistsViewPage.getProductName(page, 3);
+      const nameProduct = await foHummingbirdMyWishlistsViewPage.getProductName(page, 3);
       expect(nameProduct).to.equal(productLowStock.name);
 
-      const qtyProduct = await foClassicMyWishlistsViewPage.getProductQuantity(page, 2);
+      const qtyProduct = await foHummingbirdMyWishlistsViewPage.getProductQuantity(page, 2);
       expect(qtyProduct).to.equal(1);
 
-      const isProductLastItemsInStock = await foClassicMyWishlistsViewPage.isProductLastItemsInStock(page, 3);
+      const isProductLastItemsInStock = await foHummingbirdMyWishlistsViewPage.isProductLastItemsInStock(page, 3);
       expect(isProductLastItemsInStock).to.equal(true);
     });
 
     it(`should search the product ${dataProducts.demo_1.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchProductDemo1', baseContext);
 
-      await foClassicMyWishlistsViewPage.searchProduct(page, dataProducts.demo_1.name);
-      await foClassicSearchResultsPage.goToProductPage(page, 1);
+      await foHummingbirdMyWishlistsViewPage.searchProduct(page, dataProducts.demo_1.name);
+      await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.equal(dataProducts.demo_1.name);
     });
 
     it('should select the size \'M\' / color "Black" and check it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectSizeColor', baseContext);
 
-      await foClassicProductPage.selectAttributes(page, 'select', [{name: 'size', value: 'M'}]);
-      await foClassicProductPage.selectAttributes(page, 'radio', [{name: 'Color', value: 'Black'}], 2);
+      await foHummingbirdProductPage.selectAttributes(page, 'select', [{name: 'size', value: 'M'}]);
+      await foHummingbirdProductPage.selectAttributes(page, 'radio', [{name: 'Color', value: 'Black'}], 2);
 
-      const selectedAttributeSize = await foClassicProductPage.getSelectedAttribute(page, 1, 'select');
+      const selectedAttributeSize = await foHummingbirdProductPage.getSelectedAttribute(page, 1, 'select');
       expect(selectedAttributeSize).to.equal('M');
 
-      const selectedAttributeColor = await foClassicProductPage.getSelectedAttribute(page, 2, 'radio');
+      const selectedAttributeColor = await foHummingbirdProductPage.getSelectedAttribute(page, 2, 'radio');
       expect(selectedAttributeColor).to.equal('Black');
     });
 
     it('should add to the wishlist and select the first wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addToWishlist4', baseContext);
 
-      await foClassicProductPage.clickAddToWishlistButton(page);
+      await foHummingbirdProductPage.clickAddToWishlistButton(page);
 
       const textResult = await foClassicModalWishlistPage.addWishlist(page, 1);
       expect(textResult).to.equal(foClassicModalWishlistPage.messageAddedToWishlist);
@@ -378,27 +378,27 @@ describe('Wishlist module - Add a product to a list', async () => {
     it('should go to "My Account" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccount5', baseContext);
 
-      await foClassicHomePage.goToMyAccountPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
+      const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdMyAccountPage.pageTitle);
     });
 
     it('should go to "My wishlists" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyWishlists5', baseContext);
 
-      await foClassicMyAccountPage.goToMyWishlistsPage(page);
+      await foHummingbirdMyAccountPage.goToMyWishlistsPage(page);
 
-      const pageTitle = await foClassicMyWishlistsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicMyWishlistsPage.pageTitle);
+      const pageTitle = await foHummingbirdMyWishlistsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdMyWishlistsPage.pageTitle);
     });
 
     it('should click on the first wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickFirstWishlist5', baseContext);
 
-      await foClassicMyWishlistsPage.goToWishlistPage(page, 1);
+      await foHummingbirdMyWishlistsPage.goToWishlistPage(page, 1);
 
-      const pageTitle = await foClassicMyWishlistsViewPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdMyWishlistsViewPage.getPageTitle(page);
       expect(pageTitle).to.contains(wishlistName);
     });
 
@@ -406,23 +406,23 @@ describe('Wishlist module - Add a product to a list', async () => {
     it('should check the wishlist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWishlist5', baseContext);
 
-      const numProducts = await foClassicMyWishlistsViewPage.countProducts(page);
+      const numProducts = await foHummingbirdMyWishlistsViewPage.countProducts(page);
       expect(numProducts).to.equal(4);
 
-      // const nameProduct = await foClassicMyWishlistsViewPage.getProductName(page, 4);
-      const nameProduct = await foClassicMyWishlistsViewPage.getProductName(page, 2);
+      // const nameProduct = await foHummingbirdMyWishlistsViewPage.getProductName(page, 4);
+      const nameProduct = await foHummingbirdMyWishlistsViewPage.getProductName(page, 2);
       expect(nameProduct).to.equal(dataProducts.demo_1.name);
 
-      //const qtyProduct = await foClassicMyWishlistsViewPage.getProductQuantity(page, 4);
-      const qtyProduct = await foClassicMyWishlistsViewPage.getProductQuantity(page, 2);
+      //const qtyProduct = await foHummingbirdMyWishlistsViewPage.getProductQuantity(page, 4);
+      const qtyProduct = await foHummingbirdMyWishlistsViewPage.getProductQuantity(page, 2);
       expect(qtyProduct).to.equal(1);
 
-      //const sizeProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 4, 'Size');
-      //const sizeProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 2, 'Size');
+      //const sizeProduct = await foHummingbirdMyWishlistsViewPage.getProductAttribute(page, 4, 'Size');
+      //const sizeProduct = await foHummingbirdMyWishlistsViewPage.getProductAttribute(page, 2, 'Size');
       //expect(sizeProduct).to.equal('M');
 
-      //const colorProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 4, 'Color');
-      //const colorProduct = await foClassicMyWishlistsViewPage.getProductAttribute(page, 2, 'Color');
+      //const colorProduct = await foHummingbirdMyWishlistsViewPage.getProductAttribute(page, 4, 'Color');
+      //const colorProduct = await foHummingbirdMyWishlistsViewPage.getProductAttribute(page, 2, 'Color');
       //expect(colorProduct).to.equal('Black');
     });
 
@@ -430,11 +430,11 @@ describe('Wishlist module - Add a product to a list', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'emptyWishlist', baseContext);
 
       for (let idxProduct = 1; idxProduct <= 4; idxProduct++) {
-        const message = await foClassicMyWishlistsViewPage.removeProduct(page, 1);
-        expect(message).to.equal(foClassicMyWishlistsViewPage.messageSuccessfullyRemoved);
+        const message = await foHummingbirdMyWishlistsViewPage.removeProduct(page, 1);
+        expect(message).to.equal(foHummingbirdMyWishlistsViewPage.messageSuccessfullyRemoved);
       }
 
-      const numProducts = await foClassicMyWishlistsViewPage.countProducts(page);
+      const numProducts = await foHummingbirdMyWishlistsViewPage.countProducts(page);
       expect(numProducts).to.equal(0);
     });
   });

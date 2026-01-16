@@ -79,6 +79,11 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         return $carrier;
     }
 
+    public function assertCarrierExists(CarrierId $carrierId): void
+    {
+        $this->assertObjectModelExists($carrierId->getValue(), 'carrier', CarrierNotFoundException::class);
+    }
+
     public function add(Carrier $carrier, array $shopIds): CarrierId
     {
         $carrierId = $this->addObjectModelToShops(

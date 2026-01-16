@@ -3,8 +3,7 @@ import {expect} from 'chai';
 
 import deleteCacheTest from '@commonTests/BO/advancedParameters/cache';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/classic/account';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
+import {createAccountTest} from '@commonTests/FO/hummingbird/account';
 
 import {
   type BrowserContext,
@@ -64,11 +63,8 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
   // Pre-condition: Create new account on FO
   createAccountTest(createCustomerData, `${baseContext}_preTest_1`);
 
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_2`);
-
   // Pre-condition: Delete cache
-  deleteCacheTest(`${baseContext}_preTest_3`);
+  deleteCacheTest(`${baseContext}_preTest_2`);
 
   describe('Check links in footer page', async () => {
     before(async function () {
@@ -248,9 +244,6 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     });
   });
 
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_1`);
-
   // Post-condition: Delete the created customer account
-  deleteCustomerTest(createCustomerData, `${baseContext}_postTest_2`);
+  deleteCustomerTest(createCustomerData, `${baseContext}_postTest_1`);
 });

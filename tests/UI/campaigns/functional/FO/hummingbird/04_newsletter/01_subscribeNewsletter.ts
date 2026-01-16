@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -23,8 +21,6 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_newsletter_subscribeNewsletter';
 
 /*
-Pre-condition:
-- Install hummingbird
 Scenario:
 - Go to the FO homepage
 - Fill the subscribe newsletter field and subscribe
@@ -33,8 +29,6 @@ Scenario:
 - Go back to the FO homepage
 - Try to subscribe again with the same email
 - Go to back to BO and delete subscription
-Post-condition:
-- Uninstall hummingbird
  */
 describe('FO - Newsletter : Subscribe to Newsletter', async () => {
   let browserContext: BrowserContext;
@@ -44,9 +38,6 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     tag: 'ps_emailsubscription',
     name: 'Newsletter subscription',
   });
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -250,7 +241,4 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       expect(pageTitle).to.contains(boLoginPage.pageTitle);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

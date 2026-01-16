@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -19,23 +16,16 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_search_searchProductAndValidate';
 
 /*
-Pre-condition:
-- Install hummingbird themeProducts
 Scenario:
 - Go to FO
 - Search product and see result
 - Click on first product and check product page
 - Click on enter and check search result page
-Post-condition:
-- Uninstall hummingbird theme
 */
 
 describe('FO - Search Page : Search product and validate', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -113,7 +103,4 @@ describe('FO - Search Page : Search product and validate', async () => {
       expect(countResults).to.equal(3);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

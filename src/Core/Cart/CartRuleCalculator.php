@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Cart;
 
 use Cart;
+use CartCore;
 use CartRule;
 use Currency;
 use Hook;
@@ -108,7 +109,7 @@ class CartRuleCalculator
             return;
         }
         if ($cartRule->getType() === DiscountType::ORDER_LEVEL && (float) $cartRule->reduction_percent > 0 && $cartRule->reduction_product == 0) {
-            if ($this->featureFlagManager !== null && $this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_DISCOUNT)) {
+            if ($this->isDiscountFeatureFlagEnabled()) {
                 $initialShippingFees = $this->calculator->getFees()->getInitialShippingFees();
                 $productsTotal = $this->calculator->getRowTotal();
                 $orderTotal = $productsTotal->add($initialShippingFees);
@@ -207,48 +208,31 @@ class CartRuleCalculator
 
             // Discount (%) on the cheapest product
             if ($cartRule->reduction_product == -1) {
-                /** @var CartRow|null $cartRowCheapest */
-                $cartRowCheapest = null;
-                foreach ($this->cartRows as $cartRow) {
-                    $product = $cartRow->getRowData();
-                    if (
-                        (
-                            ($cartRule->reduction_exclude_special && !$product['reduction_applies'])
-                            || !$cartRule->reduction_exclude_special
-                        ) && (
-                            $cartRowCheapest === null
-                            || $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded() > $cartRow->getInitialUnitPrice()->getTaxIncluded()
-                        )
-                    ) {
-                        $cartRowCheapest = $cartRow;
-                    }
-                }
+                $cartRowCheapest = $this->getCheapestCartRow($cartRuleData);
                 if ($cartRowCheapest !== null) {
-                    // apply only on one product of the cheapest row
-                    $discountTaxIncluded = $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded()
-                        * $cartRule->reduction_percent / 100;
-                    $discountTaxExcluded = $cartRowCheapest->getInitialUnitPrice()->getTaxExcluded()
-                        * $cartRule->reduction_percent / 100;
-                    $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
-                    $cartRowCheapest->applyFlatDiscount($amount);
-                    $cartRuleData->addDiscountApplied($amount);
+                    if ($this->isDiscountFeatureFlagEnabled() && $cartRule->getType() === DiscountType::PRODUCT_LEVEL) {
+                        // For product level discount the percentage is applied on all quantities not just one
+                        $amount = $cartRowCheapest->applyPercentageDiscount($cartRule->reduction_percent);
+                        $cartRuleData->addDiscountApplied($amount);
+                    } else {
+                        // Apply only on one product of the cheapest row
+                        $discountTaxIncluded = $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded()
+                            * $cartRule->reduction_percent / 100;
+                        $discountTaxExcluded = $cartRowCheapest->getInitialUnitPrice()->getTaxExcluded()
+                            * $cartRule->reduction_percent / 100;
+                        $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
+                        $cartRowCheapest->applyFlatDiscount($amount);
+                        $cartRuleData->addDiscountApplied($amount);
+                    }
                 }
             }
 
             // Discount (%) on the selection of products
             if ($cartRule->reduction_product == -2) {
-                $selected_products = $cartRule->checkProductRestrictionsFromCart($cart, true);
-                if (is_array($selected_products)) {
-                    foreach ($this->cartRows as $cartRow) {
-                        $product = $cartRow->getRowData();
-                        if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
-                                || in_array($product['id_product'] . '-0', $selected_products))
-                            && (($cartRule->reduction_exclude_special && !$product['reduction_applies'])
-                                || !$cartRule->reduction_exclude_special)) {
-                            $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
-                            $cartRuleData->addDiscountApplied($amount);
-                        }
-                    }
+                $concernedRows = $this->getCartRowsMatchingSelection($cartRuleData, $cart);
+                foreach ($concernedRows as $cartRow) {
+                    $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
+                    $cartRuleData->addDiscountApplied($amount);
                 }
             }
         }
@@ -265,15 +249,25 @@ class CartRuleCalculator
                     }
                 }
             } elseif ($cartRule->reduction_product == 0) {
-                // Discount (¤) on the whole order
+                // Discount (¤) on the whole order, that will be applied with a weight ratio on all related products
                 $concernedRows = $this->cartRows;
             }
-            /*
-             * Reduction on the cheapest or on the selection is not really meaningful and has been disabled in the backend
-             * Please keep this code, so it won't be considered as a bug
-             * elseif ($this->reduction_product == -1)
-             * elseif ($this->reduction_product == -2)
-             */
+
+            // This new computing is only available for new discount with type product_level
+            // The same amount will be applied on all targeted products not based on a weightRatio but on their quantity
+            $productLevelDiscount = false;
+            if ($this->isDiscountFeatureFlagEnabled() && $cartRule->getType() === DiscountType::PRODUCT_LEVEL) {
+                if ($cartRule->reduction_product == -2) {
+                    $productLevelDiscount = true;
+                    $concernedRows = $this->getCartRowsMatchingSelection($cartRuleData, $cart);
+                } elseif ($cartRule->reduction_product == -1) {
+                    $productLevelDiscount = true;
+                    $cartRowCheapest = $this->getCheapestCartRow($cartRuleData);
+                    if ($cartRowCheapest !== null) {
+                        $concernedRows->addCartRow($cartRowCheapest);
+                    }
+                }
+            }
 
             // currency conversion
             $totalDiscountConverted = $discountConverted = $this->convertAmountBetweenCurrencies(
@@ -300,20 +294,26 @@ class CartRuleCalculator
                 $taxRate = $this->getTaxRateFromRow($concernedRow);
                 $weightFactor = 0;
                 if ($cartRule->reduction_tax) {
-                    // if cart rule amount is set tax included : calculate weight tax included
-                    if ($totalTaxIncl != 0) {
+                    if ($productLevelDiscount) {
+                        $weightFactor = (int) $concernedRow->getRowData()['cart_quantity'];
+                    } elseif ($totalTaxIncl != 0) {
+                        // if cart rule amount is set tax included : calculate weight tax included
                         $weightFactor = $concernedRow->getFinalTotalPrice()->getTaxIncluded() / $totalTaxIncl;
                     }
                     $discountAmountTaxIncl = $discountConverted * $weightFactor;
-                    // recalculate tax included
+                    $discountAmountTaxIncl = min($discountAmountTaxIncl, $concernedRow->getFinalTotalPrice()->getTaxIncluded());
+                    // Recompute tax included
                     $discountAmountTaxExcl = $discountAmountTaxIncl / (1 + $taxRate);
                 } else {
-                    // if cart rule amount is set tax excluded : calculate weight tax excluded
-                    if ($totalTaxExcl != 0) {
+                    if ($productLevelDiscount) {
+                        $weightFactor = (int) $concernedRow->getRowData()['cart_quantity'];
+                    } elseif ($totalTaxExcl != 0) {
+                        // if cart rule amount is set tax excluded : calculate weight tax excluded
                         $weightFactor = $concernedRow->getFinalTotalPrice()->getTaxExcluded() / $totalTaxExcl;
                     }
                     $discountAmountTaxExcl = $discountConverted * $weightFactor;
-                    // recalculate tax excluded
+                    $discountAmountTaxExcl = min($discountAmountTaxExcl, $concernedRow->getFinalTotalPrice()->getTaxExcluded());
+                    // Recompute tax excluded
                     $discountAmountTaxIncl = $discountAmountTaxExcl * (1 + $taxRate);
                 }
                 $amount = new AmountImmutable($discountAmountTaxIncl, $discountAmountTaxExcl);
@@ -325,7 +325,7 @@ class CartRuleCalculator
                 $cartRuleData->addDiscountApplied($amount);
             }
 
-            if ($this->featureFlagManager !== null && $this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_DISCOUNT) && $cartRule->getType() === DiscountType::ORDER_LEVEL) {
+            if ($this->isDiscountFeatureFlagEnabled() && $cartRule->getType() === DiscountType::ORDER_LEVEL) {
                 $totalProducts = $cartRule->reduction_tax ? $totalTaxIncl : $totalTaxExcl;
                 // The total discount is superior to the products amount, so we apply the remaining part of the discount globally
                 if ($totalDiscountConverted > $totalProducts) {
@@ -351,6 +351,51 @@ class CartRuleCalculator
                 }
             }
         }
+    }
+
+    protected function getCartRowsMatchingSelection(CartRuleData $cartRuleData, CartCore $cart): CartRowCollection
+    {
+        $concernedRows = new CartRowCollection();
+        $cartRule = $cartRuleData->getCartRule();
+        if ($cartRule->reduction_product == -2) {
+            $selected_products = $cartRule->checkProductRestrictionsFromCart($cart, true);
+            if (is_array($selected_products)) {
+                foreach ($this->cartRows as $cartRow) {
+                    $product = $cartRow->getRowData();
+                    if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
+                            || in_array($product['id_product'] . '-0', $selected_products))
+                        && (($cartRule->reduction_exclude_special && !$product['reduction_applies'])
+                            || !$cartRule->reduction_exclude_special)) {
+                        $concernedRows->addCartRow($cartRow);
+                    }
+                }
+            }
+        }
+
+        return $concernedRows;
+    }
+
+    protected function getCheapestCartRow(CartRuleData $cartRuleData): ?CartRow
+    {
+        /** @var CartRow|null $cartRowCheapest */
+        $cartRowCheapest = null;
+        $cartRule = $cartRuleData->getCartRule();
+        foreach ($this->cartRows as $cartRow) {
+            $product = $cartRow->getRowData();
+            if (
+                (
+                    ($cartRule->reduction_exclude_special && !$product['reduction_applies'])
+                    || !$cartRule->reduction_exclude_special
+                ) && (
+                    $cartRowCheapest === null
+                    || $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded() > $cartRow->getInitialUnitPrice()->getTaxIncluded()
+                )
+            ) {
+                $cartRowCheapest = $cartRow;
+            }
+        }
+
+        return $cartRowCheapest;
     }
 
     /**
@@ -445,5 +490,10 @@ class CartRuleCalculator
     public function getFees()
     {
         return $this->fees;
+    }
+
+    protected function isDiscountFeatureFlagEnabled(): bool
+    {
+        return $this->featureFlagManager !== null && $this->featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_DISCOUNT);
     }
 }

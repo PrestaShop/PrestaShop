@@ -123,6 +123,7 @@ class AddDisablingSwitchListener implements EventSubscriberInterface
             'switch_event' => $form->getConfig()->getOption(DisablingSwitchExtension::SWITCH_EVENT_OPTION),
             'data' => $disabledData,
             'disable_on_match' => $disableOnMatch,
+            'label' => $form->getConfig()->getOption(DisablingSwitchExtension::SWITCH_LABEL),
         ];
 
         $parent->add(

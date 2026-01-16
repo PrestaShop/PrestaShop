@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetOrderShipments;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryHandler\GetOrderShipmentsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\OrderShipment;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 #[AsQueryHandler]
@@ -44,6 +45,7 @@ class GetOrderShipmentsHandler implements GetOrderShipmentsHandlerInterface
     public function __construct(
         private readonly ShipmentRepository $shipmentRepository,
         private readonly CarrierRepository $carrierRepository,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -60,14 +62,30 @@ class GetOrderShipmentsHandler implements GetOrderShipmentsHandlerInterface
         try {
             $result = $this->shipmentRepository->findByOrderId($orderId);
         } catch (Throwable $e) {
-            throw new ShipmentNotFoundException(sprintf('Could not find shipment for order with id "%s"', $orderId), 0, $e);
+            throw new ShipmentNotFoundException(
+                $this->translator->trans(
+                    'Could not find shipment for order with id "%id%".',
+                    ['%id%' => $orderId],
+                    'Admin.Shipment.Error'
+                ),
+                0,
+                $e
+            );
         }
 
         foreach ($result as $shipment) {
             try {
                 $carrier = $this->carrierRepository->get(new CarrierId($shipment->getCarrierId()));
             } catch (Throwable $e) {
-                throw new ShipmentNotFoundException(sprintf('Could not find carrier with id "%s"', $shipment->getCarrierId()), 0, $e);
+                throw new ShipmentNotFoundException(
+                    $this->translator->trans(
+                        'Could not find carrier with id "%id%".',
+                        ['%id%' => $shipment->getCarrierId()],
+                        'Admin.Shipment.Error'
+                    ),
+                    0,
+                    $e
+                );
             }
 
             $carrierSummary = new CarrierSummary($carrier->id, $carrier->name);

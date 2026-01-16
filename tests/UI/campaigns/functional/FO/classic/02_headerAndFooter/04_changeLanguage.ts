@@ -2,6 +2,8 @@
 import testContext from '@utils/testContext';
 
 import {expect} from 'chai';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
+
 import {
   boDashboardPage,
   boLanguagesPage,
@@ -17,11 +19,15 @@ import {
 const baseContext: string = 'functional_FO_classic_headerAndFooter_changeLanguage';
 
 /*
+Pre-condition:
+- Enable the theme classic
 Scenario:
 - Disable french language
 - Go to FO and check that there is only one language
 - Enable french language
 - Go to Fo and change language
+Post-condition:
+- Disable the theme classic
  */
 describe('FO - Header and Footer : Change language', async () => {
   let browserContext: BrowserContext;
@@ -36,6 +42,9 @@ describe('FO - Header and Footer : Change language', async () => {
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // 1 - Disable language
   describe('Disable \'French\' language', async () => {
@@ -245,4 +254,7 @@ describe('FO - Header and Footer : Change language', async () => {
       expect(language, 'Language is not changed to English!').to.equal('English');
     });
   });
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest`);
 });

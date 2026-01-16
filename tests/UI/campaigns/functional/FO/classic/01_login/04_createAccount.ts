@@ -1,8 +1,10 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
+// Import common tests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -47,7 +49,10 @@ describe('FO - Login : Create account', async () => {
   });
 
   // Pre-Condition : Setup config SMTP
-  setupSmtpConfigTest(`${baseContext}_preTest`);
+  setupSmtpConfigTest(`${baseContext}_preTest_0`);
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_1`);
 
   describe('FO - Login : Create account', async () => {
     it('should open the shop page', async function () {
@@ -122,4 +127,7 @@ describe('FO - Login : Create account', async () => {
 
   // Post-condition : Reset SMTP config
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_3`);
 });

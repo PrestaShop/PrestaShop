@@ -2,7 +2,6 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomersPage,
@@ -37,8 +36,6 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_userAccount_getGDPRDataInCSV';
 
 /*
-Pre-condition:
-- Install the theme hummingbird
 Scenario:
 - Check GDPR CSV file after create customer and first login
 - Check GDPR CSV file after create a cart
@@ -89,9 +86,6 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   });
 
   const createCustomerName: string = `${customerData.firstName[0]}. ${customerData.lastName}`;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -1008,7 +1002,4 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
   // Post-condition: Create new account on FO
   deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

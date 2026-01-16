@@ -2,7 +2,6 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 
 import {expect} from 'chai';
@@ -21,14 +20,13 @@ const baseContext: string = 'functional_FO_hummingbird_productPage_quickView_cha
 
 /*
 Pre-condition:
-- Install hummingbird theme
 - Create product with 2 images
 Scenario:
 - Go to FO
 - Quick view the created product
 - Change second image
 Post-condition:
-- Uninstall hummingbird theme
+- Delete created product
  */
 describe('FO - Product page - Quick view : Change image', async () => {
   let browserContext: BrowserContext;
@@ -41,9 +39,6 @@ describe('FO - Product page - Quick view : Change image', async () => {
     coverImage: 'coverImage.jpg',
     thumbImage: 'thumbImage.jpg',
   });
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_0`);
 
   // Pre-condition : Create product out of stock not allowed
   createProductTest(productWith2Images, `${baseContext}_preTest_1`);
@@ -108,9 +103,6 @@ describe('FO - Product page - Quick view : Change image', async () => {
       expect(firstCoverImageURL).to.not.equal(secondCoverImageURL);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_0`);
 
   // Post-condition : Delete created product
   deleteProductTest(productWith2Images, `${baseContext}_postTest_1`);

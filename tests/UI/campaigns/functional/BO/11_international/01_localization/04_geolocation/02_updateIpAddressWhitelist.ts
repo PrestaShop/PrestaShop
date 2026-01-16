@@ -8,7 +8,7 @@ import {
   boLocalizationPage,
   boLoginPage,
   type BrowserContext,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -65,8 +65,8 @@ describe('BO - International - Localization - Geolocation: Update IP address whi
     const pageTitle = await boGeolocationPage.getPageTitle(page);
     expect(pageTitle).to.equal(boGeolocationPage.pageTitle);
 
-    //const hasAlertBlock  = await boGeolocationPage.hasAlertBlock(page);
-    //expect(hasAlertBlock).to.equal(true);
+    // const hasAlertBlock = await boGeolocationPage.hasAlertBlock(page);
+    // expect(hasAlertBlock).to.equal(true);
 
     const messageWarning = await boGeolocationPage.getWarningMessage(page);
     expect(messageWarning).to.equal(boGeolocationPage.messageWarningNeedDB);
@@ -127,16 +127,16 @@ describe('BO - International - Localization - Geolocation: Update IP address whi
     expect(resultForm2).to.equal(boGeolocationPage.successfulUpdateMessage);
 
     page = await boGeolocationPage.viewMyShop(page);
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
     expect(isHomePage).to.equal(true);
   });
 
   it('should update the IP Address Whitelist', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateIPAddressWhitelist', baseContext);
 
-    page = await foClassicHomePage.changePage(browserContext, 0);
+    page = await foHummingbirdHomePage.changePage(browserContext, 0);
 
     await boGeolocationPage.setWhiteListedIPAddresses(page, ipAddressWhiteList.replace(ipDocker, '').trim());
 
@@ -148,19 +148,19 @@ describe('BO - International - Localization - Geolocation: Update IP address whi
     await testContext.addContextItem(this, 'testIdentifier', 'checkFO301', baseContext);
 
     page = await boGeolocationPage.changePage(browserContext, 1);
-    await foClassicHomePage.reloadPage(page);
+    await foHummingbirdHomePage.reloadPage(page);
 
-    const isRestrictedPage = await foClassicHomePage.isRestrictedPage(page);
+    const isRestrictedPage = await foHummingbirdHomePage.isRestrictedPage(page);
     expect(isRestrictedPage).to.equal(true);
 
-    const restrictedText = await foClassicHomePage.getRestrictedText(page);
-    expect(restrictedText).to.equal(foClassicHomePage.restrictedContentCountry);
+    const restrictedText = await foHummingbirdHomePage.getRestrictedText(page);
+    expect(restrictedText).to.equal(foHummingbirdHomePage.restrictedContentCountry);
   });
 
   it('should disable the geolocation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableGeolocation', baseContext);
 
-    page = await foClassicHomePage.changePage(browserContext, 0);
+    page = await foHummingbirdHomePage.changePage(browserContext, 0);
 
     await boGeolocationPage.setGeolocationByIPAddressStatus(page, false);
 
@@ -173,16 +173,16 @@ describe('BO - International - Localization - Geolocation: Update IP address whi
 
     page = await boGeolocationPage.changePage(browserContext, 1);
 
-    await foClassicHomePage.reloadPage(page);
+    await foHummingbirdHomePage.reloadPage(page);
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
     expect(isHomePage).to.equal(true);
   });
 
   it('should reset the IP Address Whitelist', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetIPAddressWhitelist', baseContext);
 
-    page = await foClassicHomePage.changePage(browserContext, 0);
+    page = await foHummingbirdHomePage.changePage(browserContext, 0);
 
     await boGeolocationPage.setWhiteListedIPAddresses(page, ipAddressWhiteList);
 

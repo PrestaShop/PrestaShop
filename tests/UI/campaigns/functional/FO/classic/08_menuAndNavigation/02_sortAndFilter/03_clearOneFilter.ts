@@ -14,20 +14,28 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
+
 const baseContext: string = 'functional_FO_classic_menuAndNavigation_sortAndFilter_clearOneFilter';
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Get the number of active products
 Scenario:
 - Filter products by composition and availability
 - Clear one filter
+Post-condition:
+- Disable the theme classic
  */
 describe('FO - Menu and Navigation - Sort and filter : Clear one filter', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfActiveProducts: number;
   let productsNumber: number;
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -166,4 +174,7 @@ describe('FO - Menu and Navigation - Sort and filter : Clear one filter', async 
       expect(productsNumberAfterClearFilter).to.be.equal(numberOfActiveProducts);
     });
   });
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest`);
 });

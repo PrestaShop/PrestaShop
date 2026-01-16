@@ -14,9 +14,9 @@ import {
   type BrowserContext,
   dataModules,
   FakerProduct,
-  foClassicCategoryPage,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdCategoryPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -147,42 +147,43 @@ describe('Mail alerts module - Uninstall and delete module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
       page = await boModuleManagerPage.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to the category Page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoryPage', baseContext);
 
-      await foClassicHomePage.goToAllProductsPage(page);
+      await foHummingbirdHomePage.goToAllProductsPage(page);
 
-      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
+      const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
 
     it('should go to the next page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoryPage2', baseContext);
 
-      await foClassicCategoryPage.goToNextPage(page);
+      await foHummingbirdCategoryPage.goToNextPage(page);
 
-      nthProduct = await foClassicCategoryPage.getNThChildFromIDProduct(page, idProduct);
+      nthProduct = await foHummingbirdCategoryPage.getNThChildFromIDProduct(page, idProduct);
       expect(nthProduct).to.not.eq(null);
     });
 
     it('should go to the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await foClassicCategoryPage.goToProductPage(page, nthProduct!);
+      await foHummingbirdCategoryPage.goToProductPage(page, nthProduct!);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(productOutOfStockNotAllowed.name.toUpperCase());
 
-      const hasFlagOutOfStock = await foClassicProductPage.hasProductFlag(page, 'out_of_stock');
-      expect(hasFlagOutOfStock).to.be.equal(true);
+      // @todo : https://github.com/PrestaShop/hummingbird/issues/879
+      // const hasFlagOutOfStock = await foHummingbirdProductPage.hasProductFlag(page, 'out_of_stock');
+      // expect(hasFlagOutOfStock).to.be.equal(true);
 
-      const hasBlockMailAlert = await foClassicProductPage.hasBlockMailAlert(page);
+      const hasBlockMailAlert = await foHummingbirdProductPage.hasBlockMailAlert(page);
       expect(hasBlockMailAlert).to.be.equal(false);
     });
   });

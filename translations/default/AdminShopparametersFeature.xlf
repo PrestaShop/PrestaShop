@@ -363,12 +363,12 @@ Customer service</target>
       <trans-unit id="38bada4e8300d679ea0c293a8658605a">
         <source>Disable Apache's MultiViews option</source>
         <target>Disable Apache's MultiViews option</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php [Line: 141]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php [Line: 145]</note>
       </trans-unit>
       <trans-unit id="1260ff0747d4dbe30fcc4d360891205f">
         <source>Disable Apache's mod_security module</source>
         <target>Disable Apache's mod_security module</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php [Line: 149]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php [Line: 153]</note>
       </trans-unit>
       <trans-unit id="9bf6ad8b3a08781c7f86684e464e75de">
         <source>Disable reordering option</source>
@@ -568,7 +568,7 @@ Customer service</target>
       <trans-unit id="7959e21ff0b83542251ca0b4e9a62eea">
         <source>Generate robots.txt file</source>
         <target>Generate robots.txt file</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig [Line: 60]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig [Line: 62]</note>
       </trans-unit>
       <trans-unit id="bf3b3ed0e4fd43efff9c26b3d35c6c2f">
         <source>Gift options</source>
@@ -782,6 +782,11 @@ Customer service</target>
         <source>Meta configuration</source>
         <target>Meta configuration</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/form.html.twig [Line: 31]</note>
+      </trans-unit>
+      <trans-unit id="84311657be7570a479cc7be41bbef0b9">
+        <source>Minimum order value</source>
+        <target>Minimum order value</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php [Line: 104]</note>
       </trans-unit>
       <trans-unit id="c6ca929dc4c8193ad6cd154e9e075ac9">
         <source>Minimum purchase total required in order to validate the order</source>

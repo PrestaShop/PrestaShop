@@ -1,6 +1,5 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -32,9 +31,6 @@ describe('FO - Product page - Product page : Display Specific delivery time', as
     minimumQuantity: 0,
     status: true,
   });
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -206,7 +202,4 @@ describe('FO - Product page - Product page : Display Specific delivery time', as
 
   // Post-condition: Delete specific price
   deleteProductTest(newProductData, `${baseContext}_postTest_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

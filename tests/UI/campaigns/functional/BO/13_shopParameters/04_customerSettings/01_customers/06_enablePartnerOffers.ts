@@ -6,9 +6,9 @@ import {
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
-  foClassicCreateAccountPage,
-  foClassicHomePage,
-  foClassicLoginPage,
+  foHummingbirdCreateAccountPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -81,21 +81,21 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
 
       // Go to FO
       page = await boCustomerSettingsPage.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to create customer account in FO and check partner offer checkbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkIsPartnerOffer${index}`, baseContext);
 
       // Go to create account page
-      await foClassicHomePage.goToLoginPage(page);
-      await foClassicLoginPage.goToCreateAccountPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
+      await foHummingbirdLoginPage.goToCreateAccountPage(page);
 
       // Check partner offer
-      const isPartnerOfferVisible = await foClassicCreateAccountPage.isPartnerOfferVisible(page);
+      const isPartnerOfferVisible = await foHummingbirdCreateAccountPage.isPartnerOfferVisible(page);
       expect(isPartnerOfferVisible).to.be.equal(test.args.enable);
     });
 
@@ -103,7 +103,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Go back to BO
-      page = await foClassicCreateAccountPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCreateAccountPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);

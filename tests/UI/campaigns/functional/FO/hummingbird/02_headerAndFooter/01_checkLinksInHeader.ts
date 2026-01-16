@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataCustomers,
@@ -33,9 +31,6 @@ describe('FO - Header and Footer : Check links in header page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_1`);
-
   describe('Check links in header page', async () => {
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -62,7 +57,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
       await foHummingbirdHomePage.clickOnHeaderLink(page, 'Contact us');
 
       const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdContactUsPage.pageTitle);
+      expect(pageTitle).to.contains(foHummingbirdContactUsPage.pageTitle);
     });
 
     it('should check \'sign in\' link', async function () {
@@ -152,7 +147,4 @@ describe('FO - Header and Footer : Check links in header page', async () => {
       expect(pageTitle).to.equal(foHummingbirdHomePage.pageTitle);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_1`);
 });

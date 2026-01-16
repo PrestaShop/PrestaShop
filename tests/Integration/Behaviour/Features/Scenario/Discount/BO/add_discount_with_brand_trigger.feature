@@ -20,17 +20,12 @@ Feature: Add discount with brand trigger
       | meta_description[en-US]  | The sun is shining and the weather is sweet|
       | enabled                  | true                               |
     When I create a "free_shipping" discount "discount_with_brand_trigger" with following properties:
-      | name[en-US] | Promotion |
+      | name[en-US]                     | Promotion |
+      | productConditionQuantity        | 42        |
+      | productCondition[manufacturers] | rocket    |
     Then discount "discount_with_brand_trigger" should have the following properties:
-      | name[en-US] | Promotion     |
-      | type        | free_shipping |
-    When I update discount "discount_with_brand_trigger" with following conditions matching at least 42 products:
-      | condition_type | items  |
-      | manufacturers  | rocket |
-    Then discount "discount_with_brand_trigger" should have the following properties:
-      | name[en-US]              | Promotion     |
-      | type                     | free_shipping |
-      | minimum_product_quantity | 0             |
-    Then discount "discount_with_brand_trigger" should have the following product conditions matching at least 42 products:
-      | condition_type | items  |
-      | manufacturers  | rocket |
+      | name[en-US]                     | Promotion     |
+      | type                            | free_shipping |
+      | minimum_product_quantity        | 0             |
+      | productConditionQuantity        | 42            |
+      | productCondition[manufacturers] | rocket        |

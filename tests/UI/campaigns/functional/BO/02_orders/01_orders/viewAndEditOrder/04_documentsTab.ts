@@ -1,5 +1,5 @@
 import testContext from '@utils/testContext';
-import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
 import {expect} from 'chai';
 
 import {

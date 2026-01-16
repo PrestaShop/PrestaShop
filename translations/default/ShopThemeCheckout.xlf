@@ -612,22 +612,22 @@
       <trans-unit id="96b0141273eabab320119c467cdcaf17">
         <source>Total</source>
         <target>Total</target>
-        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 319]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 331]</note>
       </trans-unit>
       <trans-unit id="8faf99e02e4d0ccb4dd933404f87a4ea">
         <source>Total (tax excl.)</source>
         <target>Total (tax excl.)</target>
-        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 346]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 358]</note>
       </trans-unit>
       <trans-unit id="adc852563bca51fb6b10c7905010406d">
         <source>Total (tax incl.)</source>
         <target>Total (tax incl.)</target>
-        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 336]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 348]</note>
       </trans-unit>
       <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
         <source>Total paid</source>
         <target>Total paid</target>
-        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 326]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 338]</note>
       </trans-unit>
       <trans-unit id="0eede552438475bdfe820c13f24c9399">
         <source>Total price</source>

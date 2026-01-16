@@ -80,10 +80,13 @@ class OrderShipmentCreator
                         continue;
                     }
 
+                    $quantity = $orderDetailProduct['product_quantity'];
+                    $orderDetailId = $orderDetailProduct['id_order_detail'];
+
                     $shipmentProduct = (new ShipmentProduct())
                         ->setShipment($shipment)
-                        ->setOrderDetailId($orderDetailProduct['id_order_detail'])
-                        ->setQuantity($orderDetailProduct['product_quantity']);
+                        ->setOrderDetailId($orderDetailId)
+                        ->setQuantity($quantity);
 
                     $shipment->addShipmentProduct($shipmentProduct);
                 }
@@ -114,7 +117,6 @@ class OrderShipmentCreator
         if (!empty($product['id_customization'])) {
             return $product['id_customization'] === $orderDetailProduct['id_customization'];
         }
-
         if (!empty($product['id_product_attribute'])) {
             return $product['id_product_attribute'] === $orderDetailProduct['product_attribute_id'];
         }

@@ -8,9 +8,9 @@ import {
   boProductSettingsPage,
   type BrowserContext,
   dataProducts,
-  foClassicHomePage,
-  foClassicProductPage,
-  foClassicSearchResultsPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -77,33 +77,33 @@ describe('BO - Shop Parameters - Product Settings : Update separator of attribut
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       page = await boProductSettingsPage.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page was not opened').to.eq(true);
     });
 
     it('should search for the product and go to product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToProductPage${index}`, baseContext);
 
-      await foClassicHomePage.searchProduct(page, dataProducts.demo_1.name);
-      await foClassicSearchResultsPage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.searchProduct(page, dataProducts.demo_1.name);
+      await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should check the attribute separator on the product links in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkAttributeSeparator_${index}`, baseContext);
 
-      const currentURL = await foClassicProductPage.getProductPageURL(page);
+      const currentURL = await foHummingbirdProductPage.getProductPageURL(page);
       expect(currentURL).to.contains(test.args.attributesInProductLink);
     });
 
     it('should close the page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
-      page = await foClassicProductPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boProductSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);

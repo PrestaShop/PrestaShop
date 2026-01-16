@@ -69,20 +69,14 @@ Feature: Add discount with country trigger on FO
       | name[fr-FR] | Promotion                  |
       | code        | CART_LEVEL_COUNTRY_TRIGGER |
       | active      | true                       |
+      | countries   | France                     |
     Then discount "discount_with_country_trigger" should have the following properties:
-      | name[en-US] | Promotion                  |
-      | name[fr-FR] | Promotion                  |
-      | type        | free_shipping              |
-      | code        | CART_LEVEL_COUNTRY_TRIGGER |
-      | active      | true                       |
-    When I update discount "discount_with_country_trigger" with conditions based on countries "France"
-    Then discount "discount_with_country_trigger" should have the following properties:
-      | minimum_product_quantity | 0 |
-    Then discount "discount_with_country_trigger" should have the following properties:
-      | name[en-US]              | Promotion     |
-      | name[fr-FR]              | Promotion     |
-      | type                     | free_shipping |
-      | minimum_product_quantity | 0             |
+      | name[en-US]              | Promotion                  |
+      | name[fr-FR]              | Promotion                  |
+      | type                     | free_shipping              |
+      | code                     | CART_LEVEL_COUNTRY_TRIGGER |
+      | active                   | true                       |
+      | minimum_product_quantity | 0                          |
 
   Scenario: Reduction with country trigger on FO
     Given I create an empty cart "dummy_cart" for customer "testCustomer"

@@ -2,7 +2,6 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -22,7 +21,6 @@ const baseContext: string = 'functional_FO_hummingbird_homePage_productQuickView
 /*
  * Pre-condition:
  * - Create product out of stock not allowed
- * - Install hummingbird theme
  * Scenario:
  * - Quick view product with combinations
  * - Quick view simple product
@@ -30,7 +28,6 @@ const baseContext: string = 'functional_FO_hummingbird_homePage_productQuickView
  * - Quick view product out of stock not allowed
  * Post-condition:
  * - Delete created product
- * - Uninstall hummingbird theme
  */
 describe('FO - Home Page : Product quick view', async () => {
   let browserContext: BrowserContext;
@@ -59,9 +56,6 @@ describe('FO - Home Page : Product quick view', async () => {
 
   // Pre-condition : Create product out of stock not allowed
   createProductTest(productOutOfStockNotAllowed, `${baseContext}_preTest_0`);
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
@@ -280,7 +274,4 @@ describe('FO - Home Page : Product quick view', async () => {
 
   // Post-condition : Delete the created product
   deleteProductTest(productOutOfStockNotAllowed, `${baseContext}_postTest_0`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_1`);
 });

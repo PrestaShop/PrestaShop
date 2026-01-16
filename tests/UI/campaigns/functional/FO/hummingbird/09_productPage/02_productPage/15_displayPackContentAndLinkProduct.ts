@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -21,9 +18,6 @@ const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_d
 describe('FO - Product Page : Display pack content and link to product', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   describe('Display pack content and link to product', async () => {
     before(async function () {
@@ -98,7 +92,4 @@ describe('FO - Product Page : Display pack content and link to product', async (
       expect(pageTitle).to.contains(dataProducts.demo_7.name);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_1`);
 });

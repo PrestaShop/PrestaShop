@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   boDashboardPage,
@@ -19,8 +16,6 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_navigationAndDisplay_pagination';
 
 /*
-Pre-condition:
-- Install the theme hummingbird
 Scenario:
 - Go to FO>All products page
 - Check the pagination in the bottom of the page
@@ -31,14 +26,10 @@ Scenario:
 - Check the new pagination
 Post-condition:
 - Reset 'Number of products per page'
-- Uninstall the theme hummingbird
  */
 describe('FO - Menu and Navigation - Navigate and display : Pagination', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -275,7 +266,4 @@ describe('FO - Menu and Navigation - Navigate and display : Pagination', async (
       expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

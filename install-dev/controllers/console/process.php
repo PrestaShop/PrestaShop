@@ -172,15 +172,18 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             }
         }
 
-        if (in_array('theme', $steps)) {
-            if (!$this->processInstallTheme()) {
-                $this->printErrors('processInstallTheme');
-            }
-        }
-
+        // First install modules
         if (in_array('modules', $steps)) {
             if (!$this->processInstallModules()) {
                 $this->printErrors('processInstallModules');
+            }
+        }
+
+        // Once modules are installed enabled selected theme since it could enable/disable
+        // some of the installed modules
+        if (in_array('theme', $steps)) {
+            if (!$this->processInstallTheme()) {
+                $this->printErrors('processInstallTheme');
             }
         }
 

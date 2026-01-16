@@ -9,8 +9,8 @@ import {
   boShopParametersPage,
   type BrowserContext,
   dataModules,
-  foClassicCategoryPage,
-  foClassicHomePage,
+  foHummingbirdCategoryPage,
+  foHummingbirdHomePage,
   modPsNewProductsBoMain,
   modPsSupplierListBoMain,
   type Page,
@@ -105,31 +105,31 @@ describe('ps_supplierlist - Configure Settings',
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       page = await modPsNewProductsBoMain.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.equal(true);
     });
 
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
-      await foClassicHomePage.goToAllProductsPage(page);
+      await foHummingbirdHomePage.goToAllProductsPage(page);
 
-      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
+      const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible).to.equal(true);
 
-      const hasFiltersSuppliers = await foClassicCategoryPage.hasFiltersSuppliers(page);
+      const hasFiltersSuppliers = await foHummingbirdCategoryPage.hasFiltersSuppliers(page);
       expect(hasFiltersSuppliers).to.equal(true);
 
-      const isSupplierListDropdown = await foClassicCategoryPage.isSupplierListDropdown(page);
+      const isSupplierListDropdown = await foHummingbirdCategoryPage.isSupplierListDropdown(page);
       expect(isSupplierListDropdown).to.equal(true);
     });
 
     it('should set the type of display to "plain-text"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setTypeDisplayPlaintext', baseContext);
 
-      page = await foClassicCategoryPage.changePage(browserContext, 0);
+      page = await foHummingbirdCategoryPage.changePage(browserContext, 0);
 
       const result = await modPsSupplierListBoMain.setTypeOfDisplay(page, modPsSupplierListBoMain.typeOfDisplayPlaintext);
       expect(result).to.contains(modPsNewProductsBoMain.updateSettingsSuccessMessage);
@@ -138,23 +138,23 @@ describe('ps_supplierlist - Configure Settings',
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToAllProducts', baseContext);
 
-      page = await foClassicCategoryPage.changePage(browserContext, 1);
-      await foClassicCategoryPage.reloadPage(page);
+      page = await foHummingbirdCategoryPage.changePage(browserContext, 1);
+      await foHummingbirdCategoryPage.reloadPage(page);
 
-      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
+      const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible).to.equal(true);
 
-      const hasFiltersSuppliers = await foClassicCategoryPage.hasFiltersSuppliers(page);
+      const hasFiltersSuppliers = await foHummingbirdCategoryPage.hasFiltersSuppliers(page);
       expect(hasFiltersSuppliers).to.equal(true);
 
-      const isSupplierListDropdown = await foClassicCategoryPage.isSupplierListDropdown(page);
+      const isSupplierListDropdown = await foHummingbirdCategoryPage.isSupplierListDropdown(page);
       expect(isSupplierListDropdown).to.equal(false);
     });
 
     it('should go to \'Shop parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToGeneralPage', baseContext);
 
-      page = await foClassicCategoryPage.changePage(browserContext, 0);
+      page = await foHummingbirdCategoryPage.changePage(browserContext, 0);
 
       await boDashboardPage.goToSubMenu(
         page,
@@ -177,13 +177,13 @@ describe('ps_supplierlist - Configure Settings',
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToAllProductsAfterDisable', baseContext);
 
-      page = await foClassicCategoryPage.changePage(browserContext, 1);
-      await foClassicCategoryPage.reloadPage(page);
+      page = await foHummingbirdCategoryPage.changePage(browserContext, 1);
+      await foHummingbirdCategoryPage.reloadPage(page);
 
-      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
+      const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible).to.equal(true);
 
-      const hasFiltersSuppliers = await foClassicCategoryPage.hasFiltersSuppliers(page);
+      const hasFiltersSuppliers = await foHummingbirdCategoryPage.hasFiltersSuppliers(page);
       expect(hasFiltersSuppliers).to.equal(false);
     });
   });

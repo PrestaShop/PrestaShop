@@ -28,17 +28,17 @@ import {
   FakerContactMessage,
   FakerCustomer,
   FakerProduct,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicCheckoutOrderConfirmationPage,
-  foClassicContactUsPage,
-  foClassicHomePage,
-  foClassicLoginPage,
-  foClassicMyAccountPage,
-  foClassicMyMerchandiseReturnsPage,
-  foClassicMyOrderDetailsPage,
-  foClassicMyOrderHistoryPage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
+  foHummingbirdContactUsPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
+  foHummingbirdMyMerchandiseReturnsPage,
+  foHummingbirdMyOrderDetailsPage,
+  foHummingbirdMyOrderHistoryPage,
+  foHummingbirdProductPage,
   modProductCommentsBoMain,
   modPsEmailSubscriptionBoMain,
   type Page,
@@ -124,27 +124,27 @@ describe('BO - Dashboard : Activity overview', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
         page = await boDashboardPage.viewMyShop(page);
-        await foClassicHomePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await foClassicHomePage.isHomePage(page);
-        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+        expect(isHomePage).to.eq(true);
       });
 
       it('should go to login page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO2', baseContext);
 
-        await foClassicHomePage.goToLoginPage(page);
+        await foHummingbirdHomePage.goToLoginPage(page);
 
-        const pageTitle = await foClassicLoginPage.getPageTitle(page);
-        expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+        const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
       });
 
       it('should sign in with default customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'sighInFO2', baseContext);
 
-        await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+        await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-        const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+        const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
         expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
       });
 
@@ -152,13 +152,13 @@ describe('BO - Dashboard : Activity overview', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
         // Go to home page
-        await foClassicLoginPage.goToHomePage(page);
+        await foHummingbirdLoginPage.goToHomePage(page);
         // Go to the first product page
-        await foClassicHomePage.goToProductPage(page, 1);
+        await foHummingbirdHomePage.goToProductPage(page, 1);
         // Add the product to the cart
-        await foClassicProductPage.addProductToTheCart(page);
+        await foHummingbirdProductPage.addProductToTheCart(page);
 
-        const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+        const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(1);
       });
 
@@ -166,10 +166,10 @@ describe('BO - Dashboard : Activity overview', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
         // Proceed to checkout the shopping cart
-        await foClassicCartPage.clickOnProceedToCheckout(page);
+        await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+        const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
         expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -177,7 +177,7 @@ describe('BO - Dashboard : Activity overview', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
         // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+        const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
         expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -185,18 +185,18 @@ describe('BO - Dashboard : Activity overview', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
         // Payment step - Choose payment step
-        await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+        await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
-        expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
+        const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+        expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
       });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
         // Close page and init page objects
-        page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
+        page = await foHummingbirdCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
         await boShoppingCartsPage.reloadPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
@@ -302,52 +302,52 @@ describe('BO - Dashboard : Activity overview', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop3', baseContext);
 
         page = await boOrdersViewBasePage.viewMyShop(page);
-        await foClassicHomePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await foClassicHomePage.isHomePage(page);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage, 'Home page is not displayed').to.eq(true);
       });
 
       it('should go to account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-        await foClassicHomePage.goToMyAccountPage(page);
+        await foHummingbirdHomePage.goToMyAccountPage(page);
 
-        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
-        expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
+        const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foHummingbirdMyAccountPage.pageTitle);
       });
 
       it('should go to \'Order history and details\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-        await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
+        await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
-        const pageTitle = await foClassicMyOrderHistoryPage.getPageTitle(page);
-        expect(pageTitle).to.contains(foClassicMyOrderHistoryPage.pageTitle);
+        const pageTitle = await foHummingbirdMyOrderHistoryPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foHummingbirdMyOrderHistoryPage.pageTitle);
       });
 
       it('should go to the first order in the list and check the existence of order return form', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'isOrderReturnFormVisible', baseContext);
 
-        await foClassicMyOrderHistoryPage.goToDetailsPage(page, 1);
+        await foHummingbirdMyOrderHistoryPage.goToDetailsPage(page, 1);
 
-        const result = await foClassicMyOrderDetailsPage.isOrderReturnFormVisible(page);
+        const result = await foHummingbirdMyOrderDetailsPage.isOrderReturnFormVisible(page);
         expect(result).to.eq(true);
       });
 
       it('should create a merchandise return', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createMerchandiseReturn', baseContext);
 
-        await foClassicMyOrderDetailsPage.requestMerchandiseReturn(page, 'test', 1, [{quantity: 1}]);
+        await foHummingbirdMyOrderDetailsPage.requestMerchandiseReturn(page, 'test', 1, [{quantity: 1}]);
 
-        const pageTitle = await foClassicMyMerchandiseReturnsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(foClassicMyMerchandiseReturnsPage.pageTitle);
+        const pageTitle = await foHummingbirdMyMerchandiseReturnsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foHummingbirdMyMerchandiseReturnsPage.pageTitle);
       });
 
       it('should close the FO page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'closeFoAndGoBackToBO', baseContext);
 
-        page = await foClassicMyOrderDetailsPage.closePage(browserContext, page, 0);
+        page = await foHummingbirdMyOrderDetailsPage.closePage(browserContext, page, 0);
         await boDashboardPage.reloadPage(page);
 
         const pageTitle = await boDashboardPage.getPageTitle(page);
@@ -482,34 +482,34 @@ describe('BO - Dashboard : Activity overview', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
         page = await boDashboardPage.viewMyShop(page);
-        await foClassicHomePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await foClassicHomePage.isHomePage(page);
-        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+        expect(isHomePage).to.eq(true);
       });
 
       it('should to contact us page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
-        await foClassicHomePage.goToFooterLink(page, 'Contact us');
+        await foHummingbirdHomePage.goToFooterLink(page, 'Contact us');
 
-        const pageTitle = await foClassicContactUsPage.getPageTitle(page);
-        expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
+        const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foHummingbirdContactUsPage.pageTitle);
       });
 
       it('should send message to customer service', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-        await foClassicContactUsPage.sendMessage(page, contactUsData);
+        await foHummingbirdContactUsPage.sendMessage(page, contactUsData);
 
-        const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
-        expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
+        const validationMessage = await foHummingbirdContactUsPage.getAlertSuccess(page);
+        expect(validationMessage).to.equal(foHummingbirdContactUsPage.validationMessage);
       });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo3', baseContext);
 
-        page = await foClassicContactUsPage.closePage(browserContext, page, 0);
+        page = await foHummingbirdContactUsPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boCustomerServicePage.getPageTitle(page);
         expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);

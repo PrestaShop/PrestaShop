@@ -1,7 +1,7 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s discount --tags add-discount-customer-groups
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s discount --tags add-discount-customer-groups-eligibility
 @restore-all-tables-before-feature
 @restore-languages-after-feature
-@add-discount-customer-groups
+@add-discount-customer-groups-eligibility
 Feature: Add discount with customer groups eligibility
   PrestaShop allows BO users to create discounts limited to specific customer groups
   As a BO user

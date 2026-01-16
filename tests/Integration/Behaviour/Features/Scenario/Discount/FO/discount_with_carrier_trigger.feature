@@ -36,7 +36,7 @@ Feature: Add discount with carrier trigger on FO
       | name[fr-FR] | Nice carrier offre la livraison |
       | code        | FREE_SHIPPING_NICE_CARRIER      |
       | active      | true                            |
-    When I update discount "discount_with_nice_carrier" with conditions based on carriers "nice_carrier"
+      | carriers    | nice_carrier                    |
     Then discount "discount_with_nice_carrier" should have the following properties:
       | name[en-US] | Nice carrier offers shipping    |
       | name[fr-FR] | Nice carrier offre la livraison |

@@ -61,8 +61,17 @@ class ListAvailableShipmentsHandler implements ListAvailableShipmentsHandlerInte
         try {
             $getShipmentsFromOrder = $this->repository->findByOrderId($orderId);
         } catch (Throwable $e) {
-            throw new ShipmentNotFoundException(sprintf('Could not find shipment for order id "%s"', $orderId), 0, $e);
+            throw new ShipmentNotFoundException(
+                $this->translator->trans(
+                    'Could not find shipment for order id "%id%".',
+                    ['%id%' => $orderId],
+                    'Admin.Shipment.Error'
+                ),
+                0,
+                $e
+            );
         }
+
         if (empty($getShipmentsFromOrder)) {
             return $shipments;
         }
@@ -76,8 +85,16 @@ class ListAvailableShipmentsHandler implements ListAvailableShipmentsHandlerInte
 
                 if ($shipment->getDeliveredAt() === null) {
                     $isCompatible = in_array($shipment->getCarrierId(), $carrierCompatibleWithProduct);
-                    $shipmentName = $this->translator->trans('Shipment ', [], 'Shop.Forms.Labels') . $shipment->getId() . ' ' . (new Carrier($shipment->getCarrierId()))->name;
-                    $shipments[] = new ShipmentsForMerge($shipment->getId(), $shipmentName, $isCompatible);
+                    $shipmentName = $this->translator->trans('Shipment ', [], 'Shop.Forms.Labels')
+                        . $shipment->getId()
+                        . ' '
+                        . (new Carrier($shipment->getCarrierId()))->name;
+
+                    $shipments[] = new ShipmentsForMerge(
+                        $shipment->getId(),
+                        $shipmentName,
+                        $isCompatible
+                    );
                 }
             }
         }

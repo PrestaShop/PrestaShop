@@ -18,6 +18,7 @@ import {
   utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 const baseContext: string = 'functional_FO_classic_cart_cart_displayDiscount';
 
@@ -53,6 +54,9 @@ describe('FO - Cart : Display discount on product', async () => {
   });
   const secondCartRuleDiscount: number = parseFloat(secondCartRuleData.discountAmount!.value.toString());
 
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
+
   // Pre-condition: Create first cart rule
   createCartRuleTest(firstCartRuleData, `${baseContext}_PreTest_1`);
 
@@ -76,7 +80,7 @@ describe('FO - Cart : Display discount on product', async () => {
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it(`should search for the product '${dataProducts.demo_8.name}'`, async function () {
@@ -249,4 +253,7 @@ describe('FO - Cart : Display discount on product', async () => {
 
   // Post-Condition: Delete second cart rule
   deleteCartRuleTest(secondCartRuleData.name, `${baseContext}_PostTest_2`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_3`);
 });

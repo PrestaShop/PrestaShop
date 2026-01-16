@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataProducts,
@@ -25,9 +23,6 @@ describe('FO - Product page - Product page : Add to cart', async () => {
   const qtyProductPage: number = 5;
   const qtyQuickView: number = 100;
   const qtyQuickAdd: number = 1;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -141,7 +136,4 @@ describe('FO - Product page - Product page : Add to cart', async () => {
       expect(productCount).to.eq(0);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

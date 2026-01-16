@@ -11,9 +11,9 @@ import {
   boShopParametersPage,
   type BrowserContext,
   FakerProduct,
-  foClassicHomePage,
-  foClassicProductPage,
-  foClassicSearchResultsPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -98,41 +98,41 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           // View shop
           page = await boShopParametersPage.viewMyShop(page);
-          await foClassicHomePage.changeLanguage(page, 'en');
+          await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await foClassicHomePage.isHomePage(page);
+          const isHomePage = await foHummingbirdHomePage.isHomePage(page);
           expect(isHomePage).to.eq(true);
         });
 
         it('should search for the created product', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `searchProduct${index}`, baseContext);
 
-          await foClassicHomePage.searchProduct(page, productData.name);
+          await foHummingbirdHomePage.searchProduct(page, productData.name);
 
-          const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-          expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+          const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+          expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
         });
 
         it('should go to the product page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToProductPage${index}`, baseContext);
 
-          await foClassicSearchResultsPage.goToProductPage(page, 1);
+          await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-          const pageTitle = await foClassicProductPage.getPageTitle(page);
+          const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
           expect(pageTitle).to.contains(productData.name);
         });
 
         it('should check the product price', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductPrice${index}`, baseContext);
 
-          const productPrice = await foClassicProductPage.getProductPrice(page);
+          const productPrice = await foHummingbirdProductPage.getProductPrice(page);
           expect(productPrice).to.equal(test.args.price);
         });
 
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-          page = await foClassicProductPage.closePage(browserContext, page, 0);
+          page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
           const pageTitle = await boShopParametersPage.getPageTitle(page);
           expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
@@ -217,41 +217,41 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           // View shop
           page = await boShopParametersPage.viewMyShop(page);
-          await foClassicHomePage.changeLanguage(page, 'en');
+          await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await foClassicHomePage.isHomePage(page);
+          const isHomePage = await foHummingbirdHomePage.isHomePage(page);
           expect(isHomePage).to.eq(true);
         });
 
         it('should search for the created product', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `searchProduct2${index}`, baseContext);
 
-          await foClassicHomePage.searchProduct(page, productData.name);
+          await foHummingbirdHomePage.searchProduct(page, productData.name);
 
-          const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-          expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+          const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+          expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
         });
 
         it('should go to the product page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToProductPage2${index}`, baseContext);
 
-          await foClassicSearchResultsPage.goToProductPage(page, 1);
+          await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-          const pageTitle = await foClassicProductPage.getPageTitle(page);
+          const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
           expect(pageTitle).to.contains(productData.name);
         });
 
         it('should check the product price', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductPrice2${index}`, baseContext);
 
-          const productPrice = await foClassicProductPage.getProductPrice(page);
+          const productPrice = await foHummingbirdProductPage.getProductPrice(page);
           expect(productPrice).to.equal(test.args.price);
         });
 
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo2${index}`, baseContext);
 
-          page = await foClassicProductPage.closePage(browserContext, page, 0);
+          page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
           const pageTitle = await boShopParametersPage.getPageTitle(page);
           expect(pageTitle).to.contains(boShopParametersPage.pageTitle);
@@ -336,41 +336,41 @@ describe('BO - Shop Parameters - General : Round mode', async () => {
 
           // View shop
           page = await boShopParametersPage.viewMyShop(page);
-          await foClassicHomePage.changeLanguage(page, 'en');
+          await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await foClassicHomePage.isHomePage(page);
+          const isHomePage = await foHummingbirdHomePage.isHomePage(page);
           expect(isHomePage).to.eq(true);
         });
 
         it('should search for the created product', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `searchProduct3${index}`, baseContext);
 
-          await foClassicHomePage.searchProduct(page, productData.name);
+          await foHummingbirdHomePage.searchProduct(page, productData.name);
 
-          const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-          expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+          const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+          expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
         });
 
         it('should go to the product page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToProductPage3${index}`, baseContext);
 
-          await foClassicSearchResultsPage.goToProductPage(page, 1);
+          await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-          const pageTitle = await foClassicProductPage.getPageTitle(page);
+          const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
           expect(pageTitle).to.contains(productData.name);
         });
 
         it('should check the product price', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductPrice3${index}`, baseContext);
 
-          const productPrice = await foClassicProductPage.getProductPrice(page);
+          const productPrice = await foHummingbirdProductPage.getProductPrice(page);
           expect(productPrice).to.equal(test.args.price);
         });
 
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo3${index}`, baseContext);
 
-          page = await foClassicProductPage.closePage(browserContext, page, 0);
+          page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
           const pageTitle = await boShopParametersPage.getPageTitle(page);
           expect(pageTitle).to.contains(boShopParametersPage.pageTitle);

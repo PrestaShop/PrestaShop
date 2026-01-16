@@ -1,6 +1,8 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
+
 import {
   type BrowserContext,
   foClassicCategoryPage,
@@ -23,6 +25,9 @@ const baseContext: string = 'functional_FO_classic_homePage_displaySomeProducts'
 describe('FO - Home Page : Display some products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -57,7 +62,7 @@ describe('FO - Home Page : Display some products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProductsNumber', baseContext);
 
       const productsNumber = await foClassicHomePage.getProductsBlockNumber(page, 'popularproducts');
-      expect(productsNumber).to.equal(8);
+      expect(productsNumber).to.equal(4);
     });
 
     it('should check All products link', async function () {
@@ -141,7 +146,7 @@ describe('FO - Home Page : Display some products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewProductsNumber', baseContext);
 
       const productsNumber = await foClassicHomePage.getProductsBlockNumber(page, 'newproducts');
-      expect(productsNumber).to.equal(8);
+      expect(productsNumber).to.equal(4);
     });
 
     it('should check All new products', async function () {
@@ -162,4 +167,7 @@ describe('FO - Home Page : Display some products', async () => {
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
   });
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest`);
 });

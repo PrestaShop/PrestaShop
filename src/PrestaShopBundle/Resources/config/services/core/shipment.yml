@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+
+  PrestaShop\PrestaShop\Core\Domain\Shipment\Service\ShipmentSplitterInterface:
+    class: PrestaShop\PrestaShop\Adapter\Shipment\ShipmentSplitter
+
+  PrestaShop\PrestaShop\Core\Domain\Shipment\Service\ShipmentMergerInterface:
+    class: PrestaShop\PrestaShop\Adapter\Shipment\ShipmentMerger

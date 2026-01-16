@@ -1850,8 +1850,6 @@ class ToolsCore
 
                 throw new Exception($errorMessage);
             }
-
-            curl_close($curl);
         }
 
         return $content;

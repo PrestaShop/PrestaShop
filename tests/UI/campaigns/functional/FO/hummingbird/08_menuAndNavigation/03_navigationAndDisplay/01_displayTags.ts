@@ -1,6 +1,5 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -26,7 +25,6 @@ const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_navigat
 
 /*
 Pre-condition:
-- Install the theme hummingbird
 - Disable new product page
 Scenario:
 - Go to Fo and check the new tag
@@ -42,7 +40,6 @@ Post-condition:
 - Reset number of days which product is considered new
 - Delete specific price
 - Enable new product page
-- Uninstall the theme hummingbird
  */
 describe('FO - Menu and Navigation - Navigate and display : Display of tag products (New, Promo, Pack...)', async () => {
   let browserContext: BrowserContext;
@@ -87,9 +84,6 @@ describe('FO - Menu and Navigation - Navigate and display : Display of tag produ
     lowStockLevel: 3,
     behaviourOutOfStock: 'Default behavior',
   });
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -427,7 +421,4 @@ describe('FO - Menu and Navigation - Navigate and display : Display of tag produ
 
   // Post-condition: Delete created product
   deleteProductTest(packOfProducts, `${baseContext}_deleteProduct_2`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_3`);
 });

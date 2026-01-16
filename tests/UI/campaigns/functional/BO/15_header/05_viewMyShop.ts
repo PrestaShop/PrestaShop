@@ -8,7 +8,7 @@ import {
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -50,7 +50,7 @@ describe('BO - Header : View My Shop', async () => {
     const numPages = utilsPlaywright.getNumberTabs(browserContext);
     expect(numPages).to.be.eq(2);
 
-    const pageTitle = await foClassicHomePage.getPageTitle(page);
-    expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
+    const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+    expect(pageTitle).to.contains(foHummingbirdHomePage.pageTitle);
   });
 });

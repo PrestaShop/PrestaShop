@@ -40,7 +40,6 @@
       <trans-unit id="b9716d3d87447a2275318bf88ced7bf8">
         <source>After a customer logs in, you can recall and display the content of his/her last shopping cart.</source>
         <target>After a customer logs in, you can recall and display the content of his/her last shopping cart.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/CustomerPreferences/GeneralType.php [Line: 54]</note>
       </trans-unit>
       <trans-unit id="4db650b0232001140675125d740191be">
         <source>Allow IP addresses to access the store, even in maintenance mode. Use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96).</source>
@@ -55,6 +54,15 @@
       <trans-unit id="4f70bd9998bb35643fa3dfc88d6a6373">
         <source>Allow iframes on text fields like product description. We recommend that you leave this option disabled.</source>
         <target>Allow iframes on text fields like product description. We recommend that you leave this option disabled.</target>
+      </trans-unit>
+      <trans-unit id="c2585925167101587128f7782c5dd757">
+        <source>Allow or deny customers to order products that are out of stock. Further customization is possible for each product.</source>
+        <target>Allow or deny customers to order products that are out of stock. Further customization is possible for each product.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 104]</note>
+      </trans-unit>
+      <trans-unit id="cffcb6b76faff5fd9cb6a310aab445d2">
+        <source>Allows the use of iframes in rich text fields such as product descriptions. It is recommended to keep this option disabled unless you specifically need iframes for video embeds or other external content.</source>
+        <target>Allows the use of iframes in rich text fields such as product descriptions. It is recommended to keep this option disabled unless you specifically need iframes for video embeds or other external content.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 130]</note>
       </trans-unit>
       <trans-unit id="a5fa9ffd3ddf89fe263675358032e7fb">
@@ -62,10 +70,14 @@
         <target>Automatically apply this value as a discount on all products for members of this customer group.</target>
         <note>File: controllers/admin/AdminGroupsController.php [Line: 378]</note>
       </trans-unit>
+      <trans-unit id="562da52195b6e52ac39be2dccbae6901">
+        <source>Automatically updates the shipping costs when an order is edited in the back office. If you disable this option, make sure to review the shipping costs whenever you make changes to an order.</source>
+        <target>Automatically updates the shipping costs when an order is edited in the back office. If you disable this option, make sure to review the shipping costs whenever you make changes to an order.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php [Line: 113]</note>
+      </trans-unit>
       <trans-unit id="5ed533875d7388ffdbb60818e9596bdc">
         <source>Automatically updates the shipping costs when you edit an order.</source>
         <target>Automatically updates the shipping costs when you edit an order.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php [Line: 113]</note>
       </trans-unit>
       <trans-unit id="dcc9a3ac81d54b27a1e7f522a17a3d2a">
         <source>Background color of this status label. Used both in backoffice and on order tracking page. HTML colors only.</source>
@@ -80,7 +92,6 @@
       <trans-unit id="b5e585ab39ea18b6354e53370bfe7472">
         <source>By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.</source>
         <target>By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php [Line: 104]</note>
       </trans-unit>
       <trans-unit id="b080303b551112c7b9dcdf6a21051f42">
         <source>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</source>
@@ -110,6 +121,10 @@
       <trans-unit id="7ba34b929c8241268ab5eac35a772ab1">
         <source>Clean the HTML content on text fields. We recommend that you leave this option enabled.</source>
         <target>Clean the HTML content on text fields. We recommend that you leave this option enabled.</target>
+      </trans-unit>
+      <trans-unit id="5b6d89f93deda9c02c553196a5d73cb7">
+        <source>Cleans the HTML content in rich text fields before saving. It is recommended to keep this option enabled to ensure safe and valid content is saved into the database.</source>
+        <target>Cleans the HTML content in rich text fields before saving. It is recommended to keep this option enabled to ensure safe and valid content is saved into the database.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 140]</note>
       </trans-unit>
       <trans-unit id="9cd9efd3eb168071eb0a199972c54aab">
@@ -194,12 +209,10 @@
       <trans-unit id="0678cf17f202cb7fd14d79054a2e628c">
         <source>Enable best sellers page on your front office even when its respective module is disabled.</source>
         <target>Enable best sellers page on your front office even when its respective module is disabled.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 194]</note>
       </trans-unit>
       <trans-unit id="8e17743ca02e7c24310531d34d0c89ff">
         <source>Enable brands page on your front office even when its module is disabled.</source>
         <target>Enable brands page on your front office even when its module is disabled.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 186]</note>
       </trans-unit>
       <trans-unit id="c4474326e7d8129b7c04ada10f34f5b1">
         <source>Enable more precise search with the end of the word.</source>
@@ -219,7 +232,6 @@
       <trans-unit id="7c6efc73556c295515e6f3c2129eee32">
         <source>Enable suppliers page on your front office even when its module is disabled.</source>
         <target>Enable suppliers page on your front office even when its module is disabled.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 178]</note>
       </trans-unit>
       <trans-unit id="12399d580627a1a5889cdc44e6e48b5a">
         <source>Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.</source>
@@ -244,12 +256,32 @@
       <trans-unit id="7dcc0875a9e200be4d760155c09c2945">
         <source>Enable this option only if you have problems with URL rewriting.</source>
         <target>Enable this option only if you have problems with URL rewriting.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php [Line: 143]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php [Line: 147]</note>
       </trans-unit>
       <trans-unit id="3ff4fabe93bbb10c32a27c54ea13a5e1">
         <source>Enable this option only if your server allows URL rewriting (recommended).</source>
         <target>Enable this option only if your server allows URL rewriting (recommended).</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php [Line: 93]</note>
+      </trans-unit>
+      <trans-unit id="feb02e79a9b6bca4bb9559914d218455">
+        <source>Enables or disables SSL encryption (https://) for your shop. This is a security standard and you should always keep this option enabled, unless there is a specific technical issue.</source>
+        <target>Enables or disables SSL encryption (https://) for your shop. This is a security standard and you should always keep this option enabled, unless there is a specific technical issue.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 106]</note>
+      </trans-unit>
+      <trans-unit id="3745e6d203a2be11a15c749586ba592f">
+        <source>Enables or disables the best sellers page in your shop. When disabled, the page and related links are also removed from the sitemap and other sections.</source>
+        <target>Enables or disables the best sellers page in your shop. When disabled, the page and related links are also removed from the sitemap and other sections.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 194]</note>
+      </trans-unit>
+      <trans-unit id="f44ccb9feb9694644d7ddb842809af7c">
+        <source>Enables or disables the brands listing in your shop. When disabled, brands are also removed from the sitemap and other related sections.</source>
+        <target>Enables or disables the brands listing in your shop. When disabled, brands are also removed from the sitemap and other related sections.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 186]</note>
+      </trans-unit>
+      <trans-unit id="9955808073b701a1d996e190b0fa2b6b">
+        <source>Enables or disables the suppliers listing in your shop. When disabled, suppliers are also removed from the sitemap and other related sections.</source>
+        <target>Enables or disables the suppliers listing in your shop. When disabled, suppliers are also removed from the sitemap and other related sections.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 178]</note>
       </trans-unit>
       <trans-unit id="786471035f60ea5955fd93f6998e8637">
         <source>Enter each alias separated by a comma (e.g. 'prestshop,preztashop,prestasohp').</source>
@@ -299,6 +331,11 @@
         <target>If a customer meets multiple conditions, specific prices will be applied in this order of priority, unless a different order has been set for a particular product.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php [Line: 177]</note>
       </trans-unit>
+      <trans-unit id="78c4fac28bb7772e31c75299bdbf31bf">
+        <source>If a visitor accesses a page using a non-canonical URL, this option defines how the shop should respond. For SEO reasons, we recommend choosing "301 Moved Permanently".</source>
+        <target>If a visitor accesses a page using a non-canonical URL, this option defines how the shop should respond. For SEO reasons, we recommend choosing "301 Moved Permanently".</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php [Line: 135]</note>
+      </trans-unit>
       <trans-unit id="8bd1967f496dd2a0dd64dae32a3bc6e5">
         <source>If an attribute is not available in every product combination, it will not be displayed.</source>
         <target>If an attribute is not available in every product combination, it will not be displayed.</target>
@@ -319,10 +356,14 @@
         <target>If there are multiple languages enabled on the shop, all URLs are prefixed with the ISO code of the language. Do you want to do this also for the default language, or keep it un-prefixed? If adding a language to a well established single language shop, it's a good idea to disable this and avoid changing the URLs.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php [Line: 114]</note>
       </trans-unit>
+      <trans-unit id="6530353e5fc38824748de002f5b2d80a">
+        <source>If this option is enabled, the customer's last cart will be restored when they log back in. Otherwise, a new, empty cart will be created.</source>
+        <target>If this option is enabled, the customer's last cart will be restored when they log back in. Otherwise, a new, empty cart will be created.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/CustomerPreferences/GeneralType.php [Line: 54]</note>
+      </trans-unit>
       <trans-unit id="3bc8663376c647160124246b5567fe1f">
         <source>If you own an SSL certificate for your shop's domain name, you can activate SSL encryption (https://) for all the pages of your shop.</source>
         <target>If you own an SSL certificate for your shop's domain name, you can activate SSL encryption (https://) for all the pages of your shop.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 106]</note>
       </trans-unit>
       <trans-unit id="a3a0f3b2f4c12d1c11b9916c8c10c48c">
         <source>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</source>
@@ -471,6 +512,10 @@
       <trans-unit id="fff92cdf417b8a468af180474057a575">
         <source>Require customers to accept or decline terms of service before processing an order.</source>
         <target>Require customers to accept or decline terms of service before processing an order.</target>
+      </trans-unit>
+      <trans-unit id="de3c63a6c46e2ed9b86014d9da949b3e">
+        <source>Require customers to accept terms of service before processing an order.</source>
+        <target>Require customers to accept terms of service before processing an order.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php [Line: 127]</note>
       </trans-unit>
       <trans-unit id="01d2aac5d20787a1e873f2bdc79b514a">
@@ -503,6 +548,11 @@
         <target>Set a tax for gift wrapping.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GiftOptionsType.php [Line: 125]</note>
       </trans-unit>
+      <trans-unit id="c673507ef400a7b700e8c8ede0ed7bac">
+        <source>Set the minimum order value required to proceed to checkout. Customers won’t be able to continue if their cart total is below this amount. Set to 0 to disable this restriction.</source>
+        <target>Set the minimum order value required to proceed to checkout. Customers won’t be able to continue if their cart total is below this amount. Set to 0 to disable this restriction.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php [Line: 105]</note>
+      </trans-unit>
       <trans-unit id="9175b705bec9604985209d1f2d88c785">
         <source>Set to "0" to disable this feature.</source>
         <target>Set to "0" to disable this feature.</target>
@@ -511,7 +561,6 @@
       <trans-unit id="96b2f955774aee5f11e61646b7d5ae43">
         <source>Set to 0 to disable this feature.</source>
         <target>Set to 0 to disable this feature.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php [Line: 105]</note>
       </trans-unit>
       <trans-unit id="49aaf34d99febc7c13881d121288cd8a">
         <source>Shop registration information (e.g. SIRET or RCS).</source>
@@ -521,7 +570,7 @@
       <trans-unit id="9e9ad9fb2adc8da0aaec808b3d4e73e4">
         <source>Some of PrestaShop's features might not work correctly with a specific configuration of Apache's mod_security module. We recommend to turn it off.</source>
         <target>Some of PrestaShop's features might not work correctly with a specific configuration of Apache's mod_security module. We recommend to turn it off.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php [Line: 151]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php [Line: 155]</note>
       </trans-unit>
       <trans-unit id="75dfe702391b0e2cb38a1df614b40fb8">
         <source>Some themes allow your customers to add a product to their cart directly from the product list. You may want to deactivate this feature if a product has combinations, requiring your customers to check product details and choose one of the options.</source>
@@ -542,6 +591,11 @@
         <source>Suggest recycled packaging to customer.</source>
         <target>Suggest recycled packaging to customer.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GiftOptionsType.php [Line: 135]</note>
+      </trans-unit>
+      <trans-unit id="d7ea625e2b60f5f00947667c1b46506a">
+        <source>The default order in which products are displayed in listings. The available sorting methods differ based on the page type.</source>
+        <target>The default order in which products are displayed in listings. The available sorting methods differ based on the page type.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 61]</note>
       </trans-unit>
       <trans-unit id="e3e0c764f81f1a3677d59aa238fddd14">
         <source>The group defined for your identified guest customers (used in guest checkout).</source>
@@ -566,7 +620,6 @@
       <trans-unit id="c18179baaeadd4a2fc27fafd3d6f40b1">
         <source>The order in which products are displayed in the product list.</source>
         <target>The order in which products are displayed in the product list.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php [Line: 61]</note>
       </trans-unit>
       <trans-unit id="1a9a8cbb0899db011b7fec6df3326aa7">
         <source>The order status will be set to "On backorder" for new orders containing products that are out of stock.</source>

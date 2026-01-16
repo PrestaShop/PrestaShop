@@ -7,11 +7,11 @@ import {
   boOrderSettingsPage,
   type BrowserContext,
   dataCustomers,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicCheckoutOrderConfirmationPage,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -81,9 +81,9 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       // Click on view my shop
       page = await boOrderSettingsPage.viewMyShop(page);
       // Change FO language
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
@@ -91,25 +91,25 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
       // Go to the first product page
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
 
       // Add the product to the cart
-      await foClassicProductPage.addProductToTheCart(page);
+      await foHummingbirdProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(index + 1);
     });
 
     it('should proceed to checkout and login', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `proceedToCheckout${index}`, baseContext);
       // Proceed to checkout the shopping cart
-      await foClassicCartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       // Checkout the order
       if (index === 0) {
         // Personal information step - Login
-        await foClassicCheckoutPage.clickOnSignIn(page);
-        await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+        await foHummingbirdCheckoutPage.clickOnSignIn(page);
+        await foHummingbirdCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       }
     });
 
@@ -117,7 +117,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -125,7 +125,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -133,14 +133,14 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       await testContext.addContextItem(this, 'testIdentifier', `checkFinalSummary${index}`, baseContext);
 
       // Check the final summary existence in payment step
-      const isVisible = await foClassicCheckoutOrderConfirmationPage.isFinalSummaryVisible(page);
+      const isVisible = await foHummingbirdCheckoutOrderConfirmationPage.isFinalSummaryVisible(page);
       expect(isVisible).to.be.equal(test.args.exist);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
 
-      page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boOrderSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);

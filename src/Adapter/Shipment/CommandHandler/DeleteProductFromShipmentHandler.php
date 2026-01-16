@@ -28,19 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler;
 
-use Exception;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\DeleteProductFromShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\CommandHandler\DeleteProductFromShipmentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentNotFoundException;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 #[AsCommandHandler]
 class DeleteProductFromShipmentHandler implements DeleteProductFromShipmentHandlerInterface
 {
     public function __construct(
-        private readonly ShipmentRepository $shipmentRepository
+        private readonly ShipmentRepository $shipmentRepository,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -50,7 +52,13 @@ class DeleteProductFromShipmentHandler implements DeleteProductFromShipmentHandl
         $shipment = $this->shipmentRepository->findOneBy(['id' => $shipmentId]);
 
         if (null === $shipment) {
-            throw new ShipmentNotFoundException(sprintf('Shipment with id "%s" was not found', $shipmentId));
+            throw new ShipmentNotFoundException(
+                $this->translator->trans(
+                    'Cannot find product with order detail id %id%.',
+                    ['%id%' => $shipmentId],
+                    'Admin.Shipment.Error'
+                )
+            );
         }
 
         foreach ($shipment->getProducts() as $product) {
@@ -61,8 +69,16 @@ class DeleteProductFromShipmentHandler implements DeleteProductFromShipmentHandl
 
         try {
             $this->shipmentRepository->save($shipment);
-        } catch (Exception $e) {
-            throw new ShipmentException(sprintf('Failed to delete products from shipment with id "%s"', $shipmentId), 0, $e);
+        } catch (Throwable $e) {
+            throw new ShipmentException(
+                $this->translator->trans(
+                    'Failed to delete products from shipment with id "%id%".',
+                    ['%id%' => $shipmentId],
+                    'Admin.Shipment.Error'
+                ),
+                0,
+                $e
+            );
         }
     }
 }

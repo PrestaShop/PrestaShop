@@ -24,6 +24,14 @@ services:
     arguments:
       - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
 
+  PrestaShop\PrestaShop\Adapter\Shipment\ShipmentTotalsCalculatorInterface:
+    class: PrestaShop\PrestaShop\Adapter\Shipment\ShipmentTotalsCalculator
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Order\Repository\OrderDetailRepository'
+      - '@PrestaShop\PrestaShop\Adapter\LegacyContext'
+      - '@PrestaShop\PrestaShop\Adapter\Tools'
+
   prestashop.adapter.legacy.context:
     alias: PrestaShop\PrestaShop\Adapter\LegacyContext
 

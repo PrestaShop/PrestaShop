@@ -73,8 +73,8 @@ Feature: Duplicate discount
       | zones            | zone1                              |
       | rangeBehavior    | disabled                           |
     When I create a "free_shipping" discount "discount_with_carriers" with following properties:
-      | name[en-US] | Promotion |
-    And I update discount "discount_with_carriers" with conditions based on carriers "carrier1,carrier2"
+      | name[en-US] | Promotion         |
+      | carriers    | carrier1,carrier2 |
     And I duplicate the discount "discount_with_carriers" as "discount_with_carriers_copy"
     Then discount "discount_with_carriers_copy" should have the following properties:
       | name[en-US] | copy of Promotion |
@@ -118,17 +118,15 @@ Feature: Duplicate discount
     Given country "france" with iso code "FR" exists
     And country "spain" with iso code "ES" exists
     When I create a "free_shipping" discount "discount_with_country" with following properties:
-      | name[en-US] | Promotion |
-    When I update discount "discount_with_country" with conditions based on countries "france,spain"
+      | name[en-US] | Promotion    |
+      | countries   | france,spain |
     And I duplicate the discount "discount_with_country" as "discount_with_country_copy"
     Then discount "discount_with_country_copy" should have the following properties:
       | name[en-US]              | copy of Promotion |
       | type                     | free_shipping     |
       | minimum_product_quantity | 0                 |
       | active                   | false             |
-    Then discount "discount_with_country_copy" should have the following properties:
-      | condition_type | items        |
-      | countries      | spain,france |
+      | countries                | spain,france      |
 
   Scenario: Duplicate discount with supplier trigger
     Given I add new supplier supplier1 with the following properties:
@@ -142,36 +140,32 @@ Feature: Duplicate discount
       | meta description[en-US] |                    |
       | shops                   | [shop1]            |
     When I create a "free_shipping" discount "discount_with_supplier" with following properties:
-      | name[en-US] | Promotion |
-    When I update discount "discount_with_supplier" with following conditions matching at least 42 products:
-      | condition_type | items     |
-      | suppliers      | supplier1 |
+      | name[en-US]                 | Promotion |
+      | productConditionQuantity    | 42        |
+      | productCondition[suppliers] | supplier1 |
     And I duplicate the discount "discount_with_supplier" as "discount_with_supplier_copy"
     Then discount "discount_with_supplier_copy" should have the following properties:
-      | name[en-US]              | copy of Promotion |
-      | type                     | free_shipping     |
-      | minimum_product_quantity | 0                 |
-      | active                   | false             |
-    Then discount "discount_with_supplier_copy" should have the following product conditions matching at least 42 products:
-      | condition_type | items     |
-      | suppliers      | supplier1 |
+      | name[en-US]                 | copy of Promotion |
+      | type                        | free_shipping     |
+      | minimum_product_quantity    | 0                 |
+      | active                      | false             |
+      | productConditionQuantity    | 42                |
+      | productCondition[suppliers] | supplier1         |
 
   Scenario: Duplicate discount with category trigger
     Given category "home" in default language named "Home" exists
     When I create a "free_shipping" discount "discount_with_category" with following properties:
-      | name[en-US] | Promotion |
-    When I update discount "discount_with_category" with following conditions matching at least 42 products:
-      | condition_type | items  |
-      | categories     | home  |
+      | name[en-US]                  | Promotion |
+      | productConditionQuantity     | 42        |
+      | productCondition[categories] | home      |
     And I duplicate the discount "discount_with_category" as "discount_with_category_copy"
     Then discount "discount_with_category_copy" should have the following properties:
-      | name[en-US]              | copy of Promotion |
-      | type                     | free_shipping     |
-      | minimum_product_quantity | 0                 |
-      | active                   | false             |
-    Then discount "discount_with_category_copy" should have the following product conditions matching at least 42 products:
-      | condition_type | items  |
-      | categories     | home  |
+      | name[en-US]                  | copy of Promotion |
+      | type                         | free_shipping     |
+      | minimum_product_quantity     | 0                 |
+      | active                       | false             |
+      | productConditionQuantity     | 42                |
+      | productCondition[categories] | home              |
 
   Scenario: Duplicate discount with brand trigger
     Given I add new manufacturer "rocket" with following properties:
@@ -182,19 +176,17 @@ Feature: Duplicate discount
       | meta_description[en-US]  | The sun is shining and the weather is sweet|
       | enabled                  | true                               |
     When I create a "free_shipping" discount "discount_with_brand" with following properties:
-      | name[en-US] | Promotion |
-    When I update discount "discount_with_brand" with following conditions matching at least 42 products:
-      | condition_type | items  |
-      | manufacturers  | rocket |
+      | name[en-US]                     | Promotion |
+      | productConditionQuantity        | 42        |
+      | productCondition[manufacturers] | rocket    |
     And I duplicate the discount "discount_with_brand" as "discount_with_brand_copy"
     Then discount "discount_with_brand_copy" should have the following properties:
-      | name[en-US]              | copy of Promotion |
-      | type                     | free_shipping     |
-      | minimum_product_quantity | 0                 |
-      | active                   | false             |
-    Then discount "discount_with_brand_copy" should have the following product conditions matching at least 42 products:
-      | condition_type | items  |
-      | manufacturers  | rocket |
+      | name[en-US]                     | copy of Promotion |
+      | type                            | free_shipping     |
+      | minimum_product_quantity        | 0                 |
+      | active                          | false             |
+      | productConditionQuantity        | 42                |
+      | productCondition[manufacturers] | rocket            |
 
   Scenario: Duplicate discount with brand and category triggers
     Given I add new manufacturer "rocket" with following properties:
@@ -206,18 +198,16 @@ Feature: Duplicate discount
       | enabled                  | true                               |
     And category "home" in default language named "Home" exists
     When I create a "free_shipping" discount "discount_with_brand_and_category" with following properties:
-      | name[en-US] | Promotion |
-    When I update discount "discount_with_brand_and_category" with following conditions matching at least 42 products:
-      | condition_type | items  |
-      | manufacturers  | rocket |
-      | categories     | home   |
+      | name[en-US]                     | Promotion |
+      | productConditionQuantity        | 42        |
+      | productCondition[manufacturers] | rocket    |
+      | productCondition[categories]    | home      |
     And I duplicate the discount "discount_with_brand_and_category" as "discount_with_brand_and_category_copy"
     Then discount "discount_with_brand_and_category_copy" should have the following properties:
-      | name[en-US]              | copy of Promotion |
-      | type                     | free_shipping     |
-      | minimum_product_quantity | 0                 |
-      | active                   | false             |
-    Then discount "discount_with_brand_and_category_copy" should have the following product conditions matching at least 42 products:
-      | condition_type | items  |
-      | manufacturers  | rocket |
-      | categories     | home   |
+      | name[en-US]                     | copy of Promotion |
+      | type                            | free_shipping     |
+      | minimum_product_quantity        | 0                 |
+      | active                          | false             |
+      | productConditionQuantity        | 42                |
+      | productCondition[manufacturers] | rocket            |
+      | productCondition[categories]    | home              |

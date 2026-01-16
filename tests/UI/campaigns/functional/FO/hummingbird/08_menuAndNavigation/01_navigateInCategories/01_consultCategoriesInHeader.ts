@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -24,9 +21,6 @@ Check all categories and subcategories links in header
 describe('FO - Menu and Navigation - Navigate in Categories : Check categories and subcategories links in header', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   describe('Check categories and subcategories links in header', async () => {
     // before and after functions
@@ -75,7 +69,4 @@ describe('FO - Menu and Navigation - Navigate in Categories : Check categories a
       });
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

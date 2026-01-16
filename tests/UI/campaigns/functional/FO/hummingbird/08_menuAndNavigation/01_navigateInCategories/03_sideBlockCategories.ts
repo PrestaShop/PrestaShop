@@ -1,6 +1,5 @@
 import {expect} from 'chai';
 import testContext from '@utils/testContext';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -17,9 +16,6 @@ const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_navigat
 describe('FO - Menu and Navigation : Side block categories', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -96,7 +92,4 @@ describe('FO - Menu and Navigation : Side block categories', async () => {
       }
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

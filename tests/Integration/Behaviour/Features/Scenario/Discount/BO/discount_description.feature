@@ -84,4 +84,3 @@ Feature: Discount description field
      Scenario: Create a discount with description that exceeds maximum length
          When I create a "cart_level" discount "discount_too_long_desc" with a very large description
          Then I should get error that discount field description is invalid
-

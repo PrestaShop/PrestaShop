@@ -231,16 +231,3 @@ services:
   prestashop.adapter.order.command_handler.set_internal_order_note_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\SetInternalOrderNoteHandler
     autoconfigure: true
-
-  prestashop.adapter.order.repository.order_repository:
-    alias: PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository
-    deprecated:
-      package: PrestaShop\PrestaShop
-      version: 9.0
-
-  PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository:
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
-
-  PrestaShop\PrestaShop\Adapter\Order\Repository\OrderDetailRepository:

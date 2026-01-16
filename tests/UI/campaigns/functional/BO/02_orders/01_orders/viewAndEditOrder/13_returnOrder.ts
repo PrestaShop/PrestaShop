@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boDashboardPage,

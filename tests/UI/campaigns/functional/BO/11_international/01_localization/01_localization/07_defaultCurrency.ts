@@ -10,7 +10,7 @@ import {
   type BrowserContext,
   dataCurrencies,
   dataLanguages,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   type ImportContent,
   type Page,
   utilsPlaywright,
@@ -145,14 +145,14 @@ describe('BO - International - Localization : Update default currency', async ()
         // View my shop and init pages
         page = await boLocalizationPage.viewMyShop(page);
 
-        const defaultCurrency = await foClassicHomePage.getDefaultCurrency(page);
+        const defaultCurrency = await foHummingbirdHomePage.getDefaultCurrency(page);
         expect(defaultCurrency).to.equal(test.args.currency);
       });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-        page = await foClassicHomePage.closePage(browserContext, page, 0);
+        page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await boLocalizationPage.getPageTitle(page);
         expect(pageTitle).to.contains(boLocalizationPage.pageTitle);

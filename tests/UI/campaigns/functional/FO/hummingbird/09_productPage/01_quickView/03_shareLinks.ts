@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -16,21 +13,14 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_productPage_quickView_shareLinks';
 
 /*
-Pre-condition:
-- Install hummingbird theme
 Scenario:
 - Go to FO
 - Quick view third product
 - Check shared links (Facebook-Twitter-Pinterest)
-Post-condition:
-- Uninstall hummingbird theme
  */
 describe('FO - Product page - Quick view : Share links', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -103,7 +93,4 @@ describe('FO - Product page - Quick view : Share links', async () => {
       });
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

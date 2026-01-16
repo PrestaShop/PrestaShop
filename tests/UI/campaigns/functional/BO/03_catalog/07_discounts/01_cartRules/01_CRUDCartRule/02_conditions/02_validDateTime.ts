@@ -11,11 +11,11 @@ import {
   boLoginPage,
   type BrowserContext,
   FakerCartRule,
-  foClassicCartPage,
-  foClassicHomePage,
-  foClassicLoginPage,
-  foClassicModalBlockCartPage,
-  foClassicModalQuickViewPage,
+  foHummingbirdCartPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  foHummingbirdModalBlockCartPage,
+  foHummingbirdModalQuickViewPage,
   type Page,
   utilsDate,
   utilsPlaywright,
@@ -95,45 +95,45 @@ describe('BO - Cart rules - Condition : Case 2 - Valid Date Time', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await foClassicHomePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await foClassicHomePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should quick view the first product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewTheFirstProduct', baseContext);
 
-      await foClassicLoginPage.goToHomePage(page);
-      await foClassicHomePage.quickViewProduct(page, 1);
+      await foHummingbirdLoginPage.goToHomePage(page);
+      await foHummingbirdHomePage.quickViewProduct(page, 1);
 
-      const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
+      const isQuickViewModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isQuickViewModalVisible).to.equal(true);
     });
 
     it('should add the product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
-      await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await foClassicModalBlockCartPage.proceedToCheckout(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
+      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
 
-      const pageTitle = await foClassicCartPage.getPageTitle(page);
-      expect(pageTitle).to.eq(foClassicCartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.eq(foHummingbirdCartPage.pageTitle);
     });
 
     it('should check that there is no discount applied', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoDiscount', baseContext);
 
-      const isVisible = await foClassicCartPage.isCartRuleNameVisible(page);
+      const isVisible = await foHummingbirdCartPage.isCartRuleNameVisible(page);
       expect(isVisible).to.eq(false);
     });
 
     it('should delete the last product from the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLastProduct', baseContext);
 
-      await foClassicCartPage.deleteProduct(page, 1);
+      await foHummingbirdCartPage.deleteProduct(page, 1);
 
-      const notificationNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+      const notificationNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationNumber).to.eq(0);
     });
   });

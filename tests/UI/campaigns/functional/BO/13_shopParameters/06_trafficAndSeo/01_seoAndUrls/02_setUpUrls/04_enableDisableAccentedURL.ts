@@ -10,7 +10,7 @@ import {
   boSeoUrlsPage,
   type BrowserContext,
   FakerProduct,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -173,7 +173,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         // Go to product page in FO
         page = await boProductsCreatePage.previewProduct(page);
 
-        const url = await foClassicHomePage.getCurrentURL(page);
+        const url = await foHummingbirdHomePage.getCurrentURL(page);
         expect(url).to.contains(test.args.productNameInURL.toLowerCase());
       });
 
@@ -181,7 +181,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${test.args.action}`, baseContext);
 
         // Go back to BO
-        page = await foClassicHomePage.closePage(browserContext, page, 0);
+        page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await boProductsCreatePage.getPageTitle(page);
         expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);

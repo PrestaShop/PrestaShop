@@ -57,26 +57,24 @@ Feature: Full UX discount test
       | delta quantity | 100 |
     # Now create the discount
     When I create a "free_shipping" discount "free_shipping_discount_with_restricted_combinations" with following properties:
-      | name[en-US] | Three Tshirt M or L size get free shipping        |
-      | name[fr-FR] | Livraison offerte pour Trois tshirt taille M ou L |
-      | active      | true                                              |
-      | valid_from  | 2025-01-01 11:05:00                               |
-      | valid_to    | 2026-12-01 00:00:00                               |
-      | code        | FREE_SHIPPING_THREE_COMBINATIONS                  |
-    And I update discount "free_shipping_discount_with_restricted_combinations" with following conditions matching at least 3 products:
-      | condition_type | items                      |
-      | combinations   | metalTshirtM, metalTshirtL |
+      | name[en-US]                    | Three Tshirt M or L size get free shipping        |
+      | name[fr-FR]                    | Livraison offerte pour Trois tshirt taille M ou L |
+      | active                         | true                                              |
+      | valid_from                     | 2025-01-01 11:05:00                               |
+      | valid_to                       | 2026-12-01 00:00:00                               |
+      | code                           | FREE_SHIPPING_THREE_COMBINATIONS                  |
+      | productConditionQuantity       | 3                                                 |
+      | productCondition[combinations] | metalTshirtM, metalTshirtL                        |
     Then discount "free_shipping_discount_with_restricted_combinations" should have the following properties:
       | name[en-US]              | Three Tshirt M or L size get free shipping        |
       | name[fr-FR]              | Livraison offerte pour Trois tshirt taille M ou L |
       | active                   | true                                              |
       | valid_from               | 2025-01-01 11:05:00                               |
       | valid_to                 | 2026-12-01 00:00:00                               |
-      | code                     | FREE_SHIPPING_THREE_COMBINATIONS                  |
-      | minimum_product_quantity | 0                                                 |
-    And discount "free_shipping_discount_with_restricted_combinations" should have the following product conditions matching at least 3 products:
-      | condition_type | items                      |
-      | combinations   | metalTshirtM, metalTshirtL |
+      | code                           | FREE_SHIPPING_THREE_COMBINATIONS |
+      | minimum_product_quantity       | 0                                |
+      | productConditionQuantity       | 3                                |
+      | productCondition[combinations] | metalTshirtM, metalTshirtL       |
 
   Scenario: Free shipping with three t shirts L
     Given I create an empty cart "dummy_cart" for customer "testCustomer"

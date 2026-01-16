@@ -2,6 +2,7 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomersPage,
@@ -36,6 +37,8 @@ import {
 const baseContext: string = 'functional_FO_classic_userAccount_getGDPRDataInCSV';
 
 /*
+Pre-condition
+- Enable the theme classic
 Scenario
 - Check GDPR CSV file after create customer and first login
 - Check GDPR CSV file after create a cart
@@ -44,6 +47,7 @@ Scenario
 - Check GDPR CSV file after logout and login in FO
 Post condition:
 - Delete created customer
+- Disable the theme classic
  */
 describe('FO - Account : Get GDPR data in CSV', async () => {
   let browserContext: BrowserContext;
@@ -86,6 +90,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   });
 
   const createCustomerName: string = `${customerData.firstName[0]}. ${customerData.lastName}`;
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -1001,5 +1008,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   });
 
   // Post-condition: Create new account on FO
-  deleteCustomerTest(customerData, `${baseContext}_postTest`);
+  deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

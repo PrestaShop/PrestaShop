@@ -8,7 +8,7 @@ import {
   boModuleManagerPage,
   type BrowserContext,
   dataModules,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   modPsNewProductsBoMain,
   type Page,
   utilsPlaywright,
@@ -82,23 +82,23 @@ describe('New products block module - Disable/Enable module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOAfterDisable', baseContext);
 
       page = await modPsNewProductsBoMain.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should check if the "New Products" block is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotVisible', baseContext);
 
-      const hasProductsBlock = await foClassicHomePage.hasProductsBlock(page, 'newproducts');
+      const hasProductsBlock = await foHummingbirdHomePage.hasProductsBlock(page, 'newproducts');
       expect(hasProductsBlock).to.eq(false);
     });
 
     it('should return to the back office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnBO', baseContext);
 
-      page = await foClassicHomePage.closePage(browserContext, page, 0);
+      page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await boModuleManagerPage.getPageTitle(page);
       expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
@@ -122,16 +122,16 @@ describe('New products block module - Disable/Enable module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOAfterEnable', baseContext);
 
       page = await modPsNewProductsBoMain.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should check if the "New Products" block is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkVisible', baseContext);
 
-      const hasProductsBlock = await foClassicHomePage.hasProductsBlock(page, 'newproducts');
+      const hasProductsBlock = await foHummingbirdHomePage.hasProductsBlock(page, 'newproducts');
       expect(hasProductsBlock).to.eq(true);
     });
   });

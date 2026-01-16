@@ -24,6 +24,493 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 9
 
 ####################################
+#   v9.1.0 Beta 1 - (2025-12-18)
+####################################
+
+- Back Office:
+  - New feature:
+    - #39889: Send improved shipment feature flag to smarty on order history page (by @Nakahiru)
+    - #39873: Discount priority system (by @tleon)
+    - #39876: Feat: [discount-list] fix #39796 - add start and expiration date columns (by @mattgoud)
+    - #39741: Set validity date for discounts (by @tleon)
+    - #39789: Add limit to a single customer for discount (by @nicosomb)
+    - #39763: UI tests - Add new scenario to check multicarrier (by @nesrineabdmouleh)
+    - #39351: Condition based on feature (by @tleon)
+    - #39498: Add edit shipment page (by @PoulainMaxime)
+    - #39127: Add shipmentId on product list in order page detail (by @PoulainMaxime)
+    - #39138: Create split shipment form (by @ga-devfront)
+    - #39418: Discount attributes condition in form (by @jolelievre)
+    - #39363: Condition based on countries (by @tleon)
+    - #39246: Discount condition based on supplier (by @tleon)
+    - #39140: Condition based on categories (by @tleon)
+    - #39137: Create merge shipment form (by @M0rgan01)
+    - #39130: Add trigger on a brand for discount (by @nicosomb)
+    - #39093: Create-shipment-tab (by @M0rgan01)
+    - #39019: Add delete shipment product command for multishipment (by @PoulainMaxime)
+    - #39103: Discount specific product condition allows selection of combination (by @jolelievre)
+    - #38976: Add split shipment command for multishipment (by @PoulainMaxime)
+    - #38984: Add get shipment for viewing query (by @M0rgan01)
+    - #39087: Handle new type of Discount product condition based on restricted combinations (by @jolelievre)
+    - #38933: Add list available shipments for product query  (by @PoulainMaxime)
+    - #38954: Add merge shipment command (by @PoulainMaxime)
+    - #38911: Add list available carriers query (by @M0rgan01)
+    - #38839: Add hooks on Module enable/disable/upgrade (by @studiokiwik)
+    - #38909: Add switch shipment carrier CQRS command (by @ga-devfront)
+    - #38842: Discount minimal cart product (by @jolelievre)
+    - #38867: Integrate discount conditions in form (by @tleon)
+    - #38746: Add product selection while creating free gift discount (by @nicosomb)
+    - #38837: Add delete discount command and list for api & bo (by @tleon)
+    - #38690: Cart & Order discount Form (add + update)  (by @tleon)
+    - #38450: Order level discount (by @tleon)
+    - #38209: Add `free gift` discount (by @nicosomb)
+    - #38191: Feat: add CQRS command for add & list shipment (by @PoulainMaxime)
+    - #38201: Add product level discounts (by @tleon)
+    - #38187: Add new discount page grid and creation popup (by @jolelievre)
+    - #38081: Add new discount cart level cqrs command (by @tleon)
+    - #38046: Feat: add entities for multi-shipment (by @PoulainMaxime)
+    - #38111: Refactor Discount creation domain services and allow creation without names (by @jolelievre)
+    - #38040: Feature: add feature flag for upcoming new shipment system (by @Nakahiru)
+    - #37911: Cart rule refacto command free shipping (by @tleon)
+  - Improvement:
+    - #40130: Add two-step process for module upgrade (download then install) (by @dylanDenizonPresta)
+    - #40230: Adds help text to product page fields (by @Hlavtox)
+    - #40247: Discount duplication (by @boherm)
+    - #40212: [BC Break] Update module api resources v0.2.0 (by @jolelievre)
+    - #40104: Bulk delete for discounts (by @boherm)
+    - #40103: Add new bulk enable/disable commands for discounts (by @boherm)
+    - #40089: Handle description field for discounts (by @tleon)
+    - #39951: Chore(bo): New date filter component for discounts (by @tleon)
+    - #39977: Migration Admin Tags : Delete & Bulk Delete (by @Progi1984)
+    - #39979: Combine different types of trigger conditions (by @boherm)
+    - #39962: Sort modules and mails templates by name in translations (by @PululuK)
+    - #39649: Migration Admin Tags : Create & Edit Form (by @Progi1984)
+    - #39857: Rearrange discount form (by @nicosomb)
+    - #39629: [BC Break] Update d3 and nvd3 libs (by @boherm)
+    - #39662: [BC Break] Add discount compatibility (by @nicosomb)
+    - #39760: Address without linked brand (by @aomaxime)
+    - #37668: Add more specific filtering to Brand addresses listing (by @zelarg)
+    - #39579: Trigger error when split shipment with tracking number (by @PoulainMaxime)
+    - #39383: Improve performance of admin notifications (by @MattKelvin)
+    - #39536: Display right tab when the feature flag is enabled (by @PoulainMaxime)
+    - #39517: Add possibility to get multiple shipment id for one product (by @PoulainMaxime)
+    - #39516: Migration Admin Tags : Feature Flag & Grid (Listing & Filters) (by @Progi1984)
+    - #39330: Improve "GetAvailableCarriers" query - filters (by @M0rgan01)
+    - #39338: Update CQRS discount commands and queries to handle the carriers (by @jolelievre)
+    - #38916: Add trigger with specific product in discount (by @nicosomb)
+    - #38889: Add form in BO to apply discount automatically or via promo code (by @boherm)
+    - #39055: Add more updateDiscountCommand Tests (by @tleon)
+    - #38956: Add hook on Configuration updateValue (by @studiokiwik)
+    - #38953: New generic form types, integration of minimum quantity and amount in the discount form (by @jolelievre)
+    - #38780: Discount form cards (by @jolelievre)
+    - #38561: Free shipping creation form (by @tleon)
+    - #38430: Open product link in new window in admin order page (by @web-cooking-factory)
+    - #38431: Add CMS Page preview link in listing in BO (by @web-cooking-factory)
+    - #38248: Add product discount integration + some tests improvements (by @tleon)
+    - #38000: Add new integration test for discount CQRS (by @tleon)
+  - Bug fix:
+    - #39926: Fix: handle SELECT fields without no_quotes in getSensitiveAttributes (by @Codencode)
+    - #40001: Fix redirect after editing root category to use current categoryId in stead of PS_HOME_CATEGORY (by @Codencode)
+    - #39869: Update monologger to v3 (by @NKoonen)
+    - #40256: Fix: Issue retrieving product price when adding the first specific_price (by @Codencode)
+    - #40243: Admin API handle position update (by @jolelievre)
+    - #40257: Prevent saving ajax URL for future login redirection, or the redirect… (by @jolelievre)
+    - #40112: Bump prestakit to v2.0.5 (by @Quetzacoalt91)
+    - #40267: Fix minimum amount discount cart conditions tax/shipping incl. or excl. (by @boherm)
+    - #40201: Fix path to legacy mail folder (by @Hlavtox)
+    - #40123: Update module api resources with new boolean rule (by @jolelievre)
+    - #39868: Chore: show carrier deleted on edit shipment to avoid blocking edit (by @PoulainMaxime)
+    - #39883: Refactor discount-map.ts to use discountContainer for currency selector and reduction value symbol paths (by @tleon)
+    - #39880: Add virtual product filter for shipments (by @M0rgan01)
+    - #39810: Chore: verify is carrier is linked to shipments for soft delete (by @PoulainMaxime)
+    - #39811: Fix product type discount (by @tleon)
+    - #39808: Add missing form type in catalog discount (by @tleon)
+    - #39706: Fix discount edition when no cart conditions were defined (by @nicosomb)
+    - #39448: Fix carrier grade validation and prevent fatal error (by @MattKelvin)
+    - #39262: Fix "get available carriers" query (by @M0rgan01)
+    - #39341: Fix shipments "items" (by @M0rgan01)
+    - #39302: Fix shipments tab (by @M0rgan01)
+    - #38603: Cast $orderMessage['message'] as string to prevent fatal error. (by @josecarlosphp)
+    - #38763: Fix for setAmountDiscount constructor type  (by @tleon)
+    - #38349: Discount feedbacks (by @tleon)
+    - #36374: PR - Fix order detail price re-calculation (by @Jeremie-Kiwik)
+    - #37882: Fix: BO - Product Page - Display all features in feature choice, even if two features have the same name (by @Shagshag)
+  - Refactoring:
+    - #38505: Refacto discount commands (by @tleon)
+- Front Office:
+  - New feature:
+    - #39755: Feat: add logic for new display on multishipment for order summary (by @PoulainMaxime)
+    - #38444: Show all carriers in the delivery option when FEATURE_FLAG_IMPROVED_SHIPMENT is enabled (by @Nakahiru)
+  - Improvement:
+    - #40248: Prevent Exposure of Sensitive Product Attributes in Front Office (by @M0rgan01)
+    - #39879: Chore: add new format to multishipment display on order final summary (by @PoulainMaxime)
+    - #39787: Multi-carrier: added a property in OrderLazyArray (by @M0rgan01)
+    - #39097: Fix CartPresenter translation domain (by @PululuK)
+    - #39433: Allow specials characters in search (by @MattKelvin)
+  - Bug fix:
+    - #39582: Fix: Product customization text field bug with using symbol {} (by @Codencode)
+    - #40117: Fix cart rule validation in front office (by @Hlavtox)
+    - #40262: Allow access to customized files preview without multi-lang enabled (by @kpodemski)
+    - #40137: Updated zxcvbn to a maintained version for consistency with backend checks (by @tleon)
+    - #40044: Multistore : Display countries only those covered by active carriers (by @Progi1984)
+    - #39788: Add check for enabled countries in cart and order (by @PrestaEdit)
+    - #35471: [BC Break] PrestashopDatabaseException on cart confirmation with free delivery cart rules in debug mode #32748  (by @clotairer)
+- Core:
+  - New feature:
+    - #40356: Update & activate hummingbird (by @tleon)
+    - #40346: Update themes (by @tleon)
+    - #39478: Add console command "prestashop:thumbnails:regenerate" (by @iNem0o)
+    - #39403: Add SearchIndexationCommand to handle CLI search indexation (by @iNem0o)
+    - #39405: Export module translations command (by @kpodemski)
+    - #38484: Modify the shipment creation & remove order duplication for different carrier (by @PoulainMaxime)
+  - Improvement:
+    - #40349: Manual verifications (by @tleon)
+    - #40347: Update native modules (by @jolelievre)
+    - #40332: Restore original repository for ps_apiresources (by @nicosomb)
+    - #40293: Create fixtures for discount types (by @boherm)
+    - #40312: Bump to `9.0.3` (by @boherm)
+    - #40134: Docker : Fixed Install of xdebug (by @Progi1984)
+    - #39645: Add display parameter to generatePDF method (by @PrestaEdit)
+    - #40265: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.48.0 to 8.48.1 in /tests/UI (by @dependabot[bot])
+    - #40264: Chore(deps-dev): bump @typescript-eslint/parser from 8.48.0 to 8.48.1 in /tests/UI (by @dependabot[bot])
+    - #40217: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.47.0 to 8.48.0 in /tests/UI (by @dependabot[bot])
+    - #40136: Add more logs in database dumping script (by @nicosomb)
+    - #40215: Chore(deps-dev): bump @typescript-eslint/parser from 8.47.0 to 8.48.0 in /tests/UI (by @dependabot[bot])
+    - #39831: Add customer groups limit for discounts (by @nicosomb)
+    - #40084: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.46.4 to 8.47.0 in /tests/UI (by @dependabot[bot])
+    - #40083: Chore(deps-dev): bump @typescript-eslint/parser from 8.46.4 to 8.47.0 in /tests/UI (by @dependabot[bot])
+    - #40010: Chore(deps): bump @prestashop-core/ui-testing from `8c2eab4` to `41f49bf` in /tests/UI (by @dependabot[bot])
+    - #40009: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.46.3 to 8.46.4 in /tests/UI (by @dependabot[bot])
+    - #39956: Chore(deps): bump mocha from 11.7.4 to 11.7.5 in /tests/UI (by @dependabot[bot])
+    - #39957: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.46.2 to 8.46.3 in /tests/UI (by @dependabot[bot])
+    - #39899: CHORE(DEPS): BUMP @PRESTASHOP-CORE/UI-TESTING FROM `47A084B` TO `6BE33E2` IN /TESTS/UI (by @dependabot[bot])
+    - #39840: Chore(deps): bump @prestashop-core/ui-testing from `32f470f` to `c00d5c6` in /tests/UI (by @dependabot[bot])
+    - #39841: Chore(deps): bump mysql2 from 3.15.2 to 3.15.3 in /tests/UI (by @dependabot[bot])
+    - #39839: Chore(deps-dev): bump @types/mochawesome from 6.2.4 to 6.2.5 in /tests/UI (by @dependabot[bot])
+    - #39842: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.46.1 to 8.46.2 in /tests/UI (by @dependabot[bot])
+    - #39843: Chore(deps-dev): bump @typescript-eslint/parser from 8.46.1 to 8.46.2 in /tests/UI (by @dependabot[bot])
+    - #39785: Chore(deps): bump @faker-js/faker from 9.9.0 to 10.1.0 in /tests/UI (by @dependabot[bot])
+    - #39736: Chore(deps): bump mysql2 from 3.15.1 to 3.15.2 in /tests/UI (by @dependabot[bot])
+    - #39734: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.45.0 to 8.46.0 in /tests/UI (by @dependabot[bot])
+    - #39697: Chore(deps): bump @prestashop-core/ui-testing from `9c61da0` to `17efa39` in /tests/UI
+ (by @dependabot[bot])
+    - #39694: Chore(deps): bump dotenv from 17.2.2 to 17.2.3 in /tests/UI
+ (by @dependabot[bot])
+    - #39698: Chore(deps-dev): bump typescript from 5.9.2 to 5.9.3 in /tests/UI
+ (by @dependabot[bot])
+    - #39696: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.44.1 to 8.45.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39695: Chore(deps): bump mocha from 11.7.2 to 11.7.4 in /tests/UI
+ (by @dependabot[bot])
+    - #39699: Chore(deps-dev): bump @typescript-eslint/parser from 8.44.1 to 8.45.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39640: Chore(deps): bump @prestashop-core/ui-testing from `8cf7b0d` to `b721cb9` in /tests/UI
+ (by @dependabot[bot])
+    - #39599: Update Cookie class documentation (by @djbuch)
+    - #39643: Chore(deps): bump mysql2 from 3.15.0 to 3.15.1 in /tests/UI
+ (by @dependabot[bot])
+    - #39641: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.44.0 to 8.44.1 in /tests/UI
+ (by @dependabot[bot])
+    - #39642: Chore(deps-dev): bump @typescript-eslint/parser from 8.44.0 to 8.44.1 in /tests/UI
+ (by @dependabot[bot])
+    - #39600: Chore(deps): bump mysql2 from 3.14.5 to 3.15.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39604: Chore(deps): bump mochawesome from 7.1.3 to 7.1.4 in /tests/UI
+ (by @dependabot[bot])
+    - #39603: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.43.0 to 8.44.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39570: Add new constraint to avoid having customizable product on free gift discount (by @boherm)
+    - #39564: Chore(deps): bump @prestashop-core/ui-testing from `610e3fc` to `1f11274` in /tests/UI
+ (by @dependabot[bot])
+    - #39561: Chore(deps): bump mysql2 from 3.14.4 to 3.14.5 in /tests/UI
+ (by @dependabot[bot])
+    - #39563: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.42.0 to 8.43.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39518: Updated PrestaShop Packages (by @github-actions[bot])
+    - #39521: Chore(deps-dev): bump typescript from 5.8.3 to 5.9.2 in /tests/UI
+ (by @dependabot[bot])
+    - #39520: Chore(deps): bump mocha from 11.7.1 to 11.7.2 in /tests/UI
+ (by @dependabot[bot])
+    - #39519: Chore(deps): bump dotenv from 17.2.1 to 17.2.2 in /tests/UI
+ (by @dependabot[bot])
+    - #39522: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.41.0 to 8.42.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39487: Bump mysql2 from 3.14.3 to 3.14.4 in /tests/UI (by @dependabot[bot])
+    - #39486: Bump @prestashop-core/ui-testing from `ecfcc4d` to `500a226` in /tests/UI (by @dependabot[bot])
+    - #39484: Bump @typescript-eslint/parser from 8.38.0 to 8.41.0 in /tests/UI (by @dependabot[bot])
+    - #39483: Bump @typescript-eslint/eslint-plugin from 8.38.0 to 8.41.0 in /tests/UI (by @dependabot[bot])
+    - #39424: Update CSSJanus to wikimedia/cssjanus (by @Krinkle)
+    - #39197: Added PrestaShop version in bin/console (by @Codencode)
+    - #39289: Build(deps): bump mysql2 from 3.14.2 to 3.14.3 in /tests/UI
+ (by @dependabot[bot])
+    - #39213: Build(deps): bump dotenv from 17.2.0 to 17.2.1 in /tests/UI
+ (by @dependabot[bot])
+    - #39212: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.37.0 to 8.38.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39177: Updated PrestaShop Packages (by @github-actions[bot])
+    - #39155: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.36.0 to 8.37.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39113: Build(deps): bump @prestashop-core/ui-testing from `c560551` to `9d48756` in /tests/UI
+ (by @dependabot[bot])
+    - #39115: Build(deps): bump mysql2 from 3.14.1 to 3.14.2 in /tests/UI
+ (by @dependabot[bot])
+    - #39116: Build(deps): bump dotenv from 17.0.1 to 17.2.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39114: Build(deps-dev): bump @typescript-eslint/parser from 8.35.1 to 8.36.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39117: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.35.1 to 8.36.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39071: Build(deps): bump @faker-js/faker from 9.8.0 to 9.9.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39072: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.35.0 to 8.35.1 in /tests/UI
+ (by @dependabot[bot])
+    - #39036: Build(deps): bump mocha from 11.6.0 to 11.7.1 in /tests/UI
+ (by @dependabot[bot])
+    - #39040: Build(deps): bump dotenv from 16.5.0 to 17.0.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39038: Build(deps-dev): bump @typescript-eslint/parser from 8.34.1 to 8.35.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39039: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.34.0 to 8.35.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38969: Build(deps-dev): bump eslint-plugin-import from 2.31.0 to 2.32.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38785: Noindex ajax controller (by @PululuK)
+    - #39029: Remove docker compose version, it is obsolete (by @tswfi)
+    - #38971: Build(deps-dev): bump @typescript-eslint/parser from 8.34.0 to 8.34.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38900: Bump to 9.1.0 (by @boherm)
+    - #38923: Build(deps): bump @prestashop-core/ui-testing from `baf6879` to `0ef43d3` in /tests/UI
+ (by @dependabot[bot])
+    - #38922: Build(deps): bump mocha from 11.5.0 to 11.6.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38921: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.33.1 to 8.34.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38864: Build(deps-dev): bump @typescript-eslint/parser from 8.32.1 to 8.33.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38863: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.32.1 to 8.33.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38779: New order history retrieval filter (by @Kaikina)
+    - #38777: Build(deps-dev): bump eslint-plugin-html from 8.1.2 to 8.1.3 in /tests/UI
+ (by @dependabot[bot])
+    - #38778: Build(deps): bump mocha from 11.3.0 to 11.5.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38727: Build(deps): bump @prestashop-core/ui-testing from `a115403` to `8dad7b7` in /tests/UI
+ (by @dependabot[bot])
+    - #38728: Build(deps): bump mocha from 11.2.2 to 11.3.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38729: Build(deps-dev): bump @typescript-eslint/parser from 8.32.0 to 8.32.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38726: Build(deps): bump @faker-js/faker from 9.7.0 to 9.8.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38624: Build(deps): bump @prestashop-core/ui-testing from `6a87453` to `5e44d9e` in /tests/UI
+ (by @dependabot[bot])
+    - #38625: Build(deps-dev): bump @types/mocha from 10.0.9 to 10.0.10 in /tests/UI
+ (by @dependabot[bot])
+    - #38626: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.31.1 to 8.32.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38627: Build(deps-dev): bump @typescript-eslint/parser from 8.31.1 to 8.32.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38585: Updated PrestaShop Packages (by @github-actions[bot])
+    - #38541: Build(deps): bump mysql2 from 3.14.0 to 3.14.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38588: Build(deps): bump mocha from 10.7.3 to 11.2.2 in /tests/UI
+ (by @dependabot[bot])
+    - #38587: Build(deps): bump @prestashop-core/ui-testing from `b013e9a` to `6a87453` in /tests/UI
+ (by @dependabot[bot])
+    - #38590: Build(deps-dev): bump @typescript-eslint/parser from 8.31.0 to 8.31.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38538: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.30.1 to 8.31.0 in /tests/UI (by @dependabot[bot])
+    - #38476: Build(deps): bump @prestashop-core/ui-testing from `ee6d175` to `df14b61` in /tests/UI (by @dependabot[bot])
+    - #38473: Build(deps): bump @faker-js/faker from 9.6.0 to 9.7.0 in /tests/UI (by @dependabot[bot])
+    - #38510: Build(deps-dev): bump @typescript-eslint/parser from 8.29.0 to 8.30.1 in /tests/UI (by @dependabot[bot])
+    - #38512: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.29.0 to 8.30.1 in /tests/UI (by @dependabot[bot])
+    - #38472: Build(deps): bump dotenv from 16.4.7 to 16.5.0 in /tests/UI (by @dependabot[bot])
+    - #38426: Build(deps-dev): bump typescript from 5.6.3 to 5.8.3 in /tests/UI
+ (by @dependabot[bot])
+    - #38429: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.28.0 to 8.29.0 in /tests/UI (by @dependabot[bot])
+    - #38427: Build(deps-dev): bump @typescript-eslint/parser from 8.28.0 to 8.29.0 in /tests/UI (by @dependabot[bot])
+    - #38373: Build(deps): bump @prestashop-core/ui-testing from `1a7ac2a` to `11febeb` in /tests/UI (by @dependabot[bot])
+    - #38374: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.27.0 to 8.28.0 in /tests/UI (by @dependabot[bot])
+    - #38375: Build(deps-dev): bump @typescript-eslint/parser from 8.27.0 to 8.28.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38331: Build(deps): bump @prestashop-core/ui-testing from `0731418` to `1a7ac2a` in /tests/UI
+ (by @dependabot[bot])
+    - #38333: Build(deps): bump mysql2 from 3.13.0 to 3.14.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38332: Build(deps-dev): bump @typescript-eslint/parser from 8.26.1 to 8.27.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38330: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.26.1 to 8.27.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38267: Build(deps-dev): bump ts-mocha from 10.0.0 to 11.1.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38271: Build(deps): bump @faker-js/faker from 9.0.3 to 9.6.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38270: Build(deps): bump dotenv from 16.4.5 to 16.4.7 in /tests/UI
+ (by @dependabot[bot])
+    - #38269: Build(deps-dev): bump @typescript-eslint/parser from 8.8.1 to 8.26.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38268: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.8.1 to 8.26.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38272: Build(deps): bump mysql2 from 3.11.3 to 3.13.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38218: Build(deps): bump chai-string from 1.5.0 to 1.6.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38216: Build(deps): bump @prestashop-core/ui-testing from `a6591d6` to `78ad81b` in /tests/UI
+ (by @dependabot[bot])
+    - #38217: Build(deps): bump @faker-js/faker from 9.5.1 to 9.6.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38221: Build(deps-dev): bump @typescript-eslint/parser from 8.25.0 to 8.26.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38219: Build(deps): bump mysql2 from 3.12.0 to 3.13.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38215: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.25.0 to 8.26.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38177: Build(deps-dev): bump @typescript-eslint/parser from 8.24.1 to 8.25.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38176: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.24.1 to 8.25.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38175: Build(deps): bump @faker-js/faker from 9.5.0 to 9.5.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38143: Build(deps): bump @prestashop-core/ui-testing from `160589f` to `a6591d6` in /tests/UI
+ (by @dependabot[bot])
+    - #38129: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.23.0 to 8.24.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38130: Build(deps-dev): bump ts-mocha from 10.0.0 to 11.1.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38066: Build(deps): bump @faker-js/faker from 9.4.0 to 9.5.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38128: Build(deps-dev): bump @typescript-eslint/parser from 8.23.0 to 8.24.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38085: Updated PrestaShop Packages (by @github-actions[bot])
+    - #38054: Change version to 9.1.0 (by @boherm)
+    - #38019: Build(deps-dev): bump @typescript-eslint/parser from 8.22.0 to 8.23.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38018: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.22.0 to 8.23.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37960: Build(deps-dev): bump @typescript-eslint/parser from 8.21.0 to 8.22.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37858: Build(deps): bump @faker-js/faker from 9.3.0 to 9.4.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37950: Build(deps): bump @prestashop-core/ui-testing from `6f826b5` to `e621af0` in /tests/UI
+ (by @dependabot[bot])
+    - #37914: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.19.1 to 8.22.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37904: Build(deps-dev): bump @typescript-eslint/parser from 8.20.0 to 8.21.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37857: Build(deps-dev): bump @typescript-eslint/parser from 8.19.1 to 8.20.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37814: Build(deps): bump @prestashop-core/ui-testing from `c9555dd` to `071d97a` in /tests/UI
+ (by @dependabot[bot])
+    - #37809: Build(deps-dev): bump @typescript-eslint/parser from 8.19.0 to 8.19.1 in /tests/UI
+ (by @dependabot[bot])
+    - #37810: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.19.0 to 8.19.1 in /tests/UI
+ (by @dependabot[bot])
+    - #37812: Build(deps-dev): bump typescript from 5.7.2 to 5.7.3 in /tests/UI
+ (by @dependabot[bot])
+    - #37761: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.18.2 to 8.19.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37762: Build(deps-dev): bump @typescript-eslint/parser from 8.18.2 to 8.19.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37738: Build(deps): bump @prestashop-core/ui-testing from `92f687b` to `c9555dd` in /tests/UI
+ (by @dependabot[bot])
+    - #37736: Build(deps): bump mysql2 from 3.11.5 to 3.12.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37737: Build(deps-dev): bump @typescript-eslint/parser from 8.18.1 to 8.18.2 in /tests/UI
+ (by @dependabot[bot])
+    - #37731: Build(deps): bump @prestashop-core/ui-testing from `0b3ed30` to `92f687b` in /tests/UI
+ (by @dependabot[bot])
+    - #37730: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.16.0 to 8.18.2 in /tests/UI
+ (by @dependabot[bot])
+    - #37720: Build(deps-dev): bump @typescript-eslint/parser from 8.16.0 to 8.18.1 in /tests/UI
+ (by @dependabot[bot])
+    - #37607: Build(deps): bump @faker-js/faker from 9.2.0 to 9.3.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37583: Update iframe-modal.ts DOM Text Interpreted As HTML  (by @Shivam7-1)
+    - #37605: Build(deps): bump dotenv from 16.4.5 to 16.4.7 in /tests/UI
+ (by @dependabot[bot])
+    - #37540: Bump mysql2 from 3.11.4 to 3.11.5 in /tests/UI (by @dependabot[bot])
+    - #37457: Build(deps-dev): bump typescript from 5.6.3 to 5.7.2 in /tests/UI (by @dependabot[bot])
+    - #37500: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.14.0 to 8.16.0 in /tests/UI (by @dependabot[bot])
+    - #37488: Bump @typescript-eslint/parser from 8.14.0 to 8.16.0 in /tests/UI (by @dependabot[bot])
+    - #37455: Bump @types/mocha from 10.0.9 to 10.0.10 in /tests/UI (by @dependabot[bot])
+    - #37407: Bump @prestashop-core/ui-testing from `242dded` to `93c245e` in /tests/UI (by @dependabot[bot])
+    - #37396: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.13.0 to 8.14.0 in /tests/UI (by @dependabot[bot])
+    - #37397: Build(deps-dev): bump @typescript-eslint/parser from 8.13.0 to 8.14.0 in /tests/UI (by @dependabot[bot])
+    - #37353: Build(deps): bump mysql2 from 3.11.3 to 3.11.4 in /tests/UI (by @dependabot[bot])
+    - #37351: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.12.2 to 8.13.0 in /tests/UI (by @dependabot[bot])
+    - #37305: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.8.1 to 8.12.2 in /tests/UI (by @dependabot[bot])
+    - #37307: Build(deps): bump @faker-js/faker from 9.1.0 to 9.2.0 in /tests/UI (by @dependabot[bot])
+    - #37309: Build(deps-dev): bump jsdoc-to-markdown from 9.0.4 to 9.0.5 in /tests/UI (by @dependabot[bot])
+    - #37310: Build(deps): bump mocha from 10.7.3 to 10.8.2 in /tests/UI (by @dependabot[bot])
+    - #37262: Build(deps): bump @faker-js/faker from 9.0.3 to 9.1.0 in /tests/UI (by @dependabot[bot])
+    - #37196: Build(deps-dev): bump jsdoc-to-markdown from 9.0.2 to 9.0.4 in /tests/UI (by @dependabot[bot])
+  - Bug fix:
+    - #40291: Removed useless aliases which cause issue with MariaDB (by @kpodemski)
+    - #40092: Fix composer and npm script in make file (by @tleon)
+    - #39864: Fix: [Docker][Makefile] fix #39862 (by @mattgoud)
+    - #39670: Fix log level for create-test-db (by @boherm)
+    - #32058: Improve cart performance when multiple product combinations (by @MattKelvin)
+    - #39569: Disable temporary order level discount to avoid issues (by @boherm)
+    - #36084: New Dispatcher methods to set Controller/FrontController (by @Markus-Gurkcity)
+    - #39233: Filemanager should load AdminKernel (by @Kaikina)
+    - #39349: Fixed version in the README version badge (by @tyloo)
+    - #38898: Improvig typing (by @Kaikina)
+    - #38086: Revert #38054, UI tests are not ready yet (by @nicosomb)
+    - #37647: Fix incorrect @see reference in ModuleCore documentation (by @dali-rajab)
+  - Refactoring:
+    - #40295: [BC Break] Introduce Theme::getDefaultTheme method to replace classic hard-coded value (by @jolelievre)
+    - #39719: Remove tests & references to the cronjobs module (by @tleon)
+    - #38991: Change default product type to TYPE_STANDARD (by @Hlavtox)
+    - #38193: Removed extra repeated line (by @dali-rajab)
+    - #38014: Rename `emailField` to `field` for aligning the variable name with its actual purpose (by @jmartin82)
+    - #37411: Unify error handling in FO and get rid of Tools::displayError calls (by @Hlavtox)
+    - #37348: Add missing apostrophes to database queries (by @ShaiMagal)
+- Installer:
+  - Improvement:
+    - #40354: Update default catalog 9.1.x (by @ps-jarvis)
+    - #39443: Allow to use static db prefix during installation (by @kpodemski)
+    - #35503: Improve GD test precision - check JPEG support (by @b44x)
+  - Bug fix:
+    - #40114: Chore(Makefile): fix Makefile shell detection issue (by @tyloo)
+- Tests:
+  - Improvement:
+    - #40219: No more nightly for 8.0.x and 8.1.x (by @jolelievre)
+    - #40138: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39211: Added support for PHP 8.5 (by @Progi1984)
+    - #40046: Functional Tests : Unskip Test (Linked to issue #39983) (by @Progi1984)
+    - #39984: Functional Tests : BO - Catalog price Rules : CRUD - Reduction type (by @Progi1984)
+    - #39973: Functional Tests : BO - Catalog price Rules : Bulk actions (by @Progi1984)
+    - #39963: Functional Tests : BO - Cart Rules : Quantity consumption (by @Progi1984)
+    - #39919: TE: Bump behat/behat (v3.25.0 => v3.26.0) (by @Progi1984)
+    - #39515: Functional Tests : Migrate from CommonJS to NodeNext (by @Progi1984)
+    - #39256: Functional Tests : BO - Cart rules - Actions : Send a free gift (by @Progi1984)
+    - #39242: Functional Tests : BO - Cart rules - Actions : Exclude discounted products (by @Progi1984)
+    - #39234: Functional Tests : BO - Cart rules - Actions : Apply a discount to Selected product(s) (by @Progi1984)
+    - #39224: Functional Tests : BO - Cart rules - Actions : Apply a discount to Cheapest product (by @Progi1984)
+    - #39194: Functional Tests : BO - Cart rules - Actions : Apply a discount to Specific product (by @Progi1984)
+    - #39173: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39132: Functional Tests : BO - Cart rules - Actions : Apply a discount to Order (without shipping) (by @Progi1984)
+    - #39131: Functional Tests : BO - Cart rules - Actions : Apply a discount None (by @Progi1984)
+    - #39121: Functional Tests : BO - Cart rules - Actions : Apply a discount Amount (by @Progi1984)
+    - #39085: Functional Tests : BO - Cart rules - Actions - Apply a discount percent(%) (by @Progi1984)
+    - #39067: Nightly : Remove 1.7.8 (by @Progi1984)
+    - #38949: Functional Tests : BO - Cart rules - Actions : Free shipping (by @Progi1984)
+    - #37844: Nightly : Fixed `functional/BO/00*/04*` (by @Progi1984)
+    - #37845: Nightly : Fixed `functional/BO/00*/04*` (by @Progi1984)
+    - #37546: Nightly Build : Generate XML for each branch (by @Progi1984)
+    - #37512: Nightly : Create ZIP for each branch (by @Progi1984)
+  - Bug fix:
+    - #40225: Update valid_to dates in behat tests for discount FO (by @jolelievre)
+    - #39795: Functional Tests : Fixed `functional/BO/03*/05*/brands/addresses/02*` (by @Progi1984)
+    - #39493: Nightly : Fixed 8.2 (Missing API Config file) (by @Progi1984)
+    - #39070: Nightly : Remove 1.7.8 (by @Progi1984)
+    - #38542: Fix blocked CI (by @jolelievre)
+    - #37867: Nightly : Define Ubuntu Version for 8.1.x & 8.2.x (by @Progi1984)
+    - #37860: Functional Tests : `actions/upload-artifact@v4` doesn't support colon (by @Progi1984)
+  - Refactoring:
+    - #40298: Functional tests - Fix create account in FO classic theme test (by @nesrineabdmouleh)
+    - #39166: Refactor manufacturer behat tests (by @jolelievre)
+
+####################################
 #   v9.0.2 - (2025-12-01)
 ####################################
 

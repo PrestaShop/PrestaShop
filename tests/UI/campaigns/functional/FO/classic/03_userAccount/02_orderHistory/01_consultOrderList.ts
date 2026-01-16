@@ -4,8 +4,9 @@ import {expect} from 'chai';
 // Import common tests
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/classic/account';
+import {createAccountTest} from '@commonTests/FO/hummingbird/account';
 import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -29,6 +30,7 @@ const baseContext: string = 'functional_FO_classic_userAccount_orderHistory_cons
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Create customer
 - Create address
 Scenario:
@@ -40,6 +42,7 @@ Scenario:
 - Check the link of Home page
 Post-condition
 - Delete customer
+- Disable the theme classic
  */
 
 describe('FO - Account - Order history : Consult order list', async () => {
@@ -64,7 +67,10 @@ describe('FO - Account - Order history : Consult order list', async () => {
   const today: string = utilsDate.getDateFormat('mm/dd/yyyy');
 
   // Pre-condition: Create new account
-  createAccountTest(customerData, `${baseContext}_enableNewProduct`);
+  createAccountTest(customerData, `${baseContext}_preTest_0`);
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_1`);
 
   // Pre-condition: Create new address
   createAddressTest(addressData, `${baseContext}_preTest_2`);
@@ -188,5 +194,8 @@ describe('FO - Account - Order history : Consult order list', async () => {
   });
 
   // Post-condition : Delete customer
-  deleteCustomerTest(customerData, `${baseContext}_postText`);
+  deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

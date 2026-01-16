@@ -30,7 +30,9 @@ use DateTimeImmutable;
 use Exception;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository;
+use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
+use PrestaShop\PrestaShop\Core\Domain\Discount\DiscountSettings;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Query\GetDiscountForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Discount\QueryHandler\GetDiscountForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Discount\QueryResult\DiscountForEditing;
@@ -39,7 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\Discount\QueryResult\DiscountForEditing;
 class GetDiscountForEditingHandler implements GetDiscountForEditingHandlerInterface
 {
     public function __construct(
-        protected readonly DiscountRepository $discountRepository
+        protected readonly DiscountRepository $discountRepository,
+        protected readonly DiscountTypeRepository $discountTypeRepository,
     ) {
     }
 
@@ -49,10 +52,11 @@ class GetDiscountForEditingHandler implements GetDiscountForEditingHandlerInterf
     public function handle(GetDiscountForEditing $query): DiscountForEditing
     {
         $cartRule = $this->discountRepository->get($query->getDiscountId());
-        $discountConditions = $this->discountRepository->getProductRulesGroup($query->getDiscountId());
+        $productConditions = $this->discountRepository->getProductRulesGroup($query->getDiscountId());
         $carrierIds = $this->discountRepository->getCarriersIds($query->getDiscountId());
         $countryIds = $this->discountRepository->getCountriesIds($query->getDiscountId());
         $customerGroupIds = $this->discountRepository->getCustomerGroupsIds($query->getDiscountId());
+        $compatibleDiscountTypeIds = $this->discountTypeRepository->getCompatibleTypesIdsForDiscount($query->getDiscountId()->getValue());
 
         return new DiscountForEditing(
             $query->getDiscountId()->getValue(),
@@ -65,7 +69,7 @@ class GetDiscountForEditingHandler implements GetDiscountForEditingHandlerInterf
             $cartRule->quantity_per_user,
             $cartRule->description,
             $cartRule->code,
-            (int) $cartRule->id_customer,
+            $cartRule->id_customer ?: null,
             $cartRule->highlight,
             $cartRule->partial_use,
             $cartRule->getType(),
@@ -73,11 +77,12 @@ class GetDiscountForEditingHandler implements GetDiscountForEditingHandlerInterf
             (float) $cartRule->reduction_amount > 0.00 ? new DecimalNumber($cartRule->reduction_amount) : null,
             $cartRule->reduction_currency,
             $cartRule->reduction_tax,
-            $cartRule->reduction_product,
-            $cartRule->gift_product,
-            $cartRule->gift_product_attribute,
+            $cartRule->reduction_product === DiscountSettings::CHEAPEST_PRODUCT,
+            $cartRule->reduction_product > 0 ? $cartRule->reduction_product : null,
+            $cartRule->gift_product ?: null,
+            $cartRule->gift_product_attribute ?: null,
             $cartRule->minimum_product_quantity,
-            $discountConditions,
+            $productConditions,
             (float) $cartRule->minimum_amount > 0.00 ? new DecimalNumber($cartRule->minimum_amount) : null,
             $cartRule->minimum_amount_currency,
             $cartRule->minimum_amount_tax,
@@ -85,6 +90,7 @@ class GetDiscountForEditingHandler implements GetDiscountForEditingHandlerInterf
             $carrierIds,
             $countryIds,
             $customerGroupIds,
+            $compatibleDiscountTypeIds,
         );
     }
 }

@@ -4,8 +4,7 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-import createAccountTest from '@commonTests/FO/hummingbird/account';
+import {createAccountTest} from '@commonTests/FO/hummingbird/account';
 
 import {
   type BrowserContext,
@@ -56,16 +55,12 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
   customerNewPassword.email = customerData.email;
   customerNewPassword.password = newPassword;
 
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_0`);
-
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
   // Pre-condition : Create new customer on FO
   createAccountTest(customerData, `${baseContext}_preTest_2`);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -91,7 +86,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should add product to cart', async function () {
@@ -225,7 +220,4 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
 
   // Post-condition : Reset SMTP config
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_3`);
 });

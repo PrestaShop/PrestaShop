@@ -9,8 +9,8 @@ import {
   type BrowserContext,
   dataCategories,
   dataModules,
-  foClassicCategoryPage,
-  foClassicHomePage,
+  foHummingbirdCategoryPage,
+  foHummingbirdHomePage,
   modPsFacetedsearchBoMain,
   type Page,
   utilsFile,
@@ -90,43 +90,43 @@ describe('Faceted search module: Show products only from default category\'s fie
     await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
     page = await modPsFacetedsearchBoMain.viewMyShop(page);
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should go to the All products page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAllProductsPage', baseContext);
 
-    await foClassicHomePage.goToAllProductsPage(page);
+    await foHummingbirdHomePage.goToAllProductsPage(page);
 
-    const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
+    const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
     expect(isCategoryPageVisible).to.equal(true);
 
-    const numBlockCategories = await foClassicCategoryPage.getNumContentCategories(page);
+    const numBlockCategories = await foHummingbirdCategoryPage.getNumContentCategories(page);
     expect(numBlockCategories).to.equal(dataCategories.home.children.length);
 
-    const productsNum = await foClassicCategoryPage.getNumberOfProductsDisplayed(page);
+    const productsNum = await foHummingbirdCategoryPage.getNumberOfProductsDisplayed(page);
     expect(productsNum).to.equal(0);
   });
 
   it(`should go to the ${dataCategories.art.name} category page`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoryPage', baseContext);
 
-    await foClassicCategoryPage.clickBlockCategory(page, dataCategories.art.name);
+    await foHummingbirdCategoryPage.clickBlockCategory(page, dataCategories.art.name);
 
-    const pageTitle = await foClassicHomePage.getPageTitle(page);
+    const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
     expect(pageTitle).to.equal(dataCategories.art.name);
 
-    const productsNum = await foClassicCategoryPage.getProductsNumber(page);
+    const productsNum = await foHummingbirdCategoryPage.getProductsNumber(page);
     expect(productsNum).to.equal(6);
   });
 
   it('should return to the backoffice', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToTheBO', baseContext);
 
-    page = await foClassicCategoryPage.changePage(browserContext, 0);
+    page = await foHummingbirdCategoryPage.changePage(browserContext, 0);
 
     const pageTitle = await modPsFacetedsearchBoMain.getPageSubtitle(page);
     expect(pageTitle).to.equal(modPsFacetedsearchBoMain.pageSubTitle);
@@ -148,10 +148,10 @@ describe('Faceted search module: Show products only from default category\'s fie
   it('should check the frontoffice', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkFrontOffice', baseContext);
 
-    page = await foClassicHomePage.changePage(browserContext, 1);
-    await foClassicHomePage.reloadPage(page);
+    page = await foHummingbirdHomePage.changePage(browserContext, 1);
+    await foHummingbirdHomePage.reloadPage(page);
 
-    const productsNum = await foClassicCategoryPage.getNumberOfProductsDisplayed(page);
+    const productsNum = await foHummingbirdCategoryPage.getNumberOfProductsDisplayed(page);
     expect(productsNum).to.equal(7);
   });
 });

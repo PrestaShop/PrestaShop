@@ -1,5 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -18,6 +19,9 @@ describe('FO - Cart : Display modal when adding a product to cart', async () => 
   let browserContext: BrowserContext;
   let page: Page;
 
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
+
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -27,47 +31,52 @@ describe('FO - Cart : Display modal when adding a product to cart', async () => 
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
-  it('should open the shop page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
+  describe('Display modal when adding a product to cart', async () => {
+    it('should open the shop page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
-    await foClassicHomePage.goToFo(page);
-    await foClassicHomePage.changeLanguage(page, 'en');
+      await foClassicHomePage.goToFo(page);
+      await foClassicHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
-    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
+    });
+
+    it('should add the first product to cart by quick view and click on continue button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
+
+      await foClassicHomePage.quickViewProduct(page, 1);
+      await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
+
+      const isBlockCartModal = await foClassicModalBlockCartPage.isBlockCartModalVisible(page);
+      expect(isBlockCartModal).to.equal(true);
+
+      const successMessage = await foClassicModalBlockCartPage.getBlockCartModalTitle(page);
+      expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);
+
+      const isModalNotVisible = await foClassicModalBlockCartPage.continueShopping(page);
+      expect(isModalNotVisible).to.eq(true);
+    });
+
+    it('should go to the second product page and add the product to the cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToSecondProductPage', baseContext);
+
+      await foClassicHomePage.goToProductPage(page, 2);
+      // Add the product to the cart
+      await foClassicProductPage.addProductToTheCart(page, 3);
+
+      const pageTitle = await foClassicCartPage.getPageTitle(page);
+      expect(pageTitle).to.eq(foClassicCartPage.pageTitle);
+    });
+
+    it('should check notifications number', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber', baseContext);
+
+      const notificationsNumber = await foClassicHomePage.getCartNotificationsNumber(page);
+      expect(notificationsNumber).to.eq(5);
+    });
   });
 
-  it('should add the first product to cart by quick view and click on continue button', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
-
-    await foClassicHomePage.quickViewProduct(page, 1);
-    await foClassicModalQuickViewPage.setQuantityAndAddToCart(page, 2);
-
-    const isBlockCartModal = await foClassicModalBlockCartPage.isBlockCartModalVisible(page);
-    expect(isBlockCartModal).to.equal(true);
-
-    const successMessage = await foClassicModalBlockCartPage.getBlockCartModalTitle(page);
-    expect(successMessage).to.contains(foClassicHomePage.successAddToCartMessage);
-
-    const isModalNotVisible = await foClassicModalBlockCartPage.continueShopping(page);
-    expect(isModalNotVisible).to.eq(true);
-  });
-
-  it('should go to the second product page and add the product to the cart', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToSecondProductPage', baseContext);
-
-    await foClassicHomePage.goToProductPage(page, 2);
-    // Add the product to the cart
-    await foClassicProductPage.addProductToTheCart(page, 3);
-
-    const pageTitle = await foClassicCartPage.getPageTitle(page);
-    expect(pageTitle).to.eq(foClassicCartPage.pageTitle);
-  });
-
-  it('should check notifications number', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber', baseContext);
-
-    const notificationsNumber = await foClassicHomePage.getCartNotificationsNumber(page);
-    expect(notificationsNumber).to.eq(5);
-  });
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest`);
 });

@@ -3,7 +3,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/classic/account';
+import {createAccountTest} from '@commonTests/FO/hummingbird/account';
 
 import {
   type BrowserContext,
@@ -19,11 +19,13 @@ import {
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 const baseContext: string = 'functional_FO_classic_checkout_addresses_CRUDAddress';
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Create account in FO
 Scenario:
 - Create new address in checkout page
@@ -33,6 +35,7 @@ Scenario:
 - Choose same addresses for invoice address and shipping address
 - Delete all addresses
 Post_condition:
+- Disable the theme classic
 - Delete customer account
  */
 describe('FO - Checkout - Addresses : CRUD address', async () => {
@@ -61,9 +64,11 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
   });
 
   // Pre-condition: Create new account on FO
-  createAccountTest(customerData, `${baseContext}_preTest_1`);
+  createAccountTest(customerData, `${baseContext}_preTest_0`);
 
-  // before and after functions
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_1`);
+
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -81,7 +86,7 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to first product page', async function () {
@@ -307,5 +312,8 @@ describe('FO - Checkout - Addresses : CRUD address', async () => {
   });
 
   // Post-condition: Delete the created customer account
-  deleteCustomerTest(customerData, `${baseContext}_postTest`);
+  deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_3`);
 });

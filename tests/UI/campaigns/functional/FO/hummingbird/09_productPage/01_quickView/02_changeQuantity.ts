@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   foHummingbirdHomePage,
@@ -15,22 +13,15 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_productPage_quickView_changeQuantity';
 
 /*
-Pre-condition:
-- Install hummingbird theme
 Scenario:
 - Go to FO
 - Quick view third product
 - Click up/down on quantity input
 - Set quantity input (good/bad value)
-Post-condition:
-- Uninstall hummingbird theme
  */
 describe('FO - Product page - Quick view : Change quantity', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -154,7 +145,4 @@ describe('FO - Product page - Quick view : Change quantity', async () => {
       expect(isEnabled, 'Add to cart button is not disabled').to.eq(false);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

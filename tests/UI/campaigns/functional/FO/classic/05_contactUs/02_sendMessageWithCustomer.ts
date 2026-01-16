@@ -1,6 +1,7 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomerServicePage,
@@ -28,6 +29,7 @@ const baseContext: string = 'functional_FO_classic_contactUs_sendMessageWithCust
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Setup SMTP parameters
 - Configure contact form module
 Scenario:
@@ -39,6 +41,7 @@ Verify message on customer service page
 Post-condition:
 - Reset config in Contact form module
 - Reset SMTP parameters
+- Disable the theme classic
  */
 describe('FO - Contact us : Send message from contact us page with customer logged in', async () => {
   let browserContext: BrowserContext;
@@ -53,6 +56,9 @@ describe('FO - Contact us : Send message from contact us page with customer logg
     emailAddress: dataCustomers.johnDoe.email,
     reference: dataOrders.order_1.reference,
   });
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
@@ -164,7 +170,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
       await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+      expect(pageTitle).to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -314,4 +320,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
 
   // Post-Condition : Reset SMTP config
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_3`);
 });

@@ -23,11 +23,13 @@ import {
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 const baseContext: string = 'functional_FO_classic_checkout_personalInformation_createAccount';
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Setup SMTP parameters
 Scenario:
 - Open FO page
@@ -37,6 +39,7 @@ Scenario:
 - Complete the order
 - Check welcome email
 Post-condition:
+- Disable the theme classic
 - Reset SMTP parameters
 - Delete customer
  */
@@ -70,8 +73,11 @@ describe('FO - Checkout - Personal information : Create account', async () => {
     utilsMail.stopListener(mailListener);
   });
 
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
+
   // Pre-Condition : Setup config SMTP
-  setupSmtpConfigTest(`${baseContext}_preTest`);
+  setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
   describe('Create account', async () => {
     it('should open FO page', async function () {
@@ -82,7 +88,7 @@ describe('FO - Checkout - Personal information : Create account', async () => {
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should add product to cart', async function () {
@@ -156,4 +162,7 @@ describe('FO - Checkout - Personal information : Create account', async () => {
 
   // Post-condition : Reset SMTP config
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_3`);
 });

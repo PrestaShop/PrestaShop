@@ -401,7 +401,6 @@ function get_file_by_url($url)
         curl_setopt($ch, CURLOPT_URL, $url);
 
         $data = curl_exec($ch);
-        curl_close($ch);
     } elseif (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1'))) {
         $data = file_get_contents($url);
     }

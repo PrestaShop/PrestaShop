@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   boDashboardPage,
@@ -23,21 +20,16 @@ const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_sortAnd
 Pre-condition:
 - Get the number of active products
 - Change the number of products per page
-- Install the theme hummingbird
 Scenario:
 - Filter products by category, size, color, composition, price, brand, dimension, availability, paper type
 Post-condition:
 - Reset the number of products per page
-- Uninstall the theme hummingbird
  */
 describe('FO - Menu and Navigation - Sort and filter : Filter products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfActiveProducts: number;
   let productsNumber: number;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -490,7 +482,4 @@ describe('FO - Menu and Navigation - Sort and filter : Filter products', async (
       expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

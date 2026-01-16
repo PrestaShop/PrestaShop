@@ -11,7 +11,7 @@ import {
   boProductSettingsPage,
   type BrowserContext,
   FakerProduct,
-  foClassicProductPage,
+  foHummingbirdProductPage,
   type Page,
   type ProductAttribute,
   type ProductCombinationOptions,
@@ -43,7 +43,6 @@ describe('BO - Catalog - Products : Combination tab', async () => {
     quantity: 150,
   };
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -248,7 +247,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
         // Click on preview button
         page = await boProductsCreatePage.previewProduct(page);
 
-        const pageTitle = await foClassicProductPage.getPageTitle(page);
+        const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(newProductData.name);
       });
 
@@ -264,9 +263,9 @@ describe('BO - Catalog - Products : Combination tab', async () => {
             value: 'White',
           },
         ];
-        await foClassicProductPage.selectDefaultAttributes(page, firstCombination);
+        await foHummingbirdProductPage.selectDefaultAttributes(page, firstCombination);
 
-        const isVisible = await foClassicProductPage.isAddToCartButtonEnabled(page);
+        const isVisible = await foHummingbirdProductPage.isAddToCartButtonEnabled(page);
         expect(isVisible).to.eq(test.args.isAddToCartButtonVisible);
       });
 
@@ -274,7 +273,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
         // Go back to BO
-        page = await foClassicProductPage.closePage(browserContext, page, 0);
+        page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boProductsCreatePage.getPageTitle(page);
         expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
@@ -314,7 +313,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       // Click on preview button
       page = await boProductsCreatePage.previewProduct(page);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
@@ -330,16 +329,16 @@ describe('BO - Catalog - Products : Combination tab', async () => {
           value: 'Taupe',
         },
       ];
-      await foClassicProductPage.selectDefaultAttributes(page, firstCombination);
+      await foHummingbirdProductPage.selectDefaultAttributes(page, firstCombination);
 
-      const isVisible = await foClassicProductPage.isAddToCartButtonEnabled(page);
+      const isVisible = await foHummingbirdProductPage.isAddToCartButtonEnabled(page);
       expect(isVisible).eq(false);
     });
 
     it('should check the product availability label', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectCombination4', baseContext);
 
-      const availabilityLabel = await foClassicProductPage.getProductAvailabilityLabel(page);
+      const availabilityLabel = await foHummingbirdProductPage.getProductAvailabilityLabel(page);
       expect(availabilityLabel).to.contains('Out-of-Stock');
     });
 
@@ -369,7 +368,7 @@ describe('BO - Catalog - Products : Combination tab', async () => {
       // Click on preview button
       page = await boProductsCreatePage.previewProduct(page);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
@@ -385,19 +384,19 @@ describe('BO - Catalog - Products : Combination tab', async () => {
           value: 'Taupe',
         },
       ];
-      await foClassicProductPage.selectDefaultAttributes(page, firstCombination);
+      await foHummingbirdProductPage.selectDefaultAttributes(page, firstCombination);
 
-      const isVisible = await foClassicProductPage.isAddToCartButtonEnabled(page);
+      const isVisible = await foHummingbirdProductPage.isAddToCartButtonEnabled(page);
       expect(isVisible).eq(true);
     });
 
     it('should check the label of out of stock', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectCombination6', baseContext);
 
-      const availabilityLabel = await foClassicProductPage.getProductAvailabilityLabel(page);
+      const availabilityLabel = await foHummingbirdProductPage.getProductAvailabilityLabel(page);
       expect(availabilityLabel).to.contains('Out of stock');
 
-      const isVisible = await foClassicProductPage.isAddToCartButtonEnabled(page);
+      const isVisible = await foHummingbirdProductPage.isAddToCartButtonEnabled(page);
       expect(isVisible).eq(true);
     });
 

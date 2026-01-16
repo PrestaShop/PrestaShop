@@ -147,7 +147,7 @@ class MultiParameterSetterAdapter implements OpenApiSchemaAdapterInterface
         $methodsWithMultipleArguments = [];
         foreach ($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
             if (
-                $reflectionMethod->getNumberOfRequiredParameters() <= 1
+                $reflectionMethod->getNumberOfParameters() <= 1
                 || $reflectionMethod->isStatic()
                 || $reflectionMethod->isConstructor()
                 || $reflectionMethod->isDestructor()

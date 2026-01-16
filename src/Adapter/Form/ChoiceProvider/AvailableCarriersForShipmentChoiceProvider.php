@@ -37,11 +37,15 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class AvailableCarriersForShipmentChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
-    public function __construct(private readonly CommandBusInterface $commandBus, private readonly ShipmentRepository $shipmentRepository)
-    {
+    public function __construct(
+        private readonly CommandBusInterface $commandBus,
+        private readonly ShipmentRepository $shipmentRepository,
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
     /**
@@ -54,11 +58,16 @@ final class AvailableCarriersForShipmentChoiceProvider implements ConfigurableFo
         $shipment = $this->shipmentRepository->findById($shipmentId);
 
         if ($shipment === null) {
-            throw new ShipmentNotFoundException(sprintf('Could not find shipment with id "%s"', $shipmentId), 0);
+            throw new ShipmentNotFoundException(
+                $this->translator->trans(
+                    'Could not find shipment with id "%id%".',
+                    ['%id%' => $shipmentId],
+                    'Admin.Shipment.Error'
+                )
+            );
         }
 
         $productQuantities = [];
-
         foreach ($options['selectedProducts'] as $productId => $quantity) {
             $productQuantities[] = new ProductQuantity(
                 new ProductId($productId),

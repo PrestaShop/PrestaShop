@@ -295,12 +295,12 @@
       <trans-unit id="914aabd65a536be202b28dc1ac5dd1af">
         <source>This cart has expired.</source>
         <target>This cart has expired.</target>
-        <note>File: classes/controller/FrontController.php [Line: 1299]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1312]</note>
       </trans-unit>
       <trans-unit id="1e65dae319656efa0e4d3f49be9fdfda">
         <source>This cart was already used in an order and has expired.</source>
         <target>This cart was already used in an order and has expired.</target>
-        <note>File: classes/controller/FrontController.php [Line: 1306]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1319]</note>
       </trans-unit>
       <trans-unit id="79658ac80c7883992c8a1963edf9a15b">
         <source>This category is no longer available.</source>

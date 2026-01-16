@@ -15,10 +15,13 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
+
 const baseContext: string = 'functional_FO_classic_menuAndNavigation_sortAndFilter_sortProducts';
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Disable new product page
 - Get the number of active products
 - Change the number of products per page
@@ -27,11 +30,15 @@ Scenario:
 Post-condition:
 - Reset the number of products per page
 - Enable new product page
+- Disable the theme classic
  */
 describe('FO - Menu and navigation : Sort products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfActiveProducts: number;
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -209,4 +216,7 @@ describe('FO - Menu and navigation : Sort products', async () => {
       expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest`);
 });

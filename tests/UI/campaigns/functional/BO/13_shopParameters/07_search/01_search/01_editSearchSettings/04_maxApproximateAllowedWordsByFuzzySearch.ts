@@ -8,8 +8,8 @@ import {
   boSearchPage,
   type BrowserContext,
   dataProducts,
-  foClassicHomePage,
-  foClassicSearchResultsPage,
+  foHummingbirdHomePage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -73,30 +73,30 @@ describe('BO - Shop Parameters - Search : Maximum approximate words allowed by f
     await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
     page = await boSearchPage.viewMyShop(page);
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
-    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+    expect(isHomePage).to.eq(true);
   });
 
   it('should search the word "notenook"', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchWordnotenook', baseContext);
 
-    await foClassicHomePage.searchProduct(page, 'notenook');
+    await foHummingbirdHomePage.searchProduct(page, 'notenook');
 
-    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+    const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
 
-    const hasResults = await foClassicSearchResultsPage.hasResults(page);
+    const hasResults = await foHummingbirdSearchResultsPage.hasResults(page);
     expect(hasResults).to.eq(true);
 
-    const numResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
+    const numResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
     expect(numResults).to.eq(3);
 
-    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
+    const searchInputValue = await foHummingbirdSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal('notenook');
 
-    const titleTable = await foClassicSearchResultsPage.getAllProductsAttribute(page, 'title');
+    const titleTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, 'title');
     expect(titleTable).to.deep.equal([
       dataProducts.demo_8.name,
       dataProducts.demo_9.name,
@@ -107,21 +107,21 @@ describe('BO - Shop Parameters - Search : Maximum approximate words allowed by f
   it('should search the word "briow beer"', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchWordbriowbeer', baseContext);
 
-    await foClassicSearchResultsPage.searchProduct(page, 'briow beer');
+    await foHummingbirdSearchResultsPage.searchProduct(page, 'briow beer');
 
-    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+    const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
 
-    const hasResults = await foClassicSearchResultsPage.hasResults(page);
+    const hasResults = await foHummingbirdSearchResultsPage.hasResults(page);
     expect(hasResults).to.eq(true);
 
-    const numResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
+    const numResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
     expect(numResults).to.eq(3);
 
-    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
+    const searchInputValue = await foHummingbirdSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal('briow beer');
 
-    const titleTable = await foClassicSearchResultsPage.getAllProductsAttribute(page, 'title');
+    const titleTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, 'title');
     expect(titleTable).to.deep.equal([
       dataProducts.demo_16.name,
       dataProducts.demo_19.name,
@@ -132,7 +132,7 @@ describe('BO - Shop Parameters - Search : Maximum approximate words allowed by f
   it('should set the minimum word length to 5', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setMinWordLengthTo5', baseContext);
 
-    page = await foClassicSearchResultsPage.changePage(browserContext, 0);
+    page = await foHummingbirdSearchResultsPage.changePage(browserContext, 0);
     const textResult = await boSearchPage.setMaximumApproximateWords(page, maximumApproximateWords);
     expect(textResult).to.be.eq(boSearchPage.settingsUpdateMessage);
   });

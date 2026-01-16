@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
+import {createOrderByGuestTest} from '@commonTests/FO/hummingbird/order';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 

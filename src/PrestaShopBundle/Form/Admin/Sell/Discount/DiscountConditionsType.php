@@ -50,6 +50,7 @@ class DiscountConditionsType extends TranslatorAwareType
                 'choice_options' => [
                     'label' => false,
                 ],
+                'discount_type' => $discountType,
             ])
             ->add(self::CART_CONDITIONS, CartConditionsType::class, [
                 'label' => $this->trans('Cart conditions', 'Admin.Catalog.Feature'),

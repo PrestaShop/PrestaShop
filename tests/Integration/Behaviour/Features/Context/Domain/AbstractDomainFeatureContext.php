@@ -176,7 +176,7 @@ abstract class AbstractDomainFeatureContext extends AbstractPrestaShopFeatureCon
      *
      * @return array
      */
-    private function parseLocalizedRow(array $row): array
+    protected function parseLocalizedRow(array $row): array
     {
         $parsedRow = [];
         foreach ($row as $key => $value) {

@@ -25,14 +25,7 @@
 
 <div class="card customer-personal-informations-card">
   <h3 class="card-header">
-    <i class="material-icons">person</i>
-    {{ customerInformation.personalInformation.firstName }}
-    {{ customerInformation.personalInformation.lastName }}
-    {{ '[%06d]'|format(customerInformation.customerId.value) }}
-    -
-    <a href="mailto:{{ customerInformation.personalInformation.email }}">
-      {{ customerInformation.personalInformation.email }}
-    </a>
+    <i class="material-icons">person</i> {{ 'Basic information'|trans({}, 'Admin.Global') }}
 
     <a href="{{ getAdminLink('AdminCustomers', true, {id_customer: customerInformation.customerId.value, updatecustomer: 1, back: app.request.uri}) }}"
        class="tooltip-link float-right edit-link"
@@ -45,6 +38,36 @@
     </a>
   </h3>
   <div class="card-body">
+
+    <div class="row mb-1">
+      <div class="col-sm-4 text-sm-right font-weight-bold">
+        {{ 'ID'|trans({}, 'Admin.Global') }}
+      </div>
+      <div class="customer-id col-sm-8">
+        {{ customerInformation.customerId.value }}
+      </div>
+    </div>
+
+    <div class="row mb-1">
+      <div class="col-sm-4 text-sm-right font-weight-bold">
+        {{ 'Name'|trans({}, 'Admin.Global') }}
+      </div>
+      <div class="customer-name col-sm-8">
+        {{ customerInformation.personalInformation.firstName }} {{ customerInformation.personalInformation.lastName }}
+      </div>
+    </div>
+
+    <div class="row mb-1">
+      <div class="col-sm-4 text-sm-right font-weight-bold">
+        {{ 'Email'|trans({}, 'Admin.Global') }}
+      </div>
+      <div class="customer-email col-sm-8">
+        <a href="mailto:{{ customerInformation.personalInformation.email }}">
+          {{ customerInformation.personalInformation.email }}
+        </a>
+      </div>
+    </div>
+
     <div class="row mb-1">
       <div class="col-sm-4 text-sm-right font-weight-bold">
         {{ 'Social Title'|trans({}, 'Admin.Global') }}

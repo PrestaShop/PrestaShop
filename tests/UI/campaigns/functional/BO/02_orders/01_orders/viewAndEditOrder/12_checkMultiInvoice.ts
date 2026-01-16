@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {createProductTest, bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
-import {createOrderSpecificProductTest} from '@commonTests/FO/classic/order';
+import {createOrderSpecificProductTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boDashboardPage,

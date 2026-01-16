@@ -275,9 +275,9 @@ $list-group-link-heading-color: map-get($map: $cdk-primary, $key: "primary-800")
 
 // Panels
 $panel-bg: map-get($map: $cdk-common, $key: "white");
-$panel-body-padding: map-get($map: $cdk-size, $key: "size-24");
-$panel-heading-padding: map-get($map: $cdk-size, $key: "size-24");
-$panel-footer-padding: map-get($map: $cdk-size, $key: "size-24");
+$panel-body-padding: map-get($map: $cdk-size, $key: "size-16");
+$panel-heading-padding: map-get($map: $cdk-size, $key: "size-16");
+$panel-footer-padding: map-get($map: $cdk-size, $key: "size-16");
 
 $panel-default-text: map-get($map: $cdk-primary, $key: "primary-800");
 $panel-default-border: map-get($map: $cdk-primary, $key: "primary-400");

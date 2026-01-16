@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -18,8 +15,6 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_search_consultResultsList';
 
 /*
-Pre-condition:
-- Install hummingbird themeProducts
 Scenario:
 - Go to FO
 - Search Mug value and see result
@@ -30,16 +25,11 @@ Scenario:
 - Click on precedent
 - Delete the searched value and click on enter
 - Check no result
-Post-condition:
-- Uninstall hummingbird theme
 */
 
 describe('FO - Search Page : Consult results list', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -141,7 +131,4 @@ describe('FO - Search Page : Consult results list', async () => {
       expect(hasResults, 'There are results!').to.equal(false);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

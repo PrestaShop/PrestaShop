@@ -175,7 +175,7 @@
       <trans-unit id="23962b3f83d5ef0fd0f41cdae1528fe7">
         <source>Shipment </source>
         <target>Shipment</target>
-        <note>File: src/Adapter/Shipment/QueryHandler/ListAvailableShipmentsHandler.php [Line: 79]</note>
+        <note>File: src/Adapter/Shipment/QueryHandler/ListAvailableShipmentsHandler.php [Line: 88]</note>
       </trans-unit>
       <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
         <source>Social title</source>

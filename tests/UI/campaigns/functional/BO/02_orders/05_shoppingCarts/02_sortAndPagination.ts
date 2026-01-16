@@ -3,7 +3,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {bulkDeleteCustomersTest} from '@commonTests/BO/customers/customer';
-import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
+import {createOrderByGuestTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boDashboardPage,

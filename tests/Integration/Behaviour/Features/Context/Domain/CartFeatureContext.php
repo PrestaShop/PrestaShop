@@ -40,6 +40,7 @@ use DateInterval;
 use DateTime;
 use Exception;
 use PHPUnit\Framework\Assert;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
@@ -1197,6 +1198,42 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['total'])) {
             Assert::assertSame($data['total'], $cartInfo->getSummary()->getTotalPriceWithTaxes());
+        }
+    }
+
+    /**
+     * @Then the cart :cartReference should have the following reductions:
+     */
+    public function checkCartRuleContextualValue(string $cartReference, TableNode $tableNode): void
+    {
+        $expectedCartRuleValues = $tableNode->getRowsHash();
+        $expectedCartRulesKeys = array_keys($expectedCartRuleValues);
+        $cart = new Cart($this->referenceToId($cartReference));
+        $cartRuleRows = $cart->getCartRules();
+
+        Assert::assertCount(count($expectedCartRuleValues), $cartRuleRows, 'Unexpected cart rules count in cart');
+
+        foreach ($cartRuleRows as $key => $cartRuleRow) {
+            $cartRuleReference = $expectedCartRulesKeys[$key];
+
+            Assert::assertTrue(
+                $this->getSharedStorage()->exists($cartRuleReference),
+                sprintf('cart rule by reference "%s" doesnt exist', $cartRuleReference)
+            );
+
+            Assert::assertSame(
+                (int) $cartRuleRow['id_cart_rule'],
+                $this->getSharedStorage()->get($cartRuleReference),
+                sprintf('Cart rule %s was not expected in cart (or the sequence is unexpected).', $cartRuleReference)
+            );
+
+            $expectedReduction = new DecimalNumber((string) $expectedCartRuleValues[$cartRuleReference]);
+            $actualReduction = new DecimalNumber((string) $cartRuleRow['value_real']);
+
+            Assert::assertTrue(
+                $actualReduction->equals($expectedReduction),
+                sprintf('Unexpected contextual reduction. Expected %s, got %s', $expectedReduction, $actualReduction)
+            );
         }
     }
 

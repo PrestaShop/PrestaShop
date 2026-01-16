@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataCustomers,
@@ -21,8 +18,6 @@ import {expect} from 'chai';
 const baseContext: string = 'functional_FO_hummingbird_checkout_addresses_selectAddress';
 
 /*
-Pre-condition:
-- Install the theme hummingbird
 Scenario:
 - Go to FO
 - Add product to cart
@@ -30,15 +25,10 @@ Scenario:
 - Login as a customer
 - Select the second address
 - Check that no payment method is available
-Post-condition:
-- Uninstall the theme hummingbird
 */
 describe('FO - Checkout - Addresses: Select address', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -57,7 +47,7 @@ describe('FO - Checkout - Addresses: Select address', async () => {
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.equal(true);
+      expect(isHomePage).to.equal(true);
     });
 
     it('should go to the fourth product page', async function () {
@@ -121,7 +111,4 @@ describe('FO - Checkout - Addresses: Select address', async () => {
       expect(alertMessage).to.equal('Unfortunately, there is no payment method available.');
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

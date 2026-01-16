@@ -7,10 +7,10 @@ import {
   boPaymentPreferencesPage,
   type BrowserContext,
   dataCustomers,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -78,35 +78,35 @@ describe('BO - Payment - Preferences : Configure currency restrictions', async (
       // Click on view my shop
       page = await boPaymentPreferencesPage.viewMyShop(page);
       // Change language in FO
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const pageTitle = await foClassicHomePage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
+      const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdHomePage.pageTitle);
     });
 
     it('should create the order and go to payment step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `createOrder${index}`, baseContext);
 
       // Go to the first product page
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
       // Add the product to the cart
-      await foClassicProductPage.addProductToTheCart(page);
+      await foHummingbirdProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await foClassicCartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       // Checkout the order
       if (index === 0) {
         // Personal information step - Login
-        await foClassicCheckoutPage.clickOnSignIn(page);
-        await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+        await foHummingbirdCheckoutPage.clickOnSignIn(page);
+        await foHummingbirdCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       }
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -114,7 +114,7 @@ describe('BO - Payment - Preferences : Configure currency restrictions', async (
       await testContext.addContextItem(this, 'testIdentifier', `checkPaymentModule${index}`, baseContext);
 
       // Payment step - Choose payment step
-      const isVisible = await foClassicCheckoutPage.isPaymentMethodExist(page, test.args.paymentModule);
+      const isVisible = await foHummingbirdCheckoutPage.isPaymentMethodExist(page, test.args.paymentModule);
       expect(isVisible).to.be.equal(test.args.exist);
     });
 
@@ -122,7 +122,7 @@ describe('BO - Payment - Preferences : Configure currency restrictions', async (
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Go back to BO
-      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boPaymentPreferencesPage.getPageTitle(page);
       expect(pageTitle).to.contains(boPaymentPreferencesPage.pageTitle);

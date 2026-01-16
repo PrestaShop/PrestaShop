@@ -1,5 +1,6 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -38,6 +39,9 @@ describe('FO - Product page - Product page : Add a text customization', async ()
         required: true,
       }],
   });
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   describe('Create product with 2 customizations and check it in FO', async () => {
     // before and after functions
@@ -155,5 +159,8 @@ describe('FO - Product page - Product page : Add a text customization', async ()
   });
 
   // Post-condition: Delete specific price
-  deleteProductTest(newProductData, `${baseContext}_postTest`);
+  deleteProductTest(newProductData, `${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

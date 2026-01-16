@@ -83,6 +83,11 @@ class AttributeRepository extends AbstractMultiShopObjectModelRepository
         return $attribute;
     }
 
+    public function assertAttributeExists(AttributeId $attributeId): void
+    {
+        $this->assertObjectModelExists($attributeId->getValue(), 'attribute', AttributeNotFoundException::class);
+    }
+
     /**
      * @param ProductAttribute $attribute
      *

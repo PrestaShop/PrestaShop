@@ -1,9 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-// Import commonTests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   boCustomerServicePage,
   boCustomerServiceViewPage,
@@ -24,16 +21,12 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_contactUs_addAttachment';
 
 /*
-Pre-condition:
-- Install hummingbird theme
 Scenario:
 Go to FO
 - Log in with default customer
 - Try to send a message on contact page with csv attachment
 - Send a message on contact page with png attachment
 - Verify message and attachment on view customer service page
-Post-condition:
-- Uninstall hummingbird theme
  */
 describe('FO - Contact us : Add attachment', async () => {
   let browserContext: BrowserContext;
@@ -48,9 +41,6 @@ describe('FO - Contact us : Add attachment', async () => {
     emailAddress: dataCustomers.johnDoe.email,
     reference: dataOrders.order_1.reference,
   });
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -84,7 +74,7 @@ describe('FO - Contact us : Add attachment', async () => {
       await foHummingbirdHomePage.goToLoginPage(page);
 
       const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdLoginPage.pageTitle);
+      expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -218,7 +208,4 @@ describe('FO - Contact us : Add attachment', async () => {
       expect(textResult).to.contains(boCustomerServicePage.successfulDeleteMessage);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

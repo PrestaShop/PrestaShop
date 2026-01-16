@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   foHummingbirdCartPage,
@@ -15,21 +13,14 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_cart_cart_changeQuantity';
 /*
-Pre-condition:
-- Install hummingbird theme
 Scenario:
 - Go to Fo and add the first product to cart
 - Increase/Decrease the product quantity by the touchSpin up/down
 - Edit product quantity bu the input (3, -6, +6, 64, 'azerty', 2400, 0)
-Post-condition:
-- Uninstall hummingbird theme
 */
 describe('FO - Cart : Change quantity', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -48,7 +39,7 @@ describe('FO - Cart : Change quantity', async () => {
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.equal(true);
+      expect(isHomePage).to.equal(true);
     });
 
     it('should add the first product to cart and proceed to checkout', async function () {
@@ -106,7 +97,7 @@ describe('FO - Cart : Change quantity', async () => {
       await foHummingbirdCartPage.goToHomePage(page);
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.equal(true);
+      expect(isHomePage).to.equal(true);
     });
 
     it('should add the first product to cart and proceed to checkout', async function () {
@@ -172,7 +163,4 @@ describe('FO - Cart : Change quantity', async () => {
       expect(notificationsNumber).to.be.equal(1);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

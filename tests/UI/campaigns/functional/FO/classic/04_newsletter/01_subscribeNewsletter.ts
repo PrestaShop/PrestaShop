@@ -1,6 +1,8 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
+
 import {
   boDashboardPage,
   boLoginPage,
@@ -37,6 +39,9 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     tag: 'ps_emailsubscription',
     name: 'Newsletter subscription',
   });
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -231,4 +236,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       expect(pageTitle).to.contains(boLoginPage.pageTitle);
     });
   });
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_3`);
 });

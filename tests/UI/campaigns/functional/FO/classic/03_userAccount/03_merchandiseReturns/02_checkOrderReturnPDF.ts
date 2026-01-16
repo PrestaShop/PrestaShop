@@ -3,7 +3,8 @@ import {expect} from 'chai';
 
 // Import commonTests
 import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
-import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boDashboardPage,
@@ -37,6 +38,7 @@ const baseContext: string = 'functional_FO_classic_userAccount_merchandiseReturn
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Create new order by default customer
 - Enable merchandise returns
 Scenario
@@ -45,6 +47,7 @@ Scenario
 - Check merchandise returns return PDF
 Post-condition:
 - Disable merchandise returns
+- Disable the theme classic
  */
 describe('FO - Account : Check order return PDF', async () => {
   let browserContext: BrowserContext;
@@ -69,12 +72,14 @@ describe('FO - Account : Check order return PDF', async () => {
   });
 
   // Pre-condition: Create order
-  createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
+  createOrderByCustomerTest(orderData, `${baseContext}_preTest_0`);
 
   // Pre-condition: Enable merchandise returns
-  enableMerchandiseReturns(`${baseContext}_preTest_2`);
+  enableMerchandiseReturns(`${baseContext}_preTest_1`);
 
-  // before and after functions
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_2`);
+
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -444,4 +449,7 @@ describe('FO - Account : Check order return PDF', async () => {
 
   // Post-condition : Disable merchandise returns
   disableMerchandiseReturns(`${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

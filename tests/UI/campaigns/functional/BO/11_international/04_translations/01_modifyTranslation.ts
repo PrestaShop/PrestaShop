@@ -16,11 +16,11 @@ import {
   dataLanguages,
   dataModules,
   FakerCustomer,
-  foClassicCreateAccountPage,
   foClassicHomePage,
-  foClassicLoginPage,
   foHummingbirdContactUsPage,
+  foHummingbirdCreateAccountPage,
   foHummingbirdHomePage,
+  foHummingbirdLoginPage,
   type MailDev,
   type MailDevEmail,
   type Page,
@@ -133,7 +133,10 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
   });
 
-  describe('Case 2 - Front office translations', async () => {
+  // Pre-condition : Enable classic
+  enableTheme('classic', `${baseContext}_preTest_2`);
+
+  describe('Case 2 - Front office translations with classic theme', async () => {
     it('should go to \'International > Translations\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTranslationsPage2', baseContext);
 
@@ -172,7 +175,7 @@ describe('BO - International - Translation : Modify translation', async () => {
       await foClassicHomePage.changeLanguage(page, 'fr');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should check the translation', async function () {
@@ -183,15 +186,15 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
   });
 
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_2`);
+  // Post-condition : Disable classic
+  disableTheme('classic', `${baseContext}_postTest_1`);
 
   describe('Case 3 - Front office translations with hummingbird theme', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
       // Close tab and init other page objects with new current tab
-      page = await foClassicHomePage.closePage(browserContext, page, 0);
+      page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await boTranslationsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
@@ -256,15 +259,12 @@ describe('BO - International - Translation : Modify translation', async () => {
     });
   });
 
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_1`);
-
   describe('Case 4 - Installed modules translations', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo2', baseContext);
 
       // Close tab and init other page objects with new current tab
-      page = await foClassicHomePage.closePage(browserContext, page, 0);
+      page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await boTranslationsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
@@ -289,7 +289,7 @@ describe('BO - International - Translation : Modify translation', async () => {
       await boTranslationsPage.modifyTranslation(
         page,
         'Installed modules translations',
-        'classic',
+        'hummingbird',
         dataLanguages.english.name,
         dataModules.contactForm.name,
       );
@@ -356,7 +356,7 @@ describe('BO - International - Translation : Modify translation', async () => {
       await boTranslationsPage.modifyTranslation(
         page,
         'Email translations',
-        'classic',
+        'hummingbird',
         dataLanguages.english.name,
         '',
         'Subject',
@@ -379,41 +379,41 @@ describe('BO - International - Translation : Modify translation', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
       page = await boStoresPage.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
 
-      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
 
     it('should go to create account page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
 
-      await foClassicHomePage.goToLoginPage(page);
-      await foClassicLoginPage.goToCreateAccountPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
+      await foHummingbirdLoginPage.goToCreateAccountPage(page);
 
-      const pageHeaderTitle = await foClassicCreateAccountPage.getHeaderTitle(page);
-      expect(pageHeaderTitle).to.equal(foClassicCreateAccountPage.formTitle);
+      const pageHeaderTitle = await foHummingbirdCreateAccountPage.getHeaderTitle(page);
+      expect(pageHeaderTitle).to.equal(foHummingbirdCreateAccountPage.formTitle);
     });
 
     it('should create new account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
 
-      await foClassicCreateAccountPage.createAccount(page, customerData);
+      await foHummingbirdCreateAccountPage.createAccount(page, customerData);
 
-      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
-      await foClassicCreateAccountPage.goToHomePage(page);
-      await foClassicHomePage.logout(page);
+      await foHummingbirdCreateAccountPage.goToHomePage(page);
+      await foHummingbirdHomePage.logout(page);
 
-      const isCustomerConnected = await foClassicHomePage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdHomePage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 
@@ -432,7 +432,7 @@ describe('BO - International - Translation : Modify translation', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo3', baseContext);
 
       // Close tab and init other page objects with new current tab
-      page = await foClassicHomePage.closePage(browserContext, page, 0);
+      page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await boTranslationsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boTranslationsPage.pageTitle);
@@ -454,7 +454,7 @@ describe('BO - International - Translation : Modify translation', async () => {
     it(`should choose the translation 'Other' and the language '${dataLanguages.english.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation6', baseContext);
 
-      await boTranslationsPage.modifyTranslation(page, 'Other translations', 'classic', dataLanguages.english.name);
+      await boTranslationsPage.modifyTranslation(page, 'Other translations', 'hummingbird', dataLanguages.english.name);
 
       const pageTitle = await boTranslationsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boTranslationsPage.pageTitle);

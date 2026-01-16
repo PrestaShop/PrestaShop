@@ -3,7 +3,7 @@ import {expect} from 'chai';
 
 import {
   type BrowserContext,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   installPage,
   type Page,
   utilsPlaywright,
@@ -165,8 +165,8 @@ describe('Install Prestashop', async () => {
       args:
         {
           step: {
-            name: 'Install theme',
-            timeout: 60000,
+            name: 'Install modules',
+            timeout: 30000,
           },
         },
     },
@@ -174,8 +174,8 @@ describe('Install Prestashop', async () => {
       args:
         {
           step: {
-            name: 'Install modules',
-            timeout: 30000,
+            name: 'Install theme',
+            timeout: 60000,
           },
         },
     },
@@ -227,7 +227,7 @@ describe('Install Prestashop', async () => {
 
     page = await installPage.goToFOAfterInstall(page);
 
-    const result = await foClassicHomePage.isHomePage(page);
+    const result = await foHummingbirdHomePage.isHomePage(page);
     expect(result).to.eq(true);
   });
 });

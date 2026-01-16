@@ -14,13 +14,13 @@ Feature: Full UX discount test
   Scenario: Create a complete discount with free shipping using new CQRS
     And there is a product in the catalog named "product1" with a price of 10.00 and 1000 items in stock
     When I create a "free_shipping" discount "free_shipping_discount_with_minimum_quantity" with following properties:
-      | name[en-US] | Four products equal free shipping  |
-      | name[fr-FR] | Quatre produit donne envoi gratuit |
-      | active      | true                               |
-      | valid_from  | 2025-01-01 11:05:00                |
-      | valid_to    | 2026-12-01 00:00:00                |
-      | code        | FREE_SHIPPING_4                    |
-    When I update discount "free_shipping_discount_with_minimum_quantity" with the condition it requires at least 4 products
+      | name[en-US]              | Four products equal free shipping  |
+      | name[fr-FR]              | Quatre produit donne envoi gratuit |
+      | active                   | true                               |
+      | valid_from               | 2025-01-01 11:05:00                |
+      | valid_to                 | 2026-12-01 00:00:00                |
+      | code                     | FREE_SHIPPING_4                    |
+      | minimum_product_quantity | 4                                  |
     And discount "free_shipping_discount_with_minimum_quantity" should have the following properties:
       | name[en-US]              | Four products equal free shipping  |
       | name[fr-FR]              | Quatre produit donne envoi gratuit |

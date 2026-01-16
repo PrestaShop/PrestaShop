@@ -337,7 +337,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'isbn' => $details->getIsbn(),
                 'reference' => $details->getReference(),
             ],
-            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
+            'features' => $this->extractFeatureValues($productForEditing->getProductId(), $shopConstraint),
             'attachments' => $this->extractAttachmentsData($productForEditing),
             'show_condition' => $options->showCondition(),
             'condition' => $options->getCondition(),
@@ -347,13 +347,14 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param int $productId
+     * @param ShopConstraint $shopConstraint
      *
      * @return array<string, array<int, array<string, int|array<int, string>>>>
      */
-    private function extractFeatureValues(int $productId): array
+    private function extractFeatureValues(int $productId, ShopConstraint $shopConstraint): array
     {
         /** @var ProductFeatureValue[] $featureValues */
-        $featureValues = $this->queryBus->handle(new GetProductFeatureValues($productId));
+        $featureValues = $this->queryBus->handle(new GetProductFeatureValues($productId, $shopConstraint->getShopId()->getValue()));
         if (empty($featureValues)) {
             return [];
         }

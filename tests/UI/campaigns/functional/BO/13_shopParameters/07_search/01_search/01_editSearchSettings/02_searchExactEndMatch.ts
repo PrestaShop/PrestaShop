@@ -12,8 +12,8 @@ import {
   type BrowserContext,
   dataProducts,
   FakerProduct,
-  foClassicHomePage,
-  foClassicSearchResultsPage,
+  foHummingbirdHomePage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -100,35 +100,35 @@ describe('BO - Shop Parameters - Search : Search exact end match', async () => {
 
         page = await boSearchPage.viewMyShop(page);
 
-        const pageTitle = await foClassicHomePage.getPageTitle(page);
-        expect(pageTitle).to.be.eq(foClassicHomePage.pageTitle);
+        const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+        expect(pageTitle).to.be.eq(foHummingbirdHomePage.pageTitle);
       });
 
       it('should check the search page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkSearchPage${index}`, baseContext);
 
-        await foClassicHomePage.searchProduct(page, 'note');
+        await foHummingbirdHomePage.searchProduct(page, 'note');
 
-        const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-        expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+        const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
 
-        const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
+        const searchInputValue = await foHummingbirdSearchResultsPage.getSearchValue(page);
         expect(searchInputValue).to.be.equal('note');
 
-        const hasResults = await foClassicSearchResultsPage.hasResults(page);
+        const hasResults = await foHummingbirdSearchResultsPage.hasResults(page);
         expect(hasResults).to.eq(true);
 
-        const numResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
+        const numResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
         expect(numResults).to.eq(arg.numResults);
 
-        const titleTable = await foClassicSearchResultsPage.getAllProductsAttribute(page, 'title');
+        const titleTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, 'title');
         expect(titleTable).to.deep.equal(arg.results);
       });
 
       it('should close the FO page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `closeFoAndGoBackToBO${index}`, baseContext);
 
-        page = await foClassicSearchResultsPage.closePage(browserContext, page, 0);
+        page = await foHummingbirdSearchResultsPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boSearchPage.getPageTitle(page);
         expect(pageTitle).to.contains(boSearchPage.pageTitle);

@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -17,24 +14,17 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_search_sortResultsList';
 
 /*
-Pre-condition:
-- Install hummingbird themeProducts
 Scenario:
 - Go to FO
 - Search Mug value and see result
 - Check sort by Relevance
 - Sort by name ASC/DESC
 - Sort by price ASC/DESC
-Post-condition:
-- Uninstall hummingbird theme
 */
 
 describe('FO - Search Page : Sort results list', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -135,7 +125,4 @@ describe('FO - Search Page : Sort results list', async () => {
       });
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

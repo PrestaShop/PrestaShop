@@ -2,7 +2,7 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 // Import commonTests
-import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
 import {
@@ -15,10 +15,10 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerOrder,
-  foClassicHomePage,
-  foClassicLoginPage,
-  foClassicMyAccountPage,
-  foClassicMyOrderHistoryPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
+  foHummingbirdMyOrderHistoryPage,
   type MailDev,
   type MailDevEmail,
   type Page,
@@ -241,45 +241,45 @@ describe('BO - orders : Update order status', async () => {
           await testContext.addContextItem(this, 'testIdentifier', `goToFoToCheckStatus${index}`, baseContext);
 
           page = await boOrdersPage.viewMyShop(page);
-          await foClassicHomePage.changeLanguage(page, 'en');
+          await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await foClassicHomePage.isHomePage(page);
-          expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+          const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+          expect(isHomePage).to.eq(true);
         });
 
         if (index === 0) {
           it('should go to login page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `goToLoginPage${index}`, baseContext);
 
-            await foClassicHomePage.goToLoginPage(page);
+            await foHummingbirdHomePage.goToLoginPage(page);
 
-            const pageTitle = await foClassicLoginPage.getPageTitle(page);
-            expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+            const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+            expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
           });
 
           it('should sign in with default customer', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `sighInFoToCheckStatus${index}`, baseContext);
 
-            await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+            await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-            const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+            const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
             expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
           });
         }
         it('should go to orders history page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrderHistoryPage${index}`, baseContext);
 
-          await foClassicHomePage.goToMyAccountPage(page);
-          await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
+          await foHummingbirdHomePage.goToMyAccountPage(page);
+          await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
-          const pageTitle = await foClassicMyOrderHistoryPage.getPageTitle(page);
-          expect(pageTitle, 'Fail to open order history page').to.contains(foClassicMyOrderHistoryPage.pageTitle);
+          const pageTitle = await foHummingbirdMyOrderHistoryPage.getPageTitle(page);
+          expect(pageTitle, 'Fail to open order history page').to.contains(foHummingbirdMyOrderHistoryPage.pageTitle);
         });
 
         it('should check the last order status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkLastOrderStatus${index}`, baseContext);
 
-          const orderStatusFO = await foClassicMyOrderHistoryPage.getOrderStatus(page, 1);
+          const orderStatusFO = await foHummingbirdMyOrderHistoryPage.getOrderStatus(page, 1);
           expect(orderStatusFO, 'Order status is not correct').to.equal(test.args.orderStatus.name);
         });
 
@@ -287,14 +287,14 @@ describe('BO - orders : Update order status', async () => {
           it('should check if the last invoice is visible', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkLastInvoice${index}`, baseContext);
 
-            const isVisible = await foClassicMyOrderHistoryPage.isInvoiceVisible(page, 1);
+            const isVisible = await foHummingbirdMyOrderHistoryPage.isInvoiceVisible(page, 1);
             expect(isVisible, 'The invoice file is not existing!').to.eq(true);
           });
 
           it('should check the order ID of the invoice', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkOrderID${index}`, baseContext);
 
-            const orderID = await foClassicMyOrderHistoryPage.getOrderIdFromInvoiceHref(page, 1);
+            const orderID = await foHummingbirdMyOrderHistoryPage.getOrderIdFromInvoiceHref(page, 1);
             expect(orderID, 'The invoice file attached is not correct!').to.contains(`id_order=${orderId}`);
           });
         }
@@ -302,7 +302,7 @@ describe('BO - orders : Update order status', async () => {
         it('should close the shop page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `closeShop${index}`, baseContext);
 
-          page = await foClassicMyOrderHistoryPage.closePage(browserContext, page, 0);
+          page = await foHummingbirdMyOrderHistoryPage.closePage(browserContext, page, 0);
 
           const pageTitle = await boOrdersPage.getPageTitle(page);
           expect(pageTitle).to.contains(boOrdersPage.pageTitle);

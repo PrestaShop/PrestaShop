@@ -3,7 +3,6 @@
 @discount-priority-incompatible-auto
 @clear-cache-before-feature
 @clear-cache-after-feature
-
 Feature: Discount priority - Incompatible auto discounts
   Test that incompatible auto discounts are resolved by priority
 
@@ -19,21 +18,20 @@ Feature: Discount priority - Incompatible auto discounts
   Scenario: Incompatible auto discounts - higher priority field wins
     # Priority 5 (lower priority): $25 amount discount
     When I create a "cart_level" discount "auto_incompat_amount_prio5" with following properties:
-      | name[en-US]        | Auto Incompatible Amount Priority 5 |
-      | active             | true                                |
-      | priority           | 5                                   |
-      | valid_from         | 2025-01-01 10:00:00                 |
-      | valid_to           | 2026-12-31 23:59:59                 |
-      | reduction_amount   | 25.0                                |
-      | reduction_currency | usd                                 |
-      | taxIncluded        | true                                |
-    And I update discount "auto_incompat_amount_prio5" with the condition of a minimum amount:
+      | name[en-US]            | Auto Incompatible Amount Priority 5 |
+      | active                 | true                                |
+      | priority               | 5                                   |
+      | valid_from             | 2025-01-01 10:00:00                 |
+      | valid_to               | 2026-12-31 23:59:59                 |
+      | reduction_amount       | 25.0                                |
+      | reduction_currency     | usd                                 |
+      | reduction_tax_included | true                                |
+      | compatible_types       | product_level                       |
+    And I update discount "auto_incompat_amount_prio5" with the following properties:
       | minimum_amount                   | 1.00  |
       | minimum_amount_currency          | usd   |
       | minimum_amount_tax_included      | true  |
       | minimum_amount_shipping_included | false |
-    And I set compatible types for discount "auto_incompat_amount_prio5" to:
-      | product_level |
     # Priority 3 (higher priority): 15% percentage discount
     When I create a "cart_level" discount "auto_incompat_percent_prio3" with following properties:
       | name[en-US]       | Auto Incompatible Percent Priority 3 |
@@ -42,13 +40,12 @@ Feature: Discount priority - Incompatible auto discounts
       | valid_from        | 2025-01-01 10:00:00                  |
       | valid_to          | 2026-12-31 23:59:59                  |
       | reduction_percent | 15.0                                 |
-    And I update discount "auto_incompat_percent_prio3" with the condition of a minimum amount:
+      | compatible_types  | product_level                        |
+    And I update discount "auto_incompat_percent_prio3" with the following properties:
       | minimum_amount                   | 1.00  |
       | minimum_amount_currency          | usd   |
       | minimum_amount_tax_included      | true  |
       | minimum_amount_shipping_included | false |
-    And I set compatible types for discount "auto_incompat_percent_prio3" to:
-      | product_level |
     Given I create an empty cart "cart_auto_incompat" for customer "testCustomer"
     When I add 1 product "product1" to the cart "cart_auto_incompat"
     # Only priority 3 (15% percent) should be applied, not priority 5 ($25 amount)

@@ -9,7 +9,7 @@ import {
   boProductsCreateTabCombinationsPage,
   type BrowserContext,
   FakerProduct,
-  foClassicProductPage,
+  foHummingbirdProductPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -163,16 +163,16 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       // Click on preview button
       page = await boProductsCreatePage.previewProduct(page);
 
-      await foClassicProductPage.changeLanguage(page, 'en');
+      await foHummingbirdProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const result = await foClassicProductPage.getProductInformation(page);
+      const result = await foHummingbirdProductPage.getProductInformation(page);
       await Promise.all([
         expect(result.name).to.equal(newProductData.name),
         expect(result.price).to.equal(newProductData.price),
@@ -180,7 +180,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
         expect(result.description).to.equal(newProductData.description),
       ]);
 
-      const productAttributes = await foClassicProductPage.getProductAttributes(page);
+      const productAttributes = await foHummingbirdProductPage.getProductAttributes(page);
       await Promise.all([
         // color
         expect(productAttributes[0].value).to.equal(newProductData.attributes[1].values.join(' ')),
@@ -193,7 +193,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       // Go back to BO
-      page = await foClassicProductPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boProductsCreatePage.getPageTitle(page);
       expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
@@ -245,23 +245,23 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       // Click on preview button
       page = await boProductsCreatePage.previewProduct(page);
 
-      await foClassicProductPage.changeLanguage(page, 'en');
+      await foHummingbirdProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(editProductData.name);
     });
 
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
 
-      const result = await foClassicProductPage.getProductInformation(page);
+      const result = await foHummingbirdProductPage.getProductInformation(page);
       await Promise.all([
         expect(result.name).to.equal(editProductData.name),
         expect(result.price).to.equal(editProductData.price),
         expect(result.description).to.equal(editProductData.description),
       ]);
 
-      const productAttributes = await foClassicProductPage.getProductAttributes(page);
+      const productAttributes = await foHummingbirdProductPage.getProductAttributes(page);
       await Promise.all([
         expect(productAttributes[0].value).to.equal(
           `${newProductData.attributes[1].values.join(' ')} ${editProductData.attributes[1].values.join(' ')}`),
@@ -273,7 +273,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
       // Go back to BO
-      page = await foClassicProductPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boProductsCreatePage.getPageTitle(page);
       expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);

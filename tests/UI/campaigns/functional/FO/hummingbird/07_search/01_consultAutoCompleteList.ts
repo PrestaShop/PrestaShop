@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -15,24 +12,17 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_search_consultAutoCompleteList';
 
 /*
-Pre-condition:
-- Install hummingbird theme
 Scenario:
 - Go to FO
 - Check autocomplete list
 - Click outside the autocomplete list
 - Check the autocomplete list with values
 - Check the autocomplete list with a string with less than 3 characters
-Post-condition:
-- Uninstall hummingbird theme
 */
 
 describe('FO - Search Page : Search product and consult autocomplete list', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -116,7 +106,4 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
       expect(hasSearchResult, 'There are results in autocomplete search').to.eq(false);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

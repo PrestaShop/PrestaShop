@@ -129,8 +129,11 @@
 {% block form_disabling_switch %}
   {% set disablingSwitchName = disabling_switch_prefix ~ form.vars.name %}
   {% if attribute(form.parent, disablingSwitchName) is defined %}
-    {{ form_errors(attribute(form.parent, disablingSwitchName)) }}
-    {{ form_widget(attribute(form.parent, disablingSwitchName)) }}
+    <div class="d-inline-flex align-items-center ml-3">
+      {{ form_errors(attribute(form.parent, disablingSwitchName)) }}
+      {{ form_widget(attribute(form.parent, disablingSwitchName)) }}
+      {{ form_label(attribute(form.parent, disablingSwitchName)) }}
+    </div>
   {% endif %}
 {% endblock %}
 
@@ -192,7 +195,8 @@
       {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
       {{ include('@Common/HelpBox/helpbox.html.twig', {placement: placement, content: content}) }}
     {% endif %}
-    {{- block('form_disabling_switch') -}}
+
+      {{- block('form_disabling_switch') -}}
     </{{ labelTag }}>
   {%- endif -%}
   {% if label_subtitle is defined and label_subtitle is not empty %}

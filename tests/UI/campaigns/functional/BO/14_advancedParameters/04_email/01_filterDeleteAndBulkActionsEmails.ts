@@ -9,11 +9,11 @@ import {
   dataCustomers,
   dataLanguages,
   dataPaymentMethods,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicCheckoutOrderConfirmationPage,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsDate,
   utilsPlaywright,
@@ -64,41 +64,41 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       page = await boDashboardPage.viewMyShop(page);
 
       // Change language in FO
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should add the first product to the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       // Go to the first product page
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
 
       // Add the product to the cart
-      await foClassicProductPage.addProductToTheCart(page);
+      await foHummingbirdProductPage.addProductToTheCart(page);
 
-      const pageTitle = await foClassicCartPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicCartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdCartPage.pageTitle);
     });
 
     it('should proceed to checkout and sign in', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
       // Proceed to checkout the shopping cart
-      await foClassicCartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       // Personal information step - Login
-      await foClassicCheckoutPage.clickOnSignIn(page);
-      await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdCheckoutPage.clickOnSignIn(page);
+      await foHummingbirdCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
     });
 
     it('should go to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -106,7 +106,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -114,20 +114,20 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await testContext.addContextItem(this, 'testIdentifier', 'payTheOrder', baseContext);
 
       // Payment step - Choose payment step
-      await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+      await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
       // Check the confirmation message
-      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should logout from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'logoutFO', baseContext);
 
       // Logout from FO
-      await foClassicCheckoutOrderConfirmationPage.logout(page);
+      await foHummingbirdCheckoutOrderConfirmationPage.logout(page);
 
-      const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdCheckoutOrderConfirmationPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(false);
     });
 
@@ -135,7 +135,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       // Go Back to BO
-      page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boDashboardPage.getPageTitle(page);
       expect(pageTitle).to.contains(boDashboardPage.pageTitle);

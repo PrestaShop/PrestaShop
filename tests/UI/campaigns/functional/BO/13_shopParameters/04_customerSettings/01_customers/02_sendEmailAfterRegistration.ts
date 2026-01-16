@@ -11,9 +11,9 @@ import {
   boLoginPage,
   type BrowserContext,
   FakerCustomer,
-  foClassicCreateAccountPage,
-  foClassicHomePage,
-  foClassicLoginPage,
+  foHummingbirdCreateAccountPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
   type MailDev,
   type MailDevEmail,
   type Page,
@@ -121,21 +121,21 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
 
         // Go to FO
         page = await boCustomerSettingsPage.viewMyShop(page);
-        await foClassicHomePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await foClassicHomePage.isHomePage(page);
-        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+        expect(isHomePage).to.eq(true);
       });
 
       it('should create a customer account from FO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCustomerAccount${index}`, baseContext);
 
         // Create account
-        await foClassicHomePage.goToLoginPage(page);
-        await foClassicLoginPage.goToCreateAccountPage(page);
-        await foClassicCreateAccountPage.createAccount(page, test.args.customer);
+        await foHummingbirdHomePage.goToLoginPage(page);
+        await foHummingbirdLoginPage.goToCreateAccountPage(page);
+        await foHummingbirdCreateAccountPage.createAccount(page, test.args.customer);
 
-        const connected = await foClassicCreateAccountPage.isCustomerConnected(page);
+        const connected = await foHummingbirdCreateAccountPage.isCustomerConnected(page);
         expect(connected, 'Customer is not created in FO').to.eq(true);
       });
 
@@ -143,9 +143,9 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
         await testContext.addContextItem(this, 'testIdentifier', `logoutFO_${index}`, baseContext);
 
         // Logout from FO
-        await foClassicCreateAccountPage.logout(page);
+        await foHummingbirdCreateAccountPage.logout(page);
 
-        const connected = await foClassicHomePage.isCustomerConnected(page);
+        const connected = await foHummingbirdHomePage.isCustomerConnected(page);
         expect(connected, 'Customer is connected in FO').to.eq(false);
       });
 
@@ -160,7 +160,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackTOBO${index}`, baseContext);
 
-        page = await foClassicCreateAccountPage.closePage(browserContext, page, 0);
+        page = await foHummingbirdCreateAccountPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boCustomerSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(boCustomerSettingsPage.pageTitle);

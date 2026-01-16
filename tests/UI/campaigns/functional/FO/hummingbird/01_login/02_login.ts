@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataCustomers,
@@ -25,9 +22,6 @@ describe('FO - Login : Login in FO', async () => {
   const firstCredentialsData: FakerCustomer = new FakerCustomer();
   const secondCredentialsData: FakerCustomer = new FakerCustomer({password: dataCustomers.johnDoe.password});
   const thirdCredentialsData: FakerCustomer = new FakerCustomer({email: dataCustomers.johnDoe.email});
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
@@ -111,7 +105,4 @@ describe('FO - Login : Login in FO', async () => {
       expect(result).to.eq(true);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

@@ -16,15 +16,12 @@ Feature: Add discount with country trigger
 
   Scenario: Create discount with country trigger
     When I create a "free_shipping" discount "discount_with_country_trigger" with following properties:
-      | name[en-US] | Promotion |
-    Then discount "discount_with_country_trigger" should have the following properties:
       | name[en-US] | Promotion     |
-      | type        | free_shipping |
-    When I update discount "discount_with_country_trigger" with conditions based on countries "france,spain"
+      | countries   | france,spain  |
     Then discount "discount_with_country_trigger" should have the following properties:
-      | name[en-US]              | Promotion     |
-      | type                     | free_shipping |
-      | minimum_product_quantity | 0             |
-    Then discount "discount_with_country_trigger" should have the following properties:
-      | condition_type | items        |
-      | countries      | spain,france |
+      | name[en-US]              | Promotion         |
+      | type                     | free_shipping     |
+      | minimum_product_quantity | 0                 |
+      | countries                | spain,france      |
+      | productConditionQuantity |                   |
+      | productCondition         |                   |

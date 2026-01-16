@@ -9,8 +9,8 @@ import {
   type BrowserContext,
   dataModules,
   dataProducts,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -102,25 +102,25 @@ describe('Wishlist module - Uninstall and delete module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       page = await boModuleManagerPage.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
 
-      const productInformations = await foClassicProductPage.getProductInformation(page);
+      const productInformations = await foHummingbirdProductPage.getProductInformation(page);
       expect(productInformations.name).to.eq(dataProducts.demo_1.name);
     });
 
     it('should check if the button "Add to wishlist" is present', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkButtonAddToWoshlist', baseContext);
 
-      const hasAddToWishlistButton = await foClassicProductPage.hasAddToWishlistButton(page);
+      const hasAddToWishlistButton = await foHummingbirdProductPage.hasAddToWishlistButton(page);
       expect(hasAddToWishlistButton).to.equal(false);
     });
   });

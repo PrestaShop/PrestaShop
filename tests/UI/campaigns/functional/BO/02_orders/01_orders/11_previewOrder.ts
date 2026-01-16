@@ -16,12 +16,12 @@ import {
   FakerAddress,
   FakerCustomer,
   FakerOrderShipping,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicCheckoutOrderConfirmationPage,
-  foClassicHomePage,
-  foClassicProductPage,
-  foClassicSearchResultsPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -69,11 +69,11 @@ describe('BO - Orders : Preview order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'openFO', baseContext);
 
       // Go to FO and change language
-      await foClassicHomePage.goToFo(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.goToFo(page);
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     [
@@ -92,20 +92,20 @@ describe('BO - Orders : Preview order', async () => {
       it(`should search for the product '${test.args.productName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `searchForProduct_${index}`, baseContext);
 
-        await foClassicHomePage.searchProduct(page, test.args.productName);
+        await foHummingbirdHomePage.searchProduct(page, test.args.productName);
 
-        const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-        expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+        const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+        expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
       });
 
       it('should add the product to cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
-        await foClassicSearchResultsPage.goToProductPage(page, 1);
+        await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
         // Add the product to the cart
-        await foClassicProductPage.addProductToTheCart(page, 1, [], false);
+        await foHummingbirdProductPage.addProductToTheCart(page, 1, [], false);
 
-        const notificationsNumber = await foClassicProductPage.getCartNotificationsNumber(page);
+        const notificationsNumber = await foHummingbirdProductPage.getCartNotificationsNumber(page);
         expect(notificationsNumber).to.be.equal(index + 1);
       });
     });
@@ -113,34 +113,34 @@ describe('BO - Orders : Preview order', async () => {
     it('should go to shopping cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCart', baseContext);
 
-      await foClassicProductPage.goToCartPage(page);
+      await foHummingbirdProductPage.goToCartPage(page);
 
-      const pageTitle = await foClassicCartPage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicCartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdCartPage.pageTitle);
     });
 
     it('should proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       // Proceed to checkout the shopping cart
-      await foClassicCartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       // Go to checkout page
-      const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
     });
 
     it('should fill guest personal information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
 
-      const isStepPersonalInfoCompleted = await foClassicCheckoutPage.setGuestPersonalInformation(page, customerData);
+      const isStepPersonalInfoCompleted = await foHummingbirdCheckoutPage.setGuestPersonalInformation(page, customerData);
       expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.eq(true);
     });
 
     it('should fill address form and go to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
 
-      const isStepAddressComplete = await foClassicCheckoutPage.setAddress(page, addressData);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.setAddress(page, addressData);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -148,15 +148,15 @@ describe('BO - Orders : Preview order', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'validateOrder', baseContext);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
       // Payment step - Choose payment step
-      await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
-      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message
-      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 

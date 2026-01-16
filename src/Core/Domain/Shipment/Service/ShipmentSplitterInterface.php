@@ -24,11 +24,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Discount\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Discount\Command\UpdateDiscountConditionsCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Shipment\Service;
 
-interface UpdateDiscountConditionsHandlerInterface
+use PrestaShopBundle\Entity\Shipment;
+use PrestaShopBundle\Entity\ShipmentProduct;
+
+interface ShipmentSplitterInterface
 {
-    public function handle(UpdateDiscountConditionsCommand $command): void;
+    /**
+     * @param ShipmentProduct[] $productsToMove
+     */
+    public function split(
+        Shipment $source,
+        int $carrierId,
+        array $productsToMove
+    ): Shipment;
 }

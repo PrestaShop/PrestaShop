@@ -3,7 +3,6 @@
 @discount-priority-creation-date
 @clear-cache-before-feature
 @clear-cache-after-feature
-
 Feature: Discount priority - Creation date ordering
   Test that when type and priority field are same, older discount has higher priority
 
@@ -26,21 +25,19 @@ Feature: Discount priority - Creation date ordering
       | valid_to          | 2026-12-31 23:59:59    |
       | code              | OLDER_PCT              |
       | reduction_percent | 15.0                   |
-    And I set compatible types for discount "older_percent" to:
-      | cart_level |
+      | compatible_types  | cart_level             |
     # Create SECOND discount (newer) - will have later date_add
     When I create a "cart_level" discount "newer_amount" with following properties:
-      | name[en-US]        | Newer Amount Discount |
-      | active             | true                  |
-      | priority           | 1                     |
-      | valid_from         | 2025-01-01 10:00:00   |
-      | valid_to           | 2026-12-31 23:59:59   |
-      | code               | NEWER_AMT             |
-      | reduction_amount   | 25.0                  |
-      | reduction_currency | usd                   |
-      | taxIncluded        | true                  |
-    And I set compatible types for discount "newer_amount" to:
-      | cart_level |
+      | name[en-US]            | Newer Amount Discount |
+      | active                 | true                  |
+      | priority               | 1                     |
+      | valid_from             | 2025-01-01 10:00:00   |
+      | valid_to               | 2026-12-31 23:59:59   |
+      | code                   | NEWER_AMT             |
+      | reduction_amount       | 25.0                  |
+      | reduction_currency     | usd                   |
+      | reduction_tax_included | true                  |
+      | compatible_types       | cart_level            |
     Given I create an empty cart "cart_date" for customer "testCustomer"
     When I add 1 product "product1" to the cart "cart_date"
     And I use a voucher "older_percent" on the cart "cart_date"
@@ -61,17 +58,16 @@ Feature: Discount priority - Creation date ordering
   Scenario: Incompatible discounts - same type, same priority, older wins
     # Create FIRST discount (older) - $35 amount
     When I create a "cart_level" discount "older_amount_incompat" with following properties:
-      | name[en-US]        | Older Amount Incompatible |
-      | active             | true                      |
-      | priority           | 1                         |
-      | valid_from         | 2025-01-01 10:00:00       |
-      | valid_to           | 2026-12-31 23:59:59       |
-      | code               | OLDER_AMT_IC              |
-      | reduction_amount   | 35.0                      |
-      | reduction_currency | usd                       |
-      | taxIncluded        | true                      |
-    And I set compatible types for discount "older_amount_incompat" to:
-      | free_shipping |
+      | name[en-US]            | Older Amount Incompatible |
+      | active                 | true                      |
+      | priority               | 1                         |
+      | valid_from             | 2025-01-01 10:00:00       |
+      | valid_to               | 2026-12-31 23:59:59       |
+      | code                   | OLDER_AMT_IC              |
+      | reduction_amount       | 35.0                      |
+      | reduction_currency     | usd                       |
+      | reduction_tax_included | true                      |
+      | compatible_types       | free_shipping             |
     # Create SECOND discount (newer) - 25% percentage
     When I create a "cart_level" discount "newer_percent_incompat" with following properties:
       | name[en-US]       | Newer Percent Incompatible |
@@ -81,8 +77,7 @@ Feature: Discount priority - Creation date ordering
       | valid_to          | 2026-12-31 23:59:59        |
       | code              | NEWER_PCT_IC               |
       | reduction_percent | 25.0                       |
-    And I set compatible types for discount "newer_percent_incompat" to:
-      | free_shipping |
+      | compatible_types  | free_shipping              |
     Given I create an empty cart "cart_date_incompat" for customer "testCustomer"
     When I add 1 product "product1" to the cart "cart_date_incompat"
     And I use a voucher "older_amount_incompat" on the cart "cart_date_incompat"

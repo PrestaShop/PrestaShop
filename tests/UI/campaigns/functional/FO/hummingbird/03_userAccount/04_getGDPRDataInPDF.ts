@@ -2,7 +2,6 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomersPage,
@@ -38,8 +37,6 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_userAccount_getGDPRDataInPDF';
 
 /*
-Pre-condition:
-- Install the theme hummingbird
 Scenario
 - Check GDPR PDF file after create customer and first login
 - Check GDPR PDF file after create a cart
@@ -48,7 +45,6 @@ Scenario
 - Check GDPR PDF file after logout and login in FO
 Post condition:
 - Delete created customer
-- Uninstall the theme hummingbird
  */
 describe('FO - Account : Get GDPR data in PDF', async () => {
   let browserContext: BrowserContext;
@@ -93,9 +89,6 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
   });
 
   const createCustomerName: string = `${customerData.firstName[0]}. ${customerData.lastName}`;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -931,7 +924,4 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
   // Post-condition: Delete customer
   deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

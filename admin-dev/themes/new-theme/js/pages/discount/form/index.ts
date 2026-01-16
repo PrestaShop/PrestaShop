@@ -40,6 +40,7 @@ $(() => {
       'ChoiceTree',
       'ChoiceTable',
       'EventEmitter',
+      'DisablingSwitch',
     ],
   );
 
@@ -80,7 +81,19 @@ $(() => {
     if (radio.value === 'carriers') {
       $(DiscountMap.carriersSelect).trigger('change');
     }
+    if (radio.value === 'single_customer') {
+      $(DiscountMap.quantityPerCustomerInput).parents('.form-group').hide();
+    }
+    if (radio.value === 'customer_groups' || radio.value === 'all_customers') {
+      $(DiscountMap.quantityPerCustomerInput).parents('.form-group').show();
+    }
   });
+
+  if ($(DiscountMap.customerEligibilityInput).find('input[type="radio"]:checked').attr('value') === 'single_customer') {
+    $(DiscountMap.quantityPerCustomerInput).parents('.form-group').hide();
+  } else {
+    $(DiscountMap.quantityPerCustomerInput).parents('.form-group').show();
+  }
 
   $(DiscountMap.countriesSelect).select2({
     templateResult: formatOption,

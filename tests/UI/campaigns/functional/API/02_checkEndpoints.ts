@@ -203,10 +203,10 @@ describe('API : Check endpoints', async () => {
         '/customers/{customerId}: PATCH',
         // @todo: add tests
         '/customers: POST',
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/39682
-        '/discounts/{discountId}/conditions: GET',
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/39682
-        '/discounts/{discountId}/conditions: PATCH',
+        // @todo: add tests
+        '/discounts/bulk-delete: DELETE',
+        // @todo: add tests
+        '/discounts/bulk-update-status: PATCH',
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
         '/discounts/{discountId}: DELETE',
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/38647

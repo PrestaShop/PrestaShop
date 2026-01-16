@@ -71,7 +71,7 @@
         "prestashop/hummingbird": "^2.0",
         "prestashop/pagesnotfound": "^3",
         "prestashop/productcomments": "^8.0",
-        "prestashop/ps_apiresources": "dev-dev",
+        "prestashop/ps_apiresources": "dev-discount-refacto",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^1.0",
         "prestashop/ps_brandlist": "^1.0",
@@ -212,7 +212,7 @@
         },
         "ps_apiresources": {
             "type": "vcs",
-            "url": "https://github.com/PrestaShop/ps_apiresources"
+            "url": "https://github.com/jolelievre/ps_apiresources"
         }
     },
     "minimum-stability": "dev",
@@ -269,6 +269,11 @@
             "@composer dump-autoload --dev --working-dir=modules/ps_apiresources",
             "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c modules/ps_apiresources/tests/Integration/phpunit-ci.xml"
         ],
+        "api-module-tests-local": [
+            "@composer create-test-db",
+            "@composer dump-autoload --dev --working-dir=modules/ps_apiresources",
+            "@composer run-api-module-tests-local"
+        ],
         "create-release": "@php tools/build/CreateRelease.php",
         "create-test-db": [
             "@php ./tests/bin/create-test-db.php",
@@ -297,6 +302,9 @@
         ],
         "restore-test-tables": [
             "@php ./tests/bin/restore-test-tables.php"
+        ],
+        "run-api-module-tests-local": [
+            "_PS_ROOT_DIR_=`pwd` php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c modules/ps_apiresources/tests/Integration/phpunit-local.xml"
         ],
         "test-all": [
             "@composer unit-tests",

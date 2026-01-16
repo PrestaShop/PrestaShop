@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   boDashboardPage,
@@ -31,9 +28,6 @@ describe('FO - Menu and Navigation - Sort and filter : Clear filters', async () 
   let page: Page;
   let numberOfActiveProducts: number;
   let productsNumber: number;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -192,7 +186,4 @@ describe('FO - Menu and Navigation - Sort and filter : Clear filters', async () 
       expect(productsNumberAfterClearFilter).to.equal(numberOfActiveProducts);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

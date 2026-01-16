@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataCustomers,
@@ -21,9 +18,6 @@ const baseContext: string = 'functional_FO_hummingbird_login_logout';
 describe('FO - Login : Logout from FO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
@@ -100,7 +94,4 @@ describe('FO - Login : Logout from FO', async () => {
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest_2`);
 });

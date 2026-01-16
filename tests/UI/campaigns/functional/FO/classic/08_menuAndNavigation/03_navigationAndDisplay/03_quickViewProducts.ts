@@ -1,6 +1,8 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
+
 import {
   type BrowserContext,
   dataProducts,
@@ -22,6 +24,9 @@ quick view the product demo_14 and check information
 describe('FO - Navigation and display : Quick view products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -180,4 +185,7 @@ describe('FO - Navigation and display : Quick view products', async () => {
       expect(isQuickViewModalClosed).to.eq(true);
     });
   });
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest`);
 });

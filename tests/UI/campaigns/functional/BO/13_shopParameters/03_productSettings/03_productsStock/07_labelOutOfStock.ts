@@ -9,9 +9,9 @@ import {
   boProductSettingsPage,
   type BrowserContext,
   FakerProduct,
-  foClassicHomePage,
-  foClassicProductPage,
-  foClassicSearchResultsPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -172,7 +172,7 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
 
         page = await boProductSettingsPage.viewMyShop(page);
 
-        const isHomePage = await foClassicHomePage.isHomePage(page);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
@@ -185,10 +185,10 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
         );
 
         // Search and go to product page
-        await foClassicHomePage.searchProduct(page, productData.name);
-        await foClassicSearchResultsPage.goToProductPage(page, 1);
+        await foHummingbirdHomePage.searchProduct(page, productData.name);
+        await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-        const pageTitle = await foClassicProductPage.getPageTitle(page);
+        const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(productData.name);
       });
 
@@ -201,17 +201,17 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
         );
 
         // Check quantity and availability label
-        const lastQuantityIsVisible = await foClassicProductPage.isAddToCartButtonEnabled(page);
+        const lastQuantityIsVisible = await foHummingbirdProductPage.isAddToCartButtonEnabled(page);
         expect(lastQuantityIsVisible).to.be.equal(test.args.enable);
 
-        const availabilityLabel = await foClassicProductPage.getProductAvailabilityLabel(page);
+        const availabilityLabel = await foHummingbirdProductPage.getProductAvailabilityLabel(page);
         expect(availabilityLabel).to.contains(test.args.labelToCheck);
       });
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-        page = await foClassicProductPage.closePage(browserContext, page, 0);
+        page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boProductSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);

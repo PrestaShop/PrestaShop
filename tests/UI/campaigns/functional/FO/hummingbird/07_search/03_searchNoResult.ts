@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -16,22 +13,15 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_search_searchNoResult';
 
 /*
-Pre-condition:
-- Install hummingbird themeProducts
 Scenario:
 - Go to FO
 - Search a string with less than 3 characters
 - Search an empty string
-Post-condition:
-- Uninstall hummingbird theme
 */
 
 describe('FO - Search Page : Search no result', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -86,7 +76,4 @@ describe('FO - Search Page : Search no result', async () => {
       expect(searchInputValue, 'A search value exists').to.equal('');
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

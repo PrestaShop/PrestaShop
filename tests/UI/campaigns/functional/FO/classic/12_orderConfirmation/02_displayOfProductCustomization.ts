@@ -1,4 +1,5 @@
 import testContext from '@utils/testContext';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -21,15 +22,22 @@ import {expect} from 'chai';
 const baseContext: string = 'functional_FO_classic_orderConfirmation_displayOfProductCustomization';
 
 /*
+Pre-condition
+- Enable the theme classic
 Scenario:
 - Add product with customization to cart
 - Proceed to checkout and confirm the order
 - Check the payment confirmation details
 - Check the customization modal
+Post-condition
+- Disable the theme classic
 */
 describe('FO - Order confirmation : Display of product customization', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -189,4 +197,7 @@ describe('FO - Order confirmation : Display of product customization', async () 
       expect(isModalNotVisible).to.equal(true);
     });
   });
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest`);
 });

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a909806fc5806b3c60c8d77fb06443b",
+    "content-hash": "2080f39fb4da7763aa9612327d4e3a8a",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5208,16 +5208,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-dev",
+            "version": "dev-discount-refacto",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "9b22f4e8c9848705132455ac623c369e0ec63d64"
+                "url": "https://github.com/jolelievre/ps_apiresources.git",
+                "reference": "493741fba6168c04a43e322e2a78f3ac9cd929b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/9b22f4e8c9848705132455ac623c369e0ec63d64",
-                "reference": "9b22f4e8c9848705132455ac623c369e0ec63d64",
+                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/493741fba6168c04a43e322e2a78f3ac9cd929b7",
+                "reference": "493741fba6168c04a43e322e2a78f3ac9cd929b7",
                 "shasum": ""
             },
             "require": {
@@ -5231,7 +5231,6 @@
                 "prestashop/php-dev-tools": "^4.3",
                 "rector/rector": "^2.0"
             },
-            "default-branch": true,
             "type": "prestashop-module",
             "autoload": {
                 "psr-4": {
@@ -5282,10 +5281,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_apiresources/tree/dev",
-                "issues": "https://github.com/PrestaShop/ps_apiresources/issues"
+                "source": "https://github.com/jolelievre/ps_apiresources/tree/discount-refacto"
             },
-            "time": "2025-12-16T08:18:10+00:00"
+            "time": "2026-01-15T12:52:32+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -18273,5 +18271,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

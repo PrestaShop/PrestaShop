@@ -1,6 +1,8 @@
 // Import utils
 import testContext from '@utils/testContext';
 
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
+
 import {expect} from 'chai';
 import {
   boDashboardPage,
@@ -16,6 +18,8 @@ import {
 const baseContext: string = 'functional_FO_classic_menuAndNavigation_navigationAndDisplay_pagination';
 
 /*
+Pre-condition
+- Enable the theme classic
 Scenario:
 - Go to FO>All products page
 - Check the pagination in the bottom of the page
@@ -26,10 +30,14 @@ Scenario:
 - Check the new pagination
 Post-condition:
 - Reset 'Number of products per page'
+- Disable the theme classic
  */
 describe('FO - Navigation and display : Pagination', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -266,4 +274,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_3`);
 });

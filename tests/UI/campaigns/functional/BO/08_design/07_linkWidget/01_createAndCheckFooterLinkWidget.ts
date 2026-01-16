@@ -9,7 +9,7 @@ import {
   type BrowserContext,
   dataHooks,
   dataLinkWidgets,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   type LinkWidgetPage,
   type Page,
   utilsPlaywright,
@@ -96,19 +96,19 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       // View shop
       page = await boDesignLinkListPage.viewMyShop(page);
       // Change FO language
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const pageTitle = await foClassicHomePage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
+      const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdHomePage.pageTitle);
     });
 
     it('should check link widget in the footer of home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLinkWidgetInFO', baseContext);
 
-      const title = await foClassicHomePage.getFooterLinksBlockTitle(page, numberOfLinkWidgetInFooter + 1);
+      const title = await foHummingbirdHomePage.getFooterLinksBlockTitle(page, numberOfLinkWidgetInFooter + 1);
       expect(title).to.contains(dataLinkWidgets.demo_1.name);
 
-      const linksTextContent = await foClassicHomePage.getFooterLinksTextContent(page, numberOfLinkWidgetInFooter + 1);
+      const linksTextContent = await foHummingbirdHomePage.getFooterLinksTextContent(page, numberOfLinkWidgetInFooter + 1);
       await Promise.all([
         expect(linksTextContent).to.include.members(dataLinkWidgets.demo_1.contentPages),
         expect(linksTextContent).to.include.members(dataLinkWidgets.demo_1.productsPages),
@@ -121,7 +121,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       // Go back to BO
-      page = await foClassicHomePage.closePage(browserContext, page, 0);
+      page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await boDesignLinkListPage.getPageTitle(page);
       expect(pageTitle).to.contains(boDesignLinkListPage.pageTitle);

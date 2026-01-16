@@ -3,7 +3,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
-import {createOrderSpecificProductTest} from '@commonTests/FO/classic/order';
+import {createOrderSpecificProductTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boCreditSlipsPage,

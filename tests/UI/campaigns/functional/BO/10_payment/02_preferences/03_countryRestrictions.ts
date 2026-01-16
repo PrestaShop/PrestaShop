@@ -8,10 +8,10 @@ import {
   type BrowserContext,
   dataCountries,
   dataCustomers,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -79,10 +79,10 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
       // Click on view my shop
       page = await boPaymentPreferencesPage.viewMyShop(page);
       // Change language in FO
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const pageTitle = await foClassicHomePage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
+      const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdHomePage.pageTitle);
     });
 
     it('should add the first product to the cart and checkout', async function () {
@@ -94,13 +94,13 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
       );
 
       // Go to the first product page
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
       // Add the product to the cart
-      await foClassicProductPage.addProductToTheCart(page);
+      await foHummingbirdProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await foClassicCartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
     });
 
@@ -110,9 +110,9 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
 
       if (index === 0) {
         // Personal information step - Login
-        await foClassicCheckoutPage.clickOnSignIn(page);
+        await foHummingbirdCheckoutPage.clickOnSignIn(page);
 
-        const isStepLoginComplete = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+        const isStepLoginComplete = await foHummingbirdCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
         expect(isStepLoginComplete, 'Step Personal information is not complete').to.eq(true);
       }
     });
@@ -121,7 +121,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
       await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -129,11 +129,11 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
       await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
       // Payment step - Check payment method
-      const isVisible = await foClassicCheckoutPage.isPaymentMethodExist(page, test.args.paymentModule);
+      const isVisible = await foHummingbirdCheckoutPage.isPaymentMethodExist(page, test.args.paymentModule);
       expect(isVisible).to.be.equal(test.args.exist);
     });
 
@@ -141,7 +141,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
       // Close current tab
-      page = await foClassicHomePage.closePage(browserContext, page, 0);
+      page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await boPaymentPreferencesPage.getPageTitle(page);
       expect(pageTitle).to.contains(boPaymentPreferencesPage.pageTitle);

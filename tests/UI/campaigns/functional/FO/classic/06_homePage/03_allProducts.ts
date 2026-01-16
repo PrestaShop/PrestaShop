@@ -13,6 +13,8 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
+
 const baseContext: string = 'functional_FO_classic_homePage_allProducts';
 
 describe('FO - Home Page : Display all products', async () => {
@@ -20,6 +22,9 @@ describe('FO - Home Page : Display all products', async () => {
   let page: Page;
   let numberOfActiveProducts: number;
   let numberOfProducts: number;
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -133,4 +138,7 @@ describe('FO - Home Page : Display all products', async () => {
       expect(listOfProductDisplayed).to.be.above(0);
     });
   });
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest`);
 });

@@ -14,10 +14,10 @@ import {
   dataGroups,
   dataProducts,
   FakerProduct,
-  foClassicHomePage,
-  foClassicLoginPage,
-  foClassicProductPage,
-  foClassicSearchResultsPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsCore,
   utilsPlaywright,
@@ -124,70 +124,70 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
     await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
     page = await boCustomerGroupsPage.viewMyShop(page);
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
-    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+    expect(isHomePage).to.eq(true);
   });
 
   it(`should search the product ${dataProducts.demo_6.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-    await foClassicHomePage.searchProduct(page, dataProducts.demo_6.name);
+    await foHummingbirdHomePage.searchProduct(page, dataProducts.demo_6.name);
 
-    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+    const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
   });
 
   it('should go to the product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-    await foClassicSearchResultsPage.goToProductPage(page, 1);
+    await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-    const pageTitle = await foClassicProductPage.getPageTitle(page);
+    const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_6.name);
 
-    const productPrice = await foClassicProductPage.getProductPrice(page);
+    const productPrice = await foHummingbirdProductPage.getProductPrice(page);
     expect(productPrice).to.contains(dataProducts.demo_6.combinations[0].price);
   });
 
   it('should check the product features list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'hasProductFeaturesList', baseContext);
 
-    const hasProductFeaturesList = await foClassicProductPage.hasProductFeaturesList(page);
+    const hasProductFeaturesList = await foHummingbirdProductPage.hasProductFeaturesList(page);
     expect(hasProductFeaturesList).to.equal(true);
 
-    const productFeatures = await foClassicProductPage.getProductFeaturesList(page);
+    const productFeatures = await foHummingbirdProductPage.getProductFeaturesList(page);
     expect(productFeatures).to.equal(
-      `Data sheet ${dataProducts.demo_6.features[0].featureName} ${dataProducts.demo_6.features[0].preDefinedValue}`);
+      `${dataProducts.demo_6.features[0].featureName} ${dataProducts.demo_6.features[0].preDefinedValue}`);
   });
 
   it('should go to login page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
-    page = await foClassicProductPage.changePage(browserContext, 1);
-    await foClassicProductPage.goToLoginPage(page);
+    page = await foHummingbirdProductPage.changePage(browserContext, 1);
+    await foHummingbirdProductPage.goToLoginPage(page);
 
-    const pageTitle = await foClassicLoginPage.getPageTitle(page);
-    expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+    const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+    expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
   });
 
   it('should login on the Front Office', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'loginFrontOffice', baseContext);
 
-    await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+    await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-    const isCustomerConnected = await foClassicProductPage.isCustomerConnected(page);
+    const isCustomerConnected = await foHummingbirdProductPage.isCustomerConnected(page);
     expect(isCustomerConnected).to.eq(true);
   });
 
   it('should check the product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductPage', baseContext);
 
-    const pageTitle = await foClassicProductPage.getPageTitle(page);
+    const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
     expect(pageTitle).to.contains(dataProducts.demo_6.name);
 
-    const productPrice = await foClassicProductPage.getProductPrice(page);
+    const productPrice = await foHummingbirdProductPage.getProductPrice(page);
     const discountValue = utilsCore.percentage(dataProducts.demo_6.combinations[0].price, groupDiscount);
     expect(productPrice).to.contains((dataProducts.demo_6.combinations[0].price - discountValue).toFixed(2));
   });
@@ -195,7 +195,7 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
   it('should go to \'Advanced Parameters > Performance\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToPerformancePage', baseContext);
 
-    page = await foClassicProductPage.changePage(browserContext, 0);
+    page = await foHummingbirdProductPage.changePage(browserContext, 0);
     await boCustomerGroupsPage.goToSubMenu(
       page,
       boDashboardPage.advancedParametersLink,
@@ -217,9 +217,9 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
     await testContext.addContextItem(this, 'testIdentifier', 'hasNotProductFeaturesList', baseContext);
 
     page = await boPerformancePage.changePage(browserContext, 1);
-    await foClassicProductPage.reloadPage(page);
+    await foHummingbirdProductPage.reloadPage(page);
 
-    const hasProductFeaturesList = await foClassicProductPage.hasProductFeaturesList(page);
+    const hasProductFeaturesList = await foHummingbirdProductPage.hasProductFeaturesList(page);
     expect(hasProductFeaturesList).to.equal(false);
   });
 
@@ -270,7 +270,7 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
   it('should go to \'Advanced Parameters > Performance\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToPerformancePage', baseContext);
 
-    page = await foClassicProductPage.changePage(browserContext, 0);
+    page = await foHummingbirdProductPage.changePage(browserContext, 0);
     await boCustomerGroupsPage.goToSubMenu(
       page,
       boDashboardPage.advancedParametersLink,

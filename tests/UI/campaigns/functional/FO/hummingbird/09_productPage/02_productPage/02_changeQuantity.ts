@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataProducts,
@@ -17,22 +15,15 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_changeQuantity';
 
 /*
-Pre-condition:
-- Install hummingbird theme
 Scenario:
 - Go to FO
 - Go to the third product in the list
 - Click up/down on quantity input
 - Set quantity input (good/bad value)
-Post-condition:
-- Uninstall hummingbird theme
  */
 describe('FO - Product page : Change quantity', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -149,7 +140,4 @@ describe('FO - Product page : Change quantity', async () => {
       expect(notificationNumber).to.equal(0);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });

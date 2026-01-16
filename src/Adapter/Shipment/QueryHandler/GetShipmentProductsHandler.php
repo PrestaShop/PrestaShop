@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use Product;
 use RuntimeException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 #[AsQueryHandler]
@@ -51,6 +52,7 @@ class GetShipmentProductsHandler implements GetShipmentProductsHandlerInterface
         private readonly LanguageContext $languageContext,
         private readonly ProductImagePathFactory $productImageUrlFactory,
         private readonly ProductRepository $productRepository,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -67,23 +69,33 @@ class GetShipmentProductsHandler implements GetShipmentProductsHandlerInterface
         try {
             $result = $this->repository->findOneBy(['id' => $shipmentId]);
         } catch (Throwable $e) {
-            throw new ShipmentNotFoundException(sprintf('Could not find shipment with id "%s"', $shipmentId), 0, $e);
+            throw new ShipmentNotFoundException(
+                $this->translator->trans(
+                    'Could not find shipment with id "%id%".',
+                    ['%id%' => $shipmentId],
+                    'Admin.Shipment.Error'
+                ),
+                0,
+                $e
+            );
         }
+
         if (!empty($result)) {
             foreach ($result->getProducts() as $product) {
                 $orderDetail = new OrderDetail($product->getOrderDetailId());
-                $productInstance = $this->productRepository->get(new ProductId($orderDetail->product_id), new ShopId($orderDetail->id_shop));
-                $image = $productInstance->getCover($orderDetail->product_id);
-                $imagePath = null;
+                $productInstance = $this->productRepository->get(
+                    new ProductId($orderDetail->product_id),
+                    new ShopId($orderDetail->id_shop)
+                );
 
-                if ($image) {
-                    $imagePath = $this->productImageUrlFactory->getPathByType(new ImageId($image['id_image']), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
-                } else {
-                    $imagePath = $this->productImageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
-                }
+                $image = $productInstance->getCover($orderDetail->product_id);
+                $imagePath = $image
+                    ? $this->productImageUrlFactory->getPathByType(new ImageId($image['id_image']), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT)
+                    : $this->productImageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
 
                 $productName = $this->getProductName($productInstance);
                 $productReference = $productInstance->reference;
+
                 $shipmentProducts[] = new OrderShipmentProduct(
                     $product->getOrderDetailId(),
                     $product->getQuantity(),
@@ -108,7 +120,9 @@ class GetShipmentProductsHandler implements GetShipmentProductsHandlerInterface
             $languageId = $this->languageContext->getId();
 
             if (!isset($product->name[$languageId])) {
-                throw new RuntimeException(sprintf('Product name not found for product ID %d and language ID %d.', $product->id, $languageId));
+                throw new RuntimeException(
+                    sprintf('Product name not found for product ID %d and language ID %d.', $product->id, $languageId)
+                );
             }
 
             return $product->name[$languageId];

@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataCarriers,
@@ -26,9 +24,6 @@ const baseContext: string = 'functional_FO_hummingbird_orderConfirmation_popular
 describe('FO - Order confirmation : Popular product', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableTheme('hummingbird', `${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -130,7 +125,7 @@ describe('FO - Order confirmation : Popular product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProductsNumber', baseContext);
 
       const productsNumber = await foHummingbirdCheckoutOrderConfirmationPage.getProductsBlockNumber(page);
-      expect(productsNumber).to.equal(4);
+      expect(productsNumber).to.equal(8);
     });
 
     it('should quick view the first product in list', async function () {
@@ -195,7 +190,4 @@ describe('FO - Order confirmation : Popular product', async () => {
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableTheme('hummingbird', `${baseContext}_postTest`);
 });
