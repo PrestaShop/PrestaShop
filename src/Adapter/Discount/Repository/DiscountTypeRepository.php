@@ -41,6 +41,24 @@ class DiscountTypeRepository
     }
 
     /**
+     * Get all discount types
+     *
+     * @return array
+     */
+    public function getAllTypes(): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('crt.id_cart_rule_type', 'crt.discount_type', 'crt.is_core', 'crt.active', 'crtl.name', 'crtl.description', 'crtl.id_lang')
+            ->from($this->dbPrefix . 'cart_rule_type', 'crt')
+            ->leftJoin('crt', $this->dbPrefix . 'cart_rule_type_lang', 'crtl', 'crt.id_cart_rule_type = crtl.id_cart_rule_type')
+            ->orderBy('crtl.name')
+        ;
+
+        return $qb->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
      * Get all active discount types
      *
      * @return array

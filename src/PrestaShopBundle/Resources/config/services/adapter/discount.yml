@@ -40,6 +40,9 @@ services:
   PrestaShop\PrestaShop\Adapter\Discount\QueryHandler\GetDiscountForEditingHandler:
     autoconfigure: true
 
+  PrestaShop\PrestaShop\Adapter\Discount\QueryHandler\GetDiscountTypesHandler:
+    autoconfigure: true
+
   PrestaShop\PrestaShop\Adapter\Discount\Validate\DiscountValidator:
     calls:
       - setDiscountRepository: [ '@PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository' ]
