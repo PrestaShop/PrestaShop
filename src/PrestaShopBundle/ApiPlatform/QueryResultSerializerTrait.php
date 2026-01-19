@@ -39,11 +39,21 @@ trait QueryResultSerializerTrait
     /**
      * @param mixed $CQRSQueryResult this is the QueryResult DTO returned by a CQRS query
      * @param Operation $operation
+     * @param array $extraParameters
      *
      * @return mixed It returns the ApiResource DTO object
      */
-    protected function denormalizeQueryResult($CQRSQueryResult, Operation $operation)
+    protected function denormalizeQueryResult($CQRSQueryResult, Operation $operation, array $extraParameters = [])
     {
+        // If the result is a scalar value, then we need to wrap it behind "_queryResult" key and add extra parameters
+        // (this could be used in CQRSQueryMapping property to build the DTO)
+        if (is_scalar($CQRSQueryResult)) {
+            $CQRSQueryResult = array_merge(
+                $extraParameters,
+                ["_queryResult" => $CQRSQueryResult]
+            );
+        }
+
         // Start by normalizing the QueryResult object into normalized array
         $normalizedQueryResult = $this->domainSerializer->normalize($CQRSQueryResult, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
 

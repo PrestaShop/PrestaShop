@@ -78,6 +78,6 @@ class QueryProvider implements ProviderInterface
             return new ($operation->getClass())();
         }
 
-        return $this->denormalizeQueryResult($CQRSQueryResult, $operation);
+        return $this->denormalizeQueryResult($CQRSQueryResult, $operation, $queryParameters);
     }
 }

@@ -94,7 +94,7 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = [])
     {
         // Add context parameters and URI variables into the data
-        $data = array_merge($data, $this->contextParametersProvider->getContextParameters());
+        $data = array_merge((array) $data, $this->contextParametersProvider->getContextParameters());
         if (!empty($context['uri_variables'])) {
             $data = array_merge($data, $context['uri_variables']);
         }
