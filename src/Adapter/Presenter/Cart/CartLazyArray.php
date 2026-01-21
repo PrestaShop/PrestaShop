@@ -420,7 +420,7 @@ class CartLazyArray extends AbstractLazyArray
 
         $cartHasTax = null === $this->cart->id ? false : $this->cart->getAverageProductsTaxRate() * 100;
         $freeShippingAlreadySet = false;
-        
+
         foreach ($this->calculator->getCartRulesData() as $cartRuleData) {
             /** @var array{id_cart_rule:int, name: string, code: string, reduction_percent: float, reduction_currency: int, free_shipping: bool, reduction_tax: bool, reduction_amount:float, value_real:float|int|string, value_tax_exc:float|int|string} $cartVoucher */
             $cartVoucher = $cartRuleData->getRuleData();
@@ -464,7 +464,7 @@ class CartLazyArray extends AbstractLazyArray
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $freeShippingOnly
                 ? $this->translator->trans('Free shipping', [], 'Shop.Theme.Checkout')
                 : '-' . $this->priceFormatter->format($totalCartVoucherReduction);
-            
+
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
                 'cart',
                 null,

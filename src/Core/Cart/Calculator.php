@@ -24,7 +24,7 @@ class Calculator
     protected $cart;
 
     /**
-     * @var int
+     * @var int|null
      */
     protected $id_carrier;
 
@@ -67,11 +67,11 @@ class Calculator
 
     /**
      * @param CartCore $cart
-     * @param int $carrierId
+     * @param int|null $carrierId
      * @param int|null $computePrecision
      * @param int|null $orderId
      */
-    public function __construct(CartCore $cart, $carrierId, ?int $computePrecision = null, ?int $orderId = null, ?FeatureFlagStateCheckerInterface $featureFlagManager = null)
+    public function __construct(CartCore $cart, ?int $carrierId = null, ?int $computePrecision = null, ?int $orderId = null, ?FeatureFlagStateCheckerInterface $featureFlagManager = null)
     {
         $this->setCart($cart);
         $this->setCarrierId($carrierId);
