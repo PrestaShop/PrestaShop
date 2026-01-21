@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2080f39fb4da7763aa9612327d4e3a8a",
+    "content-hash": "43f0a6a81dff52f036d28049c18431d1",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5208,16 +5208,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-discount-refacto",
+            "version": "dev-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "1111632c0afb80990a8b7feaa921ed254e05e719"
+                "url": "https://github.com/PrestaShop/ps_apiresources.git",
+                "reference": "440a2f060228e65dcd0aad97eded9d3f68e357d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/1111632c0afb80990a8b7feaa921ed254e05e719",
-                "reference": "1111632c0afb80990a8b7feaa921ed254e05e719",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/440a2f060228e65dcd0aad97eded9d3f68e357d8",
+                "reference": "440a2f060228e65dcd0aad97eded9d3f68e357d8",
                 "shasum": ""
             },
             "require": {
@@ -5231,6 +5231,7 @@
                 "prestashop/php-dev-tools": "^4.3",
                 "rector/rector": "^2.0"
             },
+            "default-branch": true,
             "type": "prestashop-module",
             "autoload": {
                 "psr-4": {
@@ -5240,35 +5241,7 @@
                     "ps_apiresources.php"
                 ]
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "PsApiResourcesTest\\": "tests/"
-                }
-            },
-            "scripts": {
-                "clear-test-cache": [
-                    "PsApiResourcesTest\\EnvironmentBuilder::clearCache"
-                ],
-                "create-test-db": [
-                    "@composer clear-test-cache",
-                    "@composer setup-local-tests -- --build-db"
-                ],
-                "run-module-tests": [
-                    "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Integration/phpunit-local.xml"
-                ],
-                "run-unit-tests": [
-                    "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
-                ],
-                "setup-local-tests": [
-                    "PsApiResourcesTest\\EnvironmentBuilder::setupLocalTests"
-                ],
-                "rector": [
-                    "vendor/bin/rector process --clear-cache --dry-run"
-                ],
-                "rector-fix": [
-                    "vendor/bin/rector process"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
             ],
@@ -5281,9 +5254,10 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/jolelievre/ps_apiresources/tree/discount-refacto"
+                "issues": "https://github.com/PrestaShop/ps_apiresources/issues",
+                "source": "https://github.com/PrestaShop/ps_apiresources/tree/dev"
             },
-            "time": "2026-01-16T10:42:37+00:00"
+            "time": "2026-01-16T16:42:45+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -18267,9 +18241,9 @@
         "ext-simplexml": "*",
         "ext-zip": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.2.0"
 }

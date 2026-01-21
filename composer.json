@@ -71,7 +71,7 @@
         "prestashop/hummingbird": "^2.0",
         "prestashop/pagesnotfound": "^3",
         "prestashop/productcomments": "^8.0",
-        "prestashop/ps_apiresources": "dev-discount-refacto",
+        "prestashop/ps_apiresources": "dev-dev",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^1.0",
         "prestashop/ps_brandlist": "^1.0",
@@ -209,10 +209,6 @@
         "php-sql-parser": {
             "type": "vcs",
             "url": "https://github.com/PrestaShop/PHP-SQL-Parser"
-        },
-        "ps_apiresources": {
-            "type": "vcs",
-            "url": "https://github.com/jolelievre/ps_apiresources"
         }
     },
     "minimum-stability": "dev",

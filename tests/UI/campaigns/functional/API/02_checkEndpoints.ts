@@ -207,6 +207,8 @@ describe('API : Check endpoints', async () => {
         '/discounts/bulk-delete: DELETE',
         // @todo: add tests
         '/discounts/bulk-update-status: PATCH',
+        // @todo: add tests
+        '/discounts/{discountId}/duplicate: POST',
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
         '/discounts/{discountId}: DELETE',
         // @todo : https://github.com/PrestaShop/PrestaShop/issues/38647
