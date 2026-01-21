@@ -2309,13 +2309,13 @@ class CartCore extends ObjectModel
      *
      * @param array $products list of products to calculate on
      * @param array $cartRules list of cart rules to apply
-     * @param int $id_carrier carrier id (fees calculation)
+     * @param int|null $id_carrier carrier id (fees calculation)
      * @param int|null $computePrecision
      * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return Calculator
      */
-    public function newCalculator($products, $cartRules, $id_carrier, $computePrecision = null, bool $keepOrderPrices = false)
+    public function newCalculator($products, $cartRules, $id_carrier = null, $computePrecision = null, bool $keepOrderPrices = false)
     {
         $orderId = null;
         if ($keepOrderPrices) {
