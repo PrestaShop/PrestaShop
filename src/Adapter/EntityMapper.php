@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Cache;
 use Db;
 use DbQuery;
+use Language;
 use ObjectModel;
 use ObjectModelCore;
 use PrestaShopDatabaseException;
@@ -87,6 +88,17 @@ class EntityMapper
                                     }
 
                                     $object_datas[$key][$row['id_lang']] = $value;
+                                }
+                            }
+                        }
+                    } else {
+                        // Initialize multilingual fields with empty values for each language.
+                        // This prevents errors when _lang records are missing (e.g. entity deleted from a shop but accessed in "all shops" context).
+                        $languages = Language::getLanguages();
+                        foreach ($entity_defs['fields'] as $key => $field) {
+                            if (!empty($field['lang'])) {
+                                foreach ($languages as $language) {
+                                    $object_datas[$key][$language['id_lang']] = '';
                                 }
                             }
                         }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2080f39fb4da7763aa9612327d4e3a8a",
+    "content-hash": "3d51d2e720417b2662928b43e3a23ad7",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5208,16 +5208,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-discount-refacto",
+            "version": "dev-add-combinations-endpoint",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jolelievre/ps_apiresources.git",
-                "reference": "1111632c0afb80990a8b7feaa921ed254e05e719"
+                "url": "https://github.com/sebajps/ps_apiresources.git",
+                "reference": "86e47474aa9004dfeaf7b726bfb192e66ab15779"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jolelievre/ps_apiresources/zipball/1111632c0afb80990a8b7feaa921ed254e05e719",
-                "reference": "1111632c0afb80990a8b7feaa921ed254e05e719",
+                "url": "https://api.github.com/repos/sebajps/ps_apiresources/zipball/86e47474aa9004dfeaf7b726bfb192e66ab15779",
+                "reference": "86e47474aa9004dfeaf7b726bfb192e66ab15779",
                 "shasum": ""
             },
             "require": {
@@ -5281,9 +5281,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/jolelievre/ps_apiresources/tree/discount-refacto"
+                "source": "https://github.com/sebajps/ps_apiresources/tree/add-combinations-endpoint"
             },
-            "time": "2026-01-16T10:42:37+00:00"
+            "time": "2026-01-21T07:13:47+00:00"
         },
         {
             "name": "prestashop/ps_banner",

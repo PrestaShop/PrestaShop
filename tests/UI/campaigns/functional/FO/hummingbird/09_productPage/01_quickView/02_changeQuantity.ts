@@ -102,32 +102,31 @@ describe('FO - Product page - Quick view : Change quantity', async () => {
       expect(isModalVisible).to.eq(true);
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/35219
-    it.skip('should set \'-24\' in the quantity input', async function () {
+    it('should set \'-24\' in the quantity input', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput2', baseContext);
 
       await foHummingbirdModalQuickViewPage.setQuantity(page, '-24');
-      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page, false);
 
-      const isVisible = await foHummingbirdModalBlockCartPage.isBlockCartModalVisible(page);
-      expect(isVisible).to.eq(true);
+      const isDisabled = await foHummingbirdModalQuickViewPage.isAddToCartButtonDisabled(page);
+      expect(isDisabled).to.eq(true);
     });
 
-    it.skip('should click on continue shopping and check that the modal is not visible', async function () {
+    it('should click on continue shopping and check that the modal is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinueShopping2', baseContext);
 
-      const isNotVisible = await foHummingbirdModalBlockCartPage.continueShopping(page);
+      const isNotVisible = await foHummingbirdModalQuickViewPage.closeQuickViewModal(page);
       expect(isNotVisible).to.eq(true);
     });
 
-    it.skip('should check the cart notifications number', async function () {
+    it('should check the cart notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber2', baseContext);
 
       const notificationsNumber = await foHummingbirdHomePage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.equal(12);
     });
 
-    it.skip('should quick view the third product', async function () {
+    it('should quick view the third product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickView3', baseContext);
 
       await foHummingbirdHomePage.quickViewProduct(page, 3);

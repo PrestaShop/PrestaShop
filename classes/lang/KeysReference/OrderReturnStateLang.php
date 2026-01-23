@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+// install-dev/langs/en/data/order_return_state.xml
 trans('Waiting for confirmation', 'Admin.Orderscustomers.Feature');
 trans('Waiting for package', 'Admin.Orderscustomers.Feature');
 trans('Package received', 'Admin.Orderscustomers.Feature');

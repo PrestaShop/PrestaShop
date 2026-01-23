@@ -315,7 +315,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
         const isVisible = await utilsFile.isTextInPDF(filePath, 'Module : Newsletter subscription 0 Newsletter '
           + 'subscription: no email to export this customer has not registered.', true);
-        expect(isVisible, 'Newsletter subscription table is not empty!').to.eq(true);
+        expect(isVisible).to.eq(true);
       });
 
       it('should check that Module product comments is empty', async function () {

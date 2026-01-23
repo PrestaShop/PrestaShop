@@ -41,7 +41,6 @@ describe('FO - Checkout - Addresses: Use different invoice address', async () =>
   let browserContext: BrowserContext;
   let page: Page;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -97,11 +96,8 @@ describe('FO - Checkout - Addresses: Use different invoice address', async () =>
       expect(isStepCompleted).to.equal(true);
     });
 
-    // @todo : https://github.com/PrestaShop/hummingbird/issues/614
     it('should fill different delivery and invoice addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillCustomerAddresses', baseContext);
-
-      this.skip();
 
       const isStepCompleted = await foHummingbirdCheckoutPage.setAddress(page, deliveryAddress, invoiceAddress);
       expect(isStepCompleted).to.equal(true);
@@ -110,11 +106,9 @@ describe('FO - Checkout - Addresses: Use different invoice address', async () =>
     it('should complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeTheOrder', baseContext);
 
-      this.skip();
-
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
-      expect(isStepDeliveryComplete, 'Step Address is not complete').to.equal(true);
+      expect(isStepDeliveryComplete).to.equal(true);
 
       // Payment step - Choose payment step
       await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);

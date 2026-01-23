@@ -45,7 +45,7 @@ use Stringable;
  * It gathers its data from the associated GridData using the GridDataFactoryInterface.
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
-class PaginatedList extends AbstractCQRSOperation implements CollectionOperationInterface
+class CQRSPaginate extends AbstractCQRSOperation implements CollectionOperationInterface
 {
     public function __construct(
         ?string $uriTemplate = null,
@@ -123,22 +123,20 @@ class PaginatedList extends AbstractCQRSOperation implements CollectionOperation
         array|Parameters|null $parameters = null,
         ?bool $queryParameterValidationEnabled = null,
         array $extraProperties = [],
+        ?string $CQRSQuery = null,
         array $scopes = [],
+        ?array $CQRSQueryMapping = null,
         ?array $ApiResourceMapping = null,
-        ?string $gridDataFactory = null,
         ?string $filtersClass = null,
         ?array $filtersMapping = null,
         ?bool $experimentalOperation = null,
+        ?string $itemsField = null,
+        ?string $countField = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_GET;
         $passedArguments['provider'] = $provider ?? QueryListProvider::class;
         $passedArguments['filtersClass'] = $filtersClass ?? Filters::class;
-
-        if (!empty($gridDataFactory)) {
-            $this->checkArgumentAndExtraParameterValidity('gridDataFactory', $gridDataFactory, $passedArguments['extraProperties']);
-            $passedArguments['extraProperties']['gridDataFactory'] = $gridDataFactory;
-        }
 
         if (!empty($filtersClass)) {
             $this->checkArgumentAndExtraParameterValidity('filtersClass', $filtersClass, $passedArguments['extraProperties']);
@@ -150,24 +148,22 @@ class PaginatedList extends AbstractCQRSOperation implements CollectionOperation
             $passedArguments['extraProperties']['filtersMapping'] = $filtersMapping;
         }
 
-        unset($passedArguments['gridDataFactory']);
+        if (!empty($itemsField)) {
+            $this->checkArgumentAndExtraParameterValidity('itemsField', $itemsField, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['itemsField'] = $itemsField;
+        }
+
+        if (!empty($countField)) {
+            $this->checkArgumentAndExtraParameterValidity('countField', $countField, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['countField'] = $countField;
+        }
+
+        unset($passedArguments['itemsField']);
+        unset($passedArguments['countField']);
         unset($passedArguments['filtersClass']);
         unset($passedArguments['filtersMapping']);
 
         parent::__construct(...$passedArguments);
-    }
-
-    public function getGridDataFactory(): ?string
-    {
-        return $this->extraProperties['gridDataFactory'] ?? null;
-    }
-
-    public function withGridDataFactory(string $gridDataFactory): static
-    {
-        $self = clone $this;
-        $self->extraProperties['gridDataFactory'] = $gridDataFactory;
-
-        return $self;
     }
 
     public function getFiltersClass(): ?string
@@ -192,6 +188,32 @@ class PaginatedList extends AbstractCQRSOperation implements CollectionOperation
     {
         $self = clone $this;
         $self->extraProperties['filtersMapping'] = $filtersMapping;
+
+        return $self;
+    }
+
+    public function getItemsField(): ?string
+    {
+        return $this->extraProperties['itemsField'];
+    }
+
+    public function withItemsField(string $itemsField): static
+    {
+        $self = clone $this;
+        $self->extraProperties['itemsField'] = $itemsField;
+
+        return $self;
+    }
+
+    public function getCountField(): ?string
+    {
+        return $this->extraProperties['countField'];
+    }
+
+    public function withCountField(string $countField): static
+    {
+        $self = clone $this;
+        $self->extraProperties['countField'] = $countField;
 
         return $self;
     }

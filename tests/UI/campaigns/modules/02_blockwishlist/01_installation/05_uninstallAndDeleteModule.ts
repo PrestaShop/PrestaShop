@@ -15,11 +15,14 @@ import {
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-import {installModule} from '@commonTests/BO/modules/moduleManager';
+import {disableModule, enableModule, installModule} from '@commonTests/BO/modules/moduleManager';
 
 const baseContext: string = 'modules_blockwishlist_installation_uninstallAndDeleteModule';
 
 describe('Wishlist module - Uninstall and delete module', async () => {
+  // PRE-TEST : Enable Blockwishlist
+  enableModule(dataModules.blockwishlist, `${baseContext}_preTest_0`);
+
   describe('Uninstall and delete module', async () => {
     let browserContext: BrowserContext;
     let page: Page;
@@ -127,4 +130,7 @@ describe('Wishlist module - Uninstall and delete module', async () => {
 
   // POST-TEST: Install module
   installModule(dataModules.blockwishlist, true, `${baseContext}_postTest_0`);
+
+  // POST-TEST : Disable Blockwishlist
+  disableModule(dataModules.blockwishlist, `${baseContext}_postTest_1`);
 });

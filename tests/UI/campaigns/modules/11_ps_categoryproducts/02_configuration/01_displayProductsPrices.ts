@@ -99,10 +99,10 @@ describe('Category products module - Display products\' prices', async () => {
   it('should check if the price in the "Category Products" block is not visible', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNotVisible', baseContext);
 
-    const hasProductsBlock = await foHummingbirdProductPage.hasProductsBlock(page, 'categoryproducts');
+    const hasProductsBlock = await foHummingbirdProductPage.hasProductsBlock(page, 'ps-categoryproducts');
     expect(hasProductsBlock).to.eq(true);
 
-    const hasProductsBlockPrice = await foHummingbirdProductPage.hasProductsBlockPrice(page, 'categoryproducts');
+    const hasProductsBlockPrice = await foHummingbirdProductPage.hasProductsBlockPrice(page, 'ps-categoryproducts');
     expect(hasProductsBlockPrice).to.eq(false);
   });
 
@@ -121,10 +121,10 @@ describe('Category products module - Display products\' prices', async () => {
     page = await modPsCategoryProductsBoMain.changePage(browserContext, 1);
     await foHummingbirdProductPage.reloadPage(page);
 
-    const hasProductsBlock = await foHummingbirdProductPage.hasProductsBlock(page, 'categoryproducts');
+    const hasProductsBlock = await foHummingbirdProductPage.hasProductsBlock(page, 'ps-categoryproducts');
     expect(hasProductsBlock).to.eq(true);
 
-    const hasProductsBlockPrice = await foHummingbirdProductPage.hasProductsBlockPrice(page, 'categoryproducts');
+    const hasProductsBlockPrice = await foHummingbirdProductPage.hasProductsBlockPrice(page, 'ps-categoryproducts');
     expect(hasProductsBlockPrice).to.eq(true);
   });
 });

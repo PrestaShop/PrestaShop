@@ -16,28 +16,30 @@ import {
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
-import {resetModule} from '@commonTests/BO/modules/moduleManager';
+import {disableModule, enableModule, resetModule} from '@commonTests/BO/modules/moduleManager';
 
 const baseContext: string = 'modules_blockwishlist_frontOffice_lists_shareList';
 
 describe('Wishlist module - Share a list', async () => {
-  const wishlistName: string = 'Ma liste de souhaits';
-
-  let browserContext: BrowserContext;
-  let page: Page;
-  let wishlistUrl: string;
-
-  // before and after functions
-  before(async function () {
-    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
-    page = await utilsPlaywright.newTab(browserContext);
-  });
-
-  after(async () => {
-    await utilsPlaywright.closeBrowserContext(browserContext);
-  });
+  // PRE-TEST : Enable Blockwishlist
+  enableModule(dataModules.blockwishlist, `${baseContext}_preTest_0`);
 
   describe('Share a list', async () => {
+    const wishlistName: string = 'Ma liste de souhaits';
+
+    let browserContext: BrowserContext;
+    let page: Page;
+    let wishlistUrl: string;
+
+    before(async function () {
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
+    });
+
+    after(async () => {
+      await utilsPlaywright.closeBrowserContext(browserContext);
+    });
+
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
@@ -197,4 +199,7 @@ describe('Wishlist module - Share a list', async () => {
   });
 
   resetModule(dataModules.blockwishlist, `${baseContext}_postTest_0`);
+
+  // POST-TEST : Disable Blockwishlist
+  disableModule(dataModules.blockwishlist, `${baseContext}_postTest_1`);
 });

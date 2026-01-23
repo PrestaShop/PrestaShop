@@ -50,7 +50,7 @@ install-prestashop: ## Install fresh PrestaShop database (requires containers to
 	$(PHP_CONT) .docker/install/database.sh
 
 ## —— Assets 🎨 ———————————————————————————————————————————————————————————————
-assets: admin front ## Build all assets
+assets: ## Build all assets
 	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh all --force
 
 wait-assets: ## Wait for assets to be built

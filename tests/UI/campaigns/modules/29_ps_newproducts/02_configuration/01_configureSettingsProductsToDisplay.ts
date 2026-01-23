@@ -115,7 +115,7 @@ describe('New products block module - Configure settings of "Products to display
       const hasProductsBlock = await foHummingbirdHomePage.hasProductsBlock(page, 'newproducts');
       expect(hasProductsBlock).to.be.equal(true);
 
-      const numProductsBlock = await foHummingbirdHomePage.getProductsBlockNumber(page, 'newproducts');
+      const numProductsBlock = await foHummingbirdHomePage.getProductsBlockNumber(page, 'ps-newproducts');
       expect(numProductsBlock).to.be.equal(arg.numProducts);
     });
 
@@ -162,7 +162,7 @@ describe('New products block module - Configure settings of "Products to display
       const hasProductsBlock = await foHummingbirdHomePage.hasProductsBlock(page, 'newproducts');
       expect(hasProductsBlock).to.be.equal(true);
 
-      const numProductsBlock = await foHummingbirdHomePage.getProductsBlockNumber(page, 'newproducts');
+      const numProductsBlock = await foHummingbirdHomePage.getProductsBlockNumber(page, 'ps-newproducts');
       expect(numProductsBlock).to.be.equal(1);
     });
 

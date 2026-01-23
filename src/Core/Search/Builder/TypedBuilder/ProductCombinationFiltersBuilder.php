@@ -89,11 +89,14 @@ class ProductCombinationFiltersBuilder extends AbstractFiltersBuilder implements
      */
     private function buildShopConstraint(): ShopConstraint
     {
-        if (!$this->request->query->has('shopId')) {
-            throw new InvalidArgumentException('Missing "shopId" in request for combinations list filters');
+        if ($this->request->query->has('shopId')) {
+            return ShopConstraint::shop($this->request->query->getInt('shopId'));
+        }
+        if ($this->request->attributes->has('shopConstraint')) {
+            return $this->request->attributes->get('shopConstraint');
         }
 
-        return ShopConstraint::shop($this->request->query->getInt('shopId'));
+        throw new InvalidArgumentException('Missing "shopId" in request for combinations list filters');
     }
 
     /**

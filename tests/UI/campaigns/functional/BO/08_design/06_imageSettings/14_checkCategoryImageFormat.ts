@@ -38,7 +38,6 @@ describe('BO - Design - Image Settings : Check category image format', async () 
     thumbnailImage: 'thumbWEBP.webp',
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -283,7 +282,8 @@ describe('BO - Design - Image Settings : Check category image format', async () 
           expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
         });
 
-        it('should check that the main image of the quick view is a WebP', async function () {
+        // @todo : https://github.com/PrestaShop/hummingbird/issues/874
+        it.skip('should check that the main image of the quick view is a WebP', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkMainImageQuickView${argExtension}`, baseContext);
 
           const categoryImage = await foHummingbirdCategoryPage.getCategoryImageMain(page, arg.category.name);

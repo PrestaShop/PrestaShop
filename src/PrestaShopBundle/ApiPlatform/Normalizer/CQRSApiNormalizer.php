@@ -204,7 +204,7 @@ class CQRSApiNormalizer extends ObjectNormalizer
 
         foreach ($reflClass->getMethods(ReflectionMethod::IS_PUBLIC) as $reflMethod) {
             if (
-                0 !== $reflMethod->getNumberOfRequiredParameters()
+                0 !== $reflMethod->getNumberOfParameters()
                 || $reflMethod->isStatic()
                 || $reflMethod->isConstructor()
                 || $reflMethod->isDestructor()

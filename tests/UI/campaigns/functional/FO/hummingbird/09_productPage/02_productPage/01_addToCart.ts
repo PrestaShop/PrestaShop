@@ -24,7 +24,6 @@ describe('FO - Product page - Product page : Add to cart', async () => {
   const qtyQuickView: number = 100;
   const qtyQuickAdd: number = 1;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);

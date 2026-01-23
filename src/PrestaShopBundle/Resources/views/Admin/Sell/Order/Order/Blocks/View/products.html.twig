@@ -215,14 +215,12 @@
           </div>
         </div>
 
-        {% if not orderForViewing.taxIncluded %}
-          <div class="col-sm text-center">
-            <p class="text-muted mb-0">
-              <strong>{{ 'Taxes'|trans({}, 'Admin.Global') }}</strong>
-            </p>
-            <strong id="orderTaxesTotal">{{ orderForViewing.prices.taxesAmountFormatted }}</strong>
-          </div>
-        {% endif %}
+        <div class="col-sm text-center">
+          <p class="text-muted mb-0">
+            <strong>{{ 'Taxes'|trans({}, 'Admin.Global') }}</strong>
+          </p>
+          <strong id="orderTaxesTotal">{{ orderForViewing.prices.taxesAmountFormatted }}</strong>
+        </div>
 
         <div class="col-sm text-center">
           <p class="text-muted mb-0">

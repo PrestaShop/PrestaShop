@@ -141,8 +141,7 @@ describe('FO - Product page - Product page : Display Specific delivery time', as
       expect(pageTitle).to.contains(newProductData.name);
     });
 
-    // @todo : https://github.com/PrestaShop/hummingbird/issues/850
-    it.skip('should check the delivery time out of stock product', async function () {
+    it('should check the delivery time out of stock product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryTimeOutOfStock', baseContext);
 
       const deliveryTimeText = await foHummingbirdProductPage.getDeliveryInformationText(page);
@@ -191,8 +190,7 @@ describe('FO - Product page - Product page : Display Specific delivery time', as
       expect(pageTitle).to.contains(newProductData.name);
     });
 
-    // @todo : https://github.com/PrestaShop/hummingbird/issues/851
-    it.skip('should check the delivery time out of stock product', async function () {
+    it('should check the delivery time out of stock product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryTimeInStock2', baseContext);
 
       const deliveryTimeText = await foHummingbirdProductPage.getDeliveryInformationText(page);

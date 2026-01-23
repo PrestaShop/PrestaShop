@@ -74,6 +74,7 @@ describe('API : GET /products/{productId}/images', async () => {
 
         for (let i:number = 0; i < jsonResponse.length; i++) {
           expect(jsonResponse[i]).to.have.all.keys(
+            'productId',
             'imageId',
             'imageUrl',
             'thumbnailUrl',
@@ -83,6 +84,7 @@ describe('API : GET /products/{productId}/images', async () => {
             'shopIds',
           );
 
+          expect(jsonResponse[i].productId).to.equal(dataProducts.demo_1.id);
           expect(jsonResponse[i].imageId).to.be.gt(0);
           expect(jsonResponse[i].imageUrl).to.be.a('string');
           expect(jsonResponse[i].thumbnailUrl).to.be.a('string');

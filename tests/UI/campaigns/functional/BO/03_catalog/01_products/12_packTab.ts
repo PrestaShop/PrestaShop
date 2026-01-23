@@ -41,7 +41,6 @@ describe('BO - Catalog - Products : Pack Tab', async () => {
   const productQuantity: number = 4;
   const productStock: number = 100;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);

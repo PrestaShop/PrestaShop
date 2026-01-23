@@ -72,7 +72,7 @@ services:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider:
     arguments:
       - '@=service("prestashop.core.import.fields_provider_finder")'
-      - '@=service("session").get("entity")'
+      - '@=service("request_stack").getSession().get("entity")'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemePageLayoutsChoiceProvider:
     arguments:

@@ -535,11 +535,9 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
     });
 
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/34334
-    describe('BO - Check Filter "Categories"', async () => {
+    describe.skip('BO - Check Filter "Categories"', async () => {
       it(`should set the filter "Categories" to "${dataCategories.clothes.name}"`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'setFilterCategories', baseContext);
-
-        this.skip();
 
         await boStockMovementsPage.setAdvancedFiltersVisible(page);
         await boStockMovementsPage.setAdvancedFiltersEmployee(page, `${employeeData.lastName} ${employeeData.firstName}`);
@@ -551,8 +549,6 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
       it('should reset the filter "Categories"', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilterCategories', baseContext);
-
-        this.skip();
 
         await boStockMovementsPage.resetAdvancedFilter(page);
 
@@ -606,11 +602,9 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
     });
 
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/33842
-    describe('BO - Check Filter "Status"', async () => {
+    describe.skip('BO - Check Filter "Status"', async () => {
       it('should go to \'Catalog > Stocks\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPageAfterDisablingProduct', baseContext);
-
-        this.skip();
 
         await boDashboardPage.goToSubMenu(
           page,
@@ -626,8 +620,6 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
       it('should go to Movements page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMovementsPageAfterDisablingProduct', baseContext);
 
-        this.skip();
-
         await boStockPage.goToSubTabMovements(page);
 
         const pageTitle = await boStockMovementsPage.getPageTitle(page);
@@ -636,8 +628,6 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
       it('should set the filter "Status" to "Disabled"', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'setFilterStatus', baseContext);
-
-        this.skip();
 
         await boStockMovementsPage.setAdvancedFiltersVisible(page);
         await boStockMovementsPage.setAdvancedFiltersStatus(page, false);
@@ -648,8 +638,6 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
 
       it('should reset the filter "Status"', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'resetFilterStatus', baseContext);
-
-        this.skip();
 
         await boStockMovementsPage.resetAdvancedFilter(page);
 

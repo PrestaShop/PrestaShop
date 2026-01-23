@@ -21,7 +21,6 @@ describe('Category products module - Disable/Enable module', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -101,7 +100,7 @@ describe('Category products module - Disable/Enable module', async () => {
     it('should check if the "Category Products" block is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotVisible', baseContext);
 
-      const hasProductsBlock = await foHummingbirdProductPage.hasProductsBlock(page, 'categoryproducts');
+      const hasProductsBlock = await foHummingbirdProductPage.hasProductsBlock(page, 'ps-categoryproducts');
       expect(hasProductsBlock).to.eq(false);
     });
 
@@ -150,7 +149,7 @@ describe('Category products module - Disable/Enable module', async () => {
     it('should check if the "Category Products" block is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkVisible', baseContext);
 
-      const hasProductsBlock = await foHummingbirdProductPage.hasProductsBlock(page, 'categoryproducts');
+      const hasProductsBlock = await foHummingbirdProductPage.hasProductsBlock(page, 'ps-categoryproducts');
       expect(hasProductsBlock).to.eq(true);
     });
   });

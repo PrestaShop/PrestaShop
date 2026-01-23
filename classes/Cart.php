@@ -4935,7 +4935,7 @@ class CartCore extends ObjectModel
      */
     public function checkAllProductsHaveMinimalQuantities()
     {
-        $productList = $this->getProducts(true);
+        $productList = $this->getProducts();
         foreach ($productList as $product) {
             if ($product['minimal_quantity'] > $product['cart_quantity']) {
                 return false;

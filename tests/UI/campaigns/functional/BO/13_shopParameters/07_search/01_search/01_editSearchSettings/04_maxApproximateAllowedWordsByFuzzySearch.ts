@@ -96,7 +96,7 @@ describe('BO - Shop Parameters - Search : Maximum approximate words allowed by f
     const searchInputValue = await foHummingbirdSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal('notenook');
 
-    const titleTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, 'title');
+    const titleTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, 'miniature__title');
     expect(titleTable).to.deep.equal([
       dataProducts.demo_8.name,
       dataProducts.demo_9.name,
@@ -121,7 +121,7 @@ describe('BO - Shop Parameters - Search : Maximum approximate words allowed by f
     const searchInputValue = await foHummingbirdSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal('briow beer');
 
-    const titleTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, 'title');
+    const titleTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, 'miniature__title');
     expect(titleTable).to.deep.equal([
       dataProducts.demo_16.name,
       dataProducts.demo_19.name,

@@ -23,7 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+// install-dev/langs/en/data/profile.xml
 trans('SuperAdmin', 'Admin.Advparameters.Feature');
+// install-dev/fixtures/fashion/langs/en/data/profile.xml
 trans('Logistician', 'Admin.Advparameters.Feature');
 trans('Translator', 'Admin.Advparameters.Feature');
 trans('Salesman', 'Admin.Advparameters.Feature');

@@ -16,6 +16,7 @@ import {
   dataProducts,
   FakerCatalogPriceRule,
   foHummingbirdCartPage,
+  foHummingbirdCategoryPage,
   foHummingbirdHomePage,
   foHummingbirdLoginPage,
   foHummingbirdProductPage,
@@ -92,7 +93,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
   });
 
   // Pre-condition: Create currency
-  createCurrencyTest(dataCurrencies.mad, `${baseContext}_preTest_2`);
+  createCurrencyTest(dataCurrencies.mad, `${baseContext}_preTest_0`);
 
   describe('CRUD catalog price rules', async () => {
     before(async function () {
@@ -164,10 +165,19 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
         expect(isHomePage).to.eq(true);
       });
 
+      it('should check All products link', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkAllPopularProductsLink', baseContext);
+
+        await foHummingbirdHomePage.goToAllProductsPage(page, 'ps-featuredproducts');
+
+        const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
+        expect(isCategoryPageVisible).to.eq(true);
+      });
+
       it('should go to the first product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage_1', baseContext);
 
-        await foHummingbirdHomePage.goToProductPage(page, 6);
+        await foHummingbirdCategoryPage.goToProductPage(page, 6);
 
         const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(dataProducts.demo_11.name);

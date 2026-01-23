@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+// install-dev/langs/en/data/group.xml
 trans('Visitor', 'Admin.Shopparameters.Feature');
 trans('Guest', 'Admin.Shopparameters.Feature');
 trans('Customer', 'Admin.Shopparameters.Feature');

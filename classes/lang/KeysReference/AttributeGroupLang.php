@@ -23,6 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+// install-dev/fixtures/fashion/langs/en/data/attribute_group.xml
 trans('Size', 'Shop.Demo.Catalog');
-trans('Shoe size', 'Shop.Demo.Catalog');
 trans('Color', 'Shop.Demo.Catalog');
+trans('Dimension', 'Shop.Demo.Catalog');
+trans('Paper Type', 'Shop.Demo.Catalog');

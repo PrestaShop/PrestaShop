@@ -331,7 +331,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           true,
           'utf16le',
         );
-        expect(isVisible, 'Newsletter subscription table is not empty!').to.eq(true);
+        expect(isVisible).to.eq(true);
       });
 
       it('should check that Module product comments is empty', async function () {

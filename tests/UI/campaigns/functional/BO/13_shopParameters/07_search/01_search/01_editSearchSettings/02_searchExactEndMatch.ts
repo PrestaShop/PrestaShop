@@ -121,7 +121,7 @@ describe('BO - Shop Parameters - Search : Search exact end match', async () => {
         const numResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
         expect(numResults).to.eq(arg.numResults);
 
-        const titleTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, 'title');
+        const titleTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, 'miniature__title');
         expect(titleTable).to.deep.equal(arg.results);
       });
 

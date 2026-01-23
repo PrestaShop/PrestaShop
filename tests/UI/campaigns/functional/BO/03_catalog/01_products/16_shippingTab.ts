@@ -42,7 +42,6 @@ describe('BO - Catalog - Products : Shipping tab', async () => {
     deliveryTime: 'None',
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);

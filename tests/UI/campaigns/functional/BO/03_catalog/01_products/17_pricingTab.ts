@@ -62,7 +62,6 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
     reduction: 20,
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -274,7 +273,7 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUnitPrice', baseContext);
 
       const flagText = await foHummingbirdProductPage.getProductUnitPrice(page);
-      expect(flagText).to.eq('€12.00 per unit');
+      expect(flagText).to.eq('(€12.00 per unit)');
     });
 
     it('should go back to BO', async function () {
@@ -305,7 +304,8 @@ describe('BO - Catalog - Products : Pricing tab', async () => {
       expect(pageTitle).to.contains(newProductData.name);
     });
 
-    it('should check the on sale flag', async function () {
+    // @todo : https://github.com/PrestaShop/hummingbird/issues/879
+    it.skip('should check the on sale flag', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOnSaleFlag', baseContext);
 
       const flagText = await foHummingbirdProductPage.getProductTag(page);

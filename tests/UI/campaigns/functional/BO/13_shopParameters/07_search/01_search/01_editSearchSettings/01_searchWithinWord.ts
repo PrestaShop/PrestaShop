@@ -107,7 +107,7 @@ describe('BO - Shop Parameters - Search : Search within word', async () => {
       const numResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
       expect(numResults).to.eq(arg.numResults);
 
-      const titleTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, 'title');
+      const titleTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, 'miniature__title');
       expect(titleTable.length).to.equals(arg.numResults);
       for (let nthTable = 0; nthTable < titleTable.length; nthTable++) {
         expect(arg.results[nthTable]).to.contains(titleTable[nthTable].replace('...', ''));

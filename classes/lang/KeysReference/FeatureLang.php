@@ -23,10 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-trans('Height', 'Shop.Demo.Catalog');
-trans('Width', 'Shop.Demo.Catalog');
-trans('Depth', 'Shop.Demo.Catalog');
-trans('Weight', 'Shop.Demo.Catalog');
+// install-dev/fixtures/fashion/langs/en/data/feature.xml
 trans('Composition', 'Shop.Demo.Catalog');
-trans('Styles', 'Shop.Demo.Catalog');
 trans('Property', 'Shop.Demo.Catalog');

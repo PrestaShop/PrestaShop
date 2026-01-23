@@ -108,7 +108,7 @@ describe('New products block module - Reset module', async () => {
   it('should check the number of products in the "New Products" block', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
-    const numProductsInBlock = await foHummingbirdHomePage.getProductsBlockNumber(page, 'newproducts');
+    const numProductsInBlock = await foHummingbirdHomePage.getProductsBlockNumber(page, 'ps-newproducts');
     expect(numProductsInBlock).to.be.equal(numProducts);
   });
 
@@ -178,7 +178,7 @@ describe('New products block module - Reset module', async () => {
   it('should check the number of products in the "New Products" block', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProductsAfterReset', baseContext);
 
-    const numProductsInBlock = await foHummingbirdHomePage.getProductsBlockNumber(page, 'newproducts');
+    const numProductsInBlock = await foHummingbirdHomePage.getProductsBlockNumber(page, 'ps-newproducts');
     expect(numProductsInBlock).to.be.equal(defaultValue);
   });
 });

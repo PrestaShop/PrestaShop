@@ -20,12 +20,12 @@ import {
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productsGeneral_quantityDiscountsBasedOn';
 
-/*
-Choose quantity discounts based on 'Products'
-Create product with combinations and add a specific price(discount 50% for the first combination)
-Add the combinations to the cart and check the price ATI
-Choose quantity discounts based on 'Combinations'
-Check the cart price ATI
+/**
+ * Choose quantity discounts based on 'Products'
+ * Create product with combinations and add a specific price(discount 50% for the first combination)
+ * Add the combinations to the cart and check the price ATI
+ * Choose quantity discounts based on 'Combinations'
+ * Check the cart price ATI
  */
 describe('BO - Shop Parameters - Product Settings : Choose quantity discount based on', async () => {
   let browserContext: BrowserContext;
@@ -78,7 +78,6 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
   const firstCartTotalATI: number = 30;
   const secondCartTotalATI: number = 40;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);

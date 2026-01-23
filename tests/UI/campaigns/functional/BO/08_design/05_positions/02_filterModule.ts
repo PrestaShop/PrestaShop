@@ -7,6 +7,7 @@ import {
   boDesignPositionsPage,
   boLoginPage,
   type BrowserContext,
+  dataModules,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -16,9 +17,13 @@ const baseContext: string = 'functional_BO_design_positions_filterModule';
 describe('BO - Design - Positions : Filter module', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const moduleName: string = 'Wishlist';
 
-  // before and after functions
+  const hooks: string[] = [
+    'displayAdminCustomers',
+    'displayMyAccountBlock',
+    'displayProductActions',
+  ];
+
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -52,22 +57,15 @@ describe('BO - Design - Positions : Filter module', async () => {
     expect(pageTitle).to.contains(boDesignPositionsPage.pageTitle);
   });
 
-  it(`should filter by module '${moduleName}' and check the result`, async function () {
+  it(`should filter by module '${dataModules.blockwishlist.name}' and check the result`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterModule', baseContext);
 
-    await boDesignPositionsPage.filterModule(page, moduleName);
+    await boDesignPositionsPage.filterModule(page, dataModules.blockwishlist.name);
 
     const numberOfHooks = await boDesignPositionsPage.getNumberOfHooks(page);
-    expect(numberOfHooks).to.eq(5);
+    expect(numberOfHooks).to.eq(hooks.length);
   });
 
-  const hooks: string[] = [
-    'displayAdminCustomers',
-    'displayCustomerAccount',
-    'displayFooter',
-    'displayMyAccountBlock',
-    'displayProductActions',
-  ];
   hooks.forEach((hook: string) => {
     it(`should check the hook '${hook}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkHooks${hook}`, baseContext);
@@ -76,7 +74,7 @@ describe('BO - Design - Positions : Filter module', async () => {
       expect(isVisible).to.eq(true);
 
       const firstModuleName = await boDesignPositionsPage.getModulesInHook(page, hook);
-      expect(firstModuleName).to.contain(moduleName);
+      expect(firstModuleName).to.contain(dataModules.blockwishlist.name);
     });
   });
 
@@ -86,6 +84,6 @@ describe('BO - Design - Positions : Filter module', async () => {
     await boDesignPositionsPage.filterModule(page, 'All modules');
 
     const numberOfHooks = await boDesignPositionsPage.getNumberOfHooks(page);
-    expect(numberOfHooks).to.above(5);
+    expect(numberOfHooks).to.above(hooks.length);
   });
 });

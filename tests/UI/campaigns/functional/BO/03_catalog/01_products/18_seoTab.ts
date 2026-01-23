@@ -19,7 +19,7 @@ import {
 
 const baseContext: string = 'functional_BO_catalog_products_seoTab';
 
-describe('BO - Catalog - Products : Seo tab', async () => {
+describe('BO - Catalog - Products : SEO tab', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -38,7 +38,6 @@ describe('BO - Catalog - Products : Seo tab', async () => {
     friendlyUrl: 'lorem ipsum',
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -144,7 +143,7 @@ describe('BO - Catalog - Products : Seo tab', async () => {
       expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
     });
 
-    it(`'should choose redirectionPage 'Products : ${dataProducts.demo_1.name}'`, async function () {
+    it(`should choose redirectionPage 'Products : ${dataProducts.demo_1.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseRedirectionPage2', baseContext);
 
       await boProductsCreateTabSEOPage.selectRedirectionPage(page, 'Permanent redirection to a product (301)');

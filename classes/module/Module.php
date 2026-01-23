@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
@@ -365,7 +366,9 @@ abstract class ModuleCore implements ModuleInterface
                 }
                 $this->_path = __PS_BASE_URI__ . 'modules/' . $this->name . '/';
             }
-            if (!$this->context->controller instanceof Controller) {
+
+            // In Symfony BO, context controller is not a legacy Controller (proxy/context), keep modules cache to preserve module id.
+            if (!$this->context->controller instanceof Controller && !$this->context->controller instanceof LegacyControllerContext) {
                 static::$modules_cache = null;
             }
             $this->local_path = _PS_MODULE_DIR_ . $this->name . '/';

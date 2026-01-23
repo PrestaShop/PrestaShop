@@ -125,7 +125,7 @@ describe('FO - Order confirmation : Popular product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPopularProductsNumber', baseContext);
 
       const productsNumber = await foHummingbirdCheckoutOrderConfirmationPage.getProductsBlockNumber(page);
-      expect(productsNumber).to.equal(8);
+      expect(productsNumber).to.equal(4);
     });
 
     it('should quick view the first product in list', async function () {

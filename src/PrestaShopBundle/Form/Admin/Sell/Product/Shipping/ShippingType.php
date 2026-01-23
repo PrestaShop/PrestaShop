@@ -128,6 +128,7 @@ class ShippingType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Available carriers', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
+                'label_help_box' => $this->trans('Here you can restrict which carriers are available for this product. For example, if the product cannot be shipped, you can allow only in-store pickup.', 'Admin.Catalog.Help'),
             ])
         ;
     }

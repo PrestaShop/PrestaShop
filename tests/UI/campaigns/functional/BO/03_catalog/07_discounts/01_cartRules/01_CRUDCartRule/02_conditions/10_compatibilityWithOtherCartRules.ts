@@ -306,6 +306,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(pageHeaderTitle).to.equal(foHummingbirdMyAddressesCreatePage.updateFormTitle);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip('should update the address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateAddress', baseContext);
 
@@ -313,6 +314,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(textResult).to.equal(foHummingbirdMyAddressesPage.updateAddressSuccessfulMessage);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip(`should search for the product '${dataProducts.demo_6.name}' and go to product page`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
@@ -323,6 +325,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(pageTitle).to.contains(dataProducts.demo_6.name);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip('should add the product to cart and click on continue shopping', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
@@ -332,6 +335,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(notificationsNumber).to.be.equal(10);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip('should check amounts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAmounts', baseContext);
 
@@ -343,6 +347,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(priceATI).to.equal(totalProducts + totalShipping);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip(`should add the promo code "${cartRuleTestPercent.code}" and check the cart rule name`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCodePercent', baseContext);
 
@@ -352,6 +357,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(cartRuleName).to.contains(cartRuleTestPercent.name);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValuePercent', baseContext);
 
@@ -368,6 +374,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(priceATI).to.equal(totalProducts + totalShipping - totalDiscounts);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip(`should add the promo code "${cartRuleTestFreeGift.code}" and check the cart rule name`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCodeFreeGift', baseContext);
 
@@ -380,6 +387,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(cartRuleName2).to.contains(cartRuleTestPercent.name);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValueFreeGift', baseContext);
 
@@ -404,6 +412,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(priceATI).to.equal(totalProducts + totalShipping - totalDiscounts);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip(`should add the promo code "${cartRuleTestFreeShipping.code}" and check the cart rule name`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCodeFreeShipping', baseContext);
 
@@ -419,6 +428,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(cartRuleName2).to.contains(cartRuleTestPercent.name);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValueFreeShipping', baseContext);
 
@@ -446,6 +456,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(priceATI).to.equal(totalProducts + totalShipping - totalDiscounts);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip(`should add the promo code "${cartRuleTestAmount.code}" and check the cart rule name`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCodeAmount', baseContext);
 
@@ -464,6 +475,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(cartRuleName4).to.contains(cartRuleTestPercent.name);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValueAmount', baseContext);
 
@@ -499,6 +511,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(priceATI).to.equal(totalProducts + totalShipping - totalDiscounts);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip(`should delete the promo code "${cartRuleTestPercent.code}" and check the cart rule name`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removePromoCodePercent', baseContext);
 
@@ -514,6 +527,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(discountValue3).to.equal('Free shipping');
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValueWOPercent', baseContext);
 
@@ -538,6 +552,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(priceATI).to.equal(totalProducts + totalShipping - totalDiscounts);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip(`should add the promo code "${cartRuleTestPercent.code}" and check the cart rule name`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPromoCodePercentBis', baseContext);
 
@@ -556,6 +571,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
       expect(cartRuleName4).to.contains(cartRuleTestPercent.name);
     });
 
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
     it.skip('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValuePercent2', baseContext);
 
@@ -592,6 +608,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
     });
   });
 
+  // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
   describe.skip('BO : Modify cart rule', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBackBO', baseContext);
@@ -628,6 +645,7 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
     });
   });
 
+  // @todo : https://github.com/PrestaShop/PrestaShop/issues/39929
   describe.skip('FO : Check modified cart rule', async () => {
     it('should go back to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBackFO', baseContext);

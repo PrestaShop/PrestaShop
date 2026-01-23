@@ -3,6 +3,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
+import {disableModule, enableModule} from '@commonTests/BO/modules/moduleManager';
 
 import {
   type BrowserContext,
@@ -19,6 +20,7 @@ import {
   foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
+  dataModules,
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
@@ -42,27 +44,29 @@ describe('Wishlist module - Add a product to a list', async () => {
     quantity: 2,
   });
 
-  let browserContext: BrowserContext;
-  let page: Page;
-  let wishlistName: string;
-
-  // before and after functions
-  before(async function () {
-    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
-    page = await utilsPlaywright.newTab(browserContext);
-  });
-
-  after(async () => {
-    await utilsPlaywright.closeBrowserContext(browserContext);
-  });
-
-  // Pre-condition : Create product out of stock not allowed
+  // PRE-TEST : Create product out of stock not allowed
   createProductTest(productOutOfStockNotAllowed, `${baseContext}_preTest_0`);
 
-  // Pre-condition : Create product with a low stock
+  // PRE-TEST : Create product with a low stock
   createProductTest(productLowStock, `${baseContext}_preTest_1`);
 
+  // PRE-TEST : Enable Blockwishlist
+  enableModule(dataModules.blockwishlist, `${baseContext}_preTest_2`);
+
   describe('Add a product to a list', async () => {
+    let browserContext: BrowserContext;
+    let page: Page;
+    let wishlistName: string;
+
+    before(async function () {
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
+    });
+
+    after(async () => {
+      await utilsPlaywright.closeBrowserContext(browserContext);
+    });
+
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
@@ -442,4 +446,7 @@ describe('Wishlist module - Add a product to a list', async () => {
   deleteProductTest(productOutOfStockNotAllowed, `${baseContext}_postTest_0`);
 
   deleteProductTest(productLowStock, `${baseContext}_postTest_1`);
+
+  // POST-TEST : Disable Blockwishlist
+  disableModule(dataModules.blockwishlist, `${baseContext}_postTest_2`);
 });

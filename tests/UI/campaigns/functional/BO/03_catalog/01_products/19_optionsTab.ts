@@ -18,6 +18,7 @@ import {
   type Page,
   utilsFile,
   utilsPlaywright,
+  dataCategories,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_catalog_products_optionsTab';
@@ -37,7 +38,6 @@ describe('BO - Catalog - Products : Options tab', async () => {
     status: true,
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -154,7 +154,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
       await foHummingbirdProductPage.clickOnBreadCrumbLink(page, 'clothes');
 
       const pageTitle = await foHummingbirdCategoryPage.getHeaderPageName(page);
-      expect(pageTitle).to.contains('CLOTHES');
+      expect(pageTitle).to.contains(dataCategories.clothes.name);
     });
 
     it('should check that the created product is visible in clothes category list', async function () {
@@ -205,7 +205,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
       await foHummingbirdProductPage.clickOnBreadCrumbLink(page, 'clothes');
 
       const pageTitle = await foHummingbirdCategoryPage.getHeaderPageName(page);
-      expect(pageTitle).to.contains('CLOTHES');
+      expect(pageTitle).to.contains(dataCategories.clothes.name);
     });
 
     it('should check that the created product is not visible in clothes category list', async function () {
@@ -260,7 +260,7 @@ describe('BO - Catalog - Products : Options tab', async () => {
       await foHummingbirdProductPage.clickOnBreadCrumbLink(page, 'clothes');
 
       const pageTitle = await foHummingbirdCategoryPage.getHeaderPageName(page);
-      expect(pageTitle).to.contains('CLOTHES');
+      expect(pageTitle).to.contains(dataCategories.clothes.name);
     });
 
     it('should check that the created product is not visible in clothes category list', async function () {

@@ -123,6 +123,30 @@ class HookConfigurator
         return $this;
     }
 
+    public function unhookModules(array $removedHooks): self
+    {
+        $cleanHooks = [];
+        foreach ($removedHooks as $hookName => $moduleNames) {
+            foreach ($moduleNames as $moduleName) {
+                if (null === $moduleName) {
+                    $cleanHooks[$hookName][] = $moduleName;
+                    continue;
+                }
+
+                if ($this->moduleManager && !$this->moduleManager->isOnDisk($moduleName)) {
+                    $this->logger?->warning(sprintf('Module %s was removed from disk, no need to unhook it', $moduleName));
+                    continue;
+                }
+                $cleanHooks[$hookName][] = $moduleName;
+            }
+        }
+        if (!empty($cleanHooks)) {
+            $this->hookRepository->unHookModules($cleanHooks);
+        }
+
+        return $this;
+    }
+
     private function getUniqueModuleToHookList(array $hooks)
     {
         $list = [];

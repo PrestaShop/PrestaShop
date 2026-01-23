@@ -23,14 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-trans('Increase', 'Admin.Catalog.Feature');
-
-trans('Decrease', 'Admin.Catalog.Feature');
-
+// install-dev/langs/en/data/stock_mvt_reason.xml
 trans('Customer Order', 'Admin.Catalog.Feature');
-
-trans('Adjustment following an inventory of stock', 'Admin.Catalog.Feature');
-
 trans('Product Return', 'Admin.Catalog.Feature');
-
-trans('Manual Entry', 'Admin.Catalog.Feature');
+trans('Employee Edition', 'Admin.Catalog.Feature');

@@ -338,14 +338,12 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
     {
         $qb = $this->connection->createQueryBuilder();
 
-        $count = $qb->select('COUNT(*)')
+        return (int) $qb->select('COUNT(*)')
             ->from($this->prefix . 'order_carrier', 'oc')
             ->where('oc.id_carrier = :carrierId')
             ->setParameter('carrierId', $carrierId->getValue())
             ->executeQuery()
             ->fetchOne();
-
-        return $count;
     }
 
     /**

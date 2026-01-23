@@ -114,6 +114,32 @@ class HookRepository
         return $this;
     }
 
+    public function unHookSpecificModuleFromHook(string $hookName, string $moduleName): self
+    {
+        $hookId = $this->getIdByName($hookName);
+        if (!$hookId) {
+            return $this;
+        }
+        $moduleId = $this->getIdModule($moduleName);
+        if (!$moduleId) {
+            return $this;
+        }
+        $shopId = (int) $this->shop->id;
+        if (!$shopId) {
+            return $this;
+        }
+
+        $this->db->execute("DELETE FROM {$this->db_prefix}hook_module
+             WHERE id_hook = $hookId AND id_shop = $shopId AND id_module = $moduleId
+        ");
+
+        $this->db->execute("DELETE FROM {$this->db_prefix}hook_module_exceptions
+            WHERE id_hook = $hookId AND id_shop = $shopId AND id_module = $moduleId
+        ");
+
+        return $this;
+    }
+
     /**
      * Saves hook settings for a list of hooks.
      * The $hooks array should have this format:
@@ -177,6 +203,27 @@ class HookRepository
                         $id_hook,
                         $extra_data['except_pages']
                     );
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    public function unHookModules(array $modulesToUnhook): self
+    {
+        foreach ($modulesToUnhook as $hookName => $moduleNames) {
+            $hookId = $this->getIdByName($hookName);
+            if (!$hookId) {
+                continue;
+            }
+
+            foreach ($moduleNames as $moduleName) {
+                // Null matches all hooked modules, so we remove all modules for this hook
+                if (null === $moduleName) {
+                    $this->unHookModulesFromHook($hookName);
+                } elseif (is_string($moduleName)) {
+                    $this->unHookSpecificModuleFromHook($hookName, $moduleName);
                 }
             }
         }

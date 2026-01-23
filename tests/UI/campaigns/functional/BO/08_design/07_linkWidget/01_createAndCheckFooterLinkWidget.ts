@@ -17,17 +17,16 @@ import {
 
 const baseContext: string = 'functional_BO_design_linkWidget_createAndCheckFooterLinkWidget';
 
-/*
-Create link widget
-Check existence in FO
-Delete link widget created
+/**
+ * Create link widget
+ * Check existence in FO
+ * Delete link widget created
  */
 describe('BO - Design - Link Widget : Create footer link widget and check it in FO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfLinkWidgetInFooter: number = 0;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);

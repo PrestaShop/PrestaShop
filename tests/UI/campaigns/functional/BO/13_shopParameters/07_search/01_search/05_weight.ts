@@ -917,7 +917,7 @@ describe('BO - Shop Parameters - Search: Weight', async () => {
         const numResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
         expect(numResults).to.eq(8);
 
-        const titleTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, 'title');
+        const titleTable = await foHummingbirdSearchResultsPage.getAllProductsAttribute(page, 'miniature__title');
         expect(titleTable.length).to.equals(8);
         for (let nthTable = 0; nthTable < titleTable.length; nthTable++) {
           expect(titleTable[nthTable]).to.not.contains(searchValue);

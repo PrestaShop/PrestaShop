@@ -118,8 +118,7 @@ describe('FO - Checkout : Show details', async () => {
         expect(result.image).to.contains(dataProducts.demo_6.coverImage),
         expect(result.name).to.equal(dataProducts.demo_6.name),
         expect(result.quantity).to.equal(2),
-        // @todo : https://github.com/PrestaShop/hummingbird/issues/865
-        //expect(result.price).to.equal(dataProducts.demo_6.combinations[0].price),
+        expect(result.price).to.equal(dataProducts.demo_6.combinations[0].price * 2),
       ]);
 
       const attributes = await foHummingbirdCheckoutPage.getProductAttributes(page, 2);

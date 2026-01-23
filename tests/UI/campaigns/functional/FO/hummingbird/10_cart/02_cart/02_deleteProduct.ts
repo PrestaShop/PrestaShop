@@ -129,7 +129,7 @@ describe('FO - Cart : Delete product', async () => {
       expect(notificationsNumber).to.equal(0);
     });
 
-    it.skip('should check the message "There are no more items in your cart"', async function () {
+    it('should check the message "There are no more items in your cart"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoItemMessage3', baseContext);
 
       const message = await foHummingbirdCartPage.getNoItemsInYourCartMessage(page);

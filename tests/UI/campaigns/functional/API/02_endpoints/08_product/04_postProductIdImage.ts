@@ -127,6 +127,7 @@ describe('API : POST /products/{productId}/images', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkResponseKeys', baseContext);
 
         expect(jsonResponse).to.have.all.keys(
+          'productId',
           'imageId',
           'imageUrl',
           'thumbnailUrl',
@@ -140,6 +141,7 @@ describe('API : POST /products/{productId}/images', async () => {
       it('should check the JSON Response', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkResponseJSON', baseContext);
 
+        expect(jsonResponse.productId).to.equal(idProduct);
         expect(jsonResponse.imageId).to.be.gt(0);
 
         expect(jsonResponse.imageUrl).to.be.a('string');

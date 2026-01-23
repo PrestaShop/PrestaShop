@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+// install-dev/langs/en/data/risk.xml
 trans('None', 'Admin.Orderscustomers.Feature');
 trans('Low', 'Admin.Orderscustomers.Feature');
 trans('Medium', 'Admin.Orderscustomers.Feature');

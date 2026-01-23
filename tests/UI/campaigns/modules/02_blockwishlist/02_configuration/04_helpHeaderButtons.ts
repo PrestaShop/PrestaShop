@@ -1,6 +1,9 @@
 // Import utils
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import {disableModule, enableModule} from '@commonTests/BO/modules/moduleManager';
+
 import {
   boDashboardPage,
   boLoginPage,
@@ -17,20 +20,22 @@ import {expect} from 'chai';
 const baseContext: string = 'modules_blockwishlist_configuration_helpHeaderButtons';
 
 describe('Wishlist module - Help header buttons', async () => {
-  let browserContext: BrowserContext;
-  let page: Page;
-
-  // before and after functions
-  before(async function () {
-    browserContext = await utilsPlaywright.createBrowserContext(this.browser);
-    page = await utilsPlaywright.newTab(browserContext);
-  });
-
-  after(async () => {
-    await utilsPlaywright.closeBrowserContext(browserContext);
-  });
+  // PRE-TEST : Enable Blockwishlist
+  enableModule(dataModules.blockwishlist, `${baseContext}_preTest_0`);
 
   describe('Help header buttons', async () => {
+    let browserContext: BrowserContext;
+    let page: Page;
+
+    before(async function () {
+      browserContext = await utilsPlaywright.createBrowserContext(this.browser);
+      page = await utilsPlaywright.newTab(browserContext);
+    });
+
+    after(async () => {
+      await utilsPlaywright.closeBrowserContext(browserContext);
+    });
+
     it('should login in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
 
@@ -94,4 +99,7 @@ describe('Wishlist module - Help header buttons', async () => {
       expect(isHelpSidebarClosed).to.eq(true);
     });
   });
+
+  // POST-TEST : Disable Blockwishlist
+  disableModule(dataModules.blockwishlist, `${baseContext}_postTest_0`);
 });

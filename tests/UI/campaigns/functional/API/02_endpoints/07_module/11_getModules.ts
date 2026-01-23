@@ -58,7 +58,8 @@ describe('API : GET /modules', async () => {
       it(`should request the endpoint /modules (page ${arg.page})`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `requestEndpoint${index}`, baseContext);
 
-        const apiResponse = await apiContext.get(`modules${arg.page > 0 ? `?offset=${arg.page * 50}` : ''}`, {
+        // We force the limit to 50 because the default value is 10
+        const apiResponse = await apiContext.get(`modules?limit=50${arg.page > 0 ? `&offset=${arg.page * 50}` : ''}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -89,6 +90,7 @@ describe('API : GET /modules', async () => {
         expect(jsonResponse).to.have.all.keys(keys);
 
         expect(jsonResponse.items.length).to.be.gt(0);
+        // We paginate by 50 so we expect only two pages, and one not full
         if (arg.page === 0) {
           expect(jsonResponse.items.length).to.be.equal(jsonResponse.limit);
         } else {
