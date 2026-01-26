@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 
 /**
  * Class ImageCore.
@@ -59,7 +60,7 @@ class ImageCore extends ObjectModel
     protected $existing_path;
 
     /** @var int access rights of created folders (octal) */
-    protected static $access_rights = \PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem::PERM_DIR_GROUP_WRITABLE;
+    protected static $access_rights = FileSystem::PERM_DIR_GROUP_WRITABLE;
 
     /**
      * @see ObjectModel::$definition
