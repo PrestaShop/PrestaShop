@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Command;
 
 use Exception;
 use InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Hook\Extractor\HookExtractor;
 use PrestaShop\PrestaShop\Core\Hook\Provider\GridDefinitionHookByServiceIdsProvider;
 use PrestaShop\PrestaShop\Core\Version;

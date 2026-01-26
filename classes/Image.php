@@ -25,8 +25,8 @@
  */
 
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 
 /**
  * Class ImageCore.

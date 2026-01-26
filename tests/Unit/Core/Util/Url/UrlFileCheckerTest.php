@@ -29,9 +29,9 @@ namespace Tests\Unit\Core\Util\Url;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlFileChecker;
 use PrestaShop\PrestaShop\Core\Util\Url\UrlFileCheckerInterface;
-use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 
 class UrlFileCheckerTest extends TestCase
 {
