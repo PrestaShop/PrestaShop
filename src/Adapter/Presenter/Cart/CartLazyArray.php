@@ -495,7 +495,8 @@ class CartLazyArray extends AbstractLazyArray
     {
         return !$this->cartVoucherHasPercentReduction($cartVoucher)
             && !$this->cartVoucherHasAmountReduction($cartVoucher)
-            && !$this->cartVoucherHasGiftProductReduction($cartVoucher);
+            && !$this->cartVoucherHasGiftProductReduction($cartVoucher)
+            && $cartVoucher['free_shipping'];
     }
 
     private function cartVoucherHasPercentReduction(array $cartVoucher): bool
