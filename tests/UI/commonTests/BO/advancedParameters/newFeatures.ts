@@ -26,6 +26,9 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
     case boFeatureFlagPage.featureFlagImprovedShipment:
       title = 'Improved shipment';
       break;
+    case boFeatureFlagPage.featureFlagDiscount:
+      title = 'Discount';
+      break;
     default:
       throw new Error(`The feature flag ${featureFlag} is not defined`);
   }
