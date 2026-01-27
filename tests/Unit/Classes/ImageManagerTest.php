@@ -41,6 +41,7 @@ class ImageManagerTest extends TestCase
             ['name.jpe', null, true],
             ['name.png', null, true],
             ['name.webp', null, true],
+            ['name.avif', null, true],
             ['name.name.gif', null, true],
             ['name.GIF', null, true],
             ['name.doc', ['doc'], true],
@@ -72,6 +73,7 @@ class ImageManagerTest extends TestCase
             ['file.jpeg', 'image/jpeg'],
             ['file.png', 'image/png'],
             ['file.webp', 'image/webp'],
+            ['file.avif', 'image/avif'],
             ['file.test', 'image/jpeg'],
             ['file', 'image/jpeg'],
         ];

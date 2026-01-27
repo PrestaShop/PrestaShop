@@ -25,6 +25,7 @@ class ImageManagerCore
         'image/png',
         'image/x-png',
         'image/webp',
+        'image/avif',
         'image/svg+xml',
         'image/svg',
     ];
@@ -36,6 +37,7 @@ class ImageManagerCore
         'jpe',
         'png',
         'webp',
+        'avif',
     ];
 
     /**
