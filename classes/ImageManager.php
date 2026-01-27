@@ -211,7 +211,7 @@ class ImageManagerCore
                     $sourceHeight,
                     $imageFitment
                 );
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Imagick failed, fall through to GD
             }
         }
@@ -1008,7 +1008,7 @@ class ImageManagerCore
      *
      * @return bool
      *
-     * @throws \ImagickException
+     * @throws ImagickException
      */
     private static function resizeWithImagick(
         string $sourceFile,
@@ -1024,7 +1024,7 @@ class ImageManagerCore
         ?int &$sourceHeight,
         string $imageFitment = ImageFitment::FIT
     ): bool {
-        $imagick = new \Imagick($sourceFile);
+        $imagick = new Imagick($sourceFile);
 
         // Auto-orient based on EXIF data
         $imagick->autoOrient();
@@ -1059,20 +1059,20 @@ class ImageManagerCore
         $targetHeight = $destinationHeight;
 
         // Resize the image using Lanczos filter for better quality
-        $imagick->resizeImage($nextWidth, $nextHeight, \Imagick::FILTER_LANCZOS, 1);
+        $imagick->resizeImage($nextWidth, $nextHeight, Imagick::FILTER_LANCZOS, 1);
 
         // Create canvas and composite for centering
-        $canvas = new \Imagick();
+        $canvas = new Imagick();
 
         if (in_array($destinationFileType, ['png', 'webp', 'avif'])) {
-            $canvas->newImage($destinationWidth, $destinationHeight, new \ImagickPixel('transparent'));
+            $canvas->newImage($destinationWidth, $destinationHeight, new ImagickPixel('transparent'));
         } else {
-            $canvas->newImage($destinationWidth, $destinationHeight, new \ImagickPixel('white'));
+            $canvas->newImage($destinationWidth, $destinationHeight, new ImagickPixel('white'));
         }
 
         $offsetX = (int) (($destinationWidth - $nextWidth) / 2);
         $offsetY = (int) (($destinationHeight - $nextHeight) / 2);
-        $canvas->compositeImage($imagick, \Imagick::COMPOSITE_OVER, $offsetX, $offsetY);
+        $canvas->compositeImage($imagick, Imagick::COMPOSITE_OVER, $offsetX, $offsetY);
 
         $imagick->destroy();
 
@@ -1087,11 +1087,11 @@ class ImageManagerCore
     /**
      * Get the IMAGETYPE_* constant equivalent from an Imagick object.
      *
-     * @param \Imagick $imagick
+     * @param Imagick $imagick
      *
      * @return int
      */
-    private static function getImagickSourceFileType(\Imagick $imagick): int
+    private static function getImagickSourceFileType(Imagick $imagick): int
     {
         $format = strtoupper($imagick->getImageFormat());
 
@@ -1107,12 +1107,12 @@ class ImageManagerCore
      * Write an image using Imagick.
      *
      * @param string $type
-     * @param \Imagick $imagick
+     * @param Imagick $imagick
      * @param string $filename
      *
      * @return bool
      */
-    private static function writeImagick(string $type, \Imagick $imagick, string $filename): bool
+    private static function writeImagick(string $type, Imagick $imagick, string $filename): bool
     {
         static $psPngQuality = null;
         static $psJpegQuality = null;
@@ -1166,7 +1166,7 @@ class ImageManagerCore
                 $imagick->setImageFormat('jpeg');
                 $quality = ($psJpegQuality === false ? 90 : (int) $psJpegQuality);
                 $imagick->setImageCompressionQuality($quality);
-                $imagick->setInterlaceScheme(\Imagick::INTERLACE_PLANE);
+                $imagick->setInterlaceScheme(Imagick::INTERLACE_PLANE);
 
                 break;
         }
