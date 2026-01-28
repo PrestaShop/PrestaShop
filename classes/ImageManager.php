@@ -910,11 +910,17 @@ class ImageManagerCore
      */
     private static function getDestinationFileType(string $destinationFileType, bool $forceType, int $sourceFileType): string
     {
+        /*
+         * If the filetype is not forced and we are requesting a JPG file, we will adjust the format inside
+         * the image according to PS_IMAGE_QUALITY in some cases.
+         */
         if (!$forceType && $destinationFileType === 'jpg') {
+            // If PS_IMAGE_QUALITY is set to png_all, we will use PNG file no matter the source.
             if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all') {
                 $destinationFileType = 'png';
             }
 
+            // If PS_IMAGE_QUALITY is set to png (optional), we will use PNG if the original format could support transparency.
             if (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $sourceFileType != IMAGETYPE_JPEG) {
                 $destinationFileType = 'png';
             }
