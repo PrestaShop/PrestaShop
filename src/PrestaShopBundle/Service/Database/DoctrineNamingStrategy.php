@@ -55,7 +55,7 @@ class DoctrineNamingStrategy extends UnderscoreNamingStrategy
      *
      * This override adds a prefix to the underscored table name.
      */
-    public function classToTableName($className)
+    public function classToTableName($className): string
     {
         $underscored = parent::classToTableName($className);
 
@@ -67,7 +67,7 @@ class DoctrineNamingStrategy extends UnderscoreNamingStrategy
      *
      * This override adds a prefix to the underscored table name.
      */
-    public function joinTableName($sourceEntity, $targetEntity, $propertyName = null)
+    public function joinTableName($sourceEntity, $targetEntity, $propertyName = null): string
     {
         $prestashopTable = $this->getPrestashopTable($sourceEntity, $propertyName);
         if (!empty($prestashopTable)) {

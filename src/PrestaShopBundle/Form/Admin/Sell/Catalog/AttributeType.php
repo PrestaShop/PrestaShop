@@ -62,7 +62,7 @@ class AttributeType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $attributeGroupId = (is_int($options['attribute_group']) && $options['attribute_group'] > 0) ? $options['attribute_group'] : '';
 
@@ -121,7 +121,7 @@ class AttributeType extends TranslatorAwareType
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired('attribute_group');
         parent::configureOptions($resolver);

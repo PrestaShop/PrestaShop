@@ -74,7 +74,7 @@ class CategoryFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
         $view->vars['nested_tree'] = $options['nested_tree'];
@@ -83,7 +83,7 @@ class CategoryFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $nestedTree = $this->categoryProvider->getNestedCategories(null, $this->contextLangId, false);
@@ -105,7 +105,7 @@ class CategoryFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return ChoiceType::class;
     }
@@ -113,7 +113,7 @@ class CategoryFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'category_filter';
     }

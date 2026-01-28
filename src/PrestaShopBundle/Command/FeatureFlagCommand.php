@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Command;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShopBundle\Entity\FeatureFlag;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -40,12 +41,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * This CLI command allows to enable/disable a feature flag or to list all of them.
  */
+#[AsCommand(name: 'prestashop:feature-flag', description: 'Manage feature flags via command line')]
 class FeatureFlagCommand extends Command
 {
     private const SUCCESS_RETURN_CODE = 0;
     private const INVALID_ARGUMENTS_RETURN_CODE = 1;
-
-    protected static $defaultName = 'prestashop:feature-flag';
 
     /**
      * @var string[]
@@ -63,7 +63,7 @@ class FeatureFlagCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Manage feature flags via command line')

@@ -40,7 +40,7 @@ class MoneyWithSuffixType extends MoneyType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $pattern = self::getPattern($options['currency']);
 
@@ -59,7 +59,7 @@ class MoneyWithSuffixType extends MoneyType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 

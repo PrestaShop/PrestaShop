@@ -44,7 +44,7 @@ final class CustomerPreferencesFormHandler extends Handler
     /**
      * {@inheritdoc}
      */
-    public function save(array $data)
+    public function save(array $data): array
     {
         $errors = parent::save($data);
 

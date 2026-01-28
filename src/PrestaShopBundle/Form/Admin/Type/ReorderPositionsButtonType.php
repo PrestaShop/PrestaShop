@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -37,7 +39,7 @@ class ReorderPositionsButtonType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('position', ButtonType::class, [
             'label' => $this->trans('Rearrange', 'Admin.Actions'),

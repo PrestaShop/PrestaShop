@@ -51,7 +51,7 @@ final class GeolocationOptionsFormDataProvider implements FormDataProviderInterf
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         $configuration = $this->dataConfiguration->getConfiguration();
 
@@ -67,7 +67,7 @@ final class GeolocationOptionsFormDataProvider implements FormDataProviderInterf
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         $errors = [];
 

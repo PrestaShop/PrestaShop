@@ -63,7 +63,7 @@ class ForwardCustomerThreadType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $employeeChoices = $this->employeeChoiceProvider->getChoices();
         $employeeChoices[$this->translator->trans('Someone else', [], 'Admin.Orderscustomers.Feature')] = 0;

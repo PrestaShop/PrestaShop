@@ -45,7 +45,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ProductShopsType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('source_shop_id', HiddenType::class)
@@ -81,7 +81,7 @@ class ProductShopsType extends TranslatorAwareType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

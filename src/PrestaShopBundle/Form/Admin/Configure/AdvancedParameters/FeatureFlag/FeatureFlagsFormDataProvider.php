@@ -54,7 +54,7 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
     ) {
     }
 
-    public function getData()
+    public function getData(): array
     {
         $featureFlags = $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findBy(['stability' => $this->stability]);
 
@@ -80,7 +80,7 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
         return ['feature_flags' => $featureFlagsData];
     }
 
-    public function setData(array $flagsData)
+    public function setData(array $flagsData): array
     {
         $featureFlags = $flagsData['feature_flags'];
         if (!$this->validateFlagsData($featureFlags)) {

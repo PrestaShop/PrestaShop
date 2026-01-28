@@ -50,7 +50,7 @@ final class TaxOptionsFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->taxOptionsDataConfiguration->getConfiguration();
     }
@@ -58,7 +58,7 @@ final class TaxOptionsFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         return $this->taxOptionsDataConfiguration->updateConfiguration($data);
     }

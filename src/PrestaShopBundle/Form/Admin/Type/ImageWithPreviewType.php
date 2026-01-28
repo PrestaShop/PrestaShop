@@ -38,7 +38,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ImageWithPreviewType extends FileType
 {
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
         $view->vars['download_url'] = $options['download_url'];
@@ -55,7 +55,7 @@ class ImageWithPreviewType extends FileType
         $view->vars['warning_message'] = $options['warning_message'];
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

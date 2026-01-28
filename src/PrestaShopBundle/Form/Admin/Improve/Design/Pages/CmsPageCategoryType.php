@@ -77,7 +77,7 @@ class CmsPageCategoryType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $invalidCharactersForCatalogLabel = $this->trans('Invalid characters:', 'Admin.Global') . TypedRegexValidator::CATALOG_CHARS;
         $invalidCharactersForNameLabel = $this->trans('Invalid characters:', 'Admin.Global') . TypedRegexValidator::GENERIC_NAME_CHARS;

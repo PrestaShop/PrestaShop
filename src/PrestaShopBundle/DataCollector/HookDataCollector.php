@@ -50,7 +50,7 @@ final class HookDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, ?Throwable $exception = null)
+    public function collect(Request $request, Response $response, ?Throwable $exception = null): void
     {
         $hooks = $this->registry->getHooks();
         $calledHooks = $this->registry->getCalledHooks();
@@ -107,7 +107,7 @@ final class HookDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function reset()
+    public function reset(): void
     {
         $this->data = [];
     }
@@ -115,7 +115,7 @@ final class HookDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'ps.hooks_collector';
     }

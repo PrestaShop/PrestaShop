@@ -40,7 +40,7 @@ final class LegacyCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, ?Throwable $exception = null)
+    public function collect(Request $request, Response $response, ?Throwable $exception = null): void
     {
         $this->data = [
             'isProfilerEnabled' => false,
@@ -78,7 +78,7 @@ final class LegacyCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'ps.legacy_collector';
     }
@@ -86,7 +86,7 @@ final class LegacyCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function reset()
+    public function reset(): void
     {
         $this->data = [];
     }

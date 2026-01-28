@@ -68,7 +68,7 @@ class LegacyCacheClearer implements CacheClearerInterface
     ) {
     }
 
-    public function clear(string $cacheDir)
+    public function clear(string $cacheDir): void
     {
         if (!is_dir($this->legacyCacheDir)) {
             return;

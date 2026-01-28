@@ -37,7 +37,7 @@ interface FormHandlerInterface
     /**
      * @return FormInterface
      */
-    public function getForm();
+    public function getForm(): FormInterface;
 
     /**
      * Describe what need to be done on saving the form: mostly persists the data
@@ -49,5 +49,5 @@ interface FormHandlerInterface
      *
      * @throws Exception if the data can't be handled
      */
-    public function save(array $data);
+    public function save(array $data): array;
 }

@@ -40,7 +40,7 @@ class RedirectionTargetTransformer implements DataTransformerInterface
     /**
      * {@inheritDoc}
      */
-    public function transform($redirectionData)
+    public function transform(mixed $redirectionData): mixed
     {
         if (isset($redirectionData['target'])) {
             $redirectionData['target'] = [
@@ -54,7 +54,7 @@ class RedirectionTargetTransformer implements DataTransformerInterface
     /**
      * {@inheritDoc}
      */
-    public function reverseTransform($redirectionData)
+    public function reverseTransform(mixed $redirectionData): mixed
     {
         // EntitySearchInputType contains a collection of hidden inputs, for redirection only one target is selected
         // and we just want to retrieve the first (and only) selected ID

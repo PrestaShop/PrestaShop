@@ -67,7 +67,7 @@ class DebugCommand extends Command
         $this->debugConfiguration = $debugConfiguration;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('prestashop:debug')

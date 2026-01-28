@@ -44,13 +44,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class EnrichedChoiceType extends ChoiceType
 {
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
         $view->vars['flex_direction'] = $options['flex_direction'];
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

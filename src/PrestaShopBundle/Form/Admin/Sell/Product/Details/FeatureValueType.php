@@ -45,7 +45,7 @@ class FeatureValueType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('feature_value_id', HiddenType::class, [
@@ -118,7 +118,7 @@ class FeatureValueType extends TranslatorAwareType
         ]);
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
         $formData = $form->getData();

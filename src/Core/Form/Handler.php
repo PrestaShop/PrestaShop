@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form;
 use Exception;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 /**
@@ -98,7 +99,7 @@ class Handler implements FormHandlerInterface
      *
      * @throws Exception
      */
-    public function getForm()
+    public function getForm(): FormInterface
     {
         $formBuilder = $this->formFactory->createNamedBuilder($this->formName, $this->form);
 
@@ -120,7 +121,7 @@ class Handler implements FormHandlerInterface
      * @throws Exception
      * @throws UndefinedOptionsException
      */
-    public function save(array $data)
+    public function save(array $data): array
     {
         $errors = $this->formDataProvider->setData($data);
 

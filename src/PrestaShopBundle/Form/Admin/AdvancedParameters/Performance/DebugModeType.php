@@ -39,7 +39,7 @@ class DebugModeType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('disable_overrides', SwitchType::class, [
@@ -80,7 +80,7 @@ class DebugModeType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'performance_debug_mode_block';
     }

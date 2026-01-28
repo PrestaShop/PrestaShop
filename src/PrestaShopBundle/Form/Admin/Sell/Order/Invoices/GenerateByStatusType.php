@@ -70,7 +70,7 @@ class GenerateByStatusType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('order_states', ChoiceType::class, [
@@ -85,7 +85,7 @@ class GenerateByStatusType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function finishView(FormView $view, FormInterface $form, array $options)
+    public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         /** @var FormView $child */
         foreach ($view->children['order_states'] as $child) {
@@ -100,7 +100,7 @@ class GenerateByStatusType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'Admin.Orderscustomers.Feature',
@@ -110,7 +110,7 @@ class GenerateByStatusType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'orders_invoices_by_status_block';
     }

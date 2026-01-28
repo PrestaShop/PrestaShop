@@ -47,7 +47,7 @@ class TaxType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $invalidCharsText = sprintf(
             '%s ' . TypedRegexValidator::GENERIC_NAME_CHARS,

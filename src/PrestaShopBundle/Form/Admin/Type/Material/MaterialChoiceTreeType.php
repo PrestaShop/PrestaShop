@@ -36,7 +36,7 @@ class MaterialChoiceTreeType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $selectedData = [];
         if (null !== $form->getData()) {
@@ -55,7 +55,7 @@ class MaterialChoiceTreeType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -81,7 +81,7 @@ class MaterialChoiceTreeType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'material_choice_tree';
     }

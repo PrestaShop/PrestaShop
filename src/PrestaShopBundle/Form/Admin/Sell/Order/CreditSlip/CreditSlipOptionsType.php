@@ -41,7 +41,7 @@ final class CreditSlipOptionsType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('slip_prefix', TranslatableType::class, [
             'label' => $this->trans('Credit slip prefix', 'Admin.Orderscustomers.Feature'),

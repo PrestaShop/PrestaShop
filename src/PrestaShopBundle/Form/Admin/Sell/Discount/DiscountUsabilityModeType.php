@@ -43,7 +43,7 @@ class DiscountUsabilityModeType extends TranslatorAwareType
     public const CODE_MODE = 'code';
     protected const GENERATED_CODE_LENGTH = 8;
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(self::AUTO_MODE, HiddenType::class, [
@@ -78,7 +78,7 @@ class DiscountUsabilityModeType extends TranslatorAwareType
         ]);
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return ToggleChildrenChoiceType::class;
     }

@@ -43,7 +43,7 @@ class ProductPreferencesFormHandler extends Handler
     /**
      * {@inheritdoc}
      */
-    public function save(array $data)
+    public function save(array $data): array
     {
         $errors = $this->formDataProvider->setData($data);
 

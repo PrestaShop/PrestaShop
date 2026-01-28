@@ -57,7 +57,7 @@ class DiscountCustomerEligibilityChoiceType extends TranslatorAwareType
         $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(self::ALL_CUSTOMERS, HiddenType::class, [
@@ -120,7 +120,7 @@ class DiscountCustomerEligibilityChoiceType extends TranslatorAwareType
         ]);
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return ToggleChildrenChoiceType::class;
     }

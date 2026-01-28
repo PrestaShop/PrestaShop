@@ -39,7 +39,7 @@ class RemoveXmlCompiledContainerPass implements CompilerPassInterface
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if ($container->getParameter('kernel.debug')) {
             $filename = $container->getParameter('debug.container.dump');

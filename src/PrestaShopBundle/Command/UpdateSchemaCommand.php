@@ -62,7 +62,7 @@ class UpdateSchemaCommand extends Command
         $this->em = $manager;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('prestashop:schema:update-without-foreign')

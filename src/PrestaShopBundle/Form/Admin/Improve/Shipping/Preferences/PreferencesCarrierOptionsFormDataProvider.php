@@ -50,7 +50,7 @@ class PreferencesCarrierOptionsFormDataProvider implements FormDataProviderInter
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->dataConfiguration->getConfiguration();
     }
@@ -58,7 +58,7 @@ class PreferencesCarrierOptionsFormDataProvider implements FormDataProviderInter
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         return $this->dataConfiguration->updateConfiguration($data);
     }

@@ -55,7 +55,7 @@ abstract class CommonAbstractType extends AbstractType
      *
      * @return array
      */
-    protected function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
+    protected function formatDataChoicesList($list, $mapping_value = 'id', $mapping_name = 'name'): array
     {
         @trigger_error(
             sprintf(
@@ -79,7 +79,7 @@ abstract class CommonAbstractType extends AbstractType
      *
      * @return array
      */
-    protected function formatDataDuplicateChoicesList($list, $mapping_value = 'id', $mapping_name = 'name')
+    protected function formatDataDuplicateChoicesList($list, $mapping_value = 'id', $mapping_name = 'name'): array
     {
         @trigger_error(
             sprintf(

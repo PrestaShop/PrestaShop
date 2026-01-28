@@ -48,7 +48,7 @@ final class MaintenanceFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->maintenanceConfiguration->getConfiguration();
     }
@@ -56,7 +56,7 @@ final class MaintenanceFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         return $this->maintenanceConfiguration->updateConfiguration($data);
     }

@@ -70,7 +70,7 @@ class EntitySearchInputType extends CollectionType
     /**
      * {@inheritDoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
@@ -146,7 +146,7 @@ class EntitySearchInputType extends CollectionType
     /**
      * {@inheritDoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         // If no mapping has been defined it is built based on the prototype field names
         /** @var FormInterface $prototype */

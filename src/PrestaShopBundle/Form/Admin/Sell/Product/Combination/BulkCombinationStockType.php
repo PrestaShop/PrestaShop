@@ -65,7 +65,7 @@ class BulkCombinationStockType extends TranslatorAwareType
         $this->stockManagementEnabled = $stockManagementEnabled;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if ($this->stockManagementEnabled) {
             $builder
@@ -169,7 +169,7 @@ class BulkCombinationStockType extends TranslatorAwareType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

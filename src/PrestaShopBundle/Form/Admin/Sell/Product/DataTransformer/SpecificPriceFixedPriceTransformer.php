@@ -50,7 +50,7 @@ class SpecificPriceFixedPriceTransformer implements DataTransformerInterface
         $this->numberTransformer = new NumberToLocalizedStringTransformer($scale, $grouping, $roundingMode);
     }
 
-    public function transform($fixedPriceLocalizedValue)
+    public function transform(mixed $fixedPriceLocalizedValue): mixed
     {
         $floatValue = $this->numberTransformer->reverseTransform((string) $fixedPriceLocalizedValue);
         if (InitialPrice::isInitialPriceValue((string) $floatValue)) {
@@ -60,7 +60,7 @@ class SpecificPriceFixedPriceTransformer implements DataTransformerInterface
         return $fixedPriceLocalizedValue;
     }
 
-    public function reverseTransform($fixedPriceViewValue)
+    public function reverseTransform(mixed $fixedPriceViewValue): mixed
     {
         if ($fixedPriceViewValue === '') {
             return InitialPrice::INITIAL_PRICE_VALUE;

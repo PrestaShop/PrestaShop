@@ -96,7 +96,7 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
      *
      * @return array Twig_SimpleFilter
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('configuration', [$this, 'getConfiguration'], ['deprecated' => true]),
@@ -108,7 +108,7 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
      *
      * @return array An array of functions
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('getAdminLink', [$this, 'getAdminLink']),

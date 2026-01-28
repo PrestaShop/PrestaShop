@@ -40,7 +40,7 @@ final class ReductionValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof ReductionConstraint) {
             throw new UnexpectedTypeException($constraint, ReductionConstraint::class);

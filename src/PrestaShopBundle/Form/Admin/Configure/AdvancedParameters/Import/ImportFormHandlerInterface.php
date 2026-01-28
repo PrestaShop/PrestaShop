@@ -49,5 +49,5 @@ interface ImportFormHandlerInterface
      *
      * @return array of errors
      */
-    public function save(array $data);
+    public function save(array $data): array;
 }

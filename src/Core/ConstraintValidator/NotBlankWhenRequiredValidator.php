@@ -32,7 +32,7 @@ use Symfony\Component\Validator\Constraints\NotBlankValidator;
 
 class NotBlankWhenRequiredValidator extends NotBlankValidator
 {
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if ($constraint instanceof NotBlankWhenRequired && true === $constraint->required) {
             parent::validate($value, $constraint);

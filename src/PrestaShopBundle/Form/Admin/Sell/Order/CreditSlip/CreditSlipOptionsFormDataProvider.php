@@ -50,7 +50,7 @@ final class CreditSlipOptionsFormDataProvider implements FormDataProviderInterfa
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->creditSlipOptionsConfiguration->getConfiguration();
     }
@@ -58,7 +58,7 @@ final class CreditSlipOptionsFormDataProvider implements FormDataProviderInterfa
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         return $this->creditSlipOptionsConfiguration->updateConfiguration($data);
     }

@@ -36,14 +36,14 @@ class LoginFormDataProvider implements FormDataProviderInterface
     ) {
     }
 
-    public function getData()
+    public function getData(): array
     {
         return [
             'email' => $this->authenticationUtils->getLastUsername(),
         ];
     }
 
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         // Nothing to do the login mechanism is handled by the Symfony framework
         return [];

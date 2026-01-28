@@ -75,7 +75,7 @@ class HookExtension extends AbstractExtension
      *
      * @return array Twig_SimpleFilter
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('renderhook', [$this, 'renderHook'], ['is_safe' => ['html']]),
@@ -89,7 +89,7 @@ class HookExtension extends AbstractExtension
      *
      * @return array Twig_SimpleFilter
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('renderhook', [$this, 'renderHook'], ['is_safe' => ['html']]),

@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface;
+use Symfony\Component\Config\Definition\ConfigurationInterface as ConfigConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -46,7 +47,7 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
         $env = $container->getParameter('kernel.environment');
@@ -61,7 +62,7 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration(array $config, ContainerBuilder $container)
+    public function getConfiguration(array $config, ContainerBuilder $container): ?ConfigConfigurationInterface
     {
         return new AddOnsConfiguration();
     }
@@ -74,7 +75,7 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
         return 'prestashop';
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         $container->setParameter('prestashop.admin_cookie_lifetime', $this->getAdminCookieLifetime());
         $this->preprendApiConfig($container);

@@ -44,7 +44,7 @@ class AlertExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -64,7 +64,7 @@ class AlertExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         if (!empty($options['alert_message'])) {
             $view->vars['alert_message'] = is_string($options['alert_message']) ? [$options['alert_message']] : $options['alert_message'];

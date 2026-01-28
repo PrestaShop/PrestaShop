@@ -79,7 +79,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function replace(array $parameters = [])
+    public function replace(array $parameters = []): void
     {
         $this->add($parameters);
     }
@@ -87,7 +87,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function add(array $parameters = [])
+    public function add(array $parameters = []): void
     {
         foreach ($parameters as $key => $value) {
             $this->set($key, $value);

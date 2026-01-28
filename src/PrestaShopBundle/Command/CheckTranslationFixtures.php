@@ -45,7 +45,7 @@ class CheckTranslationFixtures extends Command
 
     protected const OBJECT_FILE = 'classes/%s.php';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('prestashop:translation:check-fixtures')

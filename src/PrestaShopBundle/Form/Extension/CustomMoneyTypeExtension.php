@@ -67,7 +67,7 @@ class CustomMoneyTypeExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'precision' => null,
@@ -84,7 +84,7 @@ class CustomMoneyTypeExtension extends AbstractTypeExtension
     /**
      * {@inheritDoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
 
@@ -94,7 +94,7 @@ class CustomMoneyTypeExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // We only want to adapt the MoneyToLocalizedStringTransformer, so we save the current transformers
         // to restore them after replacing the new MoneyToLocalizedStringTransformer.

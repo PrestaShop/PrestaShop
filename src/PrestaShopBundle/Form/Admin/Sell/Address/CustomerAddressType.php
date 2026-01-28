@@ -97,7 +97,7 @@ class CustomerAddressType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $data = $builder->getData();
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;

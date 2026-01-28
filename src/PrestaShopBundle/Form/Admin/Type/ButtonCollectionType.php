@@ -57,14 +57,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ButtonCollectionType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         foreach ($options['buttons'] as $buttonOptions) {
             $builder->add($buttonOptions['name'], $buttonOptions['type'], $buttonOptions['options']);
         }
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
 
@@ -80,7 +80,7 @@ class ButtonCollectionType extends AbstractType
         $view->vars['use_button_groups'] = $options['use_button_groups'];
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

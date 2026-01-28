@@ -50,7 +50,7 @@ class EventSubscriber implements EventSubscriberInterface
         $this->cacheClearer = $cacheClearer;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ModuleManagementEvent::PRE_ACTION => 'onModuleStateChanged',

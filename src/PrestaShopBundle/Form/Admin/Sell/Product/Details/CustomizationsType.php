@@ -36,7 +36,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CustomizationsType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('customization_fields', CollectionType::class, [
@@ -58,7 +58,7 @@ class CustomizationsType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([

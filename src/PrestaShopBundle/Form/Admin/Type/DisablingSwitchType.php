@@ -42,7 +42,7 @@ class DisablingSwitchType extends SwitchType
     /**
      * {@inheritDoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
@@ -71,7 +71,7 @@ class DisablingSwitchType extends SwitchType
     /**
      * {@inheritDoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
         $view->vars['attr']['data-target-selector'] = $options['target_selector'];

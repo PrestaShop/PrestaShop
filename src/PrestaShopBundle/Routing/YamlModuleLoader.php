@@ -54,7 +54,7 @@ class YamlModuleLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, $type = null): mixed
     {
         if (true === $this->isLoaded) {
             throw new RuntimeException('Do not add the "module" loader twice.');
@@ -78,7 +78,7 @@ class YamlModuleLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, $type = null): bool
     {
         return 'module' === $type;
     }
@@ -86,7 +86,7 @@ class YamlModuleLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function import($resource, $type = null)
+    public function import($resource, $type = null): mixed
     {
         $loadedRoutes = parent::import($resource, $type);
 

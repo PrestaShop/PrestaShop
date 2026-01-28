@@ -55,7 +55,7 @@ final class MetaSettingsSetUpUrlsFormDataProvider implements FormDataProviderInt
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->setUpUrlDataConfiguration->getConfiguration();
     }
@@ -63,7 +63,7 @@ final class MetaSettingsSetUpUrlsFormDataProvider implements FormDataProviderInt
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         return $this->setUpUrlDataConfiguration->updateConfiguration($data);
     }

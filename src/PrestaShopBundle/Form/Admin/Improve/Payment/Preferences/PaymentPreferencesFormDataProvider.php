@@ -51,7 +51,7 @@ final class PaymentPreferencesFormDataProvider implements FormDataProviderInterf
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->paymentModulePreferencesConfiguration->getConfiguration();
     }
@@ -59,7 +59,7 @@ final class PaymentPreferencesFormDataProvider implements FormDataProviderInterf
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         return $this->paymentModulePreferencesConfiguration->updateConfiguration($data);
     }

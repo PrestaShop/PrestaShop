@@ -46,7 +46,7 @@ class CheckTranslationDuplicatesCommand extends Command
         $this->translator = $translator;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('prestashop:translation:find-duplicates')

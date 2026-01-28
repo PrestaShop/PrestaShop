@@ -36,7 +36,7 @@ use Symfony\Component\Form\FormView;
  */
 class ProductSearchAndResetType extends SearchAndResetType
 {
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
         if (null !== $form->getParent()) {

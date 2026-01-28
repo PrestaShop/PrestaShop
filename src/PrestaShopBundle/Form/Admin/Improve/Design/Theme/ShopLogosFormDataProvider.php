@@ -62,7 +62,7 @@ final class ShopLogosFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->themeMultiStoreSettingsFormDataProvider->getData();
     }
@@ -72,7 +72,7 @@ final class ShopLogosFormDataProvider implements FormDataProviderInterface
      *
      * @return array
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         $data = $this->geFilteredFieldsByShopRestriction($data);
 

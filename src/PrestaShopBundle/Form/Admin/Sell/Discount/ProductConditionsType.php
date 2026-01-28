@@ -46,7 +46,7 @@ class ProductConditionsType extends TranslatorAwareType
     public const SPECIFIC_PRODUCTS = 'specific_products';
     public const PRODUCT_SEGMENT = 'product_segment';
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
         $discountType = $options['discount_type'];
@@ -120,7 +120,7 @@ class ProductConditionsType extends TranslatorAwareType
         $resolver->setAllowedTypes('discount_type', ['string']);
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return ToggleChildrenChoiceType::class;
     }

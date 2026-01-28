@@ -64,7 +64,7 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
      * @param mixed $value
      * @param TinyMceMaxLength $constraint
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof TinyMceMaxLength) {
             throw new UnexpectedTypeException($constraint, TinyMceMaxLength::class);

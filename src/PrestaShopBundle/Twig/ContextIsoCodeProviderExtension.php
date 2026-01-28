@@ -50,7 +50,7 @@ class ContextIsoCodeProviderExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('get_context_iso_code', [$this, 'getIsoCode']),

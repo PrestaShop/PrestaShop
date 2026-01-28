@@ -26,18 +26,18 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class CurrencyExchangeRateType
  */
-class CurrencyExchangeRateType extends CommonAbstractType
+class CurrencyExchangeRateType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
     }
 }

@@ -40,7 +40,7 @@ class NotCustomizableProductValidator extends ConstraintValidator
     ) {
     }
 
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof NotCustomizableProduct) {
             throw new UnexpectedTypeException($constraint, NotCustomizableProduct::class);

@@ -62,7 +62,7 @@ final class NamingConventionLinterCommand extends Command
     /**
      * {@inheritdoc}
      */
-    public function configure()
+    public function configure(): void
     {
         $this
             ->setName('prestashop:linter:naming-convention')

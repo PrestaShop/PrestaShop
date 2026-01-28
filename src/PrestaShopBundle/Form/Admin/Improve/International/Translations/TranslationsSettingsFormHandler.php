@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 
 final class TranslationsSettingsFormHandler implements FormHandlerInterface
 {
@@ -73,7 +74,7 @@ final class TranslationsSettingsFormHandler implements FormHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function getForm()
+    public function getForm(): FormInterface
     {
         $formBuilder = $this->formFactory->createNamedBuilder('form', $this->form);
 
@@ -90,7 +91,7 @@ final class TranslationsSettingsFormHandler implements FormHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function save(array $data)
+    public function save(array $data): array
     {
         // Translations forms do not save data
         return [];

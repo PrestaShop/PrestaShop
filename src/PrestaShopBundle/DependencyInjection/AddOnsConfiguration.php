@@ -32,7 +32,7 @@ use Tools;
 
 class AddOnsConfiguration implements ConfigurationInterface
 {
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('prestashop');
         $rootNode = $treeBuilder->getRootNode();

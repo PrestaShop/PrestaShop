@@ -101,7 +101,7 @@ class FormThemeExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -118,7 +118,7 @@ class FormThemeExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         if (!empty($options['form_theme'])) {
             $formThemes = is_array($options['form_theme']) ? $options['form_theme'] : [$options['form_theme']];

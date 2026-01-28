@@ -245,7 +245,7 @@ class CombinationItemType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
         $view->vars['placeholder_data'] = $this->getPlaceholderData($form->all());

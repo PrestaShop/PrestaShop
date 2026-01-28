@@ -33,7 +33,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DiscountCustomerEligibilityType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('eligibility', DiscountCustomerEligibilityChoiceType::class)
@@ -49,7 +49,7 @@ class DiscountCustomerEligibilityType extends TranslatorAwareType
         ]);
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return CardType::class;
     }

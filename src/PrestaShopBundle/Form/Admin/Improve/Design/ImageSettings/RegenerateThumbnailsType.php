@@ -46,7 +46,7 @@ class RegenerateThumbnailsType extends TranslatorAwareType
         parent::__construct($translator, $locales);
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('image', ChoiceType::class, [

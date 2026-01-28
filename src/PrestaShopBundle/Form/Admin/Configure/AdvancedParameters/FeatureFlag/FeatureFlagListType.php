@@ -40,7 +40,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class FeatureFlagListType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('feature_flags', CollectionType::class, [
@@ -56,7 +56,7 @@ class FeatureFlagListType extends TranslatorAwareType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver

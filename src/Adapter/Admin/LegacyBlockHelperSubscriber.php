@@ -40,7 +40,7 @@ class LegacyBlockHelperSubscriber implements EventSubscriberInterface
      *
      * @return array The listeners array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'legacy_block_kpi' => ['renderKpi', 0],

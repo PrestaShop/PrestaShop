@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -35,14 +36,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * This form class is responsible to create a category selector using Nested sets.
  */
-class ChoiceCategoriesTreeType extends CommonAbstractType
+class ChoiceCategoriesTreeType extends AbstractType
 {
     /**
      * {@inheritdoc}
      *
      * Add the var choices to the view
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['choices'] = $options['list'];
         $view->vars['multiple'] = $options['multiple'];
@@ -59,7 +60,7 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
      *
      * Builds the form.
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('tree', ChoiceType::class, [
             'label' => false,
@@ -74,7 +75,7 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'label' => '',
@@ -90,7 +91,7 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
      *
      * @return string The prefix name
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'choice_tree';
     }

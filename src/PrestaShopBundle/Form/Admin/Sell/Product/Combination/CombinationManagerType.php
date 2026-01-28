@@ -61,13 +61,13 @@ class CombinationManagerType extends TranslatorAwareType
         $this->multiStoreFeature = $multiStoreFeature;
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['productId'] = $options['product_id'];
         $view->vars['isMultiStoreActive'] = $this->multiStoreFeature->isActive();
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

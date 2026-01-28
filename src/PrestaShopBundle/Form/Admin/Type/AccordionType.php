@@ -38,7 +38,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class AccordionType extends AbstractType
 {
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['expand_first'] = $options['expand_first'];
         $view->vars['expand_all'] = $options['expand_all'];
@@ -46,7 +46,7 @@ class AccordionType extends AbstractType
         $view->vars['display_one'] = $options['display_one'];
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'expand_first' => true,

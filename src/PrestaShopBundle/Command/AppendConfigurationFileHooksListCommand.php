@@ -64,7 +64,7 @@ class AppendConfigurationFileHooksListCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('prestashop:update:configuration-file-hooks-listing')

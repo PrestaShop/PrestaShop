@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class PassVsprintfValidator extends ConstraintValidator
 {
-    public function validate($translation, Constraint $constraint)
+    public function validate($translation, Constraint $constraint): void
     {
         if (!$constraint instanceof PassVsprintf) {
             throw new UnexpectedTypeException($constraint, 'PrestaShopBundle\Translation\Constraints\PassVsprintf');

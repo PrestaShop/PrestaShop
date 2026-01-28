@@ -39,7 +39,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class DiscountUsabilityType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $cartRuleTypeChoices = [];
         foreach ($options['available_cart_rule_types'] as $cartRuleType) {
@@ -140,7 +140,7 @@ class DiscountUsabilityType extends TranslatorAwareType
         $resolver->setAllowedTypes('available_cart_rule_types', ['array']);
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return CardType::class;
     }

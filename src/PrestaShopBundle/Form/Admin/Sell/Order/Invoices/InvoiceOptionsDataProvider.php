@@ -60,7 +60,7 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->invoiceOptionsConfiguration->getConfiguration();
     }
@@ -68,7 +68,7 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         if ($errors = $this->validate($data)) {
             return $errors;

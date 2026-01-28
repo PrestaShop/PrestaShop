@@ -64,7 +64,7 @@ class AnonymousRouteProvider implements CacheWarmerInterface
         return array_key_exists($routeName, $this->getAnonymousRoutes());
     }
 
-    public function warmUp(string $cacheDir): array
+    public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         // Simply call the method so that its result is put in the cache
         $this->getAnonymousRoutes();

@@ -40,7 +40,7 @@ class DataFormatterExtension extends AbstractExtension
      *
      * @return array Twig_SimpleFilter
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('arrayCast', [$this, 'arrayCast']),
@@ -55,7 +55,7 @@ class DataFormatterExtension extends AbstractExtension
      *
      * @return array Twig_SimpleFunction
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('arrayCast', [$this, 'arrayCast']),

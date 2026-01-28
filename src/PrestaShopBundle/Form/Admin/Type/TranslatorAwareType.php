@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -33,7 +34,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * This feature is not available in Symfony so we need to inject the translator
  * for constraints messages only.
  */
-abstract class TranslatorAwareType extends CommonAbstractType
+abstract class TranslatorAwareType extends AbstractType
 {
     /**
      * @var TranslatorInterface

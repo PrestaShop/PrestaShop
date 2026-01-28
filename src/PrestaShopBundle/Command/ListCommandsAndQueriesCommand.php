@@ -67,7 +67,7 @@ class ListCommandsAndQueriesCommand extends Command
     /**
      * {@inheritdoc}
      */
-    public function configure()
+    public function configure(): void
     {
         $this
             ->setName('prestashop:list:commands-and-queries')

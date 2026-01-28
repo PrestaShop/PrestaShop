@@ -39,7 +39,7 @@ class SlipPdfType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $now = (new DateTime())->format('Y-m-d');
         $builder
@@ -80,7 +80,7 @@ class SlipPdfType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'order_delivery_slip_options';
     }

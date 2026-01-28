@@ -40,7 +40,7 @@ final class GridDefinitionServiceIdsCollectorPass implements CompilerPassInterfa
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
             return;

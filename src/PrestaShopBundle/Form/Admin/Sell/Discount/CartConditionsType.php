@@ -41,7 +41,7 @@ class CartConditionsType extends TranslatorAwareType
     public const MINIMUM_AMOUNT = 'minimum_amount';
     public const MINIMUM_PRODUCT_QUANTITY = 'minimum_product_quantity';
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
         $builder
@@ -85,7 +85,7 @@ class CartConditionsType extends TranslatorAwareType
         ;
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return ToggleChildrenChoiceType::class;
     }

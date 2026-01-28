@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * This class manages the data manipulated using forms
@@ -64,7 +65,7 @@ final class PreferencesFormHandler implements FormHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function getForm()
+    public function getForm(): FormInterface
     {
         return $this->formFactory->createBuilder()
             ->add('general', PreferencesType::class, [
@@ -77,7 +78,7 @@ final class PreferencesFormHandler implements FormHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function save(array $data)
+    public function save(array $data): array
     {
         return $this->formDataProvider->setData($data);
     }

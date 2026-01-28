@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -31,14 +34,12 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class CacheWarmer implements CacheWarmerInterface
 {
-    private $fileSystem;
-
-    public function __construct(Filesystem $fileSystem)
-    {
-        $this->fileSystem = $fileSystem;
+    public function __construct(
+        private readonly Filesystem $fileSystem,
+    ) {
     }
 
-    public function warmUp($cacheDir)
+    public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         $legacyDirs = [
             $cacheDir . DIRECTORY_SEPARATOR . 'cachefs',
@@ -53,7 +54,7 @@ class CacheWarmer implements CacheWarmerInterface
         return [];
     }
 
-    public function isOptional()
+    public function isOptional(): bool
     {
         return false;
     }

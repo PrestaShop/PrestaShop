@@ -52,7 +52,7 @@ final class EmailConfigurationFormDataProvider implements FormDataProviderInterf
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->emailDataConfigurator->getConfiguration();
     }
@@ -60,7 +60,7 @@ final class EmailConfigurationFormDataProvider implements FormDataProviderInterf
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         $errors = $this->checkSmtpConfiguration($data);
         if (!empty($errors)) {

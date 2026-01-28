@@ -51,7 +51,7 @@ class LowStockThresholdType extends TranslatorAwareType
         $this->router = $router;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('low_stock_alert', SwitchType::class, [

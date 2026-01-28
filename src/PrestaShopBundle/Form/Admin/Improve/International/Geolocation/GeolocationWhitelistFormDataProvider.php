@@ -61,7 +61,7 @@ final class GeolocationWhitelistFormDataProvider implements FormDataProviderInte
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->dataConfiguration->getConfiguration();
     }
@@ -69,7 +69,7 @@ final class GeolocationWhitelistFormDataProvider implements FormDataProviderInte
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         $errors = [];
         if (!$this->validator->isCleanHtml($data['geolocation_whitelist'])) {

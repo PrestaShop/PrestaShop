@@ -55,7 +55,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         parent::__construct($translator, $locales);
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $resourceScopes = $this->resourceScopeExtractor->getAllApiResourceScopes();
         foreach ($resourceScopes as $resourceScope) {
@@ -68,7 +68,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         $builder->setDataMapper($this);
     }
 
-    public function mapDataToForms($viewData, Traversable $forms)
+    public function mapDataToForms(mixed $viewData, Traversable $forms): void
     {
         /** @var FormInterface[] $forms */
         $forms = iterator_to_array($forms);
@@ -87,7 +87,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         }
     }
 
-    public function mapFormsToData(Traversable $forms, &$viewData)
+    public function mapFormsToData(Traversable $forms, mixed &$viewData): void
     {
         $associatedScopes = [];
         /** @var FormInterface $collection */
@@ -101,7 +101,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         $viewData = $associatedScopes;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
@@ -110,7 +110,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
         ]);
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return AccordionType::class;
     }
@@ -118,7 +118,7 @@ class ResourceScopesType extends TranslatorAwareType implements DataMapperInterf
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $scopes = 0;
 

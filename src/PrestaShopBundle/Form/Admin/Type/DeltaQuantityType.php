@@ -52,7 +52,7 @@ class DeltaQuantityType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('quantity', TextPreviewType::class, [
@@ -100,7 +100,7 @@ class DeltaQuantityType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
 
@@ -114,7 +114,7 @@ class DeltaQuantityType extends TranslatorAwareType
         $view->vars['initialQuantity'] = $initialQuantity;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver
@@ -130,7 +130,7 @@ class DeltaQuantityType extends TranslatorAwareType
     /**
      * {@inheritDoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'delta_quantity';
     }

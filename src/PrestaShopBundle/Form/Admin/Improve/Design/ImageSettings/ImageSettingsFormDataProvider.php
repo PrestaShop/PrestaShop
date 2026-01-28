@@ -67,7 +67,7 @@ final class ImageSettingsFormDataProvider implements FormDataProviderInterface
         ];
     }
 
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         $command = new EditImageSettingsCommand();
         $command->setFormats($data['formats']);

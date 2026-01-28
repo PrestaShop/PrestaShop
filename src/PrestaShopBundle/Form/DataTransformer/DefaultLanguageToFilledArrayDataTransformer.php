@@ -50,7 +50,7 @@ final class DefaultLanguageToFilledArrayDataTransformer implements DataTransform
     /**
      * {@inheritdoc}
      */
-    public function transform($value)
+    public function transform($value): mixed
     {
         // No transformation is required here due to this data is being sent to template
         return $value;
@@ -61,7 +61,7 @@ final class DefaultLanguageToFilledArrayDataTransformer implements DataTransform
      *
      * @param array $values
      */
-    public function reverseTransform($values)
+    public function reverseTransform($values): mixed
     {
         if (!$this->assertIsValidForDataTransforming($values)) {
             return $values;

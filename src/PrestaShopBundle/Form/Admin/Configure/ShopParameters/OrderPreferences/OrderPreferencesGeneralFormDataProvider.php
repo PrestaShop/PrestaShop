@@ -66,7 +66,7 @@ class OrderPreferencesGeneralFormDataProvider implements FormDataProviderInterfa
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->generalConfiguration->getConfiguration();
     }
@@ -74,7 +74,7 @@ class OrderPreferencesGeneralFormDataProvider implements FormDataProviderInterfa
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         // If TOS option is disabled - reset the cms id as well
         if (!$data['enable_tos']) {

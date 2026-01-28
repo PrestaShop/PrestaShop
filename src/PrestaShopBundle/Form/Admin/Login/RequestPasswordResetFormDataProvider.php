@@ -37,12 +37,12 @@ class RequestPasswordResetFormDataProvider implements FormDataProviderInterface
     ) {
     }
 
-    public function getData()
+    public function getData(): array
     {
         return [];
     }
 
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         $this->commandBus->handle(new SendEmployeePasswordResetEmailCommand($data['email_forgot']));
 

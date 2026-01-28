@@ -53,7 +53,7 @@ final class ExistingCustomerEmailValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof ExistingCustomerEmail) {
             throw new UnexpectedTypeException($constraint, ExistingCustomerEmail::class);

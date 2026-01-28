@@ -37,7 +37,7 @@ class TestEnvironmentPass implements CompilerPassInterface
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $env = $container->getParameter('kernel.environment');
 

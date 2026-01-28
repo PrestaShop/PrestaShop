@@ -76,7 +76,7 @@ final class InvoiceByDateFormHandler extends Handler
     /**
      * {@inheritdoc}
      */
-    public function save(array $data)
+    public function save(array $data): array
     {
         if ($errors = parent::save($data)) {
             return $errors;

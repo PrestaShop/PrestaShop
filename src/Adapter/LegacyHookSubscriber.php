@@ -53,7 +53,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
      *
      * @return array The listeners array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         $listeners = [];
 

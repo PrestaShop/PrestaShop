@@ -44,7 +44,7 @@ class SubmittableInputType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('value', $options['type'], $options['type_options']);
     }
@@ -52,7 +52,7 @@ class SubmittableInputType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['type_attr'] = $options['type_options']['attr'] ?? [];
     }
@@ -60,7 +60,7 @@ class SubmittableInputType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefault('type', NumberType::class)

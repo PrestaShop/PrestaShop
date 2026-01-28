@@ -41,7 +41,7 @@ class ConfigYamlLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, $type = null): mixed
     {
         $path = $this->locator->locate($resource);
         $configValues = Yaml::parse(file_get_contents($path), Yaml::PARSE_CONSTANT);
@@ -50,12 +50,14 @@ class ConfigYamlLoader extends FileLoader
         unset($configValues['imports']);
 
         $this->configValues = array_merge_recursive($this->configValues, $configValues);
+
+        return null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, $type = null): bool
     {
         return is_string($resource) && 'yml' === pathinfo(
             $resource,

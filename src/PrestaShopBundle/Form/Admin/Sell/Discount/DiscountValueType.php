@@ -33,7 +33,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class DiscountValueType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('reduction', PriceReductionType::class, [
@@ -48,7 +48,7 @@ class DiscountValueType extends TranslatorAwareType
         ;
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return CardType::class;
     }

@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -36,7 +37,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * This form class is responsible to create a translatable form.
  * Language selection uses tabs.
  */
-class TranslateType extends CommonAbstractType
+class TranslateType extends AbstractType
 {
     /**
      * @var UrlGeneratorInterface
@@ -81,7 +82,7 @@ class TranslateType extends CommonAbstractType
      *
      * Builds form fields for each locales
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $i = 0;
         foreach ($options['locales'] as $locale) {
@@ -103,7 +104,7 @@ class TranslateType extends CommonAbstractType
      *
      * Add the var locales and defaultLocale to the view
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['locales'] = $options['locales'];
         $view->vars['defaultLocale'] = $this->getDefaultLocale($options['locales']);
@@ -119,7 +120,7 @@ class TranslateType extends CommonAbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'type' => null,
@@ -134,7 +135,7 @@ class TranslateType extends CommonAbstractType
      *
      * @return string The prefix name
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'translatefields';
     }

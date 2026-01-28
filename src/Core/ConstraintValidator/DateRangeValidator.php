@@ -43,7 +43,7 @@ class DateRangeValidator extends ConstraintValidator
      *
      * @throws Exception
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof DateRange) {
             throw new UnexpectedTypeException($constraint, DateRange::class);

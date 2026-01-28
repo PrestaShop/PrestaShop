@@ -39,7 +39,7 @@ class MaterialMultipleChoiceTableType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         foreach ($options['multiple_choices'] as $choices) {
             $builder->add($choices['name'], ChoiceType::class, [
@@ -69,7 +69,7 @@ class MaterialMultipleChoiceTableType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['choices'] = $options['choices'];
         $view->vars['scrollable'] = $options['scrollable'];
@@ -81,7 +81,7 @@ class MaterialMultipleChoiceTableType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function finishView(FormView $view, FormInterface $form, array $options)
+    public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         $entryIndexMapping = [];
 
@@ -97,7 +97,7 @@ class MaterialMultipleChoiceTableType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setRequired([
@@ -126,7 +126,7 @@ class MaterialMultipleChoiceTableType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'material_multiple_choice_table';
     }

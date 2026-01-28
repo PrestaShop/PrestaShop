@@ -42,7 +42,7 @@ class PositiveOrZeroValidator extends ConstraintValidator
     /**
      * {@inheritDoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof PositiveOrZero) {
             throw new UnexpectedTypeException($constraint, PositiveOrZero::class);

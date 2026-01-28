@@ -36,7 +36,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FeatureCollectionItemType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('feature_id', HiddenType::class, [
@@ -71,7 +71,7 @@ class FeatureCollectionItemType extends TranslatorAwareType
      *
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'feature_collection_item';
     }

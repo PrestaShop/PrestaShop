@@ -120,7 +120,7 @@ class TranslatableType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $errors = iterator_to_array($view->vars['errors']);
 
@@ -166,7 +166,7 @@ class TranslatableType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'type' => TextType::class,
@@ -196,7 +196,7 @@ class TranslatableType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'translatable';
     }

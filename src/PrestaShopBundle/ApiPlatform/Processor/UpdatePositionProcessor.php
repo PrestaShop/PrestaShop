@@ -50,7 +50,7 @@ class UpdatePositionProcessor implements ProcessorInterface
     ) {
     }
 
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
         $positionDefinitionName = $operation->getExtraProperties()['positionDefinition'] ?? null;
         if (null === $positionDefinitionName) {
@@ -77,6 +77,8 @@ class UpdatePositionProcessor implements ProcessorInterface
             // We catch and force the API Platform exception to have a 400 bad request code
             throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
+
+        return null;
     }
 
     protected function getPositionsData(array $data, PositionDefinition $positionDefinition, string $parentIdField): ?array

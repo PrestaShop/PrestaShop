@@ -42,7 +42,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StockMovementType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('date', TextPreviewType::class, [

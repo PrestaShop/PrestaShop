@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Doctrine;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 
 /**
@@ -54,7 +55,7 @@ class DatabaseConnection extends Connection
 {
     private const PARAMETERS_FILE = __DIR__ . '/../../../app/config/parameters.php';
 
-    public function getDatabasePlatform()
+    public function getDatabasePlatform(): AbstractPlatform
     {
         try {
             $detectedVersion = parent::getDatabasePlatform();

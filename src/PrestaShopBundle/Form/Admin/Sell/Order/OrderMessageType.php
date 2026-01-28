@@ -69,7 +69,7 @@ class OrderMessageType extends AbstractType
         $this->translator = $translator;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('order_message', ChoiceType::class, [
@@ -113,7 +113,7 @@ class OrderMessageType extends AbstractType
         ;
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['messages'] = $this->orderMessageChoiceProvider->getChoices([
             'lang_id' => $options['data']['lang_id'] ?? null,

@@ -60,7 +60,7 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
         $this->hookDispatcher = $hookDispatcher;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::CONTROLLER => [

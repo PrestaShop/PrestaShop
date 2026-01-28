@@ -43,7 +43,7 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class TitleType extends TranslatorAwareType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name', TranslatableType::class, [

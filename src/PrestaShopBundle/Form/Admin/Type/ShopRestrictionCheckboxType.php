@@ -40,7 +40,7 @@ class ShopRestrictionCheckboxType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $isChecked = $form->getData();
 
@@ -54,7 +54,7 @@ class ShopRestrictionCheckboxType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'required' => false,
@@ -64,7 +64,7 @@ class ShopRestrictionCheckboxType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return CheckboxType::class;
     }

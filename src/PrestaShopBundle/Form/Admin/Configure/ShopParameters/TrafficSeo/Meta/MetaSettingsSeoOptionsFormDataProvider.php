@@ -55,7 +55,7 @@ final class MetaSettingsSeoOptionsFormDataProvider implements FormDataProviderIn
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->seoOptionsDataConfiguration->getConfiguration();
     }
@@ -63,7 +63,7 @@ final class MetaSettingsSeoOptionsFormDataProvider implements FormDataProviderIn
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         return $this->seoOptionsDataConfiguration->updateConfiguration($data);
     }

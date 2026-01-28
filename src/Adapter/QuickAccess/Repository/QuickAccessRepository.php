@@ -61,6 +61,6 @@ class QuickAccessRepository extends AbstractObjectModelRepository implements Qui
             ->setParameter('languageId', $languageId->getValue())
         ;
 
-        return $qb->execute()->fetchAllAssociative();
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 }

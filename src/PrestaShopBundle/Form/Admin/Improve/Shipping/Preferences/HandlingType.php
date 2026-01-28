@@ -68,7 +68,7 @@ class HandlingType extends TranslatorAwareType
         $this->configuration = $configuration;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $defaultCurrencyIsoCode = $this->currencyDataProvider->getDefaultCurrencyIsoCode();
         $weightUnit = $this->configuration->get('PS_WEIGHT_UNIT');
@@ -122,7 +122,7 @@ class HandlingType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'Admin.Shipping.Feature',
@@ -132,7 +132,7 @@ class HandlingType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'shipping_preferences_handling_block';
     }

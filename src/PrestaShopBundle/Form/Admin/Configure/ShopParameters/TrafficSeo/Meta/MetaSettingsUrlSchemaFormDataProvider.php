@@ -74,7 +74,7 @@ final class MetaSettingsUrlSchemaFormDataProvider implements FormDataProviderInt
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->urlSchemaDataConfiguration->getConfiguration();
     }
@@ -82,7 +82,7 @@ final class MetaSettingsUrlSchemaFormDataProvider implements FormDataProviderInt
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         $errors = $this->validateData($data);
 

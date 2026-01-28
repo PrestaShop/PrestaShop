@@ -39,7 +39,7 @@ class DiscountProductSegmentValidator extends ConstraintValidator
     {
     }
 
-    public function validate(mixed $value, Constraint $constraint)
+    public function validate(mixed $value, Constraint $constraint): void
     {
         if (!$constraint instanceof DiscountProductSegment) {
             throw new UnexpectedTypeException($constraint, DiscountProductSegment::class);

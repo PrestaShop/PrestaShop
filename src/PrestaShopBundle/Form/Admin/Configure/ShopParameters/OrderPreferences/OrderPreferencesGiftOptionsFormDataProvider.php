@@ -58,7 +58,7 @@ class OrderPreferencesGiftOptionsFormDataProvider implements FormDataProviderInt
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->giftOptionsConfiguration->getConfiguration();
     }
@@ -66,7 +66,7 @@ class OrderPreferencesGiftOptionsFormDataProvider implements FormDataProviderInt
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         // If gift wrapping tax rules group was not submitted - reset it to 0
         if (!isset($data['gift_wrapping_tax_rules_group'])) {

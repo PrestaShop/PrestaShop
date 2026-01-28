@@ -55,7 +55,7 @@ class GenerateMailTemplatesCommand extends Command
         $this->legacyContext = $legacyContext;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('prestashop:mail:generate')

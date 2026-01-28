@@ -45,7 +45,7 @@ class InstalledApiResourceScopeValidator extends ConstraintValidator
      * @param string[] $value
      * @param Constraint $constraint
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof InstalledApiResourceScope) {
             throw new UnexpectedTypeException($constraint, InstalledApiResourceScope::class);

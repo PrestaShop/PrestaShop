@@ -28,18 +28,19 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Default entry type used by @see EntitySearchInputType
  */
-class EntityItemType extends CommonAbstractType
+class EntityItemType extends AbstractType
 {
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('id', HiddenType::class, [

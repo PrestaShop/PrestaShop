@@ -27,17 +27,17 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class SearchedCustomerType extends CommonAbstractType
+class SearchedCustomerType extends AbstractType
 {
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('id_customer', HiddenType::class, [

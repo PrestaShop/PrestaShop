@@ -61,7 +61,7 @@ final class GeolocationByIpAddressFormDataProvider implements FormDataProviderIn
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->dataConfiguration->getConfiguration();
     }
@@ -69,7 +69,7 @@ final class GeolocationByIpAddressFormDataProvider implements FormDataProviderIn
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         $errors = [];
 

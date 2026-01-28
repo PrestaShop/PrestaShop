@@ -41,7 +41,7 @@ class TextWithRecommendedLengthType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['recommended_length'] = $options['recommended_length'];
         $view->vars['input_type'] = $options['input_type'];
@@ -50,7 +50,7 @@ class TextWithRecommendedLengthType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

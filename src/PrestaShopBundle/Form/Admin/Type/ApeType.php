@@ -41,12 +41,12 @@ class ApeType extends AbstractType implements DataTransformerInterface
 {
     use TranslatorAwareTrait;
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->addModelTransformer($this);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'constraints' => [
@@ -58,17 +58,17 @@ class ApeType extends AbstractType implements DataTransformerInterface
         ]);
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return TextType::class;
     }
 
-    public function transform($value)
+    public function transform(mixed $value): mixed
     {
         return $value;
     }
 
-    public function reverseTransform($value)
+    public function reverseTransform(mixed $value): mixed
     {
         return $value;
     }

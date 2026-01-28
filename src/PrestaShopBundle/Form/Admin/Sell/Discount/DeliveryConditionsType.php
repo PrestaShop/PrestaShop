@@ -42,7 +42,7 @@ class DeliveryConditionsType extends TranslatorAwareType
     public const CARRIERS = 'carriers';
     public const COUNTRY = 'country';
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(self::NONE, HiddenType::class, [
@@ -85,7 +85,7 @@ class DeliveryConditionsType extends TranslatorAwareType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
@@ -93,7 +93,7 @@ class DeliveryConditionsType extends TranslatorAwareType
         ]);
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return ToggleChildrenChoiceType::class;
     }

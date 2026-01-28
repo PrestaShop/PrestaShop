@@ -38,7 +38,7 @@ class DiscountConditionsType extends TranslatorAwareType
     public const CART_CONDITIONS = 'cart';
     public const DELIVERY_CONDITIONS = 'delivery';
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $discountType = $options['discount_type'];
         $builder
@@ -88,7 +88,7 @@ class DiscountConditionsType extends TranslatorAwareType
         $resolver->setAllowedTypes('discount_type', ['string']);
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return CardType::class;
     }

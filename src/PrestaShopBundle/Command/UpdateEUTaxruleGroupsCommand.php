@@ -79,7 +79,7 @@ class UpdateEUTaxruleGroupsCommand extends Command
         $this->localizationPath = $localizationPath;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('prestashop:taxes:update-eu-tax-rule-groups')

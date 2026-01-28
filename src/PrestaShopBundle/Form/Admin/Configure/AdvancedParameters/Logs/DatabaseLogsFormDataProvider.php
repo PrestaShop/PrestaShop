@@ -43,7 +43,7 @@ final class DatabaseLogsFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->databaseLogsConfiguration->getConfiguration();
     }
@@ -51,7 +51,7 @@ final class DatabaseLogsFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setData(array $data)
+    public function setData(array $data): array
     {
         return $this->databaseLogsConfiguration->updateConfiguration($data);
     }
