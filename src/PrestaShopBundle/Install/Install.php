@@ -642,26 +642,18 @@ class Install extends AbstractInstall
                 'locale' => (string) $xml->locale,
             ];
 
-            if (file_exists(_PS_TRANSLATIONS_DIR_ . (string) $iso . '.gzip') == false) {
-                $language = EntityLanguage::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
-
-                if ($language == false) {
-                    throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));
-                }
-            }
-
-            $errors = [];
             $locale = $params_lang['locale'];
 
-            /* @todo check if a newer pack is available */
+            // Try and update the language page all the time, but if it's in the cache this is not blocking
+            $downloaded = EntityLanguage::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
+            // Calling downloadLanguagePack with $iso is equivalent internally to download file for $locale
             if (!EntityLanguage::translationPackIsInCache($locale)) {
-                EntityLanguage::downloadXLFLanguagePack($locale, $errors);
-
-                if (!empty($errors)) {
-                    throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));
-                }
+                throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));
             }
-
+            if (!$downloaded) {
+                $this->getLogger()->logWarning(sprintf('Could not download language %s but found in cache', $locale));
+            }
+            $errors = [];
             $this->callWithUnityAutoincrement(function () use ($iso, $params_lang, &$errors) {
                 EntityLanguage::installFirstLanguagePack($iso, $params_lang, $errors);
             });

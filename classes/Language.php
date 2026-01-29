@@ -1278,11 +1278,14 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         // 3 attempts to download the language pack
         for ($i = 1; $i <= 3; ++$i) {
-            $content = Tools::file_get_contents($url, false, null, static::PACK_DOWNLOAD_TIMEOUT);
-
-            // If we managed to download the pack successfully and it's a valid zip file, we stop
-            if (!empty($content) && strpos($content, "\x50\x4b\x03\x04") !== false) {
-                break;
+            try {
+                $content = Tools::file_get_contents($url, false, null, static::PACK_DOWNLOAD_TIMEOUT);
+                // If we managed to download the pack successfully and it's a valid zip file, we stop
+                if (!empty($content) && strpos($content, "\x50\x4b\x03\x04") !== false) {
+                    break;
+                }
+            } catch (Exception) {
+                // Let the check below exit the loop
             }
 
             // If not, we will give it another try, unless we are on our last attempt
@@ -1717,6 +1720,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function translationPackIsInCache(string $locale, string $type = self::PACK_TYPE_SYMFONY): bool
     {
+        $cachePath = self::getPathToCachedTranslationPack($locale, $type);
         return file_exists(self::getPathToCachedTranslationPack($locale, $type));
     }
 
