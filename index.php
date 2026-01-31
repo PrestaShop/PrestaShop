@@ -44,13 +44,13 @@ define('_PS_APP_ID_', FrontKernel::APP_ID);
 // Load .env file from the root of project if present
 (new Dotenv(false))->loadEnv(_PS_FRONT_DIR_ . '/.env');
 
+// Activate Symfony's debug if we need it
+if (_PS_MODE_DEV_) {
+    Debug::enable();
+}
+
 // If we want to use new container access in front (Warning: Experimental feature from now!)
 if (isset($_ENV['PS_FF_FRONT_CONTAINER_V2']) && filter_var($_ENV['PS_FF_FRONT_CONTAINER_V2'], \FILTER_VALIDATE_BOOL)) {
-    // Activate Symfony's debug if we need it
-    if (_PS_MODE_DEV_) {
-        Debug::enable();
-    }
-
     // Block the process until the cache clear is in progress, this must be done before the kernel is created so it doesn't
     // try to use the old container
     CacheClearLocker::waitUntilUnlocked(_PS_ENV_, _PS_APP_ID_);
