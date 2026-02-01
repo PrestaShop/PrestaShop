@@ -84,4 +84,37 @@ class ImageManagerTest extends TestCase
         $result = ImageManager::isImagickAvailable();
         self::assertIsBool($result);
     }
+
+    public function testIsImagickAvifSupportedReturnsBool(): void
+    {
+        $result = ImageManager::isImagickAvifSupported();
+        self::assertIsBool($result);
+    }
+
+    public function testIsGdAvifSupportedReturnsBool(): void
+    {
+        $result = ImageManager::isGdAvifSupported();
+        self::assertIsBool($result);
+    }
+
+    public function testIsAvifSupportedReturnsBool(): void
+    {
+        $result = ImageManager::isAvifSupported();
+        self::assertIsBool($result);
+    }
+
+    public function testIsAvifSupportedMatchesComponentSupport(): void
+    {
+        // isAvifSupported should be true if either Imagick or GD supports AVIF
+        $imagickAvif = ImageManager::isImagickAvifSupported();
+        $gdAvif = ImageManager::isGdAvifSupported();
+        $expected = $imagickAvif || $gdAvif;
+
+        self::assertSame($expected, ImageManager::isAvifSupported());
+    }
+
+    public function testErrorAvifNotSupportedConstant(): void
+    {
+        self::assertSame(4, ImageManager::ERROR_AVIF_NOT_SUPPORTED);
+    }
 }

@@ -231,4 +231,15 @@ class ImageManagerImagickTest extends TestCase
 
         $img->destroy();
     }
+
+    public function testIsImagickAvifSupportedMatchesQueryFormats(): void
+    {
+        // When Imagick is available, isImagickAvifSupported should match queryFormats result
+        $imagick = new Imagick();
+        $formats = $imagick->queryFormats('AVIF');
+        $imagick->destroy();
+
+        $expected = !empty($formats);
+        self::assertSame($expected, ImageManager::isImagickAvifSupported());
+    }
 }

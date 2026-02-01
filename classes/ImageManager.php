@@ -16,9 +16,16 @@ class ImageManagerCore
     public const ERROR_FILE_NOT_EXIST = 1;
     public const ERROR_FILE_WIDTH = 2;
     public const ERROR_MEMORY_LIMIT = 3;
+    public const ERROR_AVIF_NOT_SUPPORTED = 4;
 
     /** @var bool|null Cached result of Imagick availability check */
     private static $imagickAvailable = null;
+
+    /** @var bool|null Cached result of Imagick AVIF support check */
+    private static $imagickAvifSupported = null;
+
+    /** @var bool|null Cached result of GD AVIF support check */
+    private static $gdAvifSupported = null;
 
     public const MIME_TYPE_SUPPORTED = [
         'image/gif',
@@ -194,8 +201,37 @@ class ImageManagerCore
             return false;
         }
 
-        // Try ImageMagick first if available, fall back to GD on failure
-        if (self::isImagickAvailable()) {
+        // Detect source file type early to check AVIF support
+        $sourceInfo = @getimagesize($sourceFile);
+        $sourceFileType = $sourceInfo ? $sourceInfo[2] : 0;
+
+        // Check if source is AVIF and verify support is available
+        $isSourceAvif = ($sourceFileType === IMAGETYPE_AVIF)
+            || (pathinfo($sourceFile, PATHINFO_EXTENSION) === 'avif');
+
+        if ($isSourceAvif && !self::isAvifSupported()) {
+            $error = self::ERROR_AVIF_NOT_SUPPORTED;
+
+            return false;
+        }
+
+        // Check if destination is AVIF and verify support is available
+        $isDestAvif = ($destinationFileType === 'avif')
+            || (pathinfo($destinationFile, PATHINFO_EXTENSION) === 'avif');
+
+        if ($isDestAvif && !self::isAvifSupported()) {
+            $error = self::ERROR_AVIF_NOT_SUPPORTED;
+
+            return false;
+        }
+
+        // Try ImageMagick first if available
+        // For AVIF (source or destination), only use Imagick if it supports AVIF
+        $needsAvifSupport = $isSourceAvif || $isDestAvif;
+        $useImagick = self::isImagickAvailable()
+            && (!$needsAvifSupport || self::isImagickAvifSupported());
+
+        if ($useImagick) {
             try {
                 return self::resizeWithImagick(
                     $sourceFile,
@@ -213,10 +249,18 @@ class ImageManagerCore
                 );
             } catch (Exception $e) {
                 // Imagick failed, fall through to GD
+                // But if AVIF is needed and GD doesn't support it, we must fail
+                if ($needsAvifSupport && !self::isGdAvifSupported()) {
+                    $error = self::ERROR_AVIF_NOT_SUPPORTED;
+
+                    return false;
+                }
             }
         }
 
-        list($tmpWidth, $tmpHeight, $sourceFileType) = getimagesize($sourceFile);
+        // GD path - reuse sourceFileType from earlier detection
+        $tmpWidth = $sourceInfo ? $sourceInfo[0] : 0;
+        $tmpHeight = $sourceInfo ? $sourceInfo[1] : 0;
         $rotate = 0;
         if (function_exists('exif_read_data')) {
             $exif = @exif_read_data($sourceFile);
@@ -598,6 +642,8 @@ class ImageManagerCore
                 return imagecreatefrompng($filename);
             case IMAGETYPE_WEBP:
                 return imagecreatefromwebp($filename);
+            case IMAGETYPE_AVIF:
+                return imagecreatefromavif($filename);
             case IMAGETYPE_JPEG:
             default:
                 return imagecreatefromjpeg($filename);
@@ -900,6 +946,50 @@ class ImageManagerCore
     }
 
     /**
+     * Check if Imagick supports AVIF format.
+     *
+     * @return bool
+     */
+    public static function isImagickAvifSupported(): bool
+    {
+        if (self::$imagickAvifSupported === null) {
+            self::$imagickAvifSupported = false;
+            if (self::isImagickAvailable()) {
+                $imagick = new Imagick();
+                $formats = $imagick->queryFormats('AVIF');
+                self::$imagickAvifSupported = !empty($formats);
+                $imagick->destroy();
+            }
+        }
+
+        return self::$imagickAvifSupported;
+    }
+
+    /**
+     * Check if GD supports AVIF format.
+     *
+     * @return bool
+     */
+    public static function isGdAvifSupported(): bool
+    {
+        if (self::$gdAvifSupported === null) {
+            self::$gdAvifSupported = function_exists('imagecreatefromavif') && function_exists('imageavif');
+        }
+
+        return self::$gdAvifSupported;
+    }
+
+    /**
+     * Check if AVIF format is supported by any available image processor.
+     *
+     * @return bool
+     */
+    public static function isAvifSupported(): bool
+    {
+        return self::isImagickAvifSupported() || self::isGdAvifSupported();
+    }
+
+    /**
      * Determine the destination file type based on PS_IMAGE_QUALITY configuration.
      *
      * @param string $destinationFileType
@@ -1031,6 +1121,11 @@ class ImageManagerCore
         string $imageFitment = ImageFitment::FIT
     ): bool {
         $imagick = new Imagick($sourceFile);
+
+        // Convert to sRGB colorspace to avoid color issues (especially with AVIF)
+        if ($imagick->getImageColorspace() !== Imagick::COLORSPACE_SRGB) {
+            $imagick->transformImageColorspace(Imagick::COLORSPACE_SRGB);
+        }
 
         // Auto-orient based on EXIF data
         $imagick->autoOrient();
