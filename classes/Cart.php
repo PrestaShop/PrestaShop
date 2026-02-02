@@ -867,8 +867,6 @@ class CartCore extends ObjectModel
             }
         }
 
-        // Thus you can avoid one query per product, because there will be only one query for all the products of the cart
-        Product::cacheProductsFeatures($products_ids);
         Cart::cacheSomeAttributesLists($pa_ids, (int) $this->getAssociatedLanguage()->getId());
 
         if (empty($products)) {
@@ -1070,7 +1068,6 @@ class CartCore extends ObjectModel
         $row['quantity_discount_applies'] = ($specific_price_output && $productQuantity >= (int) $specific_price_output['from_quantity']);
         $row['id_image'] = Product::defineProductImage($row, $this->getAssociatedLanguage()->getId());
         $row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
-        $row['features'] = Product::getFeaturesStatic((int) $row['id_product']);
 
         $productAttributeKey = $row['id_product_attribute'] . '-' . $this->getAssociatedLanguage()->getId();
         $row = array_merge(
