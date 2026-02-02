@@ -918,17 +918,6 @@ class CartCore extends ObjectModel
                     $product['is_gift'] = false;
                 }
 
-                $props = Product::getProductProperties((int) $this->id_lang, $product);
-                $product['reduction'] = $props['reduction'];
-                $product['reduction_without_tax'] = $props['reduction_without_tax'];
-                $product['price_without_reduction'] = $props['price_without_reduction'];
-                $product['specific_prices'] = $props['specific_prices'];
-                $product['unit_price'] = $props['unit_price_tax_excluded'];
-                $product['unit_price_ratio'] = $props['unit_price_ratio'];
-                $product['unit_price_tax_excluded'] = $props['unit_price_tax_excluded'];
-                $product['unit_price_tax_included'] = $props['unit_price_tax_included'];
-                unset($props);
-
                 $givenAwayQuantity = 0;
                 $giftIndex = $product['id_product'] . '-' . $product['id_product_attribute'];
                 if ($product['is_gift'] && array_key_exists($giftIndex, $givenAwayProductsIds)) {
@@ -980,9 +969,10 @@ class CartCore extends ObjectModel
         // for compatibility with 1.2 themes
         $row['quantity'] = $productQuantity;
 
-        // get the customization weight impact
+        // Get the customization weight impact
         $customization_weight = Customization::getCustomizationWeight($row['id_customization']);
 
+        // Get final weight of the product
         if (isset($row['id_product_attribute']) && (int) $row['id_product_attribute'] && isset($row['weight_attribute'])) {
             $row['weight_attribute'] += $customization_weight;
             $row['weight'] = (float) $row['weight_attribute'];
@@ -990,6 +980,7 @@ class CartCore extends ObjectModel
             $row['weight'] += $customization_weight;
         }
 
+        // Resolve address ID for tax calculation
         if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice') {
             $address_id = (int) $this->id_address_invoice;
         } else {
@@ -1011,6 +1002,7 @@ class CartCore extends ObjectModel
             $orderId = (int) $orderId ?: null;
         }
 
+        // Get prices, either from Order (if exists) or from Cart
         if (!empty($orderId)) {
             $orderPrices = $this->getOrderPrices($row, $orderId, $productQuantity, $address_id, $shopContext, $specific_price_output);
             $row = array_merge($row, $orderPrices);
@@ -1018,6 +1010,15 @@ class CartCore extends ObjectModel
             $cartPrices = $this->getCartPrices($row, $productQuantity, $address_id, $shopContext, $specific_price_output);
             $row = array_merge($row, $cartPrices);
         }
+
+        // Add specific price information we got from the price calculation methods
+        $row['specific_prices'] = $specific_price_output;
+
+        // Add unit prices
+        $row['unit_price_ratio'] = Product::computeUnitPriceRatio($row, $row['id_product_attribute'], $row['cart_quantity'], Context::getContext());
+        $row['unit_price_tax_excluded'] = $row['unit_price_ratio'] != 0 ? $row['price_with_reduction_without_tax'] / $row['unit_price_ratio'] : 0.0;
+        $row['unit_price_tax_included'] = $row['unit_price_ratio'] != 0 ? $row['price_with_reduction'] / $row['unit_price_ratio'] : 0.0;
+        $row['unit_price'] = $row['unit_price_tax_excluded'];
 
         switch (Configuration::get('PS_ROUND_TYPE')) {
             case Order::ROUND_TOTAL:
@@ -1150,6 +1151,36 @@ class CartCore extends ObjectModel
             $specificPriceOutput
         );
 
+        $cartPrices['reduction'] = $this->getCartPriceFromCatalog(
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
+            (int) $productRow['id_customization'],
+            true,
+            true,
+            true,
+            $productQuantity,
+            null,
+            $shopContext,
+            $specificPriceOutput,
+            true,
+            true
+        );
+
+        $cartPrices['reduction_without_tax'] = $this->getCartPriceFromCatalog(
+            (int) $productRow['id_product'],
+            isset($productRow['id_product_attribute']) ? (int) $productRow['id_product_attribute'] : 0,
+            (int) $productRow['id_customization'],
+            false,
+            true,
+            true,
+            $productQuantity,
+            null,
+            $shopContext,
+            $specificPriceOutput,
+            true,
+            true
+        );
+
         return $cartPrices;
     }
 
@@ -1164,6 +1195,8 @@ class CartCore extends ObjectModel
      * @param int|null $addressId Customer's address id (for tax calculation)
      * @param Context $shopContext
      * @param array|false|null $specificPriceOutput
+     * @param bool $onlyReduction
+     * @param bool $forceAssociatedTax
      *
      * @return float|null
      */
@@ -1177,7 +1210,9 @@ class CartCore extends ObjectModel
         int $productQuantity,
         ?int $addressId,
         Context $shopContext,
-        &$specificPriceOutput
+        &$specificPriceOutput,
+        bool $onlyReduction = false,
+        bool $forceAssociatedTax = false
     ): ?float {
         return Product::getPriceStatic(
             $productId,
@@ -1185,10 +1220,10 @@ class CartCore extends ObjectModel
             $combinationId,
             6,
             null,
-            false,
+            $onlyReduction,
             $useReduction,
             $productQuantity,
-            false,
+            $forceAssociatedTax,
             (int) $this->id_customer ? (int) $this->id_customer : null,
             (int) $this->id,
             $addressId,
@@ -1259,6 +1294,9 @@ class CartCore extends ObjectModel
             true,
             isset($productRow['id_customization']) ? (int) $productRow['id_customization'] : 0
         );
+
+        $orderPrices['reduction'] = $orderPrices['price_without_reduction'] - $orderPrices['price_with_reduction'];
+        $orderPrices['reduction_without_tax'] = $orderPrices['price_without_reduction_without_tax'] - $orderPrices['price_with_reduction_without_tax'];
 
         // If the product price was not found in the order, use cart prices as fallback
         if (false !== array_search(null, $orderPrices)) {

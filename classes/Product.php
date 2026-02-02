@@ -5654,7 +5654,7 @@ class ProductCore extends ObjectModel
      *
      * @return float
      */
-    private static function computeUnitPriceRatio(array $productRow, int $combinationId, int $quantity, Context $context): float
+    public static function computeUnitPriceRatio(array $productRow, int $combinationId, int $quantity, Context $context): float
     {
         $baseUnitPrice = 0.0;
         if (isset($productRow['unit_price'])) {
