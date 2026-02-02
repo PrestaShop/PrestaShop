@@ -30,6 +30,15 @@ use SplFileInfo;
 
 class FileSystem
 {
+    /**
+    * @deprecated since 9.1.0 Use \PrestaShop\PrestaShop\Core\Filesystem\Permissions::PERM_DIR_DEFAULT instead.
+    */
+    public const DEFAULT_MODE_FOLDER = 0755;
+    /**
+    * @deprecated since 9.1.0 Use \PrestaShop\PrestaShop\Core\Filesystem\Permissions::PERM_FILE_DEFAULT instead.
+    */
+    public const DEFAULT_MODE_FILE = 0644;
+
     public const PERM_FILE_PRIVATE_READ = 0400;
     public const PERM_FILE_PRIVATE = 0600;
     public const PERM_FILE_DEFAULT = 0644;
