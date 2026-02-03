@@ -4662,16 +4662,16 @@
         },
         {
             "name": "prestashop/classic",
-            "version": "3.0.5",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "09a8934bcb5e8f0cc0a3e234d5e9b18a61c27ec2"
+                "reference": "9af074d6cdbb8002323780e85b11e30d210f002b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/09a8934bcb5e8f0cc0a3e234d5e9b18a61c27ec2",
-                "reference": "09a8934bcb5e8f0cc0a3e234d5e9b18a61c27ec2",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/9af074d6cdbb8002323780e85b11e30d210f002b",
+                "reference": "9af074d6cdbb8002323780e85b11e30d210f002b",
                 "shasum": ""
             },
             "require-dev": {
@@ -4696,9 +4696,9 @@
             "description": "Classic theme for develop PrestaShop version",
             "support": {
                 "issues": "https://github.com/PrestaShop/classic-theme/issues",
-                "source": "https://github.com/PrestaShop/classic-theme/tree/3.0.5"
+                "source": "https://github.com/PrestaShop/classic-theme/tree/3.1.0"
             },
-            "time": "2025-12-15T16:49:50+00:00"
+            "time": "2026-01-16T10:02:47+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -5083,16 +5083,16 @@
         },
         {
             "name": "prestashop/hummingbird",
-            "version": "v2.0.0-beta.2",
+            "version": "v2.0.0-beta.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/hummingbird.git",
-                "reference": "d2576caa72ca08468ea372ce6f133f8ac52dacb2"
+                "reference": "190debd25be5501ba2efc89af6b8d46900c6a00b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/d2576caa72ca08468ea372ce6f133f8ac52dacb2",
-                "reference": "d2576caa72ca08468ea372ce6f133f8ac52dacb2",
+                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/190debd25be5501ba2efc89af6b8d46900c6a00b",
+                "reference": "190debd25be5501ba2efc89af6b8d46900c6a00b",
                 "shasum": ""
             },
             "require-dev": {
@@ -5117,9 +5117,9 @@
             "description": "Hummingbird development theme for PrestaShop",
             "support": {
                 "issues": "https://github.com/PrestaShop/hummingbird/issues",
-                "source": "https://github.com/PrestaShop/hummingbird/tree/v2.0.0-beta.2"
+                "source": "https://github.com/PrestaShop/hummingbird/tree/v2.0.0-beta.4"
             },
-            "time": "2025-12-15T17:19:33+00:00"
+            "time": "2026-01-29T15:45:26+00:00"
         },
         {
             "name": "prestashop/pagesnotfound",
@@ -6002,16 +6002,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v4.0.2",
+            "version": "v4.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "8ebc5f07be387e378baf907a02f53f1496e6347b"
+                "reference": "bd9f09e81d1d49a936b4c0c3fa6b7e846bc53e76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/8ebc5f07be387e378baf907a02f53f1496e6347b",
-                "reference": "8ebc5f07be387e378baf907a02f53f1496e6347b",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/bd9f09e81d1d49a936b4c0c3fa6b7e846bc53e76",
+                "reference": "bd9f09e81d1d49a936b4c0c3fa6b7e846bc53e76",
                 "shasum": ""
             },
             "require": {
@@ -6047,9 +6047,10 @@
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v4.0.2"
+                "issues": "https://github.com/PrestaShop/ps_facetedsearch/issues",
+                "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v4.0.3"
             },
-            "time": "2025-11-21T13:36:43+00:00"
+            "time": "2025-12-31T13:27:28+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
@@ -18271,5 +18272,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
