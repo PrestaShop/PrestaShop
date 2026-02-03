@@ -71,7 +71,7 @@ export default class CategoryTreeSelector {
   }
 
   public showModal(selectedCategories: Array<Category>, defaultCategoryId: number): void {
-    if (!defaultCategoryId) {
+    if (defaultCategoryId < 0) {
       console.error('Default category id is invalid.');
 
       return;
