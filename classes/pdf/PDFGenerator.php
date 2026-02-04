@@ -56,7 +56,7 @@ class PDFGeneratorCore extends TCPDF
      * map default font overrides
      * @var array
      */
- public $font_by_lang = [
+    public $font_by_lang = [
         'ja' => 'cid0jp',
         'bg' => 'freeserif',
         'ru' => 'freeserif',
