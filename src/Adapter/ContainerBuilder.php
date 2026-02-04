@@ -9,6 +9,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Doctrine\ORM\Tools\Setup;
 use Exception;
+use FrontKernel;
 use LegacyCompilerPass;
 use PrestaShop\PrestaShop\Adapter\Container\ContainerBuilderExtensionInterface;
 use PrestaShop\PrestaShop\Adapter\Container\ContainerParametersExtension;
@@ -80,11 +81,24 @@ class ContainerBuilder
                 'You should use `SymfonyContainer::getInstance()` instead of `ContainerBuilder::getContainer(\'admin\')`'
             );
         }
+
         if (!isset(self::$containers[$containerName])) {
-            // Container builder is only used for FO now, so we hard code the Environment to use the front appId so that
-            // it uses the cache dir from FrontKernel (in var/cache/{dev|prod}/front)
-            $builder = new ContainerBuilder(new Environment($isDebug, $isDebug ? 'dev' : 'prod', 'front'));
-            self::$containers[$containerName] = $builder->buildContainer($containerName);
+            if (isset($_ENV['PS_FF_FRONT_CONTAINER_V2']) && filter_var($_ENV['PS_FF_FRONT_CONTAINER_V2'], \FILTER_VALIDATE_BOOL)) {
+                global $kernel;
+
+                if ($kernel instanceof FrontKernel) {
+                    self::$containers[$containerName] = $kernel->getContainer();
+                } else {
+                    $frontKernel = (new FrontKernel(_PS_ENV_, _PS_MODE_DEV_));
+                    $frontKernel->boot();
+                    self::$containers[$containerName] = $frontKernel->getContainer();
+                }
+            } else {
+                // Container builder is only used for FO now, so we hard code the Environment to use the front appId so that
+                // it uses the cache dir from FrontKernel (in var/cache/{dev|prod}/front)
+                $builder = new ContainerBuilder(new Environment($isDebug, $isDebug ? 'dev' : 'prod', 'front'));
+                self::$containers[$containerName] = $builder->buildContainer($containerName);
+            }
         }
 
         return self::$containers[$containerName];

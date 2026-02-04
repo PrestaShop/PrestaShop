@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use BadMethodCallException;
 use Context;
+use FrontKernel;
 use Hook;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
@@ -39,7 +40,8 @@ class LegacyHookSubscriber implements EventSubscriberInterface
 
         // Hack Symfony cache clear : if context not mounted, bypass legacy call
         $legacyContext = Context::getContext();
-        if (!$legacyContext || empty($legacyContext->shop) || empty($legacyContext->employee)) {
+        global $kernel;
+        if (!($kernel instanceof FrontKernel) && (!$legacyContext || empty($legacyContext->shop) || empty($legacyContext->employee))) {
             return $listeners;
         }
 
