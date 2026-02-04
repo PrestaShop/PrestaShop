@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Hook\Extractor\HookExtractor;
 use PrestaShop\PrestaShop\Core\Hook\Provider\GridDefinitionHookByServiceIdsProvider;
 use PrestaShop\PrestaShop\Core\Version;
-use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use SimpleXMLElement;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
