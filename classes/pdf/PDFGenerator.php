@@ -53,43 +53,15 @@ class PDFGeneratorCore extends TCPDF
     public $font;
 
     /**
+     * map default font overrides
      * @var array
      */
-    public $font_by_lang = [
+ public $font_by_lang = [
         'ja' => 'cid0jp',
-        'bg' => 'freeserif',
-        'ru' => 'freeserif',
-        'uk' => 'freeserif',
-        'mk' => 'freeserif',
-        'el' => 'freeserif',
-        'en' => 'dejavusans',
-        'vn' => 'dejavusans',
-        'pl' => 'dejavusans',
-        'ar' => 'dejavusans',
-        'fa' => 'dejavusans',
-        'ur' => 'dejavusans',
-        'az' => 'dejavusans',
-        'ca' => 'dejavusans',
-        'gl' => 'dejavusans',
-        'hr' => 'dejavusans',
-        'sr' => 'dejavusans',
-        'si' => 'dejavusans',
-        'cs' => 'dejavusans',
-        'sk' => 'dejavusans',
-        'ka' => 'dejavusans',
-        'he' => 'dejavusans',
-        'lo' => 'dejavusans',
-        'lt' => 'dejavusans',
-        'lv' => 'dejavusans',
-        'tr' => 'dejavusans',
-        'ro' => 'dejavusans',
         'ko' => 'cid0kr',
         'zh' => 'cid0cs',
         'tw' => 'cid0cs',
-        'th' => 'freeserif',
-        'hy' => 'freeserif',
     ];
-
     /**
      * @param bool $use_cache
      * @param string $orientation
@@ -163,10 +135,12 @@ class PDFGeneratorCore extends TCPDF
             $this->font = self::DEFAULT_FONT;
         }
 
-        $this->setHeaderFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', false]);
-        $this->setFooterFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', false]);
-
-        $this->setFont($this->font, '', PDF_FONT_SIZE_MAIN, '', false);
+        // include only font subset to safe file space
+        $subset = true;
+        $this->setHeaderFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', $subset]);
+        $this->setFooterFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', $subset]);
+        $this->setFont($this->font, '', PDF_FONT_SIZE_MAIN, '', $subset);
+    }
     }
 
     /**
@@ -183,7 +157,6 @@ class PDFGeneratorCore extends TCPDF
     public function Footer()
     {
         $this->writeHTML($this->footer);
-        $this->FontFamily = self::DEFAULT_FONT;
         $this->writeHTML($this->pagination);
     }
 
