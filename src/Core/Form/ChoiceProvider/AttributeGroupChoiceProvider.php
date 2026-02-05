@@ -59,7 +59,7 @@ final class AttributeGroupChoiceProvider implements FormChoiceProviderInterface,
     public function __construct(
         private readonly AttributeGroupRepository $attributeGroupRepository,
         private readonly int $langId,
-        private readonly int $shopId,
+        private readonly ?int $shopId,
     ) {
     }
 
