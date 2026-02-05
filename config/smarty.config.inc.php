@@ -36,7 +36,7 @@ if (Configuration::get('PS_SMARTY_LOCAL')) {
 $smarty->setConfigDir([]);
 $smarty->setCompileDir(_PS_CACHE_DIR_ . 'smarty/compile');
 $smarty->setCacheDir(_PS_CACHE_DIR_ . 'smarty/cache');
-$smarty->use_sub_dirs = true;
+$smarty->use_sub_dirs = false;
 $smarty->caching = Smarty::CACHING_OFF;
 $smarty->force_compile = Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_;
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_SMARTY_CHECK_COMPILE_) ? Smarty::COMPILECHECK_ON : Smarty::COMPILECHECK_OFF;
