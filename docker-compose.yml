@@ -1,5 +1,9 @@
 volumes:
   db-data:
+  ps-var:
+  ps-img:
+  ps-upload:
+  ps-download:
 
 services:
   mysql:
@@ -41,7 +45,7 @@ services:
       PS_DEV_MODE: ${PS_DEV_MODE:-1}
       PS_ENABLE_SSL: ${PS_ENABLE_SSL:-0}
       PS_ERASE_DB: ${PS_ERASE_DB:-0}
-      PS_USE_DOCKER_MAILDEV: ${PS_USE_DOCKER_MAILDEV:-1}
+      PS_USE_DOCKER_MAILDEV: ${PS_USE_DOCKER_MAILDEV:-0}
       ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
       ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
       BLACKFIRE_ENABLE: ${BLACKFIRE_ENABLE:-0}
@@ -55,6 +59,11 @@ services:
       - mysql
     volumes:
       - ./:/var/www/html
+      - ps-var:/var/www/html/var
+      - ps-img:/var/www/html/img
+      - ps-upload:/var/www/html/upload
+      - ps-download:/var/www/html/download
+
     networks:
       - prestashop-network
 
