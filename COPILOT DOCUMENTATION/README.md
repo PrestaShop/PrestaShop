@@ -12,6 +12,10 @@ Per project requirements, all additional documentation created by Copilot agents
 
 ## Documentation Files
 
+### QUICK_REFERENCE.md
+**Topic**: Quick verification guide for Docker volumes fix  
+**Summary**: Fast reference with verification commands and what to expect after the fix. Use this for quick validation.
+
 ### DOCKER_VOLUMES_FIX.md
 **Topic**: Docker Compose Named Volumes Configuration Fix  
 **Related Files**: `/docker-compose.yml`  
