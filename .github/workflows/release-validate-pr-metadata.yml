@@ -1,0 +1,17 @@
+name: PR Metadata Validator
+on:
+  pull_request:
+    types: [opened, edited, reopened, milestoned, demilestoned]
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  convention-check:
+    name: Validate PR Metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate PR Metadata
+        uses: tleon/.github/.github/actions/validate-pr-metadata@Issue-40559-normalize-dependabot-pr
