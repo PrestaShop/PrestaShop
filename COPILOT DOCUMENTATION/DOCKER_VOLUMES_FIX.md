@@ -113,7 +113,7 @@ All of these need to be accessible from both the host and container for proper d
 ## History
 
 ### When Was This Introduced?
-The problematic configuration was introduced in commit `bf6561dc1147bb598f2003201e74986c5b7ef876` with the commit message "docker: persist var/img/upload/download using named volumes".
+The problematic configuration was introduced with the commit message "docker: persist var/img/upload/download using named volumes" (commit bf6561dc1147bb598f2003201e74986c5b7ef876 at the time of this documentation - note that this SHA may change if the repository history is rebased or modified).
 
 ### Why Was It Added?
 The original intent was likely to persist these directories between container rebuilds. However, this approach is unnecessary and counterproductive for a development environment using bind mounts.

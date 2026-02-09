@@ -18,8 +18,8 @@ Per project requirements, all additional documentation created by Copilot agents
 **Summary**: Documents the removal of named volumes (ps-var, ps-img, ps-upload, ps-download) that were preventing PrestaShop from serving images and files correctly in the development environment.
 
 **Key Changes**:
-- Lines 1-6: Removed named volume declarations
-- Lines 60-65: Removed named volume mounts from prestashop-git service
+- Lines 3-6: Removed named volume declarations (ps-var, ps-img, ps-upload, ps-download)
+- Lines 62-65: Removed named volume mounts from prestashop-git service
 
 **Why This Matters**: Named volumes were overlaying the bind mount, isolating images and uploads from the local filesystem, which broke image serving in both front and back office.
 
