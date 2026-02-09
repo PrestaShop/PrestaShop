@@ -29,11 +29,12 @@ Per project requirements, all additional documentation created by Copilot agents
 
 ### WINDOWS_BATCH_SCRIPTS.md
 **Topic**: Windows Batch Scripts for Docker Compose Management  
-**Related Files**: `/start.bat`, `/stop.bat`, `/restart.bat`, `/docker-compose.yml`  
+**Related Files**: `/quick-start.bat`, `/start.bat`, `/stop.bat`, `/restart.bat`, `/docker-compose.yml`  
 **Summary**: Documents the Windows batch scripts created to manage PrestaShop Docker development environment. These scripts replace outdated scripts that referenced the incorrect "admin-fast" folder and now properly reference "admin-dev".
 
 **Key Features**:
-- `start.bat`: Build and start Docker containers
+- `quick-start.bat`: Quick start for daily development (fast)
+- `start.bat`: Build and start Docker containers (full setup)
 - `stop.bat`: Stop Docker containers gracefully
 - `restart.bat`: Rebuild and restart containers
 - Correct admin folder reference: `admin-dev` (not `admin-fast`)

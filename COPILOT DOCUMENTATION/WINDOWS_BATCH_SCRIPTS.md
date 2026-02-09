@@ -14,9 +14,35 @@ The batch scripts were created to:
 
 ## Available Scripts
 
+### quick-start.bat
+**Location**: `/quick-start.bat`  
+**Purpose**: Quickly start existing containers (for daily development)
+
+**What it does:**
+1. Starts existing containers with `docker compose up --detach`
+2. Does NOT rebuild images (much faster)
+3. Displays access URLs and admin credentials
+
+**Usage:**
+```batch
+quick-start.bat
+```
+
+**When to use:**
+- Daily development when containers already exist
+- After stopping containers with stop.bat
+- When no code changes require rebuilding
+
+**Expected Output:**
+- Containers start quickly (seconds, not minutes)
+- Access URLs displayed
+- Services ready to use
+
+**Note**: If containers don't exist yet, run `start.bat` first.
+
 ### start.bat
 **Location**: `/start.bat`  
-**Purpose**: Build and start the PrestaShop Docker development environment
+**Purpose**: Build and start the PrestaShop Docker development environment (full setup)
 
 **What it does:**
 1. Builds Docker images from scratch with `docker compose build --pull --no-cache`
@@ -29,8 +55,14 @@ The batch scripts were created to:
 start.bat
 ```
 
+**When to use:**
+- First time setup
+- After major code changes
+- After pulling new changes from repository
+- When you need a fresh rebuild
+
 **Expected Output:**
-- Docker images build successfully
+- Docker images build successfully (takes several minutes)
 - Containers start in the background
 - Message displays access URLs:
   - Frontend: http://localhost:8001
@@ -104,6 +136,7 @@ For users familiar with Linux/Mac Makefile commands, here's the equivalent mappi
 
 | Batch Script | Makefile Command | Description |
 |-------------|------------------|-------------|
+| `quick-start.bat` | `make docker-up` | Start existing containers |
 | `start.bat` | `make docker-start` | Build and start containers |
 | `stop.bat` | `make docker-down` | Stop containers |
 | `restart.bat` | `make docker-restart` | Restart containers |
@@ -251,10 +284,19 @@ start.bat
 
 These batch scripts integrate seamlessly with the existing development workflow:
 
-1. **Start Development**:
+### First Time Setup
+1. **Initial Build**:
    ```batch
    start.bat
    ```
+   (Takes several minutes to build everything)
+
+### Daily Development
+1. **Quick Start**:
+   ```batch
+   quick-start.bat
+   ```
+   (Starts in seconds)
 
 2. **Access Backend**: http://localhost:8001/admin-dev
 
@@ -269,10 +311,13 @@ These batch scripts integrate seamlessly with the existing development workflow:
    stop.bat
    ```
 
+7. **Next Day**: Run `quick-start.bat` again
+
 ## Files Modified/Created
 
 ### Created Files
-- `/start.bat` - Startup script
+- `/quick-start.bat` - Quick startup script (daily use)
+- `/start.bat` - Full build and startup script
 - `/stop.bat` - Stop script
 - `/restart.bat` - Restart script
 - `/COPILOT DOCUMENTATION/WINDOWS_BATCH_SCRIPTS.md` - This documentation
@@ -289,6 +334,7 @@ These batch scripts integrate seamlessly with the existing development workflow:
 dir *.bat
 ```
 Should show:
+- quick-start.bat
 - start.bat
 - stop.bat
 - restart.bat
