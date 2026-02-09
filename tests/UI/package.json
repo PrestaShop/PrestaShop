@@ -132,7 +132,7 @@
     "eslint-plugin-deprecation": "^3.0.0",
     "eslint-plugin-html": "^8.1.4",
     "eslint-plugin-import": "^2.32.0",
-    "mochawesome-merge": "^4.3.0",
+    "mochawesome-merge": "^5.1.1",
     "ts-mocha": "^11.1.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3"
