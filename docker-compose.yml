@@ -1,9 +1,5 @@
 volumes:
   db-data:
-  ps-var:
-  ps-img:
-  ps-upload:
-  ps-download:
 
 services:
   mysql:
@@ -59,10 +55,6 @@ services:
       - mysql
     volumes:
       - ./:/var/www/html
-      - ps-var:/var/www/html/var
-      - ps-img:/var/www/html/img
-      - ps-upload:/var/www/html/upload
-      - ps-download:/var/www/html/download
 
     networks:
       - prestashop-network
