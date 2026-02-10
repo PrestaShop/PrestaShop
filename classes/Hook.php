@@ -1117,6 +1117,9 @@ class HookCore extends ObjectModel
                 $hookRegistry->hookedByModule($moduleInstance);
             }
 
+            $db = Db::getInstance();
+            $transactionsDepth = $db->getTransactionsDepth();
+
             if (Hook::isHookCallableOn($moduleInstance, $registeredHookName)) {
                 $hook_args['altern'] = ++$altern;
 
@@ -1208,6 +1211,11 @@ class HookCore extends ObjectModel
                 if ($isRegistryEnabled) {
                     $hookRegistry->hookedByWidget($moduleInstance, $hook_args);
                 }
+            }
+
+            $diff = $db->getTransactionsDepth() - $transactionsDepth;
+            if ($diff) {
+                throw new PrestaShopException('Unbalanced database transaction in ' . $moduleInstance->name);
             }
         }
 
