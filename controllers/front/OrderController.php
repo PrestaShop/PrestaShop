@@ -317,10 +317,14 @@ class OrderControllerCore extends FrontController
             }
         }
 
+        /** @var FeatureFlagStateCheckerInterface $featureFlagManager */
+        $featureFlagManager = $this->get(FeatureFlagStateCheckerInterface::class);
+
         $this->context->smarty->assign([
             'checkout_process' => new RenderableProxy($this->checkoutProcess),
             'display_transaction_updated_info' => Tools::getIsset('updatedTransaction'),
             'tos_cms' => $this->getDefaultTermsAndConditions(),
+            'opc_enable' => $featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ONE_PAGE_CHECKOUT),
         ]);
 
         parent::initContent();
@@ -362,6 +366,58 @@ class OrderControllerCore extends FrontController
             ),
         ]));
     }
+    /**
+     * AJAX endpoint to get delivery options dynamically
+     * Used for one-page checkout when address changes
+     */
+    public function displayAjaxGetDeliveryOptions(): void
+    {
+        // Update delivery address if provided
+        if (Tools::getIsset('id_address_delivery')) {
+            $idAddressDelivery = (int) Tools::getValue('id_address_delivery');
+            $this->getCheckoutSession()->setIdAddressDelivery($idAddressDelivery);
+        }
+
+        // Rebuild checkout process to refresh delivery options
+        $this->bootstrap();
+
+        // Find the delivery step
+        $deliveryStep = null;
+        foreach ($this->checkoutProcess->getSteps() as $step) {
+            if ($step instanceof CheckoutDeliveryStep) {
+                $deliveryStep = $step;
+                break;
+            }
+        }
+
+        if (!$deliveryStep) {
+            ob_end_clean();
+            header('Content-Type: application/json');
+            $this->ajaxRender(json_encode([
+                'error' => $this->trans('Delivery step not found', [], 'Shop.Notifications.Error'),
+            ]));
+            return;
+        }
+
+        // Make sure the step is reachable
+        $deliveryStep->setReachable(true);
+
+        // Render the delivery step template
+        $deliveryStepHtml = $deliveryStep->render();
+
+        // Get delivery options data for potential JSON response
+        $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
+        $selectedDeliveryOption = $this->getCheckoutSession()->getSelectedDeliveryOption();
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxRender(json_encode([
+            'html' => $deliveryStepHtml,
+            'delivery_options' => $deliveryOptions,
+            'selected_delivery_option' => $selectedDeliveryOption,
+        ]));
+    }
+
 
     /**
      * Return default TOS link for checkout footer
