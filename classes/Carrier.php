@@ -745,70 +745,77 @@ class CarrierCore extends ObjectModel
         $results_array = [];
 
         foreach ($result as $k => $row) {
-            $carrier = new Carrier((int) $row['id_carrier']);
-            $shipping_method = $carrier->getShippingMethod();
-            if ($shipping_method != Carrier::SHIPPING_METHOD_FREE) {
-                /*
-                 * First, we check loosely if the carrier is available for the zone with at least one range.
-                 * No weight, no price, just check if the carrier has any ranges for the zone.
-                 * If not, we remove it from the list immediately.
-                 * If yes, we must still check the behavior of the carrier for out-of-range prices below.
-                 */
-                if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight($id_zone) === false) {
-                    $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
-                    unset($result[$k]);
-
-                    continue;
-                }
-                if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice($id_zone) === false) {
-                    $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
-                    unset($result[$k]);
-
-                    continue;
-                }
-
-                /*
-                 * Second, if out-of-range behavior carrier is set to "Deactivate carrier", we have to specifically check
-                 * for current weight/price of the cart and remove the carrier if it is not available for the current cart.
-                 */
-                if ($row['range_behavior']) {
-                    // Get id zone
-                    if (!$id_zone) {
-                        $id_zone = (int) Country::getIdZone((int) Configuration::get('PS_COUNTRY_DEFAULT'));
-                    }
-
-                    // Get only carriers that have a range compatible with cart
-                    if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT
-                        && (Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight(), $id_zone) === false)) {
+            $cache_id = 'Carrier::getCarriersForOrder_' . (int) $id_zone . '-' . (int) $row['id_carrier'];
+            if (!Cache::isStored($cache_id)) {
+                $carrier = new Carrier((int) $row['id_carrier']);
+                $shipping_method = $carrier->getShippingMethod();
+                if ($shipping_method != Carrier::SHIPPING_METHOD_FREE) {
+                    /*
+                     * First, we check loosely if the carrier is available for the zone with at least one range.
+                     * No weight, no price, just check if the carrier has any ranges for the zone.
+                     * If not, we remove it from the list immediately.
+                     * If yes, we must still check the behavior of the carrier for out-of-range prices below.
+                     */
+                    if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight($id_zone) === false) {
                         $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
                         unset($result[$k]);
 
                         continue;
                     }
-
-                    if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE
-                        && (Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency ?? null) === false)) {
+                    if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice($id_zone) === false) {
                         $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
                         unset($result[$k]);
 
                         continue;
                     }
+
+                    /*
+                     * Second, if out-of-range behavior carrier is set to "Deactivate carrier", we have to specifically check
+                     * for current weight/price of the cart and remove the carrier if it is not available for the current cart.
+                     */
+                    if ($row['range_behavior']) {
+                        // Get id zone
+                        if (!$id_zone) {
+                            $id_zone = (int) Country::getIdZone((int) Configuration::get('PS_COUNTRY_DEFAULT'));
+                        }
+
+                        // Get only carriers that have a range compatible with cart
+                        if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT
+                            && (Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight(), $id_zone) === false)) {
+                            $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
+                            unset($result[$k]);
+
+                            continue;
+                        }
+
+                        if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE
+                            && (Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency ?? null) === false)) {
+                            $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
+                            unset($result[$k]);
+
+                            continue;
+                        }
+                    }
                 }
+
+                // Calculate the price of the carrier
+                $row['price'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], true, null, null, $id_zone));
+                $row['price_tax_exc'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], false, null, null, $id_zone));
+
+                // If price is false, then the carrier is unavailable (carrier module)
+                if ($row['price'] === false) {
+                    unset($result[$k]);
+
+                    continue;
+                }
+
+                // Locate an image (original resolution, we should probably move to use a presenter and thumbnails here)
+                $row['img'] = file_exists(_PS_SHIP_IMG_DIR_ . (int) $row['id_carrier'] . '.jpg') ? _THEME_SHIP_DIR_ . (int) $row['id_carrier'] . '.jpg' : '';
+
+                Cache::store($cache_id, $row);
+            } else {
+                $row = Cache::retrieve($cache_id);
             }
-
-            // Calculate the price of the carrier
-            $row['price'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], true, null, null, $id_zone));
-            $row['price_tax_exc'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], false, null, null, $id_zone));
-
-            // If price is false, then the carrier is unavailable (carrier module)
-            if ($row['price'] === false) {
-                unset($result[$k]);
-
-                continue;
-            }
-
-            // Locate an image (original resolution, we should probably move to use a presenter and thumbnails here)
-            $row['img'] = file_exists(_PS_SHIP_IMG_DIR_ . (int) $row['id_carrier'] . '.jpg') ? _THEME_SHIP_DIR_ . (int) $row['id_carrier'] . '.jpg' : '';
 
             $results_array[] = $row;
         }
@@ -1594,7 +1601,7 @@ class CarrierCore extends ObjectModel
             }// no linked carrier are available for this zone
         }
 
-        $cache_id = 'Carrier::getAvailableCarrierList_getCarriersForOrder_' . (int) $id_zone . '-' . (int) $cart->id;
+        $cache_id = 'Carrier::getAvailableCarrierList_getCarriersForOrder_' . (int) $id_zone . '-' . (int) $cart->id . '-' . (int) $product->id;
         if (!Cache::isStored($cache_id)) {
             $customer = new Customer($cart->id_customer);
             $carrier_error = [];
