@@ -1,4 +1,4 @@
-name: PR Metadata Validator
+name: Release workflows
 on:
   pull_request:
     types: [ opened, edited, reopened, milestoned, demilestoned ]
@@ -9,5 +9,7 @@ concurrency:
 
 jobs:
   convention-check:
-    name: Validate PR Metadata
-    uses: PrestaShop/.github/.github/actions/validate-pr-metadata@master
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR Metadata
+        uses: PrestaShop/.github/.github/actions/validate-pr-metadata@master
