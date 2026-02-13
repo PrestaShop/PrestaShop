@@ -367,6 +367,7 @@ class ModuleTabRegister
         $tab->id_parent = $this->findParentId($tabDetails);
         $tab->wording = $tabDetails->get('wording');
         $tab->wording_domain = $tabDetails->get('wording_domain');
+        $tab->id_feature_flag = $tabDetails->get('id_feature_flag');
 
         if (!$tab->save()) {
             throw new Exception($this->translator->trans('Failed to install admin tab "%name%".', ['%name%' => $tab->name], 'Admin.Modules.Notification'));

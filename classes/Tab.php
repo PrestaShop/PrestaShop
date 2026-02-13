@@ -63,6 +63,9 @@ class TabCore extends ObjectModel
     /** @var string|null Wording domain to use for the display name */
     public $wording_domain;
 
+    /** @var int Associated feature flag ID */
+    public $id_feature_flag;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -81,6 +84,7 @@ class TabCore extends ObjectModel
             'icon' => ['type' => self::TYPE_STRING, 'size' => 64],
             'wording' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
             'wording_domain' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
+            'id_feature_flag' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'allow_null' => true],
             /* Lang fields */
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 128],
         ],

@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Twig\Component;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Entity\FeatureFlag;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopBundle\Twig\Layout\MenuBuilder;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -45,6 +47,7 @@ class NavBar
         protected readonly LoggerInterface $logger,
         protected readonly MenuBuilder $menuBuilder,
         protected readonly string $psVersion,
+        protected readonly FeatureFlagRepository $featureFlagRepository,
     ) {
     }
 
@@ -92,9 +95,23 @@ class NavBar
 
     protected function isValidTab(array $tab): bool
     {
+        $featureFlag = $this->retrieveFeatureFlagTab($tab);
+
         return Tab::checkTabRights($tab['id_tab'])
             && $tab['enabled']
-            && $tab['class_name'] !== 'AdminCarrierWizard';
+            && $tab['class_name'] !== 'AdminCarrierWizard'
+            && ($featureFlag?->isEnabled() ?? true);
+    }
+
+    private function retrieveFeatureFlagTab(array $tab): ?FeatureFlag
+    {
+        $featureFlagId = $tab['id_feature_flag'];
+
+        if (empty($featureFlagId)) {
+            return null;
+        }
+
+        return $this->featureFlagRepository->find($featureFlagId);
     }
 
     protected function processTab(array $tab, int $currentId, int $level, ?string $controllerName): array

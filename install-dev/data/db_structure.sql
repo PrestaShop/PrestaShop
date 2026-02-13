@@ -2923,17 +2923,18 @@ CREATE TABLE `PREFIX_attribute_shop` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 CREATE TABLE `PREFIX_tab` (
-  `id_tab`         INT AUTO_INCREMENT NOT NULL,
-  `id_parent`      INT         NOT NULL,
-  `position`       INT         NOT NULL,
-  `module`         VARCHAR(64)  DEFAULT NULL,
-  `class_name`     VARCHAR(64) NOT NULL,
-  `route_name`     VARCHAR(256) DEFAULT NULL,
-  `active`         TINYINT(1) NOT NULL,
-  `enabled`        TINYINT(1) NOT NULL,
-  `icon`           VARCHAR(32)  DEFAULT NULL,
-  `wording`        VARCHAR(255) DEFAULT NULL,
-  `wording_domain` VARCHAR(255) DEFAULT NULL,
+  `id_tab`          INT AUTO_INCREMENT NOT NULL,
+  `id_parent`       INT         NOT NULL,
+  `position`        INT         NOT NULL,
+  `module`          VARCHAR(64)  DEFAULT NULL,
+  `class_name`      VARCHAR(64) NOT NULL,
+  `route_name`      VARCHAR(256) DEFAULT NULL,
+  `active`          TINYINT(1) NOT NULL,
+  `enabled`         TINYINT(1) NOT NULL,
+  `icon`            VARCHAR(32)  DEFAULT NULL,
+  `wording`         VARCHAR(255) DEFAULT NULL,
+  `wording_domain`  VARCHAR(255) DEFAULT NULL,
+  `id_feature_flag` INT          DEFAULT NULL,
   PRIMARY KEY (`id_tab`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 CREATE TABLE `PREFIX_tab_lang` (

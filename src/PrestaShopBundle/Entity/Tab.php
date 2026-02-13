@@ -99,6 +99,13 @@ class Tab
     private ?string $wordingDomain;
 
     /**
+     * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\FeatureFlag")
+     *
+     * @ORM\JoinColumn(name="id_feature_flag", referencedColumnName="id_feature_flag", nullable=true)
+     */
+    private ?FeatureFlag $featureFlag;
+
+    /**
      * @var Collection<TabLang>
      *
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\TabLang", mappedBy="tab")
@@ -253,6 +260,18 @@ class Tab
     public function setRouteName(?string $routeName): static
     {
         $this->routeName = $routeName;
+
+        return $this;
+    }
+
+    public function getFeatureFlag(): ?FeatureFlag
+    {
+        return $this->featureFlag;
+    }
+
+    public function setFeatureFlag(FeatureFlag $featureFlag): self
+    {
+        $this->featureFlag = $featureFlag;
 
         return $this;
     }
