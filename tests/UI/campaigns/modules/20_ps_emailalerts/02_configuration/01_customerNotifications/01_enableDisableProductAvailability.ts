@@ -57,7 +57,6 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
     quantity: 0,
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -321,9 +320,8 @@ describe('Mail alerts module - Customer notifications - Enable/Disable product a
 
       await page.reload();
 
-      // @todo : https://github.com/PrestaShop/hummingbird/issues/910
-      //const textMessage = await foHummingbirdProductPage.getBlockMailAlertNotification(page);
-      //expect(textMessage).to.be.equal(foHummingbirdProductPage.messageAlertNotificationAlreadyRegistered);
+      const textMessage = await foHummingbirdProductPage.getBlockMailAlertNotification(page);
+      expect(textMessage).to.be.equal(foHummingbirdProductPage.messageAlertNotificationAlreadyRegistered);
     });
   });
 

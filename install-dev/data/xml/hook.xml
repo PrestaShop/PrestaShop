@@ -5663,5 +5663,20 @@
       <title/>
       <description/>
     </hook>
+    <hook id="actionUpdateDefaultCombinationAfter">
+      <name>actionUpdateDefaultCombinationAfter</name>
+      <title>After default combination update</title>
+      <description>Allows modules to react after the default combination of a product has been updated. This hook is triggered once the default combination has been successfully changed.</description>
+    </hook>
+    <hook id="actionOverrideShippingFreePrice">
+      <name>actionOverrideShippingFreePrice</name>
+      <title>Override price that determines free shipping</title>
+      <description>Allows modules to override the free shipping price and return their custom value, for example to specify it by zone or other criteria.</description>
+    </hook>
+    <hook id="actionOverrideShippingFreeWeight">
+      <name>actionOverrideShippingFreeWeight</name>
+      <title>Override weight that determines free shipping</title>
+      <description>Allows modules to override the free shipping weight and return their custom value, for example to specify it by zone or other criteria.</description>
+    </hook>
   </entities>
 </entity_hook>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_module_country>
+  <fields>
+    <field name="id_module"/>
+    <field name="id_country" relation="country"/>
+  </fields>
+  <entities>
+    <module_country id_country="US" id_module="ps_cashondelivery" />
+    <module_country id_country="US" id_module="ps_wirepayment" />
+    <module_country id_country="US" id_module="ps_checkpayment" />
+  </entities>
+</entity_module_country>

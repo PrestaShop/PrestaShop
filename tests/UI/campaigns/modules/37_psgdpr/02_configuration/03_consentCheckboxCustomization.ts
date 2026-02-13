@@ -414,11 +414,6 @@ describe('GDPR : Consent checkbox customization', async () => {
 
       const successMessage = await modPsGdprBoTabDataConsent.saveForm(page);
       expect(successMessage).to.be.contains(modPsGdprBoTabDataConsent.saveFormMessage);
-
-      await page.screenshot({
-        path: `${global.SCREENSHOT.FOLDER}/gdpr_00.png`,
-        fullPage: true,
-      });
     });
 
     it('should check on Contact Form the GDPR Label', async function () {

@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Responsible for updating product default combination
@@ -40,22 +41,14 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 class DefaultCombinationUpdater
 {
     /**
-     * @var CombinationRepository
-     */
-    private $combinationRepository;
-
-    /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
      * @param CombinationRepository $combinationRepository
      * @param ProductRepository $productRepository
+     * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(
-        CombinationRepository $combinationRepository,
-        ProductRepository $productRepository
+        private CombinationRepository $combinationRepository,
+        private ProductRepository $productRepository,
+        private HookDispatcherInterface $hookDispatcher
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->productRepository = $productRepository;
@@ -84,5 +77,14 @@ class DefaultCombinationUpdater
         );
 
         $this->productRepository->updateCachedDefaultCombination($productId, $shopConstraint);
+
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionUpdateDefaultCombinationAfter',
+            [
+                'id_product' => (int) $newDefaultCombination->id_product,
+                'id_product_attribute' => (int) $defaultCombinationId->getValue(),
+                'id_shop' => $shopConstraint->isSingleShopContext() ? $shopConstraint->getShopId()->getValue() : null,
+            ]
+        );
     }
 }

@@ -250,11 +250,8 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
   });
 
-  // @todo : https://github.com/PrestaShop/PrestaShop/issues/36602
   it('should choose payment method and confirm the order', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'confirmOrderAfterDisable', baseContext);
-
-    this.skip();
 
     // Payment step - Choose payment step
     await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);

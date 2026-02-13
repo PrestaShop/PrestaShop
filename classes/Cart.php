@@ -828,10 +828,21 @@ class CartCore extends ObjectModel
         $pa_ids = [];
         $cart_base_product_quantity = [];
         if (is_iterable($products)) {
+            $customerGroupId = (int) (new Customer((int) $this->id_customer))->id_default_group;
             foreach ($products as $key => $product) {
                 $products_ids[] = $product['id_product'];
                 $pa_ids[] = $product['id_product_attribute'];
-                $specific_price = SpecificPrice::getSpecificPrice($product['id_product'], $this->id_shop, $this->id_currency, $id_country, $this->id_shop_group, $product['cart_quantity'], $product['id_product_attribute'], $this->id_customer, $this->id);
+                $specific_price = SpecificPrice::getSpecificPrice(
+                    $product['id_product'],
+                    $this->id_shop,
+                    $this->id_currency,
+                    $id_country,
+                    $customerGroupId,
+                    $product['cart_quantity'],
+                    $product['id_product_attribute'],
+                    $this->id_customer,
+                    $this->id
+                );
                 if ($specific_price) {
                     $reduction_type_row = ['reduction_type' => $specific_price['reduction_type']];
                 } else {
@@ -3829,10 +3840,8 @@ class CartCore extends ObjectModel
         }
 
         $configuration = Configuration::getMultiple([
-            'PS_SHIPPING_FREE_PRICE',
             'PS_SHIPPING_HANDLING',
             'PS_SHIPPING_METHOD',
-            'PS_SHIPPING_FREE_WEIGHT',
         ]);
 
         /*
@@ -3843,12 +3852,20 @@ class CartCore extends ObjectModel
          *
          * Watch out, this is different from the other calculations which use the order total WITH discounts.
          */
-        $free_fees_price = 0;
-        if (isset($configuration['PS_SHIPPING_FREE_PRICE'])) {
-            $free_fees_price = Tools::convertPrice((float) $configuration['PS_SHIPPING_FREE_PRICE'], Currency::getCurrencyInstance((int) $this->id_currency));
+        // Get the configuration value and convert it to the current currency
+        $shippingFreePrice = (float) Configuration::get('PS_SHIPPING_FREE_PRICE');
+        if (!empty($shippingFreePrice)) {
+            $shippingFreePrice = Tools::convertPrice((float) $shippingFreePrice, Currency::getCurrencyInstance((int) $this->id_currency));
         }
+
+        /*
+         * Allow modules to override the free shipping price and return their custom value, for example to specify
+         * it by zone or other criteria. Make sure to convert it to the currency of the cart if needed.
+         */
+        Hook::exec('actionOverrideShippingFreePrice', ['shippingFreePrice' => &$shippingFreePrice, 'id_zone' => $id_zone, 'id_currency' => $this->id_currency]);
+
         $orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);
-        if ($orderTotalwithDiscounts >= (float) $free_fees_price && (float) $free_fees_price > 0) {
+        if ($orderTotalwithDiscounts >= (float) $shippingFreePrice && (float) $shippingFreePrice > 0) {
             // Allow module to override the shipping cost and return their custom value
             $shipping_cost = $this->getPackageShippingCostFromModule($carrier, $shipping_cost, $products);
 
@@ -3876,9 +3893,17 @@ class CartCore extends ObjectModel
          * is greater than or equal to the free shipping weight.
          * If it is, we return 0.
          */
-        if (isset($configuration['PS_SHIPPING_FREE_WEIGHT'])
-            && $this->getTotalWeight() >= (float) $configuration['PS_SHIPPING_FREE_WEIGHT']
-            && (float) $configuration['PS_SHIPPING_FREE_WEIGHT'] > 0) {
+        $shippingFreeWeight = (float) Configuration::get('PS_SHIPPING_FREE_WEIGHT');
+
+        /*
+         * Allow modules to override the free shipping weight and return their custom value, for example to specify
+         * it by zone or other criteria. Make sure to convert it to the currency of the cart if needed.
+         */
+        Hook::exec('actionOverrideShippingFreeWeight', ['shippingFreeWeight' => &$shippingFreeWeight, 'id_zone' => $id_zone, 'id_currency' => $this->id_currency]);
+
+        if (!empty($shippingFreeWeight)
+            && $this->getTotalWeight() >= (float) $shippingFreeWeight
+            && (float) $shippingFreeWeight > 0) {
             // Allow module to override the shipping cost and return their custom value
             $shipping_cost = $this->getPackageShippingCostFromModule($carrier, $shipping_cost, $products);
 

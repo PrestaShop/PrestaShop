@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
 use ReflectionException;
@@ -63,27 +64,27 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @var ImageRetriever
      */
-    private $imageRetriever;
+    protected $imageRetriever;
 
     /**
      * @var Link
      */
-    private $link;
+    protected $link;
 
     /**
      * @var PriceFormatter
      */
-    private $priceFormatter;
+    protected $priceFormatter;
 
     /**
      * @var ProductColorsRetriever
      */
-    private $productColorsRetriever;
+    protected $productColorsRetriever;
 
     /**
      * @var TranslatorInterface
      */
-    private $translator;
+    protected $translator;
 
     /**
      * @var ProductPresentationSettings
@@ -98,17 +99,17 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @var Language
      */
-    private $language;
+    protected $language;
 
     /**
      * @var HookManager
      */
-    private $hookManager;
+    protected $hookManager;
 
     /**
      * @var Configuration
      */
-    private $configuration;
+    protected $configuration;
 
     public function __construct(
         ProductPresentationSettings $settings,
@@ -339,24 +340,38 @@ class ProductLazyArray extends AbstractLazyArray
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getDeliveryInformation()
     {
-        $productQuantity =
-            $this->product['stock_quantity'] ?? $this->product['quantity'];
+        // If the product is virtual, we don't show delivery information
+        if ($this->getVirtual()) {
+            return null;
+        }
 
-        if ($productQuantity >= $this->getQuantityWanted()) {
-            $config = $this->configuration->get(
-                'PS_LABEL_DELIVERY_TIME_AVAILABLE'
-            );
+        // If the product cannot be ordered, we don't show delivery information
+        if (!$this->shouldEnableAddToCartButton($this->product, $this->settings)) {
+            return null;
+        }
 
-            return $config[$this->language->id] ?? null;
-        } elseif (
-            $this->shouldEnableAddToCartButton($this->product, $this->settings)
-        ) {
-            $config = $this->configuration->get(
-                'PS_LABEL_DELIVERY_TIME_OOSBOA',
-                []
-            );
+        // Get proper quantity available value
+        $productQuantity = $this->product['stock_quantity'] ?? $this->product['quantity'];
 
-            return $config[$this->language->id] ?? null;
+        // Type 0 - no delivery information
+        if ($this->product['additional_delivery_times'] == DeliveryTimeNoteType::TYPE_NONE) {
+            return null;
+
+        // Type 1 - use default information
+        } elseif ($this->product['additional_delivery_times'] == DeliveryTimeNoteType::TYPE_DEFAULT) {
+            if ($productQuantity >= $this->getQuantityWanted()) {
+                return $this->configuration->get('PS_LABEL_DELIVERY_TIME_AVAILABLE')[$this->language->id] ?? null;
+            } else {
+                return $this->configuration->get('PS_LABEL_DELIVERY_TIME_OOSBOA')[$this->language->id] ?? null;
+            }
+
+        // Type 2 - use product information
+        } elseif ($this->product['additional_delivery_times'] == DeliveryTimeNoteType::TYPE_SPECIFIC) {
+            if ($productQuantity >= $this->getQuantityWanted()) {
+                return $this->product['delivery_in_stock'] ?? null;
+            } else {
+                return $this->product['delivery_out_stock'] ?? null;
+            }
         }
 
         return null;
@@ -890,7 +905,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return bool
      */
-    private function shouldShowPrice(
+    protected function shouldShowPrice(
         ProductPresentationSettings $settings,
         array $product
     ): bool {
@@ -902,7 +917,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return bool
      */
-    private function shouldShowOutOfStockLabel(
+    protected function shouldShowOutOfStockLabel(
         ProductPresentationSettings $settings,
         array $product
     ): bool {
@@ -950,7 +965,7 @@ class ProductLazyArray extends AbstractLazyArray
      * @param array $product
      * @param Language $language
      */
-    private function fillImages(array $product, Language $language): void
+    protected function fillImages(array $product, Language $language): void
     {
         // Get all product images assigned to this product.
         $productImages = $this->imageRetriever->getAllProductImages(
@@ -1006,7 +1021,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return array
      */
-    private function filterImagesForCombination(
+    protected function filterImagesForCombination(
         array $images,
         int $productAttributeId
     ) {
@@ -1025,7 +1040,7 @@ class ProductLazyArray extends AbstractLazyArray
      * @param ProductPresentationSettings $settings
      * @param array $product
      */
-    private function addPriceInformation(
+    protected function addPriceInformation(
         ProductPresentationSettings $settings,
         array $product
     ): void {
@@ -1306,7 +1321,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return string
      */
-    private function getProductURL(
+    protected function getProductURL(
         array $product,
         Language $language,
         $canonical = false
@@ -1516,7 +1531,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return string|null
      */
-    private function prepareAvailabilityDate($product)
+    protected function prepareAvailabilityDate($product)
     {
         // Check if the date is valid
         if (
@@ -1541,7 +1556,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return string
      */
-    private function getTranslatedKey($key)
+    protected function getTranslatedKey($key)
     {
         switch ($key) {
             case 'ean13':

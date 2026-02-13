@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray;
-use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -87,6 +86,8 @@ class CartLazyArray extends AbstractLazyArray
 
     private ImageRetriever $imageRetriever;
 
+    private CartProductPresenter $cartProductPresenter;
+
     public function __construct(Cart $cart, CartPresenter $cartPresenter, bool $shouldSeparateGifts = false)
     {
         $this->shouldSeparateGifts = $shouldSeparateGifts;
@@ -97,6 +98,13 @@ class CartLazyArray extends AbstractLazyArray
         $this->link = $context->link;
         $this->imageRetriever = new ImageRetriever($this->link);
         $this->priceFormatter = new PriceFormatter();
+        $this->cartProductPresenter = new CartProductPresenter(
+            $this->imageRetriever,
+            $this->link,
+            $this->priceFormatter,
+            new ProductColorsRetriever(),
+            $this->translator
+        );
         parent::__construct();
     }
 
@@ -582,15 +590,7 @@ class CartLazyArray extends AbstractLazyArray
         // Pass the cart quantity as quantity wanted for proper price calculation
         $rawProduct['quantity_wanted'] = $rawProduct['cart_quantity'];
 
-        $presenter = new ProductListingPresenter(
-            $this->imageRetriever,
-            $this->link,
-            $this->priceFormatter,
-            new ProductColorsRetriever(),
-            $this->translator
-        );
-
-        return $presenter->present(
+        return $this->cartProductPresenter->present(
             $this->cartPresenter->getSettings(),
             $rawProduct,
             Context::getContext()->language

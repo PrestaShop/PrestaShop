@@ -213,9 +213,8 @@ describe('Wishlist module - Add a product to a list', async () => {
       const nameProduct = await foHummingbirdMyWishlistsViewPage.getProductName(page, 1);
       expect(nameProduct).to.equal(dataProducts.demo_3.name);
 
-      // @todo : https://github.com/PrestaShop/hummingbird/issues/908
-      //const qtyProduct = await foHummingbirdMyWishlistsViewPage.getProductQuantity(page, 1);
-      //expect(qtyProduct).to.equal(5);
+      const qtyProduct = await foHummingbirdMyWishlistsViewPage.getProductQuantity(page, 1);
+      expect(qtyProduct).to.equal(5);
 
       const sizeProduct = await foHummingbirdMyWishlistsViewPage.getProductAttribute(page, 1, 'Size');
       expect(sizeProduct).to.equal('S');
