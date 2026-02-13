@@ -833,6 +833,7 @@ class CartCore extends ObjectModel
                 $pa_ids[] = $product['id_product_attribute'];
                 $specific_price = SpecificPrice::getSpecificPrice($product['id_product'], $this->id_shop, $this->id_currency, $id_country, $this->id_shop_group, $product['cart_quantity'], $product['id_product_attribute'], $this->id_customer, $this->id);
                 if ($specific_price) {
+                    $product['specific_prices'] = $specific_price;
                     $reduction_type_row = ['reduction_type' => $specific_price['reduction_type']];
                 } else {
                     $reduction_type_row = ['reduction_type' => 0];
@@ -922,6 +923,9 @@ class CartCore extends ObjectModel
                 $product['reduction'] = $props['reduction'];
                 $product['reduction_without_tax'] = $props['reduction_without_tax'];
                 $product['price_without_reduction'] = $props['price_without_reduction'];
+                if(!isset($product['specific_prices'])){
+                    $product['specific_prices'] = $props['specific_prices'];
+                }
                 $product['specific_prices'] = $props['specific_prices'];
                 $product['unit_price'] = $props['unit_price_tax_excluded'];
                 $product['unit_price_ratio'] = $props['unit_price_ratio'];
