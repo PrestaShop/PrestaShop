@@ -836,33 +836,34 @@ class CartCore extends ObjectModel
                     $reduction_type_row = ['reduction_type' => $specific_price['reduction_type']];
                     // set product reduction based on cart so it wont be overwritten by value from getProductProperties
                     $product['specific_prices'] = $specific_price;
-                    
+
                     $product['reduction'] = Product::getPriceStatic(
-                    (int) $product['id_product'],
-                    !Tax::excludeTaxeOption(),
-                    $product['id_product_attribute'],
-                    6,
-                    null,
-                    true,
-                    true,
-                    $product['cart_quantity'],
-                    true,
-                    $this->id_customer,
-                    $this->id,
+                        (int) $product['id_product'],
+                        !Tax::excludeTaxeOption(),
+                        $product['id_product_attribute'],
+                        6,
+                        null,
+                        true,
+                        true,
+                        $product['cart_quantity'],
+                        true,
+                        $this->id_customer,
+                        $this->id,
                     );
 
                     $product['reduction_without_tax'] = Product::getPriceStatic(
-                    (int) $product['id_product'],
-                    false,
-                    $product['id_product_attribute'],
-                    6,
-                    null,
-                    true,
-                    true,
-                    $product['cart_quantity'],
-                    true,
-                    $this->id_customer,
-                    $this->id,
+                        (int) $product['id_product'],
+                        false,
+                        $product['id_product_attribute'],
+                        6,
+                        null,
+                        true,
+                        true,
+                        $product['cart_quantity'],
+                        true,
+                        $this->id_customer,
+                        $this->id,
+                        
                     );
                 } else {
                     $reduction_type_row = ['reduction_type' => 0];
@@ -949,10 +950,7 @@ class CartCore extends ObjectModel
                 }
 
                 $props = Product::getProductProperties((int) $this->id_lang, $product);
-                $product['reduction'] = $props['reduction'];
-                $product['reduction_without_tax'] = $props['reduction_without_tax'];
-                $product['price_without_reduction'] = $props['price_without_reduction'];
-                //if there is specific_prices with cart id provided, we dont want to overwrite it by getProductProperties as it get reduction without cart context
+                // if there is specific_prices with cart id provided, we dont want to overwrite it by getProductProperties as it get reduction without cart context
                 if (!isset($product['specific_prices'])) {
                     $product['reduction'] = $props['reduction'];
                     $product['reduction_without_tax'] = $props['reduction_without_tax'];
