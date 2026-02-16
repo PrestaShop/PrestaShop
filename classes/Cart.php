@@ -831,13 +831,13 @@ class CartCore extends ObjectModel
             foreach ($products as $key => $product) {
                 $products_ids[] = $product['id_product'];
                 $pa_ids[] = $product['id_product_attribute'];
-$cartPrices = $this->getCartPrices($product,$product['cart_quantity'], $product['id_customization'], Context::getContext(), $specific_price);
-if ($specific_price) {
-$reduction_type_row = ['reduction_type' => $specific_price['reduction_type']];
-                                        // set product reduction based on cart so it wont be overwritten by value from getProductProperties
+                $cartPrices = $this->getCartPrices($product,$product['cart_quantity'], $product['id_customization'], Context::getContext(), $specific_price);
+                if ($specific_price) {
+                    $reduction_type_row = ['reduction_type' => $specific_price['reduction_type']];
+                    // set product reduction based on cart so it wont be overwritten by value from getProductProperties
                     $product['specific_prices'] = $specific_price;
                     $product['reduction'] = $cartPrices['price_with_reduction'];
-                    $product['reduction_without_tax'] = $cartPrices['price_with_reduction_without_tax'];    
+                    $product['reduction_without_tax'] = $cartPrices['price_with_reduction_without_tax'];
                 } else {
                     $reduction_type_row = ['reduction_type' => 0];
                 }
