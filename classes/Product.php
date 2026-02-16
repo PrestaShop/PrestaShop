@@ -5489,7 +5489,10 @@ class ProductCore extends ObjectModel
             null,
             false,
             true,
-            $quantityToUseForPriceCalculations
+            $quantityToUseForPriceCalculations,
+            false,
+            null,
+            $id_cart
         );
 
         if (self::$_taxCalculationMethod == PS_TAX_EXC) {
@@ -5502,7 +5505,10 @@ class ProductCore extends ObjectModel
                 null,
                 false,
                 true,
-                $quantityToUseForPriceCalculations
+                $quantityToUseForPriceCalculations,
+                false,
+                null,
+                $id_cart
             );
             $row['price_without_reduction'] = $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
                 (int) $row['id_product'],
@@ -5512,7 +5518,10 @@ class ProductCore extends ObjectModel
                 null,
                 false,
                 false,
-                $quantityToUseForPriceCalculations
+                $quantityToUseForPriceCalculations,
+                false,
+                null,
+                $id_cart
             );
         } else {
             $priceTaxIncluded = Product::getPriceStatic(
@@ -5523,7 +5532,10 @@ class ProductCore extends ObjectModel
                 null,
                 false,
                 true,
-                $quantityToUseForPriceCalculations
+                $quantityToUseForPriceCalculations,
+                false,
+                null,
+                $id_cart
             );
             $row['price'] = Tools::ps_round($priceTaxIncluded, Context::getContext()->getComputingPrecision());
             $row['price_without_reduction'] = Product::getPriceStatic(
@@ -5534,7 +5546,10 @@ class ProductCore extends ObjectModel
                 null,
                 false,
                 false,
-                $quantityToUseForPriceCalculations
+                $quantityToUseForPriceCalculations,
+                false,
+                null,
+                $id_cart
             );
             $row['price_without_reduction_without_tax'] = Product::getPriceStatic(
                 (int) $row['id_product'],
@@ -5544,7 +5559,10 @@ class ProductCore extends ObjectModel
                 null,
                 false,
                 false,
-                $quantityToUseForPriceCalculations
+                $quantityToUseForPriceCalculations,
+                false,
+                null,
+                $id_cart
             );
         }
 
