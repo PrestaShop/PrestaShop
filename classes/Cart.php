@@ -831,7 +831,15 @@ class CartCore extends ObjectModel
             foreach ($products as $key => $product) {
                 $products_ids[] = $product['id_product'];
                 $pa_ids[] = $product['id_product_attribute'];
-                $cartPrices = $this->getCartPrices($product, $product['cart_quantity'], $product['id_customization'], Context::getContext(), $specific_price);
+                if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice') {
+                    $address_id = (int) $this->id_address_invoice;
+                } else {
+                    $address_id = (int) $product['id_address_delivery'];
+                }
+                if (!Address::addressExists($address_id, true)) {
+                    $address_id = null;
+                }                
+                $cartPrices = $this->getCartPrices($product,$product['cart_quantity'], $address_id, Context::getContext(), $specific_price);
                 if ($specific_price) {
                     $reduction_type_row = ['reduction_type' => $specific_price['reduction_type']];
                     // set product reduction based on cart so it wont be overwritten by value from getProductProperties
