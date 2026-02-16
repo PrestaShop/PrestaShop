@@ -5470,9 +5470,11 @@ class ProductCore extends ObjectModel
          * If cart_quantity is defined, we use it. Usually cart context.
          * Otherwise, we use minimal_quantity, if nothing was passed - on listings.
          */
+        $id_cart = null;
         if (isset($row['quantity_wanted'])) {
             $quantityToUseForPriceCalculations = max((int) $row['minimal_quantity'], (int) $row['quantity_wanted']);
         } elseif (isset($row['cart_quantity'])) {
+            $id_cart = $context->cart->id;
             $quantityToUseForPriceCalculations = max((int) $row['minimal_quantity'], (int) $row['cart_quantity']);
         } else {
             $quantityToUseForPriceCalculations = (int) $row['minimal_quantity'];
@@ -5557,7 +5559,7 @@ class ProductCore extends ObjectModel
             $quantityToUseForPriceCalculations,
             true,
             null,
-            null,
+            $id_cart,
             null,
             $specific_prices
         );
@@ -5573,7 +5575,7 @@ class ProductCore extends ObjectModel
             $quantityToUseForPriceCalculations,
             true,
             null,
-            null,
+            $id_cart,
             null,
             $specific_prices
         );
