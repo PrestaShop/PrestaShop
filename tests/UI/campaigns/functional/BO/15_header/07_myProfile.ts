@@ -150,7 +150,7 @@ describe('BO - Header : My profile', async () => {
       await boMyProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
       const textResult = await boMyProfilePage.getAlertError(page);
-      expect(textResult).to.contains(boMyProfilePage.errorInvalidFormatImageMessage);
+      expect(textResult).to.contains('Image format not recognized, allowed formats are:');
 
       // Delete created file
       await utilsFile.deleteFile('image.svg');
