@@ -19,15 +19,15 @@ on:
         description: 'Previous git ref - tag, branch or SHA (e.g. 9.0.2)'
         required: true
         type: string
-      target_ref:
-        description: 'Target git ref - tag, branch or SHA (e.g. HEAD)'
-        required: false
-        type: string
-        default: 'HEAD'
       next_version:
         description: 'Next version for the changelog (e.g. 9.1.0 Beta 1)'
         required: true
         type: string
+      target_ref:
+        description: 'Leave empty to use the provided base_branch. Tou can optionally specify target git ref - tag, branch or SHA (e.g. HEAD)'
+        required: false
+        type: string
+        default: ''
       release_date:
         description: 'Release date (YYYY-MM-DD). Empty = today'
         required: false
@@ -53,14 +53,24 @@ jobs:
       - name: Fetch tags
         run: git fetch --tags
 
+      - name: Display parameters
+        run: |
+          echo Generating changelog with following parameters:
+          echo repository: ${{ github.repository }}
+          echo base_branch: ${{ inputs.base_branch }}
+          echo previous_ref: ${{ inputs.previous_ref }}
+          echo target_ref: ${{ inputs.target_ref || inputs.base_branch }}
+          echo next_version: ${{ inputs.next_version }}
+          echo release_date: ${{ inputs.release_date }}
+
       - name: Generate changelog
         id: changelog
-        uses: boherm/ps.github/.github/actions/generate-changelog@generate-changelog-action
+        uses: PrestaShop/.github/.github/actions/generate-changelog@master
         with:
           github_token: ${{ github.token }}
           repository: ${{ github.repository }}
           previous_ref: ${{ inputs.previous_ref }}
-          target_ref: ${{ inputs.target_ref }}
+          target_ref: ${{ inputs.target_ref || inputs.base_branch }}
           next_version: ${{ inputs.next_version }}
           release_date: ${{ inputs.release_date }}
 

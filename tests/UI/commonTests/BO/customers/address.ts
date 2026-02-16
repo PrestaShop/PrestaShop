@@ -93,12 +93,12 @@ function createAddressTest(addressData: FakerAddress, baseContext: string = 'com
  * @param baseContext {string} String to identify the test
  */
 function bulkDeleteAddressesTest(
+  filterType: string,
   filterBy: string,
   value: string,
   baseContext: string = 'commonTests-deleteAddressesByBulkActionsTest',
 ): void {
   describe('POST-TEST: Delete addresses by bulk actions', async () => {
-    // before and after functions
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
       page = await utilsPlaywright.newTab(browserContext);
@@ -143,9 +143,13 @@ function bulkDeleteAddressesTest(
     it(`should filter list by '${filterBy}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEdit', baseContext);
 
-      await boAddressesPage.filterAddresses(page, 'input', filterBy, value);
+      await boAddressesPage.filterAddresses(page, filterType, filterBy, value);
 
-      const address = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, filterBy);
+      const address = await boAddressesPage.getTextColumnFromTableAddresses(
+        page,
+        1,
+        filterBy === 'id_country' ? 'country_name' : filterBy,
+      );
       expect(address).to.contains(value);
     });
 

@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Install;
 
+use Country;
+use Module;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Adapter\Entity\Image;
@@ -610,6 +612,30 @@ class XmlLoader
         }
 
         $this->storeId($entity, $identifier, $entity_id);
+    }
+
+    /**
+     * @param string $identifier
+     * @param array $data
+     * @param array $data_lang
+     *
+     * @return $this
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function createEntityModuleCountry($identifier, array $data, array $data_lang)
+    {
+        Country::addModuleRestrictions(
+            [],
+            [
+                ['id_country' => $data['id_country']],
+            ],
+            [
+                ['id_module' => Module::getModuleIdByName($data['id_module'])],
+            ]
+        );
+
+        return $this;
     }
 
     /**

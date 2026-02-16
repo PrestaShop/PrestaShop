@@ -29,6 +29,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Gtin;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
@@ -345,7 +346,7 @@ class ProductCore extends ObjectModel
      *
      * @var int
      */
-    public $additional_delivery_times = 1;
+    public $additional_delivery_times = DeliveryTimeNoteType::TYPE_DEFAULT;
 
     /**
      * Delivery in-stock information.

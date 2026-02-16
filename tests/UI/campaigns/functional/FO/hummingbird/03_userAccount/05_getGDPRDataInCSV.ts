@@ -331,10 +331,11 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const isVisible = await utilsFile.isTextInFile(
           filePath,
-          '""MODULE:PRODUCTCOMMENTS""MODULE:NEWSLETTERSUBSCRIPTION"',
+          '"MODULE:PRODUCTCOMMENTS"',
           true,
           true,
           'utf16le',
+          true,
         );
         expect(isVisible).to.eq(true);
       });

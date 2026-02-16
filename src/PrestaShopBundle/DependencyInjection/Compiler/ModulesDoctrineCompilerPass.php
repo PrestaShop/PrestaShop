@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
-use PrestaShop\PrestaShop\Core\Util\Inflector;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -75,12 +74,14 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
             if (in_array($moduleFolder->getFilename(), $activeModules)
                 && is_dir($moduleFolder . '/src/Entity')
             ) {
-                $moduleNamespace = $this->getModuleNamespace($moduleFolder);
+                $moduleEntityDirectory = realpath($moduleFolder . '/src/Entity');
+                if ($moduleEntityDirectory === false) {
+                    continue;
+                }
+                $moduleNamespace = $this->getModuleNamespace($moduleEntityDirectory);
                 if (empty($moduleNamespace)) {
                     continue;
                 }
-                $modulePrefix = 'Module' . Inflector::getInflector()->camelize($moduleFolder->getFilename());
-                $moduleEntityDirectory = realpath($moduleFolder . '/src/Entity');
                 $mappingPass = $this->createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory);
                 $mappingsPassList[$moduleEntityDirectory] = $mappingPass;
             }
@@ -113,18 +114,31 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
     }
 
     /**
-     * @param SplFileInfo $moduleFolder
+     * @param string $moduleEntityDirectory
      *
      * @return string
      */
-    private function getModuleNamespace(SplFileInfo $moduleFolder)
+    private function getModuleNamespace(string $moduleEntityDirectory)
     {
         $finder = new Finder();
-        $finder->files()->in($moduleFolder->getRealPath() . '/src/Entity')->name('*.php');
+        $finder->files()->in($moduleEntityDirectory)->name('*.php');
+
         foreach ($finder as $phpFile) {
-            $phpContent = file_get_contents($phpFile->getRealPath());
-            if (preg_match('~namespace[ \t]+(.+)[ \t]*;~Um', $phpContent, $matches)) {
-                return $matches[1];
+            if (preg_match('~namespace[ \t]+(.*)[ \t]*;~Um', $phpFile->getContents(), $matches)) {
+                if (($namespace = trim($matches[1])) === '') {
+                    continue;
+                }
+
+                // We strip the last part of the namespace to get the namespace matching with the entity folder
+                // This is required in case you have sub-folders like src/Entity/Category/Category.php
+                // The first matching PHP file would be in a sub namespace and be returned, thus the Entity
+                // namespace would not be parsed completely
+                if (($pos = strpos($namespace, '\\Entity')) !== false) {
+                    return substr($namespace, 0, $pos + strlen('\\Entity'));
+                }
+
+                // Fallback: if for some reason there's no '\Entity', I'll use what was found anyway
+                return $namespace;
             }
         }
 

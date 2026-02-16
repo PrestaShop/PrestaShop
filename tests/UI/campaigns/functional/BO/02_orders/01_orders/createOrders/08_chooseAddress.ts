@@ -511,5 +511,5 @@ describe('BO - Orders - Create order : Choose address', async () => {
   });
 
   // Post-condition: Bulk delete created addresses
-  bulkDeleteAddressesTest('lastname', 'test', `${baseContext}_postTest_1`);
+  bulkDeleteAddressesTest('input', 'lastname', 'test', `${baseContext}_postTest_1`);
 });

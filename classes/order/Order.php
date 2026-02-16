@@ -712,13 +712,13 @@ class OrderCore extends ObjectModel
     {
         $address = Address::initialize($this->id_address_delivery, true);
         $id_country = (int) $address->id_country;
-
+        $customerGroupId = (int) (new Customer($this->id_customer))->id_default_group;
         $specific_price = SpecificPrice::getSpecificPrice(
             $product['product_id'],
             $product['id_shop'],
             $this->id_currency,
             $id_country,
-            $this->id_shop_group,
+            $customerGroupId,
             $product['product_quantity'],
             $product['product_attribute_id']
         );

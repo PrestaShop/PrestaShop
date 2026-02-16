@@ -78,7 +78,7 @@ class FeatureQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria);
         $qb
             ->select('f.id_feature, fl.name, f.position')
-            ->addSelect('COUNT(fv.id_feature_value) AS values_count')
+            ->addSelect('COUNT(DISTINCT(fv.id_feature_value)) AS values_count')
             ->leftJoin(
                 'f',
                 $this->dbPrefix . 'feature_value',

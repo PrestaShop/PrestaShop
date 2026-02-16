@@ -33,6 +33,11 @@ use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 class ProductListingLazyArray extends ProductLazyArray
 {
     /**
+     * Custom implementation of add to cart URL for product listing. In product listing, we have a bit stricter
+     * rules to allow adding to cart a product. Specifically, we do not want to allow adding to cart of product
+     * combinations if the setting is disabled. Also, we do not want to allow adding to cart of products that
+     * require customization, because it's not possible to do so from the listing page.
+     *
      * @return string|null
      */
     #[LazyArrayAttribute(arrayAccess: true)]

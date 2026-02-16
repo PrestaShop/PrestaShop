@@ -49,6 +49,27 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
+  describe('Go to FO to subscribe to the newsletter', async () => {
+    it('should open the shop page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFOForSubscribingToNewsletter', baseContext);
+
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
+
+      const result = await foHummingbirdHomePage.isHomePage(page);
+      expect(result).to.eq(true);
+    });
+
+    it('should subscribe to newsletter', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'subscribeToNewsletterForJohnDoe', baseContext);
+
+      const newsletterSubscribeAlertMessage = await foHummingbirdHomePage.subscribeToNewsletter(
+        page,
+        dataCustomers.johnDoe.email,
+      );
+      expect(newsletterSubscribeAlertMessage).to.contains(foHummingbirdHomePage.successSubscriptionMessage);
+    });
+  });
+
   describe('Go to FO and try to subscribe with already used email', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openFoShop', baseContext);
