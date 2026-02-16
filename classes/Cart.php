@@ -863,7 +863,6 @@ class CartCore extends ObjectModel
                         true,
                         $this->id_customer,
                         $this->id,
-                        
                     );
                 } else {
                     $reduction_type_row = ['reduction_type' => 0];
