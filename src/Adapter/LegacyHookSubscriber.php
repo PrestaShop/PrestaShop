@@ -40,8 +40,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
 
         // Hack Symfony cache clear : if context not mounted, bypass legacy call
         $legacyContext = Context::getContext();
-        global $kernel;
-        if (!($kernel instanceof FrontKernel) && (!$legacyContext || empty($legacyContext->shop) || empty($legacyContext->employee))) {
+        if (!$legacyContext || empty($legacyContext->shop) || empty($legacyContext->employee)) {
             return $listeners;
         }
 
