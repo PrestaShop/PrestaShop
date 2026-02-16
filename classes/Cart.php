@@ -831,39 +831,13 @@ class CartCore extends ObjectModel
             foreach ($products as $key => $product) {
                 $products_ids[] = $product['id_product'];
                 $pa_ids[] = $product['id_product_attribute'];
-                $specific_price = SpecificPrice::getSpecificPrice($product['id_product'], $this->id_shop, $this->id_currency, $id_country, $this->id_shop_group, $product['cart_quantity'], $product['id_product_attribute'], $this->id_customer, $this->id);
-                if ($specific_price) {
-                    $reduction_type_row = ['reduction_type' => $specific_price['reduction_type']];
-                    // set product reduction based on cart so it wont be overwritten by value from getProductProperties
+$cartPrices = $this->getCartPrices($product,$product['cart_quantity'], $product['id_customization'], Context::getContext(), $specific_price);
+if ($specific_price) {
+$reduction_type_row = ['reduction_type' => $specific_price['reduction_type']];
+                                        // set product reduction based on cart so it wont be overwritten by value from getProductProperties
                     $product['specific_prices'] = $specific_price;
-
-                    $product['reduction'] = Product::getPriceStatic(
-                        (int) $product['id_product'],
-                        !Tax::excludeTaxeOption(),
-                        $product['id_product_attribute'],
-                        6,
-                        null,
-                        true,
-                        true,
-                        $product['cart_quantity'],
-                        true,
-                        $this->id_customer,
-                        $this->id,
-                    );
-
-                    $product['reduction_without_tax'] = Product::getPriceStatic(
-                        (int) $product['id_product'],
-                        false,
-                        $product['id_product_attribute'],
-                        6,
-                        null,
-                        true,
-                        true,
-                        $product['cart_quantity'],
-                        true,
-                        $this->id_customer,
-                        $this->id,
-                    );
+                    $product['reduction'] = $cartPrices['price_with_reduction'];
+                    $product['reduction_without_tax'] = $cartPrices['price_with_reduction_without_tax'];    
                 } else {
                     $reduction_type_row = ['reduction_type' => 0];
                 }
