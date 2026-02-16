@@ -8,9 +8,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use BadMethodCallException;
 use Context;
-use FrontKernel;
 use Hook;
-use PrestaShopBundle\Service\Hook\HookEvent;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
