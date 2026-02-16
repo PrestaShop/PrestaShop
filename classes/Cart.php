@@ -838,7 +838,7 @@ class CartCore extends ObjectModel
             }
             foreach ($products as $key => $product) {
                 $products_ids[] = $product['id_product'];
-                $pa_ids[] = $product['id_product_attribute'];        
+                $pa_ids[] = $product['id_product_attribute'];
                 $cartPrices = $this->getCartPrices($product, $product['cart_quantity'], $address_id, Context::getContext(), $specific_price);
                 if ($specific_price) {
                     $reduction_type_row = ['reduction_type' => $specific_price['reduction_type']];
