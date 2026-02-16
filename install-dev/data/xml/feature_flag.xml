@@ -29,5 +29,6 @@
     <feature_flag id="discount" name="discount" type="env,dotenv,db" label_wording="Discount" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the new discount system." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
     <feature_flag id="tag" name="tag" type="env,dotenv,db" label_wording="Tag" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the tag page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
     <feature_flag id="improved_b2b" name="improved_b2b" type="env,dotenv,db" label_wording="Improved B2B" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the improved B2B mode. To use the feature activate the B2B mode in General Settings." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
+    <feature_flag id="one_page_checkout" name="one_page_checkout" type="env,dotenv,db" label_wording="One-page checkout" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable one-page checkout flow. All checkout steps (address, delivery, payment) are grouped on a single page to reduce friction and improve conversion rate." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
   </entities>
 </entity_feature_flag>

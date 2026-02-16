@@ -317,14 +317,32 @@ class OrderControllerCore extends FrontController
             }
         }
 
-        $this->context->smarty->assign([
-            'checkout_process' => new RenderableProxy($this->checkoutProcess),
-            'display_transaction_updated_info' => Tools::getIsset('updatedTransaction'),
-            'tos_cms' => $this->getDefaultTermsAndConditions(),
-        ]);
+        $featureFlagManager = $this->get(FeatureFlagStateCheckerInterface::class);
+        if ($featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ONE_PAGE_CHECKOUT)) {
+            $steps = $this->checkoutProcess->getSteps();
 
-        parent::initContent();
-        $this->setTemplate('checkout/checkout');
+            foreach ($steps as $step) {
+                $step->setReachable(true);
+                $step->setCurrent(true);
+            }
+            $this->context->smarty->assign([
+                'checkout_process' => new RenderableProxy($this->checkoutProcess),
+                'display_transaction_updated_info' => Tools::getIsset('updatedTransaction'),
+                'tos_cms' => $this->getDefaultTermsAndConditions(),
+                'steps' => $steps,
+            ]);
+            parent::initContent();
+            $this->setTemplate('checkout/one-page-checkout');
+        } else {
+            $this->context->smarty->assign([
+                'checkout_process' => new RenderableProxy($this->checkoutProcess),
+                'display_transaction_updated_info' => Tools::getIsset('updatedTransaction'),
+                'tos_cms' => $this->getDefaultTermsAndConditions(),
+            ]);
+
+            parent::initContent();
+            $this->setTemplate('checkout/checkout');
+        }
     }
 
     public function displayAjaxAddressForm(): void
@@ -450,5 +468,43 @@ class OrderControllerCore extends FrontController
             ));
 
         return $checkoutProcess;
+    }
+
+    public function displayAjaxGetPaymentOptions()
+    {
+        // 1. S'assurer que le contexte (Panier/Livraison) est à jour
+        // PrestaShop charge le contexte automatiquement, mais on force la vérification
+        if (!$this->context->cart->id) {
+            ajaxDie(json_encode(['error' => 'No cart found']));
+        }
+
+        // 2. Récupérer les options de paiement via le PaymentOptionsFinder (Service Core)
+        // Cela va déclencher le hook 'paymentOptions' pour tous les modules
+        $paymentOptionsFinder = new PaymentOptionsFinder();
+        $paymentOptions = $paymentOptionsFinder->present();
+
+        // 3. Assigner à Smarty comme le fait le contrôleur standard
+        $this->context->smarty->assign([
+            'payment_options' => $paymentOptions,
+            'conditions_to_approve' => [], // Simplification pour le POC
+            'selected_payment_option' => null // Ou récupérer la sélection précédente en session
+        ]);
+
+        // 4. Rendre UNIQUEMENT le partial de Hummingbird
+        // Note : Le chemin dépend de votre structure, voici le standard Hummingbird
+        $template = 'checkout/_partials/payment-options.tpl';
+
+        // Sécurité si le thème parent surcharge différemment
+        if (!$this->getTemplateFinder()->getTemplate($template)) {
+            $template = 'checkout/steps/payment.tpl'; // Fallback
+        }
+
+        $html = $this->context->smarty->fetch($template);
+
+        // 5. Renvoyer le JSON
+        ajaxDie(json_encode([
+            'content' => $html,
+            'checksum' => md5($html) // Utile pour éviter le re-rendu si rien n'a changé
+        ]));
     }
 }
