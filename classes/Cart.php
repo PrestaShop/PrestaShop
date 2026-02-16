@@ -930,13 +930,10 @@ class CartCore extends ObjectModel
                 }
 
                 $props = Product::getProductProperties((int) $this->id_lang, $product);
-                // if there is specific_prices with cart id provided, we dont want to overwrite it by getProductProperties as it get reduction without cart context
-                if (!isset($product['specific_prices'])) {
-                    $product['reduction'] = $props['reduction'];
-                    $product['reduction_without_tax'] = $props['reduction_without_tax'];
-                    $product['price_without_reduction'] = $props['price_without_reduction'];
-                    $product['specific_prices'] = $props['specific_prices'];
-                }
+                $product['reduction'] = $props['reduction'];
+                $product['reduction_without_tax'] = $props['reduction_without_tax'];
+                $product['price_without_reduction'] = $props['price_without_reduction'];
+                $product['specific_prices'] = $props['specific_prices'];
                 $product['unit_price'] = $props['unit_price_tax_excluded'];
                 $product['unit_price_ratio'] = $props['unit_price_ratio'];
                 $product['unit_price_tax_excluded'] = $props['unit_price_tax_excluded'];
