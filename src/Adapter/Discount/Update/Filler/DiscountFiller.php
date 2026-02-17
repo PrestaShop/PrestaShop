@@ -26,7 +26,8 @@ class DiscountFiller
             $updatableProperties[] = 'date_from';
         }
         if ($command->isDirty('validTo')) {
-            $cartRule->date_to = $command->getValidTo()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+            $validTo = $command->getValidTo();
+            $cartRule->date_to = $validTo !== null ? $validTo->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) : null;
             $updatableProperties[] = 'date_to';
         }
         if ($command->isDirty('localizedNames')) {

@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\Discount\DiscountSettings;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Query\GetDiscountForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Discount\QueryHandler\GetDiscountForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Discount\QueryResult\DiscountForEditing;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 #[AsQueryHandler]
 class GetDiscountForEditingHandler implements GetDiscountForEditingHandlerInterface
@@ -44,7 +45,7 @@ class GetDiscountForEditingHandler implements GetDiscountForEditingHandlerInterf
             $cartRule->priority,
             $cartRule->active,
             new DateTimeImmutable($cartRule->date_from),
-            new DateTimeImmutable($cartRule->date_to),
+            DateTimeUtil::buildDateTimeOrNull($cartRule->date_to),
             $cartRule->quantity,
             $cartRule->quantity_per_user,
             $cartRule->description,

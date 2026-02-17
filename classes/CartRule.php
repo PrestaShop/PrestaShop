@@ -110,7 +110,7 @@ class CartRuleCore extends ObjectModel
         'fields' => [
             'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'date_from' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
-            'date_to' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
+            'date_to' => ['type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'required' => false],
             'description' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => DiscountSettings::MAX_DESCRIPTION_LENGTH],
             'quantity' => ['type' => self::TYPE_INT, 'allow_null' => true, 'validate' => 'isUnsignedInt'],
             'quantity_per_user' => ['type' => self::TYPE_INT, 'allow_null' => true, 'validate' => 'isUnsignedInt'],
@@ -369,13 +369,13 @@ class CartRuleCore extends ObjectModel
             $start_date = date('Y-m-d 00:00:00');
             $end_date = date('Y-m-d 23:59:59');
             $sql = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE ((date_to >= "' . $start_date .
+                'WHERE (((date_to >= "' . $start_date .
                 '" AND date_to <= "' . $end_date .
                 '") OR (date_from >= "' . $start_date .
                 '" AND date_from <= "' . $end_date .
                 '") OR (date_from < "' . $start_date .
                 '" AND date_to > "' . $end_date .
-                '")) AND `id_customer` IN (0,' . (int) $idCustomer . ')';
+                '") OR (date_to IS NULL AND date_from <= "' . $end_date . '"))) AND `id_customer` IN (0,' . (int) $idCustomer . ')';
 
             $haveCartRuleToday[$idCustomer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
         }
@@ -429,7 +429,7 @@ class CartRuleCore extends ObjectModel
         $sql .= ')';
 
         // Then, conditions for date, voucher active property and total amount of vouchers in stock
-        $sql .= ' AND NOW() BETWEEN cr.date_from AND cr.date_to
+        $sql .= ' AND (cr.date_to IS NULL OR (NOW() BETWEEN cr.date_from AND cr.date_to))
             ' . ($active ? 'AND cr.`active` = 1' : '') . '
             ' . ($inStock ? 'AND (cr.`quantity` > 0 OR cr.`quantity` is null)' : '');
 
@@ -786,7 +786,7 @@ class CartRuleCore extends ObjectModel
             if (strtotime($this->date_from) > time()) {
                 return (!$display_error) ? false : $this->trans('This voucher is not valid yet', [], 'Shop.Notifications.Error');
             }
-            if (strtotime($this->date_to) < time()) {
+            if ($this->date_to !== null && $this->date_to !== '' && strtotime($this->date_to) < time()) {
                 return (!$display_error) ? false : $this->trans('This voucher has expired', [], 'Shop.Notifications.Error');
             }
 
@@ -1992,7 +1992,7 @@ class CartRuleCore extends ObjectModel
 		WHERE cr.active = 1
 		AND cr.code = ""
 		AND (cr.quantity > 0 OR cr.quantity is null)
-		AND NOW() BETWEEN cr.date_from AND cr.date_to
+		AND (cr.date_to IS NULL OR (NOW() BETWEEN cr.date_from AND cr.date_to))
 		AND (
 			cr.id_customer = 0
 			' . (Validate::isLoadedObject($context->customer) ? 'OR cr.id_customer = ' . (int) $context->cart->id_customer : '') . '

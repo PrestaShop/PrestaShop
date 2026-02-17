@@ -36,6 +36,7 @@ class UpdateDiscountCommand
     private ?bool $active = null;
     private ?DateTimeImmutable $validFrom = null;
     private ?DateTimeImmutable $validTo = null;
+    private bool $periodNeverExpires = false;
     private ?int $totalQuantity = null;
     private ?int $quantityPerUser = null;
     private ?string $description = null;
@@ -136,7 +137,7 @@ class UpdateDiscountCommand
         return $this;
     }
 
-    public function setValidTo(DateTimeImmutable $validTo): self
+    public function setValidTo(?DateTimeImmutable $validTo): self
     {
         $this->validTo = $validTo;
         $this->markDirty('validTo');
@@ -147,9 +148,9 @@ class UpdateDiscountCommand
     /**
      * @throws DiscountConstraintException
      */
-    public function setValidityDateRange(DateTimeImmutable $from, DateTimeImmutable $to): self
+    public function setValidityDateRange(DateTimeImmutable $from, ?DateTimeImmutable $to = null): self
     {
-        if ($from > $to) {
+        if ($to !== null && $from > $to) {
             throw new DiscountConstraintException('Date from cannot be greater than date to.', DiscountConstraintException::DATE_FROM_GREATER_THAN_DATE_TO);
         }
 
@@ -159,6 +160,18 @@ class UpdateDiscountCommand
         $this->markDirty('validTo');
 
         return $this;
+    }
+
+    public function setPeriodNeverExpires(bool $periodNeverExpires): self
+    {
+        $this->periodNeverExpires = $periodNeverExpires;
+
+        return $this;
+    }
+
+    public function isPeriodNeverExpires(): bool
+    {
+        return $this->periodNeverExpires;
     }
 
     public function getPriority(): ?int

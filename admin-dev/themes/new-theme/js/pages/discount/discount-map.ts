@@ -28,4 +28,6 @@ export default {
   productSegmentFeatures: '#discount_conditions_product_product_segment_features',
   quantityPerCustomerInput: '#discount_usability_quantity_per_customer',
   customerEligibilityInput: '#discount_customer_eligibility_eligibility',
+  periodNeverExpiresCheckbox: 'input[name*="[period_never_expires]"]',
+  periodExpiryDateField: '.date-range-end-date',
 };

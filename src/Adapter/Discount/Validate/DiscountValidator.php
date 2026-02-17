@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopException;
 
 /**
@@ -296,6 +297,10 @@ class DiscountValidator extends AbstractObjectModelValidator
 
     private function assertDateRangeIsCorrect(CartRule $cartrule): void
     {
+        if (DateTimeUtil::isNull($cartrule->date_to)) {
+            return;
+        }
+
         if ($cartrule->date_from > $cartrule->date_to) {
             throw new DiscountConstraintException('Date from cannot be greater than date to.', DiscountConstraintException::DATE_FROM_GREATER_THAN_DATE_TO);
         }

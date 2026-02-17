@@ -207,7 +207,7 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     'from' => $discountForEditing->getValidFrom() ? $discountForEditing->getValidFrom()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) : null,
                     'to' => $discountForEditing->getValidTo() ? $discountForEditing->getValidTo()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) : null,
                 ],
-                'period_never_expires' => $this->isPeriodNeverExpires($discountForEditing->getValidFrom(), $discountForEditing->getValidTo()),
+                'period_never_expires' => $this->isPeriodNeverExpires($discountForEditing->getValidTo()),
             ],
             'customer_eligibility' => [
                 'eligibility' => $this->getCustomerEligibilityData($discountForEditing),
@@ -457,17 +457,10 @@ class DiscountFormDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * Check if the discount period is set to "never expires" (>= 100 years duration).
+     * Check if the discount period is set to "never expires"
      */
-    private function isPeriodNeverExpires(?DateTimeInterface $validFrom, ?DateTimeInterface $validTo): bool
+    private function isPeriodNeverExpires(?DateTimeInterface $validTo): bool
     {
-        if ($validFrom === null || $validTo === null) {
-            return false;
-        }
-
-        $diff = $validFrom->diff($validTo);
-        $years = $diff->y + ($diff->m / 12) + ($diff->d / 365);
-
-        return $years >= 100;
+        return $validTo === null;
     }
 }

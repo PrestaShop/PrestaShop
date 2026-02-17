@@ -33,6 +33,7 @@ class AddDiscountCommand
     private bool $active = false;
     private ?DateTimeImmutable $validFrom = null;
     private ?DateTimeImmutable $validTo = null;
+    private bool $periodNeverExpires = false;
     private ?int $totalQuantity = null;
     private ?int $quantityPerUser = null;
     private string $description = '';
@@ -124,13 +125,27 @@ class AddDiscountCommand
     /**
      * @throws DiscountConstraintException
      */
-    public function setValidityDateRange(DateTimeImmutable $from, DateTimeImmutable $to): self
+    public function setValidityDateRange(DateTimeImmutable $from, ?DateTimeImmutable $to = null): self
     {
-        $this->assertDateRangeIsValid($from, $to);
+        if ($to !== null) {
+            $this->assertDateRangeIsValid($from, $to);
+        }
         $this->validFrom = $from;
         $this->validTo = $to;
 
         return $this;
+    }
+
+    public function setPeriodNeverExpires(bool $periodNeverExpires): self
+    {
+        $this->periodNeverExpires = $periodNeverExpires;
+
+        return $this;
+    }
+
+    public function isPeriodNeverExpires(): bool
+    {
+        return $this->periodNeverExpires;
     }
 
     public function getPriority(): int

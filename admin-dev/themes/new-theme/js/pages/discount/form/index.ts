@@ -75,6 +75,18 @@ $(() => {
     $(DiscountMap.quantityPerCustomerInput).parents('.form-group').show();
   }
 
+  const toggleExpiryDateVisibility = () => {
+    const isNeverExpires = (document.querySelector(DiscountMap.periodNeverExpiresCheckbox) as HTMLInputElement).checked;
+    const expiryDateFormGroup = document.querySelector(DiscountMap.periodExpiryDateField)!.closest('.form-group');
+
+    if (expiryDateFormGroup instanceof HTMLElement) {
+      expiryDateFormGroup.style.display = isNeverExpires ? 'none' : '';
+    }
+  };
+
+  toggleExpiryDateVisibility();
+  document.querySelector(DiscountMap.periodNeverExpiresCheckbox)!.addEventListener('change', toggleExpiryDateVisibility);
+
   $(DiscountMap.countriesSelect).select2({
     templateResult: formatOption,
     templateSelection: formatOption,

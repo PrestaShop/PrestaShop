@@ -167,7 +167,7 @@ CREATE TABLE `PREFIX_cart_rule` (
   `id_cart_rule` int(10) unsigned NOT NULL auto_increment,
   `id_customer` int unsigned NOT NULL DEFAULT '0',
   `date_from` datetime NOT NULL,
-  `date_to` datetime NOT NULL,
+  `date_to` datetime DEFAULT NULL,
   `description` MEDIUMTEXT,
   `quantity` int(10) unsigned DEFAULT '0',
   `quantity_per_user` int(10) unsigned DEFAULT '0',
