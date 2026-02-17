@@ -4,10 +4,6 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-// Legacy link feature flags
-trans('Attribute groups', 'Admin.Advparameters.Feature');
-trans('Enable or disable the migrated attribute page.', 'Admin.Advparameters.Help');
-
 // Admin API - Multistore feature flag
 trans('Admin API - Multistore', 'Admin.Advparameters.Feature');
 trans('Enable or disable the Admin API when multistore is enabled.', 'Admin.Advparameters.Help');
@@ -15,10 +11,6 @@ trans('Enable or disable the Admin API when multistore is enabled.', 'Admin.Advp
 // Admin Api - Enable experimental endpoints
 trans('Admin API - Enable experimental endpoints', 'Admin.Advparameters.Feature');
 trans('Experimental API endpoints are disabled by default in prod environment, this configuration allows to forcefully enable them.', 'Admin.Advparameters.Help');
-
-// Cart rules feature flag
-trans('Cart rules', 'Admin.Advparameters.Feature');
-trans('Enable or disable the migrated cart rules page.', 'Admin.Advparameters.Help');
 
 // Catalog price rules feature flag
 trans('Catalog price rules', 'Admin.Advparameters.Feature');
@@ -35,10 +27,6 @@ trans('Enable or disable the migrated states page.', 'Admin.Advparameters.Help')
 // Carriers feature flag
 trans('Carriers', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated carriers page.', 'Admin.Advparameters.Help');
-
-// Titles feature flag
-trans('Titles', 'Admin.Advparameters.Feature');
-trans('Enable or disable the migrated titles page.', 'Admin.Advparameters.Help');
 
 // Permissions feature flag
 trans('Permissions', 'Admin.Advparameters.Feature');

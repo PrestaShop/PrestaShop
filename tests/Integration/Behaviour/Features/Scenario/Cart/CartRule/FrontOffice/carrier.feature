@@ -68,7 +68,6 @@ Feature: Cart calculation with cart rules and different carriers
       | code                         | cartrule2              |
       | discount_percentage          | 50                     |
       | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
 
   # Issue #9540 part one fixed by #12965
   Scenario: free carrier in price range, voucher in percent set the price bellow range
@@ -90,7 +89,6 @@ Feature: Cart calculation with cart rules and different carriers
       | discount_currency            | usd                    |
       | discount_includes_tax        | false                  |
       | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     When I add 1 item of product "product5" in my cart
     And I apply the voucher code "foo2"
     And I select address "address1" in my cart
@@ -186,12 +184,7 @@ Feature: Cart calculation with cart rules and different carriers
       | code                         | cartrule7              |
       | discount_percentage          | 50                     |
       | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
-    And I restrict following carriers for cart rule cartrule7:
-      | restricted carriers | carrier2 |
-    And I save all the restrictions for cart rule cartrule7
-    And cart rule cartrule7 should have the following properties:
-      | restricted carriers | carrier2 |
+      | carriers                     | carrier2               |
     And there is a cart rule "cartrule8" with following properties:
       | name[en-US]                  | cartrule8              |
       | total_quantity               | 1000                   |
@@ -201,12 +194,7 @@ Feature: Cart calculation with cart rules and different carriers
       | code                         | cartrule8              |
       | discount_percentage          | 50                     |
       | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
-    And I restrict following carriers for cart rule cartrule8:
-      | restricted carriers | carrier1 |
-    And I save all the restrictions for cart rule cartrule8
-    And cart rule cartrule8 should have the following properties:
-      | restricted carriers | carrier1 |
+      | carriers                     | carrier1               |
     When I add 1 items of product "product1" in my cart
     And I select address "address1" in my cart
     And I select carrier "carrier2" in my cart
@@ -228,21 +216,9 @@ Feature: Cart calculation with cart rules and different carriers
       | priority            | 3         |
       | free_shipping       | false     |
       | discount_percentage | 55        |
-    And I restrict following carriers for cart rule cartrule9:
-      | restricted carriers | carrier3 |
-    And I save all the restrictions for cart rule cartrule9
-    And cart rule cartrule9 should have the following properties:
-      | restricted carriers | carrier3 |
-    And I restrict following carriers for cart rule cartrule5:
-      | restricted carriers | carrier2 |
-    And I save all the restrictions for cart rule cartrule5
-    And cart rule cartrule5 should have the following properties:
-      | restricted carriers | carrier2 |
-    And I restrict following carriers for cart rule cartrule2:
-      | restricted carriers | carrier1 |
-    And I save all the restrictions for cart rule cartrule2
-    And cart rule cartrule2 should have the following properties:
-      | restricted carriers | carrier1 |
+      | carriers            | carrier3  |
+    And I restrict following carriers "carrier2" for cart rule "cartrule5"
+    And I restrict following carriers "carrier1" for cart rule "cartrule2"
     When I add 1 items of product "product1" in my cart
     And I select address "address1" in my cart
     And I select carrier "carrier2" in my cart

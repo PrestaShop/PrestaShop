@@ -22,6 +22,8 @@ class DiscountSettings
     public const PERIOD_FILTER_EXPIRED = 'expired';
 
     // Special values for CartRule::reduction_product (used for product level discount)
+    // Previously known as order without shipping
+    public const PRODUCTS_TOTAL = 0;
     public const CHEAPEST_PRODUCT = -1;
     public const PRODUCT_SEGMENT = -2;
 }

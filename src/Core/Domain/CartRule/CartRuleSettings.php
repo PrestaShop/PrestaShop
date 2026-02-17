@@ -9,6 +9,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule;
 
 /**
  * Class contains various constants representing cart rule constraints
+ *
+ * @deprecated To be removed in 10.0
  */
 class CartRuleSettings
 {

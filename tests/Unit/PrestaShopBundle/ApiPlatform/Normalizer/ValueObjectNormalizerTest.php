@@ -8,7 +8,7 @@ namespace PrestaShopBundle\ApiPlatform\Normalizer;
 
 use DbMySQLi;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\EditApiClientCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactTypeChoiceProvider;
@@ -79,7 +79,7 @@ class ValueObjectNormalizerTest extends TestCase
 
     public function getSupportsDenormalizationValues(): iterable
     {
-        yield 'class with single parameter but not a ValueObject' => [1, EditCartRuleCommand::class, false];
+        yield 'class with single parameter but not a ValueObject' => [1, EditApiClientCommand::class, false];
 
         yield 'product ID' => [['productId' => 42], ProductId::class, true];
         yield 'product ID snake case' => [['product_id' => 42], ProductId::class, true];

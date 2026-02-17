@@ -7,12 +7,11 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\BulkDeleteDiscountsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\BulkUpdateDiscountsStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\DeleteDiscountCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\DuplicateDiscountCommand;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Command\UpdateDiscountCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\CannotUpdateDiscountException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountException;
@@ -181,16 +180,15 @@ class DiscountController extends PrestaShopAdminController
         try {
             /** @var DiscountForEditing $editableDiscount */
             $editableDiscount = $this->dispatchQuery(new GetDiscountForEditing($discountId));
+            $updateCommand = new UpdateDiscountCommand($discountId);
+            $updateCommand->setActive(!$editableDiscount->isActive());
 
-            // @todo: this should be replaced with dedicated discount command when available
-            $this->dispatchCommand(
-                new ToggleCartRuleStatusCommand((int) $discountId, !$editableDiscount->isActive())
-            );
+            $this->dispatchCommand($updateCommand);
             $this->addFlash(
                 'success',
                 $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
-        } catch (CartRuleException $e) {
+        } catch (DiscountException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 

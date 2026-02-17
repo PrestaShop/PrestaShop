@@ -18,8 +18,6 @@ use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
@@ -272,45 +270,6 @@ class CQRSApiSerializerTest extends KernelTestCase
                 true,
                 [1]
             ),
-        ];
-
-        $editCartRuleCommand = new EditCartRuleCommand(1);
-        $editCartRuleCommand->setDescription('test description');
-        $editCartRuleCommand->setCode('test code');
-        $editCartRuleCommand->setMinimumAmount('10', 1, true, true);
-        $editCartRuleCommand->setCustomerId(1);
-        $editCartRuleCommand->setLocalizedNames([self::EN_LANG_ID => 'test en', self::getFrenchId() => 'test fr']);
-        $editCartRuleCommand->setHighlightInCart(true);
-        $editCartRuleCommand->setAllowPartialUse(true);
-        $editCartRuleCommand->setPriority(1);
-        $editCartRuleCommand->setActive(true);
-        $editCartRuleCommand->setValidityDateRange(new DateTimeImmutable('2023-08-23'), new DateTimeImmutable('2023-08-25'));
-        $editCartRuleCommand->setTotalQuantity(100);
-        $editCartRuleCommand->setQuantityPerUser(1);
-        $editCartRuleCommand->setCartRuleAction(new CartRuleAction(true));
-        yield 'object with complex setter methods based on multiple properties or sub types' => [
-            [
-                'cartRuleId' => 1,
-                'description' => 'test description',
-                'code' => 'test code',
-                'minimumAmount' => ['minimumAmount' => '10', 'currencyId' => 1, 'taxIncluded' => true, 'shippingIncluded' => true],
-                'customerId' => 1,
-                'localizedNames' => [
-                    self::EN_LANG_ID => 'test en',
-                    self::getFrenchId() => 'test fr',
-                ],
-                'highlightInCart' => true,
-                'allowPartialUse' => true,
-                'priority' => 1,
-                'active' => true,
-                'validityDateRange' => ['validFrom' => '2023-08-23', 'validTo' => '2023-08-25'],
-                'totalQuantity' => 100,
-                'quantityPerUser' => 1,
-                'cartRuleAction' => ['freeShipping' => true],
-                // TODO: handle cartRuleAction with complex discount handle by business rules
-                // 'cartRuleAction' => ['freeShipping' => true, 'giftProduct' => ['productId': 1], 'discount' => ['amountDiscount' => ['amount' => 10]]]...
-            ],
-            $editCartRuleCommand,
         ];
 
         $customerGroupQuery = new GetCustomerGroupForEditing(51);

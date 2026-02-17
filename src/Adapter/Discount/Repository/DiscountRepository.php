@@ -27,7 +27,7 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 class DiscountRepository extends AbstractObjectModelRepository
 {
     public function __construct(
-        protected readonly DiscountValidator $cartRuleValidator,
+        protected readonly DiscountValidator $discountValidator,
         protected readonly Connection $connection,
         protected readonly string $dbPrefix,
     ) {
@@ -35,7 +35,7 @@ class DiscountRepository extends AbstractObjectModelRepository
 
     public function add(CartRule $cartRule): CartRule
     {
-        $this->cartRuleValidator->validate($cartRule);
+        $this->discountValidator->validate($cartRule);
         $this->addObjectModel($cartRule, CannotAddDiscountException::class);
 
         return $cartRule;
@@ -243,7 +243,7 @@ class DiscountRepository extends AbstractObjectModelRepository
 
     public function partialUpdate(CartRule $cartRule, array $updatableProperties, int $errorCode): void
     {
-        $this->cartRuleValidator->validate($cartRule);
+        $this->discountValidator->validate($cartRule);
 
         $this->partiallyUpdateObjectModel(
             $cartRule,

@@ -32,7 +32,6 @@ Feature: Cart rule (amount) calculation with multiple cart rules
       | discount_currency            | usd                    |
       | discount_includes_tax        | false                  |
       | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     And there is a cart rule "reduction_10_dollar" with following properties:
       | name[en-US]                  | reduces $10            |
       | priority                     | 6                      |

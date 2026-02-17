@@ -4603,11 +4603,6 @@
       <title>Provide feature value identifiable object form data for update</title>
       <description>This hook allows to provide feature value identifiable object form data which will prefill the form in update/edition page</description>
     </hook>
-    <hook id="actionCartRuleFormDataProviderData">
-      <name>actionCartRuleFormDataProviderData</name>
-      <title>Provide cart rule identifiable object form data for update</title>
-      <description>This hook allows to provide cart rule identifiable object form data which will prefill the form in update/edition page</description>
-    </hook>
     <hook id="actionTitleFormDataProviderData">
       <name>actionTitleFormDataProviderData</name>
       <title>Provide title identifiable object form data for update</title>
@@ -4632,11 +4627,6 @@
       <name>actionFeatureValueFormDataProviderDefaultData</name>
       <title>Provide feature value identifiable object default form data for creation</title>
       <description>This hook allows to provide feature value identifiable object form data which will prefill the form in creation page</description>
-    </hook>
-    <hook id="actionCartRuleFormDataProviderDefaultData">
-      <name>actionCartRuleFormDataProviderDefaultData</name>
-      <title>Provide cart rule identifiable object default form data for creation</title>
-      <description>This hook allows to provide cart rule identifiable object form data which will prefill the form in creation page</description>
     </hook>
     <hook id="actionTitleFormDataProviderDefaultData">
       <name>actionTitleFormDataProviderDefaultData</name>

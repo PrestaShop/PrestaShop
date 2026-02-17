@@ -55,12 +55,11 @@ Feature: Ecotax for Order in Back Office (BO)
   Scenario: Add product (without ecotax) to an Order
     ## Set Cart Rule
     And there is a cart rule "cartRuleFiftyPercent" with following properties:
-      | name[en-US]               | cartRuleFiftyPercent |
-      | discount_percentage       | 50                   |
-      | priority                  | 2                    |
-      | free_shipping             | false                |
-      | discount_application_type | specific_product     |
-      | discount_product          | Test Ecotax Product  |
+      | name[en-US]         | cartRuleFiftyPercent |
+      | discount_percentage | 50                   |
+      | priority            | 2                    |
+      | free_shipping       | false                |
+      | discount_product    | Test Ecotax Product  |
     And cart rule "cartRuleFiftyPercent" is restricted to product "Test Ecotax Product"
     When I set tax rule group "fr-tax-6-group" to product "Test Ecotax Product"
     And I add products to order "bo_order1" with new invoice and the following products details:
@@ -103,12 +102,11 @@ Feature: Ecotax for Order in Back Office (BO)
 #    When there is a cart rule named "cartRuleFiftyPercent" that applies a percent discount of 50.0% with priority 2, quantity of 1000 and quantity per user 1000
 #    And cart rule "cartRuleFiftyPercent" is restricted to product "Test Ecotax Product"
     And there is a cart rule "cartRuleFiftyPercent" with following properties:
-      | name[en-US]               | cartRuleFiftyPercent |
-      | discount_percentage       | 50                   |
-      | priority                  | 2                    |
-      | free_shipping             | false                |
-      | discount_application_type | specific_product     |
-      | discount_product          | Test Ecotax Product  |
+      | name[en-US]         | cartRuleFiftyPercent |
+      | discount_percentage | 50                   |
+      | priority            | 2                    |
+      | free_shipping       | false                |
+      | discount_product    | Test Ecotax Product  |
     And cart rule "cartRuleFiftyPercent" is restricted to product "Test Ecotax Product"
     ## Set EcoTax
     When the product "Test Ecotax Product" ecotax is 5.12

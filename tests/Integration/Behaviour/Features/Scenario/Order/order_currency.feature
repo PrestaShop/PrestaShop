@@ -134,14 +134,13 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | reduction_type | percentage |
       | reduction_tax  | 1          |
     And there is a cart rule CartRuleAmountOnSelectedProduct with following properties:
-      | name[en-US]               | CartRuleAmountOnSelectedProduct              |
-      | discount_amount           | 1                                            |
-      | discount_currency         | usd                                          |
-      | discount_includes_tax     | false                                        |
-      | total_quantity            | 100                                          |
-      | quantity_per_user         | 100                                          |
-      | discount_application_type | specific_product                             |
-      | discount_product          | Test Product With Discount and SpecificPrice |
+      | name[en-US]           | CartRuleAmountOnSelectedProduct              |
+      | discount_amount       | 1                                            |
+      | discount_currency     | usd                                          |
+      | discount_includes_tax | false                                        |
+      | total_quantity        | 100                                          |
+      | quantity_per_user     | 100                                          |
+      | discount_product      | Test Product With Discount and SpecificPrice |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product With Discount and SpecificPrice |
       | amount | 2                                            |
@@ -409,16 +408,15 @@ Feature: Multiple currencies for Order in Back Office (BO)
     And there is a product in the catalog named "Test Product With Auto Gift" with a price of 12.0 and 100 items in stock
     And there is a product in the catalog named "Test Product Gifted" with a price of 15.0 and 100 items in stock
     And there is a cart rule MultiGiftAutoCartRule with following properties:
-      | name[en-US]               | MultiGiftAutoCartRule       |
-      | free_shipping             | true                        |
-      | discount_amount           | 1                           |
-      | discount_currency         | usd                         |
-      | discount_includes_tax     | false                       |
-      | total_quantity            | 100                         |
-      | quantity_per_user         | 100                         |
-      | discount_application_type | specific_product            |
-      | discount_product          | Test Product With Auto Gift |
-      | gift_product              | Test Product Gifted         |
+      | name[en-US]           | MultiGiftAutoCartRule       |
+      | free_shipping         | true                        |
+      | discount_amount       | 1                           |
+      | discount_currency     | usd                         |
+      | discount_includes_tax | false                       |
+      | total_quantity        | 100                         |
+      | quantity_per_user     | 100                         |
+      | discount_product      | Test Product With Auto Gift |
+      | gift_product          | Test Product Gifted         |
     And I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Gifted |
       | amount | 1                   |

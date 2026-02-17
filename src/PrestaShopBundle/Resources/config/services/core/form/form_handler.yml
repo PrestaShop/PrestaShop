@@ -292,12 +292,6 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TaxRulesGroupFormDataHandler'
 
-  prestashop.core.form.identifiable_object.handler.cart_rule_form_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
-    factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
-    arguments:
-      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartRuleFormDataHandler'
-
   prestashop.core.form.identifiable_object.handler.discount_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]

@@ -6,7 +6,6 @@
 
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Discount\Application\DiscountApplicationService;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\CartRuleSettings;
 use PrestaShop\PrestaShop\Core\Domain\Discount\DiscountSettings;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
@@ -148,7 +147,7 @@ class CartRuleCore extends ObjectModel
                 'type' => self::TYPE_HTML,
                 'lang' => true,
                 'required' => false,
-                'size' => CartRuleSettings::NAME_MAX_LENGTH,
+                'size' => DiscountSettings::MAX_NAME_LENGTH,
                 'validate' => 'defaultLanguageRequiredWhenActive',
             ],
         ],

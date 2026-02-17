@@ -72,11 +72,7 @@ Feature: Cart rule application is validated before it is applied to cart
     And I create carrier "carrier1" with specified properties:
       | name | Carrier 1 |
       | zones| zone1     |
-    And I restrict following carriers for cart rule cart_rule_4:
-      | restricted carriers | carrier1 |
-    And I save all the restrictions for cart rule cart_rule_4
-    And cart rule cart_rule_4 should have the following properties:
-      | restricted carriers | carrier1 |
+    And I restrict following carriers "carrier1" for cart rule "cart_rule_4"
     And I select carrier "carrier1" in my cart
     And I should have 0 products in my cart
     When I apply the voucher code "foo3"
