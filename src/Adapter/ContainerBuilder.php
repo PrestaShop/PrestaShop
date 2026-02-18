@@ -33,6 +33,7 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class ContainerBuilder
 {
@@ -40,6 +41,11 @@ class ContainerBuilder
      * @var ContainerInterface
      */
     private static $containers;
+
+    /**
+     * @var KernelInterface[]
+     */
+    private static array $kernels = [];
 
     /**
      * @var EnvironmentInterface
@@ -76,23 +82,31 @@ class ContainerBuilder
      */
     public static function getContainer($containerName, $isDebug)
     {
-        if ($containerName === 'admin') {
+        if (!in_array($containerName, ['front', 'webservice'])) {
             throw new ServiceContainerException(
-                'You should use `SymfonyContainer::getInstance()` instead of `ContainerBuilder::getContainer(\'admin\')`'
+                'You should use `SymfonyContainer::getInstance()` instead of `ContainerBuilder::getContainer(\''.$containerName.'\')`'
             );
         }
 
-        if (!isset(self::$containers[$containerName])) {
+        if (!isset(self::$kernels[$containerName])) {
             if (isset($_ENV['PS_FF_FRONT_CONTAINER_V2']) && filter_var($_ENV['PS_FF_FRONT_CONTAINER_V2'], \FILTER_VALIDATE_BOOL)) {
                 global $kernel;
 
                 if ($kernel instanceof FrontKernel) {
-                    self::$containers[$containerName] = $kernel->getContainer();
+                    $frontKernel = $kernel;
                 } else {
-                    $frontKernel = (new FrontKernel(_PS_ENV_, _PS_MODE_DEV_));
-                    $frontKernel->boot();
-                    self::$containers[$containerName] = $frontKernel->getContainer();
+                    if (empty(self::$kernels[$containerName])) {
+                        $frontKernel = new FrontKernel(_PS_ENV_, _PS_MODE_DEV_);
+                        // Must cache kernel reference *BEFORE* calling boot()
+                        // Booting the kernel will call the ContainerBuilder when compiling and try to boot it again, creating a lock hell.
+                        self::$kernels[$containerName] = $frontKernel;
+                        $frontKernel->boot();
+                    }  else {
+                        $frontKernel = self::$kernels[$containerName];
+                    }
                 }
+
+                self::$containers[$containerName] = $frontKernel->getContainer();
             } else {
                 // Container builder is only used for FO now, so we hard code the Environment to use the front appId so that
                 // it uses the cache dir from FrontKernel (in var/cache/{dev|prod}/front)
