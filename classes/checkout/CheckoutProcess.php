@@ -5,6 +5,9 @@
  */
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 
 class CheckoutProcessCore implements RenderableInterface
 {
@@ -160,6 +163,26 @@ class CheckoutProcessCore implements RenderableInterface
     public function hasErrors()
     {
         return $this->has_errors;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOnePageCheckoutEnabled(): bool
+    {
+        $isConfigEnabled = (bool) Configuration::get('PS_ONE_PAGE_CHECKOUT_ENABLED');
+        if (!$isConfigEnabled) {
+            return false;
+        }
+
+        try {
+            $containerFinder = new ContainerFinder($this->context);
+            /** @var FeatureFlagStateCheckerInterface $featureFlagManager */
+            $featureFlagManager = $containerFinder->getContainer()->get(FeatureFlagStateCheckerInterface::class);
+            return $featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ONE_PAGE_CHECKOUT);
+        } catch (Throwable $e) {
+            return false;
+        }
     }
 
     public function getDataToPersist()

@@ -301,6 +301,7 @@ class OrderControllerCore extends FrontController
             'checkout_process' => new RenderableProxy($this->checkoutProcess),
             'display_transaction_updated_info' => Tools::getIsset('updatedTransaction'),
             'tos_cms' => $this->getDefaultTermsAndConditions(),
+            'is_one_page_checkout_enabled' => $this->checkoutProcess->isOnePageCheckoutEnabled(),
         ]);
 
         parent::initContent();
