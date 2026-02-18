@@ -3,11 +3,11 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableInterface;
-use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
-use PrestaShop\PrestaShop\Adapter\ContainerFinder;
+use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableInterface;
+use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 
 class CheckoutProcessCore implements RenderableInterface
 {
@@ -179,6 +179,7 @@ class CheckoutProcessCore implements RenderableInterface
             $containerFinder = new ContainerFinder($this->context);
             /** @var FeatureFlagStateCheckerInterface $featureFlagManager */
             $featureFlagManager = $containerFinder->getContainer()->get(FeatureFlagStateCheckerInterface::class);
+
             return $featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ONE_PAGE_CHECKOUT);
         } catch (Throwable $e) {
             return false;
