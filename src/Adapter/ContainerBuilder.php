@@ -82,13 +82,13 @@ class ContainerBuilder
      */
     public static function getContainer($containerName, $isDebug)
     {
-        if (!in_array($containerName, ['front', 'webservice'])) {
+        if (!in_array($containerName, [FrontKernel::APP_ID, 'webservice'])) {
             throw new ServiceContainerException(
                 'You should use `SymfonyContainer::getInstance()` instead of `ContainerBuilder::getContainer(\''.$containerName.'\')`'
             );
         }
 
-        if (!isset(self::$kernels[$containerName])) {
+        if (!isset(self::$containers[$containerName])) {
             if (isset($_ENV['PS_FF_FRONT_CONTAINER_V2']) && filter_var($_ENV['PS_FF_FRONT_CONTAINER_V2'], \FILTER_VALIDATE_BOOL)) {
                 global $kernel;
 
@@ -101,7 +101,7 @@ class ContainerBuilder
                         // Booting the kernel will call the ContainerBuilder when compiling and try to boot it again, creating a lock hell.
                         self::$kernels[$containerName] = $frontKernel;
                         $frontKernel->boot();
-                    }  else {
+                    } else {
                         $frontKernel = self::$kernels[$containerName];
                     }
                 }
