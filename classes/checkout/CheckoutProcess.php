@@ -3,9 +3,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-use PrestaShop\PrestaShop\Adapter\ContainerFinder;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\Checkout\OnePageCheckoutAvailabilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 
@@ -26,6 +24,8 @@ class CheckoutProcessCore implements RenderableInterface
     private $template = 'checkout/checkout-process.tpl';
     /** @var Context */
     protected $context;
+    /** @var OnePageCheckoutAvailabilityCheckerInterface|null */
+    private $onePageCheckoutAvailabilityChecker;
 
     /**
      * @param Context $context
@@ -38,6 +38,16 @@ class CheckoutProcessCore implements RenderableInterface
         $this->context = $context;
         $this->smarty = $context->smarty;
         $this->checkoutSession = $checkoutSession;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setOnePageCheckoutAvailabilityChecker(OnePageCheckoutAvailabilityCheckerInterface $onePageCheckoutAvailabilityChecker)
+    {
+        $this->onePageCheckoutAvailabilityChecker = $onePageCheckoutAvailabilityChecker;
+
+        return $this;
     }
 
     /**
@@ -170,20 +180,11 @@ class CheckoutProcessCore implements RenderableInterface
      */
     public function isOnePageCheckoutEnabled(): bool
     {
-        $isConfigEnabled = (bool) Configuration::get('PS_ONE_PAGE_CHECKOUT_ENABLED');
-        if (!$isConfigEnabled) {
+        if (null === $this->onePageCheckoutAvailabilityChecker || !isset($this->context->shop->id)) {
             return false;
         }
 
-        try {
-            $containerFinder = new ContainerFinder($this->context);
-            /** @var FeatureFlagStateCheckerInterface $featureFlagManager */
-            $featureFlagManager = $containerFinder->getContainer()->get(FeatureFlagStateCheckerInterface::class);
-
-            return $featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ONE_PAGE_CHECKOUT);
-        } catch (Throwable $e) {
-            return false;
-        }
+        return $this->onePageCheckoutAvailabilityChecker->isEnabledForShop((int) $this->context->shop->id);
     }
 
     public function getDataToPersist()

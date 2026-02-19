@@ -6,6 +6,7 @@
 
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Shipment\DeliveryOptionsProvider;
+use PrestaShop\PrestaShop\Core\Checkout\OnePageCheckoutAvailabilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Checkout\TermsAndConditions;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
@@ -382,6 +383,9 @@ class OrderControllerCore extends FrontController
             $this->context,
             $session
         );
+        /** @var OnePageCheckoutAvailabilityCheckerInterface $onePageCheckoutAvailabilityChecker */
+        $onePageCheckoutAvailabilityChecker = $this->get(OnePageCheckoutAvailabilityCheckerInterface::class);
+        $checkoutProcess->setOnePageCheckoutAvailabilityChecker($onePageCheckoutAvailabilityChecker);
 
         $checkoutProcess
             ->addStep(new CheckoutPersonalInformationStep(
