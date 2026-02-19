@@ -24,6 +24,154 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 9
 
 ####################################
+#   v9.1.0 RC 1 - (2026-02-19)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #40720: Add actionUpdateDefaultCombinationAfter hook when default combination is set (by @Codencode)
+    - #40536: Add discountType endpoint (by @nicosomb)
+    - #40517: Add some help boxes to product page (by @Hlavtox)
+    - #40481: Improved UX for API client creation (by @kpodemski)
+    - #40330: Add usage limits fields for new discount system (by @boherm)
+    - #40094: Fix: Doctrine auto-mapping in modules: only the first subfolder inside src/Entity is recognized (by @Codencode)
+    - #39923: Improve wording of some settings, better explain the meaning of them (by @Hlavtox)
+    - #39459: Set optin and newsletter off for John DOE (by @Touxten)
+  - Bug fix:
+    - #40809: Clean discount form (by @jolelievre)
+    - #40743: Fix: Bug: when invoicing is disabled, changing order status to "paid=1" does not register any payment on the order (by @Codencode)
+    - #40710: Fix: Feature values count is duplicated when using “All shops” with multiple shops (by @Codencode)
+    - #40682: Fix the collision when we create / delete product customization in the same action (by @nicosomb)
+    - #40640: Fix EntitySearchInput::setValues forEach callback argument order (by @Codencode)
+    - #40620: Update AdminSecurity permissions logic in OrderController (by @rsoulard-prolaser)
+    - #40578: Dynamic pack quantity (by @jolelievre)
+    - #40563: Admin API improvements for combination endpoints (by @jolelievre)
+    - #40556: Fix: CsvFileReader service fails with "You have requested a non-existent service 'session'" (by @Codencode)
+    - #40554: Fix: always display taxes total in order summary (by @Codencode)
+    - #40532: BO Product page, fix feature value collection indexes (by @jolelievre)
+    - #40525: Update module ps_apiresources (by @jolelievre)
+    - #40518: Fix position of minimum_product_quantity field in table (by @nicosomb)
+    - #40499: Fix: When saving an Attribute is_color_group is not updated. (by @Codencode)
+    - #40475: Fix link for redirection on country BO page (by @jolelievre)
+    - #40433: Fix: Module update problem (by @Codencode)
+    - #40329: Prevent NoResultException when checking for existing translations (by @ChillCode)
+    - #40317: Fix: Backoffice data grids can yield different random results every time (by @Codencode)
+    - #40066: Fix: [BO] Admin Countries page redirect issue with multishop after changing shop (by @Codencode)
+    - #40054: Use URL when building urls to prevent subtle mistakes with &? (by @tswfi)
+    - #40050: Fix: Incorrect redirect from HTTP to HTTPS on the admin login page when PrestaShop is in a subfolder (by @Codencode)
+    - #40036: BO - Product : Fixed feature display in multishop (by @Progi1984)
+    - #39854: Fix: Quick Access links redirect to root instead of subdirectory, causing 404 (by @Codencode)
+    - #38775: Fix: Multishop - error loading CMS pages removed from the default shop (by @Codencode)
+  - Refactoring:
+    - #40825: Add shipping helptexts (by @Hlavtox)
+    - #40358: Handle Product level discount in CQRS (by @jolelievre)
+    - #37667: Apply backoffice optimizations (by @Hlavtox)
+- Front Office:
+  - New feature:
+    - #40403: Allow easily hooking into country and currency selection logic (by @Hlavtox)
+  - Improvement:
+    - #40758: Secure table name with bqsql in DB and DBQuery  #33539 backport (by @jf-viguier)
+    - #40733: Bump prestashop/hummingbird to 2.0 (by @Progi1984)
+    - #40572: Add feature during theme enabling to unhook specific modules (by @jolelievre)
+    - #40537: Remove unnecessary force refresh in checkout (by @Hlavtox)
+  - Bug fix:
+    - #40814: Update classic theme to 3.1.1 (by @jolelievre)
+    - #40626: Fix "Free shipping" displayed for discounts with free shipping off an… (by @Hlavtox)
+    - #40614: Fix "Free shipping" displayed on cart when a discount haven't free shipping enabled and with a reduction amount = 0 (by @boherm)
+    - #40538: Fix quantity input, add to cart button and availability labels when items are added in a cart (by @Hlavtox)
+    - #40246: Fix preview in multilang (by @tleon)
+  - Refactoring:
+    - #40673: Use proper delivery times (by @Hlavtox)
+    - #40662: Corrects the error message when the quantity is less than 1 in cart (by @Touxten)
+    - #40653: Add cart product presenter and cart availability (by @Hlavtox)
+    - #40570: Prevent accidental usage of quantity_wanted from request (by @Hlavtox)
+    - #40406: Comment how language setting works in FO (by @Hlavtox)
+- Core:
+  - New feature:
+    - #40808: Add new options for release creator (by @nicosomb)
+  - Improvement:
+    - #40811: Backport missing workflows from develop to 9.1.x (by @jolelievre)
+    - #40768: Integrate new header-stamp for 9.1.x branch (by @jolelievre)
+    - #40765: Dynamic PHP matrix in workflows for 9.1.x (by @jolelievre)
+    - #40730: Add hooks that enable to control free shipping price (by @Hlavtox)
+    - #40678: Restore dev version for ps_apiresources (by @nicosomb)
+    - #40603: Clean old cart rule migration (by @jolelievre)
+    - #40596: Discounts for guest, test scenario (by @kpodemski)
+    - #40546: Command : Added CLI for checking fixtures translations (by @Progi1984)
+    - #40520: Skip removed modules on enable theme (by @jolelievre)
+    - #40467: Chore: [composer] update prestashop/dashproducts (by @mattgoud)
+    - #40381: Remove `curl_close` obsolete function calls (by @ShaiMagal)
+    - #40359: Use node 20.19.5 by default to build assets (by @jolelievre)
+    - #40353: Dynamise hook documentation generation based on Version (by @jolelievre)
+    - #40350: Remove the composer config to ignore audit (by @jolelievre)
+    - #40342: Improved-shipment: Global refactorisation (by @M0rgan01)
+    - #40269: Prevent database inconsistencies by preventing faulty group delete calls (by @Hlavtox)
+    - #40133: Update ca-bundle from 1.3.7 to 1.5.9 (by @tswfi)
+  - Bug fix:
+    - #40823: Don't add "default" if "default" already in name for getFormattedName (by @boherm)
+    - #40776: Replace github action that sets up mysql in CI (by @Touxten)
+    - #40762: Replace github action that sets up mysql in CI (by @Touxten)
+    - #40657: Fix configuration of Dev mode and Debug profiling in the back office (by @kpodemski)
+    - #40656: Fix getting specific price for a given customer group (by @kpodemski)
+    - #40590: Fix creating orders for guests (by @kpodemski)
+    - #40588: Update Changelog 9.0.3 (by @jolelievre)
+    - #40585: Preliminary tasks for patch version 9.0.3 (by @jolelievre)
+    - #40562: Update VAT rates for Estonia and Romania (by @Codencode)
+    - #40498: Fix: doctrine throws error from the beginning: There is no column with name "theme_name" on table "ps_image_type" (by @Codencode)
+    - #40496: Fix some type issues related to carriers (by @Hlavtox)
+    - #40480: Improvements to Makefile (by @kpodemski)
+    - #40479: Fix legacy profiler in the back office (by @kpodemski)
+    - #40423: Fix empty extra vars / product list when using the new automatic text email option (by @matrixino)
+    - #40400: Simplify cart rule minimal value by avoiding subtracting values (by @Hlavtox)
+    - #40040: Always request a non cached result in Order::getIdByCartId (by @ilsalvopss)
+  - Refactoring:
+    - #40798: Fix, comment and improve country initialization logic related to shipping (by @Hlavtox)
+    - #40604: Update classic to 3.0.6 (by @Hlavtox)
+    - #40432: Simplify some of cart logic to gradually move to single source of truth (by @Hlavtox)
+    - #40389: Comment logic related to addresses and their initialization (by @Hlavtox)
+- Installer:
+  - Improvement:
+    - #40824: Update default catalog 9.1.x (by @ps-jarvis)
+    - #40468: Update default catalog 9.1.x (by @ps-jarvis)
+    - #40397: Update default catalog 9.1.x (by @ps-jarvis)
+  - Bug fix:
+    - #40574: Fix Makefile to prevent build assets twice (by @jolelievre)
+    - #40457: Fix installation theme step order (by @jolelievre)
+    - #40077: Install Console : Allow characters "<" & ">" in admin password (by @Progi1984)
+- Web Services:
+  - Bug fix:
+    - #40442: Fix: PHP Fatal error when deleting product image by Webservice API #39111 (by @semicolonSimp)
+- Localization:
+  - Bug fix:
+    - #40521: Fix default fixtures translation (by @jolelievre)
+- Tests:
+  - Improvement:
+    - #40789: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40734: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40691: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40674: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40645: Functional Tests : Fixed campaigns (Part 5) (by @Progi1984)
+    - #40607: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40565: Functional Tests : Fixed campaigns (Part 4) (by @Progi1984)
+    - #40512: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40469: Functional Tests : Fixed campaigns (Part 3) (by @Progi1984)
+    - #40458: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40436: Functional Tests : Fixed campaigns (Part 2) (by @Progi1984)
+    - #40434: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40428: Functional Tests : Fixed campaigns (Part 1) (by @Progi1984)
+    - #40425: Functional Tests : Use Hummingbird as front theme for Audit/Modules/Regression/Sanity Scenarios (by @Progi1984)
+    - #40419: Functional Tests : Use Hummingbird as front theme for BO Scenarios (by @Progi1984)
+    - #40418: Enable Hummingbird as default theme (by @Progi1984)
+    - #40363: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40128: Functional Tests : Hummingbird 2 (as secondary theme) (by @Progi1984)
+  - Bug fix:
+    - #40684: Functional Tests : Enable scenarios (by @Progi1984)
+    - #40646: Fixtures : Enable payment modules for US (by @Progi1984)
+  - Refactoring:
+    - #40405: Functional tests - Add enable/disable the classic theme (by @nesrineabdmouleh)
+    - #40402: Functional tests - Delete enable/disable the theme hummingbird (by @nesrineabdmouleh)
+
+####################################
 #   v9.1.0 Beta 1 - (2025-12-18)
 ####################################
 
