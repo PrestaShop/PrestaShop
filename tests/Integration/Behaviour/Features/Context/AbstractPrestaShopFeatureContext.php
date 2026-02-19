@@ -7,6 +7,8 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Context\Context as BehatContext;
+use Behat\Gherkin\Node\TableNode;
+use Language;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use RuntimeException;
 
@@ -37,6 +39,124 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
                 $firstFixtureNamesStr
             ));
         }
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return int
+     */
+    protected function referenceToId(string $reference): int
+    {
+        if (!$this->getSharedStorage()->exists($reference)) {
+            throw new RuntimeException(sprintf('Reference %s does not exist in shared storage', $reference));
+        }
+
+        return $this->getSharedStorage()->get($reference);
+    }
+
+    /**
+     * @param string $references
+     *
+     * @return int[]
+     */
+    protected function referencesToIds(string $references): array
+    {
+        if (empty($references)) {
+            return [];
+        }
+
+        $ids = [];
+        foreach (explode(',', $references) as $reference) {
+            $reference = trim($reference);
+
+            if (!$this->getSharedStorage()->exists($reference)) {
+                throw new RuntimeException(sprintf('Reference %s does not exist in shared storage', $reference));
+            }
+
+            $ids[] = $this->getSharedStorage()->get($reference);
+        }
+
+        return $ids;
+    }
+
+    /**
+     * @param TableNode $tableNode
+     *
+     * @return array
+     */
+    protected function localizeByRows(TableNode $tableNode): array
+    {
+        return $this->parseLocalizedRow($tableNode->getRowsHash());
+    }
+
+    /**
+     * @param TableNode $table
+     *
+     * @return array
+     */
+    protected function localizeByColumns(TableNode $table): array
+    {
+        $rows = [];
+        foreach ($table->getColumnsHash() as $key => $column) {
+            $row = [];
+            foreach ($column as $columnName => $value) {
+                $row[$columnName] = $value;
+            }
+
+            $rows[] = $this->parseLocalizedRow($row);
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @param array $row
+     *
+     * @return array
+     */
+    protected function parseLocalizedRow(array $row): array
+    {
+        $parsedRow = [];
+        foreach ($row as $key => $value) {
+            $localeMatch = preg_match('/\[.*?\]/', $key, $matches) ? reset($matches) : null;
+
+            if (!$localeMatch) {
+                $parsedRow[$key] = $value;
+                continue;
+            }
+
+            $propertyName = str_replace($localeMatch, '', $key);
+            $locale = str_replace(['[', ']'], '', $localeMatch);
+
+            $langId = (int) Language::getIdByLocale($locale, true);
+
+            if (!$langId) {
+                throw new RuntimeException(sprintf('Language by locale "%s" was not found', $locale));
+            }
+
+            $parsedRow[$propertyName][$langId] = $value;
+        }
+
+        return $parsedRow;
+    }
+
+    /**
+     * @param string $localizedValue
+     *
+     * @return array
+     */
+    protected function localizeByCell(string $localizedValue): array
+    {
+        $localizedValues = [];
+        $valuesByLang = explode(';', $localizedValue);
+        foreach ($valuesByLang as $valueByLang) {
+            $value = explode(':', $valueByLang);
+            $langId = (int) Language::getIdByLocale($value[0], true);
+            $localizedValues[$langId] = $value[1];
+        }
+
+        return $localizedValues;
     }
 
     /**

@@ -45,15 +45,14 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     And there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
     And there is a cart rule "CartRuleAmountOnSelectedProduct" with following properties:
-      | name[en-US]               | CartRuleAmountOnSelectedProduct          |
-      | priority                  | 1                                        |
-      | discount_amount           | 500                                      |
-      | discount_currency         | usd                                      |
-      | discount_application_type | specific_product                         |
-      | discount_product          | Test Product Cart Rule On Select Product |
-      | discount_includes_tax     | true                                     |
-      | total_quantity            | 100                                      |
-      | quantity_per_user         | 100                                      |
+      | name[en-US]           | CartRuleAmountOnSelectedProduct          |
+      | priority              | 1                                        |
+      | discount_amount       | 500                                      |
+      | discount_currency     | usd                                      |
+      | discount_product      | Test Product Cart Rule On Select Product |
+      | discount_includes_tax | true                                     |
+      | total_quantity        | 100                                      |
+      | quantity_per_user     | 100                                      |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Select Product |
       | amount | 1                                        |
@@ -108,14 +107,13 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     And there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
     And there is a cart rule CartRuleAmountOnSelectedProduct with following properties:
-      | name[en-US]               | CartRuleAmountOnSelectedProduct          |
-      | discount_amount           | 500                                      |
-      | discount_currency         | usd                                      |
-      | total_quantity            | 100                                      |
-      | quantity_per_user         | 100                                      |
-      | discount_application_type | specific_product                         |
-      | discount_includes_tax     | false                                    |
-      | discount_product          | Test Product Cart Rule On Select Product |
+      | name[en-US]           | CartRuleAmountOnSelectedProduct          |
+      | discount_amount       | 500                                      |
+      | discount_currency     | usd                                      |
+      | total_quantity        | 100                                      |
+      | quantity_per_user     | 100                                      |
+      | discount_includes_tax | false                                    |
+      | discount_product      | Test Product Cart Rule On Select Product |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Select Product |
       | amount | 1                                        |
@@ -258,13 +256,12 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     And there is a product in the catalog named "Test Product Cart Rule On Order" with a price of 15.0 and 100 items in stock
     And there is a cart rule "CartRuleAmountOnEveryOrder" with following properties:
-      | name[en-US]               | CartRuleAmountOnEveryOrder |
-      | priority                  | 1                          |
-      | free_shipping             | false                      |
-      | discount_percentage       | 50                         |
-      | discount_application_type | order_without_shipping     |
-      | total_quantity            | 1000                       |
-      | quantity_per_user         | 1000                       |
+      | name[en-US]         | CartRuleAmountOnEveryOrder |
+      | priority            | 1                          |
+      | free_shipping       | false                      |
+      | discount_percentage | 50                         |
+      | total_quantity      | 1000                       |
+      | quantity_per_user   | 1000                       |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Order |
       | amount | 1                               |
@@ -320,13 +317,12 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     And there is a product in the catalog named "Test Product Cart Rule On Order" with a price of 15.0 and 100 items in stock
     And there is a cart rule "CartRuleAmountOnEveryOrder" with following properties:
-      | name[en-US]               | CartRuleAmountOnEveryOrder |
-      | priority                  | 1                          |
-      | free_shipping             | false                      |
-      | discount_percentage       | 50                         |
-      | discount_application_type | order_without_shipping     |
-      | total_quantity            | 1000                       |
-      | quantity_per_user         | 1000                       |
+      | name[en-US]         | CartRuleAmountOnEveryOrder |
+      | priority            | 1                          |
+      | free_shipping       | false                      |
+      | discount_percentage | 50                         |
+      | total_quantity      | 1000                       |
+      | quantity_per_user   | 1000                       |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Order |
       | amount | 1                               |
@@ -398,12 +394,11 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
     And there is a cart rule "CartRulePercentForSpecificProduct" with following properties:
-      | name[en-US]               | CartRulePercentForSpecificProduct  |
-      | priority                  | 1                                  |
-      | free_shipping             | false                              |
-      | discount_percentage       | 50                                 |
-      | discount_application_type | specific_product                   |
-      | discount_product          | Test Product With Percent Discount |
+      | name[en-US]         | CartRulePercentForSpecificProduct  |
+      | priority            | 1                                  |
+      | free_shipping       | false                              |
+      | discount_percentage | 50                                 |
+      | discount_product    | Test Product With Percent Discount |
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product With Percent Discount"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product With Percent Discount |
@@ -478,12 +473,11 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
     And there is a cart rule "CartRulePercentForSpecificProduct" with following properties:
-      | name[en-US]               | CartRulePercentForSpecificProduct  |
-      | priority                  | 1                                  |
-      | free_shipping             | false                              |
-      | discount_percentage       | 50                                 |
-      | discount_application_type | specific_product                   |
-      | discount_product          | Test Product With Percent Discount |
+      | name[en-US]         | CartRulePercentForSpecificProduct  |
+      | priority            | 1                                  |
+      | free_shipping       | false                              |
+      | discount_percentage | 50                                 |
+      | discount_product    | Test Product With Percent Discount |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product With Percent Discount |
       | amount | 1                                  |
@@ -670,12 +664,11 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     And there is a product in the catalog named "Test Product With Percent Discount" with a price of 350.00 and 100 items in stock
     And there is a cart rule "CartRulePercentForSpecificProduct1" with following properties:
-      | name[en-US]               | CartRulePercentForSpecificProduct1 |
-      | discount_percentage       | 50                                 |
-      | priority                  | 1                                  |
-      | free_shipping             | false                              |
-      | discount_application_type | specific_product                   |
-      | discount_product          | Test Product With Percent Discount |
+      | name[en-US]         | CartRulePercentForSpecificProduct1 |
+      | discount_percentage | 50                                 |
+      | priority            | 1                                  |
+      | free_shipping       | false                              |
+      | discount_product    | Test Product With Percent Discount |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product With Percent Discount |
       | amount | 1                                  |
@@ -723,11 +716,11 @@ Feature: Order from Back Office (BO)
       | enabled | true  |
     And there is a country named "country1" and iso code "FR" in zone "zone1"
     And I create carrier "carrier1" with specified properties:
-      | name             | carrier 1                          |
-      | zones            | zone1                              |
+      | name  | carrier 1 |
+      | zones | zone1     |
     And I create carrier "carrier2" with specified properties:
-      | name             | carrier 2                          |
-      | zones            | zone1                              |
+      | name  | carrier 2 |
+      | zones | zone1     |
     Then I set ranges for carrier "carrier1" with specified properties for all shops:
       | id_zone | range_from | range_to | range_price |
       | zone1   | 0          | 10000    | 0.0         |
@@ -737,11 +730,7 @@ Feature: Order from Back Office (BO)
     And there is a cart rule FreeGift with following properties:
       | name[en-US]  | FreeGift |
       | gift_product | product1 |
-    And I restrict following carriers for cart rule FreeGift:
-      | restricted carriers | carrier1 |
-    And I save all the restrictions for cart rule FreeGift
-    And cart rule FreeGift should have the following properties:
-      | restricted carriers | carrier1 |
+      | carriers     | carrier1 |
     When I create an empty cart "dummy_cart_freegift" for customer "testCustomer"
     And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_freegift"
     And I add 1 products "product2" to the cart "dummy_cart_freegift"
@@ -865,11 +854,11 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42    |
     And order "bo_order1" should have invoice
     ## Create a new cart rule
-    And I create cart rule "cart_rule_1" with following properties:
+    And there is a cart rule "cart_rule_1" with following properties:
       | name[en-US]                  | Cart Rule 50% which excludes discounted products and applies to cheapest product |
       | discount_percentage          | 50                                                                               |
       | apply_to_discounted_products | false                                                                            |
-      | discount_application_type    | cheapest_product                                                                 |
+      | cheapest_product             | true                                                                             |
     ## Add the product to the order
     When I add products to order "bo_order1" without invoice and the following products details:
       | name   | product_cheap |

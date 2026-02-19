@@ -30,7 +30,6 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
     And my cart total should be 162.4 tax excluded
     When I apply the voucher code "foo8"
     Then my cart total should be 157.4 tax included
-    And my cart total using previous calculation method should be 157.4 tax included
 
   Scenario: 3 products in cart, several quantities, one specific 500€ cartRule on product #2
     Given there is a cart rule "cartrule9" with following properties:
@@ -50,4 +49,3 @@ Feature: Cart rule (amount) calculation with one cart rule restricted to one pro
     When I apply the voucher code "foo9"
     # discount is $500, but it only applies for product 2 so in the end it provides a discount equal to value of product2 (so 32.388 * 2qty)
     Then my cart total should be 97.624 tax included
-    And my cart total using previous calculation method should be 97.624 tax included

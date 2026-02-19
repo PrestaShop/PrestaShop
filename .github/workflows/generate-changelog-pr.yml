@@ -102,7 +102,7 @@ jobs:
           | Questions         | Answers
           | ----------------- | -------------------------------------------------------
           | Branch?           | ${{ inputs.base_branch }}
-          | Description?      | Update `docs/CHANGELOG.txt` with merged PRs between `${{ inputs.previous_ref }}` and `${{ inputs.target_ref }}`, and update `CONTRIBUTORS.md` with new contributors.
+          | Description?      | Update `docs/CHANGELOG.txt` with merged PRs between `${{ inputs.previous_ref }}` and `${{ inputs.target_ref || inputs.base_branch }}`, and update `CONTRIBUTORS.md` with new contributors.
           | Type?             | improvement
           | Category?         | PM
           | BC breaks?        | no

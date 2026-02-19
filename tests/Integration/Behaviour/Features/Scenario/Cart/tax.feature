@@ -17,14 +17,10 @@ Feature: Cart calculation with tax
     Given I have an empty default cart
     When I select address "address1" in my cart
     Then my cart total should be 0.0 tax included
-    Then my cart total using previous calculation method should be 0.0 tax included
     Then my cart total should be 0.0 tax excluded
-    Then my cart total using previous calculation method should be 0.0 tax excluded
     Given shop configuration for "PS_TAX" is set to 0
     Then my cart total should be 0.0 tax included
-    Then my cart total using previous calculation method should be 0.0 tax included
     Then my cart total should be 0.0 tax excluded
-    Then my cart total using previous calculation method should be 0.0 tax excluded
 
   Scenario: tax #1: one product in cart, quantity 1
     Given I have an empty default cart
@@ -35,14 +31,10 @@ Feature: Cart calculation with tax
     When I add 1 items of product "product1" in my cart
     When I select address "address1" in my cart
     Then my cart total should be 20.60448 tax included
-    Then my cart total using previous calculation method should be 20.60448 tax included
     Then my cart total should be 19.812 tax excluded
-    Then my cart total using previous calculation method should be 19.812 tax excluded
     Given shop configuration for "PS_TAX" is set to 0
     Then my cart total should be 19.812 tax included
-    Then my cart total using previous calculation method should be 19.812 tax included
     Then my cart total should be 19.812 tax excluded
-    Then my cart total using previous calculation method should be 19.812 tax excluded
 
   Scenario: tax #2: one product in cart, quantity 1
     Given I have an empty default cart
@@ -53,14 +45,10 @@ Feature: Cart calculation with tax
     When I add 1 items of product "product5" in my cart
     When I select address "address1" in my cart
     Then my cart total should be 21.00072 tax included
-    Then my cart total using previous calculation method should be 21.00072 tax included
     Then my cart total should be 19.812 tax excluded
-    Then my cart total using previous calculation method should be 19.812 tax excluded
     Given shop configuration for "PS_TAX" is set to 0
     Then my cart total should be 19.812 tax included
-    Then my cart total using previous calculation method should be 19.812 tax included
     Then my cart total should be 19.812 tax excluded
-    Then my cart total using previous calculation method should be 19.812 tax excluded
 
   Scenario: tax #3: one product in cart, quantity 1
     Given I have an empty default cart
@@ -71,14 +59,10 @@ Feature: Cart calculation with tax
     When I add 1 items of product "product5" in my cart
     When I select address "address1" in my cart
     Then my cart total should be 19.812 tax included
-    Then my cart total using previous calculation method should be 19.812 tax included
     Then my cart total should be 19.812 tax excluded
-    Then my cart total using previous calculation method should be 19.812 tax excluded
     Given shop configuration for "PS_TAX" is set to 0
     Then my cart total should be 19.812 tax included
-    Then my cart total using previous calculation method should be 19.812 tax included
     Then my cart total should be 19.812 tax excluded
-    Then my cart total using previous calculation method should be 19.812 tax excluded
 
   Scenario: tax #1: one product in cart, quantity 3
     Given I have an empty default cart
@@ -89,14 +73,10 @@ Feature: Cart calculation with tax
     When I add 3 items of product "product1" in my cart
     When I select address "address1" in my cart
     Then my cart total should be 61.81344 tax included
-    Then my cart total using previous calculation method should be 61.81344 tax included
     Then my cart total should be 59.436 tax excluded
-    Then my cart total using previous calculation method should be 59.436 tax excluded
     Given shop configuration for "PS_TAX" is set to 0
     Then my cart total should be 59.436 tax included
-    Then my cart total using previous calculation method should be 59.436 tax included
     Then my cart total should be 59.436 tax excluded
-    Then my cart total using previous calculation method should be 59.436 tax excluded
 
   Scenario: multiple taxes, multiple products, several quantities
     Given I have an empty default cart
@@ -117,14 +97,10 @@ Feature: Cart calculation with tax
     When I add 2 items of product "product3" in my cart
     When I select address "address1" in my cart
     Then my cart total should be 164.75832 tax included
-    Then my cart total using previous calculation method should be 164.75832 tax included
     Then my cart total should be 154.2 tax excluded
-    Then my cart total using previous calculation method should be 154.2 tax excluded
     Given shop configuration for "PS_TAX" is set to 0
     Then my cart total should be 154.2 tax included
-    Then my cart total using previous calculation method should be 154.2 tax included
     Then my cart total should be 154.2 tax excluded
-    Then my cart total using previous calculation method should be 154.2 tax excluded
 
   Scenario: multiple taxes, multiple products, several quantities, one tax is null
     Given I have an empty default cart
@@ -145,11 +121,7 @@ Feature: Cart calculation with tax
     When I add 2 items of product "product3" in my cart
     When I select address "address1" in my cart
     Then my cart total should be 162.81504 tax included
-    Then my cart total using previous calculation method should be 162.81504 tax included
     Then my cart total should be 154.2 tax excluded
-    Then my cart total using previous calculation method should be 154.2 tax excluded
     Given shop configuration for "PS_TAX" is set to 0
     Then my cart total should be 154.2 tax included
-    Then my cart total using previous calculation method should be 154.2 tax included
     Then my cart total should be 154.2 tax excluded
-    Then my cart total using previous calculation method should be 154.2 tax excluded

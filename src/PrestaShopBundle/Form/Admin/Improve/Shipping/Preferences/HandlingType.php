@@ -67,6 +67,10 @@ class HandlingType extends TranslatorAwareType
                     'Handling charges',
                     'Admin.Shipping.Feature'
                 ),
+                'help' => $this->trans(
+                    'Optional additional fee added to carriers with handling charges enabled. This fee is not applied when shipping is free due to options below.',
+                    'Admin.Shipping.Help'
+                ),
                 'multistore_configuration_key' => 'PS_SHIPPING_HANDLING',
             ])
             ->add('free_shipping_price', MoneyType::class, [
@@ -80,6 +84,10 @@ class HandlingType extends TranslatorAwareType
                 'label' => $this->trans(
                     'Free shipping starts at',
                     'Admin.Shipping.Feature'
+                ),
+                'help' => $this->trans(
+                    'Shipping is free for all zones when the cart total reaches or exceeds this amount.',
+                    'Admin.Shipping.Help'
                 ),
                 'multistore_configuration_key' => 'PS_SHIPPING_FREE_PRICE',
             ])
@@ -95,6 +103,10 @@ class HandlingType extends TranslatorAwareType
                     new GreaterThanOrEqual(['value' => 0]),
                     new Type(['type' => 'numeric']),
                 ],
+                'help' => $this->trans(
+                    'Shipping is free for all zones when the total cart weight reaches or exceeds this value.',
+                    'Admin.Shipping.Help'
+                ),
                 'multistore_configuration_key' => 'PS_SHIPPING_FREE_WEIGHT',
             ]);
     }

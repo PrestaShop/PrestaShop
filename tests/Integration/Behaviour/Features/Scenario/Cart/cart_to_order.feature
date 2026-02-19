@@ -59,8 +59,7 @@ Feature: Check cart to order data copy
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    And I edit cart rule "cartrule1" with following properties:
-      | total_quantity      | 1         |
+    Given I update quantity for cart rule "cartrule1" to 1
     And there is a cart rule "cartrule2" with following properties:
       | name[en-US]         | cartrule2 |
       | priority            | 2         |
@@ -103,8 +102,7 @@ Feature: Check cart to order data copy
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    And I edit cart rule "cartrule1" with following properties:
-      | total_quantity      | 0         |
+    Given I update quantity for cart rule "cartrule1" to 0
     And there is a cart rule "cartrule2" with following properties:
       | name[en-US]         | cartrule2 |
       | priority            | 2         |
@@ -182,8 +180,7 @@ Feature: Check cart to order data copy
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
-    Given I edit cart rule "cartrule1" with following properties:
-      | total_quantity      | 1         |
+    Given I update quantity for cart rule "cartrule1" to 1
     Given there is a cart rule "cartrule2" with following properties:
       | name[en-US]         | cartrule2 |
       | priority            | 2         |

@@ -17,12 +17,10 @@ Feature: Cart calculation with rounding type ITEM
     When I add 1 items of product "product1" in my cart
     Then my cart total should be precisely 26.81 tax included
     And my cart total shipping fees should be 7.0 tax included
-    Then my cart total using previous calculation method should be precisely 26.81 tax included
 
   Scenario: one product in cart, quantity 3
     When I add 3 items of product "product1" in my cart
     Then my cart total should be precisely 66.43 tax included
-    Then my cart total using previous calculation method should be precisely 66.43 tax included
 
   Scenario: 3 products in cart, several quantities
     When I add 2 items of product "product2" in my cart
@@ -30,14 +28,12 @@ Feature: Cart calculation with rounding type ITEM
     When I add 1 items of product "product3" in my cart
     Then my cart total should be precisely 162.4 tax included
     And my cart total shipping fees should be 7.0 tax included
-    Then my cart total using previous calculation method should be precisely 162.4 tax included
 
   Scenario: 1 product in cart, with a quantity of 2 and a tricky price
     Given there is a product in the catalog named "product4" with a price of 35.32552 and 1000 items in stock
     When I add 2 items of product "product4" in my cart
     Then my cart total should be precisely 77.66 tax included
     And my cart total shipping fees should be 7.0 tax included
-    Then my cart total using previous calculation method should be precisely 77.66 tax included
 
   @restore-cart-rules-after-scenario
   Scenario: 1 product in cart, with a quantity of 3 and a percentage cart rule
@@ -48,7 +44,6 @@ Feature: Cart calculation with rounding type ITEM
     When I add 3 items of product "product1" in my cart
     Then my cart total should be precisely 57.52 tax included
     And my cart total shipping fees should be 7.0 tax included
-    Then my cart total using previous calculation method should be precisely 57.52 tax included
 
   Scenario: 1 product in cart, with a quantity of 3 and an amount cart rule
     Given there is a cart rule "cartrule1" with following properties:
@@ -60,4 +55,3 @@ Feature: Cart calculation with rounding type ITEM
     When I add 3 items of product "product1" in my cart
     Then my cart total should be precisely 61.43 tax included
     And my cart total shipping fees should be 7.0 tax included
-    Then my cart total using previous calculation method should be precisely 61.43 tax included

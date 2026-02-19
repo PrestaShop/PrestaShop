@@ -5,12 +5,23 @@ Feature: Add discount with carrier trigger on FO
   PrestaShop allows discounts with restricted carriers as the condition
 
   Background:
-    Given there is a customer named "testCustomer" whose email is "pub2@prestashop.com"
     Given language with iso code "en" is the default one
     And language "french" with locale "fr-FR" exists
+    And country "US" is enabled
     Given shop "shop1" with name "test_shop" exists
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And group "customer" named "Customer" exists
+    Given there is a customer named "testCustomer" whose email is "pub2@prestashop.com"
+    And I add new address to customer "testCustomer" with following details:
+      | Address alias | test-customer-states-address |
+      | First name    | testFirstName                |
+      | Last name     | testLastName                 |
+      | Address       | 36 Avenue des Champs Elysees |
+      | City          | Anchorage                    |
+      | Country       | United States                |
+      | State         | Alaska                       |
+      | Postal code   | 33133                        |
+    And customer "testCustomer" has address in "US" country
     And there is a zone "north_america" named "North America"
     And I create carrier "nice_carrier" with specified properties:
       | name             | Nice carrier                       |
@@ -44,6 +55,7 @@ Feature: Add discount with carrier trigger on FO
       | carriers    | nice_carrier                    |
       | code        | FREE_SHIPPING_NICE_CARRIER      |
     Given I create an empty cart "dummy_cart" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     # This mug is worth 11.90$ without tax
     When I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And cart "dummy_cart" total with tax included should be '$30.80'

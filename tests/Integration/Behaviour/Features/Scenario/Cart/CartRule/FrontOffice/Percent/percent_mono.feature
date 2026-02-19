@@ -27,7 +27,6 @@ Feature: Cart rule (percent) calculation with one cart rule
     And my cart total should be 26.812 tax included
     When I apply the voucher code "foo2"
     Then my cart total should be 16.906 tax included
-    And my cart total using previous calculation method should be 16.906 tax included
 
   Scenario: one product in cart, quantity 3, one 50% global cartRule
     Given I add 3 items of product "product1" in my cart
@@ -35,7 +34,6 @@ Feature: Cart rule (percent) calculation with one cart rule
     And my cart total should be 66.436 tax included
     When I apply the voucher code "foo2"
     Then my cart total should be 36.718 tax included
-    And my cart total using previous calculation method should be 36.718 tax included
 
   Scenario: 3 products in cart, several quantities, one 5€ global cartRule (reduced product at first place)
     Given I add 3 items of product "product1" in my cart
@@ -45,7 +43,6 @@ Feature: Cart rule (percent) calculation with one cart rule
     And my cart total should be 162.4 tax included
     When I apply the voucher code "foo2"
     Then my cart total should be 84.7 tax included
-    Then my cart total using previous calculation method should be 84.7 tax included
 
   Scenario: 1 product in cart, percentage reduction cart rule is applied correctly
     Given there is a cart rule "cartrule1" with following properties:
@@ -62,7 +59,6 @@ Feature: Cart rule (percent) calculation with one cart rule
     And my cart total should be 26.812 tax included
     When I apply the voucher code "foo1"
     Then my cart total should be 16.906 tax included
-    And my cart total using previous calculation method should be 16.906 tax included
     When I apply the voucher code "foo2"
     Then my cart total should be 11.95 tax included
     And I should have 1 products in my cart

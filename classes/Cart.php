@@ -2602,6 +2602,8 @@ class CartCore extends ObjectModel
      * Get the gift wrapping price.
      *
      * @param bool $with_taxes With or without taxes
+     * @param int|null $id_address Address ID to use for tax calculation. If null, the method will use the cart's tax address.
+     *                             (deprecated - the parameter is not used anywhere in the codebase, and can be removed)
      *
      * @return float wrapping price
      */
@@ -2626,15 +2628,21 @@ class CartCore extends ObjectModel
                 // so nothing to do here.
             } else {
                 if (!isset($address[$this->id])) {
+                    // If no address ID was provided, we use the cart tax address ID
                     if ($id_address === null) {
                         $id_address = (int) $this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
                     }
 
+                    /*
+                     * We initialize the address object and wrap it in try/catch. This should not be normally needed,
+                     * we are using the method without any safeguard in other places of the code, but there is
+                     * a possibility that someone will pass broken ID manually. If it fails, we just run the method
+                     * again, but without any address specified.
+                     */
                     try {
                         $address[$this->id] = Address::initialize($id_address);
                     } catch (Exception $e) {
-                        $address[$this->id] = new Address();
-                        $address[$this->id]->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+                        $address[$this->id] = Address::initialize();
                     }
                 }
 
@@ -2922,6 +2930,10 @@ class CartCore extends ObjectModel
                 $address = new Address($id_address);
                 $country = new Country($address->id_country);
             } else {
+                /*
+                 * Note - $default_country is almost always passed as null here. If a delivery address is not yet set,
+                 * it will be resolved to something in getPackageShippingCostValue.
+                 */
                 $country = $default_country;
             }
 
@@ -3484,6 +3496,12 @@ class CartCore extends ObjectModel
      */
     public function getTotalShippingCost($delivery_option = null, $use_tax = true, ?Country $default_country = null)
     {
+        /*
+         * @todo
+         * This condition should fill default_country with something, but it will never work, since context->cookie->id_country
+         * is never set anywhere. NULL will be passed in $default_country down the stream and it will usually be resolved
+         * to proper values all the way in getPackageShippingCostValue.
+         */
         if (isset(Context::getContext()->cookie->id_country)) {
             $default_country = new Country((int) Context::getContext()->cookie->id_country);
         }
@@ -3673,7 +3691,11 @@ class CartCore extends ObjectModel
             return $shipping_cost;
         }
 
-        // If no specific zone ID was passed, use the zone from delivery address
+        /*
+         * If no specific zone ID was passed, use the zone from delivery address, if it exists and is valid.
+         * Otherwise, we will use the default country provided as a parameter.
+         * If even that is empty, we will use the default country of the shop as a last resort.
+         */
         if (!isset($id_zone)) {
             // Get id zone
             if (isset($this->id_address_delivery)
@@ -3682,6 +3704,7 @@ class CartCore extends ObjectModel
             ) {
                 $id_zone = Address::getZoneById((int) $this->id_address_delivery);
             } else {
+                // This should never happen, because context country is always resolved
                 if (!Validate::isLoadedObject($default_country)) {
                     $default_country = new Country(
                         (int) Configuration::get('PS_COUNTRY_DEFAULT'),

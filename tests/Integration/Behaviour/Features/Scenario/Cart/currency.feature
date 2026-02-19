@@ -14,7 +14,6 @@ Feature: Cart calculation with currencies
     Given currency "currency1" is the current one
     Then I should have 0 different products in my cart
     Then my cart total should be 0.0 tax included
-    Then my cart total using previous calculation method should be 0.0 tax included
 
   Scenario: one product in cart, quantity 1
     Given I have an empty default cart
@@ -26,7 +25,6 @@ Feature: Cart calculation with currencies
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 1 items of product "product1" in my cart
     Then my cart total should be 26.812 tax included
-    Then my cart total using previous calculation method should be 26.812 tax included
 
   Scenario: one product in cart, quantity 3
     Given I have an empty default cart
@@ -38,7 +36,6 @@ Feature: Cart calculation with currencies
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 3 items of product "product1" in my cart
     Then my cart total should be 66.44 tax included
-    Then my cart total using previous calculation method should be 66.44 tax included
 
   Scenario: 3 products in cart, several quantities
     Given I have an empty default cart
@@ -54,7 +51,6 @@ Feature: Cart calculation with currencies
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
     Then my cart total should be 162.4 tax included
-    Then my cart total using previous calculation method should be 162.4 tax included
 
   # USD / CHF
 
@@ -67,7 +63,6 @@ Feature: Cart calculation with currencies
     Given currency "currency2" is the current one
     Then I should have 0 different products in my cart
     Then my cart total should be 0.0 tax included
-    Then my cart total using previous calculation method should be 0.0 tax included
 
   Scenario: one product in cart, quantity 1
     Given I have an empty default cart
@@ -79,7 +74,6 @@ Feature: Cart calculation with currencies
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 1 items of product "product1" in my cart
     Then my cart total should be 33.515 tax included
-    Then my cart total using previous calculation method should be 33.515 tax included
 
   Scenario: one product in cart, quantity 3
     Given I have an empty default cart
@@ -91,7 +85,6 @@ Feature: Cart calculation with currencies
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 3 items of product "product1" in my cart
     Then my cart total should be 83.1 tax included
-    Then my cart total using previous calculation method should be 83.1 tax included
 
   Scenario: 3 products in cart, several quantities
     Given I have an empty default cart
@@ -107,7 +100,6 @@ Feature: Cart calculation with currencies
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
     Then my cart total should be 203.0 tax included
-    Then my cart total using previous calculation method should be 203.0 tax included
 
   # CHF / USD
 
@@ -120,7 +112,6 @@ Feature: Cart calculation with currencies
     Given currency "currency1" is the current one
     Then I should have 0 different products in my cart
     Then my cart total should be 0.0 tax included
-    Then my cart total using previous calculation method should be 0.0 tax included
 
   Scenario: one product in cart, quantity 1
     Given I have an empty default cart
@@ -132,7 +123,6 @@ Feature: Cart calculation with currencies
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 1 items of product "product1" in my cart
     Then my cart total should be 24.66704 tax included
-    Then my cart total using previous calculation method should be 24.66704 tax included
 
   Scenario: one product in cart, quantity 3
     Given I have an empty default cart
@@ -144,7 +134,6 @@ Feature: Cart calculation with currencies
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 3 items of product "product1" in my cart
     Then my cart total should be 61.12 tax included
-    Then my cart total using previous calculation method should be 61.12 tax included
 
   Scenario: 3 products in cart, several quantities
     Given I have an empty default cart
@@ -160,7 +149,6 @@ Feature: Cart calculation with currencies
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
     Then my cart total should be 149.408 tax included
-    Then my cart total using previous calculation method should be 149.408 tax included
 
   # USD / EUR
 
@@ -173,7 +161,6 @@ Feature: Cart calculation with currencies
     Given currency "currency3" is the current one
     Then I should have 0 different products in my cart
     Then my cart total should be 0.0 tax included
-    Then my cart total using previous calculation method should be 0.0 tax included
 
   Scenario: one product in cart, quantity 1
     Given I have an empty default cart
@@ -185,7 +172,6 @@ Feature: Cart calculation with currencies
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 1 items of product "product1" in my cart
     Then my cart total should be 16.89156 tax included
-    Then my cart total using previous calculation method should be 16.89156 tax included
 
   Scenario: one product in cart, quantity 3
     Given I have an empty default cart
@@ -197,7 +183,6 @@ Feature: Cart calculation with currencies
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 3 items of product "product1" in my cart
     Then my cart total should be 41.85 tax included
-    Then my cart total using previous calculation method should be 41.85 tax included
 
   Scenario: 3 products in cart, several quantities
     Given I have an empty default cart
@@ -213,7 +198,6 @@ Feature: Cart calculation with currencies
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
     Then my cart total should be 102.312 tax included
-    Then my cart total using previous calculation method should be 102.312 tax included
 
   # EUR / USD
 
@@ -226,7 +210,6 @@ Feature: Cart calculation with currencies
     Given currency "currency1" is the current one
     Then I should have 0 different products in my cart
     Then my cart total should be 0.0 tax included
-    Then my cart total using previous calculation method should be 0.0 tax included
 
   Scenario: one product in cart, quantity 1
     Given I have an empty default cart
@@ -238,7 +221,6 @@ Feature: Cart calculation with currencies
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 1 items of product "product1" in my cart
     Then my cart total should be 24.66704 tax included
-    Then my cart total using previous calculation method should be 24.66704 tax included
 
   Scenario: one product in cart, quantity 3
     Given I have an empty default cart
@@ -250,7 +232,6 @@ Feature: Cart calculation with currencies
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 3 items of product "product1" in my cart
     Then my cart total should be 61.12 tax included
-    Then my cart total using previous calculation method should be 61.12 tax included
 
   Scenario: 3 products in cart, several quantities
     Given I have an empty default cart
@@ -266,4 +247,3 @@ Feature: Cart calculation with currencies
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
     Then my cart total should be 149.408 tax included
-    Then my cart total using previous calculation method should be 149.408 tax included

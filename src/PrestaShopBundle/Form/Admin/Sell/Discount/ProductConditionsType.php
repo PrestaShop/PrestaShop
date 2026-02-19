@@ -36,11 +36,12 @@ class ProductConditionsType extends TranslatorAwareType
         ]);
 
         if ($discountType === DiscountType::PRODUCT_LEVEL) {
-            $builder
+            // Cheapest product condition has been decided not relevant
+            /*$builder
                 ->add(self::CHEAPEST_PRODUCT, HiddenType::class, [
                     'label' => $this->trans('Cheapest product', 'Admin.Catalog.Feature'),
                 ])
-            ;
+            ;*/
             $specificProductsLabel = $this->trans('Single product', 'Admin.Catalog.Feature');
             $specificProductsLimit = 1;
         } else {

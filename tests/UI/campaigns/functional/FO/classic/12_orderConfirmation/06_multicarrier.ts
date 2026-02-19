@@ -835,7 +835,7 @@ describe('FO - Checkout - Shipping methods : MultiCarrier', async () => {
     it('should check the carriers table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersTable2', baseContext);
 
-      const trackingNumber = await foClassicMyOrderDetailsPage.getCarrierDataFromTable(page, 1, '5');
+      const trackingNumber = await foClassicMyOrderDetailsPage.getCarrierDataFromTable(page, 1, '4');
       expect(trackingNumber).to.equal('TN12345678');
     });
   });

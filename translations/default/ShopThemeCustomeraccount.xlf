@@ -5,7 +5,7 @@
       <trans-unit id="6f6347e99d6511fc895179a42301c001">
         <source>#%id%</source>
         <target>#%id%</target>
-        <note>File: controllers/front/OrderSlipController.php [Line: 65]</note>
+        <note>File: controllers/front/OrderSlipController.php [Line: 45]</note>
       </trans-unit>
       <trans-unit id="4aa65c7cc01324ce850c2975f548d637">
         <source>%number% on %date%</source>
@@ -369,7 +369,7 @@
       <trans-unit id="a9e3d6296e9b194ee466230d8438935a">
         <source>Receive offers from our partners</source>
         <target>Receive offers from our partners</target>
-        <note>File: classes/form/CustomerFormatter.php [Line: 227]</note>
+        <note>File: classes/form/CustomerFormatter.php [Line: 207]</note>
       </trans-unit>
       <trans-unit id="92a9774c2a5df29ac4bffb46219ea9cd">
         <source>Reminder</source>

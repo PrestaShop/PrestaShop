@@ -5,22 +5,22 @@
       <trans-unit id="116cb47fe026f7a3679486e086426a64">
         <source>If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.</source>
         <target>If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.</target>
-        <note>File: controllers/front/HistoryController.php [Line: 57]</note>
+        <note>File: controllers/front/HistoryController.php [Line: 37]</note>
       </trans-unit>
       <trans-unit id="f9ddd507fdf437437efdcb333a0f4ff0">
         <source>This product is not visible to your customers.</source>
         <target>This product is not visible to your customers.</target>
-        <note>File: controllers/front/ProductController.php [Line: 188]</note>
+        <note>File: controllers/front/ProductController.php [Line: 168]</note>
       </trans-unit>
       <trans-unit id="c8baafa963dab58836b08b5acdedc07a">
         <source>You cannot place a new order from your country (%s).</source>
         <target>You cannot place a new order from your country (%s).</target>
-        <note>File: classes/controller/FrontController.php [Line: 923]</note>
+        <note>File: classes/controller/FrontController.php [Line: 927]</note>
       </trans-unit>
       <trans-unit id="d22c170769e81d2229b17003553b6d57">
         <source>You cannot return merchandise with a guest account.</source>
         <target>You cannot return merchandise with a guest account.</target>
-        <note>File: controllers/front/GuestTrackingController.php [Line: 157]</note>
+        <note>File: controllers/front/GuestTrackingController.php [Line: 137]</note>
       </trans-unit>
       <trans-unit id="d3f5baf7537ec2a40ade00599a8da8c6">
         <source>You do not have any vouchers.</source>
@@ -40,7 +40,7 @@
       <trans-unit id="44a9edeffb86277f007fa90d96689a6d">
         <source>You must wait for confirmation before returning any merchandise.</source>
         <target>You must wait for confirmation before returning any merchandise.</target>
-        <note>File: controllers/front/OrderReturnController.php [Line: 61]</note>
+        <note>File: controllers/front/OrderReturnController.php [Line: 41]</note>
       </trans-unit>
     </body>
   </file>

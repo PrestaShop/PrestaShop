@@ -20,7 +20,7 @@ Feature: Apply cart rule to cart from Back Office (BO)
     And shipping handling fees are set to 2.0
     And there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     And there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
-    And I create cart rule "cart_rule_1" with following properties:
+    And there is a cart rule "cart_rule_1" with following properties:
       | name[en-US]                      | CartRule with minimum amount |
       | description                      | CartRule with minimum amount |
       | priority                         | 2                            |
@@ -33,7 +33,6 @@ Feature: Apply cart rule to cart from Back Office (BO)
       | discount_amount                  | 2                            |
       | discount_currency                | usd                          |
       | discount_includes_tax            | true                         |
-      | discount_application_type        | order_without_shipping       |
     When I add 1 products "product1" to the cart "dummy_custom_cart"
     And I add 1 products "product4" to the cart "dummy_custom_cart"
     Then cart "dummy_custom_cart" should contain 2 products

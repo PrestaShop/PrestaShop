@@ -5,17 +5,17 @@
       <trans-unit id="ca96f27e7d3e3b67b5d1f43a54296466">
         <source>%count% items</source>
         <target>%count% items</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 259]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 247]</note>
       </trans-unit>
       <trans-unit id="e532954941a2469e3b3ae35ce44885d6">
         <source>%price% tax excl.</source>
         <target>%price% tax excl.</target>
-        <note>File: classes/checkout/DeliveryOptionsFinder.php [Line: 111]</note>
+        <note>File: classes/checkout/DeliveryOptionsFinder.php [Line: 91]</note>
       </trans-unit>
       <trans-unit id="464f47d6975750e4cbd91c90ccf1791e">
         <source>%price% tax incl.</source>
         <target>%price% tax incl.</target>
-        <note>File: classes/checkout/DeliveryOptionsFinder.php [Line: 102]</note>
+        <note>File: classes/checkout/DeliveryOptionsFinder.php [Line: 82]</note>
       </trans-unit>
       <trans-unit id="4c4cfffa1e5022b41e4871b27ede1f25">
         <source>%productName% product quantity field</source>
@@ -47,10 +47,15 @@
         <target>%products_count% items in your cart</target>
         <note>File: themes/classic/templates/checkout/_partials/order-final-summary-table.tpl [Line: 33]</note>
       </trans-unit>
+      <trans-unit id="02364522e4b53765700fc5e8875d18e3">
+        <source>%quantityInStock% - %messageForInStockProducts%, the rest - %messageForOutOfStockProducts%</source>
+        <target>%quantityInStock% - %messageForInStockProducts%, the rest - %messageForOutOfStockProducts%</target>
+        <note>File: src/Adapter/Presenter/Cart/CartProductLazyArray.php [Line: 100]</note>
+      </trans-unit>
       <trans-unit id="b7d7e0f62e6223d7cde0960ce1100b24">
         <source>(additional cost of %giftcost% %taxlabel%)</source>
         <target>(additional cost of %giftcost% %taxlabel%)</target>
-        <note>File: classes/checkout/CheckoutDeliveryStep.php [Line: 111]</note>
+        <note>File: classes/checkout/CheckoutDeliveryStep.php [Line: 91]</note>
       </trans-unit>
       <trans-unit id="f53d1cd25e03173ba9eaa4e493636769">
         <source>(optional)</source>
@@ -60,12 +65,12 @@
       <trans-unit id="7e0eb131cbb6280fe2b38edf92a3bcc5">
         <source>1 item</source>
         <target>1 item</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 258]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 246]</note>
       </trans-unit>
       <trans-unit id="2bd544f123f671c597c4b330ef05b5da">
         <source>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</source>
         <target>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 360]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 348]</note>
       </trans-unit>
       <trans-unit id="06df33001c1d7187fdd81ea1f5b277aa">
         <source>Actions</source>
@@ -110,7 +115,7 @@
       <trans-unit id="914419aa32f04011357d3b604a86d7eb">
         <source>Carrier</source>
         <target>Carrier</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-shipments.tpl [Line: 23]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-shipments.tpl [Line: 22]</note>
       </trans-unit>
       <trans-unit id="2d0a942984a469523c573a23728cf0ff">
         <source>Carrier: </source>
@@ -184,12 +189,12 @@
       <trans-unit id="104d9898c04874d0fbac36e125fa1369">
         <source>Discount</source>
         <target>Discount</target>
-        <note>File: src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php [Line: 103]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php [Line: 83]</note>
       </trans-unit>
       <trans-unit id="40d906eb5dd9a2734d0c20c437e2ff68">
         <source>Discount(s)</source>
         <target>Discount(s)</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 182]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 170]</note>
       </trans-unit>
       <trans-unit id="8c1279db4db86553e4b9682f78cf500e">
         <source>Expiration date</source>
@@ -204,32 +209,32 @@
       <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
         <source>Free</source>
         <target>Free</target>
-        <note>File: src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php [Line: 139]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php [Line: 119]</note>
       </trans-unit>
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 464]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 452]</note>
       </trans-unit>
       <trans-unit id="0d9175fe89fb80d815e7d03698b6e83a">
         <source>Gift</source>
         <target>Gift</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/cart-detailed-product-line.tpl [Line: 144]</note>
+        <note>File: themes/classic/templates/checkout/_partials/cart-detailed-product-line.tpl [Line: 156]</note>
       </trans-unit>
       <trans-unit id="484f5a79672cebe198ebdde45a1d672f">
         <source>Gift wrapping</source>
         <target>Gift wrapping</target>
-        <note>File: src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php [Line: 192]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php [Line: 172]</note>
       </trans-unit>
       <trans-unit id="8e702a8aa0c6b063894e3347e0352e0b">
         <source>Gift(s)</source>
         <target>Gift(s)</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/cart-detailed-product-line.tpl [Line: 121]</note>
+        <note>File: themes/hummingbird/templates/checkout/_partials/order-confirmation-table.tpl [Line: 124]</note>
       </trans-unit>
       <trans-unit id="8bbbace7ffb26d61b400c72ffe493f4d">
         <source>Guest order tracking</source>
         <target>Guest order tracking</target>
-        <note>File: controllers/front/GuestTrackingController.php [Line: 182]</note>
+        <note>File: controllers/front/GuestTrackingController.php [Line: 162]</note>
       </trans-unit>
       <trans-unit id="3111382b0f345f39639de6e580a94933">
         <source>Have a promo code?</source>
@@ -239,12 +244,12 @@
       <trans-unit id="823e713a0e72b5dc3d75a71a7bbc6274">
         <source>I agree to the [terms of service] and will adhere to them unconditionally.</source>
         <target>I agree to the [terms of service] and will adhere to them unconditionally.</target>
-        <note>File: classes/checkout/ConditionsToApproveFinder.php [Line: 53]</note>
+        <note>File: classes/checkout/ConditionsToApproveFinder.php [Line: 33]</note>
       </trans-unit>
       <trans-unit id="882ed1e831a6175e4a3dd2c09faa225c">
         <source>I would like my order to be gift wrapped %cost%</source>
         <target>I would like my order to be gift wrapped %cost%</target>
-        <note>File: classes/checkout/CheckoutDeliveryStep.php [Line: 184]</note>
+        <note>File: classes/checkout/CheckoutDeliveryStep.php [Line: 164]</note>
       </trans-unit>
       <trans-unit id="9193b58520051d8b59ca64a5cc5353ff">
         <source>I would like to receive my order in recycled packaging.</source>
@@ -269,7 +274,7 @@
       <trans-unit id="3b5a05f2c4a0373c7a6e8d1cfec7020f">
         <source>Included taxes</source>
         <target>Included taxes</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 222]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 210]</note>
       </trans-unit>
       <trans-unit id="466eadd40b3c10580e3ab4e8061161ce">
         <source>Invoice</source>
@@ -294,7 +299,7 @@
       <trans-unit id="0bf3928d84fde940f6feafac75062280">
         <source>My Address</source>
         <target>My Address</target>
-        <note>File: classes/form/CustomerAddressForm.php [Line: 169]</note>
+        <note>File: classes/form/CustomerAddressForm.php [Line: 149]</note>
       </trans-unit>
       <trans-unit id="49ee3087348e8d44e1feda1917443987">
         <source>Name</source>
@@ -334,7 +339,7 @@
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
         <target>Order confirmation</target>
-        <note>File: controllers/front/OrderConfirmationController.php [Line: 338]</note>
+        <note>File: controllers/front/OrderConfirmationController.php [Line: 318]</note>
       </trans-unit>
       <trans-unit id="f5d74ea75357b5e139854c14f8e24fe3">
         <source>Order details</source>
@@ -359,12 +364,12 @@
       <trans-unit id="f1d3b424cd68795ecaa552883759aceb">
         <source>Order summary</source>
         <target>Order summary</target>
-        <note>File: themes/hummingbird/templates/checkout/checkout.tpl [Line: 36]</note>
+        <note>File: themes/hummingbird/templates/checkout/checkout.tpl [Line: 37]</note>
       </trans-unit>
       <trans-unit id="5486191906ec27c1c4bb5bd3e46b3442">
         <source>Order with an obligation to pay</source>
         <target>Order with an obligation to pay</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/steps/payment.tpl [Line: 151]</note>
+        <note>File: themes/hummingbird/templates/checkout/_partials/steps/payment.tpl [Line: 170]</note>
       </trans-unit>
       <trans-unit id="ab32dfc3bc270bd622a35d552de886b0">
         <source>Paste your voucher here</source>
@@ -403,7 +408,7 @@
       <trans-unit id="a128f329c5aeea633ced6bb9d7c56c74">
         <source>Place Order</source>
         <target>Place Order</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/steps/payment.tpl [Line: 144]</note>
+        <note>File: themes/hummingbird/templates/checkout/_partials/steps/payment.tpl [Line: 163]</note>
       </trans-unit>
       <trans-unit id="e7965ae5942a09b8778af5a9fd481460">
         <source>Place order</source>
@@ -418,7 +423,17 @@
       <trans-unit id="3a31d70f8c2eb35a29f6c58e9664cd7f">
         <source>Please make sure you've chosen a [1]payment method[/1] and accepted the [2]terms and conditions[/2].</source>
         <target>Please make sure you've chosen a [1]payment method[/1] and accepted the [2]terms and conditions[/2].</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/steps/payment.tpl [Line: 122]</note>
+        <note>File: themes/hummingbird/templates/checkout/_partials/steps/payment.tpl [Line: 123]</note>
+      </trans-unit>
+      <trans-unit id="0ed87ff7fd033d1121932b52dd2910a6">
+        <source>Please make sure you've chosen a [1]payment method[/1] and accepted the required condition(s).</source>
+        <target>Please make sure you've chosen a [1]payment method[/1] and accepted the required condition(s).</target>
+        <note>File: themes/hummingbird/templates/checkout/_partials/steps/payment.tpl [Line: 134]</note>
+      </trans-unit>
+      <trans-unit id="6cca837b5d9d6181309ab24ac1e008a7">
+        <source>Please make sure you've chosen a [1]payment method[/1].</source>
+        <target>Please make sure you've chosen a [1]payment method[/1].</target>
+        <note>File: themes/hummingbird/templates/checkout/_partials/steps/payment.tpl [Line: 143]</note>
       </trans-unit>
       <trans-unit id="3601146c4e948c32b6424d2c0a7f0118">
         <source>Price</source>
@@ -463,12 +478,12 @@
       <trans-unit id="1063e38cb53d94d386f21227fcd84717">
         <source>Remove</source>
         <target>Remove</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/cart-detailed-product-line.tpl [Line: 165]</note>
+        <note>File: themes/hummingbird/templates/checkout/_partials/cart-detailed-product-line.tpl [Line: 191]</note>
       </trans-unit>
       <trans-unit id="d4da09d07e0911986f8a742aeeb6f6d3">
         <source>Remove %productName% from cart</source>
         <target>Remove %productName% from cart</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/cart-detailed-product-line.tpl [Line: 163]</note>
+        <note>File: themes/hummingbird/templates/checkout/_partials/cart-detailed-product-line.tpl [Line: 189]</note>
       </trans-unit>
       <trans-unit id="b1695dd82c52e56e0a98701fb90c2e31">
         <source>Remove Voucher</source>
@@ -492,7 +507,7 @@
       <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
         <source>Shipping</source>
         <target>Shipping</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 210]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 198]</note>
       </trans-unit>
       <trans-unit id="48974cc3df177e6b565c39aa155458cd">
         <source>Shipping Address</source>
@@ -507,12 +522,12 @@
       <trans-unit id="7589dfa9a5a899e9701335164c9ab520">
         <source>Shipping and handling</source>
         <target>Shipping and handling</target>
-        <note>File: src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php [Line: 133]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php [Line: 113]</note>
       </trans-unit>
       <trans-unit id="552a0d8c17d95d5dbdc0c28217024f5a">
         <source>Shipping cost</source>
         <target>Shipping cost</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-shipments.tpl [Line: 29]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-carrier.tpl [Line: 29]</note>
       </trans-unit>
       <trans-unit id="83d893ae1e34a74ab9a068e1d190c764">
         <source>Shipping method</source>
@@ -547,7 +562,7 @@
       <trans-unit id="2194aaec8cc7086ab0e93f74547e5f53">
         <source>Subtotal</source>
         <target>Subtotal</target>
-        <note>File: src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php [Line: 82]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php [Line: 62]</note>
       </trans-unit>
       <trans-unit id="856ab109229e8acfcddd5c6766a8d956">
         <source>Subtotal:</source>
@@ -557,22 +572,22 @@
       <trans-unit id="4b78ac8eb158840e9638a3aeb26c4a9d">
         <source>Tax</source>
         <target>Tax</target>
-        <note>File: src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php [Line: 170]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php [Line: 150]</note>
       </trans-unit>
       <trans-unit id="befcac0f9644a7abee43e69f49252ac4">
         <source>Tax excluded</source>
         <target>Tax excluded</target>
-        <note>File: controllers/front/DiscountController.php [Line: 132]</note>
+        <note>File: controllers/front/DiscountController.php [Line: 112]</note>
       </trans-unit>
       <trans-unit id="f4a0d7cb0cd45214c8ca5912c970de13">
         <source>Tax included</source>
         <target>Tax included</target>
-        <note>File: controllers/front/DiscountController.php [Line: 130]</note>
+        <note>File: controllers/front/DiscountController.php [Line: 110]</note>
       </trans-unit>
       <trans-unit id="719fec04166d6fa75f89cd29ad61fa8c">
         <source>Taxes</source>
         <target>Taxes</target>
-        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 223]</note>
+        <note>File: src/Adapter/Presenter/Cart/CartLazyArray.php [Line: 211]</note>
       </trans-unit>
       <trans-unit id="829f96defc7c51f96edf84b190ab864a">
         <source>Terms and conditions</source>
@@ -582,7 +597,7 @@
       <trans-unit id="21cf667b2d56747effd90b0333c6813c">
         <source>The minimum purchase order quantity for the product is %quantity%.</source>
         <target>The minimum purchase order quantity for the product is %quantity%.</target>
-        <note>File: themes/hummingbird/templates/catalog/_partials/product-add-to-cart.tpl [Line: 107]</note>
+        <note>File: themes/hummingbird/templates/catalog/_partials/product-add-to-cart.tpl [Line: 102]</note>
       </trans-unit>
       <trans-unit id="dc024b376ebf01abd90cf4d5e4dca1c7">
         <source>The selected address will be used as your personal address (for invoice).</source>
@@ -612,22 +627,22 @@
       <trans-unit id="96b0141273eabab320119c467cdcaf17">
         <source>Total</source>
         <target>Total</target>
-        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 331]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 311]</note>
       </trans-unit>
       <trans-unit id="8faf99e02e4d0ccb4dd933404f87a4ea">
         <source>Total (tax excl.)</source>
         <target>Total (tax excl.)</target>
-        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 358]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 338]</note>
       </trans-unit>
       <trans-unit id="adc852563bca51fb6b10c7905010406d">
         <source>Total (tax incl.)</source>
         <target>Total (tax incl.)</target>
-        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 348]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 328]</note>
       </trans-unit>
       <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
         <source>Total paid</source>
         <target>Total paid</target>
-        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 338]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 318]</note>
       </trans-unit>
       <trans-unit id="0eede552438475bdfe820c13f24c9399">
         <source>Total price</source>
@@ -642,7 +657,7 @@
       <trans-unit id="5068c162a60b5859f973f701333f45c5">
         <source>Tracking number</source>
         <target>Tracking number</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-shipments.tpl [Line: 32]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-shipments.tpl [Line: 28]</note>
       </trans-unit>
       <trans-unit id="9fb4d9fd68ac3a078e956d034bce0474">
         <source>Transaction amount has been correctly updated</source>
@@ -687,7 +702,7 @@
       <trans-unit id="8c489d0946f66d17d73f26366a4bf620">
         <source>Weight</source>
         <target>Weight</target>
-        <note>File: themes/hummingbird/templates/customer/_partials/order-shipments.tpl [Line: 26]</note>
+        <note>File: themes/hummingbird/templates/customer/_partials/order-shipments.tpl [Line: 25]</note>
       </trans-unit>
       <trans-unit id="51cb70bea00ccdb79e8458d4a683e369">
         <source>Write a comment about this order</source>
@@ -727,12 +742,12 @@
       <trans-unit id="887ee91702c962a70b87cbef07bbcaec">
         <source>tax excl.</source>
         <target>tax excl.</target>
-        <note>File: classes/checkout/CheckoutDeliveryStep.php [Line: 107]</note>
+        <note>File: classes/checkout/CheckoutDeliveryStep.php [Line: 87]</note>
       </trans-unit>
       <trans-unit id="e2e79605fc9450ec17957cf0e910f5c6">
         <source>tax incl.</source>
         <target>tax incl.</target>
-        <note>File: classes/checkout/CheckoutDeliveryStep.php [Line: 105]</note>
+        <note>File: classes/checkout/CheckoutDeliveryStep.php [Line: 85]</note>
       </trans-unit>
       <trans-unit id="c4ca4238a0b923820dcc509a6f75849b">
         <source>1</source>

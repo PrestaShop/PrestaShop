@@ -5,7 +5,7 @@
       <trans-unit id="26fabd8660373b86b9288dd72fd40e13">
         <source>An answer to your message is available #ct%thread_id% #tc%thread_token%</source>
         <target>An answer to your message is available #ct%thread_id% #tc%thread_token%</target>
-        <note>File: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php [Line: 155]</note>
+        <note>File: src/Core/Domain/CustomerService/CommandHandler/ReplyToCustomerThreadHandler.php [Line: 135]</note>
       </trans-unit>
       <trans-unit id="732f1aa49f17856ff55a5aa0a88374d9">
         <source>Email verification</source>
@@ -15,22 +15,22 @@
       <trans-unit id="4f55e8d67e33d354a5273eb87c903980">
         <source>Fwd: Customer message</source>
         <target>Fwd: Customer message</target>
-        <note>File: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php [Line: 175]</note>
+        <note>File: src/Core/Domain/CustomerService/CommandHandler/ForwardCustomerThreadHandler.php [Line: 155]</note>
       </trans-unit>
       <trans-unit id="a218495ad30949e8ea1f64a261e37463">
         <source>Import complete</source>
         <target>Import complete</target>
-        <note>File: controllers/admin/AdminImportController.php [Line: 4204]</note>
+        <note>File: controllers/admin/AdminImportController.php [Line: 4184]</note>
       </trans-unit>
       <trans-unit id="caedcb9e2005bf6e522cf4536a1885bd">
         <source>Log: You have a new alert from your shop</source>
         <target>Log: You have a new alert from your shop</target>
-        <note>File: classes/PrestaShopLogger.php [Line: 126]</note>
+        <note>File: classes/PrestaShopLogger.php [Line: 106]</note>
       </trans-unit>
       <trans-unit id="381fc38b470ed543424afbd43f224453">
         <source>Message from a customer</source>
         <target>Message from a customer</target>
-        <note>File: controllers/front/OrderDetailController.php [Line: 118]</note>
+        <note>File: controllers/front/OrderDetailController.php [Line: 98]</note>
       </trans-unit>
       <trans-unit id="9e03c4150db1c72add84ba520ee589aa">
         <source>Message from contact form</source>
@@ -40,12 +40,12 @@
       <trans-unit id="10e7889bf2e6fd95e25936d2c11e92be">
         <source>New credit slip regarding your order</source>
         <target>New credit slip regarding your order</target>
-        <note>File: src/Adapter/Order/Refund/OrderSlipCreator.php [Line: 139]</note>
+        <note>File: src/Adapter/Order/Refund/OrderSlipCreator.php [Line: 119]</note>
       </trans-unit>
       <trans-unit id="abe01af80b6bc9f1fa34feaa068336b2">
         <source>New message regarding your order</source>
         <target>New message regarding your order</target>
-        <note>File: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php [Line: 250]</note>
+        <note>File: src/Core/Domain/CustomerService/CommandHandler/AddOrderCustomerMessageHandler.php [Line: 230]</note>
       </trans-unit>
       <trans-unit id="da252605cef71a041c0dadaeeb2aa0f4">
         <source>New order : #%d - %s</source>
@@ -60,12 +60,12 @@
       <trans-unit id="b360ddde7a5a70304c005e45e141cf9d">
         <source>New voucher for your order #%s</source>
         <target>New voucher for your order #%s</target>
-        <note>File: src/Adapter/Order/Refund/VoucherGenerator.php [Line: 151]</note>
+        <note>File: src/Adapter/Order/Refund/VoucherGenerator.php [Line: 131]</note>
       </trans-unit>
       <trans-unit id="fca7e8d1c86db11246e429e40aa10c81">
         <source>New voucher for your order %s</source>
         <target>New voucher for your order %s</target>
-        <note>File: classes/PaymentModule.php [Line: 1298]</note>
+        <note>File: classes/PaymentModule.php [Line: 1285]</note>
       </trans-unit>
       <trans-unit id="efabbb0eb84d3c8e487a72e879953673">
         <source>Newsletter confirmation</source>
@@ -80,22 +80,22 @@
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
         <target>Order confirmation</target>
-        <note>File: classes/PaymentModule.php [Line: 764]</note>
+        <note>File: classes/PaymentModule.php [Line: 744]</note>
       </trans-unit>
       <trans-unit id="87405e011a2c4166bb685336827fbe81">
         <source>Package in transit</source>
         <target>Package in transit</target>
-        <note>File: classes/order/OrderCarrier.php [Line: 155]</note>
+        <note>File: classes/order/OrderCarrier.php [Line: 135]</note>
       </trans-unit>
       <trans-unit id="61afad00abe3639b3ead655a1e8696d9">
         <source>Password query confirmation</source>
         <target>Password query confirmation</target>
-        <note>File: controllers/front/PasswordController.php [Line: 107]</note>
+        <note>File: controllers/front/PasswordController.php [Line: 87]</note>
       </trans-unit>
       <trans-unit id="cad374f43e79ca774b2e8e00dcd8b842">
         <source>Process the payment of your order</source>
         <target>Process the payment of your order</target>
-        <note>File: src/Adapter/Order/CommandHandler/SendProcessOrderEmailHandler.php [Line: 157]</note>
+        <note>File: src/Adapter/Order/CommandHandler/SendProcessOrderEmailHandler.php [Line: 137]</note>
       </trans-unit>
       <trans-unit id="923524e0ff0364df2987d3b8269f03d1">
         <source>Product available</source>
@@ -115,17 +115,17 @@
       <trans-unit id="3cf100d3725155b75779945680651f3d">
         <source>The virtual product that you bought is available for download</source>
         <target>The virtual product that you bought is available for download</target>
-        <note>File: classes/order/OrderHistory.php [Line: 181]</note>
+        <note>File: classes/order/OrderHistory.php [Line: 161]</note>
       </trans-unit>
       <trans-unit id="9a843f20677a52ca79af903123147af0">
         <source>Welcome!</source>
         <target>Welcome!</target>
-        <note>File: classes/Customer.php [Line: 1314]</note>
+        <note>File: classes/Customer.php [Line: 1297]</note>
       </trans-unit>
       <trans-unit id="32e8a8d9ed872f16d6dae0dc5fd4bb71">
         <source>Your guest account has been transformed into a customer account</source>
         <target>Your guest account has been transformed into a customer account</target>
-        <note>File: classes/Customer.php [Line: 1330]</note>
+        <note>File: classes/Customer.php [Line: 1313]</note>
       </trans-unit>
       <trans-unit id="d40cb87db94e750405e7b20a8a043d81">
         <source>Your message has been correctly sent</source>
@@ -140,7 +140,7 @@
       <trans-unit id="c5f4622e4a63b41e7c0ddc100583ee6b">
         <source>Your new password</source>
         <target>Your new password</target>
-        <note>File: src/PrestaShopBundle/Security/Admin/EmployeePasswordResetter.php [Line: 165]</note>
+        <note>File: src/PrestaShopBundle/Security/Admin/EmployeePasswordResetter.php [Line: 145]</note>
       </trans-unit>
       <trans-unit id="9fcf30e719f10629a4a7f951cfbbf2d0">
         <source>Your order has been changed</source>
@@ -150,7 +150,7 @@
       <trans-unit id="f2328a3f139e31d53016f94ea9477124">
         <source>Your order return status has changed</source>
         <target>Your order return status has changed</target>
-        <note>File: controllers/admin/AdminReturnController.php [Line: 275]</note>
+        <note>File: controllers/admin/AdminReturnController.php [Line: 255]</note>
       </trans-unit>
     </body>
   </file>

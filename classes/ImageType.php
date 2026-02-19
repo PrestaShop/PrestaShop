@@ -187,7 +187,12 @@ class ImageTypeCore extends ObjectModel
             return $themeName . '_' . $nameWithoutThemeName;
         }
 
-        return $nameWithoutThemeName . '_default';
+        // only if "default" isn't already in name, we return it with default
+        if (!strstr($name, 'default')) {
+            return $nameWithoutThemeName . '_default';
+        }
+
+        return $nameWithoutThemeName;
     }
 
     /**

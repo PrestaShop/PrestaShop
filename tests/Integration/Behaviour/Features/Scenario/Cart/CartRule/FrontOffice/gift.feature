@@ -14,12 +14,13 @@ Feature: Cart calculation with cart rules giving gift
     # cart rules must be reset after each scenario, because new product is created everytime, but old cart rule remains (with previous id of gift product)
     # will need to be improved later when cleaning up product steps
     And there is a cart rule "cartrule13" with following properties:
-      | name[en-US]         | cartrule13 |
-      | priority            | 13         |
-      | free_shipping       | false      |
-      | code                | foo13      |
-      | discount_percentage | 10         |
-      | gift_product        | product4   |
+      | name[en-US]                  | cartrule13 |
+      | priority                     | 13         |
+      | free_shipping                | false      |
+      | code                         | foo13      |
+      | discount_percentage          | 10         |
+      | gift_product                 | product4   |
+      | apply_to_discounted_products | false      |
 
   @restore-cart-rules-after-scenario
   Scenario: 1 product in cart (out of stock), 1 cart rule give it as a gift, offering a gift (out of stock) and a global 10% discount

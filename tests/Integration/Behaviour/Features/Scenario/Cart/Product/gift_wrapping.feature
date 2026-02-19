@@ -10,7 +10,6 @@ Feature: Cart calculation with only products and gift wrapping
     When I select gift wrapping
     Then I should have 0 different products in my cart
     Then my cart total should be 0.0 tax included
-    Then my cart total using previous calculation method should be 0.0 tax included
 
   Scenario: one product in cart, quantity 1
     Given shop configuration for "PS_GIFT_WRAPPING" is set to 1
@@ -20,7 +19,6 @@ Feature: Cart calculation with only products and gift wrapping
     When I add 1 items of product "product1" in my cart
     When I select gift wrapping
     Then my cart total should be 32.112 tax included
-    Then my cart total using previous calculation method should be 32.112 tax included
 
   Scenario: one product in cart, quantity 3
     Given shop configuration for "PS_GIFT_WRAPPING" is set to 1
@@ -30,7 +28,6 @@ Feature: Cart calculation with only products and gift wrapping
     When I add 3 items of product "product1" in my cart
     When I select gift wrapping
     Then my cart total should be 71.736 tax included
-    Then my cart total using previous calculation method should be 71.736 tax included
 
   Scenario: 3 products in cart, several quantities
     Given shop configuration for "PS_GIFT_WRAPPING" is set to 1
@@ -44,4 +41,3 @@ Feature: Cart calculation with only products and gift wrapping
     When I add 1 items of product "product3" in my cart
     When I select gift wrapping
     Then my cart total should be 167.7 tax included
-    Then my cart total using previous calculation method should be 167.7 tax included

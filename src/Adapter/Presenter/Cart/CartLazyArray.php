@@ -382,6 +382,12 @@ class CartLazyArray extends AbstractLazyArray
         } else {
             $defaultCountry = null;
 
+            /*
+             * @todo
+             * This condition should fill default_country with something, but it will never work, since context->cookie->id_country
+             * is never set anywhere. NULL will be passed in $default_country down the stream and it will usually be resolved
+             * to proper values all the way in getPackageShippingCostValue.
+             */
             if (isset(Context::getContext()->cookie->id_country)) {
                 $defaultCountry = new Country((int) Context::getContext()->cookie->id_country);
             }

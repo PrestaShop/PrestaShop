@@ -13,4 +13,3 @@ Feature: Cart calculation with only products with specific prices
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
     Then my cart total should be 153.4 tax included
-    Then my cart total using previous calculation method should be 153.4 tax included

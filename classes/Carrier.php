@@ -747,9 +747,12 @@ class CarrierCore extends ObjectModel
                  * for current weight/price of the cart and remove the carrier if it is not available for the current cart.
                  */
                 if ($row['range_behavior']) {
-                    // Get id zone
+                    /*
+                     * Resolve default zone to use for shipping if no address is provided yet. Country in the context is
+                     * always assigned. It may be a default country or a geolocated country set it FrontController.
+                     */
                     if (!$id_zone) {
-                        $id_zone = (int) Country::getIdZone((int) Configuration::get('PS_COUNTRY_DEFAULT'));
+                        $id_zone = (int) Context::getContext()->country->id_zone;
                     }
 
                     // Get only carriers that have a range compatible with cart
@@ -1506,12 +1509,6 @@ class CarrierCore extends ObjectModel
      */
     public static function getAvailableCarrierList(Product $product, $id_warehouse = 0, $id_address_delivery = null, $id_shop = null, $cart = null, &$error = [])
     {
-        static $ps_country_default = null;
-
-        if ($ps_country_default === null) {
-            $ps_country_default = Configuration::get('PS_COUNTRY_DEFAULT');
-        }
-
         if (null === $id_shop) {
             $id_shop = Context::getContext()->shop->id;
         }
@@ -1532,8 +1529,7 @@ class CarrierCore extends ObjectModel
                 return [];
             }
         } else {
-            $country = new Country($ps_country_default);
-            $id_zone = $country->id_zone;
+            $id_zone = (int) Context::getContext()->country->id_zone;
         }
 
         // Does the product is linked with carriers?

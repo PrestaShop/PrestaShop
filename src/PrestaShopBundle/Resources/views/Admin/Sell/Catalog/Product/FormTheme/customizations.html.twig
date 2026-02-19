@@ -27,7 +27,7 @@
 {%- block collection_row -%}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name}) -%}
   {%- set attr = attr|merge({class: (attr.class|default('') ~ ' list-unstyled')|trim}) -%}
-  <ul {{ block('widget_attributes') }}>
+  <ul {{ block('widget_attributes') }} data-row-index="{{ form.children|length }}">
     {{- block('form_rows') -}}
   </ul>
 {%- endblock collection_row -%}

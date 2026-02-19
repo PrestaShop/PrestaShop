@@ -14,14 +14,14 @@ Feature: Order from Back Office (BO)
     And shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And I add new currency "eur" with following properties:
-      | iso_code         | EUR        |
-      | exchange_rate    | 0.88       |
-      | name             | My Euros   |
-      | symbols[en-US]   | €          |
-      | patterns[en-US]  | ¤#,##0.00  |
-      | is_enabled       | 1          |
-      | is_unofficial    | 0          |
-      | shop_association | shop1      |
+      | iso_code         | EUR       |
+      | exchange_rate    | 0.88      |
+      | name             | My Euros  |
+      | symbols[en-US]   | €         |
+      | patterns[en-US]  | ¤#,##0.00 |
+      | is_enabled       | 1         |
+      | is_unofficial    | 0         |
+      | shop_association | shop1     |
     And the current currency is "USD"
     And country "US" is enabled
     And language with iso code "en" is the default one
@@ -56,13 +56,12 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     And there is a product in the catalog named "Test Product Cart Rule On Order" with a price of 15.0 and 100 items in stock
     And there is a cart rule "CartRuleAmountOnEveryOrder" with following properties:
-      | name[en-US]               | CartRuleAmountOnEveryOrder |
-      | priority                  | 1                          |
-      | free_shipping             | false                      |
-      | discount_percentage       | 50                         |
-      | discount_application_type | order_without_shipping     |
-      | total_quantity            | 1000                       |
-      | quantity_per_user         | 1000                       |
+      | name[en-US]         | CartRuleAmountOnEveryOrder |
+      | priority            | 1                          |
+      | free_shipping       | false                      |
+      | discount_percentage | 50                         |
+      | total_quantity      | 1000                       |
+      | quantity_per_user   | 1000                       |
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Order |
       | amount | 1                               |

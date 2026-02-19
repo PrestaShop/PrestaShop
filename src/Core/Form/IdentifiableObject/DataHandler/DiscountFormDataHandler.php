@@ -273,7 +273,7 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
                 new DecimalNumber((string) $data['conditions'][DiscountConditionsType::CART_CONDITIONS]['minimum_amount']['value']),
                 $data['conditions'][DiscountConditionsType::CART_CONDITIONS]['minimum_amount']['currency'],
                 $data['conditions'][DiscountConditionsType::CART_CONDITIONS]['minimum_amount']['tax_included'],
-                $data['conditions'][DiscountConditionsType::CART_CONDITIONS]['minimum_amount']['shipping_included'],
+                $data['conditions'][DiscountConditionsType::CART_CONDITIONS]['minimum_amount']['shipping_included'] ?? false,
             );
         } elseif ($data['conditions'][DiscountConditionsType::CART_CONDITIONS]['children_selector'] === CartConditionsType::NONE) {
             $command->setMinimumAmount(null);

@@ -42,8 +42,6 @@ services:
       $productTypeListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
       $isAllShopContext: '@=service("prestashop.adapter.shop.context").isAllShopContext()'
 
-  PrestaShopBundle\Form\Admin\Sell\CartRule\:
-    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/CartRule/*"
   PrestaShopBundle\Form\Admin\Sell\Discount\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/Discount/*"
   PrestaShopBundle\Form\Admin\Sell\Product\:

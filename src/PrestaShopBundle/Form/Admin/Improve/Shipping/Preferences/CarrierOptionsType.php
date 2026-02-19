@@ -67,7 +67,7 @@ class CarrierOptionsType extends TranslatorAwareType
                     'Admin.Shipping.Feature'
                 ),
                 'help' => $this->trans(
-                    'Your shop\'s default carrier.',
+                    'Default carrier that will be pre-selected for customers in the checkout process.',
                     'Admin.Shipping.Help'
                 ),
                 'multistore_configuration_key' => 'PS_CARRIER_DEFAULT',
@@ -81,7 +81,7 @@ class CarrierOptionsType extends TranslatorAwareType
                     'Admin.Actions'
                 ),
                 'help' => $this->trans(
-                    'This will only be visible in the front office.',
+                    'Determines how carriers are sorted in the checkout.',
                     'Admin.Shipping.Help'
                 ),
                 'multistore_configuration_key' => 'PS_CARRIER_DEFAULT_SORT',
@@ -94,7 +94,7 @@ class CarrierOptionsType extends TranslatorAwareType
                     'Admin.Actions'
                 ),
                 'help' => $this->trans(
-                    'This will only be visible in the front office.',
+                    'Sets the sorting direction of carriers in the checkout.',
                     'Admin.Shipping.Help'
                 ),
                 'multistore_configuration_key' => 'PS_CARRIER_DEFAULT_ORDER',

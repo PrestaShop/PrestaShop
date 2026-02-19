@@ -32,7 +32,11 @@ class DiscountConditionsType extends TranslatorAwareType
                 ],
                 'discount_type' => $discountType,
             ])
-            ->add(self::CART_CONDITIONS, CartConditionsType::class, [
+        ;
+
+        // Product level has no cart conditions
+        if ($discountType !== DiscountType::PRODUCT_LEVEL) {
+            $builder->add(self::CART_CONDITIONS, CartConditionsType::class, [
                 'label' => $this->trans('Cart conditions', 'Admin.Catalog.Feature'),
                 'label_subtitle' => $this->trans('Set a minimum purchase amount or product quantity for the discount to become active.', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
@@ -40,8 +44,8 @@ class DiscountConditionsType extends TranslatorAwareType
                 'choice_options' => [
                     'label' => false,
                 ],
-            ])
-        ;
+            ]);
+        }
 
         if (in_array($discountType, [DiscountType::FREE_SHIPPING, DiscountType::ORDER_LEVEL, DiscountType::FREE_GIFT])) {
             $builder->add(self::DELIVERY_CONDITIONS, DeliveryConditionsType::class, [

@@ -72,13 +72,13 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function fillWith(array $params = [])
     {
-        // This form is tricky: fields may change depending on which country is being selected!
-        // Country preselection priority order :
-        // 1) Update the format if a new id_country was set.
-        // 2) Detect country from address if set
-        // 3) Detect country from browser language settings and matches BO enabled countries
-        // 4) Default country set in BO
-
+        /*
+         * This form is tricky - fields may change depending on which country is being selected.
+         * Country preselection priority order:
+         * 1) Update the format if a new id_country was set.
+         * 2) Detect country from address if set
+         * 3) Use context country - either a default one or the one geolocated.
+         */
         if (isset($params['id_country'])) {
             $country = (int) $params['id_country'] !== (int) $this->formatter->getCountry()->id
                 ? new Country($params['id_country'], $this->language->id)
@@ -86,13 +86,8 @@ class CustomerAddressFormCore extends AbstractForm
             ;
         } elseif ($this->address) {
             $country = $this->formatter->getCountry();
-        } elseif (
-            Tools::isCountryFromBrowserAvailable()
-            && Country::getByIso($countryIsoCode = Tools::getCountryIsoCodeFromHeader(), true)
-        ) {
-            $country = new Country((int) Country::getByIso($countryIsoCode, true), Language::getIdByIso($countryIsoCode));
         } else {
-            $country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'), $this->language->id);
+            $country = Context::getContext()->country;
         }
 
         $this->formatter->setCountry($country);

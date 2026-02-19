@@ -64,8 +64,10 @@ class MinimumAmountType extends TranslatorAwareType implements EventSubscriberIn
                 ],
             ])
             ->add('tax_included', TaxInclusionChoiceType::class)
-            ->add('shipping_included', ShippingInclusionChoiceType::class)
         ;
+        // No no jose, this field is not in the design so we drop it
+        // $builder->add('shipping_included', ShippingInclusionChoiceType::class);
+
         $builder->addEventSubscriber($this);
     }
 

@@ -11,16 +11,10 @@ use Context;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use RuntimeException;
-use Tests\Integration\Utility\CartOld;
 
 class CartFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
-
-    /**
-     * @var CartOld
-     */
-    protected $cart;
 
     /**
      * @Then there is no delivery options available for my cart
@@ -61,7 +55,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function iHaveAnEmptyDefaultCart()
     {
-        $cart = new CartOld();
+        $cart = new Cart();
         $cart->id_lang = (int) Context::getContext()->language->id;
         $cart->id_currency = (int) Context::getContext()->currency->id;
         $cart->id_shop = (int) Context::getContext()->shop->id;
@@ -114,15 +108,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function totalCartWithTaxShouldBe($precisely, $expectedTotal)
     {
-        $this->expectsTotal($expectedTotal, 'v2', true, !empty($precisely));
-    }
-
-    /**
-     * @Then /^my cart total using previous calculation method should be (precisely )?(\d+\.\d+) tax included$/
-     */
-    public function totalCartWithTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
-    {
-        $this->expectsTotal($expectedTotal, 'v1', true, !empty($precisely));
+        $this->expectsTotal($expectedTotal, true, !empty($precisely));
     }
 
     /**
@@ -130,29 +116,14 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function totalCartWithoutTaxShouldBe($precisely, $expectedTotal)
     {
-        $this->expectsTotal($expectedTotal, 'v2', false, !empty($precisely));
+        $this->expectsTotal($expectedTotal, false, !empty($precisely));
     }
 
-    /**
-     * @Then /^my cart total using previous calculation method should be (precisely )?(\d+\.\d+) tax excluded$/
-     */
-    public function totalCartWithoutTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
+    protected function expectsTotal($expectedTotal, $withTax = true, $precisely = false)
     {
-        $this->expectsTotal($expectedTotal, 'v1', false, !empty($precisely));
-    }
-
-    protected function expectsTotal($expectedTotal, $method, $withTax = true, $precisely = false)
-    {
-        if ($method == 'v1') {
-            /** @var CartOld $cart */
-            $cart = $this->getCurrentCart();
-            $carrierId = (int) $cart->id_carrier <= 0 ? null : $cart->id_carrier;
-            $total = $cart->getOrderTotalV1($withTax, Cart::BOTH, null, $carrierId);
-        } else {
-            $cart = $this->getCurrentCart();
-            $carrierId = (int) $cart->id_carrier <= 0 ? null : $cart->id_carrier;
-            $total = $cart->getOrderTotal($withTax, Cart::BOTH, null, $carrierId);
-        }
+        $cart = $this->getCurrentCart();
+        $carrierId = (int) $cart->id_carrier <= 0 ? null : $cart->id_carrier;
+        $total = $cart->getOrderTotal($withTax, Cart::BOTH, null, $carrierId);
         if (!$precisely) {
             // here we round values to avoid round issues : rounding modes are tested by specific tests
             $expectedTotal = round($expectedTotal, 1);

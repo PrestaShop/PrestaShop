@@ -41,14 +41,17 @@ export default class CustomizationsManager {
   }
 
   private addCustomizationField(): void {
-    const index = this.getIndex();
-    const newItem = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), this.getIndex());
+    // The container keeps track of the next index to use, we increment it right away
+    const rowIndex = this.$customizationFieldsList.data('rowIndex');
+    this.$customizationFieldsList.data('rowIndex', rowIndex + 1);
+
+    const newItem = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), rowIndex);
 
     this.$customizationFieldsList.append(newItem);
     window.prestaShopUiKit.initToolTips();
     const {translatableInput} = window.prestashop.instance;
     translatableInput.refreshFormInputs(this.$customizationsContainer.closest('form'));
-    this.eventEmitter.emit(ProductEventMap.customizations.rowAdded, {index});
+    this.eventEmitter.emit(ProductEventMap.customizations.rowAdded, {index: rowIndex});
   }
 
   private removeCustomizationField(event: JQuery.ClickEvent): void {
@@ -71,9 +74,5 @@ export default class CustomizationsManager {
       },
     );
     modal.show();
-  }
-
-  private getIndex(): string {
-    return this.$customizationFieldsList.find(ProductMap.customizations.customizationFieldRow).length.toString();
   }
 }

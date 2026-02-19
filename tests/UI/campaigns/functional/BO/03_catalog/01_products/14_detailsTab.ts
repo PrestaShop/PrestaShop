@@ -487,10 +487,53 @@ describe('BO - Catalog - Products : Details tab', async () => {
       expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
     });
 
-    it('should delete the 4 customizations', async function () {
+    it('should remove 1 customization and add two new customizations', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'removeAndAddCustomizations', baseContext);
+
+      // Remove the first one (same bug scenario as features: delete then add causes index collision)
+      await boProductsCreateTabDetailsPage.deleteCustomizationNth(page, 1);
+      // Add 2 new customizations
+      await boProductsCreateTabDetailsPage.addNewCustomization(page, {label: 'NewField1', type: 'Text', required: false});
+      await boProductsCreateTabDetailsPage.addNewCustomization(page, {label: 'NewField2', type: 'Text', required: false});
+
+      const message = await boProductsCreatePage.saveProduct(page);
+      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
+    });
+
+    it('should preview updated product with customizations', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'previewUpdatedProductCustomizations', baseContext);
+
+      // Click on preview button
+      page = await boProductsCreatePage.previewProduct(page);
+
+      await foHummingbirdProductPage.changeLanguage(page, 'en');
+
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
+      expect(pageTitle).to.contains(newProductData.name);
+    });
+
+    it('should check the updated product customizations', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedProductCustomizations', baseContext);
+
+      const isCustomizationVisible = await foHummingbirdProductPage.isCustomizationBlockVisible(page);
+      expect(isCustomizationVisible).to.eq(true);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO6', baseContext);
+
+      // Go back to BO
+      page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await boProductsCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
+    });
+
+    it('should delete the 5 customizations', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomizations', baseContext);
 
-      await boProductsCreateTabDetailsPage.deleteCustomizations(page, editProductData);
+      // 5 customizations to delete: 3 remaining original + 2 newly added
+      await boProductsCreateTabDetailsPage.deleteCustomizations(page);
 
       const message = await boProductsCreatePage.saveProduct(page);
       expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);

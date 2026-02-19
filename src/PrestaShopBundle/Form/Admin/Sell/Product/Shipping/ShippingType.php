@@ -81,7 +81,7 @@ class ShippingType extends TranslatorAwareType
                 'label' => $this->trans('Shipping fees', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'label_subtitle' => $this->trans('Additional shipping costs', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('If a carrier has a tax, it will be added to the shipping fees. Does not apply to free shipping.', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('Optional additional fee added to the shipping cost for each purchased item. Applies only if shipping is not free.', 'Admin.Catalog.Help'),
                 'currency' => $this->currencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
