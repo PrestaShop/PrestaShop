@@ -84,7 +84,7 @@ class ContainerBuilder
     {
         if (!in_array($containerName, [FrontKernel::APP_ID, 'webservice'])) {
             throw new ServiceContainerException(
-                'You should use `SymfonyContainer::getInstance()` instead of `ContainerBuilder::getContainer(\''.$containerName.'\')`'
+                'You should use `SymfonyContainer::getInstance()` instead of `ContainerBuilder::getContainer(\'' . $containerName . '\')`'
             );
         }
 
