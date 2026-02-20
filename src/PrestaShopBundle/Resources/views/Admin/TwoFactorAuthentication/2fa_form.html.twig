@@ -12,7 +12,15 @@
   </div>
 
   {% if authenticationError %}
-    <p>{{ authenticationError|trans(authenticationErrorData, 'SchebTwoFactorBundle') }}</p>
+    <div class="alert alert-danger" role="alert">
+      <div class="alert-text">
+        {% if authenticationError == 'code_invalid' %}
+          <p>{{ 'The verification code is not valid.'|trans({}, 'Admin.Login.Notification') }}</p>
+        {% else %}
+          <p>{{ authenticationError|trans(authenticationErrorData, 'Admin.Login.Notification') }}</p>
+        {% endif %}
+      </div>
+    </div>
   {% endif %}
 
   {% if availableTwoFactorProviders|length > 1 %}

@@ -87,4 +87,39 @@ class EmployeeRepository extends EntityRepository
             'secret' => $row['twoFactorTotpSecretEncrypted'] ?? null,
         ];
     }
+
+    /**
+     * Reset all 2FA data for all employees.
+     * Used when 2FA is globally disabled.
+     *
+     * @return int Number of employees affected
+     */
+    public function resetAllTwoFactorData(): int
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        return $qb->update($this->getEntityName(), 'e')
+            ->set('e.twoFactorEnabled', ':false')
+            ->set('e.twoFactorTotEnabled', ':false')
+            ->set('e.twoFactorEmailEnabled', ':false')
+            ->set('e.twoFactorTotpSecretEncrypted', ':null')
+            ->set('e.twoFactorEmailAuthCode', ':null')
+            ->setParameter('false', false)
+            ->setParameter('null', null)
+            ->getQuery()
+            ->execute();
+    }
+
+    /**
+     * Check if any employee has 2FA enabled.
+     */
+    public function hasAnyEmployeeWith2FAEnabled(): bool
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('COUNT(e.id)')
+            ->where('e.twoFactorEnabled = :true')
+            ->setParameter('true', true);
+
+        return (int) $qb->getQuery()->getSingleScalarResult() > 0;
+    }
 }

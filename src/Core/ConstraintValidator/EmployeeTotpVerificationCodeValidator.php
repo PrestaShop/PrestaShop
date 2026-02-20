@@ -10,7 +10,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\EmployeeTotpVerif
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticator;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -18,7 +18,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 final class EmployeeTotpVerificationCodeValidator extends ConstraintValidator
 {
     public function __construct(
-        private readonly TotpAuthenticator $totpAuthenticator,
+        private readonly ?TotpAuthenticatorInterface $totpAuthenticator,
         private readonly ContextEmployeeProviderInterface $contextEmployeeProvider,
         private readonly EmployeeRepository $employeeRepository,
     ) {
@@ -30,7 +30,7 @@ final class EmployeeTotpVerificationCodeValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, EmployeeTotpVerificationCode::class);
         }
 
-        if ($value === null || $value === '') {
+        if ($value === null || $value === '' || null === $this->totpAuthenticator) {
             return;
         }
 
