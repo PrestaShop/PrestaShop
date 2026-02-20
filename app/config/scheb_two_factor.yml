@@ -17,10 +17,12 @@ scheb_two_factor:
     cookie_name: trusted_device
 
 services:
-  PrestaShopBundle\SchebTwoFactor\DynamicIssuerTotpFactory:
-    decorates: 'scheb_two_factor.security.totp_factory'
+  PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer:
+    autowire: true
+
+  PrestaShopBundle\SchebTwoFactor\DynamicIssuerTotpAuthenticator:
+    decorates: 'scheb_two_factor.security.totp_authenticator'
+    decoration_on_invalid: ignore
     arguments:
-      $server: '%scheb_two_factor.totp.server_name%'
-      $issuer: '%scheb_two_factor.totp.issuer%'
-      $customParameters: '%scheb_two_factor.totp.parameters%'
+      $inner: '@.inner'
       $configuration: '@PrestaShop\PrestaShop\Adapter\Configuration'

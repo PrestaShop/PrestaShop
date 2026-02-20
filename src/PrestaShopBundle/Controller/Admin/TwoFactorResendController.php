@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin;
 
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGenerator;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -20,7 +20,7 @@ class TwoFactorResendController extends PrestaShopAdminController
     public function __construct(
         private readonly Security $security,
         #[Autowire(service: 'scheb_two_factor.security.email.code_generator')]
-        private readonly CodeGenerator $codeGenerator,
+        private readonly ?CodeGeneratorInterface $codeGenerator = null,
     ) {
     }
 
@@ -31,11 +31,11 @@ class TwoFactorResendController extends PrestaShopAdminController
         }
 
         $user = $this->security->getUser();
-        if (!$user instanceof TwoFactorInterface) {
+        if (!$user instanceof TwoFactorInterface || null === $this->codeGenerator) {
             throw $this->createAccessDeniedException($this->trans('Email 2FA is not enabled for this user.', [], 'Admin.TwoFactor.Login'));
         }
 
-        $this->codeGenerator->reSend($user);
+        $this->codeGenerator->generateAndSend($user);
 
         $this->addFlash('success', $this->trans('Code resent. Please check your spam folder as well.', [], 'Admin.TwoFactor.Login'));
 

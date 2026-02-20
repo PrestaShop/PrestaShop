@@ -36,6 +36,7 @@ security:
       two_factor:
         auth_form_path: 2fa_login
         check_path: 2fa_login_check
+        enable_csrf: true
       remember_me:
         secret: "%kernel.secret%"
         lifetime: "%prestashop.admin_cookie_lifetime%"

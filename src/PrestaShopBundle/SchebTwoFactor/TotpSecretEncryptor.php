@@ -13,7 +13,7 @@ final class TotpSecretEncryptor
 {
     public function __construct(
         #[Autowire('%new_cookie_key%')]
-        private string $newCookieKey
+        private ?string $newCookieKey = null
     ) {
     }
 

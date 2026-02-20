@@ -4,6 +4,15 @@ imports:
   - { resource: security.yml }
   - { resource: services.yml }
 
+# Disable 2FA for API
+scheb_two_factor:
+  totp:
+    enabled: false
+  email:
+    enabled: false
+  trusted_device:
+    enabled: false
+
 framework:
   router:
     resource: "%kernel.project_dir%/app/config/admin-api/routing.yml"
