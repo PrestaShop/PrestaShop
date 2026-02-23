@@ -15,10 +15,10 @@ if (!defined('_PS_API_IN_USE_')) {
 
 require_once dirname(__FILE__) . '/../config/config.inc.php';
 
-define('_PS_APP_ID_', FrontKernel::APP_ID);
+define('_PS_APP_ID_', AdminAPIKernel::APP_ID);
 
 // Load .env file from the root of project if present
-(new Dotenv(false))->loadEnv(dirname(__FILE__, 2) . '/.env');
+(new Dotenv())->loadEnv(dirname(__FILE__, 2) . '/.env');
 
 // Cart is needed for some requests
 Context::getContext()->cart = new Cart();
