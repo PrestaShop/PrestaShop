@@ -91,6 +91,9 @@ describe('BO - Statistics', async () => {
       expect(subTabTitle).to.equals(test.title);
 
       const jsErrors = utilsPlaywright.getJsErrors();
+      if (jsErrors.length > 0) {
+        console.log(jsErrors);
+      }
       expect(jsErrors.length).to.equals(0);
     });
   });
