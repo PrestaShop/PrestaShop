@@ -85,6 +85,8 @@ if (!defined('_PS_ENV_FILE_PATH_')) {
             ? $_SERVER['APP_RUNTIME_OPTIONS']['dotenv_path']
             : _PS_ROOT_DIR_.'/.env',
     );
+} else {
+    $_SERVER['APP_RUNTIME_OPTIONS']['dotenv_path'] = _PS_ENV_FILE_PATH_;
 }
 
 // Find if we are running under a Symfony command
