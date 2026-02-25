@@ -306,3 +306,8 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EditProductFormDataProvider:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\BusinessEntityFormDataProvider:
+    arguments:
+      - '@=service("prestashop.adapter.legacy.configuration").get("PS_COUNTRY_DEFAULT")'
+    public: false

@@ -91,7 +91,7 @@ class BusinessEntity
     private DateTime $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\B2B\BusinessEntityAddress", mappedBy="businessEntity")
+     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\B2B\BusinessEntityAddress", mappedBy="businessEntity", cascade={"persist"})
      */
     private Collection $businessEntityAddresses;
 

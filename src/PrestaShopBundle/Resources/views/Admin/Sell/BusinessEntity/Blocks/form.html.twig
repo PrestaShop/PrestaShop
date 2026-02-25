@@ -1,0 +1,101 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% form_theme businessEntityForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% macro customAddressPrototype(prototype, prototype_name) %}
+  {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
+    index: prototype_name,
+    address: prototype
+  }) }}
+{% endmacro %}
+
+{% block business_entity_form %}
+  {{ form_start(businessEntityForm) }}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">domain</i>
+      {{ 'General information'|trans({}, 'Admin.Global') }}
+    </h3>
+    <div class="card-body">
+      <div class="form-wrapper">
+        {{ form_widget(businessEntityForm.general_information) }}
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-header d-flex justify-content-between">
+      <span>
+        <i class="material-icons">place</i>
+        {{ 'Billing address'|trans({}, 'Admin.Global') }}
+      </span>
+
+      <button type="button" id="add_business_entity_billing_address" class="btn btn-outline-secondary"
+              data-collection-holder-class="billing_addresses"><i
+          class="material-icons">add</i>{{ 'Add address'|trans({}, 'Admin.Global') }}
+      </button>
+    </h3>
+    <div class="card-body">
+      <div class="form-wrapper">
+        <ul class="billing_addresses list-unstyled"
+            {% set billingAddressIndex = businessEntityForm.billing_address|length > 0 ? businessEntityForm.billing_address|last.vars.name + 1 : 1 %}
+            data-index="{{ billingAddressIndex }}"
+            data-prototype="{{ _self.customAddressPrototype(businessEntityForm.billing_address.vars.prototype, businessEntityForm.billing_address.vars.prototype.vars.name)|e('html_attr') }}"
+        >
+          {% for address in businessEntityForm.billing_address %}
+            <li>
+              {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
+                index: loop.index,
+                address: address
+              }) }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="card-header d-flex justify-content-between">
+      <span>
+        <i class="material-icons">place</i>
+        {{ 'Shipping address'|trans({}, 'Admin.Global') }}
+      </span>
+
+      <button type="button" id="add_business_entity_shipping_address" class="btn btn-outline-secondary"
+              data-collection-holder-class="shipping_addresses"><i
+          class="material-icons">add</i>{{ 'Add address'|trans({}, 'Admin.Global') }}
+      </button>
+    </h3>
+    <div class="card-body">
+      <div class="form-wrapper">
+        <ul class="shipping_addresses list-unstyled"
+            {% set shippingAddressIndex = businessEntityForm.shipping_address|length > 0 ? businessEntityForm.shipping_address|last.vars.name + 1 : 1 %}
+            data-index="{{ shippingAddressIndex }}"
+            data-prototype="{{ _self.customAddressPrototype(businessEntityForm.shipping_address.vars.prototype, businessEntityForm.shipping_address.vars.prototype.vars.name)|e('html_attr') }}"
+        >
+          {% for address in businessEntityForm.shipping_address %}
+            <li>
+              {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
+                index: loop.index,
+                address: address
+              }) }}
+            </li>
+          {% endfor %}
+        </ul>
+        {{ form_row(businessEntityForm.billingAddressAsShippingAddress) }}
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-end">
+    <a href="{{ path('admin_business_entities_list') }}" class="btn btn-outline-secondary mr-3">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</a>
+    <button class="btn btn-primary">{{ 'Create business entity'|trans({}, 'Admin.Actions') }}</button>
+  </div>
+  {{ form_widget(businessEntityForm._token) }}
+  {{ form_widget(businessEntityForm.default_billing_address) }}
+  {{ form_widget(businessEntityForm.default_shipping_address) }}
+  {{ form_end(businessEntityForm, {render_rest: false}) }}
+{% endblock %}
