@@ -85,8 +85,11 @@ if (!defined('_PS_ENV_FILE_PATH_')) {
             ? $_SERVER['APP_RUNTIME_OPTIONS']['dotenv_path']
             : _PS_ROOT_DIR_.'/.env',
     );
-} else {
-    $_SERVER['APP_RUNTIME_OPTIONS']['dotenv_path'] = _PS_ENV_FILE_PATH_;
+}
+
+if (_PS_ENV_FILE_PATH_ !== _PS_ROOT_DIR_.'/.env') {
+    // SYMFONY_DOTENV_PATH only introduced in Sf 7.1 but needed for console debug:dotenv
+    $_SERVER['SYMFONY_DOTENV_PATH'] = $_SERVER['APP_RUNTIME_OPTIONS']['dotenv_path'] = _PS_ENV_FILE_PATH_;
 }
 
 // Find if we are running under a Symfony command
