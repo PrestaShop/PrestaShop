@@ -18,11 +18,10 @@ set_time_limit(0);
 require_once __DIR__ . '/../autoload.php';
 
 // Loads .env file from the root of project
-$dotEnvFile = dirname(__FILE__, 2) . '/.env';
 (new Dotenv())
   // DO NOT use putEnv
   ->usePutenv(false)
-  ->loadEnv($dotEnvFile)
+  ->loadEnv(_PS_ENV_FILE_PATH_)
 ;
 
 try {

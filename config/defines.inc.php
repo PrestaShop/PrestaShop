@@ -77,6 +77,16 @@ if (defined('_PS_ADMIN_DIR_')) {
     define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
 }
 
+// Define .env file path
+if (!defined('_PS_ENV_FILE_PATH_')) {
+    define(
+        '_PS_ENV_FILE_PATH_',
+        !empty($_SERVER['APP_RUNTIME_OPTIONS']['dotenv_path'])
+            ? $_SERVER['APP_RUNTIME_OPTIONS']['dotenv_path']
+            : _PS_ROOT_DIR_.'/.env',
+    );
+}
+
 // Find if we are running under a Symfony command
 $cliEnvValue = null;
 if (isset($argv) && is_array($argv)) {
