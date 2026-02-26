@@ -14,7 +14,9 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Discount\DiscountSettings;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\ShopSearchCriteriaInterface;
 
 /**
  * Builds query for discount list
@@ -49,7 +51,7 @@ class DiscountQueryBuilder extends AbstractDoctrineQueryBuilder
             (int) $this->configuration->get('PS_OS_ERROR')
         );
 
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
+        $qb = $this->getQueryBuilder($searchCriteria)
             ->select(
                 'cr.id_cart_rule AS id_discount,
                 crl.name,
@@ -75,7 +77,7 @@ class DiscountQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
+        $qb = $this->getQueryBuilder($searchCriteria)
             ->select('COUNT(DISTINCT cr.`id_cart_rule`)')
         ;
 
@@ -85,12 +87,14 @@ class DiscountQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * Gets query builder with the common sql for discounts listing.
      *
-     * @param array $filters
-     *
-     * @return QueryBuilder
+     * @throws InvalidArgumentException
      */
-    private function getQueryBuilder(array $filters): QueryBuilder
+    private function getQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
+        if (!$searchCriteria instanceof ShopSearchCriteriaInterface) {
+            throw new InvalidArgumentException(sprintf('Invalid search criteria, expected a %s', ShopSearchCriteriaInterface::class));
+        }
+
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'cart_rule', 'cr')
@@ -118,9 +122,58 @@ class DiscountQueryBuilder extends AbstractDoctrineQueryBuilder
             ->setParameter('contextLangId', $this->languageContext->getId())
         ;
 
-        $this->applyFilters($qb, $filters);
+        $this->applyShopConstraint($qb, $searchCriteria);
+        $this->applyFilters($qb, $searchCriteria->getFilters());
 
         return $qb;
+    }
+
+    /**
+     * Filters discounts by shop context.
+     *
+     * Discounts with shop_restriction = 0 are always visible regardless of the current shop.
+     * Discounts with shop_restriction = 1 are only visible if explicitly associated to the
+     * current shop (or a shop in the current group) via the cart_rule_shop table.
+     * In the "all shops" context no filter is applied.
+     */
+    private function applyShopConstraint(QueryBuilder $qb, ShopSearchCriteriaInterface $searchCriteria): void
+    {
+        $shopConstraint = $searchCriteria->getShopConstraint();
+
+        if ($shopConstraint === null || $shopConstraint->isAllShopContext()) {
+            return;
+        }
+
+        if ($shopConstraint->getShopId() !== null) {
+            $qb
+                ->leftJoin(
+                    'cr',
+                    $this->dbPrefix . 'cart_rule_shop',
+                    'crs',
+                    'crs.id_cart_rule = cr.id_cart_rule AND crs.id_shop = :shopId'
+                )
+                ->andWhere('cr.shop_restriction = 0 OR crs.id_cart_rule IS NOT NULL')
+                ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
+            ;
+
+            return;
+        }
+
+        // Shop group context: use EXISTS to avoid duplicate rows when multiple shops
+        // of the group are linked to the same discount.
+        $qb
+            ->andWhere(
+                'cr.shop_restriction = 0 OR EXISTS (
+                    SELECT 1
+                    FROM ' . $this->dbPrefix . 'cart_rule_shop crs_sub
+                    INNER JOIN ' . $this->dbPrefix . 'shop crs_shop
+                        ON crs_shop.id_shop = crs_sub.id_shop
+                        AND crs_shop.id_shop_group = :shopGroupId
+                    WHERE crs_sub.id_cart_rule = cr.id_cart_rule
+                )'
+            )
+            ->setParameter('shopGroupId', $shopConstraint->getShopGroupId()->getValue())
+        ;
     }
 
     /**
