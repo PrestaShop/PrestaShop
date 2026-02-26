@@ -27,7 +27,6 @@ import initDropzone from '@pages/product/image/dropzone';
 import initImagesShopAssociation from '@pages/product/image/images-shop-association';
 import PriceSummary from '@pages/product/edit/price-summary';
 import ProductOptionsManager from '@pages/product/edit/manager/product-options-manager';
-import ProductShippingManager from '@pages/product/edit/manager/product-shipping-manager';
 import ProductDetailsManager from '@pages/product/edit/manager/product-details-manager';
 import SummaryQuantityUpdater from '@pages/product/edit/summary-quantity-updater';
 import initCarrierSelector from '@pages/product/carrier';
@@ -72,7 +71,6 @@ $(() => {
 
   new ProductSEOManager(eventEmitter);
   new ProductOptionsManager(productType, productFormModel);
-  new ProductShippingManager();
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeSwitcher($productForm);
