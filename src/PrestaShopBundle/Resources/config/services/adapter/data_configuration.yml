@@ -60,6 +60,7 @@ services:
       - '@prestashop.adapter.combination_feature'
       - '@prestashop.adapter.feature.feature'
       - '@prestashop.adapter.group.feature'
+      - '@PrestaShop\PrestaShop\Adapter\Discount\Update\DiscountWhenCustomerGroupRemovedUpdater'
 
   prestashop.adapter.ccc.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Cache\CombineCompressCacheConfiguration'

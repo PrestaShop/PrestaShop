@@ -419,7 +419,7 @@ class CustomerCore extends ObjectModel
             }
         }
 
-        CartRule::deleteByIdCustomer((int) $this->id);
+        CartRule::disableAndApplyToAllCustomersByIdCustomer((int) $this->id);
 
         return parent::delete();
     }

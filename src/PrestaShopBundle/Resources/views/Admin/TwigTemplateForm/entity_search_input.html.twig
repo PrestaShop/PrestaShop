@@ -138,10 +138,12 @@
 {% block searched_customer_row %}
   {% set attr = attr|merge({class: (attr.class|default('') ~ ' media entity-item')|trim}) %}
   <li {{ block('widget_container_attributes') }}>
-    <div class="media-body media-middle">
-      {{ form_widget(form.fullname_and_email) }}
+    <div class="media-body media-middle d-flex align-items-center justify-content-between flex-wrap">
+      <span>{{ form_widget(form.fullname_and_email) }}</span>
+      <span class="badge badge-secondary rounded ml-2 js-customer-disabled-badge d-none">{{ 'Disabled'|trans({}, 'Admin.Global') }}</span>
       <i class="material-icons entity-item-delete">clear</i>
     </div>
     {{ form_widget(form.id_customer) }}
+    {{ form_widget(form.active) }}
   </li>
 {% endblock %}

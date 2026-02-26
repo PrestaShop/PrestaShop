@@ -86,7 +86,10 @@ class DiscountType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => false,
-            'form_theme' => '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig',
+            'form_theme' => [
+                '@PrestaShop/Admin/Sell/Catalog/Discount/FormTheme/customer_eligibility_group_feature.html.twig',
+                '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig',
+            ],
             'available_cart_rule_types' => [],
         ]);
         $resolver->setRequired([

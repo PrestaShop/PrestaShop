@@ -6,7 +6,9 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-    {{ include('@PrestaShop/Admin/Sell/Catalog/Discount/form.html.twig', {discountForm: form}) }}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Discount/form.html.twig', {
+      discountForm: form
+    }) }}
 {% endblock %}
 
 {% block javascripts %}

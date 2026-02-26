@@ -208,6 +208,8 @@ class GroupCore extends ObjectModel
             throw new PrestaShopException('You cannot delete a group that is used in the shop configuration.');
         }
 
+        CartRule::updateWhenCustomerGroupRemoved((int) $this->id);
+
         if (parent::delete()) {
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'cart_rule_group` WHERE `id_group` = ' . (int) $this->id);
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customer_group` WHERE `id_group` = ' . (int) $this->id);

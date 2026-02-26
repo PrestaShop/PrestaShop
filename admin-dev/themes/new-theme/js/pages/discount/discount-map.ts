@@ -28,4 +28,6 @@ export default {
   productSegmentFeatures: '#discount_conditions_product_product_segment_features',
   quantityPerCustomerInput: '#discount_usability_quantity_per_customer',
   customerEligibilityInput: '#discount_customer_eligibility_eligibility',
+  groupFeatureDisabledMessage: '.js-group-feature-disabled-message',
+  customerDisabledBadge: '.js-customer-disabled-badge',
 };

@@ -1,0 +1,15 @@
+{% block _discount_customer_eligibility_eligibility_customer_groups_widget %}
+  {% if not configuration('PS_GROUP_FEATURE_ACTIVE') %}
+    {% set performance_href = path('admin_performance') ~ '#optional_features' %}
+    {% set performance_link = 'Performance'|trans({}, 'Admin.Global') %}
+    <div class="alert alert-warning mt-2 js-group-feature-disabled-message" role="alert">
+      <p class="alert-text mb-0">
+        {{ 'This feature has been disabled. You can activate it here: %url%.'|trans({
+          '%url%': '<a href="' ~ performance_href ~ '" class="alert-link">' ~ performance_link ~ '</a>'
+        }, 'Admin.Catalog.Notification')|raw }}
+      </p>
+    </div>
+  {% else %}
+    {{ block('material_choice_table_widget') }}
+  {% endif %}
+{% endblock %}

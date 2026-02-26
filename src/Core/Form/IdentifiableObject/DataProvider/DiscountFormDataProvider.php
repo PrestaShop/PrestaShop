@@ -447,6 +447,7 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     [
                         'id_customer' => $customerId,
                         'fullname_and_email' => $fullnameAndEmail,
+                        'active' => (int) $customer->active,
                     ],
                 ];
             } catch (CustomerNotFoundException $e) {

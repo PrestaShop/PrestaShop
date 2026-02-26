@@ -34,6 +34,9 @@ $(() => {
       '.js-customer-item',
       () => null,
     );
+
+    updateCustomerDisabledBadges(DiscountMap.customerSearchContainer);
+    observeCustomerListForDisabledBadges(DiscountMap.customerSearchContainer);
   }
 
   const reductionTypeSelect = document.querySelector(DiscountMap.reductionTypeSelect);
@@ -66,6 +69,18 @@ $(() => {
     }
     if (radio.value === 'customer_groups' || radio.value === 'all_customers') {
       $(DiscountMap.quantityPerCustomerInput).parents('.form-group').show();
+    }
+    const customerEligibilityToggle = radio.closest(DiscountMap.customerEligibilityInput);
+    if (customerEligibilityToggle) {
+      const card = customerEligibilityToggle.closest('.card');
+      const messageEl = card?.querySelector(DiscountMap.groupFeatureDisabledMessage);
+      if (messageEl) {
+        if (radio.value === 'customer_groups') {
+          messageEl.classList.remove('d-none');
+        } else {
+          messageEl.classList.add('d-none');
+        }
+      }
     }
   });
 
@@ -111,3 +126,33 @@ $(() => {
   initGroupedItemCollection(DiscountMap.productSegmentAttributes, getAllAttributeGroups);
   initGroupedItemCollection(DiscountMap.productSegmentFeatures, getAllFeatureGroups);
 });
+
+function updateCustomerDisabledBadges(container: string): void {
+  $(container).find('.entity-item').each(function () {
+    const $item = $(this);
+    const activeInput = $item.find('input[name*="[active]"]')[0] as HTMLInputElement | undefined;
+    const $badge = $item.find(DiscountMap.customerDisabledBadge);
+
+    if (activeInput && $badge.length) {
+      const value = activeInput.value;
+      if (value === '0') {
+        $badge.removeClass('d-none');
+      } else {
+        $badge.addClass('d-none');
+      }
+    }
+  });
+}
+
+function observeCustomerListForDisabledBadges(container: string): void {
+  const listEl = document.querySelector(`${container} .entities-list`);
+  if (!listEl) {
+    return;
+  }
+
+  const observer = new MutationObserver(() => {
+    setTimeout(() => updateCustomerDisabledBadges(container), 0);
+  });
+
+  observer.observe(listEl, {childList: true, subtree: true});
+}

@@ -3,6 +3,11 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
+{% form_theme discountForm with [
+  '@PrestaShop/Admin/Sell/Catalog/Discount/FormTheme/customer_eligibility_group_feature.html.twig',
+  '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig'
+] %}
+
 {{ form_start(discountForm) }}
   {{ form_errors(discountForm) }}
   {% block discount_form_rest %}

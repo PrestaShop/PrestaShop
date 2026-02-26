@@ -6,10 +6,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\OptionalFeatures;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureFeature;
 use PrestaShop\PrestaShop\Adapter\Feature\GroupFeature;
+use PrestaShop\PrestaShop\Adapter\Discount\Update\DiscountWhenCustomerGroupRemovedUpdater;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
@@ -32,14 +32,21 @@ class OptionalFeaturesConfiguration implements DataConfigurationInterface
      */
     private $groupFeature;
 
+    /**
+     * @var DiscountWhenCustomerGroupRemovedUpdater
+     */
+    private $discountWhenCustomerGroupRemovedUpdater;
+
     public function __construct(
         CombinationFeature $combinationFeature,
         FeatureFeature $featureFeature,
-        GroupFeature $groupFeature
+        GroupFeature $groupFeature,
+        DiscountWhenCustomerGroupRemovedUpdater $discountWhenCustomerGroupRemovedUpdater
     ) {
         $this->combinationFeature = $combinationFeature;
         $this->featureFeature = $featureFeature;
         $this->groupFeature = $groupFeature;
+        $this->discountWhenCustomerGroupRemovedUpdater = $discountWhenCustomerGroupRemovedUpdater;
     }
 
     /**
@@ -62,6 +69,9 @@ class OptionalFeaturesConfiguration implements DataConfigurationInterface
         if ($this->validateConfiguration($configuration)) {
             $this->combinationFeature->update((bool) $configuration['combinations']);
             $this->featureFeature->update((bool) $configuration['features']);
+            if (!$configuration['customer_groups']) {
+                $this->discountWhenCustomerGroupRemovedUpdater->handleCustomerGroupsFeatureDisabled();
+            }
             $this->groupFeature->update((bool) $configuration['customer_groups']);
         }
 

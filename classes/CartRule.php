@@ -640,6 +640,77 @@ class CartRuleCore extends ObjectModel
     }
 
     /**
+     * Disable discounts when a customer is deleted 
+     *
+     * @param int $id_customer Customer ID
+     *
+     * @return bool
+     */
+    public static function disableAndApplyToAllCustomersByIdCustomer($id_customer)
+    {
+        if (empty($id_customer)) {
+            return false;
+        }
+
+        $cart_rules = new PrestaShopCollection('CartRule');
+        $cart_rules->where('id_customer', '=', $id_customer);
+        $result = true;
+        foreach ($cart_rules as $cart_rule) {
+            /** @var CartRule $cart_rule */
+            $cart_rule->id_customer = 0;
+            $cart_rule->active = false;
+            if (!$cart_rule->update()) {
+                $result = false;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Disable or unlink cart rules referencing a group that is about to be deleted.
+     * Must be called before Group::delete() so the join table still exists.
+     *
+     * @param int $id_group Customer group ID
+     *
+     * @return bool
+     */
+    public static function updateWhenCustomerGroupRemoved($id_group)
+    {
+        if (empty($id_group)) {
+            return true;
+        }
+
+        $db = Db::getInstance();
+        $prefix = _DB_PREFIX_;
+        $cartRuleIds = $db->executeS(
+            'SELECT id_cart_rule FROM `' . $prefix . 'cart_rule_group` WHERE id_group = ' . (int) $id_group
+        );
+        if (!$cartRuleIds || !is_array($cartRuleIds)) {
+            return true;
+        }
+
+        foreach ($cartRuleIds as $row) {
+            $id_cart_rule = (int) $row['id_cart_rule'];
+            $count = (int) $db->getValue(
+                'SELECT COUNT(*) FROM `' . $prefix . 'cart_rule_group` WHERE id_cart_rule = ' . $id_cart_rule
+            );
+            if ($count <= 1) {
+                $db->execute(
+                    'UPDATE `' . $prefix . 'cart_rule` SET group_restriction = 0, active = 0 WHERE id_cart_rule = ' . $id_cart_rule
+                );
+                $db->execute('DELETE FROM `' . $prefix . 'cart_rule_group` WHERE id_cart_rule = ' . $id_cart_rule);
+            } else {
+                $db->execute(
+                    'DELETE FROM `' . $prefix . 'cart_rule_group` WHERE id_cart_rule = ' . $id_cart_rule . ' AND id_group = ' . (int) $id_group
+                );
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Delete CartRules by Customer ID.
      *
      * @param int $id_customer Customer ID

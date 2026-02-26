@@ -57,6 +57,11 @@ services:
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
 
+  PrestaShop\PrestaShop\Adapter\Discount\Update\DiscountWhenCustomerGroupRemovedUpdater:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+
   PrestaShop\PrestaShop\Adapter\Discount\Application\DiscountApplicationService:
     public: true
     arguments:
