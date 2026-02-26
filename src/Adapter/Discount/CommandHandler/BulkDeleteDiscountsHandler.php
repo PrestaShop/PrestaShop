@@ -7,7 +7,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Discount\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository;
+use PrestaShop\PrestaShop\Adapter\Discount\Update\DiscountConditionsUpdater;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\BulkDeleteDiscountsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\CommandHandler\BulkDeleteDiscountsHandlerInterface;
@@ -22,6 +24,8 @@ final class BulkDeleteDiscountsHandler extends AbstractBulkCommandHandler implem
 {
     public function __construct(
         private readonly DiscountRepository $discountRepository,
+        private readonly DiscountConditionsUpdater $discountConditionsUpdater,
+        private readonly ShopContext $shopContext,
     ) {
     }
 
@@ -43,7 +47,22 @@ final class BulkDeleteDiscountsHandler extends AbstractBulkCommandHandler implem
      */
     protected function handleSingleAction(mixed $id, mixed $command): void
     {
-        $this->discountRepository->delete($id);
+        if ($this->shopContext->isAllShopContext()) {
+            $this->discountRepository->delete($id);
+
+            return;
+        }
+
+        $existingShopIds = $this->discountRepository->getShopsIds($id);
+        $remainingShopIds = array_diff($existingShopIds, $this->shopContext->getAssociatedShopIds());
+
+        if (empty($existingShopIds) || empty($remainingShopIds)) {
+            $this->discountRepository->delete($id);
+
+            return;
+        }
+
+        $this->discountConditionsUpdater->update($id, shopIds: array_values($remainingShopIds));
     }
 
     /**
