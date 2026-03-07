@@ -389,10 +389,11 @@ class SearchCore
                 while (!($result = $db->executeS($sql . "'" . $sql_param_search . "';", true, false))) {
                     if (!$psFuzzySearch
                         || $fuzzyLoop++ > $fuzzyMaxLoop
-                        || !($sql_param_search = static::findClosestWeightestWord($context, $word))
+                        || !($closestWord = static::findClosestWeightestWord($context, $word))
                     ) {
                         break;
                     }
+                    $sql_param_search = self::getSearchParamFromWord($closestWord);
                 }
 
                 // If nothing was found after X retries, skip this keyword
