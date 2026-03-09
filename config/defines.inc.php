@@ -81,9 +81,10 @@ if (defined('_PS_ADMIN_DIR_')) {
 if (!defined('_PS_ENV_FILE_PATH_')) {
     define(
         '_PS_ENV_FILE_PATH_',
-        !empty($_SERVER['APP_RUNTIME_OPTIONS']['dotenv_path'])
-            ? $_SERVER['APP_RUNTIME_OPTIONS']['dotenv_path']
-            : _PS_ROOT_DIR_.'/.env',
+        getenv('PS_ENV_FILE_PATH', true)
+            ?: getenv('PS_ENV_FILE_PATH')
+            ?: ($_SERVER['APP_RUNTIME_OPTIONS']['dotenv_path'] ?? null)
+            ?: _PS_ROOT_DIR_.'/.env',
     );
 }
 
