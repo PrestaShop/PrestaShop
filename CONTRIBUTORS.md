@@ -473,6 +473,7 @@ GitHub contributors:
 - ZiZuu.com
 - Zollner Robert
 - Sarūnas Jonusas
+- kopolot
 
 SVN contributors:
 --------------------------------
