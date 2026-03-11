@@ -63,6 +63,11 @@
 
     > ol {
       padding-left: 0;
+
+      .breadcrumb-item {
+        display: inline-flex;
+        align-items: center;
+      }
     }
   }
   // toolbar buttons
