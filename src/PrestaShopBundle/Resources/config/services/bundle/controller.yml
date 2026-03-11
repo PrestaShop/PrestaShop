@@ -104,7 +104,6 @@ services:
   PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController:
     arguments:
       $featureFeature: "@prestashop.adapter.feature.feature"
-      $featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
     public: false
     autowire: true
     autoconfigure: true

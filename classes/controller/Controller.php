@@ -794,4 +794,9 @@ abstract class ControllerCore
     {
         return $this->get(static::SERVICE_MULTISTORE_FEATURE)->isUsed();
     }
+
+    public function getControllerName(): string
+    {
+        return get_class($this);
+    }
 }

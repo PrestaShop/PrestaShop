@@ -71,6 +71,7 @@ final class CustomerFormDataProvider implements FormDataProviderInterface
             'email' => $editableCustomer->getEmail()->getValue(),
             'birthday' => $birthday->isEmpty() ? null : $birthday->getValue(),
             'is_enabled' => $editableCustomer->isEnabled(),
+            'is_newsletter_subscribed' => $editableCustomer->isNewsletterSubscribed(),
             'is_partner_offers_subscribed' => $editableCustomer->isPartnerOffersSubscribed(),
             'group_ids' => $editableCustomer->getGroupIds(),
             'default_group_id' => $editableCustomer->getDefaultGroupId(),

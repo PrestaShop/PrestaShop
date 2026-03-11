@@ -115,6 +115,7 @@ class CustomerFormDataProviderTest extends TestCase
             'group_ids' => [1, 2, 3],
             'default_group_id' => 3,
             'is_guest' => false,
+            'is_newsletter_subscribed' => true,
         ], $customerFormDataProvider->getData(1));
     }
 
@@ -145,6 +146,7 @@ class CustomerFormDataProviderTest extends TestCase
             'max_payment_days' => 10,
             'risk_id' => 1,
             'is_guest' => false,
+            'is_newsletter_subscribed' => true,
         ], $customerFormDataProvider->getData(1));
     }
 

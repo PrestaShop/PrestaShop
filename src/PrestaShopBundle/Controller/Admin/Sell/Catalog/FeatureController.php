@@ -10,6 +10,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureFeature;
+use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
@@ -26,7 +27,6 @@ use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
-use PrestaShopBundle\Entity\Repository\FeatureAttributeRepository;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -41,8 +41,7 @@ class FeatureController extends PrestaShopAdminController
     use BulkActionsTrait;
 
     public function __construct(
-        private readonly FeatureFeature $featureFeature,
-        private readonly FeatureAttributeRepository $featureAttributeRepository
+        private readonly FeatureFeature $featureFeature
     ) {
     }
 
@@ -275,9 +274,9 @@ class FeatureController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function getAllFeatureGroupsAction(?int $shopId): JsonResponse
+    public function getAllFeatureGroupsAction(FeatureRepository $featureRepository): JsonResponse
     {
-        $features = $this->featureAttributeRepository->getFeatures();
+        $features = $featureRepository->getFeaturesWithValues($this->getLanguageContext()->getId(), $this->getShopContext()->getAssociatedShopIds());
 
         return $this->json($this->formatFeatureGroupsForPresentation($features));
     }

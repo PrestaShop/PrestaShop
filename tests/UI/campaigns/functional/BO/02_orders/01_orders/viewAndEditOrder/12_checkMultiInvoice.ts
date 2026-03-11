@@ -232,7 +232,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     it('should get the second invoice file name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getSecondInvoiceNumber', baseContext);
 
-      secondFileName = await boOrdersViewBlockTabListPage.getFileName(page, 3);
+      secondFileName = await boOrdersViewBlockTabListPage.getFileName(page, 2);
       expect(filePath).is.not.equal('');
     });
   });

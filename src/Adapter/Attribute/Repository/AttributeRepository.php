@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Attribute\Repository;
 
 use Attribute;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\CannotAddAttributeException;
@@ -346,6 +347,69 @@ class AttributeRepository extends AbstractMultiShopObjectModelRepository
         }
 
         return $attributesInfoByAttributeId;
+    }
+
+    /**
+     * Retrieve attributes with values (id, name).
+     *
+     * @param int $languageId
+     * @param int[] $shopIds
+     *
+     * @return array<int, array{attribute_group_id: int, name: string, values: array<int, array{item_id: int, name: string}>}>
+     */
+    public function getAttributesWithValues(int $languageId, array $shopIds = []): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select(
+                'DISTINCT a.id_attribute_group AS attribute_group_id',
+                'agl.name AS name',
+                'al.id_attribute AS value_id',
+                'al.name AS value_name'
+            )
+            ->from($this->dbPrefix . 'attribute', 'a')
+            ->leftJoin('a', $this->dbPrefix . 'attribute_lang', 'al',
+                'a.id_attribute = al.id_attribute AND al.id_lang = :language_id AND LENGTH(TRIM(al.name)) > 0'
+            )
+            ->leftJoin('a', $this->dbPrefix . 'attribute_group', 'ag',
+                'ag.id_attribute_group = a.id_attribute_group'
+            )
+            ->leftJoin('ag', $this->dbPrefix . 'attribute_group_lang', 'agl',
+                'ag.id_attribute_group = agl.id_attribute_group AND agl.id_lang = :language_id AND LENGTH(TRIM(agl.name)) > 0'
+            )
+            ->orderBy('a.id_attribute_group')
+            ->addOrderBy('al.id_attribute')
+            ->setParameter('language_id', $languageId);
+
+        if (!empty($shopIds)) {
+            $qb
+                ->join('a', $this->dbPrefix . 'attribute_shop', 'ats',
+                    'ats.id_attribute = a.id_attribute AND ats.id_shop IN (:shop_ids)'
+                )
+                ->join('a', $this->dbPrefix . 'attribute_group_shop', 'ags',
+                    'ags.id_attribute_group = a.id_attribute_group AND ags.id_shop IN (:shop_ids)'
+                )
+                ->setParameter('shop_ids', $shopIds, ArrayParameterType::INTEGER);
+        }
+
+        $rows = $qb->executeQuery()->fetchAllAssociative();
+
+        $attributeGroups = [];
+        foreach ($rows as $row) {
+            $groupId = (int) $row['attribute_group_id'];
+            if (!isset($attributeGroups[$groupId])) {
+                $attributeGroups[$groupId] = [
+                    'attribute_group_id' => (int) $groupId,
+                    'name' => (string) $row['name'],
+                    'values' => [],
+                ];
+            }
+            $attributeGroups[$groupId]['values'][] = [
+                'item_id' => (int) $row['value_id'],
+                'name' => (string) $row['value_name'],
+            ];
+        }
+
+        return array_values($attributeGroups);
     }
 
     /**

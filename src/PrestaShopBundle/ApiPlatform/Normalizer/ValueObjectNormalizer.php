@@ -65,6 +65,15 @@ class ValueObjectNormalizer implements NormalizerInterface, DenormalizerInterfac
      */
     protected array $constructorParameter = [];
 
+    /**
+     * The key is the initial class of the NoValueObject (example NoStateId)
+     * The value is the deduced short name of the associated ValueObject with the No part removed (example StateId)
+     * If the array doesn't contain the VO class it means it's not a NoValueObject
+     *
+     * @var array<string, string>
+     */
+    protected array $noValueClasses = [];
+
     public function __construct(
         protected readonly ClassMetadataFactoryInterface $classMetadataFactory
     ) {
@@ -137,9 +146,15 @@ class ValueObjectNormalizer implements NormalizerInterface, DenormalizerInterfac
         }
 
         $metadata = $this->classMetadataFactory->getMetadataFor($object);
+        $className = $metadata->getReflectionClass()->getName();
+        if ($this->isNoValueClass($object) && !empty($this->noValueClasses[$className])) {
+            $valueId = lcfirst($this->noValueClasses[$className]);
+        } else {
+            $valueId = lcfirst($metadata->getReflectionClass()->getShortName());
+        }
 
         return [
-            lcfirst($metadata->getReflectionClass()->getShortName()) => $object->getValue(),
+            $valueId => $object->getValue(),
         ];
     }
 
@@ -162,7 +177,10 @@ class ValueObjectNormalizer implements NormalizerInterface, DenormalizerInterfac
             && method_exists($data, 'getValue')
             // Check that ValueObject is part of the namespace
             && str_contains(get_class($data), 'ValueObject')
-            && $this->getConstructorParameter($data);
+            && (
+                $this->getConstructorParameter($data)
+                || $this->isNoValueClass($data)
+            );
     }
 
     protected function isValueObjectType(string $type): bool
@@ -171,7 +189,10 @@ class ValueObjectNormalizer implements NormalizerInterface, DenormalizerInterfac
             && method_exists($type, 'getValue')
             // Check that ValueObject is part of the namespace
             && str_contains($type, 'ValueObject')
-            && $this->getConstructorParameter($type);
+            && (
+                $this->getConstructorParameter($type)
+                || $this->isNoValueClass($type)
+            );
     }
 
     protected function matchesConstructorParameter(mixed $value, string $type): bool
@@ -238,5 +259,28 @@ class ValueObjectNormalizer implements NormalizerInterface, DenormalizerInterfac
         }
 
         return $this->constructorParameter[$objectType] ?? null;
+    }
+
+    /**
+     * Is the class used for "no values" like NoStateId, NoCombination that always carry the
+     * 0 value.
+     */
+    protected function isNoValueClass(object|string $type): bool
+    {
+        $objectType = is_object($type) ? get_class($type) : $type;
+        if (!array_key_exists($objectType, $this->noValueClasses)) {
+            $metadata = $this->classMetadataFactory->getMetadataFor($objectType);
+            $shortName = $metadata->getReflectionClass()->getShortName();
+            $matches = [];
+            // Check that the class name starts with No, the following part should be the expected ShortName
+            // when value is set
+            if (!preg_match('/No(.+)/', $shortName, $matches)) {
+                $this->noValueClasses[$objectType] = null;
+            } else {
+                $this->noValueClasses[$objectType] = $matches[1];
+            }
+        }
+
+        return !empty($this->noValueClasses[$objectType]);
     }
 }

@@ -25,12 +25,10 @@ Back to the default delivery slip prefix value
 describe('BO - Orders - Delivery slips : Update delivery slip prefix and check the generated file name', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let fileName: string;
 
   const deliverySlipData: FakerOrderDeliverySlipOptions = new FakerOrderDeliverySlipOptions();
   const defaultPrefix: string = '#DE';
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -105,12 +103,19 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
       expect(result).to.equal(dataOrderStatuses.shipped.name);
     });
 
+    it('should click on \'Documents\' tab', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab', baseContext);
+
+      const isTabOpened = await boOrdersViewBlockTabListPage.goToDocumentsTab(page);
+      expect(isTabOpened).to.eq(true);
+    });
+
     it(`should check that the delivery slip file name contain '${deliverySlipData.prefix}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentNamePrefix', baseContext);
 
-      // Get delivery slips filename
-      fileName = await boOrdersViewBlockTabListPage.getFileName(page, 3);
-      expect(fileName).to.contains(deliverySlipData.prefix.replace('#', '').trim());
+      const document = await boOrdersViewBlockTabListPage.getDocument(page, 1, 'Delivery slip');
+      expect(document.type).to.equals('Delivery slip');
+      expect(document.number).to.contains(deliverySlipData.prefix);
     });
   });
 

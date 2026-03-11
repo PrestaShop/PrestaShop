@@ -179,7 +179,7 @@ admin_feature_get_feature_values:
     expose: true
 
 admin_all_feature_groups:
-  path: /all-feature-groups/{shopId}
+  path: /all-feature-groups
   methods: [ GET ]
   options:
     expose: true
@@ -188,5 +188,3 @@ admin_all_feature_groups:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::getAllFeatureGroupsAction
     _legacy_controller: AdminFeatures
     _legacy_link: AdminFeatures:getAllFeatureGroups
-  requirements:
-    shopId: \d+

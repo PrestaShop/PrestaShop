@@ -137,6 +137,10 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
             $customer->active = $command->isEnabled();
         }
 
+        if (null !== $command->isNewsletterSubscribed()) {
+            $customer->newsletter = $command->isNewsletterSubscribed();
+        }
+
         if (null !== $command->isPartnerOffersSubscribed()) {
             $customer->optin = $command->isPartnerOffersSubscribed();
         }

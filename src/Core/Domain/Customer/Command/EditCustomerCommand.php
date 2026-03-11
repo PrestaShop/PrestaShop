@@ -285,10 +285,14 @@ class EditCustomerCommand
 
     /**
      * @param bool $isNewsletterSubscribed
+     *
+     * @return self
      */
     public function setNewsletterSubscribed($isNewsletterSubscribed)
     {
         $this->isNewsletterSubscribed = $isNewsletterSubscribed;
+
+        return $this;
     }
 
     /**

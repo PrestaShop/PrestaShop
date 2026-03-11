@@ -17,12 +17,16 @@ use PrestaShop\Module\APIResources\ApiPlatform\Resources\Product\Product;
 use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\AddDiscountCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\UpdateDiscountCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\ProductRule;
@@ -40,6 +44,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
 use PrestaShopBundle\ApiPlatform\NormalizationMapper;
@@ -688,6 +694,96 @@ class CQRSApiSerializerTest extends KernelTestCase
             $productId,
             [
                 'productId' => 42,
+            ],
+        ];
+
+        yield 'normalize EditableCustomerAddress with no state ID' => [
+            new EditableCustomerAddress(
+                new AddressId(1),
+                new CustomerId(42),
+                'pub@prestashop.com',
+                'Order Test Address',
+                'John',
+                'Doe',
+                '1 street Example',
+                'Orleans',
+                new CountryId(8),
+                '45000',
+                'dni',
+                'company',
+                'vatNumber',
+                'address2',
+                new NoStateId(),
+                '',
+                '',
+                '',
+                []
+            ),
+            [
+                'addressId' => 1,
+                'customerId' => 42,
+                'customerEmail' => 'pub@prestashop.com',
+                'addressAlias' => 'Order Test Address',
+                'firstName' => 'John',
+                'lastName' => 'Doe',
+                'address' => '1 street Example',
+                'city' => 'Orleans',
+                'countryId' => 8,
+                'postCode' => '45000',
+                'dni' => 'dni',
+                'company' => 'company',
+                'vatNumber' => 'vatNumber',
+                'address2' => 'address2',
+                'stateId' => 0,
+                'homePhone' => '',
+                'mobilePhone' => '',
+                'other' => '',
+                'requiredFields' => [],
+            ],
+        ];
+
+        yield 'normalize EditableCustomerAddress with StateID' => [
+            new EditableCustomerAddress(
+                new AddressId(1),
+                new CustomerId(42),
+                'pub@prestashop.com',
+                'Order Test Address',
+                'John',
+                'Doe',
+                '1 street Example',
+                'Orleans',
+                new CountryId(8),
+                '45000',
+                'dni',
+                'company',
+                'vatNumber',
+                'address2',
+                new StateId(4),
+                '',
+                '',
+                '',
+                []
+            ),
+            [
+                'addressId' => 1,
+                'customerId' => 42,
+                'customerEmail' => 'pub@prestashop.com',
+                'addressAlias' => 'Order Test Address',
+                'firstName' => 'John',
+                'lastName' => 'Doe',
+                'address' => '1 street Example',
+                'city' => 'Orleans',
+                'countryId' => 8,
+                'postCode' => '45000',
+                'dni' => 'dni',
+                'company' => 'company',
+                'vatNumber' => 'vatNumber',
+                'address2' => 'address2',
+                'stateId' => 4,
+                'homePhone' => '',
+                'mobilePhone' => '',
+                'other' => '',
+                'requiredFields' => [],
             ],
         ];
 

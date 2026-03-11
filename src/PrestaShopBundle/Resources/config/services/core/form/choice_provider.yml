@@ -146,5 +146,3 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\AttributeGroupChoiceProvider:
     autowire: true
-    arguments:
-      $shopId: '@=service("prestashop.adapter.shop.context").getContextShopID()'

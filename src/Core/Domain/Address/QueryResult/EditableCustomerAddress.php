@@ -10,7 +10,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Address\QueryResult;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateIdInterface;
 
 /**
@@ -128,7 +127,7 @@ class EditableCustomerAddress
      * @param string $company
      * @param string $vatNumber
      * @param string $address2
-     * @param StateId $stateId
+     * @param StateIdInterface $stateId
      * @param string $homePhone
      * @param string $mobilePhone
      * @param string $other

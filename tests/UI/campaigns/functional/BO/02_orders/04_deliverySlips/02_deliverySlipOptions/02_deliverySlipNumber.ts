@@ -133,7 +133,7 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliverySlipsDocumentName', baseContext);
 
       // Get delivery slips filename
-      fileName = await boOrdersViewBlockTabListPage.getFileName(page, 3);
+      fileName = await boOrdersViewBlockTabListPage.getFileName(page, 2);
       expect(fileName).to.contains(deliverySlipData.number);
     });
   });

@@ -260,6 +260,11 @@ class CustomerType extends TranslatorAwareType
                 ),
                 'required' => false,
             ])
+            ->add('is_newsletter_subscribed', SwitchType::class, [
+                'label' => $this->trans('Newsletter', 'Admin.Orderscustomers.Feature'),
+                'help' => '',
+                'required' => false,
+            ])
             ->add('is_partner_offers_subscribed', SwitchType::class, [
                 'label' => $this->trans('Partner offers', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans(

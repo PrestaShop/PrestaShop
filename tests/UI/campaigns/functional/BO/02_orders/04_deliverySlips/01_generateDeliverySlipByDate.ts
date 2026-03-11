@@ -28,7 +28,6 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
 
   const futureDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'future');
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -72,6 +71,20 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
       expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
+    it('should check documents', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsBefore', baseContext);
+
+      const numDocuments = await boOrdersViewBlockTabListPage.getNumberOfDocuments(page);
+      expect(numDocuments).to.be.equals(3);
+
+      const countDocuments = await boOrdersViewBlockTabListPage.countDocumentsType(page);
+      expect(countDocuments).to.be.deep.equal({
+        creditSlips: 1,
+        deliverySlips: 1,
+        invoices: 1,
+      });
+    });
+
     it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
@@ -80,10 +93,17 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
     });
 
     it('should check the delivery slip document name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentName', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsAfter', baseContext);
 
-      const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 3);
-      expect(documentType).to.be.equal('Delivery slip');
+      const numDocuments = await boOrdersViewBlockTabListPage.getNumberOfDocuments(page);
+      expect(numDocuments).to.be.equals(3);
+
+      const countDocuments = await boOrdersViewBlockTabListPage.countDocumentsType(page);
+      expect(countDocuments).to.be.deep.equal({
+        creditSlips: 1,
+        deliverySlips: 1,
+        invoices: 1,
+      });
     });
   });
 

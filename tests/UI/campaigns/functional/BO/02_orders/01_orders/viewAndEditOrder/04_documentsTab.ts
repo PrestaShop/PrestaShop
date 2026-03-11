@@ -355,7 +355,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
     it('should check if \'Delivery slip\' document is created', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliverySlipDocument', baseContext);
 
-      const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 3);
+      const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 2);
       expect(documentType).to.be.equal('Delivery slip');
     });
 
@@ -382,7 +382,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocument', baseContext);
 
       // Get document name
-      const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 4);
+      const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 3);
       expect(documentType).to.be.equal('Credit slip');
     });
 

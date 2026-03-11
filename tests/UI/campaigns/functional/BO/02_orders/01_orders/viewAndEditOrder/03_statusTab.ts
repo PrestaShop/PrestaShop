@@ -109,7 +109,6 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
   // Pre-condition: Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_4`);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);

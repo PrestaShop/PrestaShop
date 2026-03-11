@@ -162,6 +162,7 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             ->setFirstName($data['first_name'])
             ->setLastName($data['last_name'])
             ->setIsEnabled($data['is_enabled'])
+            ->setNewsletterSubscribed($data['is_newsletter_subscribed'])
             ->setIsPartnerOffersSubscribed($data['is_partner_offers_subscribed'])
             ->setDefaultGroupId((int) $data['default_group_id'])
             ->setGroupIds($groupIds)

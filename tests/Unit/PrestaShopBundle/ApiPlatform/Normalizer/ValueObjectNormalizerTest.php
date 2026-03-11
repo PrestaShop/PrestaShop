@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\EditApiClientCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactTypeChoiceProvider;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
@@ -37,6 +38,7 @@ class ValueObjectNormalizerTest extends TestCase
         yield 'real value object based on string' => [new ProductType(ProductType::TYPE_STANDARD), true];
         yield 'object with getValue but not ValueObject namespace' => [new DbMySQLi('localhost', 'root', 'root', 'prestashop', false), false];
         yield 'object without getValue method' => [new ContactTypeChoiceProvider(1), false];
+        yield 'no state id' => [new NoStateId(), true];
     }
 
     /**
@@ -61,6 +63,9 @@ class ValueObjectNormalizerTest extends TestCase
 
         yield 'VO integer as scalar' => [new ProductId(1), 1, [ValueObjectNormalizer::VALUE_OBJECT_RETURNED_AS_SCALAR => true]];
         yield 'VO string as scalar' => [new ProductType(ProductType::TYPE_STANDARD), ProductType::TYPE_STANDARD, [ValueObjectNormalizer::VALUE_OBJECT_RETURNED_AS_SCALAR => true]];
+
+        yield 'no state id' => [new NoStateId(), ['stateId' => NoStateId::NO_STATE_ID_VALUE]];
+        yield 'no state id as scalar' => [new NoStateId(), NoStateId::NO_STATE_ID_VALUE, [ValueObjectNormalizer::VALUE_OBJECT_RETURNED_AS_SCALAR => true]];
     }
 
     /**
@@ -92,6 +97,13 @@ class ValueObjectNormalizerTest extends TestCase
         yield 'product type value' => [['value' => ProductType::TYPE_COMBINATIONS], ProductType::class, true];
         yield 'product type string' => [ProductType::TYPE_COMBINATIONS, ProductType::class, true];
         yield 'product type integer' => [42, ProductType::class, false];
+
+        yield 'no state id, stateId' => [['stateId' => 0], NoStateId::class, true];
+        yield 'no state id, noStateId' => [['noStateId' => 0], NoStateId::class, true];
+        yield 'no state id, state_id' => [['state_id' => 0], NoStateId::class, true];
+        yield 'no state id, value' => [['value' => 0], NoStateId::class, true];
+        yield 'no state id, integer' => [0, NoStateId::class, true];
+        yield 'no state id, string' => ['0', NoStateId::class, true];
     }
 
     /**
@@ -131,5 +143,11 @@ class ValueObjectNormalizerTest extends TestCase
         yield 'product type snake case as scalar' => [['product_type' => ProductType::TYPE_COMBINATIONS], ProductType::class, ProductType::TYPE_COMBINATIONS, [ValueObjectNormalizer::VALUE_OBJECT_RETURNED_AS_SCALAR => true]];
         yield 'product type value as scalar' => [['value' => ProductType::TYPE_COMBINATIONS], ProductType::class, ProductType::TYPE_COMBINATIONS, [ValueObjectNormalizer::VALUE_OBJECT_RETURNED_AS_SCALAR => true]];
         yield 'product type string as scalar' => [ProductType::TYPE_COMBINATIONS, ProductType::class, ProductType::TYPE_COMBINATIONS, [ValueObjectNormalizer::VALUE_OBJECT_RETURNED_AS_SCALAR => true]];
+
+        yield 'no state id, stateId' => [['stateId' => 0], NoStateId::class, new NoStateId()];
+        yield 'no state id, noStateId' => [['noStateId' => 0], NoStateId::class, new NoStateId()];
+        yield 'no state id, state_id' => [['state_id' => 0], NoStateId::class, new NoStateId()];
+        yield 'no state id, value' => [['value' => 0], NoStateId::class, new NoStateId()];
+        yield 'no state id, integer' => [0, NoStateId::class, new NoStateId()];
     }
 }

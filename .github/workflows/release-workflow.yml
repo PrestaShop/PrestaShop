@@ -19,30 +19,3 @@ jobs:
         uses: PrestaShop/.github/.github/actions/normalize-dependabot-pr@master
         with:
           default-branch: ${{ github.event.pull_request.base.ref }}
-
-  header-stamp:
-    name: Check license headers
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      # Composer cache
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-      - name: Cache Composer Directory
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-      - name: Composer Install
-        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
-
-      # Run header stamp
-      - name: Header stamp dry run
-        run: composer header-stamp
-      # Little hint to help contributors fix their PRs
-      - name: Hint to fix
-        if: failure()
-        run: echo "::notice::Run composer header-stamp-fix at the root of the project to fix files, or update the .header-stamp-config.yml file to add exceptions"

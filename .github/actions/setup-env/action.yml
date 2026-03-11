@@ -89,6 +89,7 @@ runs:
         DB_PASSWD: 'prestashop'
         PS_LANGUAGE: 'en'
         ADMIN_PASSWD: 'Correct Horse Battery Staple'
+        TIMEZONE: 'Europe/Paris'
       run: |
         cd ${{ inputs.PRESTASHOP_DIR }}
         if [[ "${{ inputs.DOCKER_DAEMON }}" = "true" ]]; then

@@ -137,12 +137,10 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
         .and.to.contain('Delivery slip');
     });
 
-    const tests = [
-      {args: {productID: 1, quantity: 1, documentRow: 4}},
-      {args: {productID: 1, quantity: 2, documentRow: 5}},
-    ];
-
-    tests.forEach((test, index: number) => {
+    [
+      {productID: 1, quantity: 1, documentRow: 4},
+      {productID: 1, quantity: 2, documentRow: 5},
+    ].forEach((arg, index: number) => {
       it(`should create the partial refund n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addPartialRefund${index + 1}`, baseContext);
 
@@ -150,8 +148,8 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
 
         const textMessage = await boOrdersViewBlockProductsPage.addPartialRefundProduct(
           page,
-          test.args.productID,
-          test.args.quantity,
+          arg.productID,
+          arg.quantity,
         );
         expect(textMessage).to.contains(boOrdersViewBlockProductsPage.partialRefundValidationMessage);
       });
@@ -205,35 +203,27 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
       expect(numberOfCreditSlips).to.be.above(0);
     });
 
-    const tests = [
+    [
       {
-        args:
-          {
-            testIdentifier: 'filterIdCreditSlip',
-            filterBy: 'id_credit_slip',
-            filterValue: '1',
-            columnName: 'id_order_slip',
-          },
+        testIdentifier: 'filterIdCreditSlip',
+        filterBy: 'id_credit_slip',
+        filterValue: '1',
+        columnName: 'id_order_slip',
       },
       {
-        args:
-          {
-            testIdentifier: 'filterIdOrder',
-            filterBy: 'id_order',
-            filterValue: '4',
-            columnName: 'id_order',
-          },
+        testIdentifier: 'filterIdOrder',
+        filterBy: 'id_order',
+        filterValue: '4',
+        columnName: 'id_order',
       },
-    ];
-
-    tests.forEach((test) => {
-      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+    ].forEach((arg) => {
+      it(`should filter by ${arg.filterBy} '${arg.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', arg.testIdentifier, baseContext);
 
         await boCreditSlipsPage.filterCreditSlips(
           page,
-          test.args.filterBy,
-          test.args.filterValue,
+          arg.filterBy,
+          arg.filterValue,
         );
 
         // Get number of credit slips
@@ -244,14 +234,14 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
           const textColumn = await boCreditSlipsPage.getTextColumnFromTableCreditSlips(
             page,
             i,
-            test.args.columnName,
+            arg.columnName,
           );
-          expect(textColumn).to.contains(test.args.filterValue);
+          expect(textColumn).to.contains(arg.filterValue);
         }
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${arg.testIdentifier}Reset`, baseContext);
 
         const numberOfCreditSlipsAfterReset = await boCreditSlipsPage.resetAndGetNumberOfLines(page);
         expect(numberOfCreditSlipsAfterReset).to.be.equal(numberOfCreditSlips);

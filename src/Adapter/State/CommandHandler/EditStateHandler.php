@@ -38,11 +38,11 @@ class EditStateHandler implements EditStateHandlerInterface
         $state = $this->getState($command->getStateId());
 
         try {
-            if (null !== $command->getZoneId()->getValue()) {
+            if (null !== $command->getZoneId()) {
                 $state->id_zone = $command->getZoneId()->getValue();
             }
 
-            if (null !== $command->getCountryId()->getValue()) {
+            if (null !== $command->getCountryId()) {
                 $state->id_country = $command->getCountryId()->getValue();
             }
 

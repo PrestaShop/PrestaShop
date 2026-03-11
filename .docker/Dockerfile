@@ -13,15 +13,21 @@ ARG GROUP_ID
 ARG USER_ID
 ARG NODE_VERSION
 ARG INSTALL_XDEBUG
+ARG TIMEZONE
 
+ENV TZ=$TIMEZONE
+ENV NODE_VERSION=$NODE_VERSION
 
 RUN groupmod -g $GROUP_ID www-data \
   && usermod -u $USER_ID -g $GROUP_ID www-data
 
 # Install mailutils to make sendmail work
-RUN apt update && apt install -y mailutils
+# Install tzdata to define the timezone
+RUN apt update && apt install -y mailutils tzdata
 
-ENV NODE_VERSION       $NODE_VERSION
+## Define timezone
+RUN ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
+  && echo $TZ > /etc/timezone
 
 RUN php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');" && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer && rm -rf /tmp/composer-setup.php
 

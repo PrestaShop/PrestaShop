@@ -17,23 +17,53 @@ Feature: Zones management
     Then state "StateNormandy" zone should be "Europe"
     And state "StateNormandy" should be enabled
 
-  Scenario: Editing state
+  Scenario: Partial Editing state
+    ## Name
     When I edit state "StateNormandy" with following properties:
       | name    | Britain       |
-      | enabled | false         |
-      | country | Italy         |
-      | zone    | South America |
+    Then state "StateNormandy" name should be "Britain"
+    Then state "StateNormandy" country should be "United States"
+    Then state "StateNormandy" zone should be "Europe"
+    And state "StateNormandy" should be enabled
+    ## Enabled
+    When I edit state "StateNormandy" with following properties:
+      | enabled | false          |
+    Then state "StateNormandy" name should be "Britain"
+    Then state "StateNormandy" country should be "United States"
+    Then state "StateNormandy" zone should be "Europe"
+    And state "StateNormandy" should be disabled
+    ## Country
+    When I edit state "StateNormandy" with following properties:
+      | country | Italy          |
+    Then state "StateNormandy" name should be "Britain"
+    Then state "StateNormandy" country should be "Italy"
+    Then state "StateNormandy" zone should be "Europe"
+    And state "StateNormandy" should be disabled
+    ## Zone
+    When I edit state "StateNormandy" with following properties:
+      | zone | South America  |
     Then state "StateNormandy" name should be "Britain"
     Then state "StateNormandy" country should be "Italy"
     Then state "StateNormandy" zone should be "South America"
     And state "StateNormandy" should be disabled
 
+  Scenario: Editing state
+    When I edit state "StateNormandy" with following properties:
+      | name    | Tasmania      |
+      | enabled | true          |
+      | country | Australia     |
+      | zone    | Oceania       |
+    Then state "StateNormandy" name should be "Tasmania"
+    Then state "StateNormandy" country should be "Australia"
+    Then state "StateNormandy" zone should be "Oceania"
+    And state "StateNormandy" should be enabled
+
   Scenario: Enable and disable state status
-    Given state "StateNormandy" is disabled
-    When I toggle status of state "StateNormandy"
-    Then state "StateNormandy" should be enabled
+    Given state "StateNormandy" is enabled
     When I toggle status of state "StateNormandy"
     Then state "StateNormandy" should be disabled
+    When I toggle status of state "StateNormandy"
+    Then state "StateNormandy" should be enabled
 
   Scenario: Enabling and disabling multiple states in bulk action
     When I add new state "StateBrittany" with following properties:
