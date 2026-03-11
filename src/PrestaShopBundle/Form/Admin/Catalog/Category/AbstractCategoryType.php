@@ -81,7 +81,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
         $builder
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Name', 'Admin.Global'),
-                'help' => $genericCharactersHint,
                 'type' => TextType::class,
                 'constraints' => [
                     new DefaultLanguage(),
@@ -161,7 +160,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             )
             ->add('meta_title', TranslatableType::class, [
                 'label' => $this->trans('Meta title', 'Admin.Global'),
-                'help' => $genericCharactersHint,
                 'type' => TextWithRecommendedLengthType::class,
                 'required' => false,
                 'options' => [
@@ -192,7 +190,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('meta_description', TranslatableType::class, [
                 'label' => $this->trans('Meta description', 'Admin.Global'),
-                'help' => $genericCharactersHint,
                 'required' => false,
                 'type' => TextWithRecommendedLengthType::class,
                 'options' => [

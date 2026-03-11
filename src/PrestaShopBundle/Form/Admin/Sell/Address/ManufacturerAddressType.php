@@ -74,11 +74,9 @@ class ManufacturerAddressType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $nameHint = $this->trans('Invalid characters:', 'Admin.Global') . ' 0-9!<>,;?=+()@#"�{}_$%:';
         $data = $builder->getData();
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
         $stateChoices = $this->statesChoiceProvider->getChoices(['id_country' => $countryId]);
-        $otherHint = $this->trans('Invalid characters:', 'Admin.Global') . ' <>{}';
 
         $builder
             ->add('id_manufacturer', ChoiceType::class, [
@@ -90,7 +88,6 @@ class ManufacturerAddressType extends TranslatorAwareType
             ])
             ->add('last_name', TextType::class, [
                 'label' => $this->trans('Last name', 'Admin.Global'),
-                'help' => $nameHint,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -98,7 +95,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                         ),
                     ]),
                     new TypedRegex([
-                        'type' => 'name',
+                        'type' => TypedRegex::TYPE_NAME,
                     ]),
                     new Length([
                         'max' => AddressSettings::MAX_NAME_LENGTH,
@@ -112,7 +109,6 @@ class ManufacturerAddressType extends TranslatorAwareType
             ])
             ->add('first_name', TextType::class, [
                 'label' => $this->trans('First name', 'Admin.Global'),
-                'help' => $nameHint,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -120,7 +116,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                         ),
                     ]),
                     new TypedRegex([
-                        'type' => 'name',
+                        'type' => TypedRegex::TYPE_NAME,
                     ]),
                     new Length([
                         'max' => AddressSettings::MAX_NAME_LENGTH,
@@ -136,7 +132,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                 'label' => $this->trans('Address', 'Admin.Global'),
                 'constraints' => [
                     new TypedRegex([
-                        'type' => 'address',
+                        'type' => TypedRegex::TYPE_ADDRESS,
                     ]),
                     new Length([
                         'max' => AddressSettings::MAX_ADDRESS_LENGTH,
@@ -154,7 +150,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                 'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
-                        'type' => 'address',
+                        'type' => TypedRegex::TYPE_ADDRESS,
                     ]),
                     new Length([
                         'max' => AddressSettings::MAX_ADDRESS_LENGTH,
@@ -172,7 +168,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                 'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
-                        'type' => 'post_code',
+                        'type' => TypedRegex::TYPE_POST_CODE,
                     ]),
                     new Length([
                         'max' => AddressSettings::MAX_POST_CODE_LENGTH,
@@ -193,7 +189,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                         ),
                     ]),
                     new TypedRegex([
-                        'type' => 'city_name',
+                        'type' => TypedRegex::TYPE_CITY_NAME,
                     ]),
                     new Length([
                         'max' => AddressSettings::MAX_CITY_NAME_LENGTH,
@@ -243,7 +239,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                         'id_country' => $countryId,
                     ]),
                     new TypedRegex([
-                        'type' => 'dni_lite',
+                        'type' => TypedRegex::TYPE_DNI_LITE,
                     ]),
                     new Length([
                         'max' => 16,
@@ -261,7 +257,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                 'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
-                        'type' => 'phone_number',
+                        'type' => TypedRegex::TYPE_PHONE_NUMBER,
                     ]),
                     new Length([
                         'max' => AddressSettings::MAX_PHONE_LENGTH,
@@ -279,7 +275,7 @@ class ManufacturerAddressType extends TranslatorAwareType
                 'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
-                        'type' => 'phone_number',
+                        'type' => TypedRegex::TYPE_PHONE_NUMBER,
                     ]),
                     new Length([
                         'max' => AddressSettings::MAX_PHONE_LENGTH,
@@ -294,11 +290,10 @@ class ManufacturerAddressType extends TranslatorAwareType
             ->add('other', TextType::class, [
                 'label' => $this->trans('Other', 'Admin.Global'),
                 'required' => false,
-                'help' => $otherHint,
                 'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
-                        'type' => 'message',
+                        'type' => TypedRegex::TYPE_MESSAGE,
                     ]),
                     new Length([
                         'max' => AddressSettings::MAX_OTHER_LENGTH,
