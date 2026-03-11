@@ -10,7 +10,6 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressDniRequire
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Address\AddressSettings;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\SupplierSettings;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
@@ -84,28 +83,10 @@ class SupplierType extends TranslatorAwareType
         $data = $builder->getData();
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
 
-        $invalidCharsText = sprintf(
-            '%s ' . TypedRegexValidator::CATALOG_CHARS,
-            $this->trans('Invalid characters:', 'Admin.Global')
-        );
-
-        $invalidGenericNameHint = sprintf(
-            '%s ' . TypedRegexValidator::GENERIC_NAME_CHARS,
-            $this->trans('Invalid characters:', 'Admin.Global')
-        );
-
-        $keywordHint = sprintf(
-            '%s ' . PHP_EOL . $invalidGenericNameHint,
-            $this->trans(
-                'To add tags, click in the field, write something, and then press the "Enter" key.',
-                'Admin.Shopparameters.Help'
-            ));
-
         $builder
             ->add('name', TextType::class, [
                 'label' => $this->trans('Name', 'Admin.Global'),
                 'required' => true,
-                'help' => $invalidCharsText,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -256,7 +237,6 @@ class SupplierType extends TranslatorAwareType
             ])
             ->add('meta_title', TranslatableType::class, [
                 'label' => $this->trans('Meta title', 'Admin.Global'),
-                'help' => $invalidGenericNameHint,
                 'type' => TextType::class,
                 'required' => false,
                 'options' => [
@@ -277,7 +257,6 @@ class SupplierType extends TranslatorAwareType
             ])
             ->add('meta_description', TranslatableType::class, [
                 'label' => $this->trans('Meta description', 'Admin.Global'),
-                'help' => $invalidGenericNameHint,
                 'type' => TextareaType::class,
                 'required' => false,
                 'options' => [

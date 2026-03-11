@@ -8,7 +8,6 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Tax;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -29,18 +28,10 @@ class TaxType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $invalidCharsText = sprintf(
-            '%s ' . TypedRegexValidator::GENERIC_NAME_CHARS,
-            $this->trans('Invalid characters:', 'Admin.Notifications.Info')
+        $nameHintText = $this->trans(
+            'Tax name to display in carts and on invoices (e.g. "VAT").',
+            'Admin.International.Help'
         );
-
-        $nameHintText =
-            $this->trans(
-                'Tax name to display in carts and on invoices (e.g. "VAT").',
-                'Admin.International.Help'
-            )
-            . PHP_EOL
-            . $invalidCharsText;
 
         $builder
             ->add('name', TranslatableType::class, [
@@ -57,7 +48,7 @@ class TaxType extends TranslatorAwareType
                             ),
                         ]),
                         new TypedRegex([
-                            'type' => 'generic_name',
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
                         ]),
                     ],
                 ],

@@ -11,7 +11,6 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressZipCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ExistingCustomerEmail;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
@@ -81,10 +80,6 @@ class CustomerAddressType extends TranslatorAwareType
     {
         $data = $builder->getData();
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
-        $genericInvalidCharsMessage = $this->trans(
-            'Invalid characters:',
-            'Admin.Notifications.Info'
-        ) . ' ' . TypedRegexValidator::GENERIC_NAME_CHARS;
         $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
         $showStates = !empty($stateChoices);
         $requiredFields = $options['requiredFields'];
@@ -138,7 +133,6 @@ class CustomerAddressType extends TranslatorAwareType
         ])
             ->add('alias', TextType::class, [
                 'label' => $this->trans('Address alias', 'Admin.Orderscustomers.Feature'),
-                'help' => $genericInvalidCharsMessage,
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
@@ -162,10 +156,6 @@ class CustomerAddressType extends TranslatorAwareType
             ])
             ->add('first_name', TextType::class, [
                 'label' => $this->trans('First name', 'Admin.Global'),
-                'help' => $this->trans(
-                    'Invalid characters:',
-                    'Admin.Notifications.Info'
-                ) . ' ' . TypedRegexValidator::NAME_CHARS,
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
@@ -189,10 +179,6 @@ class CustomerAddressType extends TranslatorAwareType
             ])
             ->add('last_name', TextType::class, [
                 'label' => $this->trans('Last name', 'Admin.Global'),
-                'help' => $this->trans(
-                    'Invalid characters:',
-                    'Admin.Notifications.Info'
-                ) . ' ' . TypedRegexValidator::NAME_CHARS,
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
@@ -216,7 +202,6 @@ class CustomerAddressType extends TranslatorAwareType
             ])
             ->add('company', TextType::class, [
                 'label' => $this->trans('Company', 'Admin.Global'),
-                'help' => $genericInvalidCharsMessage,
                 'required' => in_array('company', $requiredFields, true),
                 'empty_data' => '',
                 'constraints' => [
@@ -414,10 +399,6 @@ class CustomerAddressType extends TranslatorAwareType
             ->add('other', TextareaType::class, [
                 'required' => in_array('other', $requiredFields, true),
                 'label' => $this->trans('Other', 'Admin.Global'),
-                'help' => $this->trans(
-                    'Invalid characters:',
-                    'Admin.Notifications.Info'
-                ) . ' ' . TypedRegexValidator::MESSAGE_CHARS,
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
