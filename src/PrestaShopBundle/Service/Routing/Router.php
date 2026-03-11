@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Service\Routing;
 
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
@@ -27,12 +29,20 @@ class Router extends BaseRouter
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
-        $url = parent::generate($name, $parameters, $referenceType);
-        if (TokenInUrls::isDisabled() || $this->anonymousRouteProvider->isRouteAnonymous($name)) {
+        $url = $this->generateFromParent($name, $parameters, $referenceType);
+        if (TokenInUrls::isDisabled() || $this->anonymousRouteProvider->isRouteAnonymous($name) || str_starts_with($name, '_api')) {
             return $url;
         }
 
         return self::generateTokenizedUrl($url, $this->userTokenManager->getSymfonyToken());
+    }
+
+    /**
+     * Wraps the parent generate() call to allow overriding in tests.
+     */
+    protected function generateFromParent(string $name, array $parameters, int $referenceType): string
+    {
+        return parent::generate($name, $parameters, $referenceType);
     }
 
     public function setUserTokenManager(UserTokenManager $userTokenManager): void
