@@ -3118,7 +3118,11 @@ exit;
 
         register_shutdown_function(function () use ($dir) {
             $fs = new Filesystem();
-            $fs->remove($dir);
+            try {
+                $fs->remove($dir);
+            } catch (\Symfony\Component\Filesystem\Exception\IOException $e) {
+                // Ignore removal errors (e.g. locked files on Windows/Docker volume mounts)
+            }
             Hook::exec('actionClearSf2Cache');
         });
     }
