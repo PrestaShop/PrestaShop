@@ -56,5 +56,20 @@ class SQLUtilsTest extends TestCase
             ['name', '[19.2|20|25]'],
             ' AND (`name` = "19.2" OR `name` = "20" OR `name` = "25")' . PHP_EOL,
         ];
+        // Date range: date-only bounds should include the full last day (fixes #10822)
+        yield [
+            ['date_add', '[2018-07-01,2018-07-31]'],
+            ' AND `date_add` BETWEEN "2018-07-01 00:00:00" AND "2018-07-31 23:59:59"' . PHP_EOL,
+        ];
+        // Date range with table alias
+        yield [
+            ['date_add', '[2020-01-01,2020-12-31]', 'main.'],
+            ' AND `main`.`date_add` BETWEEN "2020-01-01 00:00:00" AND "2020-12-31 23:59:59"' . PHP_EOL,
+        ];
+        // Date range with full datetime values should remain untouched
+        yield [
+            ['date_add', '[2018-07-01 00:00:00,2018-07-31 14:30:00]'],
+            ' AND `date_add` BETWEEN "2018-07-01 00:00:00" AND "2018-07-31 14:30:00"' . PHP_EOL,
+        ];
     }
 }
