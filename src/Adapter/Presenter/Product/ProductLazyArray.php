@@ -999,6 +999,10 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * Method that prepares all pricing information to use. Most prices are provided in the default tax configuration,
+     * but also in tax-excluded and tax-included formats, making them easy to display as needed. B2B shops usually
+     * present most of the prices in tax-excluded format primarily.
+     *
      * @param ProductPresentationSettings $settings
      * @param array $product
      */
@@ -1006,78 +1010,99 @@ class ProductLazyArray extends AbstractLazyArray
         ProductPresentationSettings $settings,
         array $product
     ): void {
+        // First, we resolve the discounts to display on the product.
         $this->product['has_discount'] = false;
         $this->product['discount_type'] = null;
         $this->product['discount_percentage'] = null;
         $this->product['discount_percentage_absolute'] = null;
         $this->product['discount_amount'] = null;
         $this->product['discount_amount_to_display'] = null;
+        $this->product['discount_amount_tax_excluded'] = null;
+        $this->product['discount_amount_tax_included'] = null;
+        $this->product['discount_amount_to_display_tax_excluded'] = null;
+        $this->product['discount_amount_to_display_tax_included'] = null;
 
-        if ($settings->include_taxes) {
-            $price = $regular_price = $product['price'];
-        } else {
-            $price = $regular_price = $product['price_tax_exc'];
-        }
+        if ($this->product['specific_prices']) {
+            $this->product['has_discount'] = 0 != $this->product['reduction'];
+            $this->product['discount_type'] = $this->product['specific_prices']['reduction_type'];
 
-        if ($product['specific_prices']) {
-            $this->product['has_discount'] = 0 != $product['reduction'];
-            $this->product['discount_type'] =
-                $product['specific_prices']['reduction_type'];
+            /*
+             * First, the percentage reduction. We fill it out only if the reduction type is percentage,
+             * otherwise, we have no data and the numbers contain meaningless zeros.
+             */
+            if ($this->product['specific_prices']['reduction_type'] == 'percentage') {
+                $absoluteReduction = new DecimalNumber($this->product['specific_prices']['reduction']);
+                $absoluteReduction = $absoluteReduction->times(new DecimalNumber('100'));
+                $negativeReduction = $absoluteReduction->toNegative();
+                $presAbsoluteReduction = $absoluteReduction->round(2, Rounding::ROUND_HALF_UP);
+                $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
 
-            $absoluteReduction = new DecimalNumber(
-                $product['specific_prices']['reduction']
-            );
-            $absoluteReduction = $absoluteReduction->times(
-                new DecimalNumber('100')
-            );
-            $negativeReduction = $absoluteReduction->toNegative();
-            $presAbsoluteReduction = $absoluteReduction->round(
-                2,
-                Rounding::ROUND_HALF_UP
-            );
-            $presNegativeReduction = $negativeReduction->round(
-                2,
-                Rounding::ROUND_HALF_UP
-            );
-
-            // TODO: add percent sign according to locale preferences
-            $this->product['discount_percentage'] =
-                Context::getContext()
-                    ->getCurrentLocale()
-                    ->formatNumber($presNegativeReduction) . '%';
-            $this->product['discount_percentage_absolute'] =
-                Context::getContext()
-                    ->getCurrentLocale()
-                    ->formatNumber($presAbsoluteReduction) . '%';
-            if ($settings->include_taxes) {
-                $regular_price = $product['price_without_reduction'];
-            } else {
-                $regular_price =
-                    $product['price_without_reduction_without_tax'];
+                // TODO: add percent sign according to locale preferences
+                $this->product['discount_percentage'] = Context::getContext()->getCurrentLocale()->formatNumber($presNegativeReduction) . '%';
+                $this->product['discount_percentage_absolute'] = Context::getContext()->getCurrentLocale()->formatNumber($presAbsoluteReduction) . '%';
             }
-            // We must calculate the real amount of discount.
-            // see @https://github.com/PrestaShop/PrestaShop/issues/32924
-            $product['reduction'] = $regular_price - $price;
-            $this->product['discount_amount'] = $this->priceFormatter->format(
-                $product['reduction']
-            );
-            $this->product['discount_amount_to_display'] =
-                '-' . $this->priceFormatter->format($product['reduction']);
+
+            /*
+             * Then, the amount reduction. Amount reduction is valid for both percentage and amount reduction types,
+             * because in case of percentage, we also want to display the real amount of discount. Core provides us
+             * with the calculated reduction.
+             *
+             * Note that we must calculate the real amount of discount - see @https://github.com/PrestaShop/PrestaShop/issues/32924.
+             */
+            $this->product['reduction_tax_excluded'] = $this->product['price_without_reduction_without_tax'] - $this->product['price_tax_exc'];
+            $this->product['reduction_tax_included'] = $this->product['price_without_reduction'] - $this->product['price'];
+            $this->product['discount_amount_tax_excluded'] = $this->priceFormatter->format($this->product['price_without_reduction_without_tax'] - $this->product['price_tax_exc']);
+            $this->product['discount_amount_tax_included'] = $this->priceFormatter->format($this->product['price_without_reduction'] - $this->product['price']);
+            $this->product['discount_amount_to_display_tax_excluded'] = '-' . $this->product['discount_amount_tax_excluded'];
+            $this->product['discount_amount_to_display_tax_included'] = '-' . $this->product['discount_amount_tax_included'];
+            if ($settings->include_taxes) {
+                $this->product['reduction'] = $this->product['reduction_tax_included'];
+                $this->product['discount_amount'] = $this->product['discount_amount_tax_included'];
+                $this->product['discount_amount_to_display'] = $this->product['discount_amount_to_display_tax_included'];
+            } else {
+                $this->product['reduction'] = $this->product['reduction_tax_excluded'];
+                $this->product['discount_amount'] = $this->product['discount_amount_tax_excluded'];
+                $this->product['discount_amount_to_display'] = $this->product['discount_amount_to_display_tax_excluded'];
+            }
         }
 
-        $this->product['price_amount'] = $price;
-        $this->product['price'] = $this->priceFormatter->format($price);
-        $this->product['regular_price_amount'] = $regular_price;
-        $this->product['regular_price'] = $this->priceFormatter->format(
-            $regular_price
-        );
-
-        if ($product['reduction'] < $product['price_without_reduction']) {
-            $this->product['discount_to_display'] =
-                $this->product['discount_amount'];
+        /*
+         * Now, selling prices. We have the current selling price and the price before discounts. First, the values for the current
+         * tax display context, then, the tax-included and tax-excluded values for both prices, so it's easy to display them as needed.
+         */
+        $this->product['price_amount_tax_excluded'] = $this->product['price_tax_exc'];
+        $this->product['price_amount_tax_included'] = $this->product['price'];
+        $this->product['price_tax_excluded'] = $this->priceFormatter->format($this->product['price_tax_exc']);
+        $this->product['price_tax_included'] = $this->priceFormatter->format($this->product['price']);
+        $this->product['regular_price_amount_tax_excluded'] = $this->product['price_without_reduction_without_tax'];
+        $this->product['regular_price_amount_tax_included'] = $this->product['price_without_reduction'];
+        $this->product['regular_price_tax_excluded'] = $this->priceFormatter->format($this->product['price_without_reduction_without_tax']);
+        $this->product['regular_price_tax_included'] = $this->priceFormatter->format($this->product['price_without_reduction']);
+        if ($settings->include_taxes) {
+            $this->product['price_amount'] = $this->product['price_amount_tax_included'];
+            $this->product['price'] = $this->product['price_tax_included'];
+            $this->product['regular_price_amount'] = $this->product['regular_price_amount_tax_included'];
+            $this->product['regular_price'] = $this->product['regular_price_tax_included'];
         } else {
-            $this->product['discount_to_display'] =
-                $this->product['regular_price'];
+            $this->product['price_amount'] = $this->product['price_amount_tax_excluded'];
+            $this->product['price'] = $this->product['price_tax_excluded'];
+            $this->product['regular_price_amount'] = $this->product['regular_price_amount_tax_excluded'];
+            $this->product['regular_price'] = $this->product['regular_price_tax_excluded'];
+        }
+
+        /*
+         * Some old weird safety check that prevents displaying discount higher than the price itself.
+         * In that case, we just display the regular price as discount, without percentage or amount,
+         * because they don't make sense in this case.
+         */
+        if ($this->product['reduction'] < $this->product['price_without_reduction']) {
+            $this->product['discount_to_display'] = $this->product['discount_amount'];
+            $this->product['discount_to_display_tax_excluded'] = $this->product['discount_amount_tax_excluded'];
+            $this->product['discount_to_display_tax_included'] = $this->product['discount_amount_tax_included'];
+        } else {
+            $this->product['discount_to_display'] = $this->product['regular_price'];
+            $this->product['discount_to_display_tax_excluded'] = $this->product['regular_price_tax_excluded'];
+            $this->product['discount_to_display_tax_included'] = $this->product['regular_price_tax_included'];
         }
 
         /*
@@ -1108,8 +1133,7 @@ class ProductLazyArray extends AbstractLazyArray
             );
 
             // And add the full version with the unit after the price
-            $this->product['unit_price_full'] =
-                $this->product['unit_price'] . ' ' . $product['unity'];
+            $this->product['unit_price_full'] = $this->product['unit_price'] . ' ' . $product['unity'];
         } else {
             $this->product['unit_price'] = '';
             $this->product['unit_price_full'] = '';
