@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Translation\Exporter\ThemeExporter as TranslationsExporter;
@@ -117,7 +118,16 @@ class ThemeExporter
         $catalogueDir = '';
         foreach ($languages as $lang) {
             $locale = $lang->getLocale();
-            $catalogueDir = $this->translationsExporter->exportCatalogues($theme->getName(), $locale);
+            try {
+                $catalogueDir = $this->translationsExporter->exportCatalogues($theme->getName(), $locale);
+            } catch (Exception) {
+                // Skip languages whose translation catalogues cannot be exported (e.g. custom languages
+                // without associated translation files).
+            }
+        }
+
+        if (empty($catalogueDir)) {
+            return;
         }
 
         $catalogueDirParts = explode(DIRECTORY_SEPARATOR, $catalogueDir);
