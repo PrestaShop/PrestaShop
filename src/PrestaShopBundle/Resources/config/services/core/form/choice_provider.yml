@@ -16,6 +16,11 @@ services:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider:
     public: true
 
+  prestashop.core.form.choice_provider.currency_by_id.with_inactive:
+    class: PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider
+    arguments:
+      $activeOnly: false
+
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageChoiceProvider:
     arguments:
       $languages: '@=service("prestashop.adapter.data_provider.language").getLanguages(false)'
