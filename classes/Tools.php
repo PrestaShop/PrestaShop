@@ -698,14 +698,16 @@ class ToolsCore
             return $currency;
         } else {
             // Get currency from context
-            $currency = Shop::getEntityIds('currency', Context::getContext()->shop->id, true, true);
-            if (isset($currency[0]) && $currency[0]['id_currency']) {
-                $cookie->id_currency = $currency[0]['id_currency'];
+            $shopCurrencies = Shop::getEntityIds('currency', Context::getContext()->shop->id, true, true);
+            if (isset($shopCurrencies[0]) && $shopCurrencies[0]['id_currency']) {
+                $cookie->id_currency = $shopCurrencies[0]['id_currency'];
 
                 return Currency::getCurrencyInstance((int) $cookie->id_currency);
             }
         }
 
+        // Fallback: return the default currency object even if not associated to this shop.
+        // This prevents returning an array when a newly created shop has no currency configured yet.
         return $currency;
     }
 
