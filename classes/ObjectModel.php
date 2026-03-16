@@ -355,7 +355,10 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             if ($type == self::FORMAT_LANG && $id_lang && is_array($value)) {
                 if (!empty($value[$id_lang])) {
                     $value = $value[$id_lang];
-                } elseif (!empty($data['required'])) {
+                } elseif (!empty($data['required']) || in_array(
+                    Tools::strtolower($data['validate'] ?? ''),
+                    ['isrequiredwhenactive', 'defaultlanguagerequiredwhenactive']
+                )) {
                     $value = $value[Configuration::get('PS_LANG_DEFAULT')];
                 } else {
                     $value = '';
