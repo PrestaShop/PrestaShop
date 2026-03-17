@@ -323,9 +323,6 @@
   <configuration id="PS_GUEST_CHECKOUT_ENABLED" name="PS_GUEST_CHECKOUT_ENABLED">
     <value>1</value>
   </configuration>
-  <configuration id="PS_ONE_PAGE_CHECKOUT_ENABLED" name="PS_ONE_PAGE_CHECKOUT_ENABLED">
-    <value>0</value>
-  </configuration>
   <configuration id="PS_CHECKOUT_PROCESS_PROVIDER_MODULE" name="PS_CHECKOUT_PROCESS_PROVIDER_MODULE">
     <value/>
   </configuration>

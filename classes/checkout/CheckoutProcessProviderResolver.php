@@ -4,23 +4,11 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShopBundle\Translation\TranslatorComponent;
-use Psr\Log\LoggerInterface;
 
 class CheckoutProcessProviderResolverCore
 {
     public const PROVIDER_MODULE_CONFIG_KEY = 'PS_CHECKOUT_PROCESS_PROVIDER_MODULE';
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct()
-    {
-        $this->logger = new LegacyLogger();
-    }
 
     /**
      * Returns the checkout process provided by the configured checkout module.
@@ -49,43 +37,13 @@ class CheckoutProcessProviderResolverCore
             'translator' => $translator,
         ], $providerModuleId, true);
 
-        if (!is_array($hookOutput) || empty($hookOutput)) {
-            $this->logProviderWarning(
-                sprintf(
-                    'Configured module "%s" is not registered on hook actionCheckoutBuildProcess.',
-                    $providerModuleName
-                )
-            );
-
-            return null;
-        }
-
-        if (!array_key_exists($providerModuleName, $hookOutput)) {
-            $this->logProviderWarning(
-                sprintf(
-                    'Configured module "%s" is not the hook output key on actionCheckoutBuildProcess. Returned keys: [%s].',
-                    $providerModuleName,
-                    implode(', ', array_keys($hookOutput))
-                )
-            );
-
+        if (!is_array($hookOutput) || !array_key_exists($providerModuleName, $hookOutput)) {
             return null;
         }
 
         $providerOutput = $hookOutput[$providerModuleName];
-
         if ($providerOutput instanceof CheckoutProcess) {
             return $providerOutput;
-        }
-
-        if (null !== $providerOutput) {
-            $this->logProviderWarning(
-                sprintf(
-                    'Configured module "%s" returned "%s" on actionCheckoutBuildProcess. Expected CheckoutProcess.',
-                    $providerModuleName,
-                    is_object($providerOutput) ? $providerOutput::class : gettype($providerOutput)
-                )
-            );
         }
 
         return null;
@@ -112,47 +70,14 @@ class CheckoutProcessProviderResolverCore
     {
         $providerModuleId = (int) Module::getModuleIdByName($providerModuleName);
         if ($providerModuleId <= 0) {
-            $this->logProviderWarning(
-                sprintf(
-                    'Configured module "%s" does not exist.',
-                    $providerModuleName
-                )
-            );
-
             return null;
         }
 
         $providerModule = Module::getInstanceByName($providerModuleName);
-        if (!$providerModule instanceof Module) {
-            $this->logProviderWarning(
-                sprintf(
-                    'Configured module "%s" cannot be loaded.',
-                    $providerModuleName
-                )
-            );
-
-            return null;
-        }
-
-        if (!$providerModule->isEnabledForShopContext()) {
-            $this->logProviderWarning(
-                sprintf(
-                    'Configured module "%s" is disabled for current shop context.',
-                    $providerModuleName
-                )
-            );
-
+        if (!$providerModule instanceof Module || !$providerModule->isEnabledForShopContext()) {
             return null;
         }
 
         return $providerModuleId;
-    }
-
-    /**
-     * @param string $message
-     */
-    protected function logProviderWarning(string $message): void
-    {
-        $this->logger->warning('Checkout process provider: ' . $message);
     }
 }
