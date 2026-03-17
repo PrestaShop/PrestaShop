@@ -2873,6 +2873,11 @@
       <title>Modify checkout process</title>
       <description>This hook is called when constructing the checkout process</description>
     </hook>
+    <hook id="actionCheckoutBuildProcess">
+      <name>actionCheckoutBuildProcess</name>
+      <title>Build checkout process</title>
+      <description>This hook is called before rendering checkout. Only the module configured in PS_CHECKOUT_PROCESS_PROVIDER_MODULE is executed and can return a CheckoutProcess instance.</description>
+    </hook>
     <hook id="actionCheckoutStepRenderTemplate">
       <name>actionCheckoutStepRenderTemplate</name>
       <title>Modify the parameters of the checkout step template rendering</title>
