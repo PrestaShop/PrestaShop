@@ -145,11 +145,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         if ($this->id_product) {
             $this->product = new Product($this->id_product, true, $this->context->language->id, $this->context->shop->id);
         }
+        // check is product object not loaded and change controller type
         if (!Validate::isLoadedObject($this->product)) {
-            header('HTTP/1.1 404 Not Found');
-            header('Status: 404 Not Found');
-            $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
+            $this->controller_type = '404'; 
             $this->setTemplate('errors/404');
+            $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
 
             return;
         }
@@ -311,6 +311,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function initContent()
     {
+        // added controller type check
+        if ($this->controller_type == '404') {
+            parent::initContent();
+            return;
+        }
         if (!$this->errors) {
             if (Pack::isPack((int) $this->product->id)
                 && !Pack::isInStock((int) $this->product->id, $this->product->minimal_quantity, $this->context->cart)
@@ -1340,7 +1345,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function getBreadcrumbLinks()
     {
         $breadcrumb = parent::getBreadcrumbLinks();
-
+        
+        // added product object check
+        if (!Validate::isLoadedObject($this->product) || $this->controller_type == '404') {
+            return $breadcrumb;
+        }
+        
         $categoryDefault = new Category($this->product->id_category_default, $this->context->language->id);
 
         foreach ($categoryDefault->getAllParents() as $category) {
