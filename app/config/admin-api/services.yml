@@ -49,6 +49,12 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 5 }
 
+  # Wraps BulkCommandExceptionInterface in HttpException(207) so the FlattenException carries the correct status code.
+  # Must run BEFORE ApiPlatform ExceptionListener (priority -96).
+  PrestaShopBundle\EventListener\API\BulkCommandExceptionListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: -90 }
+
   # SSL middleware
   PrestaShopBundle\EventListener\API\SSLMiddlewareListener:
     autowire: true
@@ -59,6 +65,12 @@ services:
 
   # Serializer modifications, the following services are automatically injected in the serializer Symfony service,
   # to limit their impact on the Admin they are only defined for the API context.
+
+  # Normalizes BulkCommandExceptionInterface into a 207 Multi-Status response with the list of individual errors
+  PrestaShopBundle\ApiPlatform\Normalizer\BulkCommandExceptionNormalizer:
+    autowire: true
+    tags:
+      - { name: 'serializer.normalizer', priority: 100 }
 
   # This normalizer disables the denormalization process of File fields
   PrestaShopBundle\ApiPlatform\Normalizer\UploadedFileNormalizer:
