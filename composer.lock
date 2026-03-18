@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e84fc033e547231cc577e5f8ceb7ec1d",
+    "content-hash": "5c37c613f9eeab7c56d7f8d701142033",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5208,16 +5208,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "dev-change-validto",
+            "version": "dev-fix-bulk-error-status-code",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "c74a019fc74aa0df82b5b5a8187ca17c1fbfe9bc"
+                "url": "https://github.com/boherm/ps_apiresources.git",
+                "reference": "51be59ee995aa61dda4c0fe309c352da4c407221"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/c74a019fc74aa0df82b5b5a8187ca17c1fbfe9bc",
-                "reference": "c74a019fc74aa0df82b5b5a8187ca17c1fbfe9bc",
+                "url": "https://api.github.com/repos/boherm/ps_apiresources/zipball/51be59ee995aa61dda4c0fe309c352da4c407221",
+                "reference": "51be59ee995aa61dda4c0fe309c352da4c407221",
                 "shasum": ""
             },
             "require": {
@@ -5253,6 +5253,12 @@
                     "@composer clear-test-cache",
                     "@composer setup-local-tests -- --build-db"
                 ],
+                "header-stamp": [
+                    "@php vendor/bin/header-stamp --license=vendor/prestashop/header-stamp/assets/afl.txt --exclude=vendor --dry-run"
+                ],
+                "header-stamp-fix": [
+                    "@php vendor/bin/header-stamp --license=vendor/prestashop/header-stamp/assets/afl.txt --exclude=vendor"
+                ],
                 "run-module-tests": [
                     "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Integration/phpunit-local.xml"
                 ],
@@ -5267,6 +5273,15 @@
                 ],
                 "rector-fix": [
                     "vendor/bin/rector process"
+                ],
+                "phpstan": [
+                    "_PS_ROOT_DIR_=${_PS_ROOT_DIR_:?'Set _PS_ROOT_DIR_ to your PrestaShop installation path'} _PS_BRANCH_=${_PS_BRANCH_:?'Set _PS_BRANCH_ to 9.0.x|9.1.x|develop'} php -d memory_limit=-1 vendor/bin/phpstan analyse --configuration=tests/PHPStan/phpstan-${_PS_BRANCH_}.neon --no-progress"
+                ],
+                "phpstan-baseline": [
+                    "_PS_ROOT_DIR_=${_PS_ROOT_DIR_:?'Set _PS_ROOT_DIR_ to your PrestaShop installation path'} _PS_BRANCH_=${_PS_BRANCH_:?'Set _PS_BRANCH_ to 9.0.x|9.1.x|develop'} php -d memory_limit=-1 vendor/bin/phpstan analyse --configuration=tests/PHPStan/phpstan-${_PS_BRANCH_}.neon --no-progress --generate-baseline=tests/PHPStan/phpstan-${_PS_BRANCH_}-baseline.neon"
+                ],
+                "phpstan:docker": [
+                    "bash tests/phpstan.sh"
                 ]
             },
             "license": [
@@ -5281,10 +5296,9 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_apiresources/tree/change-validto",
-                "issues": "https://github.com/PrestaShop/ps_apiresources/issues"
+                "source": "https://github.com/boherm/ps_apiresources/tree/fix-bulk-error-status-code"
             },
-            "time": "2026-02-24T15:00:54+00:00"
+            "time": "2026-03-18T09:54:23+00:00"
         },
         {
             "name": "prestashop/ps_banner",
