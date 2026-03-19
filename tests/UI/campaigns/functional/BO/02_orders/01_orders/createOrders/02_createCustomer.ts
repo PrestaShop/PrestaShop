@@ -13,6 +13,7 @@ import {
   type BrowserContext,
   FakerCustomer,
   type Page,
+  type Frame,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
@@ -28,10 +29,10 @@ Post-condition:
 describe('BO - Orders - Create order : Create customer from new order page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let customerFrame;
+  let customerFrame: Frame;
 
   const customerData1: FakerCustomer = new FakerCustomer({
-    firstName: 'Tom', lastName: null, email: '', password: '',
+    firstName: 'Tom', lastName: null!, email: '', password: '',
   });
   const customerData2: FakerCustomer = new FakerCustomer({
     firstName: 'Tom',
@@ -40,7 +41,7 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
     password: '',
   });
   const customerData3: FakerCustomer = new FakerCustomer({
-    name: 'Tom',
+    firstName: 'Tom',
     lastName: 'Thierry',
     password: '',
   });
@@ -97,7 +98,7 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
   it('should enable guest account and check the disabled input', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableGuestAccount', baseContext);
 
-    customerFrame = boOrdersCreatePage.getNewCustomerIframe(page);
+    customerFrame = boOrdersCreatePage.getNewCustomerIframe(page)!;
 
     await boCustomersCreatePage.enableGuestAccount(customerFrame!, true);
 
@@ -160,7 +161,7 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
   });
 
   it('should create customer and check result', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'createNewCustomer', baseContext);
 
     const customerName = await boOrdersCreatePage.addNewCustomer(page, customerData);
     expect(customerName).to.contains(`${customerData.firstName} ${customerData.lastName}`);
@@ -176,5 +177,5 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
   });
 
   // Post-condition: Delete created customer
-  deleteCustomerTest(customerData, baseContext);
+  deleteCustomerTest(customerData, `${baseContext}Post_test`);
 });
