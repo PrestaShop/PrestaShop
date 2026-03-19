@@ -32,7 +32,10 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
   let customerFrame: Frame;
 
   const customerData1: FakerCustomer = new FakerCustomer({
-    firstName: 'Tom', lastName: null!, email: '', password: '',
+    firstName: 'Tom',
+    lastName: null!,
+    email: '',
+    password: '',
   });
   const customerData2: FakerCustomer = new FakerCustomer({
     firstName: 'Tom',
@@ -45,7 +48,9 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
     lastName: 'Thierry',
     password: '',
   });
-  const customerData: FakerCustomer = new FakerCustomer({password: 'abcdefghijkl'});
+  const customerData: FakerCustomer = new FakerCustomer({
+    password: 'abcdefghijkl',
+  });
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
