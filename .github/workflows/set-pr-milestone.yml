@@ -1,0 +1,105 @@
+name: Set PR milestone
+on:
+  pull_request_target:
+    types: [ opened, edited ]
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  set-milestone:
+    runs-on: ubuntu-latest
+    # Only run when no milestone is set, or when the base branch changed (edited event)
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Set milestone based on target branch
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const baseBranch = pr.base.ref;
+
+            // If this is an edit event, only proceed if the base branch changed
+            if (context.payload.action === 'edited') {
+              const changes = context.payload.changes;
+              if (!changes || !changes.base) {
+                console.log('Edit event but base branch did not change, skipping.');
+                return;
+              }
+            }
+
+            // Fetch all open milestones
+            const milestones = await github.paginate(github.rest.issues.listMilestones, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100,
+            });
+
+            console.log(`Found ${milestones.length} open milestones: ${milestones.map(m => m.title).join(', ')}`);
+            console.log(`Target branch: ${baseBranch}`);
+
+            // Parse semver from milestone title (e.g. "9.2.0" or "9.1.1")
+            const semverRegex = /^(\d+)\.(\d+)\.(\d+)$/;
+
+            function parseMilestone(title) {
+              const match = title.match(semverRegex);
+              if (!match) return null;
+              return { major: parseInt(match[1]), minor: parseInt(match[2]), patch: parseInt(match[3]) };
+            }
+
+            let selectedMilestone = null;
+
+            if (baseBranch === 'develop') {
+              // Find the highest major.minor milestone (highest major, then highest minor)
+              let best = null;
+              for (const ms of milestones) {
+                const v = parseMilestone(ms.title);
+                if (!v) continue;
+                if (!best
+                  || v.major > best.version.major
+                  || (v.major === best.version.major && v.minor > best.version.minor)
+                  || (v.major === best.version.major && v.minor === best.version.minor && v.patch > best.version.patch)
+                ) {
+                  best = { milestone: ms, version: v };
+                }
+              }
+              selectedMilestone = best?.milestone || null;
+            } else {
+              // Match branches like "9.1.x" or "9.0.x"
+              const branchMatch = baseBranch.match(/^(\d+)\.(\d+)\.x$/);
+              if (branchMatch) {
+                const branchMajor = parseInt(branchMatch[1]);
+                const branchMinor = parseInt(branchMatch[2]);
+
+                // Find the highest patch version for this major.minor
+                let best = null;
+                for (const ms of milestones) {
+                  const v = parseMilestone(ms.title);
+                  if (!v) continue;
+                  if (v.major === branchMajor && v.minor === branchMinor) {
+                    if (!best || v.patch > best.version.patch) {
+                      best = { milestone: ms, version: v };
+                    }
+                  }
+                }
+                selectedMilestone = best?.milestone || null;
+              }
+            }
+
+            if (!selectedMilestone) {
+              console.log('No matching milestone found, leaving empty.');
+              return;
+            }
+
+            console.log(`Setting milestone to: ${selectedMilestone.title}`);
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              milestone: selectedMilestone.number,
+            });
