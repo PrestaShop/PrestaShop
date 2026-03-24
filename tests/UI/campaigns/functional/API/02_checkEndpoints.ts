@@ -176,6 +176,8 @@ describe('API : Check endpoints', async () => {
         // @todo: add tests
         '/contacts: POST',
         // @todo: add tests
+        '/countries/{countryId}: GET',
+        // @todo: add tests
         '/customers/bulk-delete: DELETE',
         // @todo: add tests
         '/customers/bulk-disable: PUT',
@@ -204,7 +206,7 @@ describe('API : Check endpoints', async () => {
         // @todo: add tests
         '/customers: POST',
         // @todo: add tests
-        '/discount-types: GET',
+        '/discounts/types: GET',
         // @todo: add tests
         '/discounts/bulk-delete: DELETE',
         // @todo: add tests
@@ -310,21 +312,21 @@ describe('API : Check endpoints', async () => {
         // tests/UI/campaigns/functional/API/02_endpoints/08_product/10_postProduct.ts
         '/products: POST',
         // @todo: add tests
+        '/search-aliases/bulk-delete: DELETE',
+        // @todo: add tests
+        '/search-aliases/{searchTerm}: GET',
+        // @todo: add tests
+        '/search-aliases/{searchTerm}: PUT',
+        // @todo: add tests
+        '/search-aliases: POST',
+        // @todo: add tests
         '/showcase-cards/{showcaseCardName}/{employeeId}/close: PUT',
         // @todo: add tests
         '/showcase-cards/{showcaseCardName}/{employeeId}: GET',
-        // @todo: add tests
-        // '/search-aliases/bulk-delete: DELETE',
-        // @todo: add tests
-        // '/search-aliases/{searchTerm}: GET',
-        // @todo: add tests
-        // '/search-aliases/{searchTerm}: PUT',
         // tests/UI/campaigns/functional/API/02_endpoints/09_searchAlias/01_deleteSearch.ts
         // '/search-aliases: DELETE',
         // @todo: add tests
-        // '/search-aliases: GET',
-        // @todo: add tests
-        // '/search-aliases: POST',
+        '/search-aliases: GET',
         // @todo: add tests
         '/stores/bulk-delete: DELETE',
         // @todo: add tests
