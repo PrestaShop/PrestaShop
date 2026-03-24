@@ -1,7 +1,27 @@
 <?php
 /**
- * For the full copyright and license information, please view the
- * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
 declare(strict_types=1);
@@ -22,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /** @var int */
-    private const CUSTOMER_ONLINE_TIME = 1800; // 30 min
+    private const CUSTOMER_ONLINE_TIME = '30 MINUTE';
 
     /**
      * @param Connection $connection
@@ -55,15 +75,18 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('co.`id_guest` AS customer_online')
             ->addSelect('s.`name` AS shop_name')
             ->addSelect('o.`total_products` AS cart_total')
-            ->addSelect($this->getCartStatusQuery() . ' AS status')
+            ->addSelect("CASE 
+                WHEN o.id_order IS NOT NULL THEN 'ordered'
+                WHEN c.date_add < NOW() - INTERVAL 1 DAY THEN 'abandoned_cart'
+                ELSE 'not_ordered' END AS status")
             ->setParameter('current_date', date('Y-m-d H:i:00', time()))
             ->setParameter('cart_expiration_time', CartStatus::ABANDONED_CART_EXPIRATION_TIME)
         ;
 
+
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
             ->applySorting($searchCriteria, $qb)
-            ->applyDeterministicSorting($searchCriteria, $qb, 'c', 'id_cart')
         ;
 
         return $qb;
@@ -76,22 +99,6 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         return $this->getQueryBuilder($searchCriteria)
             ->select('COUNT(DISTINCT c.`id_cart`)');
-    }
-
-    /**
-     * Format cart status query.
-     *
-     * @return string
-     */
-    private function getCartStatusQuery(): string
-    {
-        return '(IF
-           (
-                IFNULL(o.id_order, "not_ordered") = "not_ordered",
-                IF (TIME_TO_SEC(TIMEDIFF(:current_date, c.date_add)) > :cart_expiration_time, "abandoned_cart", "not_ordered"),
-                "ordered"
-           )
-       )';
     }
 
     /**
@@ -110,12 +117,6 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         $filters = $searchCriteria->getFilters();
-
-        $qbOnline = $this->connection
-            ->createQueryBuilder()
-            ->select('DISTINCT co.`id_guest`')
-            ->from($this->dbPrefix . 'connections', 'co')
-            ->where('TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', `date_add`)) < ' . self::CUSTOMER_ONLINE_TIME);
 
         $qb = $this->connection
             ->createQueryBuilder()
@@ -144,9 +145,9 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb->leftJoin(
             'c',
-            '(' . $qbOnline->getSQL() . ')',
+            $this->dbPrefix . 'connections',
             'co',
-            'co.`id_guest` = c.`id_guest`'
+            'co.`id_guest` = c.`id_guest` AND co.date_add > NOW() - INTERVAL ' . self::CUSTOMER_ONLINE_TIME
         );
 
         $qb->leftJoin(
@@ -208,7 +209,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('status' === $filterName) {
-                $qb->andWhere($this->getCartStatusQuery() . ' = :' . $filterName);
+                // $qb->andWhere($this->getCartStatusQuery() . ' = :' . $filterName);
                 $qb->setParameter($filterName, $filterValue);
                 $qb->setParameter('current_date', date('Y-m-d H:i:00', time()));
                 $qb->setParameter('cart_expiration_time', CartStatus::ABANDONED_CART_EXPIRATION_TIME);
