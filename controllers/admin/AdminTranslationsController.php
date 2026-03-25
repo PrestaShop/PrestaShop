@@ -3036,10 +3036,24 @@ class AdminTranslationsControllerCore extends AdminController
             $email_file = _PS_ROOT_DIR_ . $email;
         }
 
-        if (strpos(realpath($email_file), _PS_MAIL_DIR_) === 0 && file_exists($email_file)) {
+        if (!file_exists($email_file)) {
+            return '';
+        }
+
+        $realEmailPath = realpath($email_file);
+
+        if (!$realEmailPath) {
+            return '';
+        }
+
+        $isCoreMail = strpos($realEmailPath, _PS_MAIL_DIR_) === 0;
+        $isModuleMail = strpos($realEmailPath, _PS_MODULE_DIR_) === 0
+            && str_contains($realEmailPath, '/mails/');
+
+        $email_html = '';
+
+        if ($isCoreMail || $isModuleMail) {
             $email_html = file_get_contents($email_file);
-        } else {
-            $email_html = '';
         }
 
         return $email_html;
