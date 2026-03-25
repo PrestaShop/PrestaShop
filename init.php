@@ -4,7 +4,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 /**
- * @deprecated
+ * @deprecated This file will be removed in v10
  *
  * Not used anymore, will be removed in next major version
  */
