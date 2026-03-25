@@ -287,12 +287,12 @@ class FeatureValueController extends PrestaShopAdminController
         $featuresChoices = $featureValuesChoiceProvider->getChoices(['feature_id' => $featureId, 'custom' => false]);
 
         $data = [];
-        if (count($featuresChoices) !== 0) {
-            $data[] = [
-                'id' => 0,
-                'value' => $this->trans('Choose a value', [], 'Admin.Catalog.Feature'),
-            ];
-        }
+
+        // We add this choice no matter what otherwise the feature select on the product page even if you don't have feature values yet
+        $data[] = [
+            'id' => 0,
+            'value' => $this->trans('Choose a value', [], 'Admin.Catalog.Feature'),
+        ];
 
         foreach ($featuresChoices as $featureName => $featureId) {
             $data[] = [
