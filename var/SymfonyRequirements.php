@@ -389,7 +389,7 @@ class SymfonyRequirements extends RequirementCollection
 {
     const LEGACY_REQUIRED_PHP_VERSION = '8.1';
     const REQUIRED_PHP_VERSION = '8.1';
-    const MAXIMUM_PHP_VERSION = '8.4';
+    const MAXIMUM_PHP_VERSION = '8.5';
 
     /**
      * Constructor that initializes the requirements.
