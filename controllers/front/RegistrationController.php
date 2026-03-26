@@ -58,6 +58,7 @@ class RegistrationControllerCore extends FrontController
                 // Before that, we need to check if 'back' is legit URL that is on OUR domain, with the right protocol
                 $back = rawurldecode(Tools::getValue('back'));
                 if (Tools::urlBelongsToShop($back)) {
+                    $this->success[] = $this->trans('Account successfully created', [], 'Shop.Theme.Customeraccount');
                     $this->redirectWithNotifications($back);
                 }
 
