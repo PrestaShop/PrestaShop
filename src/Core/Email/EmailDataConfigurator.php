@@ -6,8 +6,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Email;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
  * Class EmailDataConfigurator is responsible for configuring email data.
@@ -15,14 +15,14 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 final class EmailDataConfigurator implements DataConfigurationInterface
 {
     /**
-     * @var ConfigurationInterface
+     * @var Configuration
      */
     private $configuration;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @param Configuration $configuration
      */
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
@@ -78,7 +78,9 @@ final class EmailDataConfigurator implements DataConfigurationInterface
             $smtpPassword = (string) $config['smtp_config']['password'];
 
             if ('' !== $smtpPassword || !$this->configuration->get('PS_MAIL_PASSWD')) {
-                $this->configuration->set('PS_MAIL_PASSWD', $smtpPassword);
+                // Use html option to prevent strip_tags() from removing special characters like '<'
+                // @see https://github.com/PrestaShop/PrestaShop/issues/22540
+                $this->configuration->set('PS_MAIL_PASSWD', $smtpPassword, null, ['html' => true]);
             }
         }
 
