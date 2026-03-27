@@ -2288,7 +2288,7 @@ class AdminControllerCore extends Controller
     {
         // We assign js and css files on the last step before display template, because controller can add many js and css files
         $this->context->smarty->assign('css_files', $this->css_files);
-        $this->context->smarty->assign('js_files', array_unique($this->js_files));
+        $this->context->smarty->assign('js_files', array_unique($this->js_files, SORT_REGULAR));
 
         $this->context->smarty->assign([
             'ps_version' => _PS_VERSION_,
