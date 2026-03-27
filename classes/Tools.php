@@ -2194,26 +2194,23 @@ class ToolsCore
 
         fwrite($write_fd, "RewriteEngine on\n");
 
+        $media_domains = '';
         if (
             !$medias
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_1')
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_2')
             && Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
         ) {
-            $medias = [
+            $medias = array_filter(array_unique(array_merge(
                 Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'),
                 Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'),
-                Configuration::getMultiShopValues('PS_MEDIA_SERVER_3'),
-            ];
-        }
+                Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
+            )), function($media) {
+                return is_string($media) && $media;
+            });
 
-        $media_domains = '';
-        foreach ($medias as $media) {
-            $media = array_unique($media);
-            foreach ($media as $media_url) {
-                if ($media_url) {
-                    $media_domains .= 'RewriteCond %{HTTP_HOST} ^' . $media_url . '$ [OR]' . PHP_EOL;
-                }
+            foreach ($medias as $media_url) {
+                $media_domains .= 'RewriteCond %{HTTP_HOST} ^' . $media_url . '$ [OR]' . PHP_EOL;
             }
         }
 
