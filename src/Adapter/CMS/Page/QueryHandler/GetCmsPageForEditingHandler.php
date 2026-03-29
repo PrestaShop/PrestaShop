@@ -66,8 +66,8 @@ final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implement
                 $cms->meta_description,
                 $cms->link_rewrite,
                 $cms->content,
-                $cms->indexation,
-                $cms->active,
+                (bool) $cms->indexation,
+                (bool) $cms->active,
                 $cms->getAssociatedShops(),
                 $this->link->getCMSLink($cms, null, null, $this->langId)
             );
