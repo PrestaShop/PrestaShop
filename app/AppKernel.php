@@ -4,6 +4,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+use League\FlysystemBundle\FlysystemBundle;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\CachedModuleRepository;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
@@ -52,6 +53,7 @@ abstract class AppKernel extends Kernel
             new Symfony\UX\TwigComponent\TwigComponentBundle(),
             new Twig\Extra\TwigExtraBundle\TwigExtraBundle(),
             new Symfony\UX\Icons\UXIconsBundle(),
+            new FlysystemBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

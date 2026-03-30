@@ -9,6 +9,12 @@
  *
  * This class includes functions for image manipulation
  */
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\Storage\FactoryStorageInterface;
+use PrestaShop\PrestaShop\Core\Storage\StorageInterface;
+
 class ImageManagerCore
 {
     public const ERROR_FILE_NOT_EXIST = 1;
@@ -40,6 +46,40 @@ class ImageManagerCore
      * @var array - a list of svg mime types
      */
     protected const SVG_MIMETYPES = ['image/svg+xml', 'image/svg'];
+
+
+    private static ?StorageInterface $storage = null;
+
+    private static function getStorage(): StorageInterface
+    {
+        if (self::$storage === null) {
+            $container = SymfonyContainer::getInstance();
+            if (null === $container || !$container->has(FactoryStorageInterface::class)) {
+                $containerFinder = new \PrestaShop\PrestaShop\Adapter\ContainerFinder(Context::getContext());
+                $container = $containerFinder->getContainer();
+            }
+            $factory = $container->get(FactoryStorageInterface::class);
+            self::$storage = $factory->get('default');
+        }
+
+        return self::$storage;
+    }
+
+    private static function isStorageFeatureFlagEnabled(): bool
+    {
+        try {
+            $container = SymfonyContainer::getInstance();
+            if (null === $container || !$container->has(FeatureFlagStateCheckerInterface::class)) {
+                $containerFinder = new \PrestaShop\PrestaShop\Adapter\ContainerFinder(Context::getContext());
+                $container = $containerFinder->getContainer();
+            }
+            $checker = $container->get(FeatureFlagStateCheckerInterface::class);
+
+            return $checker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_STORAGE);
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
 
     /**
      * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc).
@@ -652,32 +692,41 @@ class ImageManagerCore
             $psAvifQuality = Configuration::get('PS_AVIF_QUALITY');
         }
 
+        $useStorage = self::isStorageFeatureFlagEnabled();
         $success = false;
+        $stream = null;
+        $output = $filename;
+
+        if ($useStorage) {
+            $stream = fopen('php://temp', 'w+b');
+            $output = $stream;
+        }
+
         switch ($type) {
             case 'gif':
                 // @phpstan-ignore-next-line
-                $success = imagegif($resource, $filename);
+                $success = imagegif($resource, $output);
 
                 break;
 
             case 'png':
                 $quality = ($psPngQuality === false ? 7 : $psPngQuality);
                 // @phpstan-ignore-next-line
-                $success = imagepng($resource, $filename, (int) $quality);
+                $success = imagepng($resource, $output, (int) $quality);
 
                 break;
 
             case 'webp':
                 $quality = ($psWebpQuality === false ? 80 : $psWebpQuality);
                 // @phpstan-ignore-next-line
-                $success = imagewebp($resource, $filename, (int) $quality);
+                $success = imagewebp($resource, $output, (int) $quality);
 
                 break;
 
             case 'avif':
                 $quality = ($psAvifQuality === false ? 80 : $psAvifQuality);
                 // @phpstan-ignore-next-line
-                $success = imageavif($resource, $filename, $quality);
+                $success = imageavif($resource, $output, $quality);
 
                 break;
 
@@ -688,10 +737,25 @@ class ImageManagerCore
                 // @phpstan-ignore-next-line
                 imageinterlace($resource, true); // / make it PROGRESSIVE
                 // @phpstan-ignore-next-line
-                $success = imagejpeg($resource, $filename, (int) $quality);
+                $success = imagejpeg($resource, $output, (int) $quality);
 
                 break;
         }
+
+        if ($useStorage && $stream !== null) {
+            rewind($stream);
+            $data = stream_get_contents($stream);
+            fclose($stream);
+
+            if ($data) {
+                $relativeFileName = ltrim(
+                    str_replace(_PS_ROOT_DIR_, '', $filename),
+                    '/'
+                );
+                self::getStorage()->write($relativeFileName, $data);
+            }
+        }
+
         // @phpstan-ignore-next-line
         imagedestroy($resource);
         @chmod($filename, 0664);

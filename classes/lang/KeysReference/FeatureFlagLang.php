@@ -64,3 +64,7 @@ trans('Enable / Disable the new discount system.', 'Admin.Advparameters.Help');
 
 trans('Tag', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the tag page.', 'Admin.Advparameters.Help');
+
+trans('Storage', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the storage system.', 'Admin.Advparameters.Help');
+

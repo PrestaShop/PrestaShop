@@ -1,0 +1,13 @@
+services:
+  prestashop.storage.default:
+    class: PrestaShopBundle\Storage\FlysystemStorage
+    arguments:
+      - '@prestashop.default_storage'
+    public: false
+
+  PrestaShop\PrestaShop\Core\Storage\FactoryStorageInterface:
+    class: PrestaShopBundle\Storage\FactoryStorage
+    public: true
+    arguments:
+      $storages: !service_locator
+          default: '@prestashop.storage.default'

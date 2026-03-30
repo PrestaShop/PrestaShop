@@ -73,3 +73,27 @@ services:
       arguments:
         $employeeRepository: '@PrestaShop\PrestaShop\Adapter\Employee\EmployeeRepository'
         $requestStack: '@request_stack'
+
+    # Copy of what is already defined in app/config/config.yml flysystem + core/storage.yml for the legacy FO container
+    prestashop.flysystem.local_adapter:
+        class: League\Flysystem\Local\LocalFilesystemAdapter
+        arguments:
+            - !php/const _PS_ROOT_DIR_
+
+    prestashop.default_storage:
+        class: League\Flysystem\Filesystem
+        arguments:
+            - '@prestashop.flysystem.local_adapter'
+
+    prestashop.storage.default:
+        class: PrestaShopBundle\Storage\FlysystemStorage
+        arguments:
+            - '@prestashop.default_storage'
+        public: false
+
+    PrestaShop\PrestaShop\Core\Storage\FactoryStorageInterface:
+        class: PrestaShopBundle\Storage\FactoryStorage
+        public: true
+        arguments:
+            $storages: !service_locator
+                default: '@prestashop.storage.default'
