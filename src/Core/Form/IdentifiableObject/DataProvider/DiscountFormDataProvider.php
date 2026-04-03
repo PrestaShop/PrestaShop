@@ -161,6 +161,7 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                 'discount_type' => $discountForEditing->getType()->getValue(),
                 'names' => $discountForEditing->getLocalizedNames(),
                 'description' => $discountForEditing->getDescription(),
+                'active' => $discountForEditing->isActive(),
             ],
             'value' => [
                 'reduction' => [
