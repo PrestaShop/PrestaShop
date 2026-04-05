@@ -4785,16 +4785,16 @@
         },
         {
             "name": "prestashop/dashgoals",
-            "version": "v2.0.4",
+            "version": "v2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashgoals.git",
-                "reference": "13667ef6458cdbc55b760a1d9ae75ac76bb13932"
+                "reference": "24d6e0d7a086ad67ada37710a658bb2c6caa2f97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashgoals/zipball/13667ef6458cdbc55b760a1d9ae75ac76bb13932",
-                "reference": "13667ef6458cdbc55b760a1d9ae75ac76bb13932",
+                "url": "https://api.github.com/repos/PrestaShop/dashgoals/zipball/24d6e0d7a086ad67ada37710a658bb2c6caa2f97",
+                "reference": "24d6e0d7a086ad67ada37710a658bb2c6caa2f97",
                 "shasum": ""
             },
             "require": {
@@ -4823,9 +4823,10 @@
             "description": "PrestaShop module dashgoals",
             "homepage": "https://github.com/PrestaShop/dashgoals",
             "support": {
-                "source": "https://github.com/PrestaShop/dashgoals/tree/v2.0.4"
+                "issues": "https://github.com/PrestaShop/dashgoals/issues",
+                "source": "https://github.com/PrestaShop/dashgoals/tree/v2.0.5"
             },
-            "time": "2023-03-22T16:16:12+00:00"
+            "time": "2026-04-04T11:33:46+00:00"
         },
         {
             "name": "prestashop/dashproducts",
@@ -18432,5 +18433,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
