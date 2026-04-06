@@ -69,6 +69,9 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         $endDate = (clone $now)->modify('+1 month')->setTime(23, 59);
 
         return [
+            'information' => [
+                'active' => true,
+            ],
             'period' => [
                 'valid_date_range' => [
                     'from' => $startDate->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),

@@ -114,6 +114,9 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
         // Set description
         $command->setDescription($data['information']['description'] ?? '');
 
+        // Set active
+        $command->setActive($data['information']['active'] ?? true);
+
         // Set code
         if ($data['usability']['mode']['children_selector'] === DiscountUsabilityModeType::CODE_MODE) {
             $command->setCode($data['usability']['mode']['code'] ?? '');
