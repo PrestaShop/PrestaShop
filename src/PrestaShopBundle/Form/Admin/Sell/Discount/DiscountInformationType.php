@@ -77,7 +77,7 @@ class DiscountInformationType extends TranslatorAwareType
                 ],
             ])
             ->add('active', SwitchType::class, [
-                'label' => $this->trans('Enable Discount', 'Admin.Global'),
+                'label' => $this->trans('Enabled', 'Admin.Global'),
                 'required' => false,
             ])
         ;
