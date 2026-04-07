@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityAddressType;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityGeneralInformationType;
@@ -14,10 +15,12 @@ final class BusinessEntityFormDataProvider implements FormDataProviderInterface
 {
     public const DEFAULT_BILLING_ADDRESS_INDEX = 1;
     public const DEFAULT_SHIPPING_ADDRESS_INDEX = 0;
+    private readonly int $defaultCountryId;
 
     public function __construct(
-        private readonly int $defaultCountryId
+        Configuration $configuration,
     ) {
+        $this->defaultCountryId = (int) $configuration->get('PS_COUNTRY_DEFAULT');
     }
 
     /**

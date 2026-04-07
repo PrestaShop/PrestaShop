@@ -85,11 +85,6 @@ final class AddBusinessEntityHandler
     }
 
     /**
-     * @param BusinessEntity $businessEntity
-     * @param AddBusinessEntityCommand $command
-     *
-     * @return void
-     *
      * @throws CountryConstraintException
      * @throws StateConstraintException
      * @throws UnableToCreateBusinessEntityAddress

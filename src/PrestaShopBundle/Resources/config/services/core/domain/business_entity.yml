@@ -1,6 +1,5 @@
 services:
   _defaults:
-    public: true
-    autowire: true
-  PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\AddBusinessEntityHandler:
     autoconfigure: true
+    autowire: true
+  PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\AddBusinessEntityHandler: ~

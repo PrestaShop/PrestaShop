@@ -8,7 +8,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\AddBusinessEntityHandler;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityBillingAddressConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\AbstractBusinessEntityAddress;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 
 /**
@@ -19,15 +18,7 @@ use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 class AddBusinessEntityCommand
 {
     /**
-     * @param string $name
-     * @param string $legalName
-     * @param string|null $enterpriseId
-     * @param string|null $externalRef
-     * @param bool $flagDeliveryAuthorized
-     * @param BusinessEntityStatus $status
-     * @param bool $billingAddressAsShippingAddress
-     * @param AbstractBusinessEntityAddress[] $billingAddresses
-     * @param AbstractBusinessEntityAddress[] $shippingAddresses
+     * @throws BusinessEntityBillingAddressConstraintException
      */
     public function __construct(
         private readonly string $name,
@@ -53,12 +44,12 @@ class AddBusinessEntityCommand
         return $this->legalName;
     }
 
-    public function getEnterpriseId(): string
+    public function getEnterpriseId(): ?string
     {
         return $this->enterpriseId;
     }
 
-    public function getExternalRef(): string
+    public function getExternalRef(): ?string
     {
         return $this->externalRef;
     }

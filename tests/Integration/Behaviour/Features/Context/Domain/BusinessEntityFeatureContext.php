@@ -22,17 +22,10 @@ use Validate;
 
 class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
 {
-    /** @var array */
-    private $businessEntityDetails = [];
-
-    /** @var array */
-    private $billingAddresses = [];
-
-    /** @var array */
-    private $shippingAddresses = [];
-
-    /** @var BusinessEntityId|null */
-    private $lastBusinessEntityId;
+    private array $businessEntityDetails = [];
+    private array $billingAddresses = [];
+    private array $shippingAddresses = [];
+    private ?BusinessEntityId $lastBusinessEntityId;
 
     /**
      * @Given there is a business entity with the following details:
@@ -160,11 +153,6 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
         Assert::assertTrue($businessEntityAddress->isDefault());
     }
 
-    /**
-     * @param string $name
-     *
-     * @return BusinessEntity
-     */
     private function getBusinessEntityByName(string $name): BusinessEntity
     {
         $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
@@ -178,12 +166,6 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
         return $businessEntity;
     }
 
-    /**
-     * @param string $businessEntityName
-     * @param string $alias
-     *
-     * @return BusinessEntityAddress
-     */
     private function getBusinessEntityAddressByAlias(string $businessEntityName, string $alias): BusinessEntityAddress
     {
         $businessEntity = $this->getBusinessEntityByName($businessEntityName);
