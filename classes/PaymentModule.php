@@ -494,7 +494,9 @@ abstract class PaymentModuleCore extends Module
                         $customization_text = '';
                         if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
                             foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
-                                $customization_text .= '<strong>' . $text['name'] . '</strong>: ' . htmlspecialchars($text['value'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '<br />';
+                                $customization_text .= '<strong>' . $text['name'] . '</strong>: '
+                                    . $this->formatCustomizationValueForEmail($text)
+                                    . '<br />';
                             }
                         }
 
@@ -865,6 +867,21 @@ abstract class PaymentModuleCore extends Module
         }
 
         return Currency::getCurrencyInstance((int) $id_currency);
+    }
+
+    /**
+     * @param array<string, mixed> $customizationText
+     */
+    private function formatCustomizationValueForEmail(array $customizationText): string
+    {
+        if (!empty($customizationText['id_module'])) {
+            $module = Module::getInstanceById((int) $customizationText['id_module']);
+            if (Validate::isLoadedObject($module) && (bool) $module->active) {
+                return (string) $customizationText['value'];
+            }
+        }
+
+        return htmlspecialchars((string) $customizationText['value'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
     /**

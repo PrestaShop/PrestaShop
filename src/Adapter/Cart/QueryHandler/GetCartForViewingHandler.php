@@ -15,6 +15,7 @@ use Gender;
 use Group;
 use Order;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
@@ -239,9 +240,17 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                                 }
                             } elseif (Product::CUSTOMIZE_TEXTFIELD === $type) {
                                 foreach ($data as $item) {
+                                    $allowHtml = false;
+                                    if (!empty($item['id_module'])) {
+                                        $moduleAdapter = new Module();
+                                        $module = $moduleAdapter->getInstanceById((int) $item['id_module']);
+                                        $allowHtml = Validate::isLoadedObject($module) && (bool) $module->active;
+                                    }
+
                                     $productCustomization['fields'][] = [
                                         'name' => $item['name'],
                                         'value' => $item['value'],
+                                        'allow_html' => $allowHtml,
                                         'type' => 'customizable_text_field',
                                     ];
                                 }

@@ -16,6 +16,7 @@ use OrderReturn;
 use OrderSlip;
 use Pack;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
@@ -32,6 +33,7 @@ use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use Product;
 use Shop;
 use StockAvailable;
+use Validate;
 
 /**
  * Handles GetOrderProductsForViewing query using legacy object models
@@ -79,10 +81,18 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                         $customized_product_quantity += (int) $customization['quantity'];
                         foreach ($customization['datas'] as $datas) {
                             foreach ($datas as $data) {
+                                $allowHtml = false;
+                                if (!empty($data['id_module'])) {
+                                    $moduleAdapter = new Module();
+                                    $module = $moduleAdapter->getInstanceById((int) $data['id_module']);
+                                    $allowHtml = Validate::isLoadedObject($module) && (bool) $module->active;
+                                }
+
                                 $customizations[] = new OrderProductCustomizationForViewing(
                                     (int) $data['type'],
                                     (string) $data['name'],
-                                    $data['value']
+                                    (string) $data['value'],
+                                    $allowHtml
                                 );
                             }
                         }
