@@ -6,6 +6,7 @@
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
 use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentCreator;
 use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 
@@ -874,10 +875,30 @@ abstract class PaymentModuleCore extends Module
      */
     private function formatCustomizationValueForEmail(array $customizationText): string
     {
+        static $moduleNames = [];
+        static $moduleManager = null;
+
         if (!empty($customizationText['id_module'])) {
-            $module = Module::getInstanceById((int) $customizationText['id_module']);
-            if (Validate::isLoadedObject($module) && (bool) $module->active) {
-                return (string) $customizationText['value'];
+            $moduleId = (int) $customizationText['id_module'];
+
+            if (!array_key_exists($moduleId, $moduleNames)) {
+                $module = Module::getInstanceById($moduleId);
+
+                if (false === $module) {
+                    $moduleNames[$moduleId] = null;
+                } else {
+                    $moduleNames[$moduleId] = $module->name;
+                }
+            }
+
+            if (!empty($moduleNames[$moduleId])) {
+                if (null === $moduleManager) {
+                    $moduleManager = ModuleManagerBuilder::getInstance()->build();
+                }
+
+                if ($moduleManager->isEnabled($moduleNames[$moduleId])) {
+                    return (string) $customizationText['value'];
+                }
             }
         }
 
