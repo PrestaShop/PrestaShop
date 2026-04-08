@@ -64,7 +64,7 @@
                       {% if customizationField.type == 'customizable_file' %}
                         <img src="{{ customizationField.image }}">
                       {% elseif customizationField.allow_html|default(false) %}
-                        {{ customizationField.value|raw }}
+                        {{ customizationField.value|raw_purified }}
                       {% else %}
                         {{ customizationField.value }}
                       {% endif %}

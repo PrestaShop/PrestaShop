@@ -165,7 +165,7 @@
         <p>
           <strong>{{ customization.name }} :</strong>
           {% if customization.allowHtml %}
-            {{ customization.value|raw }}
+            {{ customization.value|raw_purified }}
           {% else %}
             {{ customization.value }}
           {% endif %}
