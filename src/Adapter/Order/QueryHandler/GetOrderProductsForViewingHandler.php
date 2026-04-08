@@ -10,6 +10,7 @@ use Currency;
 use Db;
 use Image;
 use ImageManager;
+use Module as LegacyModule;
 use Order;
 use OrderInvoice;
 use OrderReturn;
@@ -299,6 +300,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         if (!array_key_exists($moduleId, $moduleNames)) {
             $moduleAdapter = new Module();
 
+            /** @var LegacyModule|false $module */
             $module = $moduleAdapter->getInstanceById($moduleId);
 
             if (false === $module) {

@@ -13,6 +13,7 @@ use Customer;
 use DateTime;
 use Gender;
 use Group;
+use Module as LegacyModule;
 use Order;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleHtmlAuthorizationChecker;
