@@ -15,6 +15,7 @@ use Gender;
 use Group;
 use Order;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleHtmlAuthorizationChecker;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
@@ -22,6 +23,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartView;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Util\Sorter;
 use Product;
 use StockAvailable;
@@ -35,7 +37,8 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
 {
     public function __construct(
         private ImageManager $imageManager,
-        private Locale $locale
+        private Locale $locale,
+        private ModuleHtmlAuthorizationChecker $moduleHtmlAuthorizationChecker
     ) {
     }
 
@@ -240,17 +243,10 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                                 }
                             } elseif (Product::CUSTOMIZE_TEXTFIELD === $type) {
                                 foreach ($data as $item) {
-                                    $allowHtml = false;
-                                    if (!empty($item['id_module'])) {
-                                        $moduleAdapter = new Module();
-                                        $module = $moduleAdapter->getInstanceById((int) $item['id_module']);
-                                        $allowHtml = Validate::isLoadedObject($module) && (bool) $module->active;
-                                    }
-
                                     $productCustomization['fields'][] = [
                                         'name' => $item['name'],
                                         'value' => $item['value'],
-                                        'allow_html' => $allowHtml,
+                                        'allow_html' => $this->isModuleHtmlAllowed((int) ($item['id_module'] ?? 0)),
                                         'type' => 'customizable_text_field',
                                     ];
                                 }

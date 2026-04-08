@@ -28,12 +28,12 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Module\ModuleManagerInterface;
 use PrestaShop\PrestaShop\Core\Util\Sorter;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use Product;
 use Shop;
 use StockAvailable;
-use Validate;
 
 /**
  * Handles GetOrderProductsForViewing query using legacy object models
@@ -45,7 +45,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         private readonly ImageTagSourceParserInterface $imageTagSourceParser,
         private readonly int $contextLanguageId,
         private readonly Locale $locale,
-        private readonly ShipmentRepository $shipmentRepository
+        private readonly ShipmentRepository $shipmentRepository,
+        private readonly ModuleManagerInterface $moduleManager
     ) {
     }
 
@@ -81,18 +82,11 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                         $customized_product_quantity += (int) $customization['quantity'];
                         foreach ($customization['datas'] as $datas) {
                             foreach ($datas as $data) {
-                                $allowHtml = false;
-                                if (!empty($data['id_module'])) {
-                                    $moduleAdapter = new Module();
-                                    $module = $moduleAdapter->getInstanceById((int) $data['id_module']);
-                                    $allowHtml = Validate::isLoadedObject($module) && (bool) $module->active;
-                                }
-
                                 $customizations[] = new OrderProductCustomizationForViewing(
                                     (int) $data['type'],
                                     (string) $data['name'],
                                     (string) $data['value'],
-                                    $allowHtml
+                                    $this->isModuleHtmlAllowed((int) ($data['id_module'] ?? 0))
                                 );
                             }
                         }
@@ -292,5 +286,28 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
 
         $pack_item['image'] = $id_image ? new Image((int) $id_image) : null;
         $pack_item['image_size'] = null;
+    }
+
+    private function isModuleHtmlAllowed(int $moduleId): bool
+    {
+        static $moduleNames = [];
+
+        if ($moduleId <= 0) {
+            return false;
+        }
+
+        if (!array_key_exists($moduleId, $moduleNames)) {
+            $moduleAdapter = new Module();
+
+            $module = $moduleAdapter->getInstanceById($moduleId);
+
+            if (false === $module) {
+                $moduleNames[$moduleId] = null;
+            } else {
+                $moduleNames[$moduleId] = $module->name;
+            }
+        }
+
+        return !empty($moduleNames[$moduleId]) && $this->moduleManager->isEnabled($moduleNames[$moduleId]);
     }
 }
