@@ -7,6 +7,19 @@
 
 {% block content %}
 
+  {% set hasMultipleProviders = availableTwoFactorProviders|length > 1 %}
+
+  {# Rely on the explicit query choice, not the bundle preselected provider. #}
+  {% set selectedProvider = app.request.query.get('preferProvider') %}
+
+  {# With multiple providers, wait for an explicit user choice before displaying the verification form. #}
+  {% set shouldDisplayVerificationForm = not hasMultipleProviders or selectedProvider is not empty or authenticationError %}
+
+  {% set providerLabels = {
+    email: 'Email'|trans({}, 'Admin.Global'),
+    totp: 'Authenticator app'|trans({}, 'Admin.TwoFactor.Login')
+  } %}
+
   <div class="text-center mb-4">
     <h1 class="h3 mt-3">{{ shopName }}</h1>
   </div>
@@ -23,72 +36,82 @@
     </div>
   {% endif %}
 
-  {% if availableTwoFactorProviders|length > 1 %}
-      <p>{{ 'Select a verification method'|trans({}, 'Admin.TwoFactor.Login') }}:
-          {% for provider in availableTwoFactorProviders %}
-              <a href="{{ path('2fa_login', {preferProvider: provider}) }}">{{ provider }}</a>
-          {% endfor %}
-      </p>
+  {% if hasMultipleProviders %}
+    <div class="form-group">
+      <p class="mb-3 text-center">{{ 'Select a verification method'|trans({}, 'Admin.TwoFactor.Login') }}</p>
+      <div class="d-flex flex-wrap justify-content-center mb-3">
+        {% for provider in availableTwoFactorProviders %}
+          <a
+            href="{{ path('2fa_login', {preferProvider: provider}) }}"
+            class="btn mr-2 mb-2 {% if provider == selectedProvider %}btn-primary{% else %}btn-outline-secondary{% endif %}"
+          >
+            {{ providerLabels[provider]|default(provider|title) }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
   {% endif %}
 
   {% set actionUrl = checkPathUrl ?: path(checkPathRoute) %}
 
-  <form method="post" action="{{ actionUrl }}" class="form-horizontal">
-    <div class="form-group">
-      <label class="form-control-label" for="two_factor_code">
-        {{ 'Authentication code'|trans({}, 'Admin.TwoFactor.Login') }}
-      </label>
-
-      <input
-        type="text"
-        id="two_factor_code"
-        name="{{ authCodeParameterName }}"
-        inputmode="numeric"
-        autocomplete="one-time-code"
-        class="form-control"
-        required
-        autofocus
-      >
-    </div>
-
-    {% if displayTrustedOption %}
+  {% if shouldDisplayVerificationForm %}
+    <form method="post" action="{{ actionUrl }}" class="form-horizontal">
       <div class="form-group">
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="two_factor_trusted"
-            name="{{ trustedParameterName }}"
-            value="1"
-          >
-          <label class="form-check-label" for="two_factor_trusted">
-            {{ 'Don\'t ask me again on this device'|trans({}, 'Admin.TwoFactor.Login') }}
-          </label>
+        <label class="form-control-label" for="two_factor_code">
+          {{ 'Authentication code'|trans({}, 'Admin.TwoFactor.Login') }}
+        </label>
+
+        <input
+          type="text"
+          id="two_factor_code"
+          name="{{ authCodeParameterName }}"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          class="form-control"
+          required
+          autofocus
+        >
+      </div>
+
+      {% if displayTrustedOption %}
+        <div class="form-group">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="two_factor_trusted"
+              name="{{ trustedParameterName }}"
+              value="1"
+            >
+            <label class="form-check-label" for="two_factor_trusted">
+              {{ 'Don\'t ask me again on this device'|trans({}, 'Admin.TwoFactor.Login') }}
+            </label>
+          </div>
         </div>
-      </div>
-    {% endif %}
+      {% endif %}
 
-    {% if isCsrfProtectionEnabled %}
-      <input type="hidden" name="{{ csrfParameterName }}" value="{{ csrf_token(csrfTokenId) }}">
-    {% endif %}
+      {% if isCsrfProtectionEnabled %}
+        <input type="hidden" name="{{ csrfParameterName }}" value="{{ csrf_token(csrfTokenId) }}">
+      {% endif %}
 
-    <button class="btn btn-primary btn-lg btn-block" type="submit">
-      {{ 'Verify'|trans({}, 'Admin.TwoFactor.Login') }}
-    </button>
-
-    {% if logoutPath %}
-      <div class="text-center mt-3">
-        <a href="{{ logoutPath }}">{{ 'Cancel and log out'|trans({}, 'Admin.TwoFactor.Login') }}</a>
-      </div>
-    {% endif %}
-  </form>
-
-  {% if twoFactorProvider == 'email' %}
-    <form method="post" action="{{ path('2fa_resend') }}" class="text-center mt-3">
-      <input type="hidden" name="_token" value="{{ csrf_token('2fa_resend') }}">
-      <button class="btn btn-outline-secondary btn-block" type="submit">
-        {{ 'Resend code'|trans({}, 'Admin.TwoFactor.Login') }}
+      <button class="btn btn-primary btn-lg btn-block" type="submit">
+        {{ 'Verify'|trans({}, 'Admin.TwoFactor.Login') }}
       </button>
+
+      {% if logoutPath %}
+        <div class="text-center mt-3">
+          <a href="{{ logoutPath }}">{{ 'Cancel and log out'|trans({}, 'Admin.TwoFactor.Login') }}</a>
+        </div>
+      {% endif %}
     </form>
+
+    {% if twoFactorProvider == 'email' %}
+      <form method="post" action="{{ path('2fa_resend') }}" class="text-center mt-3">
+        <input type="hidden" name="_token" value="{{ csrf_token('2fa_resend') }}">
+        <button class="btn btn-outline-secondary btn-block" type="submit">
+          {{ 'Send a new code'|trans({}, 'Admin.TwoFactor.Login') }}
+        </button>
+      </form>
+    {% endif %}
   {% endif %}
 {% endblock %}
