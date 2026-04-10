@@ -12,6 +12,7 @@ use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -30,7 +31,19 @@ final class EmployeeTotpVerificationCodeValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, EmployeeTotpVerificationCode::class);
         }
 
-        if ($value === null || $value === '' || null === $this->totpAuthenticator) {
+        // Only validate the verification code when the current form submit enables TOTP.
+        if (!$this->isTotpActivationRequested()) {
+            return;
+        }
+
+        if ($value === null || $value === '') {
+            $this->context->buildViolation('This field cannot be empty.')
+                ->addViolation();
+
+            return;
+        }
+
+        if (null === $this->totpAuthenticator) {
             return;
         }
 
@@ -45,5 +58,17 @@ final class EmployeeTotpVerificationCodeValidator extends ConstraintValidator
                 ->setParameter('{{ string }}', $value)
                 ->addViolation();
         }
+    }
+
+    private function isTotpActivationRequested(): bool
+    {
+        // The constraint is attached to the verification code field, so we inspect the
+        // root form to know whether the TOTP option is being enabled in this submit.
+        $root = $this->context->getRoot();
+        if (!$root instanceof FormInterface || !$root->has('two_factor_totp_enabled')) {
+            return false;
+        }
+
+        return (bool) $root->get('two_factor_totp_enabled')->getData();
     }
 }
