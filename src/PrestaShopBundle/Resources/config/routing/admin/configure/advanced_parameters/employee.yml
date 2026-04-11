@@ -88,6 +88,18 @@ admin_employees_edit:
   requirements:
     employeeId: \d+
 
+admin_employees_reset_two_factor:
+  path: /{employeeId}/reset-two-factor
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::resetTwoFactorAction'
+    _legacy_controller: AdminEmployees
+    _legacy_link: AdminEmployees:updateemployee
+    _legacy_parameters:
+      id_employee: employeeId
+  requirements:
+    employeeId: \d+
+
 admin_employees_toggle_navigation:
   path: /toggle-navigation
   methods: [ POST ]

@@ -16,6 +16,8 @@
   {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig', {
     employeeForm: employeeForm,
     isRestrictedAccess: isRestrictedAccess,
+    canResetTwoFactor: canResetTwoFactor,
+    editableEmployeeId: editableEmployeeId
   }) }}
 {% endblock %}
 
