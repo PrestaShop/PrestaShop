@@ -312,6 +312,7 @@ class EmployeeController extends PrestaShopAdminController
             $employeeForm = $formBuilder->getFormFor((int) $employeeId, [], [
                 'is_restricted_access' => $isRestrictedAccess,
                 'is_for_editing' => true,
+                'can_manage_two_factor_requirement' => $this->getEmployeeContext()->isSuperAdmin() && !$isRestrictedAccess,
                 'qr_code_src' => $twoFactorData['qr_code_src'],
                 'two_factor_totp_secret' => $twoFactorData['two_factor_totp_secret'],
             ]);
