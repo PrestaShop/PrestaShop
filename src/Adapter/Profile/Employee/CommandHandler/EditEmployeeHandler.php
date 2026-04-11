@@ -115,6 +115,10 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $employee->two_factor_totp_enabled = $command->getTwoFactorTotEnabled();
         $employee->two_factor_email_enabled = $command->getTwoFactorEmailEnabled();
 
+        if (null !== $command->getTwoFactorRequired()) {
+            $employee->two_factor_required = $command->getTwoFactorRequired();
+        }
+
         if (!$command->getTwoFactorTotEnabled()) {
             $employee->two_factor_totp_secret = null;
         }
