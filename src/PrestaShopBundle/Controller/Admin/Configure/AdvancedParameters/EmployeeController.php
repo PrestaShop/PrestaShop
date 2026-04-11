@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ResetEmployeeTwoFactorCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\SetEmployeeTwoFactorSecretCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AdminEmployeeException;
@@ -343,6 +344,8 @@ class EmployeeController extends PrestaShopAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'employeeForm' => $employeeForm->createView(),
             'isRestrictedAccess' => $isRestrictedAccess,
+            'canResetTwoFactor' => $this->getEmployeeContext()->isSuperAdmin() && $this->getEmployeeContext()->getEmployee()->getId() !== $employeeId,
+            'editableEmployeeId' => $employeeId,
             'editableEmployee' => $editableEmployee,
             'enableSidebar' => true,
             'layoutTitle' => $this->trans(
@@ -359,6 +362,42 @@ class EmployeeController extends PrestaShopAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/edit.html.twig',
             $templateVars
         );
+    }
+
+    #[DemoRestricted(redirectRoute: 'admin_employees_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_employees_index')]
+    public function resetTwoFactorAction(int $employeeId): RedirectResponse
+    {
+        if (!$this->getEmployeeContext()->isSuperAdmin()) {
+            $this->addFlash(
+                'error',
+                $this->trans('You do not have permission to update this.', [], 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_employees_index');
+        }
+
+        if ($this->getEmployeeContext()->getEmployee()->getId() === $employeeId) {
+            $this->addFlash(
+                'error',
+                $this->trans('You cannot reset 2FA on your own account from this page.', [], 'Admin.Advparameters.Notification')
+            );
+
+            return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
+        }
+
+        try {
+            $this->dispatchCommand(new ResetEmployeeTwoFactorCommand($employeeId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('2FA has been reset for this employee.', [], 'Admin.Notifications.Success')
+            );
+        } catch (EmployeeException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_employees_edit', ['employeeId' => $employeeId]);
     }
 
     private function buildTwoFactorFormData(

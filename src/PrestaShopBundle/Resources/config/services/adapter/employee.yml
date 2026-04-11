@@ -90,3 +90,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\SetEmployeeTwoFactorSecretHandler:
     autoconfigure: true
     autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\ResetEmployeeTwoFactorHandler:
+    autoconfigure: true
+    autowire: true
