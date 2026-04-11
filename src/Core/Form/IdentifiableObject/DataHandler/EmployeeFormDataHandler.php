@@ -171,6 +171,10 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             ->setTwoFactorEmailEnabled((bool) $data['two_factor_email_enabled'])
         ;
 
+        if (array_key_exists('two_factor_required', $data)) {
+            $command->setTwoFactorRequired((bool) $data['two_factor_required']);
+        }
+
         if ($this->employeeFormAccessChecker->isRestrictedAccess((int) $id)) {
             if ($this->shouldChangePassword($data)) {
                 $this->assertPasswordIsSameAsOldPassword(

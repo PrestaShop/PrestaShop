@@ -92,6 +92,11 @@ class EmployeeCore extends ObjectModel
     /**
      * @var bool
      */
+    public $two_factor_required = false;
+
+    /**
+     * @var bool
+     */
     public $two_factor_totp_enabled = false;
 
     /**
@@ -138,6 +143,7 @@ class EmployeeCore extends ObjectModel
             'reset_password_validity' => ['type' => self::TYPE_DATE, 'validate' => 'isDateOrNull', 'copy_post' => false],
             'has_enabled_gravatar' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'two_factor_enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'two_factor_required' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'two_factor_totp_enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'two_factor_email_enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'two_factor_totp_secret' => ['type' => self::TYPE_STRING, 'required' => false, 'size' => 512],

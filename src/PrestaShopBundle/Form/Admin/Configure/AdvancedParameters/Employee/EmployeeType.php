@@ -27,6 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -236,6 +237,15 @@ final class EmployeeType extends AbstractType
             $builder
                 ->remove('change_password')
             ;
+
+            if ($options['can_manage_two_factor_requirement'] && (bool) $this->configuration->get('PS_BACKOFFICE_2FA')) {
+                $builder->add('two_factor_required', SwitchType::class, [
+                    'label' => $this->trans('Require 2FA', [], 'Admin.Global'),
+                    'required' => false,
+                    'help' => $this->trans('Require this employee to configure and use two-factor authentication.', [], 'Admin.Advparameters.Help'),
+                ]);
+            }
+
             if (!$this->isMultistoreFeatureActive) {
                 $builder
                     ->remove('shop_association')
@@ -251,6 +261,7 @@ final class EmployeeType extends AbstractType
         }
 
         $twoFactorEnabled = (bool) $options['data']['two_factor_enabled'];
+        $twoFactorRequired = (bool) ($options['data']['two_factor_required'] ?? false);
         $twoFactorTotpEnabled = (bool) $options['data']['two_factor_totp_enabled'];
 
         $builder
@@ -313,6 +324,27 @@ final class EmployeeType extends AbstractType
                 'help' => $this->trans('A one-time code will be sent to the employee email address.', [], 'Admin.Global'),
             ])
         ;
+
+        if ($twoFactorRequired) {
+            $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event): void {
+                $form = $event->getForm();
+                $isTwoFactorEnabled = (bool) $form->get('two_factor_enabled')->getData();
+                $isTotpEnabled = (bool) $form->get('two_factor_totp_enabled')->getData();
+                $isEmailEnabled = (bool) $form->get('two_factor_email_enabled')->getData();
+
+                if ($isTwoFactorEnabled && ($isTotpEnabled || $isEmailEnabled)) {
+                    return;
+                }
+
+                $form->addError(new FormError(
+                    $this->trans(
+                        'Two-factor authentication is required for your account. Keep it enabled and configure at least one verification method.',
+                        [],
+                        'Admin.Advparameters.Notification'
+                    )
+                ));
+            });
+        }
     }
 
     /**
@@ -331,11 +363,13 @@ final class EmployeeType extends AbstractType
 
                 // Is this form used for editing the employee.
                 'is_for_editing' => false,
+                'can_manage_two_factor_requirement' => false,
                 'qr_code_src' => '',
                 'two_factor_totp_secret' => '',
             ])
             ->setAllowedTypes('is_restricted_access', 'bool')
             ->setAllowedTypes('is_for_editing', 'bool')
+            ->setAllowedTypes('can_manage_two_factor_requirement', 'bool')
             ->setAllowedTypes('qr_code_src', 'string')
             ->setAllowedTypes('two_factor_totp_secret', 'string')
         ;

@@ -201,6 +201,11 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
     private bool $twoFactorEnabled = false;
 
     /**
+     * @ORM\Column(name="two_factor_required", type="boolean", options={"default": 0})
+     */
+    private bool $twoFactorRequired = false;
+
+    /**
      * @ORM\Column(name="two_factor_totp_enabled", type="boolean", options={"default": 0})
      */
     private bool $twoFactorTotEnabled = false;
@@ -781,6 +786,18 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
     public function setTwoFactorEnabled(bool $twoFactorEnabled): self
     {
         $this->twoFactorEnabled = $twoFactorEnabled;
+
+        return $this;
+    }
+
+    public function isTwoFactorRequired(): bool
+    {
+        return $this->twoFactorRequired;
+    }
+
+    public function setTwoFactorRequired(bool $twoFactorRequired): self
+    {
+        $this->twoFactorRequired = $twoFactorRequired;
 
         return $this;
     }

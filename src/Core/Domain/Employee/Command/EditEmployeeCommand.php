@@ -78,6 +78,11 @@ class EditEmployeeCommand
     private $twoFactorEnabled = false;
 
     /**
+     * @var bool|null
+     */
+    private $twoFactorRequired;
+
+    /**
      * @var bool
      */
     private $twoFactorTotEnabled = false;
@@ -329,6 +334,18 @@ class EditEmployeeCommand
     public function setTwoFactorEnabled($twoFactorEnabled): self
     {
         $this->twoFactorEnabled = $twoFactorEnabled;
+
+        return $this;
+    }
+
+    public function getTwoFactorRequired(): ?bool
+    {
+        return $this->twoFactorRequired;
+    }
+
+    public function setTwoFactorRequired(bool $twoFactorRequired): self
+    {
+        $this->twoFactorRequired = $twoFactorRequired;
 
         return $this;
     }

@@ -79,6 +79,11 @@ class EditableEmployee
     /**
      * @var bool
      */
+    private $twoFactorRequired = false;
+
+    /**
+     * @var bool
+     */
     private $twoFactorTotEnabled = false;
 
     /**
@@ -99,6 +104,7 @@ class EditableEmployee
      * @param array $shopAssociation
      * @param bool $hasEnabledGravatar
      * @param bool $twoFactorEnabled
+     * @param bool $twoFactorRequired
      * @param bool $twoFactorTotEnabled
      * @param bool $twoFactorEmailEnabled
      */
@@ -115,6 +121,7 @@ class EditableEmployee
         array $shopAssociation,
         bool $hasEnabledGravatar = false,
         bool $twoFactorEnabled = false,
+        bool $twoFactorRequired = false,
         bool $twoFactorTotEnabled = false,
         bool $twoFactorEmailEnabled = false
     ) {
@@ -130,6 +137,7 @@ class EditableEmployee
         $this->avatarUrl = $avatarUrl;
         $this->hasEnabledGravatar = $hasEnabledGravatar;
         $this->twoFactorEnabled = $twoFactorEnabled;
+        $this->twoFactorRequired = $twoFactorRequired;
         $this->twoFactorTotEnabled = $twoFactorTotEnabled;
         $this->twoFactorEmailEnabled = $twoFactorEmailEnabled;
     }
@@ -228,6 +236,14 @@ class EditableEmployee
     public function getTwoFactorEnabled()
     {
         return $this->twoFactorEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTwoFactorRequired()
+    {
+        return $this->twoFactorRequired;
     }
 
     /**
