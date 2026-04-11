@@ -13,6 +13,17 @@
     </div>
   {% endif %}
 
+  {% if isRestrictedAccess
+    and editableEmployee.isTwoFactorRequired
+    and (not editableEmployee.twoFactorEnabled or (not editableEmployee.twoFactorTotEnabled and not editableEmployee.twoFactorEmailEnabled))
+  %}
+    <div class="alert alert-warning" role="alert">
+      <p class="alert-text mb-0">
+        {{ 'Two-factor authentication is required for your account. Configure at least one verification method to continue using the Back Office.'|trans({}, 'Admin.Advparameters.Notification') }}
+      </p>
+    </div>
+  {% endif %}
+
   {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig', {
     employeeForm: employeeForm,
     isRestrictedAccess: isRestrictedAccess,

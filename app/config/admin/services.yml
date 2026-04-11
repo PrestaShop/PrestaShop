@@ -18,6 +18,11 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
 
+  PrestaShopBundle\EventListener\Admin\RequiredTwoFactorSetupListener:
+    autowire: true
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 6 }
+
   PrestaShopBundle\EventListener\Admin\EmployeeSessionSubscriber:
     autowire: true
     autoconfigure: true

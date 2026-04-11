@@ -7,6 +7,7 @@
 namespace PrestaShopBundle\Security\Admin;
 
 use PrestaShopBundle\Entity\Employee\Employee;
+use PrestaShopBundle\Entity\Repository\EmployeeRepository;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +27,7 @@ class AdminAuthenticationSuccessHandler implements AuthenticationSuccessHandlerI
 
     public function __construct(
         private readonly EmployeeHomepageProvider $employeeHomepageProvider,
+        private readonly EmployeeRepository $employeeRepository,
         private readonly RouterInterface $router,
     ) {
     }
@@ -34,6 +36,13 @@ class AdminAuthenticationSuccessHandler implements AuthenticationSuccessHandlerI
     {
         if ($token instanceof TwoFactorTokenInterface) {
             return new RedirectResponse($this->router->generate('2fa_login'));
+        }
+
+        $user = $this->employeeRepository->loadEmployeeByIdentifier($token->getUserIdentifier(), true);
+        if ($user instanceof Employee && $this->requiresTwoFactorSetup($user)) {
+            return new RedirectResponse($this->router->generate('admin_employees_edit', [
+                'employeeId' => $user->getId(),
+            ]));
         }
 
         if ($request->hasPreviousSession()) {
@@ -47,5 +56,18 @@ class AdminAuthenticationSuccessHandler implements AuthenticationSuccessHandlerI
         }
 
         return new RedirectResponse($redirectUrl);
+    }
+
+    private function requiresTwoFactorSetup(Employee $employee): bool
+    {
+        if (!$employee->isTwoFactorRequired()) {
+            return false;
+        }
+
+        if (!$employee->getTwoFactorEnabled()) {
+            return true;
+        }
+
+        return !$employee->isEmailAuthEnabled() && !$employee->isTotpAuthenticationEnabled();
     }
 }
