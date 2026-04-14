@@ -204,8 +204,10 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
       await page.waitForFunction(
         (expected: number) => {
           const el = document.querySelector('#cms_page_grid_panel h3.card-header-title');
+
           if (!el?.textContent) return false;
           const match = el.textContent.match(/\d+/);
+
           return match !== null && parseInt(match[0], 10) >= expected;
         },
         numberOfPages,
