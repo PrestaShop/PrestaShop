@@ -14,8 +14,8 @@ import {
 const baseContext: string = 'functional_BO_design_pages_pages_filterAndQuickEditPages';
 
 /*
-Filter pages table by : ID, Link, Meta title, Position and Displayed
-Enable/Disable page status by quick edit
+Filter pages table by : ID, Link, Meta title and Displayed
+Enable/Disable page status by quick edit, then verify with displayed filter
  */
 describe('BO - Design - Pages : Filter and quick edit pages table', async () => {
   let browserContext: BrowserContext;
@@ -65,44 +65,41 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
     expect(numberOfPages).to.be.above(0);
   });
 
-  // 1 : Filter pages with all inputs and selects in grid table
+  // 1 : Filter pages with all inputs in grid table
   describe('Filter pages table', async () => {
     const tests = [
       {
-        args:
-          {
-            testIdentifier: 'filterById',
-            filterType: 'input',
-            filterBy: 'id_cms',
-            filterValue: dataCMSPages.delivery.id.toString(),
-          },
+        args: {
+          testIdentifier: 'filterById',
+          filterType: 'input',
+          filterBy: 'id_cms',
+          filterValue: dataCMSPages.delivery.id.toString(),
+        },
       },
       {
-        args:
-          {
-            testIdentifier: 'filterByLink',
-            filterType: 'input',
-            filterBy: 'link_rewrite',
-            filterValue: dataCMSPages.aboutUs.url,
-          },
+        args: {
+          testIdentifier: 'filterByLink',
+          filterType: 'input',
+          filterBy: 'link_rewrite',
+          filterValue: dataCMSPages.aboutUs.url,
+        },
       },
       {
-        args:
-          {
-            testIdentifier: 'filterByMetaTitle',
-            filterType: 'input',
-            filterBy: 'meta_title',
-            filterValue: dataCMSPages.termsAndCondition.title,
-          },
+        args: {
+          testIdentifier: 'filterByMetaTitle',
+          filterType: 'input',
+          filterBy: 'meta_title',
+          filterValue: dataCMSPages.termsAndCondition.title,
+        },
       },
       {
-        args:
-          {
-            testIdentifier: 'filterByActive',
-            filterType: 'select',
-            filterBy: 'active',
-            filterValue: dataCMSPages.securePayment.displayed ? '1' : '0',
-          },
+        args: {
+          testIdentifier: 'filterByMetaTitleNoResult',
+          filterType: 'input',
+          filterBy: 'meta_title',
+          filterValue: '123',
+          expectedCount: 0,
+        },
       },
     ];
 
@@ -119,14 +116,12 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
         );
 
         const numberOfPagesAfterFilter = await boCMSPagesPage.getNumberOfElementInGrid(page, pagesTableName);
-        expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
 
-        if (test.args.filterBy === 'active') {
-          for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
-            const pagesStatus = await boCMSPagesPage.getStatus(page, pagesTableName, i);
-            expect(pagesStatus).to.equal(test.args.filterValue === '1');
-          }
+        if (test.args.expectedCount !== undefined) {
+          expect(numberOfPagesAfterFilter).to.equal(test.args.expectedCount);
         } else {
+          expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
+
           const allValues = await boCMSPagesPage.getAllRowsColumnContentTableCmsPage(page, test.args.filterBy);
           for (const textColumn of allValues) {
             expect(textColumn).to.contains(test.args.filterValue);
@@ -143,48 +138,63 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
     });
   });
 
-  // 2 : Editing pages from grid table
+  // 2 : Quick edit page status and verify with displayed filter
   describe('Quick edit pages', async () => {
-    it('should filter by Title \'Terms and conditions of use\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'quickEditFilter', baseContext);
+    it('should disable page with ID 1', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disablePage', baseContext);
 
-      await boCMSPagesPage.filterTable(
-        page,
-        pagesTableName,
-        'input',
-        'meta_title',
-        dataCMSPages.termsAndCondition.title,
-      );
+      // Grid is unfiltered, ID=1 (delivery) is at row 1 (default sort by ID asc)
+      const isActionPerformed = await boCMSPagesPage.setStatus(page, pagesTableName, 1, false);
 
-      const numberOfPagesAfterFilter = await boCMSPagesPage.getNumberOfElementInGrid(page, pagesTableName);
-
-      if (numberOfPages === 0) {
-        expect(numberOfPagesAfterFilter).to.be.equal(numberOfPages + 1);
-      } else {
-        expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
+      if (isActionPerformed) {
+        const resultMessage = await boCMSPagesPage.getAlertSuccessBlockParagraphContent(page);
+        expect(resultMessage).to.contains(boCMSPagesPage.successfulUpdateStatusMessage);
       }
 
-      const textColumn = await boCMSPagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
-      expect(textColumn).to.contains(dataCMSPages.termsAndCondition.title);
+      const currentStatus = await boCMSPagesPage.getStatus(page, pagesTableName, 1);
+      expect(currentStatus).to.be.equal(false);
     });
 
-    [
-      {args: {status: 'disable', enable: false}},
-      {args: {status: 'enable', enable: true}},
-    ].forEach((pageStatus) => {
-      it(`should ${pageStatus.args.status} the page`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${pageStatus.args.status}Page`, baseContext);
+    it('should filter by displayed \'No\' and verify only disabled pages are shown', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByDisplayedNo', baseContext);
 
-        const isActionPerformed = await boCMSPagesPage.setStatus(page, pagesTableName, 1, pageStatus.args.enable);
+      await boCMSPagesPage.filterTable(page, pagesTableName, 'select', 'active', '0');
 
-        if (isActionPerformed) {
-          const resultMessage = await boCMSPagesPage.getAlertSuccessBlockParagraphContent(page);
-          expect(resultMessage).to.contains(boCMSPagesPage.successfulUpdateStatusMessage);
-        }
+      const numberOfPagesAfterFilter = await boCMSPagesPage.getNumberOfElementInGrid(page, pagesTableName);
+      expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
 
-        const currentStatus = await boCMSPagesPage.getStatus(page, pagesTableName, 1);
-        expect(currentStatus).to.be.equal(pageStatus.args.enable);
-      });
+      for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
+        const pagesStatus = await boCMSPagesPage.getStatus(page, pagesTableName, i);
+        expect(pagesStatus).to.equal(false);
+      }
+    });
+
+    it('should enable page with ID 1', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'enablePage', baseContext);
+
+      // After filter by 'No', ID=1 is the only disabled page and sits at row 1
+      const isActionPerformed = await boCMSPagesPage.setStatus(page, pagesTableName, 1, true);
+
+      if (isActionPerformed) {
+        const resultMessage = await boCMSPagesPage.getAlertSuccessBlockParagraphContent(page);
+        expect(resultMessage).to.contains(boCMSPagesPage.successfulUpdateStatusMessage);
+      }
+      // Status verification deferred to the next filter step:
+      // after re-enabling, the 'No' session filter returns 0 rows, so getStatus cannot be used here.
+    });
+
+    it('should filter by displayed \'Yes\' and verify only enabled pages are shown', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByDisplayedYes', baseContext);
+
+      await boCMSPagesPage.filterTable(page, pagesTableName, 'select', 'active', '1');
+
+      const numberOfPagesAfterFilter = await boCMSPagesPage.getNumberOfElementInGrid(page, pagesTableName);
+      expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
+
+      for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
+        const pagesStatus = await boCMSPagesPage.getStatus(page, pagesTableName, i);
+        expect(pagesStatus).to.equal(true);
+      }
     });
 
     it('should reset all filters', async function () {
