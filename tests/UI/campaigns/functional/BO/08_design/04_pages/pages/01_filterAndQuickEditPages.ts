@@ -121,12 +121,14 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
         const numberOfPagesAfterFilter = await boCMSPagesPage.getNumberOfElementInGrid(page, pagesTableName);
         expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
 
-        for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
-          if (test.args.filterBy === 'active') {
+        if (test.args.filterBy === 'active') {
+          for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
             const pagesStatus = await boCMSPagesPage.getStatus(page, pagesTableName, i);
             expect(pagesStatus).to.equal(test.args.filterValue === '1');
-          } else {
-            const textColumn = await boCMSPagesPage.getTextColumnFromTableCmsPage(page, i, test.args.filterBy);
+          }
+        } else {
+          const allValues = await boCMSPagesPage.getAllRowsColumnContentTableCmsPage(page, test.args.filterBy);
+          for (const textColumn of allValues) {
             expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -135,12 +137,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `reset_${test.args.testIdentifier}`, baseContext);
 
-        // Trigger reset then wait for full navigation before reading the count,
-        // because resetAndGetNumberOfLines reads with waitForSelector=false which
-        // can return a stale count if the page is still navigating.
-        await boCMSPagesPage.resetAndGetNumberOfLines(page, pagesTableName);
-        await page.waitForLoadState('networkidle');
-        const numberOfPagesAfterReset = await boCMSPagesPage.getNumberOfElementInGrid(page, pagesTableName);
+        const numberOfPagesAfterReset = await boCMSPagesPage.resetAndGetNumberOfLines(page, pagesTableName);
         expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
       });
     });
@@ -193,27 +190,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickEditReset', baseContext);
 
-      // The status toggle (setStatus) triggers a full redirect to improve/design/cms-pages/
-      // which loads with the session filter still active. The grid's JS bundle may not yet
-      // be loaded when the next it-block starts, so the reset button's click handler is not
-      // bound. Waiting for networkidle ensures the JS is fully loaded before we attempt to
-      // click the reset button.
-      await page.waitForLoadState('networkidle');
-      await boCMSPagesPage.resetAndGetNumberOfLines(page, pagesTableName);
-      // Poll until the grid reflects the unfiltered count (reset AJAX + redirect complete).
-      await page.waitForFunction(
-        (expected: number) => {
-          const el = document.querySelector('#cms_page_grid_panel h3.card-header-title');
-
-          if (!el?.textContent) return false;
-          const match = el.textContent.match(/\d+/);
-
-          return match !== null && parseInt(match[0], 10) >= expected;
-        },
-        numberOfPages,
-        {timeout: 30000},
-      );
-      const numberOfPagesAfterReset = await boCMSPagesPage.getNumberOfElementInGrid(page, pagesTableName);
+      const numberOfPagesAfterReset = await boCMSPagesPage.resetAndGetNumberOfLines(page, pagesTableName);
       expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
     });
   });
