@@ -123,9 +123,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
           expect(numberOfPagesAfterFilter).to.be.at.most(numberOfPages);
 
           const allValues = await boCMSPagesPage.getAllRowsColumnContentTableCmsPage(page, test.args.filterBy);
-          for (const textColumn of allValues) {
-            expect(textColumn).to.contains(test.args.filterValue);
-          }
+          allValues.forEach((textColumn: string) => expect(textColumn).to.contains(test.args.filterValue));
         }
       });
 
