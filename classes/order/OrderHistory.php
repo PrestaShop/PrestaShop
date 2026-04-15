@@ -53,6 +53,15 @@ class OrderHistoryCore extends ObjectModel
         ],
     ];
 
+    public function getOrder()
+    {
+        if (!$this->order) {
+            $this->order = new Order($this->id_order);
+        }
+
+        return $this->order;
+    }
+
     /**
      * Sets the new state of the given order.
      *
