@@ -58,6 +58,15 @@ class OrderCarrierCore extends ObjectModel
         ],
     ];
 
+    public function getOrder()
+    {
+        if (!$this->order) {
+            $this->order = new Order($this->id_order);
+        }
+
+        return $this->order;
+    }
+
     /**
      * @param Order $order Required
      *
