@@ -298,6 +298,15 @@ class OrderDetailCore extends ObjectModel
         }
     }
 
+    public function getOrder()
+    {
+        if (!$this->order) {
+            $this->order = new Order($this->id_order);
+        }
+
+        return $this->order;
+    }
+
     public static function getDownloadFromHash($hash)
     {
         if ($hash == '') {
