@@ -1,4 +1,5 @@
 <?php
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -141,7 +142,7 @@ class DeliveryOptionsProvider extends DeliveryOptionsFinderCore
 
             if ($carrier['instance']->is_module) {
                 if ($moduleId = Module::getModuleIdByName($carrier['instance']->external_module_name)) {
-                    $extraContent .= Hook::exec('displayCarrierExtraContent', ['carrier' => (array) $carrier['instance']], Module::getModuleIdByName($moduleId));
+                    $extraContent .= Hook::exec('displayCarrierExtraContent', ['carrier' => (array) $carrier['instance']], $moduleId);
                 }
             }
         }
