@@ -897,7 +897,8 @@ abstract class PaymentModuleCore extends Module
                 }
 
                 if ($moduleManager->isEnabled($moduleNames[$moduleId])) {
-                    return (string) $customizationText['value'];
+                    // Allow module-provided HTML in emails only after sanitizing to prevent XSS.
+                    return Tools::purifyHTML((string) $customizationText['value']);
                 }
             }
         }
