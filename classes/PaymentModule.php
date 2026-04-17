@@ -617,7 +617,7 @@ abstract class PaymentModuleCore extends Module
 
             if ($order_status->logable) {
                 foreach ($this->context->cart->getProducts() as $product) {
-                    ProductSale::addProductSale((int) $product['id_product'], (int) $product['cart_quantity']);
+                    ProductSale::addProductSale((int) $product['id_product'], (int) $product['cart_quantity'], $order->date_add);
                 }
             }
 
