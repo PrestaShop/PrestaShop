@@ -1,5 +1,0 @@
-services:
-  _defaults:
-    autoconfigure: true
-    autowire: true
-  PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\AddBusinessEntityHandler: ~

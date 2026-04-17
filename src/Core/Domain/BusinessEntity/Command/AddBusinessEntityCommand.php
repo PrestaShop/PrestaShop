@@ -6,7 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\AddBusinessEntityHandler;
+use PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\AddBusinessEntityHandler;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityBillingAddressConstraintException;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 

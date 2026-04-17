@@ -13,7 +13,7 @@ class BusinessEntityGeneralInformation
     public function __construct(
         private readonly string $name,
         private readonly string $legalName,
-        private readonly string $externalRef,
+        private readonly ?string $externalRef,
         private readonly bool $flagDeliveryAuthorized,
         private readonly BusinessEntityStatus $status
     ) {
@@ -29,7 +29,7 @@ class BusinessEntityGeneralInformation
         return $this->legalName;
     }
 
-    public function getExternalRef(): string
+    public function getExternalRef(): ?string
     {
         return $this->externalRef;
     }

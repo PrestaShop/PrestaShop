@@ -10,7 +10,6 @@ namespace PrestaShop\PrestaShop\Adapter\Address\Repository;
 
 use Address;
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Adapter\Address\DTO\NewAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
@@ -74,35 +73,9 @@ class AddressRepository extends AbstractMultiShopObjectModelRepository
     /**
      * @throws CoreException
      */
-    public function add(NewAddress $address): AddressId
+    public function add(Address $address): AddressId
     {
-        $addressModel = new Address();
-
-        // required fields
-        $addressModel->alias = $address->getAlias();
-        $addressModel->address1 = $address->getAddress1();
-        $addressModel->lastname = $address->getLastName();
-        $addressModel->firstname = $address->getFirstName();
-        $addressModel->city = $address->getCity();
-        $addressModel->postcode = $address->getPostcode();
-        $addressModel->id_country = $address->getCountryId()->getValue();
-
-        // optional fields
-        $addressModel->id_state = $address->getStateId();
-        $addressModel->id_customer = $address->getCustomerId();
-        $addressModel->id_manufacturer = $address->getManufacturerId();
-        $addressModel->id_supplier = $address->getSupplierId();
-        $addressModel->address2 = $address->getAddress2();
-        $addressModel->phone = $address->getPhone();
-        $addressModel->phone_mobile = $address->getPhoneMobile();
-        $addressModel->dni = $address->getDni();
-        $addressModel->company = $address->getCompany();
-        $addressModel->vat_number = $address->getVatNumber();
-        $addressModel->other = $address->getOther();
-
-        $addressModel->deleted = $address->isDeleted();
-
-        $addressId = $this->addObjectModel($addressModel, Address::class);
+        $addressId = $this->addObjectModel($address, Address::class);
 
         return new AddressId($addressId);
     }

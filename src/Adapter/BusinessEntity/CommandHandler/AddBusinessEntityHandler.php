@@ -4,16 +4,17 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler;
 
+use Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Address\DTO\NewAddress;
 use PrestaShop\PrestaShop\Adapter\Address\Repository\AddressRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\AddBusinessEntityHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityBillingAddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\UnableToCreateBusinessEntityAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\AbstractBusinessEntityAddress;
@@ -28,7 +29,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 #[AsCommandHandler]
-final class AddBusinessEntityHandler
+final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterface
 {
     /** @var AddressId[] */
     private array $createdAddressId = [];
@@ -121,18 +122,18 @@ final class AddBusinessEntityHandler
         AbstractBusinessEntityAddress $address,
         BusinessEntity $businessEntity
     ): AddressId {
-        $newAddress = new NewAddress(
-            $address->getCountryId(),
-            $address->getAlias(),
-            $businessEntity->getLegalName(),
-            $businessEntity->getLegalName(),
-            $address->getAddress1(),
-            $address->getCity(),
-            $address->getPostCode(),
-        );
+        $modelAddress = new Address();
+        $modelAddress->id_country = $address->getCountryId()->getValue();
+        $modelAddress->alias = $address->getAlias();
+        $modelAddress->lastname = $businessEntity->getLegalName();
+        $modelAddress->firstname = $businessEntity->getLegalName();
+        $modelAddress->address1 = $address->getAddress1();
+        $modelAddress->city = $address->getCity();
+        $modelAddress->postcode = $address->getPostCode();
+        $modelAddress->id_state = $address->getStateId()->getValue();
 
         try {
-            return $this->addressRepository->add($newAddress);
+            return $this->addressRepository->add($modelAddress);
         } catch (Exception $e) {
             throw new UnableToCreateBusinessEntityAddress(previous: $e);
         }

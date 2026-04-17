@@ -34,6 +34,7 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
             ])
             ->add(self::FIELD_EXTERNAL_REF, TextType::class, [
                 'label' => $this->trans('External Reference', 'Admin.Global'),
+                'required' => false,
             ])
             ->add(self::FIELD_FLAG_DELIVERY_AUTHORIZED, SwitchType::class, [
                 'label' => $this->trans('Delivery authorized', 'Admin.Global'),
