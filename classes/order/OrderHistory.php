@@ -217,14 +217,14 @@ class OrderHistoryCore extends ObjectModel
                 if (Validate::isLoadedObject($old_os)) {
                     // if becoming logable => adds sale
                     if ($new_os->logable && !$old_os->logable) {
-                        ProductSale::addProductSale($product['product_id'], $product['product_quantity'], $order->date_add);
+                        ProductSale::addProductSale($product['product_id'], $order->date_add, $product['product_quantity']);
                         if (!Pack::isPack($product['product_id'])
                             && in_array($old_os->id, $error_or_canceled_statuses)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int) $product['product_quantity'], $order->id_shop);
                         }
                     } elseif (!$new_os->logable && $old_os->logable) {
                         // if becoming unlogable => removes sale
-                        ProductSale::removeProductSale($product['product_id'], $product['product_quantity'], $order->date_add);
+                        ProductSale::removeProductSale($product['product_id'], $order->date_add, $product['product_quantity']);
                         if (!Pack::isPack($product['product_id'])
                             && in_array($new_os->id, $error_or_canceled_statuses)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
