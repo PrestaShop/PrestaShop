@@ -116,7 +116,7 @@ class ProductSaleCore
 					pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
 					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
 					image_shop.`id_image` id_image, il.`legend`,
-					SUM(ps.`quantity`)` AS sales, t.`rate`, pl.`meta_title`, pl.`meta_description`,
+					SUM(ps.`quantity`) AS sales, t.`rate`, pl.`meta_title`, pl.`meta_description`,
 					DATEDIFF(p.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
 					INTERVAL ' . (int) $interval . ' DAY)) > 0 AS new'
             . ' FROM `' . _DB_PREFIX_ . 'product_sale` ps
@@ -284,10 +284,11 @@ class ProductSaleCore
      * Get number of sales.
      *
      * @param int $idProduct Product ID
+     * @param string $order_date Order Date Add
      *
      * @return int Number of sales for the given Product
      */
-    public static function getNbrSales($idProduct)
+    public static function getNbrSales($idProduct, $order_date)
     {
         $result = Db::getInstance()->getRow('SELECT SUM(`sale_nbr`) AS sale_nbr FROM ' . _DB_PREFIX_ . 'product_sale WHERE `id_product` = ' . (int) $idProduct . ' AND `date_upd`= "' . (string) $order_date . '"');
         if (empty($result) || !array_key_exists('sale_nbr', $result)) {
