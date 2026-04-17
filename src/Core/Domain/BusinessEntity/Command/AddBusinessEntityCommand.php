@@ -23,7 +23,6 @@ class AddBusinessEntityCommand
     public function __construct(
         private readonly string $name,
         private readonly string $legalName,
-        private readonly ?string $enterpriseId,
         private readonly ?string $externalRef,
         private readonly bool $flagDeliveryAuthorized,
         private readonly BusinessEntityStatus $status,
@@ -42,11 +41,6 @@ class AddBusinessEntityCommand
     public function getLegalName(): string
     {
         return $this->legalName;
-    }
-
-    public function getEnterpriseId(): ?string
-    {
-        return $this->enterpriseId;
     }
 
     public function getExternalRef(): ?string

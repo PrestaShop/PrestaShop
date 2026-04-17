@@ -17,7 +17,6 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
 {
     public const FIELD_NAME = 'name';
     public const FIELD_LEGAL_NAME = 'legal_name';
-    public const FIELD_ENTERPRISE_ID = 'enterprise_id';
     public const FIELD_EXTERNAL_REF = 'external_ref';
     public const FIELD_FLAG_DELIVERY_AUTHORIZED = 'flag_delivery_authorized';
     public const FIELD_STATUS = 'status';
@@ -32,10 +31,6 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
             ->add(self::FIELD_LEGAL_NAME, TextType::class, [
                 'label' => $this->trans('Legal Name', 'Admin.Global'),
                 'help' => $this->trans('The official registered name of the company.', 'Admin.Catalog.Feature'),
-            ])
-            ->add(self::FIELD_ENTERPRISE_ID, TextType::class, [
-                'label' => $this->trans('Enterprise ID', 'Admin.Global'),
-                'required' => false,
             ])
             ->add(self::FIELD_EXTERNAL_REF, TextType::class, [
                 'label' => $this->trans('External Reference', 'Admin.Global'),

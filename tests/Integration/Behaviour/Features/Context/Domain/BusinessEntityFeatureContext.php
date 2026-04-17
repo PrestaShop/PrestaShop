@@ -81,7 +81,6 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
         $command = new AddBusinessEntityCommand(
             $this->businessEntityDetails['name'],
             $this->businessEntityDetails['legal_name'],
-            $this->businessEntityDetails['enterprise_id'] ?? null,
             $this->businessEntityDetails['external_ref'] ?? null,
             (bool) ($this->businessEntityDetails['flag_delivery_authorized'] ?? true),
             BusinessEntityStatus::from($this->businessEntityDetails['status']),

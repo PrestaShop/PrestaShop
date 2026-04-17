@@ -67,7 +67,6 @@ class BusinessEntityCommandTransformer implements DataTransformerInterface
             'general_information' => new BusinessEntityGeneralInformation(
                 $value['general_information']['name'],
                 $value['general_information']['legal_name'],
-                $value['general_information']['enterprise_id'],
                 $value['general_information']['external_ref'],
                 $value['general_information']['flag_delivery_authorized'],
                 $value['general_information']['status']

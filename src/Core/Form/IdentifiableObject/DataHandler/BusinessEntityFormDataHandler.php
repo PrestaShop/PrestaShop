@@ -32,7 +32,6 @@ final class BusinessEntityFormDataHandler implements FormDataHandlerInterface
         $command = new AddBusinessEntityCommand(
             $generalInformation->getName(),
             $generalInformation->getLegalName(),
-            $generalInformation->getEnterpriseId(),
             $generalInformation->getExternalRef(),
             $generalInformation->isFlagDeliveryAuthorized(),
             $generalInformation->getStatus(),

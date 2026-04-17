@@ -10,7 +10,6 @@ Feature: Add business entity
     Given there is a business entity with the following details:
       | name                         | Test Business Entity |
       | legal_name                   | Test Legal Name      |
-      | enterprise_id                | 123456789            |
       | external_ref                 | EXT-001              |
       | flag_delivery_authorized     | 1                    |
       | status                       | active               |
@@ -28,7 +27,6 @@ Feature: Add business entity
     Given there is a business entity with the following details:
       | name                         | Separate Addresses Entity |
       | legal_name                   | Separate Legal Name       |
-      | enterprise_id                | 987654321                 |
       | external_ref                 | EXT-002                   |
       | flag_delivery_authorized     | 1                         |
       | status                       | active                    |

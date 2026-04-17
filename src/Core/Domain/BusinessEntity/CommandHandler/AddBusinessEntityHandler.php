@@ -52,7 +52,6 @@ final class AddBusinessEntityHandler
         $businessEntity->setName($command->getName());
         $businessEntity->setLegalName($command->getLegalName());
         $businessEntity->setExternalRef($command->getExternalRef());
-        $businessEntity->setEnterpriseId($command->getEnterpriseId());
         $businessEntity->setFlagDeliveryAuthorized($command->isFlagDeliveryAuthorized());
         $businessEntity->setStatus($command->getStatus());
 

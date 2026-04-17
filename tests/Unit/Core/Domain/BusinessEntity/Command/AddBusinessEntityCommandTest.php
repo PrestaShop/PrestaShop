@@ -22,7 +22,6 @@ class AddBusinessEntityCommandTest extends TestCase
     public const DEFAULT_BUSINESS_ENTITY_ALIAS_SHIPPING = 'Shipping';
     public const DEFAULT_BUSINESS_ENTITY_POSTCODE = '00000';
     public const DEFAULT_BUSINESS_ENTITY_ADDRESS1 = 'a';
-    public const DEFAULT_BUSINESS_ENTITY_ENTERPRISE_ID = 'c';
     public const DEFAULT_BUSINESS_ENTITY_LEGAL_NAME = 'b';
     public const DEFAULT_BUSINESS_ENTITY_NAME = 'NAME';
 
@@ -42,7 +41,6 @@ class AddBusinessEntityCommandTest extends TestCase
         new AddBusinessEntityCommand(
             self::DEFAULT_BUSINESS_ENTITY_NAME,
             self::DEFAULT_BUSINESS_ENTITY_LEGAL_NAME,
-            self::DEFAULT_BUSINESS_ENTITY_ENTERPRISE_ID,
             self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
             true,
             BusinessEntityStatus::ACTIVE,
@@ -80,7 +78,6 @@ class AddBusinessEntityCommandTest extends TestCase
         new AddBusinessEntityCommand(
             self::DEFAULT_BUSINESS_ENTITY_NAME,
             self::DEFAULT_BUSINESS_ENTITY_LEGAL_NAME,
-            self::DEFAULT_BUSINESS_ENTITY_ENTERPRISE_ID,
             self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
             true,
             BusinessEntityStatus::ACTIVE,
@@ -100,7 +97,6 @@ class AddBusinessEntityCommandTest extends TestCase
         new AddBusinessEntityCommand(
             self::DEFAULT_BUSINESS_ENTITY_NAME,
             self::DEFAULT_BUSINESS_ENTITY_LEGAL_NAME,
-            self::DEFAULT_BUSINESS_ENTITY_ENTERPRISE_ID,
             self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
             true,
             BusinessEntityStatus::ACTIVE,
@@ -128,7 +124,6 @@ class AddBusinessEntityCommandTest extends TestCase
         new AddBusinessEntityCommand(
             self::DEFAULT_BUSINESS_ENTITY_NAME,
             self::DEFAULT_BUSINESS_ENTITY_LEGAL_NAME,
-            self::DEFAULT_BUSINESS_ENTITY_ENTERPRISE_ID,
             self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
             true,
             BusinessEntityStatus::ACTIVE,
@@ -156,7 +151,6 @@ class AddBusinessEntityCommandTest extends TestCase
         new AddBusinessEntityCommand(
             self::DEFAULT_BUSINESS_ENTITY_NAME,
             self::DEFAULT_BUSINESS_ENTITY_LEGAL_NAME,
-            self::DEFAULT_BUSINESS_ENTITY_ENTERPRISE_ID,
             self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
             true,
             BusinessEntityStatus::ACTIVE,
@@ -196,7 +190,6 @@ class AddBusinessEntityCommandTest extends TestCase
         new AddBusinessEntityCommand(
             self::DEFAULT_BUSINESS_ENTITY_ADDRESS1,
             self::DEFAULT_BUSINESS_ENTITY_LEGAL_NAME,
-            self::DEFAULT_BUSINESS_ENTITY_ENTERPRISE_ID,
             self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
             true,
             BusinessEntityStatus::ACTIVE,
