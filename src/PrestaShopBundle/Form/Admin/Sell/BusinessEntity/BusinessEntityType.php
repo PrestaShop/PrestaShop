@@ -81,12 +81,6 @@ class BusinessEntityType extends TranslatorAwareType
         $builder->addModelTransformer($this->commandTransformer);
     }
 
-    /**
-     * @param array $data
-     * @param string $addressType
-     *
-     * @return array
-     */
     protected function getDataForBusinessEntityAddressType(array $data, string $addressType): array
     {
         $dataForBusinessEntityAddressType = [];
