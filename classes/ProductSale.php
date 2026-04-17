@@ -55,8 +55,10 @@ class ProductSaleCore
 				FROM `' . _DB_PREFIX_ . 'product_sale` ps
 				LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON p.`id_product` = ps.`id_product`
 				' . Shop::addSqlAssociation('product', 'p', false) . '
-				WHERE product_shop.`active` = 1
-                AND DATEDIFF(CURRENT_DATE(), ps.date_upd) <= '.Configuration::get('PS_BEST_SELLERS_DAYS');
+				WHERE product_shop.`active` = 1';
+        if (!Configuration::get('PS_BEST_SELLERS_DAYS')) {
+            $sql .= 'AND DATEDIFF(CURRENT_DATE(), ps.date_upd) <= ' . Configuration::get('PS_BEST_SELLERS_DAYS');
+        }
 
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
     }
@@ -132,9 +134,12 @@ class ProductSaleCore
 				' . Product::sqlStock('p', 0);
 
         $sql .= '
-				WHERE product_shop.`active` = 1
-					AND product_shop.`visibility` != \'none\'
-                    AND DATEDIFF(CURRENT_DATE(), ps.date_upd) <= '.Configuration::get('PS_BEST_SELLERS_DAYS');
+		WHERE product_shop.`active` = 1
+		AND p.`visibility` != \'none\'';
+
+        if (!Configuration::get('PS_BEST_SELLERS_DAYS')) {
+            $sql .= 'AND DATEDIFF(CURRENT_DATE(), ps.date_upd) <= ' . Configuration::get('PS_BEST_SELLERS_DAYS');
+        }
 
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
@@ -211,8 +216,11 @@ class ProductSaleCore
 
         $sql .= '
 		WHERE product_shop.`active` = 1
-		AND p.`visibility` != \'none\'
-        AND DATEDIFF(CURRENT_DATE(), ps.date_upd) <= '.Configuration::get('PS_BEST_SELLERS_DAYS');
+		AND p.`visibility` != \'none\'';
+
+        if (!Configuration::get('PS_BEST_SELLERS_DAYS')) {
+            $sql .= 'AND DATEDIFF(CURRENT_DATE(), ps.date_upd) <= ' . Configuration::get('PS_BEST_SELLERS_DAYS');
+        }
 
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
