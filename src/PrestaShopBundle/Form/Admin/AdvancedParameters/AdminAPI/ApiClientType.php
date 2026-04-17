@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -52,6 +32,7 @@ class ApiClientType extends TranslatorAwareType
         $builder
             ->add('client_name', TextType::class, [
                 'label' => $this->trans('Client Name', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('A friendly name to identify this API client.', 'Admin.Advparameters.Help'),
                 'required' => !$isExternalApiClient,
                 'constraints' => [
                     new NotBlank(),
@@ -67,9 +48,13 @@ class ApiClientType extends TranslatorAwareType
                     ]),
                 ],
                 'disabled' => $isExternalApiClient,
+                'attr' => [
+                    'class' => 'js-client-id-source',
+                ],
             ])
             ->add('client_id', TextType::class, [
                 'label' => $this->trans('Client ID', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('The unique identifier for this client, used for API authentication. Only lowercase letters, numbers and hyphens are allowed.', 'Admin.Advparameters.Help'),
                 'required' => !$isExternalApiClient,
                 'constraints' => [
                     new NotBlank(),
@@ -85,9 +70,13 @@ class ApiClientType extends TranslatorAwareType
                     ]),
                 ],
                 'disabled' => $isExternalApiClient,
+                'attr' => [
+                    'class' => 'js-client-id-destination',
+                ],
             ])
             ->add('description', TextareaType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
+                'help' => $this->trans('Optional description to help identify the purpose of this API client.', 'Admin.Advparameters.Help'),
                 'required' => false,
                 'empty_data' => '',
                 'constraints' => [
@@ -109,6 +98,8 @@ class ApiClientType extends TranslatorAwareType
             $builder
                 ->add('lifetime', IntegerType::class, [
                     'label' => $this->trans('Lifetime', 'Admin.Global'),
+                    'help' => $this->trans('The duration for which an access token remains valid.', 'Admin.Advparameters.Help'),
+                    'unit' => $this->trans('seconds', 'Admin.Advparameters.Feature'),
                     'required' => false,
                     'constraints' => [
                         new NotBlank(),

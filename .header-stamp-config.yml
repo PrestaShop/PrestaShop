@@ -1,0 +1,75 @@
+license: .header-stamp-osl3-license.txt
+discriminationString:
+  # New discriminator since 9.1
+  - For the full copyright and license information
+  # Old discriminator, important to handle migration/update correctly
+  - NOTICE OF LICENSE
+extensions:
+  - 'php'
+  - 'js'
+  - 'ts'
+  - 'css'
+  - 'scss'
+  - 'tpl'
+  - 'twig'
+  - 'json'
+  - 'vue'
+excludedFiles:
+  # versioning folders
+  - '.git'
+  - '.github'
+  - '.composer'
+  - 'composer.json'
+  # admin folders
+  - 'admin-dev/themes/new-theme/package.json'
+  - 'admin-dev/themes/default/package.json'
+  - 'admin-dev/filemanager'
+  - 'admin-dev/themes/default/public'
+  - 'admin-dev/themes/default/example'
+  - 'admin-dev/themes/new-theme/public'
+  - 'admin-dev/themes/default/css/bundle'
+  - 'admin-dev/themes/default/css/overrides.css'
+  - 'admin-dev/themes/default/css/font.css'
+  # Config files
+  - 'app/config/parameters.php'
+  # js dependencies
+  - 'js/tiny_mce'
+  - 'js/jquery'
+  - 'js/cropper'
+  - 'js/fileuploader.js'
+  - 'js/admin/tinymce.inc.js'
+  - 'js/date.js'
+  # mails folder
+  - 'mails/themes'
+  # tools dependencies
+  - 'tools/htmlpurifier'
+  - 'tools/build/Library/InstallUnpacker/content'
+  - 'tools/build/composer.json'
+  - 'themes/package.json'
+  # modules are not part of the core, they are independent and installed via composer
+  - 'modules'
+  # dependencies
+  - 'vendor'
+  - 'node_modules'
+  # themes are not part of the core
+  - 'themes/classic'
+  - 'themes/hummingbird'
+  - 'themes/_libraries/font-awesome'
+  # tests folders (ignore resources mainly, PHPUnit classes still need to be fixed for example)
+  - 'tests/Resources/modules'
+  - 'tests/Resources/modules_tests/override'
+  - 'tests/Resources/themes'
+  - 'tests/Resources/translations'
+  - 'tests/Resources/ModulesOverrideInstallUninstallTest'
+  - 'tests/E2E'
+  - 'tests/Unit/Resources/config'
+  - 'tests/Unit/Resources/assets'
+  - 'tests/Unit/Resources/twig'
+  - 'tests/UI'
+  # No need to check the cache
+  - 'var'
+  # Install files
+  - 'install-dev/theme/js/sprintf.min.js'
+  - 'install-dev/theme/js/zxcvbn-core.js'
+  - 'install-dev/theme/js/zxcvbn-language-common.js'
+  - 'install-dev/theme/js/zxcvbn-language-en.js'

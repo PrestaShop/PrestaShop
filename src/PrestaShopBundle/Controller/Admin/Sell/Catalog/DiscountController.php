@@ -1,53 +1,45 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Command\BulkDeleteDiscountsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Command\BulkUpdateDiscountsStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\DeleteDiscountCommand;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Command\DuplicateDiscountCommand;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Command\UpdateDiscountCommand;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\CannotUpdateDiscountException;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Query\GetDiscountForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Discount\QueryResult\DiscountForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DiscountGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\DiscountFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Controller\BulkActionsTrait;
+use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountTypeSelectorType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class DiscountController extends PrestaShopAdminController
 {
+    use BulkActionsTrait;
+
     /**
      * Displays discount listing page.
      *
@@ -82,6 +74,41 @@ class DiscountController extends PrestaShopAdminController
         ]);
     }
 
+    /**
+     * Custom reset action, we don't use the CommonController one because the reset must keep the
+     * period filter, and resets all other filters.
+     *
+     * @return JsonResponse
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function resetSearchAction(AdminFilterRepository $adminFiltersRepository): JsonResponse
+    {
+        $employeeId = $this->getEmployeeContext()->getEmployee()->getId();
+        $shopId = $this->getShopContext()->getId();
+        $adminFilter = $adminFiltersRepository->findByEmployeeAndFilterId($employeeId, $shopId, DiscountGridDefinitionFactory::GRID_ID);
+
+        if (isset($adminFilter)) {
+            $currentFilters = json_decode($adminFilter->getFilter(), true);
+            // Reset offset to show first page of list after filters resetting
+            $currentFilters['offset'] = 0;
+
+            // If no period_filter is selected we can unset all filters
+            if (empty($currentFilters['filters']['period_filter'])) {
+                unset($currentFilters['filters']);
+            } else {
+                // If period_filter ise set we only keep period_filter as a filter
+                $selectedPeriod = $currentFilters['filters']['period_filter'];
+                $currentFilters['filters'] = [
+                    'period_filter' => $selectedPeriod,
+                ];
+            }
+            $adminFilter->setFilter(json_encode($currentFilters));
+            $adminFiltersRepository->updateFilter($adminFilter);
+        }
+
+        return new JsonResponse();
+    }
+
     #[DemoRestricted(redirectRoute: 'admin_discounts_index')]
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_discounts_index')]
     public function createAction(
@@ -109,10 +136,14 @@ class DiscountController extends PrestaShopAdminController
             $form->handleRequest($request);
             $result = $formHandler->handle($form);
 
-            if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
+            if ($result->isSubmitted()) {
+                if ($result->isValid()) {
+                    $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_discount_edit', ['discountId' => $result->getIdentifiableObjectId()]);
+                    return $this->redirectToRoute('admin_discount_edit', ['discountId' => $result->getIdentifiableObjectId()]);
+                } else {
+                    $this->displayFormErrors($form);
+                }
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -155,14 +186,7 @@ class DiscountController extends PrestaShopAdminController
 
                     return $this->redirectToRoute('admin_discount_edit', ['discountId' => $discountId]);
                 } else {
-                    // Display root level errors with flash messages
-                    foreach ($form->getErrors() as $error) {
-                        $this->addFlash('error', sprintf(
-                            '%s: %s',
-                            $error->getOrigin()->getName(),
-                            $error->getMessage()
-                        ));
-                    }
+                    $this->displayFormErrors($form);
                 }
             }
         } catch (Exception $e) {
@@ -192,16 +216,15 @@ class DiscountController extends PrestaShopAdminController
         try {
             /** @var DiscountForEditing $editableDiscount */
             $editableDiscount = $this->dispatchQuery(new GetDiscountForEditing($discountId));
+            $updateCommand = new UpdateDiscountCommand($discountId);
+            $updateCommand->setActive(!$editableDiscount->isActive());
 
-            // @todo: this should be replaced with dedicated discount command when available
-            $this->dispatchCommand(
-                new ToggleCartRuleStatusCommand((int) $discountId, !$editableDiscount->isActive())
-            );
+            $this->dispatchCommand($updateCommand);
             $this->addFlash(
                 'success',
                 $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
             );
-        } catch (CartRuleException $e) {
+        } catch (DiscountException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -232,9 +255,153 @@ class DiscountController extends PrestaShopAdminController
         return $this->redirectToRoute('admin_discounts_index');
     }
 
+    /**
+     * Duplicates discount
+     *
+     * @param int $discountId
+     *
+     * @return RedirectResponse
+     */
+    #[DemoRestricted(redirectRoute: 'admin_discounts_index')]
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_discounts_index')]
+    public function duplicateAction(int $discountId): RedirectResponse
+    {
+        try {
+            $newDiscountId = $this->dispatchCommand(new DuplicateDiscountCommand($discountId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful duplication', [], 'Admin.Notifications.Success')
+            );
+
+            return $this->redirectToRoute('admin_discount_edit', ['discountId' => $newDiscountId->getValue()]);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_discounts_index');
+        }
+    }
+
+    private function displayFormErrors(FormInterface $form): void
+    {
+        // Some errors are only on root level and not displayed so we display them as flash messages
+        $rootErrors = $form->getErrors();
+        if ($rootErrors->count()) {
+            foreach ($form->getErrors() as $error) {
+                $this->addFlash('error', sprintf(
+                    '%s: %s',
+                    $error->getOrigin()->getName(),
+                    $error->getMessage()
+                ));
+            }
+        } else {
+            // Other inline errors are linked to their input, but since the page is quite long we display a generic error message at the top to make sure the user
+            // understand something is not right
+            $this->addFlash('error', $this->trans('The form contains errors. Please fix them and save again.', [], 'Admin.Notifications.Error'));
+        }
+    }
+
     private function getErrorMessages(Exception $e): array
     {
         return [
+            DiscountNotFoundException::class => $this->trans('The object cannot be loaded (or found).', [], 'Admin.Notifications.Error'),
+            // todo: use more specific message for constraint exceptions
+            DiscountConstraintException::class => $e->getMessage(),
+            CannotUpdateDiscountException::class => $this->trans('An error occurred while updating the discount.', [], 'Admin.Notifications.Error'),
         ];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return int[]
+     */
+    private function getBulkDiscountsFromRequest(Request $request): array
+    {
+        return array_map('intval', $request->request->all('discount_bulk'));
+    }
+
+    /**
+     * Process bulk action for discount status enabling.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[DemoRestricted(redirectRoute: 'admin_discounts_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_discounts_index', message: 'You do not have permission to update this.')]
+    public function bulkEnableStatusAction(Request $request): RedirectResponse
+    {
+        return $this->bulkUpdateStatus($request, true);
+    }
+
+    /**
+     * Process bulk action for discount status disabling.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[DemoRestricted(redirectRoute: 'admin_discounts_index')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_discounts_index', message: 'You do not have permission to update this.')]
+    public function bulkDisableStatusAction(Request $request): RedirectResponse
+    {
+        return $this->bulkUpdateStatus($request, false);
+    }
+
+    /**
+     * Process bulk action for discount status enabling/disabling.
+     *
+     * @param Request $request
+     * @param bool $enable
+     *
+     * @return RedirectResponse
+     */
+    protected function bulkUpdateStatus(Request $request, bool $enable): RedirectResponse
+    {
+        try {
+            $discountIds = $this->getBulkDiscountsFromRequest($request);
+
+            $command = new BulkUpdateDiscountsStatusCommand($discountIds, $enable);
+
+            $this->dispatchCommand($command);
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
+            );
+        } catch (DiscountException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_discounts_index');
+    }
+
+    /**
+     * Processes bulk discounts deleting.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[DemoRestricted(redirectRoute: 'admin_discounts_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_discounts_index', message: 'You do not have permission to delete this.')]
+    public function bulkDeleteAction(Request $request): RedirectResponse
+    {
+        try {
+            $discountIds = $this->getBulkDiscountsFromRequest($request);
+
+            $command = new BulkDeleteDiscountsCommand($discountIds);
+
+            $this->dispatchCommand($command);
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
+            );
+        } catch (DiscountException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_discounts_index');
     }
 }

@@ -5,9 +5,8 @@ import testContext from '@utils/testContext';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createAccountTest} from '@commonTests/FO/classic/account';
-import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {createAccountTest} from '@commonTests/FO/hummingbird/account';
+import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boDashboardPage,
@@ -86,8 +85,6 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_3`);
   // Pre-Condition: Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_4`);
-  // Pre-Condition: Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_5`);
 
   // before and after functions
   before(async function () {
@@ -235,7 +232,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocument', baseContext);
 
         // Get document name
-        const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 3);
+        const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 2);
         expect(documentType).to.be.equal('Credit slip');
       });
 
@@ -251,11 +248,11 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'getIdentifierDateIssued', baseContext);
 
         // Get Credit Slip ID
-        creditSlipID = await boOrdersViewBlockTabListPage.getFileName(page, 3);
+        creditSlipID = await boOrdersViewBlockTabListPage.getFileName(page, 2);
         expect(creditSlipID).is.not.equal('');
 
         // Get Date Issued
-        dateIssued = await boOrdersViewBlockTabListPage.getDocumentDate(page, 3);
+        dateIssued = await boOrdersViewBlockTabListPage.getDocumentDate(page, 2);
         expect(dateIssued).is.not.equal('');
       });
     });
@@ -269,7 +266,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await foHummingbirdHomePage.changeLanguage(page, 'en');
 
         const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+        expect(isHomePage).to.eq(true);
       });
 
       it('should go to my account page', async function () {
@@ -383,6 +380,4 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
   deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
   // Post-Condition: Reset SMTP config
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_3`);
 });

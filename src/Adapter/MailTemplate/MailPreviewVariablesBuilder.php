@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
@@ -33,6 +13,7 @@ use Cart;
 use Context;
 use Order;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentService;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -82,6 +63,11 @@ final class MailPreviewVariablesBuilder
     private $translator;
 
     /**
+     * @var OrderShipmentService
+     */
+    private $orderShipmentService;
+
+    /**
      * MailPreviewVariablesBuilder constructor.
      *
      * @param ConfigurationInterface $configuration
@@ -97,8 +83,10 @@ final class MailPreviewVariablesBuilder
         ContextEmployeeProviderInterface $employeeProvider,
         MailPartialTemplateRenderer $mailPartialTemplateRenderer,
         Locale $locale,
-        TranslatorInterface $translatorComponent
+        TranslatorInterface $translatorComponent,
+        OrderShipmentService $orderShipmentService
     ) {
+        $this->orderShipmentService = $orderShipmentService;
         $this->configuration = $configuration;
         $this->legacyContext = $legacyContext;
         $this->context = $this->legacyContext->getContext();
@@ -216,12 +204,20 @@ final class MailPreviewVariablesBuilder
             return [];
         }
 
-        $carrier = new Carrier($order->id_carrier);
         $delivery = new Address($order->id_address_delivery);
         $invoice = new Address($order->id_address_invoice);
 
+        if ($this->orderShipmentService->orderHasShipment($order->id)) {
+            $carriers = $this->orderShipmentService->getAllCarriersForOrder($order->id);
+            $carrierNames = array_map(fn ($carrier) => $carrier->name, $carriers);
+            $carrierNames = implode(', ', $carrierNames);
+        } else {
+            $carrier = new Carrier($order->id_carrier);
+            $carrierNames = $carrier->name;
+        }
+
         return array_merge($productVariables, [
-            '{carrier}' => $carrier->name,
+            '{carrier}' => $carrierNames,
             '{delivery_block_txt}' => $this->getFormatedAddress($delivery, "\n"),
             '{invoice_block_txt}' => $this->getFormatedAddress($invoice, "\n"),
             '{delivery_block_html}' => $this->getFormatedAddress($delivery, '<br />', [
@@ -364,11 +360,25 @@ final class MailPreviewVariablesBuilder
 
             $productPrice = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $priceWithTax;
 
+            $carrierName = null;
+            if ($this->orderShipmentService->orderHasShipment($order->id)) {
+                $carrier = $this->orderShipmentService->getCarrierForProduct($order->id, (int) $product['id_product']);
+                if ($carrier) {
+                    $carrierName = $carrier->name;
+                }
+            }
+
             $productTemplate = [
                 'id_product' => $product['id_product'],
                 'id_product_attribute' => $product['id_product_attribute'],
                 'reference' => $product['reference'],
-                'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
+                'name' => $this->trans(
+                    '%name%%attributes%%carrier%',
+                    [
+                        '%name%' => $product['name'],
+                        '%attributes%' => !empty($product['attributes']) ? $this->trans(' - %attributes%', ['%attributes%' => $product['attributes']], 'Emails.Body') : '',
+                        '%carrier%' => $carrierName ? $this->trans(' - Carrier: %carrier_name%', ['%carrier_name%' => $carrierName], 'Emails.Body') : '',
+                    ], 'Emails.Body'),
                 'price' => $this->locale->formatPrice($productPrice * $product['quantity'], $this->context->currency->iso_code),
                 'quantity' => $product['quantity'],
                 'customization' => [],

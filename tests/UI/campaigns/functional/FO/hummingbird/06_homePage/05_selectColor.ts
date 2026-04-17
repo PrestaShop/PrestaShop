@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -19,9 +16,6 @@ const baseContext: string = 'functional_FO_hummingbird_homePage_selectColor';
 describe('FO - Home Page : Select color', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -88,7 +82,4 @@ describe('FO - Home Page : Select color', async () => {
       // .and.to.contains('size-m');
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

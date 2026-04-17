@@ -69,10 +69,16 @@ services:
     class: PrestaShopBundle\Service\Hook\HookFinder
 
   # EVENT HANDLER
-  prestashop.handler.log:
-    class: PrestaShopBundle\Service\Log\LogHandler
+  PrestaShopBundle\Service\Log\LogHandler:
+    public: false
     arguments:
       - "@service_container"
+
+  prestashop.handler.log:
+    alias: PrestaShopBundle\Service\Log\LogHandler
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.1
 
   # CSRF/XSS additional protection middleware
   PrestaShopBundle\Service\DataProvider\UserProvider:

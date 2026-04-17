@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {createProductTest, bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
-import {createOrderSpecificProductTest} from '@commonTests/FO/classic/order';
+import {createOrderSpecificProductTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boDashboardPage,
@@ -232,7 +232,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     it('should get the second invoice file name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getSecondInvoiceNumber', baseContext);
 
-      secondFileName = await boOrdersViewBlockTabListPage.getFileName(page, 3);
+      secondFileName = await boOrdersViewBlockTabListPage.getFileName(page, 2);
       expect(filePath).is.not.equal('');
     });
   });

@@ -1,0 +1,26 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  {{ include('@PrestaShop/Admin/Common/multistore-infotip.html.twig') }}
+  {% if tagForm.vars.errors is not empty %}
+    <div class="alert alert-danger">
+      {% for error in tagForm.vars.errors %}
+        <div class="alert-text">{{ error.message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {{ include('@PrestaShop/Admin/Configure/ShopParameters/Tags/form.html.twig') }}
+
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/tag_form.bundle.js') }}"></script>
+{% endblock %}

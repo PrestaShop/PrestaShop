@@ -68,7 +68,6 @@ Feature: Cart calculation with cart rules and different carriers
       | code                         | cartrule2              |
       | discount_percentage          | 50                     |
       | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
 
   # Issue #9540 part one fixed by #12965
   Scenario: free carrier in price range, voucher in percent set the price bellow range
@@ -78,7 +77,6 @@ Feature: Cart calculation with cart rules and different carriers
     And I select carrier "carrier4" in my cart
     And cart shipping fees should be 7.0
     And my cart total should be 82.5 tax included
-    And my cart total using previous calculation method should be 82.5 tax included
 
   Scenario: free carrier in price range, voucher in amount set the price bellow range
     Given there is a cart rule "cartrule3" with following properties:
@@ -90,14 +88,12 @@ Feature: Cart calculation with cart rules and different carriers
       | discount_currency            | usd                    |
       | discount_includes_tax        | false                  |
       | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
     When I add 1 item of product "product5" in my cart
     And I apply the voucher code "foo2"
     And I select address "address1" in my cart
     And I select carrier "carrier4" in my cart
     Then cart shipping fees should be 7.0
     And my cart total should be 156.0 tax included
-    And my cart total using previous calculation method should be 156.0 tax included
 
   # Issue #12976 part two
   @restore-cart-rules-after-scenario
@@ -117,7 +113,6 @@ Feature: Cart calculation with cart rules and different carriers
     And I select carrier "carrier4" in my cart
     Then cart shipping fees should be 7.0
     And my cart total should be 156.0 tax included
-    And my cart total using previous calculation method should be 156.0 tax included
 
   Scenario: carrier fees not free, voucher with code set shipping fees free above amount, cart total is below
     When I add 1 item of product "product4" in my cart
@@ -127,7 +122,6 @@ Feature: Cart calculation with cart rules and different carriers
     Then I should get cart rule validation error saying "The minimum amount to benefit from this promo code is $150"
     And cart shipping fees should be 7.0
     And my cart total should be 156.0 tax included
-    And my cart total using previous calculation method should be 156.0 tax included
 
   @restore-cart-rules-after-scenario
   Scenario: carrier fees not free, voucher without code set shipping fees free above amount, cart total is below
@@ -146,7 +140,6 @@ Feature: Cart calculation with cart rules and different carriers
     And I select carrier "carrier4" in my cart
     Then cart shipping fees should be 7.0
     And my cart total should be 156.0 tax included
-    And my cart total using previous calculation method should be 156.0 tax included
 
   Scenario: carrier fees not free, voucher with code set shipping fees free above amount, cart total is above
     Given I add 1 item of product "product5" in my cart
@@ -155,7 +148,6 @@ Feature: Cart calculation with cart rules and different carriers
     When I apply the voucher code "foo5"
     Then cart shipping fees should be 2.0
     And my cart total should be 151.0 tax included
-    And my cart total using previous calculation method should be 151.0 tax included
 
   @restore-cart-rules-after-scenario
   Scenario: carrier fees not free, voucher without code set shipping fees free above amount, cart total is above
@@ -174,7 +166,6 @@ Feature: Cart calculation with cart rules and different carriers
     And I select carrier "carrier4" in my cart
     Then cart shipping fees should be 2.0
     And my cart total should be 151.0 tax included
-    And my cart total using previous calculation method should be 151.0 tax included
 
   Scenario: one product in cart, quantity 1, can apply only the cart rule which is restricted to selected carrier
     Given there is a cart rule "cartrule7" with following properties:
@@ -186,12 +177,7 @@ Feature: Cart calculation with cart rules and different carriers
       | code                         | cartrule7              |
       | discount_percentage          | 50                     |
       | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
-    And I restrict following carriers for cart rule cartrule7:
-      | restricted carriers | carrier2 |
-    And I save all the restrictions for cart rule cartrule7
-    And cart rule cartrule7 should have the following properties:
-      | restricted carriers | carrier2 |
+      | carriers                     | carrier2               |
     And there is a cart rule "cartrule8" with following properties:
       | name[en-US]                  | cartrule8              |
       | total_quantity               | 1000                   |
@@ -201,12 +187,7 @@ Feature: Cart calculation with cart rules and different carriers
       | code                         | cartrule8              |
       | discount_percentage          | 50                     |
       | apply_to_discounted_products | true                   |
-      | discount_application_type    | order_without_shipping |
-    And I restrict following carriers for cart rule cartrule8:
-      | restricted carriers | carrier1 |
-    And I save all the restrictions for cart rule cartrule8
-    And cart rule cartrule8 should have the following properties:
-      | restricted carriers | carrier1 |
+      | carriers                     | carrier1               |
     When I add 1 items of product "product1" in my cart
     And I select address "address1" in my cart
     And I select carrier "carrier2" in my cart
@@ -228,21 +209,9 @@ Feature: Cart calculation with cart rules and different carriers
       | priority            | 3         |
       | free_shipping       | false     |
       | discount_percentage | 55        |
-    And I restrict following carriers for cart rule cartrule9:
-      | restricted carriers | carrier3 |
-    And I save all the restrictions for cart rule cartrule9
-    And cart rule cartrule9 should have the following properties:
-      | restricted carriers | carrier3 |
-    And I restrict following carriers for cart rule cartrule5:
-      | restricted carriers | carrier2 |
-    And I save all the restrictions for cart rule cartrule5
-    And cart rule cartrule5 should have the following properties:
-      | restricted carriers | carrier2 |
-    And I restrict following carriers for cart rule cartrule2:
-      | restricted carriers | carrier1 |
-    And I save all the restrictions for cart rule cartrule2
-    And cart rule cartrule2 should have the following properties:
-      | restricted carriers | carrier1 |
+      | carriers            | carrier3  |
+    And I restrict following carriers "carrier2" for cart rule "cartrule5"
+    And I restrict following carriers "carrier1" for cart rule "cartrule2"
     When I add 1 items of product "product1" in my cart
     And I select address "address1" in my cart
     And I select carrier "carrier2" in my cart

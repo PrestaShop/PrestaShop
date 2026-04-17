@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /* eslint-disable max-len */
@@ -50,11 +30,22 @@ export default {
   updateOrderStatusActionInputWrapper: '#update_order_status_action_input_wrapper',
   updateOrderStatusActionForm: '#update_order_status_action_form',
   showOrderShippingUpdateModalBtn: '.js-update-shipping-btn',
+  editShipmentModal: '#editShipmentModal',
+  showEditShipmentModalBtn: '[data-show-modal="edit-shipment"]',
+  editShipmentModalContainer: '#editShipmentFormContainer',
+  submitEditShipment: '#submitEditShipment',
   mergeShipmentModal: '#mergeShipmentModal',
   showMergeShipmentModalBtn: '[data-show-modal="merge-shipment"]',
   mergeShipmentModalContainer: '#mergeShipmentFormContainer',
+  mergeShipmentFormName: 'merge_shipment',
   submitMergeShipment: '#submitMergeShipment',
   selectMergeShipment: 'select[name="merge_shipment[merge_to_shipment]"]',
+  showSplitShipmentModalBtn: '[data-show-modal="split-shipment"]',
+  splitShipmentFormContainer: '#splitShipmentFormContainer',
+  splitShipmentModal: '#splitShipmentModal',
+  splitShipmentFormName: 'split_shipment',
+  splitShipmentFormSubmitButton: 'button[type="submit"][form="split_shipment"]',
+  splitShipmentCarrierSelector: '#split_shipment_carrier',
   updateOrderShippingTrackingNumberInput: '#update_order_shipping_tracking_number',
   updateOrderShippingCurrentOrderCarrierIdInput: '#update_order_shipping_current_order_carrier_id',
   updateOrderShippingNewCarrierIdSelect: '#update_order_shipping_new_carrier_id',
@@ -71,9 +62,16 @@ export default {
   orderDocumentsTabBody: '#orderDocumentsTabContent .card-body',
   orderShippingTabCount: '#orderShippingTab .count',
   orderShippingTabBody: '#orderShippingTabContent .card-body',
+  orderShipmentsTabBody: '#orderShipmentsTabContent',
+  orderShipmentsTabCount: '#orderShipmentsTab .count',
   allMessagesModal: '#view_all_messages_modal',
   allMessagesList: '#all-messages-list',
   openAllMessagesBtn: '.js-open-all-messages-btn',
+  addProductModalContainer: '#addProductFormContainer',
+  editProductModalContainer: '#editProductFormContainer',
+  addProductConfirmNewInvoiceCheckbox: '[name="add_product_row[confirm_new_invoice]',
+  productAddModal: '#addOrderProductModal',
+  productEditModal: '#editOrderProductModal',
   // Products table elements
   productOriginalPosition: '#orderProductsOriginalPosition',
   productModificationPosition: '#orderProductsModificationPosition',
@@ -108,7 +106,11 @@ export default {
   productSearchInput: '#add_product_row_search',
   productSearchInputAutocomplete: '#addProductTableRow .dropdown',
   productSearchInputAutocompleteMenu: '#addProductTableRow .dropdown .dropdown-menu',
+  productSearchInputAutocompleteOnModale: '#searchProductToAddProduct .dropdown',
+  productSearchInputAutocompleteMenuOnModale: '#searchProductToAddProduct .dropdown .dropdown-menu',
   productAddIdInput: '#add_product_row_product_id',
+  productSelectCarriers: '#add_product_row_carrier_for_shipment',
+  productSelectCarriersContainer: '#addProductCarriers',
   productAddTaxRateInput: '#add_product_row_tax_rate',
   productAddCombinationsBlock: '#addProductCombinations',
   productAddCombinationsSelect: '#addProductCombinationId',
@@ -121,7 +123,10 @@ export default {
   productAddInvoiceSelect: '#add_product_row_invoice',
   productAddFreeShippingSelect: '#add_product_row_free_shipping',
   productAddNewInvoiceInfo: '#addProductNewInvoiceInfo',
+  selectAddShipment: '#add_product_row_addShipment',
+  selectAddShipmentContainer: '#addProductShipmentSelect',
   productEditSaveBtn: '.productEditSaveBtn',
+  productModalEditSaveBtn: '#edit_product_row',
   productEditCancelBtn: '.productEditCancelBtn',
   productEditRowTemplate: '#editProductTableRowTemplate',
   productEditRow: '.editProductRow',
@@ -138,6 +143,12 @@ export default {
   productEditLocationText: '.editProductLocation',
   productEditAvailableText: '.editProductAvailable',
   productEditTotalPriceText: '.editProductTotalPrice',
+  // for only modal edit
+  productModalEditImage: '#editProductImg',
+  productModalShipmentQuantityInput: '.js-shipment-quantity',
+  productModalEditName: '#editProductName',
+  productModalTotalTaxIncl: '#editProductTotalTaxIncl',
+  productModalShipmentQtyHeader: '.shipment-table-qty-counter',
   // Product Discount List
   productDiscountList: {
     list: '.table.discountList',

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\PrestaShopBundle\ApiPlatform;
@@ -95,7 +75,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
     public function provideEndpointScopes(): iterable
     {
         yield 'API client entity' => [
-            '/api-client/{apiClientId}',
+            '/api-clients/{apiClientId}',
             [
                 'get' => ['api_client_read'],
                 'patch' => ['api_client_write'],
@@ -104,7 +84,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
         ];
 
         yield 'API client creation' => [
-            '/api-client',
+            '/api-clients',
             [
                 'post' => ['api_client_write'],
             ],
@@ -118,7 +98,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
         ];
 
         yield 'Product entity' => [
-            '/product/{productId}',
+            '/products/{productId}',
             [
                 'get' => ['product_read'],
                 'patch' => ['product_write'],
@@ -127,7 +107,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
         ];
 
         yield 'Product creation' => [
-            '/product',
+            '/products',
             [
                 'post' => ['product_write'],
             ],
@@ -139,6 +119,40 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                 'get' => ['product_read'],
             ],
         ];
+    }
+
+    public function testMultishopParametersAreDocumentedWhenFeatureActive(): void
+    {
+        $configuration = $this->getContainer()->get('prestashop.adapter.legacy.configuration');
+        $configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', 1);
+
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        /** @var OpenApi $openApi */
+        $openApi = $openApiFactory->__invoke();
+        $operation = $openApi->getPaths()->getPath('/products')->getGet();
+        $parameterNames = array_map(static fn ($parameter) => $parameter->getName(), $operation->getParameters());
+        $this->assertContains('shopId', $parameterNames);
+        $this->assertContains('shopGroupId', $parameterNames);
+        $this->assertContains('shopIds', $parameterNames);
+        $this->assertContains('allShops', $parameterNames);
+    }
+
+    public function testMultishopParametersAreNotDocumentedWhenFeatureInactive(): void
+    {
+        $configuration = $this->getContainer()->get('prestashop.adapter.legacy.configuration');
+        $configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', 0);
+
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        /** @var OpenApi $openApi */
+        $openApi = $openApiFactory->__invoke();
+        $operation = $openApi->getPaths()->getPath('/products')->getGet();
+        $parameterNames = array_map(static fn ($parameter) => $parameter->getName(), $operation->getParameters());
+        $this->assertNotContains('shopId', $parameterNames);
+        $this->assertNotContains('shopGroupId', $parameterNames);
+        $this->assertNotContains('shopIds', $parameterNames);
+        $this->assertNotContains('allShops', $parameterNames);
     }
 
     /**
@@ -173,7 +187,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                     'type' => new ArrayObject([
                         'type' => 'string',
                     ]),
-                    'active' => new ArrayObject([
+                    'enabled' => new ArrayObject([
                         'type' => 'boolean',
                     ]),
                     // Localized fields are documented vie the LocalizedValue attribute
@@ -391,13 +405,14 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                             'fr-FR' => 'valeur',
                         ],
                     ]),
-                    // Nullable DateTime
+                    // Nullable DateImmutable (format is 'date' not 'date-time')
                     'availableDate' => new ArrayObject([
-                        'format' => 'date-time',
+                        'format' => 'date',
                         'type' => [
                             'string',
                             'null',
                         ],
+                        'example' => '2025-11-05',
                     ]),
                     'coverThumbnailUrl' => new ArrayObject([
                         'type' => 'string',
@@ -407,6 +422,34 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                         'type' => 'array',
                         'items' => ['type' => 'integer'],
                         'example' => [1, 3],
+                    ]),
+                    // Categories use @index replacement, but their definition uses an ApiProperty
+                    'categories' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => [
+                            'type' => 'object',
+                            'properties' => [
+                                'categoryId' => [
+                                    'type' => 'integer',
+                                ],
+                                'name' => [
+                                    'type' => 'string',
+                                ],
+                                'displayName' => [
+                                    'type' => 'string',
+                                ],
+                            ],
+                        ],
+                        'example' => [
+                            [
+                                'categoryId' => 2,
+                                'name' => 'Home',
+                                'displayName' => 'Home',
+                            ],
+                        ],
+                    ]),
+                    'defaultCategoryId' => new ArrayObject([
+                        'type' => 'integer',
                     ]),
                 ],
             ]),
@@ -446,7 +489,7 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                     'productId' => new ArrayObject([
                         'type' => 'integer',
                     ]),
-                    'active' => new ArrayObject([
+                    'enabled' => new ArrayObject([
                         'type' => 'boolean',
                     ]),
                     // Localized fields are documented vie the LocalizedValue attribute
@@ -552,18 +595,6 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                         'type' => 'number',
                         'example' => 42.99,
                     ]),
-                    // Multi-parameters setter
-                    'redirectOption' => new ArrayObject([
-                        'type' => 'object',
-                        'properties' => [
-                            'redirectType' => new ArrayObject([
-                                'type' => 'string',
-                            ]),
-                            'redirectTarget' => new ArrayObject([
-                                'type' => 'integer',
-                            ]),
-                        ],
-                    ]),
                     'deliveryTimeNoteType' => new ArrayObject([
                         'type' => 'integer',
                     ]),
@@ -602,6 +633,17 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                             'fr-FR' => 'valeur',
                         ],
                     ]),
+                    'redirectOption' => new ArrayObject([
+                        'type' => 'object',
+                        'properties' => [
+                            'redirectType' => new ArrayObject([
+                                'type' => 'string',
+                            ]),
+                            'redirectTarget' => new ArrayObject([
+                                'type' => 'integer',
+                            ]),
+                        ],
+                    ]),
                     'packStockType' => new ArrayObject([
                         'type' => 'integer',
                     ]),
@@ -625,18 +667,85 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
                             'fr-FR' => 'valeur',
                         ],
                     ]),
-                    // Nullable DateTime
+                    // Nullable DateImmutable
                     'availableDate' => new ArrayObject([
-                        'format' => 'date-time',
+                        'format' => 'date',
+                        'type' => 'string',
+                        'example' => '2025-11-05',
+                    ]),
+                ],
+            ]),
+        ];
+
+        yield 'Product list output, we need to check ApiResourceMapping is correctly applied' => [
+            'ProductList',
+            new ArrayObject([
+                'type' => 'object',
+                'description' => '',
+                'deprecated' => false,
+                'properties' => [
+                    'productId' => new ArrayObject([
+                        'type' => 'integer',
+                    ]),
+                    'type' => new ArrayObject([
                         'type' => 'string',
                     ]),
-                    // Deprecated setter still present for now
-                    'ean13' => new ArrayObject([
+                    'enabled' => new ArrayObject([
+                        'type' => 'boolean',
+                    ]),
+                    'name' => new ArrayObject([
+                        'type' => 'string',
+                    ]),
+                    'quantity' => new ArrayObject([
+                        'type' => 'integer',
+                    ]),
+                    'priceTaxExcluded' => new ArrayObject([
+                        'type' => 'number',
+                        'example' => 42.99,
+                    ]),
+                    'priceTaxIncluded' => new ArrayObject([
+                        'type' => 'number',
+                        'example' => 42.99,
+                    ]),
+                    'category' => new ArrayObject([
                         'type' => 'string',
                     ]),
                 ],
             ]),
         ];
+
+        yield 'UpdatePositionResource, the documentation is adapted thanks to the PositionCollection attribute' => [
+            'UpdatePositionResource',
+            new ArrayObject([
+                'type' => 'object',
+                'description' => '',
+                'deprecated' => false,
+                'properties' => [
+                    'positions' => new ArrayObject([
+                        'type' => 'array',
+                        'items' => new ArrayObject([
+                            'type' => 'object',
+                            'properties' => new ArrayObject([
+                                'testId' => ['type' => 'integer'],
+                                'newPosition' => ['type' => 'integer'],
+                            ]),
+                        ]),
+                        'example' => new ArrayObject([
+                            [
+                                'testId' => 5,
+                                'newPosition' => 3,
+                            ],
+                            [
+                                'testId' => 8,
+                                'newPosition' => 1,
+                            ],
+                        ]),
+                    ]),
+                ],
+            ]),
+        ];
+
+        // @todo Add a schema with a dateTime like discount when it is released or virtual product's expiration date.
     }
 
     /**
@@ -661,25 +770,25 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
     public function getExpectedTags(): iterable
     {
         yield 'product get endpoint keeps Product tag' => [
-            '/product/{productId}',
+            '/products/{productId}',
             'get',
             ['Product'],
         ];
 
         yield 'product patch endpoint keeps Product tag' => [
-            '/product/{productId}',
+            '/products/{productId}',
             'patch',
             ['Product'],
         ];
 
         yield 'product image get endpoint has Product tag instead of ProductImage' => [
-            '/product/image/{imageId}',
+            '/products/images/{imageId}',
             'get',
             ['Product'],
         ];
 
         yield 'api client get endpoint keeps ApiClient tag' => [
-            '/api-client/{apiClientId}',
+            '/api-clients/{apiClientId}',
             'get',
             ['ApiClient'],
         ];
@@ -689,5 +798,22 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
             'get',
             ['ApiClient'],
         ];
+    }
+
+    public function testApiPropertyOpenApiContextApplied(): void
+    {
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        /** @var OpenApi $openApi */
+        $openApi = $openApiFactory->__invoke();
+        $schemas = $openApi->getComponents()->getSchemas();
+
+        /** @var ArrayObject $contactSchema */
+        $contactSchema = $schemas['Contact'];
+        $shopIdsProperty = $contactSchema['properties']['shopIds'];
+
+        $this->assertEquals('array', $shopIdsProperty['type']);
+        $this->assertEquals(['type' => 'integer'], $shopIdsProperty['items']);
+        $this->assertEquals([1, 3], $shopIdsProperty['example']);
     }
 }

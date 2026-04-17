@@ -316,20 +316,13 @@ services:
       - 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType'
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TaxRulesGroupFormDataProvider'
 
-  prestashop.core.form.identifiable_object.builder.cart_rule_form_builder:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
-    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
-    arguments:
-      - 'PrestaShopBundle\Form\Admin\Sell\CartRule\CartRuleType'
-      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CartRuleFormDataProvider'
-
   prestashop.core.form.identifiable_object.builder.discount_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
     arguments:
       - 'PrestaShopBundle\Form\Admin\Sell\Discount\DiscountType'
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\DiscountFormDataProvider'
-      - '@prestashop.core.form.identifiable_object.option_provider.discount_form_options_provider'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\DiscountFormOptionsProvider'
 
   prestashop.core.form.identifiable_object.builder.title_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
@@ -365,3 +358,45 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search\SearchTermType'
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AliasFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.tag_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Tag\TagType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TagFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.add_product_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AddProductFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.merge_shipment_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Order\Shipment\MergeShipmentType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\MergeShipmentFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.edit_shipment_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Order\Shipment\EditShipmentType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EditShipmentFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.split_shipment_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Order\Shipment\SplitShipmentType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SplitShipmentFormDataProvider'
+
+  prestashop.core.form.identifiable_object.builder.edit_order_product_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Order\EditProductRowType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EditProductFormDataProvider'

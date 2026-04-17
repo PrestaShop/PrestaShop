@@ -14,7 +14,7 @@ import {
   type BrowserContext,
   FakerProduct,
   FakerShop,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -156,17 +156,17 @@ describe('BO - Catalog - Products : Multistore', async () => {
 
       page = await boProductsPage.viewMyStore(page);
 
-      const pageTitle = await foClassicHomePage.getPageTitle(page);
-      expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
+      const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdHomePage.pageTitle);
 
-      const newUrl = await foClassicHomePage.getCurrentURL(page);
+      const newUrl = await foHummingbirdHomePage.getCurrentURL(page);
       expect(newUrl).to.contains(createShopData.name);
     });
 
     it('should close the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closePage', baseContext);
 
-      page = await foClassicHomePage.closePage(browserContext, page, 0);
+      page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await boProductsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boProductsPage.pageTitle);

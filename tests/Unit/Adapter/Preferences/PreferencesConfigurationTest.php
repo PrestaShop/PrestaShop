@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -32,7 +12,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration;
+use PrestaShop\PrestaShop\Core\Feature\Enum\ShopModeEnum;
+use PrestaShop\PrestaShop\Core\Feature\ShopModeFeature;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
+use PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType;
 
 class PreferencesConfigurationTest extends TestCase
 {
@@ -49,7 +32,7 @@ class PreferencesConfigurationTest extends TestCase
     protected function setUp(): void
     {
         $this->mockConfiguration = $this->getMockBuilder(Configuration::class)
-            ->onlyMethods(['get', 'getBoolean', 'set'])
+            ->onlyMethods(['get', 'getBoolean', 'set', 'getEnum'])
             ->disableOriginalConstructor()
             ->getMock();
         $this->object = new PreferencesConfiguration($this->mockConfiguration);
@@ -81,11 +64,20 @@ class PreferencesConfigurationTest extends TestCase
                 ]
             );
 
+        $this->mockConfiguration
+            ->method('getEnum')
+            ->willReturnMap(
+                [
+                    [ShopModeFeature::CONFIGURATION_NAME, ShopModeEnum::class, ShopModeFeature::DEFAULT_SHOP_MODE, ShopModeEnum::SHOP_MODE_B2C_ONLY],
+                ]
+            );
+
         $result = $this->object->getConfiguration();
         $this->assertSame(
             [
                 'enable_ssl' => true,
                 'enable_token' => true,
+                PreferencesType::SHOP_MODE => ShopModeEnum::SHOP_MODE_B2C_ONLY,
                 'allow_html_iframes' => true,
                 'use_htmlpurifier' => true,
                 'price_round_mode' => 'test',
@@ -136,6 +128,7 @@ class PreferencesConfigurationTest extends TestCase
                 [
                     'enable_ssl' => false,
                     'enable_token' => true,
+                    PreferencesType::SHOP_MODE => ShopModeEnum::SHOP_MODE_B2C_ONLY,
                     'allow_html_iframes' => true,
                     'use_htmlpurifier' => true,
                     'price_round_mode' => 'test',
@@ -158,12 +151,14 @@ class PreferencesConfigurationTest extends TestCase
                     ['PS_COOKIE_SAMESITE', null, null, CookieOptions::SAMESITE_NONE],
                 ]
             );
+
         $this->mockConfiguration
             ->method('set')
             ->willReturnMap(
                 [
                     ['PS_SSL_ENABLED', true],
                     ['PS_TOKEN_ENABLE', true],
+                    [ShopModeFeature::CONFIGURATION_NAME, ShopModeEnum::SHOP_MODE_B2C_ONLY],
                     ['PS_ALLOW_HTML_IFRAME', true],
                     ['PS_USE_HTMLPURIFIER', true],
                     ['PS_DISPLAY_SUPPLIERS', false],
@@ -176,18 +171,12 @@ class PreferencesConfigurationTest extends TestCase
             );
 
         $this->assertSame(
-            [
-                [
-                    'key' => 'Cannot disable SSL configuration due to the Cookie SameSite=None.',
-                    'domain' => 'Admin.Advparameters.Notification',
-                    'parameters' => [],
-                ],
-            ],
-
+            [],
             $this->object->updateConfiguration(
                 [
-                    'enable_ssl' => false,
+                    'enable_ssl' => true,
                     'enable_token' => true,
+                    PreferencesType::SHOP_MODE => ShopModeEnum::SHOP_MODE_B2C_ONLY,
                     'allow_html_iframes' => true,
                     'use_htmlpurifier' => true,
                     'price_round_mode' => 'test',

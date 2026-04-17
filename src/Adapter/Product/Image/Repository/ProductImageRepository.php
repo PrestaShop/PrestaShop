@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -30,15 +10,19 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\Repository;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
+use Generator;
 use Image;
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImageForThumbnailGeneration;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociationCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
@@ -105,6 +89,29 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
         return array_map(static function (string $id): Image {
             return new Image((int) $id);
         }, $qb->executeQuery()->fetchFirstColumn());
+    }
+
+    /**
+     * Memory and database operations optimized iterator for all product images in the database.
+     *
+     * @return Generator<ProductImageForThumbnailGeneration>
+     *
+     * @throws ProductConstraintException
+     * @throws Exception
+     */
+    public function iterateImagesForThumbnailGeneration(): Generator
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('i.id_image, i.id_product')
+            ->from($this->dbPrefix . 'image', 'i')
+            ->addOrderBy('i.id_image', 'ASC');
+
+        foreach ($qb->executeQuery()->iterateNumeric() as [$id, $productId]) {
+            yield new ProductImageForThumbnailGeneration(
+                new ImageId((int) $id),
+                new ProductId((int) $productId),
+            );
+        }
     }
 
     /**

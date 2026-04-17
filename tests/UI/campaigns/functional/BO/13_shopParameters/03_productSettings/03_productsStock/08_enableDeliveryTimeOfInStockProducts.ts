@@ -7,8 +7,8 @@ import {
   boLoginPage,
   boProductSettingsPage,
   type BrowserContext,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -69,18 +69,18 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time in stoc
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       page = await boProductSettingsPage.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should check delivery time block visibility', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `deliveryTimeBlockVisible${index}`, baseContext);
 
-      await foClassicHomePage.goToProductPage(page, 4);
+      await foHummingbirdHomePage.goToProductPage(page, 4);
 
-      const isDeliveryTimeBlockVisible = await foClassicProductPage.isDeliveryInformationVisible(page);
+      const isDeliveryTimeBlockVisible = await foHummingbirdProductPage.isDeliveryInformationVisible(page);
       expect(isDeliveryTimeBlockVisible).to.equal(test.args.enable);
     });
 
@@ -88,7 +88,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time in stoc
       it('should check delivery time text', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deliveryTimeBlockText${index}`, baseContext);
 
-        const deliveryTimeText = await foClassicProductPage.getDeliveryInformationText(page);
+        const deliveryTimeText = await foHummingbirdProductPage.getDeliveryInformationText(page);
         expect(deliveryTimeText).to.equal(test.args.deliveryTimeText);
       });
     }
@@ -96,7 +96,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time in stoc
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-      page = await foClassicProductPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boProductSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);

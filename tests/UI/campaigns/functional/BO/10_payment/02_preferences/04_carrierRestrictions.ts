@@ -7,11 +7,11 @@ import {
   boPaymentPreferencesPage,
   type BrowserContext,
   dataCustomers,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicHomePage,
-  foClassicLoginPage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  foHummingbirdProductPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -36,28 +36,28 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
     it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      await foClassicHomePage.goToFo(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.goToFo(page);
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
-      await foClassicHomePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
-      const pageTitle = await foClassicLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
   });
@@ -116,23 +116,23 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         // Click on view my shop
         page = await boPaymentPreferencesPage.viewMyShop(page);
         // Change language in FO
-        await foClassicHomePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const pageTitle = await foClassicHomePage.getPageTitle(page);
-        expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
+        const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+        expect(pageTitle).to.contains(foHummingbirdHomePage.pageTitle);
       });
 
       it('should add the first product to the cart and proceed to checkout', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
         // Go to the first product page
-        await foClassicHomePage.goToProductPage(page, 1);
+        await foHummingbirdHomePage.goToProductPage(page, 1);
         // Add the product to the cart
-        await foClassicProductPage.addProductToTheCart(page);
+        await foHummingbirdProductPage.addProductToTheCart(page);
         // Proceed to checkout the shopping cart
-        await foClassicCartPage.clickOnProceedToCheckout(page);
+        await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-        const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+        const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
         expect(isCheckoutPage).to.eq(true);
       });
 
@@ -140,7 +140,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+        const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
         expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
       });
 
@@ -148,11 +148,11 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         await testContext.addContextItem(this, 'testIdentifier', `checkPaymentMethod${index}`, baseContext);
 
         // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+        const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
         expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
         // Payment step - Check payment method
-        const isVisible = await foClassicCheckoutPage.isPaymentMethodExist(page, test.args.paymentModule);
+        const isVisible = await foHummingbirdCheckoutPage.isPaymentMethodExist(page, test.args.paymentModule);
         expect(isVisible).to.be.equal(test.args.exist);
       });
 
@@ -160,7 +160,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
         // Close current tab
-        page = await foClassicHomePage.closePage(browserContext, page, 0);
+        page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await boPaymentPreferencesPage.getPageTitle(page);
         expect(pageTitle).to.contains(boPaymentPreferencesPage.pageTitle);

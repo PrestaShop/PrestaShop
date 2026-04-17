@@ -14,9 +14,25 @@ import {
 const baseContext: string = 'functional_BO_design_pages_pages_sortPages';
 
 /*
-Sort pages table by id, url, title, position
+Pre-condition:
+- Login in BO
+Scenario:
+- Go to Design > Pages
+- Reset all filters
+- Sort pages by ID asc
+- Sort pages by ID desc
+- Sort pages by URL asc
+- Sort pages by URL desc
+- Sort pages by Title asc
+- Sort pages by Title desc
+- Sort pages by Meta Title asc
+- Sort pages by Meta Title desc
+- Sort pages by Position asc
+- Sort pages by Position desc
+- Sort pages by Status asc
+- Sort pages by Status desc
  */
-describe('BO - design - Pages : Sort Pages table', async () => {
+describe('BO - Design - Pages : Sort pages table', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -56,36 +72,68 @@ describe('BO - design - Pages : Sort Pages table', async () => {
 
   // Sort pages table
   describe('Sort pages table', async () => {
-    const sortTests = [
+    const sortTests: {
+      args: { testIdentifier: string, sortBy: string, sortDirection: string, isFloat?: boolean },
+    }[] = [
       {
-        args:
-          {
-            testIdentifier: 'sortByPositionDesc', sortBy: 'position', sortDirection: 'desc', isFloat: true,
-          },
+        args: {
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_cms', sortDirection: 'asc', isFloat: true,
+        },
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByIdAsc', sortBy: 'id_cms', sortDirection: 'asc', isFloat: true,
-          },
+        args: {
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_cms', sortDirection: 'desc', isFloat: true,
+        },
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByIdDesc', sortBy: 'id_cms', sortDirection: 'desc', isFloat: true,
-          },
+        args: {
+          testIdentifier: 'sortByUrlAsc', sortBy: 'link_rewrite', sortDirection: 'asc',
+        },
       },
-      {args: {testIdentifier: 'sortByUrlAsc', sortBy: 'link_rewrite', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByUrlDesc', sortBy: 'link_rewrite', sortDirection: 'desc'}},
-      {args: {testIdentifier: 'sortByTitleAsc', sortBy: 'meta_title', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByTitleDesc', sortBy: 'meta_title', sortDirection: 'desc'}},
-      {args: {testIdentifier: 'sortByStatusAsc', sortBy: 'active', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByStatusDesc', sortBy: 'active', sortDirection: 'desc'}},
       {
-        args:
-          {
-            testIdentifier: 'sortByPositionAsc', sortBy: 'position', sortDirection: 'asc', isFloat: true,
-          },
+        args: {
+          testIdentifier: 'sortByUrlDesc', sortBy: 'link_rewrite', sortDirection: 'desc',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByTitleAsc', sortBy: 'meta_title', sortDirection: 'asc',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByTitleDesc', sortBy: 'meta_title', sortDirection: 'desc',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByMetaTitleAsc', sortBy: 'head_seo_title', sortDirection: 'asc',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByMetaTitleDesc', sortBy: 'head_seo_title', sortDirection: 'desc',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByPositionAsc', sortBy: 'position', sortDirection: 'asc', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByPositionDesc', sortBy: 'position', sortDirection: 'desc', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByStatusAsc', sortBy: 'active', sortDirection: 'asc',
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByStatusDesc', sortBy: 'active', sortDirection: 'desc',
+        },
       },
     ];
 
@@ -110,7 +158,7 @@ describe('BO - design - Pages : Sort Pages table', async () => {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await utilsCore.sortArray(nonSortedTable);
+          const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);

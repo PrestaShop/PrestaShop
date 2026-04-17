@@ -1,29 +1,10 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 import AttributeFormMap from '@pages/attribute/form/attribute-form-map';
+import FormSubmitButton from '@components/form-submit-button';
 
 const {$} = window;
 
@@ -36,31 +17,27 @@ $(() => {
   );
 
   new window.prestashop.component.ChoiceTree(AttributeFormMap.attributeShopAssociationInput).enableAutoCheckChildren();
+
+  new FormSubmitButton();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  const attributeGroupSelect = document.querySelector(AttributeFormMap.attributeGroupSelect) as HTMLInputElement | null;
+  const attributeGroupSelect = document.querySelector(AttributeFormMap.attributeGroupSelect) as HTMLSelectElement | null;
   const attributeColorRow = document.querySelector(AttributeFormMap.attributeColorFormRow) as HTMLElement | null;
   const attributeTextureRow = document.querySelector(AttributeFormMap.attributeTextureFormRow) as HTMLElement | null;
-  const attributeGroupSelectValue = (attributeGroupSelect as HTMLInputElement | null)?.value;
 
-  const toggleDisplay = (value: string | null) => {
-    if (attributeColorRow && attributeTextureRow) {
-      const displayValue = value === '2' ? 'flex' : 'none';
-      attributeColorRow.style.display = displayValue;
-      attributeTextureRow.style.display = displayValue;
-    }
+  if (!attributeGroupSelect || !attributeColorRow || !attributeTextureRow) return;
+
+  const toggleDisplay = () => {
+    const selectedOption = attributeGroupSelect?.selectedOptions[0];
+    const isColorGroup = selectedOption?.dataset.iscolorgroup;
+    const displayValue = isColorGroup ? 'flex' : 'none';
+
+    attributeColorRow.style.display = displayValue;
+    attributeTextureRow.style.display = displayValue;
   };
 
-  if (attributeGroupSelectValue) {
-    toggleDisplay(attributeGroupSelectValue);
-  }
+  toggleDisplay();
 
-  attributeGroupSelect?.addEventListener('change', () => {
-    const NewattributeGroupSelectValue = (attributeGroupSelect as HTMLInputElement | null)?.value;
-
-    if (NewattributeGroupSelectValue) {
-      toggleDisplay(NewattributeGroupSelectValue);
-    }
-  });
+  attributeGroupSelect?.addEventListener('change', toggleDisplay);
 });

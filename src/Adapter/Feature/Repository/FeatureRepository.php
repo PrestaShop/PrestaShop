@@ -1,33 +1,14 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Feature\Repository;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Feature;
@@ -122,14 +103,17 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param int $langId
+     * @param int $shopId
      *
      * @return array<int, array<string, mixed>>
      */
-    public function getFeaturesByLang(int $langId): array
+    public function getFeaturesByLang(int $langId, int $shopId): array
     {
         $qb = $this->getFeaturesQueryBuilder()
             ->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature AND fl.id_lang = :languageId')
+            ->innerJoin('f', $this->dbPrefix . 'feature_shop', 'fs', 'fs.id_feature = f.id_feature AND fs.id_shop = :shopId')
             ->setParameter('languageId', $langId)
+            ->setParameter('shopId', $shopId)
             ->select('f.*, fl.*')
             ->addOrderBy('fl.name', 'ASC')
         ;
@@ -185,6 +169,7 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
     {
         $qb = $this->getFeaturesQueryBuilder()
             ->select('f.*, fl.*')
+            ->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl', 'fl.id_feature = f.id_feature')
             ->setFirstResult($offset ?? 0)
             ->addOrderBy('f.position', 'ASC')
             ->setMaxResults($limit)
@@ -283,6 +268,66 @@ class FeatureRepository extends AbstractMultiShopObjectModelRepository
         return array_map(static function (array $result): ShopId {
             return new ShopId((int) $result['id_shop']);
         }, $qb->executeQuery()->fetchAllAssociative());
+    }
+
+    /**
+     * Retrieve features with values (id, name).
+     *
+     * @param int $languageId
+     * @param int[] $shopIds
+     *
+     * @return array<int, array{feature_id: int, name: string, values: array<int, array{item_id: int, name: string}>}>
+     */
+    public function getFeaturesWithValues(int $languageId, array $shopIds = []): array
+    {
+        $qb = $this->getFeaturesQueryBuilder()
+            ->select(
+                'DISTINCT f.id_feature AS feature_id',
+                'fl.name AS name',
+                'fvl.id_feature_value AS value_id',
+                'fvl.value AS value_name'
+            )
+            ->leftJoin('f', $this->dbPrefix . 'feature_lang', 'fl',
+                'f.id_feature = fl.id_feature AND fl.id_lang = :language_id'
+            )
+            ->leftJoin('f', $this->dbPrefix . 'feature_value', 'fv',
+                'f.id_feature = fv.id_feature'
+            )
+            ->leftJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl',
+                'fvl.id_lang = :language_id AND fvl.id_feature_value = fv.id_feature_value'
+            )
+            ->where('fv.custom = 0')
+            ->orderBy('f.id_feature')
+            ->addOrderBy('fvl.id_feature_value')
+            ->setParameter('language_id', $languageId);
+
+        if (!empty($shopIds)) {
+            $qb
+                ->innerJoin('f', $this->dbPrefix . 'feature_shop', 'fs',
+                    'fs.id_feature = f.id_feature AND fs.id_shop IN (:shop_ids)'
+                )
+                ->setParameter('shop_ids', $shopIds, ArrayParameterType::INTEGER);
+        }
+
+        $rows = $qb->executeQuery()->fetchAllAssociative();
+
+        $features = [];
+        foreach ($rows as $row) {
+            $featureId = (int) $row['feature_id'];
+            if (!isset($features[$featureId])) {
+                $features[$featureId] = [
+                    'feature_id' => (int) $featureId,
+                    'name' => (string) $row['name'],
+                    'values' => [],
+                ];
+            }
+            $features[$featureId]['values'][] = [
+                'item_id' => (int) $row['value_id'],
+                'name' => (string) $row['value_name'],
+            ];
+        }
+
+        return array_values($features);
     }
 
     /**

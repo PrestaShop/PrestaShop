@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Product\Command;
@@ -68,12 +48,24 @@ class UpdateProductInOrderCommand
     private $orderInvoiceId;
 
     /**
+     * @var null|array<int, array{
+     *     shipment_id: int,
+     *     quantity: int
+     * }>
+     */
+    private ?array $shipmentsQuantities;
+
+    /**
      * @param int $orderId
      * @param int $orderDetailId
      * @param string $priceTaxIncluded
      * @param string $priceTaxExcluded
      * @param int $quantity
      * @param int|null $orderInvoiceId
+     * @param null|array<int, array{
+     *     shipment_id: int,
+     *     quantity: int
+     * }> $shipmentsQuantities
      */
     public function __construct(
         int $orderId,
@@ -81,7 +73,8 @@ class UpdateProductInOrderCommand
         string $priceTaxIncluded,
         string $priceTaxExcluded,
         int $quantity,
-        ?int $orderInvoiceId = null
+        ?int $orderInvoiceId = null,
+        ?array $shipmentsQuantities = null
     ) {
         $this->orderId = new OrderId($orderId);
         $this->orderDetailId = $orderDetailId;
@@ -92,6 +85,7 @@ class UpdateProductInOrderCommand
             throw new InvalidAmountException();
         }
         $this->setQuantity($quantity);
+        $this->setShipmentsQuantities($shipmentsQuantities);
         $this->orderInvoiceId = $orderInvoiceId;
     }
 
@@ -154,5 +148,49 @@ class UpdateProductInOrderCommand
             throw new InvalidProductQuantityException('When adding a product quantity must be strictly positive');
         }
         $this->quantity = $quantity;
+    }
+
+    /**
+     * @param null|array<int, array{
+     *     shipment_id: int,
+     *     quantity: int
+     * }> $shipmentsQuantities
+     *
+     * @throws InvalidProductQuantityException
+     */
+    private function setShipmentsQuantities(?array $shipmentsQuantities): void
+    {
+        if (!empty($shipmentsQuantities)) {
+            $hasPositiveQuantity = false;
+
+            foreach ($shipmentsQuantities as $shipmentQuantity) {
+                if ($shipmentQuantity['quantity'] < 0) {
+                    throw new InvalidProductQuantityException('Shipment quantity must be positive');
+                }
+
+                if ($shipmentQuantity['quantity'] >= 1) {
+                    $hasPositiveQuantity = true;
+                }
+            }
+
+            if (!$hasPositiveQuantity) {
+                throw new InvalidProductQuantityException(
+                    'At least one shipment quantity must be greater than or equal to 1'
+                );
+            }
+        }
+
+        $this->shipmentsQuantities = $shipmentsQuantities;
+    }
+
+    /**
+     * @return null|array<int, array{
+     *     shipment_id: int,
+     *     quantity: int
+     * }>
+     */
+    public function getShipmentsQuantities()
+    {
+        return $this->shipmentsQuantities;
     }
 }

@@ -32,6 +32,7 @@ services:
         - GROUP_ID=${GROUP_ID:-1000}
         - NODE_VERSION=${NODE_VERSION:-16.20.1}
         - INSTALL_XDEBUG=${INSTALL_XDEBUG:-false}
+        - TIMEZONE=${TIMEZONE:-UTC}
     environment:
       DISABLE_MAKE: ${DISABLE_MAKE:-0}
       PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}

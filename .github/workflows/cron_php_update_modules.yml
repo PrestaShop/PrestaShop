@@ -1,72 +1,139 @@
-name: Cron Update PHP Modules
+name: Update PrestaShop composer packages
 on:
-  schedule:
-    - cron: '0 23 * * *'
   workflow_dispatch:
-
-permissions:
-  contents: read
+  schedule:
+    - cron: '0 5 * * *'
 
 jobs:
-  update-composer-modules:
+  update-prestashop-packages:
     permissions:
-      contents: write  # for peter-evans/create-pull-request to create branch
-      pull-requests: write  # for peter-evans/create-pull-request to create a PR
+      contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
-    name: Update PHP Modules
     strategy:
       fail-fast: false
       matrix:
         BRANCH:
           - develop
-          - 9.0.x
-          - 8.2.x
+          - 9.1.x
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}
+      IGNORE_PRESTASHOP_PACKAGES: "prestashop/psgdpr prestashop/ps_apiresources"
 
     steps:
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
+          token: ${{ secrets.JARVIS_TOKEN }}
 
-      - name: Install Composer dependencies
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --no-scripts
+
+      - name: Find outdated prestashop/* packages and build PR body
+        id: outdated
         run: |
-          composer self-update --stable
-          COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
+          set -e
 
-      - name: Execute script for updating modules
-        run: php .github/workflows/cron_update_modules/script.php ${{ env.GH_BRANCH }}
+          json=$(composer show --outdated --format=json "prestashop/*" || true)
 
-      - name: Update PrestaShop packages
-        id: updated-packages
-        run: |
-          if [[ -f cron_php_update_modules.txt ]]; then
-            FILE_CONTENT=$(cat cron_php_update_modules.txt)
-            echo PR_BODY=$FILE_CONTENT >> $GITHUB_OUTPUT
-            rm cron_php_update_modules.txt
-          else
-            echo 'Nothing to update'
+          if [ -z "$json" ]; then
+            echo "has_updates=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
 
+          ignore="${IGNORE_PRESTASHOP_PACKAGES:-}"
+
+          pkgs=$(printf '%s\n' "$json" | jq -r --arg ignore "$ignore" '
+            .installed
+            | map(select(.name | startswith("prestashop/")))
+            | (if $ignore == "" then . else map(select(.name as $n |
+                ($ignore | split(" ") | index($n)) | not)) end)
+            | .[]
+            | .name
+          ')
+
+          if [ -z "$pkgs" ]; then
+            echo "has_updates=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "has_updates=true" >> "$GITHUB_OUTPUT"
+          echo "packages=$(echo "$pkgs" | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+
+          body=$(cat <<'EOF'
+          | Questions                      | Answers |
+          | ------------------------------ | ------------------------------------------------------- |
+          | Branch?                        | GH_BRANCH |
+          | Description?                   | Updated PrestaShop themes, modules and packages via composer, details below. |
+          | Type?                          | improvement |
+          | Category?                      | PM |
+          | BC breaks?                     | no |
+          | Deprecations?                  | no |
+          | Fixed ticket?                  | N/A |
+          | How to test?                   | N/A |
+          | UI Tests?                      | Paste the URL here |
+          | Fixed issue or discussion?     | N/A |
+          | Related PRs                    | N/A |
+          EOF
+          )
+
+          body="${body//GH_BRANCH/$GH_BRANCH}"
+
+          details_header=$(cat <<'EOF'
+
+          ## Updated packages
+
+          | Package | From | To |
+          | ------- | ---- | -- |
+          EOF
+          )
+
+          details=$(printf '%s\n' "$json" | jq -r --arg ignore "$ignore" '
+            .installed
+            | map(select(.name | startswith("prestashop/")))
+            | (if $ignore == "" then . else map(select(.name as $n |
+                ($ignore | split(" ") | index($n)) | not)) end)
+            | .[]
+            | "| `\(.name)` | `\(.version)` | `\(.latest)` |"
+          ')
+
+          body="$body$details_header"$'\n'"$details"
+
+          {
+            echo "body<<EOF"
+            printf '%s\n' "$body"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Stop if there is nothing to update
+        if: steps.outdated.outputs.has_updates != 'true'
+        run: echo "No prestashop/* updates found, exiting."
+
+      - name: Update selected prestashop/* packages
+        if: steps.outdated.outputs.has_updates == 'true'
+        run: |
+          set -e
+          composer update ${{ steps.outdated.outputs.packages }} --no-interaction --no-progress
+
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
-        if: ${{steps.updated-packages.outputs.PR_BODY}} != ''
+        if: steps.outdated.outputs.has_updates == 'true'
+        uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: cron-php-update-modules-${{ env.GH_BRANCH }}
-          commit-message: Updated PrestaShop Packages
-          committer: PrestonBot <noreply@github.com>
-          author: prestonBot <prestonBot@users.noreply.github.com>
-          title: 'Updated PrestaShop Packages'
-          body: ${{steps.updated-packages.outputs.PR_BODY}}
+          commit-message: "Update prestashop/* composer packages"
+          title: "Update prestashop/* composer packages"
+          body: ${{ steps.outdated.outputs.body }}
+          branch: chore/update-prestashop-packages-${{ env.GH_BRANCH }}
           base: ${{ env.GH_BRANCH }}
           delete-branch: true
+          token: ${{ secrets.JARVIS_TOKEN }}

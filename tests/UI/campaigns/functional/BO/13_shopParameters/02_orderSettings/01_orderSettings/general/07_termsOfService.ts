@@ -8,10 +8,10 @@ import {
   type BrowserContext,
   dataCMSPages,
   dataCustomers,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -28,7 +28,6 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
   let browserContext: BrowserContext;
   let page: Page;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -131,9 +130,9 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       // Click on view my shop
       page = await boOrderSettingsPage.viewMyShop(page);
       // Change FO language
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
@@ -141,28 +140,28 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
       // Go to the first product page
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
       // Add the product to the cart
-      await foClassicProductPage.addProductToTheCart(page);
+      await foHummingbirdProductPage.addProductToTheCart(page);
 
-      const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+      const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
       expect(notificationsNumber).to.be.equal(index + 1);
     });
 
     it('should proceed to checkout and go to deliveryStep', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `proceedToCheckout${index}`, baseContext);
 
-      await foClassicCartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       // Checkout the order
       if (index === 0) {
         // Personal information step - Login
-        await foClassicCheckoutPage.clickOnSignIn(page);
-        await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+        await foHummingbirdCheckoutPage.clickOnSignIn(page);
+        await foHummingbirdCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       }
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -170,7 +169,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -178,7 +177,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       await testContext.addContextItem(this, 'testIdentifier', `checkTermsOfService${index}`, baseContext);
 
       // Check terms of service checkbox existence
-      const isVisible = await foClassicCheckoutPage.isConditionToApproveCheckboxVisible(page);
+      const isVisible = await foHummingbirdCheckoutPage.isConditionToApproveCheckboxVisible(page);
       expect(isVisible).to.be.equal(test.args.enable);
     });
 
@@ -186,7 +185,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       it('should check the terms of service page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkTermsOfServicePage${index}`, baseContext);
 
-        const pageName = await foClassicCheckoutPage.getTermsOfServicePageTitle(page);
+        const pageName = await foHummingbirdCheckoutPage.getTermsOfServicePageTitle(page);
         expect(pageName).to.contains(test.args.title);
       });
     }
@@ -194,7 +193,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkAndBackToBO${index}`, baseContext);
 
-      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boOrderSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);

@@ -2,7 +2,6 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomersPage,
@@ -28,6 +27,8 @@ import {
   foHummingbirdMyAccountPage,
   foHummingbirdMyGDPRPersonalDataPage,
   foHummingbirdProductPage,
+  type GDPRExportCSV,
+  modPsGdprBoMain,
   type Page,
   utilsCore,
   utilsFile,
@@ -37,8 +38,6 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_userAccount_getGDPRDataInCSV';
 
 /*
-Pre-condition:
-- Install the theme hummingbird
 Scenario:
 - Check GDPR CSV file after create customer and first login
 - Check GDPR CSV file after create a cart
@@ -64,6 +63,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   let messageDate: string;
   let ipAddress: string;
   let connectionOrigin: string;
+  let csvData: GDPRExportCSV[] = [];
 
   const customerData: FakerCustomer = new FakerCustomer({
     firstName: 'Marc',
@@ -90,10 +90,6 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
   const createCustomerName: string = `${customerData.firstName[0]}. ${customerData.lastName}`;
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -205,7 +201,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const registration = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'date_add');
 
         registrationDate = `${registration.substring(6, 10)}-${registration.substring(0, 2)}-`
-          + `${registration.substring(3, 5)}${registration.substring(11, 19)}`;
+          + `${registration.substring(3, 5)} ${registration.substring(11, 19)}`;
         expect(registrationDate).to.contains(date.getFullYear());
       });
 
@@ -214,7 +210,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const lastVisit = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
         lastVisitDate = `${lastVisit.substring(6, 10)}-${lastVisit.substring(0, 2)}-`
-          + `${lastVisit.substring(3, 5)}${lastVisit.substring(11, 19)}`;
+          + `${lastVisit.substring(3, 5)} ${lastVisit.substring(11, 19)}`;
         expect(lastVisitDate).to.contains(date.getFullYear());
       });
 
@@ -239,124 +235,109 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check general info', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkGeneralInfo', baseContext);
 
-        const age = await utilsCore.age(customerData.birthDate);
+        const age = (await utilsCore.age(customerData.birthDate)).toString();
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          '"GENERALINFO"GenderName"Birthdate"AgeEmailLanguage"Creationaccountdata""Lastvisit"'
-          + `SiretApeCompanyWebsite${customerData.socialTitle}"${customerData.firstName}${customerData.lastName}"`
-          + `${customerData.birthDate.toISOString().slice(0, 10)}${age}${customerData.email}"English(English)""`
-          + `${registrationDate}""${lastVisitDate}`,
-          true,
-          true,
-          'utf16le',
-        );
-        expect(isVisible, 'General info is not correct!').to.eq(true);
+        csvData = await modPsGdprBoMain.parseCSVFile(filePath, 'utf16le');
+        expect(csvData.length).to.gt(0);
+
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'GENERAL INFO');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('GENERAL INFO');
+        expect(csvDatum[0].rows.length).to.equal(1);
+        expect(csvDatum[0].rows[0]).to.deep.equal([
+          customerData.socialTitle,
+          `${customerData.firstName} ${customerData.lastName}`,
+          customerData.birthDate.toISOString().slice(0, 10),
+          age,
+          customerData.email,
+          'English (English)',
+          registrationDate,
+          lastVisitDate,
+          '',
+          '',
+          '',
+          '',
+        ]);
       });
 
       it('should check that Addresses table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatAddressesTableIsEmpty', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          'ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"Noaddresses"',
-          true,
-          true,
-          'utf16le',
-        );
-        expect(isVisible, 'Addresses table is not empty!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'ADDRESSES');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('ADDRESSES');
+        expect(csvDatum[0].error).to.equal('No addresses');
       });
 
       it('should check that Orders table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatOrdersTableIsEmpty', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          'RDERSReferencePayment"Orderstate""Totalpaid"Date"Noorders"',
-          true,
-          true,
-          'utf16le',
-        );
-        expect(isVisible, 'Orders table is not empty!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'ORDERS');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('ORDERS');
+        expect(csvDatum[0].error).to.equal('No orders');
       });
 
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatCartsTableIsEmpty1', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
-          true,
-          true,
-          'utf16le',
-        );
-        expect(isVisible, 'Carts table is not empty!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'CARTS');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('CARTS');
+        expect(csvDatum[0].error).to.equal('No carts');
       });
 
       it('should check that Messages table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatMessagesTableIsEmpty', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          'MESSAGESIPMessageDate"Nomessages""',
-          true,
-          true,
-          'utf16le',
-        );
-        expect(isVisible, 'Messages table is not empty!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'MESSAGES');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('MESSAGES');
+        expect(csvDatum[0].error).to.equal('No messages');
       });
 
       it('should check Last connections table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLastConnectionsTable1', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          `LASTCONNECTIONS""Originrequest""Pageviewed""Timeonthepage""IPaddress"DateCountryDate0${ipAddress}`
-          + `"${lastVisitDate}"`,
-          true,
-          true,
-          'utf16le',
-        );
-        expect(isVisible, 'The data in Last connections table is not correct!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'LAST CONNECTIONS');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('LAST CONNECTIONS');
+        expect(csvDatum[0].rows[0]).to.deep.equal([
+          '',
+          '0',
+          '',
+          ipAddress,
+          lastVisitDate,
+        ]);
       });
 
       it('should check that Newsletter subscription table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNewsletterSubscriptionTable', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          '"MODULE:NEWSLETTERSUBSCRIPTION""Newslettersubscription:noemailtoexport,thiscustomerhasnotregistered.""',
-          true,
-          true,
-          'utf16le',
-        );
-        expect(isVisible, 'Newsletter subscription table is not empty!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'MODULE : NEWSLETTER SUBSCRIPTION');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('MODULE : NEWSLETTER SUBSCRIPTION');
+        expect(csvDatum[0].error).to.equal('Newsletter subscription: no email to export, this customer has not registered.');
       });
 
       it('should check that Module product comments is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkModuleProductComments', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          '""MODULE:PRODUCTCOMMENTS""MODULE:MAILALERTS"',
-          true,
-          true,
-          'utf16le',
-        );
-        expect(isVisible, 'Products comments is not empty!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'MODULE : PRODUCT COMMENTS');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('MODULE : PRODUCT COMMENTS');
+        expect(csvDatum[0].headers.length).to.equal(0);
+        expect(csvDatum[0].rows.length).to.equal(0);
+        expect(csvDatum[0].error).to.equal('');
       });
 
       it('should check that mail alerts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkModuleMailAlerts', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          'MODULE:MAILALERTS""Mailalert:Unabletoexportcustomerusingemail."',
-          true,
-          true,
-          'utf16le',
-        );
-        expect(isVisible, 'Mail alert table is not empty!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'MODULE : MAIL ALERTS');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('MODULE : MAIL ALERTS');
+        expect(csvDatum[0].error).to.equal('Mail alert: Unable to export customer using email.');
       });
     });
   });
@@ -459,7 +440,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         shoppingCartDate = await boShoppingCartsPage.getTextColumn(page, 1, 'date_add');
         shoppingCartDate = `${shoppingCartDate.substring(6, 10)}-${shoppingCartDate.substring(0, 2)}-`
-          + `${shoppingCartDate.substring(3, 5)}${shoppingCartDate.substring(11, 19)}`;
+          + `${shoppingCartDate.substring(3, 5)} ${shoppingCartDate.substring(11, 19)}`;
 
         shoppingCartID = await boShoppingCartsPage.getTextColumn(page, 1, 'id_cart');
         expect(parseInt(shoppingCartID, 10)).to.be.greaterThan(5);
@@ -470,16 +451,28 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Carts table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkThatCartsTableIsEmpty2', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          `CARTSId"Totalproducts"Date#${shoppingCartID}1`
-          + `"${shoppingCartDate}""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity`
-          + `#${shoppingCartID}${dataProducts.demo_1.reference}"${dataProducts.demo_1.name.replace(/\s/g, '')}"2`,
-          true,
-          true,
-          'utf16le',
-        );
-        expect(isVisible, 'Data in Carts table is not correct!').to.eq(true);
+        csvData = await modPsGdprBoMain.parseCSVFile(filePath, 'utf16le');
+        expect(csvData.length).to.gt(0);
+
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'CARTS');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('CARTS');
+        expect(csvDatum[0].rows[0]).to.deep.equal([
+          `#${shoppingCartID}`,
+          '1',
+          shoppingCartDate,
+        ]);
+        expect(csvData.length).to.gt(0);
+
+        const csvDatum2 = csvData.filter((item: GDPRExportCSV) => item.title === 'PRODUCT(S) STILL IN CART');
+        expect(csvDatum2.length).to.equal(1);
+        expect(csvDatum2[0].title).to.equal('PRODUCT(S) STILL IN CART');
+        expect(csvDatum2[0].rows[0]).to.deep.equal([
+          `#${shoppingCartID}`,
+          dataProducts.demo_1.reference,
+          dataProducts.demo_1.name,
+          '2',
+        ]);
       });
     });
   });
@@ -620,42 +613,58 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Addresses table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesTable1', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
-          + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
-          + `"${addressData.phone}"${addressData.country}"`,
-          true,
-          true,
-          'utf16le');
-        expect(isVisible, 'Data in Addresses table is not correct!').to.eq(true);
+        csvData = await modPsGdprBoMain.parseCSVFile(filePath, 'utf16le');
+        expect(csvData.length).to.gt(0);
+
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'ADDRESSES');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('ADDRESSES');
+        expect(csvDatum[0].rows[0]).to.include.ordered.members([
+          addressData.alias,
+          addressData.company,
+          `${addressData.firstName} ${addressData.lastName}`,
+          addressData.address,
+          addressData.phone,
+          addressData.country,
+        ]);
       });
 
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable1', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
-          + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
-          + `NameQuantity${orderReference}${dataProducts.demo_1.reference}"${dataProducts.demo_1.name.replace(/\s/g, '')}`
-          + '(Size:S-Color:White)"2',
-          true,
-          true,
-          'utf16le');
-        expect(isVisible, 'Data in Orders table is not correct!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'ORDERS');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('ORDERS');
+        expect(csvDatum[0].rows[0]).to.include.ordered.members([
+          orderReference,
+          'Bank transfer',
+          'Awaiting bank wire payment',
+          `${totalPaid} EUR`,
+        ]);
+
+        const csvDatum2 = csvData.filter((item: GDPRExportCSV) => item.title === 'PRODUCTS BOUGHT');
+        expect(csvDatum2.length).to.equal(1);
+        expect(csvDatum2[0].title).to.equal('PRODUCTS BOUGHT');
+        expect(csvDatum2[0].rows[0]).to.deep.equal([
+          orderReference,
+          dataProducts.demo_1.reference,
+          `${dataProducts.demo_1.name} (Size: S - Color: White)`,
+          '2',
+        ]);
       });
 
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartsTable1', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
-          true,
-          true,
-          'utf16le');
-        expect(isVisible, 'Carts table is not empty!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'CARTS');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('CARTS');
+        expect(csvDatum[0].error).to.equal('No carts');
+
+        const csvDatum2 = csvData.filter((item: GDPRExportCSV) => item.title === 'PRODUCT(S) STILL IN CART');
+        expect(csvDatum2.length).to.equal(1);
+        expect(csvDatum2[0].title).to.equal('PRODUCT(S) STILL IN CART');
+        expect(csvDatum2[0].error).to.equal('No carts');
       });
     });
   });
@@ -753,7 +762,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         messageDate = await boCustomerServicePage.getTextColumn(page, 1, 'date');
         messageDate = `${messageDate.substring(6, 10)}-${messageDate.substring(0, 2)}-`
-          + `${messageDate.substring(3, 5)}${messageDate.substring(11, 19)}`;
+          + `${messageDate.substring(3, 5)} ${messageDate.substring(11, 19)}`;
         expect(messageDate).to.not.eq(null);
       });
     });
@@ -762,54 +771,71 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Addresses table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesTable2', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
-          + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
-          + `"${addressData.phone}"${addressData.country}"`,
-          true,
-          true,
-          'utf16le');
-        expect(isVisible, 'Data in Addresses table is not correct!').to.eq(true);
+        csvData = await modPsGdprBoMain.parseCSVFile(filePath, 'utf16le');
+        expect(csvData.length).to.gt(0);
+
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'ADDRESSES');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('ADDRESSES');
+        expect(csvDatum[0].rows[0]).to.include.ordered.members([
+          addressData.alias,
+          addressData.company,
+          `${addressData.firstName} ${addressData.lastName}`,
+          addressData.address,
+          addressData.phone,
+          addressData.country,
+        ]);
       });
 
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable2', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
-          + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
-          + `NameQuantity${orderReference}${dataProducts.demo_1.reference}"${dataProducts.demo_1.name.replace(/\s/g, '')}`
-          + '(Size:S-Color:White)"2',
-          true,
-          true,
-          'utf16le');
-        expect(isVisible, 'Data in Orders table is not correct!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'ORDERS');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('ORDERS');
+        expect(csvDatum[0].rows[0]).to.include.ordered.members([
+          orderReference,
+          'Bank transfer',
+          'Awaiting bank wire payment',
+          `${totalPaid} EUR`,
+        ]);
+
+        const csvDatum2 = csvData.filter((item: GDPRExportCSV) => item.title === 'PRODUCTS BOUGHT');
+        expect(csvDatum2.length).to.equal(1);
+        expect(csvDatum2[0].title).to.equal('PRODUCTS BOUGHT');
+        expect(csvDatum2[0].rows[0]).to.deep.equal([
+          orderReference,
+          dataProducts.demo_1.reference,
+          `${dataProducts.demo_1.name} (Size: S - Color: White)`,
+          '2',
+        ]);
       });
 
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartsTable2', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
-          true,
-          true,
-          'utf16le');
-        expect(isVisible, 'Carts table is not empty!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'CARTS');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('CARTS');
+        expect(csvDatum[0].error).to.equal('No carts');
+
+        const csvDatum2 = csvData.filter((item: GDPRExportCSV) => item.title === 'PRODUCT(S) STILL IN CART');
+        expect(csvDatum2.length).to.equal(1);
+        expect(csvDatum2[0].title).to.equal('PRODUCT(S) STILL IN CART');
+        expect(csvDatum2[0].error).to.equal('No carts');
       });
 
       it('should check Messages table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkMessagesTable1', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          `MESSAGESIPMessageDate${ipAddress}"${contactUsData.message.replace(/\s/g, '')}""${messageDate}`,
-          true,
-          true,
-          'utf16le');
-        expect(isVisible, 'Data in Messages table is not correct!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'MESSAGES');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('MESSAGES');
+        expect(csvDatum[0].rows[0]).to.deep.equal([
+          ipAddress,
+          contactUsData.message,
+          messageDate,
+        ]);
       });
     });
   });
@@ -911,7 +937,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const lastVisit = await boCustomersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
         secondLastVisitDate = `${lastVisit.substring(6, 10)}-${lastVisit.substring(0, 2)}-`
-          + `${lastVisit.substring(3, 5)}${lastVisit.substring(11, 19)}`;
+          + `${lastVisit.substring(3, 5)} ${lastVisit.substring(11, 19)}`;
         expect(lastVisitDate).to.contains(date.getFullYear());
       });
 
@@ -941,74 +967,97 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check Addresses table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesTable3', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"${addressData.alias}"${addressData.company}`
-          + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
-          + `"${addressData.phone}"${addressData.country}"`,
-          true,
-          true,
-          'utf16le');
-        expect(isVisible, 'Data in Addresses table is not correct!').to.eq(true);
+        csvData = await modPsGdprBoMain.parseCSVFile(filePath, 'utf16le');
+        expect(csvData.length).to.gt(0);
+
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'ADDRESSES');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('ADDRESSES');
+        expect(csvDatum[0].rows[0]).to.include.ordered.members([
+          addressData.alias,
+          addressData.company,
+          `${addressData.firstName} ${addressData.lastName}`,
+          addressData.address,
+          addressData.phone,
+          addressData.country,
+        ]);
       });
 
       it('should check Orders table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrdersTable3', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          `ORDERSReferencePayment"Orderstate""Totalpaid"Date${orderReference}"Banktransfer"`
-          + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
-          + `NameQuantity${orderReference}${dataProducts.demo_1.reference}"${dataProducts.demo_1.name.replace(/\s/g, '')}`
-          + '(Size:S-Color:White)"2',
-          true,
-          true,
-          'utf16le');
-        expect(isVisible, 'Data in Orders table is not correct!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'ORDERS');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('ORDERS');
+        expect(csvDatum[0].rows[0]).to.include.ordered.members([
+          orderReference,
+          'Bank transfer',
+          'Awaiting bank wire payment',
+          `${totalPaid} EUR`,
+        ]);
+
+        const csvDatum2 = csvData.filter((item: GDPRExportCSV) => item.title === 'PRODUCTS BOUGHT');
+        expect(csvDatum2.length).to.equal(1);
+        expect(csvDatum2[0].title).to.equal('PRODUCTS BOUGHT');
+        expect(csvDatum2[0].rows[0]).to.deep.equal([
+          orderReference,
+          dataProducts.demo_1.reference,
+          `${dataProducts.demo_1.name} (Size: S - Color: White)`,
+          '2',
+        ]);
       });
 
       it('should check that Carts table is empty', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCartsTable3', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
-          true,
-          true,
-          'utf16le');
-        expect(isVisible, 'Carts table is not empty!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'CARTS');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('CARTS');
+        expect(csvDatum[0].error).to.equal('No carts');
+
+        const csvDatum2 = csvData.filter((item: GDPRExportCSV) => item.title === 'PRODUCT(S) STILL IN CART');
+        expect(csvDatum2.length).to.equal(1);
+        expect(csvDatum2[0].title).to.equal('PRODUCT(S) STILL IN CART');
+        expect(csvDatum2[0].error).to.equal('No carts');
       });
 
       it('should check Messages table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkMessagesTable2', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          `MESSAGESIPMessageDate${ipAddress}"${contactUsData.message.replace(/\s/g, '')}""${messageDate}`,
-          true,
-          true,
-          'utf16le');
-        expect(isVisible, 'Data in Messages table is not correct!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'MESSAGES');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('MESSAGES');
+        expect(csvDatum[0].rows[0]).to.deep.equal([
+          ipAddress,
+          contactUsData.message,
+          messageDate,
+        ]);
       });
 
       it('should check Last connections table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkLastConnectionsTable2', baseContext);
 
-        const isVisible = await utilsFile.isTextInFile(
-          filePath,
-          'LASTCONNECTIONS""Originrequest""Pageviewed""Timeonthepage""IPaddress"DateCountryDate'
-          + `${connectionOrigin}0${ipAddress}"${secondLastVisitDate}"0${ipAddress}"${lastVisitDate}"`,
-          true,
-          true,
-          'utf16le');
-        expect(isVisible, 'The data in Last connections table is not correct!').to.eq(true);
+        const csvDatum = csvData.filter((item: GDPRExportCSV) => item.title === 'LAST CONNECTIONS');
+        expect(csvDatum.length).to.equal(1);
+        expect(csvDatum[0].title).to.equal('LAST CONNECTIONS');
+        expect(csvDatum[0].rows[0]).to.deep.equal([
+          connectionOrigin,
+          '0',
+          '',
+          ipAddress,
+          secondLastVisitDate,
+        ]);
+        expect(csvDatum[0].rows[1]).to.deep.equal([
+          '',
+          '0',
+          '',
+          ipAddress,
+          lastVisitDate,
+        ]);
       });
     });
   });
 
   // Post-condition: Create new account on FO
   deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
 });

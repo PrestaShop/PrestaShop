@@ -1,27 +1,7 @@
-{# **
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * #}
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
 
 {% set isColumnLocationDisplayed = false %}
 {% set isColumnRefundedDisplayed = false %}
@@ -37,7 +17,7 @@
 <div class="card" id="orderProductsPanel">
   <div class="card-header">
     <h3 class="card-header-title">
-      {{ 'Products'|trans({}, 'Admin.Global') }} (<span id="orderProductsPanelCount">{{ orderForViewing.products.products|length }}</span>)
+      <i class="material-icons">shopping_basket</i> {{ 'Products'|trans({}, 'Admin.Global') }} (<span id="orderProductsPanelCount">{{ orderForViewing.products.products|length }}</span>)
     </h3>
   </div>
 
@@ -58,7 +38,12 @@
     {{ form_start(cancelProductForm, formOptions) }}
 
     {# PRODUCT TABLE #}
-    <table class="table" id="orderProductsTable" data-currency-precision="{{ orderCurrency.precision }}">
+    <table
+      class="table"
+      id="orderProductsTable"
+      data-currency-precision="{{ orderCurrency.precision }}"
+      data-multishipment-enabled="{{ isImprovedShipmentFeatureFlagEnabled and orderHasShipment == true }}"
+    >
       <thead>
         <tr>
           <th>
@@ -102,8 +87,10 @@
       </thead>
       <tbody>
         {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product_list.html.twig') }}
-        {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig') }}
-        {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig') }}
+        {% if isImprovedShipmentFeatureFlagEnabled is defined and isImprovedShipmentFeatureFlagEnabled == false or orderHasShipment == false %}
+          {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig') }}
+          {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig') }}
+        {% endif %}
       </tbody>
     </table>
 
@@ -148,12 +135,22 @@
 
       <div class="col-xl-6 text-xl-right discount-action">
         {% if not orderForViewing.delivered %}
-          <button type="button" class="btn btn-outline-secondary js-product-action-btn mr-3" id="addProductBtn">
+          <button
+            type="button"
+            class="btn btn-outline-secondary js-product-action-btn mr-3"
+            id="addProductBtn"
+            {% if isImprovedShipmentFeatureFlagEnabled is defined and isImprovedShipmentFeatureFlagEnabled == true and orderHasShipment == true %}data-toggle="modal" data-target="#addOrderProductModal"{% endif %}
+          >
             <i class="material-icons">add_circle_outline</i>
             {{ 'Add a product'|trans({}, 'Admin.Orderscustomers.Feature') }}
           </button>
         {% endif %}
-        <button type="button" class="btn btn-outline-secondary js-product-action-btn" data-toggle="modal" data-target="#addOrderDiscountModal">
+        <button
+          type="button"
+          class="btn btn-outline-secondary js-product-action-btn"
+          data-toggle="modal"
+          data-target="#addOrderDiscountModal"
+        >
           <i class="material-icons">confirmation_number</i>
           {{ 'Add a discount'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </button>
@@ -215,14 +212,12 @@
           </div>
         </div>
 
-        {% if not orderForViewing.taxIncluded %}
-          <div class="col-sm text-center">
-            <p class="text-muted mb-0">
-              <strong>{{ 'Taxes'|trans({}, 'Admin.Global') }}</strong>
-            </p>
-            <strong id="orderTaxesTotal">{{ orderForViewing.prices.taxesAmountFormatted }}</strong>
-          </div>
-        {% endif %}
+        <div class="col-sm text-center">
+          <p class="text-muted mb-0">
+            <strong>{{ 'Taxes'|trans({}, 'Admin.Global') }}</strong>
+          </p>
+          <strong id="orderTaxesTotal">{{ orderForViewing.prices.taxesAmountFormatted }}</strong>
+        </div>
 
         <div class="col-sm text-center">
           <p class="text-muted mb-0">

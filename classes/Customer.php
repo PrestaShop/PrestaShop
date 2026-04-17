@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -118,7 +98,7 @@ class CustomerCore extends ObjectModel
     /** @var bool Status */
     public $is_guest = false;
 
-    /** @var bool True if carrier has been deleted (staying in database as deleted) */
+    /** @var bool True if customer has been deleted (staying in database as deleted) */
     public $deleted = false;
 
     /** @var string|null Object creation date */
@@ -245,11 +225,23 @@ class CustomerCore extends ObjectModel
     {
         $this->id_shop = ($this->id_shop) ? $this->id_shop : Context::getContext()->shop->id;
         $this->id_shop_group = ($this->id_shop_group) ? $this->id_shop_group : Context::getContext()->shop->id_shop_group;
+
+        /*
+         * Customer language is stored in the database, so we can automatically switch
+         * the shop language according to the customer preference, if he logged in.
+         */
         $this->id_lang = ($this->id_lang) ? $this->id_lang : Context::getContext()->language->id;
+
+        /*
+         * Customer birthday is stored as a single date (YYYY-MM-DD) in the database,
+         * but the object model uses three different fields (years, months, days).
+         * If it's being updated, we must rebuild the date from these three fields.
+         */
         $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years . '-' . (int) $this->months . '-' . (int) $this->days);
         $this->secure_key = md5(uniqid((string) mt_rand(0, mt_getrandmax()), true));
         $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_FRONT') . 'minutes'));
 
+        // If subscribed to the newsletter, set the date of subscription to now, if not set
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
         }
@@ -261,6 +253,11 @@ class CustomerCore extends ObjectModel
             } else {
                 $this->id_default_group = (int) Configuration::get('PS_CUSTOMER_GROUP');
             }
+        }
+
+        // Check if registered customer exists with the email we are trying to add
+        if (!$this->isGuest() && Customer::customerExists($this->email)) {
+            return false;
         }
 
         /* Can't create a guest customer, if this feature is disabled */
@@ -318,12 +315,26 @@ class CustomerCore extends ObjectModel
      */
     public function update($nullValues = false)
     {
+        /*
+         * Customer birthday is stored as a single date (YYYY-MM-DD) in the database,
+         * but the object model uses three different fields (years, months, days).
+         * If it's being updated, we must rebuild the date from these three fields.
+         */
         $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years . '-' . (int) $this->months . '-' . (int) $this->days);
 
+        // If subscribed to the newsletter, set the date of subscription to now, if not set
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
         }
 
+        // Check if registered customer exists with the email we are trying to add.
+        // Also check if the customer found is a different customer than our object.
+        $customerExists = (int) Customer::customerExists($this->email, true);
+        if (!$this->isGuest() && $customerExists > 0 && $customerExists !== (int) $this->id) {
+            return false;
+        }
+
+        // If the customer is being soft-deleted, we also soft-delete his addresses
         if ($this->deleted) {
             $addresses = $this->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
             foreach ($addresses as $address) {
@@ -377,6 +388,10 @@ class CustomerCore extends ObjectModel
      */
     public function delete()
     {
+        if (empty((int) $this->id)) {
+            return false;
+        }
+
         if (!count(Order::getCustomerOrders((int) $this->id))) {
             $addresses = $this->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
             foreach ($addresses as $address) {
@@ -860,13 +875,17 @@ class CustomerCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      */
-    public static function searchByName($query, $limit = null, ?ShopConstraint $shopConstraint = null)
+    public static function searchByName($query, $limit = null, ?ShopConstraint $shopConstraint = null, $ignoreGuest = false)
     {
         $sql = 'SELECT c.*,
                 GROUP_CONCAT(cg.id_group SEPARATOR \',\') AS group_ids
                 FROM `' . _DB_PREFIX_ . 'customer` c
                 LEFT JOIN `' . _DB_PREFIX_ . 'customer_group` cg ON c.id_customer = cg.id_customer
                 WHERE 1';
+
+        if ($ignoreGuest) {
+            $sql .= ' AND c.is_guest = 0';
+        }
 
         if ($shopConstraint) {
             if ($shopConstraint->getShopGroupId()) {

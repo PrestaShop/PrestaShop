@@ -698,22 +698,22 @@ Feature: Copy product from shop to shop.
       | location | shelf1 |
     And product "productWithStock" last stock movements for shop shop1 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -9             |
-      | Puff Daddy | 10             |
+      | Puffin Mummy | -9             |
+      | Puffin Mummy | 10             |
     And product "productWithStock" should have following stock information for shop shop2:
       | quantity | 2      |
       | location | shelf2 |
     And product "productWithStock" last stock movements for shop shop2 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -10            |
-      | Puff Daddy | 12             |
+      | Puffin Mummy | -10            |
+      | Puffin Mummy | 12             |
     And product "productWithStock" should have following stock information for shops "shop3,shop4":
       | quantity | 3            |
       | location | shared shelf |
     And product "productWithStock" last stock movements for shops "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -12            |
-      | Puff Daddy | 15             |
+      | Puffin Mummy | -12            |
+      | Puffin Mummy | 15             |
     # Duplicate to one shop
     When I duplicate product productWithStock to a productWithStockCopy1 for shop shop1
     Then product "productWithStockCopy1" should have following stock information for shop shop1:
@@ -721,7 +721,7 @@ Feature: Copy product from shop to shop.
       | location | shelf1 |
     And product "productWithStockCopy1" last stock movements for shop shop1 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 1              |
+      | Puffin Mummy | 1              |
     # Duplicate to shop group
     When I duplicate product productWithStock to a productWithStockCopyShopGroup1 for shop group default_shop_group
     Then product "productWithStockCopyShopGroup1" should have following stock information for shop shop1:
@@ -729,13 +729,13 @@ Feature: Copy product from shop to shop.
       | location | shelf1 |
     And product "productWithStockCopyShopGroup1" last stock movements for shop shop1 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 1              |
+      | Puffin Mummy | 1              |
     And product "productWithStockCopyShopGroup1" should have following stock information for shop shop2:
       | quantity | 2      |
       | location | shelf2 |
     And product "productWithStockCopyShopGroup1" last stock movements for shop shop2 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 2              |
+      | Puffin Mummy | 2              |
     # Duplicate to shop group sharing stock, check that the stock are correctly shared by modifying it
     When I duplicate product productWithStock to a productWithStockCopyShopGroup2 for shop group test_second_shop_group
     Then product "productWithStockCopyShopGroup2" should have following stock information for shops "shop3,shop4":
@@ -743,7 +743,7 @@ Feature: Copy product from shop to shop.
       | location | shared shelf |
     And product "productWithStockCopyShopGroup2" last stock movements for shops "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 3              |
+      | Puffin Mummy | 3              |
     When I update product "productWithStockCopyShopGroup2" stock for shop shop4 with following information:
       | delta_quantity | 39 |
     Then product "productWithStockCopyShopGroup2" should have following stock information for shops "shop3,shop4":
@@ -751,8 +751,8 @@ Feature: Copy product from shop to shop.
       | location | shared shelf |
     And product "productWithStockCopyShopGroup2" last stock movements for shops "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 39             |
-      | Puff Daddy | 3              |
+      | Puffin Mummy | 39             |
+      | Puffin Mummy | 3              |
     # Duplicate for all shops
     When I duplicate product productWithStock to a productWithStockCopyAllShops for all shops
     Then product "productWithStockCopyAllShops" should have following stock information for shop shop1:
@@ -760,19 +760,19 @@ Feature: Copy product from shop to shop.
       | location | shelf1 |
     And product "productWithStockCopyAllShops" last stock movements for shop shop1 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 1              |
+      | Puffin Mummy | 1              |
     And product "productWithStockCopyAllShops" should have following stock information for shop shop2:
       | quantity | 2      |
       | location | shelf2 |
     And product "productWithStockCopyAllShops" last stock movements for shop shop2 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 2              |
+      | Puffin Mummy | 2              |
     And product "productWithStockCopyAllShops" should have following stock information for shops "shop3,shop4":
       | quantity | 3            |
       | location | shared shelf |
     And product "productWithStockCopyAllShops" last stock movements for shops "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 3              |
+      | Puffin Mummy | 3              |
 
   Scenario: I duplicate a product with combinations their stock are copied
     When I add product "productWithCombinationAndStock" with following information:
@@ -831,8 +831,8 @@ Feature: Copy product from shop to shop.
       | available date             |           |
     And combination "productWithCombinationsRed" last stock movements for shop shop1 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -9             |
-      | Puff Daddy | 10             |
+      | Puffin Mummy | -9             |
+      | Puffin Mummy | 10             |
     And combination "productWithCombinationsBlue" should have following stock details for shop shop1:
       | combination stock detail   | value      |
       | quantity                   | 11         |
@@ -843,8 +843,8 @@ Feature: Copy product from shop to shop.
       | available date             |            |
     And combination "productWithCombinationsBlue" last stock movements for shop shop1 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -9             |
-      | Puff Daddy | 20             |
+      | Puffin Mummy | -9             |
+      | Puffin Mummy | 20             |
     # Check initial stock before duplicating for shop2
     Then combination "productWithCombinationsRed" should have following stock details for shop shop2:
       | combination stock detail   | value     |
@@ -856,8 +856,8 @@ Feature: Copy product from shop to shop.
       | available date             |           |
     And combination "productWithCombinationsRed" last stock movements for shop shop2 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -10            |
-      | Puff Daddy | 12             |
+      | Puffin Mummy | -10            |
+      | Puffin Mummy | 12             |
     And combination "productWithCombinationsBlue" should have following stock details for shop shop2:
       | combination stock detail   | value      |
       | quantity                   | 12         |
@@ -868,8 +868,8 @@ Feature: Copy product from shop to shop.
       | available date             |            |
     And combination "productWithCombinationsBlue" last stock movements for shop shop2 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -10            |
-      | Puff Daddy | 22             |
+      | Puffin Mummy | -10            |
+      | Puffin Mummy | 22             |
     # Check initial stock before duplicating for shop3 and shop4
     Then combination "productWithCombinationsRed" should have following stock details for shops "shop3,shop4":
       | combination stock detail   | value     |
@@ -881,8 +881,8 @@ Feature: Copy product from shop to shop.
       | available date             |           |
     And combination "productWithCombinationsRed" last stock movements for shops "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -12            |
-      | Puff Daddy | 15             |
+      | Puffin Mummy | -12            |
+      | Puffin Mummy | 15             |
     And combination "productWithCombinationsBlue" should have following stock details for shops "shop3,shop4":
       | combination stock detail   | value      |
       | quantity                   | 13         |
@@ -893,8 +893,8 @@ Feature: Copy product from shop to shop.
       | available date             |            |
     And combination "productWithCombinationsBlue" last stock movements for shops "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -12            |
-      | Puff Daddy | 25             |
+      | Puffin Mummy | -12            |
+      | Puffin Mummy | 25             |
     # Duplicate to one shop
     When I duplicate product productWithCombinationAndStock to a productWithCombinationAndStockCopy1 for shop shop1
     Then product "productWithCombinationAndStockCopy1" should have the following combinations for shop shop1:
@@ -914,7 +914,7 @@ Feature: Copy product from shop to shop.
       | available date             |           |
     And combination "productWithCombinationsRedCopy1" last stock movements for shop shop1 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 1              |
+      | Puffin Mummy | 1              |
     And combination "productWithCombinationsBlueCopy1" should have following stock details for shop shop1:
       | combination stock detail   | value      |
       | quantity                   | 11         |
@@ -925,7 +925,7 @@ Feature: Copy product from shop to shop.
       | available date             |            |
     And combination "productWithCombinationsBlueCopy1" last stock movements for shop shop1 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 11             |
+      | Puffin Mummy | 11             |
     # Duplicate to shop group
     When I duplicate product productWithCombinationAndStock to a productWithCombinationAndStockCopyShopGroup1 for shop group default_shop_group
     Then product "productWithCombinationAndStockCopyShopGroup1" should have the following combinations for shop shop1:
@@ -950,7 +950,7 @@ Feature: Copy product from shop to shop.
       | available date             |           |
     And combination "productWithCombinationsRedCopyShopGroup1" last stock movements for shop shop1 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 1              |
+      | Puffin Mummy | 1              |
     And combination "productWithCombinationsBlueCopyShopGroup1" should have following stock details for shop shop1:
       | combination stock detail   | value      |
       | quantity                   | 11         |
@@ -961,7 +961,7 @@ Feature: Copy product from shop to shop.
       | available date             |            |
     And combination "productWithCombinationsBlueCopyShopGroup1" last stock movements for shop shop1 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 11             |
+      | Puffin Mummy | 11             |
     ## Check values for shop2
     And combination "productWithCombinationsRedCopyShopGroup1" should have following stock details for shop shop2:
       | combination stock detail   | value     |
@@ -973,7 +973,7 @@ Feature: Copy product from shop to shop.
       | available date             |           |
     And combination "productWithCombinationsRedCopyShopGroup1" last stock movements for shop shop2 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 2              |
+      | Puffin Mummy | 2              |
     And combination "productWithCombinationsBlueCopyShopGroup1" should have following stock details for shop shop2:
       | combination stock detail   | value      |
       | quantity                   | 12         |
@@ -984,7 +984,7 @@ Feature: Copy product from shop to shop.
       | available date             |            |
     And combination "productWithCombinationsBlueCopyShopGroup1" last stock movements for shop shop2 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 12             |
+      | Puffin Mummy | 12             |
     # Duplicate to shop group sharing stock, check that the stock are correctly shared by modifying it
     When I duplicate product productWithCombinationAndStock to a productWithCombinationAndStockCopyShopGroup2 for shop group test_second_shop_group
     Then product "productWithCombinationAndStockCopyShopGroup2" should have the following combinations for shops "shop3,shop4":
@@ -1005,7 +1005,7 @@ Feature: Copy product from shop to shop.
       | available date             |           |
     And combination "productWithCombinationsRedCopyShopGroup2" last stock movements for shops "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 3              |
+      | Puffin Mummy | 3              |
     And combination "productWithCombinationsBlueCopyShopGroup2" should have following stock details for shops "shop3,shop4":
       | combination stock detail   | value      |
       | quantity                   | 13         |
@@ -1016,7 +1016,7 @@ Feature: Copy product from shop to shop.
       | available date             |            |
     And combination "productWithCombinationsBlueCopyShopGroup2" last stock movements for shops "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 13             |
+      | Puffin Mummy | 13             |
     ## Check that stock are shared on both shops
     When I update combination "productWithCombinationsBlueCopyShopGroup2" stock for shop shop4 with following details:
       | delta quantity | 10 |
@@ -1030,8 +1030,8 @@ Feature: Copy product from shop to shop.
       | available date             |            |
     And combination "productWithCombinationsBlueCopyShopGroup2" last stock movements for shops "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 10             |
-      | Puff Daddy | 13             |
+      | Puffin Mummy | 10             |
+      | Puffin Mummy | 13             |
     # Duplicate for all shops
     When I duplicate product productWithCombinationAndStock to a productWithCombinationAndStockCopyAllShops for all shops
     Then product "productWithCombinationAndStockCopyAllShops" should have the following combinations for shop shop1:
@@ -1057,7 +1057,7 @@ Feature: Copy product from shop to shop.
       | available date             |           |
     And combination "productWithCombinationsRedCopyAllShops" last stock movements for shop shop1 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 1              |
+      | Puffin Mummy | 1              |
     And combination "productWithCombinationsBlueCopyAllShops" should have following stock details for shop shop1:
       | combination stock detail   | value      |
       | quantity                   | 11         |
@@ -1068,7 +1068,7 @@ Feature: Copy product from shop to shop.
       | available date             |            |
     And combination "productWithCombinationsBlueCopyAllShops" last stock movements for shop shop1 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 11             |
+      | Puffin Mummy | 11             |
     ## Check values for shop2
     And combination "productWithCombinationsRedCopyAllShops" should have following stock details for shop shop2:
       | combination stock detail   | value     |
@@ -1080,7 +1080,7 @@ Feature: Copy product from shop to shop.
       | available date             |           |
     And combination "productWithCombinationsRedCopyAllShops" last stock movements for shop shop2 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 2              |
+      | Puffin Mummy | 2              |
     And combination "productWithCombinationsBlueCopyAllShops" should have following stock details for shop shop2:
       | combination stock detail   | value      |
       | quantity                   | 12         |
@@ -1091,7 +1091,7 @@ Feature: Copy product from shop to shop.
       | available date             |            |
     And combination "productWithCombinationsBlueCopyAllShops" last stock movements for shop shop2 should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 12             |
+      | Puffin Mummy | 12             |
     ## Check values for shop3 and shop4
     And combination "productWithCombinationsRedCopyAllShops" should have following stock details for shops "shop3,shop4":
       | combination stock detail   | value     |
@@ -1103,7 +1103,7 @@ Feature: Copy product from shop to shop.
       | available date             |           |
     And combination "productWithCombinationsRedCopyAllShops" last stock movements for shops "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 3              |
+      | Puffin Mummy | 3              |
     And combination "productWithCombinationsBlueCopyAllShops" should have following stock details for shops "shop3,shop4":
       | combination stock detail   | value      |
       | quantity                   | 13         |
@@ -1114,7 +1114,7 @@ Feature: Copy product from shop to shop.
       | available date             |            |
     And combination "productWithCombinationsBlueCopyAllShops" last stock movements for shops "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 13             |
+      | Puffin Mummy | 13             |
 
   Scenario: I duplicate a product with customization, the fields are copied along with their multishop translations
     Given I add product "productWithCustomizationFields" to shop "shop1" with following information:

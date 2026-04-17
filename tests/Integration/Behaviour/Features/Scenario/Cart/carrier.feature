@@ -39,7 +39,6 @@ Feature: Cart calculation with carriers
     When I select carrier "carrier1" in my cart
     Then cart shipping fees should be 0.0
     Then my cart total should be 0.0 tax included
-    Then my cart total using previous calculation method should be 0.0 tax included
 
   Scenario: one product in cart, quantity 1, carrier 1
     Given I have an empty default cart
@@ -49,7 +48,6 @@ Feature: Cart calculation with carriers
     When I select carrier "carrier1" in my cart
     Then cart shipping fees should be 5.1
     Then my cart total should be 24.912 tax included
-    Then my cart total using previous calculation method should be 24.912 tax included
 
   Scenario: one product in cart, quantity 3, carrier 1
     Given I have an empty default cart
@@ -59,7 +57,6 @@ Feature: Cart calculation with carriers
     When I select carrier "carrier1" in my cart
     Then cart shipping fees should be 5.1
     Then my cart total should be 64.536 tax included
-    Then my cart total using previous calculation method should be 64.536 tax included
 
   Scenario: 3 products in cart, several quantities, carrier 1
     Given I have an empty default cart
@@ -73,7 +70,6 @@ Feature: Cart calculation with carriers
     When I select carrier "carrier1" in my cart
     Then cart shipping fees should be 5.1
     Then my cart total should be 160.5 tax included
-    Then my cart total using previous calculation method should be 160.5 tax included
 
   Scenario: Empty cart, carrier 2
     Given I have an empty default cart
@@ -82,7 +78,6 @@ Feature: Cart calculation with carriers
     When I select carrier "carrier2" in my cart
     Then cart shipping fees should be 0.0
     Then my cart total should be 0.0 tax included
-    Then my cart total using previous calculation method should be 0.0 tax included
 
   Scenario: one product in cart, quantity 1, carrier 2
     Given I have an empty default cart
@@ -92,7 +87,6 @@ Feature: Cart calculation with carriers
     When I select carrier "carrier2" in my cart
     Then cart shipping fees should be 7.7
     Then my cart total should be 27.512 tax included
-    Then my cart total using previous calculation method should be 27.512 tax included
 
   Scenario: one product in cart, quantity 3, carrier 2
     Given I have an empty default cart
@@ -102,7 +96,6 @@ Feature: Cart calculation with carriers
     When I select carrier "carrier2" in my cart
     Then cart shipping fees should be 7.7
     Then my cart total should be 67.136 tax included
-    Then my cart total using previous calculation method should be 67.136 tax included
 
   Scenario: 3 products in cart, several quantities, carrier 2
     Given I have an empty default cart
@@ -116,7 +109,6 @@ Feature: Cart calculation with carriers
     When I select carrier "carrier2" in my cart
     Then cart shipping fees should be 7.7
     Then my cart total should be 163.1 tax included
-    Then my cart total using previous calculation method should be 163.1 tax included
 
   Scenario: free carrier in price range
     Given I have an empty default cart
@@ -133,4 +125,3 @@ Feature: Cart calculation with carriers
     When I select carrier "carrier3" in my cart
     Then cart shipping fees should be 2.0
     Then my cart total should be 153.0 tax included
-    Then my cart total using previous calculation method should be 153.0 tax included

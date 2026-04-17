@@ -10,7 +10,7 @@ import {
   type BrowserContext,
   dataCurrencies,
   dataLanguages,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   type ImportContent,
   type Page,
   utilsPlaywright,
@@ -87,7 +87,7 @@ describe('BO - International - Localization : Import a localization pack', async
       // View my shop and int pages
       page = await boCurrenciesPage.viewMyShop(page);
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
@@ -95,25 +95,25 @@ describe('BO - International - Localization : Import a localization pack', async
       await testContext.addContextItem(this, 'testIdentifier', 'changeFoCurrency', baseContext);
 
       // Check currency
-      await foClassicHomePage.changeCurrency(page, dataCurrencies.chileanPeso.isoCode, dataCurrencies.chileanPeso.symbol);
+      await foHummingbirdHomePage.changeCurrency(page, dataCurrencies.chileanPeso.isoCode, dataCurrencies.chileanPeso.symbol);
 
-      const shopCurrency = await foClassicHomePage.getDefaultCurrency(page);
+      const shopCurrency = await foHummingbirdHomePage.getDefaultCurrency(page);
       expect(shopCurrency).to.contain(dataCurrencies.chileanPeso.isoCode);
     });
 
     it('should change FO language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeFoLanguage', baseContext);
 
-      await foClassicHomePage.changeLanguage(page, dataLanguages.spanish.isoCode);
+      await foHummingbirdHomePage.changeLanguage(page, dataLanguages.spanish.isoCode);
 
-      const shopLanguage = await foClassicHomePage.getDefaultShopLanguage(page);
+      const shopLanguage = await foHummingbirdHomePage.getDefaultShopLanguage(page);
       expect(dataLanguages.spanish.name).to.contain(shopLanguage);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo1', baseContext);
 
-      page = await foClassicHomePage.closePage(browserContext, page, 0);
+      page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
       const pageTitle = await boLocalizationPage.getPageTitle(page);
       expect(pageTitle).to.contains(boLocalizationPage.pageTitle);

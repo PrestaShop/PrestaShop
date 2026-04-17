@@ -6,7 +6,7 @@ import {
   boLoginPage,
   boSeoUrlsPage,
   type BrowserContext,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -62,14 +62,14 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable friendly URL', a
 
     page = await boSeoUrlsPage.viewMyShop(page);
 
-    const url = await foClassicHomePage.getCurrentURL(page);
+    const url = await foHummingbirdHomePage.getCurrentURL(page);
     expect(url).to.contains('index.php');
   });
 
   it('should go back to BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-    page = await foClassicHomePage.closePage(browserContext, page, 0);
+    page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
     const pageTitle = await boSeoUrlsPage.getPageTitle(page);
     expect(pageTitle).to.contains(boSeoUrlsPage.pageTitle);
@@ -87,9 +87,9 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable friendly URL', a
 
     // Go to FO
     page = await boSeoUrlsPage.viewMyShop(page);
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const url = await foClassicHomePage.getCurrentURL(page);
+    const url = await foHummingbirdHomePage.getCurrentURL(page);
     expect(url).to.not.contains('index.php');
   });
 });

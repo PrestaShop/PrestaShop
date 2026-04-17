@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boCreditSlipsPage,
@@ -39,7 +39,6 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
   let page: Page;
 
   const futureDate: string = utilsDate.getDateFormat('yyyy-mm-dd', 'future');
-  const creditSlipDocumentName: string = 'Credit slip';
   const orderByCustomerData: FakerOrder = new FakerOrder({
     customer: dataCustomers.johnDoe,
     products: [
@@ -54,7 +53,6 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
   // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -97,6 +95,20 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
+    it('should check documents', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocumentNameBefore', baseContext);
+
+      const numDocuments = await boOrdersViewBlockTabListPage.getNumberOfDocuments(page);
+      expect(numDocuments).to.be.equals(0);
+
+      const countDocuments = await boOrdersViewBlockTabListPage.countDocumentsType(page);
+      expect(countDocuments).to.be.deep.equal({
+        creditSlips: 0,
+        deliverySlips: 0,
+        invoices: 0,
+      });
+    });
+
     it(`should change the order status to '${dataOrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
 
@@ -114,10 +126,17 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
     });
 
     it('should check the existence of the Credit slip document', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocumentName', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocumentNameAfter', baseContext);
 
-      const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 4);
-      expect(documentType).to.be.equal(creditSlipDocumentName);
+      const numDocuments = await boOrdersViewBlockTabListPage.getNumberOfDocuments(page);
+      expect(numDocuments).to.be.equals(3);
+
+      const countDocuments = await boOrdersViewBlockTabListPage.countDocumentsType(page);
+      expect(countDocuments).to.be.deep.equal({
+        creditSlips: 1,
+        deliverySlips: 1,
+        invoices: 1,
+      });
     });
   });
 

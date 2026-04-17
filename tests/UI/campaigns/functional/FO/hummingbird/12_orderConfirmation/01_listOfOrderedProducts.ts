@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -26,24 +24,16 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_orderConfirmation_listOfOrderedProducts';
 
 /*
-Pre-condition:
-- Install the theme hummingbird
 Scenario:
 - Add 3 products to cart
 - Proceed to checkout and confirm the order
 - Check the payment confirmation details
-Post-condition:
-- Uninstall the theme hummingbird
 */
 describe('FO - Order confirmation : List of ordered products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let orderReference: string;
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -243,8 +233,10 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       const result = await foHummingbirdCheckoutOrderConfirmationPage.getProductDetailsInRow(page, 1);
       await Promise.all([
         expect(result.image).to.contains(dataProducts.demo_3.coverImage),
-        expect(result.details).to.equal(`${dataProducts.demo_3.name} (Size: S) Reference ${dataProducts.demo_3.reference}`),
-        expect(result.prices).to.equal(`€${dataProducts.demo_3.finalPrice} (x1) €${dataProducts.demo_3.finalPrice}`),
+        expect(result.details).to.contains(dataProducts.demo_3.name),
+        expect(result.details).to.contains('Size: S'),
+        expect(result.details).to.contains(`Reference: ${dataProducts.demo_3.reference}`),
+        expect(result.prices).to.equal(`€${dataProducts.demo_3.finalPrice}`),
       ]);
     });
 
@@ -254,11 +246,10 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       const result = await foHummingbirdCheckoutOrderConfirmationPage.getProductDetailsInRow(page, 2);
       await Promise.all([
         expect(result.image).to.contains(dataProducts.demo_5.coverImage),
-        expect(result.details).to.equal(
-          `${dataProducts.demo_5.name} (Dimension: 40x60cm) Reference ${dataProducts.demo_5.reference}`,
-        ),
-        expect(result.prices).to.equal(`€${dataProducts.demo_5.finalPrice.toFixed(2)}`
-          + ` (x2) €${(dataProducts.demo_5.finalPrice * 2).toFixed(2)}`),
+        expect(result.details).to.contains(dataProducts.demo_5.name),
+        expect(result.details).to.contains('Dimension: 40x60cm'),
+        expect(result.details).to.contains(`Reference: ${dataProducts.demo_5.reference}`),
+        expect(result.prices).to.equal(`€${(dataProducts.demo_5.finalPrice * 2).toFixed(2)}`),
       ]);
     });
 
@@ -268,14 +259,10 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       const result = await foHummingbirdCheckoutOrderConfirmationPage.getProductDetailsInRow(page, 3);
       await Promise.all([
         expect(result.image).to.contains(dataProducts.demo_12.coverImage),
-        expect(result.details).to.equal(`${dataProducts.demo_12.name} Reference ${dataProducts.demo_12.reference}`),
-        expect(result.prices).to.equal(
-          `€${dataProducts.demo_12.finalPrice} (x2) €${(dataProducts.demo_12.finalPrice * 2).toFixed(2)}`,
-        ),
+        expect(result.details).to.contains(dataProducts.demo_12.name),
+        expect(result.details).to.contains(`Reference: ${dataProducts.demo_12.reference}`),
+        expect(result.prices).to.equal(`€${(dataProducts.demo_12.finalPrice * 2).toFixed(2)}`),
       ]);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

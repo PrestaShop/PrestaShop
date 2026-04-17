@@ -1,0 +1,407 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+  {% set icon %}
+    {% if collector.isProfilerEnabled %}
+    🕵️‍♂️&nbsp;<span class="sf-toolbar-value">Legacy</span>
+    {% endif %}
+  {% endset %}
+
+  {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {link: true}) }}
+{% endblock %}
+
+{% block menu %}
+  {% if collector.isProfilerEnabled %}
+  <span class="label">
+    <span class="icon">🕵️‍♂️</span>
+    <strong>Legacy</strong>
+  </span>
+  {% endif %}
+{% endblock %}
+
+{% block panel %}
+  {% if collector.isProfilerEnabled %}
+    {% set constRootDir = constant('_PS_ROOT_DIR_') ~ '/' %}
+    <div class="sf-tabs">
+      <div class="tab">
+        <h3 class="tab-title">Summary</h3>
+        <div class="tab-content">
+          <div class="metrics">
+            {% if collector.summary.loadTime is not null %}
+            <div class="metric">
+                <span class="value">{{ '%01.3f'|format(collector.summary.loadTime) }} <span class="unit">ms</span></span>
+                <span class="label">Load Time</span>
+            </div>
+            {% endif %}
+            <div class="metric">
+                <span class="value">{{ collector.summary.queryTime }} <span class="unit">ms</span></span>
+                <span class="label">Querying Time</span>
+            </div>
+            <div class="metric">
+                <span class="value">{{ collector.summary.nbQueries }}</span>
+                <span class="label">Queries</span>
+            </div>
+            {% if collector.summary.peakMemoryUsage is not null %}
+            <div class="metric">
+                <span class="value">{{ '%0.1f'|format((collector.summary.peakMemoryUsage / 1048576)|round(2)) }} <span class="unit">Mb</span></span>
+                <span class="label">Memory Peak Usage</span>
+            </div>
+            {% endif %}
+            <div class="metric">
+                <span class="value">{{ collector.summary.includedFiles }} <span class="unit">files</span> - {{ '%0.2f'|format((collector.summary.totalFileSize / 1048576)|round(2)) }} <span class="unit">Mb</span></span>
+                <span class="label">Included Files</span>
+            </div>
+            <div class="metric">
+                <span class="value">{{ '%0.2f'|format((collector.summary.totalCacheSize / 1048576)|round(2)) }} <span class="unit">Mb</span></span>
+                <span class="label">PS Cache Size</span>
+            </div>
+          </div>
+          {% if collector.summary.globalVarSize is not empty %}
+            <h3>Global vars</h3>
+            <div class="metrics">
+              <div class="metric">
+                  <span class="value">{{ '%0.2f'|format((collector.summary.totalGlobalVarSize / 1048576)|round(2)) }} <span class="unit">Mb</span></span>
+                  <span class="label">Global vars</span>
+              </div>
+            </div>
+            <div class="sf-toolbar-info-piece">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Variable</th>
+                    <th>Size</th>
+                  </tr>
+                </thead>
+                <tbody class="sf-toolbar-ajax-request-list">
+                  {% for key, value in collector.summary.globalVarSize %}
+                    <tr>
+                      <td class="text-small">{{ key }}</td>
+                      <td>{{ value }}k</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                </table>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="tab">
+        <h3 class="tab-title">Configuration</h3>
+        <div class="tab-content">
+          <div class="metrics">
+            <div class="metric">
+              <span class="value">{{ collector.configuration.psVersion }}</span>
+              <span class="label">PrestaShop Version</span>
+            </div>
+            <div class="metric">
+              <span class="value">{{ collector.configuration.phpVersion }}</span>
+              <span class="label">PHP Version</span>
+            </div>
+            <div class="metric">
+              <span class="value">{{ collector.configuration.mysqlVersion }}</span>
+              <span class="label">MySQL Version</span>
+            </div>
+            <div class="metric">
+              <span class="value">{{ collector.configuration.memoryLimit }}</span>
+              <span class="label">Memory Limit</span>
+            </div>
+            <div class="metric">
+              <span class="value">{{ collector.configuration.maxExecutionTime }}</span>
+              <span class="label">Max Execution Time</span>
+            </div>
+            <div class="metric">
+              <span class="value">{{ collector.configuration.smartyCache is same as '1' ? 'enabled' : 'disabled' }}</span>
+              <span class="label">Smarty Cache</span>
+            </div>
+            <div class="metric">
+              <span class="value">
+                {% if collector.configuration.smartyCompilation is same as '0' %}
+                  never recompile
+                {% elseif collector.configuration.smartyCompilation is same as '1' %}
+                  auto
+                {% else %}
+                  force compile
+                {% endif %}
+              </span>
+              <span class="label">Smarty Compilation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% if collector.run.profiler|length > 0 %}
+      <div class="tab">
+        <h3 class="tab-title">Run <span class="badge">{{ collector.run.profiler|length }}</span></h3>
+        <div class="tab-content">
+          <div class="sf-toolbar-info-piece">
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Time</th>
+                  <th>Cumulated Time</th>
+                  <th>Memory Usage</th>
+                  <th>Memory Peak Usage</th>
+                </tr>
+              </thead>
+              <tbody class="sf-toolbar-ajax-request-list">
+                {% set profilerLastTime = collector.run.startTime %}
+                {% set profilerLastMemUsage = 0 %}
+                {% for profilerRow in collector.run.profiler %}
+                  {% if not (profilerRow.block == 'checkAccess' and profilerRow.time == profilerLastTime) %}
+                  <tr>
+                    <td class="text-small">{{ profilerRow.block }}</td>
+                    <td>{{ '%01.3f'|format(profilerRow.time - profilerLastTime) }}</td>
+                    <td>{{ '%01.3f'|format(profilerRow.time - collector.run.startTime) }}</td>
+                    <td>{{ '%0.2f'|format(((profilerRow.memory_usage - profilerLastMemUsage) / 1048576)|round(2)) }} Mb</td>
+                    <td>{{ '%0.1f'|format((profilerRow.peak_memory_usage / 1048576)|round(2)) }} Mb</td>
+                  </tr>
+                  {% endif %}
+                  {% set profilerLastTime = profilerRow.time %}
+                  {% set profilerLastMemUsage = profilerRow.memory_usage %}
+                {% endfor %}
+              </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      <div class="tab">
+        <h3 class="tab-title">Hooks <span class="badge">{{ collector.hooks.perfs|length }}</span></h3>
+        <div class="tab-content">
+          <div class="sf-toolbar-info-piece">
+            <table>
+              <thead>
+                <tr>
+                  <th>Hook</th>
+                  <th>Time</th>
+                  <th>Memory Usage</th>
+                </tr>
+              </thead>
+              <tbody class="sf-toolbar-ajax-request-list">
+                {% for profilerHookName, profilerHookPerf in collector.hooks.perfs %}
+                <tr>
+                  <td class="font-normal">{{ profilerHookName }}</td>
+                  <td>{{ '%01.3f'|format(profilerHookPerf.time) }} ms</td>
+                  <td>{{ '%0.2f'|format((profilerHookPerf.memory / 1048576)|round(2)) }} Mb</td>
+                </tr>
+                  {% for profilerModule in profilerHookPerf.modules %}
+                  <tr>
+                    <td class="text-right">
+                      <strong>
+                        <span class="sf-dump-str">{{ profilerModule.module }}</span>
+                      </strong>
+                    </td>
+                    <td>{{ '%01.3f'|format(profilerModule.time) }} ms</td>
+                    <td>{{ '%0.2f'|format((profilerModule.memory / 1048576)|round(2)) }} Mb</td>
+                  </tr>
+                  {% endfor %}
+                {% endfor %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>{{ collector.hooks.perfs|length }} hooks</th>
+                  <th>{{ '%01.3f'|format(collector.hooks.totalHooksTime) }} ms</th>
+                  <th>{{ '%0.2f'|format((collector.hooks.totalHooksMemory / 1048576)|round(2)) }} Mb</th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="tab">
+        <h3 class="tab-title">Modules <span class="badge">{{ collector.modules.perfs|length }}</span></h3>
+        <div class="tab-content">
+          <div class="sf-toolbar-info-piece">
+            <table>
+              <thead>
+                <tr>
+                  <th>Module</th>
+                  <th>Time</th>
+                  <th>Memory Usage</th>
+                </tr>
+              </thead>
+              <tbody class="sf-toolbar-ajax-request-list">
+                {% for profilerModuleName, profilerModulePerf in collector.modules.perfs %}
+                <tr>
+                  <td class="font-normal">{{ profilerModuleName }}</td>
+                  <td>{{ '%01.3f'|format(profilerModulePerf.total_time) }} ms</td>
+                  <td>{{ '%0.2f'|format((profilerModulePerf.total_memory / 1048576)|round(2)) }} Mb</td>
+                </tr>
+                  {% for profilerDetail in profilerModulePerf.details %}
+                  <tr>
+                    <td class="text-right">
+                      <strong>
+                        <span class="sf-dump-str">{{ profilerDetail.method }}</span>
+                      </strong>
+                    </td>
+                    <td>{{ '%01.3f'|format(profilerDetail.time) }} ms</td>
+                    <td>{{ '%0.2f'|format((profilerDetail.memory / 1048576)|round(2)) }} Mb</td>
+                  </tr>
+                  {% endfor %}
+                {% endfor %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>{{ collector.modules.perfs|length }} modules</th>
+                  <th>{{ '%01.3f'|format(collector.modules.totalHooksTime) }} ms</th>
+                  <th>{{ '%0.2f'|format((collector.modules.totalHooksMemory / 1048576)|round(2)) }} Mb</th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="tab">
+        <h3 class="tab-title">Stopwatch SQL <span class="badge">{{ collector.summary.nbQueries }}</span></h3>
+        <div class="tab-content">
+          <div class="sf-toolbar-info-piece">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Query</th>
+                  <th>Time (ms)</th>
+                  <th>Rows</th>
+                  <th>Filesort</th>
+                  <th>Group By</th>
+                  <th>Location</th>
+                </tr>
+              </thead>
+              <tbody class="sf-toolbar-ajax-request-list">
+                {% for profilerStopwatch in collector.stopwatch %}
+                <tr>
+                  <td class="font-normal">{{ profilerStopwatch.id }}</td>
+                  <td>
+                    <span class="sf-dump-str">{{ profilerStopwatch.query }}</span>
+                  </td>
+                  <td class="font-normal">{{ '%01.3f'|format(profilerStopwatch.time * 1000) }}&nbsp;ms</td>
+                  <td class="font-normal text-right">{{ profilerStopwatch.rows }}</td>
+                  <td class="font-normal">{% if profilerStopwatch.filesort %}Yes{% else %}No{% endif %}</td>
+                  <td class="font-normal">{% if profilerStopwatch.group_by %}Yes{% else %}No{% endif %}</td>
+                  <td>
+                    <strong>{{ profilerStopwatch.location }}</strong><br />
+                    {% for profilerStopwatchStack in profilerStopwatch.stack %}
+                      {{ profilerStopwatchStack }}<br />
+                    {% endfor %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="tab">
+        <h3 class="tab-title">Double queries <span class="badge">{{ collector.doubles|filter((numQueries, query) => numQueries > 1)|length }}</span></h3>
+        <div class="tab-content">
+          <div class="sf-toolbar-info-piece">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Query</th>
+                </tr>
+              </thead>
+              <tbody class="sf-toolbar-ajax-request-list">
+                {% for query, numQueries in collector.doubles|filter((numQueries, query) => numQueries > 1) %}
+                <tr>
+                  <td class="font-normal">{{ numQueries }}</td>
+                  <td>
+                    <strong>
+                      <span class="sf-dump-str">{{ query }}</span>
+                    </strong>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="tab">
+        <h3 class="tab-title">SQL Table Stress <span class="badge">{{ collector.sqlTableStress|length }}</span></h3>
+        <div class="tab-content">
+          <div class="sf-toolbar-info-piece">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Table</th>
+                </tr>
+              </thead>
+              <tbody class="sf-toolbar-ajax-request-list">
+                {% for table, numRows in collector.sqlTableStress %}
+                <tr>
+                  <td class="font-normal">{{ numRows }}</td>
+                  <td>
+                    <strong>
+                      <span class="sf-dump-str">{{ table }}</span>
+                    </strong>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="tab">
+        <h3 class="tab-title">ObjectModel Instances <span class="badge">{{ collector.objectModelInstances|length }}</span></h3>
+        <div class="tab-content">
+          <div class="sf-toolbar-info-piece">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Instances</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody class="sf-toolbar-ajax-request-list">
+                {% for objectModelClass, objectModelInfo in collector.objectModelInstances %}
+                <tr>
+                  <td>{{ objectModelClass }}</td>
+                  <td class="font-normal">{{ objectModelInfo|length }}</td>
+                  <td>
+                    {% for objectModelInfoItem in objectModelInfo %}
+                      {{ objectModelInfoItem.file|replace({(constRootDir): ''}) }}:{{ objectModelInfoItem.line }} ({{ objectModelInfoItem.function }}) [id: {{ objectModelInfoItem.id }}]
+                      <br />
+                    {% endfor %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="tab">
+        <h3 class="tab-title">Included files <span class="badge">{{ collector.includedFiles|filter((includedFile) => '/tools/profiling/' not in includedFile)|length }}</span></h3>
+        <div class="tab-content">
+          <div class="sf-toolbar-info-piece">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Filename</th>
+                </tr>
+              </thead>
+              <tbody class="sf-toolbar-ajax-request-list">
+                {% for k, includedFile in collector.includedFiles|filter((includedFile) => '/tools/profiling/' not in includedFile) %}
+                <tr>
+                  <td class="font-normal">{{ k }}</td>
+                  <td>{{ includedFile|replace({(constRootDir): ''}) }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

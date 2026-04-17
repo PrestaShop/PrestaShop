@@ -71,6 +71,13 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     expect(numberOfElements).to.be.equal(0);
   });
 
+  it('should set the log minimum severity to Debug or the login logs will not be created', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'setDebugSeverityForDatabase', baseContext);
+
+    const errorMessage = await boLogsPage.setMinimumSeverityLevelForDatabase(page, 'Debug');
+    expect(errorMessage).to.eq(boLogsPage.successfulUpdateMessage);
+  });
+
   // Login and logout 11 times to have 11 logs
   describe('Logout then login 11 times to have 11 logs', async () => {
     const tests: number[] = new Array(11).fill(0, 0, 11);
@@ -200,6 +207,16 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             filterType: 'input',
             filterBy: 'severity',
             filterValue: 'Informative Only',
+            expectedCount: 0,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterBySeverityDebug',
+            filterType: 'input',
+            filterBy: 'severity',
+            filterValue: 'Debug',
             expectedCount: 'numberOfLogs',
           },
       },
@@ -459,6 +476,13 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
           }
         }
       });
+    });
+
+    it('should reset the log minimum severity to initial value Informative only', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'setInfoSeverityForDatabase', baseContext);
+
+      const errorMessage = await boLogsPage.setMinimumSeverityLevelForDatabase(page, 'Informative only');
+      expect(errorMessage).to.eq(boLogsPage.successfulUpdateMessage);
     });
   });
 });

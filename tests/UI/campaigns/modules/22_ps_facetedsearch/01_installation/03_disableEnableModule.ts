@@ -9,8 +9,8 @@ import {
   type BrowserContext,
   dataCategories,
   dataModules,
-  foClassicCategoryPage,
-  foClassicHomePage,
+  foHummingbirdCategoryPage,
+  foHummingbirdHomePage,
   modPsFacetedsearchBoMain,
   type Page,
   utilsPlaywright,
@@ -84,32 +84,32 @@ describe('Faceted search module - Disable/Enable module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOAfterDisable', baseContext);
 
       page = await modPsFacetedsearchBoMain.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to the category Page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoryPage', baseContext);
 
-      await foClassicHomePage.goToCategory(page, dataCategories.clothes.id);
+      await foHummingbirdHomePage.goToCategory(page, dataCategories.clothes.id);
 
-      const pageTitle = await foClassicHomePage.getPageTitle(page);
+      const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
       expect(pageTitle).to.equal(dataCategories.clothes.name);
     });
 
     it(`should check that ${dataModules.psFacetedSearch.name} is not present`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkModuleNotPresent', baseContext);
 
-      const hasFilters = await foClassicCategoryPage.hasSearchFilters(page);
+      const hasFilters = await foHummingbirdCategoryPage.hasSearchFilters(page);
       expect(hasFilters).to.eq(false);
     });
 
     it('should return to the back office', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnBO', baseContext);
 
-      page = await foClassicCategoryPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCategoryPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boModuleManagerPage.getPageTitle(page);
       expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
@@ -133,25 +133,25 @@ describe('Faceted search module - Disable/Enable module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOAfterEnable', baseContext);
 
       page = await modPsFacetedsearchBoMain.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to the category Page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCategoryPageAfterEnable', baseContext);
 
-      await foClassicHomePage.goToCategory(page, dataCategories.clothes.id);
+      await foHummingbirdHomePage.goToCategory(page, dataCategories.clothes.id);
 
-      const pageTitle = await foClassicHomePage.getPageTitle(page);
+      const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
       expect(pageTitle).to.equal(dataCategories.clothes.name);
     });
 
     it(`should check that ${dataModules.psFacetedSearch.name} is present`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkModulePresent', baseContext);
 
-      const hasFilters = await foClassicCategoryPage.hasSearchFilters(page);
+      const hasFilters = await foHummingbirdCategoryPage.hasSearchFilters(page);
       expect(hasFilters).to.eq(true);
     });
   });

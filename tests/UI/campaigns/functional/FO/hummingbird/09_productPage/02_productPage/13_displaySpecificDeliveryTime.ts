@@ -1,6 +1,5 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -19,11 +18,10 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_displaySpecificDeliveryTime';
 
-describe('FO - Product page - Product page : Display specific delivery time', async () => {
+describe('FO - Product page - Product page : Display Specific delivery time', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // Data to create new product
   const newProductData: FakerProduct = new FakerProduct({
     name: 'test',
     type: 'standard',
@@ -34,10 +32,6 @@ describe('FO - Product page - Product page : Display specific delivery time', as
     status: true,
   });
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -206,7 +200,4 @@ describe('FO - Product page - Product page : Display specific delivery time', as
 
   // Post-condition: Delete specific price
   deleteProductTest(newProductData, `${baseContext}_postTest_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
 });

@@ -5,7 +5,6 @@ import {
   enableMerchandiseReturns,
   disableMerchandiseReturns,
 } from '@commonTests/BO/customerService/merchandiseReturns';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {
   boDashboardPage,
@@ -60,9 +59,6 @@ describe('FO - Account - Order details : Request merchandise return', async () =
     paymentMethod: dataPaymentMethods.wirePayment,
   });
   const today: string = utilsDate.getDateFormat('mm/dd/yyyy');
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_0`);
 
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
@@ -212,9 +208,6 @@ describe('FO - Account - Order details : Request merchandise return', async () =
       ]);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_0`);
 
   // Post-condition: Disable merchandise returns
   disableMerchandiseReturns(`${baseContext}_postTest_1`);

@@ -10,9 +10,9 @@ import {
   boProductSettingsPage,
   type BrowserContext,
   FakerProduct,
-  foClassicHomePage,
-  foClassicProductPage,
-  foClassicSearchResultsPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -158,32 +158,32 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
         await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
         page = await boProductSettingsPage.viewMyShop(page);
-        await foClassicHomePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await foClassicHomePage.isHomePage(page);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
       it('should search for the created product and go to product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToCreatedProductPage${index}`, baseContext);
 
-        await foClassicHomePage.searchProduct(page, productData.name);
-        await foClassicSearchResultsPage.goToProductPage(page, 1);
+        await foHummingbirdHomePage.searchProduct(page, productData.name);
+        await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-        const pageTitle = await foClassicProductPage.getPageTitle(page);
+        const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
         expect(pageTitle.toUpperCase()).to.contains(productData.name.toUpperCase());
       });
 
       it('should check the unavailable product attributes in FO product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkUnavailableAttribute${index}`, baseContext);
 
-        const sizeIsVisible = await foClassicProductPage.isUnavailableProductSizeDisplayed(
+        const sizeIsVisible = await foHummingbirdProductPage.isUnavailableProductSizeDisplayed(
           page,
           productData.attributes[1].values[0],
         );
         expect(sizeIsVisible).to.be.equal(test.args.enable);
 
-        const colorIsVisible = await foClassicProductPage.isUnavailableProductColorDisplayed(
+        const colorIsVisible = await foHummingbirdProductPage.isUnavailableProductColorDisplayed(
           page,
           productData.attributes[0].values[0],
         );
@@ -193,7 +193,7 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
       it('should close the page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
-        page = await foClassicProductPage.closePage(browserContext, page, 0);
+        page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boProductSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);

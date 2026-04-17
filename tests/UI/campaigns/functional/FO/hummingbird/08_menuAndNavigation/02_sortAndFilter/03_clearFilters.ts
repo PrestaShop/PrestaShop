@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   boDashboardPage,
@@ -26,14 +23,11 @@ Scenario:
 - Filter products by composition and availability
 - Clear filters
  */
-describe('FO - Menu and navigation : Clear filters', async () => {
+describe('FO - Menu and Navigation - Sort and filter : Clear filters', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfActiveProducts: number;
   let productsNumber: number;
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -99,7 +93,7 @@ describe('FO - Menu and navigation : Clear filters', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
       await foHummingbirdHomePage.changeLanguage(page, 'en');
-      await foHummingbirdHomePage.goToAllProductsPage(page);
+      await foHummingbirdHomePage.goToAllProductsPage(page, 'ps-featuredproducts');
 
       const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
@@ -192,7 +186,4 @@ describe('FO - Menu and navigation : Clear filters', async () => {
       expect(productsNumberAfterClearFilter).to.equal(numberOfActiveProducts);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

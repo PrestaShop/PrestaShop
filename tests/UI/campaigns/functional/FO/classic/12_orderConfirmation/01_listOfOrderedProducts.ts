@@ -1,5 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boDashboardPage,
@@ -25,15 +26,22 @@ import {
 const baseContext: string = 'functional_FO_classic_orderConfirmation_listOfOrderedProducts';
 
 /*
+Pre-condition
+- Enable the theme classic
 Scenario:
 - Add 3 products to cart
 - Proceed to checkout and confirm the order
 - Check the payment confirmation details
+Post-condition
+- Disable the theme classic
 */
 describe('FO - Order confirmation : List of ordered products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let orderReference: string;
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -262,4 +270,7 @@ describe('FO - Order confirmation : List of ordered products', async () => {
       ]);
     });
   });
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest`);
 });

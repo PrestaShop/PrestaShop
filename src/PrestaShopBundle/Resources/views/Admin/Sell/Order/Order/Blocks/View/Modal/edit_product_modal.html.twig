@@ -1,0 +1,41 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+ <div class="modal fade"
+     id="editOrderProductModal"
+     tabindex="-1"
+     role="dialog"
+     data-is-order-tax-included="{{ orderForViewing.isTaxIncluded }}"
+     data-order-id="{{ orderForViewing.id }}"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ 'Edit a product'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </h5>
+        <button type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="editProductFormContainer"></div>
+
+      {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/Skeletons/edit_product_skeleton.html.twig') }}
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </button>
+
+        <button type="submit" class="btn btn-primary" id="edit_product_row" data-order-id="{{ orderForViewing.id }}" disabled>
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

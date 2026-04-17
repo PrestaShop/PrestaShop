@@ -179,5 +179,5 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
   });
 
   // Post-condition: Delete imported addresses with bulk actions
-  bulkDeleteAddressesTest('lastname', 'test', `${baseContext}_postTest_1`);
+  bulkDeleteAddressesTest('input', 'lastname', 'test', `${baseContext}_postTest_1`);
 });

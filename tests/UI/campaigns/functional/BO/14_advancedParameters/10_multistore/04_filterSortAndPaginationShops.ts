@@ -19,24 +19,23 @@ import {
 
 const baseContext: string = 'functional_BO_advancedParameters_multistore_filterSortAndPaginationShops';
 
-/*
-Enable multistore
-Create 20 shops
-Filter by: Id, shop name, shop group, root category and URL
-Pagination between pages
-Sort table by: Id, shop name, shop group, root category and URL
-Delete the created shop
-Disable multistore
+/**
+ * Enable multistore
+ * Create 20 shops
+ * Filter by: Id, shop name, shop group, root category and URL
+ * Pagination between pages
+ * Sort table by: Id, shop name, shop group, root category and URL
+ * Delete the created shop
+ * Disable multistore
  */
 describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination shops', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   const shopCreate: FakerShop = new FakerShop({name: 'todelete0', shopGroup: 'Default', categoryRoot: 'Home'});
 
-  //Pre-condition: Enable multistore
+  // Pre-condition: Enable multistore
   setMultiStoreStatus(true, `${baseContext}_preTest`);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -118,22 +117,22 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
   // 4 : Filter shops
   describe('Filter shops table', async () => {
     [
-      {args: {filterBy: 'id_shop', filterValue: '10'}},
-      {args: {filterBy: 'a!name', filterValue: 'Todelete10'}},
-      {args: {filterBy: 'gs!name', filterValue: 'Default'}},
-      {args: {filterBy: 'cl!name', filterValue: 'Home'}},
-      {args: {filterBy: 'url', filterValue: 'Click here'}},
-    ].forEach((test: { args: { filterBy: string, filterValue: string } }, index: number) => {
-      it(`should filter list by ${test.args.filterBy}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `filterBy_${test.args.filterBy}`, baseContext);
+      {filterBy: 'id_shop', filterValue: '10'},
+      {filterBy: 'a!name', filterValue: 'Todelete10'},
+      {filterBy: 'gs!name', filterValue: 'Default'},
+      {filterBy: 'cl!name', filterValue: 'Home'},
+      {filterBy: 'url', filterValue: 'Click here'},
+    ].forEach((arg: {filterBy: string, filterValue: string }, index: number) => {
+      it(`should filter list by ${arg.filterBy}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `filterBy_${arg.filterBy}`, baseContext);
 
-        await boMultistoreShopPage.filterTable(page, test.args.filterBy, test.args.filterValue);
+        await boMultistoreShopPage.filterTable(page, arg.filterBy, arg.filterValue);
 
         const numberOfElementAfterFilter = await boMultistoreShopPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfElementAfterFilter; i++) {
-          const textColumn = await boMultistoreShopPage.getTextColumn(page, i, test.args.filterBy);
-          expect(textColumn).to.contains(test.args.filterValue);
+          const textColumn = await boMultistoreShopPage.getTextColumn(page, i, arg.filterBy);
+          expect(textColumn).to.contains(arg.filterValue);
         }
       });
 
@@ -181,81 +180,73 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
   describe('Sort shops table', async () => {
     [
       {
-        args:
-          {
-            testIdentifier: 'sortByIdDesc', sortBy: 'id_shop', sortDirection: 'down', isFloat: true,
-          },
+        testIdentifier: 'sortByIdDesc',
+        sortBy: 'id_shop',
+        sortDirection: 'down',
+        isFloat: true,
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByShopNameAsc', sortBy: 'a!name', sortDirection: 'up',
-          },
+        testIdentifier: 'sortByShopNameAsc',
+        sortBy: 'a!name',
+        sortDirection: 'up',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByShopNameDesc', sortBy: 'a!name', sortDirection: 'down',
-          },
+        testIdentifier: 'sortByShopNameDesc',
+        sortBy: 'a!name',
+        sortDirection: 'down',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByShopGroupAsc', sortBy: 'gs!name', sortDirection: 'up',
-          },
+        testIdentifier: 'sortByShopGroupAsc',
+        sortBy: 'gs!name',
+        sortDirection: 'up',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByShopGroupDesc', sortBy: 'gs!name', sortDirection: 'down',
-          },
+        testIdentifier: 'sortByShopGroupDesc',
+        sortBy: 'gs!name',
+        sortDirection: 'down',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByMessageAsc', sortBy: 'cl!name', sortDirection: 'up',
-          },
+        testIdentifier: 'sortByMessageAsc',
+        sortBy: 'cl!name',
+        sortDirection: 'up',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByRootCategoryDesc', sortBy: 'cl!name', sortDirection: 'down',
-          },
+        testIdentifier: 'sortByRootCategoryDesc',
+        sortBy: 'cl!name',
+        sortDirection: 'down',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByURLAsc', sortBy: 'url', sortDirection: 'up',
-          },
+        testIdentifier: 'sortByURLAsc',
+        sortBy: 'url',
+        sortDirection: 'up',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByURLDesc', sortBy: 'url', sortDirection: 'down',
-          },
+        testIdentifier: 'sortByURLDesc',
+        sortBy: 'url',
+        sortDirection: 'down',
       },
       {
-        args:
-          {
-            testIdentifier: 'sortByIdAsc', sortBy: 'id_shop', sortDirection: 'up', isFloat: true,
-          },
+        testIdentifier: 'sortByIdAsc',
+        sortBy: 'id_shop',
+        sortDirection: 'up',
+        isFloat: true,
       },
-    ].forEach((test: { args: { testIdentifier: string, sortBy: string, sortDirection: string, isFloat?: boolean } }) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+    ].forEach((arg: {testIdentifier: string, sortBy: string, sortDirection: string, isFloat?: boolean}) => {
+      it(`should sort by '${arg.sortBy}' '${arg.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', arg.testIdentifier, baseContext);
 
-        const nonSortedTable = await boMultistoreShopPage.getAllRowsColumnContent(page, test.args.sortBy);
-        await boMultistoreShopPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const nonSortedTable = await boMultistoreShopPage.getAllRowsColumnContent(page, arg.sortBy);
+        await boMultistoreShopPage.sortTable(page, arg.sortBy, arg.sortDirection);
 
-        const sortedTable = await boMultistoreShopPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boMultistoreShopPage.getAllRowsColumnContent(page, arg.sortBy);
 
-        if (test.args.isFloat) {
+        if (arg.isFloat) {
           const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
+          if (arg.sortDirection === 'up') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
@@ -263,7 +254,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
         } else {
           const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (arg.sortDirection === 'up') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());

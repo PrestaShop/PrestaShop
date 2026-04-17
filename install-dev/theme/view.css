@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 @charset "UTF-8";
 
 /* ****************************************************************************
@@ -1094,6 +1098,27 @@ ul#optional_update li.ok {
 #error_process p a:hover {
   text-decoration: underline;
 }
+
+#warning_process {
+  background: var(--cdk-yellow-50) url(img/warning.svg) no-repeat calc(100% - var(--cdk-size-8)) center;
+  padding: var(--cdk-size-16);
+  border: 1px solid var(--cdk-yellow-500);
+  margin: var(--cdk-size-16) 0;
+  display: none;
+}
+#warning_process h3 {
+  color: var(--cdk-red-500);
+}
+#warning_process p {
+  margin-left: 20px;
+}
+#warning_process p a {
+  font-weight: bold;
+}
+#warning_process p a:hover {
+  text-decoration: underline;
+}
+
 
 #install_process_success {
   display: none;

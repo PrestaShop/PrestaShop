@@ -72,7 +72,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | available date             | 2021-10-10  |
     And combination "product1SBlack" last stock movements should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 100            |
+      | Puffin Mummy | 100            |
     And combination "product1SBlack" last stock movement increased by 100
     When I update combination "product1SWhite" with following values:
       | minimal quantity           | 10          |
@@ -118,8 +118,8 @@ Feature: Update product combination stock information in Back Office (BO)
       | available date             | 2021-10-10  |
     And combination "product1SBlack" last stock movements should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -101           |
-      | Puff Daddy | 100            |
+      | Puffin Mummy | -101           |
+      | Puffin Mummy | 100            |
     And combination "product1SBlack" last stock movement decreased by 101
     And product "product1" should have following stock information:
       | quantity | 49 |
@@ -141,9 +141,9 @@ Feature: Update product combination stock information in Back Office (BO)
       | available date             | 2020-01-01 |
     And combination "product1SBlack" last stock movements should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 1              |
-      | Puff Daddy | -101           |
-      | Puff Daddy | 100            |
+      | Puffin Mummy | 1              |
+      | Puffin Mummy | -101           |
+      | Puffin Mummy | 100            |
     And combination "product1SBlack" last stock movement increased by 1
     And product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
@@ -168,9 +168,9 @@ Feature: Update product combination stock information in Back Office (BO)
       | available date             | 2020-01-01 |
     And combination "product1SBlack" last stock movements should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 1              |
-      | Puff Daddy | -101           |
-      | Puff Daddy | 100            |
+      | Puffin Mummy | 1              |
+      | Puffin Mummy | -101           |
+      | Puffin Mummy | 100            |
     And combination "product1SBlack" last stock movement increased by 1
     And product "product1" should have following stock information:
       | quantity | 50 |
@@ -198,7 +198,7 @@ Feature: Update product combination stock information in Back Office (BO)
     And combination "product1SBlack" last stock movement increased by 10
     And combination "product1SBlack" last stock movements should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 10             |
+      | Puffin Mummy | 10             |
     When I update combination "product1SBlack" stock with following details:
       | fixed quantity | -3 |
     Then combination "product1SBlack" should have following stock details:
@@ -212,8 +212,8 @@ Feature: Update product combination stock information in Back Office (BO)
     And combination "product1SBlack" last stock movement decreased by 13
     And combination "product1SBlack" last stock movements should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -13            |
-      | Puff Daddy | 10             |
+      | Puffin Mummy | -13            |
+      | Puffin Mummy | 10             |
 
   Scenario: I should not be able to provide both delta and fixed quantities when updating combination stock information
     Given combination "product1SBlack" should have following stock details:
@@ -335,7 +335,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | available date             |             |
     And combination "product1MBlue" last stock movements should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 2147483647     |
+      | Puffin Mummy | 2147483647     |
     When I update combination "product1MBlue" stock with following details:
       | delta quantity             | -4294967295 |
       | minimal quantity           | 1           |
@@ -353,8 +353,8 @@ Feature: Update product combination stock information in Back Office (BO)
       | available date             |             |
     And combination "product1MBlue" last stock movements should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -4294967295    |
-      | Puff Daddy | 2147483647     |
+      | Puffin Mummy | -4294967295    |
+      | Puffin Mummy | 2147483647     |
     When I update combination "product1MBlue" stock with following details:
       | delta quantity             | 4294967295  |
       | minimal quantity           | 1           |
@@ -372,6 +372,6 @@ Feature: Update product combination stock information in Back Office (BO)
       | available date             |             |
     And combination "product1MBlue" last stock movements should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 4294967295     |
-      | Puff Daddy | -4294967295    |
-      | Puff Daddy | 2147483647     |
+      | Puffin Mummy | 4294967295     |
+      | Puffin Mummy | -4294967295    |
+      | Puffin Mummy | 2147483647     |

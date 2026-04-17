@@ -13,12 +13,12 @@ import {
   FakerAddress,
   FakerCartRule,
   FakerCustomer,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicCheckoutOrderConfirmationPage,
-  foClassicHomePage,
-  foClassicModalBlockCartPage,
-  foClassicModalQuickViewPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
+  foHummingbirdHomePage,
+  foHummingbirdModalBlockCartPage,
+  foHummingbirdModalQuickViewPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -50,7 +50,6 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
   const customerData: FakerCustomer = new FakerCustomer({password: ''});
   const addressData: FakerAddress = new FakerAddress({country: 'France'});
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -138,58 +137,58 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
 
       page = await boCartRulesPage.viewMyShop(page);
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should quick view the first product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewTheFirstProduct', baseContext);
 
-      await foClassicHomePage.quickViewProduct(page, 1);
+      await foHummingbirdHomePage.quickViewProduct(page, 1);
 
-      const isQuickViewModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
+      const isQuickViewModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isQuickViewModalVisible).to.equal(true);
     });
 
     it('should add product to cart and Proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await foClassicModalBlockCartPage.proceedToCheckout(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
+      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
 
-      const pageTitle = await foClassicCartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should add our discount code and check that the total price is 0', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPercentDiscount', baseContext);
 
-      await foClassicCartPage.addPromoCode(page, percentCartRule.code);
+      await foHummingbirdCartPage.addPromoCode(page, percentCartRule.code);
 
-      const totalPrice = await foClassicCartPage.getATIPrice(page);
+      const totalPrice = await foHummingbirdCartPage.getATIPrice(page);
       expect(totalPrice, 'Order total price is incorrect').to.equal(0);
     });
 
     it('should go to checkout process', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
-      await foClassicCartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.eq(true);
     });
 
     it('should fill personal information as a guest', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
 
-      const isStepPersonalInfoCompleted = await foClassicCheckoutPage.setGuestPersonalInformation(page, customerData);
+      const isStepPersonalInfoCompleted = await foHummingbirdCheckoutPage.setGuestPersonalInformation(page, customerData);
       expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.eq(true);
     });
 
     it('should fill address form and go to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
 
-      const isStepAddressComplete = await foClassicCheckoutPage.setAddress(page, addressData);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.setAddress(page, addressData);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
@@ -197,21 +196,21 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       await testContext.addContextItem(this, 'testIdentifier', 'goToLastStep', baseContext);
 
       // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should contain no payment needed text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoPaymentNeededText', baseContext);
 
-      const noPaymentNeededText = await foClassicCheckoutPage.getNoPaymentNeededBlockContent(page);
-      expect(noPaymentNeededText).to.contains(foClassicCheckoutPage.noPaymentNeededText);
+      const noPaymentNeededText = await foHummingbirdCheckoutPage.getNoPaymentNeededBlockContent(page);
+      expect(noPaymentNeededText).to.contains(foHummingbirdCheckoutPage.noPaymentNeededText);
     });
 
     it('should check that complete order button is enabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCompleteIsNotDisabled', baseContext);
 
-      const confirmButtonVisible = await foClassicCheckoutPage.isPaymentConfirmationButtonVisibleAndEnabled(page);
+      const confirmButtonVisible = await foHummingbirdCheckoutPage.isPaymentConfirmationButtonVisibleAndEnabled(page);
       expect(confirmButtonVisible, 'Confirm button visible').to.eq(true);
     });
 
@@ -219,11 +218,11 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
       // complete the order
-      await foClassicCheckoutPage.orderWithoutPaymentMethod(page);
+      await foHummingbirdCheckoutPage.orderWithoutPaymentMethod(page);
 
       // Check that we got to order confirmation (probably not necessary)
-      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
 
@@ -236,7 +235,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BackToBOForCleanup', baseContext);
 
-      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boOrderSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);

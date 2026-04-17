@@ -1,0 +1,67 @@
+services:
+  _defaults:
+    public: true
+    autowire: true
+    autoconfigure: true
+
+  # Providers (cart context)
+  PrestaShop\PrestaShop\Core\Pricing\Product\Provider\CatalogProductProvider:
+    arguments:
+      $dbPrefix: '%database_prefix%'
+
+  # Rounding
+  PrestaShop\PrestaShop\Core\Pricing\Rounding\RoundingService:
+    arguments:
+      $legacyRoundMode: '@=service("prestashop.adapter.legacy.configuration").getInt("PS_PRICE_ROUND_MODE")'
+  PrestaShop\PrestaShop\Core\Pricing\Rounding\RoundingServiceInterface:
+    alias: PrestaShop\PrestaShop\Core\Pricing\Rounding\RoundingService
+
+  # Calculators — cart context
+  prestashop.pricing.cart.product.base_product_calculator:
+    class: PrestaShop\PrestaShop\Core\Pricing\Product\Calculator\BaseProductCalculator
+    arguments:
+      $productProvider: '@PrestaShop\PrestaShop\Core\Pricing\Product\Provider\CatalogProductProvider'
+    tags: [ { name: 'prestashop.pricing.cart.product_calculator', priority: 100 } ]
+
+  # Rounding calculator — shared across cart and order contexts
+  PrestaShop\PrestaShop\Core\Pricing\Product\Calculator\RoundingCalculator:
+    tags:
+      - { name: 'prestashop.pricing.cart.product_calculator', priority: 10 }
+      - { name: 'prestashop.pricing.order.product_calculator', priority: 10 }
+
+  # Cart calculator
+  prestashop.pricing.cart.product_calculator:
+    class: PrestaShop\PrestaShop\Core\Pricing\Product\Calculator\ProductCalculator
+    arguments:
+      $calculators: !tagged_iterator { tag: 'prestashop.pricing.cart.product_calculator' }
+
+  # Order calculator
+  prestashop.pricing.order.product_calculator:
+    class: PrestaShop\PrestaShop\Core\Pricing\Product\Calculator\ProductCalculator
+    arguments:
+      $calculators: !tagged_iterator { tag: 'prestashop.pricing.order.product_calculator' }
+
+  # Cart product provider
+  PrestaShop\PrestaShop\Core\Pricing\Cart\Provider\DatabaseCartProductProvider:
+    arguments:
+      $dbPrefix: '%database_prefix%'
+  PrestaShop\PrestaShop\Core\Pricing\Cart\Provider\CartProductProviderInterface:
+    alias: PrestaShop\PrestaShop\Core\Pricing\Cart\Provider\DatabaseCartProductProvider
+
+  # Cart calculators
+  PrestaShop\PrestaShop\Core\Pricing\Cart\Calculator\ProductTotalCalculator:
+    arguments:
+      $cartProductProvider: '@PrestaShop\PrestaShop\Core\Pricing\Cart\Provider\CartProductProviderInterface'
+      $productCalculator: '@prestashop.pricing.cart.product_calculator'
+    tags: [ { name: 'prestashop.pricing.cart.cart_calculator', priority: 100 } ]
+
+  # Cart calculator (orchestrator)
+  prestashop.pricing.cart.cart_calculator:
+    class: PrestaShop\PrestaShop\Core\Pricing\Cart\Calculator\CartCalculator
+    arguments:
+      $calculators: !tagged_iterator { tag: 'prestashop.pricing.cart.cart_calculator' }
+
+  # Debug
+  PrestaShop\PrestaShop\Core\Pricing\Debug\PricingRegistry: ~
+  PrestaShop\PrestaShop\Core\Pricing\Debug\ProductPriceHistoryDisplayer: ~
+  PrestaShop\PrestaShop\Core\Pricing\Debug\CartPriceHistoryDisplayer: ~

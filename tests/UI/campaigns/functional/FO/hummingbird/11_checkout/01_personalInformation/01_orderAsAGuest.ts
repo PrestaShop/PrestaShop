@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataPaymentMethods,
@@ -23,16 +20,12 @@ import {expect} from 'chai';
 const baseContext: string = 'functional_FO_hummingbird_checkout_personalInformation_orderAsAGuest';
 
 /*
-Pre-condition:
-- Install hummingbird them
 Scenario:
 - Open FO page
 - Add first product to the cart
 - Proceed to checkout and validate the cart
 - Fill guest personal information
 - Complete the order
-Post-condition:
-- Uninstall hummingbird theme
  */
 
 describe('FO - Checkout - Personal information : Order as a guest', async () => {
@@ -41,9 +34,6 @@ describe('FO - Checkout - Personal information : Order as a guest', async () => 
   const guestData: FakerCustomer = new FakerCustomer({password: ''});
   const secondGuestData: FakerCustomer = new FakerCustomer({password: ''});
   const addressData: FakerAddress = new FakerAddress({country: 'France'});
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -64,7 +54,7 @@ describe('FO - Checkout - Personal information : Order as a guest', async () => 
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should add product to cart', async function () {
@@ -124,7 +114,4 @@ describe('FO - Checkout - Personal information : Order as a guest', async () => 
       expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

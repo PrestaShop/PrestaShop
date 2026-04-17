@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
@@ -32,12 +12,19 @@ use Behat\Gherkin\Node\TableNode;
 use Cache;
 use CartRule;
 use Context;
+use DateInterval;
+use DateTime;
 use Db;
 use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
+use PrestaShop\PrestaShop\Core\Domain\Discount\DiscountSettings;
+use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountId;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Resources\DatabaseDump;
 use Validate;
 
 class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
@@ -52,19 +39,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     protected $cartRules = [];
 
     /**
-     * @var CountryFeatureContext
-     */
-    protected $countryFeatureContext;
-
-    /**
      * @var LegacyProductFeatureContext
      */
     protected $productFeatureContext;
-
-    /**
-     * @var CarrierFeatureContext
-     */
-    protected $carrierFeatureContext;
 
     /**
      * @var CustomerFeatureContext
@@ -76,27 +53,245 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     protected $categoryFeatureContext;
 
+    /**
+     * @BeforeScenario @restore-cart-rules-before-scenario
+     *
+     * @AfterScenario @restore-cart-rules-after-scenario
+     *
+     * @return void
+     */
+    public static function restoreCartRules(): void
+    {
+        DatabaseDump::restoreMatchingTables('^cart_rule.*^');
+    }
+
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
         /** @var InitializedContextEnvironment $environment */
         $environment = $scope->getEnvironment();
-        /** @var CountryFeatureContext $countryFeatureContext */
-        $countryFeatureContext = $environment->getContext(CountryFeatureContext::class);
         /** @var LegacyProductFeatureContext $productFeatureContext */
         $productFeatureContext = $environment->getContext(LegacyProductFeatureContext::class);
-        /** @var CarrierFeatureContext $carrierFeatureContext */
-        $carrierFeatureContext = $environment->getContext(CarrierFeatureContext::class);
         /** @var CustomerFeatureContext $customerFeatureContext */
         $customerFeatureContext = $environment->getContext(CustomerFeatureContext::class);
         /** @var CategoryFeatureContext $categoryFeatureContext */
         $categoryFeatureContext = $environment->getContext(CategoryFeatureContext::class);
 
-        $this->countryFeatureContext = $countryFeatureContext;
         $this->productFeatureContext = $productFeatureContext;
-        $this->carrierFeatureContext = $carrierFeatureContext;
         $this->customerFeatureContext = $customerFeatureContext;
         $this->categoryFeatureContext = $categoryFeatureContext;
+    }
+
+    /**
+     * @When there is a cart rule :cartRuleReference with following properties:
+     *
+     * @param string $cartRuleReference
+     * @param TableNode $node
+     */
+    public function createCartRuleIfNotExists(string $cartRuleReference, TableNode $node): void
+    {
+        $data = $this->localizeByRows($node);
+
+        // If reference exists check that the cart rule matches the expected values
+        $cartRuleId = $this->getSharedStorage()->exists($cartRuleReference) ? $this->getSharedStorage()->get($cartRuleReference) : 0;
+        $cartRule = new CartRule($cartRuleId);
+
+        // If no ID stored as reference or the cart rule is not in DB we create it
+        if (!$cartRuleId || !((int) $cartRule->id)) {
+            $cartRule = new CartRule();
+            $cartRule->name = $data['name'];
+            $cartRule->description = $data['description'] ?? '';
+            $cartRule->reduction_percent = $data['discount_percentage'] ?? 0;
+            $cartRule->reduction_amount = $data['discount_amount'] ?? 0;
+            if (isset($data['discount_currency'])) {
+                $cartRule->reduction_currency = $this->referenceToId($data['discount_currency']);
+            }
+            $cartRule->reduction_tax = isset($data['discount_includes_tax']) && PrimitiveUtils::castStringBooleanIntoBoolean($data['discount_includes_tax']);
+            $cartRule->priority = $data['priority'] ?? 1;
+            $cartRule->quantity = $data['total_quantity'] ?? $data['quantity'] ?? 1;
+            $cartRule->quantity_per_user = $data['quantity_per_user'] ?? 1;
+            $cartRule->code = $data['code'] ?? '';
+            $cartRule->free_shipping = isset($data['free_shipping']) && PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']);
+            $cartRule->partial_use = !isset($data['allow_partial_use']) || PrimitiveUtils::castStringBooleanIntoBoolean($data['allow_partial_use']);
+            $cartRule->gift_product = isset($data['gift_product']) ? $this->referenceToId($data['gift_product']) : 0;
+            $cartRule->minimum_amount = isset($data['minimum_amount']) ? (float) $data['minimum_amount'] : 0;
+            $cartRule->minimum_amount_currency = isset($data['minimum_amount_currency']) ? $this->referenceToId($data['minimum_amount_currency']) : 0;
+            $cartRule->minimum_amount_tax = isset($data['minimum_amount_tax_included']) && PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_tax_included']);
+            $cartRule->minimum_amount_shipping = isset($data['minimum_amount_shipping_included']) && PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_shipping_included']);
+            $cartRule->reduction_exclude_special = isset($data['apply_to_discounted_products']) && !PrimitiveUtils::castStringBooleanIntoBoolean($data['apply_to_discounted_products']);
+            if (isset($data['valid_from'])) {
+                $cartRule->date_from = $data['valid_from'];
+            } else {
+                $now = new DateTime();
+                // sub 1s to avoid bad comparisons with strictly greater than
+                $now->sub(new DateInterval('P2D'));
+                $cartRule->date_from = $now->format('Y-m-d H:i:s');
+            }
+            if (isset($data['valid_to'])) {
+                $cartRule->date_to = $data['valid_to'];
+            } else {
+                $now = new DateTime();
+                $now->add(new DateInterval('P1Y'));
+                $cartRule->date_to = $now->format('Y-m-d H:i:s');
+            }
+            $cartRule->active = !isset($data['active']) || PrimitiveUtils::castStringBooleanIntoBoolean($data['active']);
+            if (isset($data['discount_product'])) {
+                $cartRule->reduction_product = $this->referenceToId($data['discount_product']);
+            } elseif (isset($data['cheapest_product'])) {
+                $cheapestProduct = PrimitiveUtils::castStringBooleanIntoBoolean($data['cheapest_product']);
+                if ($cheapestProduct) {
+                    $cartRule->reduction_product = DiscountSettings::CHEAPEST_PRODUCT;
+                }
+            } else {
+                $cartRule->reduction_product = DiscountSettings::PRODUCTS_TOTAL;
+            }
+
+            $cartRule->add();
+            $this->getSharedStorage()->set($cartRuleReference, (int) $cartRule->id);
+            if (!empty($cartRule->code)) {
+                $this->getSharedStorage()->set($cartRule->code, (int) $cartRule->id);
+            }
+
+            if (isset($data['carriers'])) {
+                $carriersIds = $this->referencesToIds($data['carriers']);
+                $this->setCartRuleCarriers($cartRule, $carriersIds);
+            }
+            if (isset($data['countries'])) {
+                $countryIds = $this->referencesToIds($data['countries']);
+                $this->setCartRuleCountries($cartRule, $countryIds);
+            }
+        } else {
+            Assert::assertEquals($cartRule->name, $data['name'], 'Unexpected cart rule name');
+            Assert::assertEquals($cartRule->description, $data['description'] ?? '', 'Unexpected cart rule description');
+            Assert::assertEquals($cartRule->reduction_percent, (float) ($data['discount_percentage'] ?? 0), 'Unexpected cart rule reduction percent');
+            Assert::assertEquals($cartRule->reduction_amount, (float) ($data['discount_amount'] ?? 0), 'Unexpected cart rule amount');
+            if (isset($data['discount_currency'])) {
+                Assert::assertEquals($cartRule->reduction_currency, $this->referenceToId($data['discount_currency']), 'Unexpected cart rule reduction currency');
+            }
+            Assert::assertEquals($cartRule->reduction_tax, isset($data['discount_includes_tax']) && PrimitiveUtils::castStringBooleanIntoBoolean($data['discount_includes_tax']), 'Unexpected cart rule reduction tax');
+            Assert::assertEquals($cartRule->priority, $data['priority'] ?? 1, 'Unexpected cart rule priority');
+            if (isset($data['total_quantity']) || isset($data['quantity'])) {
+                Assert::assertEquals($cartRule->quantity, $data['total_quantity'] ?? $data['quantity'] ?? 1, 'Unexpected cart rule quantity');
+            }
+            Assert::assertEquals($cartRule->quantity_per_user, $data['quantity_per_user'] ?? 1, 'Unexpected cart rule quantity per user');
+            Assert::assertEquals($cartRule->code, $data['code'] ?? '', 'Unexpected cart rule code');
+            Assert::assertEquals($cartRule->free_shipping, isset($data['free_shipping']) && PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']), 'Unexpected cart rule free shipping');
+            Assert::assertEquals($cartRule->partial_use, !isset($data['allow_partial_use']) || PrimitiveUtils::castStringBooleanIntoBoolean($data['allow_partial_use']), 'Unexpected cart rule partial use');
+            Assert::assertEquals($cartRule->gift_product, isset($data['gift_product']) ? $this->referenceToId($data['gift_product']) : 0, 'Unexpected cart rule gift product');
+            Assert::assertEquals($cartRule->minimum_amount, isset($data['minimum_amount']) ? (float) $data['minimum_amount'] : 0, 'Unexpected cart rule minimum amount');
+            Assert::assertEquals($cartRule->minimum_amount_currency, isset($data['minimum_amount_currency']) ? $this->referenceToId($data['minimum_amount_currency']) : 0, 'Unexpected cart rule minimum amount currency');
+            Assert::assertEquals($cartRule->minimum_amount_tax, isset($data['minimum_amount_tax_included']) && PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_tax_included']), 'Unexpected cart rule minimum amount tax include');
+            Assert::assertEquals($cartRule->minimum_amount_shipping, isset($data['minimum_amount_shipping_included']) && PrimitiveUtils::castStringBooleanIntoBoolean($data['minimum_amount_shipping_included']), 'Unexpected cart rule minimum amount shipping included');
+            Assert::assertEquals($cartRule->reduction_exclude_special, isset($data['apply_to_discounted_products']) && !PrimitiveUtils::castStringBooleanIntoBoolean($data['apply_to_discounted_products']), 'Unexpected cart rule applying to discounted products');
+            Assert::assertEquals($cartRule->active, !isset($data['active']) || PrimitiveUtils::castStringBooleanIntoBoolean($data['active']), 'Unexpected cart rule active');
+            if (isset($data['valid_from'])) {
+                Assert::assertEquals($cartRule->date_from, $data['valid_from'], 'Unexpected cart rule valid from');
+            }
+            if (isset($data['valid_to'])) {
+                Assert::assertEquals($cartRule->date_to, $data['valid_to'], 'Unexpected cart rule valid to');
+            }
+            if (isset($data['discount_product'])) {
+                Assert::assertEquals($cartRule->reduction_product, $this->referenceToId($data['discount_product']), 'Unexpected cart rule discount product');
+            } elseif (isset($data['cheapest_product'])) {
+                $cheapestProduct = PrimitiveUtils::castStringBooleanIntoBoolean($data['cheapest_product']);
+                if ($cheapestProduct) {
+                    Assert::assertEquals($cartRule->reduction_product, DiscountSettings::CHEAPEST_PRODUCT, 'Unexpected cheapest product');
+                } else {
+                    Assert::assertEquals($cartRule->reduction_product, DiscountSettings::PRODUCTS_TOTAL, 'Unexpected cheapest product');
+                }
+            }
+            if (isset($data['carriers'])) {
+                $expectedCarriersIds = $this->referencesToIds($data['carriers']);
+                $repository = CommonFeatureContext::getContainer()->get(DiscountRepository::class);
+                $carrierIds = $repository->getCarriersIds(new DiscountId((int) $cartRule->id));
+                Assert::assertEquals($expectedCarriersIds, $carrierIds, 'Unexpected carrier ids');
+            }
+            if (isset($data['countries'])) {
+                $expectedCountryIds = $this->referencesToIds($data['countries']);
+                $repository = CommonFeatureContext::getContainer()->get(DiscountRepository::class);
+                $countryIds = $repository->getCountriesIds(new DiscountId((int) $cartRule->id));
+                Assert::assertEquals($expectedCountryIds, $countryIds, 'Unexpected country ids');
+            }
+        }
+
+        // Check there is no field that was not handled by this step
+        unset($data['name'], $data['description'], $data['discount_percentage'], $data['discount_amount'], $data['discount_currency'], $data['discount_includes_tax']);
+        unset($data['priority'], $data['total_quantity'], $data['quantity_per_user'], $data['code'], $data['free_shipping'], $data['allow_partial_use'], $data['active']);
+        unset($data['valid_from'], $data['valid_to'], $data['apply_to_discounted_products'], $data['gift_product']);
+        unset($data['minimum_amount'], $data['minimum_amount_currency'], $data['minimum_amount_tax_included'], $data['minimum_amount_shipping_included'], $data['discount_product']);
+        unset($data['quantity'], $data['cheapest_product'], $data['carriers'], $data['countries']);
+        if (!empty($data)) {
+            throw new RuntimeException(sprintf('There are fields that were not handled in cart rule creation: %s', implode(',', array_keys($data))));
+        }
+    }
+
+    /**
+     * @When I update quantity for cart rule :cartRuleReference to :quantity
+     *
+     * @param string $cartRuleReference
+     * @param int $quantity
+     *
+     * @return void
+     */
+    public function setCartRuleQuantity(string $cartRuleReference, int $quantity): void
+    {
+        $cartRule = new CartRule($this->referenceToId($cartRuleReference));
+        $cartRule->quantity = $quantity;
+        $cartRule->save();
+    }
+
+    /**
+     * @When I restrict following carriers :carrierReferences for cart rule :cartRuleReference
+     *
+     * @param string $cartRuleReference
+     * @param string $carrierReferences
+     *
+     * @return void
+     */
+    public function setRestrictedCarriers(string $cartRuleReference, string $carrierReferences): void
+    {
+        $cartRule = new CartRule($this->referenceToId($cartRuleReference));
+        $this->setCartRuleCarriers($cartRule, $this->referencesToIds($carrierReferences));
+    }
+
+    protected function setCartRuleCarriers(CartRule $cartRule, array $carrierIds): void
+    {
+        // First clear existing associations
+        Db::getInstance()->execute(
+            'DELETE FROM `' . _DB_PREFIX_ . 'cart_rule_carrier` WHERE `id_cart_rule` = ' . (int) $cartRule->id
+        );
+
+        // Now add the associations
+        if (!empty($carrierIds)) {
+            foreach ($carrierIds as $carrierId) {
+                Db::getInstance()->execute(
+                    'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_carrier` (`id_cart_rule`, `id_carrier`) ' .
+                    'VALUES (' . (int) $cartRule->id . ', ' . (int) $carrierId . ')'
+                );
+            }
+        }
+        $cartRule->carrier_restriction = !empty($carrierIds);
+        $cartRule->save();
+    }
+
+    protected function setCartRuleCountries(CartRule $cartRule, array $countryIds): void
+    {
+        // First clear existing associations
+        Db::getInstance()->execute(
+            'DELETE FROM `' . _DB_PREFIX_ . 'cart_rule_country` WHERE `id_cart_rule` = ' . (int) $cartRule->id
+        );
+
+        // Now add the associations
+        if (!empty($countryIds)) {
+            foreach ($countryIds as $countryId) {
+                Db::getInstance()->execute(
+                    'INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_country` (`id_cart_rule`, `id_country`) ' .
+                    'VALUES (' . (int) $cartRule->id . ', ' . (int) $countryId . ')'
+                );
+            }
+        }
+        $cartRule->country_restriction = !empty($countryIds);
+        $cartRule->save();
     }
 
     /**

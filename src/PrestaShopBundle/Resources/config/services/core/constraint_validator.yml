@@ -82,3 +82,7 @@ services:
   PrestaShop\PrestaShop\Core\ConstraintValidator\UniqueDiscountCodeValidator:
     autowire: true
     autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\ConstraintValidator\NotCustomizableProductValidator:
+    autowire: true
+    autoconfigure: true

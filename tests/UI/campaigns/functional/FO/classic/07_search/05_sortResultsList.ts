@@ -11,20 +11,29 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
+
 const baseContext: string = 'functional_FO_classic_search_sortResultsList';
 
 /*
+Pre-condition:
+- Enable the theme classic
 Scenario:
 - Go to FO
 - Search Mug value and see result
 - Check sort by Relevance
 - Sort by name ASC/DESC
 - Sort by price ASC/DESC
+Post-condition
+- Disable the theme classic
 */
 
 describe('FO - Search Page : Sort results list', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -36,91 +45,96 @@ describe('FO - Search Page : Sort results list', async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
-  it('should go to FO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+  describe('Sort results list', async () => {
+    it('should go to FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-    await foClassicHomePage.goToFo(page);
+      await foClassicHomePage.goToFo(page);
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
-    expect(isHomePage).to.eq(true);
-  });
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
+    });
 
-  it('should put \'Mug\' in the search input and check result', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'searchProduct1', baseContext);
+    it('should put \'Mug\' in the search input and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchProduct1', baseContext);
 
-    await foClassicHomePage.searchProduct(page, 'mug');
+      await foClassicHomePage.searchProduct(page, 'mug');
 
-    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
-  });
+      const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+    });
 
-  it('should check the search result page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'countResult', baseContext);
+    it('should check the search result page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'countResult', baseContext);
 
-    const countResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
-    expect(countResults).to.equal(5);
-  });
+      const countResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
+      expect(countResults).to.equal(5);
+    });
 
-  it('should check that the products is sorted by relevance', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkDefaultSort', baseContext);
+    it('should check that the products is sorted by relevance', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDefaultSort', baseContext);
 
-    const isSortingLinkVisible = await foClassicSearchResultsPage.getSortByValue(page);
-    expect(isSortingLinkVisible).to.contain('Relevance');
-  });
+      const isSortingLinkVisible = await foClassicSearchResultsPage.getSortByValue(page);
+      expect(isSortingLinkVisible).to.contain('Relevance');
+    });
 
-  const tests = [
-    {
-      args: {
-        testIdentifier: 'sortByNameAsc',
-        sortName: 'Name, A to Z',
-        attribute: 'title',
-        sortBy: 'product.name.asc',
-        sortDirection: 'asc',
+    const tests = [
+      {
+        args: {
+          testIdentifier: 'sortByNameAsc',
+          sortName: 'Name, A to Z',
+          attribute: 'title',
+          sortBy: 'product.name.asc',
+          sortDirection: 'asc',
+        },
       },
-    },
-    {
-      args: {
-        testIdentifier: 'sortByNameDesc',
-        sortName: 'Name, Z to A',
-        attribute: 'title',
-        sortBy: 'product.name.desc',
-        sortDirection: 'desc',
+      {
+        args: {
+          testIdentifier: 'sortByNameDesc',
+          sortName: 'Name, Z to A',
+          attribute: 'title',
+          sortBy: 'product.name.desc',
+          sortDirection: 'desc',
+        },
       },
-    },
-    {
-      args: {
-        testIdentifier: 'sortByPriceAsc',
-        sortName: 'Price, low to high',
-        attribute: 'price-and-shipping .price',
-        sortBy: 'product.price.asc',
-        sortDirection: 'asc',
+      {
+        args: {
+          testIdentifier: 'sortByPriceAsc',
+          sortName: 'Price, low to high',
+          attribute: 'price-and-shipping .price',
+          sortBy: 'product.price.asc',
+          sortDirection: 'asc',
+        },
       },
-    },
-    {
-      args: {
-        testIdentifier: 'sortByPriceDesc',
-        sortName: 'Price, high to low',
-        attribute: 'price-and-shipping .price',
-        sortBy: 'product.price.desc',
-        sortDirection: 'desc',
+      {
+        args: {
+          testIdentifier: 'sortByPriceDesc',
+          sortName: 'Price, high to low',
+          attribute: 'price-and-shipping .price',
+          sortBy: 'product.price.desc',
+          sortDirection: 'desc',
+        },
       },
-    },
-  ];
-  tests.forEach((test) => {
-    it(`should sort by '${test.args.sortName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+    ];
+    tests.forEach((test) => {
+      it(`should sort by '${test.args.sortName}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-      const nonSortedTable = await foClassicSearchResultsPage.getAllProductsAttribute(page, test.args.attribute);
-      await foClassicSearchResultsPage.sortProductsList(page, test.args.sortBy);
-      const sortedTable = await foClassicSearchResultsPage.getAllProductsAttribute(page, test.args.attribute);
+        const nonSortedTable = await foClassicSearchResultsPage.getAllProductsAttribute(page, test.args.attribute);
+        await foClassicSearchResultsPage.sortProductsList(page, test.args.sortBy);
+        const sortedTable = await foClassicSearchResultsPage.getAllProductsAttribute(page, test.args.attribute);
 
-      const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
+        const expectedResult: string[] = await utilsCore.sortArray(nonSortedTable);
 
-      if (test.args.sortDirection === 'asc') {
-        expect(sortedTable).to.deep.equal(expectedResult);
-      } else {
-        expect(sortedTable).to.deep.equal(expectedResult.reverse());
-      }
+        if (test.args.sortDirection === 'asc') {
+          expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
     });
   });
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest`);
 });

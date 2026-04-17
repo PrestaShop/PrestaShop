@@ -30,3 +30,8 @@ services:
       - '@logger'
     tags:
       - { name: kernel.event_subscriber }
+
+  PrestaShopBundle\EventListener\Admin\ImprovedB2bFeatureFlagListener:
+    autowire: true
+    tags:
+      - { name: doctrine.orm.entity_listener, event: postUpdate, entity: PrestaShopBundle\Entity\FeatureFlag, lazy: true }

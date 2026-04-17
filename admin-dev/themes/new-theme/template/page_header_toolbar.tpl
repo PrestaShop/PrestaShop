@@ -1,3 +1,7 @@
+{**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ *}
 {* TODO: 1.7.0.0: RENAME THIS FILE AT THE NEXT RETROCOMPATIBILITY BREAK *}
 
 <div class="header-toolbar d-print-none">

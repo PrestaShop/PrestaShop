@@ -5,7 +5,7 @@ Feature: Full UX discount test
   PrestaShop allows discounts with restricted products as the condition
 
   Background:
-    Given there is a customer named "testCustomer" whose email is "pub@prestashop.com"
+    Given there is a customer named "testCustomer" whose email is "pub2@prestashop.com"
     Given language with iso code "en" is the default one
     And language "french" with locale "fr-FR" exists
     Given shop "shop1" with name "test_shop" exists
@@ -43,26 +43,24 @@ Feature: Full UX discount test
       | price | 12.00 |
     # Now create the discount
     When I create a "free_shipping" discount "free_shipping_discount_with_restricted_products" with following properties:
-      | name[en-US] | Trois bières et/ou chips equal free shipping |
-      | name[fr-FR] | Trois bière et/ou chips donne envoi gratuit  |
-      | active      | true                                         |
-      | valid_from  | 2025-01-01 11:05:00                          |
-      | valid_to    | 2025-12-01 00:00:00                          |
-      | code        | FREE_SHIPPING_THREE_PRODUCTS                 |
-    And I update discount "free_shipping_discount_with_restricted_products" with following conditions matching at least 3 products:
-      | condition_type | items                              |
-      | products       | beer_product, potato_chips_product |
+      | name[en-US]                | Trois bières et/ou chips equal free shipping |
+      | name[fr-FR]                | Trois bière et/ou chips donne envoi gratuit  |
+      | active                     | true                                         |
+      | valid_from                 | 2025-01-01 11:05:00                          |
+      | valid_to                   | 2026-12-01 00:00:00                          |
+      | code                       | FREE_SHIPPING_THREE_PRODUCTS                 |
+      | productConditionQuantity   | 3                                            |
+      | productCondition[products] | beer_product, potato_chips_product           |
     Then discount "free_shipping_discount_with_restricted_products" should have the following properties:
       | name[en-US]              | Trois bières et/ou chips equal free shipping |
       | name[fr-FR]              | Trois bière et/ou chips donne envoi gratuit  |
       | active                   | true                                         |
       | valid_from               | 2025-01-01 11:05:00                          |
-      | valid_to                 | 2025-12-01 00:00:00                          |
-      | code                     | FREE_SHIPPING_THREE_PRODUCTS                 |
-      | minimum_product_quantity | 0                                            |
-    And discount "free_shipping_discount_with_restricted_products" should have the following product conditions matching at least 3 products:
-      | condition_type | items                              |
-      | products       | beer_product, potato_chips_product |
+      | valid_to                 | 2026-12-01 00:00:00                          |
+      | code                       | FREE_SHIPPING_THREE_PRODUCTS       |
+      | minimum_product_quantity   | 0                                  |
+      | productConditionQuantity   | 3                                  |
+      | productCondition[products] | beer_product, potato_chips_product |
 
   Scenario: Free shipping with three bottle of beers
     Given I create an empty cart "dummy_cart" for customer "testCustomer"

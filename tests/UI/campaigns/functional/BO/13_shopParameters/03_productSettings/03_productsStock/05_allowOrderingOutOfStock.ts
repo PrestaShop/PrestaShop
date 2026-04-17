@@ -9,9 +9,9 @@ import {
   boProductSettingsPage,
   type BrowserContext,
   FakerProduct,
-  foClassicHomePage,
-  foClassicProductPage,
-  foClassicSearchResultsPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -116,7 +116,7 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
         // Go to FO
         page = await boProductSettingsPage.viewMyShop(page);
 
-        const isHomePage = await foClassicHomePage.isHomePage(page);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage, 'Home page was not opened').to.eq(true);
       });
 
@@ -124,10 +124,10 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
         await testContext.addContextItem(this, 'testIdentifier', `goToProductPage${test.args.action}`, baseContext);
 
         // Search and go to product page
-        await foClassicHomePage.searchProduct(page, productData.name);
-        await foClassicSearchResultsPage.goToProductPage(page, 1);
+        await foHummingbirdHomePage.searchProduct(page, productData.name);
+        await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-        const pageTitle = await foClassicProductPage.getPageTitle(page);
+        const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
         expect(pageTitle).to.contains(productData.name);
       });
 
@@ -140,7 +140,7 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
         );
 
         // Check add to cart button
-        const lastQuantityIsVisible = await foClassicProductPage.isAddToCartButtonEnabled(page);
+        const lastQuantityIsVisible = await foHummingbirdProductPage.isAddToCartButtonEnabled(page);
         expect(lastQuantityIsVisible).to.be.equal(test.args.enable);
       });
 
@@ -148,7 +148,7 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${test.args.action}`, baseContext);
 
         // Go back to BO
-        page = await foClassicProductPage.closePage(browserContext, page, 0);
+        page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boProductSettingsPage.getPageTitle(page);
         expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);

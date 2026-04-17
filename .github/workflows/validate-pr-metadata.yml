@@ -1,0 +1,15 @@
+name: Validate PR metadata
+on:
+  pull_request:
+    types: [ opened, edited, reopened, milestoned, demilestoned ]
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  convention-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR Metadata
+        uses: PrestaShop/.github/.github/actions/validate-pr-metadata@master

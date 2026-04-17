@@ -59,7 +59,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Import\File\CsvFileReader'
     arguments:
       - '@prestashop.adapter.import.file_opener'
-      - '@=service("prestashop.core.import.normalizer.csv_value_separator").normalize(service("session").get("separator"))'
+      - '@=service("prestashop.core.import.normalizer.csv_value_separator").normalize(service("request_stack").getSession().get("separator"))'
 
   prestashop.core.import.data_row.presenter:
     class: 'PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowPresenter'

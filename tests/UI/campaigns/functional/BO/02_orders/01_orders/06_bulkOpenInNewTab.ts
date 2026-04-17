@@ -1,7 +1,7 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
+import {createOrderByGuestTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boDashboardPage,

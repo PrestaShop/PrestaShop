@@ -4,9 +4,8 @@ import {expect} from 'chai';
 // Import common tests
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import createAccountTest from '@commonTests/FO/hummingbird/account';
+import {createAccountTest} from '@commonTests/FO/hummingbird/account';
 import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {
   type BrowserContext,
@@ -32,7 +31,6 @@ const baseContext: string = 'functional_FO_hummingbird_userAccount_orderHistory_
 
 /*
 Pre-condition:
-_ Install the theme hummingbird
 - Create customer
 - Create address
 Scenario:
@@ -44,10 +42,9 @@ Scenario:
 - Click on reorder link and reorder
 Post-condition
 - Delete customer
-- Delete the theme hummingbird
  */
 
-describe('FO - Account - Order history : Consult details and reorder', async () => {
+describe('FO - User account - Order history : Consult details and Reorder', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -68,11 +65,8 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
   });
   const today: string = utilsDate.getDateFormat('mm/dd/yyyy');
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_1`);
-
   // Pre-condition: Create new account
-  createAccountTest(customerData, `${baseContext}_enableNewProduct`);
+  createAccountTest(customerData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create new address
   createAddressTest(addressData, `${baseContext}_preTest_2`);
@@ -163,7 +157,7 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
         expect(result.price).to.equal(`€${dataProducts.demo_1.finalPrice}`),
         expect(result.paymentType).to.equal(dataPaymentMethods.wirePayment.displayName),
         expect(result.status).to.equal(dataOrderStatuses.awaitingBankWire.name),
-        expect(result.invoice).to.equal('-'),
+        expect(result.invoice).to.equal('--'),
       ]);
     });
 
@@ -224,8 +218,5 @@ describe('FO - Account - Order history : Consult details and reorder', async () 
   });
 
   // Post-condition : Delete customer
-  deleteCustomerTest(customerData, `${baseContext}_postText_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
+  deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
 });

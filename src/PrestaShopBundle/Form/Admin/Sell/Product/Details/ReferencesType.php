@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -51,7 +31,7 @@ class ReferencesType extends TranslatorAwareType
             ->add('reference', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('Reference', 'Admin.Global'),
-                'label_help_box' => $this->trans('Allowed special characters: %allowed_characters%', 'Admin.Global', ['%allowed_characters%' => '.-_#']),
+                'label_help_box' => $this->trans('Your own primary unique product code used to identify this product. We recommend using a clear and consistent scheme that helps you keep everything organized. Allowed special characters: %allowed_characters%', 'Admin.Global', ['%allowed_characters%' => '.-_#']),
                 'constraints' => [
                     new TypedRegex(TypedRegex::TYPE_REFERENCE),
                     new Length(['max' => Reference::MAX_LENGTH]),
@@ -61,7 +41,7 @@ class ReferencesType extends TranslatorAwareType
             ->add('mpn', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('MPN', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('MPN is used internationally to identify the Manufacturer Part Number.', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('Manufacturer part number that allows to identify this product internationally.', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new Length(['max' => ProductSettings::MAX_MPN_LENGTH]),
                 ],
@@ -80,7 +60,7 @@ class ReferencesType extends TranslatorAwareType
             ->add('ean_13', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('GTIN (EAN, JA, ITF or UCC code)', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('The product\'s worldwide barcode. Filling this field improves product traceability, catalog management, and overall searchability.', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new TypedRegex(TypedRegex::TYPE_GTIN),
                     new Length(['max' => Gtin::MAX_LENGTH]),
@@ -109,6 +89,7 @@ class ReferencesType extends TranslatorAwareType
         $resolver->setDefaults([
             'label' => $this->trans('References', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h3',
+            'label_help_box' => $this->trans('All existing identifiers of the product. We recommend filling in every relevant field you can obtain, as it will improve the product\'s searchability and management.', 'Admin.Catalog.Help'),
             'required' => false,
             'columns_number' => 3,
         ]);

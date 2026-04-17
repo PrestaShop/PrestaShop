@@ -13,6 +13,19 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer:
     autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Cache\Clearer\Symfony\ExecKernelCacheClearer:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Cache\Clearer\Symfony\ApplicationKernelCacheClearer:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Cache\Clearer\Symfony\FilesystemKernelCacheClearer:
+    autowire: true
+    autoconfigure: true
 
   prestashop.adapter.cache.clearer.symfony_cache_clearer:
     alias: 'PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer'

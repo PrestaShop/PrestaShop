@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -115,6 +95,8 @@ class ModuleManager implements ModuleManagerInterface
         $this->hookManager->exec('actionBeforeInstallModule', ['moduleName' => $name, 'source' => $source]);
 
         $module = $this->moduleRepository->getModule($name);
+        $this->dispatchPreAction($module);
+
         $installed = $module->onInstall();
         if ($installed) {
             // Only trigger install event if install has succeeded otherwise it could automatically add tabs linked to a
@@ -138,6 +120,8 @@ class ModuleManager implements ModuleManagerInterface
         $this->hookManager->exec('actionBeforePostInstallModule', ['moduleName' => $name]);
 
         $module = $this->moduleRepository->getModule($name);
+        $this->dispatchPreAction($module);
+
         $result = $module->onPostInstall();
 
         $this->dispatch(ModuleManagementEvent::POST_INSTALL, $module);
@@ -160,6 +144,8 @@ class ModuleManager implements ModuleManagerInterface
         $this->hookManager->exec('actionBeforeUninstallModule', ['moduleName' => $name]);
 
         $module = $this->moduleRepository->getModule($name);
+        $this->dispatchPreAction($module);
+
         $uninstalled = $module->onUninstall();
 
         if ($deleteFiles && $path = $this->moduleRepository->getModulePath($name)) {
@@ -183,6 +169,7 @@ class ModuleManager implements ModuleManagerInterface
         }
 
         $module = $this->moduleRepository->getModule($name);
+        $this->dispatchPreAction($module);
 
         $path = $this->moduleRepository->getModulePath($name);
         $this->filesystem->remove($path);
@@ -214,6 +201,8 @@ class ModuleManager implements ModuleManagerInterface
         $this->hookManager->exec('actionBeforeUpgradeModule', ['moduleName' => $name, 'source' => $source]);
 
         $module = $this->moduleRepository->getModule($name);
+        $this->dispatchPreAction($module);
+
         $upgraded = $this->upgradeMigration($name) && $module->onUpgrade($module->get('version'));
 
         $this->dispatch(ModuleManagementEvent::UPGRADE, $module);
@@ -236,6 +225,8 @@ class ModuleManager implements ModuleManagerInterface
         $this->hookManager->exec('actionBeforeEnableModule', ['moduleName' => $name]);
 
         $module = $this->moduleRepository->getModule($name);
+        $this->dispatchPreAction($module);
+
         $enabled = $module->onEnable();
         $this->dispatch(ModuleManagementEvent::ENABLE, $module);
 
@@ -257,6 +248,8 @@ class ModuleManager implements ModuleManagerInterface
         $this->hookManager->exec('actionBeforeDisableModule', ['moduleName' => $name]);
 
         $module = $this->moduleRepository->getModule($name);
+        $this->dispatchPreAction($module);
+
         $disabled = $module->onDisable();
         $this->dispatch(ModuleManagementEvent::DISABLE, $module);
 
@@ -281,6 +274,7 @@ class ModuleManager implements ModuleManagerInterface
         $this->hookManager->exec('actionBeforeResetModule', ['moduleName' => $name]);
 
         $module = $this->moduleRepository->getModule($name);
+        $this->dispatchPreAction($module);
 
         if ($keepData && method_exists($module->getInstance(), 'reset')) {
             $reset = $module->onReset();
@@ -305,6 +299,11 @@ class ModuleManager implements ModuleManagerInterface
     public function isEnabled(string $name): bool
     {
         return $this->moduleDataProvider->isEnabled($name);
+    }
+
+    public function isOnDisk(string $name): bool
+    {
+        return $this->moduleDataProvider->isOnDisk($name);
     }
 
     public function getError(string $name): string
@@ -431,5 +430,19 @@ class ModuleManager implements ModuleManagerInterface
     private function dispatch(string $event, ModuleInterface $module): void
     {
         $this->eventDispatcher->dispatch(new ModuleManagementEvent($module), $event);
+    }
+
+    /**
+     * Before any action we dispatch this event, it allows the event to know a module action is undergoing, this
+     * way even if it fails and the actual action event is not triggered (they are only triggered after success),
+     * we can still clear the cache which can prevent some failure after an installation failed for example.
+     *
+     * @param ModuleInterface $module
+     *
+     * @return void
+     */
+    private function dispatchPreAction(ModuleInterface $module): void
+    {
+        $this->eventDispatcher->dispatch(new ModuleManagementEvent($module), ModuleManagementEvent::PRE_ACTION);
     }
 }

@@ -18,7 +18,7 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerCartRule,
-  foClassicCheckoutPage,
+  foHummingbirdCheckoutPage,
   type MailDev,
   type MailDevEmail,
   type Page,
@@ -285,14 +285,14 @@ describe('BO - Orders - Create order : Check summary', async () => {
 
         page = await boOrdersCreatePage.setMoreActionsProceedToCheckout(page);
 
-        const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+        const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
         expect(isCheckoutPage, 'Not redirected to checkout page!').to.eq(true);
       });
 
       it('should close the checkout page and go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
-        page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
+        page = await foHummingbirdCheckoutPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boOrdersCreatePage.getPageTitle(page);
         expect(pageTitle, 'Fo page not closed!').to.contains(boOrdersCreatePage.pageTitle);

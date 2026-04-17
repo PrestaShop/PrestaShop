@@ -1,0 +1,22 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% block _discount_compatibility_row %}
+  {{ block('card_row') }}
+{% endblock %}
+
+{% block _discount_compatibility_widget %}
+  <div class="compatibility-options">
+    {% for child in form %}
+      <div class="form-check">
+        {{ form_widget(child, {attr: {class: 'form-check-input'}}) }}
+        {{ form_label(child, null, {label_attr: {class: 'form-check-label'}}) }}
+        {% if child.vars.attr['data-type-description'] is defined %}
+          <small class="form-text text-muted">{{ child.vars.attr['data-type-description'] }}</small>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

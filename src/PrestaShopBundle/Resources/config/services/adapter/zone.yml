@@ -29,3 +29,9 @@ services:
   prestashop.adapter.zone.command_handler.bulk_toggle_zone_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Zone\CommandHandler\BulkToggleZoneStatusHandler'
     autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Zone\Repository\ZoneRepository:
+    autowire: true
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $prefix: '%database_prefix%'

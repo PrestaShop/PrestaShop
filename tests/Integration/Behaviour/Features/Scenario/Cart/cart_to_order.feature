@@ -59,6 +59,7 @@ Feature: Check cart to order data copy
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
+    Given I update quantity for cart rule "cartrule1" to 1
     And there is a cart rule "cartrule2" with following properties:
       | name[en-US]         | cartrule2 |
       | priority            | 2         |
@@ -94,6 +95,48 @@ Feature: Check cart to order data copy
     Then current cart order shipping fees should be 7.0 tax excluded
     Then current cart order should have a discount in position 1 with an amount of 10.300000 tax included and 9.905000 tax excluded
     Then current cart order should have a discount in position 2 with an amount of 5.150000 tax included and 4.952500 tax excluded
+    Then customer "customer1" should have 0 cart rules that apply to him
+
+  @restore-cart-rules-after-scenario
+  Scenario: 1 product in cart, 2 cart rules, one of them unusable
+    Given I have an empty default cart
+    Given email sending is disabled
+    Given shipping handling fees are set to 2.0
+    Given I update quantity for cart rule "cartrule1" to 0
+    And there is a cart rule "cartrule2" with following properties:
+      | name[en-US]         | cartrule2 |
+      | priority            | 2         |
+      | free_shipping       | false     |
+      | code                | foo2      |
+      | discount_percentage | 50        |
+    Given there is a country named "country1" and iso code "FR" in zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
+    Given there is an address named "address1" with postcode "1" in state "state1"
+    Given there is a tax named "tax1" and rate 4.0%
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
+    Given product "product1" belongs to tax group "taxrule1"
+    Given there is a customer named "customer1" whose email is "fake@prestashop.com"
+    Given address "address1" is associated to customer "customer1"
+    And I create carrier "carrier1" with specified properties:
+      | name | carrier 1 |
+      | zones| zone1     |
+    Then I set ranges for carrier "carrier1" with specified properties for all shops:
+      | id_zone | range_from | range_to | range_price |
+      | zone1   | 0          | 10000    | 5.0         |
+    When I am logged in as "customer1"
+    When I add 1 items of product "product1" in my cart
+    When I use the discount "cartrule1"
+    When I use the discount "cartrule2"
+    When I select address "address1" in my cart
+    When I select carrier "carrier1" in my cart
+    When I validate my cart using payment module fake
+    Then current cart order total for products should be 20.600000 tax included
+    Then current cart order total for products should be 19.810000 tax excluded
+    Then current cart order total discount should be 10.300000 tax included
+    Then current cart order total discount should be 9.910000 tax excluded
+    Then current cart order shipping fees should be 7.0 tax included
+    Then current cart order shipping fees should be 7.0 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 10.300000 tax included and 9.905000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
   Scenario: 3 product in cart, 1 cart rule
@@ -133,10 +176,11 @@ Feature: Check cart to order data copy
     Then current cart order should have a discount in position 1 with an amount of 59.575000 tax included and 57.290000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
-  Scenario: 3 product in cart, 3 cart rules
+  Scenario: 3 product in cart, 2 cart rules
     Given I have an empty default cart
     Given email sending is disabled
     Given shipping handling fees are set to 2.0
+    Given I update quantity for cart rule "cartrule1" to 1
     Given there is a cart rule "cartrule2" with following properties:
       | name[en-US]         | cartrule2 |
       | priority            | 2         |

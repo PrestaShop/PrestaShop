@@ -418,7 +418,6 @@ describe('BO - Design - Email Theme : Configuration of the whole page', async ()
     it('should check if mail is in mailbox', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmail3', baseContext);
 
-      console.log(newMail.text);
       expect(newMail.text).to.contains(`Merci d'avoir créé votre compte client sur ${global.INSTALL.SHOP_NAME}.bonjour`);
     });
 

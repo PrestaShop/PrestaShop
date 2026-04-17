@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
@@ -33,6 +13,11 @@ use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 class ProductListingLazyArray extends ProductLazyArray
 {
     /**
+     * Custom implementation of add to cart URL for product listing. In product listing, we have a bit stricter
+     * rules to allow adding to cart a product. Specifically, we do not want to allow adding to cart of product
+     * combinations if the setting is disabled. Also, we do not want to allow adding to cart of products that
+     * require customization, because it's not possible to do so from the listing page.
+     *
      * @return string|null
      */
     #[LazyArrayAttribute(arrayAccess: true)]
@@ -64,5 +49,22 @@ class ProductListingLazyArray extends ProductLazyArray
         }
 
         return parent::shouldEnableAddToCartButton($product, $settings);
+    }
+
+    /**
+     * Returns the quantity wanted value for products in listings. We have this specific implementation
+     * because in listings, the quantity wanted is not to be taken from the request directly.
+     * If a specific value was already provided, we use it. For example, in cart context.
+     *
+     * @return int Quantity wanted, usually 1, altered if needed, always a positive integer
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getQuantityWanted()
+    {
+        if (empty($this->product['quantity_wanted'])) {
+            $this->product['quantity_wanted'] = $this->getQuantityRequired();
+        }
+
+        return $this->product['quantity_wanted'];
     }
 }

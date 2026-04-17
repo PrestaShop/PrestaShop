@@ -1,0 +1,108 @@
+name: Workflow matrix
+on:
+  workflow_call:
+    inputs:
+      matrix_type:
+        description: Which type of matrix is required (PHP or sanity)
+        type: string
+        required: true
+    outputs:
+      dynamic_matrix:
+        description: Dynamic matrix, defined in a JSON payload that needs to be parsed
+        value: ${{ jobs.workflow_matrix_generator.outputs.dynamic_matrix }}
+
+jobs:
+  workflow_matrix_generator:
+    name: Build workflow matrix
+    runs-on: ubuntu-latest
+    steps:
+      # First detect if we want the whole matrix or the default minimalist ones
+      # So far the cases when we want the whole matrix are:
+      #  - on merge PR (detected based on PR description)
+      #  - when the label "Run all versions" is associated on the PR
+      - name: Detect complete or default values
+        id: use_all_versions
+        env:
+          PR_LABEL_LIST: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+          DESCRIPTION: ${{ toJSON(github.event.pull_request.body) }}
+        run: |
+          # Put label list in one line JSON style to avoid parse error
+          labelList=$( echo '${{ env.PR_LABEL_LIST }}' | jq -c )
+          if [[ ${{ env.DESCRIPTION }} =~ \|?[[:space:]]*Category\?[[:space:]]*\|[[:space:]]*ME([[:space:]]|(\\[rn]))+ ]]; then
+            echo Using all versions for a merge request
+            echo "use_all_versions=1" >> $GITHUB_OUTPUT
+          elif [[ "$labelList" == *"Run all versions"* ]]; then
+            echo Using all versions because of the label
+            echo "use_all_versions=1" >> $GITHUB_OUTPUT
+          else
+            echo Using default PHP versions
+            echo "use_all_versions=0" >> $GITHUB_OUTPUT
+          fi
+
+      # It is not possible to define arrays nor arrays of objects as env variables
+      # To make maintenance of the matrix easier they are store in JSON files in the .github/workflows/workflow-matrix
+      # folder, so if you need to update the settings simply update the associated JSON files
+      # To optimize this workflow only one file is read though, depending on:
+      #   - matrix_type
+      #   - use_all_versions
+
+      # Read appropriate versions for PHP
+      - name: Read default PHP versions
+        if: ${{ inputs.matrix_type == 'PHP' && steps.use_all_versions.outputs.use_all_versions == 0 }}
+        id: default_php
+        uses: jaywcjlove/github-action-read-file@main
+        with:
+          # For pull_request event this is pull request merge branch, for push event this is the pushed branch
+          branch: ${{ github.ref }}
+          path: .github/workflows/workflow-matrix/default-php-versions.json
+      - name: Read complete PHP versions
+        if: ${{ inputs.matrix_type == 'PHP' && steps.use_all_versions.outputs.use_all_versions == 1 }}
+        id: complete_php
+        uses: jaywcjlove/github-action-read-file@main
+        with:
+          # For pull_request event this is pull request merge branch, for push event this is the pushed branch
+          branch: ${{ github.ref }}
+          path: .github/workflows/workflow-matrix/complete-php-versions.json
+      # Read appropriate matrix for sanity
+      - name: Read default Sanity matrix
+        if: ${{ inputs.matrix_type == 'sanity' && steps.use_all_versions.outputs.use_all_versions == 0 }}
+        id: default_sanity
+        uses: jaywcjlove/github-action-read-file@main
+        with:
+          # For pull_request event this is pull request merge branch, for push event this is the pushed branch
+          branch: ${{ github.ref }}
+          path: .github/workflows/workflow-matrix/default-sanity-matrix.json
+      - name: Read complete Sanity matrix
+        if: ${{ inputs.matrix_type == 'sanity' && steps.use_all_versions.outputs.use_all_versions == 1 }}
+        id: complete_sanity
+        uses: jaywcjlove/github-action-read-file@main
+        with:
+          # For pull_request event this is pull request merge branch, for push event this is the pushed branch
+          branch: ${{ github.ref }}
+          path: .github/workflows/workflow-matrix/complete-sanity-matrix.json
+
+      # Finally we need one step that outputs the proper value because IDs cannot be duplicated, and we need
+      # one final source of truth for the job's output This final step re-checks the parameter and prints the
+      # proper value in the dynamic_matrix output variable
+      # Since multiline JSON is not well adapted to pass data between jobs the full JSON is printed as one line
+      - name: Build workflow matrix
+        id: workflow_matrix
+        run: |
+          if [[ "${{ inputs.matrix_type }}" == "PHP" && "${{ steps.use_all_versions.outputs.use_all_versions }}" == "0" ]]; then
+            dynamicMatrix=$( echo '${{ steps.default_php.outputs.content }}' | jq -c )
+          elif [[ "${{ inputs.matrix_type }}" == "PHP" && "${{ steps.use_all_versions.outputs.use_all_versions }}" == "1" ]]; then
+            dynamicMatrix=$( echo '${{ steps.complete_php.outputs.content }}' | jq -c )
+          elif [[ "${{ inputs.matrix_type }}" == "sanity" && "${{ steps.use_all_versions.outputs.use_all_versions }}" == "0" ]]; then
+            dynamicMatrix=$( echo '${{ steps.default_sanity.outputs.content }}' | jq -c )
+          elif [[ "${{ inputs.matrix_type }}" == "sanity" && "${{ steps.use_all_versions.outputs.use_all_versions }}" == "1" ]]; then
+            dynamicMatrix=$( echo '${{ steps.complete_sanity.outputs.content }}' | jq -c )
+          else
+            echo Unknown matrix
+            exit 1
+          fi
+
+          echo One line matrix: $dynamicMatrix
+          echo "dynamic_matrix=$dynamicMatrix" >> $GITHUB_OUTPUT
+    # Pass the step outputs on the job scope, so the workflow can then reuse it and pass it outside the workflow
+    outputs:
+      dynamic_matrix: ${{ steps.workflow_matrix.outputs.dynamic_matrix }}

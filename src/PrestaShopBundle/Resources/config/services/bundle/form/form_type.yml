@@ -42,8 +42,6 @@ services:
       $productTypeListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
       $isAllShopContext: '@=service("prestashop.adapter.shop.context").isAllShopContext()'
 
-  PrestaShopBundle\Form\Admin\Sell\CartRule\:
-    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/CartRule/*"
   PrestaShopBundle\Form\Admin\Sell\Discount\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/Discount/*"
   PrestaShopBundle\Form\Admin\Sell\Product\:
@@ -365,7 +363,7 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Catalog\AttributeType:
     public: true
     arguments:
-      $attributeGroupRepository: '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
+      $attributeGroupChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\AttributeGroupChoiceProvider'
       $multistoreFeature: '@prestashop.adapter.multistore_feature'
     tags:
       - { name: form.type }
@@ -431,8 +429,20 @@ services:
       $manufacturerChoiceProvider: '@prestashop.adapter.form.choice_provider.manufacturer_name_by_id'
 
   PrestaShopBundle\Form\Admin\Sell\Discount\DiscountSupplierType:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Discount\DiscountSupplierType'
     arguments:
       $supplierNameByIdChoiceProvider: '@prestashop.adapter.form.choice_provider.supplier_name_by_id_choice_provider'
+  PrestaShopBundle\Form\Admin\Sell\Discount\DiscountFeaturesType:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Discount\DiscountFeaturesType'
+    arguments:
+      $featuresChoiceProvider: '@prestashop.adapter.form.choice_provider.features_choice_provider'
+  PrestaShopBundle\Form\Admin\Sell\Discount\DiscountTypeChoiceType:
+    arguments:
+      $choiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\DiscountTypeChoiceProvider'
+
+  PrestaShopBundle\Form\Admin\Sell\Discount\DiscountCustomerEligibilityChoiceType:
+    arguments:
+      $groupByIdChoiceProvider: '@prestashop.core.form.choice_provider.group_by_id'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType:
     arguments:
@@ -554,6 +564,7 @@ services:
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType:
     arguments:
       $themeCatalog: "@prestashop.core.mail_template.theme_catalog"
+      $legacyTemplateLister: '@prestashop.core.email.legacy_template_lister'
 
   PrestaShopBundle\Form\Admin\Improve\International\Locations\ZoneType:
   PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryType:
@@ -588,6 +599,10 @@ services:
       $countriesChoiceProvider: '@prestashop.core.form.choice_provider.configurable_country_by_id'
       $zonesChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
+  PrestaShopBundle\Form\Admin\Improve\International\Locations\ChangeStatesZoneType:
+    arguments:
+      $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
+
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener:
     arguments:
       $combinationRepository: '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
@@ -612,10 +627,6 @@ services:
   PrestaShopBundle\Form\Admin\Type\FeatureChoiceType:
     arguments:
       $featureChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider'
-
-  PrestaShopBundle\Form\Admin\Type\ThemeChoiceType:
-    arguments:
-      $themesChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemeByNameChoiceProvider'
 
   form.type.sell.product.event_listener.categories_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'
@@ -697,3 +708,11 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Order\Shipment\MergeShipmentType:
     arguments:
       $translator: '@translator'
+
+  PrestaShopBundle\Form\Admin\Sell\Order\Shipment\SplitShipmentType: ~
+
+  PrestaShopBundle\Form\Admin\Sell\Order\Shipment\EditShipmentType: ~
+
+  PrestaShopBundle\Form\Admin\Configure\ShopParameters\Tag\TagType:
+    arguments:
+      $languagesChoices: '@=service("prestashop.core.form.choice_provider.all_languages").getChoices()'

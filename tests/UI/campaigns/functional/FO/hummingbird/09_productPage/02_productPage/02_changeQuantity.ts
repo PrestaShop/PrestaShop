@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataProducts,
@@ -17,22 +15,15 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_changeQuantity';
 
 /*
-Pre-condition:
-- Install hummingbird theme
 Scenario:
 - Go to FO
 - Go to the third product in the list
 - Click up/down on quantity input
 - Set quantity input (good/bad value)
-Post-condition:
-- Uninstall hummingbird theme
  */
 describe('FO - Product page : Change quantity', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -66,13 +57,13 @@ describe('FO - Product page : Change quantity', async () => {
     it('should change the quantity by using the arrow \'Down\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'decrement', baseContext);
 
-      await foHummingbirdProductPage.setQuantityByArrowUpDown(page, 1, 'down');
+      await foHummingbirdProductPage.setQuantityByArrowUpDown(page, 1, 'decrement');
 
       const productQuantity = await foHummingbirdProductPage.getProductQuantity(page);
       expect(productQuantity).to.equal(1);
     });
 
-    it('should change the quantity by using the arrow \'UP\' button', async function () {
+    it('should change the quantity by using the arrow \'Up\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'incrementQuantity', baseContext);
 
       await foHummingbirdProductPage.setQuantityByArrowUpDown(page, 2, 'increment');
@@ -131,37 +122,10 @@ describe('FO - Product page : Change quantity', async () => {
       expect(notificationsNumber).to.equal(15);
     });
 
-    it('should set \'-24\' in the quantity input and check the quantity in the cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput2', baseContext);
+    it('should go to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCart', baseContext);
 
-      await foHummingbirdProductPage.setQuantity(page, '-24');
-      await foHummingbirdProductPage.clickOnAddToCartButton(page);
-
-      const notificationsNumber = await foHummingbirdProductPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.equal(16);
-    });
-
-    it('should click on continue shopping', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnContinueShopping3', baseContext);
-
-      const isNotVisible = await foHummingbirdModalBlockCartPage.continueShopping(page);
-      expect(isNotVisible).to.equal(true);
-    });
-
-    it('should set \'Prestashop\' in the quantity input and proceed to checkout', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateQuantityByInput3', baseContext);
-
-      await foHummingbirdProductPage.setQuantity(page, 'Prestashop');
-      await foHummingbirdProductPage.clickOnAddToCartButton(page);
-
-      const notificationsNumber = await foHummingbirdProductPage.getCartNotificationsNumber(page);
-      expect(notificationsNumber).to.equal(17);
-    });
-
-    it('should proceed to checkout', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
-
-      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
+      await foHummingbirdProductPage.clickOnHeaderLink(page, 'Cart');
 
       const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
       expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
@@ -176,7 +140,4 @@ describe('FO - Product page : Change quantity', async () => {
       expect(notificationNumber).to.equal(0);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

@@ -1,14 +1,15 @@
 name: Pull Request Validator
-on: pull_request
+on:
+  pull_request:
+
 concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
 jobs:
   message-check:
     name: Block Merge Commits
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Check is merge PR
         id: check-is-merge

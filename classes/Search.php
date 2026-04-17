@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /* Copied from Drupal search module, except for \x{0}-\x{2f} that has been replaced by \x{0}-\x{2c}\x{2e}-\x{2f} in order to keep the char '-' */
@@ -196,8 +176,17 @@ class SearchCore
         $string = Tools::strtolower(strip_tags($string));
         $string = html_entity_decode($string, ENT_NOQUOTES, 'utf-8');
         $string = preg_replace('/([' . PREG_CLASS_NUMBERS . ']+)[' . PREG_CLASS_PUNCTUATION . ']+(?=[' . PREG_CLASS_NUMBERS . '])/u', '\1', $string);
-        $string = preg_replace('/[' . PREG_CLASS_SEARCH_EXCLUDE . ']+/u', ' ', $string);
+
+        $terms = explode(' ', $string);
+        // Sanitize terms made up of special characters only
+        foreach ($terms as &$term) {
+            if (preg_match('/^[' . PREG_CLASS_SEARCH_EXCLUDE . ']+$/u', $term)) {
+                $term = preg_replace('/[' . PREG_CLASS_SEARCH_EXCLUDE . ']+/u', ' ', $term);
+            }
+        }
+
         // Now, our string looks something like "prestashop test a-1000".
+        $string = implode(' ', $terms);
 
         if ($indexation) {
             if (!$keepHyphens) {
@@ -214,22 +203,22 @@ class SearchCore
             $query = '
 				SELECT a.alias, a.search
 				FROM `' . _DB_PREFIX_ . 'alias` a
-				WHERE \'' . pSQL($string) . '\' %s AND `active` = 1
+				WHERE \'TERM\' %s AND `active` = 1
             ';
 
             // Check if we can we use '\b' (faster)
             $useICU = (bool) Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getValue(
                 'SELECT 1 FROM DUAL WHERE \'icu regex\' REGEXP \'\\\\bregex\''
             );
-            $aliases = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS(
-                sprintf(
-                    $query,
-                    $useICU
-                        ? 'REGEXP CONCAT(\'\\\\b\', alias, \'\\\\b\')'
-                        : 'REGEXP CONCAT(\'(^|[[:space:]]|[[:<:]])\', alias, \'([[:space:]]|[[:>:]]|$)\')'
-                )
-            );
 
+            $query = sprintf(
+                $query,
+                $useICU
+                    ? 'REGEXP CONCAT(\'\\\\b\', alias, \'\\\\b\')'
+                    : 'REGEXP CONCAT(\'(^|[[:space:]]|[[:<:]])\', alias, \'([[:space:]]|[[:>:]]|$)\')'
+            );
+            $query = str_replace('/TERM/', pSQL($string), $query);
+            $aliases = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS($query);
             $words = explode(' ', $string);
             $processed_words = [];
             foreach ($aliases as $alias) {

@@ -2,7 +2,6 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomerServicePage,
@@ -32,7 +31,6 @@ const baseContext: string = 'functional_FO_hummingbird_contactUs_sendMessageWith
 Pre-condition:
 - Setup SMTP parameters
 - Configure contact form module
-- Install hummingbird theme
 Scenario:
 - Go to FO
 - Log in with default customer
@@ -42,7 +40,6 @@ Scenario:
 Post-condition:
 - Reset config in Contact form module
 - Reset SMTP parameters
-- Uninstall hummingbird theme
  */
 describe('FO - Contact us : Send message from contact us page with customer logged in', async () => {
   let browserContext: BrowserContext;
@@ -60,9 +57,6 @@ describe('FO - Contact us : Send message from contact us page with customer logg
 
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -171,7 +165,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
       await foHummingbirdHomePage.goToLoginPage(page);
 
       const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdLoginPage.pageTitle);
+      expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -321,7 +315,4 @@ describe('FO - Contact us : Send message from contact us page with customer logg
 
   // Post-Condition : Reset SMTP config
   resetSmtpConfigTest(`${baseContext}_postTest_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
 });

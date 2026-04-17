@@ -86,3 +86,15 @@ services:
       $moduleDir: '%prestashop.module_dir%'
     tags:
       - 'console.command'
+
+  PrestaShopBundle\Command\SearchIndexationCommand:
+    arguments:
+      - '@prestashop.core.command_bus'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\RegenerateThumbnailsCommand:
+    arguments:
+      - '@prestashop.core.command_bus'
+    tags:
+      - 'console.command'

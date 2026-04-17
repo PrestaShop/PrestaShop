@@ -1,0 +1,50 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+<div class="skeleton-edit-product-form">
+  <div class="skeleton-edit-product-form__product">
+    <div class="skeleton-edit-product-form__product-img skeleton skeleton--img-square"></div>
+    <div class="skeleton-edit-product-form__product-name skeleton skeleton--2/3 skeleton--sm"></div>
+  </div>
+
+  <div class="skeleton-edit-product-form__prices">
+    <div class="skeleton-edit-product-form__price">
+      <div class="skeleton skeleton--1/2 skeleton--sm mb-2"></div>
+      <div class="skeleton skeleton--line skeleton--lg"></div>
+    </div>
+    <div class="skeleton-edit-product-form__price">
+      <div class="skeleton skeleton--1/2 skeleton--sm mb-2"></div>
+      <div class="skeleton skeleton--line skeleton--lg"></div>
+    </div>
+    <div class="skeleton-edit-product-form__price">
+      <div class="skeleton skeleton--1/2 skeleton--sm mb-2"></div>
+      <div class="skeleton skeleton--line skeleton--lg"></div>
+    </div>
+  </div>
+
+  {% if orderForViewing.hasInvoice() %}
+    <div class="skeleton-edit-product-form__invoice form-group">
+      <div class="skeleton skeleton--1/4 skeleton--sm mb-2"></div>
+      <div class="skeleton skeleton--line skeleton--lg mb-0"></div>
+    </div>
+  {% endif %}
+
+  <div class="skeleton-edit-product-form__table">
+    <div class="skeleton-edit-product-form__head">
+      <div class="skeleton skeleton--line skeleton--1/4"></div>
+      <div class="skeleton skeleton--line skeleton--3/4 skeleton--self-right"></div>
+    </div>
+
+    <div class="skeleton-edit-product-form__rows">
+      {% for i in 1..2 %}
+        <div class="skeleton-edit-product-form__row">
+          <div class="skeleton skeleton--line skeleton--sm"></div>
+          <div></div>
+          <div class="skeleton skeleton--line skeleton--sm"></div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

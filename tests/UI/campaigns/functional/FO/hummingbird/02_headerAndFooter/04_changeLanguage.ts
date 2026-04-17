@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   boDashboardPage,
@@ -29,9 +26,6 @@ Scenario:
 describe('FO - Header and Footer : Change language', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_1`);
 
   describe('Change language', async () => {
     // before and after functions
@@ -253,7 +247,4 @@ describe('FO - Header and Footer : Change language', async () => {
       });
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
 });

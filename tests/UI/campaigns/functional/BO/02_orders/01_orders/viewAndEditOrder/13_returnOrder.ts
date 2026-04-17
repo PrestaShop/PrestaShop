@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boDashboardPage,
@@ -43,7 +43,7 @@ Post-condition:
 - Disable merchandise returns
 - Reset SMTP parameters
  */
-describe('BO - Orders - View and edit order : Return an order', async () => {
+describe('BO - Orders - View and edit order : Return a product', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let allEmails: MailDevEmail[];

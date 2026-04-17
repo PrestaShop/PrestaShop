@@ -1,33 +1,14 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -41,26 +22,20 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
     private $searchCriteriaApplicator;
 
     /**
-     * @var int
-     */
-    private $contextLangId;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param int $contextLangId
+     * @param LanguageContext $languageContext
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        $contextLangId
+        private LanguageContext $languageContext
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -108,7 +83,7 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
                 'cl',
                 'cl.id_country = a.id_country AND cl.id_lang = :lang'
             )
-            ->setParameter('lang', $this->contextLangId)
+            ->setParameter('lang', $this->languageContext->getId())
             ->leftJoin(
                 'a',
                 $this->dbPrefix . 'manufacturer',
@@ -118,6 +93,7 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
             ->andWhere('a.id_supplier = 0')
             ->andWhere('a.id_warehouse = 0')
             ->andWhere('a.deleted = 0')
+            ->andWhere('a.id_manufacturer > 0')
         ;
         $this->applyFilters($qb, $filters);
 

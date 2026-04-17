@@ -1,28 +1,9 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Core\Checkout\OnePageCheckoutAvailabilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 
@@ -43,6 +24,8 @@ class CheckoutProcessCore implements RenderableInterface
     private $template = 'checkout/checkout-process.tpl';
     /** @var Context */
     protected $context;
+    /** @var OnePageCheckoutAvailabilityCheckerInterface|null */
+    private $onePageCheckoutAvailabilityChecker;
 
     /**
      * @param Context $context
@@ -55,6 +38,16 @@ class CheckoutProcessCore implements RenderableInterface
         $this->context = $context;
         $this->smarty = $context->smarty;
         $this->checkoutSession = $checkoutSession;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setOnePageCheckoutAvailabilityChecker(OnePageCheckoutAvailabilityCheckerInterface $onePageCheckoutAvailabilityChecker)
+    {
+        $this->onePageCheckoutAvailabilityChecker = $onePageCheckoutAvailabilityChecker;
+
+        return $this;
     }
 
     /**
@@ -180,6 +173,18 @@ class CheckoutProcessCore implements RenderableInterface
     public function hasErrors()
     {
         return $this->has_errors;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOnePageCheckoutEnabled(): bool
+    {
+        if (null === $this->onePageCheckoutAvailabilityChecker || !isset($this->context->shop->id)) {
+            return false;
+        }
+
+        return $this->onePageCheckoutAvailabilityChecker->isEnabledForShop((int) $this->context->shop->id);
     }
 
     public function getDataToPersist()

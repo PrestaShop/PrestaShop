@@ -8,7 +8,7 @@ import {
   boModuleManagerPage,
   type BrowserContext,
   dataModules,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -101,16 +101,16 @@ describe('New products block module - Uninstall and delete module', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'goToTheFo', baseContext);
 
       page = await boModuleManagerPage.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.equal(true);
     });
 
     it('should check if the "New Products" block is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotVisible', baseContext);
 
-      const hasProductsBlock = await foClassicHomePage.hasProductsBlock(page, 'newproducts');
+      const hasProductsBlock = await foHummingbirdHomePage.hasProductsBlock(page, 'ps-newproducts');
       expect(hasProductsBlock).to.eq(false);
     });
   });

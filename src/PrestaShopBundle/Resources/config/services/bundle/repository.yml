@@ -97,10 +97,10 @@ services:
 
   prestashop.core.api.feature_attribute.repository:
     class: PrestaShopBundle\Entity\Repository\FeatureAttributeRepository
-    arguments:
-      - "@doctrine.dbal.default_connection"
-      - "@prestashop.adapter.legacy.context"
-      - "%database_prefix%"
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.1
+    autowire: true
 
   prestashop.core.admin.timezone.repository:
     class: PrestaShopBundle\Entity\Repository\TimezoneRepository
@@ -158,6 +158,8 @@ services:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\Shipment
+    calls:
+      - setTablePrefix: [ '%database_prefix%' ]
 
   PrestaShopBundle\Entity\Repository\MutationRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
@@ -175,3 +177,8 @@ services:
       - PrestaShopBundle\Entity\Employee\Employee
     calls:
       - setIdnConverter: [ '@PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter' ]
+
+  PrestaShopBundle\Entity\Repository\AttributeGroupRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\AttributeGroup

@@ -1,6 +1,5 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -20,7 +19,7 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_displayOnSaleLabel';
 
-describe('FO - Product page - Product page : Display on sale label', async () => {
+describe('FO - Product page - Product page : Display "On sale" label', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let productsNumber: number;
@@ -36,9 +35,6 @@ describe('FO - Product page - Product page : Display on sale label', async () =>
     minimumQuantity: 0,
     status: true,
   });
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -140,7 +136,7 @@ describe('FO - Product page - Product page : Display on sale label', async () =>
     it('should go to all products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProductsPage', baseContext);
 
-      await foHummingbirdHomePage.goToAllProductsPage(page);
+      await foHummingbirdHomePage.goToAllProductsPage(page, 'ps-featuredproducts');
 
       const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
@@ -183,9 +179,6 @@ describe('FO - Product page - Product page : Display on sale label', async () =>
     });
   });
 
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
-
   // Post-condition: Delete specific price
-  deleteProductTest(newProductData, `${baseContext}_postTest_2`);
+  deleteProductTest(newProductData, `${baseContext}_postTest`);
 });

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 class AverageTaxOfProductsTaxCalculator
 {
@@ -59,24 +39,25 @@ class AverageTaxOfProductsTaxCalculator
 
     public function getTaxesAmount($price_before_tax, $price_after_tax = null, $round_precision = 2, $round_mode = null)
     {
-        $amounts_arr = [];
+        $amounts = [];
         $total_base = 0;
+        $price_after_tax = (float) $price_after_tax;
+        $price_before_tax = (float) $price_before_tax;
 
         foreach ($this->getProductTaxes() as $row) {
-            if (!array_key_exists($row['id_tax'], $amounts_arr)) {
-                $amounts_arr[$row['id_tax']] = [
+            if (!array_key_exists($row['id_tax'], $amounts)) {
+                $amounts[$row['id_tax']] = [
                     'rate' => $row['rate'],
                     'base' => 0,
                 ];
             }
 
-            $amounts_arr[$row['id_tax']]['base'] += $row['total_price_tax_excl'];
+            $amounts[$row['id_tax']]['base'] += $row['total_price_tax_excl'];
             $total_base += $row['total_price_tax_excl'];
         }
 
-        $amounts = [];
-        foreach ($amounts_arr as $k => $amount) {
-            $amounts[$k] = Tools::ps_round(
+        foreach ($amounts as &$amount) {
+            $amount['amount'] = Tools::ps_round(
                 $price_before_tax * ($amount['base'] / $total_base) * $amount['rate'] / 100,
                 $round_precision,
                 $round_mode
@@ -84,16 +65,16 @@ class AverageTaxOfProductsTaxCalculator
         }
 
         if ($price_after_tax) {
-            $actual_tax = array_sum($amounts);
+            $actual_tax = array_sum(array_column($amounts, 'amount'));
 
             Tools::spreadAmount(
                 $price_after_tax - $price_before_tax - $actual_tax,
                 $round_precision,
                 $amounts,
-                'id_tax'
+                'amount'
             );
         }
 
-        return $amounts;
+        return array_combine(array_keys($amounts), array_column($amounts, 'amount'));
     }
 }

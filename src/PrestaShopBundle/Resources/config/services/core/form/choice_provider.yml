@@ -72,7 +72,7 @@ services:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ImportEntityFieldChoiceProvider:
     arguments:
       - '@=service("prestashop.core.import.fields_provider_finder")'
-      - '@=service("session").get("entity")'
+      - '@=service("request_stack").getSession().get("entity")'
 
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ThemePageLayoutsChoiceProvider:
     arguments:
@@ -143,3 +143,6 @@ services:
     arguments:
       $psImageDir: !php/const _PS_IMG_DIR_
       $psImageBaseUrl: !php/const _PS_IMG_
+
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\AttributeGroupChoiceProvider:
+    autowire: true

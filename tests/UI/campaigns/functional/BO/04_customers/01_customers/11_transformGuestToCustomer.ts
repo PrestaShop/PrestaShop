@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {createOrderByGuestTest} from '@commonTests/FO/classic/order';
+import {createOrderByGuestTest} from '@commonTests/FO/hummingbird/order';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 
@@ -28,7 +28,7 @@ import {expect} from 'chai';
 
 const baseContext = 'functional_BO_customers_customers_transformGuestToCustomer';
 
-describe('BO - Customers _ Customers : Transform guest to customer account', async () => {
+describe('BO - Customers - Customers : Transform guest to customer account', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfCustomers: number;

@@ -27,6 +27,7 @@ services:
     autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductGridDataFactoryDecorator:
+    autowire: true
     arguments:
       - '@prestashop.core.grid.data.factory.product'
       - '@PrestaShop\PrestaShop\Core\Localization\Locale\Repository'

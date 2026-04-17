@@ -4,8 +4,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import createAccountTest from '@commonTests/FO/hummingbird/account';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {createAccountTest} from '@commonTests/FO/hummingbird/account';
 
 import {
   type BrowserContext,
@@ -54,11 +53,8 @@ describe('FO - Login : Password reminder', async () => {
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_2`);
-
   // Pre-condition : Create new customer on FO
-  createAccountTest(customerData, `${baseContext}_preTest_3`);
+  createAccountTest(customerData, `${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -205,7 +201,4 @@ describe('FO - Login : Password reminder', async () => {
 
   // Post-condition : Reset SMTP config
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_3`);
 });

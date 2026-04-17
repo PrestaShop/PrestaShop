@@ -57,7 +57,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | fr-FR  |              |
     And product "product1" last stock movements for shops "shop1,shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 42             |
     And product "product1" last stock movement increased by 42
     And product product1 is not associated to shops "shop3,shop4"
 
@@ -92,8 +92,8 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | fr-FR  |             |
     And product "product1" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 69             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 69             |
+      | Puffin Mummy | 42             |
     And product "product1" last stock movement for shop "shop2" increased by 69
     But product "product1" should have following stock information for shops "shop1":
       | pack_stock_type     | pack_only  |
@@ -114,7 +114,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | fr-FR  |              |
     And product "product1" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 42             |
     And product "product1" last stock movement for shop "shop1" increased by 42
     And product product1 is not associated to shops "shop3,shop4"
 
@@ -253,15 +253,15 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | quantity | 111 |
     And product "product1" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 69             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 69             |
+      | Puffin Mummy | 42             |
     And product "product1" last stock movement for shop "shop2" increased by 69
     And product "product1" should have following stock information for shops "shop1":
       | quantity | 93 |
     And product "product1" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 51             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 51             |
+      | Puffin Mummy | 42             |
     And product "product1" last stock movement for shop "shop1" increased by 51
 
   Scenario: I can update stock quantity independently for all shops at once
@@ -271,13 +271,13 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | quantity | 111 |
     And product "product1" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 69             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 69             |
+      | Puffin Mummy | 42             |
     And product "product1" last stock movement for shop "shop2" increased by 69
     And product "product1" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 69             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 69             |
+      | Puffin Mummy | 42             |
     And product "product1" last stock movement for shop "shop1" increased by 69
 
   Scenario: I can update stock quantity for single and/or all shops but since it's a delta modification their values are not necessarily synced
@@ -291,17 +291,17 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | quantity | 101 |
     And product "product1" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -10            |
-      | Puff Daddy | 69             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | -10            |
+      | Puffin Mummy | 69             |
+      | Puffin Mummy | 42             |
     And product "product1" last stock movement for shop "shop2" decreased by 10
     And product "product1" should have following stock information for shops "shop1":
       | quantity | 83 |
     And product "product1" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -10            |
-      | Puff Daddy | 51             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | -10            |
+      | Puffin Mummy | 51             |
+      | Puffin Mummy | 42             |
     And product "product1" last stock movement for shop "shop1" decreased by 10
 
   Scenario: I can update stock quantity for single and/or all shops but since it's a delta modification their values are not necessarily synced
@@ -315,17 +315,17 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | quantity | 101 |
     And product "product1" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 69             |
-      | Puff Daddy | -10            |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 69             |
+      | Puffin Mummy | -10            |
+      | Puffin Mummy | 42             |
     And product "product1" last stock movement for shop "shop2" increased by 69
     And product "product1" should have following stock information for shops "shop1":
       | quantity | 83 |
     And product "product1" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 51             |
-      | Puff Daddy | -10            |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 51             |
+      | Puffin Mummy | -10            |
+      | Puffin Mummy | 42             |
     And product "product1" last stock movement for shop "shop1" increased by 51
 
   Scenario: I update product type to combinations (stock is reset to zero for ALL associated shops)
@@ -354,15 +354,15 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | quantity | 93 |
     And product "productCombinations" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 51             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 51             |
+      | Puffin Mummy | 42             |
     And product "productCombinations" last stock movement for shop "shop1" increased by 51
     And product "productCombinations" should have following stock information for shops "shop2":
       | quantity | 111 |
     And product "productCombinations" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 69             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 69             |
+      | Puffin Mummy | 42             |
     And product "productCombinations" last stock movement for shop "shop2" increased by 69
     When I update product "productCombinations" type to combinations
     Then product "productCombinations" type should be combinations
@@ -370,15 +370,15 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | quantity | 0 |
     And product "productCombinations" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -93            |
-      | Puff Daddy | 51             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | -93            |
+      | Puffin Mummy | 51             |
+      | Puffin Mummy | 42             |
     And product "productCombinations" last stock movement for shop "shop1" decreased by 93
     And product "productCombinations" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -111           |
-      | Puff Daddy | 69             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | -111           |
+      | Puffin Mummy | 69             |
+      | Puffin Mummy | 42             |
     And product "productCombinations" last stock movement for shop "shop2" decreased by 111
 
   Scenario: When I update the stock in a group that shares its stock all shops from the group should be impacted
@@ -396,7 +396,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     And product product1 is not associated to shop shop4
     And product "product1" last stock movements for shop "shop1,shop2,shop3" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 42             |
     When I update product "product1" stock for shop shop3 with following information:
       | delta_quantity    | 27             |
       | out_of_stock_type | not_available  |
@@ -411,8 +411,8 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | location          | shared storage |
     And product "product1" last stock movements for shop "shop3" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 27             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 27             |
+      | Puffin Mummy | 42             |
     And product product1 is not associated to shop shop4
     # When the stock is copied for shop4 it impacts shop3 as well since they share the same StockAvailable
     When I set following shops for product "product1":
@@ -425,9 +425,9 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     # Stock for both shops are linked so are the stock movements
     And product "product1" last stock movements for shop "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -27            |
-      | Puff Daddy | 27             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | -27            |
+      | Puffin Mummy | 27             |
+      | Puffin Mummy | 42             |
     # Edit shop4 also impacts shop3
     When I update product "product1" stock for shop shop4 with following information:
       | delta_quantity    | 9             |
@@ -443,10 +443,10 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | location          | bound storage |
     And product "product1" last stock movements for shop "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 9              |
-      | Puff Daddy | -27            |
-      | Puff Daddy | 27             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 9              |
+      | Puffin Mummy | -27            |
+      | Puffin Mummy | 27             |
+      | Puffin Mummy | 42             |
     # Edit shop3 also impacts shop4
     When I update product "product1" stock for shop shop4 with following information:
       | delta_quantity    | 18        |
@@ -461,11 +461,11 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | location          | bound storage |
     And product "product1" last stock movements for shop "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 18             |
-      | Puff Daddy | 9              |
-      | Puff Daddy | -27            |
-      | Puff Daddy | 27             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 18             |
+      | Puffin Mummy | 9              |
+      | Puffin Mummy | -27            |
+      | Puffin Mummy | 27             |
+      | Puffin Mummy | 42             |
     # We can still update for all shops
     When I update product "product1" stock for all shops with following information:
       | out_of_stock_type | available |
@@ -481,15 +481,15 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | location          | dtc       |
     And product "product1" last stock movements for shop "shop1,shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 42             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 42             |
+      | Puffin Mummy | 42             |
     And product "product1" last stock movements for shop "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 42             |
-      | Puff Daddy | 18             |
-      | Puff Daddy | 9              |
-      | Puff Daddy | -27            |
-      | Puff Daddy | 27             |
+      | Puffin Mummy | 42             |
+      | Puffin Mummy | 18             |
+      | Puffin Mummy | 9              |
+      | Puffin Mummy | -27            |
+      | Puffin Mummy | 27             |
     # But grouped stock remain independent
     When I update product "product1" stock for shop shop4 with following information:
       | delta_quantity    | 9             |
@@ -505,12 +505,12 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | location          | bound storage |
     And product "product1" last stock movements for shop "shop1,shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 42             |
-      | Puff Daddy | 42             |
+      | Puffin Mummy | 42             |
+      | Puffin Mummy | 42             |
     And product "product1" last stock movements for shop "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 9              |
-      | Puff Daddy | 42             |
-      | Puff Daddy | 18             |
-      | Puff Daddy | 9              |
-      | Puff Daddy | -27            |
+      | Puffin Mummy | 9              |
+      | Puffin Mummy | 42             |
+      | Puffin Mummy | 18             |
+      | Puffin Mummy | 9              |
+      | Puffin Mummy | -27            |

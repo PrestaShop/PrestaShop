@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
@@ -123,6 +103,26 @@ class CustomerFormCore extends AbstractForm
 
     public function validate()
     {
+        /*
+         * If email is being changed, check if it's free to use and doesn't belong to another customer.
+         * We only do this if we have a valid customer in the context (logged in user) and if it's not a guest account.
+         * We cannot just check for is_guest only, because an empty customer object will return false for is_guest.
+         */
+        /* @phpstan-ignore-next-line */
+        if (!empty($this->context->customer->id) && !$this->context->customer->is_guest) {
+            // We check if there is a customer with the same email, registered only
+            $id_customer = Customer::customerExists($this->getField('email')->getValue(), true);
+
+            // If we found a customer and it's not the current one, it's an error
+            if ($id_customer && $id_customer != $this->getCustomer()->id) {
+                $this->getField('email')->addError($this->translator->trans(
+                    'The email is already used, please choose another one or sign in',
+                    [],
+                    'Shop.Notifications.Error'
+                ));
+            }
+        }
+
         // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
         if (!empty($birthdayField)

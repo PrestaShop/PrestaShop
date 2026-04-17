@@ -1,5 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomerServicePage,
@@ -28,6 +29,9 @@ import {
 const baseContext: string = 'functional_FO_classic_orderConfirmation_contactUs';
 
 /*
+Pre-condition:
+- Enable the theme classic
+Scenario:
 1 GO to shop FO
 2 login
 3 make an order
@@ -37,6 +41,8 @@ const baseContext: string = 'functional_FO_classic_orderConfirmation_contactUs';
 10 go to the shop BO
 11 go to the "customer service" page
 12 check that the previously made message is visible and the infos are correct
+Post-condition:
+- Disable the theme classic
 */
 describe('FO - Order confirmation : Contact us', async () => {
   let browserContext: BrowserContext;
@@ -49,6 +55,9 @@ describe('FO - Order confirmation : Contact us', async () => {
     emailAddress: dataCustomers.johnDoe.email,
     reference: '',
   });
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -264,4 +273,7 @@ describe('FO - Order confirmation : Contact us', async () => {
       expect(deleteMessageSuccessText).to.contains(boCustomerServicePage.deleteMessageSuccessAlertText);
     });
   });
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_3`);
 });

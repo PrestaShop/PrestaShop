@@ -16,11 +16,11 @@ import {
   dataZones,
   FakerCarrier,
   FakerProduct,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicHomePage,
-  foClassicProductPage,
-  foClassicSearchResultsPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -415,7 +415,6 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   const editProductData: FakerProduct = {...dataProducts.demo_11};
   editProductData.packageDimensionWeight = 30;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -448,6 +447,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   it('should go to \'Shipping > Carriers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
 
+    await boDashboardPage.setSidebarCollapsed(page, false);
     await boDashboardPage.goToSubMenu(
       page,
       boDashboardPage.shippingLink,
@@ -505,77 +505,77 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     // Click on view my shop
     page = await boCarriersPage.viewMyShop(page);
     // Change language
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
     expect(isHomePage, 'Home page is not displayed').to.eq(true);
   });
 
   it(`should search for the product '${dataProducts.demo_11.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchForProduct', baseContext);
 
-    await foClassicHomePage.searchProduct(page, dataProducts.demo_11.name);
+    await foHummingbirdHomePage.searchProduct(page, dataProducts.demo_11.name);
 
-    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+    const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
   });
 
   it('should add the product to cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-    await foClassicSearchResultsPage.goToProductPage(page, 1);
+    await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
     // Add the product to the cart
-    await foClassicProductPage.addProductToTheCart(page, 1, [], false);
+    await foHummingbirdProductPage.addProductToTheCart(page, 1, [], false);
 
-    const notificationsNumber = await foClassicProductPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foHummingbirdProductPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.equal(1);
   });
 
   it('should go to shopping cart page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCart', baseContext);
 
-    await foClassicProductPage.goToCartPage(page);
+    await foHummingbirdProductPage.goToCartPage(page);
 
-    const pageTitle = await foClassicCartPage.getPageTitle(page);
-    expect(pageTitle).to.contains(foClassicCartPage.pageTitle);
+    const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+    expect(pageTitle).to.contains(foHummingbirdCartPage.pageTitle);
   });
 
   it('should proceed to checkout', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
     // Proceed to checkout the shopping cart
-    await foClassicCartPage.clickOnProceedToCheckout(page);
+    await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
     // Go to checkout page
-    const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+    const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
     expect(isCheckoutPage).to.eq(true);
   });
 
   it('should fill guest personal information', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
 
-    await foClassicCheckoutPage.clickOnSignIn(page);
+    await foHummingbirdCheckoutPage.clickOnSignIn(page);
 
-    const isCustomerConnected = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
-    expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
+    const isCustomerConnected = await foHummingbirdCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+    expect(isCustomerConnected).to.eq(true);
   });
 
   it('should choose the delivery address', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStepStart', baseContext);
 
-    await foClassicCheckoutPage.chooseDeliveryAddress(page, 1);
+    await foHummingbirdCheckoutPage.chooseDeliveryAddress(page, 1);
 
-    const isDeliveryStep = await foClassicCheckoutPage.goToDeliveryStep(page);
+    const isDeliveryStep = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
     expect(isDeliveryStep).to.eq(true);
   });
 
   it('should check the carriers', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersBasic', baseContext);
 
-    const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
+    const carriers = await foHummingbirdCheckoutPage.getAllCarriersNames(page);
     expect(carriers).to.deep.equal([dataCarriers.clickAndCollect.name, carrierData.name, dataCarriers.myCarrier.name]);
 
-    const carrierInfo = await foClassicCheckoutPage.getCarrierData(page, idCarrier);
+    const carrierInfo = await foHummingbirdCheckoutPage.getCarrierData(page, idCarrier);
     await Promise.all([
       expect(carrierInfo.name).to.equal(carrierData.name),
       expect(carrierInfo.transitName).to.equal(carrierData.transitName),
@@ -587,7 +587,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   it('should go back to BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'firstGoBackToBO', baseContext);
 
-    page = await foClassicCheckoutPage.changePage(browserContext, 0);
+    page = await foHummingbirdCheckoutPage.changePage(browserContext, 0);
 
     const pageTitle = await boCarriersPage.getPageTitle(page);
     expect(pageTitle).to.contains(boCarriersPage.pageTitle);
@@ -648,16 +648,16 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersFreeShipping', baseContext);
 
     page = await boCarriersPage.changePage(browserContext, 1);
-    await foClassicCheckoutPage.reloadPage(page);
+    await foHummingbirdCheckoutPage.reloadPage(page);
 
-    const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
+    const carriers = await foHummingbirdCheckoutPage.getAllCarriersNames(page);
     expect(carriers).to.deep.equal([
       carrierDataFreeShipping.name,
       dataCarriers.clickAndCollect.name,
       dataCarriers.myCarrier.name,
     ]);
 
-    const carrierInfo = await foClassicCheckoutPage.getCarrierData(page, idCarrier);
+    const carrierInfo = await foHummingbirdCheckoutPage.getCarrierData(page, idCarrier);
     await Promise.all([
       expect(carrierInfo.name).to.equal(carrierData.name),
       expect(carrierInfo.transitName).to.equal(carrierData.transitName),
@@ -668,7 +668,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   it('should go to edit carrier page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierHandlingCosts', baseContext);
 
-    page = await foClassicCheckoutPage.changePage(browserContext, 0);
+    page = await foHummingbirdCheckoutPage.changePage(browserContext, 0);
     await boCarriersPage.goToEditCarrierPage(page, 1);
 
     const pageTitle = await boCarriersCreatePage.getPageTitle(page);
@@ -704,16 +704,16 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersHandlingCosts', baseContext);
 
     page = await boCarriersPage.changePage(browserContext, 1);
-    await foClassicCheckoutPage.reloadPage(page);
+    await foHummingbirdCheckoutPage.reloadPage(page);
 
-    const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
+    const carriers = await foHummingbirdCheckoutPage.getAllCarriersNames(page);
     expect(carriers).to.deep.equal([
       dataCarriers.clickAndCollect.name,
       carrierDataHandlingCosts.name,
       dataCarriers.myCarrier.name,
     ]);
 
-    const carrierInfo = await foClassicCheckoutPage.getCarrierData(page, idCarrier);
+    const carrierInfo = await foHummingbirdCheckoutPage.getCarrierData(page, idCarrier);
     await Promise.all([
       expect(carrierInfo.name).to.equal(carrierData.name),
       expect(carrierInfo.transitName).to.equal(carrierData.transitName),
@@ -725,7 +725,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   it('should go to edit carrier page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierTax', baseContext);
 
-    page = await foClassicCheckoutPage.changePage(browserContext, 0);
+    page = await foHummingbirdCheckoutPage.changePage(browserContext, 0);
     await boCarriersPage.goToEditCarrierPage(page, 1);
 
     const pageTitle = await boCarriersCreatePage.getPageTitle(page);
@@ -761,16 +761,16 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersTax', baseContext);
 
     page = await boCarriersPage.changePage(browserContext, 1);
-    await foClassicCheckoutPage.reloadPage(page);
+    await foHummingbirdCheckoutPage.reloadPage(page);
 
-    const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
+    const carriers = await foHummingbirdCheckoutPage.getAllCarriersNames(page);
     expect(carriers).to.deep.equal([
       dataCarriers.clickAndCollect.name,
       dataCarriers.myCarrier.name,
       carrierDataHandlingCosts.name,
     ]);
 
-    const carrierInfo = await foClassicCheckoutPage.getCarrierData(page, idCarrier);
+    const carrierInfo = await foHummingbirdCheckoutPage.getCarrierData(page, idCarrier);
     const priceWithTax: number = ((carrierData.ranges[0].zones[0].price! + handlingCost) / 100) * (100 + 20);
     await Promise.all([
       expect(carrierInfo.name).to.equal(carrierData.name),
@@ -780,10 +780,18 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     ]);
   });
 
+  it('should go back to the tab "Carriers"', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'returnToTabCarriers', baseContext);
+
+    page = await foHummingbirdCheckoutPage.changePage(browserContext, 0);
+
+    const pageTitle = await boCarriersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCarriersPage.pageTitle);
+  });
+
   it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-    page = await boCarriersPage.changePage(browserContext, 0);
     await boDashboardPage.goToSubMenu(
       page,
       boDashboardPage.catalogParentLink,
@@ -830,16 +838,16 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersProductWeight', baseContext);
 
     page = await boProductsCreatePage.changePage(browserContext, 1);
-    await foClassicCheckoutPage.reloadPage(page);
+    await foHummingbirdCheckoutPage.reloadPage(page);
 
-    const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
+    const carriers = await foHummingbirdCheckoutPage.getAllCarriersNames(page);
     expect(carriers).to.deep.equal([
       dataCarriers.clickAndCollect.name,
       dataCarriers.myCarrier.name,
       carrierData.name,
     ]);
 
-    const carrierInfo = await foClassicCheckoutPage.getCarrierData(page, idCarrier);
+    const carrierInfo = await foHummingbirdCheckoutPage.getCarrierData(page, idCarrier);
     const priceWithTax: number = ((carrierData.ranges[2].zones[0].price! + handlingCost) / 100) * (100 + 20);
     await Promise.all([
       expect(carrierInfo.name).to.equal(carrierData.name),
@@ -852,7 +860,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   it('should go to \'Shipping > Carriers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCarriersPage', baseContext);
 
-    page = await foClassicCheckoutPage.changePage(browserContext, 0);
+    page = await foHummingbirdCheckoutPage.changePage(browserContext, 0);
     await boDashboardPage.goToSubMenu(
       page,
       boDashboardPage.shippingLink,
@@ -918,16 +926,16 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersRanges', baseContext);
 
     page = await boProductsCreatePage.changePage(browserContext, 1);
-    await foClassicCheckoutPage.reloadPage(page);
+    await foHummingbirdCheckoutPage.reloadPage(page);
 
-    const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
+    const carriers = await foHummingbirdCheckoutPage.getAllCarriersNames(page);
     expect(carriers).to.deep.equal([
       dataCarriers.clickAndCollect.name,
       dataCarriers.myCarrier.name,
       carrierData.name,
     ]);
 
-    const carrierInfo = await foClassicCheckoutPage.getCarrierData(page, idCarrier);
+    const carrierInfo = await foHummingbirdCheckoutPage.getCarrierData(page, idCarrier);
     const priceWithTax: number = ((carrierData.ranges[2].zones[0].price! + handlingCost) / 100) * (100 + 20);
     await Promise.all([
       expect(carrierInfo.name).to.equal(carrierData.name),
@@ -940,81 +948,81 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   it('should return to cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCartQty2', baseContext);
 
-    await foClassicCheckoutPage.clickOnHeaderLink(page, 'Logo');
-    await foClassicHomePage.goToCartPage(page);
+    await foHummingbirdCheckoutPage.clickOnHeaderLink(page, 'Logo');
+    await foHummingbirdHomePage.goToCartPage(page);
 
-    const pageTitle = await foClassicCartPage.getPageTitle(page);
-    expect(pageTitle).to.contains(foClassicCartPage.pageTitle);
+    const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+    expect(pageTitle).to.contains(foHummingbirdCartPage.pageTitle);
   });
 
   it('should change quantity to 2 and proceed to checkout', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'changeQuantity2', baseContext);
 
-    await foClassicCartPage.editProductQuantity(page, 1, 2);
+    await foHummingbirdCartPage.editProductQuantity(page, 1, 2);
 
     // Proceed to checkout the shopping cart
-    await foClassicCartPage.clickOnProceedToCheckout(page);
+    await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
     // Go to checkout page
-    const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+    const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
     expect(isCheckoutPage).to.eq(true);
   });
 
   it('should choose the delivery address', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStepQty2', baseContext);
 
-    await foClassicCheckoutPage.chooseDeliveryAddress(page, 1);
+    await foHummingbirdCheckoutPage.chooseDeliveryAddress(page, 1);
 
-    const isDeliveryStep = await foClassicCheckoutPage.goToDeliveryStep(page);
+    const isDeliveryStep = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
     expect(isDeliveryStep).to.eq(true);
   });
 
   it('should check carriers', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersWeightExceeded', baseContext);
 
-    const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
+    const carriers = await foHummingbirdCheckoutPage.getAllCarriersNames(page);
     expect(carriers).to.deep.equal([dataCarriers.clickAndCollect.name, dataCarriers.myCarrier.name]);
   });
 
   it('should return to cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToCartQty1', baseContext);
 
-    await foClassicCheckoutPage.clickOnHeaderLink(page, 'Logo');
-    await foClassicHomePage.goToCartPage(page);
+    await foHummingbirdCheckoutPage.clickOnHeaderLink(page, 'Logo');
+    await foHummingbirdHomePage.goToCartPage(page);
 
-    const pageTitle = await foClassicCartPage.getPageTitle(page);
-    expect(pageTitle).to.contains(foClassicCartPage.pageTitle);
+    const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+    expect(pageTitle).to.contains(foHummingbirdCartPage.pageTitle);
   });
 
   it('should change quantity to 1 and proceed to checkout', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'changeQuantity1', baseContext);
 
-    await foClassicCartPage.editProductQuantity(page, 1, 1);
+    await foHummingbirdCartPage.editProductQuantity(page, 1, 1);
 
     // Proceed to checkout the shopping cart
-    await foClassicCartPage.clickOnProceedToCheckout(page);
+    await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
     // Go to checkout page
-    const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+    const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
     expect(isCheckoutPage).to.eq(true);
   });
 
   it('should choose the delivery address', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseAndConfirmAddressStepQty1', baseContext);
 
-    await foClassicCheckoutPage.chooseDeliveryAddress(page, 1);
+    await foHummingbirdCheckoutPage.chooseDeliveryAddress(page, 1);
 
-    const isDeliveryStep = await foClassicCheckoutPage.goToDeliveryStep(page);
+    const isDeliveryStep = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
     expect(isDeliveryStep).to.eq(true);
   });
 
   it('should check the carriers', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersWeightQty1', baseContext);
 
-    const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
+    const carriers = await foHummingbirdCheckoutPage.getAllCarriersNames(page);
     expect(carriers).to.deep.equal([dataCarriers.clickAndCollect.name, dataCarriers.myCarrier.name, carrierData.name]);
 
-    const carrierInfo = await foClassicCheckoutPage.getCarrierData(page, idCarrier);
+    const carrierInfo = await foHummingbirdCheckoutPage.getCarrierData(page, idCarrier);
     const priceWithTax: number = ((carrierData.ranges[2].zones[0].price! + handlingCost) / 100) * (100 + 20);
     await Promise.all([
       expect(carrierInfo.name).to.equal(carrierData.name),
@@ -1027,7 +1035,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   it('should go to edit carrier page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierBilling', baseContext);
 
-    page = await foClassicCheckoutPage.changePage(browserContext, 0);
+    page = await foHummingbirdCheckoutPage.changePage(browserContext, 0);
     await boCarriersPage.goToEditCarrierPage(page, 1);
 
     const pageTitle = await boCarriersCreatePage.getPageTitle(page);
@@ -1063,12 +1071,12 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersBilling', baseContext);
 
     page = await boCarriersPage.changePage(browserContext, 1);
-    await foClassicCheckoutPage.reloadPage(page);
+    await foHummingbirdCheckoutPage.reloadPage(page);
 
-    const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
+    const carriers = await foHummingbirdCheckoutPage.getAllCarriersNames(page);
     expect(carriers).to.deep.equal([dataCarriers.clickAndCollect.name, dataCarriers.myCarrier.name, carrierData.name]);
 
-    const carrierInfo = await foClassicCheckoutPage.getCarrierData(page, idCarrier);
+    const carrierInfo = await foHummingbirdCheckoutPage.getCarrierData(page, idCarrier);
     const priceWithTax: number = ((carrierData.ranges[2].zones[0].price! + handlingCost) / 100) * (100 + 20);
     await Promise.all([
       expect(carrierInfo.name).to.equal(carrierData.name),
@@ -1081,7 +1089,7 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
   it('should go to edit carrier page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierRemoveRanges', baseContext);
 
-    page = await foClassicCheckoutPage.changePage(browserContext, 0);
+    page = await foHummingbirdCheckoutPage.changePage(browserContext, 0);
     await boCarriersPage.goToEditCarrierPage(page, 1);
 
     const pageTitle = await boCarriersCreatePage.getPageTitle(page);
@@ -1117,28 +1125,38 @@ describe('BO - Shipping - Carriers : Shipping locations and costs', async () => 
     await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersWithoutCorrectRange', baseContext);
 
     page = await boCarriersPage.changePage(browserContext, 1);
-    await foClassicCheckoutPage.reloadPage(page);
+    await foHummingbirdCheckoutPage.reloadPage(page);
 
-    const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
+    const carriers = await foHummingbirdCheckoutPage.getAllCarriersNames(page);
     expect(carriers).to.deep.equal([dataCarriers.clickAndCollect.name, dataCarriers.myCarrier.name]);
+  });
+
+  it('should go back to the tab "Carriers"', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'returnToTabCarriers2', baseContext);
+
+    page = await foHummingbirdCheckoutPage.changePage(browserContext, 0);
+
+    const pageTitle = await boCarriersPage.getPageTitle(page);
+    expect(pageTitle).to.contains(boCarriersPage.pageTitle);
   });
 
   it('should delete carrier', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteCarrier', baseContext);
 
-    page = await foClassicCheckoutPage.changePage(browserContext, 0);
-
     const textResult = await boCarriersPage.deleteCarrier(page, 1);
     expect(textResult).to.contains(boCarriersPage.successfulDeleteMessage);
+  });
 
-    const numberOfCarriersAfterDelete = await boCarriersPage.resetAndGetNumberOfLines(page);
-    expect(numberOfCarriersAfterDelete).to.be.equal(numberOfCarriers);
+  it('should reset all filters and get number of carriers in BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
+
+    numberOfCarriers = await boCarriersPage.resetAndGetNumberOfLines(page);
+    expect(numberOfCarriers).to.be.above(0);
   });
 
   it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageForReset', baseContext);
 
-    page = await boCarriersPage.changePage(browserContext, 0);
     await boDashboardPage.goToSubMenu(
       page,
       boDashboardPage.catalogParentLink,

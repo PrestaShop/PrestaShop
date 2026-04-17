@@ -7,15 +7,15 @@ import {
   boThemeAndLogoPage,
   type BrowserContext,
   type Page,
+  utilsCore,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-function enableHummingbird(baseContext: string = 'commonTests-enableHummingbird'): void {
-  describe('Enable Hummingbird theme', async () => {
+function enableTheme(theme: string, baseContext: string = 'commonTests-enableTheme'): void {
+  describe(`Enable ${utilsCore.capitalize(theme)} theme`, async () => {
     let browserContext: BrowserContext;
     let page: Page;
 
-    // before and after functions
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
       page = await utilsPlaywright.newTab(browserContext);
@@ -52,21 +52,24 @@ function enableHummingbird(baseContext: string = 'commonTests-enableHummingbird'
       expect(numThemes).to.eq(2);
     });
 
-    it('should enable the theme Hummingbird', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'enableThemeHummingbird', baseContext);
+    it(`should enable the theme ${utilsCore.capitalize(theme)}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'enableTheme', baseContext);
 
-      const result = await boThemeAndLogoPage.enableTheme(page, 'hummingbird');
-      expect(result).to.eq(boThemeAndLogoPage.successfulUpdateMessage);
+      const activeTheme = await boThemeAndLogoPage.getActiveTheme(page);
+
+      if (activeTheme !== theme) {
+        const result = await boThemeAndLogoPage.enableTheme(page, theme);
+        expect(result).to.eq(boThemeAndLogoPage.successfulUpdateMessage);
+      }
     });
   });
 }
 
-function disableHummingbird(baseContext: string = 'commonTests-disableHummingbird'): void {
-  describe('Disable Hummingbird theme', async () => {
+function disableTheme(theme: string, baseContext: string = 'commonTests-disableTheme'): void {
+  describe(`Disable ${utilsCore.capitalize(theme)} theme`, async () => {
     let browserContext: BrowserContext;
     let page: Page;
 
-    // before and after functions
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
       page = await utilsPlaywright.newTab(browserContext);
@@ -103,16 +106,20 @@ function disableHummingbird(baseContext: string = 'commonTests-disableHummingbir
       expect(numThemes).to.eq(2);
     });
 
-    it('should enable the theme Classic', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'enableThemeClassic', baseContext);
+    it(`should toggle the theme ${utilsCore.capitalize(theme)}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'enableTheme', baseContext);
 
-      const result = await boThemeAndLogoPage.enableTheme(page, 'classic');
-      expect(result).to.eq(boThemeAndLogoPage.successfulUpdateMessage);
+      const activeTheme = await boThemeAndLogoPage.getActiveTheme(page);
+
+      if (activeTheme === theme) {
+        const result = await boThemeAndLogoPage.enableTheme(page, theme === 'hummingbird' ? 'classic' : 'hummingbird');
+        expect(result).to.eq(boThemeAndLogoPage.successfulUpdateMessage);
+      }
     });
   });
 }
 
 export {
-  enableHummingbird,
-  disableHummingbird,
+  enableTheme,
+  disableTheme,
 };

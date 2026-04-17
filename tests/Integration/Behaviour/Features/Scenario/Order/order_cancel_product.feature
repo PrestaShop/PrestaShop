@@ -273,14 +273,13 @@ Feature: Cancel Order Product from Back Office (BO)
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
     And there is a cart rule CartRuleAmountOnSelectedProduct with following properties:
-      | name[en-US]               | CartRuleAmountOnSelectedProduct          |
-      | discount_amount           | 500                                      |
-      | discount_currency         | usd                                      |
-      | total_quantity            | 100                                      |
-      | quantity_per_user         | 100                                      |
-      | discount_application_type | specific_product                         |
-      | discount_includes_tax     | false                                    |
-      | discount_product          | Test Product Cart Rule On Select Product |
+      | name[en-US]           | CartRuleAmountOnSelectedProduct          |
+      | discount_amount       | 500                                      |
+      | discount_currency     | usd                                      |
+      | total_quantity        | 100                                      |
+      | quantity_per_user     | 100                                      |
+      | discount_includes_tax | false                                    |
+      | discount_product      | Test Product Cart Rule On Select Product |
     When I add products to order "bo_order_cancel_product" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Select Product |
       | amount | 1                                        |
@@ -347,10 +346,9 @@ Feature: Cancel Order Product from Back Office (BO)
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product Cart Rule On Order" with a price of 15.0 and 100 items in stock
     And there is a cart rule CartRuleAmountOnWholeOrder with following properties:
-      | name[en-US]               | CartRuleAmountOnWholeOrder |
-      | priority                  | 1                          |
-      | discount_percentage       | 50                         |
-      | discount_application_type | order_without_shipping     |
+      | name[en-US]         | CartRuleAmountOnWholeOrder |
+      | priority            | 1                          |
+      | discount_percentage | 50                         |
     When I add products to order "bo_order_cancel_product" with new invoice and the following products details:
       | name   | Test Product Cart Rule On Order |
       | amount | 1                               |

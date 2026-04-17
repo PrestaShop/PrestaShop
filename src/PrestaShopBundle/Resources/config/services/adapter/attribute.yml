@@ -13,7 +13,11 @@ services:
   PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\BulkDeleteAttributeHandler: ~
   PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\AddAttributeHandler: ~
   PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\EditAttributeHandler: ~
-  PrestaShop\PrestaShop\Adapter\Attribute\QueryHandler\GetAttributeForEditingHandler: ~
   PrestaShop\PrestaShop\Adapter\Attribute\Validate\AttributeValidator: ~
   PrestaShop\PrestaShop\Adapter\File\Uploader\AttributeFileUploader: ~
   PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\AttributeFileUploaderInterface: ~
+  PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\DeleteAttributeTextureImageHandler: ~
+
+  PrestaShop\PrestaShop\Adapter\Attribute\QueryHandler\GetAttributeForEditingHandler:
+    arguments:
+      $imageTagSourceParser: '@prestashop.core.image.parser.image_tag_source_parser'

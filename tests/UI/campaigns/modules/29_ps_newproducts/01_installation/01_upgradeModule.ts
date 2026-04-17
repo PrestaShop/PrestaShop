@@ -13,7 +13,7 @@ import {
   boShopParametersPage,
   type BrowserContext,
   dataModules,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -89,7 +89,7 @@ describe('New products block module: Upgrade module', async () => {
 
       page = await boMaintenancePage.viewMyShop(page);
 
-      const pageContent = await foClassicHomePage.getTextContent(page, foClassicHomePage.content);
+      const pageContent = await foHummingbirdHomePage.getTextContent(page, foHummingbirdHomePage.content);
       expect(pageContent).to.equal(boMaintenancePage.maintenanceText);
     });
 
@@ -97,7 +97,7 @@ describe('New products block module: Upgrade module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
       // Go back to BO
-      page = await foClassicHomePage.closePage(browserContext, page, 0);
+      page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
       await boDashboardPage.goToSubMenu(
         page,
         boDashboardPage.modulesParentLink,
@@ -185,16 +185,16 @@ describe('New products block module: Upgrade module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTheFo', baseContext);
 
       page = await boModuleManagerPage.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.equal(true);
     });
 
     it('should check if the "New Products" block is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkVisible', baseContext);
 
-      const hasProductsBlock = await foClassicHomePage.hasProductsBlock(page, 'newproducts');
+      const hasProductsBlock = await foHummingbirdHomePage.hasProductsBlock(page, 'ps-newproducts');
       expect(hasProductsBlock).to.eq(true);
     });
   });
@@ -273,16 +273,16 @@ describe('New products block module: Upgrade module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTheFoWoMaintenance', baseContext);
 
       page = await boModuleManagerPage.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.equal(true);
     });
 
     it('should check if the "New Products" block is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkVisibleWoMaintenance', baseContext);
 
-      const hasProductsBlock = await foClassicHomePage.hasProductsBlock(page, 'newproducts');
+      const hasProductsBlock = await foHummingbirdHomePage.hasProductsBlock(page, 'ps-newproducts');
       expect(hasProductsBlock).to.eq(true);
     });
   });

@@ -60,6 +60,7 @@ class CccReducer extends CccReducerCore {};
 class Chart extends ChartCore {};
 class CheckoutAddressesStep extends CheckoutAddressesStepCore {};
 class CheckoutDeliveryStep extends CheckoutDeliveryStepCore {};
+class CheckoutShipmentStep extends CheckoutShipmentStepCore {};
 class CheckoutPaymentStep extends CheckoutPaymentStepCore {};
 class CheckoutPersonalInformationStep extends CheckoutPersonalInformationStepCore {};
 class CheckoutProcess extends CheckoutProcessCore {};

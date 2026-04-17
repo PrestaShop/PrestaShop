@@ -41,6 +41,12 @@ services:
   prestashop.core.mail_template.transformation.html_textify:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\HTMLToTextTransformation'
 
+  prestashop.core.email.legacy_template_lister:
+    class: 'PrestaShop\PrestaShop\Core\Email\LegacyEmailTemplateLister'
+    arguments:
+      $mailsDir: '%kernel.project_dir%/mails'
+      $modulesDir: '%modules_dir%'
+
   prestashop.core.mail_template.command_handler.generate_theme_mails_handler:
     class: 'PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler\GenerateThemeMailTemplatesHandler'
     arguments:

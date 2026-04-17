@@ -1,5 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boDashboardPage,
@@ -25,15 +26,22 @@ import {
 const baseContext: string = 'functional_FO_classic_orderConfirmation_recapPaymentMethod';
 
 /*
+Pre-condition
+- Enable the theme classic
 Scenario:
 - Add 1 products to cart
 - Proceed to checkout and confirm the order
 - Check the recap of payment method
+Post-condition
+- Disable the theme classic
 */
 describe('FO - Order confirmation : Order details and totals - Recap of payment method', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let orderReference: string;
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -197,4 +205,7 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
       expect(shippingMethod).to.contains(`${dataCarriers.clickAndCollect.name} ${dataCarriers.clickAndCollect.transitName}`);
     });
   });
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest`);
 });

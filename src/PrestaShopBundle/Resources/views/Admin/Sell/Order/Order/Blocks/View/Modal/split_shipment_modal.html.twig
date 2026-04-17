@@ -1,0 +1,34 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+<div class="modal fade" id="splitShipmentModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ 'Split shipment'|trans({}, 'Admin.Orderscustomers.Feature') }}</h5>
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+
+      <div class="modal-body" id="splitShipmentFormContainer">
+        <!-- split shipment form be added with ajax her -->
+      </div>
+
+      {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/Skeletons/split_shipment_skeleton.html.twig') }}
+
+      <div class="modal-footer shipment-form__footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </button>
+
+        <button type="submit" class="btn btn-primary" id="submitSplitShipment" form="split_shipment" disabled>
+          {{ 'Split shipment'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

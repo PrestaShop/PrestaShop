@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataProducts,
@@ -20,8 +18,6 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_checkout_showDetails';
 
 /*
-Pre-condition:
-- Install the theme hummingbird
 Scenario:
 - Add first and third product to cart
 - Go to checkout page
@@ -29,16 +25,11 @@ Scenario:
 - Show all details
 - Click on the product image
 - Click on the product name
-Post-condition:
-- Uninstall the theme hummingbird
  */
 
 describe('FO - Checkout : Show details', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -57,7 +48,7 @@ describe('FO - Checkout : Show details', async () => {
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should add the first product to cart then close block cart modal', async function () {
@@ -127,7 +118,7 @@ describe('FO - Checkout : Show details', async () => {
         expect(result.image).to.contains(dataProducts.demo_6.coverImage),
         expect(result.name).to.equal(dataProducts.demo_6.name),
         expect(result.quantity).to.equal(2),
-        expect(result.price).to.equal(dataProducts.demo_6.combinations[0].price),
+        expect(result.price).to.equal(dataProducts.demo_6.combinations[0].price * 2),
       ]);
 
       const attributes = await foHummingbirdCheckoutPage.getProductAttributes(page, 2);
@@ -153,7 +144,4 @@ describe('FO - Checkout : Show details', async () => {
       expect(productInformation.name).to.equal(dataProducts.demo_1.name);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

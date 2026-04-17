@@ -3,6 +3,7 @@ services:
     public: true
 
   PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository:
+    autowire: true
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'

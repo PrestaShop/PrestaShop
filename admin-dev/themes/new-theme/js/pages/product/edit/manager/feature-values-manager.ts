@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 import ProductMap from '@pages/product/product-map';
@@ -121,9 +101,11 @@ export default class FeatureValuesManager {
       if (!$featureRow.length) {
         const featurePrototype = this.$collectionContainer.data('prototype');
         const featurePrototypeName = this.$collectionContainer.data('prototypeName');
-        const newIndex = $(ProductMap.featureValues.featureRow, this.$collectionRowsContainer).length;
+        // The container keeps track of the next index to use, we increment it right away
+        const rowIndex = this.$collectionContainer.data('rowIndex');
+        this.$collectionContainer.data('rowIndex', rowIndex + 1);
 
-        const $newFeatureRow = $(featurePrototype.replace(new RegExp(featurePrototypeName, 'g'), newIndex)).first();
+        const $newFeatureRow = $(featurePrototype.replace(new RegExp(featurePrototypeName, 'g'), rowIndex)).first();
         $newFeatureRow.attr('feature-id', featureId);
         this.$collectionRowsContainer.append($newFeatureRow);
         $(ProductMap.featureValues.featureIdInput, $newFeatureRow).val(featureId);
@@ -156,9 +138,11 @@ export default class FeatureValuesManager {
   private addFeatureValueRow($featureRow: JQuery, featureId: string, featureName: string, featureValueId: string): void {
     const rowValuePrototype = $featureRow.data('prototype');
     const rowValuePrototypeName = $featureRow.data('prototypeName');
+    // The feature row keeps track of the next index to use for its values, we increment it right away
+    const rowIndex = $featureRow.data('rowIndex');
+    $featureRow.data('rowIndex', rowIndex + 1);
     const $featureValueRows = $(ProductMap.featureValues.featureValueRowByFeatureId(featureId), this.$collectionRowsContainer);
-
-    const $newFeatureValueRow = $(rowValuePrototype.replace(new RegExp(rowValuePrototypeName, 'g'), $featureValueRows.length));
+    const $newFeatureValueRow = $(rowValuePrototype.replace(new RegExp(rowValuePrototypeName, 'g'), rowIndex));
     $newFeatureValueRow.attr('feature-id', featureId);
 
     if ($featureValueRows.length === 0) {

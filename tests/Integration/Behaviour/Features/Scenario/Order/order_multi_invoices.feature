@@ -400,12 +400,11 @@ Feature: Order from Back Office (BO)
   Scenario: I add products in two different invoices, a product has automatic discount when I move it to an order the discount is also moved
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a cart rule "CartRulePercentForSpecificProduct" with following properties:
-      | name[en-US]               | CartRulePercentForSpecificProduct |
-      | discount_percentage       | 50                                |
-      | priority                  | 2                                 |
-      | free_shipping             | false                             |
-      | discount_application_type | specific_product                  |
-      | discount_product          | Test Product B                    |
+      | name[en-US]         | CartRulePercentForSpecificProduct |
+      | discount_percentage | 50                                |
+      | priority            | 2                                 |
+      | free_shipping       | false                             |
+      | discount_product    | Test Product B                    |
     And cart rule "CartRulePercentForSpecificProduct" is restricted to product "Test Product B"
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have 1 invoice

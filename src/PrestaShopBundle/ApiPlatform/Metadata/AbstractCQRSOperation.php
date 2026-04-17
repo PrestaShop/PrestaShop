@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,14 +9,13 @@ declare(strict_types=1);
 namespace PrestaShopBundle\ApiPlatform\Metadata;
 
 use ApiPlatform\Exception\InvalidArgumentException;
-use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Parameters;
 use ApiPlatform\OpenApi\Attributes\Webhook;
 use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 use ApiPlatform\State\OptionsInterface;
 use Stringable;
 
-abstract class AbstractCQRSOperation extends HttpOperation
+abstract class AbstractCQRSOperation extends AbstractScopedOperation
 {
     public function __construct(
         string $method = self::METHOD_GET,
@@ -124,11 +103,6 @@ abstract class AbstractCQRSOperation extends HttpOperation
     ) {
         $passedArguments = \get_defined_vars();
 
-        if (!empty($scopes)) {
-            $extraScopes = $passedArguments['extraProperties']['scopes'] ?? [];
-            $passedArguments['extraProperties']['scopes'] = array_values(array_unique(array_merge($extraScopes, $scopes)));
-        }
-
         if (!empty($CQRSQuery)) {
             $this->checkArgumentAndExtraParameterValidity('CQRSQuery', $CQRSQuery, $passedArguments['extraProperties']);
             $passedArguments['extraProperties']['CQRSQuery'] = $CQRSQuery;
@@ -139,25 +113,9 @@ abstract class AbstractCQRSOperation extends HttpOperation
             $passedArguments['extraProperties']['CQRSQueryMapping'] = $CQRSQueryMapping;
         }
 
-        if (!empty($ApiResourceMapping)) {
-            $this->checkArgumentAndExtraParameterValidity('ApiResourceMapping', $ApiResourceMapping, $passedArguments['extraProperties']);
-            $passedArguments['extraProperties']['ApiResourceMapping'] = $ApiResourceMapping;
-        }
-
-        if (null !== $experimentalOperation) {
-            $this->checkArgumentAndExtraParameterValidity('experimentalOperation', $experimentalOperation, $passedArguments['extraProperties']);
-            $passedArguments['extraProperties']['experimentalOperation'] = $experimentalOperation;
-        }
-
         // Remove custom arguments
-        unset($passedArguments['scopes']);
         unset($passedArguments['CQRSQuery']);
         unset($passedArguments['CQRSQueryMapping']);
-        unset($passedArguments['ApiResourceMapping']);
-        unset($passedArguments['experimentalOperation']);
-
-        // Unless especially specified we only handle JSON format by default
-        $passedArguments['formats'] = $formats ?? ['json'];
 
         parent::__construct(...$passedArguments);
     }

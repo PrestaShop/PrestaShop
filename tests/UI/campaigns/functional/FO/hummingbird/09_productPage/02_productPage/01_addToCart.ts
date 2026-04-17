@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataProducts,
@@ -26,10 +24,6 @@ describe('FO - Product page - Product page : Add to cart', async () => {
   const qtyQuickView: number = 100;
   const qtyQuickAdd: number = 1;
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -141,7 +135,4 @@ describe('FO - Product page - Product page : Add to cart', async () => {
       expect(productCount).to.eq(0);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

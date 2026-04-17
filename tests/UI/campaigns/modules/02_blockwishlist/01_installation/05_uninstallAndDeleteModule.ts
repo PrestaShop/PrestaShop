@@ -9,17 +9,20 @@ import {
   type BrowserContext,
   dataModules,
   dataProducts,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsFile,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
-import {installModule} from '@commonTests/BO/modules/moduleManager';
+import {disableModule, enableModule, installModule} from '@commonTests/BO/modules/moduleManager';
 
 const baseContext: string = 'modules_blockwishlist_installation_uninstallAndDeleteModule';
 
 describe('Wishlist module - Uninstall and delete module', async () => {
+  // PRE-TEST : Enable Blockwishlist
+  enableModule(dataModules.blockwishlist, `${baseContext}_preTest_0`);
+
   describe('Uninstall and delete module', async () => {
     let browserContext: BrowserContext;
     let page: Page;
@@ -102,29 +105,32 @@ describe('Wishlist module - Uninstall and delete module', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       page = await boModuleManagerPage.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
 
-      const productInformations = await foClassicProductPage.getProductInformation(page);
+      const productInformations = await foHummingbirdProductPage.getProductInformation(page);
       expect(productInformations.name).to.eq(dataProducts.demo_1.name);
     });
 
     it('should check if the button "Add to wishlist" is present', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkButtonAddToWoshlist', baseContext);
 
-      const hasAddToWishlistButton = await foClassicProductPage.hasAddToWishlistButton(page);
+      const hasAddToWishlistButton = await foHummingbirdProductPage.hasAddToWishlistButton(page);
       expect(hasAddToWishlistButton).to.equal(false);
     });
   });
 
   // POST-TEST: Install module
   installModule(dataModules.blockwishlist, true, `${baseContext}_postTest_0`);
+
+  // POST-TEST : Disable Blockwishlist
+  disableModule(dataModules.blockwishlist, `${baseContext}_postTest_1`);
 });

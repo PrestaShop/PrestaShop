@@ -1,0 +1,200 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace PrestaShopBundle\ApiPlatform\Metadata;
+
+use ApiPlatform\Metadata\CollectionOperationInterface;
+use ApiPlatform\Metadata\Parameters;
+use ApiPlatform\OpenApi\Attributes\Webhook;
+use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
+use ApiPlatform\State\OptionsInterface;
+use Attribute;
+use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShopBundle\ApiPlatform\Provider\QueryListProvider;
+use Stringable;
+
+/**
+ * Class PaginatedList is a custom operation that provides extra parameters
+ * to help configure an operation based on a GetCollection,
+ * it is custom tailed for read operations and forces using the GET method.
+ * It gathers its data from the associated GridData using the GridDataFactoryInterface.
+ */
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
+class CQRSPaginate extends AbstractCQRSOperation implements CollectionOperationInterface
+{
+    public function __construct(
+        ?string $uriTemplate = null,
+        ?array $types = null,
+        $formats = null,
+        $inputFormats = null,
+        $outputFormats = null,
+        $uriVariables = null,
+        ?string $routePrefix = null,
+        ?string $routeName = null,
+        ?array $defaults = null,
+        ?array $requirements = null,
+        ?array $options = null,
+        ?bool $stateless = null,
+        ?string $sunset = null,
+        ?string $acceptPatch = null,
+        $status = null,
+        ?string $host = null,
+        ?array $schemes = null,
+        ?string $condition = null,
+        ?string $controller = null,
+        ?array $headers = null,
+        ?array $cacheHeaders = null,
+        ?array $paginationViaCursor = null,
+        ?array $hydraContext = null,
+        ?array $openapiContext = null,
+        bool|OpenApiOperation|Webhook|null $openapi = null,
+        ?array $exceptionToStatus = null,
+        ?array $links = null,
+        ?array $errors = null,
+        ?string $shortName = null,
+        ?string $class = null,
+        ?bool $paginationEnabled = null,
+        ?string $paginationType = null,
+        ?int $paginationItemsPerPage = null,
+        ?int $paginationMaximumItemsPerPage = null,
+        ?bool $paginationPartial = null,
+        ?bool $paginationClientEnabled = null,
+        ?bool $paginationClientItemsPerPage = null,
+        ?bool $paginationClientPartial = null,
+        ?bool $paginationFetchJoinCollection = null,
+        ?bool $paginationUseOutputWalkers = null,
+        ?array $order = null,
+        ?string $description = null,
+        ?array $normalizationContext = null,
+        ?array $denormalizationContext = null,
+        ?bool $collectDenormalizationErrors = null,
+        string|Stringable|null $security = null,
+        ?string $securityMessage = null,
+        string|Stringable|null $securityPostDenormalize = null,
+        ?string $securityPostDenormalizeMessage = null,
+        string|Stringable|null $securityPostValidation = null,
+        ?string $securityPostValidationMessage = null,
+        ?string $deprecationReason = null,
+        ?array $filters = null,
+        ?array $validationContext = null,
+        $input = null,
+        $output = null,
+        $mercure = null,
+        $messenger = null,
+        ?bool $elasticsearch = null,
+        ?int $urlGenerationStrategy = null,
+        ?bool $read = null,
+        ?bool $deserialize = null,
+        ?bool $validate = null,
+        ?bool $write = null,
+        ?bool $serialize = null,
+        ?bool $fetchPartial = null,
+        ?bool $forceEager = null,
+        ?int $priority = null,
+        ?string $name = null,
+        $provider = null,
+        $processor = null,
+        ?OptionsInterface $stateOptions = null,
+        array|Parameters|null $parameters = null,
+        ?bool $queryParameterValidationEnabled = null,
+        array $extraProperties = [],
+        ?string $CQRSQuery = null,
+        array $scopes = [],
+        ?array $CQRSQueryMapping = null,
+        ?array $ApiResourceMapping = null,
+        ?string $filtersClass = null,
+        ?array $filtersMapping = null,
+        ?bool $experimentalOperation = null,
+        ?string $itemsField = null,
+        ?string $countField = null,
+    ) {
+        $passedArguments = \get_defined_vars();
+        $passedArguments['method'] = self::METHOD_GET;
+        $passedArguments['provider'] = $provider ?? QueryListProvider::class;
+        $passedArguments['filtersClass'] = $filtersClass ?? Filters::class;
+
+        if (!empty($filtersClass)) {
+            $this->checkArgumentAndExtraParameterValidity('filtersClass', $filtersClass, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['filtersClass'] = $filtersClass;
+        }
+
+        if (!empty($filtersMapping)) {
+            $this->checkArgumentAndExtraParameterValidity('filtersMapping', $filtersMapping, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['filtersMapping'] = $filtersMapping;
+        }
+
+        if (!empty($itemsField)) {
+            $this->checkArgumentAndExtraParameterValidity('itemsField', $itemsField, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['itemsField'] = $itemsField;
+        }
+
+        if (!empty($countField)) {
+            $this->checkArgumentAndExtraParameterValidity('countField', $countField, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['countField'] = $countField;
+        }
+
+        unset($passedArguments['itemsField']);
+        unset($passedArguments['countField']);
+        unset($passedArguments['filtersClass']);
+        unset($passedArguments['filtersMapping']);
+
+        parent::__construct(...$passedArguments);
+    }
+
+    public function getFiltersClass(): ?string
+    {
+        return $this->extraProperties['filtersClass'];
+    }
+
+    public function withFiltersClass(string $filtersClass): static
+    {
+        $self = clone $this;
+        $self->extraProperties['filtersClass'] = $filtersClass;
+
+        return $self;
+    }
+
+    public function getFiltersMapping(): ?array
+    {
+        return $this->extraProperties['filtersMapping'];
+    }
+
+    public function withFiltersMapping(array $filtersMapping): static
+    {
+        $self = clone $this;
+        $self->extraProperties['filtersMapping'] = $filtersMapping;
+
+        return $self;
+    }
+
+    public function getItemsField(): ?string
+    {
+        return $this->extraProperties['itemsField'];
+    }
+
+    public function withItemsField(string $itemsField): static
+    {
+        $self = clone $this;
+        $self->extraProperties['itemsField'] = $itemsField;
+
+        return $self;
+    }
+
+    public function getCountField(): ?string
+    {
+        return $this->extraProperties['countField'];
+    }
+
+    public function withCountField(string $countField): static
+    {
+        $self = clone $this;
+        $self->extraProperties['countField'] = $countField;
+
+        return $self;
+    }
+}

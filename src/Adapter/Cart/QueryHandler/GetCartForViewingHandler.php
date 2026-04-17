@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\QueryHandler;
@@ -93,7 +73,6 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
         $context->customer = $customer;
 
         $products = $cart->getProducts();
-        $summary = $cart->getSummaryDetails();
 
         $id_order = (int) Order::getIdByCartId($cart->id);
         $order = new Order($id_order);
@@ -107,17 +86,17 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
         }
 
         if ($tax_calculation_method == PS_TAX_EXC) {
-            $total_products = $summary['total_products'];
-            $total_discounts = $summary['total_discounts_tax_exc'];
-            $total_wrapping = $summary['total_wrapping_tax_exc'];
-            $total_price = $summary['total_price_without_tax'];
-            $total_shipping = $summary['total_shipping_tax_exc'];
+            $total_products = $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+            $total_discounts = $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS);
+            $total_wrapping = $cart->getOrderTotal(false, Cart::ONLY_WRAPPING);
+            $total_price = $cart->getOrderTotal(false);
+            $total_shipping = $cart->getTotalShippingCost(null, false);
         } else {
-            $total_products = $summary['total_products_wt'];
-            $total_discounts = $summary['total_discounts'];
-            $total_wrapping = $summary['total_wrapping'];
-            $total_price = $summary['total_price'];
-            $total_shipping = $summary['total_shipping'];
+            $total_products = $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+            $total_discounts = $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
+            $total_wrapping = $cart->getOrderTotal(true, Cart::ONLY_WRAPPING);
+            $total_price = $cart->getOrderTotal(true);
+            $total_shipping = $cart->getTotalShippingCost();
         }
 
         // Sort products by Reference ID (and if equals (like combination) by Supplier Reference)

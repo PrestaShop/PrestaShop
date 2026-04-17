@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataPaymentMethods,
@@ -24,8 +21,6 @@ import {expect} from 'chai';
 const baseContext: string = 'functional_FO_hummingbird_checkout_addresses_useSameInvoiceAddress';
 
 /*
-Pre-condition:
-- Install the theme hummingbird
 Scenario:
 - Go to FO
 - Add product to cart
@@ -35,8 +30,6 @@ Scenario:
 - Add delivery address
 - Set the same address for delivery and invoice
 - Finish the order
-Post-condition:
-- Uninstall the theme hummingbird
 */
 describe('FO - Checkout - Addresses: Use same invoice address', async () => {
   // Create faker data
@@ -45,9 +38,6 @@ describe('FO - Checkout - Addresses: Use same invoice address', async () => {
 
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -67,7 +57,7 @@ describe('FO - Checkout - Addresses: Use same invoice address', async () => {
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.equal(true);
+      expect(isHomePage).to.equal(true);
     });
 
     it('should go to the fourth product page', async function () {
@@ -126,7 +116,4 @@ describe('FO - Checkout - Addresses: Use same invoice address', async () => {
       expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

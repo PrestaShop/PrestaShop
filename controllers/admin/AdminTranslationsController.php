@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
@@ -30,6 +10,9 @@ use PrestaShop\PrestaShop\Core\Security\Permission;
 
 class AdminTranslationsControllerCore extends AdminController
 {
+    /**
+     * @deprecated Will be removed in 10.0
+     */
     /** Name of theme by default */
     public const DEFAULT_THEME_NAME = _PS_DEFAULT_THEME_NAME_;
     public const TEXTAREA_SIZED = 70;
@@ -238,7 +221,7 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         $this->tpl_view_vars = [
-            'theme_default' => self::DEFAULT_THEME_NAME,
+            'theme_default' => Theme::getDefaultTheme(),
             'theme_lang_dir' => _THEME_LANG_DIR_,
             'token' => $this->token,
             'languages' => $this->languages,
@@ -615,6 +598,8 @@ class AdminTranslationsControllerCore extends AdminController
     }
 
     /**
+     * @deprecated To be removed in 10.0
+     *
      * Move theme translations in selected themes.
      *
      * @param array $files
@@ -635,7 +620,7 @@ class AdminTranslationsControllerCore extends AdminController
                     $theme_file_old = _PS_THEME_DIR_ . 'lang/' . $name_file;
                 } else {
                     $deleted_old_theme = true;
-                    $theme_file_old = str_replace(self::DEFAULT_THEME_NAME, $name_default_theme, _PS_THEME_DIR_ . 'lang/' . $name_file);
+                    $theme_file_old = str_replace(Theme::getDefaultTheme(), $name_default_theme, _PS_THEME_DIR_ . 'lang/' . $name_file);
                 }
 
                 // Move the old file theme in the new folder
@@ -2169,6 +2154,10 @@ class AdminTranslationsControllerCore extends AdminController
             );
         }
 
+        if (!empty($arr_return['files'])) {
+            ksort($arr_return['files']);
+        }
+
         return $arr_return;
     }
 
@@ -2448,6 +2437,10 @@ class AdminTranslationsControllerCore extends AdminController
                     }
                 }
             }
+        }
+
+        if (!empty($arr_modules)) {
+            ksort($arr_modules);
         }
 
         return $arr_modules;
@@ -2844,7 +2837,7 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         $this->tpl_view_vars = array_merge($this->tpl_view_vars, [
-            'default_theme_name' => self::DEFAULT_THEME_NAME,
+            'default_theme_name' => Theme::getDefaultTheme(),
             'count' => $this->total_expression,
             'limit_warning' => $this->displayLimitPostWarning($this->total_expression),
             'mod_security_warning' => Tools::apacheModExists('mod_security'),

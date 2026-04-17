@@ -33,6 +33,20 @@ if (!defined('_PS_ADMIN_DIR_')) {
 }
 
 require_once _PS_ADMIN_DIR_.'/../config/config.inc.php';
+
+// Boot the Symfony kernel
+global $kernel;
+
+if (!$kernel) {
+    require_once _PS_ROOT_DIR_ . '/app/AdminKernel.php';
+
+    $kernel = new AdminKernel(
+        _PS_ENV_,
+        _PS_MODE_DEV_
+    );
+    $kernel->boot();
+}
+
 require_once _PS_ADMIN_DIR_.'/init.php';
 
 mb_internal_encoding('UTF-8');

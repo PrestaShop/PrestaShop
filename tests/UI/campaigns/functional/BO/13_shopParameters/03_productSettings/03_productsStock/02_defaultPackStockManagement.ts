@@ -11,13 +11,13 @@ import {
   dataCustomers,
   dataPaymentMethods,
   FakerProduct,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicCheckoutOrderConfirmationPage,
-  foClassicHomePage,
-  foClassicLoginPage,
-  foClassicProductPage,
-  foClassicSearchResultsPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -126,7 +126,10 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       {
         args: {
           option: 'Use quantity of products in the pack',
-          packQuantity: productPackData.quantity - 1,
+          // The lower quantity is defined by the first product based on the quantity required in the pack
+          packQuantity: Math.floor(
+            (firstProductData.quantity - productPackData.pack[0].quantity) / productPackData.pack[0].quantity,
+          ),
           firstProductQuantity: firstProductData.quantity - productPackData.pack[0].quantity,
           secondProductQuantity: secondProductData.quantity - productPackData.pack[1].quantity,
         },
@@ -134,7 +137,10 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
       {
         args: {
           option: 'Use both, whatever is lower',
-          packQuantity: productPackData.quantity - 2,
+          // The lower quantity is defined by the first product based on the quantity required in the pack
+          packQuantity: Math.floor(
+            (firstProductData.quantity - 2 * productPackData.pack[0].quantity) / productPackData.pack[0].quantity,
+          ),
           firstProductQuantity: firstProductData.quantity - 2 * productPackData.pack[0].quantity,
           secondProductQuantity: secondProductData.quantity - 2 * productPackData.pack[1].quantity,
         },
@@ -166,27 +172,27 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
           page = await boProductSettingsPage.viewMyShop(page);
-          await foClassicHomePage.changeLanguage(page, 'en');
+          await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-          const isFoHomePage = await foClassicHomePage.isHomePage(page);
-          expect(isFoHomePage, 'Fail to open FO home page').to.eq(true);
+          const isFoHomePage = await foHummingbirdHomePage.isHomePage(page);
+          expect(isFoHomePage).to.eq(true);
         });
 
         it('should go to login page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToLoginFO${index}`, baseContext);
 
-          await foClassicHomePage.goToLoginPage(page);
+          await foHummingbirdHomePage.goToLoginPage(page);
 
-          const pageTitle = await foClassicLoginPage.getPageTitle(page);
-          expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+          const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+          expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
         });
 
         it('should sign in with default customer', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `sighInFO${index}`, baseContext);
 
-          await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+          await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-          const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+          const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
         });
 
@@ -194,20 +200,20 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await testContext.addContextItem(this, 'testIdentifier', `goToHomePage${index}`, baseContext);
 
           // Go to home page
-          await foClassicLoginPage.goToHomePage(page);
+          await foHummingbirdLoginPage.goToHomePage(page);
 
-          const isFoHomePage = await foClassicHomePage.isHomePage(page);
-          expect(isFoHomePage, 'Fail to open FO home page').to.eq(true);
+          const isFoHomePage = await foHummingbirdHomePage.isHomePage(page);
+          expect(isFoHomePage).to.eq(true);
         });
 
         it('should search for the created product and go to product page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToCreatedProductPage${index}`, baseContext);
 
           // search for the created pack and add go to product page
-          await foClassicHomePage.searchProduct(page, productPackData.name);
-          await foClassicSearchResultsPage.goToProductPage(page, 1);
+          await foHummingbirdHomePage.searchProduct(page, productPackData.name);
+          await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-          const pageTitle = await foClassicProductPage.getPageTitle(page);
+          const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
           expect(pageTitle.toUpperCase()).to.contains(productPackData.name.toUpperCase());
         });
 
@@ -215,17 +221,17 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
           // Add the created product to the cart
-          await foClassicProductPage.addProductToTheCart(page);
+          await foHummingbirdProductPage.addProductToTheCart(page);
 
           // Proceed to checkout the shopping cart
-          await foClassicCartPage.clickOnProceedToCheckout(page);
+          await foHummingbirdCartPage.clickOnProceedToCheckout(page);
         });
 
         it('should go to delivery step', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
           // Address step - Go to delivery step
-          const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+          const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
           expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
         });
 
@@ -233,7 +239,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
           // Delivery step - Go to payment step
-          const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+          const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
           expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
         });
 
@@ -241,26 +247,26 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
           await testContext.addContextItem(this, 'testIdentifier', `confirmTheOrder${index}`, baseContext);
 
           // Payment step - Choose payment step
-          await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+          await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
-          const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
-          expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
+          const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+          expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
         });
 
         it('should sign out from FO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `sighOutFO${index}`, baseContext);
 
-          await foClassicCheckoutOrderConfirmationPage.logout(page);
+          await foHummingbirdCheckoutOrderConfirmationPage.logout(page);
 
-          const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
+          const isCustomerConnected = await foHummingbirdCheckoutOrderConfirmationPage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is connected').to.eq(false);
         });
 
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-          page = await foClassicProductPage.closePage(browserContext, page, 0);
+          page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
           const pageTitle = await boProductSettingsPage.getPageTitle(page);
           expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);

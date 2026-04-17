@@ -50,6 +50,10 @@ _search_preferences:
   resource: "search_preferences.yml"
   prefix: /search/
 
+_tag:
+  resource: "tags.yml"
+  prefix: /tags/
+
 _title:
   resource: "titles.yml"
   prefix: /titles/

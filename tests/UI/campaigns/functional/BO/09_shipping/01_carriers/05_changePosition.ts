@@ -9,10 +9,10 @@ import {
   type BrowserContext,
   dataCarriers,
   dataCustomers,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsCore,
   utilsPlaywright,
@@ -37,33 +37,33 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openTheShopPage', baseContext);
 
-      await foClassicHomePage.goToFo(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.goToFo(page);
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should add the first product to the cart and checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addFirstProductToCart', baseContext);
 
       // Go to the first product page
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
       // Add the product to the cart
-      await foClassicProductPage.addProductToTheCart(page);
+      await foHummingbirdProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await foClassicCartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-      const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+      const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
       expect(isCheckoutPage).to.equal(true);
     });
 
     it('should login and go to address step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginToFO', baseContext);
 
-      await foClassicCheckoutPage.clickOnSignIn(page);
+      await foHummingbirdCheckoutPage.clickOnSignIn(page);
 
-      const isStepLoginComplete = await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+      const isStepLoginComplete = await foHummingbirdCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
       expect(isStepLoginComplete, 'Step Personal information is not complete').to.equal(true);
     });
 
@@ -71,14 +71,14 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should check the carriers position', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersPosition', baseContext);
 
-      const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
+      const carriers = await foHummingbirdCheckoutPage.getAllCarriersNames(page);
       expect(carriers).to.deep.equal([dataCarriers.clickAndCollect.name, dataCarriers.myCarrier.name]);
     });
 
@@ -172,9 +172,9 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
 
       page = await boCarriersPage.changePage(browserContext, 0);
 
-      await foClassicCheckoutPage.reloadPage(page);
+      await foHummingbirdCheckoutPage.reloadPage(page);
 
-      const carriers = await foClassicCheckoutPage.getAllCarriersNames(page);
+      const carriers = await foHummingbirdCheckoutPage.getAllCarriersNames(page);
       expect(carriers).to.deep.equal([dataCarriers.myCarrier.name, dataCarriers.clickAndCollect.name]);
     });
   });
@@ -183,7 +183,7 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
     it('should go back to BO > Shipping page and reset the carriers position', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-      page = await foClassicCheckoutPage.changePage(browserContext, 1);
+      page = await foHummingbirdCheckoutPage.changePage(browserContext, 1);
 
       const pageTitle = await boCarriersPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCarriersPage.pageTitle);

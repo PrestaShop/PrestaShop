@@ -4,7 +4,7 @@ import {expect} from 'chai';
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {createCustomerB2BTest, bulkDeleteCustomersTest} from '@commonTests/BO/customers/customer';
 import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
-import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boDashboardPage,

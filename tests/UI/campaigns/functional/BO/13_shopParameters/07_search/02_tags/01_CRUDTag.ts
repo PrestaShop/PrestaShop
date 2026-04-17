@@ -29,7 +29,6 @@ describe('BO - Shop Parameters - Search : Create, update and delete tag in BO', 
   const createTagData: FakerSearchTag = new FakerSearchTag({language: dataLanguages.english.name});
   const editTagData: FakerSearchTag = new FakerSearchTag({language: dataLanguages.french.name});
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -102,7 +101,7 @@ describe('BO - Shop Parameters - Search : Create, update and delete tag in BO', 
       await boTagsPage.gotoEditTagPage(page, 1);
 
       const pageTitle = await boTagsCreatePage.getPageTitle(page);
-      expect(pageTitle).to.contains(boTagsCreatePage.pageTitleEdit);
+      expect(pageTitle).to.contains(boTagsCreatePage.pageTitleEdit(createTagData.name));
     });
 
     it('should update tag', async function () {
@@ -110,6 +109,15 @@ describe('BO - Shop Parameters - Search : Create, update and delete tag in BO', 
 
       const textResult = await boTagsCreatePage.setTag(page, editTagData);
       expect(textResult).to.contains(boTagsPage.successfulUpdateMessage);
+    });
+
+    it('should return to \'Tags\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToTagsPage', baseContext);
+
+      await boSearchPage.goToTagsPage(page);
+
+      const pageTitle = await boTagsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boTagsPage.pageTitle);
 
       const numberOfTagsAfterUpdate = await boTagsPage.getNumberOfElementInGrid(page);
       expect(numberOfTagsAfterUpdate).to.be.equal(numberOfTags + 1);

@@ -5,7 +5,7 @@ Feature: Full UX discount test
   PrestaShop allows discounts with minimum amount as the condition
 
   Background:
-    Given there is a customer named "testCustomer" whose email is "pub@prestashop.com"
+    Given there is a customer named "testCustomer" whose email is "pub2@prestashop.com"
     Given language with iso code "en" is the default one
     And language "french" with locale "fr-FR" exists
     Given shop "shop1" with name "test_shop" exists
@@ -14,23 +14,22 @@ Feature: Full UX discount test
   Scenario: Create a complete discount with free shipping using new CQRS
     And there is a product in the catalog named "product1" with a price of 10.00 and 1000 items in stock
     When I create a "free_shipping" discount "free_shipping_discount_with_minimum_amount" with following properties:
-      | name[en-US] | Minimum amount gives free shipping  |
-      | name[fr-FR] | Montant minimum donne envoi gratuit |
-      | active      | true                                |
-      | valid_from  | 2025-01-01 11:05:00                 |
-      | valid_to    | 2025-12-01 00:00:00                 |
-      | code        | FREE_SHIPPING_MIN_AMOUNT            |
-    When I update discount "free_shipping_discount_with_minimum_amount" with the condition of a minimum amount:
-      | minimum_amount                   | 40.00 |
-      | minimum_amount_currency          | usd   |
-      | minimum_amount_tax_included      | true  |
-      | minimum_amount_shipping_included | true  |
+      | name[en-US]                      | Minimum amount gives free shipping  |
+      | name[fr-FR]                      | Montant minimum donne envoi gratuit |
+      | active                           | true                                |
+      | valid_from                       | 2025-01-01 11:05:00                 |
+      | valid_to                         | 2026-12-01 00:00:00                 |
+      | code                             | FREE_SHIPPING_MIN_AMOUNT            |
+      | minimum_amount                   | 40.00                               |
+      | minimum_amount_currency          | usd                                 |
+      | minimum_amount_tax_included      | true                                |
+      | minimum_amount_shipping_included | true                                |
     And discount "free_shipping_discount_with_minimum_amount" should have the following properties:
       | name[en-US]                      | Minimum amount gives free shipping  |
       | name[fr-FR]                      | Montant minimum donne envoi gratuit |
       | active                           | true                                |
       | valid_from                       | 2025-01-01 11:05:00                 |
-      | valid_to                         | 2025-12-01 00:00:00                 |
+      | valid_to                         | 2026-12-01 00:00:00                 |
       | code                             | FREE_SHIPPING_MIN_AMOUNT            |
       | minimum_amount                   | 40.00                               |
       | minimum_amount_currency          | usd                                 |

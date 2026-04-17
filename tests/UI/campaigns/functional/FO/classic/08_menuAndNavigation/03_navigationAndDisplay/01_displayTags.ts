@@ -1,5 +1,6 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -24,6 +25,7 @@ const baseContext: string = 'functional_FO_classic_menuAndNavigation_navigationA
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Disable new product page
 Scenario:
 - Go to Fo and check the new tag
@@ -39,6 +41,7 @@ Post-condition:
 - Reset number of days which product is considered new
 - Delete specific price
 - Enable new product page
+- Disable the theme classic
  */
 describe('FO - Navigation and display : Display tags', async () => {
   let browserContext: BrowserContext;
@@ -81,6 +84,9 @@ describe('FO - Navigation and display : Display tags', async () => {
     lowStockLevel: 3,
     behaviourOutOfStock: 'Default behavior',
   });
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -415,4 +421,7 @@ describe('FO - Navigation and display : Display tags', async () => {
 
   // Post-condition: Delete created product
   deleteProductTest(packOfProducts, `${baseContext}_deleteProduct_2`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_3`);
 });

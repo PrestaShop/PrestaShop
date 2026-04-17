@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
-import {createAccountTest} from '@commonTests/FO/classic/account';
+import {createAccountTest} from '@commonTests/FO/hummingbird/account';
 
 import {
   type BrowserContext,
@@ -23,11 +23,13 @@ import {
 } from '@prestashop-core/ui-testing';
 
 import {expect} from 'chai';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 const baseContext: string = 'functional_FO_classic_checkout_personalInformation_passwordReminder';
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Setup SMTP config
 - Create account on FO
 Scenario:
@@ -39,6 +41,7 @@ Scenario:
 - Try to sign in with old password and check error message
 - Try to sign in with new password
 Post-condition:
+- Disable the theme classic
 - Delete created customer account
 - Go back to default smtp config
  */
@@ -56,12 +59,14 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
   customerNewPassword.password = newPassword;
 
   // Pre-Condition : Setup config SMTP
-  setupSmtpConfigTest(`${baseContext}_preTest_1`);
+  setupSmtpConfigTest(`${baseContext}_preTest_0`);
 
   // Pre-condition : Create new customer on FO
-  createAccountTest(customerData, `${baseContext}_preTest_2`);
+  createAccountTest(customerData, `${baseContext}_preTest_1`);
 
-  // before and after functions
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_2`);
+
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -87,7 +92,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should add product to cart', async function () {
@@ -221,4 +226,7 @@ describe('FO - Checkout - Personal information : Password reminder', async () =>
 
   // Post-condition : Reset SMTP config
   resetSmtpConfigTest(`${baseContext}_postTest_2`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_3`);
 });

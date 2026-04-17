@@ -1,34 +1,30 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Discount;
 
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+
 class DiscountSettings
 {
     public const MAX_NAME_LENGTH = 255;
+    public const MAX_DESCRIPTION_LENGTH = FormattedTextareaType::LIMIT_MEDIUMTEXT_UTF8_MB4;
     public const AMOUNT = 'amount';
     public const PERCENT = 'percentage';
+
+    // Period filter values
+    // Use empty value, this way when All is selected the filter value is empty and the clear button disappears
+    public const PERIOD_FILTER_ALL = '';
+    public const PERIOD_FILTER_ACTIVE = 'active';
+    public const PERIOD_FILTER_SCHEDULED = 'scheduled';
+    public const PERIOD_FILTER_EXPIRED = 'expired';
+
+    // Special values for CartRule::reduction_product (used for product level discount)
+    // Previously known as order without shipping
+    public const PRODUCTS_TOTAL = 0;
+    public const CHEAPEST_PRODUCT = -1;
+    public const PRODUCT_SEGMENT = -2;
 }

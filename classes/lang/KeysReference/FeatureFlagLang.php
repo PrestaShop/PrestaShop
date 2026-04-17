@@ -1,32 +1,8 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-
-// Legacy link feature flags
-trans('Attribute groups', 'Admin.Advparameters.Feature');
-trans('Enable or disable the migrated attribute page.', 'Admin.Advparameters.Help');
 
 // Admin API - Multistore feature flag
 trans('Admin API - Multistore', 'Admin.Advparameters.Feature');
@@ -35,10 +11,6 @@ trans('Enable or disable the Admin API when multistore is enabled.', 'Admin.Advp
 // Admin Api - Enable experimental endpoints
 trans('Admin API - Enable experimental endpoints', 'Admin.Advparameters.Feature');
 trans('Experimental API endpoints are disabled by default in prod environment, this configuration allows to forcefully enable them.', 'Admin.Advparameters.Help');
-
-// Cart rules feature flag
-trans('Cart rules', 'Admin.Advparameters.Feature');
-trans('Enable or disable the migrated cart rules page.', 'Admin.Advparameters.Help');
 
 // Catalog price rules feature flag
 trans('Catalog price rules', 'Admin.Advparameters.Feature');
@@ -55,10 +27,6 @@ trans('Enable or disable the migrated states page.', 'Admin.Advparameters.Help')
 // Carriers feature flag
 trans('Carriers', 'Admin.Advparameters.Feature');
 trans('Enable or disable the migrated carriers page.', 'Admin.Advparameters.Help');
-
-// Titles feature flag
-trans('Titles', 'Admin.Advparameters.Feature');
-trans('Enable or disable the migrated titles page.', 'Admin.Advparameters.Help');
 
 // Permissions feature flag
 trans('Permissions', 'Admin.Advparameters.Feature');
@@ -93,3 +61,14 @@ trans('Enable / Disable the newly improved shipment system.', 'Admin.Advparamete
 
 trans('Discount', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the new discount system.', 'Admin.Advparameters.Help');
+
+trans('Tag', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the tag page.', 'Admin.Advparameters.Help');
+
+// One-Page Checkout feature flag
+trans('One-page checkout', 'Admin.Advparameters.Feature');
+trans('Enable / Disable one page checkout flow. All checkout steps (address, delivery, payment) are grouped on a single page to reduce friction and improve conversion rate.', 'Admin.Advparameters.Help');
+
+// New pricing feature flag
+trans('New pricing', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the new pricing system. This feature introduces an improved pricing engine.', 'Admin.Advparameters.Help');

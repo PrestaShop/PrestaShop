@@ -9,7 +9,6 @@ Feature: Cart calculation with specific price rule (percent)
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 1 items of product "product1" in my cart
     Then my cart total should be 22.25524 tax included
-    Then my cart total using previous calculation method should be 22.25524 tax included
 
   Scenario: 1 product in cart, quantity 1, one rule percent from quantity 2
     Given I have an empty default cart
@@ -17,7 +16,6 @@ Feature: Cart calculation with specific price rule (percent)
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 1 items of product "product1" in my cart
     Then my cart total should be 26.812 tax included
-    Then my cart total using previous calculation method should be 26.812 tax included
 
   Scenario: 1 product in cart, quantity 3, one rule percent from quantity 1
     Given I have an empty default cart
@@ -25,7 +23,6 @@ Feature: Cart calculation with specific price rule (percent)
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 3 items of product "product1" in my cart
     Then my cart total should be 52.76572 tax included
-    Then my cart total using previous calculation method should be 52.76572 tax included
 
   Scenario: 1 product in cart, quantity 3, one rule percent from quantity 2
     Given I have an empty default cart
@@ -33,7 +30,6 @@ Feature: Cart calculation with specific price rule (percent)
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 3 items of product "product1" in my cart
     Then my cart total should be 57.5206 tax included
-    Then my cart total using previous calculation method should be 57.5206 tax included
 
   Scenario: 3 products in cart, several quantities, one rule percent from quantity 1
     Given I have an empty default cart
@@ -45,7 +41,6 @@ Feature: Cart calculation with specific price rule (percent)
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
     Then my cart total should be 126.658 tax included
-    Then my cart total using previous calculation method should be 126.658 tax included
 
   Scenario: 3 products in cart, several quantities, one rule percent from quantity 2
     Given I have an empty default cart
@@ -57,4 +52,3 @@ Feature: Cart calculation with specific price rule (percent)
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
     Then my cart total should be 143.7682 tax included
-    Then my cart total using previous calculation method should be 143.7682 tax included

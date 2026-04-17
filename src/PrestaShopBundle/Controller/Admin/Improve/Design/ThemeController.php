@@ -1,32 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Exception;
+use Monolog\Logger;
 use PrestaShop\PrestaShop\Adapter\Language\RTL\InstalledLanguageChecker;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemePageLayoutsCustomizer;
@@ -63,6 +44,7 @@ use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\PageLayoutCustomizationFormFactory;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
+use PrestaShopBundle\Service\Log\LogHandler;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -245,9 +227,10 @@ class ThemeController extends PrestaShopAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_themes_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_themes_index', message: 'You do not have permission to edit this.')]
-    public function enableAction(string $themeName): RedirectResponse
+    public function enableAction(string $themeName, LogHandler $handler): RedirectResponse
     {
         try {
+            $handler->startSavingRecords();
             $this->dispatchCommand(new EnableThemeCommand(new ThemeName($themeName)));
             $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
         } catch (ThemeException $e) {
@@ -260,6 +243,15 @@ class ThemeController extends PrestaShopAdminController
             );
 
             return $this->redirectToRoute('admin_themes_index');
+        } finally {
+            $warnings = $handler->getSavedRecords(Logger::WARNING);
+            $handler->stopSavingRecords();
+            foreach ($warnings as $warning) {
+                $this->addFlash(
+                    'warning',
+                    $warning['message'],
+                );
+            }
         }
 
         return $this->redirectToRoute('admin_themes_index');

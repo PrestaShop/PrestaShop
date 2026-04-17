@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -202,6 +182,13 @@ class ReleaseCreator
     protected $destinationDir;
 
     /**
+     * Distribution type for app/metadata.json (e.g. open_source). When set, metadata file is generated.
+     *
+     * @var string
+     */
+    protected $distribution = '';
+
+    /**
      * Set the release wanted version, and some options.
      *
      * @param string|null $version
@@ -209,8 +196,9 @@ class ReleaseCreator
      * @param bool $useZip
      * @param string $destinationDir
      * @param bool $keepTests
+     * @param string $distribution Distribution type for app/metadata.json (e.g. open_source). When set, metadata file is generated.
      */
-    public function __construct(?string $version = null, bool $useInstaller = true, bool $useZip = true, string $destinationDir = '', bool $keepTests = false)
+    public function __construct(?string $version = null, bool $useInstaller = true, bool $useZip = true, string $destinationDir = '', bool $keepTests = false, string $distribution = '')
     {
         $this->consoleWriter = new ConsoleWriter();
         $tmpDir = sys_get_temp_dir();
@@ -242,6 +230,7 @@ class ReleaseCreator
             $destinationDir = "{$this->projectPath}/$releasesDir/$reference";
         }
         $this->destinationDir = $destinationDir;
+        $this->distribution = $distribution;
         $this->consoleWriter->displayText(
             "--- Destination dir used will be '{$this->destinationDir}'{$this->lineSeparator}",
             ConsoleWriter::COLOR_GREEN
@@ -290,6 +279,7 @@ class ReleaseCreator
             ->generateCachedirFiles()
             ->runComposerInstall()
             ->runBuildAssets()
+            ->generateMetadataFile()
             ->createPackage();
         $endTime = date('H:i:s');
         $this->consoleWriter->displayText(
@@ -526,6 +516,37 @@ class ReleaseCreator
                 throw new BuildException('Unable to create ' . $filePath);
             }
         }
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
+
+        return $this;
+    }
+
+    /**
+     * Generate app/metadata.json when --distribution is set (e.g. for official OS builds from CI).
+     *
+     * @return $this
+     * @throws BuildException
+     */
+    protected function generateMetadataFile()
+    {
+        if ($this->distribution === '') {
+            return $this;
+        }
+
+        $this->consoleWriter->displayText('Generating app/metadata.json...', ConsoleWriter::COLOR_YELLOW);
+
+        $metadataPath = $this->tempProjectPath . '/app/metadata.json';
+        $metadata = [
+            'distribution' => $this->distribution,
+            'distributionVersion' => $this->version,
+            'buildDate' => date('Y-m-d H:i:s'),
+        ];
+
+        $jsonContent = json_encode($metadata, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        if (file_put_contents($metadataPath, $jsonContent) === false) {
+            throw new BuildException("Unable to write metadata file '{$metadataPath}'");
+        }
+
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;

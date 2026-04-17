@@ -138,6 +138,12 @@ Feature: Product associated with different carriers
       | product_name | quantity |
       | saucisson    | 1        |
 
+  Scenario: Retrieve shipments for order detail
+    Then the product "saucisson" in the order "bo_order1" is linked to shipments:
+      | shipment | quantity |
+      | shipment2 |       1 |
+      | shipment3 |       1 |
+
   Scenario: Merge product into a shipment with specified quantity
     Given I merge product from "shipment2" into "shipment1" with following information:
       | product_name | quantity |

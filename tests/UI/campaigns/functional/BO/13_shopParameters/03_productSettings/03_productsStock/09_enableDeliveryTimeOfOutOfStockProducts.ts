@@ -9,9 +9,9 @@ import {
   boProductSettingsPage,
   type BrowserContext,
   FakerProduct,
-  foClassicHomePage,
-  foClassicProductPage,
-  foClassicSearchResultsPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -119,19 +119,19 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
 
           page = await boProductSettingsPage.viewMyShop(page);
 
-          await foClassicHomePage.changeLanguage(page, 'en');
+          await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-          const isFoHomePage = await foClassicHomePage.isHomePage(page);
-          expect(isFoHomePage, 'Fail to open FO home page').to.eq(true);
+          const isFoHomePage = await foHummingbirdHomePage.isHomePage(page);
+          expect(isFoHomePage).to.eq(true);
         });
 
         it('should check delivery time block visibility', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `deliveryTimeBlockVisible${index}`, baseContext);
 
-          await foClassicHomePage.searchProduct(page, productData.name);
-          await foClassicSearchResultsPage.goToProductPage(page, 1);
+          await foHummingbirdHomePage.searchProduct(page, productData.name);
+          await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
 
-          const isDeliveryTimeBlockVisible = await foClassicProductPage.isDeliveryInformationVisible(page);
+          const isDeliveryTimeBlockVisible = await foHummingbirdProductPage.isDeliveryInformationVisible(page);
           expect(isDeliveryTimeBlockVisible).to.equal(test.args.enable);
         });
 
@@ -139,7 +139,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
           it('should check delivery time text', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `deliveryTimeBlockText${index}`, baseContext);
 
-            const deliveryTimeText = await foClassicProductPage.getDeliveryInformationText(page);
+            const deliveryTimeText = await foHummingbirdProductPage.getDeliveryInformationText(page);
             expect(deliveryTimeText).to.equal(test.args.deliveryTimeText);
           });
         }
@@ -147,7 +147,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-          page = await foClassicProductPage.closePage(browserContext, page, 0);
+          page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
           const pageTitle = await boProductSettingsPage.getPageTitle(page);
           expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);

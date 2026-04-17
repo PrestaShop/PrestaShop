@@ -4,8 +4,7 @@ import {expect} from 'chai';
 // Import commonTests
 import {createCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import createAccountTest from '@commonTests/FO/hummingbird/account';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
+import {createAccountTest} from '@commonTests/FO/hummingbird/account';
 
 import {
   type BrowserContext,
@@ -26,13 +25,11 @@ const baseContext: string = 'functional_FO_hummingbird_userAccount_viewVouchers'
 Pre-condition:
 - Create customer
 - Create 2 cart rules for the customer
-- Install hummingbird theme
 Scenario:
 - Go To FO and sign in
 - Check vouchers in account page
 Post-condition:
 - Delete customer
-- Uninstall hummingbird theme
  */
 describe('FO - Account : View vouchers', async () => {
   let browserContext: BrowserContext;
@@ -59,9 +56,6 @@ describe('FO - Account : View vouchers', async () => {
     dateTo: futureDate,
   });
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_0`);
-
   // Pre-condition: Create new account on FO
   createAccountTest(customerData, `${baseContext}_preTest_1`);
 
@@ -70,7 +64,6 @@ describe('FO - Account : View vouchers', async () => {
     createCartRuleTest(cartRule, `${baseContext}_preTest_${index + 2}`);
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -96,7 +89,7 @@ describe('FO - Account : View vouchers', async () => {
       await foHummingbirdHomePage.goToLoginPage(page);
 
       const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdLoginPage.pageTitle);
+      expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in with created customer', async function () {
@@ -149,7 +142,4 @@ describe('FO - Account : View vouchers', async () => {
 
   // Post-condition: Delete created customer
   deleteCustomerTest(customerData, `${baseContext}_postTest_0`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
 });

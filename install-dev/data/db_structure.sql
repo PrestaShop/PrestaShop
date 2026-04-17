@@ -167,10 +167,10 @@ CREATE TABLE `PREFIX_cart_rule` (
   `id_cart_rule` int(10) unsigned NOT NULL auto_increment,
   `id_customer` int unsigned NOT NULL DEFAULT '0',
   `date_from` datetime NOT NULL,
-  `date_to` datetime NOT NULL,
+  `date_to` datetime DEFAULT NULL,
   `description` MEDIUMTEXT,
-  `quantity` int(10) unsigned NOT NULL DEFAULT '0',
-  `quantity_per_user` int(10) unsigned NOT NULL DEFAULT '0',
+  `quantity` int(10) unsigned DEFAULT '0',
+  `quantity_per_user` int(10) unsigned DEFAULT '0',
   `priority` int(10) unsigned NOT NULL DEFAULT 1,
   `partial_use` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `code` varchar(254) NOT NULL,
@@ -178,7 +178,6 @@ CREATE TABLE `PREFIX_cart_rule` (
   `minimum_amount_tax` tinyint(1) NOT NULL DEFAULT '0',
   `minimum_amount_currency` int unsigned NOT NULL DEFAULT '0',
   `minimum_amount_shipping` tinyint(1) NOT NULL DEFAULT '0',
-  `minimum_product_quantity` int(10) unsigned NOT NULL DEFAULT 0,
   `country_restriction` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `carrier_restriction` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `group_restriction` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -198,7 +197,9 @@ CREATE TABLE `PREFIX_cart_rule` (
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
-  `type` varchar(128) DEFAULT NULL,
+  `id_cart_rule_type` int(10) unsigned DEFAULT NULL,
+  `minimum_product_quantity` int(10) unsigned NOT NULL DEFAULT 0,
+  `total_quantity` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id_cart_rule`),
   KEY `id_customer` (
     `id_customer`, `active`, `date_to`
@@ -216,7 +217,7 @@ CREATE TABLE `PREFIX_cart_rule` (
   ),
   KEY `date_from` (`date_from`),
   KEY `date_to` (`date_to`),
-  KEY `type` (`type`)
+  KEY `id_cart_rule_type` (`id_cart_rule_type`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* Localized name assocatied with a promo code */
@@ -276,7 +277,7 @@ CREATE TABLE `PREFIX_cart_rule_product_rule` (
   `id_product_rule_group` int(10) unsigned NOT NULL,
   `type` ENUM(
     'products', 'categories', 'attributes',
-    'manufacturers', 'suppliers', 'combinations'
+    'manufacturers', 'suppliers', 'combinations', 'features'
   ) NOT NULL,
   PRIMARY KEY (`id_product_rule`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
@@ -301,6 +302,36 @@ CREATE TABLE `PREFIX_cart_rule_shop` (
   `id_cart_rule` int(10) unsigned NOT NULL,
   `id_shop` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id_cart_rule`, `id_shop`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+/* Discount types for compatibility */
+CREATE TABLE `PREFIX_cart_rule_type` (
+  `id_cart_rule_type` int(10) unsigned NOT NULL auto_increment,
+  `discount_type` varchar(128) NOT NULL,
+  `is_core` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
+  PRIMARY KEY (`id_cart_rule_type`),
+  UNIQUE KEY `discount_type` (`discount_type`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+/* Localized names for cart rule types */
+CREATE TABLE `PREFIX_cart_rule_type_lang` (
+  `id_cart_rule_type` int(10) unsigned NOT NULL,
+  `id_lang` int(10) unsigned NOT NULL,
+  `name` varchar(254) NOT NULL,
+  `description` TEXT,
+  PRIMARY KEY (`id_cart_rule_type`, `id_lang`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+/* Cart rule compatibility table */
+CREATE TABLE `PREFIX_cart_rule_compatible_types` (
+  `id_cart_rule` int(10) unsigned NOT NULL,
+  `id_cart_rule_type` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id_cart_rule`, `id_cart_rule_type`),
+  KEY `id_cart_rule` (`id_cart_rule`),
+  KEY `id_cart_rule_type` (`id_cart_rule_type`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* List of products inside a cart */
@@ -672,7 +703,7 @@ CREATE TABLE `PREFIX_customer_message` (
   `message` MEDIUMTEXT NOT NULL,
   `file_name` varchar(18) DEFAULT NULL,
   `ip_address` varchar(16) DEFAULT NULL,
-  `user_agent` varchar(128) DEFAULT NULL,
+  `user_agent` varchar(255) DEFAULT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   `private` TINYINT NOT NULL DEFAULT '0',
@@ -1631,7 +1662,7 @@ CREATE TABLE `PREFIX_product` (
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date DEFAULT NULL,
   `show_condition` tinyint(1) NOT NULL DEFAULT '0',
-  `condition` ENUM('new', 'used', 'refurbished') NOT NULL DEFAULT 'new',
+  `condition` ENUM('new', 'used', 'refurbished', 'open_box', 'damaged', 'new_with_defects') NOT NULL DEFAULT 'new',
   `show_price` tinyint(1) NOT NULL DEFAULT '1',
   `indexed` tinyint(1) NOT NULL DEFAULT '0',
   `visibility` ENUM(
@@ -1691,7 +1722,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date DEFAULT NULL,
   `show_condition` tinyint(1) NOT NULL DEFAULT '1',
-  `condition` enum('new', 'used', 'refurbished') NOT NULL DEFAULT 'new',
+  `condition` enum('new', 'used', 'refurbished', 'open_box', 'damaged', 'new_with_defects') NOT NULL DEFAULT 'new',
   `show_price` tinyint(1) NOT NULL DEFAULT '1',
   `indexed` tinyint(1) NOT NULL DEFAULT '0',
   `visibility` enum(
@@ -2842,8 +2873,7 @@ CREATE TABLE `PREFIX_image_type` (
   `manufacturers` TINYINT(1) DEFAULT 1 NOT NULL,
   `suppliers`     TINYINT(1) DEFAULT 1 NOT NULL,
   `stores`        TINYINT(1) DEFAULT 1 NOT NULL,
-  `theme_name`    VARCHAR(255) DEFAULT NULL,
-  UNIQUE KEY `UNIQ_907C95215E237E0614E48A3B` (`name`, `theme_name`),
+  UNIQUE KEY `UNIQ_907C95215E237E06` (`name`),
   PRIMARY KEY (`id_image_type`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
@@ -3050,6 +3080,7 @@ CREATE TABLE `PREFIX_shipment` (
   `delivered_at` datetime DEFAULT NULL,
   `cancelled_at` DATETIME DEFAULT NULL,
   `tracking_number` varchar(255) DEFAULT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT 0,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_shipment`)
@@ -3062,3 +3093,101 @@ CREATE TABLE `PREFIX_shipment_product` (
   `quantity` int(10) DEFAULT NULL,
   PRIMARY KEY (id_shipment_product)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_business_entity`
+(
+  `id_business_entity`       INT UNSIGNED AUTO_INCREMENT                     NOT NULL,
+  `external_ref`             VARCHAR(255) DEFAULT NULL,
+  `name`                     VARCHAR(255) NOT NULL,
+  `legal_name`               VARCHAR(255) DEFAULT NULL,
+  `flag_delivery_authorized` TINYINT(1)                                      NOT NULL DEFAULT 0,
+  `status`                   ENUM ('pending','active','inactive','rejected') NOT NULL DEFAULT 'pending',
+  `created_at`               DATETIME     NOT NULL,
+  `updated_at`               DATETIME     NOT NULL,
+  INDEX                      `business_entity_external_ref_idx` (`external_ref`),
+  PRIMARY KEY (`id_business_entity`)
+) ENGINE = ENGINE_TYPE
+  DEFAULT CHARSET = utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_customer_b2b`
+(
+  `id_customer_b2b` INT UNSIGNED AUTO_INCREMENT         NOT NULL,
+  `id_customer`     INT UNSIGNED                        NOT NULL,
+  `status`          ENUM ('pending','active','refused') NOT NULL DEFAULT 'pending',
+  `external_ref`    VARCHAR(255) DEFAULT NULL,
+  `created_at`      DATETIME NOT NULL,
+  `updated_at`      DATETIME NOT NULL,
+  UNIQUE INDEX `uniq_customer_b2b_customer` (`id_customer`),
+  PRIMARY KEY (`id_customer_b2b`)
+) ENGINE = ENGINE_TYPE
+  DEFAULT CHARSET = utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_business_entity_customer_b2b`
+(
+  `id_business_entity_customer_b2b` INT UNSIGNED AUTO_INCREMENT NOT NULL,
+  `id_business_entity`              INT UNSIGNED                NOT NULL,
+  `id_customer_b2b`                 INT UNSIGNED                NOT NULL,
+  `id_role_b2b`                     INT UNSIGNED                NOT NULL,
+  `is_default`                      TINYINT(1)                  NOT NULL DEFAULT 0,
+  `created_at`                      DATETIME NOT NULL,
+  UNIQUE INDEX `uniq_be_customer` (`id_business_entity`, `id_customer_b2b`),
+  INDEX                             `business_entity_customer_b2b_be_idx` (`id_business_entity`),
+  INDEX                             `business_entity_customer_b2b_customer_idx` (`id_customer_b2b`),
+  INDEX                             `business_entity_customer_b2b_role_idx` (`id_role_b2b`),
+  PRIMARY KEY (`id_business_entity_customer_b2b`)
+) ENGINE = ENGINE_TYPE
+  DEFAULT CHARSET = utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_business_entity_identifier`
+(
+  `id_identifier`                  INT UNSIGNED AUTO_INCREMENT    NOT NULL,
+  `id_business_entity`         INT UNSIGNED                       NOT NULL,
+  `id_business_identifier`     INT UNSIGNED                       NOT NULL,
+  `value`              VARCHAR(255) NOT NULL,
+  UNIQUE INDEX `uniq_business_entity_identifier` (`id_business_entity`, `id_business_identifier`),
+  INDEX                `business_entity_identifier_id_business_entity_idx` (`id_business_entity`),
+  INDEX                `business_entity_identifier_id_business_identifier_idx` (`id_business_identifier`),
+  INDEX                `business_entity_identifier_value_idx` (`value`),
+  PRIMARY KEY (`id_identifier`)
+) ENGINE = ENGINE_TYPE
+  DEFAULT CHARSET = utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_business_identifier`
+(
+  `id_business_identifier` INT UNSIGNED AUTO_INCREMENT NOT NULL,
+  `label`                  VARCHAR(255)                NOT NULL,
+  `unremovable`            TINYINT(1)                  NOT NULL DEFAULT 0,
+  `deleted`                TINYINT(1)                  NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id_business_identifier`)
+) ENGINE = ENGINE_TYPE
+  DEFAULT CHARSET = utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_business_entity_address`
+(
+  `id_business_entity` INT UNSIGNED                       NOT NULL,
+  `id_address`         INT UNSIGNED                       NOT NULL,
+  `address_type`       ENUM ('both','invoice','delivery') NOT NULL DEFAULT 'both',
+  `default`            TINYINT(1)                         NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id_business_entity`, `id_address`),
+  INDEX                `business_entity_address_address_idx` (`id_address`)
+) ENGINE = ENGINE_TYPE
+  DEFAULT CHARSET = utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_b2b_role`
+(
+  `id_role` INT UNSIGNED AUTO_INCREMENT NOT NULL,
+  `role`    VARCHAR(64) NOT NULL,
+  UNIQUE INDEX `uniq_b2b_role` (`role`),
+  PRIMARY KEY (`id_role`)
+) ENGINE = ENGINE_TYPE
+  DEFAULT CHARSET = utf8mb4 COLLATION;
+
+CREATE TABLE `PREFIX_b2b_role_authorization_role`
+(
+  `id_role`               INT UNSIGNED NOT NULL,
+  `id_authorization_role` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id_role`, `id_authorization_role`),
+  INDEX                   `b2b_role_authorization_role_role_idx` (`id_role`),
+  INDEX                   `b2b_role_authorization_role_auth_role_idx` (`id_authorization_role`)
+) ENGINE = ENGINE_TYPE
+  DEFAULT CHARSET = utf8mb4 COLLATION;

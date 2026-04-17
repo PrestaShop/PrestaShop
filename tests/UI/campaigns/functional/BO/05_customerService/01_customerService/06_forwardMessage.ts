@@ -14,16 +14,16 @@ import {
   dataProducts,
   FakerContactMessage,
   FakerEmployee,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicCheckoutOrderConfirmationPage,
-  foClassicHomePage,
-  foClassicLoginPage,
-  foClassicModalBlockCartPage,
-  foClassicModalQuickViewPage,
-  foClassicMyAccountPage,
-  foClassicMyOrderDetailsPage,
-  foClassicMyOrderHistoryPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  foHummingbirdModalBlockCartPage,
+  foHummingbirdModalQuickViewPage,
+  foHummingbirdMyAccountPage,
+  foHummingbirdMyOrderDetailsPage,
+  foHummingbirdMyOrderHistoryPage,
   type MailDev,
   type MailDevEmail,
   type Page,
@@ -94,64 +94,64 @@ describe('BO - Customer Service : Forward message', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-      await foClassicHomePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOLoginPage', baseContext);
 
-      await foClassicHomePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
-      const pageHeaderTitle = await foClassicLoginPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foClassicLoginPage.pageTitle);
+      const pageHeaderTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
-      const isCustomerConnected = await foClassicMyAccountPage.isCustomerConnected(page);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      const isCustomerConnected = await foHummingbirdMyAccountPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
-      await foClassicHomePage.goToHomePage(page);
-      const result = await foClassicHomePage.isHomePage(page);
+      await foHummingbirdHomePage.goToHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should quick view the first product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewFirstProduct', baseContext);
 
-      await foClassicHomePage.quickViewProduct(page, 1);
+      await foHummingbirdHomePage.quickViewProduct(page, 1);
 
-      const isCartModalVisible = await foClassicModalQuickViewPage.isQuickViewProductModalVisible(page);
+      const isCartModalVisible = await foHummingbirdModalQuickViewPage.isQuickViewProductModalVisible(page);
       expect(isCartModalVisible).to.equal(true);
     });
 
     it('should add first product to cart and Proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foClassicModalQuickViewPage.addToCartByQuickView(page);
-      await foClassicModalBlockCartPage.proceedToCheckout(page);
+      await foHummingbirdModalQuickViewPage.addToCartByQuickView(page);
+      await foHummingbirdModalBlockCartPage.proceedToCheckout(page);
 
-      const pageTitle = await foClassicCartPage.getPageTitle(page);
-      expect(pageTitle).to.equal(foClassicCartPage.pageTitle);
+      const pageTitle = await foHummingbirdCartPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdCartPage.pageTitle);
     });
 
     it('should proceed to checkout and check Step Address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddressStep', baseContext);
 
-      await foClassicCartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-      const isStepPersonalInformationComplete = await foClassicCheckoutPage.isStepCompleted(
+      const isStepPersonalInformationComplete = await foHummingbirdCheckoutPage.isStepCompleted(
         page,
-        foClassicCheckoutPage.personalInformationStepForm,
+        foHummingbirdCheckoutPage.personalInformationStepForm,
       );
       expect(isStepPersonalInformationComplete, 'Step Personal information is not complete').to.eq(true);
     });
@@ -159,43 +159,43 @@ describe('BO - Customer Service : Forward message', async () => {
     it('should validate Step Address and go to Delivery Step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryStep', baseContext);
 
-      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should validate Step Delivery and go to Payment Step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
-      const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+      const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should Pay and confirm order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
-      await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+      await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
-      const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
-      expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
+      const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+      expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
     });
 
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await foClassicHomePage.goToMyAccountPage(page);
-      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
+      await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle = await foClassicMyOrderHistoryPage.getPageTitle(page);
-      expect(pageHeaderTitle).to.equal(foClassicMyOrderHistoryPage.pageTitle);
+      const pageHeaderTitle = await foHummingbirdMyOrderHistoryPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foHummingbirdMyOrderHistoryPage.pageTitle);
     });
 
     it('Go to order details ', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
 
-      await foClassicMyOrderHistoryPage.goToDetailsPage(page);
+      await foHummingbirdMyOrderHistoryPage.goToDetailsPage(page);
 
-      const successMessageText = await foClassicMyOrderDetailsPage.addAMessage(page, messageOption, messageSend);
-      expect(successMessageText).to.equal(foClassicMyOrderDetailsPage.successMessageText);
+      const successMessageText = await foHummingbirdMyOrderDetailsPage.addAMessage(page, messageOption, messageSend);
+      expect(successMessageText).to.equal(foHummingbirdMyOrderDetailsPage.successMessageText);
     });
 
     it('should check if the mail is in mailbox', async function () {

@@ -32,7 +32,6 @@ Feature: Delete product image from Back Office (BO)
       | shops       | shop1,shop2,shop3 |
     And I add new image "image2" named "logo.jpg" to product "product1" for shop "shop1"
     And I add new image "image3" named "logo.jpg" to product "product1" for shop "shop2"
-      | cover | true |
     And product "product1" should have following images for shop "shop1, shop2, shop3":
       | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      | shops               |
       | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg | shop1, shop2, shop3 |

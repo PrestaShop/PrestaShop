@@ -271,10 +271,6 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
 
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartRuleFormDataHandler:
-    autowire: true
-    public: false
-
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\DiscountFormDataHandler:
     autowire: true
     public: false
@@ -295,5 +291,9 @@ services:
     public: false
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AliasFormDataHandler:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\TagFormDataHandler:
     autowire: true
     public: false

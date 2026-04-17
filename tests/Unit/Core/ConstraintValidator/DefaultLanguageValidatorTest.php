@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Unit\Core\ConstraintValidator;
@@ -69,25 +49,41 @@ class DefaultLanguageValidatorTest extends ConstraintValidatorTestCase
     /**
      * @dataProvider getIncorrectTypes
      */
-    public function testItDetectsIncorrectValueType($incorrectType)
+    public function testItDetectsIncorrectValueType($incorrectType, bool $expectViolation = false)
     {
-        $this->expectException(UnexpectedTypeException::class);
-        $this->validator->validate($incorrectType, new DefaultLanguage());
+        $constraint = new DefaultLanguage();
+
+        if ($expectViolation) {
+            // For null values, we expect a violation instead of an exception
+            $this->validator->validate($incorrectType, $constraint);
+            $this->buildViolation($constraint->message)
+                ->setParameter('%field_name%', '')
+                ->assertRaised()
+            ;
+        } else {
+            // For other incorrect types (string, boolean), we expect an exception
+            $this->expectException(UnexpectedTypeException::class);
+            $this->validator->validate($incorrectType, $constraint);
+        }
     }
 
     public static function getIncorrectTypes(): iterable
     {
         yield 'string value' => [
             '',
+            false,
         ];
 
         yield 'boolean value' => [
             false,
+            false,
         ];
 
         // Not allowed unless allowNull is set (see in getValidValues)
+        // Null values now raise a violation instead of throwing an exception
         yield 'null value' => [
             null,
+            true,
         ];
     }
 

@@ -35,3 +35,16 @@ Feature: Add discount
       | valid_to     | 2019-12-01 00:00:00 |
       | code         | FREE_GIFT_2019      |
       | gift_product | hummingbird-tshirt  |
+
+  Scenario: Create a complete discount with free gift but customizable product
+    Given there is a product in the catalog named "customizable-mug" with a price of 20.0 and 1000 items in stock
+    Given product "customizable-mug" has a customization field named "custo1"
+    When I create a "free_gift" discount "complete_free_gift_discount_customizable_product" with following properties:
+      | name[en-US]  | Promotion           |
+      | name[fr-FR]  | Promotion fr        |
+      | active       | true                |
+      | valid_from   | 2019-01-01 11:05:00 |
+      | valid_to     | 2019-12-01 00:00:00 |
+      | code         | FREE_GIFT_2025      |
+      | gift_product | customizable-mug    |
+    Then I should get error that discount field gift_product is invalid

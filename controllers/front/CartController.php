@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 
@@ -79,14 +59,22 @@ class CartControllerCore extends FrontController
         $this->id_address_delivery = (int) Tools::getValue('id_address_delivery');
         $this->preview = ('1' === Tools::getValue('preview'));
 
-        /* Check if the products in the cart are available */
         if ('show' === Tools::getValue('action')) {
+            /* Check if the products in the cart are available */
             $isAvailable = $this->areProductsAvailable();
             if (Tools::getIsset('checkout')) {
                 Tools::redirect($this->context->link->getPageLink('order'));
             }
             if (true !== $isAvailable) {
                 $this->errors[] = $isAvailable;
+            }
+            /* Check if countries used in the cart are enabled */
+            if (true !== $this->context->cart->checkCountriesAreEnabled()) {
+                $this->errors[] = $this->trans(
+                    'Some of the countries used in your cart are not available and cannot be used.',
+                    [],
+                    'Shop.Notifications.Error'
+                );
             }
         }
     }
@@ -264,7 +252,11 @@ class CartControllerCore extends FrontController
                             if ($error = $cartRule->checkValidity($this->context)) {
                                 $this->errors[] = $error;
                             } else {
-                                $this->context->cart->addCartRule($cartRule->id);
+                                $result = $this->context->cart->addCartRule($cartRule->id);
+                                if ($result !== true) {
+                                    // we have an incompatibility with another cart rule
+                                    $this->errors[] = $result;
+                                }
                             }
                         } else {
                             $this->errors[] = $this->trans(
@@ -437,14 +429,24 @@ class CartControllerCore extends FrontController
              * No subtracting of quantity in the cart here.
              */
             $availableProductQuantity = Product::getQuantity($this->id_product, $this->id_product_attribute);
-            $this->errors[] = $this->trans(
-                'You can only buy %quantity% "%product%". Please adjust the quantity in your cart to continue.',
-                [
-                    '%product%' => $product->name,
-                    '%quantity%' => $availableProductQuantity,
-                ],
-                'Shop.Notifications.Error'
-            );
+            $productName = Product::getProductName($this->id_product, $this->id_product_attribute);
+
+            if ($availableProductQuantity > 0) {
+                $this->errors[] = $this->trans(
+                    'You can only buy %quantity% "%product%". Please adjust the quantity in your cart to continue.',
+                    [
+                        '%product%' => $productName,
+                        '%quantity%' => $availableProductQuantity,
+                    ],
+                    'Shop.Notifications.Error'
+                );
+            } else {
+                $this->errors[] = $this->trans(
+                    'This product (%product%) is no longer available.',
+                    ['%product%' => $productName],
+                    'Shop.Notifications.Error'
+                );
+            }
 
             return;
         }
@@ -526,14 +528,24 @@ class CartControllerCore extends FrontController
                  * No subtracting of quantity in the cart here.
                  */
                 $availableProductQuantity = Product::getQuantity($this->id_product, $this->id_product_attribute);
-                $this->{$ErrorKey}[] = $this->trans(
-                    'You can only buy %quantity% "%product%". Please adjust the quantity in your cart to continue.',
-                    [
-                        '%product%' => $product->name,
-                        '%quantity%' => $availableProductQuantity,
-                    ],
-                    'Shop.Notifications.Error'
-                );
+                $productName = Product::getProductName($this->id_product, $this->id_product_attribute);
+
+                if ($availableProductQuantity > 0) {
+                    $this->{$ErrorKey}[] = $this->trans(
+                        'You can only buy %quantity% "%product%". Please adjust the quantity in your cart to continue.',
+                        [
+                            '%product%' => $productName,
+                            '%quantity%' => $availableProductQuantity,
+                        ],
+                        'Shop.Notifications.Error'
+                    );
+                } else {
+                    $this->{$ErrorKey}[] = $this->trans(
+                        'This product (%product%) is no longer available.',
+                        ['%product%' => $productName],
+                        'Shop.Notifications.Error'
+                    );
+                }
             }
         }
 
@@ -657,11 +669,13 @@ class CartControllerCore extends FrontController
             return true;
         }
 
-        if ($product['active']) {
+        $productName = !empty($product['attributes']) ? $product['name'] . ' ' . $product['attributes'] : $product['name'];
+
+        if ($product['active'] && $product['quantity_available'] > 0) {
             return $this->trans(
                 'You can only buy %quantity% "%product%". Please adjust the quantity in your cart to continue.',
                 [
-                    '%product%' => $product['name'],
+                    '%product%' => $productName,
                     '%quantity%' => $product['quantity_available'],
                 ],
                 'Shop.Notifications.Error'
@@ -670,7 +684,7 @@ class CartControllerCore extends FrontController
 
         return $this->trans(
             'This product (%product%) is no longer available.',
-            ['%product%' => $product['name']],
+            ['%product%' => $productName],
             'Shop.Notifications.Error'
         );
     }

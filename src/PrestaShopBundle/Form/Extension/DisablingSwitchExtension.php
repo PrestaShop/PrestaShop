@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 declare(strict_types=1);
 
@@ -55,6 +35,7 @@ class DisablingSwitchExtension extends AbstractTypeExtension
     public const SWITCH_EVENT_OPTION = 'disabling_switch_event';
     public const DISABLED_VALUE_OPTION = 'disabled_value';
     public const SWITCH_STATE_ON_DISABLE_OPTION = 'switch_state_on_disable';
+    public const SWITCH_LABEL = 'disabling_switch_label';
 
     /**
      * @var AddDisablingSwitchListener
@@ -151,12 +132,15 @@ class DisablingSwitchExtension extends AbstractTypeExtension
                 static::SWITCH_EVENT_OPTION => null,
                 // Define the state of the switch component when value is disabled (by default on off)
                 static::SWITCH_STATE_ON_DISABLE_OPTION => 'off',
+                // Define the label of the switch component if needed
+                static::SWITCH_LABEL => false,
             ])
             ->setAllowedTypes(static::SWITCH_OPTION, 'bool')
             ->setAllowedTypes(static::DISABLED_VALUE_OPTION, ['null', 'string', 'int', 'array', 'object', 'bool', 'float', 'callback', Closure::class])
             ->setAllowedTypes(static::SWITCH_EVENT_OPTION, ['string', 'null'])
             ->setAllowedTypes(static::SWITCH_STATE_ON_DISABLE_OPTION, 'string')
             ->setAllowedValues(static::SWITCH_STATE_ON_DISABLE_OPTION, ['off', 'on'])
+            ->setAllowedTypes(static::SWITCH_LABEL, ['bool', 'string'])
         ;
     }
 

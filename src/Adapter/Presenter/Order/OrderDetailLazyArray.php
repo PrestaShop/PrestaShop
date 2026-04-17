@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
@@ -35,6 +15,7 @@ use Order;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
+use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use PrestaShopBundle\Translation\TranslatorComponent;
 use PrestaShopException;
 use Tools;
@@ -61,17 +42,20 @@ class OrderDetailLazyArray extends AbstractLazyArray
      */
     private $translator;
 
+    private $shipmentRepository;
+
     /**
      * OrderDetailLazyArray constructor.
      *
      * @param Order $order
      */
-    public function __construct(Order $order)
+    public function __construct(Order $order, ShipmentRepository $shipmentRepository)
     {
         $this->order = $order;
         $this->context = Context::getContext();
         $this->translator = Context::getContext()->getTranslator();
         $this->locale = $this->context->getCurrentLocale();
+        $this->shipmentRepository = $shipmentRepository;
         parent::__construct();
     }
 
@@ -196,15 +180,58 @@ class OrderDetailLazyArray extends AbstractLazyArray
         return $cart->isVirtualCart();
     }
 
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function hasShipments(): bool
+    {
+        return !empty($this->shipmentRepository->findByOrderId($this->order->id));
+    }
+
     /**
      * @return array
      */
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getShipping()
     {
-        $order = $this->order;
+        if ($this->hasShipments()) {
+            return $this->getShipments();
+        }
 
-        $shippingList = $order->getShipping();
+        return $this->getCarrier();
+    }
+
+    /**
+     * Used when the feature flag FEATURE_FLAG_IMPROVED_SHIPMENT is enabled.
+     * Since the feature flag introduce a new "shipment" concept in PrestaShop, we now need to get
+     * all shipments for the given order.
+     */
+    private function getShipments()
+    {
+        $shipments = $this->shipmentRepository->getShipmentWithWeightByOrderId($this->order->id);
+
+        foreach ($shipments as &$shipment) {
+            if ($shipment['carrier_tracking_url']) {
+                $shipment['carrier_tracking_url'] = str_replace('@', $shipment['tracking_number'], $shipment['carrier_tracking_url']);
+            }
+
+            $shipment['date_add'] = Tools::displayDate($shipment['date_add'], false);
+
+            $shipment['package_weight'] = ($shipment['package_weight'] > 0) ? sprintf('%.3f', $shipment['package_weight']) . ' ' .
+                Configuration::get('PS_WEIGHT_UNIT') : '-';
+            $packageCost = ($this->order->getTaxCalculationMethod()) ? $shipment['shipping_cost_tax_excl'] : $shipment['shipping_cost_tax_incl'];
+            $shipment['package_cost'] = ($packageCost > 0) ? $this->locale->formatPrice($packageCost, Currency::getIsoCodeById((int) $this->order->id_currency))
+                : $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
+        }
+
+        return $shipments;
+    }
+
+    /**
+     * Used when the feature flag FEATURE_FLAG_IMPROVED_SHIPMENT is disabled.
+     * Get carrier details used for the given order.
+     */
+    private function getCarrier()
+    {
+        $shippingList = $this->order->getShipping();
         $orderShipping = [];
 
         foreach ($shippingList as $shippingId => $shipping) {
@@ -214,13 +241,13 @@ class OrderDetailLazyArray extends AbstractLazyArray
                     Tools::displayDate($shipping['date_add'], false);
                 $orderShipping[$shippingId]['shipping_weight'] =
                     ($shipping['weight'] > 0) ? sprintf('%.3f', $shipping['weight']) . ' ' .
-                        Configuration::get('PS_WEIGHT_UNIT') : '-';
+                    Configuration::get('PS_WEIGHT_UNIT') : '-';
                 $shippingCost =
-                    ($order->getTaxCalculationMethod()) ? $shipping['shipping_cost_tax_excl']
-                        : $shipping['shipping_cost_tax_incl'];
+                    ($this->order->getTaxCalculationMethod()) ? $shipping['shipping_cost_tax_excl']
+                    : $shipping['shipping_cost_tax_incl'];
                 $orderShipping[$shippingId]['shipping_cost'] =
-                    ($shippingCost > 0) ? $this->locale->formatPrice($shippingCost, Currency::getIsoCodeById((int) $order->id_currency))
-                        : $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
+                    ($shippingCost > 0) ? $this->locale->formatPrice($shippingCost, Currency::getIsoCodeById((int) $this->order->id_currency))
+                    : $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
 
                 $tracking_line = '-';
                 if ($shipping['tracking_number']) {

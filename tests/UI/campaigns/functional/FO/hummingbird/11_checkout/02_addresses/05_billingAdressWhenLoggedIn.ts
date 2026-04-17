@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataCustomers,
@@ -21,10 +19,6 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_0`);
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -45,7 +39,7 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should add the first product to cart and proceed to checkout', async function () {
@@ -119,7 +113,4 @@ describe('FO - Guest checkout: Billing address when logged in', async () => {
       expect(isInvoiceAddress2Selected).to.equal(true);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
 });

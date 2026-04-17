@@ -4,6 +4,7 @@ import {faker} from '@faker-js/faker';
 
 // Import commonTests
 import {resetSmtpConfigTest, setupSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomerServicePage,
@@ -35,6 +36,7 @@ const baseContext: string = 'functional_FO_classic_userAccount_orderHistory_orde
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Setup SMTP config
 Scenario:
 - Go to FO and connect to an account
@@ -47,6 +49,7 @@ Scenario:
 - Go to BO, Customers service, customers service, the message is displayed
 Post-condition:
 - Reset SMTP config
+- Disable the theme classic
  */
 
 describe('FO - Account : Send a message with an ordered product', async () => {
@@ -60,8 +63,11 @@ describe('FO - Account : Send a message with an ordered product', async () => {
   const messageOption: string = `${dataProducts.demo_1.name} (Size: ${dataProducts.demo_1.attributes[0].values[0]} `
     + `- Color: ${dataProducts.demo_1.attributes[1].values[0]})`;
 
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
+
   // Pre-Condition : Setup config SMTP
-  setupSmtpConfigTest(`${baseContext}_preTest`);
+  setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
@@ -94,7 +100,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
@@ -103,7 +109,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await foClassicHomePage.goToLoginPage(page);
 
       const pageTitle = await foClassicLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+      expect(pageTitle).to.contains(foClassicLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -325,5 +331,8 @@ describe('FO - Account : Send a message with an ordered product', async () => {
   });
 
   // Post-Condition : Reset SMTP config
-  resetSmtpConfigTest(`${baseContext}_postTest`);
+  resetSmtpConfigTest(`${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

@@ -10,5 +10,3 @@ services:
   prestashop.adapter.notification.query_handler.get_notification_last_elements_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Notification\QueryHandler\GetNotificationLastElementsHandler'
     autoconfigure: true
-    arguments:
-      - '@prestashop.adapter.notifications.configuration'

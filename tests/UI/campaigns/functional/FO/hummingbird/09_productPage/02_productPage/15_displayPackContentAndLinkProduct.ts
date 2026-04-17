@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -22,11 +19,7 @@ describe('FO - Product Page : Display pack content and link to product', async (
   let browserContext: BrowserContext;
   let page: Page;
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
-
   describe('Display pack content and link to product', async () => {
-    // before and after functions
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
       page = await utilsPlaywright.newTab(browserContext);
@@ -99,7 +92,4 @@ describe('FO - Product Page : Display pack content and link to product', async (
       expect(pageTitle).to.contains(dataProducts.demo_7.name);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
 });

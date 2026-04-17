@@ -101,6 +101,13 @@ services:
     parent: PrestaShopBundle\Controller\Api\ApiController
     public: true
 
+  PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController:
+    arguments:
+      $featureFeature: "@prestashop.adapter.feature.feature"
+    public: false
+    autowire: true
+    autoconfigure: true
+
   PrestaShopBundle\Controller\Admin\SecuredFileReaderController:
     arguments:
       $uploadDir: !php/const _PS_UPLOAD_DIR_

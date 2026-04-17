@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
@@ -29,6 +9,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 use Cart;
 use Currency;
 use Customer;
+use Exception;
 use Hook;
 use Order;
 use OrderDetail;
@@ -41,6 +22,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\DeleteProductFromOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentException;
+use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use Shop;
 use Validate;
 
@@ -65,7 +48,8 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
      */
     public function __construct(
         ContextStateManager $contextStateManager,
-        OrderProductQuantityUpdater $orderProductQuantityUpdater
+        OrderProductQuantityUpdater $orderProductQuantityUpdater,
+        private readonly ?ShipmentRepository $shipmentRepository = null,
     ) {
         $this->contextStateManager = $contextStateManager;
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
@@ -102,6 +86,12 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
         } finally {
             $this->contextStateManager->restorePreviousContext();
         }
+
+        if ($this->shipmentRepository) {
+            $this->handleShipmentDeletion($command);
+        } else {
+            trigger_deprecation('prestashop/prestashop', '9.2', 'ShipmentRepository must be set.');
+        }
     }
 
     /**
@@ -125,6 +115,19 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
         // We can't edit a delivered order
         if ($order->hasBeenDelivered()) {
             throw new OrderException('Delivered order cannot be modified.');
+        }
+    }
+
+    private function handleShipmentDeletion(DeleteProductFromOrderCommand $command): void
+    {
+        $orderId = $command->getOrderId()->getValue();
+        $orderDetailId = $command->getOrderDetailId();
+
+        try {
+            $this->shipmentRepository->deleteShipmentProductByOrderAndOrderDetail($orderId, $orderDetailId);
+            $this->shipmentRepository->deleteEmptyShipmentByOrder($orderId);
+        } catch (Exception $e) {
+            throw new ShipmentException(sprintf('Failed to delete shipment product from order with id "%s"', $orderId), 0, $e);
         }
     }
 }

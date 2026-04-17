@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 import {createApp} from 'vue';
 import {EventEmitter} from '@components/event-emitter';
@@ -63,6 +43,8 @@ class SerpApp {
       title: '',
       description: '',
     };
+
+    this.appendTitle = selectors.appendTitle ? $(selectors.appendTitle).val() : '';
 
     this.initializeSelectors(selectors);
     this.attachInputEvents();
@@ -152,7 +134,7 @@ class SerpApp {
     const title1 = watchedTitle.length ? watchedTitle.val() : '';
     const title2 = defaultTitle.length ? defaultTitle.val() : '';
 
-    this.setTitle(title1 === '' ? title2 : title1);
+    this.setTitle(`${title1 === '' ? title2 : title1}${this.appendTitle ? ` ${this.appendTitle}` : ''}`);
     // Always check for url if title change
     this.checkUrl();
     this.updateComponent();
@@ -163,12 +145,14 @@ class SerpApp {
     let {defaultDescription} = this;
 
     if (this.useMultiLang) {
-      watchedDescription = watchedDescription
+      const watchedDescriptionTarget = watchedDescription
         .closest(this.multiLangSelector)
         .find(this.watchedDescription.is('input') ? 'input' : 'textarea');
-      defaultDescription = defaultDescription
+      watchedDescription = watchedDescriptionTarget.length ? watchedDescriptionTarget : watchedDescription;
+      const defaultDescriptionTarget = defaultDescription
         .closest(this.multiLangSelector)
         .find(this.defaultDescription.is('input') ? 'input' : 'textarea');
+      defaultDescription = defaultDescriptionTarget.length ? defaultDescriptionTarget : defaultDescription;
     }
 
     const desc1 = watchedDescription.length ? watchedDescription.val().innerText || watchedDescription.val() : '';

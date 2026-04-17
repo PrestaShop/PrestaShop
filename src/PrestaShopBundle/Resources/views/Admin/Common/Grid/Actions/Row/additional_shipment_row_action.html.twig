@@ -1,27 +1,20 @@
-{# **
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * #}
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+<a href="#"
+    class="js-update-shipping-btn d-print-none"
+    data-toggle="modal"
+    data-target="#editShipmentModal"
+    data-show-modal="edit-shipment"
+    data-carrier="{{ record[action.options.carrier] }}"
+    data-tracking-number="{{ record[action.options.tracking_number] }}"
+    data-shipment-id="{{ record[action.options.shipment_id_field] }}"
+    data-order-id="{{ record[action.options.order_id_field] }}"
+>
+  <i class="material-icons">edit</i>
+</a>
 
 {% set show_merge = record[action.options.total_shipments] > 1 %}
 {% set show_split = record[action.options.items] > 1 %}
@@ -42,10 +35,12 @@
 
     <div class="dropdown-menu dropdown-menu-right">
       {% if show_split %}
-        <a class="js-split-shipment-btn dropdown-item"
+        <a class="dropdown-item"
           href="#"
+          data-show-modal="split-shipment"
           data-toggle="modal"
           data-target="#splitShipmentModal"
+          data-order-id="{{ record[action.options.order_id_field] }}"
           data-shipment-id="{{ record[action.options.shipment_id_field] }}">
             {{ 'Split'|trans({}, 'Admin.Actions') }}
         </a>

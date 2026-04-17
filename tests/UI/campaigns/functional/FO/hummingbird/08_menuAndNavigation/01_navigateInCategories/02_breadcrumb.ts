@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -16,12 +13,9 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_navigateInCategories_breadcrumb';
 
-describe('FO - Menu and Navigation : Breadcrumb', async () => {
+describe('FO - Menu and Navigation - Navigate in Categories : Breadcrumb', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -59,7 +53,7 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
       expect(breadcrumbText).to.equal('Home Clothes');
     });
 
-    it('should go to the subcategory Men', async function () {
+    it(`should go to the subcategory "${dataCategories.men.name}"`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMenLink', baseContext);
 
       await foHummingbirdHomePage.goToSubCategory(page, dataCategories.clothes.id, dataCategories.men.id);
@@ -141,7 +135,4 @@ describe('FO - Menu and Navigation : Breadcrumb', async () => {
       expect(isHomePage).to.equal(true);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

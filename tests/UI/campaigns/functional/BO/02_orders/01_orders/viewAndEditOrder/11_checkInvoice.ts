@@ -5,7 +5,7 @@ import {expect} from 'chai';
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
-import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@commonTests/FO/classic/order';
+import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boDashboardPage,

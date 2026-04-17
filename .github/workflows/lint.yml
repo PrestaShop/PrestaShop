@@ -143,6 +143,11 @@ jobs:
     name: Admin Security Attribute Linter
     runs-on: ubuntu-latest
     steps:
+      - name: Prepare docker prefix with repository name lower cased
+        run: |
+          REPOSITORY_NAME=${{ github.event.repository.name }}
+          echo "DOCKER_PREFIX=${REPOSITORY_NAME@L}" >> $GITHUB_ENV
+
       - uses: actions/checkout@v4
 
       # First install the shop to that the modules controllers are also scanned (not the case without installation)
@@ -157,7 +162,7 @@ jobs:
       - name: Setup Environment failure
         uses: ./.github/actions/setup-env-export-logs
         with:
-          DOCKER_PREFIX: prestashop
+          DOCKER_PREFIX: ${{ env.DOCKER_PREFIX }}
           ARTIFACT_NAME: setup-symfony-console-${{ matrix.app-id }}
           ENABLE_SSL: 'true'
           INSTALL_AUTO: 'true'
@@ -166,4 +171,31 @@ jobs:
       - name: Run Admin Security Attribute Linter (inside the docker so installed modules are also scanned)
         run: |
           echo Searching for routes without security
-          docker exec prestashop-prestashop-git-1 php bin/console prestashop:linter:security-attribute find-missing
+          docker exec ${{ env.DOCKER_PREFIX }}-prestashop-git-1 php bin/console prestashop:linter:security-attribute find-missing
+
+  header-stamp:
+    name: Check license headers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Composer cache
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      - name: Cache Composer Directory
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: Composer Install
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
+
+      # Run header stamp
+      - name: Header stamp dry run
+        run: composer header-stamp
+      # Little hint to help contributors fix their PRs
+      - name: Hint to fix
+        if: failure()
+        run: echo "::notice::Run composer header-stamp-fix at the root of the project to fix files, or update the .header-stamp-config.yml file to add exceptions"

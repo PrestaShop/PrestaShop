@@ -1,7 +1,6 @@
-// Import utils
 import testContext from '@utils/testContext';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
@@ -18,7 +17,6 @@ describe('BO - Design - Theme & Logo : Export current theme', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -27,7 +25,7 @@ describe('BO - Design - Theme & Logo : Export current theme', async () => {
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
 
-    await utilsFile.deleteFile('../../themes/classic.zip');
+    await utilsFile.deleteFile('../../themes/hummingbird.zip');
   });
 
   it('should login in BO', async function () {
@@ -64,7 +62,7 @@ describe('BO - Design - Theme & Logo : Export current theme', async () => {
   it('should check that the theme is exported successfully', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkTheme', baseContext);
 
-    const found = await utilsFile.doesFileExist('../../themes/classic.zip');
+    const found = await utilsFile.doesFileExist('../../themes/hummingbird.zip');
     expect(found).to.equal(true);
   });
 });

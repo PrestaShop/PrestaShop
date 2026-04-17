@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -34,9 +14,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\ImageTypeRepository")
  *
- * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(columns={"name","theme_name"})})
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(columns={"name"})})
  *
- * @UniqueEntity({"name", "theme_name"})
+ * @UniqueEntity({"name"})
  */
 class ImageType
 {
@@ -88,11 +68,6 @@ class ImageType
      * @ORM\Column(name="stores", type="boolean", options={"default": 1})
      */
     private bool $stores;
-
-    /**
-     * @ORM\Column(name="theme_name", type="string", length=255)
-     */
-    private ?string $themeName;
 
     public function getId(): int
     {
@@ -191,18 +166,6 @@ class ImageType
     public function setStores(bool $stores): static
     {
         $this->stores = $stores;
-
-        return $this;
-    }
-
-    public function getThemeName(): ?string
-    {
-        return $this->themeName;
-    }
-
-    public function setThemeName(?string $themeName): static
-    {
-        $this->themeName = $themeName;
 
         return $this;
     }

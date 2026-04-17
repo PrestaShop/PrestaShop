@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   boDashboardPage,
@@ -23,23 +20,17 @@ const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_sortAnd
 Pre-condition:
 - Get the number of active products
 - Change the number of products per page
-- Install the theme hummingbird
 Scenario:
 - Filter products by category, size, color, composition, price, brand, dimension, availability, paper type
 Post-condition:
 - Reset the number of products per page
-- Uninstall the theme hummingbird
  */
-describe('FO - Menu and navigation : Filter products', async () => {
+describe('FO - Menu and Navigation - Sort and filter : Filter products', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfActiveProducts: number;
   let productsNumber: number;
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -126,7 +117,7 @@ describe('FO - Menu and navigation : Filter products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
       await foHummingbirdHomePage.changeLanguage(page, 'en');
-      await foHummingbirdHomePage.goToAllProductsPage(page);
+      await foHummingbirdHomePage.goToAllProductsPage(page, 'ps-featuredproducts');
 
       const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
@@ -491,7 +482,4 @@ describe('FO - Menu and navigation : Filter products', async () => {
       expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

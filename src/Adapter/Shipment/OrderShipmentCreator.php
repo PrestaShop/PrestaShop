@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -73,21 +53,54 @@ class OrderShipmentCreator
             $orderCarrier->shipping_cost_tax_excl = (float) $products['total_shipping_tax_excl'];
             $orderCarrier->shipping_cost_tax_incl = (float) $products['total_shipping_tax_incl'];
             $orderCarrier->add();
-
             // match products with order details to get quantities & orderDetailId
             foreach (OrderDetail::getList($order->id) as $orderDetailProduct) {
                 foreach ($products['product_list'] as $product) {
-                    if ($product['id_product'] === $orderDetailProduct['product_id']) {
-                        $shipmentProduct = new ShipmentProduct();
-                        $shipmentProduct->setShipment($shipment);
-                        $shipmentProduct->setOrderDetailId($orderDetailProduct['id_order_detail']);
-                        $shipmentProduct->setQuantity($orderDetailProduct['product_quantity']);
-                        $shipment->addShipmentProduct($shipmentProduct);
+                    if (!$this->needShipmentProductCreation($product, $orderDetailProduct)) {
+                        continue;
                     }
+
+                    $quantity = $orderDetailProduct['product_quantity'];
+                    $orderDetailId = $orderDetailProduct['id_order_detail'];
+
+                    $shipmentProduct = (new ShipmentProduct())
+                        ->setShipment($shipment)
+                        ->setOrderDetailId($orderDetailId)
+                        ->setQuantity($quantity);
+
+                    $shipment->addShipmentProduct($shipmentProduct);
                 }
             }
 
             $this->shipmentRepository->save($shipment);
         }
+    }
+
+    /**
+     * @param array{
+     *     id_customization: int,
+     *     id_product_attribute: int,
+     *     id_product: int
+     * } $product
+     * @param array{
+     *     id_customization: int,
+     *     id_order_detail: int,
+     *     product_id: int,
+     *     product_attribute_id: int,
+     *     product_quantity: int
+     * } $orderDetailProduct
+     *
+     * @return bool
+     */
+    private function needShipmentProductCreation(array $product, array $orderDetailProduct): bool
+    {
+        if (!empty($product['id_customization'])) {
+            return $product['id_customization'] === $orderDetailProduct['id_customization'];
+        }
+        if (!empty($product['id_product_attribute'])) {
+            return $product['id_product_attribute'] === $orderDetailProduct['product_attribute_id'];
+        }
+
+        return $product['id_product'] === $orderDetailProduct['product_id'];
     }
 }

@@ -24,6 +24,50 @@ services:
   prestashop_bundle.api_platform.open_api.reflection_extractor:
     class: Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor
 
+  # OpenAPI Schema Adapters - individual adapters for different schema transformations
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\LocalizedValueAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.resource', priority: 40 }
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 20 }
+
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\PositionCollectionAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 20 }
+
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\DecimalNumberAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.resource', priority: 30 }
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 10 }
+
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\DatePropertyAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.resource', priority: 20 }
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 0 }
+
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\MultiParameterSetterAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 60 }
+
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\CommandMappingAdapter:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 50 }
+
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\SchemaSynchronizer:
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.resource', priority: 10 }
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: 40 }
+
+  # Schema adapter chains - orchestrates adapters in the correct order
+  prestashop_bundle.api_platform.open_api.resource_schema_adapter_chain:
+    class: PrestaShopBundle\ApiPlatform\OpenApi\Adapter\SchemaAdapterChain
+    arguments:
+      $adapters: !tagged_iterator 'prestashop.openapi.schema_adapter.resource'
+
+  prestashop_bundle.api_platform.open_api.operation_schema_adapter_chain:
+    class: PrestaShopBundle\ApiPlatform\OpenApi\Adapter\SchemaAdapterChain
+    arguments:
+      $adapters: !tagged_iterator 'prestashop.openapi.schema_adapter.operation'
+
   # This decorator applies the CQRSCommandMapping on the full extracted schema
   PrestaShopBundle\ApiPlatform\OpenApi\Factory\CQRSOpenApiFactory:
     decorates: 'api_platform.openapi.factory'
@@ -31,3 +75,5 @@ services:
     arguments:
       $decorated: '@.inner'
       $definitionNameFactory: '@api_platform.json_schema.definition_name_factory'
+      $resourceSchemaAdapterChain: '@prestashop_bundle.api_platform.open_api.resource_schema_adapter_chain'
+      $operationSchemaAdapterChain: '@prestashop_bundle.api_platform.open_api.operation_schema_adapter_chain'

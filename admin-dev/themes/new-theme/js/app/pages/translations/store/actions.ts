@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 import {Commit} from 'vuex/types';
 import * as types from '@app/pages/translations/store/mutation-types';
@@ -47,11 +27,18 @@ export const getTranslations = async ({commit}: {commit: Commit}): Promise<void>
 export const getCatalog = async ({commit}: {commit: Commit}, payload: Record<string, any>): Promise<void> => {
   commit(types.PRINCIPAL_LOADING, true);
 
+  const url = new URL(payload.url, window.location.origin);
+  const queryParams = omitBy({
+    page_size: payload.page_size,
+    page_index: payload.page_index,
+  }, isParamInvalid);
+
+  Object.entries(queryParams).forEach(([key, value]) => {
+    url.searchParams.append(key, String(value));
+  });
+
   try {
-    const response = await fetch(`${payload.url}&${new URLSearchParams(omitBy({
-      page_size: payload.page_size,
-      page_index: payload.page_index,
-    }, isParamInvalid))}`);
+    const response = await fetch(url);
     const datas = await response.json();
 
     commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
@@ -63,22 +50,17 @@ export const getCatalog = async ({commit}: {commit: Commit}, payload: Record<str
 };
 
 export const getDomainsTree = async ({commit}: {commit: Commit}, payload: Record<string, any>): Promise<void> => {
-  const url = window.data.domainsTreeUrl;
-  const params = new URLSearchParams();
+  const url = new URL(window.data.domainsTreeUrl, window.location.origin);
 
   commit(types.SIDEBAR_LOADING, true);
   commit(types.PRINCIPAL_LOADING, true);
 
-  if (payload.store.getters.searchTags.length) {
-    payload.store.getters.searchTags.forEach((searchTag: string) => {
-      params.append('search[]', searchTag);
-    });
-  }
-
-  const fetchUrl = `${url}${url.includes('?') ? '&' : '?'}${params.toString()}`;
+  payload.store.getters.searchTags.forEach((tag: any) => {
+    url.searchParams.append('search[]', tag);
+  });
 
   try {
-    const response = await fetch(fetchUrl);
+    const response = await fetch(url);
     const datas = await response.json();
 
     commit(types.SET_DOMAINS_TREE, datas);
@@ -90,18 +72,14 @@ export const getDomainsTree = async ({commit}: {commit: Commit}, payload: Record
 };
 
 export const refreshCounts = async ({commit}: {commit: Commit}, payload: Record<string, any>): Promise<void> => {
-  const url = window.data.domainsTreeUrl;
-  const params = new URLSearchParams();
+  const url = new URL(window.data.domainsTreeUrl, window.location.origin);
 
-  if (payload.store.getters.searchTags.length) {
-    payload.store.getters.searchTags.forEach((searchTag: string) => {
-      params.append('search[]', searchTag);
-    });
-  }
-  const fetchUrl = `${url}${url.includes('?') ? '&' : '?'}${params.toString()}`;
+  payload.store.getters.searchTags.forEach((tag: any) => {
+    url.searchParams.append('search[]', tag);
+  });
 
   try {
-    const response = await fetch(fetchUrl);
+    const response = await fetch(url);
     const datas = await response.json();
 
     commit(types.DECREASE_CURRENT_DOMAIN_TOTAL_MISSING_TRANSLATIONS, payload.successfullySaved);

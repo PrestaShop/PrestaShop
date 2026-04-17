@@ -1,5 +1,6 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -22,6 +23,7 @@ const baseContext: string = 'functional_FO_classic_productPage_productPage_chang
 
 /*
 Pre-condition:
+- Enable the theme classic
 - Create product with 4 images
 Scenario:
 - Go to FO
@@ -30,6 +32,7 @@ Scenario:
 - Scroll from images list ans select image
 - Zoom the cover image and change image
 Post-condition:
+- Disable the theme classic
 - Delete created product
  */
 describe('FO - Product page - Quick view : Change image', async () => {
@@ -43,6 +46,9 @@ describe('FO - Product page - Quick view : Change image', async () => {
     coverImage: 'coverImage.jpg',
     thumbImage: 'thumbImage.jpg',
   });
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -203,5 +209,8 @@ describe('FO - Product page - Quick view : Change image', async () => {
   });
 
   // Post-condition : Delete created product
-  deleteProductTest(newProductData, `${baseContext}_postTest`);
+  deleteProductTest(newProductData, `${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

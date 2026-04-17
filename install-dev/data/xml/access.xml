@@ -456,6 +456,18 @@
     <access id="access_1_508" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINALIASES_READ"/>
     <access id="access_1_509" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINALIASES_CREATE"/>
     <access id="access_1_510" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINALIASES_UPDATE"/>
-    <access id="access_1_511" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINALIASES_DELETE"/>
+    <access id="access_1_511" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINALIASES_DELETE"/>  
+    <access id="access_1_512" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINBUSINESSENTITY_CREATE"/>
+    <access id="access_1_513" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINBUSINESSENTITY_READ"/>
+    <access id="access_1_514" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINBUSINESSENTITY_UPDATE"/>
+    <access id="access_1_515" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINBUSINESSENTITY_DELETE"/>
+    <access id="access_1_516" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINBUSINESSENTITIES_CREATE"/>
+    <access id="access_1_517" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINBUSINESSENTITIES_READ"/>
+    <access id="access_1_518" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINBUSINESSENTITIES_UPDATE"/>
+    <access id="access_1_519" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINBUSINESSENTITIES_DELETE"/>
+    <access id="access_1_520" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINCUSTOMERSB2B_CREATE"/>
+    <access id="access_1_521" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINCUSTOMERSB2B_READ"/>
+    <access id="access_1_522" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINCUSTOMERSB2B_UPDATE"/>
+    <access id="access_1_523" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINCUSTOMERSB2B_DELETE"/>
   </entities>
 </entity_access>

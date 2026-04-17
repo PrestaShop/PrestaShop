@@ -54,16 +54,12 @@ Feature: Add discount with carrier trigger
       | zones            | zone1                              |
       | rangeBehavior    | disabled                           |
     When I create a "free_shipping" discount "discount_with_carriers" with following properties:
-      | name[en-US] | Promotion |
-    Then discount "discount_with_carriers" should have the following properties:
-      | name[en-US] | Promotion     |
-      | type        | free_shipping |
-    Then discount "discount_with_carriers" should have the following properties:
-      | name[en-US]              | Promotion     |
-      | type                     | free_shipping |
-      | minimum_product_quantity | 0             |
-    And discount "discount_with_carriers" should have no product conditions
-    When I update discount "discount_with_carriers" with conditions based on carriers "carrier1,carrier2"
-    Then discount "discount_with_carriers" should have the following properties:
       | name[en-US] | Promotion         |
       | carriers    | carrier1,carrier2 |
+    Then discount "discount_with_carriers" should have the following properties:
+      | name[en-US]              | Promotion         |
+      | type                     | free_shipping     |
+      | minimum_product_quantity | 0                 |
+      | carriers                 | carrier1,carrier2 |
+      | productConditionQuantity |                   |
+      | productCondition         |                   |

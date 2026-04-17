@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -30,6 +10,8 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use HelperTreeCategories;
+use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
@@ -1877,5 +1859,57 @@ class ProductController extends PrestaShopAdminController
         $shopId = $this->getShopContext()->getId();
 
         return !empty($shopId) ? (int) $shopId : null;
+    }
+
+    /**
+     * Displays a category tree (legacy).
+     *
+     * This action is kept for backward compatibility with pages
+     * that still rely on HelperTreeCategories.
+     *
+     * @todo Remove this method once all pages depending on
+     *       HelperTreeCategories have been migrated to Symfony.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")]
+    public function legacyCategoryTreeAction(
+        Request $request,
+    ): Response {
+        $contextAdapter = $this->container->get(LegacyContext::class);
+        $rootCategoryId = (new CategoryDataProvider($contextAdapter))->getRootCategory()->id;
+        $category = $request->query->get('category', $rootCategoryId);
+        $full_tree = $request->query->get('fullTree', 0);
+        $use_check_box = $request->query->get('useCheckBox', 1);
+        $selected = $request->query->all('selected');
+        if (is_array($selected) === false) {
+            $selected = [$selected];
+        }
+        $id_tree = $request->query->get('type');
+        $input_name = str_replace(['[', ']'], '', $request->query->get('inputName', ''));
+
+        $tree = new HelperTreeCategories('subtree_associated_categories');
+        $tree->setTemplate('subtree_associated_categories.tpl')
+            ->setUseCheckBox($use_check_box)
+            ->setUseSearch(true)
+            ->setIdTree($id_tree)
+            ->setSelectedCategories($selected)
+            ->setFullTree($full_tree)
+            ->setChildrenOnly(true)
+            ->setNoJS(true)
+            ->setRootCategory($category);
+
+        if ($input_name) {
+            $tree->setInputName($input_name);
+        }
+
+        $contextAdapter->getContext()->smarty->setTemplateDir([
+            _PS_BO_ALL_THEMES_DIR_ . 'default/template/',
+            _PS_OVERRIDE_DIR_ . 'controllers' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'templates',
+        ]);
+
+        return new Response($tree->render());
     }
 }

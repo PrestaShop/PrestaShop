@@ -11,8 +11,8 @@ import {
   boLoginPage,
   type BrowserContext,
   FakerCategory,
-  foClassicCategoryPage,
-  foClassicHomePage,
+  foHummingbirdCategoryPage,
+  foHummingbirdHomePage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -20,7 +20,7 @@ import {
 
 const baseContext: string = 'functional_BO_design_imageSettings_checkCategoryImageFormat';
 
-describe('BO - Design - Image Settings - Check category image format', async () => {
+describe('BO - Design - Image Settings : Check category image format', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let idCategory: number = 0;
@@ -38,7 +38,6 @@ describe('BO - Design - Image Settings - Check category image format', async () 
     thumbnailImage: 'thumbWEBP.webp',
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -151,8 +150,8 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           it('should go to BO', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `goToBoProducts${argExtension}`, baseContext);
 
-            page = await foClassicCategoryPage.closePage(browserContext, page, 0);
-            await foClassicCategoryPage.goToBO(page);
+            page = await foHummingbirdCategoryPage.closePage(browserContext, page, 0);
+            await foHummingbirdCategoryPage.goToBO(page);
 
             const pageTitle = await boDashboardPage.getPageTitle(page);
             expect(pageTitle).to.contains(boDashboardPage.pageTitle);
@@ -268,25 +267,25 @@ describe('BO - Design - Image Settings - Check category image format', async () 
           await testContext.addContextItem(this, 'testIdentifier', `goToFo${argExtension}`, baseContext);
 
           page = await boCategoriesCreatePage.viewMyShop(page);
-          await foClassicHomePage.changeLanguage(page, 'en');
+          await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await foClassicHomePage.isHomePage(page);
-          expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+          const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+          expect(isHomePage).to.eq(true);
         });
 
         it('should go to all products page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToFoAllProducts${argExtension}`, baseContext);
 
-          await foClassicHomePage.goToAllProductsPage(page);
+          await foHummingbirdHomePage.goToAllProductsPage(page);
 
-          const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
+          const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
           expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
         });
 
         it('should check that the main image of the quick view is a WebP', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkMainImageQuickView${argExtension}`, baseContext);
 
-          const categoryImage = await foClassicCategoryPage.getCategoryImageMain(page, arg.category.name);
+          const categoryImage = await foHummingbirdCategoryPage.getCategoryImageMain(page, arg.category.name);
           expect(categoryImage).to.not.eq(null);
 
           await utilsFile.downloadFile(categoryImage as string, 'image.img');

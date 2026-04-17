@@ -1,0 +1,172 @@
+# Manual workflow to create a release PR with the changelog (merged PRs) and the updated contributors list.
+
+name: Generate Changelog PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: 'Branch to create the changelog on (e.g. develop)'
+        required: true
+        type: choice
+        options:
+          - 'develop'
+          - '9.1.x'
+          - '8.2.x'
+        default: 'develop'
+      previous_ref:
+        description: 'Previous git ref - tag, branch or SHA (e.g. 9.0.2)'
+        required: true
+        type: string
+      next_version:
+        description: 'Next version for the changelog (e.g. 9.1.0 Beta 1)'
+        required: true
+        type: string
+      target_ref:
+        description: 'Leave empty to use the provided base_branch. Tou can optionally specify target git ref - tag, branch or SHA (e.g. HEAD)'
+        required: false
+        type: string
+        default: ''
+      release_date:
+        description: 'Release date (YYYY-MM-DD). Empty = today'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-changelog:
+    name: Prepare changelog and create PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.base_branch }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch tags
+        run: git fetch --tags
+
+      - name: Display parameters
+        run: |
+          echo Generating changelog with following parameters:
+          echo repository: ${{ github.repository }}
+          echo base_branch: ${{ inputs.base_branch }}
+          echo previous_ref: ${{ inputs.previous_ref }}
+          echo target_ref: ${{ inputs.target_ref || inputs.base_branch }}
+          echo next_version: ${{ inputs.next_version }}
+          echo release_date: ${{ inputs.release_date }}
+
+      - name: Generate changelog
+        id: changelog
+        uses: PrestaShop/.github/.github/actions/generate-changelog@master
+        with:
+          github_token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          previous_ref: ${{ inputs.previous_ref }}
+          target_ref: ${{ inputs.target_ref || inputs.base_branch }}
+          next_version: ${{ inputs.next_version }}
+          release_date: ${{ inputs.release_date }}
+
+      - name: Create branch and push
+        id: push
+        run: |
+          BRANCH_NAME="release/changelog-$(echo '${{ inputs.next_version }}' | tr ' ' '-')"
+          echo "branch_name=${BRANCH_NAME}" >> "$GITHUB_OUTPUT"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/CHANGELOG.txt CONTRIBUTORS.md
+          if git diff --staged --quiet; then
+            echo "No changes to commit (no new PRs or contributors since previous version?)."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "Changelog ${{ inputs.next_version }}"
+          git push --force origin "HEAD:${BRANCH_NAME}"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Create or update Pull Request
+        if: steps.push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH_NAME="${{ steps.push.outputs.branch_name }}"
+          TITLE="Changelog ${{ inputs.next_version }}"
+          read -r -d '' BODY <<'EOF' || true
+          | Questions         | Answers
+          | ----------------- | -------------------------------------------------------
+          | Branch?           | ${{ inputs.base_branch }}
+          | Description?      | Update `docs/CHANGELOG.txt` with merged PRs between `${{ inputs.previous_ref }}` and `${{ inputs.target_ref || inputs.base_branch }}`, and update `CONTRIBUTORS.md` with new contributors.
+          | Type?             | improvement
+          | Category?         | PM
+          | BC breaks?        | no
+          | Deprecations?     | no
+          | How to test?      | Review the changes in `docs/CHANGELOG.txt` and `CONTRIBUTORS.md`.
+          | UI Tests          | N/A
+          | Fixed issue or discussion? | N/A
+          | Related PRs       | N/A
+          | Sponsor company   | N/A
+
+          ## Informations
+
+          <details>
+          <summary>Changelog</summary>
+
+          ```
+          ${{ steps.changelog.outputs.changelog }}
+          ```
+
+          </details>
+
+          <details>
+          <summary>Changelog with urls</summary>
+
+          ```
+          ${{ steps.changelog.outputs.changelog_formatted }}
+          ```
+
+          </details>
+          <details>
+          <summary>Contributors</summary>
+
+          ```
+          ${{ steps.changelog.outputs.contributors }}
+          ```
+
+          </details>
+
+          <details>
+          <summary>Contributors grid</summary>
+
+          ```
+          ${{ steps.changelog.outputs.contributors_grid }}
+          ```
+
+          </details>
+
+          <details>
+          <summary>New Contributors</summary>
+
+          ```
+          ${{ steps.changelog.outputs.new_contributors }}
+          ```
+
+          </details>
+          EOF
+
+          EXISTING_PR=$(gh pr list --repo "${{ github.repository }}" --head "${BRANCH_NAME}" --base "${{ inputs.base_branch }}" --json number -q '.[0].number' 2>/dev/null || true)
+          if [[ -n "$EXISTING_PR" ]]; then
+            gh pr edit "$EXISTING_PR" --title "$TITLE" --body "$BODY"
+            echo "Updated existing PR #${EXISTING_PR}"
+          else
+            gh pr create \
+              --base "${{ inputs.base_branch }}" \
+              --head "${BRANCH_NAME}" \
+              --title "$TITLE" \
+              --body "$BODY"
+          fi

@@ -1,32 +1,15 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 import Router from '@components/router';
 import GlobalMap from './global-map';
 
 const refreshNotifications = function (): void {
   let timer = null;
+  let nbOrders = 0;
+  let nbCustomers = 0;
+  let nbCustomerMessages = 0;
   const router = new Router();
 
   $.ajax({
@@ -37,31 +20,44 @@ const refreshNotifications = function (): void {
     cache: false,
     dataType: 'json',
     success(json) {
-      if (json) {
-        const nbOrders = parseInt(json.order.total, 10);
-        const nbCustomers = parseInt(json.customer.total, 10);
-        const nbCustomerMessages = parseInt(json.customer_message.total, 10);
+      if (json && Object.keys(json).length > 0) {
+        if (Object.prototype.hasOwnProperty.call(json, 'order')) {
+          nbOrders = parseInt(json.order.total, 10);
+
+          fillTpl(
+            json.order.results,
+            $(GlobalMap.notifications.ordersNotifications),
+            $(GlobalMap.notifications.orderNotificationTemplate).html(),
+          );
+
+          setNotificationsNumber('_nb_new_orders_', nbOrders);
+        }
+
+        if (Object.prototype.hasOwnProperty.call(json, 'customer')) {
+          nbCustomers = parseInt(json.customer.total, 10);
+
+          fillTpl(
+            json.customer.results,
+            $(GlobalMap.notifications.customersNotifications),
+            $(GlobalMap.notifications.customerNotificationTemplate).html(),
+          );
+
+          setNotificationsNumber('_nb_new_customers_', nbCustomers);
+        }
+
+        if (Object.prototype.hasOwnProperty.call(json, 'customer_message')) {
+          nbCustomerMessages = parseInt(json.customer_message.total, 10);
+
+          fillTpl(
+            json.customer_message.results,
+            $(GlobalMap.notifications.messagesNotifications),
+            $(GlobalMap.notifications.messageNotificationTemplate).html(),
+          );
+          setNotificationsNumber('_nb_new_messages_', nbCustomerMessages);
+        }
+
         const notificationsTotal = nbOrders + nbCustomers + nbCustomerMessages;
 
-        fillTpl(
-          json.order.results,
-          $(GlobalMap.notifications.ordersNotifications),
-          $(GlobalMap.notifications.orderNotificationTemplate).html(),
-        );
-        fillTpl(
-          json.customer.results,
-          $(GlobalMap.notifications.customersNotifications),
-          $(GlobalMap.notifications.customerNotificationTemplate).html(),
-        );
-        fillTpl(
-          json.customer_message.results,
-          $(GlobalMap.notifications.messagesNotifications),
-          $(GlobalMap.notifications.messageNotificationTemplate).html(),
-        );
-
-        setNotificationsNumber('_nb_new_orders_', nbOrders);
-        setNotificationsNumber('_nb_new_customers_', nbCustomers);
-        setNotificationsNumber('_nb_new_messages_', nbCustomerMessages);
         if (notificationsTotal) {
           $(GlobalMap.notifications.total)
             .removeClass('hide')

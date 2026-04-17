@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 #createDiscountModal {
   .modal-dialog {
     max-width: 400px;
@@ -5,6 +9,16 @@
     .modal-title {
       font-size: var(--#{$cdk}size-24);
     }
+  }
+}
+
+.discount-type-badge {
+  display: block;
+  width: fit-content;
+  font-size: var(--#{$cdk}size-14);
+
+  .text-preview-value {
+    display: none;
   }
 }
 
@@ -30,3 +44,4 @@
     margin-right: var(--cdk-size-8);
   }
 }
+

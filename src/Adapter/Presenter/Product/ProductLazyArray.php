@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
@@ -47,6 +27,7 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
 use ReflectionException;
@@ -63,27 +44,27 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @var ImageRetriever
      */
-    private $imageRetriever;
+    protected $imageRetriever;
 
     /**
      * @var Link
      */
-    private $link;
+    protected $link;
 
     /**
      * @var PriceFormatter
      */
-    private $priceFormatter;
+    protected $priceFormatter;
 
     /**
      * @var ProductColorsRetriever
      */
-    private $productColorsRetriever;
+    protected $productColorsRetriever;
 
     /**
      * @var TranslatorInterface
      */
-    private $translator;
+    protected $translator;
 
     /**
      * @var ProductPresentationSettings
@@ -98,17 +79,17 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @var Language
      */
-    private $language;
+    protected $language;
 
     /**
      * @var HookManager
      */
-    private $hookManager;
+    protected $hookManager;
 
     /**
      * @var Configuration
      */
-    private $configuration;
+    protected $configuration;
 
     public function __construct(
         ProductPresentationSettings $settings,
@@ -310,6 +291,24 @@ class ProductLazyArray extends AbstractLazyArray
                     ),
                     'schema_url' => 'https://schema.org/RefurbishedCondition',
                 ];
+            case 'damaged':
+                return [
+                    'type' => 'damaged',
+                    'label' => $this->translator->trans('Damaged', [], 'Shop.Theme.Catalog'),
+                    'schema_url' => 'https://schema.org/DamagedCondition',
+                ];
+            case 'open_box':
+                return [
+                    'type' => 'open_box',
+                    'label' => $this->translator->trans('New, open box', [], 'Shop.Theme.Catalog'),
+                    'schema_url' => 'https://schema.org/NewCondition',
+                ];
+            case 'new_with_defects':
+                return [
+                    'type' => 'new_with_defects',
+                    'label' => $this->translator->trans('New, minor defects', [], 'Shop.Theme.Catalog'),
+                    'schema_url' => 'https://schema.org/NewCondition',
+                ];
             default:
                 return false;
         }
@@ -321,24 +320,38 @@ class ProductLazyArray extends AbstractLazyArray
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getDeliveryInformation()
     {
-        $productQuantity =
-            $this->product['stock_quantity'] ?? $this->product['quantity'];
+        // If the product is virtual, we don't show delivery information
+        if ($this->getVirtual()) {
+            return null;
+        }
 
-        if ($productQuantity >= $this->getQuantityWanted()) {
-            $config = $this->configuration->get(
-                'PS_LABEL_DELIVERY_TIME_AVAILABLE'
-            );
+        // If the product cannot be ordered, we don't show delivery information
+        if (!$this->shouldEnableAddToCartButton($this->product, $this->settings)) {
+            return null;
+        }
 
-            return $config[$this->language->id] ?? null;
-        } elseif (
-            $this->shouldEnableAddToCartButton($this->product, $this->settings)
-        ) {
-            $config = $this->configuration->get(
-                'PS_LABEL_DELIVERY_TIME_OOSBOA',
-                []
-            );
+        // Get proper quantity available value
+        $productQuantity = $this->product['stock_quantity'] ?? $this->product['quantity'];
 
-            return $config[$this->language->id] ?? null;
+        // Type 0 - no delivery information
+        if ($this->product['additional_delivery_times'] == DeliveryTimeNoteType::TYPE_NONE) {
+            return null;
+
+        // Type 1 - use default information
+        } elseif ($this->product['additional_delivery_times'] == DeliveryTimeNoteType::TYPE_DEFAULT) {
+            if ($productQuantity >= $this->getQuantityWanted()) {
+                return $this->configuration->get('PS_LABEL_DELIVERY_TIME_AVAILABLE')[$this->language->id] ?? null;
+            } else {
+                return $this->configuration->get('PS_LABEL_DELIVERY_TIME_OOSBOA')[$this->language->id] ?? null;
+            }
+
+        // Type 2 - use product information
+        } elseif ($this->product['additional_delivery_times'] == DeliveryTimeNoteType::TYPE_SPECIFIC) {
+            if ($productQuantity >= $this->getQuantityWanted()) {
+                return $this->product['delivery_in_stock'] ?? null;
+            } else {
+                return $this->product['delivery_out_stock'] ?? null;
+            }
         }
 
         return null;
@@ -439,14 +452,11 @@ class ProductLazyArray extends AbstractLazyArray
     public function getReferenceToDisplay()
     {
         $combinationData = $this->getCombinationSpecificData();
-        if (
-            isset($combinationData['reference'])
-            && !empty($combinationData['reference'])
-        ) {
+        if (!empty($combinationData['reference'])) {
             return $combinationData['reference'];
         }
 
-        if ('' !== $this->product['reference']) {
+        if (!empty($this->product['reference'])) {
             return $this->product['reference'];
         }
 
@@ -875,7 +885,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return bool
      */
-    private function shouldShowPrice(
+    protected function shouldShowPrice(
         ProductPresentationSettings $settings,
         array $product
     ): bool {
@@ -887,7 +897,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return bool
      */
-    private function shouldShowOutOfStockLabel(
+    protected function shouldShowOutOfStockLabel(
         ProductPresentationSettings $settings,
         array $product
     ): bool {
@@ -935,7 +945,7 @@ class ProductLazyArray extends AbstractLazyArray
      * @param array $product
      * @param Language $language
      */
-    private function fillImages(array $product, Language $language): void
+    protected function fillImages(array $product, Language $language): void
     {
         // Get all product images assigned to this product.
         $productImages = $this->imageRetriever->getAllProductImages(
@@ -991,7 +1001,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return array
      */
-    private function filterImagesForCombination(
+    protected function filterImagesForCombination(
         array $images,
         int $productAttributeId
     ) {
@@ -1010,7 +1020,7 @@ class ProductLazyArray extends AbstractLazyArray
      * @param ProductPresentationSettings $settings
      * @param array $product
      */
-    private function addPriceInformation(
+    protected function addPriceInformation(
         ProductPresentationSettings $settings,
         array $product
     ): void {
@@ -1199,12 +1209,8 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         // Disable because of stock management
-        if (
-            $settings->stock_management_enabled
-            && !$product['allow_oosp']
-            && ($product['quantity'] <= 0
-                || $product['quantity'] - $this->getQuantityWanted() < 0
-                || $product['quantity'] - $this->getMinimalQuantity() < 0)
+        if ($settings->stock_management_enabled && !$product['allow_oosp']
+            && ($product['quantity'] <= 0 || $product['quantity'] - $this->getQuantityWanted() < 0)
         ) {
             $shouldEnable = false;
         }
@@ -1213,22 +1219,77 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
-     * @return int Quantity of product requested by the customer
+     * Gets the quantity wanted by the customer for the product. We will take his request,
+     * but we will adjust it if it's lower than the required quantity.
+     *
+     * @return int Quantity of product requested by the customer, altered if needed, always a positive integer
      */
-    private function getQuantityWanted()
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getQuantityWanted()
     {
-        return (int) Tools::getValue(
-            'quantity_wanted',
-            $this->product['quantity_wanted'] ?? 1
-        );
+        if (empty($this->product['quantity_wanted'])) {
+            // Get the quantity wanted from the request
+            $quantityWantedByTheCustomer = (int) Tools::getValue('quantity_wanted', 1);
+
+            // Get minimal required quantity for purchase
+            $requiredQuantityForPurchase = $this->getQuantityRequired();
+
+            if ($quantityWantedByTheCustomer < $requiredQuantityForPurchase) {
+                $quantityWantedByTheCustomer = $requiredQuantityForPurchase;
+            }
+
+            $this->product['quantity_wanted'] = $quantityWantedByTheCustomer;
+        }
+
+        return $this->product['quantity_wanted'];
     }
 
     /**
-     * @return int Minimal quantity of product requested by the customer
+     * Gets the minimal quantity the customer has to purchase. We cannot just let him buy 1 piece
+     * if the minimal quantity is higher. Also, we adjust it by the quantity already in cart.
+     *
+     * @return int Minimal quantity of product the customer buy right now, always a positive integer
      */
-    private function getMinimalQuantity()
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getQuantityRequired()
     {
-        return (int) $this->product['minimal_quantity'];
+        // For the required quantity, we will need to limit it by the minimal quantity on the low side.
+        $requiredQuantityForPurchase = $this->getMinimalQuantity();
+
+        /*
+         * We reduce it by the quantity we already have in cart. If the user already has a sufficient
+         * quantity in the cart, we don't need to add more. Although it may seem that we can just reset
+         * the minimal quantity to one in that case, we must not do that, because the quantity in the cart
+         * may not be the correct one.
+         */
+        if (!empty($this->product['cart_quantity'])) {
+            $requiredQuantityForPurchase -= $this->product['cart_quantity'];
+            if ($requiredQuantityForPurchase < 1) {
+                $requiredQuantityForPurchase = 1;
+            }
+        }
+
+        return $requiredQuantityForPurchase;
+    }
+
+    /**
+     * Gets the minimal quantity allowed for the product or its combination. With no adjustments
+     * by the current context. The builder of this object is responsible for passing the correct
+     * minimal quantity depending on the combination selected.
+     *
+     * @return int Minimal quantity of product from it's settings, always a positive integer
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getMinimalQuantity()
+    {
+        $minimalQuantity = (int) $this->product['minimal_quantity'];
+
+        // If we received faulty data, we correct it to 1
+        if ($minimalQuantity < 1) {
+            $minimalQuantity = 1;
+        }
+
+        return $minimalQuantity;
     }
 
     /**
@@ -1240,7 +1301,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return string
      */
-    private function getProductURL(
+    protected function getProductURL(
         array $product,
         Language $language,
         $canonical = false
@@ -1281,10 +1342,6 @@ class ProductLazyArray extends AbstractLazyArray
         $show_availability = $show_price && $settings->stock_management_enabled;
         $this->product['show_availability'] = $show_availability;
 
-        if (!isset($product['quantity_wanted'])) {
-            $product['quantity_wanted'] = $this->getQuantityWanted();
-        }
-
         // Validate and format availability date
         $product['available_date'] = $this->prepareAvailabilityDate($product);
 
@@ -1311,12 +1368,14 @@ class ProductLazyArray extends AbstractLazyArray
             return;
         }
 
-        // Quantity available we will display is reduced by amount we want to add to cart
-        $availableQuantity = $product['quantity'] - $product['quantity_wanted'];
-        if (isset($product['stock_quantity'])) {
-            $availableQuantity =
-                $product['stock_quantity'] - $product['quantity_wanted'];
-        }
+        /*
+         * To define availabiity, we will subtract the stock quantity by the quantity the customer
+         * wants to add to cart. Since this class can be instantiated from multiple places, we need
+         * to make sure we use proper quantity key. Normally, it's 'quantity', but on cart page,
+         * it's 'stock_quantity'.
+         */
+        $stockQuantity = isset($product['stock_quantity']) ? $product['stock_quantity'] : $product['quantity'];
+        $availableQuantity = $stockQuantity - $this->getQuantityWanted();
 
         // Combination labels
         $combinationData = $this->getCombinationSpecificData();
@@ -1452,7 +1511,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return string|null
      */
-    private function prepareAvailabilityDate($product)
+    protected function prepareAvailabilityDate($product)
     {
         // Check if the date is valid
         if (
@@ -1477,7 +1536,7 @@ class ProductLazyArray extends AbstractLazyArray
      *
      * @return string
      */
-    private function getTranslatedKey($key)
+    protected function getTranslatedKey($key)
     {
         switch ($key) {
             case 'ean13':
@@ -1514,7 +1573,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     protected function getProductAttributeWhitelist()
     {
-        return [
+        $whitelist = [
             'active',
             'add_to_cart_url',
             'additional_shipping_cost',
@@ -1620,6 +1679,12 @@ class ProductLazyArray extends AbstractLazyArray
             'visibility',
             'weight_unit',
         ];
+
+        if (empty($this->product['show_quantities'])) {
+            $whitelist = array_diff($whitelist, ['quantity', 'quantity_all_versions']);
+        }
+
+        return $whitelist;
     }
 
     /**

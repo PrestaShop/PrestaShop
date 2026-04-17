@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use Defuse\Crypto\Key;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -101,7 +81,11 @@ class CookieCore
      * Get data if the cookie exists and else initialize an new one.
      *
      * @param string $name Cookie name before encrypting
-     * @param string $path
+     * @param string $path Cookie path
+     * @param int|null $expire Cookie expiration time (default: 20 days from now)
+     * @param array|null $shared_urls Array of shared URLs for domain calculation
+     * @param bool $standalone Whether this is a standalone cookie (ie. the cookie is self-contained and not dependent on PrestaShop's context)
+     * @param bool $secure Whether the cookie should be secure (HTTPS only)
      */
     public function __construct($name, $path = '', $expire = null, $shared_urls = null, $standalone = false, $secure = false)
     {
@@ -132,6 +116,10 @@ class CookieCore
         $this->update();
     }
 
+    /**
+     * Disable cookie writing.
+     * Prevents the cookie from being written to the browser.
+     */
     public function disallowWriting()
     {
         $this->_allow_writing = false;
@@ -266,8 +254,8 @@ class CookieCore
     }
 
     /**
-     * Soft logout, delete everything links to the customer
-     * but leave there affiliate's informations.
+     * Soft logout, delete everything linked to the customer
+     * but leave their affiliate's informations intact.
      * As of version 1.5 don't call this function, use Customer::mylogout() instead;.
      */
     public function mylogout()
@@ -290,6 +278,10 @@ class CookieCore
         $this->_modified = true;
     }
 
+    /**
+     * Create a new guest log entry.
+     * Removes current customer and guest IDs and creates a new guest session.
+     */
     public function makeNewLog()
     {
         unset(
@@ -301,7 +293,10 @@ class CookieCore
     }
 
     /**
-     * Get cookie content.
+     * Get cookie content and update internal data.
+     * Decrypts and validates the cookie content, handles checksum verification.
+     *
+     * @param bool $nullValues Whether to handle null values
      */
     public function update($nullValues = false)
     {
@@ -392,6 +387,10 @@ class CookieCore
         );
     }
 
+    /**
+     * Destructor.
+     * Automatically saves the cookie when the object is destroyed.
+     */
     public function __destruct()
     {
         $this->write();
@@ -431,7 +430,11 @@ class CookieCore
     }
 
     /**
-     * Get a family of variables (e.g. "filter_").
+     * Get a family of variables with a common prefix (e.g. "filter_").
+     *
+     * @param string $origin The prefix to search for
+     *
+     * @return array Array of key-value pairs matching the prefix
      */
     public function getFamily($origin)
     {
@@ -448,6 +451,11 @@ class CookieCore
         return $result;
     }
 
+    /**
+     * Remove a family of variables with a common prefix.
+     *
+     * @param string $origin The prefix of variables to remove
+     */
     public function unsetFamily($origin)
     {
         $family = $this->getFamily($origin);
@@ -456,6 +464,11 @@ class CookieCore
         }
     }
 
+    /**
+     * Get all cookie content.
+     *
+     * @return array All cookie data as key-value pairs
+     */
     public function getAll()
     {
         return $this->_content;
@@ -480,9 +493,11 @@ class CookieCore
     }
 
     /**
-     * Register a new session
+     * Register a new session for the current user.
      *
-     * @param SessionInterface $session
+     * @param SessionInterface $session The session object to register
+     *
+     * @throws CoreException If no valid user ID is found
      */
     public function registerSession(SessionInterface $session)
     {
@@ -502,9 +517,10 @@ class CookieCore
     }
 
     /**
-     * Delete session
+     * Delete the current session.
+     * Removes the session if it exists.
      *
-     * @return bool
+     * @return bool True if session was deleted, false if no session exists
      */
     public function deleteSession()
     {
@@ -523,9 +539,10 @@ class CookieCore
     }
 
     /**
-     * Check if this session is still alive
+     * Check if the current session is still alive and valid.
+     * Verifies session ID, token, and user ID match.
      *
-     * @return bool
+     * @return bool True if session is valid and alive
      */
     public function isSessionAlive()
     {
@@ -546,10 +563,12 @@ class CookieCore
     }
 
     /**
-     * Retrieve session based on a session id and the employee or
-     * customer id
+     * Retrieve session based on a session ID and the employee or customer ID
+     * Creates appropriate session object (Employee or Customer) and updates its timestamp.
      *
-     * @return SessionInterface|null
+     * @param int $sessionId The session ID to retrieve
+     *
+     * @return SessionInterface|null The session object or null if not found
      */
     public function getSession($sessionId)
     {

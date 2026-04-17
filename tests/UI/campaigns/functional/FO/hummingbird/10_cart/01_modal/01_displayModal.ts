@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   foHummingbirdCartPage,
@@ -16,12 +14,9 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_cart_modal_displayModal';
 
-describe('FO - cart : Display modal when adding a product to cart', async () => {
+describe('FO - Cart : Display modal when adding a product to cart', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -40,7 +35,7 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.equal(true);
+      expect(isHomePage).to.equal(true);
     });
 
     it('should add the first product to cart by quick view and click on continue button', async function () {
@@ -81,7 +76,4 @@ describe('FO - cart : Display modal when adding a product to cart', async () => 
       expect(notificationsNumber).to.equal(5);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

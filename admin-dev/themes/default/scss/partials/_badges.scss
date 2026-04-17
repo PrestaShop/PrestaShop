@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 .badge {
   min-width: var(--#{$cdk}size-20);
   min-height: var(--#{$cdk}size-20);
@@ -21,6 +25,10 @@
 
   &.badge-critical {
     background-color: var(--#{$cdk}red-700);
+  }
+
+  &.badge-light-info {
+    background-color: var(--#{$cdk}blue-300);
   }
 }
 

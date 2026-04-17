@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataProducts,
@@ -17,13 +15,10 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_cart_cart_displayModalProductCustomization';
 
-describe('FO - cart : Display modal of product customization', async () => {
+describe('FO - Cart : Display modal of product customization', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   const customText: string = 'Hello world!';
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -42,7 +37,7 @@ describe('FO - cart : Display modal of product customization', async () => {
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it(`should search for the product '${dataProducts.demo_14.name}'`, async function () {
@@ -114,7 +109,4 @@ describe('FO - cart : Display modal of product customization', async () => {
       expect(isModalNotVisible).to.equal(true);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

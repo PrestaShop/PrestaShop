@@ -2,6 +2,11 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="Modules.Distributionapiclient.Admin.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="7d61983c34edc2a8cabbea71c4732f62">
+        <source>Community</source>
+        <target>Community</target>
+        <note>File: modules/ps_distributionapiclient/ps_distributionapiclient.php [Line: 115]</note>
+      </trans-unit>
       <trans-unit id="86d96c9ee244b0beb3ca402d777a7be3">
         <source>Distribution API Client</source>
         <target>Distribution API Client</target>
@@ -11,6 +16,11 @@
         <source>Download and upgrade PrestaShop's native modules.</source>
         <target>Download and upgrade PrestaShop's native modules.</target>
         <note>File: modules/ps_distributionapiclient/ps_distributionapiclient.php [Line: 39]</note>
+      </trans-unit>
+      <trans-unit id="133a5c283447b73f35076a5a8e761c5a">
+        <source>Wall of Fame</source>
+        <target>Wall of Fame</target>
+        <note>File: modules/ps_distributionapiclient/ps_distributionapiclient.php [Line: 133]</note>
       </trans-unit>
     </body>
   </file>

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
@@ -38,7 +18,6 @@ use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray;
-use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -87,6 +66,8 @@ class CartLazyArray extends AbstractLazyArray
 
     private ImageRetriever $imageRetriever;
 
+    private CartProductPresenter $cartProductPresenter;
+
     public function __construct(Cart $cart, CartPresenter $cartPresenter, bool $shouldSeparateGifts = false)
     {
         $this->shouldSeparateGifts = $shouldSeparateGifts;
@@ -97,6 +78,13 @@ class CartLazyArray extends AbstractLazyArray
         $this->link = $context->link;
         $this->imageRetriever = new ImageRetriever($this->link);
         $this->priceFormatter = new PriceFormatter();
+        $this->cartProductPresenter = new CartProductPresenter(
+            $this->imageRetriever,
+            $this->link,
+            $this->priceFormatter,
+            new ProductColorsRetriever(),
+            $this->translator
+        );
         parent::__construct();
     }
 
@@ -107,7 +95,7 @@ class CartLazyArray extends AbstractLazyArray
         if ($this->shouldSeparateGifts) {
             $rawProducts = $this->cart->getProductsWithSeparatedGifts();
         } else {
-            $rawProducts = $this->cart->getProducts(true);
+            $rawProducts = $this->cart->getProducts();
         }
 
         /*
@@ -169,7 +157,7 @@ class CartLazyArray extends AbstractLazyArray
     {
         $subtotals = [];
         $totalCartAmount = $this->cart->getOrderTotal($this->cartPresenter->includeTaxes(), Cart::ONLY_PRODUCTS);
-        $total_discount = $this->cart->getDiscountSubtotalWithoutGifts($this->cartPresenter->includeTaxes());
+        $total_discount = $this->cart->getOrderTotal($this->cartPresenter->includeTaxes(), Cart::ONLY_DISCOUNTS);
         $subtotals['products'] = [
             'type' => 'products',
             'label' => $this->translator->trans('Subtotal', [], 'Shop.Theme.Checkout'),
@@ -394,6 +382,12 @@ class CartLazyArray extends AbstractLazyArray
         } else {
             $defaultCountry = null;
 
+            /*
+             * @todo
+             * This condition should fill default_country with something, but it will never work, since context->cookie->id_country
+             * is never set anywhere. NULL will be passed in $default_country down the stream and it will usually be resolved
+             * to proper values all the way in getPackageShippingCostValue.
+             */
             if (isset(Context::getContext()->cookie->id_country)) {
                 $defaultCountry = new Country((int) Context::getContext()->cookie->id_country);
             }
@@ -463,7 +457,7 @@ class CartLazyArray extends AbstractLazyArray
                 $cartVoucher['reduction_formatted'] = $this->translator->trans(
                     'Free shipping',
                     [],
-                    'Admin.Shipping.Feature'
+                    'Shop.Theme.Checkout'
                 );
             } else {
                 $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->format($totalCartVoucherReduction);
@@ -493,9 +487,14 @@ class CartLazyArray extends AbstractLazyArray
 
     private function cartVoucherHasFreeShippingOnly(array $cartVoucher): bool
     {
+        /*
+         * Here, we cannot just use $cartVoucher['free_shipping'], because the rule can do multiple things.
+         * If it gives a money discount AND free shipping, we must still display a numeric value.
+         */
         return !$this->cartVoucherHasPercentReduction($cartVoucher)
             && !$this->cartVoucherHasAmountReduction($cartVoucher)
-            && !$this->cartVoucherHasGiftProductReduction($cartVoucher);
+            && !$this->cartVoucherHasGiftProductReduction($cartVoucher)
+            && $cartVoucher['free_shipping'];
     }
 
     private function cartVoucherHasPercentReduction(array $cartVoucher): bool
@@ -574,17 +573,10 @@ class CartLazyArray extends AbstractLazyArray
                 $rawProduct['total']
         );
 
+        // Pass the cart quantity as quantity wanted for proper price calculation
         $rawProduct['quantity_wanted'] = $rawProduct['cart_quantity'];
 
-        $presenter = new ProductListingPresenter(
-            $this->imageRetriever,
-            $this->link,
-            $this->priceFormatter,
-            new ProductColorsRetriever(),
-            $this->translator
-        );
-
-        return $presenter->present(
+        return $this->cartProductPresenter->present(
             $this->cartPresenter->getSettings(),
             $rawProduct,
             Context::getContext()->language

@@ -139,7 +139,6 @@ themes/*-chunk.js.map
 
 # Config
 
-/.env
 /.env.local
 /.env.local.php
 /.env.*.local

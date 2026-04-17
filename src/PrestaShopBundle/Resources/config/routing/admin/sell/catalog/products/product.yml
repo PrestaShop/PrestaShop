@@ -520,3 +520,11 @@ admin_products_quantity:
     shopId: \d+
   options:
     expose: true
+
+admin_category_tree:
+  path: /category-tree
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::legacyCategoryTreeAction
+    _legacy_controller: AdminProducts
+    _legacy_link: AdminProducts:getCategoryTree

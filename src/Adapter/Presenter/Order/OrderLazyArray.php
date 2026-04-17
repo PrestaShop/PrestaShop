@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
@@ -36,13 +16,18 @@ use Currency;
 use CustomerMessage;
 use Doctrine\Common\Annotations\AnnotationException;
 use Order;
+use OrderDetail;
 use OrderReturn;
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentTotalsCalculatorInterface;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
+use PrestaShopBundle\Entity\Repository\ShipmentRepository;
+use PrestaShopBundle\Entity\ShipmentProduct;
 use PrestaShopBundle\Translation\TranslatorComponent;
 use PrestaShopException;
 use ProductDownload;
@@ -73,6 +58,12 @@ class OrderLazyArray extends AbstractLazyArray
     /** @var OrderSubtotalLazyArray */
     private $subTotals;
 
+    /** @var ShipmentRepository */
+    private $shipmentRepository;
+
+    /** @var ShipmentTotalsCalculatorInterface */
+    private $shipmentTotalCalculator;
+
     /**
      * OrderArray constructor.
      *
@@ -88,6 +79,10 @@ class OrderLazyArray extends AbstractLazyArray
         $this->translator = Context::getContext()->getTranslator();
         $this->taxConfiguration = new TaxConfiguration();
         $this->subTotals = new OrderSubtotalLazyArray($this->order);
+        $containerFinder = new ContainerFinder(Context::getContext());
+        $this->shipmentRepository = $containerFinder->getContainer()->get(ShipmentRepository::class);
+        $this->shipmentTotalCalculator = $containerFinder->getContainer()->get(ShipmentTotalsCalculatorInterface::class);
+
         parent::__construct();
     }
 
@@ -152,6 +147,19 @@ class OrderLazyArray extends AbstractLazyArray
     }
 
     /**
+     * @return mixed
+     *
+     * @throws PrestaShopException
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function hasShipments()
+    {
+        $details = $this->getDetails();
+
+        return $details['shipments'];
+    }
+
+    /**
      * @return array
      */
     #[LazyArrayAttribute(arrayAccess: true)]
@@ -210,13 +218,93 @@ class OrderLazyArray extends AbstractLazyArray
                     break;
                 }
             }
-
-            OrderReturn::addReturnedQuantity($orderProducts, $order->id);
         }
 
+        OrderReturn::addReturnedQuantity($orderProducts, $order->id);
         $orderProducts = $this->cartPresenter->addCustomizedData($orderProducts, $cart);
 
         return $this->addOrderReferenceToCustomizationFileUrls($orderProducts);
+    }
+
+    /**
+     * @return array{
+     *     virtual_products: array<int, array<string, mixed>>,
+     *     physical_products: array<int, array{
+     *         carrier: array{
+     *             name: string,
+     *             delay: string|array<string>
+     *         },
+     *         products: array<int, array<string, mixed>>
+     *     }>
+     * }
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getOrderShipments(): array
+    {
+        $orderProducts = $this->getProducts();
+        $shipments = $this->shipmentRepository->findByOrderId($this->order->id);
+        $langId = Context::getContext()->language->id;
+
+        $indexedOrderProducts = [];
+        $virtualProducts = [];
+
+        foreach ($orderProducts as $product) {
+            if (!empty($product['is_virtual'])) {
+                $virtualProducts[] = $product;
+            } else {
+                $indexedOrderProducts[$product['id_order_detail']] = $product;
+            }
+        }
+
+        $physicalProductsByCarrier = [];
+
+        foreach ($shipments as $shipment) {
+            $carrier = new Carrier($shipment->getCarrierId());
+
+            /** @var ShipmentProduct[] $shipmentProducts */
+            $shipmentProducts = $shipment->getProducts();
+
+            $mappedProducts = [];
+
+            foreach ($shipmentProducts as $shipmentProduct) {
+                $orderDetailId = $shipmentProduct->getOrderDetailId();
+
+                if (isset($indexedOrderProducts[$orderDetailId])) {
+                    $product = $indexedOrderProducts[$orderDetailId];
+                    $product['quantity'] = $shipmentProduct->getQuantity();
+
+                    $includeTaxes = $this->includeTaxes();
+                    $total = $this->shipmentTotalCalculator->calculate($orderDetailId, $shipmentProduct->getQuantity(), $includeTaxes);
+
+                    $product['total'] = $this->priceFormatter->format(
+                        $total,
+                        Currency::getCurrencyInstance((int) $this->order->id_currency)
+                    );
+                    $mappedProducts[] = array_merge(
+                        $product,
+                        [
+                            'quantity_shipped' => $shipmentProduct->getQuantity(),
+                            'shipment_id' => $shipment->getId(),
+                        ]
+                    );
+                }
+            }
+
+            if (!empty($mappedProducts)) {
+                $physicalProductsByCarrier[] = [
+                    'carrier' => [
+                        'name' => $carrier->name,
+                        'delay' => $carrier->delay[$langId] ?? $carrier->delay,
+                    ],
+                    'products' => $mappedProducts,
+                ];
+            }
+        }
+
+        return [
+            'virtual_products' => $virtualProducts,
+            'physical_products' => $physicalProductsByCarrier,
+        ];
     }
 
     /**
@@ -277,7 +365,7 @@ class OrderLazyArray extends AbstractLazyArray
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getDetails()
     {
-        return new OrderDetailLazyArray($this->order);
+        return new OrderDetailLazyArray($this->order, $this->shipmentRepository);
     }
 
     /**

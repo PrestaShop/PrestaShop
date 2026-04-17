@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -29,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\AjaxBulkAction;
@@ -54,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\HiddenFilter;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Security\AccessCheckerInterface;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface;
 use PrestaShopBundle\Form\Admin\Sell\Product\ProductSearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
@@ -110,7 +93,9 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         ShopConstraintContextInterface $shopConstraintContext,
         FormFactoryInterface $formFactory,
         AccessibilityCheckerInterface $singleShopChecker,
-        AccessibilityCheckerInterface $multipleShopsChecker
+        AccessibilityCheckerInterface $multipleShopsChecker,
+        protected readonly AccessCheckerInterface $accessChecker,
+        protected readonly ContextEmployeeProviderInterface $contextEmployerProvider
     ) {
         parent::__construct($hookDispatcher);
         $this->configuration = $configuration;
@@ -340,17 +325,20 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         }
 
         $rowActions = new RowActionCollection();
+        if ($this->accessChecker->isEmployeeGranted('AdminProducts_' . Permission::UPDATE, $this->contextEmployerProvider->getProfileId())) {
+            $rowActions
+                ->add((new LinkRowAction('edit'))
+                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                    ->setIcon('edit')
+                    ->setOptions([
+                        'route' => 'admin_products_edit',
+                        'route_param_name' => 'productId',
+                        'route_param_field' => 'id_product',
+                        'clickable_row' => true,
+                    ])
+                );
+        }
         $rowActions
-            ->add((new LinkRowAction('edit'))
-                ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                ->setIcon('edit')
-                ->setOptions([
-                    'route' => 'admin_products_edit',
-                    'route_param_name' => 'productId',
-                    'route_param_field' => 'id_product',
-                    'clickable_row' => true,
-                ])
-            )
             ->add((new LinkRowAction('preview'))
                 ->setName($this->trans('Preview', [], 'Admin.Actions'))
                 ->setIcon('remove_red_eye')
@@ -361,38 +349,44 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'target' => '_blank',
                     'accessibility_checker' => $this->singleShopChecker,
                 ])
-            )
-            ->add((new SubmitRowAction('duplicate'))
-                ->setName($duplicateLabel)
-                ->setIcon('content_copy')
-                ->setOptions([
-                    'method' => 'POST',
-                    'route' => 'admin_products_duplicate_shop',
-                    'route_param_name' => 'productId',
-                    'route_param_field' => 'id_product',
-                    'extra_route_params' => [
-                        'shopId' => $shopId,
-                    ],
-                    'confirm_message' => $this->trans('Remember to properly edit all information after duplicating - including SEO information and friendly URL.', [], 'Admin.Catalog.Notification'),
-                    'modal_options' => new ModalOptions([
-                        'title' => $this->trans('Duplicate product', [], 'Admin.Actions'),
-                        'confirm_button_label' => $duplicateLabel,
-                        'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
-                    ]),
-                ])
-            )
-            ->add(
-                $this->buildDeleteAction(
-                    'admin_products_delete_from_shop',
-                    'productId',
-                    'id_product',
-                    'POST',
-                    ['shopId' => $shopId],
-                    [],
-                    $deleteLabel
+            );
+        if ($this->accessChecker->isEmployeeGranted('AdminProducts_' . Permission::CREATE, $this->contextEmployerProvider->getProfileId())) {
+            $rowActions
+                ->add((new SubmitRowAction('duplicate'))
+                    ->setName($duplicateLabel)
+                    ->setIcon('content_copy')
+                    ->setOptions([
+                        'method' => 'POST',
+                        'route' => 'admin_products_duplicate_shop',
+                        'route_param_name' => 'productId',
+                        'route_param_field' => 'id_product',
+                        'extra_route_params' => [
+                            'shopId' => $shopId,
+                        ],
+                        'confirm_message' => $this->trans('Remember to properly edit all information after duplicating - including SEO information and friendly URL.', [], 'Admin.Catalog.Notification'),
+                        'modal_options' => new ModalOptions([
+                            'title' => $this->trans('Duplicate product', [], 'Admin.Actions'),
+                            'confirm_button_label' => $duplicateLabel,
+                            'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+                        ]),
+                    ])
+                );
+        }
+        if ($this->accessChecker->isEmployeeGranted('AdminProducts_' . Permission::DELETE, $this->contextEmployerProvider->getProfileId())) {
+            $rowActions
+                ->add(
+                    $this->buildDeleteAction(
+                        'admin_products_delete_from_shop',
+                        'productId',
+                        'id_product',
+                        'POST',
+                        ['shopId' => $shopId],
+                        [],
+                        $deleteLabel
+                    )
                 )
-            )
-        ;
+            ;
+        }
 
         return $rowActions;
     }

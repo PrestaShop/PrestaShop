@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="Admin.Shipment.Error.xlf" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1d38d2b1dfce1fd63e722604be06d5c0">
+        <source>Cannot find product with order detail id %id%.</source>
+        <target>Cannot find product with order detail id %id%.</target>
+        <note>File: src/Adapter/Shipment/ShipmentSplitter.php [Line: 49]</note>
+      </trans-unit>
+      <trans-unit id="ac8a0964d062891491fe5a1425f12f98">
+        <source>Cannot merge into shipment "%id%" because it has already been shipped.</source>
+        <target>Cannot merge into shipment "%id%" because it has already been shipped.</target>
+        <note>File: src/Adapter/Shipment/CommandHandler/MergeProductsToShipmentHandler.php [Line: 72]</note>
+      </trans-unit>
+      <trans-unit id="230a7b5cba304f9943eaaf18b58cbe8d">
+        <source>Cannot merge products to shipment with id "%id%".</source>
+        <target>Cannot merge products to shipment with id "%id%".</target>
+        <note>File: src/Adapter/Shipment/CommandHandler/MergeProductsToShipmentHandler.php [Line: 98]</note>
+      </trans-unit>
+      <trans-unit id="b20033768a9f23ec2f0fdf68e2d775aa">
+        <source>Cannot merge shipment "%id%" because it has already been shipped.</source>
+        <target>Cannot merge shipment "%id%" because it has already been shipped.</target>
+        <note>File: src/Adapter/Shipment/CommandHandler/MergeProductsToShipmentHandler.php [Line: 52]</note>
+      </trans-unit>
+      <trans-unit id="571fccd055eed37b0afb7e59fcdfe57b">
+        <source>Cannot split the shipment "%id%" because it has already been shipped.</source>
+        <target>Cannot split the shipment "%id%" because it has already been shipped.</target>
+        <note>File: src/Adapter/Shipment/CommandHandler/SplitShipmentHandler.php [Line: 49]</note>
+      </trans-unit>
+      <trans-unit id="6c4833095fcc2e53d11883cb89cd2280">
+        <source>Could not find carrier with id "%id%".</source>
+        <target>Could not find carrier with id "%id%".</target>
+        <note>File: src/Adapter/Shipment/QueryHandler/GetOrderShipmentsHandler.php [Line: 62]</note>
+      </trans-unit>
+      <trans-unit id="e895884166af78f47b195657ffd1eece">
+        <source>Could not find shipment for order id "%id%".</source>
+        <target>Could not find shipment for order id "%id%".</target>
+        <note>File: src/Adapter/Shipment/QueryHandler/ListAvailableShipmentsHandler.php [Line: 46]</note>
+      </trans-unit>
+      <trans-unit id="170349cc1095922aaf0ae36395157aed">
+        <source>Could not find shipment for order with id "%id%".</source>
+        <target>Could not find shipment for order with id "%id%".</target>
+        <note>File: src/Adapter/Shipment/QueryHandler/GetShipmentForEditingHandler.php [Line: 53]</note>
+      </trans-unit>
+      <trans-unit id="a4baa6e4e9a10b2637e7ef29da02067d">
+        <source>Could not find shipment with id "%id%".</source>
+        <target>Could not find shipment with id "%id%".</target>
+        <note>File: src/Adapter/Shipment/QueryHandler/GetShipmentProductsHandler.php [Line: 54]</note>
+      </trans-unit>
+      <trans-unit id="8f812363cceb211b6940f30365b5c82e">
+        <source>Could not save shipment update with id "%id%".</source>
+        <target>Could not save shipment update with id "%id%".</target>
+        <note>File: src/Adapter/Shipment/CommandHandler/SwitchShipmentCarrierHandler.php [Line: 76]</note>
+      </trans-unit>
+      <trans-unit id="24b03931e64de9ddaec0e4fd91ef5b82">
+        <source>Failed to delete products from shipment with id "%id%".</source>
+        <target>Failed to delete products from shipment with id "%id%".</target>
+        <note>File: src/Adapter/Shipment/CommandHandler/DeleteProductFromShipmentHandler.php [Line: 55]</note>
+      </trans-unit>
+      <trans-unit id="a315ffaae05ed17a80278a060ec0fcb8">
+        <source>Order detail with id %id% does not exist in source shipment.</source>
+        <target>Order detail with id %id% does not exist in source shipment.</target>
+        <note>File: src/Adapter/Shipment/ShipmentMerger.php [Line: 42]</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

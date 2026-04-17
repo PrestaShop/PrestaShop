@@ -11,10 +11,10 @@ import {
   dataCustomers,
   FakerAddress,
   FakerCustomer,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -188,13 +188,13 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             page = await boPaymentPreferencesPage.viewMyShop(page);
             // Logout if already login
             if (index === 0 && groupIndex !== 0) {
-              await foClassicHomePage.logout(page);
+              await foHummingbirdHomePage.logout(page);
             }
             // Change FO language
-            await foClassicHomePage.changeLanguage(page, 'en');
+            await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-            const pageTitle = await foClassicHomePage.getPageTitle(page);
-            expect(pageTitle).to.contains(foClassicHomePage.pageTitle);
+            const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+            expect(pageTitle).to.contains(foHummingbirdHomePage.pageTitle);
           });
 
           it('should add the first product to the cart and proceed to checkout', async function () {
@@ -206,13 +206,13 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             );
 
             // Go to the first product page
-            await foClassicHomePage.goToProductPage(page, 1);
+            await foHummingbirdHomePage.goToProductPage(page, 1);
             // Add the product to the cart
-            await foClassicProductPage.addProductToTheCart(page);
+            await foHummingbirdProductPage.addProductToTheCart(page);
             // Proceed to checkout the shopping cart
-            await foClassicCartPage.clickOnProceedToCheckout(page);
+            await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
-            const isCheckoutPage = await foClassicCheckoutPage.isCheckoutPage(page);
+            const isCheckoutPage = await foHummingbirdCheckoutPage.isCheckoutPage(page);
             expect(isCheckoutPage).to.eq(true);
           });
 
@@ -226,9 +226,9 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
                 baseContext,
               );
 
-              await foClassicCheckoutPage.clickOnSignIn(page);
+              await foHummingbirdCheckoutPage.clickOnSignIn(page);
 
-              const isStepLoginComplete = await foClassicCheckoutPage.customerLogin(page, group.args.customer);
+              const isStepLoginComplete = await foHummingbirdCheckoutPage.customerLogin(page, group.args.customer);
               expect(isStepLoginComplete, 'Step Personal information is not complete').to.eq(true);
             });
           }
@@ -243,7 +243,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
                 baseContext,
               );
 
-              const isStepAddressComplete = await foClassicCheckoutPage.setAddress(page, address);
+              const isStepAddressComplete = await foHummingbirdCheckoutPage.setAddress(page, address);
               expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
             });
           }
@@ -258,7 +258,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
                 baseContext,
               );
 
-              const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+              const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
               expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
             });
           }
@@ -273,15 +273,15 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             );
 
             // Go to payment step
-            const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+            const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
             expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
 
             // Check wire Payment block
-            let isVisible = await foClassicCheckoutPage.isPaymentMethodExist(page, test.args.paymentModuleToEdit);
+            let isVisible = await foHummingbirdCheckoutPage.isPaymentMethodExist(page, test.args.paymentModuleToEdit);
             expect(isVisible).to.be.equal(test.args.wirePaymentExist);
 
             // Check Payment block
-            isVisible = await foClassicCheckoutPage.isPaymentMethodExist(page, test.args.defaultPaymentModule);
+            isVisible = await foHummingbirdCheckoutPage.isPaymentMethodExist(page, test.args.defaultPaymentModule);
             expect(isVisible).to.be.equal(test.args.checkPaymentExist);
           });
 
@@ -289,7 +289,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}${groupIndex}`, baseContext);
 
             // Close current tab
-            page = await foClassicHomePage.closePage(browserContext, page, 0);
+            page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
             const pageTitle = await boPaymentPreferencesPage.getPageTitle(page);
             expect(pageTitle).to.contains(boPaymentPreferencesPage.pageTitle);

@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 #order_grid {
   position: relative;
 
@@ -105,10 +109,7 @@
 }
 
 .info-block {
-  padding-top: 18px;
-  padding-right: 18px;
-  padding-bottom: 16px;
-  padding-left: 18px;
+  padding: var(--#{$cdk}size-16);
   background-color: $info-block-background;
 
   & &-col {

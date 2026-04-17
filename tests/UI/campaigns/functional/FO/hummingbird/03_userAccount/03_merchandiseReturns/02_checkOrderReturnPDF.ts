@@ -4,7 +4,6 @@ import {expect} from 'chai';
 // Import commonTests
 import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
 import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {
   boDashboardPage,
@@ -38,7 +37,6 @@ const baseContext: string = 'functional_FO_hummingbird_userAccount_merchandiseRe
 
 /*
 Pre-condition:
-- Install the theme hummingbird
 - Create new order by default customer
 - Enable merchandise returns
 Scenario
@@ -47,9 +45,8 @@ Scenario
 - Check merchandise returns return PDF
 Post-condition:
 - Disable merchandise returns
-- Uninstall the theme hummingbird
  */
-describe('FO - Account : Check order return PDF', async () => {
+describe('FO - User account - Merchandise Returns : Check PDF order return', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let orderID: number;
@@ -70,9 +67,6 @@ describe('FO - Account : Check order return PDF', async () => {
     ],
     paymentMethod: dataPaymentMethods.wirePayment,
   });
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_0`);
 
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
@@ -450,7 +444,4 @@ describe('FO - Account : Check order return PDF', async () => {
 
   // Post-condition : Disable merchandise returns
   disableMerchandiseReturns(`${baseContext}_postTest_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
 });

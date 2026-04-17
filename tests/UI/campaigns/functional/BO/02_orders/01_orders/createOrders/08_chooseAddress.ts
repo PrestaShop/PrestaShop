@@ -17,11 +17,11 @@ import {
   dataPaymentMethods,
   dataProducts,
   FakerAddress,
-  foClassicHomePage,
-  foClassicLoginPage,
-  foClassicMyAccountPage,
-  foClassicMyOrderDetailsPage,
-  foClassicMyOrderHistoryPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
+  foHummingbirdMyOrderDetailsPage,
+  foHummingbirdMyOrderHistoryPage,
   type Frame,
   type Page,
   utilsPlaywright,
@@ -322,54 +322,54 @@ describe('BO - Orders - Create order : Choose address', async () => {
         // Click on view my shop
         page = await boOrdersViewBlockCustomersPage.viewMyShop(page);
         // Change FO language
-        await foClassicHomePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await foClassicHomePage.isHomePage(page);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage, 'Home page is not displayed').to.eq(true);
       });
 
       it('should go to login page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
-        await foClassicHomePage.goToLoginPage(page);
+        await foHummingbirdHomePage.goToLoginPage(page);
 
-        const pageTitle = await foClassicLoginPage.getPageTitle(page);
-        expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+        const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
       });
 
       it('should sign in with customer credentials', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-        await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+        await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-        const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+        const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
         expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
       });
 
       it('should go to account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
-        await foClassicHomePage.goToMyAccountPage(page);
+        await foHummingbirdHomePage.goToMyAccountPage(page);
 
-        const pageTitle = await foClassicMyAccountPage.getPageTitle(page);
-        expect(pageTitle).to.contains(foClassicMyAccountPage.pageTitle);
+        const pageTitle = await foHummingbirdMyAccountPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foHummingbirdMyAccountPage.pageTitle);
       });
 
       it('should go to \'Order history and details\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-        await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
+        await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
-        const pageTitle = await foClassicMyOrderHistoryPage.getPageTitle(page);
-        expect(pageTitle).to.contains(foClassicMyOrderHistoryPage.pageTitle);
+        const pageTitle = await foHummingbirdMyOrderHistoryPage.getPageTitle(page);
+        expect(pageTitle).to.contains(foHummingbirdMyOrderHistoryPage.pageTitle);
       });
 
       it('should click on details link of the first created order and check the delivery address', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryAddressFO', baseContext);
 
-        await foClassicMyOrderHistoryPage.goToOrderDetailsPage(page, orderID);
+        await foHummingbirdMyOrderHistoryPage.goToOrderDetailsPage(page, orderID);
 
-        const deliveryAddress = await foClassicMyOrderDetailsPage.getDeliveryAddress(page);
+        const deliveryAddress = await foHummingbirdMyOrderDetailsPage.getDeliveryAddress(page);
         expect(deliveryAddress).to.contain(newAddressToCreate.firstName)
           .and.to.contain(newAddressToCreate.lastName)
           .and.to.contain(newAddressToCreate.address)
@@ -382,7 +382,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       it('should check the invoice address', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceAddressFO', baseContext);
 
-        const deliveryAddress = await foClassicMyOrderDetailsPage.getInvoiceAddress(page);
+        const deliveryAddress = await foHummingbirdMyOrderDetailsPage.getInvoiceAddress(page);
         expect(deliveryAddress).to.contain(newAddressToCreate.firstName)
           .and.to.contain(newAddressToCreate.lastName)
           .and.to.contain(newAddressToCreate.address)
@@ -395,7 +395,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       it('should close the FO page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'closeFo', baseContext);
 
-        page = await foClassicMyOrderDetailsPage.closePage(browserContext, page, 0);
+        page = await foHummingbirdMyOrderDetailsPage.closePage(browserContext, page, 0);
 
         const pageTitle = await boOrdersViewBlockCustomersPage.getPageTitle(page);
         expect(pageTitle).to.contains(boOrdersViewBlockCustomersPage.pageTitle);
@@ -511,5 +511,5 @@ describe('BO - Orders - Create order : Choose address', async () => {
   });
 
   // Post-condition: Bulk delete created addresses
-  bulkDeleteAddressesTest('lastname', 'test', `${baseContext}_postTest_1`);
+  bulkDeleteAddressesTest('input', 'lastname', 'test', `${baseContext}_postTest_1`);
 });

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Cart;
@@ -57,11 +37,6 @@ class CartRow
      * row round mode by all lines.
      */
     public const ROUND_MODE_TOTAL = 'total';
-
-    /**
-     * static cache key pattern.
-     */
-    public const PRODUCT_PRICE_CACHE_ID_PATTERN = 'Product::getPriceStatic_%d-%d';
 
     /**
      * @var PriceCalculator adapter to calculate price
@@ -303,6 +278,7 @@ class CartRow
     {
         $productId = (int) $rowData['id_product'];
         $quantity = (int) $rowData['cart_quantity'];
+        $cartBaseProductQuantity = (int) $rowData['cart_base_product_quantity'];
 
         $addressId = $cart->getProductAddressId();
         if (!$addressId) {
@@ -322,23 +298,6 @@ class CartRow
         }
         if (!$groupId) {
             $groupId = (int) $this->groupDataProvider->getCurrent()->id;
-        }
-
-        $cartQuantity = 0;
-        if ((int) $cart->id) {
-            $cacheId = sprintf(self::PRODUCT_PRICE_CACHE_ID_PATTERN, (int) $productId, (int) $cart->id);
-            if (!$this->cacheAdapter->isStored($cacheId)
-                || ($cartQuantity = $this->cacheAdapter->retrieve($cacheId)
-                                    != (int) $quantity)) {
-                $sql = 'SELECT SUM(`quantity`)
-				FROM `' . _DB_PREFIX_ . 'cart_product`
-				WHERE `id_product` = ' . (int) $productId . '
-				AND `id_cart` = ' . (int) $cart->id;
-                $cartQuantity = (int) $this->databaseAdapter->getValue($sql, _PS_USE_SQL_SLAVE_);
-                $this->cacheAdapter->store($cacheId, (string) $cartQuantity);
-            } else {
-                $cartQuantity = (int) $this->cacheAdapter->retrieve($cacheId);
-            }
         }
 
         // The $null variable below is not used,
@@ -388,7 +347,7 @@ class CartRow
                     (int) $cart->id_customer ? (int) $cart->id_customer : null,
                     true,
                     (int) $cart->id,
-                    $cartQuantity,
+                    $cartBaseProductQuantity,
                     (int) $rowData['id_customization']
                 );
             }

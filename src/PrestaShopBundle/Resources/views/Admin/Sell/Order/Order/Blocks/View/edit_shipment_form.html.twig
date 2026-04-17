@@ -1,0 +1,39 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+ {{ form_start(editShipmentForm, {
+  method: 'PUT',
+  action: path('admin_orders_edit_shipment', {
+    orderId: orderId,
+    shipmentId: shipmentId
+  }),
+  attr: {
+    id: 'edit_shipment',
+    class: 'shipment-form'
+  },
+}) }}
+  <div class="form-group">
+    <label class="form-control-label" for="{{ editShipmentForm.tracking_number.vars.id }}">
+      {{ 'Tracking number'|trans({}, 'Admin.Shipping.Feature') }}
+    </label>
+
+    {{ form_widget(editShipmentForm.tracking_number) }}
+  </div>
+
+  <div class="form-group mb-0">
+    <label class="form-control-label" for="{{ editShipmentForm.carrier.vars.id }}">
+      {{ 'Carrier'|trans({}, 'Admin.Global') }}
+    </label>
+
+    {{ form_widget(editShipmentForm.carrier) }}
+  </div>
+
+  <div class="d-none">
+    {{ form_rest(editShipmentForm) }}
+  </div>
+</div>
+
+{{ form_rest(editShipmentForm) }}
+{{ form_end(editShipmentForm) }}

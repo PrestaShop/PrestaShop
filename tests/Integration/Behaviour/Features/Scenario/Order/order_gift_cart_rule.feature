@@ -415,7 +415,6 @@ Feature: Order from Back Office (BO)
       | discount_amount           | 1                           |
       | discount_currency         | USD                         |
       | discount_includes_tax     | false                       |
-      | discount_application_type | specific_product            |
       | discount_product          | Test Product With Auto Gift |
     And I add 1 products "Test Product With Auto Gift" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
@@ -488,7 +487,6 @@ Feature: Order from Back Office (BO)
       | discount_amount           | 1                           |
       | discount_currency         | USD                         |
       | discount_includes_tax     | false                       |
-      | discount_application_type | specific_product            |
       | discount_product          | Test Product With Auto Gift |
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
@@ -577,7 +575,6 @@ Feature: Order from Back Office (BO)
       | discount_amount           | 1                           |
       | discount_currency         | USD                         |
       | discount_includes_tax     | false                       |
-      | discount_application_type | specific_product            |
       | discount_product          | Test Product With Auto Gift |
     And I add 1 products "Test Product Gifted" to the cart "dummy_cart"
     And I add 1 products "Test Product With Auto Gift" to the cart "dummy_cart"
@@ -659,7 +656,6 @@ Feature: Order from Back Office (BO)
       | discount_amount           | 1                           |
       | discount_currency         | USD                         |
       | discount_includes_tax     | false                       |
-      | discount_application_type | specific_product            |
       | discount_product          | Test Product With Auto Gift |
     And I add 1 products "Test Product Gifted" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
@@ -765,7 +761,6 @@ Feature: Order from Back Office (BO)
       | discount_amount           | 1                           |
       | discount_currency         | USD                         |
       | discount_includes_tax     | false                       |
-      | discount_application_type | specific_product            |
       | discount_product          | Test Product With Auto Gift |
     And I add 1 products "Test Product With Auto Gift" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
@@ -846,7 +841,6 @@ Feature: Order from Back Office (BO)
       | discount_amount           | 1                           |
       | discount_currency         | USD                         |
       | discount_includes_tax     | false                       |
-      | discount_application_type | specific_product            |
       | discount_product          | Test Product With Auto Gift |
     And I add 1 products "Test Product With Auto Gift" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
@@ -928,7 +922,6 @@ Feature: Order from Back Office (BO)
       | discount_amount           | 1                           |
       | discount_currency         | USD                         |
       | discount_includes_tax     | false                       |
-      | discount_application_type | specific_product            |
       | discount_product          | Test Product With Auto Gift |
     And I add 1 products "Test Product Gifted" to the cart "dummy_cart"
     And I add 1 products "Test Product With Auto Gift" to the cart "dummy_cart"
@@ -1169,7 +1162,6 @@ Feature: Order from Back Office (BO)
       | discount_amount           | 1                       |
       | discount_currency         | USD                     |
       | discount_includes_tax     | false                   |
-      | discount_application_type | specific_product        |
       | discount_product          | product triggering gift |
     And I add 1 products "gifted product" to the cart "dummy_cart"
     Given I add order "bo_order1" with the following details:
@@ -1225,7 +1217,7 @@ Feature: Order from Back Office (BO)
   I remove all cart rules,
   I remove the product
     Given there is a product in the catalog named "Product 12345" with a price of 12.0 and 100 items in stock
-    # Create a cart rule : No cade + Product restriction with min quanity + Discount 50%
+    # Create a cart rule : No code + Product restriction with min quanity + Discount 50%
     And there is a cart rule "cartRulePercentDiscountOnSpecificProduct" with following properties:
       | name[en-US]               | cartRulePercentDiscountOnSpecificProduct |
       | priority                  | 1                                        |
@@ -1233,11 +1225,10 @@ Feature: Order from Back Office (BO)
       | quantity_per_user         | 100                                      |
       | discount_percentage       | 50                                       |
       | discount_currency         | USD                                      |
-      | discount_application_type | specific_product                         |
       | discount_product          | Product 12345                            |
     # @todo: restrictions are not yet implemented using CQRS, so we use old step. (the step itself is as well unclear- it is a mix between specific product and product restriction features)
     And cart rule "cartRulePercentDiscountOnSpecificProduct" is restricted to product "Product 12345" with a quantity of 2
-    # Create a cart rule : No cade + no conditions + free gift = demo_6
+    # Create a cart rule : No code + no conditions + free gift = demo_6
     And there is a cart rule "cartRuleFreeGift" with following properties:
       | name[en-US]       | cartRuleFreeGift |
       | priority          | 1                |
@@ -1337,18 +1328,14 @@ Feature: Order from Back Office (BO)
     And country "FR" is enabled
     And there is a product in the catalog named "Product 12345" with a price of 12.0 and 100 items in stock
     And there is a product in the catalog named "Gift product" with a price of 13.0 and 100 items in stock
-    # Create a cart rule : No cade + no conditions + free gift = demo_6
+    # Create a cart rule : No code + no conditions + free gift = demo_6
     And there is a cart rule "cartRuleFreeGift" with following properties:
       | name[en-US]       | cartRuleFreeGift |
       | priority          | 1                |
       | total_quantity    | 100              |
       | quantity_per_user | 100              |
       | gift_product      | Gift product     |
-    And I restrict following countries for cart rule cartRuleFreeGift:
-      | restricted countries | US |
-    And I save all the restrictions for cart rule cartRuleFreeGift
-    And cart rule cartRuleFreeGift should have the following properties:
-      | restricted countries | US |
+      | countries         | US               |
     # Make an order
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
@@ -1467,7 +1454,7 @@ Feature: Order from Back Office (BO)
 
     Given there is a product in the catalog named "Product 12345" with a price of 12.0 and 100 items in stock
     And there is a product in the catalog named "Gift product" with a price of 13.0 and 100 items in stock
-    # Create a cart rule : No cade + no conditions + free gift = demo_6
+    # Create a cart rule : No code + no conditions + free gift = demo_6
     And there is a cart rule "cartRuleFreeGift" with following properties:
       | name[en-US]                      | cartRuleFreeGift |
       | priority                         | 1                |
@@ -1582,7 +1569,7 @@ Feature: Order from Back Office (BO)
 
     Given there is a product in the catalog named "Product 12345" with a price of 12.0 and 100 items in stock
     And there is a product in the catalog named "Gift product" with a price of 13.0 and 100 items in stock
-    # Create a cart rule : No cade + no conditions + free gift = demo_6
+    # Create a cart rule : No code + no conditions + free gift = demo_6
     And there is a cart rule "cartRuleFreeGift" with following properties:
       | name[en-US]                      | cartRuleFreeGift |
       | priority                         | 1                |

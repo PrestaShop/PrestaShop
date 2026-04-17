@@ -1,0 +1,36 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
+  id: 'changeStatesZoneModal',
+  title: 'Choose a zone'|trans({}, 'Admin.International.Feature'),
+  closable: true,
+  actions: [{
+    type: 'button',
+    label: 'Update zone'|trans({}, 'Admin.International.Feature'),
+    class: 'btn btn-primary btn-lg js-submit-modal-form-btn',
+  }],
+} %}
+  {% block content %}
+    <div class="modal-body">
+      {{ form_start(changeStatesZoneForm, {
+        action: path('admin_states_bulk_update_zone'),
+        attr: {
+          'data-bulk-inputs-id': changeStatesZoneForm.state_ids.vars.id
+        }
+      }) }}
+
+      <div class="form-group mb-0">
+        {{ form_widget(changeStatesZoneForm.new_zone_id) }}
+      </div>
+
+      <div class="d-none">
+        {{ form_widget(changeStatesZoneForm.state_ids) }}
+      </div>
+
+      {{ form_end(changeStatesZoneForm) }}
+    </div>
+  {% endblock %}
+{% endembed %}

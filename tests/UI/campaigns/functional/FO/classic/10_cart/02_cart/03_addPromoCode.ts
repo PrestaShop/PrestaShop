@@ -1,5 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 // Import commonTests
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
@@ -17,7 +18,7 @@ import {
 
 const baseContext: string = 'functional_FO_classic_cart_cart_addPromoCode';
 
-describe('FO - cart : Add promo code', async () => {
+describe('FO - Cart : Add promo code', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -33,8 +34,11 @@ describe('FO - cart : Add promo code', async () => {
     },
   });
 
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
+
   // Pre-condition: Create cart rule and apply the discount to 'productWithCartRule'
-  createCartRuleTest(newCartRuleData, `${baseContext}_PreTest`);
+  createCartRuleTest(newCartRuleData, `${baseContext}_PreTest_1`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -53,7 +57,7 @@ describe('FO - cart : Add promo code', async () => {
       await foClassicHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should add the first product to cart and proceed to checkout', async function () {
@@ -125,5 +129,8 @@ describe('FO - cart : Add promo code', async () => {
   });
 
   // Post-Condition: Delete cart rule
-  deleteCartRuleTest(newCartRuleData.name, `${baseContext}_PostTest`);
+  deleteCartRuleTest(newCartRuleData.name, `${baseContext}_PostTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

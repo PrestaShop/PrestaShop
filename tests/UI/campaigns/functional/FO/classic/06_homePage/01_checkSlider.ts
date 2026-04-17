@@ -9,11 +9,16 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
+
 const baseContext: string = 'functional_FO_classic_homePage_checkSlider';
 
 describe('FO - Home Page : Check slider', async () => {
   let browserContext: BrowserContext;
   let page: Page;
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -25,43 +30,48 @@ describe('FO - Home Page : Check slider', async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
-  it('should open the shop page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'openShopFO', baseContext);
+  describe('Check slider', async () => {
+    it('should open the shop page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'openShopFO', baseContext);
 
-    await foClassicHomePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-    const result = await foClassicHomePage.isHomePage(page);
-    expect(result).to.eq(true);
+      const result = await foClassicHomePage.isHomePage(page);
+      expect(result).to.eq(true);
+    });
+
+    it('should click in right arrow of the slider', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnRightSlideArrow', baseContext);
+
+      let isVisible = await foClassicHomePage.isSliderVisible(page, 1);
+      expect(isVisible).to.eq(true);
+
+      await foClassicHomePage.clickOnLeftOrRightArrow(page, 'right');
+
+      isVisible = await foClassicHomePage.isSliderVisible(page, 2);
+      expect(isVisible).to.eq(true);
+    });
+
+    it('should click in left arrow of the slider', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnLeftSlideArrow', baseContext);
+
+      let isVisible = await foClassicHomePage.isSliderVisible(page, 2);
+      expect(isVisible).to.eq(true);
+
+      await foClassicHomePage.clickOnLeftOrRightArrow(page, 'left');
+
+      isVisible = await foClassicHomePage.isSliderVisible(page, 1);
+      expect(isVisible).to.eq(true);
+    });
+
+    it('should check the slider URL', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkSliderURL', baseContext);
+
+      const currentURL = await foClassicHomePage.getSliderURL(page);
+      expect(currentURL).to.contains('www.prestashop-project.org');
+    });
   });
 
-  it('should click in right arrow of the slider', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'clickOnRightSlideArrow', baseContext);
-
-    let isVisible = await foClassicHomePage.isSliderVisible(page, 1);
-    expect(isVisible).to.eq(true);
-
-    await foClassicHomePage.clickOnLeftOrRightArrow(page, 'right');
-
-    isVisible = await foClassicHomePage.isSliderVisible(page, 2);
-    expect(isVisible).to.eq(true);
-  });
-
-  it('should click in left arrow of the slider', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'clickOnLeftSlideArrow', baseContext);
-
-    let isVisible = await foClassicHomePage.isSliderVisible(page, 2);
-    expect(isVisible).to.eq(true);
-
-    await foClassicHomePage.clickOnLeftOrRightArrow(page, 'left');
-
-    isVisible = await foClassicHomePage.isSliderVisible(page, 1);
-    expect(isVisible).to.eq(true);
-  });
-
-  it('should check the slider URL', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkSliderURL', baseContext);
-
-    const currentURL = await foClassicHomePage.getSliderURL(page);
-    expect(currentURL).to.contains('www.prestashop-project.org');
-  });
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_3`);
 });

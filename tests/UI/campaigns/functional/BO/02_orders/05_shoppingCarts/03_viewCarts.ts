@@ -4,7 +4,7 @@ import {expect} from 'chai';
 // Import commonTests
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
+import createShoppingCart from '@commonTests/FO/hummingbird/shoppingCart';
 
 import {
   boDashboardPage,

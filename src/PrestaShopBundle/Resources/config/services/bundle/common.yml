@@ -13,10 +13,47 @@ services:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\Shipment
+    calls:
+      - setTablePrefix: [ '%database_prefix%' ]
     lazy: true
+    public: true
 
   PrestaShopBundle\Entity\Repository\TabRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\Tab
     lazy: true
+
+  prestashop.adapter.order.repository.order_repository:
+    alias: PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository
+    deprecated:
+      package: PrestaShop\PrestaShop
+      version: 9.0
+
+  PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository:
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Order\Repository\OrderDetailRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentService:
+    public: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository'

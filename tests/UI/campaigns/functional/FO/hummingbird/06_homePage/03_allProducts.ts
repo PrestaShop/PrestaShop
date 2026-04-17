@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   boDashboardPage,
@@ -24,10 +21,6 @@ describe('FO - Home Page : Display all products', async () => {
   let numberOfActiveProducts: number;
   let numberOfProducts: number;
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -98,7 +91,7 @@ describe('FO - Home Page : Display all products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
       await foHummingbirdHomePage.changeLanguage(page, 'en');
-      await foHummingbirdHomePage.goToAllProductsPage(page, 'featured-products');
+      await foHummingbirdHomePage.goToAllProductsPage(page, 'ps-featuredproducts');
 
       const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.eq(true);
@@ -122,7 +115,7 @@ describe('FO - Home Page : Display all products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'homeSortAndPaginationLink', baseContext);
 
       const isSortingLinkVisible = await foHummingbirdCategoryPage.isSortButtonVisible(page);
-      expect(isSortingLinkVisible, 'Sorting Link is not visible').to.eq(true);
+      expect(isSortingLinkVisible).to.eq(true);
     });
 
     it('should check the showing items text', async function () {
@@ -139,7 +132,4 @@ describe('FO - Home Page : Display all products', async () => {
       expect(listOfProductDisplayed).to.be.above(0);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

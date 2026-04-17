@@ -10,9 +10,9 @@ import {
   dataCustomers,
   dataEmployees,
   FakerContactMessage,
-  foClassicContactUsPage,
-  foClassicHomePage,
-  foClassicLoginPage,
+  foHummingbirdContactUsPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -53,27 +53,27 @@ describe('BO - Customer Service : Change status', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-      await foClassicHomePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
 
-      await foClassicHomePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
-      const pageTitle = await foClassicLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -81,19 +81,19 @@ describe('BO - Customer Service : Change status', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToContactPage', baseContext);
 
       // Go to contact us page
-      await foClassicHomePage.goToFooterLink(page, 'Contact us');
+      await foHummingbirdHomePage.goToFooterLink(page, 'Contact us');
 
-      const pageTitle = await foClassicContactUsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
+      const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdContactUsPage.pageTitle);
     });
 
     it('should send message to customer service', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-      await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
+      await foHummingbirdContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
 
-      const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
-      expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
+      const validationMessage = await foHummingbirdContactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(foHummingbirdContactUsPage.validationMessage);
     });
   });
 

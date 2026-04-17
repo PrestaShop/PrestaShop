@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -101,7 +81,7 @@ class ShippingType extends TranslatorAwareType
                 'label' => $this->trans('Shipping fees', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'label_subtitle' => $this->trans('Additional shipping costs', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('If a carrier has a tax, it will be added to the shipping fees. Does not apply to free shipping.', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('Optional additional fee added to the shipping cost for each purchased item. Applies only if shipping is not free.', 'Admin.Catalog.Help'),
                 'currency' => $this->currencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
@@ -128,6 +108,7 @@ class ShippingType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Available carriers', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
+                'label_help_box' => $this->trans('Here you can restrict which carriers are available for this product. For example, if the product cannot be shipped, you can allow only in-store pickup.', 'Admin.Catalog.Help'),
             ])
         ;
     }

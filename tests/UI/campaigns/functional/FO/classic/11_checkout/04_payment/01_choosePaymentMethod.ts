@@ -21,6 +21,7 @@ import {
   utilsMail,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 const baseContext: string = 'functional_FO_classic_checkout_payment_choosePaymentMethod';
 
@@ -31,8 +32,11 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
   let numberOfEmails: number;
   let mailListener: MailDev;
 
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
+
   // Pre-Condition : Setup config SMTP
-  setupSmtpConfigTest(`${baseContext}_preTest`);
+  setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -67,7 +71,7 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
         await foClassicHomePage.changeLanguage(page, 'en');
 
         const isHomePage = await foClassicHomePage.isHomePage(page);
-        expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+        expect(isHomePage).to.eq(true);
       });
 
       it('should quickView the first product', async function () {
@@ -159,5 +163,8 @@ describe('FO - Checkout - Payment : Choose a payment method', async () => {
   });
 
   // Post-condition : Reset SMTP config
-  resetSmtpConfigTest(`${baseContext}_postTest`);
+  resetSmtpConfigTest(`${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

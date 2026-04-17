@@ -1,0 +1,111 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+ {{ form_start(addProductForm, {
+  attr: {
+    class: 'form-horizontal'
+  }
+}) }}
+  <div class="form-group">
+    {{ form_widget(addProductForm.product_id) }}
+    {{ form_widget(addProductForm.tax_rate) }}
+    <div class="form-group" id="searchProductToAddProduct">
+        {{ form_label(addProductForm.search) }}
+        {{ form_widget(addProductForm.search) }}
+
+      <div class="dropdown">
+        <div class="dropdown-menu w-100"></div>
+      </div>
+  </div>
+
+    <div class="form-group d-none" id="addProductCombinations">
+      <label class="form-control-label">
+        {{ 'Combinations'|trans({}, 'Admin.Global') }}
+      </label>
+        <div class="input-group mt-2">
+        <select id="addProductCombinationId" class="custom-select"></select>
+      </div>
+    </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-control-label">
+              {{ 'Price (tax excl.)'|trans({}, 'Admin.Global') }}
+            </label>
+            {{ form_widget(addProductForm.price_tax_excluded) }}
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-control-label">
+              {{ 'Price (tax incl.)'|trans({}, 'Admin.Global') }}
+            </label>
+            {{ form_widget(addProductForm.price_tax_included) }}
+          </div>
+        </div>
+      </div>
+
+    <div class="form-group">
+      <label class="form-control-label">
+        {{ 'Quantity'|trans({}, 'Admin.Global') }}
+      </label>
+      {{ form_widget(addProductForm.quantity) }}
+    </div>
+
+    {% if isMultishipmentIsEnabled and orderHasShipment == true %}
+      <div class="form-group" id="addProductShipmentSelect">
+        <label class="form-control-label">
+          {{ 'Select shipment'|trans({}, 'Admin.Global') }}
+        </label>
+        {{ form_widget(addProductForm.addShipment) }}
+      </div>
+
+      <div class="form-group d-none" id="addProductCarriers">
+        <label class="form-control-label">
+          {{ form_label(addProductForm.carrier_for_shipment) }}
+        </label>
+        {{ form_widget(addProductForm.carrier_for_shipment) }}
+      </div>
+    {% endif %}
+
+    {% if orderForViewing.hasInvoice() %}
+    <div class="form-group">
+      <label class="form-control-label">
+        {{ 'Invoice'|trans({}, 'Admin.Global') }}
+      </label>
+      {{ form_widget(addProductForm.invoice) }}
+    </div>
+  {% endif %}
+
+  <div class="form-group d-none" id="addProductNewInvoiceInfo">
+    <div class="border rounded p-3 mb-3" style="background-color: #f8f9fa;">
+      <div class="d-flex align-items-center mb-3">
+        <i class="material-icons text-muted mr-2">receipt</i>
+        <strong>{{ 'New invoice information'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+      </div>
+
+      <div class="d-flex align-items-center mb-2">
+        <i class="material-icons text-muted mr-2">local_shipping</i>
+        <strong data-role="carrier-name">{{ orderForViewing.carrierName }}</strong>
+      </div>
+
+      {{ form_widget(addProductForm.free_shipping) }}
+
+    </div>
+    <div class="mt-2">
+      {{ form_row(addProductForm.confirm_new_invoice) }}
+    </div>
+  </div>
+
+  {# to remove when the feature flag is released #}
+  {% do addProductForm.add.setRendered() %}
+  {% do addProductForm.cancel.setRendered() %}
+  {% do addProductForm.invoice.setRendered() %}
+  {% do addProductForm.addProductCombinations.setRendered() %}
+
+  {{ form_end(addProductForm) }}
+</div>

@@ -132,7 +132,22 @@
             <wording>Stock</wording>
             <wording_domain>Admin.Navigation.Menu</wording_domain>
         </tab>
-
+        <!--B2B ENTITIES-->
+        <tab id="AdminBusinessEntity" id_parent="SELL" active="0" enabled="1" icon="business_center">
+            <class_name>AdminBusinessEntity</class_name>
+            <wording>Business Entity</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="AdminBusinessEntities" id_parent="AdminBusinessEntity" active="0" enabled="1"  route_name="admin_business_entities_list">
+            <class_name>AdminBusinessEntities</class_name>
+            <wording>Business Entities</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
+        <tab id="AdminCustomersB2B" id_parent="AdminBusinessEntity" active="0" enabled="1"  route_name="admin_customer_b2b_list">
+            <class_name>AdminCustomersB2B</class_name>
+            <wording>Customers B2B</wording>
+            <wording_domain>Admin.Navigation.Menu</wording_domain>
+        </tab>
         <!--CUSTOMERS-->
         <tab id="Customers" id_parent="SELL" active="1" enabled="1" icon="account_circle">
             <class_name>AdminParentCustomer</class_name>

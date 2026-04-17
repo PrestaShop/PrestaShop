@@ -10,11 +10,11 @@ import {
   dataZones,
   FakerCarrier,
   boDashboardPage,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicHomePage,
-  foClassicLoginPage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  foHummingbirdProductPage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -156,7 +156,6 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
     enable: true,
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -268,27 +267,27 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       // Click on view my shop
       page = await boCarriersPage.viewMyShop(page);
       // Change language
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstGoToLoginPageFO', baseContext);
 
-      await foClassicHomePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
-      const pageTitle = await foClassicLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO', baseContext);
 
-      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -296,43 +295,43 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'firstCreateOrder', baseContext);
 
       // Go to home page
-      await foClassicLoginPage.goToHomePage(page);
+      await foHummingbirdLoginPage.goToHomePage(page);
       // Go to the first product page
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
       // Add the created product to the cart
-      await foClassicProductPage.addProductToTheCart(page);
+      await foHummingbirdProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await foClassicCartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should check that the new carrier is not visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewCarrier', baseContext);
 
-      const shippingMethodName = await foClassicCheckoutPage.getShippingMethodName(page, carrierID);
+      const shippingMethodName = await foHummingbirdCheckoutPage.getShippingMethodName(page, carrierID);
       expect(shippingMethodName).to.eq(createCarrierData.name);
 
-      const isShippingMethodVisible = await foClassicCheckoutPage.isShippingMethodVisible(page, carrierID);
+      const isShippingMethodVisible = await foHummingbirdCheckoutPage.isShippingMethodVisible(page, carrierID);
       expect(isShippingMethodVisible).to.eq(true);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighOutFO', baseContext);
 
-      await foClassicCheckoutPage.goToHomePage(page);
-      await foClassicCheckoutPage.logout(page);
+      await foHummingbirdCheckoutPage.goToHomePage(page);
+      await foHummingbirdCheckoutPage.logout(page);
 
-      const isCustomerConnected = await foClassicCheckoutPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdCheckoutPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstGoBackToBO', baseContext);
 
-      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boCarriersPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCarriersPage.pageTitle);
@@ -414,27 +413,27 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       // Click on view my shop
       page = await boCarriersPage.viewMyShop(page);
       // Change language
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'secondGoToLoginPageFO', baseContext);
 
-      await foClassicHomePage.goToLoginPage(page);
+      await foHummingbirdHomePage.goToLoginPage(page);
 
-      const pageTitle = await foClassicLoginPage.getPageTitle(page);
-      expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'secondSighInFO', baseContext);
 
-      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
     });
 
@@ -442,43 +441,43 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'secondCreateOrder', baseContext);
 
       // Go to home page
-      await foClassicLoginPage.goToHomePage(page);
+      await foHummingbirdLoginPage.goToHomePage(page);
       // Go to the first product page
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
       // Add the created product to the cart
-      await foClassicProductPage.addProductToTheCart(page);
+      await foHummingbirdProductPage.addProductToTheCart(page);
       // Proceed to checkout the shopping cart
-      await foClassicCartPage.clickOnProceedToCheckout(page);
+      await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
       // Address step - Go to delivery step
-      const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+      const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
       expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
     });
 
     it('should check that the updated carrier is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedCarrier', baseContext);
 
-      const shippingMethodName = await foClassicCheckoutPage.getShippingMethodName(page, carrierID);
+      const shippingMethodName = await foHummingbirdCheckoutPage.getShippingMethodName(page, carrierID);
       expect(shippingMethodName).to.eq(editCarrierData.name);
 
-      const isShippingMethodVisible = await foClassicCheckoutPage.isShippingMethodVisible(page, carrierID);
+      const isShippingMethodVisible = await foHummingbirdCheckoutPage.isShippingMethodVisible(page, carrierID);
       expect(isShippingMethodVisible, 'The carrier is not visible').to.eq(true);
     });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'secondSighOutFO', baseContext);
 
-      await foClassicCheckoutPage.goToHomePage(page);
-      await foClassicCheckoutPage.logout(page);
+      await foHummingbirdCheckoutPage.goToHomePage(page);
+      await foHummingbirdCheckoutPage.logout(page);
 
-      const isCustomerConnected = await foClassicCheckoutPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdCheckoutPage.isCustomerConnected(page);
       expect(isCustomerConnected, 'Customer is connected').to.eq(false);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'secondGoBackToBO', baseContext);
 
-      page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCheckoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boCarriersPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCarriersPage.pageTitle);

@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {
   boDashboardPage,
   boLoginPage,
@@ -23,8 +21,6 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_newsletter_subscribeNewsletter';
 
 /*
-Pre-condition:
-- Install hummingbird
 Scenario:
 - Go to the FO homepage
 - Fill the subscribe newsletter field and subscribe
@@ -33,8 +29,6 @@ Scenario:
 - Go back to the FO homepage
 - Try to subscribe again with the same email
 - Go to back to BO and delete subscription
-Post-condition:
-- Uninstall hummingbird
  */
 describe('FO - Newsletter : Subscribe to Newsletter', async () => {
   let browserContext: BrowserContext;
@@ -45,9 +39,6 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     name: 'Newsletter subscription',
   });
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
-
   // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -56,6 +47,27 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
 
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
+  });
+
+  describe('Go to FO to subscribe to the newsletter', async () => {
+    it('should open the shop page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFOForSubscribingToNewsletter', baseContext);
+
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
+
+      const result = await foHummingbirdHomePage.isHomePage(page);
+      expect(result).to.eq(true);
+    });
+
+    it('should subscribe to newsletter', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'subscribeToNewsletterForJohnDoe', baseContext);
+
+      const newsletterSubscribeAlertMessage = await foHummingbirdHomePage.subscribeToNewsletter(
+        page,
+        dataCustomers.johnDoe.email,
+      );
+      expect(newsletterSubscribeAlertMessage).to.contains(foHummingbirdHomePage.successSubscriptionMessage);
+    });
   });
 
   describe('Go to FO and try to subscribe with already used email', async () => {
@@ -250,7 +262,4 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       expect(pageTitle).to.contains(boLoginPage.pageTitle);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -20,9 +17,6 @@ const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_s
 describe('FO - Product page - Product page : Share links', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   describe('Check share links', async () => {
     // before and after functions
@@ -89,7 +83,4 @@ describe('FO - Product page - Product page : Share links', async () => {
       });
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

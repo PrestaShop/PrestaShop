@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 $component: panel;
 
 .#{$component} {
@@ -10,18 +14,18 @@ $component: panel;
     gap: map-get($map: $cdk-size, $key: "size-16");
     align-items: center;
     width: 100%;
-    padding: map-get($map: $cdk-size, $key: "size-24");
+    padding: map-get($map: $cdk-size, $key: "size-16");
     margin: map-get($map: $cdk-size, $key: "size-0");
-    font-size: map-get($map: $cdk-size, $key: "size-24");
+    font-size: map-get($map: $cdk-size, $key: "size-18");
     font-weight: 600;
 
     > i {
-      font-size: map-get($map: $cdk-size, $key: "size-24");
+      font-size: map-get($map: $cdk-size, $key: "size-18");
     }
   }
 
   &-title {
-    font-size: map-get($map: $cdk-size, $key: "size-24");
+    font-size: map-get($map: $cdk-size, $key: "size-18");
     font-weight: 600;
   }
 
@@ -70,7 +74,7 @@ $component: panel;
     }
 
     &:not(:has(.#{$component}-heading, .#{$component}-body, .#{$component}-footer)) {
-      padding: map-get($map: $cdk-size, $key: "size-24");
+      padding: map-get($map: $cdk-size, $key: "size-16");
     }
   }
 
@@ -82,7 +86,7 @@ $component: panel;
 
       *:is(.panel) {
         &:not(:has(.#{$component}-footer)) {
-          padding: map-get($map: $cdk-size, $key: "size-24");
+          padding: map-get($map: $cdk-size, $key: "size-16");
         }
       }
     }
@@ -94,7 +98,7 @@ $component: panel;
 
   &:has(.#{$component}-heading, > h3) {
     &:not(:has(.#{$component}-footer, .#{$component}-body)) {
-      padding: map-get($map: $cdk-size, $key: "size-24");
+      padding: map-get($map: $cdk-size, $key: "size-16");
 
       .#{$component}-heading,
       .#{$component} > h3
@@ -104,12 +108,12 @@ $component: panel;
 
       .#{$component}-heading,
       .#{$component} > h3 {
-        padding-bottom: map-get($map: $cdk-size, $key: "size-24");
+        padding-bottom: map-get($map: $cdk-size, $key: "size-16");
       }
     }
   }
 
   &:not(:has(> *)) {
-    padding: map-get($map: $cdk-size, $key: "size-24");
+    padding: map-get($map: $cdk-size, $key: "size-16");
   }
 }

@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 // Config
 // Tools
 @import "~bootstrap/scss/mixins/breakpoints";
@@ -517,6 +521,11 @@ $product-page-padding-bottom: 80px !default;
         max-width: 100%;
       }
     }
+  }
+
+  /* Let default category selector take full width */
+  #product_description_categories .form-group.select-widget {
+    max-width: 100%;
   }
 
   .hide {

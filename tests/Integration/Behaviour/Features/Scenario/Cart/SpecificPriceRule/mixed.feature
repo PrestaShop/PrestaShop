@@ -14,7 +14,6 @@ Feature: Cart calculation with specific price rule (mixed)
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
     Then my cart total should be 17.8 tax included
-    Then my cart total using previous calculation method should be 17.8 tax included
 
   Scenario: 3 products in cart, several quantities, one rule amount with price set from quantity 1
     Given I have an empty default cart
@@ -27,7 +26,6 @@ Feature: Cart calculation with specific price rule (mixed)
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
     Then my cart total should be 7.0 tax included
-    Then my cart total using previous calculation method should be 7.0 tax included
 
   Scenario: 3 products in cart, several quantities, one rule percent with price set from quantity 2
     Given I have an empty default cart
@@ -40,7 +38,6 @@ Feature: Cart calculation with specific price rule (mixed)
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
     Then my cart total should be 47.188 tax included
-    Then my cart total using previous calculation method should be 47.188 tax included
 
   Scenario: 3 products in cart, several quantities, one rule amount with price set from quantity 2
     Given I have an empty default cart
@@ -53,4 +50,3 @@ Feature: Cart calculation with specific price rule (mixed)
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product3" in my cart
     Then my cart total should be 38.188 tax included
-    Then my cart total using previous calculation method should be 38.188 tax included

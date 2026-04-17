@@ -1,5 +1,6 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -20,7 +21,7 @@ import {
 
 const baseContext: string = 'functional_FO_classic_productPage_productPage_displayTag';
 
-describe('FO - Product page - Product page : Display tag products', async () => {
+describe('FO - Product page - Product page : Display tag products (New, On sale, Pack...)', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let productsNumber: number;
@@ -41,6 +42,9 @@ describe('FO - Product page - Product page : Display tag products', async () => 
     minimumQuantity: 0,
     status: true,
   });
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -198,5 +202,8 @@ describe('FO - Product page - Product page : Display tag products', async () => 
   });
 
   // Post-condition: Delete specific price
-  deleteProductTest(newProductData, `${baseContext}_postTest`);
+  deleteProductTest(newProductData, `${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

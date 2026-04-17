@@ -271,7 +271,7 @@ describe('BO - Shop Parameters', async () => {
     expect(jsErrors.length).to.equals(0);
   });
 
-  it('sshould go to \'Shop parameters > Customer Settings > Titles > Edit Title\' page', async function () {
+  it('should go to \'Shop parameters > Customer Settings > Titles > Edit Title\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEditTitlePage', baseContext);
 
     await boCustomerSettingsPage.goToTitlesPage(page);

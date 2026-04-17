@@ -19,3 +19,5 @@ services:
     class: PrestaShop\PrestaShop\Core\Module\HookConfigurator
     arguments:
       - "@hook_repository"
+      - "@logger"
+      - "@prestashop.module.manager"

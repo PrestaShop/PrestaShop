@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 // stylelint-disable-next-line
 @import '@scss/pages/partials/_order-navigation';
 
@@ -71,12 +75,6 @@
       min-width: 75px;
       height: auto;
     }
-  }
-
-  .customer,
-  #orderProductsPanel,
-  .product-row .tab-content {
-    margin-bottom: 1.875rem;
   }
 
   .product-row {
@@ -242,6 +240,64 @@
       .rounded-circle {
         min-width: 21px;
         @include border-radius(100px!important);
+      }
+    }
+  }
+
+  #editOrderProductModal {
+    .skeleton-edit-product-form {
+      margin-block-start: var(--cdk-size-30);
+      margin-inline: var(--cdk-size-20);
+
+      &__product {
+        display: flex;
+        gap: var(--cdk-size-16);
+        align-items: center;
+        margin-block-end: var(--cdk-size-24);
+
+        &-img {
+          width: var(--cdk-size-48);
+          height: var(--cdk-size-48);
+        }
+      }
+
+      &__prices {
+        display: grid;
+        gap: var(--cdk-size-16);
+        margin-block-end: var(--cdk-size-24);
+      }
+
+      &__invoice {
+        margin-block-end: var(--cdk-size-24);
+      }
+
+      &__head {
+        display: grid;
+        grid-template-columns: minmax(0, 80%) minmax(0, 20%);
+        gap: var(--cdk-size-8);
+        padding-block-end: var(--cdk-size-8);
+        margin-block-end: var(--cdk-size-8);
+        border-block-end: 1px solid var(--cdk-primary-400);
+      }
+
+      &__rows {
+        display: flex;
+        flex-direction: column;
+      }
+
+      &__row {
+        display: grid;
+        grid-template-columns: minmax(0, var(--cdk-size-112)) auto minmax(0, var(--cdk-size-80));
+        gap: var(--cdk-size-8);
+        align-items: center;
+        padding-block: var(--cdk-size-8);
+        border-block-end: 1px solid var(--cdk-primary-400);
+      }
+
+      @include media-breakpoint-up(sm) {
+        &__prices {
+          grid-template-columns: repeat(3, 1fr);
+        }
       }
     }
   }

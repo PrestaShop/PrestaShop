@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -15,26 +12,18 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_search_consultAutoCompleteList';
 
 /*
-Pre-condition:
-- Install hummingbird theme
 Scenario:
 - Go to FO
 - Check autocomplete list
 - Click outside the autocomplete list
 - Check the autocomplete list with values
 - Check the autocomplete list with a string with less than 3 characters
-Post-condition:
-- Uninstall hummingbird theme
 */
 
 describe('FO - Search Page : Search product and consult autocomplete list', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -98,8 +87,15 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
 
         const inputValue = await foHummingbirdHomePage.getSearchValue(page);
         expect(inputValue).equal(search.searchValue);
+      });
+
+      it('should close the autocomplete list', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `closeAutocompleteList_${index}`, baseContext);
 
         await foHummingbirdHomePage.closeAutocompleteSearch(page);
+
+        const hasAutocompleteList = await foHummingbirdHomePage.isAutocompleteSearchResultVisible(page);
+        expect(hasAutocompleteList).to.eq(false);
       });
     });
 
@@ -110,7 +106,4 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
       expect(hasSearchResult, 'There are results in autocomplete search').to.eq(false);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

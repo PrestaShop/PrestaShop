@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -33,20 +13,25 @@ use Carrier;
 use Exception;
 use Group;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\EditCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetAvailableCarriers;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarriersForProduct;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductQuantity;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Resources\DummyFileUploader;
 use Tests\Resources\Resetter\CarrierResetter;
+use Tests\Resources\Resetter\ProductResetter;
 use Zone;
 
 class CarrierFeatureContext extends AbstractDomainFeatureContext
@@ -57,6 +42,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     public static function restoreCarrierTablesAfterSuite(): void
     {
         CarrierResetter::resetCarrier();
+        ProductResetter::resetProducts();
     }
 
     /**
@@ -408,20 +394,41 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then the products :products should have the following carriers:
-     *
-     * @param string $products
-     * @param TableNode $table
+     * @When I soft delete carrier :reference
      */
-    public function assertCarriersWithState(string $products, TableNode $table)
+    public function deleteCarrier(string $reference): void
+    {
+        try {
+            // here we use objectmodel for soft delete because CQRS command delete a carrier soft delete only if is linked to an order
+            $carrierId = $this->referenceToId($reference);
+            $carrier = new Carrier($carrierId);
+            $carrier->deleted = true;
+            $carrier->save();
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then the products :products should have the following carriers with address :address:
+     */
+    public function assertCarriersWithState(string $products, string $address, TableNode $table)
     {
         $expectedRows = $table->getColumnsHash();
 
         $expectedAvailable = [];
         $expectedFiltered = [];
+        $currentCarrierId = null;
 
         foreach ($expectedRows as $row) {
             $carrier = ['name' => $row['carrier']];
+
+            if (!empty($row['carrier_reference'])) {
+                $currentCarrier = new Carrier($this->getCarrier($row['carrier_reference'])->getCarrierId());
+                if ($currentCarrier->deleted) {
+                    $currentCarrierId = $currentCarrier->id;
+                }
+            }
 
             if (strtolower($row['state']) === 'available') {
                 $expectedAvailable[] = $carrier;
@@ -432,16 +439,17 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
                 ];
             }
         }
-
         $productNames = explode(',', $products);
-        $productIds = [];
+        $productQuantities = [];
 
         foreach ($productNames as $productName) {
-            $productIds[] = $this->referenceToId(trim($productName));
+            $productQuantity = new ProductQuantity(new ProductId($this->referenceToId(trim($productName))), 1);
+            $productQuantities[] = $productQuantity;
         }
 
         $carriersResult = $this->getQueryBus()->handle(
-            new GetAvailableCarriers($productIds)
+            new GetAvailableCarriers($productQuantities, new AddressId($this->referenceToId($address)), $currentCarrierId
+            )
         );
 
         $actualAvailable = array_map(function ($carrierSummary) {
@@ -462,8 +470,22 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
             ];
         }
 
-        Assert::assertEquals($expectedAvailable, $actualAvailable, 'Available carriers do not match expected.');
-        Assert::assertEquals($expectedFiltered, $actualFiltered, 'Filtered carriers do not match expected.');
+        Assert::assertEqualsCanonicalizing($expectedAvailable, $actualAvailable, 'Available carriers do not match expected.');
+        Assert::assertEqualsCanonicalizing($expectedFiltered, $actualFiltered, 'Filtered carriers do not match expected.');
+    }
+
+    /**
+     * @Then the product :productReference should have the following carriers assigned:
+     */
+    public function assertCarriersForProduct(string $productReference, TableNode $table): void
+    {
+        $productId = $this->referenceToId($productReference);
+        $carriers = $this->getQueryBus()->handle(new GetCarriersForProduct($productId));
+
+        $expectedCarrierNames = array_column($table->getColumnsHash(), 'name');
+        $actualCarrierNames = array_map(fn ($c) => $c->getName(), $carriers);
+
+        Assert::assertEqualsCanonicalizing($expectedCarrierNames, $actualCarrierNames);
     }
 
     private function createCarrierUsingCommand(

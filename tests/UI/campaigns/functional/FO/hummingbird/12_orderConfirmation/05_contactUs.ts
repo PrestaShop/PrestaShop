@@ -1,8 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {
   boCustomerServicePage,
   boCustomerServiceViewPage,
@@ -30,15 +28,15 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_orderConfirmation_contactUs';
 
 /*
-1 GO to shop FO
-2 login
-3 make an order
-4 in the 'order confirmation' page recover the command reference number and click on the 'contact support' link
-5 In the 'contact us' page check if the pre-filled infos are correct
-9 send the message
-10 go to the shop BO
-11 go to the "customer service" page
-12 check that the previously made message is visible and the infos are correct
+  1 GO to shop FO
+  2 login
+  3 make an order
+  4 in the 'order confirmation' page recover the command reference number and click on the 'contact support' link
+  5 In the 'contact us' page check if the pre-filled infos are correct
+  9 send the message
+  10 go to the shop BO
+  11 go to the "customer service" page
+  12 check that the previously made message is visible and the infos are correct
 */
 describe('FO - Order confirmation : Contact us', async () => {
   let browserContext: BrowserContext;
@@ -52,10 +50,6 @@ describe('FO - Order confirmation : Contact us', async () => {
     reference: '',
   });
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_0`);
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -270,7 +264,4 @@ describe('FO - Order confirmation : Contact us', async () => {
       expect(deleteMessageSuccessText).to.contains(boCustomerServicePage.deleteMessageSuccessAlertText);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_1`);
 });

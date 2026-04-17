@@ -8,9 +8,9 @@ import {
   boProductSettingsPage,
   type BrowserContext,
   dataProducts,
-  foClassicHomePage,
-  foClassicProductPage,
-  foClassicSearchResultsPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -61,51 +61,51 @@ describe('BO - Shop Parameters - Product Settings : Display notifications', asyn
     await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
     page = await boProductSettingsPage.viewMyShop(page);
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
     expect(isHomePage, 'Home page was not opened').to.eq(true);
   });
 
   it('should search product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-    await foClassicHomePage.searchProduct(page, dataProducts.demo_11.name);
+    await foHummingbirdHomePage.searchProduct(page, dataProducts.demo_11.name);
 
-    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+    const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
   });
 
   it('should add the product to cart', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-    await foClassicSearchResultsPage.goToProductPage(page, 1);
+    await foHummingbirdSearchResultsPage.goToProductPage(page, 1);
     // Add the product to the cart
-    await foClassicProductPage.addProductToTheCart(page, 1, [], false);
+    await foHummingbirdProductPage.addProductToTheCart(page, 1, [], false);
 
-    const notificationsNumber = await foClassicProductPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foHummingbirdProductPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.equal(1);
 
-    const hasNotificationMessage = await foClassicProductPage.hasNotificationMessage(page);
+    const hasNotificationMessage = await foHummingbirdProductPage.hasNotificationMessage(page);
     expect(hasNotificationMessage).to.equals(false);
   });
 
   it('should check, on front office, the notification', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkFrontOfficeEnabked', baseContext);
 
-    await foClassicSearchResultsPage.reloadPage(page);
+    await foHummingbirdSearchResultsPage.reloadPage(page);
 
-    const hasNotificationMessage = await foClassicProductPage.hasNotificationMessage(page);
+    const hasNotificationMessage = await foHummingbirdProductPage.hasNotificationMessage(page);
     expect(hasNotificationMessage).to.equals(true);
 
-    const notificationMessage = await foClassicProductPage.getNotificationMessage(page);
-    expect(notificationMessage).to.equals(foClassicProductPage.messageCartContainsAlreadyProducts);
+    const notificationMessage = await foHummingbirdProductPage.getNotificationMessage(page);
+    expect(notificationMessage).to.equals(foHummingbirdProductPage.messageCartContainsAlreadyProducts);
   });
 
   it('should go to \'Shop parameters > Product Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'disableConfiguration', baseContext);
 
-    page = await foClassicProductPage.changePage(browserContext, 0);
+    page = await foHummingbirdProductPage.changePage(browserContext, 0);
 
     const result = await boProductSettingsPage.setDisplayNotificationIfProductInCartStatus(page, false);
     expect(result).to.equals(boProductSettingsPage.successfulUpdateMessage);
@@ -115,16 +115,16 @@ describe('BO - Shop Parameters - Product Settings : Display notifications', asyn
     await testContext.addContextItem(this, 'testIdentifier', 'checkFrontOfficeDisabled', baseContext);
 
     page = await boProductSettingsPage.changePage(browserContext, 1);
-    await foClassicProductPage.reloadPage(page);
+    await foHummingbirdProductPage.reloadPage(page);
 
-    const hasNotificationMessage = await foClassicProductPage.hasNotificationMessage(page);
+    const hasNotificationMessage = await foHummingbirdProductPage.hasNotificationMessage(page);
     expect(hasNotificationMessage).to.equals(false);
   });
 
   it('should reset the configuration', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetConfiguration', baseContext);
 
-    page = await foClassicProductPage.changePage(browserContext, 0);
+    page = await foHummingbirdProductPage.changePage(browserContext, 0);
 
     const result = await boProductSettingsPage.setDisplayNotificationIfProductInCartStatus(page, true);
     expect(result).to.equals(boProductSettingsPage.successfulUpdateMessage);

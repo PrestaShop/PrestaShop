@@ -9,8 +9,8 @@ import {
   boSearchPage,
   type BrowserContext,
   dataLanguages,
-  foClassicHomePage,
-  foClassicSearchResultsPage,
+  foHummingbirdHomePage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -105,31 +105,31 @@ describe('BO - Shop Parameters - Search : Blacklisted words', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
     page = await boProductsCreatePage.viewMyShop(page);
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
-    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+    expect(isHomePage).to.eq(true);
   });
 
   it(`should search the word "${searchWord}"`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchWordWithError', baseContext);
 
-    await foClassicHomePage.searchProduct(page, searchWord);
+    await foHummingbirdHomePage.searchProduct(page, searchWord);
 
-    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+    const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
 
-    const hasResults = await foClassicSearchResultsPage.hasResults(page);
+    const hasResults = await foHummingbirdSearchResultsPage.hasResults(page);
     expect(hasResults).to.eq(false);
 
-    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
+    const searchInputValue = await foHummingbirdSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal(searchWord);
   });
 
   it('should return to \'Shop Parameters > Search\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToSearchPage', baseContext);
 
-    page = await foClassicSearchResultsPage.changePage(browserContext, 0);
+    page = await foHummingbirdSearchResultsPage.changePage(browserContext, 0);
     await boDashboardPage.goToSubMenu(
       page,
       boDashboardPage.shopParametersParentLink,
@@ -154,23 +154,23 @@ describe('BO - Shop Parameters - Search : Blacklisted words', async () => {
   it(`should search the word "${searchWord}"`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchWordWithSuccess', baseContext);
 
-    page = await foClassicSearchResultsPage.changePage(browserContext, 1);
+    page = await foHummingbirdSearchResultsPage.changePage(browserContext, 1);
     await page.reload();
 
-    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+    const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
 
-    const hasResults = await foClassicSearchResultsPage.hasResults(page);
+    const hasResults = await foHummingbirdSearchResultsPage.hasResults(page);
     expect(hasResults).to.eq(true);
 
-    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
+    const searchInputValue = await foHummingbirdSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal(searchWord);
   });
 
   it('should reset the list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetList', baseContext);
 
-    page = await foClassicSearchResultsPage.changePage(browserContext, 0);
+    page = await foHummingbirdSearchResultsPage.changePage(browserContext, 0);
 
     const textResult = await boSearchPage.setBlacklistedWords(page, dataLanguages.english.id, blacklistedWordsListEN);
     expect(textResult).to.be.eq(boSearchPage.settingsUpdateMessage);

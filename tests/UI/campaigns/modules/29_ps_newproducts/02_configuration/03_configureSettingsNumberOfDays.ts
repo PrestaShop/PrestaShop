@@ -8,7 +8,7 @@ import {
   boModuleManagerPage,
   type BrowserContext,
   dataModules,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   modPsNewProductsBoMain,
   type Page,
   utilsPlaywright,
@@ -120,23 +120,23 @@ describe('New products block module - Configure settings of "Number of days for 
         await testContext.addContextItem(this, 'testIdentifier', `goToTheFo${index}`, baseContext);
 
         page = await modPsNewProductsBoMain.viewMyShop(page);
-        await foClassicHomePage.changeLanguage(page, 'en');
+        await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-        const isHomePage = await foClassicHomePage.isHomePage(page);
+        const isHomePage = await foHummingbirdHomePage.isHomePage(page);
         expect(isHomePage).to.eq(true);
       });
 
       it('should check the block "New Products" is visible', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkBlockNewProductsVisible${index}`, baseContext);
 
-        const hasProductsBlock = await foClassicHomePage.hasProductsBlock(page, 'newproducts');
+        const hasProductsBlock = await foHummingbirdHomePage.hasProductsBlock(page, 'ps-newproducts');
         expect(hasProductsBlock).to.be.equal(arg.blockIsVisible);
       });
 
       it('should return to the back office', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `returnToBO${index}`, baseContext);
 
-        page = await foClassicHomePage.closePage(browserContext, page, 0);
+        page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
         const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
         expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);

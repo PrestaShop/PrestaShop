@@ -29,7 +29,7 @@ Feature: Stock management of order from Back Office (BO)
       | status              | <order_status>    |
     Then product "product<index>" last stock movements should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 100            |
+      | Puffin Mummy | 100            |
     Examples:
       | index | order_status                         |
       | 1     | Awaiting check payment               |
@@ -57,7 +57,7 @@ Feature: Stock management of order from Back Office (BO)
     Then product "product<index>" last stock movements should be:
       | employee   | delta_quantity |
       |            | -2             |
-      | Puff Daddy | 100            |
+      | Puffin Mummy | 100            |
     Examples:
       | index | order_status |
       | 1     | Shipped      |

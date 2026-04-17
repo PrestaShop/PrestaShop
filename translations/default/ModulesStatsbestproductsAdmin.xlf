@@ -5,32 +5,32 @@
       <trans-unit id="8c4d7af5f578693f9a6cf391e912ee33">
         <source>An empty record-set was returned.</source>
         <target>An empty record-set was returned.</target>
-        <note>File: modules/statsbestproducts/statsbestproducts.php [Line: 53]</note>
+        <note>File: modules/statsbestproducts/statsbestproducts.php [Line: 52]</note>
       </trans-unit>
       <trans-unit id="950cf49f8ca529be64c924f16fcb5404">
         <source>Best-selling products</source>
         <target>Best-selling products</target>
-        <note>File: modules/statsbestproducts/statsbestproducts.php [Line: 113]</note>
+        <note>File: modules/statsbestproducts/statsbestproducts.php [Line: 112]</note>
       </trans-unit>
       <trans-unit id="27c423a9423760b083519223b600f24a">
         <source>Enrich your stats with a small list of your best-sellers to better know your customers.</source>
         <target>Enrich your stats with a small list of your best-sellers to better know your customers.</target>
-        <note>File: modules/statsbestproducts/statsbestproducts.php [Line: 114]</note>
+        <note>File: modules/statsbestproducts/statsbestproducts.php [Line: 113]</note>
       </trans-unit>
       <trans-unit id="7664a37e0cc56aaf39aebf2edbd3f98e">
         <source>Page views</source>
         <target>Page views</target>
-        <note>File: modules/statsbestproducts/statsbestproducts.php [Line: 95]</note>
+        <note>File: modules/statsbestproducts/statsbestproducts.php [Line: 94]</note>
       </trans-unit>
       <trans-unit id="6771f2d557a34bd89ea7abc92a0a069c">
         <source>Price sold</source>
         <target>Price sold</target>
-        <note>File: modules/statsbestproducts/statsbestproducts.php [Line: 77]</note>
+        <note>File: modules/statsbestproducts/statsbestproducts.php [Line: 76]</note>
       </trans-unit>
       <trans-unit id="25f4b31e8f3baec8b2f266e05af88943">
         <source>Quantity sold in a day</source>
         <target>Quantity sold in a day</target>
-        <note>File: modules/statsbestproducts/statsbestproducts.php [Line: 89]</note>
+        <note>File: modules/statsbestproducts/statsbestproducts.php [Line: 88]</note>
       </trans-unit>
     </body>
   </file>

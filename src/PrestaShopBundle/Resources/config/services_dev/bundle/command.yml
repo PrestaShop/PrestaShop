@@ -31,6 +31,10 @@ services:
     tags:
       - 'console.command'
 
+  PrestaShopBundle\Command\CheckTranslationFixtures:
+    tags:
+      - 'console.command'
+
   PrestaShopBundle\Command\LegacyLinkLinterCommand:
     arguments:
       - '@prestashop.bundle.routing.linter.legacy_link_linter'
@@ -44,6 +48,8 @@ services:
       - '%prestashop.commands_and_queries%'
       - '@api_platform.metadata.resource.name_collection_factory.attributes'
       - '@api_platform.metadata.resource.metadata_collection_factory.attributes'
+      - '@PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface'
+      - '%prestashop.module_dir%'
     tags:
       - 'console.command'
 
@@ -58,10 +64,6 @@ services:
     arguments:
       - '@prestashop.bundle.routing.linter.admin_route_provider'
       - '@prestashop.bundle.routing.linter.security_annotation_linter'
-    tags:
-      - 'console.command'
-
-  PrestaShopBundle\Command\UpdateLicensesCommand:
     tags:
       - 'console.command'
 

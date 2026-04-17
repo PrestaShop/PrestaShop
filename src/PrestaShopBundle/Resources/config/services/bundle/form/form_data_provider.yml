@@ -128,6 +128,9 @@ services:
     arguments:
       - '@prestashop.adapter.logs.configuration'
 
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\DatabaseLogsFormDataProvider:
+    autowire: true
+
   prestashop.admin.import.form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormDataProvider'
     arguments:

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Shipment;
@@ -43,7 +23,9 @@ class MergeShipmentType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        foreach ($options['products'] as $product) {
+        $datas = $builder->getData();
+
+        foreach ($datas['products'] as $product) {
             $builder->add('product_' . $product['order_detail_id'], CheckboxType::class, [
                 'label' => $product['order_detail_id'],
                 'required' => false,
@@ -63,7 +45,7 @@ class MergeShipmentType extends AbstractType
 
         $builder->add('merge_to_shipment', ChoiceType::class, [
             'label' => $this->translator->trans('Select shipment to merge to', [], 'Admin.Orderscustomers.Feature'),
-            'choices' => $options['shipments'],
+            'choices' => $datas['shipments'],
             'choice_label' => function ($shipment) {
                 return $this->translator->trans(
                     'Shipment %shipment_id% - carrier %carrier_name%',
@@ -73,6 +55,13 @@ class MergeShipmentType extends AbstractType
                     ],
                     'Admin.Orderscustomers.Feature'
                 );
+            },
+            'choice_attr' => function ($shipment) {
+                if (!empty($shipment->getTrackingNumber())) {
+                    return ['disabled' => 'disabled'];
+                }
+
+                return [];
             },
             'choice_value' => fn ($shipment) => $shipment ? (string) $shipment->getId() : '',
             'placeholder' => $this->translator->trans('Select shipment', [], 'Admin.Orderscustomers.Feature'),

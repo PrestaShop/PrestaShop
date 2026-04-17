@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences;
@@ -87,6 +67,10 @@ class HandlingType extends TranslatorAwareType
                     'Handling charges',
                     'Admin.Shipping.Feature'
                 ),
+                'help' => $this->trans(
+                    'Optional additional fee added to carriers with handling charges enabled. This fee is not applied when shipping is free due to options below.',
+                    'Admin.Shipping.Help'
+                ),
                 'multistore_configuration_key' => 'PS_SHIPPING_HANDLING',
             ])
             ->add('free_shipping_price', MoneyType::class, [
@@ -100,6 +84,10 @@ class HandlingType extends TranslatorAwareType
                 'label' => $this->trans(
                     'Free shipping starts at',
                     'Admin.Shipping.Feature'
+                ),
+                'help' => $this->trans(
+                    'Shipping is free for all zones when the cart total reaches or exceeds this amount.',
+                    'Admin.Shipping.Help'
                 ),
                 'multistore_configuration_key' => 'PS_SHIPPING_FREE_PRICE',
             ])
@@ -115,6 +103,10 @@ class HandlingType extends TranslatorAwareType
                     new GreaterThanOrEqual(['value' => 0]),
                     new Type(['type' => 'numeric']),
                 ],
+                'help' => $this->trans(
+                    'Shipping is free for all zones when the total cart weight reaches or exceeds this value.',
+                    'Admin.Shipping.Help'
+                ),
                 'multistore_configuration_key' => 'PS_SHIPPING_FREE_WEIGHT',
             ]);
     }

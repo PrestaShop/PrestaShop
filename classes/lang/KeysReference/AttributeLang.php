@@ -1,32 +1,13 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+// install-dev/fixtures/fashion/langs/en/data/attribute.xml
 trans('S', 'Shop.Demo.Catalog');
 trans('M', 'Shop.Demo.Catalog');
 trans('L', 'Shop.Demo.Catalog');
-trans('One size', 'Shop.Demo.Catalog');
+trans('XL', 'Shop.Demo.Catalog');
 trans('Grey', 'Shop.Demo.Catalog');
 trans('Taupe', 'Shop.Demo.Catalog');
 trans('Beige', 'Shop.Demo.Catalog');
@@ -40,10 +21,11 @@ trans('Blue', 'Shop.Demo.Catalog');
 trans('Green', 'Shop.Demo.Catalog');
 trans('Yellow', 'Shop.Demo.Catalog');
 trans('Brown', 'Shop.Demo.Catalog');
-trans('35', 'Shop.Demo.Catalog');
-trans('36', 'Shop.Demo.Catalog');
-trans('37', 'Shop.Demo.Catalog');
-trans('38', 'Shop.Demo.Catalog');
-trans('39', 'Shop.Demo.Catalog');
-trans('40', 'Shop.Demo.Catalog');
 trans('Pink', 'Shop.Demo.Catalog');
+trans('40x60cm', 'Shop.Demo.Catalog');
+trans('60x90cm', 'Shop.Demo.Catalog');
+trans('80x120cm', 'Shop.Demo.Catalog');
+trans('Ruled', 'Shop.Demo.Catalog');
+trans('Plain', 'Shop.Demo.Catalog');
+trans('Squared', 'Shop.Demo.Catalog');
+trans('Doted', 'Shop.Demo.Catalog');

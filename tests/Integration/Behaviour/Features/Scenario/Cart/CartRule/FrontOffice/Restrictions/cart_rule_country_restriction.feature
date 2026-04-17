@@ -36,11 +36,7 @@ Feature: Cart calculation with country specific cart rules
       | discount_amount       | 7.8       |
       | discount_currency     | usd       |
       | discount_includes_tax | false     |
-    And I restrict following countries for cart rule cartrule1:
-      | restricted countries | France |
-    And I save all the restrictions for cart rule cartrule1
-    And cart rule cartrule1 should have the following properties:
-      | restricted countries | France |
+      | countries             | France    |
     And there is a product in the catalog named "Product1" with a price of 90.12 and 100 items in stock
 
   Scenario: Cart with a Product And address restricted by cart rule

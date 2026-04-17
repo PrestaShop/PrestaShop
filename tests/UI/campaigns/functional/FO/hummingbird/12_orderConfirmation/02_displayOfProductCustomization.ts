@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataCarriers,
@@ -25,24 +22,16 @@ import {expect} from 'chai';
 const baseContext: string = 'functional_FO_hummingbird_orderConfirmation_displayOfProductCustomization';
 
 /*
-Pre-condition:
-- Install the theme hummingbird
 Scenario:
 - Add product with customization to cart
 - Proceed to checkout and confirm the order
 - Check the payment confirmation details
 - Check the customization modal
-Post-condition:
-- Uninstall the theme hummingbird
 */
 describe('FO - Order confirmation : Display of product customization', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -172,9 +161,10 @@ describe('FO - Order confirmation : Display of product customization', async () 
       const result = await foHummingbirdCheckoutOrderConfirmationPage.getProductDetailsInRow(page, 1);
       await Promise.all([
         expect(result.image).to.contains(dataProducts.demo_14.coverImage),
-        expect(result.details).to.equal(`${dataProducts.demo_14.name} Reference ${dataProducts.demo_14.reference}`
-          + ' Customized Product customization Type your text here Hello world!'),
-        expect(result.prices).to.equal(`€${dataProducts.demo_14.finalPrice} (x1) €${dataProducts.demo_14.finalPrice}`),
+        expect(result.details).to.contains(dataProducts.demo_14.name),
+        expect(result.details).to.contains(`Reference: ${dataProducts.demo_14.reference}`),
+        expect(result.details).to.contains('Product customization Type your text here Hello world!'),
+        expect(result.prices).to.equal(`€${dataProducts.demo_14.finalPrice}`),
       ]);
     });
 
@@ -199,7 +189,4 @@ describe('FO - Order confirmation : Display of product customization', async () 
       expect(isModalNotVisible).to.equal(true);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

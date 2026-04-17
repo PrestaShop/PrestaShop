@@ -1,33 +1,12 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Category;
-use Dispatcher;
 use Exception;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
@@ -307,11 +286,6 @@ class CategoryController extends PrestaShopAdminController
 
         $defaultGroups = $defaultGroupsProvider->getGroups();
 
-        // If we don't create the dispatcher instance with the current request,
-        // a new instance will be created later using `SymfonyRequest::createFromGlobals()`
-        // but as we may have already uploaded files, this can throw an exception
-        Dispatcher::getInstance($request);
-
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig',
             [
@@ -381,7 +355,7 @@ class CategoryController extends PrestaShopAdminController
                 $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'categoryId' => (int) $this->getConfiguration()->get('PS_ROOT_CATEGORY'),
+                    'categoryId' => $categoryId,
                 ]);
             }
         } catch (Exception $e) {

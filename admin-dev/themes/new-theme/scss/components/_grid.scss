@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 .grid-toggler-icon-valid {
   color: #78d07d;
   cursor: pointer;
@@ -132,6 +136,11 @@ table .column-filters {
     margin-left: auto;
     white-space: nowrap;
   }
+}
+
+.table thead .column-filters td,
+.table thead .column-filters th {
+  padding-block: var(--#{$cdk}size-8);
 }
 
 .grid {
@@ -291,7 +300,7 @@ table .column-filters {
 
           &.image-type {
             img {
-              max-width: 3rem;
+              max-width: 2rem;
               height: auto;
             }
           }
@@ -360,6 +369,11 @@ table {
         }
       }
 
+      td,
+      th {
+        padding: var(--#{$cdk}size-4);
+      }
+
       td {
         .input-group {
           &:nth-child(2) {
@@ -377,6 +391,47 @@ table {
           }
         }
       }
+    }
+  }
+}
+
+// FilterLinkGroup component styles
+.filter-link-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--cdk-size-16);
+  margin-top: var(--cdk-size-16);
+  margin-bottom: 0;
+
+  &__item {
+    padding-bottom: var(--cdk-size-4);
+    font-weight: 600;
+    color: var(--cdk-color-grey-700);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: color var(--#{$cdk}default-transition-duration), border-color var(--#{$cdk}default-transition-duration);
+
+    &:hover,
+    &:focus {
+      color: var(--cdk-color-primary-600);
+      text-decoration: none;
+    }
+
+    &.is-active {
+      color: var(--cdk-color-primary-600);
+      border-color: var(--cdk-color-primary-500);
+    }
+  }
+}
+
+// Ensure FilterLinkGroup links don't have underline
+[data-filter-link-group] {
+  a {
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
     }
   }
 }

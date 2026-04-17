@@ -9,8 +9,8 @@ import {
   boLoginPage,
   type BrowserContext,
   FakerContactMessage,
-  foClassicContactUsPage,
-  foClassicHomePage,
+  foHummingbirdContactUsPage,
+  foHummingbirdHomePage,
   type MailDev,
   type MailDevEmail,
   type Page,
@@ -74,9 +74,9 @@ describe('BO - Customer Service : Respond to message', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-      await foClassicHomePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
@@ -84,19 +84,19 @@ describe('BO - Customer Service : Respond to message', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
 
       // Go to contact us page
-      await foClassicHomePage.goToFooterLink(page, 'Contact us');
+      await foHummingbirdHomePage.goToFooterLink(page, 'Contact us');
 
-      const pageTitle = await foClassicContactUsPage.getPageTitle(page);
-      expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
+      const pageTitle = await foHummingbirdContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdContactUsPage.pageTitle);
     });
 
     it('should send message to customer service', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-      await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
+      await foHummingbirdContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
 
-      const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
-      expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
+      const validationMessage = await foHummingbirdContactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(foHummingbirdContactUsPage.validationMessage);
     });
   });
 

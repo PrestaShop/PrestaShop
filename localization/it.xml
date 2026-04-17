@@ -19,7 +19,7 @@
     <tax id="10" name="DPH CZ 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="11" name="MwSt. DE 19%" rate="19" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="12" name="moms DK 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="13" name="km EE 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="13" name="km EE 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="14" name="IVA ES 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="15" name="ALV FI 25.5%" rate="25.5" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="16" name="TVA FR 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
@@ -36,7 +36,7 @@
     <tax id="27" name="BTW NL 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="28" name="PTU PL 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="29" name="IVA PT 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="30" name="TVA RO 19%" rate="19" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="30" name="TVA RO 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="31" name="Moms SE 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="32" name="DDV SI 22%" rate="22" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="33" name="DPH SK 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
@@ -231,7 +231,7 @@
     <state name="Agrigento" iso_code="AG" country="IT" zone="Europe"/>
     <state name="Alessandria" iso_code="AL" country="IT" zone="Europe"/>
     <state name="Ancona" iso_code="AN" country="IT" zone="Europe"/>
-    <state name="Aosta" iso_code="AO" country="IT" zone="Europe"/>
+    <state name="Valle d'Aosta" iso_code="AO" country="IT" zone="Europe"/>
     <state name="Arezzo" iso_code="AR" country="IT" zone="Europe"/>
     <state name="Ascoli Piceno" iso_code="AP" country="IT" zone="Europe"/>
     <state name="Asti" iso_code="AT" country="IT" zone="Europe"/>
@@ -249,7 +249,6 @@
     <state name="Cagliari" iso_code="CA" country="IT" zone="Europe"/>
     <state name="Caltanissetta" iso_code="CL" country="IT" zone="Europe"/>
     <state name="Campobasso" iso_code="CB" country="IT" zone="Europe"/>
-    <state name="Carbonia-Iglesias" iso_code="CI" country="IT" zone="Europe"/>
     <state name="Caserta" iso_code="CE" country="IT" zone="Europe"/>
     <state name="Catania" iso_code="CT" country="IT" zone="Europe"/>
     <state name="Catanzaro" iso_code="CZ" country="IT" zone="Europe"/>
@@ -281,25 +280,23 @@
     <state name="Lucca" iso_code="LU" country="IT" zone="Europe"/>
     <state name="Macerata" iso_code="MC" country="IT" zone="Europe"/>
     <state name="Mantova" iso_code="MN" country="IT" zone="Europe"/>
-    <state name="Massa" iso_code="MS" country="IT" zone="Europe"/>
+    <state name="Massa-Carrara" iso_code="MS" country="IT" zone="Europe"/>
     <state name="Matera" iso_code="MT" country="IT" zone="Europe"/>
     <state name="Medio Campidano" iso_code="VS" country="IT" zone="Europe"/>
     <state name="Messina" iso_code="ME" country="IT" zone="Europe"/>
     <state name="Milano" iso_code="MI" country="IT" zone="Europe"/>
     <state name="Modena" iso_code="MO" country="IT" zone="Europe"/>
-    <state name="Monza e della Brianza" iso_code="MB" country="IT" zone="Europe"/>
+    <state name="Monza e Brianza" iso_code="MB" country="IT" zone="Europe"/>
     <state name="Napoli" iso_code="NA" country="IT" zone="Europe"/>
     <state name="Novara" iso_code="NO" country="IT" zone="Europe"/>
     <state name="Nuoro" iso_code="NU" country="IT" zone="Europe"/>
-    <state name="Ogliastra" iso_code="OG" country="IT" zone="Europe"/>
-    <state name="Olbia-Tempio" iso_code="OT" country="IT" zone="Europe"/>
     <state name="Oristano" iso_code="OR" country="IT" zone="Europe"/>
     <state name="Padova" iso_code="PD" country="IT" zone="Europe"/>
     <state name="Palermo" iso_code="PA" country="IT" zone="Europe"/>
     <state name="Parma" iso_code="PR" country="IT" zone="Europe"/>
     <state name="Pavia" iso_code="PV" country="IT" zone="Europe"/>
     <state name="Perugia" iso_code="PG" country="IT" zone="Europe"/>
-    <state name="Pesaro-Urbino" iso_code="PU" country="IT" zone="Europe"/>
+    <state name="Pesaro e Urbino" iso_code="PU" country="IT" zone="Europe"/>
     <state name="Pescara" iso_code="PE" country="IT" zone="Europe"/>
     <state name="Piacenza" iso_code="PC" country="IT" zone="Europe"/>
     <state name="Pisa" iso_code="PI" country="IT" zone="Europe"/>
@@ -321,6 +318,7 @@
     <state name="Siena" iso_code="SI" country="IT" zone="Europe"/>
     <state name="Siracusa" iso_code="SR" country="IT" zone="Europe"/>
     <state name="Sondrio" iso_code="SO" country="IT" zone="Europe"/>
+    <state name="Sulcis Iglesiente" iso_code="SU" country="IT" zone="Europe"/>
     <state name="Taranto" iso_code="TA" country="IT" zone="Europe"/>
     <state name="Teramo" iso_code="TE" country="IT" zone="Europe"/>
     <state name="Terni" iso_code="TR" country="IT" zone="Europe"/>

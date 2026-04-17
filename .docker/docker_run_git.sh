@@ -41,7 +41,7 @@ if [ "${DISABLE_MAKE}" != "1" ]; then
   echo "\n* Install node $NODE_VERSION...";
   export NVM_DIR=/usr/local/nvm
   mkdir -p $NVM_DIR \
-      && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash \
+      && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash \
       && . $NVM_DIR/nvm.sh \
       && nvm install $NODE_VERSION \
       && nvm alias default $NODE_VERSION \
@@ -49,6 +49,15 @@ if [ "${DISABLE_MAKE}" != "1" ]; then
 
   export NODE_PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin
   export PATH=$PATH:$NODE_PATH
+
+  # Make nvm available by default for all users
+  echo 'export NVM_DIR="/usr/local/nvm"' >> /etc/bash.bashrc
+  echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> /etc/bash.bashrc
+  echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> /etc/bash.bashrc
+
+  # Also add Node.js binaries to system PATH for all users
+  echo "export PATH=\$PATH:$NODE_PATH" >> /etc/bash.bashrc
+  echo "export PATH=\$PATH:$NODE_PATH" >> /etc/profile
 
   echo "\n* Install composer ...";
   mkdir -p /var/www/.composer
@@ -66,10 +75,10 @@ if [ "${DISABLE_MAKE}" != "1" ]; then
   chown -R www-data:www-data vendor modules themes
 
   echo "\n* Build assets ...";
-  runuser -g www-data -u www-data -- /usr/bin/make assets
+  runuser -g www-data -u www-data -- /var/www/html/tools/assets/build.sh
 
   echo "\n* Wait for assets built...";
-  /usr/bin/make wait-assets
+  runuser -g www-data -u www-data -- /var/www/html/tools/assets/wait-build.sh
 else
   echo "\n* Build of assets was disabled...";
 fi
@@ -82,7 +91,7 @@ elif [ "$DB_SERVER" != "<to be defined>" -a $PS_INSTALL_AUTO = 1 ]; then
     RET=1
     while [ $RET -ne 0 ]; do
         echo "\n* Checking if $DB_SERVER is available..."
-        mysql -h $DB_SERVER -P $DB_PORT -u $DB_USER -p$DB_PASSWD --ssl=0 -e "status" > /dev/null 2>&1
+        mysql -h $DB_SERVER -P $DB_PORT -u $DB_USER -p$DB_PASSWD -e "status" > /dev/null 2>&1
         RET=$?
 
         if [ $RET -ne 0 ]; then

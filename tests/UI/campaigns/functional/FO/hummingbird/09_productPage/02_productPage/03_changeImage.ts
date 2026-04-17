@@ -1,6 +1,5 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -23,7 +22,6 @@ const baseContext: string = 'functional_FO_hummingbird_productPage_productPage_c
 
 /*
 Pre-condition:
-- Install the theme hummingbird
 - Create product with 7 images
 Scenario:
 - Go to FO
@@ -33,13 +31,11 @@ Scenario:
 - Zoom the cover image and change image
 Post-condition:
 - Delete created product
-- Uninstall the theme hummingbird
  */
 describe('FO - Product page - Quick view : Change image', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // Data to create product
   const newProductData: FakerProduct = new FakerProduct({
     type: 'standard',
     quantity: 2,
@@ -47,10 +43,6 @@ describe('FO - Product page - Quick view : Change image', async () => {
     thumbImage: 'thumbImage.jpg',
   });
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -166,29 +158,36 @@ describe('FO - Product page - Quick view : Change image', async () => {
     it('should display the third image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayThirdImage', baseContext);
 
-      const coverImageURL = await foHummingbirdProductPage.getCoverImage(page);
+      const coverPosition = await foHummingbirdProductPage.getCoverImage(page);
+      expect(coverPosition).to.equals('0');
 
-      const thirdCoverImageURL = await foHummingbirdProductPage.selectThumbImage(page, 3);
-      expect(coverImageURL).to.not.equal(thirdCoverImageURL);
+      const coverPositionAfterSelect = await foHummingbirdProductPage.selectThumbImage(page, 3);
+      expect(coverPosition).to.not.equal(coverPositionAfterSelect);
+      expect(coverPositionAfterSelect).to.equals('2');
     });
 
     it('should display the first image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayFirstImage', baseContext);
 
-      const coverImagePosition = await foHummingbirdProductPage.getCoverImage(page);
+      const coverPosition = await foHummingbirdProductPage.getCoverImage(page);
+      expect(coverPosition).to.equals('2');
 
-      const secondCoverImagePosition = await foHummingbirdProductPage.selectThumbImage(page, 1);
-      expect(coverImagePosition).to.not.equal(secondCoverImagePosition);
+      const coverPositionAfterSelect = await foHummingbirdProductPage.selectThumbImage(page, 1);
+      expect(coverPosition).to.not.equal(coverPositionAfterSelect);
+      expect(coverPositionAfterSelect).to.equals('0');
     });
 
     it('should click on the arrow right and check the cover image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickRight', baseContext);
 
-      const coverImagePosition = await foHummingbirdProductPage.getCoverImage(page);
+      const coverPosition = await foHummingbirdProductPage.getCoverImage(page);
+      expect(coverPosition).to.equals('0');
+
       await foHummingbirdProductPage.scrollBoxArrowsImages(page, 'next');
 
-      const secondCoverImagePosition = await foHummingbirdProductPage.getCoverImage(page);
-      expect(coverImagePosition).to.not.equal(secondCoverImagePosition);
+      const coverPositionAfterNext = await foHummingbirdProductPage.getCoverImage(page);
+      expect(coverPosition).to.not.equal(coverPositionAfterNext);
+      expect(coverPositionAfterNext).to.equals('1');
     });
 
     it('should zoom the cover image and check the modal', async function () {
@@ -201,10 +200,12 @@ describe('FO - Product page - Quick view : Change image', async () => {
     it('should click on the arrow right in the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnSecondLittleImage', baseContext);
 
-      const coverImagePosition = await foHummingbirdProductPage.getCoverImageFromProductModal(page);
+      const coverPosition = await foHummingbirdProductPage.getCoverImageFromProductModal(page);
+      expect(coverPosition).to.equals('1');
 
-      const thirdCoverImagePosition = await foHummingbirdProductPage.clickOnArrowNextPrevInProductModal(page, 'next');
-      expect(coverImagePosition).to.not.equal(thirdCoverImagePosition);
+      const coverPositionAfterNext = await foHummingbirdProductPage.clickOnArrowNextPrevInProductModal(page, 'next');
+      expect(coverPosition).to.not.equal(coverPositionAfterNext);
+      expect(coverPositionAfterNext).to.equals('2');
     });
 
     it('should close the product modal', async function () {
@@ -217,26 +218,28 @@ describe('FO - Product page - Quick view : Change image', async () => {
     it('should click on the arrow left and check the cover image', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickLeft', baseContext);
 
-      const coverImagePosition = await foHummingbirdProductPage.getCoverImage(page);
+      const coverPosition = await foHummingbirdProductPage.getCoverImage(page);
+      expect(coverPosition).to.equals('2');
+
       await foHummingbirdProductPage.scrollBoxArrowsImages(page, 'prev');
 
-      const secondCoverImagePosition = await foHummingbirdProductPage.getCoverImage(page);
-      expect(coverImagePosition).to.not.equal(secondCoverImagePosition);
+      const coverPositionAfterPrev = await foHummingbirdProductPage.getCoverImage(page);
+      expect(coverPosition).to.not.equal(coverPositionAfterPrev);
+      expect(coverPositionAfterPrev).to.equals('1');
     });
 
     it('should click on the last image and check it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickLastImage', baseContext);
 
-      const coverImagePosition = await foHummingbirdProductPage.getCoverImage(page);
+      const coverPosition = await foHummingbirdProductPage.getCoverImage(page);
+      expect(coverPosition).to.equals('1');
 
-      const lastCoverImagePosition = await foHummingbirdProductPage.selectThumbImage(page, 7);
-      expect(coverImagePosition).to.not.equal(lastCoverImagePosition);
+      const coverPositionAfterSelect = await foHummingbirdProductPage.selectThumbImage(page, 7);
+      expect(coverPosition).to.not.equal(coverPositionAfterSelect);
+      expect(coverPositionAfterSelect).to.equals('6');
     });
   });
 
   // Post-condition : Delete created product
   deleteProductTest(newProductData, `${baseContext}_postTest`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest2`);
 });

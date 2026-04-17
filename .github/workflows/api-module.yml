@@ -9,14 +9,21 @@ concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
+  # Define which PHP versions need to be used
+  workflow_matrix_generator:
+    name: PHP matrix
+    uses: ./.github/workflows/workflow-matrix-generator.yml
+    with:
+      matrix_type: PHP
   integration:
     permissions:
       contents: read   #   to clone the repos and get release assets (shivammathur/setup-php)
     name: API Module tests
     runs-on: ubuntu-latest
+    needs: workflow_matrix_generator
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3', '8.4' ]
+        php: ${{ fromJSON(needs.workflow_matrix_generator.outputs.dynamic_matrix) }}
       fail-fast: false
     steps:
       - name: Setup PHP
@@ -27,11 +34,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup MySQL
-        uses: mirromutth/mysql-action@v1.1
+        uses: shogo82148/actions-setup-mysql@v1
         with:
-          mysql version: '8.0'
-          mysql database: 'prestashop'
-          mysql root password: 'password'
+          mysql-version: "8.0"
+          root-password: 'password'
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -69,9 +75,6 @@ jobs:
       # because some built files (like preload.html.twig) are included and cause errors when absent
       - name: Build all assets
         run: make assets
-
-      - name: Change MySQL authentication method
-        run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
 
       - name: Run integration-tests
         run: composer run-script api-module-tests --timeout=0

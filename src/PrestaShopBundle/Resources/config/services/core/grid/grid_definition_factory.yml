@@ -256,13 +256,6 @@ services:
       - '@prestashop.core.form.choice_provider.order_state_by_id'
     public: true
 
-  prestashop.core.grid.definition.factory.cart_rule:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartRuleGridDefinitionFactory'
-    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
-    public: true
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
-
   prestashop.core.grid.definition.factory.discount:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DiscountGridDefinitionFactory'
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
@@ -391,6 +384,8 @@ services:
       - '@form.factory'
       - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductSingleShopAssociatedAccessibilityChecker'
       - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductMultipleShopsAssociatedAccessibilityChecker'
+      - '@PrestaShop\PrestaShop\Adapter\Security\Access'
+      - '@prestashop.adapter.data_provider.employee'
     public: true
 
   prestashop.core.grid.definition.factory.product.shops:
@@ -422,9 +417,6 @@ services:
   prestashop.core.grid.definition.factory.state:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StateGridDefinitionFactory'
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
-    arguments:
-      - "@=service('router').generate('admin_common_reset_search', {'controller': 'state', 'action': 'index'})"
-      - "@=service('router').generate('admin_states_index')"
     public: true
 
   prestashop.core.grid.definition.factory.title:
@@ -494,6 +486,13 @@ services:
     parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
     autowire: true
     public: true
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TagGridDefinitionFactory:
+    parent: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory
+    autowire: true
+    public: true
+    arguments:
+      - '@prestashop.core.form.choice_provider.language_by_id'
 
   # deprecated services
   # Alias for this abstract definition causes tests in vendor fail for some reason, so we stick to full definition instead

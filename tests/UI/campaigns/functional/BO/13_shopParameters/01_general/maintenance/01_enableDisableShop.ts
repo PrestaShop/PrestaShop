@@ -8,7 +8,7 @@ import {
   boMaintenancePage,
   boShopParametersPage,
   type BrowserContext,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -89,10 +89,10 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
 
     page = await boMaintenancePage.viewMyShop(page);
 
-    const pageContent = await foClassicHomePage.getTextContent(page, foClassicHomePage.content);
+    const pageContent = await foHummingbirdHomePage.getTextContent(page, foHummingbirdHomePage.content);
     expect(pageContent).to.not.equal(boMaintenancePage.maintenanceText);
 
-    const result = await foClassicHomePage.isHomePage(page);
+    const result = await foHummingbirdHomePage.isHomePage(page);
     expect(result).to.eq(true);
   });
 
@@ -100,7 +100,7 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
     await testContext.addContextItem(this, 'testIdentifier', 'disableStoreForLoggedInEmployees', baseContext);
 
     // Go back to BO
-    page = await foClassicHomePage.closePage(browserContext, page, 0);
+    page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
     const result = await boMaintenancePage.changeStoreForLoggedInEmployees(page, false);
     expect(result).to.contains(boMaintenancePage.successfulUpdateMessage);
@@ -111,7 +111,7 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
 
     page = await boMaintenancePage.viewMyShop(page);
 
-    const pageContent = await foClassicHomePage.getTextContent(page, foClassicHomePage.content);
+    const pageContent = await foHummingbirdHomePage.getTextContent(page, foHummingbirdHomePage.content);
     expect(pageContent).to.equal(boMaintenancePage.maintenanceText);
   });
 
@@ -119,7 +119,7 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
     await testContext.addContextItem(this, 'testIdentifier', 'updateMaintenanceText', baseContext);
 
     // Go back to BO
-    page = await foClassicHomePage.closePage(browserContext, page, 0);
+    page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
     const result = await boMaintenancePage.changeMaintenanceTextShopStatus(page, newMaintenanceText);
     expect(result).to.contains(boMaintenancePage.successfulUpdateMessage);
@@ -130,14 +130,14 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
 
     page = await boMaintenancePage.viewMyShop(page);
 
-    const pageContent = await foClassicHomePage.getTextContent(page, foClassicHomePage.content);
+    const pageContent = await foHummingbirdHomePage.getTextContent(page, foHummingbirdHomePage.content);
     expect(pageContent).to.equal(newMaintenanceText);
   });
 
   it('should go back to the default maintenance text', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultMaintenanceText', baseContext);
 
-    page = await foClassicHomePage.closePage(browserContext, page, 0);
+    page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
     const result = await boMaintenancePage.changeMaintenanceTextShopStatus(
       page,
@@ -158,17 +158,17 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
 
     page = await boMaintenancePage.viewMyShop(page);
 
-    const pageContent = await foClassicHomePage.getTextContent(page, foClassicHomePage.content);
+    const pageContent = await foHummingbirdHomePage.getTextContent(page, foHummingbirdHomePage.content);
     expect(pageContent).to.not.equal(boMaintenancePage.maintenanceText);
 
-    const result = await foClassicHomePage.isHomePage(page);
+    const result = await foHummingbirdHomePage.isHomePage(page);
     expect(result).to.eq(true);
   });
 
   it('should delete the maintenance ip address', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteIpAddress', baseContext);
 
-    page = await foClassicHomePage.closePage(browserContext, page, 0);
+    page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
     const result = await boMaintenancePage.addMaintenanceIPAddress(page, '');
     expect(result).to.contains(boMaintenancePage.successfulUpdateMessage);
@@ -186,10 +186,10 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
 
     page = await boMaintenancePage.viewMyShop(page);
 
-    const pageContent = await foClassicHomePage.getTextContent(page, foClassicHomePage.content);
+    const pageContent = await foHummingbirdHomePage.getTextContent(page, foHummingbirdHomePage.content);
     expect(pageContent).to.not.equal(boMaintenancePage.maintenanceText);
 
-    const result = await foClassicHomePage.isHomePage(page);
+    const result = await foHummingbirdHomePage.isHomePage(page);
     expect(result).to.eq(true);
   });
 });

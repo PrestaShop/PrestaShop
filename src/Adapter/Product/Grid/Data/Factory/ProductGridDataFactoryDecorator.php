@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -31,12 +11,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory;
 use Currency;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
@@ -135,7 +117,8 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         bool $isEcotaxEnabled,
         int $ecoTaxGroupId,
         ShopRepository $shopRepository,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        private ProductPackRepository $productPackRepository,
     ) {
         $this->productGridDataFactory = $productGridDataFactory;
 
@@ -239,6 +222,23 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
                 (string) $priceTaxIncluded,
                 $currency->iso_code
             );
+
+            $productType = $products[$i]['product_type'] ?? null;
+            // For pack products we dynamically update the quantity in the column so that it reflects its quantity based on
+            // its configuration and the quantity of its products. Since it's done in the decorator the dynamic quantity is not
+            // consistent with sorting and filtering Including this complexity in the query builder would cost too much in performance
+            // and would be too complex so it's a compromise
+            if ($productType === ProductType::TYPE_PACK) {
+                if ($searchCriteria->getShopConstraint()->getShopId() !== null) {
+                    $shopId = $searchCriteria->getShopConstraint()->getShopId();
+                } else {
+                    $shopId = new ShopId((int) $products[$i]['id_shop_default']);
+                }
+                $packQuantity = $this->productPackRepository->getDynamicPackQuantity(new ProductId($products[$i]['id_product']), $shopId);
+                if (null !== $packQuantity) {
+                    $products[$i]['quantity'] = $packQuantity;
+                }
+            }
         }
 
         return $this->applyShopModifications($products, $searchCriteria);

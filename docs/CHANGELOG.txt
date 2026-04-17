@@ -24,6 +24,1077 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 9
 
 ####################################
+#   v9.1.0 RC 1 - (2026-02-19)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #40720: Add actionUpdateDefaultCombinationAfter hook when default combination is set (by @Codencode)
+    - #40536: Add discountType endpoint (by @nicosomb)
+    - #40517: Add some help boxes to product page (by @Hlavtox)
+    - #40481: Improved UX for API client creation (by @kpodemski)
+    - #40330: Add usage limits fields for new discount system (by @boherm)
+    - #40094: Fix: Doctrine auto-mapping in modules: only the first subfolder inside src/Entity is recognized (by @Codencode)
+    - #39923: Improve wording of some settings, better explain the meaning of them (by @Hlavtox)
+    - #39459: Set optin and newsletter off for John DOE (by @Touxten)
+  - Bug fix:
+    - #40809: Clean discount form (by @jolelievre)
+    - #40743: Fix: Bug: when invoicing is disabled, changing order status to "paid=1" does not register any payment on the order (by @Codencode)
+    - #40710: Fix: Feature values count is duplicated when using “All shops” with multiple shops (by @Codencode)
+    - #40682: Fix the collision when we create / delete product customization in the same action (by @nicosomb)
+    - #40640: Fix EntitySearchInput::setValues forEach callback argument order (by @Codencode)
+    - #40620: Update AdminSecurity permissions logic in OrderController (by @rsoulard-prolaser)
+    - #40578: Dynamic pack quantity (by @jolelievre)
+    - #40563: Admin API improvements for combination endpoints (by @jolelievre)
+    - #40556: Fix: CsvFileReader service fails with "You have requested a non-existent service 'session'" (by @Codencode)
+    - #40554: Fix: always display taxes total in order summary (by @Codencode)
+    - #40532: BO Product page, fix feature value collection indexes (by @jolelievre)
+    - #40525: Update module ps_apiresources (by @jolelievre)
+    - #40518: Fix position of minimum_product_quantity field in table (by @nicosomb)
+    - #40499: Fix: When saving an Attribute is_color_group is not updated. (by @Codencode)
+    - #40475: Fix link for redirection on country BO page (by @jolelievre)
+    - #40433: Fix: Module update problem (by @Codencode)
+    - #40329: Prevent NoResultException when checking for existing translations (by @ChillCode)
+    - #40317: Fix: Backoffice data grids can yield different random results every time (by @Codencode)
+    - #40066: Fix: [BO] Admin Countries page redirect issue with multishop after changing shop (by @Codencode)
+    - #40054: Use URL when building urls to prevent subtle mistakes with &? (by @tswfi)
+    - #40050: Fix: Incorrect redirect from HTTP to HTTPS on the admin login page when PrestaShop is in a subfolder (by @Codencode)
+    - #40036: BO - Product : Fixed feature display in multishop (by @Progi1984)
+    - #39854: Fix: Quick Access links redirect to root instead of subdirectory, causing 404 (by @Codencode)
+    - #38775: Fix: Multishop - error loading CMS pages removed from the default shop (by @Codencode)
+  - Refactoring:
+    - #40825: Add shipping helptexts (by @Hlavtox)
+    - #40358: Handle Product level discount in CQRS (by @jolelievre)
+    - #37667: Apply backoffice optimizations (by @Hlavtox)
+- Front Office:
+  - New feature:
+    - #40403: Allow easily hooking into country and currency selection logic (by @Hlavtox)
+  - Improvement:
+    - #40758: Secure table name with bqsql in DB and DBQuery  #33539 backport (by @jf-viguier)
+    - #40733: Bump prestashop/hummingbird to 2.0 (by @Progi1984)
+    - #40572: Add feature during theme enabling to unhook specific modules (by @jolelievre)
+    - #40537: Remove unnecessary force refresh in checkout (by @Hlavtox)
+  - Bug fix:
+    - #40814: Update classic theme to 3.1.1 (by @jolelievre)
+    - #40626: Fix "Free shipping" displayed for discounts with free shipping off an… (by @Hlavtox)
+    - #40614: Fix "Free shipping" displayed on cart when a discount haven't free shipping enabled and with a reduction amount = 0 (by @boherm)
+    - #40538: Fix quantity input, add to cart button and availability labels when items are added in a cart (by @Hlavtox)
+    - #40246: Fix preview in multilang (by @tleon)
+  - Refactoring:
+    - #40673: Use proper delivery times (by @Hlavtox)
+    - #40662: Corrects the error message when the quantity is less than 1 in cart (by @Touxten)
+    - #40653: Add cart product presenter and cart availability (by @Hlavtox)
+    - #40570: Prevent accidental usage of quantity_wanted from request (by @Hlavtox)
+    - #40406: Comment how language setting works in FO (by @Hlavtox)
+- Core:
+  - New feature:
+    - #40808: Add new options for release creator (by @nicosomb)
+  - Improvement:
+    - #40833: Bump apiresources to 0.5.0 (by @boherm)
+    - #40811: Backport missing workflows from develop to 9.1.x (by @jolelievre)
+    - #40768: Integrate new header-stamp for 9.1.x branch (by @jolelievre)
+    - #40765: Dynamic PHP matrix in workflows for 9.1.x (by @jolelievre)
+    - #40730: Add hooks that enable to control free shipping price (by @Hlavtox)
+    - #40678: Restore dev version for ps_apiresources (by @nicosomb)
+    - #40603: Clean old cart rule migration (by @jolelievre)
+    - #40596: Discounts for guest, test scenario (by @kpodemski)
+    - #40546: Command : Added CLI for checking fixtures translations (by @Progi1984)
+    - #40520: Skip removed modules on enable theme (by @jolelievre)
+    - #40467: Chore: [composer] update prestashop/dashproducts (by @mattgoud)
+    - #40381: Remove `curl_close` obsolete function calls (by @ShaiMagal)
+    - #40359: Use node 20.19.5 by default to build assets (by @jolelievre)
+    - #40353: Dynamise hook documentation generation based on Version (by @jolelievre)
+    - #40350: Remove the composer config to ignore audit (by @jolelievre)
+    - #40342: Improved-shipment: Global refactorisation (by @M0rgan01)
+    - #40269: Prevent database inconsistencies by preventing faulty group delete calls (by @Hlavtox)
+    - #40133: Update ca-bundle from 1.3.7 to 1.5.9 (by @tswfi)
+  - Bug fix:
+    - #40823: Don't add "default" if "default" already in name for getFormattedName (by @boherm)
+    - #40776: Replace github action that sets up mysql in CI (by @Touxten)
+    - #40762: Replace github action that sets up mysql in CI (by @Touxten)
+    - #40657: Fix configuration of Dev mode and Debug profiling in the back office (by @kpodemski)
+    - #40656: Fix getting specific price for a given customer group (by @kpodemski)
+    - #40590: Fix creating orders for guests (by @kpodemski)
+    - #40588: Update Changelog 9.0.3 (by @jolelievre)
+    - #40585: Preliminary tasks for patch version 9.0.3 (by @jolelievre)
+    - #40562: Update VAT rates for Estonia and Romania (by @Codencode)
+    - #40498: Fix: doctrine throws error from the beginning: There is no column with name "theme_name" on table "ps_image_type" (by @Codencode)
+    - #40496: Fix some type issues related to carriers (by @Hlavtox)
+    - #40480: Improvements to Makefile (by @kpodemski)
+    - #40479: Fix legacy profiler in the back office (by @kpodemski)
+    - #40423: Fix empty extra vars / product list when using the new automatic text email option (by @matrixino)
+    - #40400: Simplify cart rule minimal value by avoiding subtracting values (by @Hlavtox)
+    - #40040: Always request a non cached result in Order::getIdByCartId (by @ilsalvopss)
+  - Refactoring:
+    - #40798: Fix, comment and improve country initialization logic related to shipping (by @Hlavtox)
+    - #40604: Update classic to 3.0.6 (by @Hlavtox)
+    - #40432: Simplify some of cart logic to gradually move to single source of truth (by @Hlavtox)
+    - #40389: Comment logic related to addresses and their initialization (by @Hlavtox)
+- Installer:
+  - Improvement:
+    - #40839: Update default catalog 9.1.x (by @ps-jarvis)
+    - #40824: Update default catalog 9.1.x (by @ps-jarvis)
+    - #40468: Update default catalog 9.1.x (by @ps-jarvis)
+    - #40397: Update default catalog 9.1.x (by @ps-jarvis)
+  - Bug fix:
+    - #40574: Fix Makefile to prevent build assets twice (by @jolelievre)
+    - #40457: Fix installation theme step order (by @jolelievre)
+    - #40077: Install Console : Allow characters "<" & ">" in admin password (by @Progi1984)
+- Web Services:
+  - Bug fix:
+    - #40442: Fix: PHP Fatal error when deleting product image by Webservice API #39111 (by @semicolonSimp)
+- Localization:
+  - Bug fix:
+    - #40521: Fix default fixtures translation (by @jolelievre)
+- Tests:
+  - Improvement:
+    - #40789: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40734: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40691: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40674: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40645: Functional Tests : Fixed campaigns (Part 5) (by @Progi1984)
+    - #40607: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40565: Functional Tests : Fixed campaigns (Part 4) (by @Progi1984)
+    - #40512: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40469: Functional Tests : Fixed campaigns (Part 3) (by @Progi1984)
+    - #40458: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40436: Functional Tests : Fixed campaigns (Part 2) (by @Progi1984)
+    - #40434: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40428: Functional Tests : Fixed campaigns (Part 1) (by @Progi1984)
+    - #40425: Functional Tests : Use Hummingbird as front theme for Audit/Modules/Regression/Sanity Scenarios (by @Progi1984)
+    - #40419: Functional Tests : Use Hummingbird as front theme for BO Scenarios (by @Progi1984)
+    - #40418: Enable Hummingbird as default theme (by @Progi1984)
+    - #40363: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40128: Functional Tests : Hummingbird 2 (as secondary theme) (by @Progi1984)
+  - Bug fix:
+    - #40684: Functional Tests : Enable scenarios (by @Progi1984)
+    - #40646: Fixtures : Enable payment modules for US (by @Progi1984)
+  - Refactoring:
+    - #40405: Functional tests - Add enable/disable the classic theme (by @nesrineabdmouleh)
+    - #40402: Functional tests - Delete enable/disable the theme hummingbird (by @nesrineabdmouleh)
+
+####################################
+#   v9.1.0 Beta 1 - (2025-12-18)
+####################################
+
+- Back Office:
+  - New feature:
+    - #39889: Send improved shipment feature flag to smarty on order history page (by @Nakahiru)
+    - #39873: Discount priority system (by @tleon)
+    - #39876: Feat: [discount-list] fix #39796 - add start and expiration date columns (by @mattgoud)
+    - #39741: Set validity date for discounts (by @tleon)
+    - #39789: Add limit to a single customer for discount (by @nicosomb)
+    - #39763: UI tests - Add new scenario to check multicarrier (by @nesrineabdmouleh)
+    - #39351: Condition based on feature (by @tleon)
+    - #39498: Add edit shipment page (by @PoulainMaxime)
+    - #39127: Add shipmentId on product list in order page detail (by @PoulainMaxime)
+    - #39138: Create split shipment form (by @ga-devfront)
+    - #39418: Discount attributes condition in form (by @jolelievre)
+    - #39363: Condition based on countries (by @tleon)
+    - #39246: Discount condition based on supplier (by @tleon)
+    - #39140: Condition based on categories (by @tleon)
+    - #39137: Create merge shipment form (by @M0rgan01)
+    - #39130: Add trigger on a brand for discount (by @nicosomb)
+    - #39093: Create-shipment-tab (by @M0rgan01)
+    - #39019: Add delete shipment product command for multishipment (by @PoulainMaxime)
+    - #39103: Discount specific product condition allows selection of combination (by @jolelievre)
+    - #38976: Add split shipment command for multishipment (by @PoulainMaxime)
+    - #38984: Add get shipment for viewing query (by @M0rgan01)
+    - #39087: Handle new type of Discount product condition based on restricted combinations (by @jolelievre)
+    - #38933: Add list available shipments for product query  (by @PoulainMaxime)
+    - #38954: Add merge shipment command (by @PoulainMaxime)
+    - #38911: Add list available carriers query (by @M0rgan01)
+    - #38839: Add hooks on Module enable/disable/upgrade (by @studiokiwik)
+    - #38909: Add switch shipment carrier CQRS command (by @ga-devfront)
+    - #38842: Discount minimal cart product (by @jolelievre)
+    - #38867: Integrate discount conditions in form (by @tleon)
+    - #38746: Add product selection while creating free gift discount (by @nicosomb)
+    - #38837: Add delete discount command and list for api & bo (by @tleon)
+    - #38690: Cart & Order discount Form (add + update)  (by @tleon)
+    - #38450: Order level discount (by @tleon)
+    - #38209: Add `free gift` discount (by @nicosomb)
+    - #38191: Feat: add CQRS command for add & list shipment (by @PoulainMaxime)
+    - #38201: Add product level discounts (by @tleon)
+    - #38187: Add new discount page grid and creation popup (by @jolelievre)
+    - #38081: Add new discount cart level cqrs command (by @tleon)
+    - #38046: Feat: add entities for multi-shipment (by @PoulainMaxime)
+    - #38111: Refactor Discount creation domain services and allow creation without names (by @jolelievre)
+    - #38040: Feature: add feature flag for upcoming new shipment system (by @Nakahiru)
+    - #37911: Cart rule refacto command free shipping (by @tleon)
+  - Improvement:
+    - #40130: Add two-step process for module upgrade (download then install) (by @dylanDenizonPresta)
+    - #40230: Adds help text to product page fields (by @Hlavtox)
+    - #40247: Discount duplication (by @boherm)
+    - #40212: [BC Break] Update module api resources v0.2.0 (by @jolelievre)
+    - #40104: Bulk delete for discounts (by @boherm)
+    - #40103: Add new bulk enable/disable commands for discounts (by @boherm)
+    - #40089: Handle description field for discounts (by @tleon)
+    - #39951: Chore(bo): New date filter component for discounts (by @tleon)
+    - #39977: Migration Admin Tags : Delete & Bulk Delete (by @Progi1984)
+    - #39979: Combine different types of trigger conditions (by @boherm)
+    - #39962: Sort modules and mails templates by name in translations (by @PululuK)
+    - #39649: Migration Admin Tags : Create & Edit Form (by @Progi1984)
+    - #39857: Rearrange discount form (by @nicosomb)
+    - #39629: [BC Break] Update d3 and nvd3 libs (by @boherm)
+    - #39662: [BC Break] Add discount compatibility (by @nicosomb)
+    - #39760: Address without linked brand (by @aomaxime)
+    - #37668: Add more specific filtering to Brand addresses listing (by @zelarg)
+    - #39579: Trigger error when split shipment with tracking number (by @PoulainMaxime)
+    - #39383: Improve performance of admin notifications (by @MattKelvin)
+    - #39536: Display right tab when the feature flag is enabled (by @PoulainMaxime)
+    - #39517: Add possibility to get multiple shipment id for one product (by @PoulainMaxime)
+    - #39516: Migration Admin Tags : Feature Flag & Grid (Listing & Filters) (by @Progi1984)
+    - #39330: Improve "GetAvailableCarriers" query - filters (by @M0rgan01)
+    - #39338: Update CQRS discount commands and queries to handle the carriers (by @jolelievre)
+    - #38916: Add trigger with specific product in discount (by @nicosomb)
+    - #38889: Add form in BO to apply discount automatically or via promo code (by @boherm)
+    - #39055: Add more updateDiscountCommand Tests (by @tleon)
+    - #38956: Add hook on Configuration updateValue (by @studiokiwik)
+    - #38953: New generic form types, integration of minimum quantity and amount in the discount form (by @jolelievre)
+    - #38780: Discount form cards (by @jolelievre)
+    - #38561: Free shipping creation form (by @tleon)
+    - #38430: Open product link in new window in admin order page (by @web-cooking-factory)
+    - #38431: Add CMS Page preview link in listing in BO (by @web-cooking-factory)
+    - #38248: Add product discount integration + some tests improvements (by @tleon)
+    - #38000: Add new integration test for discount CQRS (by @tleon)
+  - Bug fix:
+    - #39926: Fix: handle SELECT fields without no_quotes in getSensitiveAttributes (by @Codencode)
+    - #40001: Fix redirect after editing root category to use current categoryId in stead of PS_HOME_CATEGORY (by @Codencode)
+    - #39869: Update monologger to v3 (by @NKoonen)
+    - #40256: Fix: Issue retrieving product price when adding the first specific_price (by @Codencode)
+    - #40243: Admin API handle position update (by @jolelievre)
+    - #40257: Prevent saving ajax URL for future login redirection, or the redirect… (by @jolelievre)
+    - #40112: Bump prestakit to v2.0.5 (by @Quetzacoalt91)
+    - #40267: Fix minimum amount discount cart conditions tax/shipping incl. or excl. (by @boherm)
+    - #40201: Fix path to legacy mail folder (by @Hlavtox)
+    - #40123: Update module api resources with new boolean rule (by @jolelievre)
+    - #39868: Chore: show carrier deleted on edit shipment to avoid blocking edit (by @PoulainMaxime)
+    - #39883: Refactor discount-map.ts to use discountContainer for currency selector and reduction value symbol paths (by @tleon)
+    - #39880: Add virtual product filter for shipments (by @M0rgan01)
+    - #39810: Chore: verify is carrier is linked to shipments for soft delete (by @PoulainMaxime)
+    - #39811: Fix product type discount (by @tleon)
+    - #39808: Add missing form type in catalog discount (by @tleon)
+    - #39706: Fix discount edition when no cart conditions were defined (by @nicosomb)
+    - #39448: Fix carrier grade validation and prevent fatal error (by @MattKelvin)
+    - #39262: Fix "get available carriers" query (by @M0rgan01)
+    - #39341: Fix shipments "items" (by @M0rgan01)
+    - #39302: Fix shipments tab (by @M0rgan01)
+    - #38603: Cast $orderMessage['message'] as string to prevent fatal error. (by @josecarlosphp)
+    - #38763: Fix for setAmountDiscount constructor type  (by @tleon)
+    - #38349: Discount feedbacks (by @tleon)
+    - #36374: PR - Fix order detail price re-calculation (by @Jeremie-Kiwik)
+    - #37882: Fix: BO - Product Page - Display all features in feature choice, even if two features have the same name (by @Shagshag)
+  - Refactoring:
+    - #38505: Refacto discount commands (by @tleon)
+- Front Office:
+  - New feature:
+    - #39755: Feat: add logic for new display on multishipment for order summary (by @PoulainMaxime)
+    - #38444: Show all carriers in the delivery option when FEATURE_FLAG_IMPROVED_SHIPMENT is enabled (by @Nakahiru)
+  - Improvement:
+    - #40248: Prevent Exposure of Sensitive Product Attributes in Front Office (by @M0rgan01)
+    - #39879: Chore: add new format to multishipment display on order final summary (by @PoulainMaxime)
+    - #39787: Multi-carrier: added a property in OrderLazyArray (by @M0rgan01)
+    - #39097: Fix CartPresenter translation domain (by @PululuK)
+    - #39433: Allow specials characters in search (by @MattKelvin)
+  - Bug fix:
+    - #39582: Fix: Product customization text field bug with using symbol {} (by @Codencode)
+    - #40117: Fix cart rule validation in front office (by @Hlavtox)
+    - #40262: Allow access to customized files preview without multi-lang enabled (by @kpodemski)
+    - #40137: Updated zxcvbn to a maintained version for consistency with backend checks (by @tleon)
+    - #40044: Multistore : Display countries only those covered by active carriers (by @Progi1984)
+    - #39788: Add check for enabled countries in cart and order (by @PrestaEdit)
+    - #35471: [BC Break] PrestashopDatabaseException on cart confirmation with free delivery cart rules in debug mode #32748  (by @clotairer)
+- Core:
+  - New feature:
+    - #40356: Update & activate hummingbird (by @tleon)
+    - #40346: Update themes (by @tleon)
+    - #39478: Add console command "prestashop:thumbnails:regenerate" (by @iNem0o)
+    - #39403: Add SearchIndexationCommand to handle CLI search indexation (by @iNem0o)
+    - #39405: Export module translations command (by @kpodemski)
+    - #38484: Modify the shipment creation & remove order duplication for different carrier (by @PoulainMaxime)
+  - Improvement:
+    - #40349: Manual verifications (by @tleon)
+    - #40347: Update native modules (by @jolelievre)
+    - #40332: Restore original repository for ps_apiresources (by @nicosomb)
+    - #40293: Create fixtures for discount types (by @boherm)
+    - #40312: Bump to `9.0.3` (by @boherm)
+    - #40134: Docker : Fixed Install of xdebug (by @Progi1984)
+    - #39645: Add display parameter to generatePDF method (by @PrestaEdit)
+    - #40265: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.48.0 to 8.48.1 in /tests/UI (by @dependabot[bot])
+    - #40264: Chore(deps-dev): bump @typescript-eslint/parser from 8.48.0 to 8.48.1 in /tests/UI (by @dependabot[bot])
+    - #40217: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.47.0 to 8.48.0 in /tests/UI (by @dependabot[bot])
+    - #40136: Add more logs in database dumping script (by @nicosomb)
+    - #40215: Chore(deps-dev): bump @typescript-eslint/parser from 8.47.0 to 8.48.0 in /tests/UI (by @dependabot[bot])
+    - #39831: Add customer groups limit for discounts (by @nicosomb)
+    - #40084: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.46.4 to 8.47.0 in /tests/UI (by @dependabot[bot])
+    - #40083: Chore(deps-dev): bump @typescript-eslint/parser from 8.46.4 to 8.47.0 in /tests/UI (by @dependabot[bot])
+    - #40010: Chore(deps): bump @prestashop-core/ui-testing from `8c2eab4` to `41f49bf` in /tests/UI (by @dependabot[bot])
+    - #40009: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.46.3 to 8.46.4 in /tests/UI (by @dependabot[bot])
+    - #39956: Chore(deps): bump mocha from 11.7.4 to 11.7.5 in /tests/UI (by @dependabot[bot])
+    - #39957: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.46.2 to 8.46.3 in /tests/UI (by @dependabot[bot])
+    - #39899: CHORE(DEPS): BUMP @PRESTASHOP-CORE/UI-TESTING FROM `47A084B` TO `6BE33E2` IN /TESTS/UI (by @dependabot[bot])
+    - #39840: Chore(deps): bump @prestashop-core/ui-testing from `32f470f` to `c00d5c6` in /tests/UI (by @dependabot[bot])
+    - #39841: Chore(deps): bump mysql2 from 3.15.2 to 3.15.3 in /tests/UI (by @dependabot[bot])
+    - #39839: Chore(deps-dev): bump @types/mochawesome from 6.2.4 to 6.2.5 in /tests/UI (by @dependabot[bot])
+    - #39842: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.46.1 to 8.46.2 in /tests/UI (by @dependabot[bot])
+    - #39843: Chore(deps-dev): bump @typescript-eslint/parser from 8.46.1 to 8.46.2 in /tests/UI (by @dependabot[bot])
+    - #39785: Chore(deps): bump @faker-js/faker from 9.9.0 to 10.1.0 in /tests/UI (by @dependabot[bot])
+    - #39736: Chore(deps): bump mysql2 from 3.15.1 to 3.15.2 in /tests/UI (by @dependabot[bot])
+    - #39734: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.45.0 to 8.46.0 in /tests/UI (by @dependabot[bot])
+    - #39697: Chore(deps): bump @prestashop-core/ui-testing from `9c61da0` to `17efa39` in /tests/UI
+ (by @dependabot[bot])
+    - #39694: Chore(deps): bump dotenv from 17.2.2 to 17.2.3 in /tests/UI
+ (by @dependabot[bot])
+    - #39698: Chore(deps-dev): bump typescript from 5.9.2 to 5.9.3 in /tests/UI
+ (by @dependabot[bot])
+    - #39696: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.44.1 to 8.45.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39695: Chore(deps): bump mocha from 11.7.2 to 11.7.4 in /tests/UI
+ (by @dependabot[bot])
+    - #39699: Chore(deps-dev): bump @typescript-eslint/parser from 8.44.1 to 8.45.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39640: Chore(deps): bump @prestashop-core/ui-testing from `8cf7b0d` to `b721cb9` in /tests/UI
+ (by @dependabot[bot])
+    - #39599: Update Cookie class documentation (by @djbuch)
+    - #39643: Chore(deps): bump mysql2 from 3.15.0 to 3.15.1 in /tests/UI
+ (by @dependabot[bot])
+    - #39641: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.44.0 to 8.44.1 in /tests/UI
+ (by @dependabot[bot])
+    - #39642: Chore(deps-dev): bump @typescript-eslint/parser from 8.44.0 to 8.44.1 in /tests/UI
+ (by @dependabot[bot])
+    - #39600: Chore(deps): bump mysql2 from 3.14.5 to 3.15.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39604: Chore(deps): bump mochawesome from 7.1.3 to 7.1.4 in /tests/UI
+ (by @dependabot[bot])
+    - #39603: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.43.0 to 8.44.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39570: Add new constraint to avoid having customizable product on free gift discount (by @boherm)
+    - #39564: Chore(deps): bump @prestashop-core/ui-testing from `610e3fc` to `1f11274` in /tests/UI
+ (by @dependabot[bot])
+    - #39561: Chore(deps): bump mysql2 from 3.14.4 to 3.14.5 in /tests/UI
+ (by @dependabot[bot])
+    - #39563: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.42.0 to 8.43.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39518: Updated PrestaShop Packages (by @github-actions[bot])
+    - #39521: Chore(deps-dev): bump typescript from 5.8.3 to 5.9.2 in /tests/UI
+ (by @dependabot[bot])
+    - #39520: Chore(deps): bump mocha from 11.7.1 to 11.7.2 in /tests/UI
+ (by @dependabot[bot])
+    - #39519: Chore(deps): bump dotenv from 17.2.1 to 17.2.2 in /tests/UI
+ (by @dependabot[bot])
+    - #39522: Chore(deps-dev): bump @typescript-eslint/eslint-plugin from 8.41.0 to 8.42.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39487: Bump mysql2 from 3.14.3 to 3.14.4 in /tests/UI (by @dependabot[bot])
+    - #39486: Bump @prestashop-core/ui-testing from `ecfcc4d` to `500a226` in /tests/UI (by @dependabot[bot])
+    - #39484: Bump @typescript-eslint/parser from 8.38.0 to 8.41.0 in /tests/UI (by @dependabot[bot])
+    - #39483: Bump @typescript-eslint/eslint-plugin from 8.38.0 to 8.41.0 in /tests/UI (by @dependabot[bot])
+    - #39424: Update CSSJanus to wikimedia/cssjanus (by @Krinkle)
+    - #39197: Added PrestaShop version in bin/console (by @Codencode)
+    - #39289: Build(deps): bump mysql2 from 3.14.2 to 3.14.3 in /tests/UI
+ (by @dependabot[bot])
+    - #39213: Build(deps): bump dotenv from 17.2.0 to 17.2.1 in /tests/UI
+ (by @dependabot[bot])
+    - #39212: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.37.0 to 8.38.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39177: Updated PrestaShop Packages (by @github-actions[bot])
+    - #39155: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.36.0 to 8.37.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39113: Build(deps): bump @prestashop-core/ui-testing from `c560551` to `9d48756` in /tests/UI
+ (by @dependabot[bot])
+    - #39115: Build(deps): bump mysql2 from 3.14.1 to 3.14.2 in /tests/UI
+ (by @dependabot[bot])
+    - #39116: Build(deps): bump dotenv from 17.0.1 to 17.2.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39114: Build(deps-dev): bump @typescript-eslint/parser from 8.35.1 to 8.36.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39117: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.35.1 to 8.36.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39071: Build(deps): bump @faker-js/faker from 9.8.0 to 9.9.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39072: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.35.0 to 8.35.1 in /tests/UI
+ (by @dependabot[bot])
+    - #39036: Build(deps): bump mocha from 11.6.0 to 11.7.1 in /tests/UI
+ (by @dependabot[bot])
+    - #39040: Build(deps): bump dotenv from 16.5.0 to 17.0.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39038: Build(deps-dev): bump @typescript-eslint/parser from 8.34.1 to 8.35.0 in /tests/UI
+ (by @dependabot[bot])
+    - #39039: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.34.0 to 8.35.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38969: Build(deps-dev): bump eslint-plugin-import from 2.31.0 to 2.32.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38785: Noindex ajax controller (by @PululuK)
+    - #39029: Remove docker compose version, it is obsolete (by @tswfi)
+    - #38971: Build(deps-dev): bump @typescript-eslint/parser from 8.34.0 to 8.34.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38900: Bump to 9.1.0 (by @boherm)
+    - #38923: Build(deps): bump @prestashop-core/ui-testing from `baf6879` to `0ef43d3` in /tests/UI
+ (by @dependabot[bot])
+    - #38922: Build(deps): bump mocha from 11.5.0 to 11.6.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38921: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.33.1 to 8.34.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38864: Build(deps-dev): bump @typescript-eslint/parser from 8.32.1 to 8.33.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38863: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.32.1 to 8.33.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38779: New order history retrieval filter (by @Kaikina)
+    - #38777: Build(deps-dev): bump eslint-plugin-html from 8.1.2 to 8.1.3 in /tests/UI
+ (by @dependabot[bot])
+    - #38778: Build(deps): bump mocha from 11.3.0 to 11.5.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38727: Build(deps): bump @prestashop-core/ui-testing from `a115403` to `8dad7b7` in /tests/UI
+ (by @dependabot[bot])
+    - #38728: Build(deps): bump mocha from 11.2.2 to 11.3.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38729: Build(deps-dev): bump @typescript-eslint/parser from 8.32.0 to 8.32.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38726: Build(deps): bump @faker-js/faker from 9.7.0 to 9.8.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38624: Build(deps): bump @prestashop-core/ui-testing from `6a87453` to `5e44d9e` in /tests/UI
+ (by @dependabot[bot])
+    - #38625: Build(deps-dev): bump @types/mocha from 10.0.9 to 10.0.10 in /tests/UI
+ (by @dependabot[bot])
+    - #38626: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.31.1 to 8.32.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38627: Build(deps-dev): bump @typescript-eslint/parser from 8.31.1 to 8.32.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38585: Updated PrestaShop Packages (by @github-actions[bot])
+    - #38541: Build(deps): bump mysql2 from 3.14.0 to 3.14.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38588: Build(deps): bump mocha from 10.7.3 to 11.2.2 in /tests/UI
+ (by @dependabot[bot])
+    - #38587: Build(deps): bump @prestashop-core/ui-testing from `b013e9a` to `6a87453` in /tests/UI
+ (by @dependabot[bot])
+    - #38590: Build(deps-dev): bump @typescript-eslint/parser from 8.31.0 to 8.31.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38538: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.30.1 to 8.31.0 in /tests/UI (by @dependabot[bot])
+    - #38476: Build(deps): bump @prestashop-core/ui-testing from `ee6d175` to `df14b61` in /tests/UI (by @dependabot[bot])
+    - #38473: Build(deps): bump @faker-js/faker from 9.6.0 to 9.7.0 in /tests/UI (by @dependabot[bot])
+    - #38510: Build(deps-dev): bump @typescript-eslint/parser from 8.29.0 to 8.30.1 in /tests/UI (by @dependabot[bot])
+    - #38512: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.29.0 to 8.30.1 in /tests/UI (by @dependabot[bot])
+    - #38472: Build(deps): bump dotenv from 16.4.7 to 16.5.0 in /tests/UI (by @dependabot[bot])
+    - #38426: Build(deps-dev): bump typescript from 5.6.3 to 5.8.3 in /tests/UI
+ (by @dependabot[bot])
+    - #38429: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.28.0 to 8.29.0 in /tests/UI (by @dependabot[bot])
+    - #38427: Build(deps-dev): bump @typescript-eslint/parser from 8.28.0 to 8.29.0 in /tests/UI (by @dependabot[bot])
+    - #38373: Build(deps): bump @prestashop-core/ui-testing from `1a7ac2a` to `11febeb` in /tests/UI (by @dependabot[bot])
+    - #38374: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.27.0 to 8.28.0 in /tests/UI (by @dependabot[bot])
+    - #38375: Build(deps-dev): bump @typescript-eslint/parser from 8.27.0 to 8.28.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38331: Build(deps): bump @prestashop-core/ui-testing from `0731418` to `1a7ac2a` in /tests/UI
+ (by @dependabot[bot])
+    - #38333: Build(deps): bump mysql2 from 3.13.0 to 3.14.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38332: Build(deps-dev): bump @typescript-eslint/parser from 8.26.1 to 8.27.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38330: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.26.1 to 8.27.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38267: Build(deps-dev): bump ts-mocha from 10.0.0 to 11.1.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38271: Build(deps): bump @faker-js/faker from 9.0.3 to 9.6.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38270: Build(deps): bump dotenv from 16.4.5 to 16.4.7 in /tests/UI
+ (by @dependabot[bot])
+    - #38269: Build(deps-dev): bump @typescript-eslint/parser from 8.8.1 to 8.26.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38268: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.8.1 to 8.26.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38272: Build(deps): bump mysql2 from 3.11.3 to 3.13.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38218: Build(deps): bump chai-string from 1.5.0 to 1.6.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38216: Build(deps): bump @prestashop-core/ui-testing from `a6591d6` to `78ad81b` in /tests/UI
+ (by @dependabot[bot])
+    - #38217: Build(deps): bump @faker-js/faker from 9.5.1 to 9.6.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38221: Build(deps-dev): bump @typescript-eslint/parser from 8.25.0 to 8.26.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38219: Build(deps): bump mysql2 from 3.12.0 to 3.13.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38215: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.25.0 to 8.26.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38177: Build(deps-dev): bump @typescript-eslint/parser from 8.24.1 to 8.25.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38176: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.24.1 to 8.25.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38175: Build(deps): bump @faker-js/faker from 9.5.0 to 9.5.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38143: Build(deps): bump @prestashop-core/ui-testing from `160589f` to `a6591d6` in /tests/UI
+ (by @dependabot[bot])
+    - #38129: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.23.0 to 8.24.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38130: Build(deps-dev): bump ts-mocha from 10.0.0 to 11.1.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38066: Build(deps): bump @faker-js/faker from 9.4.0 to 9.5.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38128: Build(deps-dev): bump @typescript-eslint/parser from 8.23.0 to 8.24.1 in /tests/UI
+ (by @dependabot[bot])
+    - #38085: Updated PrestaShop Packages (by @github-actions[bot])
+    - #38054: Change version to 9.1.0 (by @boherm)
+    - #38019: Build(deps-dev): bump @typescript-eslint/parser from 8.22.0 to 8.23.0 in /tests/UI
+ (by @dependabot[bot])
+    - #38018: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.22.0 to 8.23.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37960: Build(deps-dev): bump @typescript-eslint/parser from 8.21.0 to 8.22.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37858: Build(deps): bump @faker-js/faker from 9.3.0 to 9.4.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37950: Build(deps): bump @prestashop-core/ui-testing from `6f826b5` to `e621af0` in /tests/UI
+ (by @dependabot[bot])
+    - #37914: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.19.1 to 8.22.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37904: Build(deps-dev): bump @typescript-eslint/parser from 8.20.0 to 8.21.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37857: Build(deps-dev): bump @typescript-eslint/parser from 8.19.1 to 8.20.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37814: Build(deps): bump @prestashop-core/ui-testing from `c9555dd` to `071d97a` in /tests/UI
+ (by @dependabot[bot])
+    - #37809: Build(deps-dev): bump @typescript-eslint/parser from 8.19.0 to 8.19.1 in /tests/UI
+ (by @dependabot[bot])
+    - #37810: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.19.0 to 8.19.1 in /tests/UI
+ (by @dependabot[bot])
+    - #37812: Build(deps-dev): bump typescript from 5.7.2 to 5.7.3 in /tests/UI
+ (by @dependabot[bot])
+    - #37761: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.18.2 to 8.19.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37762: Build(deps-dev): bump @typescript-eslint/parser from 8.18.2 to 8.19.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37738: Build(deps): bump @prestashop-core/ui-testing from `92f687b` to `c9555dd` in /tests/UI
+ (by @dependabot[bot])
+    - #37736: Build(deps): bump mysql2 from 3.11.5 to 3.12.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37737: Build(deps-dev): bump @typescript-eslint/parser from 8.18.1 to 8.18.2 in /tests/UI
+ (by @dependabot[bot])
+    - #37731: Build(deps): bump @prestashop-core/ui-testing from `0b3ed30` to `92f687b` in /tests/UI
+ (by @dependabot[bot])
+    - #37730: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.16.0 to 8.18.2 in /tests/UI
+ (by @dependabot[bot])
+    - #37720: Build(deps-dev): bump @typescript-eslint/parser from 8.16.0 to 8.18.1 in /tests/UI
+ (by @dependabot[bot])
+    - #37607: Build(deps): bump @faker-js/faker from 9.2.0 to 9.3.0 in /tests/UI
+ (by @dependabot[bot])
+    - #37583: Update iframe-modal.ts DOM Text Interpreted As HTML  (by @Shivam7-1)
+    - #37605: Build(deps): bump dotenv from 16.4.5 to 16.4.7 in /tests/UI
+ (by @dependabot[bot])
+    - #37540: Bump mysql2 from 3.11.4 to 3.11.5 in /tests/UI (by @dependabot[bot])
+    - #37457: Build(deps-dev): bump typescript from 5.6.3 to 5.7.2 in /tests/UI (by @dependabot[bot])
+    - #37500: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.14.0 to 8.16.0 in /tests/UI (by @dependabot[bot])
+    - #37488: Bump @typescript-eslint/parser from 8.14.0 to 8.16.0 in /tests/UI (by @dependabot[bot])
+    - #37455: Bump @types/mocha from 10.0.9 to 10.0.10 in /tests/UI (by @dependabot[bot])
+    - #37407: Bump @prestashop-core/ui-testing from `242dded` to `93c245e` in /tests/UI (by @dependabot[bot])
+    - #37396: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.13.0 to 8.14.0 in /tests/UI (by @dependabot[bot])
+    - #37397: Build(deps-dev): bump @typescript-eslint/parser from 8.13.0 to 8.14.0 in /tests/UI (by @dependabot[bot])
+    - #37353: Build(deps): bump mysql2 from 3.11.3 to 3.11.4 in /tests/UI (by @dependabot[bot])
+    - #37351: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.12.2 to 8.13.0 in /tests/UI (by @dependabot[bot])
+    - #37305: Build(deps-dev): bump @typescript-eslint/eslint-plugin from 8.8.1 to 8.12.2 in /tests/UI (by @dependabot[bot])
+    - #37307: Build(deps): bump @faker-js/faker from 9.1.0 to 9.2.0 in /tests/UI (by @dependabot[bot])
+    - #37309: Build(deps-dev): bump jsdoc-to-markdown from 9.0.4 to 9.0.5 in /tests/UI (by @dependabot[bot])
+    - #37310: Build(deps): bump mocha from 10.7.3 to 10.8.2 in /tests/UI (by @dependabot[bot])
+    - #37262: Build(deps): bump @faker-js/faker from 9.0.3 to 9.1.0 in /tests/UI (by @dependabot[bot])
+    - #37196: Build(deps-dev): bump jsdoc-to-markdown from 9.0.2 to 9.0.4 in /tests/UI (by @dependabot[bot])
+  - Bug fix:
+    - #40291: Removed useless aliases which cause issue with MariaDB (by @kpodemski)
+    - #40092: Fix composer and npm script in make file (by @tleon)
+    - #39864: Fix: [Docker][Makefile] fix #39862 (by @mattgoud)
+    - #39670: Fix log level for create-test-db (by @boherm)
+    - #32058: Improve cart performance when multiple product combinations (by @MattKelvin)
+    - #39569: Disable temporary order level discount to avoid issues (by @boherm)
+    - #36084: New Dispatcher methods to set Controller/FrontController (by @Markus-Gurkcity)
+    - #39233: Filemanager should load AdminKernel (by @Kaikina)
+    - #39349: Fixed version in the README version badge (by @tyloo)
+    - #38898: Improvig typing (by @Kaikina)
+    - #38086: Revert #38054, UI tests are not ready yet (by @nicosomb)
+    - #37647: Fix incorrect @see reference in ModuleCore documentation (by @dali-rajab)
+  - Refactoring:
+    - #40295: [BC Break] Introduce Theme::getDefaultTheme method to replace classic hard-coded value (by @jolelievre)
+    - #39719: Remove tests & references to the cronjobs module (by @tleon)
+    - #38991: Change default product type to TYPE_STANDARD (by @Hlavtox)
+    - #38193: Removed extra repeated line (by @dali-rajab)
+    - #38014: Rename `emailField` to `field` for aligning the variable name with its actual purpose (by @jmartin82)
+    - #37411: Unify error handling in FO and get rid of Tools::displayError calls (by @Hlavtox)
+    - #37348: Add missing apostrophes to database queries (by @ShaiMagal)
+- Installer:
+  - Improvement:
+    - #40354: Update default catalog 9.1.x (by @ps-jarvis)
+    - #39443: Allow to use static db prefix during installation (by @kpodemski)
+    - #35503: Improve GD test precision - check JPEG support (by @b44x)
+  - Bug fix:
+    - #40114: Chore(Makefile): fix Makefile shell detection issue (by @tyloo)
+- Tests:
+  - Improvement:
+    - #40219: No more nightly for 8.0.x and 8.1.x (by @jolelievre)
+    - #40138: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39211: Added support for PHP 8.5 (by @Progi1984)
+    - #40046: Functional Tests : Unskip Test (Linked to issue #39983) (by @Progi1984)
+    - #39984: Functional Tests : BO - Catalog price Rules : CRUD - Reduction type (by @Progi1984)
+    - #39973: Functional Tests : BO - Catalog price Rules : Bulk actions (by @Progi1984)
+    - #39963: Functional Tests : BO - Cart Rules : Quantity consumption (by @Progi1984)
+    - #39919: TE: Bump behat/behat (v3.25.0 => v3.26.0) (by @Progi1984)
+    - #39515: Functional Tests : Migrate from CommonJS to NodeNext (by @Progi1984)
+    - #39256: Functional Tests : BO - Cart rules - Actions : Send a free gift (by @Progi1984)
+    - #39242: Functional Tests : BO - Cart rules - Actions : Exclude discounted products (by @Progi1984)
+    - #39234: Functional Tests : BO - Cart rules - Actions : Apply a discount to Selected product(s) (by @Progi1984)
+    - #39224: Functional Tests : BO - Cart rules - Actions : Apply a discount to Cheapest product (by @Progi1984)
+    - #39194: Functional Tests : BO - Cart rules - Actions : Apply a discount to Specific product (by @Progi1984)
+    - #39173: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39132: Functional Tests : BO - Cart rules - Actions : Apply a discount to Order (without shipping) (by @Progi1984)
+    - #39131: Functional Tests : BO - Cart rules - Actions : Apply a discount None (by @Progi1984)
+    - #39121: Functional Tests : BO - Cart rules - Actions : Apply a discount Amount (by @Progi1984)
+    - #39085: Functional Tests : BO - Cart rules - Actions - Apply a discount percent(%) (by @Progi1984)
+    - #39067: Nightly : Remove 1.7.8 (by @Progi1984)
+    - #38949: Functional Tests : BO - Cart rules - Actions : Free shipping (by @Progi1984)
+    - #37844: Nightly : Fixed `functional/BO/00*/04*` (by @Progi1984)
+    - #37845: Nightly : Fixed `functional/BO/00*/04*` (by @Progi1984)
+    - #37546: Nightly Build : Generate XML for each branch (by @Progi1984)
+    - #37512: Nightly : Create ZIP for each branch (by @Progi1984)
+  - Bug fix:
+    - #40225: Update valid_to dates in behat tests for discount FO (by @jolelievre)
+    - #39795: Functional Tests : Fixed `functional/BO/03*/05*/brands/addresses/02*` (by @Progi1984)
+    - #39493: Nightly : Fixed 8.2 (Missing API Config file) (by @Progi1984)
+    - #39070: Nightly : Remove 1.7.8 (by @Progi1984)
+    - #38542: Fix blocked CI (by @jolelievre)
+    - #37867: Nightly : Define Ubuntu Version for 8.1.x & 8.2.x (by @Progi1984)
+    - #37860: Functional Tests : `actions/upload-artifact@v4` doesn't support colon (by @Progi1984)
+  - Refactoring:
+    - #40298: Functional tests - Fix create account in FO classic theme test (by @nesrineabdmouleh)
+    - #39166: Refactor manufacturer behat tests (by @jolelievre)
+
+####################################
+#   v9.0.3 - (2026-01-22)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #40517: Add some help boxes to product page (by @Hlavtox)
+    - #39923: Improve wording of some settings, better explain the meaning of them (by @Hlavtox)
+    - #40230: Adds help text to product page fields (by @Hlavtox)
+  - Bug fix:
+    - #40563: Admin API improvements for combination endpoints (by @jolelievre)
+    - #40556: Fix: CsvFileReader service fails with "You have requested a non-existent service 'session'" (by @Codencode)
+    - #38775: Fix: Multishop - error loading CMS pages removed from the default shop (by @Codencode)
+    - #40499: Fix: When saving an Attribute is_color_group is not updated. (by @Codencode)
+    - #40554: Fix: always display taxes total in order summary (by @Codencode)
+    - #40532: BO Product page, fix feature value collection indexes (by @jolelievre)
+    - #40433: Fix: Module update problem (by @Codencode)
+    - #40054: Use URL when building urls to prevent subtle mistakes with &? (by @tswfi)
+    - #40036: BO - Product : Fixed feature display in multishop (by @Progi1984)
+    - #39854: Fix: Quick Access links redirect to root instead of subdirectory, causing 404 (by @Codencode)
+    - #40050: Fix: Incorrect redirect from HTTP to HTTPS on the admin login page when PrestaShop is in a subfolder (by @Codencode)
+    - #40475: Fix link for redirection on country BO page (by @jolelievre)
+    - #40066: Fix: [BO] Admin Countries page redirect issue with multishop after changing shop (by @Codencode)
+    - #40329: Prevent NoResultException when checking for existing translations (by @ChillCode)
+    - #39926: Fix: handle SELECT fields without no_quotes in getSensitiveAttributes (by @Codencode)
+    - #40001: Fix redirect after editing root category to use current categoryId in stead of PS_HOME_CATEGORY (by @Codencode)
+    - #39869: Update monologger to v3 (by @NKoonen)
+    - #40256: Fix: Issue retrieving product price when adding the first specific_price (by @Codencode)
+    - #40243: Admin API handle position update (by @jolelievre)
+    - #40257: Prevent saving ajax URL for future login redirection, or the redirect… (by @jolelievre)
+    - #40112: Bump prestakit to v2.0.5 (by @Quetzacoalt91)
+  - Refactoring:
+    - #37667: Apply backoffice optimizations (by @Hlavtox)
+- Front Office:
+  - New feature:
+    - #40403: Allow easily hooking into country and currency selection logic (by @Hlavtox)
+  - Improvement:
+    - #40537: Remove unnecessary force refresh in checkout (by @Hlavtox)
+    - #40248: Prevent Exposure of Sensitive Product Attributes in Front Office (by @M0rgan01)
+  - Bug fix:
+    - #40246: Fix preview in multilang (by @tleon)
+    - #39582: Fix: Product customization text field bug with using symbol {} (by @Codencode)
+    - #40117: Fix cart rule validation in front office (by @Hlavtox)
+    - #40262: Allow access to customized files preview without multi-lang enabled (by @kpodemski)
+    - #40137: Updated zxcvbn to a maintained version for consistency with backend checks (by @tleon)
+  - Refactoring:
+    - #40406: Comment how language setting works in FO (by @Hlavtox)
+- Core:
+  - Improvement:
+    - #40269: Prevent database inconsistencies by preventing faulty group delete calls (by @Hlavtox)
+    - #40133: Update ca-bundle from 1.3.7 to 1.5.9 (by @tswfi)
+    - #40350: Remove the composer config to ignore audit (by @jolelievre)
+    - #40332: Restore original repository for ps_apiresources (by @nicosomb)
+    - #40312: Bump to `9.0.3` (by @boherm)
+    - #40134: Docker : Fixed Install of xdebug (by @Progi1984)
+  - Bug fix:
+    - #40585: Preliminary tasks for patch version 9.0.3 (by @jolelievre)
+    - #40479: Fix legacy profiler in the back office (by @kpodemski)
+    - #40562: Update VAT rates for Estonia and Romania (by @Codencode)
+    - #40496: Fix some type issues related to carriers (by @Hlavtox)
+    - #40423: Fix empty extra vars / product list when using the new automatic text email option (by @matrixino)
+    - #40040: Always request a non cached result in Order::getIdByCartId (by @ilsalvopss)
+    - #40400: Simplify cart rule minimal value by avoiding subtracting values (by @Hlavtox)
+  - Refactoring:
+    - #40389: Comment logic related to addresses and their initialization (by @Hlavtox)
+- Installer:
+  - Bug fix:
+    - #40574: Fix Makefile to prevent build assets twice (by @jolelievre)
+    - #40077: Install Console : Allow characters "<" & ">" in admin password (by @Progi1984)
+    - #40114: Chore(Makefile): fix Makefile shell detection issue (by @tyloo)
+- Localization:
+  - Bug fix:
+    - #40521: Fix default fixtures translation (by @jolelievre)
+- Tests:
+  - Improvement:
+    - #40512: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40458: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40434: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40363: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40138: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+  - Refactoring:
+    - #40298: Functional tests - Fix create account in FO classic theme test (by @nesrineabdmouleh)
+
+####################################
+#   v9.0.2 - (2025-12-01)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #40212: [BC Break] Update module api resources v0.2.0 (by @jolelievre)
+    - #40088: Api normalization mapper indexes (by @jolelievre)
+    - #39938: Add attachment ID to product attachments search and selection (by @Codencode)
+    - #40005: Backport Sort modules and mails templates by name in translations (by @Codencode)
+    - #39422: Improve order status form wording, improve theme selector (by @Hlavtox)
+  - Bug fix:
+    - #40201: Fix path to legacy mail folder (by @Hlavtox)
+    - #40123: Update module api resources with new boolean rule (by @jolelievre)
+    - #40091: Update module ps_apiresources with new conventions (by @jolelievre)
+    - #40052: BO - Multistore : Fixed link "Add new group" (by @Progi1984)
+    - #40082: Fix: Error in updating the state that has an ISO code equal to that of a different country's state (by @Codencode)
+    - #38617: Fix: Hook actionAttributeCombinationSave never triggered (by @Codencode)
+    - #40062: BO - Products Page : Fixed URL for documentation (by @Progi1984)
+    - #40004: BO - Customer Service : Fixed button "Reply to the next unanswered message in this thread" (by @Progi1984)
+    - #39999: BO : Product (Virtual) : Set number of days without expiration date (by @Progi1984)
+    - #39892: Fix order of categories in admin (by @Hlavtox)
+    - #40021: BO - Orders : Fixed amount of order discounts when changing currency (by @Progi1984)
+    - #37841: Fix: Multishop: Deleting and recreating a combination removes the shared reference (new Product Page V2) (by @Codencode)
+    - #39669: Fix grid doctrine query builder to use context language instead of employee language (by @Codencode)
+    - #39982: BO : Fixed anchor target for modules page (by @Progi1984)
+    - #39834: BO Modules : Display only modules if you have the permission (by @Progi1984)
+    - #39976: BO : Adresses : Fixed display of state if there is errors (by @Progi1984)
+    - #39985: BO : Product SEO - Display attribute in SEO preview (by @Progi1984)
+    - #39900: BO - Orders : Optimized Countries Choice (by @Progi1984)
+    - #39833: BO - Orders - View - Carrier Modal : The selected carrier is the correct (by @Progi1984)
+    - #39866: BO - Import : Added missing ISBN field for Products & Combinations (by @Progi1984)
+    - #39897: BO - Categories : The description wasn't displayed by default in SERP (by @Progi1984)
+    - #39914: BO - Permissions : Added authorization role for "More" (by @Progi1984)
+    - #39886: Legacy email template scan (by @tleon)
+    - #39874: BO - Products : Enable/Disable actions depending on permissions (by @Progi1984)
+    - #39877: Add the possibility to bulk assign a new zone (by @nicosomb)
+    - #38301: Fix: AverageTaxOfProductsTaxCalculator, Cannot use a scalar value as an array (by @Codencode)
+    - #39691: Fix: Ensure order status template keeps between saves (by @ChillCode)
+    - #39802: BO: State Grid : Clean unuseful parameters (by @Progi1984)
+    - #39758: Allow attribute groups colors/textures on groups with ID different than 2 (by @ChillCode)
+    - #39578: Fix issue with null values on stores from import (by @Prestaworks)
+    - #39732: Fix order tax update (by @tleon)
+    - #39728: Fix product broken when redirect target is deleted (by @tleon)
+    - #39714: BO: Email Layouts : Set table responsive (by @Progi1984)
+    - #39621: [BO] Added DataCollector for Legacy Profiling (by @Progi1984)
+    - #39637: Ensure cache is cleared on each module action even when they fail (by @jolelievre)
+  - Refactoring:
+    - #39990: Remove extra join (by @Hlavtox)
+    - #39893: Optimize category input (by @Hlavtox)
+    - #39748: BO : Webservice : Refactoring using CQRS (by @Progi1984)
+- Front Office:
+  - Improvement:
+    - #39913: Add new hooks: actionOverrideQuantityAvailableByProduct - actionCheckAttributeQuantity - actionOverrideProductQuantity (by @Codencode)
+    - #39928: Remove very specific text about payment validation (by @Hlavtox)
+    - #39891: Fix: ProductController::findProductCombinationById() incorrect return type (by @Codencode)
+  - Bug fix:
+    - #40044: Multistore : Display countries only those covered by active carriers (by @Progi1984)
+    - #36796: Fix: Product customization text appears as raw HTML in order confirmation email (order_conf) (by @Codencode)
+    - #39817: Improve front office customer form validation to fix issues with guests and emails (by @Hlavtox)
+    - #39572: Fix: Front container lazy service declaration (by @Codencode)
+    - #39525: Fix: Fatal Error : Doctrine proxy classes and cache in production mode Prestashop 9.0.0 (by @Codencode)
+    - #39606: fix(CustomerMessage): increase user_agent length from 128 to 255 to prevent silent validation errors on some mobile contact form (by @yebor974)
+    - #39651: Fix the canonical redirection when category slug is wrong but id is correct (by @aomaxime)
+  - Refactoring:
+    - #39941: Improve confirmation logic and remove module check (by @Hlavtox)
+    - #39934: Make sure address IDs are returned consistently (by @Hlavtox)
+    - #39935: Comment address save process (by @Hlavtox)
+    - #39666: Explain parent initialization for future generation (by @Hlavtox)
+- Core:
+  - Improvement:
+    - #40136: Add more logs in database dumping script (by @nicosomb)
+    - #40100: Manual verifications release 902 (by @mattgoud)
+    - #40068: Chore: [release-9.0.2][preliminary-task]- update composer (classic-theme 3.0.4) (by @mattgoud)
+    - #40047: Bump version to 9.0.2 (by @tleon)
+    - #39775: Corrects the date in the change log (by @Touxten)
+    - #39742: Merge release-9.0.1 into 9.0.x (by @tyloo)
+    - #39589: Improved generation of queries and commands (by @kpodemski)
+  - Bug fix:
+    - #39905: Fixed swagger property filter system for mapped properties (by @tleon)
+    - #40030: Initialize dispatcher early and fix all $_FILES issues (by @Hlavtox)
+    - #39835: Fix Manufacturer/Supplier controllers return types for their respective getters (by @prestamodule)
+    - #40017: Check if function exec is disabled in ExecKernelCacheClearer (by @jolelievre)
+    - #39674: Fix log level create test db for `9.0.x` (by @boherm)
+  - Refactoring:
+    - #39950: Cookie account_created - absolete code from PS 1.6 (by @ShaiMagal)
+- Installer:
+  - Improvement:
+    - #40127: Update default catalog 9.0.x (by @ps-jarvis)
+    - #39305: Rework Docker Developer Experience and Added documentation (by @tyloo)
+    - #39619: Update default catalog 9.0.x (by @ps-jarvis)
+  - Bug fix:
+    - #39959: Chore: fix docker entrypoint wait assets script (by @tyloo)
+- Web Services:
+  - Bug fix:
+    - #39904: Add DateImmutable for api type consistency (by @tleon)
+- Localization:
+  - Improvement:
+    - #39012: Update italian provinces as of June 2025 (by @mavalentin)
+- Tests:
+  - Improvement:
+    - #40121: Functional Tests : Improve UI Tests after #40088 (by @Progi1984)
+    - #39940: Functional Tests : Added new endpoints (by @Progi1984)
+    - #40029: Functional Tests : API : GET /admin-api/zones (by @Progi1984)
+    - #40012: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40016: Functional Tests : API : DELETE /admin-api/product/image/{imageId} (by @Progi1984)
+    - #39987: Functional Tests : API : DELETE /admin-api/search-alias/{search} (by @Progi1984)
+    - #39965: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39902: Functional Tests : BO - Cart rules - Conditions : Case 9 - Compatibility with other cart rules (by @Progi1984)
+    - #39812: TE: Bump behat/behat (v3.16.0 => v3.25.0) (by @Progi1984)
+    - #39875: Functional Tests : BO - Cart rules - Condition : Case 2 - Valid Date Time (by @Progi1984)
+    - #39871: Bump prestashop/ps_apiresources (by @Progi1984)
+    - #39870: Functional Tests : BO - Cart rules - Condition : Case 2 bis - Invalid Date Time (by @Progi1984)
+    - #39856: Functional Tests : API : DELETE /admin-api/category/{categoryId}/cover (by @Progi1984)
+    - #39844: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39846: Functional Tests : API : GET /attributes/attribute/{attributeId} (by @Progi1984)
+    - #39828: Functional Tests : API : POST /admin-api/attributes/attribute (by @Progi1984)
+    - #39815: Functional Tests : API : DELETE /admin-api/category/{categoryId} (by @Progi1984)
+    - #39806: Functional Tests : API : DELETE /attributes/attribute/{attributeId} (by @Progi1984)
+    - #39794: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39777: Functional Tests : API : GET /categories (by @Progi1984)
+    - #39768: Functional Tests : Update new endpoints (by @Progi1984)
+    - #39767: Functional Tests : API : PUT /attributes/groups/delete (by @Progi1984)
+    - #39754: Functional Tests : API : GET /attributes/groups (by @Progi1984)
+    - #39749: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39738: Functional Tests : API : PUT /hook/{hookId}/status (by @Progi1984)
+    - #39731: Functional Tests : API : POST /attributes/group (by @Progi1984)
+    - #39718: Functional Tests : API : PATCH /attributes/group/{attributeGroupId} (by @Progi1984)
+    - #39701: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39681: Github Action `setup-env` : Retry 5 times the download of MkCert (by @Progi1984)
+    - #39677: Functional Tests : GET /attributes/group/{attributeGroupId} (by @Progi1984)
+    - #39675: Functional Tests : Added new endpoints (by @Progi1984)
+    - #39661: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39593: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+  - Bug fix:
+    - #40042: Functional Tests : Unskip Test (Linked to issue #38787) (by @Progi1984)
+    - #39901: BO - Categories : Responsive of the SERP block (by @Progi1984)
+    - #39671: Functional Tests : Fix for ps_accounts (by @Progi1984)
+  - Refactoring:
+    - #40086: Functional Tests : API : DELETE /admin-api/category/{categoryId}/{mode} (by @Progi1984)
+    - #39829: UI tests - Fix random errors in functional:BO:advanced-parameters:07-10  & functional:FO:hummingbird:08-12 (by @nesrineabdmouleh)
+    - #39807: Functional tests - Fix random error in Orders > Credit slips > Create filter credit slip (by @nesrineabdmouleh)
+    - #39702: Removed pdiddy occurences in PrestaShop project (by @nicosomb)
+
+####################################
+#   v9.0.1 - (2025-10-13)
+####################################
+
+- Back Office:
+  - New feature:
+    - #39021: Bring back the ability to fill the login fields from the URL query params (by @Quetzacoalt91)
+    - #39050: Prompt people to migrate to new page (by @Hlavtox)
+  - Improvement:
+    - #39399: Fix: It is not possible to remove the texture and clear the color field when configuring the Attribute value (by @Codencode)
+    - #39451: Add customer_service to contact query selection (by @PrestaEdit)
+    - #39404: Allow filtering module list for translation export (by @kpodemski)
+    - #39277: Make the TinyMCEEditor more flexible and extensible via module (by @Codencode)
+    - #39196: Change 404 admin template (by @Hlavtox)
+    - #39322: Update Distribution API Client to include the new wall of fame (by @jolelievre)
+    - #39321: Update Distribution API Client to include the new wall of fame (by @jolelievre)
+    - #39192: Add product errors (by @Hlavtox)
+    - #38042: Added field "Module name" to admin carrier list (by @Codencode)
+    - #39175: Improve API misconfiguration error (by @jolelievre)
+    - #39162: Add new hooks: actionOrderHasBeenShipped and actionOrderHasBeenDelivered (by @Codencode)
+    - #39092: Fix: harmonize carrier page style (by @tblivet)
+    - #39084: Fix: Date picker handle color (by @tblivet)
+    - #39078: Fix: carrier logo preview size (by @tblivet)
+    - #38717: Use v8 documentation in HelperCard (by @PrestaEdit)
+    - #39022: Styles header notifications (by @tblivet)
+    - #38634: Improved regex in StringModifier (by @nicosomb)
+    - #38773: Disable autofill of password for edit customer in BO (by @ShaiMagal)
+  - Bug fix:
+    - #39559: Update HTMLTemplateOrderSlip.php (by @ShaiMagal)
+    - #39472: Add missing "Stock location" in the defaults product csv (by @MattKelvin)
+    - #39062: Fix display of Nav Bar with NULL icons (by @Quetzacoalt91)
+    - #39554: [BC Break] Revert PR 38745 (by @tleon)
+    - #39335: BO : Titles : When editing, fetch dimensions of the image (by @Progi1984)
+    - #38006: Fix: Problems with customer groups category discounts (by @Codencode)
+    - #39310: [BC Break] Remove property from documentation that are not in the ressources (by @tleon)
+    - #37707: Fix unsecure payment request link (by @SebBareyre)
+    - #39326: BO : HelperForm : Fixed for select the hard defined width (by @Progi1984)
+    - #39430: Fix quantity in delivery slip if we have a refunded product (by @Touxten)
+    - #39358: Create ModuleParser to parse module information (by @jolelievre)
+    - #37590: Patch tinymce fullscreen (by @nicohery)
+    - #39407: Update CancelProductType to display only refundable quantities as available quantity to refund (by @iNem0o)
+    - #39400: Fix: Help is displayed two times (by @Codencode)
+    - #38622: Fix: New product catalog does not load images in multi-store (by @Codencode)
+    - #39340: Fix product / category access in BO when seo redirection related category is deleted (by @aomaxime)
+    - #39375: Don't allow  delete default country (by @Touxten)
+    - #39333: Fix product access in BO when seo redirection related entity is deleted (by @aomaxime)
+    - #39287: Fix + simplify last positions and add comments to it (by @Hlavtox)
+    - #39314: BO : Orders : Modal Discount reset when it's hidden (by @Progi1984)
+    - #39337: Fix: Cannot use newline in textarea on product page (by @Codencode)
+    - #39269: BO : Admin API : Fixed selectors for copying secret (by @Progi1984)
+    - #39271: BO : TinyMCE : Fixed checkbox icon (by @Progi1984)
+    - #39272: BO : Fixed the memorization of the language used in Admin in the cookie (if option is enabled) (by @Progi1984)
+    - #39292: BO : Fixed redirection when permission is not allowed (by @Progi1984)
+    - #39312: Fix ALT shop name. (by @Touxten)
+    - #39297: Update PHPDoc of ActionsBarButtonInterface (by @Quetzacoalt91)
+    - #39295: [BC Break] Admin API CQRSDelete can use CQRSCommand and empty bodies can be used (by @jolelievre)
+    - #39209: BO : Fixed HTML in informations & warnings block (by @Progi1984)
+    - #39203: BO : Invoices : Harmonize Helper Text (by @Progi1984)
+    - #39274: Added closure of the 'deleteCategoriesForm' form (by @Codencode)
+    - #39208: Fix: Carrier search not working when editing order's carrier (by @Codencode)
+    - #39160: Fix OrderStateType form to show all languages, including disabled ones (by @Codencode)
+    - #39053: Add logic to generate random password on employee profil (by @PoulainMaxime)
+    - #39257: Add missing attribute tag on constraints (by @jolelievre)
+    - #39216: Fix: Call to a member function getClassName() on null when the Employee default tab does not exist anymore (by @Codencode)
+    - #39228: Fix the result of Admin API paginated response (by @jolelievre)
+    - #39206: Apply filters mapping on the orderBy query parameter in API listing (by @jolelievre)
+    - #39168: Fix RouteValidator by checking unknown keywords in schema URL (by @cnavarro-prestashop)
+    - #39193: When enriching the module data always keep most recent version (by @jolelievre)
+    - #39153: BO Theme import : Fixed bad display when filename is too long (by @Progi1984)
+    - #38810: Support for brand named as numbers (by @borjagarciab)
+    - #39028: Fix carrier edit form name (by @Hlavtox)
+    - #38549: Fix: Misleading maximum attachment upload size in configure/advanced/administration (by @Codencode)
+    - #37933: Price final critical error fix (by @jf-viguier)
+    - #38982: BO : Product Form : Use the correct configuration for the Max Filesize (by @Progi1984)
+    - #39007: Client API - Help card is not displayed in sidebar as it should (by @seiwan)
+    - #38966: Add missing Content-Type header in stock quantity update request (by @nborkowska)
+    - #37928: Fix datacollector caster for reference object property including smarty cache_locking fatal error (by @jf-viguier)
+    - #38846: BO Countries : Set two fields `call_prefix` & `zip_code_format` as non-required (by @Progi1984)
+    - #38593: Fix query builder to find translations by key in Backoffice during the translations saving process (by @mcaldex)
+    - #38532: Fix: Multistore: CMS page error on new empty store creation (by @Codencode)
+    - #38337: Fix: Max password length allowed in the password policy is longer than bcrypt can handle and hardcoded max pass length for customer (by @Codencode)
+    - #38581: Allow refund on an order of a deleted customer  (by @jf-viguier)
+  - Refactoring:
+    - #39182: Improve warning on languages page (by @Hlavtox)
+    - #39080: Remove getCasters override not necessary anymore with SF 6.4 (by @jolelievre)
+- Front Office:
+  - Improvement:
+    - #39704: Chore: Update classic theme to v3.0.3 (by @tyloo)
+    - #39445: Propagate auth header (by @Hlavtox)
+    - #39537: Backport Fix CartPresenter translation domain (by @Codencode)
+    - #39406: Display full history time (by @Hlavtox)
+    - #39366: Add hook on rendertemplate in CheckoutStep (by @alexandrebrubeyonds)
+    - #38992: Improve combination images speed (by @Hlavtox)
+    - #38586: Add hook into formfield class method toArray + add property attr (by @Mch0)
+    - #38480: New Hook: actionPaymentModuleProductVarTplAfter (by @gwojcik7)
+    - #38487: New Hook: actionGetPdfTemplateObject get pdf template object (by @Markus-Gurkcity)
+    - #38868: Update CHANGELOG.txt (by @Touxten)
+  - Bug fix:
+    - #39592: Reintroduce email unicity validation (by @bibips)
+    - #39245: Fix: Back Office becomes inaccessible if the employee's assigned language is deleted (by @Codencode)
+    - #39010: Save address choice on click (by @Matt75)
+    - #39191: Fix: recoverCart link does not log the user. Stuck to process checkout step 1 (by @Codencode)
+    - #39008: Fix customer birthdate validation in FO (by @boherm)
+    - #38926: Fix favicon path (by @Hlavtox)
+    - #38903: CustomerAddressForm : Set a minimum length in HTML5 (by @Progi1984)
+  - Refactoring:
+    - #38998: Improve cart performance by avoiding wiping a cache when not needed (by @Hlavtox)
+- Core:
+  - New feature:
+    - #38881: Add hook that allows completely custom cart rule application on a cart (by @Hlavtox)
+  - Improvement:
+    - #39717: Chore: Update ps_apiresources (by @tyloo)
+    - #39589: Improved generation of queries and commands (by @kpodemski)
+    - #39591: Improve customer unicity check and add comments (by @Hlavtox)
+    - #39541: Admin API Openapi multistore context documentation (by @iNem0o)
+    - #39379: Updated PrestaShop Packages (by @github-actions[bot])
+    - #39344: Updated PrestaShop Packages (by @github-actions[bot])
+    - #39479: Bump PrestaShop version to 8.2.3 (by @matthieu-rolland)
+    - #39466: Update Symfony components after 6.4.25 release (by @nicosomb)
+    - #39264: Update Symfony components after 6.4.24 release (by @nicosomb)
+    - #39371: Refacto ConnectionsSource.php for little better performance (by @ShaiMagal)
+    - #39372: Refacto of few $_SERVER variables (Tools.php) (by @ShaiMagal)
+    - #39364: Add genuine Czech republic bot (SeznamBot) to "isBot" function (by @ShaiMagal)
+    - #38822: Another level of protection for Tools::unSerialize (allowed_classes => false) + refacto (by @ShaiMagal)
+    - #39217: Fix changelog date for 8.2.2 (by @boherm)
+    - #39145: Bump PrestaShop version to 8.2.2 (by @boherm)
+    - #39006: Verify if category exists before accessing it (by @Hlavtox)
+    - #39180: Bump patch version 9.0.1 (by @jolelievre)
+    - #39150: Updated PrestaShop Packages (by @github-actions[bot])
+    - #39063: Add option to automatically generate text version of emails (by @Hlavtox)
+    - #39141: Update hummingbird to v1.0.1 (by @tblivet)
+    - #39135: Updated PrestaShop Packages (by @github-actions[bot])
+    - #39043: Silence some last smarty deprecations (by @Hlavtox)
+    - #39034: Update Symfony components after 6.4.23 release (by @nicosomb)
+    - #38441: Relax validation rules for first batch of characters (by @Hlavtox)
+    - #38952: Add 2 hooks in getImageLink (by @ludoviccardinale)
+    - #38924: Backport improved profiler from v9 (by @Hlavtox)
+    - #38847: Skip rector.php and PHPStan files during build (by @kpodemski)
+    - #38772: New hook at TOP of customer my account section - displayCustomerAccountTop (by @ShaiMagal)
+  - Bug fix:
+    - #39715: Chore: Update PHPSpreadsheet version to v1.30.0 (by @tyloo)
+    - #39535: Backport Filemanager should load AdminKernel (by @Codencode)
+    - #38871: Ensure specific prices are deleted safely on customer deletion by validating passed ID (by @gilles-knani)
+    - #39463: CORE : Fix Cart constructor initialization order to prevent null configuration errors (by @djbuch)
+    - #39480: Fix docker initialisation (by @nicosomb)
+    - #39442: Stabilize cache clear (by @jolelievre)
+    - #39453: Fix CI with mysql suddenly going crazy over SSL certificate (by @jolelievre)
+    - #39327: Fix symlink issues on install (by @boherm)
+    - #39331: Fix: using dev version of ps_apiresources (by @PrestaEdit)
+    - #39260: Adding taxes for shipping cost if needed (by @lukaslau)
+    - #38997: Remove dead code watermark types (by @tswfi)
+    - #38905: Cast properties to prevent issues (by @Hlavtox)
+    - #38989: Fix carrier ID for modules (by @Hlavtox)
+  - Refactoring:
+    - #39505: Method getIdFromClassName incorrect phpdoc - phpstan is complaining (by @ShaiMagal)
+    - #39373: Small Refacto Store.php for semantic (backticks unification) (by @ShaiMagal)
+    - #39311: Backport Unify error handling in FO and get rid of Tools::displayError calls (by @Hlavtox)
+    - #39167: Comment carrier logic (by @Hlavtox)
+    - #39129: Use constants instead of integers (by @Hlavtox)
+    - #39057: Comment the mail class after migration to symfony (by @Hlavtox)
+    - #39051: Wipe @since tags that serve no value anymore (by @Hlavtox)
+    - #38990: Secure .env files and comment htaccess (by @Hlavtox)
+    - #38877: Clean and comment postSave (by @Hlavtox)
+    - #38761: Refactor Warehouse::getProductLocation() (by @ShaiMagal)
+- Installer:
+  - Improvement:
+    - #39619: Update default catalog 9.0.x (by @ps-jarvis)
+    - #39508: Add the parameter `--symlink` to the command `assets:install` of Symfony (by @Quetzacoalt91)
+  - Bug fix:
+    - #39716: Chore: Add missing hooks (by @tyloo)
+    - #39336: Install : Configure : Hide password error on keyup (by @Progi1984)
+    - #39110: Fix installation of en-GB during install, improve installation error report (by @jolelievre)
+    - #38919: Update installer favicon (by @matks)
+- Web Services:
+  - Bug fix:
+    - #38893: Fix 500 error on create product with id_default_category to 0 (by @Mch0)
+- Tests:
+  - Improvement:
+    - #39594: Functional Tests : Added new endpoints (by @Progi1984)
+    - #39583: Functional Tests : API : DELETE /attributes/group/{attributeGroupId} (by @Progi1984)
+    - #39575: Functional Tests : API : GET /customers/groups (by @Progi1984)
+    - #39565: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39528: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39329: Update api module and optimise API UI tests (by @jolelievre)
+    - #39284: Command `prestashop:list:commands-and-queries` : Filter CQRS with (1) or without (0) an endpoint (by @Progi1984)
+    - #39291: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39215: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39172: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39159: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39123: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39077: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #39064: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #38927: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #38890: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #38885: Functional Tests : API : PATCH /product/{productId}/shops (by @Progi1984)
+  - Bug fix:
+    - #39551: Functional Tests : Fixed #38788  (by @Progi1984)
+    - #39500: Functional Tests : Fixed tests for PSC (by @Progi1984)
+    - #39299: BO : Products - Bulk Actions : Fixed error when no permissions (by @Progi1984)
+    - #39285: BO : Export SQL from Grid : Format SQL (by @Progi1984)
+    - #39139: Docker 7.2-apache : Fixed use of archive Debian repo  (by @Progi1984)
+    - #39049: BO : Theme : Export current theme > Protect directories (by @Progi1984)
+    - #38999: Fix FormFieldTest (by @boherm)
+    - #38963: BO : Specific Price : Hide label (by @Progi1984)
+  - Refactoring:
+    - #38873: Functional Tests : Reorganize endpoints based on domains (by @Progi1984)
+
+####################################
 #   v9.0.0 - (2025-06-06)
 ####################################
 
@@ -1952,6 +3023,24 @@ Changelog for PrestaShop 9
     - #31723: Fix nightly Develop - 'BO > Customers > View customer' (by @nesrineabdmouleh)
     - #31461: Add guest customer edit test (by @Hlavtox)
     - #31386: Add test for mismatching groups, fix the check in handler (by @Hlavtox)
+
+####################################
+#   v8.2.3 - (2025-08-28)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #39321: Update Distribution API Client to include the new wall of fame (by @jolelievre)
+    - GHSA-8xx5-h6m3-jr33: Fix email enumeration vulnerability on password reset page (by @M0rgan01 & @matthieu-rolland, vulnerability reported by Maxime Morel-Bailly)
+  - Bug fix:
+    - #38622: Fix new product catalog not loading images in multi-store (by @Codencode)
+    - #39208: Fix Carrier search not working when editing order's carrier (by @Codencode)
+    - #39274: Added closure of the 'deleteCategoriesForm' form (by @Codencode)
+    - #39337: Fix newline in textarea on product page (by @Codencode)
+    - #39430: Fix quantity in delivery slip if we have a refunded product (by @touxten)
+- Front Office:
+  - Bug fix:
+    - #39191: Fix cart recovery: use updateCustomer for restoring customer session (by @Codencode)
 
 ####################################
 #   v8.2.2 - (2025-07-28)

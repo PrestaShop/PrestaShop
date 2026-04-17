@@ -99,7 +99,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | available date             | 2021-10-10  |
     And combination "product1SBlack" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 100            |
+      | Puffin Mummy | 100            |
     And combination "product1SBlack" last stock movement for shop "shop1" increased by 100
     And combination "product1SBlack" should have following stock details for shops "shop2":
       | combination stock detail   | value |
@@ -128,7 +128,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | available date             | 2022-10-10  |
     And combination "product1SBlack" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 101            |
+      | Puffin Mummy | 101            |
     And combination "product1SBlack" last stock movement for shop "shop2" increased by 101
     And combination "product1SBlack" should have following stock details for shops "shop1":
       | combination stock detail   | value       |
@@ -140,7 +140,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | available date             | 2021-10-10  |
     And combination "product1SBlack" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 100            |
+      | Puffin Mummy | 100            |
     And combination "product1SBlack" last stock movement for shop "shop1" increased by 100
     When I update combination "product1SWhite" with following values for shop "shop1":
       | minimal quantity           | 10         |
@@ -177,11 +177,11 @@ Feature: Update product combination stock information in Back Office (BO) in mul
     And combination "product1SWhite" last stock movement for shop "shop1" increased by 50
     And combination "product1SWhite" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 50             |
+      | Puffin Mummy | 50             |
     And combination "product1SWhite" last stock movement for shop "shop2" increased by 30
     And combination "product1SWhite" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 30             |
+      | Puffin Mummy | 30             |
 
     And product "product1" should have the following combinations for shops "shop1":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
@@ -238,8 +238,8 @@ Feature: Update product combination stock information in Back Office (BO) in mul
     And combination "product1SBlack" last stock movement for shop "shop1" decreased by 13
     And combination "product1SBlack" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -13            |
-      | Puff Daddy | 10             |
+      | Puffin Mummy | -13            |
+      | Puffin Mummy | 10             |
     And combination "product1SBlack" should have following stock details for shops "shop2":
       | combination stock detail   | value |
       | quantity                   | 0     |
@@ -262,7 +262,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
     And combination "product1SBlack" last stock movement for shop "shop2" increased by 34
     And combination "product1SBlack" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 34             |
+      | Puffin Mummy | 34             |
     When I update combination "product1SBlack" stock for shop "shop2" with following details:
       | fixed quantity | 4 |
     Then combination "product1SBlack" should have following stock details for shops "shop2":
@@ -276,8 +276,8 @@ Feature: Update product combination stock information in Back Office (BO) in mul
     And combination "product1SBlack" last stock movement for shop "shop2" decreased by 30
     And combination "product1SBlack" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -30            |
-      | Puff Daddy | 34             |
+      | Puffin Mummy | -30            |
+      | Puffin Mummy | 34             |
     And combination "product1SBlack" should have following stock details for shops "shop1":
       | combination stock detail   | value |
       | quantity                   | -3    |
@@ -289,8 +289,8 @@ Feature: Update product combination stock information in Back Office (BO) in mul
     And combination "product1SBlack" last stock movement for shop "shop1" decreased by 13
     And combination "product1SBlack" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -13            |
-      | Puff Daddy | 10             |
+      | Puffin Mummy | -13            |
+      | Puffin Mummy | 10             |
 
   Scenario: I update combination stock for all shops using delta quantity:
     Given I update combination "product1SBlack" with following values for all shops:
@@ -341,13 +341,13 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | available date             | 2021-10-10  |
     And combination "product1SBlack" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 120            |
-      | Puff Daddy | 10             |
+      | Puffin Mummy | 120            |
+      | Puffin Mummy | 10             |
     And combination "product1SBlack" last stock movement for shop "shop1" increased by 120
     And combination "product1SBlack" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 120            |
-      | Puff Daddy | 100            |
+      | Puffin Mummy | 120            |
+      | Puffin Mummy | 100            |
     And combination "product1SBlack" last stock movement for shop "shop2" increased by 120
     And combinations "product1SBlack" are not associated to shop "shop3"
     And combinations "product1SBlack" are not associated to shop "shop4"
@@ -375,7 +375,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
     And combination "product1SBlack" last stock movement for shop "shop2" increased by 10
     And combination "product1SBlack" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 10             |
+      | Puffin Mummy | 10             |
     When I update combination "product1SBlack" stock for all shops with following details:
       | fixed quantity | 12 |
     Then combination "product1SBlack" should have following stock details for shops "shop1,shop2":
@@ -389,12 +389,12 @@ Feature: Update product combination stock information in Back Office (BO) in mul
     And combination "product1SBlack" last stock movement for shop "shop1" increased by 12
     And combination "product1SBlack" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 12             |
+      | Puffin Mummy | 12             |
     And combination "product1SBlack" last stock movement for shop "shop2" increased by 2
     And combination "product1SBlack" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 2              |
-      | Puff Daddy | 10             |
+      | Puffin Mummy | 2              |
+      | Puffin Mummy | 10             |
     When I update combination "product1SBlack" stock for all shops with following details:
       | fixed quantity | 5 |
     Then combination "product1SBlack" should have following stock details for shops "shop1,shop2":
@@ -408,14 +408,14 @@ Feature: Update product combination stock information in Back Office (BO) in mul
     And combination "product1SBlack" last stock movement for shop "shop1" decreased by 7
     And combination "product1SBlack" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -7             |
-      | Puff Daddy | 12             |
+      | Puffin Mummy | -7             |
+      | Puffin Mummy | 12             |
     And combination "product1SBlack" last stock movement for shop "shop2" decreased by 7
     And combination "product1SBlack" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -7             |
-      | Puff Daddy | 2              |
-      | Puff Daddy | 10             |
+      | Puffin Mummy | -7             |
+      | Puffin Mummy | 2              |
+      | Puffin Mummy | 10             |
     And combinations "product1SBlack" are not associated to shop "shop3"
     And combinations "product1SBlack" are not associated to shop "shop4"
 
@@ -519,8 +519,8 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | available date             |                 |
     And combination "product1SBlack" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 50             |
-      | Puff Daddy | 50             |
+      | Puffin Mummy | 50             |
+      | Puffin Mummy | 50             |
     Given I set following shops for product "product1":
       | source shop | shop1                   |
       | shops       | shop1,shop3,shop4 |
@@ -534,11 +534,11 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | available date             |                 |
     And combination "product1SBlack" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 50             |
-      | Puff Daddy | 50             |
+      | Puffin Mummy | 50             |
+      | Puffin Mummy | 50             |
     And combination "product1SBlack" last stock movements for shop "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 100            |
+      | Puffin Mummy | 100            |
     And product "product1" should have following stock information for shops "shop1,shop3,shop4":
       | quantity | 150 |
     Given I update combination "product1SBlack" stock for shop "shop3" with following details:
@@ -553,8 +553,8 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | available date             |                 |
     And combination "product1SBlack" last stock movements for shop "shop3,shop4" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -42            |
-      | Puff Daddy | 100            |
+      | Puffin Mummy | -42            |
+      | Puffin Mummy | 100            |
     And product "product1" should have following stock information for shops "shop1":
       | quantity | 150 |
     And product "product1" should have following stock information for shops "shop3,shop4":

@@ -1,37 +1,22 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Order;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Feature\Enum\ShopModeEnum;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShopBundle\EventSubscriber\UpdateShopModeFieldListener;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -43,6 +28,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class PreferencesType extends TranslatorAwareType
 {
+    public const SHOP_MODE = 'shop_mode';
+
     /**
      * @var bool
      */
@@ -74,6 +61,8 @@ class PreferencesType extends TranslatorAwareType
      * @param bool $isShopFeatureEnabled
      * @param bool $isSingleShopContext
      * @param bool $isAllShopContext
+     * @param ?FeatureFlagStateCheckerInterface $featureFlagStateChecker
+     * @param ?UpdateShopModeFieldListener $updateShopModeFieldListener
      */
     public function __construct(
         RequestStack $requestStack,
@@ -82,7 +71,9 @@ class PreferencesType extends TranslatorAwareType
         ConfigurationInterface $configuration,
         bool $isShopFeatureEnabled,
         bool $isSingleShopContext,
-        bool $isAllShopContext
+        bool $isAllShopContext,
+        private readonly ?FeatureFlagStateCheckerInterface $featureFlagStateChecker,
+        private readonly ?UpdateShopModeFieldListener $updateShopModeFieldListener,
     ) {
         parent::__construct($translator, $locales);
 
@@ -100,11 +91,13 @@ class PreferencesType extends TranslatorAwareType
     {
         $configuration = $this->configuration;
 
+        $showB2bShopMode = $this->featureFlagStateChecker?->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_B2B) ?? false;
+
         if ($this->requestStack->getCurrentRequest()->isSecure()) {
             $builder->add('enable_ssl', SwitchType::class, [
                 'label' => $this->trans('Enable SSL', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
-                    'If you own an SSL certificate for your shop\'s domain name, you can activate SSL encryption (https://) for all the pages of your shop.',
+                    'Enables or disables SSL encryption (https://) for your shop. This is a security standard and you should always keep this option enabled, unless there is a specific technical issue.',
                     'Admin.Shopparameters.Help'
                 ),
             ]);
@@ -121,14 +114,33 @@ class PreferencesType extends TranslatorAwareType
                     'Enable or disable token in the Front Office to improve PrestaShop\'s security.',
                     'Admin.Shopparameters.Help'
                 ),
-            ])
+            ]);
+        if ($showB2bShopMode) {
+            $builder
+                ->add(self::SHOP_MODE, EnumType::class, [
+                    'class' => ShopModeEnum::class,
+                    'label' => $this->trans(
+                        'Shop mode',
+                        'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'Choose which features are enabled in your shop: B2C only, B2B only, or both.',
+                        'Admin.Shopparameters.Help'
+                    ),
+                ]);
+
+            if (null !== $this->updateShopModeFieldListener) {
+                $builder->addEventSubscriber($this->updateShopModeFieldListener);
+            }
+        }
+
+        $builder
             ->add('allow_html_iframes', SwitchType::class, [
                 'label' => $this->trans(
                     'Allow iframes on HTML fields',
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'Allow iframes on text fields like product description. We recommend that you leave this option disabled.',
+                    'Allows the use of iframes in rich text fields such as product descriptions. It is recommended to keep this option disabled unless you specifically need iframes for video embeds or other external content.',
                     'Admin.Shopparameters.Help'
                 ),
             ])
@@ -138,7 +150,7 @@ class PreferencesType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'Clean the HTML content on text fields. We recommend that you leave this option enabled.',
+                    'Cleans the HTML content in rich text fields before saving. It is recommended to keep this option enabled to ensure safe and valid content is saved into the database.',
                     'Admin.Shopparameters.Help'
                 ),
             ])
@@ -176,7 +188,7 @@ class PreferencesType extends TranslatorAwareType
                 'display_suppliers', SwitchType::class, [
                     'label' => $this->trans('Display suppliers', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
-                        'Enable suppliers page on your front office even when its module is disabled.',
+                        'Enables or disables the suppliers listing in your shop. When disabled, suppliers are also removed from the sitemap and other related sections.',
                         'Admin.Shopparameters.Help'
                     ),
                 ])
@@ -184,7 +196,7 @@ class PreferencesType extends TranslatorAwareType
                 'display_manufacturers', SwitchType::class, [
                     'label' => $this->trans('Display brands', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
-                        'Enable brands page on your front office even when its module is disabled.',
+                        'Enables or disables the brands listing in your shop. When disabled, brands are also removed from the sitemap and other related sections.',
                         'Admin.Shopparameters.Help'
                     ),
                 ])
@@ -192,7 +204,7 @@ class PreferencesType extends TranslatorAwareType
                 'display_best_sellers', SwitchType::class, [
                     'label' => $this->trans('Display best sellers', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
-                        'Enable best sellers page on your front office even when its respective module is disabled.',
+                        'Enables or disables the best sellers page in your shop. When disabled, the page and related links are also removed from the sitemap and other sections.',
                         'Admin.Shopparameters.Help'
                     ),
                 ])

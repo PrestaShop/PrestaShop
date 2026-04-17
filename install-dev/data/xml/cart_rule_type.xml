@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_cart_rule_type>
+  <fields id="discount_type">
+    <field name="discount_type"/>
+    <field name="is_core"/>
+    <field name="active"/>
+  </fields>
+  <entities>
+    <cart_rule_type id="free_shipping" is_core="1" active="1">
+      <discount_type>free_shipping</discount_type>
+    </cart_rule_type>
+    <cart_rule_type id="cart_level" is_core="1" active="1">
+      <discount_type>cart_level</discount_type>
+    </cart_rule_type>
+    <cart_rule_type id="order_level" is_core="1" active="1">
+      <discount_type>order_level</discount_type>
+    </cart_rule_type>
+    <cart_rule_type id="product_level" is_core="1" active="1">
+      <discount_type>product_level</discount_type>
+    </cart_rule_type>
+    <cart_rule_type id="free_gift" is_core="1" active="1">
+      <discount_type>free_gift</discount_type>
+    </cart_rule_type>
+  </entities>
+</entity_cart_rule_type>

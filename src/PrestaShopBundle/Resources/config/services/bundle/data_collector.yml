@@ -10,7 +10,9 @@ services:
     arguments: [ '@prestashop.hooks_registry' ]
     public: false
     tags:
-      - { name: data_collector, template: '@PrestaShop/Admin/WebProfiler/hooks_collector.html.twig', id: 'ps.hooks_collector' }
+      - name: data_collector
+        id: ps.hooks_collector
+        template: '@PrestaShop/Admin/WebProfiler/hooks_collector.html.twig'
 
   PrestaShopBundle\DataCollector\CommandsAndQueriesDataCollector:
     autowire: true
@@ -19,6 +21,14 @@ services:
       - name: data_collector
         id: ps.commands_and_queries_collector
         template: '@PrestaShop/Admin/WebProfiler/commands_and_queries.html.twig'
+
+  PrestaShopBundle\DataCollector\LegacyCollector:
+    autowire: true
+    public: false
+    tags:
+      - name: data_collector
+        id: ps.legacy_collector
+        template: '@PrestaShop/Admin/WebProfiler/legacy.html.twig'
 
   # Web Profiler Bundle
   data_collector.config:

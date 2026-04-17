@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -80,9 +60,10 @@ class CommandProcessor implements ProcessorInterface
             $command = $this->domainSerializer->denormalize($commandParameters, $CQRSCommandClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSCommandMapping($operation)]);
         }
         $commandResult = $this->commandBus->handle($command);
+        $allowEmptyBody = $operation->getExtraProperties()['allowEmptyBody'] ?? null;
 
         // If no result is returned and no query is configured the API returns nothing
-        if (empty($commandResult) && empty($extraProperties['CQRSQuery'])) {
+        if ($commandResult === null && empty($extraProperties['CQRSQuery']) && ($allowEmptyBody === null || $allowEmptyBody === true)) {
             // If the command returns nothing (including void) we return null (because void can't be returned and its value is equivalent to null)
             return null;
         }
@@ -101,13 +82,12 @@ class CommandProcessor implements ProcessorInterface
      */
     protected function denormalizeCommandResult(mixed $commandResult, Operation $operation, array $uriVariables): mixed
     {
+        $normalizedCommandResult = [];
         if (!empty($commandResult)) {
             $normalizedCommandResult = $this->domainSerializer->normalize($commandResult, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSCommandMapping($operation)]);
-        } else {
-            // Use URI variables as fallback when the command returned no result as it probably contains the ID that will be needed to create the CQRS query
-            $normalizedCommandResult = $uriVariables;
         }
-        $normalizedCommandResult = array_merge($normalizedCommandResult, $this->contextParametersProvider->getContextParameters());
+        // Merge uri variables and normalized command result to have all needed data to create the CQRS query (it probably contains all the needed info to create the CQRS query)
+        $normalizedCommandResult = array_merge($uriVariables, $normalizedCommandResult, $this->contextParametersProvider->getContextParameters());
 
         $queryClass = $this->getCQRSQueryClass($operation);
         if (!$queryClass) {
@@ -146,7 +126,7 @@ class CommandProcessor implements ProcessorInterface
         $CQRSQuery = $this->domainSerializer->denormalize($normalizedCommandResult, $CQRSQueryClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
         $CQRSQueryResult = $this->commandBus->handle($CQRSQuery);
 
-        return $this->denormalizeQueryResult($CQRSQueryResult, $operation);
+        return $this->denormalizeQueryResult($CQRSQueryResult, $operation, $normalizedCommandResult);
     }
 
     /**

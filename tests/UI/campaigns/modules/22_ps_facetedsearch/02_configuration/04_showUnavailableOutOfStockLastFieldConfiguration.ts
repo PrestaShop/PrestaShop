@@ -13,8 +13,8 @@ import {
   type BrowserContext,
   dataModules,
   FakerProduct,
-  foClassicCategoryPage,
-  foClassicHomePage,
+  foHummingbirdCategoryPage,
+  foHummingbirdHomePage,
   modPsFacetedsearchBoMain,
   type Page,
   utilsFile,
@@ -121,18 +121,18 @@ describe('Faceted search module: Show unavailable, out of stock last\'s field co
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
       page = await modPsFacetedsearchBoMain.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage).to.eq(true);
     });
 
     it('should go to the All products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProductsPage', baseContext);
 
-      await foClassicHomePage.goToAllProductsPage(page);
+      await foHummingbirdHomePage.goToAllProductsPage(page);
 
-      const isCategoryPageVisible = await foClassicCategoryPage.isCategoryPage(page);
+      const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible).to.equal(true);
     });
 
@@ -140,16 +140,16 @@ describe('Faceted search module: Show unavailable, out of stock last\'s field co
     it('should go the the second page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToSecondPage', baseContext);
 
-      await foClassicCategoryPage.goToNextPage(page);
+      await foHummingbirdCategoryPage.goToNextPage(page);
 
-      //const nthProduct = await foClassicCategoryPage.getNThChildFromIDProduct(page, idProduct);
+      //const nthProduct = await foHummingbirdCategoryPage.getNThChildFromIDProduct(page, idProduct);
       //expect(nthProduct).to.eq(null);
     });
 
     it('should return to the backoffice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'returnToTheBO', baseContext);
 
-      page = await foClassicCategoryPage.changePage(browserContext, 0);
+      page = await foHummingbirdCategoryPage.changePage(browserContext, 0);
 
       const pageTitle = await modPsFacetedsearchBoMain.getPageSubtitle(page);
       expect(pageTitle).to.equal(modPsFacetedsearchBoMain.pageSubTitle);
@@ -168,20 +168,20 @@ describe('Faceted search module: Show unavailable, out of stock last\'s field co
     it('should check the frontoffice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFrontOffice', baseContext);
 
-      page = await foClassicHomePage.changePage(browserContext, 1);
-      await foClassicHomePage.reloadPage(page);
+      page = await foHummingbirdHomePage.changePage(browserContext, 1);
+      await foHummingbirdHomePage.reloadPage(page);
 
-      const productsNum = await foClassicCategoryPage.getNumberOfProductsDisplayed(page);
+      const productsNum = await foHummingbirdCategoryPage.getNumberOfProductsDisplayed(page);
       expect(productsNum).to.gt(0);
 
-      const nthProduct = await foClassicCategoryPage.getNThChildFromIDProduct(page, idProduct) as number;
+      const nthProduct = await foHummingbirdCategoryPage.getNThChildFromIDProduct(page, idProduct) as number;
       expect(nthProduct).to.eq(productsNum);
     });
 
     it('should reset the switch "Show unavailable, out of stock last"', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetSwitch', baseContext);
 
-      page = await foClassicHomePage.changePage(browserContext, 0);
+      page = await foHummingbirdHomePage.changePage(browserContext, 0);
       const textResult = await modPsFacetedsearchBoMain.setShowUnavailableOutOfStockLastValue(page, false);
       expect(textResult).to.equal(modPsFacetedsearchBoMain.settingsSavedMessage);
 

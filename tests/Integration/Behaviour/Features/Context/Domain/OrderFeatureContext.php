@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -35,6 +15,7 @@ use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Configuration;
 use Context;
+use Currency;
 use FrontController;
 use Order;
 use OrderInvoice;
@@ -45,6 +26,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscount
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand;
@@ -110,6 +92,26 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $adminControllerTestDouble->controller_type = 'admin';
         $adminControllerTestDouble->php_self = 'dummyTestDouble';
         Context::getContext()->controller = $adminControllerTestDouble;
+    }
+
+    /**
+     * @Given I change for the order :orderReference the currency :oldCurrency to :newCurrency
+     *
+     * @param string $orderReference
+     * @param string $oldCurrency
+     * @param string $newCurrency
+     */
+    public function changeOrderCurrency(string $orderReference, string $oldCurrency, string $newCurrency): void
+    {
+        $oldCurrencyId = Currency::getIdByIsoCode($oldCurrency, 0, true);
+        $newCurrencyId = Currency::getIdByIsoCode($newCurrency, 0, true);
+
+        $this->getCommandBus()->handle(
+            new ChangeOrderCurrencyCommand(
+                (int) SharedStorage::getStorage()->get($orderReference),
+                $newCurrencyId
+            )
+        );
     }
 
     /**
@@ -194,14 +196,27 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $combinationId = isset($data['combination']) ? $this->getProductCombinationId($product, $data['combination']) : 0;
 
         if (empty($data['price_tax_incl'])) {
-            $data['price_tax_incl'] = (string) $this->getProductTaxCalculator((int) $orderId, $productId)
-                ->addTaxes($data['price']);
+            $data['price_tax_incl'] = (string) $this
+                ->getProductTaxCalculator((int) $orderId, $productId)
+                ->addTaxes((float) $data['price']);
         }
 
         try {
             $hasFreeShipping = null;
             if (isset($data['free_shipping'])) {
                 $hasFreeShipping = PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']);
+            }
+            $shipmentId = null;
+            if (!empty($data['shipment_id'])) {
+                $shipmentId = (int) SharedStorage::getStorage()->get($data['shipment_id']);
+            }
+            $carrierId = null;
+            if (!empty($data['carrier_id'])) {
+                $carrierId = (int) SharedStorage::getStorage()->get($data['carrier_id']);
+            }
+            $isVirtual = null;
+            if (isset($data['is_virtual'])) {
+                $isVirtual = PrimitiveUtils::castStringBooleanIntoBoolean($data['is_virtual']);
             }
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::withNewInvoice(
@@ -211,7 +226,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     $data['price_tax_incl'],
                     $data['price'],
                     (int) $data['amount'],
-                    $hasFreeShipping
+                    $hasFreeShipping,
+                    $shipmentId,
+                    $carrierId,
+                    $isVirtual
                 )
             );
         } catch (InvalidProductQuantityException $e) {
@@ -288,8 +306,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (empty($data['price_tax_incl'])) {
-            $data['price_tax_incl'] = (string) $this->getProductTaxCalculator((int) $orderId, $product->getProductId())
-                ->addTaxes($data['price']);
+            $data['price_tax_incl'] = (string) $this
+                ->getProductTaxCalculator((int) $orderId, $product->getProductId())
+                ->addTaxes((float) $data['price']);
         }
 
         try {
@@ -653,6 +672,20 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 ->addTaxes($data['price']);
         }
 
+        $shipments = null;
+
+        if (!empty($data['shipment_mapping'])) {
+            $shipments = [];
+
+            foreach (explode(',', $data['shipment_mapping']) as $pair) {
+                list($shipmentId, $qty) = explode(':', trim($pair));
+                $shipments[] = [
+                    'shipment_id' => (int) $shipmentId,
+                    'quantity' => (int) $qty,
+                ];
+            }
+        }
+
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductInOrderCommand(
@@ -661,7 +694,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     $data['price_tax_incl'],
                     $data['price'],
                     (int) $data['amount'],
-                    $invoiceId
+                    $invoiceId,
+                    $shipments
                 )
             );
         } catch (InvalidProductQuantityException $e) {

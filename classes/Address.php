@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
@@ -394,8 +374,7 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Request to check if DNI field is required
-     * depending on the current selected country.
+     * Checks if DNI field is required for a given country.
      *
      * @param int $idCountry
      *
@@ -411,7 +390,7 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Check if Address is used (at least one order placed).
+     * Checks if the address has been used in an order as delivery on invoice address.
      *
      * @return int|bool Order count for this Address
      */
@@ -484,7 +463,7 @@ class AddressCore extends ObjectModel
     }
 
     /**
-     * Check if the address is valid.
+     * Check if the address is valid - active and not deleted.
      *
      * @param int $id_address Address id
      *
@@ -520,7 +499,8 @@ class AddressCore extends ObjectModel
                 '
 				SELECT `id_address`
 				FROM `' . _DB_PREFIX_ . 'address`
-				WHERE `id_customer` = ' . (int) $id_customer . ' AND `deleted` = 0' . ($active ? ' AND `active` = 1' : '')
+				WHERE `id_customer` = ' . (int) $id_customer . ' AND `deleted` = 0' . ($active ? ' AND `active` = 1' : '') . '
+                ORDER BY `id_address` ASC'
             );
             Cache::store($cache_id, $result);
 
@@ -545,11 +525,14 @@ class AddressCore extends ObjectModel
     {
         $context = Context::getContext();
 
+        /*
+         * To save performance, we cache the result, here we resolve a unique hash
+         * depending on the parameters used to initialize the address.
+         */
         if ($id_address) {
             $context_hash = (int) $id_address;
         } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
-            $context_hash = md5((int) $context->customer->geoloc_id_country . '-' . (int) $context->customer->id_state . '-' .
-                                $context->customer->postcode);
+            $context_hash = md5((int) $context->customer->geoloc_id_country . '-' . (int) $context->customer->id_state . '-' . $context->customer->postcode);
         } else {
             $context_hash = md5((string) $context->country->id);
         }
@@ -557,29 +540,49 @@ class AddressCore extends ObjectModel
         $cache_id = 'Address::initialize_' . $context_hash;
 
         if (!Cache::isStored($cache_id)) {
-            // if an id_address has been specified retrieve the address
+            /*
+             * Case 1 - Specific address ID is provided. We just load it.
+             */
             if ($id_address) {
                 $address = new Address((int) $id_address);
 
                 if (!Validate::isLoadedObject($address)) {
                     throw new PrestaShopException('Invalid address #' . (int) $id_address);
                 }
+            /*
+             * Case 2 - We try to use geolocation information if allowed. However, geoloc_id_country
+             * is not set to the customer anywhere in the current codebase. Most geolocation logic either
+             * native or from modules depend on setting the country directly in the context. So, this will
+             * probably never work.
+             */
             } elseif ($with_geoloc && isset($context->customer->geoloc_id_country)) {
                 $address = new Address();
                 $address->id_country = (int) $context->customer->geoloc_id_country;
                 $address->id_state = (int) $context->customer->id_state;
                 $address->postcode = $context->customer->postcode;
+            /*
+             * Case 3 - There is already a country set in the context and it's not the shop country.
+             * This is pretty common if you either use geolocation modules or let the user select his country
+             * via a custom country selector on the front office.
+             */
             } elseif ((int) $context->country->id && ((int) $context->country->id != Configuration::get('PS_SHOP_COUNTRY_ID'))) {
                 $address = new Address();
                 $address->id_country = (int) $context->country->id;
                 $address->id_state = 0;
                 $address->postcode = '0';
+            /*
+             * Case 4 - If there is no country in the context, or the country is the same, we use the shop country.
+             * We also assign the state and postcode if available.
+             */
             } elseif ((int) Configuration::get('PS_SHOP_COUNTRY_ID')) {
                 // set the default address
                 $address = new Address();
                 $address->id_country = (int) Configuration::get('PS_SHOP_COUNTRY_ID');
                 $address->id_state = (int) Configuration::get('PS_SHOP_STATE_ID');
                 $address->postcode = Configuration::get('PS_SHOP_CODE');
+            /*
+             * Case 5 - As a last resort, we just use the default country. It will most likely be the shop country anyway.
+             */
             } else {
                 // set the default address
                 $address = new Address();
@@ -587,6 +590,8 @@ class AddressCore extends ObjectModel
                 $address->id_state = 0;
                 $address->postcode = '0';
             }
+
+            // Store it in cache, so we don't have to re-initialize it again
             Cache::store($cache_id, $address);
 
             return $address;

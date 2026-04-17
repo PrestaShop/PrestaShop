@@ -1,3 +1,7 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
 // Settings
 @import "config/settings";
 @import "config/keyframes";
@@ -26,6 +30,7 @@
 
 // Components
 @import "components/alert";
+@import "components/badges";
 @import "components/button";
 @import "components/button_groups";
 @import "components/cards";
@@ -97,6 +102,7 @@
 @import "pages/admin_api";
 @import "pages/discount";
 @import "pages/carrier";
+@import "pages/cms_page";
 
 // Main Layout
 @import "pages/modules";

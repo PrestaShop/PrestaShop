@@ -18,6 +18,14 @@ admin_discounts_search_grid:
     _legacy_link: AdminCartRules:submitFiltercart_rule
     _legacy_feature_flag: discount
 
+admin_discounts_reset_grid:
+  path: /reset_discount_search
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::resetSearchAction'
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
+
 admin_discounts_create:
   path: /new/{discountType}
   methods: [ GET, POST ]
@@ -44,6 +52,46 @@ admin_discount_toggle_status:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::toggleStatusAction'
     _legacy_controller: AdminCartRules
     _legacy_link: AdminCartRules:statuscart_rule
+    _legacy_feature_flag: discount
+    _legacy_parameters:
+      id_cart_rule: discountId
+  requirements:
+    discountId: \d+
+
+admin_discount_bulk_enable_status:
+  path: /bulk-status-enable
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::bulkEnableStatusAction
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
+    _legacy_link: AdminCartRules:statuscart_rule
+
+admin_discount_bulk_disable_status:
+  path: /bulk-status-disable
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::bulkDisableStatusAction
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
+    _legacy_link: AdminCartRules:statuscart_rule
+
+admin_discount_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::bulkDeleteAction
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
+    _legacy_link: AdminCartRules:submitBulkdeletecart_rule
+
+admin_discounts_duplicate:
+  path: /{discountId}/duplicate
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::duplicateAction'
+    _legacy_controller: AdminCartRules
+    _legacy_link: AdminCartRules:duplicatecart_rule
     _legacy_feature_flag: discount
     _legacy_parameters:
       id_cart_rule: discountId

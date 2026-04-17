@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
@@ -40,6 +20,7 @@ use DateInterval;
 use DateTime;
 use Exception;
 use PHPUnit\Framework\Assert;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Cart\Repository\CartRepository;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
@@ -1197,6 +1178,42 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['total'])) {
             Assert::assertSame($data['total'], $cartInfo->getSummary()->getTotalPriceWithTaxes());
+        }
+    }
+
+    /**
+     * @Then the cart :cartReference should have the following reductions:
+     */
+    public function checkCartRuleContextualValue(string $cartReference, TableNode $tableNode): void
+    {
+        $expectedCartRuleValues = $tableNode->getRowsHash();
+        $expectedCartRulesKeys = array_keys($expectedCartRuleValues);
+        $cart = new Cart($this->referenceToId($cartReference));
+        $cartRuleRows = $cart->getCartRules();
+
+        Assert::assertCount(count($expectedCartRuleValues), $cartRuleRows, 'Unexpected cart rules count in cart');
+
+        foreach ($cartRuleRows as $key => $cartRuleRow) {
+            $cartRuleReference = $expectedCartRulesKeys[$key];
+
+            Assert::assertTrue(
+                $this->getSharedStorage()->exists($cartRuleReference),
+                sprintf('cart rule by reference "%s" doesnt exist', $cartRuleReference)
+            );
+
+            Assert::assertSame(
+                (int) $cartRuleRow['id_cart_rule'],
+                $this->getSharedStorage()->get($cartRuleReference),
+                sprintf('Cart rule %s was not expected in cart (or the sequence is unexpected).', $cartRuleReference)
+            );
+
+            $expectedReduction = new DecimalNumber((string) $expectedCartRuleValues[$cartRuleReference]);
+            $actualReduction = new DecimalNumber((string) $cartRuleRow['value_real']);
+
+            Assert::assertTrue(
+                $actualReduction->equals($expectedReduction),
+                sprintf('Unexpected contextual reduction. Expected %s, got %s', $expectedReduction, $actualReduction)
+            );
         }
     }
 

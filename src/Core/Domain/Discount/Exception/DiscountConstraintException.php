@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Discount\Exception;
@@ -36,7 +16,7 @@ class DiscountConstraintException extends DiscountException
     public const INVALID_QUANTITY = 6;
     public const INVALID_QUANTITY_PER_USER = 7;
     public const INVALID_GIFT_PRODUCT = 8;
-    public const INVALID_PRODUCT_DISCOUNT_PROPERTIES = 9;
+    public const INVALID_MISSING_REDUCTION = 9;
     public const INVALID_ID = 10;
     public const INVALID_NAME = 11;
     public const INVALID_STATUS = 12;
@@ -74,4 +54,9 @@ class DiscountConstraintException extends DiscountException
     public const INVALID_MINIMUM_PRODUCT_QUANTITY = 44;
     public const INVALID_PRODUCTS_CONDITIONS = 45;
     public const INVALID_SPECIFIC_PRODUCTS = 46;
+    public const INVALID_COMPATIBLE_TYPE_IDS = 47;
+    public const INVALID_PRODUCT_DISCOUNT_MISSING_TARGET = 48;
+    public const INVALID_PRODUCT_DISCOUNT_INCOMPATIBLE_TARGETS = 49;
+    public const INVALID_PRODUCT_DISCOUNT_INCOMPATIBLE_REDUCTIONS = 50;
+    public const INVALID_GUEST_CUSTOMER = 51;
 }

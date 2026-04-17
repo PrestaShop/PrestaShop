@@ -1,5 +1,6 @@
 import testContext from '@utils/testContext';
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 import {expect} from 'chai';
 
 import {
@@ -57,6 +58,9 @@ describe('FO - Product page - Product page : Change combination', async () => {
     ],
     status: true,
   });
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -356,5 +360,8 @@ describe('FO - Product page - Product page : Change combination', async () => {
   });
 
   // Post-condition: Delete Product
-  deleteProductTest(newProductData, `${baseContext}_postTest`);
+  deleteProductTest(newProductData, `${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

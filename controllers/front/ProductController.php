@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Manufacturer\ManufacturerPresenter;
@@ -30,6 +10,10 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\Pricing\Product\Calculator\ProductCalculatorInterface;
+use PrestaShop\PrestaShop\Core\Pricing\Product\ProductPrice;
 use PrestaShop\PrestaShop\Core\Product\ProductExtraContentFinder;
 use PrestaShopBundle\Security\Admin\LegacyAdminTokenValidator;
 
@@ -305,7 +289,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         // Load category and store it in cookie
-        $this->category = new Category((int) $id_category, (int) $this->context->cookie->id_lang);
+        $this->category = new Category((int) $id_category, (int) $this->context->language->id);
         $this->context->cookie->last_visited_category = (int) $this->category->id_category;
     }
 
@@ -316,104 +300,102 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function initContent(): void
     {
-        if (!$this->errors) {
-            // Assign template vars related to the category + execute hooks related to the category
-            $this->assignCategory();
+        // Assign template vars related to the category + execute hooks related to the category
+        $this->assignCategory();
 
-            // Assign template vars related to manufacturer of the product
-            $this->assignManufacturer();
+        // Assign template vars related to manufacturer of the product
+        $this->assignManufacturer();
 
-            // Assign template vars related to the price and tax
-            $this->assignPriceAndTax();
+        // Assign template vars related to the price and tax
+        $this->assignPriceAndTax();
 
-            // Assign attributes combinations to the template
-            $this->assignAttributesCombinations();
+        // Assign attributes combinations to the template
+        $this->assignAttributesCombinations();
 
-            // Add notification about this product being in cart
-            $this->addCartQuantityNotification();
+        // Add notification about this product being in cart
+        $this->addCartQuantityNotification();
 
-            // Get our product itself
-            // At this phase, it's already a presented lazy array, ready to go
-            $product_for_template = $this->getTemplateVarProduct();
+        // Get our product itself
+        // At this phase, it's already a presented lazy array, ready to go
+        $product_for_template = $this->getTemplateVarProduct();
 
-            // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
-            $filteredProduct = Hook::exec(
-                'filterProductContent',
-                ['object' => $product_for_template],
-                null,
-                false,
-                true,
-                false,
-                null,
-                true
+        // Chained hook call - if multiple modules are hooked here, they will receive the result of the previous one as a parameter
+        $filteredProduct = Hook::exec(
+            'filterProductContent',
+            ['object' => $product_for_template],
+            null,
+            false,
+            true,
+            false,
+            null,
+            true
+        );
+        if (!empty($filteredProduct['object'])) {
+            $product_for_template = $filteredProduct['object'];
+        }
+
+        // Prepare product presenter for related items like packs and accessories
+        $assembler = new ProductAssembler($this->context);
+        $presenter = new ProductListingPresenter(
+            new ImageRetriever(
+                $this->context->link
+            ),
+            $this->context->link,
+            new PriceFormatter(),
+            new ProductColorsRetriever(),
+            $this->getTranslator()
+        );
+        $presentationSettings = $this->getProductPresentationSettings();
+
+        // Presenting pack items
+        $pack_items = $product_for_template['pack'] ? $product_for_template['packItems'] : [];
+        $pack_items = $assembler->assembleProducts($pack_items);
+        $presentedPackItems = [];
+        foreach ($pack_items as $item) {
+            $presentedPackItems[] = $presenter->present(
+                $presentationSettings,
+                $item,
+                $this->context->language
             );
-            if (!empty($filteredProduct['object'])) {
-                $product_for_template = $filteredProduct['object'];
-            }
+        }
 
-            // Prepare product presenter for related items like packs and accessories
-            $assembler = new ProductAssembler($this->context);
-            $presenter = new ProductListingPresenter(
-                new ImageRetriever(
-                    $this->context->link
-                ),
-                $this->context->link,
-                new PriceFormatter(),
-                new ProductColorsRetriever(),
-                $this->getTranslator()
-            );
-            $presentationSettings = $this->getProductPresentationSettings();
-
-            // Presenting pack items
-            $pack_items = $product_for_template['pack'] ? $product_for_template['packItems'] : [];
-            $pack_items = $assembler->assembleProducts($pack_items);
-            $presentedPackItems = [];
-            foreach ($pack_items as $item) {
-                $presentedPackItems[] = $presenter->present(
+        // Assign accessories
+        $accessories = $this->product->getAccessories($this->context->language->id);
+        if (is_array($accessories)) {
+            $accessories = $assembler->assembleProducts($accessories);
+            foreach ($accessories as &$accessory) {
+                $accessory = $presenter->present(
                     $presentationSettings,
-                    $item,
+                    $accessory,
                     $this->context->language
                 );
             }
-
-            // Assign accessories
-            $accessories = $this->product->getAccessories($this->context->language->id);
-            if (is_array($accessories)) {
-                $accessories = $assembler->assembleProducts($accessories);
-                foreach ($accessories as &$accessory) {
-                    $accessory = $presenter->present(
-                        $presentationSettings,
-                        $accessory,
-                        $this->context->language
-                    );
-                }
-                unset($accessory);
-            }
-
-            // Assign everything to the template
-            $this->context->smarty->assign([
-                'product' => $product_for_template,
-                // How to display prices, tax or no tax?
-                'priceDisplay' => Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer),
-                // If product is customized but not added to cart, ID of the customization
-                'id_customization' => empty($product_for_template['id_customization']) ? null : $product_for_template['id_customization'],
-                // Related products
-                'accessories' => $accessories,
-                // Should price per unit be displayed?
-                'displayUnitPrice' => !empty($product_for_template['unit_price_tax_excluded']),
-                // If product is a pack, pack contents
-                'packItems' => $presentedPackItems,
-                // Price of the product if it wasn't in the pack (should be migrated to lazy array)
-                'noPackPrice' => $product_for_template['nopackprice_to_display'],
-                // Should display the price of product if it wasn't in the pack?
-                'displayPackPrice' => !empty($product_for_template['pack']) && $product_for_template['price_amount'] < $product_for_template['nopackprice'],
-                // Variable containing information about a pack that this product belongs to
-                'packs' => Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1),
-            ]);
-
-            // Assign attribute groups to the template
-            $this->assignAttributesGroups($product_for_template);
+            unset($accessory);
         }
+
+        // Assign everything to the template
+        $this->context->smarty->assign([
+            'product' => $product_for_template,
+            // How to display prices, tax or no tax?
+            'priceDisplay' => Product::getTaxCalculationMethod((int) $this->context->cookie->id_customer),
+            // If product is customized but not added to cart, ID of the customization
+            'id_customization' => empty($product_for_template['id_customization']) ? null : $product_for_template['id_customization'],
+            // Related products
+            'accessories' => $accessories,
+            // Should price per unit be displayed?
+            'displayUnitPrice' => !empty($product_for_template['unit_price_tax_excluded']),
+            // If product is a pack, pack contents
+            'packItems' => $presentedPackItems,
+            // Price of the product if it wasn't in the pack (should be migrated to lazy array)
+            'noPackPrice' => $product_for_template['nopackprice_to_display'],
+            // Should display the price of product if it wasn't in the pack?
+            'displayPackPrice' => !empty($product_for_template['pack']) && $product_for_template['price_amount'] < $product_for_template['nopackprice'],
+            // Variable containing information about a pack that this product belongs to
+            'packs' => Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1),
+        ]);
+
+        // Assign attribute groups to the template
+        $this->assignAttributesGroups($product_for_template);
 
         parent::initContent();
     }
@@ -449,18 +431,18 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $this->ajaxRender(json_encode([
             'quickview_html' => $this->render('catalog/_partials/quickview', $productForTemplate->jsonSerialize()),
-            'product' => $productForTemplate,
+            'product' => $productForTemplate->getEmbeddedAttributes(),
         ]));
     }
 
     public function displayAjaxRefresh(): void
     {
         $product = $this->getTemplateVarProduct();
-        $minimalProductQuantity = $this->getProductMinimalQuantity($product);
 
-        // If the product is already in the cart, we can set the minimal quantity to 1
-        if ($product['cart_quantity'] >= $minimalProductQuantity) {
-            $minimalProductQuantity = 1;
+        // After refresh, we will show the customer a new quantity he has to use
+        $newMinimalQuantity = $product['quantity_required'];
+        if (empty($newMinimalQuantity)) {
+            $newMinimalQuantity = 1;
         }
 
         ob_end_clean();
@@ -498,7 +480,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     'adtoken' => Tools::getValue('adtoken'),
                 ] : []
             ),
-            'product_minimal_quantity' => $minimalProductQuantity,
+            // A new minimal quantity to use on the input after refresh
+            'product_minimal_quantity' => $newMinimalQuantity,
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
             'id_customization' => $product['id_customization'],
@@ -550,24 +533,24 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     protected function assignPriceAndTax(): void
     {
         $id_customer = (isset($this->context->customer) ? (int) $this->context->customer->id : 0);
-        $id_group = (int) Group::getCurrent()->id;
         $id_country = $id_customer ? (int) Customer::getCurrentCountry($id_customer) : (int) Tools::getCountry();
 
         // Tax
         $tax = (float) $this->product->getTaxesRate(new Address((int) $this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
         $this->context->smarty->assign('tax_rate', $tax);
 
-        $product_price_with_tax = Product::getPriceStatic($this->product->id, true, null, 6);
-        if (Product::$_taxCalculationMethod == PS_TAX_INC) {
-            $product_price_with_tax = Tools::ps_round($product_price_with_tax, 2);
-        }
-
-        $id_currency = (int) $this->context->cookie->id_currency;
-        $id_product = (int) $this->product->id;
         $id_product_attribute = $this->getIdProductAttributeByGroupOrRequestOrDefault();
-        $id_shop = $this->context->shop->id;
 
-        $quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute, false, (int) $this->context->customer->id);
+        $quantity_discounts = SpecificPrice::getQuantityDiscounts(
+            (int) $this->product->id,
+            (int) $this->context->shop->id,
+            (int) $this->context->currency->id,
+            $id_country,
+            (int) Group::getCurrent()->id,
+            $id_product_attribute,
+            false,
+            (int) $this->context->customer->id
+        );
         foreach ($quantity_discounts as &$quantity_discount) {
             if ($quantity_discount['id_product_attribute']) {
                 $combination = new Combination((int) $quantity_discount['id_product_attribute']);
@@ -583,7 +566,17 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
         unset($quantity_discount);
 
-        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $id_product_attribute, 6, null, false, false);
+        // New pricing engine (Phase 1): use ProductCalculator directly instead of getPrice
+        if ($this->isNewPricingEnabled()) {
+            $productPrice = ProductPrice::create(
+                (int) $this->product->id,
+                (int) $id_product_attribute,
+            );
+            $this->getProductCalculator()->compute($productPrice);
+            $product_price = (float) (string) $productPrice->getFinalPrice()->getTaxExcluded();
+        } else {
+            $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $id_product_attribute, 6, null, false, false);
+        }
 
         $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float) $tax, $this->product->ecotax);
 
@@ -649,8 +642,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
                 // Call getPriceStatic in order to set $combination_specific_price
                 if (!isset($combination_prices_set[(int) $row['id_product_attribute']])) {
-                    $combination_specific_price = null;
-                    Product::getPriceStatic((int) $this->product->id, false, $row['id_product_attribute'], 6, null, false, true, 1, false, null, null, null, $combination_specific_price);
+                    if ($this->isNewPricingEnabled()) {
+                        // Phase 1: no specific prices — specific_price concept will be replaced by the calculator pipeline
+                        $combination_specific_price = null;
+                    } else {
+                        $combination_specific_price = null;
+                        Product::getPriceStatic((int) $this->product->id, false, $row['id_product_attribute'], 6, null, false, true, 1, false, null, null, null, $combination_specific_price);
+                    }
                     $combination_prices_set[(int) $row['id_product_attribute']] = true;
                     $this->combinations[$row['id_product_attribute']]['specific_price'] = $combination_specific_price;
                 }
@@ -1184,33 +1182,57 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function getTemplateVarProduct(): ProductLazyArray
     {
-        $productSettings = $this->getProductPresentationSettings();
-        // Hook displayProductExtraContent
-        $extraContentFinder = new ProductExtraContentFinder();
-
+        // Convert product object into array
         $product = $this->objectPresenter->present($this->product);
+
+        // Assign several product properties to the array
         $product['description'] = $this->transformDescriptionWithImg($this->product->description);
+
+        /*
+         * This property is not a product property, but value from stock_available table. It must be here because on this page,
+         * it's not initialized in any other way. On listings, it goes through ProductAssembler and the property is included.
+         * In cart, it's also in the selected fields. But not here.
+         *
+         * We could centralize it right now, but the call StockAvailable::outOfStock($this->id) would still be called
+         * when constructing a Product object, so, let's just migrate it all at once later.
+         */
         $product['out_of_stock'] = (int) $this->product->out_of_stock;
         $product['id_product_attribute'] = $this->getIdProductAttributeByGroupOrRequestOrDefault();
+
+        // @todo These three properties should be migrated into the lazy array, so they are available also in listings
+        // Minimal quantity setting of this product or combination
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
+
+        // Quantity of this product in the current cart
         $product['cart_quantity'] = $this->context->cart->getProductQuantity((int) $this->product->id, $product['id_product_attribute'])['quantity'];
-        $product['quantity_wanted'] = $this->getRequiredQuantity($product);
-        $product['extraContent'] = $extraContentFinder->addParams(['product' => $this->product])->present();
+
+        // Quantity requested by the customer by the quantity input on product page - may be force-altered by us
+        // @todo - a centralized version of this method is implemented in ProductLazyArray - migrate to it when migrating this code
+        $product['quantity_wanted'] = $this->getWantedQuantity($product);
+
+        // Required quantity to add to cart to reach minimal quantity
+        // @todo - a centralized version of this method is implemented in ProductLazyArray - migrate to it when migrating this code
+        $product['quantity_required'] = $this->getRequiredQuantity($product);
+
+        // Render hook displayProductExtraContent
+        $product['extraContent'] = (new ProductExtraContentFinder())->addParams(['product' => $this->product])->present();
         $product['ecotax_tax_inc'] = $this->product->getEcotax(null, true, true);
         $product['ecotax'] = Tools::convertPrice($this->getProductEcotax($product), $this->context->currency, true, $this->context);
 
+        // Enrich the product array
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
+        // Add possible customizations
         $product_full = $this->addProductCustomizationData($product_full);
 
         $product_full['show_quantities'] = (bool) (
             Configuration::get('PS_DISPLAY_QTIES')
             && Configuration::get('PS_STOCK_MANAGEMENT')
-            && $this->product->quantity > 0
+            && $product_full['quantity'] > 0
             && $this->product->available_for_order
             && !Configuration::isCatalogMode()
         );
-        $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->trans('Items', [], 'Shop.Theme.Catalog') : $this->trans('Item', [], 'Shop.Theme.Catalog');
+        $product_full['quantity_label'] = ($product_full['quantity'] > 1) ? $this->trans('Items', [], 'Shop.Theme.Catalog') : $this->trans('Item', [], 'Shop.Theme.Catalog');
         $product_full['quantity_discounts'] = $this->quantity_discounts;
 
         $group_reduction = GroupReduction::getValueForProduct($this->product->id, (int) Group::getCurrent()->id);
@@ -1220,32 +1242,42 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full['customer_group_discount'] = $group_reduction;
         $product_full['title'] = $this->getProductPageTitle();
 
+        // And finally, present it in the modern way
         return $this->getProductPresenter()->present(
-            $productSettings,
+            $this->getProductPresentationSettings(),
             $product_full,
             $this->context->language
         );
     }
 
     /**
+     * Gets the minimal quantity allowed for the product or its combination. With no adjustments
+     * by the current context.
+     *
+     * @todo This method should be migrated to ProductLazyArray, so it's available also in listings.
+     *
      * @param array $product
      *
-     * @return int
+     * @return int Minimal quantity of product from it's settings, always a positive integer
      */
     protected function getProductMinimalQuantity(ProductLazyArray|array $product)
     {
-        $minimal_quantity = 1;
+        $minimalQuantity = 1;
 
         if ($product['id_product_attribute']) {
             $combination = $this->findProductCombinationById($product['id_product_attribute']);
             if ($combination['minimal_quantity']) {
-                $minimal_quantity = $combination['minimal_quantity'];
+                $minimalQuantity = (int) $combination['minimal_quantity'];
             }
         } else {
-            $minimal_quantity = $this->product->minimal_quantity;
+            $minimalQuantity = (int) $this->product->minimal_quantity;
         }
 
-        return $minimal_quantity;
+        if ($minimalQuantity < 1) {
+            $minimalQuantity = 1;
+        }
+
+        return $minimalQuantity;
     }
 
     /**
@@ -1282,7 +1314,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /**
      * @param int $combinationId
      *
-     * @return ProductController|null
+     * @return array<string, mixed>|null
      */
     public function findProductCombinationById(int $combinationId)
     {
@@ -1296,22 +1328,62 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
+     * Gets the minimal quantity the customer has to purchase. We cannot just let him buy 1 piece
+     * if the minimal quantity is higher. Also, we adjust it by the quantity already in cart.
+     *
+     * @todo This method should be migrated to ProductLazyArray, so it's available also in listings.
+     *       It's already implemented there.
+     *
      * @param array $product
      *
-     * @return int
+     * @return int Minimal quantity of product the customer buy right now, always a positive integer
      */
-    protected function getRequiredQuantity(array $product)
+    protected function getRequiredQuantity(ProductLazyArray|array $product)
     {
-        $requiredQuantity = (int) Tools::getValue('quantity_wanted', $this->getProductMinimalQuantity($product));
-        if ($requiredQuantity < $product['minimal_quantity']) {
-            $requiredQuantity = $product['minimal_quantity'];
+        // For the required quantity, we will need to limit it by the minimal quantity on the low side.
+        $requiredQuantityForPurchase = $this->getProductMinimalQuantity($product);
+
+        /*
+         * We reduce it by the quantity we already have in cart. If the user already has a sufficient
+         * quantity in the cart, we don't need to add more. Although it may seem that we can just reset
+         * the minimal quantity to one in that case, we must not do that, because the quantity in the cart
+         * may not be the correct one.
+         */
+        if (!empty($product['cart_quantity'])) {
+            $requiredQuantityForPurchase -= $product['cart_quantity'];
+            if ($requiredQuantityForPurchase < 1) {
+                $requiredQuantityForPurchase = 1;
+            }
         }
 
-        if ($product['cart_quantity'] >= $requiredQuantity) {
-            return 0;
+        return $requiredQuantityForPurchase;
+    }
+
+    /**
+     * Gets the quantity wanted by the customer for the product. We will take his request,
+     * but we will adjust it if it's lower than the required quantity.
+     *
+     * @todo This method should be migrated to ProductLazyArray, so it's available also in listings.
+     *       It's already implemented there.
+     *
+     * @param array $product
+     *
+     * @return int Quantity of product requested by the customer, altered if needed, always a positive integer
+     */
+    public function getWantedQuantity(ProductLazyArray|array $product): int
+    {
+        // Get the quantity wanted from the request
+        $quantityWantedByTheCustomer = (int) Tools::getValue('quantity_wanted', 1);
+
+        // Get minimal required quantity for purchase
+        $requiredQuantityForPurchase = $this->getRequiredQuantity($product);
+
+        // If the wanted quantity is lower than the required, we adjust it
+        if ($quantityWantedByTheCustomer < $requiredQuantityForPurchase) {
+            $quantityWantedByTheCustomer = $requiredQuantityForPurchase;
         }
 
-        return $requiredQuantity;
+        return $quantityWantedByTheCustomer;
     }
 
     /**
@@ -1582,5 +1654,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function setPreviewMode(bool $enabled = true)
     {
         $this->isPreview = $enabled;
+    }
+
+    protected function isNewPricingEnabled(): bool
+    {
+        try {
+            $featureFlagManager = $this->container->get(FeatureFlagStateCheckerInterface::class);
+
+            return $featureFlagManager !== null && $featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_NEW_PRICING);
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    protected function getProductCalculator(): ProductCalculatorInterface
+    {
+        return $this->container->get('prestashop.pricing.cart.product_calculator');
     }
 }

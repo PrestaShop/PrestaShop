@@ -7,7 +7,7 @@ import OrderWS from '@webservices/order/orderWs';
 
 // Import commonTests
 import {addWebserviceKey, removeWebserviceKey, setWebserviceStatus} from '@commonTests/BO/advancedParameters/ws';
-import createShoppingCart from '@commonTests/FO/classic/shoppingCart';
+import createShoppingCart from '@commonTests/FO/hummingbird/shoppingCart';
 
 // Import data
 import getOrderXml from '@data/xml/order';
@@ -75,7 +75,6 @@ describe('WS - Orders : CRUD', async () => {
   let xmlResponseCreate: string;
   let xmlResponseUpdate: string;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);

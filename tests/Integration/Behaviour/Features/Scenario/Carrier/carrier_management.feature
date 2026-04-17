@@ -776,6 +776,26 @@ Feature: Carrier management
       | rangeBehavior    | disabled                           |
     Then carrier should throw an error with error code "INVALID_ZONE_MISSING"
 
+  Scenario: Add a new carrier with a wrong grade
+    When I create carrier "carrier1" with specified properties:
+      | name             | Carrier 1                          |
+      | grade            | 10                                 |
+      | trackingUrl      | http://example.com/track.php?num=@ |
+      | active           | true                               |
+      | max_width        | 1454                               |
+      | max_height       | 1234                               |
+      | max_depth        | 1111                               |
+      | max_weight       | 3864                               |
+      | group_access     | visitor, guest                     |
+      | delay[en-US]     | Shipping delay                     |
+      | delay[fr-FR]     | Délai de livraison                 |
+      | shippingHandling | false                              |
+      | isFree           | false                              |
+      | shippingMethod   | weight                             |
+      | zones            | zone1                              |
+      | rangeBehavior    | disabled                           |
+    Then carrier should throw an error with error code "INVALID_GRADE"
+
   Scenario: Edit a new carrier and delete all zone
     When I create carrier "carrier1" with specified properties:
       | name             | Carrier 1                          |

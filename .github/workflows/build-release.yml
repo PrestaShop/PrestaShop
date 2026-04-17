@@ -1,0 +1,51 @@
+name: Build Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Tag, branch or commit value to build'
+        required: true
+
+permissions:
+  contents: read   #   to fetch code (actions/checkout)
+
+jobs:
+  build-release:
+    name: Build Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref }}
+          path: prestashop-src
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          # Commit builds can't determine PS version from ref; we assume that builds from commits will be v9+ only, so fallback is Node 20
+          node-version: ${{ startsWith(github.event.inputs.ref, '8.') && '16' || '20' }}
+
+      - name: Create build
+        working-directory: ${{ github.workspace }}/prestashop-src
+        run: |
+          php tools/build/CreateRelease.php \
+            --destination-dir="${{ github.workspace }}/build-release-output" \
+            --distribution=open_source
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-source-archive
+          path: |
+            ${{ github.workspace }}/build-release-output/prestashop_*.zip
+            ${{ github.workspace }}/build-release-output/prestashop_*.xml

@@ -7,10 +7,10 @@ import {
   boOrderSettingsPage,
   type BrowserContext,
   dataCustomers,
-  foClassicHomePage,
-  foClassicLoginPage,
-  foClassicMyAccountPage,
-  foClassicMyOrderHistoryPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  foHummingbirdMyAccountPage,
+  foHummingbirdMyOrderHistoryPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -78,9 +78,9 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
       // Click on view my shop
       page = await boOrderSettingsPage.viewMyShop(page);
       // Change language
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page is not displayed').to.eq(true);
     });
 
@@ -88,18 +88,18 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
       await testContext.addContextItem(this, 'testIdentifier', `checkReorderingOption${index}`, baseContext);
 
       // Login FO
-      await foClassicHomePage.goToLoginPage(page);
-      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+      await foHummingbirdHomePage.goToLoginPage(page);
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
       expect(isCustomerConnected).to.eq(true);
 
       // Go to order history page
-      await foClassicHomePage.goToMyAccountPage(page);
-      await foClassicMyAccountPage.goToHistoryAndDetailsPage(page);
+      await foHummingbirdHomePage.goToMyAccountPage(page);
+      await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
 
       // Check reorder link
-      const isReorderLinkVisible = await foClassicMyOrderHistoryPage.isReorderLinkVisible(page);
+      const isReorderLinkVisible = await foHummingbirdMyOrderHistoryPage.isReorderLinkVisible(page);
       expect(isReorderLinkVisible).to.be.equal(test.args.reorderOption);
     });
 
@@ -107,8 +107,8 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Logout FO
-      await foClassicMyOrderHistoryPage.logout(page);
-      page = await foClassicMyOrderHistoryPage.closePage(browserContext, page, 0);
+      await foHummingbirdMyOrderHistoryPage.logout(page);
+      page = await foHummingbirdMyOrderHistoryPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boOrderSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);

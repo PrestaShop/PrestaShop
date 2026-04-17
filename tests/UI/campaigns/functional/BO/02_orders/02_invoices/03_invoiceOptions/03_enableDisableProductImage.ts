@@ -11,12 +11,12 @@ import {
   dataCustomers,
   dataOrderStatuses,
   dataPaymentMethods,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicCheckoutOrderConfirmationPage,
-  foClassicHomePage,
-  foClassicLoginPage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdCheckoutOrderConfirmationPage,
+  foHummingbirdHomePage,
+  foHummingbirdLoginPage,
+  foHummingbirdProductPage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -96,27 +96,27 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           // Click on view my shop
           page = await boInvoicesPage.viewMyShop(page);
           // Change FO language
-          await foClassicHomePage.changeLanguage(page, 'en');
+          await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-          const isHomePage = await foClassicHomePage.isHomePage(page);
-          expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+          const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+          expect(isHomePage).to.eq(true);
         });
 
         it('should go to login page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToLoginFO${index}`, baseContext);
 
-          await foClassicHomePage.goToLoginPage(page);
+          await foHummingbirdHomePage.goToLoginPage(page);
 
-          const pageTitle = await foClassicLoginPage.getPageTitle(page);
-          expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
+          const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+          expect(pageTitle).to.contains(foHummingbirdLoginPage.pageTitle);
         });
 
         it('should sign in with default customer', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `sighInFO${index}`, baseContext);
 
-          await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+          await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
 
-          const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+          const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
         });
 
@@ -124,13 +124,13 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
           // Go to home page
-          await foClassicLoginPage.goToHomePage(page);
+          await foHummingbirdLoginPage.goToHomePage(page);
           // Go to the first product page
-          await foClassicHomePage.goToProductPage(page, 1);
+          await foHummingbirdHomePage.goToProductPage(page, 1);
           // Add the product to the cart
-          await foClassicProductPage.addProductToTheCart(page);
+          await foHummingbirdProductPage.addProductToTheCart(page);
 
-          const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+          const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
           expect(notificationsNumber).to.be.equal(1);
         });
 
@@ -138,10 +138,10 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
           // Proceed to checkout the shopping cart
-          await foClassicCartPage.clickOnProceedToCheckout(page);
+          await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
           // Address step - Go to delivery step
-          const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+          const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
           expect(isStepAddressComplete, 'Step Address is not complete').to.eq(true);
         });
 
@@ -149,7 +149,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
           // Delivery step - Go to payment step
-          const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+          const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
           expect(isStepDeliveryComplete, 'Step Address is not complete').to.eq(true);
         });
 
@@ -157,19 +157,19 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await testContext.addContextItem(this, 'testIdentifier', `confirmOrder${index}`, baseContext);
 
           // Payment step - Choose payment step
-          await foClassicCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
+          await foHummingbirdCheckoutPage.choosePaymentAndOrder(page, dataPaymentMethods.wirePayment.moduleName);
 
           // Check the confirmation message
-          const cardTitle = await foClassicCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
-          expect(cardTitle).to.contains(foClassicCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
+          const cardTitle = await foHummingbirdCheckoutOrderConfirmationPage.getOrderConfirmationCardTitle(page);
+          expect(cardTitle).to.contains(foHummingbirdCheckoutOrderConfirmationPage.orderConfirmationCardTitle);
         });
 
         it('should sign out from FO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `sighOutFO${index}`, baseContext);
 
-          await foClassicCheckoutOrderConfirmationPage.logout(page);
+          await foHummingbirdCheckoutOrderConfirmationPage.logout(page);
 
-          const isCustomerConnected = await foClassicCheckoutOrderConfirmationPage.isCustomerConnected(page);
+          const isCustomerConnected = await foHummingbirdCheckoutOrderConfirmationPage.isCustomerConnected(page);
           expect(isCustomerConnected, 'Customer is connected').to.eq(false);
         });
 
@@ -177,7 +177,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
           // Close page and init page objects
-          page = await foClassicCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
+          page = await foHummingbirdCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
           const pageTitle = await boInvoicesPage.getPageTitle(page);
           expect(pageTitle).to.contains(boInvoicesPage.pageTitle);

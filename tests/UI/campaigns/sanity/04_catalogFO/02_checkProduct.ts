@@ -5,8 +5,8 @@ import {expect} from 'chai';
 import {
   type BrowserContext,
   dataProducts,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -36,25 +36,25 @@ describe('FO - Catalog : Check the Product page', async () => {
     it('should open the shop page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await foClassicHomePage.goTo(page, global.FO.URL);
+      await foHummingbirdHomePage.goTo(page, global.FO.URL);
 
-      const result = await foClassicHomePage.isHomePage(page);
+      const result = await foHummingbirdHomePage.isHomePage(page);
       expect(result).to.eq(true);
     });
 
     it('should go to the first product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle).to.contains(dataProducts.demo_1.name);
     });
 
     it('should check the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPage', baseContext);
 
-      const result = await foClassicProductPage.getProductInformation(page);
+      const result = await foHummingbirdProductPage.getProductInformation(page);
       await Promise.all([
         expect(result.name).to.equal(dataProducts.demo_1.name),
         expect(result.price).to.equal(dataProducts.demo_1.finalPrice),

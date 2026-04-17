@@ -1,0 +1,99 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{{ form_start(editProductForm, {
+  attr: {
+    class: 'form-horizontal',
+  }
+}) }}
+
+  <div class="mb-3 d-flex align-items-center p-2 bg-light rounded border">
+    <img
+      class="mr-3 object-fit-contain"
+      id="editProductImg"
+      class="rounded"
+      src=""
+      alt=""
+      width="60"
+      height="60"
+    >
+    <span id="editProductName"></span>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label class="form-control-label" for="{{ editProductForm.price_tax_excluded.vars.id }}">
+          {{ 'Price (tax excl.)'|trans({}, 'Admin.Global') }}
+        </label>
+        {{ form_widget(editProductForm.price_tax_excluded) }}
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label class="form-control-label" for="{{ editProductForm.price_tax_included.vars.id }}">
+          {{ 'Price (tax incl.)'|trans({}, 'Admin.Global') }}
+        </label>
+        {{ form_widget(editProductForm.price_tax_included) }}
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label class="form-control-label">
+          {{ 'Total (tax incl.)'|trans({}, 'Admin.Global') }}
+        </label>
+        <div class="input-group money-type">
+          <div class="input-group-prepend">
+            <span class="input-group-text">{{ currencySymbol }}</span>
+          </div>
+        <input type="number" class="js-comma-transformer form-control" readonly id="editProductTotalTaxIncl">
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group{% if shipments is not empty %} d-none{% endif %}">
+    <label class="form-control-label">
+      {{ 'Quantity'|trans({}, 'Admin.Global') }}
+    </label>
+    {{ form_widget(editProductForm.quantity) }}
+  </div>
+
+  {% if orderForViewing.hasInvoice() %}
+    <div class="form-group mb-0">
+      <label class="form-control-label" for="{{ editProductForm.invoice.vars.id }}">
+        {{ 'Invoice'|trans({}, 'Admin.Global') }}
+      </label>
+      {{ form_widget(editProductForm.invoice) }}
+    </div>
+  {% else %}
+    {% do editProductForm.invoice.setRendered() %}
+  {% endif %}
+
+  {% if shipments is not empty %}
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>{{ 'Shipment'|trans({}, 'Admin.Global') }}</th>
+          <th class="text-right text-nowrap">{{ 'Quantity'|trans({}, 'Admin.Global') }} <small class="shipment-table-qty-counter text-muted"></small></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for shipment in shipments %}
+          <tr>
+            <td class="w-100">{{ 'Shipment'|trans({}, 'Admin.Global') }} {{ shipment.shipmentId }}</td>
+            <td class="text-right">
+              <input type="number" class="form-control js-shipment-quantity" value="{{ shipment.quantity }}" data-shipment-id="{{ shipment.shipmentId }}">
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  {% do editProductForm.cancel.setRendered() %}
+  {% do editProductForm.save.setRendered() %}
+
+{{ form_end(editProductForm) }}

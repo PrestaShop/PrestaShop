@@ -5,7 +5,7 @@ import {expect} from 'chai';
 import {
   boLoginPage,
   type BrowserContext,
-  foClassicHomePage,
+  foHummingbirdHomePage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -40,7 +40,7 @@ describe('BO - Login : Check links', async () => {
 
     await boLoginPage.clickOnBackToShopNameLink(page);
 
-    const result = await foClassicHomePage.isHomePage(page);
+    const result = await foHummingbirdHomePage.isHomePage(page);
     expect(result).to.equal(true);
   });
 

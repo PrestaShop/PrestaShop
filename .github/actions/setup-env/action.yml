@@ -9,7 +9,7 @@ inputs:
   NODE_VERSION:
     required: false
     description: Node Version to Build Themes
-    default: 16.20.1
+    default: 20.19.5
   DB_SERVER:
     required: false
     description: Database Server for PrestaShop (mysql/mariadb)
@@ -50,7 +50,7 @@ runs:
         ## Install MkCert
           sudo apt-get --allow-releaseinfo-change update
           sudo apt install libnss3-tools
-          curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
+          curl --retry 5 --retry-all-errors -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
           chmod +x mkcert-v*-linux-amd64
           sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
           ## Generate certificate
@@ -89,6 +89,7 @@ runs:
         DB_PASSWD: 'prestashop'
         PS_LANGUAGE: 'en'
         ADMIN_PASSWD: 'Correct Horse Battery Staple'
+        TIMEZONE: 'Europe/Paris'
       run: |
         cd ${{ inputs.PRESTASHOP_DIR }}
         if [[ "${{ inputs.DOCKER_DAEMON }}" = "true" ]]; then

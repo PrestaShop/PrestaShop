@@ -33,7 +33,6 @@ Feature: Cart rule (percent) calculation with one cart rule
       | code                         | cartRuleFiftyPercent   |
       | discount_percentage          | 50                     |
       | apply_to_discounted_products | true                   |
-      | discount_application_type    | specific_product       |
       | discount_product             | product_without_ecotax |
     And I select address "address1" in my cart
     When I add 1 item of product "product_without_ecotax" in my cart
@@ -52,7 +51,6 @@ Feature: Cart rule (percent) calculation with one cart rule
       | code                         | cartRuleFiftyPercent |
       | discount_percentage          | 50                   |
       | apply_to_discounted_products | true                 |
-      | discount_application_type    | specific_product     |
       | discount_product             | product_with_ecotax  |
     And I select address "address1" in my cart
     When I add 1 item of product "product_with_ecotax" in my cart
@@ -71,7 +69,6 @@ Feature: Cart rule (percent) calculation with one cart rule
       | code                         | cartRuleFiftyPercent |
       | discount_percentage          | 50                   |
       | apply_to_discounted_products | true                 |
-      | discount_application_type    | specific_product     |
       | discount_product             | product_with_ecotax  |
     Given Ecotax belongs to tax group "taxRule4Percent"
     And I select address "address1" in my cart

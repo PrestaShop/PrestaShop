@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Discount\Repository;
@@ -29,6 +9,7 @@ namespace PrestaShop\PrestaShop\Adapter\Discount\Repository;
 use CartRule;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Discount\Validate\DiscountValidator;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\CannotAddDiscountException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\CannotDeleteDiscountException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\CannotUpdateDiscountException;
@@ -47,15 +28,16 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 class DiscountRepository extends AbstractObjectModelRepository
 {
     public function __construct(
-        protected readonly DiscountValidator $cartRuleValidator,
+        protected readonly DiscountValidator $discountValidator,
         protected readonly Connection $connection,
-        protected readonly string $dbPrefix
+        protected readonly string $dbPrefix,
+        protected readonly ConfigurationInterface $configuration,
     ) {
     }
 
     public function add(CartRule $cartRule): CartRule
     {
-        $this->cartRuleValidator->validate($cartRule);
+        $this->discountValidator->validate($cartRule);
         $this->addObjectModel($cartRule, CannotAddDiscountException::class);
 
         return $cartRule;
@@ -71,6 +53,24 @@ class DiscountRepository extends AbstractObjectModelRepository
         );
 
         return $cartRule;
+    }
+
+    public function getQuantityUsedInOrders(DiscountId $discountId): int
+    {
+        $qb = $this->connection->createQueryBuilder();
+
+        return (int) $qb
+            ->select('COUNT(*)')
+            ->from($this->dbPrefix . 'orders', 'o')
+            ->leftJoin('o', $this->dbPrefix . 'order_cart_rule', 'ocr', 'ocr.id_order = o.id_order')
+            ->where('ocr.deleted = 0')
+            ->andWhere('ocr.id_cart_rule = :cartRuleId')
+            ->andWhere('o.current_state != :orderErrorStateId')
+            ->setParameter('cartRuleId', $discountId->getValue())
+            ->setParameter('orderErrorStateId', (int) $this->configuration->get('PS_OS_ERROR'))
+            ->executeQuery()
+            ->fetchOne()
+        ;
     }
 
     /**
@@ -145,15 +145,13 @@ class DiscountRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param DiscountId $discountId
-     *
      * @return int[]
      */
-    public function getCarriers(DiscountId $discountId): array
+    public function getCarriersIds(DiscountId $discountId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select('*')
+            ->select('crc.id_carrier')
             ->from($this->dbPrefix . 'cart_rule_carrier', 'crc')
             ->where('crc.id_cart_rule = :discountId')
             ->setparameter('discountId', $discountId->getValue())
@@ -162,17 +160,84 @@ class DiscountRepository extends AbstractObjectModelRepository
         return array_map(fn (array $row) => (int) $row['id_carrier'], $qb->executeQuery()->fetchAllAssociative());
     }
 
-    public function getCountries(DiscountId $discountId)
+    /**
+     * @return int[]
+     */
+    public function getCountriesIds(DiscountId $discountId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select('*')
+            ->select('crc.id_country')
             ->from($this->dbPrefix . 'cart_rule_country', 'crc')
             ->where('crc.id_cart_rule = :discountId')
             ->setparameter('discountId', $discountId->getValue())
         ;
 
         return array_map(fn (array $row) => (int) $row['id_country'], $qb->executeQuery()->fetchAllAssociative());
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getCustomerGroupsIds(DiscountId $discountId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('crg.id_group')
+            ->from($this->dbPrefix . 'cart_rule_group', 'crg')
+            ->where('crg.id_cart_rule = :discountId')
+            ->setparameter('discountId', $discountId->getValue())
+        ;
+
+        return array_map(fn (array $row) => (int) $row['id_group'], $qb->executeQuery()->fetchAllAssociative());
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getCompatibleTypesIds(DiscountId $discountId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('crt.id_cart_rule_type')
+            ->from($this->dbPrefix . 'cart_rule_compatible_types', 'crt')
+            ->where('crt.id_cart_rule = :discountId')
+            ->setparameter('discountId', $discountId->getValue())
+        ;
+
+        return array_map(fn (array $row) => (int) $row['id_cart_rule_type'], $qb->executeQuery()->fetchAllAssociative());
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getGroupsIds(DiscountId $discountId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('crg.id_group')
+            ->from($this->dbPrefix . 'cart_rule_group', 'crg')
+            ->where('crg.id_cart_rule = :discountId')
+            ->setparameter('discountId', $discountId->getValue())
+        ;
+
+        return array_map(fn (array $row) => (int) $row['id_group'], $qb->executeQuery()->fetchAllAssociative());
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getShopsIds(DiscountId $discountId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('crs.id_shop')
+            ->from($this->dbPrefix . 'cart_rule_shop', 'crs')
+            ->where('crs.id_cart_rule = :discountId')
+            ->setparameter('discountId', $discountId->getValue())
+        ;
+
+        return array_map(fn (array $row) => (int) $row['id_shop'], $qb->executeQuery()->fetchAllAssociative());
     }
 
     /**
@@ -198,7 +263,7 @@ class DiscountRepository extends AbstractObjectModelRepository
 
     public function partialUpdate(CartRule $cartRule, array $updatableProperties, int $errorCode): void
     {
-        $this->cartRuleValidator->validate($cartRule);
+        $this->discountValidator->validate($cartRule);
 
         $this->partiallyUpdateObjectModel(
             $cartRule,

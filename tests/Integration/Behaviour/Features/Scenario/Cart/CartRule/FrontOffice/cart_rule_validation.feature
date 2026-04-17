@@ -72,11 +72,7 @@ Feature: Cart rule application is validated before it is applied to cart
     And I create carrier "carrier1" with specified properties:
       | name | Carrier 1 |
       | zones| zone1     |
-    And I restrict following carriers for cart rule cart_rule_4:
-      | restricted carriers | carrier1 |
-    And I save all the restrictions for cart rule cart_rule_4
-    And cart rule cart_rule_4 should have the following properties:
-      | restricted carriers | carrier1 |
+    And I restrict following carriers "carrier1" for cart rule "cart_rule_4"
     And I select carrier "carrier1" in my cart
     And I should have 0 products in my cart
     When I apply the voucher code "foo3"
@@ -134,7 +130,6 @@ Feature: Cart rule application is validated before it is applied to cart
     When I apply the voucher code "foo4"
     Then I should get cart rule validation error saying "You cannot use this voucher with these products"
     And my cart total should be 66.436 tax included
-    And my cart total using previous calculation method should be 66.436 tax included
     And I add 1 items of product "product2" in my cart
     And my cart total should be 98.82 tax included
     When I apply the voucher code "foo4"

@@ -41,36 +41,86 @@ Feature: Update product stock from Back Office (BO)
       | low_stock_alert     | false     |
       | available_date      |           |
 
-  Scenario: I update product pack stock type
+  Scenario: I update product pack stock type and check its quantity
     Given I add product "productPack1" with following information:
       | name[en-US] | weird sunglasses box |
       | type        | pack                 |
     And product "productPack1" type should be pack
-    And I add product "product2" with following information:
+    And I update product "productPack1" stock with following information:
+      | delta_quantity | 100 |
+      | location       | dtc |
+    And I add product "shady_sunglasses" with following information:
       | name[en-US] | shady sunglasses |
       | type        | standard         |
-    And product "product2" type should be standard
+    And I update product "shady_sunglasses" stock with following information:
+      | delta_quantity | 50  |
+      | location       | dtc |
+    And product "shady_sunglasses" type should be standard
+    And I add product "stylish_hat" with following information:
+      | name[en-US] | stylish hat |
+      | type        | standard    |
+    And product "stylish_hat" type should be standard
+    And I update product "stylish_hat" stock with following information:
+      | delta_quantity | 20  |
+      | location       | dtc |
     When I update pack "productPack1" with following product quantities:
-      | product  | quantity |
-      | product2 | 5        |
+      | product          | quantity |
+      | shady_sunglasses | 5        |
+      | stylish_hat      | 1        |
     Then product "productPack1" type should be pack
     And pack "productPack1" should contain products with following details:
-      | product  | combination | quantity | name             | image url                                              |
-      | product2 |             | 5        | shady sunglasses | http://myshop.com/img/p/{no_picture}-small_default.jpg |
+      | product          | combination | quantity | name             | image url                                              |
+      | shady_sunglasses |             | 5        | shady sunglasses | http://myshop.com/img/p/{no_picture}-small_default.jpg |
+      | stylish_hat      |             | 1        | stylish hat      | http://myshop.com/img/p/{no_picture}-small_default.jpg |
+    # With default configuration, use pack only
     And product "productPack1" should have following stock information:
       | pack_stock_type | default |
+      | quantity        | 100     |
+      | pack_quantity   | 100     |
     When I update product "productPack1" with following values:
       | pack_stock_type | pack_only |
+    # With pack only same behaviour
     Then product "productPack1" should have following stock information:
       | pack_stock_type | pack_only |
+      | quantity        | 100       |
+      | pack_quantity   | 100       |
     When I update product "productPack1" with following values:
       | pack_stock_type | products_only |
+    # Use products only, stylish hat minimum is 20, sunglasses minimum is 10 (stock available / quantity in pack = 50 / 5), so 10 is the minimum
     Then product "productPack1" should have following stock information:
       | pack_stock_type | products_only |
+      | quantity        | 100           |
+      | pack_quantity   | 10            |
+    And I update product "productPack1" stock with following information:
+      | delta_quantity | -95 |
+      | location       | dtc |
+    Then product "productPack1" should have following stock information:
+      | pack_stock_type | products_only |
+      | quantity        | 5             |
+      | pack_quantity   | 10            |
+    # Now both are used but pack quantity is only 5 now, so this minimum is used
     When I update product "productPack1" with following values:
       | pack_stock_type | both |
     Then product "productPack1" should have following stock information:
       | pack_stock_type | both |
+      | quantity        | 5    |
+      | pack_quantity   | 5    |
+    And I update product "productPack1" stock with following information:
+      | delta_quantity | 10  |
+      | location       | dtc |
+    Then product "productPack1" should have following stock information:
+      | pack_stock_type | both |
+      | quantity        | 15   |
+      | pack_quantity   | 10   |
+    # Update the required quantity, stylish hat is now the one with minimum quantity (20 / 10)
+    When I update pack "productPack1" with following product quantities:
+      | product          | quantity |
+      | shady_sunglasses | 5        |
+      | stylish_hat      | 10       |
+    Then product "productPack1" should have following stock information:
+      | pack_stock_type | both |
+      | quantity        | 15   |
+      | pack_quantity   | 2    |
     When I update product "productPack1" with following values:
       | pack_stock_type | invalid |
     Then I should get error that pack stock type is invalid
@@ -120,8 +170,8 @@ Feature: Update product stock from Back Office (BO)
       | quantity | 51  |
       | location | dtc |
     And product "product1" last stock movements should be:
-      | employee   | delta_quantity |
-      | Puff Daddy | 51             |
+      | employee     | delta_quantity |
+      | Puffin Mummy | 51             |
     And product "product1" last stock movement increased by 51
     When I update product "product1" stock with following information:
       | delta_quantity | -9 |
@@ -130,9 +180,9 @@ Feature: Update product stock from Back Office (BO)
       | quantity | 42 |
       | location |    |
     And product "product1" last stock movements should be:
-      | employee   | delta_quantity |
-      | Puff Daddy | -9             |
-      | Puff Daddy | 51             |
+      | employee     | delta_quantity |
+      | Puffin Mummy | -9             |
+      | Puffin Mummy | 51             |
     And product "product1" last stock movement decreased by 9
     # Next assert makes sure that 0 delta quantity is valid input for command but is skipped and stock does not move
     When I update product "product1" stock with following information:
@@ -140,9 +190,9 @@ Feature: Update product stock from Back Office (BO)
     Then product "product1" should have following stock information:
       | quantity | 42 |
     And product "product1" last stock movements should be:
-      | employee   | delta_quantity |
-      | Puff Daddy | -9             |
-      | Puff Daddy | 51             |
+      | employee     | delta_quantity |
+      | Puffin Mummy | -9             |
+      | Puffin Mummy | 51             |
     And product "product1" last stock movement decreased by 9
 
   Scenario: I update product simple stock fields
@@ -281,10 +331,10 @@ Feature: Update product stock from Back Office (BO)
       | delta_quantity | -1 |
     Then I should get error that stock available quantity is invalid
     And product "product2" last stock movements should be:
-      | employee   | delta_quantity |
-      | Puff Daddy | -4294967295    |
-      | Puff Daddy | 4294967295     |
-      | Puff Daddy | -2147483648    |
+      | employee     | delta_quantity |
+      | Puffin Mummy | -4294967295    |
+      | Puffin Mummy | 4294967295     |
+      | Puffin Mummy | -2147483648    |
 
   Scenario: I try to update product quantity with to big numbers
     Given I add product "product3" with following information:

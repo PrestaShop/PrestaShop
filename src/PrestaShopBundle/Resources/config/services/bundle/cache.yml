@@ -22,7 +22,7 @@ services:
     tags:
       - { name: kernel.cache_warmer }
 
-  PrestaShopBundle\Cache\TranslationCacheClearer:
+  PrestaShopBundle\Cache\LegacyCacheClearer:
     autowire: true
     autoconfigure: true
     arguments:

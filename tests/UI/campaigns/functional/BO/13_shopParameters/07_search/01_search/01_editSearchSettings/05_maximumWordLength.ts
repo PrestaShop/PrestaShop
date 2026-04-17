@@ -7,8 +7,8 @@ import {
   boLoginPage,
   boSearchPage,
   type BrowserContext,
-  foClassicHomePage,
-  foClassicSearchResultsPage,
+  foHummingbirdHomePage,
+  foHummingbirdSearchResultsPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -64,34 +64,34 @@ describe('BO - Shop Parameters - Search : Maximum word length (in characters)', 
     await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
 
     page = await boSearchPage.viewMyShop(page);
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
-    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+    expect(isHomePage).to.eq(true);
   });
 
   it('should search the word "hummingbird shirt"', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchWordHummingbirdShirt15', baseContext);
 
-    await foClassicHomePage.searchProduct(page, 'hummingbird shirt');
+    await foHummingbirdHomePage.searchProduct(page, 'hummingbird shirt');
 
-    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+    const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
 
-    const hasResults = await foClassicSearchResultsPage.hasResults(page);
+    const hasResults = await foHummingbirdSearchResultsPage.hasResults(page);
     expect(hasResults).to.eq(true);
 
-    const numResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
+    const numResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
     expect(numResults).to.eq(1);
 
-    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
+    const searchInputValue = await foHummingbirdSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal('hummingbird shirt');
   });
 
   it('should set the maximum word length to 2', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setMaxWordLengthTo2', baseContext);
 
-    page = await foClassicSearchResultsPage.changePage(browserContext, 0);
+    page = await foHummingbirdSearchResultsPage.changePage(browserContext, 0);
     const textResult = await boSearchPage.setMaximumWordLength(page, 2);
     expect(textResult).to.be.eq(boSearchPage.settingsUpdateMessage);
   });
@@ -100,25 +100,25 @@ describe('BO - Shop Parameters - Search : Maximum word length (in characters)', 
     await testContext.addContextItem(this, 'testIdentifier', 'searchWordHummingbirdShirt2', baseContext);
 
     page = await boSearchPage.changePage(browserContext, 1);
-    await foClassicHomePage.reloadPage(page);
+    await foHummingbirdHomePage.reloadPage(page);
 
-    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+    const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
 
-    const hasResults = await foClassicSearchResultsPage.hasResults(page);
+    const hasResults = await foHummingbirdSearchResultsPage.hasResults(page);
     expect(hasResults).to.eq(true);
 
-    const numResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
+    const numResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
     expect(numResults).to.eq(2);
 
-    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
+    const searchInputValue = await foHummingbirdSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal('hummingbird shirt');
   });
 
   it('should set the maximum word length to 1', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setMaxWordLengthTo1', baseContext);
 
-    page = await foClassicSearchResultsPage.changePage(browserContext, 0);
+    page = await foHummingbirdSearchResultsPage.changePage(browserContext, 0);
     const textResult = await boSearchPage.setMaximumWordLength(page, 1);
     expect(textResult).to.be.eq(boSearchPage.settingsUpdateMessage);
   });
@@ -127,25 +127,25 @@ describe('BO - Shop Parameters - Search : Maximum word length (in characters)', 
     await testContext.addContextItem(this, 'testIdentifier', 'searchWordHummingbirdShirt1', baseContext);
 
     page = await boSearchPage.changePage(browserContext, 1);
-    await foClassicHomePage.reloadPage(page);
+    await foHummingbirdHomePage.reloadPage(page);
 
-    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+    const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
 
-    const hasResults = await foClassicSearchResultsPage.hasResults(page);
+    const hasResults = await foHummingbirdSearchResultsPage.hasResults(page);
     expect(hasResults).to.eq(true);
 
-    const numResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
+    const numResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
     expect(numResults).to.eq(13);
 
-    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
+    const searchInputValue = await foHummingbirdSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal('hummingbird shirt');
   });
 
   it('should set the maximum word length to 0', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setMaxWordLengthTo0', baseContext);
 
-    page = await foClassicSearchResultsPage.changePage(browserContext, 0);
+    page = await foHummingbirdSearchResultsPage.changePage(browserContext, 0);
     const textResult = await boSearchPage.setMaximumWordLength(page, 0);
     expect(textResult).to.be.eq(boSearchPage.settingsUpdateMessage);
   });
@@ -154,25 +154,25 @@ describe('BO - Shop Parameters - Search : Maximum word length (in characters)', 
     await testContext.addContextItem(this, 'testIdentifier', 'searchWordHummingbirdShirt0', baseContext);
 
     page = await boSearchPage.changePage(browserContext, 1);
-    await foClassicHomePage.reloadPage(page);
+    await foHummingbirdHomePage.reloadPage(page);
 
-    const pageTitle = await foClassicSearchResultsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicSearchResultsPage.pageTitle);
+    const pageTitle = await foHummingbirdSearchResultsPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foHummingbirdSearchResultsPage.pageTitle);
 
-    const hasResults = await foClassicSearchResultsPage.hasResults(page);
+    const hasResults = await foHummingbirdSearchResultsPage.hasResults(page);
     expect(hasResults).to.eq(true);
 
-    const numResults = await foClassicSearchResultsPage.getSearchResultsNumber(page);
+    const numResults = await foHummingbirdSearchResultsPage.getSearchResultsNumber(page);
     expect(numResults).to.eq(19);
 
-    const searchInputValue = await foClassicSearchResultsPage.getSearchValue(page);
+    const searchInputValue = await foHummingbirdSearchResultsPage.getSearchValue(page);
     expect(searchInputValue).to.be.equal('hummingbird shirt');
   });
 
   it('should set the maximum word length to ""', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setMaxWordLengthToEmpty', baseContext);
 
-    page = await foClassicSearchResultsPage.changePage(browserContext, 0);
+    page = await foHummingbirdSearchResultsPage.changePage(browserContext, 0);
     const textResult = await boSearchPage.setMaximumWordLength(page, '');
     expect(textResult).to.contains(boSearchPage.errorFillFieldMessage);
   });
@@ -180,7 +180,7 @@ describe('BO - Shop Parameters - Search : Maximum word length (in characters)', 
   it('should set the maximum word length to "vhgfud"', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'setMaxWordLengthToError', baseContext);
 
-    page = await foClassicSearchResultsPage.changePage(browserContext, 0);
+    page = await foHummingbirdSearchResultsPage.changePage(browserContext, 0);
     const textResult = await boSearchPage.setMaximumWordLength(page, 'vhgfud');
     expect(textResult).to.contains(boSearchPage.errorMaxWordLengthInvalidMessage);
   });

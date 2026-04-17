@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -37,6 +17,7 @@ use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
+use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
@@ -45,6 +26,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use Product;
 use StockAvailable;
 use Validate;
@@ -55,36 +38,13 @@ use Validate;
 #[AsCommandHandler]
 final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler implements UpdateProductInOrderHandlerInterface
 {
-    /**
-     * @var ContextStateManager
-     */
-    private $contextStateManager;
-
-    /**
-     * @var OrderProductQuantityUpdater
-     */
-    private $orderProductQuantityUpdater;
-
-    /**
-     * @var OrderDetailUpdater
-     */
-    private $orderDetailUpdater;
-
-    /**
-     * UpdateProductInOrderHandler constructor.
-     *
-     * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
-     * @param OrderDetailUpdater $orderDetailUpdater
-     * @param ContextStateManager $contextStateManager
-     */
     public function __construct(
-        OrderProductQuantityUpdater $orderProductQuantityUpdater,
-        OrderDetailUpdater $orderDetailUpdater,
-        ContextStateManager $contextStateManager
+        private OrderProductQuantityUpdater $orderProductQuantityUpdater,
+        private OrderDetailUpdater $orderDetailUpdater,
+        private ContextStateManager $contextStateManager,
+        private ?ShipmentProductQuantityUpdater $shipmentProductQuantityUpdater = null,
+        private ?FeatureFlagStateCheckerInterface $featureflagStateCheckerInterface = null,
     ) {
-        $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
-        $this->orderDetailUpdater = $orderDetailUpdater;
-        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -125,8 +85,20 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
                 (int) $orderDetail->id_customization
             );
 
-            // Update invoice, quantity and amounts
-            $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $command->getQuantity(), $orderInvoice);
+            if ($this->featureflagStateCheckerInterface !== null && $this->featureflagStateCheckerInterface->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT) && !empty($command->getShipmentsQuantities())) {
+                $totalProductQuantity = array_sum(array_column($command->getShipmentsQuantities(), 'quantity'));
+
+                // Update invoice, quantity and amounts
+                $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $totalProductQuantity, $orderInvoice);
+
+                $this->shipmentProductQuantityUpdater->updateShipmentQuantity($command->getOrderDetailId(), $command->getShipmentsQuantities());
+            } else {
+                // Update invoice, quantity and amounts
+                $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $command->getQuantity(), $orderInvoice);
+            }
+
+            // Update order_detail_tax table without modifying prices
+            $this->orderDetailUpdater->updateOrderDetailTaxTableOnly($order);
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {

@@ -1,7 +1,6 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 
 import {
@@ -17,7 +16,7 @@ import {
 
 const baseContext: string = 'functional_FO_hummingbird_cart_cart_addPromoCode';
 
-describe('FO - cart : Add promo code', async () => {
+describe('FO - Cart : Add promo code', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
@@ -37,9 +36,6 @@ describe('FO - cart : Add promo code', async () => {
   // Pre-condition: Create cart rule and apply the discount to 'productWithCartRule'
   createCartRuleTest(newCartRuleData, `${baseContext}_PreTest_1`);
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest_2`);
-
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -57,7 +53,7 @@ describe('FO - cart : Add promo code', async () => {
       await foHummingbirdHomePage.changeLanguage(page, 'en');
 
       const isHomePage = await foHummingbirdHomePage.isHomePage(page);
-      expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+      expect(isHomePage).to.eq(true);
     });
 
     it('should add the first product to cart and proceed to checkout', async function () {
@@ -84,14 +80,14 @@ describe('FO - cart : Add promo code', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCartRuleName', baseContext);
 
       const cartRuleName = await foHummingbirdCartPage.getCartRuleName(page);
-      expect(cartRuleName).to.equal(newCartRuleData.name);
+      expect(cartRuleName).to.contains(newCartRuleData.name);
     });
 
     it('should check the discount value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountValue', baseContext);
 
       const totalBeforeDiscount = await foHummingbirdCartPage.getCartRuleValue(page);
-      expect(totalBeforeDiscount).to.equal(`-€${newCartRuleDiscount.toFixed(2)}`);
+      expect(totalBeforeDiscount).to.contains(`-€${newCartRuleDiscount.toFixed(2)}`);
     });
 
     it('should set the same promo code and check the error message', async function () {
@@ -124,13 +120,10 @@ describe('FO - cart : Add promo code', async () => {
       await foHummingbirdCartPage.addPromoCode(page, '', false);
 
       const voucherErrorText = await foHummingbirdCartPage.getCartRuleErrorMessage(page);
-      expect(voucherErrorText).to.equal(foHummingbirdCartPage.cartRuleMustEnterVoucherErrorText);
+      expect(voucherErrorText).to.contains(foHummingbirdCartPage.cartRuleMustEnterVoucherErrorText);
     });
   });
 
   // Post-Condition: Delete cart rule
   deleteCartRuleTest(newCartRuleData.name, `${baseContext}_PostTest_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
 });

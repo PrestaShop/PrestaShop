@@ -269,6 +269,19 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       const giftMessageText = await boOrdersViewBlockTabListPage.getGiftMessage(page);
       expect(giftMessageText).to.be.equal(giftMessage);
     });
+
+    it('should check the title of the 3 tabs', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTabNames', baseContext);
+
+      const statusTabName = await boOrdersViewBlockTabListPage.getTabName(page, 1);
+      expect(statusTabName).to.contain('Status');
+
+      const documentsTabName = await boOrdersViewBlockTabListPage.getTabName(page, 2);
+      expect(documentsTabName).to.contain('Documents');
+
+      const shipmentsTabName = await boOrdersViewBlockTabListPage.getTabName(page, 3);
+      expect(shipmentsTabName).to.contain('Carriers');
+    });
   });
 
   // Post-condition : Go back to default gift options configuration

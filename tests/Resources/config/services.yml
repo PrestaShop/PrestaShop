@@ -102,3 +102,18 @@ services:
       shared: false
       lazy: true
       factory: [ '@PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder', 'build' ]
+
+    # We need this one public to fetch data for behat tests
+    PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository:
+      public: true
+      arguments:
+        $connection: '@doctrine.dbal.default_connection'
+        $dbPrefix: '%database_prefix%'
+
+    # We need this one public to fetch data for behat tests
+    PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository:
+      public: true
+      autowire: true
+      arguments:
+        $connection: '@doctrine.dbal.default_connection'
+        $dbPrefix: '%database_prefix%'

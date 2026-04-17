@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use PrestaShopBundle\Security\Admin\LegacyAdminTokenValidator;
 
@@ -240,9 +220,24 @@ class CmsControllerCore extends FrontController
             $categoryCms['sub_categories'][$subCategory['id_cms_category']]['link'] = $this->context->link->getCMSCategoryLink($subCategory['id_cms_category'], $subCategory['link_rewrite']);
         }
 
-        foreach (CMS::getCMSPages($this->context->language->id, (int) $this->cms_category->id, true, (int) $this->context->shop->id) as $cmsPages) {
-            $categoryCms['cms_pages'][$cmsPages['id_cms']] = $cmsPages;
-            $categoryCms['cms_pages'][$cmsPages['id_cms']]['link'] = $this->context->link->getCMSLink($cmsPages['id_cms'], $cmsPages['link_rewrite']);
+        foreach (CMS::getCMSPages($this->context->language->id, (int) $this->cms_category->id, true, (int) $this->context->shop->id) as $cmsPage) {
+            $cmsVar = $this->objectPresenter->present(new CMS((int) $cmsPage['id_cms'], (int) $this->context->language->id));
+            $filteredCmsContent = Hook::exec(
+                'filterCmsContent',
+                ['object' => $cmsVar],
+                null,
+                false,
+                true,
+                false,
+                null,
+                true
+            );
+            if (!empty($filteredCmsContent['object'])) {
+                $cmsVar = $filteredCmsContent['object'];
+            }
+
+            $categoryCms['cms_pages'][$cmsPage['id_cms']] = $cmsVar;
+            $categoryCms['cms_pages'][$cmsPage['id_cms']]['link'] = $this->context->link->getCMSLink($cmsPage['id_cms'], $cmsPage['link_rewrite']);
         }
 
         return $categoryCms;

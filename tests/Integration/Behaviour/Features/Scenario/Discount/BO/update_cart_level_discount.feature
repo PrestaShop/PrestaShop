@@ -46,75 +46,75 @@ Feature: Update discount
       | reduction_percent | 15.0                |
 
     When I create a "cart_level" discount "complete_amount_cart_level_discount" with following properties:
-      | name[en-US]        | Promotion           |
-      | name[fr-FR]        | Promotion_fr        |
-      | active             | true                |
-      | valid_from         | 2019-01-01 11:05:00 |
-      | valid_to           | 2019-12-01 00:00:00 |
-      | code               | PROMO_CART_2019_2   |
-      | reduction_amount   | 10.0                |
-      | reduction_currency | usd                 |
-      | taxIncluded        | true                |
+      | name[en-US]            | Promotion           |
+      | name[fr-FR]            | Promotion_fr        |
+      | active                 | true                |
+      | valid_from             | 2019-01-01 11:05:00 |
+      | valid_to               | 2019-12-01 00:00:00 |
+      | code                   | PROMO_CART_2019_2   |
+      | reduction_amount       | 10.0                |
+      | reduction_currency     | usd                 |
+      | reduction_tax_included | true                |
     And discount "complete_amount_cart_level_discount" should have the following properties:
-      | name[en-US]        | Promotion           |
-      | name[fr-FR]        | Promotion_fr        |
-      | type               | cart_level          |
-      | active             | true                |
-      | valid_from         | 2019-01-01 11:05:00 |
-      | valid_to           | 2019-12-01 00:00:00 |
-      | code               | PROMO_CART_2019_2   |
-      | reduction_amount   | 10.0                |
-      | reduction_currency | usd                 |
-      | taxIncluded        | true                |
+      | name[en-US]            | Promotion           |
+      | name[fr-FR]            | Promotion_fr        |
+      | type                   | cart_level          |
+      | active                 | true                |
+      | valid_from             | 2019-01-01 11:05:00 |
+      | valid_to               | 2019-12-01 00:00:00 |
+      | code                   | PROMO_CART_2019_2   |
+      | reduction_amount       | 10.0                |
+      | reduction_currency     | usd                 |
+      | reduction_tax_included | true                |
     Then I update discount "complete_amount_cart_level_discount" with the following properties:
-      | reduction_amount   | 20.0 |
-      | reduction_currency | usd  |
-      | taxIncluded        | true |
+      | reduction_amount       | 20.0 |
+      | reduction_currency     | usd  |
+      | reduction_tax_included | true |
     Then discount "complete_amount_cart_level_discount" should have the following properties:
-      | name[en-US]        | Promotion           |
-      | name[fr-FR]        | Promotion_fr        |
-      | type               | cart_level          |
-      | active             | true                |
-      | valid_from         | 2019-01-01 11:05:00 |
-      | valid_to           | 2019-12-01 00:00:00 |
-      | code               | PROMO_CART_2019_2   |
-      | reduction_amount   | 20.0                |
-      | reduction_currency | usd                 |
-      | taxIncluded        | true                |
+      | name[en-US]            | Promotion           |
+      | name[fr-FR]            | Promotion_fr        |
+      | type                   | cart_level          |
+      | active                 | true                |
+      | valid_from             | 2019-01-01 11:05:00 |
+      | valid_to               | 2019-12-01 00:00:00 |
+      | code                   | PROMO_CART_2019_2   |
+      | reduction_amount       | 20.0                |
+      | reduction_currency     | usd                 |
+      | reduction_tax_included | true                |
 
     When I create a "cart_level" discount "complete_amount_cart_level_discount_tax_included" with following properties:
-      | name[en-US]        | Promotion           |
-      | name[fr-FR]        | Promotion_fr        |
-      | active             | true                |
-      | valid_from         | 2019-01-01 11:05:00 |
-      | valid_to           | 2019-12-01 00:00:00 |
-      | code               | PROMO_CART_2019_3   |
-      | reduction_amount   | 10.0                |
-      | reduction_currency | usd                 |
-      | taxIncluded        | true                |
+      | name[en-US]            | Promotion           |
+      | name[fr-FR]            | Promotion_fr        |
+      | active                 | true                |
+      | valid_from             | 2019-01-01 11:05:00 |
+      | valid_to               | 2019-12-01 00:00:00 |
+      | code                   | PROMO_CART_2019_3   |
+      | reduction_amount       | 10.0                |
+      | reduction_currency     | usd                 |
+      | reduction_tax_included | true                |
     And discount "complete_amount_cart_level_discount_tax_included" should have the following properties:
-      | name[en-US]        | Promotion           |
-      | name[fr-FR]        | Promotion_fr        |
-      | type               | cart_level          |
-      | active             | true                |
-      | valid_from         | 2019-01-01 11:05:00 |
-      | valid_to           | 2019-12-01 00:00:00 |
-      | code               | PROMO_CART_2019_3   |
-      | reduction_amount   | 10.0                |
-      | reduction_currency | usd                 |
-      | taxIncluded        | true                |
+      | name[en-US]            | Promotion           |
+      | name[fr-FR]            | Promotion_fr        |
+      | type                   | cart_level          |
+      | active                 | true                |
+      | valid_from             | 2019-01-01 11:05:00 |
+      | valid_to               | 2019-12-01 00:00:00 |
+      | code                   | PROMO_CART_2019_3   |
+      | reduction_amount       | 10.0                |
+      | reduction_currency     | usd                 |
+      | reduction_tax_included | true                |
     Then I update discount "complete_amount_cart_level_discount_tax_included" with the following properties:
-      | reduction_amount   | 20.0  |
-      | reduction_currency | usd   |
-      | taxIncluded        | false |
+      | reduction_amount       | 20.0  |
+      | reduction_currency     | usd   |
+      | reduction_tax_included | false |
     Then discount "complete_amount_cart_level_discount_tax_included" should have the following properties:
-      | name[en-US]        | Promotion           |
-      | name[fr-FR]        | Promotion_fr        |
-      | type               | cart_level          |
-      | active             | true                |
-      | valid_from         | 2019-01-01 11:05:00 |
-      | valid_to           | 2019-12-01 00:00:00 |
-      | code               | PROMO_CART_2019_3   |
-      | reduction_amount   | 20.0                |
-      | reduction_currency | usd                 |
-      | taxIncluded        | false               |
+      | name[en-US]            | Promotion           |
+      | name[fr-FR]            | Promotion_fr        |
+      | type                   | cart_level          |
+      | active                 | true                |
+      | valid_from             | 2019-01-01 11:05:00 |
+      | valid_to               | 2019-12-01 00:00:00 |
+      | code                   | PROMO_CART_2019_3   |
+      | reduction_amount       | 20.0                |
+      | reduction_currency     | usd                 |
+      | reduction_tax_included | false               |

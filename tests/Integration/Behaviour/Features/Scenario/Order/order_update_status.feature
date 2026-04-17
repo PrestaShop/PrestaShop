@@ -29,21 +29,21 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" has status "Awaiting bank wire payment"
     And order "bo_order1" has the following status history:
       | status                     | employee_first_name | employee_last_name | api_client_id |
-      | Awaiting bank wire payment | Puff                | Daddy              |               |
+      | Awaiting bank wire payment | Puffin                | Mummy              |               |
     When I update order "bo_order1" status to "Payment accepted"
     Then order "bo_order1" has status "Payment accepted"
     And order "bo_order1" has the following status history:
       | status                     | employee_first_name | employee_last_name | api_client_id |
-      | Payment accepted           | Puff                | Daddy              |               |
-      | Awaiting bank wire payment | Puff                | Daddy              |               |
+      | Payment accepted           | Puffin                | Mummy              |               |
+      | Awaiting bank wire payment | Puffin                | Mummy              |               |
     Given I am not logged in as an employee
     When I update order "bo_order1" status to "Delivered"
     Then order "bo_order1" has status "Delivered"
     And order "bo_order1" has the following status history:
       | status                     | employee_first_name | employee_last_name | api_client_id |
       | Delivered                  |                     |                    |               |
-      | Payment accepted           | Puff                | Daddy              |               |
-      | Awaiting bank wire payment | Puff                | Daddy              |               |
+      | Payment accepted           | Puffin                | Mummy              |               |
+      | Awaiting bank wire payment | Puffin                | Mummy              |               |
 
   Scenario: I update the order status while logged as an api client
     Given I create an api client "AC-1" with following properties:

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
@@ -54,6 +34,7 @@ class AdminModuleDataProvider implements ModuleInterface
         Module::ACTION_DISABLE => 'Disable',
         Module::ACTION_RESET => 'Reset',
         Module::ACTION_UPGRADE => 'Update',
+        Module::ACTION_UPLOAD => 'Upload',
         Module::ACTION_CONFIGURE => 'Configure',
         Module::ACTION_DELETE => 'Delete',
     ];
@@ -212,9 +193,6 @@ class AdminModuleDataProvider implements ModuleInterface
                     'action' => $action,
                     'module_name' => $moduleAttributes->get('name'),
                 ];
-                if ($action === 'upgrade' && $moduleAttributes->get('download_url') !== null) {
-                    $parameters['source'] = $moduleAttributes->get('download_url');
-                }
                 $urls[$action] = $this->router->generate('admin_module_manage_action', $parameters);
             }
 
@@ -237,6 +215,15 @@ class AdminModuleDataProvider implements ModuleInterface
 
                 if (!$module->canBeUpgraded()) {
                     unset($urls['upgrade']);
+                } elseif ($moduleAttributes->get('download_url') !== null) {
+                    // If the module can be upgraded and has a download URL,
+                    // we also generate an upload URL to be used for uploading the archive during the module upgrade process.
+                    $upload_url = $this->router->generate('admin_module_manage_action', [
+                        'action' => 'upload',
+                        'module_name' => $moduleAttributes->get('name'),
+                        'source' => $moduleAttributes->get('download_url'),
+                    ]);
+                    $moduleAttributes->set('upload_url', $upload_url);
                 }
 
                 if (!$module->isConfigurable()) {

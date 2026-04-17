@@ -7,7 +7,7 @@
     <language iso_code="ro"/>
   </languages>
   <taxes>
-    <tax id="1" name="TVA RO 19%" rate="19" eu-tax-group="virtual"/>
+    <tax id="1" name="TVA RO 21%" rate="21" eu-tax-group="virtual"/>
     <tax id="2" name="TVA RO 9%" rate="9"/>
     <tax id="3" name="TVA RO 5%" rate="5"/>
     <tax id="4" name="TVA RO 0%" rate="0"/>
@@ -18,7 +18,7 @@
     <tax id="9" name="DPH CZ 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="10" name="MwSt. DE 19%" rate="19" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="11" name="moms DK 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="12" name="km EE 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="12" name="km EE 24%" rate="24" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="13" name="IVA ES 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="14" name="ALV FI 25.5%" rate="25.5" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="15" name="TVA FR 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>

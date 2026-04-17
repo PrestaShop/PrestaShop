@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 import Router from '@components/router';
@@ -98,9 +78,21 @@ export default class OrderProductEdit {
 
   isOrderTaxIncluded: number | null;
 
+  isMultishipmentIsEnabled: boolean;
+
+  shipmentInputs: HTMLInputElement[];
+
+  shipmentQtyCounter!: HTMLElement | null;
+
+  modalContainer!: HTMLElement | null;
+
+  boundHandleShipment: () => void;
+
   constructor(orderDetailId: number) {
     this.router = new Router();
     this.orderDetailId = orderDetailId;
+    // eslint-disable-next-line max-len
+    this.isMultishipmentIsEnabled = document.querySelector<HTMLElement>(OrderViewPageMap.productsTable)?.dataset.multishipmentEnabled === '1';
     this.productRow = $(`#orderProduct_${this.orderDetailId}`);
     this.product = {};
     this.currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
@@ -124,9 +116,36 @@ export default class OrderProductEdit {
     this.productEditImage = null;
     this.productEditName = null;
     this.locationText = null;
+    this.shipmentInputs = [];
+    if (this.isMultishipmentIsEnabled) {
+      this.modalContainer = document.querySelector<HTMLElement>(OrderViewPageMap.editProductModalContainer)!;
+      // eslint-disable-next-line max-len
+      this.shipmentQtyCounter = this.modalContainer.querySelector<HTMLElement>(OrderViewPageMap.productModalShipmentQtyHeader)!;
+      // eslint-disable-next-line max-len
+      this.shipmentInputs = Array.from(this.modalContainer.querySelectorAll<HTMLInputElement>(OrderViewPageMap.productModalShipmentQuantityInput));
+    }
+    this.boundHandleShipment = this.handleShipmentQty.bind(this);
+  }
+
+  removeShipmentListeners(): void {
+    this.shipmentInputs.forEach((input) => {
+      input.removeEventListener('change', this.boundHandleShipment);
+      input.removeEventListener('keyup', this.boundHandleShipment);
+    });
+    this.shipmentInputs = [];
+
+    $(OrderViewPageMap.productEditModal).modal('hide');
   }
 
   setupListener(): void {
+    if (this.isMultishipmentIsEnabled && this.shipmentInputs.length > 0) {
+      this.updateShipmentQtyCounter(this.quantity!);
+      this.shipmentInputs.forEach((input) => {
+        input.addEventListener('change', this.boundHandleShipment);
+        input.addEventListener('keyup', this.boundHandleShipment);
+      });
+    }
+
     this.quantityInput.on('change keyup', (event: JQueryEventObject) => {
       const qtyInput = <HTMLInputElement>event.target;
       const newQuantity = Number(qtyInput.value);
@@ -139,6 +158,7 @@ export default class OrderProductEdit {
         this.availableText.text(remainingAvailable);
         this.availableText.toggleClass('text-danger font-weight-bold', remainingAvailable < 0);
       }
+
       this.updateTotal();
       const disableEditActionBtn = newQuantity <= 0 || (remainingAvailable < 0 && !availableOutOfStock);
       this.productEditSaveBtn.prop('disabled', disableEditActionBtn);
@@ -182,26 +202,57 @@ export default class OrderProductEdit {
       });
     }
 
-    this.productEditSaveBtn.on('click', (event: JQueryEventObject) => {
+    this.productEditSaveBtn.off('click').on('click', (event: JQueryEventObject) => {
       const $btn = $(event.currentTarget);
-      const confirmed = window.confirm($btn.data('updateMessage'));
 
-      if (!confirmed) {
-        return;
+      if (!this.isMultishipmentIsEnabled) {
+        const confirmed = window.confirm($btn.data('updateMessage'));
+
+        if (!confirmed) {
+          return;
+        }
+
+        this.handleEditProductWithConfirmationModal(event);
       }
 
       $btn.prop('disabled', true);
-      this.handleEditProductWithConfirmationModal(event);
+      this.editProduct($(event.currentTarget).data('orderId'), this.orderDetailId);
     });
 
     if (this.productEditCancelBtn) {
       this.productEditCancelBtn.on('click', () => {
+        this.removeShipmentListeners();
         EventEmitter.emit(OrderViewEventMap.productEditionCanceled, {
           orderDetailId: this.orderDetailId,
         });
       });
     }
   }
+
+  handleShipmentQty(): void {
+    const total = this.shipmentInputs.reduce((sum, input) => sum + Number(input.value), 0);
+    const availableQuantity = parseInt(this.quantityInput.data('availableQuantity'), 10);
+    const previousQuantity = parseInt(this.quantityInput.data('previousQuantity'), 10);
+    const maxQuantity = availableQuantity + previousQuantity;
+    const hasAtLeastOneQty = this.shipmentInputs.some((input) => Number(input.value) > 0);
+    this.quantity = total;
+    this.quantityInput.val(total);
+    this.updateShipmentQtyCounter(total);
+    this.updateTotal();
+    this.productEditSaveBtn.prop('disabled', !hasAtLeastOneQty || total > maxQuantity);
+  }
+
+  updateShipmentQtyCounter(total: number): void {
+    if (!this.shipmentQtyCounter) {
+      return;
+    }
+    const availableQuantity = parseInt(this.quantityInput.data('availableQuantity'), 10);
+    const previousQuantity = parseInt(this.quantityInput.data('previousQuantity'), 10);
+    const maxQuantity = availableQuantity + previousQuantity;
+    this.shipmentQtyCounter.textContent = `(${total}/${maxQuantity})`;
+    this.shipmentQtyCounter.classList.toggle('text-danger', total > maxQuantity);
+    this.shipmentQtyCounter.classList.toggle('text-muted', total >= 0 && total <= maxQuantity);
+  };
 
   updateTotal(): void {
     const updatedTotal = this.priceTaxCalculator.calculateTotalPrice(
@@ -211,31 +262,55 @@ export default class OrderProductEdit {
     );
 
     if (this.priceTotalText) {
-      this.priceTotalText.html(<string><unknown>updatedTotal);
+      if (this.isMultishipmentIsEnabled) {
+        this.priceTotalText.val(String(updatedTotal));
+      } else {
+        this.priceTotalText.html(String(updatedTotal));
+      }
     }
 
     this.productEditSaveBtn.prop('disabled', updatedTotal === this.initialTotal);
   }
 
   displayProduct(product: DisplayedProduct): void {
-    this.productRowEdit = $(OrderViewPageMap.productEditRowTemplate).clone(true);
-    this.productRowEdit.attr('id', `editOrderProduct_${this.orderDetailId}`);
-    this.productRowEdit.find('*[id]').each(function removeAllIds() {
-      $(this).removeAttr('id');
-    });
+    if (this.isMultishipmentIsEnabled) {
+      const modalContainer = $(OrderViewPageMap.editProductModalContainer);
+      const modal = $(OrderViewPageMap.productEditModal);
+      this.productEditSaveBtn = modal.find(OrderViewPageMap.productModalEditSaveBtn);
+      this.productEditCancelBtn = modalContainer.find(OrderViewPageMap.productEditCancelBtn);
+      this.productEditInvoiceSelect = modalContainer.find(OrderViewPageMap.productEditInvoiceSelect);
+      this.priceTaxIncludedInput = modalContainer.find(OrderViewPageMap.productEditPriceTaxInclInput);
+      this.priceTaxExcludedInput = modalContainer.find(OrderViewPageMap.productEditPriceTaxExclInput);
+      this.quantityInput = modalContainer.find(OrderViewPageMap.productEditQuantityInput);
+      this.productEditImage = modalContainer.find(OrderViewPageMap.productModalEditImage);
+      this.productEditName = modalContainer.find(OrderViewPageMap.productModalEditName);
+      this.priceTotalText = modalContainer.find(OrderViewPageMap.productModalTotalTaxIncl);
+      // get the img and product name from cell on table summary
+      const imgEl = this.productRow.find(`${OrderViewPageMap.productEditImage} img`);
+      this.productEditImage
+        .attr('src', imgEl.attr('src') ?? '')
+        .attr('alt', imgEl.attr('alt') ?? '');
+      this.productEditName.text(this.productRow.find(`${OrderViewPageMap.productEditName} .productName`).text().trim());
+    } else {
+      this.productRowEdit = $(OrderViewPageMap.productEditRowTemplate).clone(true);
+      this.productRowEdit.attr('id', `editOrderProduct_${this.orderDetailId}`);
+      this.productRowEdit.find('*[id]').each(function removeAllIds() {
+        $(this).removeAttr('id');
+      });
 
-    // Find controls
-    this.productEditSaveBtn = this.productRowEdit.find(OrderViewPageMap.productEditSaveBtn);
-    this.productEditCancelBtn = this.productRowEdit.find(OrderViewPageMap.productEditCancelBtn);
-    this.productEditInvoiceSelect = this.productRowEdit.find(OrderViewPageMap.productEditInvoiceSelect);
-    this.productEditImage = this.productRowEdit.find(OrderViewPageMap.productEditImage);
-    this.productEditName = this.productRowEdit.find(OrderViewPageMap.productEditName);
-    this.priceTaxIncludedInput = this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput);
-    this.priceTaxExcludedInput = this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxExclInput);
-    this.quantityInput = this.productRowEdit.find(OrderViewPageMap.productEditQuantityInput);
-    this.locationText = this.productRowEdit.find(OrderViewPageMap.productEditLocationText);
-    this.availableText = this.productRowEdit.find(OrderViewPageMap.productEditAvailableText);
-    this.priceTotalText = this.productRowEdit.find(OrderViewPageMap.productEditTotalPriceText);
+      // Find controls
+      this.productEditSaveBtn = this.productRowEdit.find(OrderViewPageMap.productEditSaveBtn);
+      this.productEditCancelBtn = this.productRowEdit.find(OrderViewPageMap.productEditCancelBtn);
+      this.productEditInvoiceSelect = this.productRowEdit.find(OrderViewPageMap.productEditInvoiceSelect);
+      this.productEditImage = this.productRowEdit.find(OrderViewPageMap.productEditImage);
+      this.productEditName = this.productRowEdit.find(OrderViewPageMap.productEditName);
+      this.priceTaxIncludedInput = this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxInclInput);
+      this.priceTaxExcludedInput = this.productRowEdit.find(OrderViewPageMap.productEditPriceTaxExclInput);
+      this.quantityInput = this.productRowEdit.find(OrderViewPageMap.productEditQuantityInput);
+      this.locationText = this.productRowEdit.find(OrderViewPageMap.productEditLocationText);
+      this.availableText = this.productRowEdit.find(OrderViewPageMap.productEditAvailableText);
+      this.priceTotalText = this.productRowEdit.find(OrderViewPageMap.productEditTotalPriceText);
+    }
 
     // Init input values
     this.priceTaxExcludedInput.val(
@@ -247,11 +322,14 @@ export default class OrderProductEdit {
     this.quantityInput.val(product.quantity)
       .data('availableQuantity', product.availableQuantity)
       .data('previousQuantity', product.quantity);
-    this.availableText.data('availableOutOfStock', product.availableOutOfStock);
+
+    if (this.availableText) {
+      this.availableText.data('availableOutOfStock', product.availableOutOfStock);
+    }
 
     // set this product's orderInvoiceId as selected
     if (product.orderInvoiceId) {
-      this.productEditInvoiceSelect.val(product.orderInvoiceId);
+      this.productEditInvoiceSelect?.val(product.orderInvoiceId);
     }
 
     // Init editor data
@@ -266,17 +344,21 @@ export default class OrderProductEdit {
     this.taxIncluded = product.price_tax_incl;
     this.taxExcluded = product.price_tax_excl;
 
-    // Copy product content in cells
-    this.productEditImage.html(
-      this.productRow.find(OrderViewPageMap.productEditImage).html(),
-    );
-    this.productEditName.html(
-      this.productRow.find(OrderViewPageMap.productEditName).html(),
-    );
-    this.locationText.html(product.location);
-    this.availableText.html(<string><unknown>product.availableQuantity);
-    this.priceTotalText.html(<string><unknown> this.initialTotal);
-    this.productRow.addClass('d-none').after(this.productRowEdit.removeClass('d-none'));
+    if (!this.isMultishipmentIsEnabled) {
+      // Copy product content in cells
+      this.productEditImage?.html(
+        this.productRow.find(OrderViewPageMap.productEditImage).html(),
+      );
+      this.productEditName?.html(
+        this.productRow.find(OrderViewPageMap.productEditName).html(),
+      );
+      this.locationText?.html(product.location);
+      this.availableText?.html(String(product.availableQuantity));
+      this.productRow.addClass('d-none').after(this.productRowEdit!.removeClass('d-none'));
+      this.priceTotalText?.html(String(this.initialTotal));
+    } else {
+      this.priceTotalText?.val(String(this.initialTotal));
+    }
 
     this.setupListener();
   }
@@ -325,12 +407,19 @@ export default class OrderProductEdit {
   }
 
   editProduct(orderId: number, orderDetailId: number): void {
-    const params = {
-      price_tax_incl: this.priceTaxIncludedInput?.val(),
-      price_tax_excl: this.priceTaxExcludedInput?.val(),
-      quantity: this.quantityInput.val(),
-      invoice: this.productEditInvoiceSelect?.val(),
+    const params: Record<string, string | {shipment_id: number; quantity: number}[]> = {
+      price_tax_incl: String(this.priceTaxIncludedInput?.val()),
+      price_tax_excl: String(this.priceTaxExcludedInput?.val()),
+      quantity: String(this.quantityInput.val()),
+      invoice: String(this.productEditInvoiceSelect?.val()),
     };
+
+    if (this.isMultishipmentIsEnabled && this.shipmentInputs.length > 0) {
+      params.shipmentProducts = this.shipmentInputs.map((input) => ({
+        shipment_id: Number(input.dataset.shipmentId),
+        quantity: Number(input.value),
+      }));
+    }
 
     $.ajax({
       url: this.router.generate('admin_orders_update_product', {
@@ -338,9 +427,12 @@ export default class OrderProductEdit {
         orderDetailId,
       }),
       method: 'POST',
-      data: params,
+      contentType: 'application/json',
+      data: JSON.stringify(params),
     }).then(
       () => {
+        this.removeShipmentListeners();
+        $(OrderViewPageMap.productEditButtons).remove();
         EventEmitter.emit(OrderViewEventMap.productUpdated, {
           orderId,
           orderDetailId,

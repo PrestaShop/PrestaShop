@@ -1,32 +1,26 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-import zxcvbn from 'zxcvbn';
+import {zxcvbn, zxcvbnOptions, ZxcvbnResult} from '@zxcvbn-ts/core';
+import * as zxcvbnCommonPackage from '@zxcvbn-ts/language-common';
+import * as zxcvbnEnPackage from '@zxcvbn-ts/language-en';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const {sprintf} = require('sprintf-js');
+
+// Initialize zxcvbn-ts with language packages
+const zxcvbnConfig = {
+  translations: zxcvbnEnPackage.translations,
+  graphs: zxcvbnCommonPackage.adjacencyGraphs,
+  dictionary: {
+    ...zxcvbnCommonPackage.dictionary,
+    ...zxcvbnEnPackage.dictionary,
+  },
+};
+
+zxcvbnOptions.setOptions(zxcvbnConfig);
 
 const {$} = window;
 
@@ -121,7 +115,7 @@ export default class ChangePasswordHandler {
   private displayFeedback(
     $passwordInput: JQuery,
     $outputContainer: JQuery,
-    result: zxcvbn.ZXCVBNResult,
+    result: ZxcvbnResult,
   ): void {
     const feedback = this.getPasswordStrengthFeedback(result.score);
     const translations = $outputContainer.data('translations');
@@ -130,7 +124,7 @@ export default class ChangePasswordHandler {
     $outputContainer.find('.password-strength-text').text(translations[result.score]);
     $passwordInput.popover('dispose');
 
-    if (result.feedback.warning !== '') {
+    if (result.feedback.warning && result.feedback.warning !== '') {
       if (result.feedback.warning in translations) {
         popoverContent.push(translations[result.feedback.warning]);
       }
@@ -187,7 +181,7 @@ export default class ChangePasswordHandler {
    * @private
    */
   private getPasswordStrengthFeedback(
-    strength: zxcvbn.ZXCVBNScore,
+    strength: number,
   ): Record<string, string> {
     switch (strength) {
       case 0:

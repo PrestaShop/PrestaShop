@@ -5,7 +5,7 @@
       <trans-unit id="b3786b970611c1a3809dd51b630812a7">
         <source>"%s" is not a valid url</source>
         <target>"%s" is not a valid url</target>
-        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1382]</note>
+        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1386]</note>
       </trans-unit>
       <trans-unit id="5d27fef01a54790de11db21f1ed47892">
         <source>%s at least, or you will have to edit the translation files manually.</source>
@@ -15,7 +15,6 @@
       <trans-unit id="bab956f96196bebabbfb693f920b1bc1">
         <source>(experimental)</source>
         <target>(experimental)</target>
-        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1751]</note>
       </trans-unit>
       <trans-unit id="56fc8142961f1f3e9f9ec0c178881b69">
         <source>(in progress)</source>
@@ -70,7 +69,7 @@
       <trans-unit id="bd7929bc6bed5d8ec99db715a980ba04">
         <source>Best sales</source>
         <target>Best sales</target>
-        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1743]</note>
+        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1747]</note>
       </trans-unit>
       <trans-unit id="fc11f4442332d8b86f01335df9d28444">
         <source>Build attributes and features indexes</source>
@@ -90,7 +89,7 @@
       <trans-unit id="3adbdb3ac060038aa0e6e6c138ef9873">
         <source>Category</source>
         <target>Category</target>
-        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1727]</note>
+        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1731]</note>
       </trans-unit>
       <trans-unit id="dc668816c4d715e1021b44a4823924a4">
         <source>Category filter depth</source>
@@ -255,7 +254,7 @@
       <trans-unit id="c0bd7654d5b278e65f21cf4e9153fdb4">
         <source>Manufacturer</source>
         <target>Manufacturer</target>
-        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1731]</note>
+        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1735]</note>
       </trans-unit>
       <trans-unit id="9e11e4b371570340ca07913bc4783a7a">
         <source>Meta title</source>
@@ -265,12 +264,12 @@
       <trans-unit id="32d2e6cd4bb1719c572ef470a3a525b6">
         <source>My template %s</source>
         <target>My template %s</target>
-        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1233]</note>
+        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1237]</note>
       </trans-unit>
       <trans-unit id="a3868119dc6858db57127fd26e6f9656">
         <source>My template - %s</source>
         <target>My template - %s</target>
-        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 857]</note>
+        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 861]</note>
       </trans-unit>
       <trans-unit id="51e17eed0057675de4bde1b34206bb12">
         <source>New filters template</source>
@@ -280,7 +279,7 @@
       <trans-unit id="9ff0635f5737513b1a6f559ac2bff745">
         <source>New products</source>
         <target>New products</target>
-        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1739]</note>
+        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1743]</note>
       </trans-unit>
       <trans-unit id="058eeeba77f547f8a9a295a0efd4f6cd">
         <source>No filter template found.</source>
@@ -325,7 +324,7 @@
       <trans-unit id="6de5d0b17afc50642850ff9486934f87">
         <source>Prices drop</source>
         <target>Prices drop</target>
-        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1747]</note>
+        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1751]</note>
       </trans-unit>
       <trans-unit id="e581c019fe5c1b2aa8dfa18d93f88d13">
         <source>Product brand filter</source>
@@ -380,7 +379,7 @@
       <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
         <source>Search</source>
         <target>Search</target>
-        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1751]</note>
+        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1755]</note>
       </trans-unit>
       <trans-unit id="fe016d3b990c2a9dd72ab6b45892f2ae">
         <source>Settings saved successfully</source>
@@ -415,7 +414,7 @@
       <trans-unit id="ec136b444eede3bc85639fac0dd06229">
         <source>Supplier</source>
         <target>Supplier</target>
-        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1735]</note>
+        <note>File: modules/ps_facetedsearch/ps_facetedsearch.php [Line: 1739]</note>
       </trans-unit>
       <trans-unit id="1adb03626a4e0c1aaa27bf37f0f1096b">
         <source>Switch this off only if your theme does not use Jquery UI slider. It is recommended to keep it on when using classic theme.</source>

@@ -7,6 +7,7 @@ import {
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
+  dataBrands,
   FakerBrandAddress,
   type Page,
   utilsCore,
@@ -27,6 +28,7 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
   let numberOfAddresses: number = 0;
 
   const tableName: string = 'manufacturer_address';
+  const brandNames: string[] = [dataBrands.brand_1.name, dataBrands.brand_2.name];
 
   // before and after functions
   before(async function () {
@@ -73,8 +75,6 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
   const creationAddressTests: number[] = new Array(10).fill(0, 0, 10);
   describe('Create 10 new Addresses in BO', async () => {
     creationAddressTests.forEach((test: number, index: number) => {
-      const createAddressData: FakerBrandAddress = new FakerBrandAddress({city: `todelete${index}`});
-
       it('should go to add new address page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewAddressPage${index}`, baseContext);
 
@@ -86,6 +86,12 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
 
       it(`should create address n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createAddress${index}`, baseContext);
+
+        const createAddressBrand: string = brandNames[index % brandNames.length];
+        const createAddressData: FakerBrandAddress = new FakerBrandAddress({
+          brandName: createAddressBrand,
+          city: `todelete${index}`,
+        });
 
         const result = await boBrandAdressesCreatePage.createEditBrandAddress(page, createAddressData);
         expect(result).to.equal(boBrandsPage.successfulCreationMessage);

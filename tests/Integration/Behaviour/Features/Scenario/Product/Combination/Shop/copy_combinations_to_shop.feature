@@ -108,7 +108,7 @@ Feature: Copy combinations from Back Office (BO) when using multi-shop feature
       | available date             | 2021-10-10  |
     And combination "product1SWhite" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 10             |
+      | Puffin Mummy | 10             |
     And I set following shops for product "product1":
       | source shop | shop1       |
       | shops       | shop1,shop2 |
@@ -138,4 +138,4 @@ Feature: Copy combinations from Back Office (BO) when using multi-shop feature
       | available date             | 2021-10-10  |
     And combination "product1SWhite" last stock movements for shop "shop1,shop2" should be:
       | employee   | delta_quantity |
-      | Puff Daddy | 10             |
+      | Puffin Mummy | 10             |

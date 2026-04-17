@@ -10,9 +10,9 @@ import {
   type BrowserContext,
   FakerCMSCategory,
   FakerCMSPage,
-  foClassicCmsPage,
-  foClassicHomePage,
-  foClassicSitemapPage,
+  foHummingbirdCmsPage,
+  foHummingbirdHomePage,
+  foHummingbirdSitemapPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -20,11 +20,11 @@ import {
 const baseContext: string = 'functional_BO_design_pages_CRUDPageCategory';
 
 /*
-Create category and check it in FO
-Create page and check it in FO
-Update category and check it in FO
-Update page and check it in FO
-Delete page and category from BO
+ * Create category and check it in FO
+ * Create page and check it in FO
+ * Update category and check it in FO
+ * Update page and check it in FO
+ * Delete page and category from BO
  */
 describe('BO - Design - Pages : CRUD category and page', async () => {
   let browserContext: BrowserContext;
@@ -43,7 +43,6 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
   const categoriesTableName: string = 'cms_page_category';
   const pagesTableName: string = 'cms_page';
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -141,32 +140,32 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       page = await boCMSPagesPage.viewMyShop(page);
 
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const pageTitle = await foClassicHomePage.getPageTitle(page);
-      expect(pageTitle).to.equal(foClassicHomePage.pageTitle);
+      const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdHomePage.pageTitle);
     });
 
     it('should go to \'Sitemap\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToSiteMapPage1', baseContext);
 
-      await foClassicHomePage.goToFooterLink(page, 'Sitemap');
+      await foHummingbirdHomePage.goToFooterLink(page, 'Sitemap');
 
-      const pageTitle = await foClassicSitemapPage.getPageTitle(page);
-      expect(pageTitle).to.equal(foClassicSitemapPage.pageTitle);
+      const pageTitle = await foHummingbirdSitemapPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSitemapPage.pageTitle);
     });
 
     it('should check the created category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCategoryFO1', baseContext);
 
-      const pageCategoryName = await foClassicSitemapPage.getPageCategoryName(page, categoryID);
+      const pageCategoryName = await foHummingbirdSitemapPage.getPageCategoryName(page, categoryID);
       expect(pageCategoryName).to.contains(createCategoryData.name);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-      page = await foClassicSitemapPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdSitemapPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boCMSPagesPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
@@ -230,20 +229,20 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       page = await boCMSPagesCreatePage.previewPage(page);
 
-      const pageTitle = await foClassicCmsPage.getTextContent(page, foClassicCmsPage.pageTitle);
+      const pageTitle = await foHummingbirdCmsPage.getTextContent(page, foHummingbirdCmsPage.pageTitle);
       expect(pageTitle).to.contains(createPageData.title);
 
-      const metaTitle = await foClassicCmsPage.getPageTitle(page);
+      const metaTitle = await foHummingbirdCmsPage.getPageTitle(page);
       expect(metaTitle).to.equal(createPageData.metaTitle);
 
-      const pageContent = await foClassicCmsPage.getTextContent(page, foClassicCmsPage.pageContent);
+      const pageContent = await foHummingbirdCmsPage.getTextContent(page, foHummingbirdCmsPage.pageContent);
       expect(pageContent).to.include(createPageData.content);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
-      page = await foClassicCmsPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCmsPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boCMSPagesCreatePage.getPageTitle(page);
       expect(pageTitle).to.contains(boCMSPagesCreatePage.editPageTitle(createPageData.title));
@@ -313,32 +312,32 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
       page = await boCMSPagesPage.viewMyShop(page);
-      await foClassicHomePage.changeLanguage(page, 'en');
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-      const pageTitle = await foClassicHomePage.getPageTitle(page);
-      expect(pageTitle).to.equal(foClassicHomePage.pageTitle);
+      const pageTitle = await foHummingbirdHomePage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdHomePage.pageTitle);
     });
 
     it('should go to \'Sitemap\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToSiteMapPage2', baseContext);
 
-      await foClassicHomePage.goToFooterLink(page, 'Sitemap');
+      await foHummingbirdHomePage.goToFooterLink(page, 'Sitemap');
 
-      const pageTitle = await foClassicSitemapPage.getPageTitle(page);
-      expect(pageTitle).to.equal(foClassicSitemapPage.pageTitle);
+      const pageTitle = await foHummingbirdSitemapPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdSitemapPage.pageTitle);
     });
 
     it('should check the updated category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCategoryFO2', baseContext);
 
-      const pageCategoryName = await foClassicSitemapPage.getPageCategoryName(page, categoryID);
+      const pageCategoryName = await foHummingbirdSitemapPage.getPageCategoryName(page, categoryID);
       expect(pageCategoryName).to.contains(editCategoryData.name);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO3', baseContext);
 
-      page = await foClassicSitemapPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdSitemapPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boCMSPagesPage.getPageTitle(page);
       expect(pageTitle).to.contains(boCMSPagesPage.pageTitle);
@@ -404,14 +403,14 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
       page = await boCMSPagesCreatePage.previewPage(page);
 
-      const pageTitle = await foClassicCmsPage.getTextContent(page, foClassicCmsPage.pageTitle);
-      expect(pageTitle).to.include(foClassicCmsPage.pageNotFound);
+      const pageTitle = await foHummingbirdCmsPage.getTextContent(page, foHummingbirdCmsPage.pageTitle);
+      expect(pageTitle).to.include(foHummingbirdCmsPage.pageNotFound);
     });
 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO4', baseContext);
 
-      page = await foClassicCmsPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdCmsPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boCMSPagesCreatePage.getPageTitle(page);
       expect(pageTitle).to.contains(boCMSPagesCreatePage.editPageTitle(editPageData.title));

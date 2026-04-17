@@ -12,7 +12,16 @@ services:
   PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\UpdateDiscountHandler:
     autoconfigure: true
 
-  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\UpdateDiscountConditionsHandler:
+  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\BulkUpdateDiscountsStatusHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\BulkDeleteDiscountsHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\CommandHandler\DuplicateDiscountHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\Update\DiscountBuilder:
     autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Discount\Update\Filler\DiscountFiller:
@@ -23,7 +32,15 @@ services:
     arguments:
       $dbPrefix: '%database_prefix%'
 
+  PrestaShop\PrestaShop\Adapter\Discount\Update\DiscountDuplicator:
+    autoconfigure: true
+    arguments:
+      $dbPrefix: '%database_prefix%'
+
   PrestaShop\PrestaShop\Adapter\Discount\QueryHandler\GetDiscountForEditingHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Discount\QueryHandler\GetDiscountTypesHandler:
     autoconfigure: true
 
   PrestaShop\PrestaShop\Adapter\Discount\Validate\DiscountValidator:
@@ -34,3 +51,17 @@ services:
     arguments:
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Discount\Application\DiscountApplicationService:
+    public: true
+    arguments:
+      $discountTypeRepository: '@PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository'
+
+  prestashop.adapter.discount.priority:
+    class: PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountPriority
+    public: true

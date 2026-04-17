@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -34,6 +14,7 @@ use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
@@ -43,9 +24,11 @@ use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
@@ -180,7 +163,8 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         ProductImagePathFactory $productImageUrlFactory,
         SpecificPriceRepository $specificPriceRepository,
         Configuration $configuration,
-        CategoryDisplayNameBuilder $categoryDisplayNameBuilder
+        CategoryDisplayNameBuilder $categoryDisplayNameBuilder,
+        private ProductPackRepository $packRepository,
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->productRepository = $productRepository;
@@ -207,10 +191,11 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             $query->getProductId(),
             $query->getShopConstraint()
         );
+        $productType = $product->getProductType();
 
         return new ProductForEditing(
             (int) $product->id,
-            $product->getProductType(),
+            $productType,
             (bool) $product->active,
             $this->getCustomizationOptions($product),
             $this->getBasicInformation($product),
@@ -221,7 +206,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             $this->getShippingInformation($product),
             $this->getSeoOptions($product),
             $this->getAttachments($query->getProductId()),
-            $this->getProductStockInformation($product),
+            $this->getProductStockInformation($product, $query->getShopConstraint()),
             $this->getVirtualProductFile($product),
             $this->getCover($query->getProductId(), $product->getShopId()),
             array_map(fn (ShopId $shopId) => $shopId->getValue(), $this->productRepository->getAssociatedShopIds($query->getProductId()))
@@ -481,10 +466,17 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
      */
     private function getSeoOptions(Product $product): ProductSeoOptions
     {
-        $redirectTarget = $this->targetProvider->getRedirectTarget(
-            $product->redirect_type,
-            (int) $product->id_type_redirected
-        );
+        $redirectTarget = null;
+        try {
+            $redirectTarget = $this->targetProvider->getRedirectTarget(
+                $product->redirect_type,
+                (int) $product->id_type_redirected
+            );
+        } catch (ProductNotFoundException|CategoryNotFoundException $e) {
+            // If the redirect target (product or category) has been deleted,
+            // we still allow loading the product but with no redirect target
+            $redirectTarget = null;
+        }
 
         return new ProductSeoOptions(
             $product->meta_title,
@@ -499,16 +491,21 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
      * Returns the product stock infos, it's important that the Product is fetched with stock data
      *
      * @param Product $product
+     * @param ShopConstraint $shopConstraint
      *
      * @return ProductStockInformation
      */
-    private function getProductStockInformation(Product $product): ProductStockInformation
+    private function getProductStockInformation(Product $product, ShopConstraint $shopConstraint): ProductStockInformation
     {
         try {
             $stockAvailable = $this->stockAvailableRepository->getForProduct(new ProductId($product->id), new ShopId($product->getShopId()));
         } catch (StockAvailableNotFoundException) {
             $stockAvailable = $this->stockAvailableRepository->createStockAvailable(new ProductId($product->id), new ShopId($product->getShopId()));
         }
+
+        // Compute pack quantity based on its configuration
+        $shopId = $shopConstraint->getShopId() !== null ? $shopConstraint->getShopId() : new ShopId($product->getShopId());
+        $packQuantity = $this->packRepository->getDynamicPackQuantity(new ProductId((int) $product->id), $shopId);
 
         return new ProductStockInformation(
             (int) $product->pack_stock_type,
@@ -520,7 +517,8 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             $product->available_now,
             $product->available_later,
             $stockAvailable->location,
-            DateTimeUtil::buildDateTimeOrNull($product->available_date)
+            DateTimeUtil::buildDateTimeOrNull($product->available_date),
+            $packQuantity,
         );
     }
 

@@ -1,0 +1,39 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% set filter_name = filterForm.vars.name %}
+{% set filter_options = filterForm.vars.filter_options|default([]) %}
+{% set filter_field_selector = filterForm.vars.filter_field_selector|default('[data-role="' ~ filter_name ~ '-filter-field"]') %}
+{% set default_value = filterForm.vars.default_value|default('') %}
+{% set current_value = grid.filters[filter_name]|default(app.request.get(grid.form_prefix) is iterable
+  ? app.request.get(grid.form_prefix).filters[filter_name]|default(app.request.get(grid.form_prefix)[filter_name]|default(default_value))
+  : default_value
+) %}
+{% set container_class = container_class|default('filter-link-group') %}
+{% set item_class = item_class|default('filter-link-group__item') %}
+{% set active_class = active_class|default('is-active') %}
+
+<div
+  class="{{ container_class }}"
+  data-filter-link-group
+  data-filter-field-selector="{{ filter_field_selector }}"
+  data-filter-submit-button-selector=".grid-search-button"
+  data-filter-active-class="{{ active_class }}"
+  data-filter-form-prefix="{{ grid.form_prefix }}"
+  data-filter-initial-value="{{ current_value }}"
+  data-role="{{ filter_name }}-filter"
+>
+  {% for value, label in filter_options %}
+    <a href="#"
+       class="{{ item_class }}{% if current_value == value %} {{ active_class }}{% endif %}"
+       data-filter-value="{{ value }}"
+       role="button"
+       aria-pressed="{{ current_value == value ? 'true' : 'false' }}"
+       style="text-decoration: none;"
+    >
+      {{ label }}
+    </a>
+  {% endfor %}
+</div>

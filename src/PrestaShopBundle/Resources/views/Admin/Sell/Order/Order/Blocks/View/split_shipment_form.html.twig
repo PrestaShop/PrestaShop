@@ -1,0 +1,107 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{{ form_start(splitShipmentForm, {
+  action: path('admin_orders_split_shipment', {orderId: orderId, shipmentId: shipmentId}),
+  attr: {
+    id: 'split_shipment',
+    class: 'shipment-form',
+    'data-is-valid': formIsValid and not isShipped,
+  }
+}) }}
+  <div class="shipment-form__loader"></div>
+  <p class="shipment-form__tooltip-wrapper">
+    {{ 'Select the items to send separately'|trans({}, 'Admin.Orderscustomers.Feature') }}
+
+    <a
+      class="tooltip-link"
+      data-toggle="pstooltip"
+      title="{{ 'Choose the products you wish to separate into new, distinct shipments. These products will be moved from their original shipment.'|trans({}, 'Admin.Orderscustomers.Notification') }}"
+      data-placement="top"
+    >
+      <i class="material-icons">help_outline</i>
+    </a>
+  </p>
+
+  {% if formIsValid is defined and formIsValid == false %}
+    <div class="alert alert-warning" role="alert">
+      <p class="alert-text">{{ 'You can’t select all items to split the shipment. At least one item must remain in the original package to proceed.'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+    </div>
+  {% endif %}
+  {% if isShipped is defined and isShipped == true %}
+    <div class="alert alert-warning" role="alert">
+      <p class="alert-text">{{ 'This shipment can\'t be modified because a tracking number has already been assigned, indicating that it has already been shipped.'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+    </div>
+  {% endif %}
+
+  <table class="table shipment-form__table">
+    <thead>
+    <tr>
+      <th>{{ 'Products'|trans }}</th>
+      <th class="text-right">{{ 'Select quantity'|trans }}</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for product in splitShipmentForm.products %}
+      <tr>
+        <td class="shipment-form__table-product-cell">
+          <label class="shipment-form__product-label" for="{{ product.selected.vars.id }}">
+            {{ form_widget(product.selected, {
+              attr: {class: 'form-check-input shipment-form__product-checkbox'},
+              label: false,
+            }) }}
+
+            {% if product.product_image_path %}
+              <img class="shipment-form__product-image" src="{{ product.product_image_path.vars.value }}" alt="{{ product.product_reference.vars.value }}" />
+            {% endif %}
+
+            <div class="shipment-form__product-info">
+              <p class="shipment-form__product-name">{{ product.product_name.vars.value }}</p>
+              <p class="shipment-form__product-reference">{{ 'Reference: %reference%'|trans({'%reference%': product.product_reference.vars.value}, 'Admin.Global') }}</p>
+            </div>
+          </label>
+        </td>
+        <td class="shipment-form__table-quantity-cell">
+          <div class="shipment-form__quantity-wrapper">
+            {{ form_widget(product.selected_quantity, {attr: {max: product.quantity.vars.value}}) }}
+            <span class="shipment-form__quantity-total">/{{ product.quantity.vars.value }}</span>
+          </div>
+        </td>
+        <td class="d-none">
+          {{ form_rest(product) }}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="form-group mt-4 mb-0">
+    <div class="shipment-form__tooltip-wrapper">
+      <label class="m-0" for="carrier-select">{{ 'Select the carrier in charge'|trans }}</label>
+
+      <a
+        class="tooltip-link"
+        data-toggle="pstooltip"
+        title="{{ 'Select the carrier that will be responsible for shipping the newly created shipment(s) containing the selected products.'|trans({}, 'Admin.Orderscustomers.Notification') }}"
+        data-placement="top"
+      >
+        <i class="material-icons">help_outline</i>
+      </a>
+    </div>
+    {{ form_widget(splitShipmentForm.carrier, {
+      attr: {
+        class: 'form-control',
+        id: 'split_shipment_carriers'
+      }
+    }) }}
+
+    <a href="{{ path('admin_carriers_index') }}" class="shipment-form__carriers-link" target="_blank">
+      {{ 'Manage carriers'|trans }} <i class="material-icons">open_in_new</i>
+    </a>
+  </div>
+
+  {{ form_rest(splitShipmentForm) }}
+{{ form_end(splitShipmentForm) }}

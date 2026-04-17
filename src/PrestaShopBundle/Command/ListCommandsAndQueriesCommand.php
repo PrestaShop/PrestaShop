@@ -1,37 +1,19 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\Command;
 
+use ApiPlatform\Metadata\Resource\Factory\AttributesResourceNameCollectionFactory;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
+use Exception;
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandDefinition;
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandDefinitionParser;
-use PrestaShopBundle\Exception\DomainClassNameMalformedException;
+use PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractorInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -54,7 +36,9 @@ class ListCommandsAndQueriesCommand extends Command
         private CommandDefinitionParser $commandDefinitionParser,
         private array $commandAndQueries,
         private ResourceNameCollectionFactoryInterface $resourceNameCollectionFactory,
-        private ResourceMetadataCollectionFactoryInterface $resourceMetadataFactory
+        private ResourceMetadataCollectionFactoryInterface $resourceMetadataFactory,
+        private ApiResourceScopesExtractorInterface $apiResourceScopesExtractor,
+        private string $moduleDir
     ) {
         parent::__construct();
         $this->isFormatSimple = false;
@@ -119,7 +103,9 @@ class ListCommandsAndQueriesCommand extends Command
                 $output->writeln(++$key . '.');
                 $output->writeln('<blue>Class: </blue><info>' . $commandDefinition->getClassName() . '</info>');
                 $output->writeln('<blue>Type: </blue><info>' . $commandDefinition->getCommandType() . '</info>');
-                $output->writeln('<blue>API: </blue><info>' . $cqrsEndpointURI . '</info>');
+                if (!empty($cqrsEndpointURI)) {
+                    $output->writeln('<blue>API: </blue><info>' . $cqrsEndpointURI . '</info>');
+                }
                 $output->writeln('<comment>' . $commandDefinition->getDescription() . '</comment>');
                 $output->writeln('');
             }
@@ -157,18 +143,69 @@ class ListCommandsAndQueriesCommand extends Command
     }
 
     /**
-     * This method rebuild the resources from the api platform attributes.
+     * This method rebuild the resources from the api platform attributes including modules.
      *
      * @return ResourceMetadataCollection[]
      */
     private function getResourceList(): array
     {
         $resourceMetadataCollection = [];
+
+        // Get core resources (original working logic)
         foreach ($this->resourceNameCollectionFactory->create() as $resourceClass) {
-            $resourceMetadataCollection[] = $this->resourceMetadataFactory->create($resourceClass);
+            try {
+                $resourceMetadataCollection[] = $this->resourceMetadataFactory->create($resourceClass);
+            } catch (Exception $e) {
+                // Skip resources that can't be loaded
+                continue;
+            }
+        }
+
+        // Get resource classes from modules
+        $moduleApiResourceScopes = array_filter(
+            $this->apiResourceScopesExtractor->getAllApiResourceScopes(),
+            fn ($scope) => !$scope->fromCore()
+        );
+
+        foreach ($moduleApiResourceScopes as $apiResourceScope) {
+            $moduleName = $apiResourceScope->getModuleName();
+            $moduleResourcePaths = $this->getModuleResourcePaths($moduleName);
+
+            if (empty($moduleResourcePaths)) {
+                continue;
+            }
+
+            try {
+                $moduleResourceExtractor = new AttributesResourceNameCollectionFactory($moduleResourcePaths);
+                foreach ($moduleResourceExtractor->create() as $resourceClass) {
+                    try {
+                        $resourceMetadataCollection[] = $this->resourceMetadataFactory->create($resourceClass);
+                    } catch (Exception $e) {
+                        // Skip individual resources that can't be loaded (e.g., missing dependencies)
+                        continue;
+                    }
+                }
+            } catch (Exception $e) {
+                // Skip entire module if resource factory fails (e.g., invalid path)
+                continue;
+            }
         }
 
         return $resourceMetadataCollection;
+    }
+
+    private function getModuleResourcePaths(string $moduleName): array
+    {
+        $paths = [];
+        $modulePath = $this->moduleDir . $moduleName;
+
+        // Folder containing ApiPlatform resources classes
+        $moduleResourcesPath = sprintf('%s/src/ApiPlatform/Resources', $modulePath);
+        if (file_exists($moduleResourcesPath)) {
+            $paths[] = $moduleResourcesPath;
+        }
+
+        return $paths;
     }
 
     /**
@@ -177,38 +214,58 @@ class ListCommandsAndQueriesCommand extends Command
      */
     private function getCQRSEndpointURI(CommandDefinition $commandDefinition): string
     {
-        $domainArray = explode('\\', $commandDefinition->getClassName());
-        if (count($domainArray) >= 5) {
-            $domain = $domainArray[4];
-        } else {
-            throw new DomainClassNameMalformedException();
-        }
+        $cqrsClassName = $commandDefinition->getClassName();
+        $matchingEndpoints = [];
 
         foreach ($this->apiResourcesList as $apiResources) {
             foreach ($apiResources as $resource) {
-                if ($resource->getShortName() !== $domain) {
-                    return '';
-                }
-
                 $apiResourceOperations = $resource->getOperations();
                 foreach ($apiResourceOperations as $operation) {
-                    if ($this->doesMethodsMatchType($operation->getMethod(), $commandDefinition->getCommandType())) {
-                        return $operation->getUriTemplate();
+                    $extraProperties = $operation->getExtraProperties();
+
+                    // Check if this operation uses the same CQRS class
+                    $operationCQRSClass = null;
+                    if (!empty($extraProperties['CQRSQuery'])) {
+                        $operationCQRSClass = $extraProperties['CQRSQuery'];
+                    } elseif (!empty($extraProperties['CQRSCommand'])) {
+                        $operationCQRSClass = $extraProperties['CQRSCommand'];
+                    }
+
+                    if ($operationCQRSClass === $cqrsClassName
+                        && $this->doesMethodsMatchType($operation->getMethod(), $commandDefinition->getCommandType())) {
+                        $matchingEndpoints[] = [
+                            'method' => $operation->getMethod(),
+                            'uri' => $operation->getUriTemplate(),
+                        ];
                     }
                 }
             }
         }
 
-        return '';
+        if (empty($matchingEndpoints)) {
+            return '';
+        }
+
+        if (count($matchingEndpoints) === 1) {
+            return $matchingEndpoints[0]['method'] . ' ' . $matchingEndpoints[0]['uri'];
+        }
+
+        // Multiple endpoints - format as method:uri pairs
+        $formattedEndpoints = array_map(
+            fn ($endpoint) => $endpoint['method'] . ' ' . $endpoint['uri'],
+            $matchingEndpoints
+        );
+
+        return implode(', ', array_unique($formattedEndpoints));
     }
 
     private function doesMethodsMatchType(string $method, string $commandType): bool
     {
         switch ($commandType) {
             case 'Command':
-                return $method === 'POST' || $method === 'PUT';
+                return in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE']);
             case 'Query':
-                return $method === 'GET' || $method === 'DELETE';
+                return $method === 'GET';
             default:
                 return false;
         }

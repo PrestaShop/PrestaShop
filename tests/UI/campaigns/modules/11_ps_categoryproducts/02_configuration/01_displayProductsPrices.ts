@@ -8,8 +8,8 @@ import {
   type BrowserContext,
   dataModules,
   dataProducts,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   modPsCategoryProductsBoMain,
   type Page,
   utilsPlaywright,
@@ -81,35 +81,35 @@ describe('Category products module - Display products\' prices', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFOAfterDisable', baseContext);
 
     page = await boModuleManagerPage.viewMyShop(page);
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
   it('should go to the product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageAfterDisable', baseContext);
 
-    await foClassicHomePage.goToProductPage(page, dataProducts.demo_6.id);
+    await foHummingbirdHomePage.goToProductPage(page, dataProducts.demo_6.id);
 
-    const pageTitle = await foClassicProductPage.getPageTitle(page);
+    const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
     expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_6.name.toUpperCase());
   });
 
   it('should check if the price in the "Category Products" block is not visible', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNotVisible', baseContext);
 
-    const hasProductsBlock = await foClassicProductPage.hasProductsBlock(page, 'categoryproducts');
+    const hasProductsBlock = await foHummingbirdProductPage.hasProductsBlock(page, 'ps-categoryproducts');
     expect(hasProductsBlock).to.eq(true);
 
-    const hasProductsBlockPrice = await foClassicProductPage.hasProductsBlockPrice(page, 'categoryproducts');
+    const hasProductsBlockPrice = await foHummingbirdProductPage.hasProductsBlockPrice(page, 'ps-categoryproducts');
     expect(hasProductsBlockPrice).to.eq(false);
   });
 
   it('should enable the Display products\' prices', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableDisplay', baseContext);
 
-    page = await foClassicProductPage.changePage(browserContext, 0);
+    page = await foHummingbirdProductPage.changePage(browserContext, 0);
 
     const textResult = await modPsCategoryProductsBoMain.setDisplayProductsPriceStatus(page, true);
     expect(textResult).to.contains(modPsCategoryProductsBoMain.successfulUpdateMessage);
@@ -119,12 +119,12 @@ describe('Category products module - Display products\' prices', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkVisible', baseContext);
 
     page = await modPsCategoryProductsBoMain.changePage(browserContext, 1);
-    await foClassicProductPage.reloadPage(page);
+    await foHummingbirdProductPage.reloadPage(page);
 
-    const hasProductsBlock = await foClassicProductPage.hasProductsBlock(page, 'categoryproducts');
+    const hasProductsBlock = await foHummingbirdProductPage.hasProductsBlock(page, 'ps-categoryproducts');
     expect(hasProductsBlock).to.eq(true);
 
-    const hasProductsBlockPrice = await foClassicProductPage.hasProductsBlockPrice(page, 'categoryproducts');
+    const hasProductsBlockPrice = await foHummingbirdProductPage.hasProductsBlockPrice(page, 'ps-categoryproducts');
     expect(hasProductsBlockPrice).to.eq(true);
   });
 });

@@ -35,6 +35,7 @@ services:
       - "@prestashop.adapter.mail_template.partial_template_renderer"
       - "@prestashop.core.localization.locale.context_locale"
       - "@translator"
+      - '@PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentService'
 
   prestashop.adapter.mail_template.preview_variables_builder:
     alias: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder'

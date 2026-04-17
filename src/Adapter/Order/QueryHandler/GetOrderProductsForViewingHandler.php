@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
@@ -48,6 +28,7 @@ use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Util\Sorter;
+use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use Product;
 use Shop;
 use StockAvailable;
@@ -58,29 +39,12 @@ use StockAvailable;
 #[AsQueryHandler]
 final class GetOrderProductsForViewingHandler extends AbstractOrderHandler implements GetOrderProductsForViewingHandlerInterface
 {
-    /**
-     * @var ImageTagSourceParserInterface
-     */
-    private $imageTagSourceParser;
-
-    /**
-     * @var int
-     */
-    private $contextLanguageId;
-
-    /**
-     * @var Locale
-     */
-    private $locale;
-
     public function __construct(
-        ImageTagSourceParserInterface $imageTagSourceParser,
-        int $contextLanguageId,
-        Locale $locale
+        private readonly ImageTagSourceParserInterface $imageTagSourceParser,
+        private readonly int $contextLanguageId,
+        private readonly Locale $locale,
+        private readonly ShipmentRepository $shipmentRepository
     ) {
-        $this->imageTagSourceParser = $imageTagSourceParser;
-        $this->contextLanguageId = $contextLanguageId;
-        $this->locale = $locale;
     }
 
     public function handle(GetOrderProductsForViewing $query): OrderProductsForViewing
@@ -199,6 +163,19 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 OrderProductForViewing::TYPE_PRODUCT_WITHOUT_COMBINATIONS;
 
             $orderInvoice = new OrderInvoice($product['id_order_invoice']);
+            $shipments = $this->shipmentRepository->findByOrderId($order->id);
+            $shipmentIds = [];
+
+            if ($shipments) {
+                foreach ($shipments as $shipment) {
+                    $shipmentProducts = $shipment->getProducts();
+                    foreach ($shipmentProducts as $shipmentProduct) {
+                        if ($shipmentProduct->getOrderDetailId() == $product['id_order_detail']) {
+                            $shipmentIds[] = $shipment->getId();
+                        }
+                    }
+                }
+            }
 
             $packItems = [];
             foreach ($product['pack_items'] as $pack_item) {
@@ -265,7 +242,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product['product_id'])),
                 $packItems,
                 $product['customizations'],
-                $product['product_mpn']
+                $product['product_mpn'],
+                $shipmentIds
             );
         }
 

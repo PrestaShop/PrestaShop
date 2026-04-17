@@ -3,7 +3,7 @@ import {expect} from 'chai';
 
 // Import common tests
 import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/currency';
-import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boDashboardPage,

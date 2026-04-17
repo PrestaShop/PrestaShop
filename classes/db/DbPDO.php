@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -61,16 +41,36 @@ class DbPDOCore extends Db
         }
         $dsn .= ';charset=utf8mb4';
 
+        $options = [
+            PDO::ATTR_TIMEOUT => $timeout,
+        ];
+        /*
+         * PHP 8.5 deprecated the driver specific PDO:: prefixed constants due to security concerns. Their
+         * replacements are the new Pdo\Mysql:: constants, introduced in PHP 8.4. Unfortunately, we don't
+         * have one solution that fits all supported PHP versions.
+         */
+        if (PHP_VERSION_ID >= 80500) {
+            $options = array_merge($options, [
+                /* @phpstan-ignore-next-line */
+                Pdo\Mysql::ATTR_USE_BUFFERED_QUERY => true,
+                /* @phpstan-ignore-next-line */
+                Pdo\Mysql::ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
+                /* @phpstan-ignore-next-line */
+                Pdo\Mysql::ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
+            ]);
+        } else {
+            $options = array_merge($options, [
+                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
+                PDO::MYSQL_ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
+            ]);
+        }
+
         return new PDO(
             $dsn,
             $user,
             $password,
-            [
-                PDO::ATTR_TIMEOUT => $timeout,
-                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
-                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
-                PDO::MYSQL_ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
-            ]
+            $options
         );
     }
 

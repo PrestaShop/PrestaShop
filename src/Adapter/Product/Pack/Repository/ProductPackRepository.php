@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -30,15 +10,23 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Pack\Repository;
 
 use Doctrine\DBAL\Connection;
 use Pack;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
@@ -58,7 +46,10 @@ class ProductPackRepository extends AbstractObjectModelRepository
 
     public function __construct(
         Connection $connection,
-        string $dbPrefix
+        string $dbPrefix,
+        private ProductRepository $productRepository,
+        private ConfigurationInterface $configuration,
+        private StockAvailableRepository $stockAvailableRepository,
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
@@ -204,6 +195,78 @@ class ProductPackRepository extends AbstractObjectModelRepository
         return array_map(function (array $packData) {
             return new PackId((int) $packData['id_product_pack']);
         }, $packs);
+    }
+
+    public function getDynamicPackQuantity(ProductId $productId, ShopId $shopId): ?int
+    {
+        $product = $this->productRepository->get($productId, $shopId);
+        if ($product->getProductType() !== ProductType::TYPE_PACK) {
+            return null;
+        }
+
+        $packQuantity = null;
+
+        // First, get pack stock type
+        $packStockType = (int) $product->pack_stock_type;
+        if ($packStockType === PackStockType::STOCK_TYPE_DEFAULT) {
+            $packStockType = (int) $this->configuration->get('PS_PACK_STOCK_TYPE');
+        }
+
+        // Now get quantity based on the pack stock type
+        if ($packStockType === PackStockType::STOCK_TYPE_PACK_ONLY) {
+            try {
+                $stockAvailable = $this->stockAvailableRepository->getForProduct($productId, $shopId);
+                $packQuantity = $stockAvailable->quantity;
+            } catch (StockAvailableNotFoundException) {
+                $packQuantity = 0;
+            }
+        } elseif ($packStockType === PackStockType::STOCK_TYPE_PRODUCTS_ONLY || $packStockType === PackStockType::STOCK_TYPE_BOTH) {
+            $packedItems = $this->getPackedProducts(
+                new PackId((int) $product->id),
+                new LanguageId((int) $this->configuration->get('PS_LANG_DEFAULT')),
+                ShopConstraint::shop($shopId->getValue())
+            );
+
+            // Compute minimum quantity based on products
+            $productsMinQuantity = null;
+            foreach ($packedItems as $packedItem) {
+                $packedItemProductId = (int) $packedItem['id_product_item'];
+                $packedItemCombinationId = (int) $packedItem['id_product_attribute_item'];
+                $packedItemQuantity = (int) $packedItem['quantity'];
+                try {
+                    if (empty($packedItemCombinationId)) {
+                        $packedItemStockAvailable = $this->stockAvailableRepository->getForProduct(new ProductId($packedItemProductId), $shopId);
+                    } else {
+                        $packedItemStockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId($packedItemCombinationId), $shopId);
+                    }
+
+                    $packedItemStock = $packedItemStockAvailable->quantity;
+                } catch (StockAvailableNotFoundException) {
+                    $packedItemStock = 0;
+                }
+
+                // Depending on the quantity required in the packs the amount of possible pack is impacted
+                $availablePackUnits = (int) floor($packedItemStock / $packedItemQuantity);
+                if ($productsMinQuantity === null) {
+                    $productsMinQuantity = $availablePackUnits;
+                } else {
+                    $productsMinQuantity = min($productsMinQuantity, $availablePackUnits);
+                }
+            }
+
+            if ($packStockType === PackStockType::STOCK_TYPE_PRODUCTS_ONLY) {
+                $packQuantity = $productsMinQuantity;
+            } else {
+                try {
+                    $stockAvailable = $this->stockAvailableRepository->getForProduct($productId, $shopId);
+                    $packQuantity = min($productsMinQuantity, (int) $stockAvailable->quantity);
+                } catch (StockAvailableNotFoundException) {
+                    $packQuantity = 0;
+                }
+            }
+        }
+
+        return $packQuantity;
     }
 
     /**

@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Product\Command;
@@ -80,6 +60,12 @@ class AddProductToOrderCommand
      */
     private $hasFreeShipping;
 
+    private ?int $shipmentId = null;
+
+    private ?int $carrierId = null;
+
+    private ?bool $isVirtual = null;
+
     /**
      * Add product to an order with new invoice. It applies to orders that were already paid and waiting for payment.
      *
@@ -90,6 +76,9 @@ class AddProductToOrderCommand
      * @param string $productPriceTaxExcluded
      * @param int $productQuantity
      * @param bool|null $hasFreeShipping
+     * @param int|null $shipmentId
+     * @param int|null $carrierId
+     * @param bool|null $isVirtual
      *
      * @return self
      *
@@ -104,7 +93,10 @@ class AddProductToOrderCommand
         string $productPriceTaxIncluded,
         string $productPriceTaxExcluded,
         int $productQuantity,
-        ?bool $hasFreeShipping = null
+        ?bool $hasFreeShipping = null,
+        ?int $shipmentId = null,
+        ?int $carrierId = null,
+        ?bool $isVirtual = null
     ) {
         $command = new self(
             $orderId,
@@ -116,6 +108,9 @@ class AddProductToOrderCommand
         );
 
         $command->hasFreeShipping = $hasFreeShipping;
+        $command->shipmentId = $shipmentId;
+        $command->carrierId = $carrierId;
+        $command->isVirtual = $isVirtual;
 
         return $command;
     }
@@ -130,6 +125,9 @@ class AddProductToOrderCommand
      * @param string $productPriceTaxIncluded
      * @param string $productPriceTaxExcluded
      * @param int $productQuantity
+     * @param int|null $shipmentId
+     * @param int|null $carrierId
+     * @param bool|null $isVirtual
      *
      * @return self
      *
@@ -144,7 +142,10 @@ class AddProductToOrderCommand
         int $combinationId,
         string $productPriceTaxIncluded,
         string $productPriceTaxExcluded,
-        int $productQuantity
+        int $productQuantity,
+        ?int $shipmentId = null,
+        ?int $carrierId = null,
+        ?bool $isVirtual = null
     ) {
         $command = new self(
             $orderId,
@@ -156,6 +157,9 @@ class AddProductToOrderCommand
         );
 
         $command->orderInvoiceId = $orderInvoiceId;
+        $command->shipmentId = $shipmentId;
+        $command->carrierId = $carrierId;
+        $command->isVirtual = $isVirtual;
 
         return $command;
     }
@@ -254,6 +258,21 @@ class AddProductToOrderCommand
     public function hasFreeShipping(): ?bool
     {
         return $this->hasFreeShipping;
+    }
+
+    public function getShipmentId(): ?int
+    {
+        return $this->shipmentId;
+    }
+
+    public function getCarrierId(): ?int
+    {
+        return $this->carrierId;
+    }
+
+    public function isVirtual(): ?bool
+    {
+        return $this->isVirtual;
     }
 
     /**

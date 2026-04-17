@@ -9,9 +9,9 @@ import {
   type BrowserContext,
   dataCategories,
   FakerCategory,
-  foClassicHomePage,
-  foClassicCategoryPage,
-  foClassicSitemapPage,
+  foHummingbirdHomePage,
+  foHummingbirdCategoryPage,
+  foHummingbirdSitemapPage,
   type Page,
   utilsFile,
   utilsPlaywright,
@@ -19,15 +19,13 @@ import {
 
 const baseContext: string = 'functional_BO_catalog_categories_editHomeCategory';
 
-// Edit home category
 describe('BO - Catalog - Categories : Edit home category', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let categoryID: number;
 
-  const editCategoryData: FakerCategory = new FakerCategory({name: 'Home'});
+  const editCategoryData: FakerCategory = new FakerCategory({name: 'Home 123'});
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -77,44 +75,44 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
   it('should update the category', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'updateCategory', baseContext);
 
+    categoryID = await boCategoriesCreatePage.getIDCategory(page);
+
     const textResult = await boCategoriesCreatePage.editHomeCategory(page, editCategoryData);
-    expect(textResult).to.equal(boCategoriesPage.pageRootTitle);
+    expect(textResult).to.equal(boCategoriesPage.pageTitle);
   });
 
   it('should go to FO and check the updated category', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCategoryFO', baseContext);
-
-    categoryID = parseInt(await boCategoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category'), 10);
     // View Shop
     page = await boCategoriesPage.viewMyShop(page);
     // Change FO language
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
-    expect(isHomePage, 'Fail to open FO home page').to.eq(true);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+    expect(isHomePage).to.eq(true);
 
     // Go to sitemap page
-    await foClassicHomePage.goToFooterLink(page, 'Sitemap');
+    await foHummingbirdHomePage.goToFooterLink(page, 'Sitemap');
 
-    const pageTitle = await foClassicSitemapPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicSitemapPage.pageTitle);
+    const pageTitle = await foHummingbirdSitemapPage.getPageTitle(page);
+    expect(pageTitle).to.equal(foHummingbirdSitemapPage.pageTitle);
 
     // Check category name
-    const categoryName = await foClassicSitemapPage.getCategoryName(page, categoryID);
+    const categoryName = await foHummingbirdSitemapPage.getCategoryName(page, categoryID);
     expect(categoryName).to.contains(editCategoryData.name);
   });
 
   it('should view the created category', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'viewCreatedCategoryFO', baseContext);
 
-    await foClassicSitemapPage.viewCreatedCategory(page, categoryID);
+    await foHummingbirdSitemapPage.viewCreatedCategory(page, categoryID);
 
     // Check category name
-    const pageTitle = await foClassicCategoryPage.getHeaderPageName(page);
-    expect(pageTitle).to.contains(editCategoryData.name.toUpperCase());
+    const pageTitle = await foHummingbirdCategoryPage.getHeaderPageName(page);
+    expect(pageTitle).to.contains(editCategoryData.name);
 
     // Check category description
-    const categoryDescription = await foClassicCategoryPage.getCategoryDescription(page);
+    const categoryDescription = await foHummingbirdCategoryPage.getCategoryDescription(page);
     expect(categoryDescription).to.equal(editCategoryData.description);
   });
 
@@ -122,16 +120,7 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
     // Close tab and init other page objects with new current tab
-    page = await foClassicCategoryPage.closePage(browserContext, page, 0);
-
-    const pageTitle = await boCategoriesPage.getPageTitle(page);
-    expect(pageTitle).to.contains(boCategoriesPage.pageRootTitle);
-  });
-
-  it('should click on view category', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToViewCreatedCategoryPage', baseContext);
-
-    await boCategoriesPage.goToViewSubCategoriesPage(page, 1);
+    page = await foHummingbirdCategoryPage.closePage(browserContext, page, 0);
 
     const pageTitle = await boCategoriesPage.getPageTitle(page);
     expect(pageTitle).to.contains(boCategoriesPage.pageTitle);
@@ -150,6 +139,6 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'resetUpdateCategory', baseContext);
 
     const textResult = await boCategoriesCreatePage.editHomeCategory(page, dataCategories.home);
-    expect(textResult).to.equal(boCategoriesPage.pageRootTitle);
+    expect(textResult).to.equal(boCategoriesPage.pageTitle);
   });
 });

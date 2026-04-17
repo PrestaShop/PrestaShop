@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 /**
@@ -87,21 +67,17 @@ class ImageTypeCore extends ObjectModel
      *
      * @param string|null $type Image type
      * @param bool $orderBySize
-     * @param string|null $theme Theme name
      *
      * @return array Image type definitions
      *
      * @throws PrestaShopDatabaseException
      */
-    public static function getImagesTypes($type = null, $orderBySize = false, $theme = null)
+    public static function getImagesTypes($type = null, $orderBySize = false)
     {
-        if (!isset(self::$images_types_cache[$type][$theme])) {
+        if (!isset(self::$images_types_cache[$type])) {
             $where = 'WHERE 1';
             if (!empty($type)) {
                 $where .= ' AND `' . bqSQL($type) . '` = 1 ';
-            }
-            if (null !== $theme) {
-                $where .= ' AND `theme_name` = \'' . pSQL($theme) . '\' OR `theme_name` IS NULL';
             }
 
             if ($orderBySize) {
@@ -110,10 +86,10 @@ class ImageTypeCore extends ObjectModel
                 $query = 'SELECT * FROM `' . _DB_PREFIX_ . 'image_type` ' . $where . ' ORDER BY `name` ASC';
             }
 
-            self::$images_types_cache[$type][$theme] = Db::getInstance()->executeS($query);
+            self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
         }
 
-        return self::$images_types_cache[$type][$theme];
+        return self::$images_types_cache[$type];
     }
 
     /**
@@ -211,7 +187,12 @@ class ImageTypeCore extends ObjectModel
             return $themeName . '_' . $nameWithoutThemeName;
         }
 
-        return $nameWithoutThemeName . '_default';
+        // only if "default" isn't already in name, we return it with default
+        if (!strstr($name, 'default')) {
+            return $nameWithoutThemeName . '_default';
+        }
+
+        return $nameWithoutThemeName;
     }
 
     /**

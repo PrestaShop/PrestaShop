@@ -8,26 +8,24 @@ import {
   boProductSettingsPage,
   type BrowserContext,
   dataProducts,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_productSettings_productPage_displayAvailableQuantities';
 
-/*
-Disable display available quantities on product page
-Check that quantity is not displayed
-Enable display available quantities on product page
-Check that quantity is displayed
+/**
+ * Disable display available quantities on product page
+ * Check that quantity is not displayed
+ * Enable display available quantities on product page
+ * Check that quantity is displayed
  */
-
 describe('BO - Shop Parameters - Product Settings : Display available quantities on the product page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -61,20 +59,18 @@ describe('BO - Shop Parameters - Product Settings : Display available quantities
     expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
   });
 
-  const tests = [
-    {args: {action: 'disable', enable: false}},
-    {args: {action: 'enable', enable: true}},
-  ];
-
-  tests.forEach((test, index: number) => {
-    it(`should ${test.args.action} Display available quantities on the product page`, async function () {
+  [
+    {action: 'disable', enable: false},
+    {action: 'enable', enable: true},
+  ].forEach((test: {action: string, enable: boolean}, index: number) => {
+    it(`should ${test.action} Display available quantities on the product page`, async function () {
       await testContext.addContextItem(this,
         'testIdentifier',
-        `${test.args.action}DisplayAvailableQuantities`,
+        `${test.action}DisplayAvailableQuantities`,
         baseContext,
       );
 
-      const result = await boProductSettingsPage.setDisplayAvailableQuantitiesStatus(page, test.args.enable);
+      const result = await boProductSettingsPage.setDisplayAvailableQuantitiesStatus(page, test.enable);
       expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
 
@@ -83,30 +79,30 @@ describe('BO - Shop Parameters - Product Settings : Display available quantities
 
       page = await boProductSettingsPage.viewMyShop(page);
 
-      const isHomePage = await foClassicHomePage.isHomePage(page);
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
       expect(isHomePage, 'Home page was not opened').to.eq(true);
     });
 
     it('should go to the first product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToFirstProductPage${index}`, baseContext);
 
-      await foClassicHomePage.goToProductPage(page, 1);
+      await foHummingbirdHomePage.goToProductPage(page, 1);
 
-      const pageTitle = await foClassicProductPage.getPageTitle(page);
+      const pageTitle = await foHummingbirdProductPage.getPageTitle(page);
       expect(pageTitle.toUpperCase()).to.contains(dataProducts.demo_1.name.toUpperCase());
     });
 
     it('should check the product quantity on the product page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkQuantity${index}`, baseContext);
 
-      const quantityIsVisible = await foClassicProductPage.isQuantityDisplayed(page);
-      expect(quantityIsVisible).to.be.equal(test.args.enable);
+      const quantityIsVisible = await foHummingbirdProductPage.isQuantityDisplayed(page);
+      expect(quantityIsVisible).to.be.equal(test.enable);
     });
 
     it('should close the page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
-      page = await foClassicProductPage.closePage(browserContext, page, 0);
+      page = await foHummingbirdProductPage.closePage(browserContext, page, 0);
 
       const pageTitle = await boProductSettingsPage.getPageTitle(page);
       expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);

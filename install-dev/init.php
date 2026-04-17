@@ -1,29 +1,11 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 use Doctrine\DBAL\Exception as DBALException;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use Symfony\Component\Dotenv\Dotenv;
 
 ob_start();
 
@@ -89,39 +71,20 @@ if ((!is_dir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'vendor') ||
 require_once _PS_CORE_DIR_ . '/config/defines.inc.php';
 require_once _PS_CORE_DIR_ . '/config/autoload.php';
 
+// Loads .env file from the root of project
+$dotEnvFile = dirname(__FILE__, 2) . '/.env';
+(new Dotenv())
+    // DO NOT use putEnv
+    ->usePutenv(false)
+    ->loadEnv($dotEnvFile)
+;
+
 if (file_exists(_PS_CORE_DIR_ . '/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_ . '/config/bootstrap.php';
 }
 
 if (!defined('_THEME_NAME_')) {
-    // @see app/config.yml _PS_THEME_NAME default value is "classic".
-    if (getenv('PS_THEME_NAME') !== false) {
-        define('_THEME_NAME_', getenv('PS_THEME_NAME'));
-    } else {
-        /**
-         * @deprecated since 1.7.5.x to be removed in 9.x
-         * Rely on "PS_THEME_NAME" environment variable value
-         */
-        $dirThemes = dirname(__DIR__) . '/themes/';
-        $fileConfig = '/config/theme.yml';
-        $defaultTheme = 'classic';
-        // Choose classic theme as default
-        if (file_exists($dirThemes . $defaultTheme . $fileConfig)) {
-            define('_THEME_NAME_', $defaultTheme);
-        } else {
-            // Choose the first theme alphabetically
-            $themes = glob($dirThemes . '*' . $fileConfig, GLOB_NOSORT);
-            usort($themes, function ($a, $b) {
-                return strcmp($a, $b);
-            });
-
-            if (empty($themes)) {
-                die('Error: Cannot find a valid theme in themes/ folder');
-            }
-
-            define('_THEME_NAME_', basename(substr($themes[0], 0, -strlen('/config/theme.yml'))));
-        }
-    }
+    define('_THEME_NAME_', Theme::getDefaultTheme());
 }
 
 require_once _PS_CORE_DIR_ . '/config/defines_uri.inc.php';

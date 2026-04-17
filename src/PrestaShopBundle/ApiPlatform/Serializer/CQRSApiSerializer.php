@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 namespace PrestaShopBundle\ApiPlatform\Serializer;
@@ -31,6 +11,7 @@ use PrestaShopBundle\ApiPlatform\ContextParametersProvider;
 use PrestaShopBundle\ApiPlatform\LocalizedValueUpdater;
 use PrestaShopBundle\ApiPlatform\Metadata\LocalizedValue;
 use PrestaShopBundle\ApiPlatform\NormalizationMapper;
+use PrestaShopBundle\ApiPlatform\PositionCollectionUpdater;
 use ReflectionNamedType;
 use Symfony\Component\Serializer\Encoder\ContextAwareDecoderInterface;
 use Symfony\Component\Serializer\Encoder\ContextAwareEncoderInterface;
@@ -56,6 +37,7 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
         protected readonly ClassMetadataFactoryInterface $classMetadataFactory,
         protected readonly LocalizedValueUpdater $localizedValueUpdater,
         protected readonly NormalizationMapper $normalizationMapper,
+        protected readonly PositionCollectionUpdater $positionCollectionUpdater,
     ) {
     }
 
@@ -106,7 +88,7 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
 
         // Update localized value to be adapted for denormalization
         if (is_array($data)) {
-            $data = $this->updateLocalizedValues($data, $type, true, $context);
+            $data = $this->denormalizeLocalizedValues($data, $type, $context);
         }
 
         return $this->decorated->denormalize($data, $type, $format, $context);
@@ -124,7 +106,8 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
 
         // Then update the localized values to use the appropriate indexes
         if (is_object($object) && class_exists(get_class($object))) {
-            $normalizedData = $this->updateLocalizedValues($normalizedData, get_class($object), false, $context);
+            $normalizedData = $this->normalizeLocalizedValues($normalizedData, get_class($object), $context);
+            $normalizedData = $this->positionCollectionUpdater->normalizePositionCollection($normalizedData, get_class($object));
         }
 
         // Finally perform normalization mapping
@@ -150,27 +133,40 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
     }
 
     /**
-     * Adapt data for localized values so that the indexes match the expected value (ID or locale)
+     * Denormalize data for localized values so that the indexes match the expected value (ID or locale)
      */
-    protected function updateLocalizedValues(array $data, string $type, bool $denormalize, array $context = []): array
+    protected function denormalizeLocalizedValues(array $data, string $type, array $context = []): array
     {
         $localizedAttributesContext = $this->localizedValueUpdater->getLocalizedAttributesContext($type);
         if (!empty($localizedAttributesContext)) {
             foreach ($localizedAttributesContext as $parameterName => $attributeContext) {
                 if (!empty($data[$parameterName])) {
-                    if ($denormalize) {
-                        $data[$parameterName] = $this->localizedValueUpdater->denormalizeLocalizedValue(
-                            $data[$parameterName],
-                            $parameterName,
-                            $context + [LocalizedValue::IS_LOCALIZED_VALUE => true] + $attributeContext
-                        );
-                    } else {
-                        $data[$parameterName] = $this->localizedValueUpdater->normalizeLocalizedValue(
-                            $data[$parameterName],
-                            $parameterName,
-                            $context + [LocalizedValue::IS_LOCALIZED_VALUE => true] + $attributeContext
-                        );
-                    }
+                    $data[$parameterName] = $this->localizedValueUpdater->denormalizeLocalizedValue(
+                        $data[$parameterName],
+                        $parameterName,
+                        $context + [LocalizedValue::IS_LOCALIZED_VALUE => true] + $attributeContext
+                    );
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Normalize data for localized values so that the indexes match the expected value (ID or locale)
+     */
+    protected function normalizeLocalizedValues(array $data, string $type, array $context = []): array
+    {
+        $localizedAttributesContext = $this->localizedValueUpdater->getLocalizedAttributesContext($type);
+        if (!empty($localizedAttributesContext)) {
+            foreach ($localizedAttributesContext as $parameterName => $attributeContext) {
+                if (!empty($data[$parameterName])) {
+                    $data[$parameterName] = $this->localizedValueUpdater->normalizeLocalizedValue(
+                        $data[$parameterName],
+                        $parameterName,
+                        $context + [LocalizedValue::IS_LOCALIZED_VALUE => true] + $attributeContext
+                    );
                 }
             }
         }

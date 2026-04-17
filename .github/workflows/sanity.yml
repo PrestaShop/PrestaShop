@@ -13,43 +13,27 @@ env:
   TEST_CAMPAIGN: 'sanity:fast-fail'
 
 jobs:
+  # Define which PHP versions need to be used
+  workflow_matrix_generator:
+    name: Sanity matrix
+    uses: ./.github/workflows/workflow-matrix-generator.yml
+    with:
+      matrix_type: sanity
   sanity:
     permissions:
       contents: read   #   to fetch code (actions/checkout)
     runs-on: ubuntu-latest
     name: Sanity
+    needs: workflow_matrix_generator
     strategy:
-      matrix:
-        include:
-          ## Check all PHP versions
-          - php: 8.1
-            browser: chromium
-            db: mysql
-          - php: 8.2
-            browser: chromium
-            db: mysql
-          - php: 8.3
-            browser: chromium
-            db: mysql
-          - php: 8.4
-            browser: chromium
-            db: mysql
-
-          ## Check all browsers (except Chrome)
-          - php: 8.4
-            browser: firefox
-            db: mysql
-          ## @todo : https://github.com/PrestaShop/PrestaShop/issues/37680
-          # - php: 8.4
-          #   browser: webkit
-          #   db: mysql
-
-          ## Check all DB supported
-          # MySQL is checked in sanity
-          # MariaDB is check in nightly
+      matrix: ${{ fromJSON(needs.workflow_matrix_generator.outputs.dynamic_matrix) }}
       fail-fast: false
-
     steps:
+      - name: Prepare docker prefix with repository name lower cased
+        run: |
+          REPOSITORY_NAME=${{ github.event.repository.name }}
+          echo "DOCKER_PREFIX=${REPOSITORY_NAME@L}" >> $GITHUB_ENV
+
       - uses: actions/checkout@v4
 
       - name: Setup Environment
@@ -64,7 +48,7 @@ jobs:
       - name: Setup Environment failure
         uses: ./.github/actions/setup-env-export-logs
         with:
-          DOCKER_PREFIX: prestashop
+          DOCKER_PREFIX: ${{ env.DOCKER_PREFIX }}
           ARTIFACT_NAME: setup-sanity-${{ matrix.php }}-${{ matrix.browser }}-${{ matrix.db }}
           DB_SERVER: ${{ matrix.db }}
           ENABLE_SSL: 'true'
@@ -83,7 +67,7 @@ jobs:
         run: |
           mkdir -p ./var/docker-logs
           docker logs prestashop-${{ matrix.db }}-1 > ./var/docker-logs/${{ matrix.db }}.log
-          docker logs prestashop-prestashop-git-1 > ./var/docker-logs/prestashop.log
+          docker logs ${{ inputs.DOCKER_PREFIX }}-prestashop-git-1 > ./var/docker-logs/prestashop.log
 
       - name: Upload Screenshots and logs
         uses: actions/upload-artifact@v4

@@ -1,26 +1,6 @@
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 import Router from '@components/router';
@@ -65,6 +45,10 @@ export default class OrderProductAdd {
 
   productAddMenuBtn: JQuery;
 
+  productShipmentSelect: JQuery;
+
+  productCarrierSelect: HTMLSelectElement;
+
   available: number | null;
 
   product: Record<string, any>;
@@ -82,6 +66,8 @@ export default class OrderProductAdd {
   taxExcluded: number | null;
 
   taxIncluded: number | null;
+
+  isMultishipmentIsEnabled: boolean;
 
   constructor() {
     this.router = new Router();
@@ -103,7 +89,11 @@ export default class OrderProductAdd {
     this.invoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
     this.freeShippingSelect = $(OrderViewPageMap.productAddFreeShippingSelect);
     this.productAddMenuBtn = $(OrderViewPageMap.productAddBtn);
+    this.productShipmentSelect = $(OrderViewPageMap.selectAddShipment);
     this.available = null;
+    // eslint-disable-next-line max-len
+    this.isMultishipmentIsEnabled = document.querySelector<HTMLElement>(OrderViewPageMap.productsTable)?.dataset.multishipmentEnabled === '1';
+    this.productCarrierSelect = document.querySelector<HTMLSelectElement>(OrderViewPageMap.productSelectCarriers)!;
     this.setupListener();
     this.product = {};
     this.currencyPrecision = $(OrderViewPageMap.productsTable).data(
@@ -118,6 +108,19 @@ export default class OrderProductAdd {
   }
 
   setupListener(): void {
+    if (this.isMultishipmentIsEnabled) {
+      const confirmCheckbox = document.querySelector<HTMLInputElement>(OrderViewPageMap.addProductConfirmNewInvoiceCheckbox);
+
+      if (confirmCheckbox) {
+        confirmCheckbox.addEventListener('change', () => {
+          const invoiceId = parseInt(<string> this.invoiceSelect.val(), 10);
+
+          if (invoiceId === 0) {
+            this.productAddActionBtn.prop('disabled', !confirmCheckbox.checked);
+          }
+        });
+      }
+    }
     this.combinationsSelect.on('change', (event) => {
       const taxExcluded = window.ps_round(
         $(event.currentTarget)
@@ -243,14 +246,27 @@ export default class OrderProductAdd {
       );
     });
 
-    this.productAddActionBtn.on('click', (event: JQueryEventObject) => this.confirmNewInvoice(event),
+    this.productAddActionBtn.off('click').on('click', (event: JQueryEventObject) => this.confirmNewInvoice(event),
     );
-    this.invoiceSelect.on('change', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo(),
-    );
+    this.invoiceSelect.on('change', () => {
+      this.orderProductRenderer.toggleProductAddNewInvoiceInfo();
+
+      if (this.isMultishipmentIsEnabled) {
+        const confirmCheckbox = document.querySelector<HTMLInputElement>(OrderViewPageMap.addProductConfirmNewInvoiceCheckbox);
+        const invoiceId = parseInt(<string> this.invoiceSelect.val(), 10);
+
+        if (invoiceId === 0 && confirmCheckbox) {
+          this.productAddActionBtn.prop('disabled', !confirmCheckbox.checked);
+        } else {
+          this.productAddActionBtn.prop('disabled', false);
+        }
+      }
+    });
   }
 
   setProduct(product: Record<string, any> | undefined): void {
     if (product) {
+      this.product = product;
       this.productIdInput.val(product.productId).trigger('change');
       const taxExcluded = window.ps_round(product.priceTaxExcl, this.currencyPrecision);
       this.priceTaxExcludedInput.val(taxExcluded);
@@ -309,6 +325,13 @@ export default class OrderProductAdd {
       quantity: this.quantityInput.val(),
       invoice_id: this.invoiceSelect.val(),
       free_shipping: this.freeShippingSelect.prop('checked'),
+      virtual: Number(this.product.virtual),
+      ...(this.isMultishipmentIsEnabled && {
+        shipment_id: this.productShipmentSelect.val(),
+      }),
+      ...(this.isMultishipmentIsEnabled && this.productShipmentSelect.val() === '0' && {
+        carrier_id: this.productCarrierSelect.value,
+      }),
     };
 
     $.ajax({
@@ -317,6 +340,9 @@ export default class OrderProductAdd {
       data: params,
     }).then(
       (response) => {
+        if (this.isMultishipmentIsEnabled) {
+          $(OrderViewPageMap.productAddModal).modal('hide');
+        }
         EventEmitter.emit(OrderViewEventMap.productAddedToOrder, {
           orderId,
           orderProductId: params.product_id,
@@ -341,23 +367,28 @@ export default class OrderProductAdd {
 
   confirmNewInvoice(event: JQueryEventObject): void {
     const invoiceId = parseInt(<string> this.invoiceSelect.val(), 10);
-    const orderId = $(event.currentTarget).data('orderId');
+    const target = event.currentTarget as HTMLElement;
+    const orderId = Number(target.dataset.orderId);
 
     // Explicit 0 value is used when we the user selected New Invoice
     if (invoiceId === 0) {
-      const modal = new ConfirmModal(
-        {
-          id: 'modal-confirm-new-invoice',
-          confirmTitle: this.invoiceSelect.data('modal-title'),
-          confirmMessage: this.invoiceSelect.data('modal-body'),
-          confirmButtonLabel: this.invoiceSelect.data('modal-apply'),
-          closeButtonLabel: this.invoiceSelect.data('modal-cancel'),
-        },
-        () => {
-          this.confirmNewPrice(orderId, invoiceId);
-        },
-      );
-      modal.show();
+      if (!this.isMultishipmentIsEnabled) {
+        const modal = new ConfirmModal(
+          {
+            id: 'modal-confirm-new-invoice',
+            confirmTitle: this.invoiceSelect.data('modal-title'),
+            confirmMessage: this.invoiceSelect.data('modal-body'),
+            confirmButtonLabel: this.invoiceSelect.data('modal-apply'),
+            closeButtonLabel: this.invoiceSelect.data('modal-cancel'),
+          },
+          () => {
+            this.confirmNewPrice(orderId, invoiceId);
+          },
+        );
+        modal.show();
+      } else {
+        this.confirmNewPrice(orderId, invoiceId);
+      }
     } else {
       // Last case is Nan, the selector is not even present, we simply add product and let the BO handle it
       this.addProduct(orderId);

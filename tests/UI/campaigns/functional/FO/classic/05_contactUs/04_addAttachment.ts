@@ -1,6 +1,8 @@
 import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
+
 import {
   boCustomerServicePage,
   boCustomerServiceViewPage,
@@ -41,6 +43,9 @@ describe('FO - Contact us : Add attachment', async () => {
     reference: dataOrders.order_1.reference,
   });
 
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
+
   // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -57,152 +62,157 @@ describe('FO - Contact us : Add attachment', async () => {
     await utilsFile.deleteFile(`${contactUsData.fileName}.png`);
   });
 
-  it('should open the shop page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
+  describe('Add attachment', async () => {
+    it('should open the shop page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'openShop', baseContext);
 
-    await foClassicHomePage.goTo(page, global.FO.URL);
+      await foClassicHomePage.goTo(page, global.FO.URL);
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
-    expect(isHomePage).to.eq(true);
+      const isHomePage = await foClassicHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
+    });
+
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFo', baseContext);
+
+      await foClassicHomePage.goToLoginPage(page);
+
+      const pageTitle = await foClassicLoginPage.getPageTitle(page);
+      expect(pageTitle).to.contains(foClassicLoginPage.pageTitle);
+    });
+
+    it('should sign in with default customer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFo', baseContext);
+
+      await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
+
+      const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
+    });
+
+    it('should go to contact us page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
+
+      // Go to contact us page
+      await foClassicLoginPage.goToFooterLink(page, 'Contact us');
+
+      const pageTitle = await foClassicContactUsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
+    });
+
+    it('should try to send message with csv file to customer service and check error message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sendCSVFile', baseContext);
+
+      await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.csv`);
+
+      const validationMessage = await foClassicContactUsPage.getAlertError(page);
+      expect(validationMessage).to.equal(foClassicContactUsPage.badFileExtensionErrorMessage);
+    });
+
+    it('should send message with PNG file to customer service and check validation message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sendPNGFile', baseContext);
+
+      await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.png`);
+
+      const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
+      expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
+    });
+
+    it('should login in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
+
+      await boLoginPage.goTo(page, global.BO.URL);
+      await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
+
+      const pageTitle = await boDashboardPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boDashboardPage.pageTitle);
+    });
+
+    it('should go to customer service page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.customerServiceLink,
+      );
+
+      const pageTitle = await boCustomerServicePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
+    });
+
+    it('should check customer name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
+
+      const email = await boCustomerServicePage.getTextColumn(page, 1, 'customer');
+      expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
+    });
+
+    it('should check customer email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
+
+      const email = await boCustomerServicePage.getTextColumn(page, 1, 'a!email');
+      expect(email).to.contain(contactUsData.emailAddress);
+    });
+
+    it('should get the customer service id and the date', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getMessageID', baseContext);
+
+      idCustomer = await boCustomerServicePage.getTextColumn(page, 1, 'id_customer_thread');
+      expect(parseInt(idCustomer, 10)).to.be.at.least(0);
+
+      messageDateTime = await boCustomerServicePage.getTextColumn(page, 1, 'date');
+    });
+
+    it('should go to view message page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
+
+      await boCustomerServicePage.goToViewMessagePage(page);
+
+      const pageTitle = await boCustomerServiceViewPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServiceViewPage.pageTitle);
+    });
+
+    it('should check the thread form', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkThreadForm', baseContext);
+
+      const text = await boCustomerServiceViewPage.getCustomerMessage(page);
+      expect(text)
+        .to.contains(contactUsData.emailAddress)
+        .and.to.contains(contactUsData.subject)
+        .and.to.contains(`${messageDateTime.substring(0, 10)} - ${messageDateTime.substring(11, 16)}`)
+        .and.to.contains('Attachment')
+        .and.to.contains(contactUsData.message);
+    });
+
+    it('should check the file attached', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkFileAttached', baseContext);
+
+      const fileExtension = await boCustomerServiceViewPage.getAttachedFileHref(page);
+      expect(fileExtension).to.contains('.png');
+    });
+
+    it('should go back to customer service page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrderMessagesPage', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.customerServiceParentLink,
+        boDashboardPage.customerServiceLink,
+      );
+
+      const pageTitle = await boCustomerServicePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
+    });
+
+    it('should delete the message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
+
+      const textResult = await boCustomerServicePage.deleteMessage(page, 1);
+      expect(textResult).to.contains(boCustomerServicePage.successfulDeleteMessage);
+    });
   });
 
-  it('should go to login page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFo', baseContext);
-
-    await foClassicHomePage.goToLoginPage(page);
-
-    const pageTitle = await foClassicLoginPage.getPageTitle(page);
-    expect(pageTitle, 'Fail to open FO login page').to.contains(foClassicLoginPage.pageTitle);
-  });
-
-  it('should sign in with default customer', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'sighInFo', baseContext);
-
-    await foClassicLoginPage.customerLogin(page, dataCustomers.johnDoe);
-
-    const isCustomerConnected = await foClassicLoginPage.isCustomerConnected(page);
-    expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
-  });
-
-  it('should go to contact us page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goOnContactPage', baseContext);
-
-    // Go to contact us page
-    await foClassicLoginPage.goToFooterLink(page, 'Contact us');
-
-    const pageTitle = await foClassicContactUsPage.getPageTitle(page);
-    expect(pageTitle).to.equal(foClassicContactUsPage.pageTitle);
-  });
-
-  it('should try to send message with csv file to customer service and check error message', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'sendCSVFile', baseContext);
-
-    await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.csv`);
-
-    const validationMessage = await foClassicContactUsPage.getAlertError(page);
-    expect(validationMessage).to.equal(foClassicContactUsPage.badFileExtensionErrorMessage);
-  });
-
-  it('should send message with PNG file to customer service and check validation message', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'sendPNGFile', baseContext);
-
-    await foClassicContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.png`);
-
-    const validationMessage = await foClassicContactUsPage.getAlertSuccess(page);
-    expect(validationMessage).to.equal(foClassicContactUsPage.validationMessage);
-  });
-
-  it('should login in BO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
-
-    await boLoginPage.goTo(page, global.BO.URL);
-    await boLoginPage.successLogin(page, global.BO.EMAIL, global.BO.PASSWD);
-
-    const pageTitle = await boDashboardPage.getPageTitle(page);
-    expect(pageTitle).to.contains(boDashboardPage.pageTitle);
-  });
-
-  it('should go to customer service page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
-
-    await boDashboardPage.goToSubMenu(
-      page,
-      boDashboardPage.customerServiceParentLink,
-      boDashboardPage.customerServiceLink,
-    );
-
-    const pageTitle = await boCustomerServicePage.getPageTitle(page);
-    expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
-  });
-
-  it('should check customer name', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
-
-    const email = await boCustomerServicePage.getTextColumn(page, 1, 'customer');
-    expect(email).to.contain(`${contactUsData.firstName} ${contactUsData.lastName}`);
-  });
-
-  it('should check customer email', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
-
-    const email = await boCustomerServicePage.getTextColumn(page, 1, 'a!email');
-    expect(email).to.contain(contactUsData.emailAddress);
-  });
-
-  it('should get the customer service id and the date', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'getMessageID', baseContext);
-
-    idCustomer = await boCustomerServicePage.getTextColumn(page, 1, 'id_customer_thread');
-    expect(parseInt(idCustomer, 10)).to.be.at.least(0);
-
-    messageDateTime = await boCustomerServicePage.getTextColumn(page, 1, 'date');
-  });
-
-  it('should go to view message page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToViewMessagePage', baseContext);
-
-    await boCustomerServicePage.goToViewMessagePage(page);
-
-    const pageTitle = await boCustomerServiceViewPage.getPageTitle(page);
-    expect(pageTitle).to.contains(boCustomerServiceViewPage.pageTitle);
-  });
-
-  it('should check the thread form', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkThreadForm', baseContext);
-
-    const text = await boCustomerServiceViewPage.getCustomerMessage(page);
-    expect(text)
-      .to.contains(contactUsData.emailAddress)
-      .and.to.contains(contactUsData.subject)
-      .and.to.contains(`${messageDateTime.substring(0, 10)} - ${messageDateTime.substring(11, 16)}`)
-      .and.to.contains('Attachment')
-      .and.to.contains(contactUsData.message);
-  });
-
-  it('should check the file attached', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkFileAttached', baseContext);
-
-    const fileExtension = await boCustomerServiceViewPage.getAttachedFileHref(page);
-    expect(fileExtension).to.contains('.png');
-  });
-
-  it('should go back to customer service page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrderMessagesPage', baseContext);
-
-    await boDashboardPage.goToSubMenu(
-      page,
-      boDashboardPage.customerServiceParentLink,
-      boDashboardPage.customerServiceLink,
-    );
-
-    const pageTitle = await boCustomerServicePage.getPageTitle(page);
-    expect(pageTitle).to.contains(boCustomerServicePage.pageTitle);
-  });
-
-  it('should delete the message', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
-
-    const textResult = await boCustomerServicePage.deleteMessage(page, 1);
-    expect(textResult).to.contains(boCustomerServicePage.successfulDeleteMessage);
-  });
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_3`);
 });

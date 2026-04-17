@@ -334,14 +334,6 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
 
-  prestashop.core.grid.data.factory.cart_rule:
-    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
-    arguments:
-      - '@prestashop.core.grid.query_builder.cart_rule'
-      - '@prestashop.core.hook.dispatcher'
-      - '@prestashop.core.grid.query.doctrine_query_parser'
-      - 'catalog_price_rule'
-
   prestashop.core.grid.data.factory.discount:
     class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
     arguments:
@@ -349,6 +341,12 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'discount'
+
+  prestashop.core.grid.data.factory.discount_decorator:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\DiscountGridDataFactoryDecorator'
+    arguments:
+      - '@prestashop.core.grid.data.factory.discount'
+      - '@translator'
 
   prestashop.core.grid.data.factory.catalog_price_rule:
     class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
@@ -384,7 +382,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\AttachmentGridDataFactoryDecorator'
     arguments:
       - '@prestashop.core.grid.data_factory.attachment'
-      - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
+      - '@PrestaShop\PrestaShop\Core\Context\LanguageContext'
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@PrestaShop\PrestaShop\Core\Util\File\FileSizeConverter'
@@ -722,3 +720,12 @@ services:
       - '@prestashop.core.localization.locale.context_locale'
       - '@PrestaShop\PrestaShop\Core\Context\CurrencyContext'
       - '@prestashop.adapter.legacy.configuration'
+
+
+  PrestaShop\PrestaShop\Core\Grid\Data\Factory\TagGridDataFactory:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\TagQueryBuilder'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'tag'

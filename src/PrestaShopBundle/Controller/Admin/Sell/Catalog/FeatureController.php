@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -30,6 +10,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureFeature;
+use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkFeatureException;
@@ -48,6 +29,7 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -273,7 +255,7 @@ class FeatureController extends PrestaShopAdminController
     }
 
     /**
-     * @param array $parameters
+     * @param array<string, mixed> $parameters
      *
      * @return Response
      */
@@ -289,6 +271,42 @@ class FeatureController extends PrestaShopAdminController
                 'Admin.Navigation.Menu'
             ),
         ]);
+    }
+
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function getAllFeatureGroupsAction(FeatureRepository $featureRepository): JsonResponse
+    {
+        $features = $featureRepository->getFeaturesWithValues($this->getLanguageContext()->getId(), $this->getShopContext()->getAssociatedShopIds());
+
+        return $this->json($this->formatFeatureGroupsForPresentation($features));
+    }
+
+    /**
+     * @param array<int, array{feature_id: int, name: string, values: array<int, array{item_id: int, name: string}>}> $features
+     *
+     * @return array<int, array{id: int, name: string, feature_values: array<int, array{id: int, name: string}>}>
+     */
+    private function formatFeatureGroupsForPresentation(array $features): array
+    {
+        $formattedGroups = [];
+        foreach ($features as $feature) {
+            $featureValues = [];
+
+            foreach ($feature['values'] as $featureValue) {
+                $featureValues[] = [
+                    'id' => $featureValue['item_id'],
+                    'name' => $featureValue['name'],
+                ];
+            }
+
+            $formattedGroups[] = [
+                'id' => $feature['feature_id'],
+                'name' => $feature['name'],
+                'feature_values' => $featureValues,
+            ];
+        }
+
+        return $formattedGroups;
     }
 
     /**

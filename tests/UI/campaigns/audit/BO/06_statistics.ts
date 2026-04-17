@@ -85,16 +85,6 @@ describe('BO - Statistics', async () => {
     it(`should go to the subtab '${test.module.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToSubTab${index}`, baseContext);
 
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/37520
-      if (test.module === dataModules.statsnewsletter) {
-        this.skip();
-      }
-
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/37521
-      if (test.module === dataModules.statssales) {
-        this.skip();
-      }
-
       await boStatisticsPage.goToSubTab(page, test.module.tag);
 
       const subTabTitle = await boStatisticsPage.getSubTabTitle(page);

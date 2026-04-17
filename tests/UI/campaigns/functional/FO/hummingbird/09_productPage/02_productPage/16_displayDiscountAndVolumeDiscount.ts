@@ -2,7 +2,6 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {deleteProductTest} from '@commonTests/BO/catalog/product';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {
   boDashboardPage,
@@ -48,9 +47,6 @@ describe('FO - Product page - Product page : Display discount', async () => {
       reductionType: '%',
     },
   });
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -352,7 +348,4 @@ describe('FO - Product page - Product page : Display discount', async () => {
 
   // Post-condition: Delete specific price
   deleteProductTest(newProductData, `${baseContext}_postTest_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
 });

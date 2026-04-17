@@ -1,7 +1,7 @@
 name: PHP
 on:
-  push:
   pull_request:
+  push:
 
 permissions:
   contents: read
@@ -46,14 +46,22 @@ jobs:
 
       - name: Run ergebnis/composer-normalize
         run: composer normalize --dry-run --no-check-lock
+
+  # Define which PHP versions need to be used
+  workflow_matrix_generator:
+    name: PHP matrix
+    uses: ./.github/workflows/workflow-matrix-generator.yml
+    with:
+      matrix_type: PHP
   phpstan:
     permissions:
       contents: read  # for actions/checkout to fetch code
     name: PHP Static Analysis
     runs-on: ubuntu-latest
+    needs: workflow_matrix_generator
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3', '8.4' ]
+        php: ${{ fromJSON(needs.workflow_matrix_generator.outputs.dynamic_matrix) }}
       fail-fast: false
     steps:
       - name: Setup PHP
@@ -91,9 +99,10 @@ jobs:
       contents: read  # for actions/checkout to fetch code
     name: PHPUnit
     runs-on: ubuntu-latest
+    needs: workflow_matrix_generator
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3', '8.4' ]
+        php: ${{ fromJSON(needs.workflow_matrix_generator.outputs.dynamic_matrix) }}
       fail-fast: false
     steps:
       - name: Setup PHP

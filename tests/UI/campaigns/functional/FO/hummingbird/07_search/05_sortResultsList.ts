@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   type BrowserContext,
@@ -17,24 +14,17 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_search_sortResultsList';
 
 /*
-Pre-condition:
-- Install hummingbird themeProducts
 Scenario:
 - Go to FO
 - Search Mug value and see result
 - Check sort by Relevance
 - Sort by name ASC/DESC
 - Sort by price ASC/DESC
-Post-condition:
-- Uninstall hummingbird theme
 */
 
 describe('FO - Search Page : Sort results list', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -84,7 +74,7 @@ describe('FO - Search Page : Sort results list', async () => {
         args: {
           testIdentifier: 'sortByNameAsc',
           sortName: 'Name, A to Z',
-          attribute: 'miniature__infos__top',
+          attribute: 'miniature__title',
           sortBy: 'product.name.asc',
           sortDirection: 'asc',
         },
@@ -93,7 +83,7 @@ describe('FO - Search Page : Sort results list', async () => {
         args: {
           testIdentifier: 'sortByNameDesc',
           sortName: 'Name, Z to A',
-          attribute: 'miniature__infos__top',
+          attribute: 'miniature__title',
           sortBy: 'product.name.desc',
           sortDirection: 'desc',
         },
@@ -135,7 +125,4 @@ describe('FO - Search Page : Sort results list', async () => {
       });
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

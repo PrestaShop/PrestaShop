@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {createOrderByCustomerTest} from '@commonTests/FO/classic/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/hummingbird/order';
 
 import {
   boCreditSlipsPage,
@@ -146,7 +146,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           `${baseContext}_preTest_${i}`,
         );
 
-        const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 4);
+        const documentType = await boOrdersViewBlockTabListPage.getDocumentType(page, 3);
         expect(documentType).to.be.equal(creditSlipDocumentName);
       });
     });

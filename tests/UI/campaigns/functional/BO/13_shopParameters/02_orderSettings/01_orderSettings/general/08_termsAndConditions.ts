@@ -8,10 +8,10 @@ import {
   type BrowserContext,
   dataCMSPages,
   dataCustomers,
-  foClassicCartPage,
-  foClassicCheckoutPage,
-  foClassicHomePage,
-  foClassicProductPage,
+  foHummingbirdCartPage,
+  foHummingbirdCheckoutPage,
+  foHummingbirdHomePage,
+  foHummingbirdProductPage,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -71,9 +71,9 @@ describe('BO - Shop Parameters - Order Settings : Terms and conditions', async (
     // Click on view my shop
     page = await boOrderSettingsPage.viewMyShop(page);
     // Change FO language
-    await foClassicHomePage.changeLanguage(page, 'en');
+    await foHummingbirdHomePage.changeLanguage(page, 'en');
 
-    const isHomePage = await foClassicHomePage.isHomePage(page);
+    const isHomePage = await foHummingbirdHomePage.isHomePage(page);
     expect(isHomePage).to.eq(true);
   });
 
@@ -81,11 +81,11 @@ describe('BO - Shop Parameters - Order Settings : Terms and conditions', async (
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
     // Go to the first product page
-    await foClassicHomePage.goToProductPage(page, 1);
+    await foHummingbirdHomePage.goToProductPage(page, 1);
     // Add the product to the cart
-    await foClassicProductPage.addProductToTheCart(page);
+    await foHummingbirdProductPage.addProductToTheCart(page);
 
-    const notificationsNumber = await foClassicCartPage.getCartNotificationsNumber(page);
+    const notificationsNumber = await foHummingbirdCartPage.getCartNotificationsNumber(page);
     expect(notificationsNumber).to.be.equal(1);
   });
 
@@ -93,14 +93,14 @@ describe('BO - Shop Parameters - Order Settings : Terms and conditions', async (
     await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
     // Checkout the order
-    await foClassicCartPage.clickOnProceedToCheckout(page);
+    await foHummingbirdCartPage.clickOnProceedToCheckout(page);
 
     // Personal information step - Login
-    await foClassicCheckoutPage.clickOnSignIn(page);
-    await foClassicCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
+    await foHummingbirdCheckoutPage.clickOnSignIn(page);
+    await foHummingbirdCheckoutPage.customerLogin(page, dataCustomers.johnDoe);
 
     // Address step - Go to delivery step
-    const isStepAddressComplete = await foClassicCheckoutPage.goToDeliveryStep(page);
+    const isStepAddressComplete = await foHummingbirdCheckoutPage.goToDeliveryStep(page);
     expect(isStepAddressComplete).to.eq(true);
   });
 
@@ -108,24 +108,24 @@ describe('BO - Shop Parameters - Order Settings : Terms and conditions', async (
     await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
     // Delivery step - Go to payment step
-    const isStepDeliveryComplete = await foClassicCheckoutPage.goToPaymentStep(page);
+    const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
     expect(isStepDeliveryComplete).to.eq(true);
   });
 
   it('should check the terms of service page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkTermsOfServicePage', baseContext);
 
-    const isVisible = await foClassicCheckoutPage.isConditionToApproveCheckboxVisible(page);
+    const isVisible = await foHummingbirdCheckoutPage.isConditionToApproveCheckboxVisible(page);
     expect(isVisible).to.be.equal(true);
 
-    const pageName = await foClassicCheckoutPage.getTermsOfServicePageTitle(page);
+    const pageName = await foHummingbirdCheckoutPage.getTermsOfServicePageTitle(page);
     expect(pageName).to.contains(dataCMSPages.termsAndCondition.title);
   });
 
   it('should return to BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'returnToBO', baseContext);
 
-    page = await foClassicCheckoutPage.changePage(browserContext, 0);
+    page = await foHummingbirdCheckoutPage.changePage(browserContext, 0);
 
     const pageTitle = await boOrderSettingsPage.getPageTitle(page);
     expect(pageTitle).to.contains(boOrderSettingsPage.pageTitle);
@@ -142,19 +142,19 @@ describe('BO - Shop Parameters - Order Settings : Terms and conditions', async (
     await testContext.addContextItem(this, 'testIdentifier', 'checkFO', baseContext);
 
     page = await boOrderSettingsPage.changePage(browserContext, 1);
-    await foClassicCheckoutPage.reloadPage(page);
+    await foHummingbirdCheckoutPage.reloadPage(page);
 
-    const isVisible = await foClassicCheckoutPage.isConditionToApproveCheckboxVisible(page);
+    const isVisible = await foHummingbirdCheckoutPage.isConditionToApproveCheckboxVisible(page);
     expect(isVisible).to.be.equal(true);
 
-    const pageName = await foClassicCheckoutPage.getTermsOfServicePageTitle(page);
+    const pageName = await foHummingbirdCheckoutPage.getTermsOfServicePageTitle(page);
     expect(pageName).to.contains('Legal');
   });
 
   it('should reset terms and conditions page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetTermsAndConditionsPage', baseContext);
 
-    page = await foClassicCheckoutPage.closePage(browserContext, page, 0);
+    page = await foHummingbirdCheckoutPage.closePage(browserContext, page, 0);
 
     const result = await boOrderSettingsPage.setTermsOfService(page, true, dataCMSPages.termsAndCondition.title);
     expect(result).to.contains(boOrderSettingsPage.successfulUpdateMessage);

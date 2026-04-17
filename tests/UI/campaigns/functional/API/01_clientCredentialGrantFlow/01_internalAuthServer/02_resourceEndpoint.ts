@@ -127,17 +127,17 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
       accessTokenExpired = utilsAPI.setAccessTokenAsExpired(accessToken);
     });
 
-    it('should request the endpoint /hook/1 without access token', async function () {
+    it('should request the endpoint /hooks/1 without access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithoutAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('hook/1');
+      const apiResponse = await apiContext.get('hooks/1');
       expect(apiResponse.status()).to.eq(401);
     });
 
-    it('should request the endpoint /hook/1 with invalid access token', async function () {
+    it('should request the endpoint /hooks/1 with invalid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithInvalidAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('hook/1', {
+      const apiResponse = await apiContext.get('hooks/1', {
         headers: {
           Authorization: 'Bearer INVALIDTOKEN',
         },
@@ -147,10 +147,10 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
       expect(utilsAPI.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /hook/1 with expired access token', async function () {
+    it('should request the endpoint /hooks/1 with expired access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithExpiredAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('hook/1', {
+      const apiResponse = await apiContext.get('hooks/1', {
         headers: {
           Authorization: `Bearer ${accessTokenExpired}`,
         },
@@ -160,10 +160,10 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
       expect(utilsAPI.getResponseHeader(apiResponse, 'WWW-Authenticate')).to.be.eq('Bearer');
     });
 
-    it('should request the endpoint /hook/1 with valid access token', async function () {
+    it('should request the endpoint /hooks/1 with valid access token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointWithValidAccessToken', baseContext);
 
-      const apiResponse = await apiContext.get('hook/1', {
+      const apiResponse = await apiContext.get('hooks/1', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -176,8 +176,8 @@ describe('API : Internal Auth Server - Resource Endpoint', async () => {
       const jsonResponse = await apiResponse.json();
       expect(jsonResponse).to.have.property('hookId');
       expect(jsonResponse.hookId).to.be.a('number');
-      expect(jsonResponse).to.have.property('active');
-      expect(jsonResponse.active).to.be.a('boolean');
+      expect(jsonResponse).to.have.property('enabled');
+      expect(jsonResponse.enabled).to.be.a('boolean');
     });
   });
 

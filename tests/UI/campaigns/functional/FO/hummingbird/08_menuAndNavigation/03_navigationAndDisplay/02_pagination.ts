@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import commonTests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {expect} from 'chai';
 import {
   boDashboardPage,
@@ -19,8 +16,6 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_menuAndNavigation_navigationAndDisplay_pagination';
 
 /*
-Pre-condition:
-- Install the theme hummingbird
 Scenario:
 - Go to FO>All products page
 - Check the pagination in the bottom of the page
@@ -31,14 +26,10 @@ Scenario:
 - Check the new pagination
 Post-condition:
 - Reset 'Number of products per page'
-- Uninstall the theme hummingbird
  */
-describe('FO - Navigation and display : Pagination', async () => {
+describe('FO - Menu and Navigation - Navigate and display : Pagination', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -64,7 +55,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts', baseContext);
 
       await foHummingbirdHomePage.changeLanguage(page, 'en');
-      await foHummingbirdHomePage.goToAllProductsPage(page);
+      await foHummingbirdHomePage.goToAllProductsPage(page, 'ps-featuredproducts');
 
       const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.equal(true);
@@ -157,7 +148,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts1', baseContext);
 
       await foHummingbirdHomePage.changeLanguage(page, 'en');
-      await foHummingbirdHomePage.goToAllProductsPage(page);
+      await foHummingbirdHomePage.goToAllProductsPage(page, 'ps-featuredproducts');
 
       const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.equal(true);
@@ -236,7 +227,7 @@ describe('FO - Navigation and display : Pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAllProducts2', baseContext);
 
       await foHummingbirdHomePage.changeLanguage(page, 'en');
-      await foHummingbirdHomePage.goToAllProductsPage(page);
+      await foHummingbirdHomePage.goToAllProductsPage(page, 'ps-featuredproducts');
 
       const isCategoryPageVisible = await foHummingbirdCategoryPage.isCategoryPage(page);
       expect(isCategoryPageVisible, 'Home category page was not opened').to.equal(true);
@@ -275,7 +266,4 @@ describe('FO - Navigation and display : Pagination', async () => {
       expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });

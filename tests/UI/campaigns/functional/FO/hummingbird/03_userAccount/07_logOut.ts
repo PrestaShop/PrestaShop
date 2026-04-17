@@ -1,9 +1,6 @@
 // Import utils
 import testContext from '@utils/testContext';
 
-// Import common tests
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
-
 import {
   type BrowserContext,
   dataCustomers,
@@ -21,9 +18,6 @@ const baseContext: string = 'functional_FO_hummingbird_userAccount_logOut';
 describe('FO - User Account : LogOut', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {
@@ -76,7 +70,4 @@ describe('FO - User Account : LogOut', async () => {
       expect(isCustomerConnected, 'Customer is connected!').to.eq(false);
     });
   });
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest`);
 });
