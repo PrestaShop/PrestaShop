@@ -255,12 +255,12 @@ class ProductSaleCore
      * Add Product sale.
      *
      * @param int $productId Product ID
-     * @param int $qty Quantity
      * @param string $order_date Order Date Add
+     * @param int $qty Quantity
      *
      * @return bool Indicates whether the sale was successfully added
      */
-    public static function addProductSale($productId, $qty = 1, $order_date)
+    public static function addProductSale($productId, $order_date, $qty = 1)
     {
         $date = new DateTime($order_date);
         $order_product_date = $date->format('Y-m-d');
@@ -302,12 +302,12 @@ class ProductSaleCore
      * Remove a Product sale.
      *
      * @param int $idProduct Product ID
-     * @param int $qty Quantity
      * @param string $order_date Order Date Add
+     * @param int $qty Quantity
      *
      * @return bool Indicates whether the product sale has been successfully removed
      */
-    public static function removeProductSale($idProduct, $qty = 1, $order_date)
+    public static function removeProductSale($idProduct, $order_date, $qty = 1)
     {
         $date = new DateTime($order_date);
         $order_product_date = $date->format('Y-m-d');
