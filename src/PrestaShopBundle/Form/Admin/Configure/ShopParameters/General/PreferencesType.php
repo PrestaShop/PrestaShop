@@ -35,6 +35,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class returning the content of the form in the maintenance page.
@@ -192,6 +193,14 @@ class PreferencesType extends TranslatorAwareType
                     'label' => $this->trans('Display best sellers', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'Enable best sellers page on your front office even when its respective module is disabled.',
+                        'Admin.Shopparameters.Help'
+                    ),
+                ])
+            ->add(
+                'best_sellers_days', TextType::class, [
+                    'label' => $this->trans('Display best sellers from last X Days', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'Display best selling products from last 30 days. Set 0 to display all best sellers',
                         'Admin.Shopparameters.Help'
                     ),
                 ])
