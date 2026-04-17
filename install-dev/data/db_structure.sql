@@ -1836,11 +1836,13 @@ CREATE TABLE `PREFIX_product_lang` (
 
 /* info about number of products sold */
 CREATE TABLE `PREFIX_product_sale` (
+  `id_product_sale` int(10) unsigned NOT NULL,
   `id_product` int(10) unsigned NOT NULL,
   `quantity` int(10) unsigned NOT NULL DEFAULT '0',
   `sale_nbr` int(10) unsigned NOT NULL DEFAULT '0',
   `date_upd` date DEFAULT NULL,
-  PRIMARY KEY (`id_product`),
+  PRIMARY KEY (`id_product_sale`),
+  KEY `id_product` (`id_product`),
   KEY `quantity` (`quantity`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
