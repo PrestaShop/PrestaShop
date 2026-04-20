@@ -417,14 +417,24 @@ class FrontControllerCore extends Controller
             ) {
                 $to_update = false;
                 if ($this->automaticallyAllocateDeliveryAddress && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0)) {
-                    $to_update = true;
-                    $cart->id_address_delivery = (int) Address::getFirstCustomerAddressId($cart->id_customer);
+                    $deliveryAddressId = (int) Address::getFirstCustomerAddressId($cart->id_customer);
+                    // Skip save when the customer has no address yet.
+                    if ($deliveryAddressId > 0) {
+                        $to_update = true;
+                        $cart->id_address_delivery = $deliveryAddressId;
+                    }
                 }
                 if ($this->automaticallyAllocateInvoiceAddress && (!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0)) {
-                    $to_update = true;
-                    $cart->id_address_invoice = (int) Address::getFirstCustomerAddressId($cart->id_customer);
+                    $invoiceAddressId = (int) Address::getFirstCustomerAddressId($cart->id_customer);
+                    // Skip save when the customer has no address yet.
+                    if ($invoiceAddressId > 0) {
+                        $to_update = true;
+                        $cart->id_address_invoice = $invoiceAddressId;
+                    }
                 }
                 if ($to_update) {
+                    // Keep context cart in sync before triggering actionCartSave.
+                    $this->context->cart = $cart;
                     $cart->update();
                 }
             }
