@@ -69,6 +69,9 @@ if ((!is_dir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'vendor') ||
 }
 
 require_once _PS_CORE_DIR_ . '/config/defines.inc.php';
+if (file_exists(_PS_CORE_DIR_ . '/config/defines_custom.inc.php')) {
+    require_once _PS_CORE_DIR_ . '/config/defines_custom.inc.php';
+}
 require_once _PS_CORE_DIR_ . '/config/autoload.php';
 
 // Loads .env file from the root of project
