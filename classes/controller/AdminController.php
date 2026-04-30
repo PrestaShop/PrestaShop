@@ -907,7 +907,7 @@ class AdminControllerCore extends Controller
                     if (($type == 'date' || $type == 'datetime') && is_string($value)) {
                         $value = json_decode($value, true);
                     }
-                    $key = isset($tmp_tab[1]) ? $tmp_tab[0] . '.`' . $tmp_tab[1] . '`' : '`' . $tmp_tab[0] . '`';
+                    $key = isset($tmp_tab[1]) ? '`' . bqSQL($tmp_tab[0]) . '`.`' . bqSQL($tmp_tab[1]) . '`' : '`' . bqSQL($tmp_tab[0]) . '`';
 
                     // Assignment by reference
                     if (array_key_exists('tmpTableFilter', $field)) {
@@ -924,7 +924,7 @@ class AdminControllerCore extends Controller
                             if (!Validate::isDate($value[0])) {
                                 $this->errors[] = $this->trans('The \'From\' date format is invalid (YYYY-MM-DD)', [], 'Admin.Notifications.Error');
                             } else {
-                                $sql_filter .= ' AND ' . pSQL($key) . ' >= \'' . pSQL(Tools::dateFrom($value[0])) . '\'';
+                                $sql_filter .= ' AND ' . $key . ' >= \'' . pSQL(Tools::dateFrom($value[0])) . '\'';
                             }
                         }
 
@@ -932,7 +932,7 @@ class AdminControllerCore extends Controller
                             if (!Validate::isDate($value[1])) {
                                 $this->errors[] = $this->trans('The \'To\' date format is invalid (YYYY-MM-DD)', [], 'Admin.Notifications.Error');
                             } else {
-                                $sql_filter .= ' AND ' . pSQL($key) . ' <= \'' . pSQL(Tools::dateTo($value[1])) . '\'';
+                                $sql_filter .= ' AND ' . $key . ' <= \'' . pSQL(Tools::dateTo($value[1])) . '\'';
                             }
                         }
                     } else {
@@ -941,16 +941,16 @@ class AdminControllerCore extends Controller
                         $alias = ($definition && !empty($definition['fields'][$filter]['shop'])) ? 'sa' : 'a';
 
                         if ($type == 'int' || $type == 'bool') {
-                            $sql_filter .= (($check_key || $key == '`active`') ? $alias . '.' : '') . pSQL($key) . ' = ' . (int) $value . ' ';
+                            $sql_filter .= (($check_key || $key == '`active`') ? $alias . '.' : '') . $key . ' = ' . (int) $value . ' ';
                         } elseif ($type == 'decimal') {
-                            $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' = ' . (float) $value . ' ';
+                            $sql_filter .= ($check_key ? $alias . '.' : '') . $key . ' = ' . (float) $value . ' ';
                         } elseif ($type == 'select') {
-                            $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' = \'' . pSQL($value) . '\' ';
+                            $sql_filter .= ($check_key ? $alias . '.' : '') . $key . ' = \'' . pSQL($value) . '\' ';
                         } elseif ($type == 'price') {
                             $value = str_replace(',', '.', $value);
-                            $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' = ' . pSQL(trim($value)) . ' ';
+                            $sql_filter .= ($check_key ? $alias . '.' : '') . $key . ' = ' . (float) trim($value) . ' ';
                         } else {
-                            $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' LIKE \'%' . pSQL(trim($value)) . '%\' ';
+                            $sql_filter .= ($check_key ? $alias . '.' : '') . $key . ' LIKE \'%' . pSQL(trim($value)) . '%\' ';
                         }
                     }
                 }
