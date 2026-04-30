@@ -948,11 +948,18 @@ class CustomerCore extends ObjectModel
 
     /**
      * Return several useful statistics about customer.
-     *
-     * @return array Stats
      */
-    public function getStats()
+    public function getStats(): array
     {
+        if (!Validate::isLoadedObject($this)) {
+            return [
+                'nb_orders' => 0,
+                'total_orders' => null,
+                'last_visit' => null,
+                'age' => '--',
+            ];
+        }
+
         $result = Db::getInstance()->getRow('
         SELECT COUNT(`id_order`) AS nb_orders, SUM(`total_paid` / o.`conversion_rate`) AS total_orders
         FROM `' . _DB_PREFIX_ . 'orders` o
