@@ -638,3 +638,9 @@ services:
       - 'PrestaShopBundle\Form\Admin\Login\ResetPasswordType'
       - 'EmployeeResetPassword'
       - 'reset_password'
+
+  prestashop.admin.stores.contact_details_form_handler:
+    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Store\ContactDetailsFormHandler'
+    arguments:
+      - '@form.factory'
+      - '@PrestaShopBundle\Form\Admin\Configure\ShopParameters\Store\ContactDetailsFormDataProvider'
