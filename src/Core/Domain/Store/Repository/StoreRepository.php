@@ -12,6 +12,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotAddStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotDeleteStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotUpdateStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
@@ -20,34 +21,18 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use Store;
 
-/**
- * Methods to access data source of Store
- */
 class StoreRepository extends AbstractObjectModelRepository
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
+    private string $dbPrefix;
 
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
-    public function __construct(
-        Connection $connection,
-        string $dbPrefix
-    ) {
+    public function __construct(Connection $connection, string $dbPrefix)
+    {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
     }
 
     /**
-     * @param StoreId $storeId
-     *
-     * @return Store
-     *
      * @throws CoreException
      * @throws StoreNotFoundException
      */
@@ -64,10 +49,20 @@ class StoreRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param Store $store
-     * @param array $propertiesToUpdate
-     * @param int $errorCode
+     * @throws CannotAddStoreException
      */
+    public function add(Store $store): StoreId
+    {
+        $id = $this->addObjectModel($store, CannotAddStoreException::class);
+
+        return new StoreId($id);
+    }
+
+    public function update(Store $store): void
+    {
+        $this->updateObjectModel($store, CannotUpdateStoreException::class);
+    }
+
     public function partialUpdate(Store $store, array $propertiesToUpdate, int $errorCode): void
     {
         $this->partiallyUpdateObjectModel(
@@ -78,9 +73,6 @@ class StoreRepository extends AbstractObjectModelRepository
         );
     }
 
-    /**
-     * @param StoreId $storeId
-     */
     public function delete(StoreId $storeId): void
     {
         $this->deleteObjectModel(
@@ -91,8 +83,6 @@ class StoreRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param ShopConstraint $shopConstraint
-     *
      * @return ShopId[]
      */
     public function getShopIdsByConstraint(ShopConstraint $shopConstraint): array
@@ -116,8 +106,6 @@ class StoreRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param ShopGroupId $shopGroupId
-     *
      * @return ShopId[]
      */
     public function getAssociatedShopIdsFromGroup(ShopGroupId $shopGroupId): array
@@ -126,12 +114,7 @@ class StoreRepository extends AbstractObjectModelRepository
         $qb
             ->select('ss.id_shop')
             ->from($this->dbPrefix . 'store_shop', 'ss')
-            ->innerJoin(
-                'ss',
-                $this->dbPrefix . 'shop',
-                's',
-                's.id_shop = ss.id_shop'
-            )
+            ->innerJoin('ss', $this->dbPrefix . 'shop', 's', 's.id_shop = ss.id_shop')
             ->andWhere('s.id_shop_group = :shopGroupId')
             ->setParameter('shopGroupId', $shopGroupId->getValue())
             ->groupBy('id_shop')

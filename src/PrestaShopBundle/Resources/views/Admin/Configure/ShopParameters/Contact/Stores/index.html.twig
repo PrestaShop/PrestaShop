@@ -6,9 +6,32 @@
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
+{% form_theme contactDetailsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
 {% block content %}
   {% block stores_listing %}
     {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: storeGrid}) }}
+  {% endblock %}
+
+  {% block contact_details %}
+    {{ form_start(contactDetailsForm, {action: path('admin_stores_save_contact_details')}) }}
+    <div class="card mt-2">
+      <h3 class="card-header">
+        <i class="material-icons">business</i>
+        {{ 'Contact details'|trans({}, 'Admin.Shopparameters.Feature') }}
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {{ form_widget(contactDetailsForm) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-primary float-right" id="save-contact-details-button">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+    {{ form_end(contactDetailsForm) }}
   {% endblock %}
 {% endblock %}
 

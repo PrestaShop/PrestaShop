@@ -15,6 +15,18 @@ services:
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
 
+  prestashop.adapter.store.command_handler.add_store:
+    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\AddStoreHandler'
+    autoconfigure: true
+    arguments:
+      - '@prestashop.core.domain.store.repository.store_repository'
+
+  prestashop.adapter.store.command_handler.edit_store:
+    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\EditStoreHandler'
+    autoconfigure: true
+    arguments:
+      - '@prestashop.core.domain.store.repository.store_repository'
+
   prestashop.adapter.store.command_handler.toggle_store_status:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler'
     autoconfigure: true
@@ -38,6 +50,12 @@ services:
     autoconfigure: true
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
+
+  PrestaShop\PrestaShop\Adapter\Image\Uploader\StoreImageUploader: ~
+
+  PrestaShop\PrestaShop\Adapter\Store\ContactDetailsConfiguration:
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.configuration'
 
   # deprecated
   prestashop.core.domain.store.repository.store_repository:
