@@ -125,6 +125,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
 
             $result = new CartForOrderCreation(
                 $cart->id,
+                (int) $cart->id_customer,
                 $products,
                 (int) $currency->id,
                 (int) $language->id,
