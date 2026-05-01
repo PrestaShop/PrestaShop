@@ -27,7 +27,6 @@ class ContactDetailsType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         private readonly ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
-        private readonly int $contextCountryId,
         private readonly UrlGeneratorInterface $router,
     ) {
         parent::__construct($translator, $locales);
@@ -36,7 +35,7 @@ class ContactDetailsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $data = $builder->getData();
-        $countryId = !empty($data['id_country']) ? (int) $data['id_country'] : $this->contextCountryId;
+        $countryId = !empty($data['id_country']) ? (int) $data['id_country'] : 0;
 
         $builder
             ->add('name', TextType::class, [
@@ -109,7 +108,8 @@ class ContactDetailsType extends TranslatorAwareType
             ->add('id_state', ChoiceType::class, [
                 'label' => $this->trans('State', 'Admin.Global'),
                 'required' => false,
-                'choices' => $this->statesChoiceProvider->getChoices(['id_country' => $countryId]),
+                'choices' => $stateChoices = $countryId > 0 ? $this->statesChoiceProvider->getChoices(['id_country' => $countryId]) : [],
+                'row_attr' => ['class' => 'js-store-state-row' . (empty($stateChoices) ? ' d-none' : '')],
                 'attr' => [
                     'data-toggle' => 'select2',
                     'data-country-id' => $countryId,
