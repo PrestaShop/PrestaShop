@@ -80,10 +80,7 @@ final class EditStoreHandler implements EditStoreHandlerInterface
         $this->storeRepository->update($store);
 
         if (null !== $command->getShopAssociation()) {
-            $store->cleanPositions();
-            foreach ($command->getShopAssociation() as $shopId) {
-                $store->associateTo((int) $shopId);
-            }
+            $this->storeRepository->updateShopAssociation($store, $command->getShopAssociation());
         }
     }
 
