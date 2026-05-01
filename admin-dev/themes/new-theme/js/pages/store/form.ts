@@ -10,6 +10,19 @@ $(() => {
     'TranslatableInput',
   ]);
 
+  const $stateSelect = $('[data-country-id]');
+  const preselectedStateId = $stateSelect.val() as string;
+
+  if (preselectedStateId && $stateSelect[0]) {
+    const observer = new MutationObserver(() => {
+      if ($stateSelect.find('option').length > 0) {
+        $stateSelect.val(preselectedStateId).trigger('change');
+        observer.disconnect();
+      }
+    });
+    observer.observe($stateSelect[0], {childList: true});
+  }
+
   new window.prestashop.component.CountryStateSelectionToggler(
     '[data-states-url]',
     '[data-country-id]',
