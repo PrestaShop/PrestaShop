@@ -603,6 +603,10 @@ services:
     arguments:
       $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
+  PrestaShopBundle\Form\Admin\Improve\International\Locations\ChangeCountriesZoneType:
+    arguments:
+      $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
+
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener:
     arguments:
       $combinationRepository: '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'

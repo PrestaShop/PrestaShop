@@ -32,6 +32,21 @@ services:
     autowire: true
     autoconfigure: true
 
+  PrestaShop\PrestaShop\Adapter\Country\CommandHandler\ToggleCountryStatusHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Country\CommandHandler\BulkToggleCountriesStatusHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Country\CommandHandler\BulkUpdateCountryZoneHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
   PrestaShop\PrestaShop\Adapter\Country\CommandHandler\EditCountryHandler:
     public: false
     autowire: true
