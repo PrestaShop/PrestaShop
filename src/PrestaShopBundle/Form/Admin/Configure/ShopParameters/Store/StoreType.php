@@ -130,7 +130,8 @@ class StoreType extends TranslatorAwareType
             ->add('id_state', ChoiceType::class, [
                 'label' => $this->trans('State', 'Admin.Global'),
                 'required' => false,
-                'choices' => $this->statesChoiceProvider->getChoices(['id_country' => $countryId]),
+                'choices' => $stateChoices = $this->statesChoiceProvider->getChoices(['id_country' => $countryId]),
+                'row_attr' => ['class' => 'js-store-state-row' . (empty($stateChoices) ? ' d-none' : '')],
                 'attr' => [
                     'data-toggle' => 'select2',
                     'data-country-id' => $countryId,
