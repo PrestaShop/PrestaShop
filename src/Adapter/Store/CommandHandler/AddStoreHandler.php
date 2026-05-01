@@ -67,11 +67,7 @@ final class AddStoreHandler implements AddStoreHandlerInterface
      */
     private function associateWithShops(Store $store, array $shopIds): void
     {
-        $store->cleanPositions();
-
-        foreach ($shopIds as $shopId) {
-            $store->associateTo((int) $shopId);
-        }
+        $store->associateTo($shopIds);
     }
 
     private function assertStateCountryConsistency(int $countryId, ?int $stateId): void
