@@ -24,7 +24,7 @@ final class ContactDetailsFormHandler implements FormHandlerInterface
     {
         return $this->formFactory
             ->createBuilder()
-            ->add('contact_details', ContactDetailsType::class)
+            ->add('contact_details', ContactDetailsType::class, ['label' => false])
             ->setData(['contact_details' => $this->dataProvider->getData()])
             ->getForm();
     }
