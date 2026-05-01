@@ -34,8 +34,8 @@ class ContactDetailsConfiguration implements DataConfigurationInterface
             'address2' => $this->configuration->get('PS_SHOP_ADDR2'),
             'postcode' => $this->configuration->get('PS_SHOP_CODE'),
             'city' => $this->configuration->get('PS_SHOP_CITY'),
-            'id_country' => (int) $this->configuration->get('PS_SHOP_COUNTRY_ID'),
-            'id_state' => (int) $this->configuration->get('PS_SHOP_STATE_ID'),
+            'id_country' => (int) $this->configuration->get('PS_SHOP_COUNTRY_ID') ?: null,
+            'id_state' => (int) $this->configuration->get('PS_SHOP_STATE_ID') ?: null,
             'phone' => $this->configuration->get('PS_SHOP_PHONE'),
             'fax' => $this->configuration->get('PS_SHOP_FAX'),
         ];
