@@ -83,6 +83,23 @@ class StoreRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Replaces the shop associations for the given store.
+     *
+     * @param int[] $shopIds
+     */
+    public function updateShopAssociation(Store $store, array $shopIds): void
+    {
+        $this->connection->delete(
+            $this->dbPrefix . 'store_shop',
+            ['id_store' => $store->id]
+        );
+
+        if ($shopIds) {
+            $store->associateTo($shopIds);
+        }
+    }
+
+    /**
      * @return ShopId[]
      */
     public function getShopIdsByConstraint(ShopConstraint $shopConstraint): array
