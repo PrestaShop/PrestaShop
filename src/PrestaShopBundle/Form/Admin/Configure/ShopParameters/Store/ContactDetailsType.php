@@ -16,6 +16,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -34,9 +36,6 @@ class ContactDetailsType extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $data = $builder->getData();
-        $countryId = !empty($data['id_country']) ? (int) $data['id_country'] : 0;
-
         $builder
             ->add('name', TextType::class, [
                 'label' => $this->trans('Shop name', 'Admin.Shopparameters.Feature'),
@@ -108,11 +107,11 @@ class ContactDetailsType extends TranslatorAwareType
             ->add('id_state', ChoiceType::class, [
                 'label' => $this->trans('State', 'Admin.Global'),
                 'required' => false,
-                'choices' => $stateChoices = $countryId > 0 ? $this->statesChoiceProvider->getChoices(['id_country' => $countryId]) : [],
-                'row_attr' => ['class' => 'js-store-state-row' . (empty($stateChoices) ? ' d-none' : '')],
+                'choices' => [],
+                'row_attr' => ['class' => 'js-store-state-row d-none'],
                 'attr' => [
                     'data-toggle' => 'select2',
-                    'data-country-id' => $countryId,
+                    'data-country-id' => 0,
                 ],
             ])
             ->add('phone', TextType::class, [
@@ -124,5 +123,38 @@ class ContactDetailsType extends TranslatorAwareType
                 'required' => false,
             ])
         ;
+
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
+            $data = $event->getData() ?? [];
+            $countryId = (int) ($data['id_country'] ?? 0);
+            $stateChoices = $countryId > 0 ? $this->statesChoiceProvider->getChoices(['id_country' => $countryId]) : [];
+            $event->getForm()->add('id_state', ChoiceType::class, [
+                'label' => $this->trans('State', 'Admin.Global'),
+                'required' => false,
+                'choices' => $stateChoices,
+                'row_attr' => ['class' => 'js-store-state-row' . (empty($stateChoices) ? ' d-none' : '')],
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-country-id' => $countryId,
+                ],
+            ]);
+        });
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
+            $data = $event->getData();
+            $form = $event->getForm();
+            $countryId = (int) ($data['id_country'] ?? 0);
+            $stateChoices = $countryId > 0 ? $this->statesChoiceProvider->getChoices(['id_country' => $countryId]) : [];
+            $form->add('id_state', ChoiceType::class, [
+                'label' => $this->trans('State', 'Admin.Global'),
+                'required' => false,
+                'choices' => $stateChoices,
+                'row_attr' => ['class' => 'js-store-state-row' . (empty($stateChoices) ? ' d-none' : '')],
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-country-id' => $countryId,
+                ],
+            ]);
+        });
     }
 }
