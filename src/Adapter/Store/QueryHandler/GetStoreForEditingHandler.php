@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Store\QueryHandler;
 
+use ImageManager;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
@@ -15,6 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler\GetStoreForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
+use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShopException;
 use Shop;
 
@@ -23,6 +25,7 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
 {
     public function __construct(
         private readonly StoreRepository $storeRepository,
+        private readonly ImageTagSourceParserInterface $imageTagSourceParser,
     ) {
     }
 
@@ -61,7 +64,7 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
                 phone: $store->phone ?: null,
                 fax: $store->fax ?: null,
                 email: $store->email ?: null,
-                hasImage: (bool) $store->id_image,
+                storeImage: $this->getStoreImage((int) $store->id),
                 shopAssociation: $shopAssociation,
             );
         } catch (PrestaShopException $e) {
@@ -71,6 +74,30 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
                 $e
             );
         }
+    }
+
+    private function getStoreImage(int $storeId): ?array
+    {
+        $pathToImage = _PS_STORE_IMG_DIR_ . $storeId . '.jpg';
+        $imageTag = ImageManager::thumbnail(
+            $pathToImage,
+            'store_' . $storeId . '.jpg',
+            350,
+            'jpg',
+            true,
+            true
+        );
+
+        $imageSize = file_exists($pathToImage) ? filesize($pathToImage) / 1000 : '';
+
+        if (empty($imageTag) || empty($imageSize)) {
+            return null;
+        }
+
+        return [
+            'path' => $this->imageTagSourceParser->parse($imageTag),
+            'size' => sprintf('%1$.2f kB', $imageSize),
+        ];
     }
 
     /**
