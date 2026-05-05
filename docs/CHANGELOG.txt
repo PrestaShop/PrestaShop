@@ -24,6 +24,14 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 9
 
 ####################################
+#   v9.1.1 - (2026-04-16)
+####################################
+
+- Back Office
+  - Improvement:
+    - GHSA-w9f3-qc75-qgx9 Prevent xss exploitation via unprotected variables in customer threads (found by Savio from Doyensec in collaboration with Anthropic Research)
+
+####################################
 #   v9.1.0 - (2026-03-13)
 ####################################
 

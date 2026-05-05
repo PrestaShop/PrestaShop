@@ -56,7 +56,7 @@
 <div class="module-contents d-none">
   {% for module in extraModules %}
     <div id="module_{{ module.id }}" class="module-render-container module-{{ module.attributes.name }}">
-      {{ module.content|raw_purified }}
+      {{ module.content|raw }}
     </div>
   {% endfor %}
 </div>

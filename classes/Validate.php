@@ -50,7 +50,7 @@ class ValidateCore
 
         $validator = Validation::createValidator();
         $errors = $validator->validate($email, new Email([
-            'mode' => 'loose',
+            'mode' => 'strict',
         ]));
 
         if (count($errors) > 0) {

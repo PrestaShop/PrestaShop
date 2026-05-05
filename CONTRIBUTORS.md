@@ -866,6 +866,7 @@ GitHub contributors:
 - Sarah Lorenzini
 - Sas-adilis
 - Sauli Maijala
+- Savio (Doyensec)
 - sbordun
 - Seb
 - Seb33300
