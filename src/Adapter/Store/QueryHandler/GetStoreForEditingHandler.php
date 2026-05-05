@@ -123,9 +123,13 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
             $days = [];
             foreach ($decoded as $day) {
                 if (is_array($day) && 2 === count($day)) {
+                    // New format: ["09:00", "18:00"] → "09:00 | 18:00"
                     $open = trim($day[0]);
                     $close = trim($day[1]);
-                    $days[] = ($open !== '' || $close !== '') ? $open . ' | ' . $close : '';
+                    $days[] = ($open !== '' && $close !== '') ? $open . ' | ' . $close : $open;
+                } elseif (is_array($day) && 1 === count($day)) {
+                    // Legacy format: ["09:00AM - 07:00PM"] → use as-is
+                    $days[] = trim($day[0]);
                 } else {
                     $days[] = '';
                 }
