@@ -105,7 +105,7 @@ final class AddStoreHandler implements AddStoreHandlerInterface
             $encoded = [];
             foreach ($days as $day) {
                 $parts = array_map('trim', explode('|', (string) $day, 2));
-                $encoded[] = [$parts[0] ?? '', $parts[1] ?? ''];
+                $encoded[] = isset($parts[1]) ? [$parts[0], $parts[1]] : [$parts[0]];
             }
             $result[(int) $langId] = json_encode($encoded);
         }
