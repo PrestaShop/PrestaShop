@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use Exception;
-use ImageManager;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
@@ -20,7 +19,6 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
-use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface as IdentifiableFormHandlerInterface;
@@ -107,8 +105,6 @@ class StoreController extends PrestaShopAdminController
         FormBuilderInterface $storeFormBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.store_form_handler')]
         IdentifiableFormHandlerInterface $storeFormHandler,
-        #[Autowire(service: 'prestashop.core.image.parser.image_tag_source_parser')]
-        ImageTagSourceParserInterface $imageTagSourceParser,
     ): Response {
         try {
             $storeForm = $storeFormBuilder->getFormFor($storeId);
@@ -134,23 +130,7 @@ class StoreController extends PrestaShopAdminController
 
         /** @var \PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing $storeForEditing */
         $storeForEditing = $this->dispatchQuery(new GetStoreForEditing($storeId));
-        $storeImage = null;
-
-        if ($storeForEditing->hasImage()) {
-            $pathToImage = _PS_STORE_IMG_DIR_ . $storeId . '.jpg';
-            $imageTag = ImageManager::thumbnail(
-                $pathToImage,
-                'store_' . $storeId . '.jpg',
-                350,
-                'jpg',
-                true,
-                true
-            );
-            $storeImage = [
-                'path' => $imageTagSourceParser->parse($imageTag),
-                'size' => file_exists($pathToImage) ? sprintf('%1$.2f kB', filesize($pathToImage) / 1000) : '',
-            ];
-        }
+        $storeImage = $storeForEditing->getStoreImage();
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Stores/edit.html.twig', [
             'enableSidebar' => true,

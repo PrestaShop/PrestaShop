@@ -39,7 +39,7 @@ class StoreForEditing
         private readonly ?string $phone,
         private readonly ?string $fax,
         private readonly ?string $email,
-        private readonly bool $hasImage,
+        private readonly ?array $storeImage,
         private readonly array $shopAssociation,
     ) {
     }
@@ -124,9 +124,9 @@ class StoreForEditing
         return $this->email;
     }
 
-    public function hasImage(): bool
+    public function getStoreImage(): ?array
     {
-        return $this->hasImage;
+        return $this->storeImage;
     }
 
     public function getShopAssociation(): array
