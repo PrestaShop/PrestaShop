@@ -7,8 +7,8 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Cookie;
-use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
