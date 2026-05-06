@@ -18,9 +18,9 @@ class StoreForEditing
      * @param array<int, string> $localizedNames
      * @param array<int, string> $localizedAddress1
      * @param array<int, string> $localizedAddress2
-     * @param array<int, string> $localizedHours    JSON-decoded hours per language (array of 7 [open, close] pairs)
+     * @param array<int, string[]> $localizedHours JSON-decoded hours per language (7 "HH:MM | HH:MM" strings per lang)
      * @param array<int, string> $localizedNotes
-     * @param int[]              $shopAssociation
+     * @param int[] $shopAssociation
      */
     public function __construct(
         private readonly int $storeId,
