@@ -33,7 +33,7 @@ Feature: contact details configuration
       | email   | shop@example.com |
       | country | France           |
     Then the contact details country should be "France"
-    And the contact details state should be empty
+    And the contact details state should have no value
 
   Scenario: Saving contact details without a name fails validation
     When I save contact details with the following values:
