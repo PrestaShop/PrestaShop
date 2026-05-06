@@ -22,6 +22,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadFor
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerThreadFilter;
@@ -29,6 +30,7 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
 use PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -301,6 +303,52 @@ class CustomerThreadController extends PrestaShopAdminController
     }
 
     /**
+     * Show the Customer service options forms (Contact panel + IMAP panel).
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads')]
+    public function optionsAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.customer_service.options.form_handler')]
+        FormHandlerInterface $optionsFormHandler,
+        #[Autowire(service: 'prestashop.adapter.customer_service.imap.form_handler')]
+        FormHandlerInterface $imapFormHandler,
+    ): Response {
+        return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/options.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('Customer service options', [], 'Admin.Catalog.Feature'),
+            'customerServiceOptionsForm' => $optionsFormHandler->getForm()->createView(),
+            'imapOptionsForm' => $imapFormHandler->getForm()->createView(),
+        ]);
+    }
+
+    /**
+     * Save the "Contact options" panel.
+     */
+    #[DemoRestricted(redirectRoute: 'admin_customer_threads_options')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads_options')]
+    public function saveOptionsAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.customer_service.options.form_handler')]
+        FormHandlerInterface $optionsFormHandler,
+    ): RedirectResponse {
+        return $this->processOptionsForm($request, $optionsFormHandler);
+    }
+
+    /**
+     * Save the "Customer service options" IMAP panel.
+     */
+    #[DemoRestricted(redirectRoute: 'admin_customer_threads_options')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads_options')]
+    public function saveImapOptionsAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.customer_service.imap.form_handler')]
+        FormHandlerInterface $imapFormHandler,
+    ): RedirectResponse {
+        return $this->processOptionsForm($request, $imapFormHandler);
+    }
+
+    /**
      * Bulk delete customer thread
      *
      * @param Request $request
@@ -380,6 +428,28 @@ class CustomerThreadController extends PrestaShopAdminController
         }
 
         return array_map('intval', $customerThreadIds);
+    }
+
+    private function processOptionsForm(Request $request, FormHandlerInterface $formHandler): RedirectResponse
+    {
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            return $this->redirectToRoute('admin_customer_threads_options');
+        }
+
+        $saveErrors = $formHandler->save($form->getData());
+
+        if (0 === count($saveErrors)) {
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_customer_threads_options');
+        }
+
+        $this->addFlashErrors($saveErrors);
+
+        return $this->redirectToRoute('admin_customer_threads_options');
     }
 
     private function handleCustomerThreadStatusUpdate(int $customerThreadId, string $newStatus)

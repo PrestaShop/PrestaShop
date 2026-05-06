@@ -136,6 +136,16 @@ services:
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\DatabaseLogsFormDataProvider:
     autowire: true
 
+  prestashop.adapter.customer_service.options.form_provider:
+    class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\CustomerServiceOptionsFormDataProvider'
+    arguments:
+      - '@prestashop.adapter.customer_service.options_configuration'
+
+  prestashop.adapter.customer_service.imap.form_provider:
+    class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\ImapOptionsFormDataProvider'
+    arguments:
+      - '@prestashop.adapter.customer_service.imap_configuration'
+
   prestashop.admin.import.form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormDataProvider'
     arguments:

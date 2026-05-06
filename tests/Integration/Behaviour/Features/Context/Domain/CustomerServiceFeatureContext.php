@@ -7,6 +7,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Configuration;
 use CustomerThread;
 use Db;
 use PHPUnit\Framework\Assert;
@@ -22,6 +23,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadFor
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceListingStatistics;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -89,7 +91,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $customerThread->token = Tools::passwdGen(12);
         $customerThread->add();
 
-        $this->getSharedStorage()->set($threadReference, $customerThread);
+        $this->getSharedStorage()->set($threadReference, (int) $customerThread->id);
 
         $customerMessage = new CustomerMessage();
         $customerMessage->id_customer_thread = $customerThread->id;
@@ -221,6 +223,94 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
                 $customerThreadView->getStatus()
             )
         );
+    }
+
+    /**
+     * @When I update customer service options with:
+     */
+    public function updateCustomerServiceOptions(TableNode $table): void
+    {
+        $rows = $table->getRowsHash();
+        $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
+
+        $data = [
+            'file_upload' => filter_var($rows['file_upload'] ?? false, FILTER_VALIDATE_BOOLEAN),
+            'signature' => [$defaultLangId => $rows['signature_in_default'] ?? ''],
+        ];
+
+        /** @var FormDataProviderInterface $provider */
+        $provider = $this->getContainer()->get('prestashop.adapter.customer_service.options.form_provider');
+        $provider->setData($data);
+    }
+
+    /**
+     * @When I update IMAP options with:
+     */
+    public function updateImapOptions(TableNode $table): void
+    {
+        $rows = $table->getRowsHash();
+        $data = [];
+        foreach ($rows as $key => $value) {
+            if ($key === 'imap_url' || $key === 'imap_port' || $key === 'imap_user' || $key === 'imap_password') {
+                $data[$key] = (string) $value;
+            } else {
+                $data[$key] = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+            }
+        }
+
+        /** @var FormDataProviderInterface $provider */
+        $provider = $this->getContainer()->get('prestashop.adapter.customer_service.imap.form_provider');
+        $provider->setData($data);
+    }
+
+    /**
+     * @Then customer service file upload should be :state
+     */
+    public function assertFileUploadState(string $state): void
+    {
+        $expected = $state === 'enabled';
+        $actual = (bool) Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD');
+
+        Assert::assertSame(
+            $expected,
+            $actual,
+            sprintf('Expected file upload to be %s, got %s.', $state, $actual ? 'enabled' : 'disabled')
+        );
+    }
+
+    /**
+     * @Then customer service signature in default language should be :expected
+     */
+    public function assertSignatureInDefaultLanguage(string $expected): void
+    {
+        $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
+        $actual = (string) Configuration::get('PS_CUSTOMER_SERVICE_SIGNATURE', $defaultLangId);
+        Assert::assertSame($expected, $actual);
+    }
+
+    /**
+     * @Then /^IMAP configuration "([^"]+)" should be "([^"]+)"$/
+     */
+    public function assertImapConfigurationStringValue(string $key, string $expected): void
+    {
+        $actual = (string) Configuration::get($key);
+        Assert::assertSame($expected, $actual, sprintf('Configuration "%s" should be "%s", got "%s".', $key, $expected, $actual));
+    }
+
+    /**
+     * @Then /^IMAP configuration "([^"]+)" should be enabled$/
+     */
+    public function assertImapConfigurationEnabled(string $key): void
+    {
+        Assert::assertTrue((bool) Configuration::get($key), sprintf('Configuration "%s" should be enabled.', $key));
+    }
+
+    /**
+     * @Then /^IMAP configuration "([^"]+)" should be disabled$/
+     */
+    public function assertImapConfigurationDisabled(string $key): void
+    {
+        Assert::assertFalse((bool) Configuration::get($key), sprintf('Configuration "%s" should be disabled.', $key));
     }
 
     /**
