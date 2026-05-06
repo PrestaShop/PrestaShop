@@ -4,40 +4,68 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Gherkin\Node\TableNode;
+use Country;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Adapter\Store\ContactDetailsConfiguration;
+use PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
+use PrestaShop\PrestaShop\Core\Domain\Store\Command\EditStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 use RuntimeException;
+use State;
 use Store;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class StoreFeatureContext extends AbstractDomainFeatureContext
 {
-    private const DUMMY_STORE_ID = 1;
+    private const DAY_ORDER = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Toggle
+    // ──────────────────────────────────────────────────────────────────────────
 
     /**
      * @When I toggle :reference
-     *
-     * @param string $reference
      */
-    public function disableStoreWithReference(string $reference): void
+    public function toggleStore(string $reference): void
     {
-        $toggleStatusCommand = new ToggleStoreStatusCommand(self::DUMMY_STORE_ID);
-        $this->getCommandBus()->handle($toggleStatusCommand);
+        /** @var Store $store */
+        $store = SharedStorage::getStorage()->get($reference);
+        $this->getCommandBus()->handle(new ToggleStoreStatusCommand((int) $store->id));
+        SharedStorage::getStorage()->set($reference, new Store((int) $store->id));
     }
 
     /**
+     * @Then /^the store "(.*)" should have status (enabled|disabled)$/
+     */
+    public function assertStoreStatus(string $reference, string $status): void
+    {
+        /** @var Store $store */
+        $store = SharedStorage::getStorage()->get($reference);
+        /** @var StoreForEditing $storeForEditing */
+        $storeForEditing = $this->getQueryBus()->handle(new GetStoreForEditing((int) $store->id));
+        Assert::assertSame($status === 'enabled', $storeForEditing->isActive());
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Bulk status
+    // ──────────────────────────────────────────────────────────────────────────
+
+    /**
      * @When /^I (enable|disable) multiple stores "(.+)" using bulk action$/
-     *
-     * @param string $action
-     * @param string $storeReferences
      */
     public function bulkToggleStatus(string $action, string $storeReferences): void
     {
@@ -45,12 +73,10 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         $storeIds = [];
 
         foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
-            $store = SharedStorage::getStorage()->get($storeReference);
-            $storeIds[$storeReference] = (int) $store->id;
+            $storeIds[$storeReference] = (int) SharedStorage::getStorage()->get($storeReference)->id;
         }
 
-        $bulkUpdateCommand = new BulkUpdateStoreStatusCommand($expectedStatus, $storeIds);
-        $this->getCommandBus()->handle($bulkUpdateCommand);
+        $this->getCommandBus()->handle(new BulkUpdateStoreStatusCommand($expectedStatus, $storeIds));
 
         foreach ($storeIds as $reference => $id) {
             SharedStorage::getStorage()->set($reference, new Store($id));
@@ -58,9 +84,31 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then /^stores "(.+)" should be (enabled|disabled)$/
+     */
+    public function assertMultipleStoreStatus(string $storeReferences, string $expectedStatus): void
+    {
+        $isEnabled = 'enabled' === $expectedStatus;
+        foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
+            /** @var Store $store */
+            $store = SharedStorage::getStorage()->get($storeReference);
+            if ((bool) $store->active !== $isEnabled) {
+                throw new RuntimeException(sprintf(
+                    'Store "%s" is %s, but expected to be %s',
+                    $storeReference,
+                    $store->active ? 'enabled' : 'disabled',
+                    $expectedStatus
+                ));
+            }
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Delete
+    // ──────────────────────────────────────────────────────────────────────────
+
+    /**
      * @When I delete store :storeReference
-     *
-     * @param string $storeReference
      */
     public function deleteStore(string $storeReference): void
     {
@@ -76,8 +124,6 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When /^I delete stores "(.+)" using bulk action$/
-     *
-     * @param string $storeReferences
      */
     public function bulkDeleteStores(string $storeReferences): void
     {
@@ -94,76 +140,359 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^the store "(.*)" should have status (enabled|disabled)$/
-     *
-     * @param string $reference
-     * @param string $status
-     */
-    public function isStoreToggledWithReference(string $reference, string $status): void
-    {
-        $isEnabled = $status === 'enabled';
-        $storeForEditingQuery = new GetStoreForEditing(self::DUMMY_STORE_ID);
-        $storeUpdated = $this->getQueryBus()->handle($storeForEditingQuery);
-        Assert::assertEquals((bool) $storeUpdated->isActive(), $isEnabled);
-    }
-
-    /**
-     * @Then /^stores "(.+)" should be (enabled|disabled)$/
-     *
-     * @param string $storeReferences
-     * @param string $expectedStatus
-     */
-    public function assertMultipleStoreStatus(string $storeReferences, string $expectedStatus): void
-    {
-        foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
-            $this->assertStoreStatus($storeReference, $expectedStatus);
-        }
-    }
-
-    public function assertStoreStatus(string $storeReference, string $expectedStatus): void
-    {
-        /** @var Store $store */
-        $store = SharedStorage::getStorage()->get($storeReference);
-
-        $isEnabled = 'enabled' === $expectedStatus;
-        $actualStatus = (bool) $store->active;
-
-        if ($actualStatus !== $isEnabled) {
-            throw new RuntimeException(sprintf('Store "%s" is %s, but it was expected to be %s', $storeReference, $actualStatus ? 'enabled' : 'disabled', $expectedStatus));
-        }
-    }
-
-    /**
      * @Then /^stores "(.+)" should (exist|be deleted)$/
-     *
-     * @param string $storeReferences
-     * @param string $expectedPresence
      */
     public function assertMultipleStorePresence(string $storeReferences, string $expectedPresence): void
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
-            $this->assertStorePresence($storeReference, $expectedPresence);
+            /** @var Store $store */
+            $store = SharedStorage::getStorage()->get($storeReference);
+            $isToBePresent = 'exist' === $expectedPresence;
+
+            try {
+                $this->getQueryBus()->handle(new GetStoreForEditing((int) $store->id));
+                if (!$isToBePresent) {
+                    throw new RuntimeException(sprintf('Store "%s" still exists, expected it to be deleted', $storeReference));
+                }
+            } catch (StoreNotFoundException $e) {
+                if ($isToBePresent) {
+                    throw new RuntimeException(sprintf('Store "%s" was not found, expected it to exist', $storeReference));
+                }
+                SharedStorage::getStorage()->clear($storeReference);
+            }
         }
     }
 
-    public function assertStorePresence(string $storeReference, string $expectedPresence): void
+    // ──────────────────────────────────────────────────────────────────────────
+    // Add via CQRS command
+    // ──────────────────────────────────────────────────────────────────────────
+
+    /**
+     * @When I add store :reference using command with the following properties:
+     */
+    public function addStoreViaCommand(string $reference, TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+        $langId = $this->getDefaultLangId();
+        $countryId = (int) Country::getIdByName($langId, $data['country']);
+
+        $command = new AddStoreCommand(
+            [$langId => $data['name']],
+            [$langId => $data['address1']],
+            $countryId,
+            $data['city']
+        );
+
+        if (isset($data['active'])) {
+            $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
+        }
+        if (!empty($data['address2'])) {
+            $command->setLocalizedAddress2([$langId => $data['address2']]);
+        }
+        if (!empty($data['postcode'])) {
+            $command->setPostcode($data['postcode']);
+        }
+        if (!empty($data['latitude'])) {
+            $command->setLatitude((float) $data['latitude']);
+        }
+        if (!empty($data['longitude'])) {
+            $command->setLongitude((float) $data['longitude']);
+        }
+        if (!empty($data['phone'])) {
+            $command->setPhone($data['phone']);
+        }
+        if (!empty($data['fax'])) {
+            $command->setFax($data['fax']);
+        }
+        if (!empty($data['email'])) {
+            $command->setEmail($data['email']);
+        }
+        if (!empty($data['state'])) {
+            $command->setStateId((int) State::getIdByName($data['state']));
+        }
+
+        try {
+            /** @var StoreId $storeId */
+            $storeId = $this->getCommandBus()->handle($command);
+            SharedStorage::getStorage()->set($reference, new Store($storeId->getValue()));
+        } catch (StoreConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Edit via CQRS command
+    // ──────────────────────────────────────────────────────────────────────────
+
+    /**
+     * @When I edit store :reference with the following properties:
+     */
+    public function editStore(string $reference, TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+        /** @var Store $store */
+        $store = SharedStorage::getStorage()->get($reference);
+        $langId = $this->getDefaultLangId();
+
+        $command = new EditStoreCommand((int) $store->id);
+
+        if (isset($data['name'])) {
+            $command->setLocalizedNames([$langId => $data['name']]);
+        }
+        if (isset($data['address1'])) {
+            $command->setLocalizedAddress1([$langId => $data['address1']]);
+        }
+        if (isset($data['address2'])) {
+            $command->setLocalizedAddress2([$langId => $data['address2']]);
+        }
+        if (isset($data['city'])) {
+            $command->setCity($data['city']);
+        }
+        if (isset($data['postcode'])) {
+            $command->setPostcode($data['postcode']);
+        }
+        if (isset($data['latitude'])) {
+            $command->setLatitude((float) $data['latitude']);
+        }
+        if (isset($data['longitude'])) {
+            $command->setLongitude((float) $data['longitude']);
+        }
+        if (isset($data['phone'])) {
+            $command->setPhone($data['phone']);
+        }
+        if (isset($data['fax'])) {
+            $command->setFax($data['fax']);
+        }
+        if (isset($data['email'])) {
+            $command->setEmail($data['email']);
+        }
+        if (isset($data['active'])) {
+            $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
+        }
+        if (isset($data['country'])) {
+            $command->setCountryId((int) Country::getIdByName($langId, $data['country']));
+        }
+        if (array_key_exists('state', $data)) {
+            $stateId = $data['state'] !== '' ? (int) State::getIdByName($data['state']) : null;
+            $command->setStateId($stateId);
+        }
+
+        try {
+            $this->getCommandBus()->handle($command);
+            SharedStorage::getStorage()->set($reference, new Store((int) $store->id));
+        } catch (StoreConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I edit store :reference opening hours with the following schedule:
+     */
+    public function editStoreHours(string $reference, TableNode $table): void
     {
         /** @var Store $store */
-        $store = SharedStorage::getStorage()->get($storeReference);
+        $store = SharedStorage::getStorage()->get($reference);
+        $langId = $this->getDefaultLangId();
 
-        $isToBePresent = 'exist' === $expectedPresence;
-        $isToBeDeleted = 'be deleted' === $expectedPresence;
-        $query = new GetStoreForEditing((int) $store->id);
-        try {
-            $storeQueried = $this->getQueryBus()->handle($query);
-            if ($storeQueried && $isToBeDeleted) {
-                throw new RuntimeException(sprintf('Store "%s" is present, but it was expected to be deleted', $storeReference));
-            }
-        } catch (StoreNotFoundException $e) {
-            if ($isToBePresent) {
-                throw new RuntimeException(sprintf('Store "%s" is present, but it was expected to be deleted', $storeReference));
-            }
-            SharedStorage::getStorage()->clear($storeReference);
+        $command = new EditStoreCommand((int) $store->id);
+        $command->setLocalizedHours($this->buildHoursFromScheduleTable($table, $langId));
+        $this->getCommandBus()->handle($command);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Assertions
+    // ──────────────────────────────────────────────────────────────────────────
+
+    /**
+     * @Then store :reference should have the following properties:
+     */
+    public function assertStoreProperties(string $reference, TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+        /** @var Store $store */
+        $store = SharedStorage::getStorage()->get($reference);
+        $langId = $this->getDefaultLangId();
+
+        /** @var StoreForEditing $storeForEditing */
+        $storeForEditing = $this->getQueryBus()->handle(new GetStoreForEditing((int) $store->id));
+
+        if (isset($data['name'])) {
+            Assert::assertSame($data['name'], $storeForEditing->getLocalizedNames()[$langId] ?? null, 'name');
         }
+        if (isset($data['active'])) {
+            Assert::assertSame(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']), $storeForEditing->isActive(), 'active');
+        }
+        if (isset($data['city'])) {
+            Assert::assertSame($data['city'], $storeForEditing->getCity(), 'city');
+        }
+        if (isset($data['postcode'])) {
+            Assert::assertSame($data['postcode'], $storeForEditing->getPostcode(), 'postcode');
+        }
+        if (isset($data['phone'])) {
+            Assert::assertSame($data['phone'], $storeForEditing->getPhone(), 'phone');
+        }
+        if (isset($data['fax'])) {
+            Assert::assertSame($data['fax'], $storeForEditing->getFax(), 'fax');
+        }
+        if (isset($data['email'])) {
+            Assert::assertSame($data['email'], $storeForEditing->getEmail(), 'email');
+        }
+        if (isset($data['country'])) {
+            $expectedCountryId = (int) Country::getIdByName($langId, $data['country']);
+            Assert::assertSame($expectedCountryId, $storeForEditing->getCountryId(), 'country');
+        }
+        if (isset($data['state'])) {
+            $expectedStateId = (int) State::getIdByName($data['state']);
+            Assert::assertSame($expectedStateId, $storeForEditing->getStateId(), 'state');
+        }
+    }
+
+    /**
+     * @Then store :reference should have the following opening hours:
+     */
+    public function assertStoreOpeningHours(string $reference, TableNode $table): void
+    {
+        /** @var Store $store */
+        $store = SharedStorage::getStorage()->get($reference);
+        $langId = $this->getDefaultLangId();
+        $expected = $this->buildHoursFromScheduleTable($table, $langId);
+
+        /** @var StoreForEditing $storeForEditing */
+        $storeForEditing = $this->getQueryBus()->handle(new GetStoreForEditing((int) $store->id));
+        $actual = $storeForEditing->getLocalizedHours();
+
+        Assert::assertSame($expected[$langId], $actual[$langId] ?? [], 'opening hours');
+    }
+
+    /**
+     * @Then I should get a store constraint error with code :errorCode
+     */
+    public function assertStoreConstraintError(string $errorCode): void
+    {
+        $code = constant(StoreConstraintException::class . '::' . $errorCode);
+        $this->assertLastErrorIs(StoreConstraintException::class, $code);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Contact details
+    // ──────────────────────────────────────────────────────────────────────────
+
+    /**
+     * @When I save contact details with the following values:
+     */
+    public function saveContactDetails(TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+        $langId = $this->getDefaultLangId();
+
+        $configuration = [
+            'name' => $data['name'] ?? '',
+            'email' => $data['email'] ?? '',
+            'registration_number' => $data['registration_number'] ?? '',
+            'address1' => $data['address1'] ?? '',
+            'address2' => $data['address2'] ?? '',
+            'postcode' => $data['postcode'] ?? '',
+            'city' => $data['city'] ?? '',
+            'phone' => $data['phone'] ?? '',
+            'fax' => $data['fax'] ?? '',
+            'id_country' => isset($data['country']) && $data['country'] !== ''
+                ? (int) Country::getIdByName($langId, $data['country'])
+                : 0,
+            'id_state' => isset($data['state']) && $data['state'] !== ''
+                ? (int) State::getIdByName($data['state'])
+                : 0,
+        ];
+
+        /** @var ContactDetailsConfiguration $contactDetailsConfig */
+        $contactDetailsConfig = $this->getContainer()->get(ContactDetailsConfiguration::class);
+        $errors = $contactDetailsConfig->updateConfiguration($configuration);
+
+        SharedStorage::getStorage()->set('contact_details_last_errors', $errors);
+    }
+
+    /**
+     * @Then the contact details should have the following values:
+     */
+    public function assertContactDetailsValues(TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+        /** @var ContactDetailsConfiguration $contactDetailsConfig */
+        $contactDetailsConfig = $this->getContainer()->get(ContactDetailsConfiguration::class);
+        $actual = $contactDetailsConfig->getConfiguration();
+
+        foreach (['name', 'email', 'city', 'postcode', 'phone', 'fax'] as $field) {
+            if (isset($data[$field])) {
+                Assert::assertSame($data[$field], $actual[$field], $field);
+            }
+        }
+    }
+
+    /**
+     * @Then the contact details country should be :countryName
+     */
+    public function assertContactDetailsCountry(string $countryName): void
+    {
+        $expectedCountryId = (int) Country::getIdByName($this->getDefaultLangId(), $countryName);
+        /** @var ContactDetailsConfiguration $contactDetailsConfig */
+        $contactDetailsConfig = $this->getContainer()->get(ContactDetailsConfiguration::class);
+        Assert::assertSame($expectedCountryId, $contactDetailsConfig->getConfiguration()['id_country']);
+    }
+
+    /**
+     * @Then the contact details state should be :stateName
+     */
+    public function assertContactDetailsState(string $stateName): void
+    {
+        $expectedStateId = (int) State::getIdByName($stateName);
+        /** @var ContactDetailsConfiguration $contactDetailsConfig */
+        $contactDetailsConfig = $this->getContainer()->get(ContactDetailsConfiguration::class);
+        Assert::assertSame($expectedStateId, $contactDetailsConfig->getConfiguration()['id_state']);
+    }
+
+    /**
+     * @Then the contact details state should be empty
+     */
+    public function assertContactDetailsStateEmpty(): void
+    {
+        /** @var ContactDetailsConfiguration $contactDetailsConfig */
+        $contactDetailsConfig = $this->getContainer()->get(ContactDetailsConfiguration::class);
+        Assert::assertNull($contactDetailsConfig->getConfiguration()['id_state']);
+    }
+
+    /**
+     * @Then saving contact details should fail with a validation error
+     */
+    public function assertContactDetailsValidationError(): void
+    {
+        $errors = SharedStorage::getStorage()->get('contact_details_last_errors');
+        Assert::assertNotEmpty($errors, 'Expected validation errors but none were returned');
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Helpers
+    // ──────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Converts a schedule table (columns: day, open, close) to the localized hours format
+     * expected by AddStoreCommand / EditStoreCommand.
+     *
+     * @return array<int, array<int, string>>
+     */
+    private function buildHoursFromScheduleTable(TableNode $table, int $langId): array
+    {
+        $daySlots = array_fill(0, 7, '');
+
+        foreach ($table->getColumnsHash() as $row) {
+            $dayIndex = array_search($row['day'], self::DAY_ORDER, true);
+            if (false === $dayIndex) {
+                throw new RuntimeException(sprintf('Unknown day "%s" in schedule table', $row['day']));
+            }
+
+            $open = trim($row['open'] ?? '');
+            $close = trim($row['close'] ?? '');
+            $daySlots[$dayIndex] = ($open !== '' && $close !== '') ? $open . ' | ' . $close : $open;
+        }
+
+        return [$langId => $daySlots];
     }
 }
