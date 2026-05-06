@@ -18,7 +18,6 @@ use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShopException;
-use Shop;
 
 #[AsQueryHandler]
 class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
@@ -40,21 +39,18 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
                 );
             }
 
-            $localizedHours = $this->decodeHours($store->hours ?? []);
+            $localizedHours = $this->decodeHours(is_array($store->hours) ? $store->hours : []);
 
-            $shopAssociation = array_map(
-                static fn (string $id): int => (int) $id,
-                $store->getAssociatedShops()
-            );
+            $shopAssociation = $store->getAssociatedShops();
 
             return new StoreForEditing(
                 storeId: (int) $store->id,
                 active: (bool) $store->active,
-                localizedNames: $store->name ?? [],
-                localizedAddress1: $store->address1 ?? [],
-                localizedAddress2: $store->address2 ?? [],
+                localizedNames: $store->name,
+                localizedAddress1: (array) $store->address1,
+                localizedAddress2: is_array($store->address2) ? $store->address2 : [],
                 localizedHours: $localizedHours,
-                localizedNotes: $store->note ?? [],
+                localizedNotes: is_array($store->note) ? $store->note : [],
                 countryId: (int) $store->id_country,
                 stateId: $store->id_state ? (int) $store->id_state : null,
                 city: (string) $store->city,
@@ -103,9 +99,9 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
     /**
      * Converts the raw JSON hours (per-lang array) to an array of 7 "HH:MM | HH:MM" strings per language.
      *
-     * @param array<int, string> $rawHours  keyed by lang id, each value is a JSON string
+     * @param array<int, string> $rawHours keyed by lang id, each value is a JSON string
      *
-     * @return array<int, array<int, string>>  keyed by lang id, each value is an array of 7 day strings
+     * @return array<int, array<int, string>> keyed by lang id, each value is an array of 7 day strings
      */
     private function decodeHours(array $rawHours): array
     {

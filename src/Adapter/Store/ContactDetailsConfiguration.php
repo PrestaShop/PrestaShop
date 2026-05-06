@@ -43,7 +43,7 @@ class ContactDetailsConfiguration implements DataConfigurationInterface
 
     public function updateConfiguration(array $configuration): array
     {
-        $errors = $this->validateConfiguration($configuration);
+        $errors = $this->collectValidationErrors($configuration);
         if (!empty($errors)) {
             return $errors;
         }
@@ -79,7 +79,12 @@ class ContactDetailsConfiguration implements DataConfigurationInterface
         return [];
     }
 
-    public function validateConfiguration(array $configuration): array
+    public function validateConfiguration(array $configuration): bool
+    {
+        return empty($this->collectValidationErrors($configuration));
+    }
+
+    private function collectValidationErrors(array $configuration): array
     {
         $errors = [];
 
@@ -87,13 +92,13 @@ class ContactDetailsConfiguration implements DataConfigurationInterface
             $errors[] = [
                 'key' => 'The %s field is required.',
                 'domain' => 'Admin.Notifications.Error',
-                'parameters' => ['"' . 'Name' . '"'],
+                'parameters' => ['"Name"'],
             ];
         } elseif (!Validate::isGenericName($configuration['name'])) {
             $errors[] = [
                 'key' => 'The %s field is not valid',
                 'domain' => 'Admin.Notifications.Error',
-                'parameters' => ['"' . 'Name' . '"'],
+                'parameters' => ['"Name"'],
             ];
         }
 
@@ -101,13 +106,13 @@ class ContactDetailsConfiguration implements DataConfigurationInterface
             $errors[] = [
                 'key' => 'The %s field is required.',
                 'domain' => 'Admin.Notifications.Error',
-                'parameters' => ['"' . 'Email address' . '"'],
+                'parameters' => ['"Email address"'],
             ];
         } elseif (!Validate::isEmail($configuration['email'])) {
             $errors[] = [
                 'key' => 'The %s field is not valid',
                 'domain' => 'Admin.Notifications.Error',
-                'parameters' => ['"' . 'Email address' . '"'],
+                'parameters' => ['"Email address"'],
             ];
         }
 
