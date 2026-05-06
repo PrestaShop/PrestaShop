@@ -450,7 +450,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then the contact details state should be empty
+     * @Then the contact details state should have no value
      */
     public function assertContactDetailsStateEmpty(): void
     {
