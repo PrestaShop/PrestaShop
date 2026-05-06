@@ -8,8 +8,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Store\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
-
 /**
  * Creates a new store.
  * All translatable fields are keyed by language id.
