@@ -8,7 +8,9 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administratio
 
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -76,6 +78,7 @@ class UploadQuotaType extends TranslatorAwareType
                             ]
                         ),
                     ],
+                    'multistore_configuration_key' => 'PS_ATTACHMENT_MAXIMUM_SIZE',
                 ]
             )
             ->add(
@@ -108,6 +111,7 @@ class UploadQuotaType extends TranslatorAwareType
                             ]
                         ),
                     ],
+                    'multistore_configuration_key' => 'PS_LIMIT_UPLOAD_FILE_VALUE',
                 ]
             )
             ->add(
@@ -140,6 +144,7 @@ class UploadQuotaType extends TranslatorAwareType
                         ),
                     ],
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
+                    'multistore_configuration_key' => 'PS_LIMIT_UPLOAD_IMAGE_VALUE',
                 ]
             );
     }
@@ -160,5 +165,15 @@ class UploadQuotaType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'administration_upload_quota_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

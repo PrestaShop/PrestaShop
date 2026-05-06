@@ -88,6 +88,8 @@ services:
     autowire: true
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
       - '@=service("prestashop.adapter.legacy.context").getContext().cookie'
 
   prestashop.adapter.maintenance.configuration:
@@ -103,11 +105,17 @@ services:
 
   prestashop.adapter.upload_quota.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.notifications.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Admin\NotificationsConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.smarty_cache.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration'
