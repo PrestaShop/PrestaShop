@@ -10,9 +10,11 @@ use Behat\Gherkin\Node\TableNode;
 use CustomerThread;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Entity\CustomerMessage;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
@@ -20,6 +22,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThread
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tools;
 
 class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
@@ -108,46 +111,69 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update thread :threadReference status to open
-     *
-     * @param string $threadReference
+     * @When /^I update thread "([^"]+)" status to "([^"]+)"$/
      */
-    public function updateThreadStatus(string $threadReference): void
+    public function updateThreadStatus(string $threadReference, string $status): void
     {
         /** @var CustomerThread $customerThread */
         $customerThread = SharedStorage::getStorage()->get($threadReference);
 
         $this->getCommandBus()->handle(
-            new UpdateCustomerThreadStatusCommand(
-                (int) $customerThread->id,
-                CustomerThreadStatus::OPEN
-            )
+            new UpdateCustomerThreadStatusCommand((int) $customerThread->id, $status)
         );
     }
 
     /**
+     * @When /^I try to update thread "([^"]+)" status to "([^"]+)"$/
+     */
+    public function tryUpdateThreadStatus(string $threadReference, string $status): void
+    {
+        /** @var CustomerThread $customerThread */
+        $customerThread = SharedStorage::getStorage()->get($threadReference);
+
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateCustomerThreadStatusCommand((int) $customerThread->id, $status)
+            );
+        } catch (CustomerServiceException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When /^I try to update non-existent customer thread with id (\d+) status to "([^"]+)"$/
+     */
+    public function updateNonExistentThreadStatus(int $threadId, string $status): void
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateCustomerThreadStatusCommand($threadId, $status)
+            );
+        } catch (CustomerServiceException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
      * @Then /^customer thread "(.+)" should be (open|closed|pending1|pending2)$/
-     *
-     * @param string $threadReference
      */
     public function assertThreadStatus(string $threadReference, string $expectedStatus): void
     {
         /** @var CustomerThread $customerThread */
         $customerThread = SharedStorage::getStorage()->get($threadReference);
 
-        /** @var CustomerThreadView $customerThreadView */
-        $customerThreadView = $this->getQueryBus()->handle(
-            new GetCustomerThreadForViewing((int) $customerThread->id)
-        );
+        $reloaded = new CustomerThread((int) $customerThread->id);
 
-        $actions = $customerThreadView->getActions();
-        foreach ([CustomerThreadStatus::OPEN, CustomerThreadStatus::PENDING_1, CustomerThreadStatus::PENDING_2, CustomerThreadStatus::CLOSED] as $possibleAction) {
-            if ($expectedStatus === $possibleAction) {
-                Assert::assertArrayNotHasKey($possibleAction, $actions, sprintf('thread "%s" should not have action "%s" possible.', $threadReference, CustomerThreadStatus::OPEN));
-            } else {
-                Assert::assertArrayHasKey($possibleAction, $actions, sprintf('thread "%s" should have action "%s" possible.', $threadReference, CustomerThreadStatus::OPEN));
-            }
-        }
+        Assert::assertSame(
+            $expectedStatus,
+            $reloaded->status,
+            sprintf(
+                'Customer thread "%s" should have status "%s", got "%s".',
+                $threadReference,
+                $expectedStatus,
+                $reloaded->status
+            )
+        );
     }
 
     /**
@@ -161,6 +187,52 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $customerThread = SharedStorage::getStorage()->get($threadReference);
 
         $this->getCommandBus()->handle(new DeleteCustomerThreadCommand((int) $customerThread->id));
+    }
+
+    /**
+     * @When I delete non-existent customer thread with id :threadId
+     */
+    public function deleteNonExistentThread(int $threadId): void
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteCustomerThreadCommand($threadId));
+        } catch (CustomerThreadNotFoundException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When /^I bulk delete customer threads: "([^"]*)"$/
+     */
+    public function bulkDeleteThreads(string $threadReferences): void
+    {
+        $references = PrimitiveUtils::castStringArrayIntoArray($threadReferences);
+
+        $threadIds = [];
+        foreach ($references as $reference) {
+            /** @var CustomerThread $customerThread */
+            $customerThread = SharedStorage::getStorage()->get($reference);
+            $threadIds[] = (int) $customerThread->id;
+        }
+
+        $this->getCommandBus()->handle(new BulkDeleteCustomerThreadCommand($threadIds));
+    }
+
+    /**
+     * @When /^I bulk delete non-existent customer threads with ids ([0-9, ]+)$/
+     */
+    public function bulkDeleteNonExistentThreads(string $rawIds): void
+    {
+        $ids = array_map(
+            'intval',
+            array_filter(array_map('trim', explode(',', $rawIds)), 'strlen')
+        );
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCustomerThreadCommand($ids));
+        } catch (CustomerThreadNotFoundException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -181,5 +253,32 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         } catch (CustomerThreadNotFoundException $e) {
             SharedStorage::getStorage()->clear($threadReference);
         }
+    }
+
+    /**
+     * @Then I should get error that customer thread does not exist
+     */
+    public function assertLastErrorIsCustomerThreadNotFound(): void
+    {
+        $this->assertLastErrorIs(CustomerThreadNotFoundException::class);
+    }
+
+    /**
+     * @Then I should get error that customer thread status is invalid
+     */
+    public function assertLastErrorIsInvalidThreadStatus(): void
+    {
+        $this->assertLastErrorIs(CustomerServiceException::class);
+    }
+
+    /**
+     * @Then I should get error that customer thread status update failed
+     */
+    public function assertLastErrorIsThreadStatusUpdateFailed(): void
+    {
+        $this->assertLastErrorIs(
+            CustomerServiceException::class,
+            CustomerServiceException::FAILED_TO_UPDATE_STATUS
+        );
     }
 }
