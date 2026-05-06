@@ -225,7 +225,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     {
         $ids = array_map(
             'intval',
-            array_filter(array_map('trim', explode(',', $rawIds)), 'strlen')
+            array_filter(array_map('trim', explode(',', $rawIds)), static fn (string $value): bool => $value !== '')
         );
 
         try {
