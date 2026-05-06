@@ -16,12 +16,14 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThre
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CannotDeleteCustomerThreadException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceListingStatistics;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
+use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerThreadFilter;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
@@ -50,6 +52,8 @@ class CustomerThreadController extends PrestaShopAdminController
         Request $request,
         #[Autowire(service: 'prestashop.core.grid.factory.customer_thread')]
         GridFactoryInterface $customerGridFactory,
+        #[Autowire(service: 'prestashop.core.kpi_row.factory.customer_service')]
+        KpiRowFactoryInterface $customerServiceKpiFactory,
         CustomerThreadFilter $filters
     ): Response {
         $customerThreadGrid = $customerGridFactory->getGrid($filters);
@@ -57,6 +61,8 @@ class CustomerThreadController extends PrestaShopAdminController
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerThreadGrid' => $this->presentGrid($customerThreadGrid),
+            'customerServiceKpi' => $customerServiceKpiFactory->build(),
+            'customerServiceListingStatistics' => $this->dispatchQuery(new GetCustomerServiceListingStatistics()),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Customer service', [], 'Admin.Navigation.Menu'),
         ]);

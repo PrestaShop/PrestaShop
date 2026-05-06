@@ -59,3 +59,6 @@ services:
 
   prestashop.core.domain.customer_service.repository.customer_thread_repository:
     class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadRepository'
+
+  PrestaShop\PrestaShop\Adapter\CustomerService\QueryHandler\GetCustomerServiceListingStatisticsHandler:
+    autoconfigure: true
