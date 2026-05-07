@@ -29,13 +29,13 @@ class ProductPreferencesFormHandler extends Handler
             $data['allow_ordering_oos'] = true;
         }
 
-        $errors = $this->formDataProvider->setData($data);
+        $errors = parent::save($data);
 
         if (empty($errors)) {
             $this->cacheClearer->clear();
         }
 
-        return parent::save($data);
+        return $errors;
     }
 
     /**
