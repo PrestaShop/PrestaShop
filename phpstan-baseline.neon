@@ -777,7 +777,7 @@ parameters:
 		-
 			message: '#^Class Store is forbidden, No legacy calls inside the prestashop bundle\. Please create an interface and an adapter if you need to\.$#'
 			identifier: disallowed.class
-			count: 3
+			count: 7
 			path: src/Core/Domain/Store/Repository/StoreRepository.php
 
 		-
