@@ -376,24 +376,34 @@ class ProductAttributeCore extends ObjectModel
     }
 
     /**
-     * get highest position.
-     *
      * Get the highest attribute position from a group attribute
      *
      * @param int $idAttributeGroup AttributeGroup ID
      *
      * @return int $position Position
      *
-     * @todo: Shouldn't this be called getHighestPosition instead?
      */
     public static function getHigherPosition($idAttributeGroup)
     {
         $sql = 'SELECT MAX(`position`)
-				FROM `' . _DB_PREFIX_ . 'attribute`
-				WHERE id_attribute_group = ' . (int) $idAttributeGroup;
+                FROM `' . _DB_PREFIX_ . 'attribute`
+                WHERE id_attribute_group = ' . (int) $idAttributeGroup;
 
         $position = Db::getInstance()->getValue($sql);
 
         return (is_numeric($position)) ? $position : -1;
+    }
+
+    /**
+     * Get the highest attribute position from a group attribute
+     *
+     * @param int $idAttributeGroup AttributeGroup ID
+     *
+     * @return int $position Position
+     *
+     */
+    public static function getHighestPosition($idAttributeGroup)
+    {
+        return self::getHigherPosition($idAttributeGroup);
     }
 }
