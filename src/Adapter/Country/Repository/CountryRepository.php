@@ -104,4 +104,17 @@ class CountryRepository extends AbstractObjectModelRepository
     {
         $this->deleteObjectModel($this->get($countryId), CannotDeleteCountryException::class);
     }
+
+    /**
+     * @param int[] $countryIds
+     */
+    public function affectCountriesToZone(array $countryIds, int $zoneId): void
+    {
+        foreach ($countryIds as $countryId) {
+            $country = $this->get(new CountryId((int) $countryId));
+            $country->id_zone = $zoneId;
+
+            $this->update($country);
+        }
+    }
 }

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
  * Updates zone for given countries.
@@ -16,9 +17,9 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 class BulkUpdateCountryZoneCommand
 {
     /**
-     * @var int[]
+     * @var array<int, CountryId>
      */
-    private $countryIds;
+    private $countryIds = [];
 
     /**
      * @var int
@@ -39,7 +40,7 @@ class BulkUpdateCountryZoneCommand
     }
 
     /**
-     * @return int[]
+     * @return array<int, CountryId>
      */
     public function getCountryIds(): array
     {
@@ -61,11 +62,7 @@ class BulkUpdateCountryZoneCommand
         }
 
         foreach ($countryIds as $countryId) {
-            if (!is_int($countryId) || $countryId <= 0) {
-                throw new CountryException(sprintf('Invalid country ID: %s', var_export($countryId, true)));
-            }
+            $this->countryIds[] = new CountryId((int) $countryId);
         }
-
-        $this->countryIds = $countryIds;
     }
 }

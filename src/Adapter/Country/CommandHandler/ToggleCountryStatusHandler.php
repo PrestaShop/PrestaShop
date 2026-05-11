@@ -8,36 +8,24 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
-use Country;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\ToggleCountryStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\ToggleCountryStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotToggleCountryStatusException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
-use PrestaShopException;
 
 #[AsCommandHandler]
 class ToggleCountryStatusHandler implements ToggleCountryStatusHandlerInterface
 {
+    public function __construct(
+        private readonly CountryRepository $countryRepository
+    ) {
+    }
+
     public function handle(ToggleCountryStatusCommand $command): void
     {
-        try {
-            $country = new Country($command->getCountryId()->getValue());
+        $country = $this->countryRepository->get($command->getCountryId());
+        $country->active = !$country->active;
 
-            if (0 >= $country->id) {
-                throw new CountryNotFoundException(sprintf('Country object with id "%d" has not been found for status changing', $command->getCountryId()->getValue()));
-            }
-
-            if (false === $country->toggleStatus()) {
-                throw new CannotToggleCountryStatusException(sprintf('Unable to toggle status of country with id "%d"', $command->getCountryId()->getValue()));
-            }
-        } catch (PrestaShopException $e) {
-            throw new CountryException(
-                sprintf('An error occurred when toggling status for country with id "%d"', $command->getCountryId()->getValue()),
-                0,
-                $e
-            );
-        }
+        $this->countryRepository->update($country);
     }
 }

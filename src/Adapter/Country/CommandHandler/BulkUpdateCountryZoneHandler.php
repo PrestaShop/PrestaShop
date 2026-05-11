@@ -8,48 +8,64 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
-use Country;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Adapter\Zone\Repository\ZoneRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkUpdateCountryZoneCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\BulkUpdateCountryZoneHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
-use PrestaShopException;
-use Zone;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\BulkCountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
+use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 
 #[AsCommandHandler]
-class BulkUpdateCountryZoneHandler implements BulkUpdateCountryZoneHandlerInterface
+final class BulkUpdateCountryZoneHandler extends AbstractBulkCommandHandler implements BulkUpdateCountryZoneHandlerInterface
 {
+    public function __construct(
+        private readonly CountryRepository $countryRepository,
+        private readonly ZoneRepository $zoneRepository,
+    ) {
+    }
+
     public function handle(BulkUpdateCountryZoneCommand $command): void
     {
         $zoneId = $command->getNewZoneId();
-        $countryIds = $command->getCountryIds();
+        $this->zoneRepository->get(new ZoneId($zoneId));
 
-        try {
-            $zone = new Zone($zoneId);
-            if (!$zone->id) {
-                throw new ZoneNotFoundException(sprintf('Zone with id "%d" was not found.', $zoneId));
-            }
-        } catch (PrestaShopException $e) {
-            throw new ZoneNotFoundException(sprintf('Zone with id "%d" was not found.', $zoneId));
-        }
+        $this->handleBulkAction($command->getCountryIds(), CountryException::class, $command);
+    }
 
-        try {
-            $country = new Country();
-            $result = $country->affectZoneToSelection($countryIds, $zoneId);
+    /**
+     * @param CountryId $id
+     * @param BulkUpdateCountryZoneCommand $command
+     */
+    protected function handleSingleAction(mixed $id, mixed $command): void
+    {
+        $countryId = $id->getValue();
+        $zoneId = $command->getNewZoneId();
 
-            if (!$result) {
-                throw new CannotEditCountryException(
-                    sprintf('Failed to update zone for countries: %s', implode(', ', $countryIds)),
-                    CannotEditCountryException::FAILED_TO_UPDATE_COUNTRY
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new CannotEditCountryException(
-                sprintf('An error occurred when updating zone for countries: %s', $e->getMessage()),
-                CannotEditCountryException::UNKNOWN_EXCEPTION,
-                $e
-            );
-        }
+        $this->countryRepository->affectCountriesToZone([$countryId], $zoneId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function buildBulkException(array $caughtExceptions): BulkCommandExceptionInterface
+    {
+        return new BulkCountryException(
+            $caughtExceptions,
+            'Errors occurred during country bulk update zone action',
+            BulkCountryException::FAILED_BULK_UPDATE_ZONE
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function supports($id): bool
+    {
+        return $id instanceof CountryId;
     }
 }

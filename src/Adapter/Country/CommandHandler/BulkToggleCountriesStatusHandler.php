@@ -8,40 +8,61 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
-use Country;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkToggleCountriesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\BulkToggleCountriesStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotToggleCountryStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\BulkCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 
 #[AsCommandHandler]
-class BulkToggleCountriesStatusHandler implements BulkToggleCountriesStatusHandlerInterface
+final class BulkToggleCountriesStatusHandler extends AbstractBulkCommandHandler implements BulkToggleCountriesStatusHandlerInterface
 {
+    public function __construct(
+        private readonly CountryRepository $countryRepository,
+    ) {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function handle(BulkToggleCountriesStatusCommand $command): void
     {
-        foreach ($command->getCountryIds() as $countryId) {
-            $country = new Country($countryId->getValue());
+        $this->handleBulkAction($command->getCountryIds(), CountryException::class, $command);
+    }
 
-            if (0 >= $country->id) {
-                throw new CountryNotFoundException(sprintf('Country object with id "%d" has not been found for status changing', $countryId->getValue()));
-            }
+    /**
+     * @param CountryId $id
+     * @param BulkToggleCountriesStatusCommand $command
+     */
+    protected function handleSingleAction(mixed $id, mixed $command): void
+    {
+        $country = $this->countryRepository->get($id);
+        $country->active = $command->getExpectedStatus();
 
-            $country->active = $command->getExpectedStatus();
+        $this->countryRepository->update($country);
+    }
 
-            try {
-                if (!$country->save()) {
-                    throw new CannotToggleCountryStatusException(sprintf('Unable to toggle status for country with id "%d"', $countryId->getValue()));
-                }
-            } catch (PrestaShopException $e) {
-                throw new CountryException(
-                    sprintf('An error occurred while updating country status with id "%d"', $countryId->getValue()),
-                    0,
-                    $e
-                );
-            }
-        }
+    /**
+     * {@inheritDoc}
+     */
+    protected function buildBulkException(array $caughtExceptions): BulkCommandExceptionInterface
+    {
+        return new BulkCountryException(
+            $caughtExceptions,
+            'Errors occurred during country bulk change status action',
+            BulkCountryException::FAILED_BULK_UPDATE_STATUS
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function supports($id): bool
+    {
+        return $id instanceof CountryId;
     }
 }

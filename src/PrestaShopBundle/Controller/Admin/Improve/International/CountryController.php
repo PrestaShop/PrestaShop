@@ -13,14 +13,16 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkToggleCountriesStatusC
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkUpdateCountryZoneCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\ToggleCountryStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotToggleCountryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotToggleCountryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DeleteCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
@@ -34,8 +36,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
 
 /**
  * CountryController is responsible for handling "Improve > International > Locations > Countries"
@@ -251,10 +251,6 @@ class CountryController extends PrestaShopAdminController
             );
 
             $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
-        } catch (CountryException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-        } catch (ZoneException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
