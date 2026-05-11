@@ -344,7 +344,7 @@
       <trans-unit id="c5181dffbcb3a594b06bee627e6d7a73">
         <source>Editing feature %name%</source>
         <target>Editing feature %name%</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 268]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 267]</note>
       </trans-unit>
       <trans-unit id="ce153042d579430501074bdc85f19971">
         <source>Editing file %value%</source>
@@ -731,7 +731,7 @@
       <trans-unit id="824a3a83a007a97494ec5981cebf67a5">
         <source>New feature</source>
         <target>New feature</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 124]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 123]</note>
       </trans-unit>
       <trans-unit id="681e10aecbafd7dd385fa51798ca0fd6">
         <source>New file</source>

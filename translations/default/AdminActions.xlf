@@ -605,7 +605,7 @@
       <trans-unit id="349838fb1d851d3e2014b9fe39203275">
         <source>Install</source>
         <target>Install</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 469]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 474]</note>
       </trans-unit>
       <trans-unit id="d59048f21fd887ad520398ce677be586">
         <source>Learn more</source>

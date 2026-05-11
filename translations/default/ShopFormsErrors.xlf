@@ -27,6 +27,11 @@
         <target>Required field</target>
         <note>File: classes/ValidateConstraintTranslator.php [Line: 58]</note>
       </trans-unit>
+      <trans-unit id="afaabda6216740e4b9805c7755792b13">
+        <source>This state is not valid for the selected country.</source>
+        <target>This state is not valid for the selected country.</target>
+        <note>File: classes/form/CustomerAddressForm.php [Line: 119]</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

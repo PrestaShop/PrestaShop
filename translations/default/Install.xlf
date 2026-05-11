@@ -310,7 +310,7 @@
       <trans-unit id="b482b125161bc9e84d12df83251ebf2d">
         <source>Enter a password between %d and %d characters</source>
         <target>Enter a password between %d and %d characters</target>
-        <note>File: install-dev/theme/views/configure.php [Line: 150]</note>
+        <note>File: install-dev/theme/views/configure.php [Line: 151]</note>
       </trans-unit>
       <trans-unit id="5ad366cc586498f65b4f18a9a87bb1ed">
         <source>Field required</source>
@@ -590,7 +590,7 @@
       <trans-unit id="540155f9adc935c8f3a9d8a77beb8860">
         <source>Re-type to confirm</source>
         <target>Re-type to confirm</target>
-        <note>File: install-dev/theme/views/configure.php [Line: 124]</note>
+        <note>File: install-dev/theme/views/configure.php [Line: 125]</note>
       </trans-unit>
       <trans-unit id="cae2fd0d1edf2730523324e86f4113d0">
         <source>Recommended PHP parameters</source>
@@ -740,7 +740,7 @@
       <trans-unit id="f43333ea2272fed37fc121a2e09755c3">
         <source>The minimum score must be: %s</source>
         <target>The minimum score must be: %s</target>
-        <note>File: install-dev/theme/views/configure.php [Line: 154]</note>
+        <note>File: install-dev/theme/views/configure.php [Line: 155]</note>
       </trans-unit>
       <trans-unit id="74d36cb95a84f88728b3d69678aba185">
         <source>The password and its confirmation are different</source>
@@ -750,7 +750,7 @@
       <trans-unit id="76f0e831c39df4563f03d1673a848fd6">
         <source>The password is incorrect (must be Strong)</source>
         <target>The password is incorrect (must be Strong)</target>
-        <note>File: install-dev/controllers/http/configure.php [Line: 103]</note>
+        <note>File: install-dev/theme/views/configure.php [Line: 101]</note>
       </trans-unit>
       <trans-unit id="89605cda87edd2daeebbe3534b7beb0d">
         <source>The password is incorrect (must be alphanumeric string with at least 8 characters)</source>

@@ -5,7 +5,7 @@
       <trans-unit id="c0498039cc042a1109b53933dc33b2e7">
         <source>A default customer group must be selected in group box.</source>
         <target>A default customer group must be selected in group box.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 940]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 944]</note>
       </trans-unit>
       <trans-unit id="1923e1e610686f1182bf54f573b86921">
         <source>A partial refund was successfully created.</source>
@@ -20,7 +20,7 @@
       <trans-unit id="2b0c8d4ac85a4f8ddf1427f7ad537f55">
         <source>Amount value must be greater than 0.</source>
         <target>Amount value must be greater than 0.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2216]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2226]</note>
       </trans-unit>
       <trans-unit id="9e2dcf2660b82a0204f668565417010a">
         <source>An account already exists for this email address:</source>
@@ -30,7 +30,7 @@
       <trans-unit id="18893a82469e2cd9492fc8d46fa8ac01">
         <source>An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.</source>
         <target>An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2373]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2383]</note>
       </trans-unit>
       <trans-unit id="7582ef2f5b5de8a479994d0412986bc2">
         <source>An error occurred while deleting the details of your order return.</source>
@@ -40,12 +40,12 @@
       <trans-unit id="561918c3c49ff748f543e28f5c405d3c">
         <source>An error occurred while sending an email to the customer.</source>
         <target>An error occurred while sending an email to the customer.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1619]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1623]</note>
       </trans-unit>
       <trans-unit id="fded441ef916f653d49abf142b535b52">
         <source>An error occurred while sending the e-mail to the customer.</source>
         <target>An error occurred while sending the e-mail to the customer.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2185]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2195]</note>
       </trans-unit>
       <trans-unit id="dc30c095a6e57c3146babe8f9088984f">
         <source>An error occurred while trying to update merchandise return.</source>
@@ -55,7 +55,7 @@
       <trans-unit id="beaa75cbedc3443661b894ed66c76b13">
         <source>An error occurred while updating customer information.</source>
         <target>An error occurred while updating customer information.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 988]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 992]</note>
       </trans-unit>
       <trans-unit id="b3d571edf77b87b3be5cb3db48d88aa6">
         <source>An error occurred. Your message was not sent. Please contact your system administrator.</source>
@@ -105,7 +105,7 @@
       <trans-unit id="bd69d7116253ba1407fa8f2611ea6866">
         <source>Discount value cannot exceed the total price of this order.</source>
         <target>Discount value cannot exceed the total price of this order.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2221]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2231]</note>
       </trans-unit>
       <trans-unit id="dc8d1b4e8c9bdf1eed97eb9ed5877a43">
         <source>Do you want to overwrite your existing message?</source>
@@ -260,22 +260,22 @@
       <trans-unit id="c3cb19afc3cf5cd7d07346dcd3504fe2">
         <source>Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.</source>
         <target>Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2335]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2345]</note>
       </trans-unit>
       <trans-unit id="f131fb3c210a32ca24a4910b42b6e2ef">
         <source>Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.</source>
         <target>Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2200]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2210]</note>
       </trans-unit>
       <trans-unit id="918093e8ad4567f6b99e9851eab8bc69">
         <source>Order #%d cannot be loaded.</source>
         <target>Order #%d cannot be loaded.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2397]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2407]</note>
       </trans-unit>
       <trans-unit id="409f3dfd9f910287f86fd6c25c94c4d8">
         <source>Order #%d has already been assigned this status.</source>
         <target>Order #%d has already been assigned this status.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2384]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2394]</note>
       </trans-unit>
       <trans-unit id="1166740db50174894a068c0c51b94c66">
         <source><![CDATA[Order history email could not be sent, test your email configuration in the Advanced Parameters > E-mail section of your back office.]]></source>
@@ -285,22 +285,22 @@
       <trans-unit id="7f35d95de964c02a558f322bf683ff93">
         <source>Percent value cannot exceed 100.</source>
         <target>Percent value cannot exceed 100.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2211]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2221]</note>
       </trans-unit>
       <trans-unit id="7b310c5ac94a5e50139d50574395683b">
         <source>Percent value must be greater than 0.</source>
         <target>Percent value must be greater than 0.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2206]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2216]</note>
       </trans-unit>
       <trans-unit id="2a11327ffe3e46a9ffadddf38b4b9fff">
         <source>Please enter a maximum quantity of [1].</source>
         <target>Please enter a maximum quantity of [1].</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2238]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2248]</note>
       </trans-unit>
       <trans-unit id="d31c479bcda04bd5b859f7cff371c3d0">
         <source>Please enter a positive amount.</source>
         <target>Please enter a positive amount.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2248]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2258]</note>
       </trans-unit>
       <trans-unit id="f569be19b537a76af7e287ace573cd3e">
         <source>Please enter a positive value</source>
@@ -310,7 +310,7 @@
       <trans-unit id="4b0c5f16b969b647ff0b63481af6c3e5">
         <source>Please generate at least one credit slip or voucher.</source>
         <target>Please generate at least one credit slip or voucher.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2253]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2263]</note>
       </trans-unit>
       <trans-unit id="2e66149518ba8dc45a9e51c4f153cebf">
         <source><![CDATA[Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings]]></source>
@@ -320,12 +320,12 @@
       <trans-unit id="97f014aa339f5b37951f100fb1a086d8">
         <source>Please select at least one product.</source>
         <target>Please select at least one product.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2243]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2253]</note>
       </trans-unit>
       <trans-unit id="fedc8043f101accfb757ff85fd8fb81d">
         <source>Product search phrase must not be an empty string.</source>
         <target>Product search phrase must not be an empty string.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2169]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2179]</note>
       </trans-unit>
       <trans-unit id="a9b14221307d90ff672c5cbb61b4c500">
         <source>Searching for customers</source>
@@ -350,12 +350,12 @@
       <trans-unit id="0e6becfb4c6566c35a8fda2d94891c70">
         <source>Shipping discount value cannot exceed the total price of this order.</source>
         <target>Shipping discount value cannot exceed the total price of this order.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2226]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2236]</note>
       </trans-unit>
       <trans-unit id="4174f012bc63b679f092acd1a933bf5c">
         <source>The email was sent to your customer.</source>
         <target>The email was sent to your customer.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1936]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1942]</note>
       </trans-unit>
       <trans-unit id="142c7111dc9e81f5cf273851ccce9fcc">
         <source>The message body is empty, cannot import it.</source>
@@ -390,7 +390,7 @@
       <trans-unit id="53efa65204c54a806b9df6707fc8a326">
         <source>The order message given is invalid.</source>
         <target>The order message given is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2303]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2313]</note>
       </trans-unit>
       <trans-unit id="5431bd88788ce2df4278c84f402e3cb6">
         <source>The order return content is invalid.</source>
@@ -415,7 +415,7 @@
       <trans-unit id="6ab061ec12504fab2c41f0689579d623">
         <source>The selected payment method is invalid.</source>
         <target>The selected payment method is invalid.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2343]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2353]</note>
       </trans-unit>
       <trans-unit id="6513e5e8645f98d950d6174b30c151b8">
         <source>There are two ways of deleting a customer. Please choose your preferred method.</source>
@@ -430,17 +430,17 @@
       <trans-unit id="4383b950a18d0fd893e237148f5f58ca">
         <source>This customer already exists as a non-guest.</source>
         <target>This customer already exists as a non-guest.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 983]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 987]</note>
       </trans-unit>
       <trans-unit id="8562db06e3931e51ac8c456b56088b02">
         <source>This customer does not exist.</source>
         <target>This customer does not exist.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 923]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 927]</note>
       </trans-unit>
       <trans-unit id="1c623b291d95f4f1b1d0c03d0dc0ffa1">
         <source>This email address is not registered.</source>
         <target>This email address is not registered.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 945]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 949]</note>
       </trans-unit>
       <trans-unit id="282426403b9a14678d5dd35e024ec84c">
         <source>This product is out of stock:</source>
@@ -480,7 +480,7 @@
       <trans-unit id="4489aa990b1be20fcfe1bbac827947ef">
         <source>You can't create a registered customer with email "%s", because a registered customer with this email already exists.</source>
         <target>You can't create a registered customer with email "%s", because a registered customer with this email already exists.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 929]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 933]</note>
       </trans-unit>
       <trans-unit id="f28229c2f922945da0fda2b88872c8d7">
         <source>You can't transform this guest to a registered customer, because a registered customer with this email address already exists. </source>
@@ -490,12 +490,12 @@
       <trans-unit id="4cd3d04366db371e6157a4eb1c3af5b0">
         <source>You can't update the email to "%s", because a registered customer with this email already exists.</source>
         <target>You can't update the email to "%s", because a registered customer with this email already exists.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 934]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 938]</note>
       </trans-unit>
       <trans-unit id="f77fd3f9865f0c725901d48dbc00619f">
         <source>You cannot edit the cart once the order delivered.</source>
         <target>You cannot edit the cart once the order delivered.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2174]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2184]</note>
       </trans-unit>
       <trans-unit id="3c55c4e4f0f6d7be29df9ded3d51459d">
         <source>You cannot merge shipment when is already shipped.</source>
@@ -535,12 +535,12 @@
       <trans-unit id="500f3380713af59cab7bdd14d8fefea2">
         <source>You must choose a payment module to create the order.</source>
         <target>You must choose a payment module to create the order.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2259]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2269]</note>
       </trans-unit>
       <trans-unit id="b2f61848a1b9245fb4d79db939e04c02">
         <source>You must choose an order status to create the order.</source>
         <target>You must choose an order status to create the order.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2295]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2305]</note>
       </trans-unit>
       <trans-unit id="eb9173ba78d315a23d8978a2b772bd9a">
         <source>You must select at least one order status.</source>

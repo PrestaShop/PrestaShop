@@ -85,7 +85,7 @@
       <trans-unit id="bdfd182324e6db5a018d0f3a34b91f8b">
         <source>The grade must be between 0 and 9.</source>
         <target>The grade must be between 0 and 9.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 77]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 90]</note>
       </trans-unit>
       <trans-unit id="8a896dc0288ba4be64367f3006d51b98">
         <source>This range is not valid</source>

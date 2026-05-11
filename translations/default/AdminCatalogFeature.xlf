@@ -168,7 +168,7 @@
       <trans-unit id="5f46be79c24b6cde1ff2176a2ce917e9">
         <source>Add new feature</source>
         <target>Add new feature</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 73]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 72]</note>
       </trans-unit>
       <trans-unit id="7aad0283b11e41230d9d1fc7372c3862">
         <source>Add new feature value</source>
@@ -345,7 +345,7 @@
       <trans-unit id="0e010c6b3fb88bf4277c880d1657787a">
         <source>Attribute group</source>
         <target>Attribute group</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 51]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 52]</note>
       </trans-unit>
       <trans-unit id="1caa6ff629641a4eb20f190f7a0539ca">
         <source>Attribute name</source>
@@ -355,7 +355,7 @@
       <trans-unit id="17af8baa9b3f90e936589069e4223280">
         <source>Attribute type</source>
         <target>Attribute type</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 80]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 87]</note>
       </trans-unit>
       <trans-unit id="287234a1ff35a314b5b6bc4e5828e745">
         <source>Attributes</source>
@@ -574,7 +574,7 @@
       <trans-unit id="f68b27443f6e6f685cce3f9f422a2b84">
         <source>Color or texture</source>
         <target>Color or texture</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 85]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 92]</note>
       </trans-unit>
       <trans-unit id="dda0640c3826fab89da4359e3976d368">
         <source>Color, dimension, size, disk space... think about attributes as properties that change from one product to another. As a consequence, attributes allow you to build product combinations.</source>
@@ -2040,7 +2040,7 @@
       <trans-unit id="d274013ea65428454962a59b7b373a41">
         <source>Public name</source>
         <target>Public name</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 64]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 68]</note>
       </trans-unit>
       <trans-unit id="647b89b705fafd7d44aa6f01a5cb4711">
         <source>Qty:</source>
@@ -2265,7 +2265,7 @@
       <trans-unit id="a4838f49c5701e128d7695c3dc45083c">
         <source>Select a store</source>
         <target>Select a store</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1832]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1837]</note>
       </trans-unit>
       <trans-unit id="ba7144e008dfcd7a273108647d7d5153">
         <source>Select all values ({valuesNb})</source>

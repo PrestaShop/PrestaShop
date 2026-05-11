@@ -50,7 +50,7 @@
       <trans-unit id="9769bc6be635c708fee72d29f5a08f30">
         <source>A word by itself is easy to guess</source>
         <target>A word by itself is easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1800]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1831]</note>
       </trans-unit>
       <trans-unit id="adc4f9f9cccaa450c10977d50da58d8d">
         <source>About and Contact</source>
@@ -65,7 +65,7 @@
       <trans-unit id="a2bfda43aef35df5f7edb8f8de1f5f30">
         <source>Add another word or two. Uncommon words are better.</source>
         <target>Add another word or two. Uncommon words are better.</target>
-        <note>File: classes/controller/FrontController.php [Line: 1814]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1845]</note>
       </trans-unit>
       <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
         <source>Addresses</source>
@@ -80,7 +80,7 @@
       <trans-unit id="82958461f3498cc00c0e95ffc05c482d">
         <source>All-uppercase is almost as easy to guess as all-lowercase</source>
         <target>All-uppercase is almost as easy to guess as all-lowercase</target>
-        <note>File: classes/controller/FrontController.php [Line: 1811]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1842]</note>
       </trans-unit>
       <trans-unit id="b1897515d548a960afe49ecf66a29021">
         <source>Average</source>
@@ -90,27 +90,27 @@
       <trans-unit id="54e26a80f66b734f94bc2bd91f3a39ca">
         <source>Avoid dates and years that are associated with you</source>
         <target>Avoid dates and years that are associated with you</target>
-        <note>File: classes/controller/FrontController.php [Line: 1809]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1840]</note>
       </trans-unit>
       <trans-unit id="b4535b0e01e0d48c4e38758a933870ad">
         <source>Avoid recent years</source>
         <target>Avoid recent years</target>
-        <note>File: classes/controller/FrontController.php [Line: 1807]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1838]</note>
       </trans-unit>
       <trans-unit id="6af81f974e7c0a35a3a80db30e8e9fa1">
         <source>Avoid repeated words and characters</source>
         <target>Avoid repeated words and characters</target>
-        <note>File: classes/controller/FrontController.php [Line: 1805]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1836]</note>
       </trans-unit>
       <trans-unit id="cf80cfbbf9eb1b8fc60a7c2c4a1d02d2">
         <source>Avoid sequences</source>
         <target>Avoid sequences</target>
-        <note>File: classes/controller/FrontController.php [Line: 1806]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1837]</note>
       </trans-unit>
       <trans-unit id="18d5eb58e70730c3d43d6a8775201057">
         <source>Avoid years that are associated with you</source>
         <target>Avoid years that are associated with you</target>
-        <note>File: classes/controller/FrontController.php [Line: 1808]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1839]</note>
       </trans-unit>
       <trans-unit id="0557fa923dcee4d0f86b1409f5c2167f">
         <source>Back</source>
@@ -155,7 +155,7 @@
       <trans-unit id="fb6fb2ced4938c895874cd10f135a624">
         <source>Capitalization doesn't help very much</source>
         <target>Capitalization doesn't help very much</target>
-        <note>File: classes/controller/FrontController.php [Line: 1810]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1841]</note>
       </trans-unit>
       <trans-unit id="6dbac206aa2d7e374277ae9ff8ec1987">
         <source>Carousel buttons</source>
@@ -195,7 +195,7 @@
       <trans-unit id="c8a17899dc267baa655e66e93dfa97a2">
         <source>Common names and surnames are easy to guess</source>
         <target>Common names and surnames are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1802]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1833]</note>
       </trans-unit>
       <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
         <source>Contact us</source>
@@ -229,7 +229,7 @@
       <trans-unit id="b3c7b778a3c8c869426ae81486275b12">
         <source>Dates are often easy to guess</source>
         <target>Dates are often easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1795]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1826]</note>
       </trans-unit>
       <trans-unit id="d54d0d430d4b7a5ee44490337c932138">
         <source>Delivery option: %carrier_name%</source>
@@ -318,7 +318,7 @@
       <trans-unit id="83812066e07a07e691d165c97ba89735">
         <source>Names and surnames by themselves are easy to guess</source>
         <target>Names and surnames by themselves are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1801]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1832]</note>
       </trans-unit>
       <trans-unit id="03c2e7e41ffc181a4e84080b4710e81e">
         <source>New</source>
@@ -348,7 +348,7 @@
       <trans-unit id="db3fe1774e30b4103c663805d999043b">
         <source>No need for symbols, digits, or uppercase letters</source>
         <target>No need for symbols, digits, or uppercase letters</target>
-        <note>File: classes/controller/FrontController.php [Line: 1804]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1835]</note>
       </trans-unit>
       <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
         <source>None</source>
@@ -373,7 +373,7 @@
       <trans-unit id="8aedfe9265263408f5a72fff0a21c118">
         <source>Predictable substitutions like "@" instead of "a" don't help very much</source>
         <target>Predictable substitutions like "@" instead of "a" don't help very much</target>
-        <note>File: classes/controller/FrontController.php [Line: 1813]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1844]</note>
       </trans-unit>
       <trans-unit id="dd1f775e443ff3b9a89270713580a51b">
         <source>Previous</source>
@@ -398,22 +398,22 @@
       <trans-unit id="25096ab4fbb9994547ace751ca107515">
         <source>Recent years are easy to guess</source>
         <target>Recent years are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1794]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1825]</note>
       </trans-unit>
       <trans-unit id="773ac0d662987369abf46eebc9000a09">
         <source>Repeats like "aaa" are easy to guess</source>
         <target>Repeats like "aaa" are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1791]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1822]</note>
       </trans-unit>
       <trans-unit id="97681c90722711e8081dcbd10620502e">
         <source>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</source>
         <target>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</target>
-        <note>File: classes/controller/FrontController.php [Line: 1792]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1823]</note>
       </trans-unit>
       <trans-unit id="fc51ea2f3761abe2201b06a33f75748e">
         <source>Reversed words aren't much harder to guess</source>
         <target>Reversed words aren't much harder to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1812]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1843]</note>
       </trans-unit>
       <trans-unit id="8b7051187b9191cdcdae6ed5a10e5adc">
         <source>Saturday</source>
@@ -433,7 +433,7 @@
       <trans-unit id="de3492070cd44f280a6f398dca2f1efb">
         <source>Sequences like "abc" or "6543" are easy to guess</source>
         <target>Sequences like "abc" or "6543" are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1793]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1824]</note>
       </trans-unit>
       <trans-unit id="552a0d8c17d95d5dbdc0c28217024f5a">
         <source>Shipping cost</source>
@@ -442,7 +442,7 @@
       <trans-unit id="bed5e315d09dedac517831b95571a7f4">
         <source>Short keyboard patterns are easy to guess</source>
         <target>Short keyboard patterns are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1789]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1820]</note>
       </trans-unit>
       <trans-unit id="f1006d542b60752f0f72107f84d7069a">
         <source>Show search bar</source>
@@ -487,7 +487,7 @@
       <trans-unit id="43775ce1723057d9e3d21e5969324fd1">
         <source>Straight rows of keys are easy to guess</source>
         <target>Straight rows of keys are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1788]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1819]</note>
       </trans-unit>
       <trans-unit id="c43e0fd449c758dab8f891d8e19eb1a9">
         <source>Strong</source>
@@ -517,22 +517,22 @@
       <trans-unit id="954a21d373e3f1bd2446606700a37217">
         <source>This is a top-10 common password</source>
         <target>This is a top-10 common password</target>
-        <note>File: classes/controller/FrontController.php [Line: 1796]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1827]</note>
       </trans-unit>
       <trans-unit id="f6e52aa06b58dd0d8855340b165c0b49">
         <source>This is a top-100 common password</source>
         <target>This is a top-100 common password</target>
-        <note>File: classes/controller/FrontController.php [Line: 1797]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1828]</note>
       </trans-unit>
       <trans-unit id="0f4a64d2fecd6b4ab2c10d21313e02a6">
         <source>This is a very common password</source>
         <target>This is a very common password</target>
-        <note>File: classes/controller/FrontController.php [Line: 1798]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1829]</note>
       </trans-unit>
       <trans-unit id="c92578d4545d5aceb430aed0c7285398">
         <source>This is similar to a commonly used password</source>
         <target>This is similar to a commonly used password</target>
-        <note>File: classes/controller/FrontController.php [Line: 1799]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1830]</note>
       </trans-unit>
       <trans-unit id="4f0e08d060041845b0bbc6571b3a03d5">
         <source>This page could not be found</source>
@@ -571,17 +571,17 @@
       <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
         <source>Undefined</source>
         <target>Undefined</target>
-        <note>File: classes/controller/FrontController.php [Line: 922]</note>
+        <note>File: classes/controller/FrontController.php [Line: 950]</note>
       </trans-unit>
       <trans-unit id="dd96380694cf9e241cba2b2ac4cf8c03">
         <source>Use a few words, avoid common phrases</source>
         <target>Use a few words, avoid common phrases</target>
-        <note>File: classes/controller/FrontController.php [Line: 1803]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1834]</note>
       </trans-unit>
       <trans-unit id="37ffb1976d12530b5c07821baaf5be39">
         <source>Use a longer keyboard pattern with more turns</source>
         <target>Use a longer keyboard pattern with more turns</target>
-        <note>File: classes/controller/FrontController.php [Line: 1790]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1821]</note>
       </trans-unit>
       <trans-unit id="516b34a4d2351006f3a0f39ccffccefa">
         <source>Very strong</source>

@@ -1377,6 +1377,11 @@ They can, however, contact you anytime via your contact form, in this case, you 
         <target>search...</target>
         <note>File: admin-dev/themes/default/template/helpers/tree/tree_toolbar_search.tpl [Line: 12]</note>
       </trans-unit>
+      <trans-unit id="d98df2134cdb0fcfffd2dc98e3b829dc">
+        <source><![CDATA[tmlspecialchars((string)$_smarty_tpl->tpl_vars['v']->value, ENT_QUOTES, 'UTF-8', true]]></source>
+        <target><![CDATA[tmlspecialchars((string)$_smarty_tpl->tpl_vars['v']->value, ENT_QUOTES, 'UTF-8', true]]></target>
+        <note>File: admin-dev/themes/default/template/helpers/form/form.tpl [Line: 537]</note>
+      </trans-unit>
       <trans-unit id="01b6e20344b68835c5ed1ddedf20d531">
         <source>to</source>
         <target>to</target>

@@ -70,7 +70,7 @@
       <trans-unit id="d4eab6753f9f3d4b57580427264beaa6">
         <source>Successful update</source>
         <target>Successful update</target>
-        <note>File: admin-dev/themes/default/template/header.tpl [Line: 61]</note>
+        <note>File: admin-dev/themes/default/template/header.tpl [Line: 62]</note>
       </trans-unit>
       <trans-unit id="b4a34d3f58b039e7685c2e39b5413757">
         <source>Successful update.</source>
@@ -170,7 +170,7 @@
       <trans-unit id="cc6450370541d1ecfdbdada739732ec1">
         <source>Update successful.</source>
         <target>Update successful.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 1017]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 1021]</note>
       </trans-unit>
       <trans-unit id="714903406a224ca68890e377ea111388">
         <source>Your cover image selection has been saved.</source>

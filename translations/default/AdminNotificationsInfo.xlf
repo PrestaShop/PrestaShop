@@ -35,12 +35,12 @@
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
         <source>Invalid characters:</source>
         <target>Invalid characters:</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 68]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 72]</note>
       </trans-unit>
       <trans-unit id="9ba3c0bbfa1072eb7cf7b38749e5c69d">
         <source>Invalid characters: %chars%</source>
         <target>Invalid characters: %chars%</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/FeatureValueType.php [Line: 50]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/FeatureValueType.php [Line: 54]</note>
       </trans-unit>
       <trans-unit id="6fe11d39747aff42159920688f59f575">
         <source>Invalid characters: %s</source>
@@ -90,12 +90,12 @@
       <trans-unit id="0269f018a765e0d969747a1871c109a1">
         <source>This page is only compatible in a single-store context. Please select a store in the multistore header.</source>
         <target>This page is only compatible in a single-store context. Please select a store in the multistore header.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1813]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1818]</note>
       </trans-unit>
       <trans-unit id="d522a12a111ad26cc15c16da99cebef6">
         <source>This product is not associated with the store selected in the multistore header, please select another one.</source>
         <target>This product is not associated with the store selected in the multistore header, please select another one.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1796]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php [Line: 1801]</note>
       </trans-unit>
       <trans-unit id="cf302b9739d595c09a469b014afff252">
         <source>This secret value will only be displayed once. Don't forget to make a copy in a secure location.</source>
