@@ -38,7 +38,8 @@ final class PendingDiscussionThreadsKpi implements KpiInterface
         }
 
         $helper->source = $this->sourceUrl;
-        $helper->refresh = $this->kpiConfiguration->get('PENDING_MESSAGES_EXPIRE') < time();
+        $expireTimestamp = $this->kpiConfiguration->get('PENDING_MESSAGES_EXPIRE');
+        $helper->refresh = false === $expireTimestamp || (int) $expireTimestamp < time();
 
         return $helper->generate();
     }

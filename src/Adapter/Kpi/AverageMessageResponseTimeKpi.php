@@ -39,7 +39,8 @@ final class AverageMessageResponseTimeKpi implements KpiInterface
         }
 
         $helper->source = $this->sourceUrl;
-        $helper->refresh = $this->kpiConfiguration->get('AVG_MSG_RESPONSE_TIME_EXPIRE') < time();
+        $expireTimestamp = $this->kpiConfiguration->get('AVG_MSG_RESPONSE_TIME_EXPIRE');
+        $helper->refresh = false === $expireTimestamp || (int) $expireTimestamp < time();
 
         return $helper->generate();
     }
