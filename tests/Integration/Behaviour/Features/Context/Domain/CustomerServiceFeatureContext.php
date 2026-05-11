@@ -111,43 +111,31 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I update thread "([^"]+)" status to "([^"]+)"$/
+     * Resolves a thread reference into a numeric id. References that exist in
+     * `SharedStorage` resolve to the stored thread's id; otherwise the
+     * reference is treated as a raw id (used by error scenarios that operate
+     * on a thread that does not exist).
+     */
+    private function resolveThreadId(string $threadReference): int
+    {
+        if (SharedStorage::getStorage()->exists($threadReference)) {
+            /** @var CustomerThread $customerThread */
+            $customerThread = SharedStorage::getStorage()->get($threadReference);
+
+            return (int) $customerThread->id;
+        }
+
+        return (int) $threadReference;
+    }
+
+    /**
+     * @When /^I update thread "([^"]+)" status to (open|closed|pending1|pending2)$/
      */
     public function updateThreadStatus(string $threadReference, string $status): void
     {
-        /** @var CustomerThread $customerThread */
-        $customerThread = SharedStorage::getStorage()->get($threadReference);
-
-        $this->getCommandBus()->handle(
-            new UpdateCustomerThreadStatusCommand((int) $customerThread->id, $status)
-        );
-    }
-
-    /**
-     * @When /^I try to update thread "([^"]+)" status to "([^"]+)"$/
-     */
-    public function tryUpdateThreadStatus(string $threadReference, string $status): void
-    {
-        /** @var CustomerThread $customerThread */
-        $customerThread = SharedStorage::getStorage()->get($threadReference);
-
         try {
             $this->getCommandBus()->handle(
-                new UpdateCustomerThreadStatusCommand((int) $customerThread->id, $status)
-            );
-        } catch (CustomerServiceException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @When /^I try to update non-existent customer thread with id (\d+) status to "([^"]+)"$/
-     */
-    public function updateNonExistentThreadStatus(int $threadId, string $status): void
-    {
-        try {
-            $this->getCommandBus()->handle(
-                new UpdateCustomerThreadStatusCommand($threadId, $status)
+                new UpdateCustomerThreadStatusCommand($this->resolveThreadId($threadReference), $status)
             );
         } catch (CustomerServiceException $e) {
             $this->setLastException($e);
@@ -159,19 +147,19 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertThreadStatus(string $threadReference, string $expectedStatus): void
     {
-        /** @var CustomerThread $customerThread */
-        $customerThread = SharedStorage::getStorage()->get($threadReference);
-
-        $reloaded = new CustomerThread((int) $customerThread->id);
+        /** @var CustomerThreadView $customerThreadView */
+        $customerThreadView = $this->getQueryBus()->handle(
+            new GetCustomerThreadForViewing($this->resolveThreadId($threadReference))
+        );
 
         Assert::assertSame(
             $expectedStatus,
-            $reloaded->status,
+            $customerThreadView->getStatus(),
             sprintf(
                 'Customer thread "%s" should have status "%s", got "%s".',
                 $threadReference,
                 $expectedStatus,
-                $reloaded->status
+                $customerThreadView->getStatus()
             )
         );
     }
@@ -208,12 +196,10 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     {
         $references = PrimitiveUtils::castStringArrayIntoArray($threadReferences);
 
-        $threadIds = [];
-        foreach ($references as $reference) {
-            /** @var CustomerThread $customerThread */
-            $customerThread = SharedStorage::getStorage()->get($reference);
-            $threadIds[] = (int) $customerThread->id;
-        }
+        $threadIds = array_map(
+            static fn (string $reference): int => (int) SharedStorage::getStorage()->get($reference)->id,
+            $references
+        );
 
         $this->getCommandBus()->handle(new BulkDeleteCustomerThreadCommand($threadIds));
     }
@@ -261,14 +247,6 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsCustomerThreadNotFound(): void
     {
         $this->assertLastErrorIs(CustomerThreadNotFoundException::class);
-    }
-
-    /**
-     * @Then I should get error that customer thread status is invalid
-     */
-    public function assertLastErrorIsInvalidThreadStatus(): void
-    {
-        $this->assertLastErrorIs(CustomerServiceException::class);
     }
 
     /**

@@ -20,6 +20,11 @@ class CustomerThreadView
     private $customerThreadId;
 
     /**
+     * @var string
+     */
+    private $status;
+
+    /**
      * @var array
      */
     private $actions;
@@ -61,6 +66,7 @@ class CustomerThreadView
     public function __construct(
         CustomerThreadId $customerThreadId,
         LanguageId $languageId,
+        string $status,
         array $actions,
         CustomerInformation $customerInformation,
         $contactName,
@@ -68,12 +74,18 @@ class CustomerThreadView
         CustomerThreadTimeline $timeline
     ) {
         $this->customerThreadId = $customerThreadId;
+        $this->status = $status;
         $this->actions = $actions;
         $this->customerInformation = $customerInformation;
         $this->contactName = $contactName;
         $this->messages = $messages;
         $this->languageId = $languageId;
         $this->timeline = $timeline;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
     }
 
     /**

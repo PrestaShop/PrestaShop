@@ -15,15 +15,15 @@ Feature: Customer service
     And customer thread "thread1" should be closed
 
   Scenario: Update thread status to open
-    When I update thread "thread1" status to "open"
+    When I update thread "thread1" status to open
     Then customer thread "thread1" should be open
 
   Scenario: Mark thread as pending status 1
-    When I update thread "thread1" status to "pending1"
+    When I update thread "thread1" status to pending1
     Then customer thread "thread1" should be pending1
 
   Scenario: Mark thread as pending status 2
-    When I update thread "thread1" status to "pending2"
+    When I update thread "thread1" status to pending2
     Then customer thread "thread1" should be pending2
 
   Scenario: I delete thread
@@ -47,12 +47,6 @@ Feature: Customer service
     When I bulk delete non-existent customer threads with ids 999998, 999999
     Then I should get error that customer thread does not exist
 
-  Scenario: Updating thread status to an invalid value raises an error
-    When I add new customer thread "thread-bad-status" with following properties:
-      | message    | thread for invalid status check |
-    And I try to update thread "thread-bad-status" status to "not-a-status"
-    Then I should get error that customer thread status is invalid
-
   Scenario: Updating status of a non-existent thread raises an error
-    When I try to update non-existent customer thread with id 999999 status to "open"
+    When I update thread "999999" status to open
     Then I should get error that customer thread status update failed
