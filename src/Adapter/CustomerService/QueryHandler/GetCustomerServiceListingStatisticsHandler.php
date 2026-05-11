@@ -23,15 +23,11 @@ final class GetCustomerServiceListingStatisticsHandler implements GetCustomerSer
 {
     public function handle(GetCustomerServiceListingStatistics $query): CustomerServiceListingStatistics
     {
-        $total = CustomerThread::getTotalCustomerThreads();
-        $open = CustomerThread::getTotalCustomerThreads('status = "open"');
-        $pending = CustomerThread::getTotalCustomerThreads('status LIKE "%pending%"');
-
         return new CustomerServiceListingStatistics(
-            $total,
-            $open,
-            $pending,
-            max(0, $total - $open - $pending),
+            CustomerThread::getTotalCustomerThreads(),
+            CustomerThread::getTotalCustomerThreads('status = "open"'),
+            CustomerThread::getTotalCustomerThreads('status IN ("pending1", "pending2")'),
+            CustomerThread::getTotalCustomerThreads('status = "closed"'),
             CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
             CustomerMessage::getTotalCustomerMessages('id_employee != 0'),
         );
