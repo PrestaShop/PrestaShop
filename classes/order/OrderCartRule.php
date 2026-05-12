@@ -32,6 +32,9 @@ class OrderCartRuleCore extends ObjectModel
     /** @var bool value : deleted from order */
     public $deleted = false;
 
+    /** @var Order * */
+    protected $order;
+
     /**
      * @see ObjectModel::$definition
      */
