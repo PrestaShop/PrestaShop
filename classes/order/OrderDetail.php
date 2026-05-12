@@ -170,6 +170,9 @@ class OrderDetailCore extends ObjectModel
     /** @var float */
     public $total_refunded_tax_incl;
 
+    /** @var Order * */
+    protected $order;
+
     /**
      * @see ObjectModel::$definition
      */
