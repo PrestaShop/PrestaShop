@@ -50,6 +50,9 @@ class OrderSlipCore extends ObjectModel
     /** @var int */
     public $order_slip_type = 0;
 
+    /** @var Order * */
+    protected $order;
+
     /**
      * @see ObjectModel::$definition
      */
