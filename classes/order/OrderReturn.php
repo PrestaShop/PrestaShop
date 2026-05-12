@@ -29,6 +29,9 @@ class OrderReturnCore extends ObjectModel
     /** @var string Object last modification date */
     public $date_upd;
 
+    /** @var Order * */
+    protected $order;
+
     /**
      * @see ObjectModel::$definition
      */
