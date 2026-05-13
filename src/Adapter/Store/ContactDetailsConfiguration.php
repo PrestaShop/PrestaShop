@@ -9,21 +9,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Store;
 
 use Country;
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use State;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Validate;
 
-/**
- * Handles read/write of PS_SHOP_* configuration values for the Contact Details section.
- */
-class ContactDetailsConfiguration implements DataConfigurationInterface
+final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
 {
-    public function __construct(
-        private readonly Configuration $configuration,
-    ) {
-    }
-
     public function getConfiguration(): array
     {
         return [
@@ -43,13 +35,16 @@ class ContactDetailsConfiguration implements DataConfigurationInterface
 
     public function updateConfiguration(array $configuration): array
     {
-        $errors = $this->collectValidationErrors($configuration);
+        $countryId = (int) ($configuration['id_country'] ?? 0);
+        $stateId = (int) ($configuration['id_state'] ?? 0);
+
+        $country = $countryId ? new Country($countryId) : null;
+        $state = ($stateId && $countryId) ? new State($stateId) : null;
+
+        $errors = $this->collectValidationErrors($configuration, $state, $countryId);
         if (!empty($errors)) {
             return $errors;
         }
-
-        $countryId = (int) $configuration['id_country'];
-        $stateId = (int) $configuration['id_state'];
 
         $this->configuration->set('PS_SHOP_NAME', $configuration['name']);
         $this->configuration->set('PS_SHOP_EMAIL', $configuration['email']);
@@ -61,14 +56,15 @@ class ContactDetailsConfiguration implements DataConfigurationInterface
         $this->configuration->set('PS_SHOP_PHONE', $configuration['phone'] ?? '');
         $this->configuration->set('PS_SHOP_FAX', $configuration['fax'] ?? '');
 
-        if ($countryId) {
-            $country = new Country($countryId);
+        if ($country !== null) {
             $this->configuration->set('PS_SHOP_COUNTRY_ID', $countryId);
             $this->configuration->set('PS_SHOP_COUNTRY', $country->iso_code);
+        } else {
+            $this->configuration->set('PS_SHOP_COUNTRY_ID', 0);
+            $this->configuration->set('PS_SHOP_COUNTRY', '');
         }
 
-        if ($stateId) {
-            $state = new State($stateId);
+        if ($state !== null) {
             $this->configuration->set('PS_SHOP_STATE_ID', $stateId);
             $this->configuration->set('PS_SHOP_STATE', $state->iso_code);
         } else {
@@ -79,12 +75,26 @@ class ContactDetailsConfiguration implements DataConfigurationInterface
         return [];
     }
 
-    public function validateConfiguration(array $configuration): bool
+    protected function buildResolver(): OptionsResolver
     {
-        return empty($this->collectValidationErrors($configuration));
+        $resolver = new OptionsResolver();
+        $resolver->setDefined(['name', 'email', 'registration_number', 'address1', 'address2', 'postcode', 'city', 'id_country', 'id_state', 'phone', 'fax']);
+        $resolver->setAllowedTypes('name', 'string');
+        $resolver->setAllowedTypes('email', 'string');
+        $resolver->setAllowedTypes('registration_number', ['string', 'null']);
+        $resolver->setAllowedTypes('address1', ['string', 'null']);
+        $resolver->setAllowedTypes('address2', ['string', 'null']);
+        $resolver->setAllowedTypes('postcode', ['string', 'null']);
+        $resolver->setAllowedTypes('city', ['string', 'null']);
+        $resolver->setAllowedTypes('id_country', ['int', 'null']);
+        $resolver->setAllowedTypes('id_state', ['int', 'null']);
+        $resolver->setAllowedTypes('phone', ['string', 'null']);
+        $resolver->setAllowedTypes('fax', ['string', 'null']);
+
+        return $resolver;
     }
 
-    private function collectValidationErrors(array $configuration): array
+    private function collectValidationErrors(array $configuration, ?State $state, int $countryId): array
     {
         $errors = [];
 
@@ -116,18 +126,12 @@ class ContactDetailsConfiguration implements DataConfigurationInterface
             ];
         }
 
-        $countryId = (int) ($configuration['id_country'] ?? 0);
-        $stateId = (int) ($configuration['id_state'] ?? 0);
-
-        if ($countryId && $stateId) {
-            $state = new State($stateId);
-            if ((int) $state->id_country !== $countryId) {
-                $errors[] = [
-                    'key' => 'The selected state does not belong to the selected country.',
-                    'domain' => 'Admin.Shopparameters.Notification',
-                    'parameters' => [],
-                ];
-            }
+        if ($state !== null && (int) $state->id_country !== $countryId) {
+            $errors[] = [
+                'key' => 'The selected state does not belong to the selected country.',
+                'domain' => 'Admin.Shopparameters.Notification',
+                'parameters' => [],
+            ];
         }
 
         return $errors;
