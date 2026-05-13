@@ -8,11 +8,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
 
-use Country;
+use PrestaShop\PrestaShop\Adapter\Store\Trait\StoreHandlerTrait;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\AddStoreHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 use Store;
@@ -20,6 +19,8 @@ use Store;
 #[AsCommandHandler]
 final class AddStoreHandler implements AddStoreHandlerInterface
 {
+    use StoreHandlerTrait;
+
     public function __construct(
         private readonly StoreRepository $storeRepository,
     ) {
@@ -69,48 +70,5 @@ final class AddStoreHandler implements AddStoreHandlerInterface
     private function associateWithShops(Store $store, array $shopIds): void
     {
         $store->associateTo($shopIds);
-    }
-
-    private function assertStateCountryConsistency(int $countryId, ?int $stateId): void
-    {
-        $country = new Country($countryId);
-
-        if ($country->contains_states && !$stateId) {
-            throw new StoreConstraintException(
-                'A state is required for the selected country.',
-                StoreConstraintException::INVALID_STATE
-            );
-        }
-
-        if (!$country->contains_states && $stateId) {
-            throw new StoreConstraintException(
-                'The selected country does not contain states.',
-                StoreConstraintException::STATE_COUNTRY_MISMATCH
-            );
-        }
-    }
-
-    /**
-     * Encodes the localised hours array back to JSON strings for storage.
-     * Input: [$langId => ['09:00 | 18:00', '09:00 | 18:00', ...]] (7 items per lang)
-     * Output: [$langId => '[[\"09:00\",\"18:00\"],...]']
-     *
-     * @param array<int, array<int, string>> $localizedHours
-     *
-     * @return array<int, string>
-     */
-    private function encodeHours(array $localizedHours): array
-    {
-        $result = [];
-        foreach ($localizedHours as $langId => $days) {
-            $encoded = [];
-            foreach ($days as $day) {
-                $parts = array_map('trim', explode('|', (string) $day, 2));
-                $encoded[] = isset($parts[1]) ? [$parts[0], $parts[1]] : [$parts[0]];
-            }
-            $result[(int) $langId] = json_encode($encoded);
-        }
-
-        return $result;
     }
 }
