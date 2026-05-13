@@ -56,7 +56,9 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Store\ContactDetailsConfiguration:
     arguments:
-      $configuration: '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   # deprecated
   prestashop.core.domain.store.repository.store_repository:

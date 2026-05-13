@@ -640,7 +640,11 @@ services:
       - 'reset_password'
 
   prestashop.admin.stores.contact_details_form_handler:
-    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Store\ContactDetailsFormHandler'
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
     arguments:
       - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
       - '@PrestaShopBundle\Form\Admin\Configure\ShopParameters\Store\ContactDetailsFormDataProvider'
+      - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Store\ContactDetailsType'
+      - 'StoresContactDetailsPage'
+      - 'stores-contact-details'
