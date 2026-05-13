@@ -16,10 +16,9 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
  */
 class Coordinate
 {
-    private ?float $value;
-
-    public function __construct(?float $value)
-    {
+    public function __construct(
+        private ?float $value,
+    ) {
         if (null !== $value && !preg_match('/^-?[0-9]{1,8}\.[0-9]{1,8}$/', number_format($value, 8, '.', ''))) {
             throw new StoreConstraintException(
                 sprintf('Invalid coordinate value "%s"', $value),
