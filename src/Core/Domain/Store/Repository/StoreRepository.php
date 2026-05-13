@@ -23,11 +23,10 @@ use Store;
 
 class StoreRepository extends AbstractObjectModelRepository
 {
-    private Connection $connection;
-    private string $dbPrefix;
-
-    public function __construct(Connection $connection, string $dbPrefix)
-    {
+    public function __construct(
+        private Connection $connection,
+        private string $dbPrefix,
+    ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
     }
