@@ -98,9 +98,9 @@ class EditCountryCommand
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
-    public function getLocalizedNames(): array
+    public function getLocalizedNames(): ?array
     {
         return $this->localizedNames;
     }
@@ -122,7 +122,7 @@ class EditCountryCommand
         return $this->isoCode;
     }
 
-    public function setIsoCode($isoCode)
+    public function setIsoCode(string $isoCode)
     {
         $this->isoCode = $isoCode;
 
