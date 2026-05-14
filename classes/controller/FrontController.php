@@ -1742,7 +1742,9 @@ class FrontControllerCore extends Controller
             return [];
         }
 
-        list($logoWidth, $logoHeight) = getimagesize($logoFileDir);
+        $logoSize = getimagesize($logoFileDir);
+        $logoWidth = (is_array($logoSize) && isset($logoSize[0])) ? (int) $logoSize[0] : 0;
+        $logoHeight = (is_array($logoSize) && isset($logoSize[1])) ? (int) $logoSize[1] : 0;
 
         return [
             'src' => ($this->getTemplateVarUrls()['img_ps_url'] ?? _PS_IMG_) . $logoFileName,
