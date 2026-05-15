@@ -8,40 +8,43 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
-use HelperKpi;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-
 /**
  * Renders the average time elapsed between customer messages and employee replies over the last 30 days.
  */
-final class AverageMessageResponseTimeKpi implements KpiInterface
+final class AverageMessageResponseTimeKpi extends AbstractAdminStatsKpi
 {
-    public function __construct(
-        private readonly TranslatorInterface $translator,
-        private readonly ConfigurationInterface $kpiConfiguration,
-        private readonly string $sourceUrl,
-    ) {
+    protected function getId(): string
+    {
+        return 'box-age';
     }
 
-    public function render(): string
+    protected function getIcon(): string
     {
-        $helper = new HelperKpi();
-        $helper->id = 'box-age';
-        $helper->icon = 'access_time';
-        $helper->color = 'color2';
-        $helper->title = $this->translator->trans('Average Response Time', [], 'Admin.Catalog.Feature');
-        $helper->subtitle = $this->translator->trans('30 days', [], 'Admin.Global');
+        return 'access_time';
+    }
 
-        if (false !== $this->kpiConfiguration->get('AVG_MSG_RESPONSE_TIME')) {
-            $helper->value = $this->kpiConfiguration->get('AVG_MSG_RESPONSE_TIME');
-        }
+    protected function getColor(): string
+    {
+        return 'color2';
+    }
 
-        $helper->source = $this->sourceUrl;
-        $expireTimestamp = $this->kpiConfiguration->get('AVG_MSG_RESPONSE_TIME_EXPIRE');
-        $helper->refresh = false === $expireTimestamp || (int) $expireTimestamp < time();
+    protected function getTitle(): string
+    {
+        return $this->translator->trans('Average Response Time', [], 'Admin.Catalog.Feature');
+    }
 
-        return $helper->generate();
+    protected function getSubtitle(): ?string
+    {
+        return $this->translator->trans('30 days', [], 'Admin.Global');
+    }
+
+    protected function getValueConfigurationKey(): string
+    {
+        return 'AVG_MSG_RESPONSE_TIME';
+    }
+
+    protected function getExpireConfigurationKey(): string
+    {
+        return 'AVG_MSG_RESPONSE_TIME_EXPIRE';
     }
 }

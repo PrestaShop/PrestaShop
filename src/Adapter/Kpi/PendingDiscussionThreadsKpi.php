@@ -8,39 +8,38 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
-use HelperKpi;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-
 /**
  * Renders the count of customer service threads still awaiting a reply.
  */
-final class PendingDiscussionThreadsKpi implements KpiInterface
+final class PendingDiscussionThreadsKpi extends AbstractAdminStatsKpi
 {
-    public function __construct(
-        private readonly TranslatorInterface $translator,
-        private readonly ConfigurationInterface $kpiConfiguration,
-        private readonly string $sourceUrl,
-    ) {
+    protected function getId(): string
+    {
+        return 'box-pending-messages';
     }
 
-    public function render(): string
+    protected function getIcon(): string
     {
-        $helper = new HelperKpi();
-        $helper->id = 'box-pending-messages';
-        $helper->icon = 'mail';
-        $helper->color = 'color1';
-        $helper->title = $this->translator->trans('Pending Discussion Threads', [], 'Admin.Catalog.Feature');
+        return 'mail';
+    }
 
-        if (false !== $this->kpiConfiguration->get('PENDING_MESSAGES')) {
-            $helper->value = $this->kpiConfiguration->get('PENDING_MESSAGES');
-        }
+    protected function getColor(): string
+    {
+        return 'color1';
+    }
 
-        $helper->source = $this->sourceUrl;
-        $expireTimestamp = $this->kpiConfiguration->get('PENDING_MESSAGES_EXPIRE');
-        $helper->refresh = false === $expireTimestamp || (int) $expireTimestamp < time();
+    protected function getTitle(): string
+    {
+        return $this->translator->trans('Pending Discussion Threads', [], 'Admin.Catalog.Feature');
+    }
 
-        return $helper->generate();
+    protected function getValueConfigurationKey(): string
+    {
+        return 'PENDING_MESSAGES';
+    }
+
+    protected function getExpireConfigurationKey(): string
+    {
+        return 'PENDING_MESSAGES_EXPIRE';
     }
 }

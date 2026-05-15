@@ -8,40 +8,43 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
-use HelperKpi;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-
 /**
  * Renders the average number of messages exchanged per customer service thread over the last 30 days.
  */
-final class MessagesPerThreadKpi implements KpiInterface
+final class MessagesPerThreadKpi extends AbstractAdminStatsKpi
 {
-    public function __construct(
-        private readonly TranslatorInterface $translator,
-        private readonly ConfigurationInterface $kpiConfiguration,
-        private readonly string $sourceUrl,
-    ) {
+    protected function getId(): string
+    {
+        return 'box-messages-per-thread';
     }
 
-    public function render(): string
+    protected function getIcon(): string
     {
-        $helper = new HelperKpi();
-        $helper->id = 'box-messages-per-thread';
-        $helper->icon = 'content_copy';
-        $helper->color = 'color3';
-        $helper->title = $this->translator->trans('Messages per Thread', [], 'Admin.Catalog.Feature');
-        $helper->subtitle = $this->translator->trans('30 days', [], 'Admin.Global');
+        return 'content_copy';
+    }
 
-        if (false !== $this->kpiConfiguration->get('MESSAGES_PER_THREAD')) {
-            $helper->value = $this->kpiConfiguration->get('MESSAGES_PER_THREAD');
-        }
+    protected function getColor(): string
+    {
+        return 'color3';
+    }
 
-        $helper->source = $this->sourceUrl;
-        $expireTimestamp = $this->kpiConfiguration->get('MESSAGES_PER_THREAD_EXPIRE');
-        $helper->refresh = false === $expireTimestamp || (int) $expireTimestamp < time();
+    protected function getTitle(): string
+    {
+        return $this->translator->trans('Messages per Thread', [], 'Admin.Catalog.Feature');
+    }
 
-        return $helper->generate();
+    protected function getSubtitle(): ?string
+    {
+        return $this->translator->trans('30 days', [], 'Admin.Global');
+    }
+
+    protected function getValueConfigurationKey(): string
+    {
+        return 'MESSAGES_PER_THREAD';
+    }
+
+    protected function getExpireConfigurationKey(): string
+    {
+        return 'MESSAGES_PER_THREAD_EXPIRE';
     }
 }
