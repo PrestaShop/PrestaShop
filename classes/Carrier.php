@@ -223,7 +223,7 @@ class CarrierCore extends ObjectModel
     public function add($autoDate = true, $nullValues = false)
     {
         if ($this->position <= 0) {
-            $this->position = Carrier::getHigherPosition() + 1;
+            $this->position = Carrier::getHighestPosition() + 1;
         }
         if (!parent::add($autoDate, $nullValues) || !Validate::isLoadedObject($this)) {
             return false;
@@ -1485,15 +1485,34 @@ class CarrierCore extends ObjectModel
      * Gets the highest carrier position.
      *
      * @return int $position
+     *
+     * @deprecated Since 9.2, use Carrier::getHighestPosition() instead.
      */
     public static function getHigherPosition()
+    {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.2. Use %s instead.',
+                __METHOD__,
+                self::class . '::getHighestPosition()'
+            ),
+            E_USER_DEPRECATED
+        );
+
+        return self::getHighestPosition();
+    }
+
+    /**
+     * Gets the highest carrier position.
+     */
+    public static function getHighestPosition(): int
     {
         $sql = 'SELECT MAX(`position`)
                 FROM `' . _DB_PREFIX_ . 'carrier`
                 WHERE `deleted` = 0';
         $position = Db::getInstance()->getValue($sql);
 
-        return (is_numeric($position)) ? $position : -1;
+        return (is_numeric($position)) ? (int) $position : -1;
     }
 
     /**
