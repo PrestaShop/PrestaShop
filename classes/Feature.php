@@ -107,7 +107,7 @@ class FeatureCore extends ObjectModel
     public function add($autoDate = true, $nullValues = false)
     {
         if ($this->position <= 0) {
-            $this->position = Feature::getHigherPosition() + 1;
+            $this->position = Feature::getHighestPosition() + 1;
         }
 
         $return = parent::add($autoDate, true);
@@ -246,7 +246,7 @@ class FeatureCore extends ObjectModel
             if ($position) {
                 $feature->position = (int) $position;
             } else {
-                $feature->position = Feature::getHigherPosition() + 1;
+                $feature->position = Feature::getHighestPosition() + 1;
             }
             $feature->add();
 
@@ -337,18 +337,35 @@ class FeatureCore extends ObjectModel
     }
 
     /**
-     * getHigherPosition.
-     *
-     * Get the higher feature position
+     * Get the highest Feature position.
      *
      * @return int $position
+     *
+     * @deprecated Since 9.2, use Feature::getHighestPosition() instead.
      */
     public static function getHigherPosition()
+    {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.2. Use %s instead.',
+                __METHOD__,
+                self::class . '::getHighestPosition()'
+            ),
+            E_USER_DEPRECATED
+        );
+
+        return self::getHighestPosition();
+    }
+
+    /**
+     * Get the highest Feature position.
+     */
+    public static function getHighestPosition(): int
     {
         $sql = 'SELECT MAX(`position`)
 				FROM `' . _DB_PREFIX_ . 'feature`';
         $position = Db::getInstance()->getValue($sql);
 
-        return (is_numeric($position)) ? $position : -1;
+        return (is_numeric($position)) ? (int) $position : -1;
     }
 }
