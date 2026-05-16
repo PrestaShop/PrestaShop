@@ -527,7 +527,32 @@ class StockAvailableCore extends ObjectModel
         if (count($shop_list) > 0) {
             $id_shops_list = implode(', ', $shop_list);
 
-            return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop IN (' . $id_shops_list . ')');
+            $db = Db::getInstance();
+
+            $db->update('stock_available', ['quantity' => 0], 'id_shop IN (' . $id_shops_list . ')');
+
+            // Keep one row per product/combination before switching to group scope,
+            // otherwise multiple shop-level rows could collide on the shared-stock unique key.
+            $db->execute('
+                DELETE sa
+                FROM ' . _DB_PREFIX_ . 'stock_available sa
+                INNER JOIN ' . _DB_PREFIX_ . 'stock_available duplicate
+                    ON duplicate.id_product = sa.id_product
+                    AND duplicate.id_product_attribute = sa.id_product_attribute
+                    AND duplicate.id_shop IN (' . $id_shops_list . ')
+                    AND sa.id_shop IN (' . $id_shops_list . ')
+                    AND duplicate.id_shop < sa.id_shop
+            ');
+
+            // Move the remaining rows to the shared stock scope expected by shop groups.
+            return $db->update(
+                'stock_available',
+                [
+                    'id_shop' => 0,
+                    'id_shop_group' => (int) $shop_group->id,
+                ],
+                'id_shop IN (' . $id_shops_list . ')'
+            );
         }
 
         return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop_group = ' . $shop_group->id);
