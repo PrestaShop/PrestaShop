@@ -2356,7 +2356,7 @@ class AdminImportControllerCore extends AdminController
                     $obj->group_type = pSQL($type);
                     $obj->name[$default_language] = $group;
                     $obj->public_name[$default_language] = $group;
-                    $obj->position = (!$position) ? AttributeGroup::getHigherPosition() + 1 : $position;
+                    $obj->position = (!$position) ? AttributeGroup::getHighestPosition() + 1 : $position;
 
                     if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true
                         && ($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
