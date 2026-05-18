@@ -128,6 +128,31 @@ A single `.feature` file is the typical case, but split into multiple smaller fi
 
 Suggested split: `{domain}_management.feature` (CRUD), `{domain}_bulk_actions.feature`, `{domain}_filters.feature`, `{domain}_constraints.feature`. Keep them in the same `Scenario/{Domain}/` folder.
 
+## 9. Step parameter patterns (review traps)
+
+These patterns recur in PR reviews — bake them in from the start instead of being asked to refactor them.
+
+### Constrain fixed-value parameters with enum regex
+
+When a parameter can only take a closed set of values (statuses, types, etc.), use a regex step with an explicit alternation rather than a permissive `"([^"]+)"` placeholder. The step then doubles as documentation of what's accepted, and an invalid value fails to bind at the Behat level instead of producing a confusing runtime error.
+
+```gherkin
+# Preferred
+When I update {domain} "ref_1" status to enabled
+```
+
+```php
+/**
+ * @When /^I update {domain} "([^"]+)" status to (enabled|disabled|pending)$/
+ */
+```
+
+Drop the quotes around the enum value in the `.feature` file so the regex stays clean — quoted values are reserved for free-form input (names, messages, IDs).
+
+### Single step for happy-path and not-found
+
+A common review trap is duplicating an action step into three near-identical variants (real entity / "try" / "non-existent"). Keep **one** step that resolves the reference via a helper that falls back to the raw id when the reference is not in `SharedStorage`. See [create-behat-context](../create-behat-context/SKILL.md#step-deduplication-via-resolvexxxid) for the helper pattern.
+
 ## Rules
 
 Conventions (stateless steps, string references, typed exceptions, deterministic steps) are in [Behat/CONTEXT.md](../../CONTEXT.md). Skill-specific reminders:
@@ -135,3 +160,5 @@ Conventions (stateless steps, string references, typed exceptions, deterministic
 - Scenario names must be unique within the feature
 - Background section should be minimal — only universally shared setup
 - Reuse existing step definitions from other contexts when possible
+- Prefer enum regexes over `"([^"]+)"` when the parameter is a closed set
+- One step covers both happy-path and not-found via `resolveXxxId` — don't duplicate

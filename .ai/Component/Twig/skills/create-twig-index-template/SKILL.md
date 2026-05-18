@@ -44,8 +44,15 @@ Most grids work with default column rendering. Only add custom blocks when a col
 - Common case: image thumbnail, custom badge, formatted compound value
 - Leave default columns alone — only override what's necessary
 
+## 3. Translation domain consistency
+
+Before adding a `|trans(...)` call to a new partial, run `grep "|trans" path/to/page/*.twig` (or the equivalent on the legacy `.tpl` files) and align on the domain already used by the surrounding page — `Admin.Catalog.Feature`, `Admin.Orderscustomers.Feature`, `Admin.International.Feature`, etc.
+
+Legacy pages often mix domains because they grew over time; the migrated Symfony page should pick **one** and stay consistent. Mixed domains on a single screen are a recurring review trap and make the translation catalog harder to audit.
+
 ## Rules
 
 Conventions (layout extension, `path()` for routes, flash messages auto-handling, toolbar buttons) are in [Twig/CONTEXT.md](../../CONTEXT.md). Skill-specific reminder:
 
 - The `grid` variable name must match what the controller passes to `render()`
+- Pick a single translation domain per page; do not mix `Admin.Catalog.*` with `Admin.Orderscustomers.*` on the same screen

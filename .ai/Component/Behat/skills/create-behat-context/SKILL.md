@@ -61,6 +61,33 @@ public function domainShouldHaveProperties(string $reference, TableNode $table):
 
 The assertion loads the entity fresh from the database — it does NOT rely on state from a previous step.
 
+**Always go through the query bus, never bypass it.** Reading state directly from the ObjectModel (`new {Domain}($id)`) or from a raw SQL query inside an assertion is a recurring PR review trap: it hides bugs in the read side (missing fields on the result DTO, broken handler logic), and it defeats the purpose of running scenarios through the bus. If the field you need to assert is not exposed on the result DTO, fix the DTO — see [create-cqrs-queries](../../../CQRS/skills/create-cqrs-queries/SKILL.md#3-result-dto).
+
+### Step deduplication via `resolveXxxId`
+
+When the same action needs to cover a happy-path *and* a "non-existent {domain}" error scenario, do **not** create two parallel methods. Add one step and a private helper that falls back to treating the reference as a raw id when it is not in `SharedStorage`:
+
+```php
+private function resolve{Domain}Id(string $reference): int
+{
+    if (SharedStorage::getStorage()->exists($reference)) {
+        return (int) SharedStorage::getStorage()->get($reference)->id;
+    }
+
+    return (int) $reference;
+}
+```
+
+```gherkin
+# Happy path
+When I delete {domain} "ref_1"
+
+# Not-found — same step, raw id as reference
+When I delete {domain} "999999"
+```
+
+The single step uses `$this->resolve{Domain}Id($reference)` and wraps the dispatch in try/catch so the error scenario can assert via [the capture-then-assert pattern](#error-steps-capture-then-assert-pattern). Three steps collapse into one.
+
 ### Error steps (capture-then-assert pattern)
 
 Errors are tested in two paired steps: the `@When` step **catches** the domain exception and stores it via `$this->setLastException(...)`; the next `@Then` step **asserts** the stored exception via `$this->assertLastErrorIs(...)`.
@@ -96,6 +123,8 @@ Two safety nets enforced by `CommonFeatureContext`:
 - `cleanStoredExceptionsBeforeScenario` (`@BeforeScenario`) clears any leftover exception so scenarios don't leak state into each other.
 
 So: **never `try/catch` and ignore** — always pair the capture with an assertion in the very next step.
+
+**Always pass the error code to `assertLastErrorIs`** when the domain exception class has codes (`FAILED_TO_UPDATE_STATUS`, `INVALID_NAME`, etc.). The class-only form is too permissive: it matches every exception of that class regardless of cause, so a regression that throws the same class for a different reason silently passes. The two-argument form pins both the class *and* the specific error path under test.
 
 ## 3. Registration in behat.yml
 

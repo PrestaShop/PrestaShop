@@ -43,3 +43,19 @@ When the parent agent supports sub-agents (Claude Code does; other tools current
 ## Slice ordering (steps 5 and 6)
 
 Listing-first is the conventional default — it unblocks bulk operations earlier and is usually simpler than the form. Form-first is valid when listing is already migrated or out of scope. Whichever runs first creates the controller class and routing file; the other extends them.
+
+## Pre-PR review checklist
+
+Run this checklist before opening the PR — every item below is something PrestaShop reviewers have asked for on past migration PRs. Catching them locally saves a review round.
+
+- [ ] **SQL — no wildcard `LIKE`** on indexed columns. Use `IN (...)` or `= ...` instead.
+- [ ] **SQL — no count-by-subtraction.** Every counter has its own query (or one grouped query covers them all).
+- [ ] **SQL — multiple COUNTs grouped.** N independent `SELECT COUNT(*)` queries → one `GROUP BY`.
+- [ ] **DTO — primitive state fields are exposed.** If the ObjectModel has a `status` / `type` / `active` column meaningful for the page, the result DTO has a `getStatus()` / `getType()` / `isActive()` getter (no inferring from derived collections).
+- [ ] **Behat — enum regex for fixed-value parameters.** No `"([^"]+)"` when the values are a closed set.
+- [ ] **Behat — single step covers happy + not-found.** `resolveXxxId` helper falls back to raw id; no triplicated methods.
+- [ ] **Behat — reads go through the query bus.** No direct `new {ObjectModel}($id)` reload inside an `@Then` step.
+- [ ] **Behat — `assertLastErrorIs` includes the error code** when the exception class has codes.
+- [ ] **Twig — single translation domain per page.** No mix between `Admin.Catalog.*` and `Admin.Orderscustomers.*` on the same screen.
+- [ ] **KPI — extends [`AbstractAdminStatsKpi`](../../../Kpi/CONTEXT.md)** if the page is migrating a legacy `renderKpis()`. Each subclass only declares id/icon/color/titles/config keys.
+- [ ] **CS / PHPStan run clean locally** (`php vendor/bin/php-cs-fixer fix --dry-run` + `php vendor/bin/phpstan analyse`).

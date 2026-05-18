@@ -32,6 +32,12 @@ Create `src/Core/Domain/{Domain}/QueryResult/Editable{Domain}.php`:
 
 **Reference:** `src/Core/Domain/Tax/QueryResult/EditableTax.php` (simple), `src/Core/Domain/Manufacturer/QueryResult/EditableManufacturer.php` (with associations)
 
+### Expose primitive state fields directly
+
+Recurring PR review trap: a result DTO exposes a derived collection (`getActions()`, `getAvailableTransitions()`, `getDisplayLabel()`) but **not** the raw state primitive it was computed from (`getStatus()`, `getType()`, `isActive()`). Consumers then have to infer state from the derived data, which is fragile and forces them to bypass the bus.
+
+Rule of thumb: every column that exists on the ObjectModel/Doctrine entity and is meaningful for the UI must have its own getter on the DTO — even if a derived getter also exists. Derived getters complement the primitive, they do not replace it.
+
 ## 3. List query (assess first)
 
 Most PS grids use `SearchCriteria` + grid `QueryBuilder` directly — no explicit CQRS query class needed.
