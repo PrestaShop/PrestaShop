@@ -214,6 +214,13 @@ class TranslatorLanguageLoader
         $locations = ['core' => self::TRANSLATION_DIR];
 
         if (null !== $theme) {
+            if ($theme->has('parent_directory')) {
+                $parentThemeLocation = $theme->get('parent_directory') . '/translations';
+                if (is_dir($parentThemeLocation)) {
+                    $locations['parent_theme'] = $parentThemeLocation;
+                }
+            }
+
             $activeThemeLocation = $theme->getDirectory() . '/translations';
             if (is_dir($activeThemeLocation)) {
                 $locations['theme'] = $activeThemeLocation;
