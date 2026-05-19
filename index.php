@@ -58,6 +58,9 @@ if (isset($_ENV['PS_FF_FRONT_CONTAINER_V2']) && filter_var($_ENV['PS_FF_FRONT_CO
         if (!headers_sent()) {
             header('Content-Type: text/html; charset=utf-8');
         }
+
+        // Restore request to stack for legacy context
+        $kernel->getContainer()->get('request_stack')->push($request);
     }
 }
 

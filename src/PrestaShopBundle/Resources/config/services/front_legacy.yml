@@ -55,3 +55,9 @@ services:
     class: PrestaShopBundle\Translation\TranslatorLanguageLoader
     arguments:
       - '@prestashop.adapter.module.repository.module_repository'
+
+  # Special validator to validate tokens from admin in the front environment
+  PrestaShopBundle\Security\Admin\LegacyAdminTokenValidator:
+    public: true
+    lazy: true
+    autowire: true
