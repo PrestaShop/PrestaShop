@@ -3,7 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-const {$} = window;
+const { $ } = window;
 
 /**
  * Displays, fills or hides State selection block depending on selected country.
@@ -42,7 +42,7 @@ export default class CountryStateSelectionToggler {
     this.$countryStateSelector = $(countryStateSelector);
     this.$countryInput = $(countryInputSelector);
 
-    this.$countryInput.on('change', () => this.onChange());
+    this.$countryInput.on("change", () => this.onChange());
     this.onChange();
   }
 
@@ -53,34 +53,37 @@ export default class CountryStateSelectionToggler {
    */
   private onChange(): void {
     const countryId = this.$countryInput.val();
-    const selectedStateId = this.$countryStateSelector.val();
-
-    if (countryId === '') {
+    if (countryId === "") {
       return;
     }
+    // Guardar el valor actual ANTES de vaciar el select
+    const currentStateId = this.$countryStateSelector.val();
+
     $.get({
-      url: this.$countryInput.data('states-url'),
-      dataType: 'json',
+      url: this.$countryInput.data("states-url"),
+      dataType: "json",
       data: {
         id_country: countryId,
       },
     })
       .then((response) => {
         this.$countryStateSelector.empty();
-
         Object.keys(response.states).forEach((value) => {
           this.$countryStateSelector.append(
-            $('<option></option>')
-              .attr('value', response.states[value])
-              .prop('selected', String(selectedStateId) === String(response.states[value]))
+            $("<option></option>")
+              .attr("value", response.states[value])
               .text(value),
           );
         });
-
+        // Restaurar el valor seleccionado anteriormente
+        if (currentStateId) {
+          this.$countryStateSelector.val(currentStateId as string);
+          this.$countryStateSelector.trigger("change");
+        }
         this.toggle();
       })
       .catch((response: AjaxError) => {
-        if (typeof response.responseJSON !== 'undefined') {
+        if (typeof response.responseJSON !== "undefined") {
           window.showErrorMessage(response.responseJSON.message);
         }
       });
@@ -92,8 +95,9 @@ export default class CountryStateSelectionToggler {
     // - (OR)
     // - there is error for the field
     this.$stateSelectionBlock.toggleClass(
-      'd-none',
-      this.$countryStateSelector.find('option').length === 0 && !this.$stateSelectionBlock.hasClass('has-error'),
+      "d-none",
+      this.$countryStateSelector.find("option").length === 0 &&
+        !this.$stateSelectionBlock.hasClass("has-error"),
     );
   }
 }
