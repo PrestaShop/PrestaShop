@@ -3,6 +3,8 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
+use PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderException;
 use PrestaShop\PrestaShop\Core\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Product\Search\FacetsRendererInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
@@ -306,9 +308,23 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
         // set the sort order if provided in the URL
         if ($encodedSortOrder = Tools::getValue('order')) {
-            $query->setSortOrder(SortOrder::newFromString(
-                $encodedSortOrder
-            ));
+            try {
+                $query->setSortOrder(SortOrder::newFromString(
+                    $encodedSortOrder
+                ));
+            } catch (InvalidSortOrderException $exception) {
+                // Don't send any cookie
+                Context::getContext()->cookie->disallowWriting();
+                if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__) {
+                    die('[Debug] Sort order is invalid: ' . $exception->getMessage());
+                }
+
+                if (!$this->ajax) {
+                    header('HTTP/1.0 301 Moved');
+                    header('Cache-Control: no-cache');
+                    Tools::redirect($this->getCanonicalURL());
+                }
+            }
         }
 
         // get the parameters containing the encoded facets from the URL
