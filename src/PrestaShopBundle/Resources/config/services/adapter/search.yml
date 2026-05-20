@@ -7,3 +7,8 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Search\CommandHandler\SearchIndexationHandler
     autowire: true
     autoconfigure: true
+
+  # Query Handlers
+  prestashop.adapter.search.query_handler.get_indexed_products_count_handler:
+    class: PrestaShop\PrestaShop\Adapter\Search\QueryHandler\GetIndexedProductsCountHandler
+    autoconfigure: true
