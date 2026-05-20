@@ -948,8 +948,10 @@ class CustomerCore extends ObjectModel
 
     /**
      * Return several useful statistics about customer.
+     *
+     * @return array Stats
      */
-    public function getStats(): array
+    public function getStats()
     {
         if (!Validate::isLoadedObject($this)) {
             return [
