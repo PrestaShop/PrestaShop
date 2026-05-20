@@ -17,6 +17,9 @@ use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\AliasNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Exception\CannotDeleteAliasException;
 use PrestaShop\PrestaShop\Core\Domain\Alias\Query\GetAliasesBySearchTermForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Alias\QueryResult\AliasForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Search\Command\SearchIndexationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Search\Query\GetIndexedProductsCount;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface as IdentifiableFormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
@@ -53,6 +56,91 @@ class SearchAliasController extends PrestaShopAdminController
                 ],
             ],
         ]);
+    }
+
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function preferencesIndexAction(
+        #[Autowire(service: 'prestashop.admin.search_preferences.indexation.form_handler')]
+        FormHandlerInterface $indexationFormHandler,
+        #[Autowire(service: 'prestashop.admin.search_preferences.search_options.form_handler')]
+        FormHandlerInterface $searchOptionsFormHandler,
+        #[Autowire(service: 'prestashop.admin.search_preferences.weight.form_handler')]
+        FormHandlerInterface $weightFormHandler,
+    ): Response {
+        $indexedCount = $this->dispatchQuery(new GetIndexedProductsCount());
+
+        return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/preferences.html.twig', [
+            'help_link' => $this->generateSidebarLink('AdminSearchConf'),
+            'indexationForm' => $indexationFormHandler->getForm()->createView(),
+            'searchOptionsForm' => $searchOptionsFormHandler->getForm()->createView(),
+            'weightForm' => $weightFormHandler->getForm()->createView(),
+            'indexedProductsCount' => $indexedCount->getIndexed(),
+            'totalProductsCount' => $indexedCount->getTotal(),
+        ]);
+    }
+
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
+    public function processIndexationFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.search_preferences.indexation.form_handler')]
+        FormHandlerInterface $formHandler,
+    ): RedirectResponse {
+        return $this->processForm($request, $formHandler, 'Indexation');
+    }
+
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
+    public function processSearchOptionsFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.search_preferences.search_options.form_handler')]
+        FormHandlerInterface $formHandler,
+    ): RedirectResponse {
+        return $this->processForm($request, $formHandler, 'SearchOptions');
+    }
+
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
+    public function processWeightFormAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.admin.search_preferences.weight.form_handler')]
+        FormHandlerInterface $formHandler,
+    ): RedirectResponse {
+        return $this->processForm($request, $formHandler, 'Weight');
+    }
+
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
+    public function addMissingToIndexAction(): RedirectResponse
+    {
+        try {
+            $this->dispatchCommand(new SearchIndexationCommand(false));
+            $this->addFlash('success', $this->trans('The index was successfully updated.', [], 'Admin.Shopparameters.Notification'));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->trans('An error occurred while indexing products.', [], 'Admin.Shopparameters.Notification'));
+        }
+
+        return $this->redirectToRoute('admin_search_preferences_index');
+    }
+
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))", message: 'You do not have permission to update this.', redirectRoute: 'admin_search_preferences_index')]
+    public function rebuildIndexAction(): RedirectResponse
+    {
+        try {
+            $this->dispatchCommand(new SearchIndexationCommand(true));
+            $this->addFlash('success', $this->trans('The index was successfully rebuilt.', [], 'Admin.Shopparameters.Notification'));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->trans('An error occurred while rebuilding the index.', [], 'Admin.Shopparameters.Notification'));
+        }
+
+        return $this->redirectToRoute('admin_search_preferences_index');
+    }
+
+    public function cronIndexationAction(): Response
+    {
+        try {
+            $this->dispatchCommand(new SearchIndexationCommand(true));
+        } catch (Exception $e) {
+            return new Response('Indexation failed: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return new Response('OK');
     }
 
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_search_alias_index', message: 'You need permission to create new aliases.')]
@@ -160,6 +248,30 @@ class SearchAliasController extends PrestaShopAdminController
         }
 
         return $this->redirectToRoute('admin_search_alias_index');
+    }
+
+    private function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName): RedirectResponse
+    {
+        $this->dispatchHookWithParameters(
+            'actionAdminShopParametersSearchPreferencesControllerPostProcess' . $hookName . 'Before',
+            ['controller' => $this]
+        );
+
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+            $saveErrors = $formHandler->save($data);
+
+            if (0 === count($saveErrors)) {
+                $this->addFlash('success', $this->trans('Update successful', [], 'Admin.Notifications.Success'));
+            } else {
+                $this->addFlashErrors($saveErrors);
+            }
+        }
+
+        return $this->redirectToRoute('admin_search_preferences_index');
     }
 
     public function getErrorMessages(Exception $e): array
