@@ -3,6 +3,7 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain 'Admin.Shopparameters.Feature' %}
 
 {% block content %}
   {% block stores_listing %}
@@ -13,6 +14,5 @@
 {% block javascripts %}
   {{ parent() }}
 
-  <script src="{{ asset('themes/new-theme/public/search.bundle.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
 {% endblock %}
