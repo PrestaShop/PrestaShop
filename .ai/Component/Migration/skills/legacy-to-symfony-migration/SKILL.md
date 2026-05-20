@@ -56,6 +56,7 @@ Run this checklist before opening the PR — every item below is something Prest
 - [ ] **Behat — single step covers happy + not-found.** `resolveXxxId` helper falls back to raw id; no triplicated methods.
 - [ ] **Behat — reads go through the query bus.** No direct `new {ObjectModel}($id)` reload inside an `@Then` step.
 - [ ] **Behat — `assertLastErrorIs` includes the error code** when the exception class has codes.
+- [ ] **Behat — `SharedStorage` holds ids, not entities.** Step bodies that wrote an ObjectModel to shared storage need to switch to the integer id.
 - [ ] **Twig — single translation domain per page.** No mix between `Admin.Catalog.*` and `Admin.Orderscustomers.*` on the same screen.
 - [ ] **KPI — extends [`AbstractAdminStatsKpi`](../../../Kpi/CONTEXT.md)** if the page is migrating a legacy `renderKpis()`. Each subclass only declares id/icon/color/titles/config keys.
 - [ ] **CS / PHPStan run clean locally** (`php vendor/bin/php-cs-fixer fix --dry-run` + `php vendor/bin/phpstan analyse`).

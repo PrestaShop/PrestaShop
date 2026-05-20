@@ -63,6 +63,30 @@ The assertion loads the entity fresh from the database — it does NOT rely on s
 
 **Always go through the query bus, never bypass it.** Reading state directly from the ObjectModel (`new {Domain}($id)`) or from a raw SQL query inside an assertion is a recurring PR review trap: it hides bugs in the read side (missing fields on the result DTO, broken handler logic), and it defeats the purpose of running scenarios through the bus. If the field you need to assert is not exposed on the result DTO, fix the DTO — see [create-cqrs-queries](../../../CQRS/skills/create-cqrs-queries/SKILL.md#3-result-dto).
 
+### Store ids in SharedStorage, not entities
+
+`SharedStorage::set()` should receive the **identifier** (an int or, for compound keys, a small array of scalars) — never the full ObjectModel or DTO. Storing an entity couples every later step to its shape, surfaces stale data when the underlying row mutates between scenarios, and confuses static analysis when the storage value type drifts.
+
+```php
+// Preferred — store the id
+$entity = new {Domain}();
+$entity->name = 'Example';
+$entity->add();
+$this->getSharedStorage()->set($reference, (int) $entity->id);
+
+// Avoid — storing the entity
+$this->getSharedStorage()->set($reference, $entity);
+```
+
+Readers then pull the id back as an `int`:
+
+```php
+$id = (int) SharedStorage::getStorage()->get($reference);
+$this->getCommandBus()->handle(new Delete{Domain}Command($id));
+```
+
+When the entity *must* be created via the ObjectModel directly (e.g. a thread that the front-office contact form would normally produce and for which no CQRS command exists), the ObjectModel construction is acceptable — but the value persisted to `SharedStorage` is still just the id.
+
 ### Step deduplication via `resolveXxxId`
 
 When the same action needs to cover a happy-path *and* a "non-existent {domain}" error scenario, do **not** create two parallel methods. Add one step and a private helper that falls back to treating the reference as a raw id when it is not in `SharedStorage`:
@@ -71,7 +95,7 @@ When the same action needs to cover a happy-path *and* a "non-existent {domain}"
 private function resolve{Domain}Id(string $reference): int
 {
     if (SharedStorage::getStorage()->exists($reference)) {
-        return (int) SharedStorage::getStorage()->get($reference)->id;
+        return (int) SharedStorage::getStorage()->get($reference);
     }
 
     return (int) $reference;
