@@ -1,0 +1,35 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% trans_default_domain 'Admin.Shopparameters.Feature' %}
+{% form_theme weightForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% block search_weight %}
+  <div class="card" id="configuration_fieldset_relevance">
+    <h3 class="card-header">
+      <i class="material-icons">settings</i>
+      {{ 'Weight'|trans }}
+    </h3>
+    <div class="card-body">
+      <div class="alert alert-info" role="alert">
+        {{ 'The "weight" represents its importance and relevance for the ranking of the products when completing a new search.'|trans }}
+        <br />
+        {{ 'A word with a weight of eight will have four times more value than a word with a weight of two.'|trans }}
+        <br /><br />
+        {{ 'We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.'|trans }}
+        <br /><br />
+        {{ 'Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0'|trans }}
+      </div>
+      <div class="form-wrapper">
+        {{ form_widget(weightForm) }}
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" id="form-weight-save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
+{% endblock %}
