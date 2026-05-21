@@ -20,7 +20,6 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadFor
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tools;
@@ -71,12 +70,11 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     public function respondToCustomerThread(string $threadReference, TableNode $table): void
     {
         $data = $table->getRowsHash();
-        $customerThreadId = (int) SharedStorage::getStorage()->get($threadReference);
 
         // it executes to fast and the update date is the same as the original message so we can't find which message is the new one
         sleep(1);
         $this->getCommandBus()->handle(
-            new ReplyToCustomerThreadCommand($customerThreadId, $data['reply_message'])
+            new ReplyToCustomerThreadCommand($this->referenceToId($threadReference), $data['reply_message'])
         );
     }
 
@@ -88,11 +86,9 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertThreadLatestMessage(string $threadReference, string $message): void
     {
-        $customerThreadId = (int) SharedStorage::getStorage()->get($threadReference);
-
         /** @var CustomerThreadView $customerThreadView */
         $customerThreadView = $this->getQueryBus()->handle(
-            new GetCustomerThreadForViewing($customerThreadId)
+            new GetCustomerThreadForViewing($this->referenceToId($threadReference))
         );
         $messages = $customerThreadView->getMessages();
 
@@ -109,15 +105,16 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * Resolves a thread reference into a numeric id. References that exist in
-     * `SharedStorage` resolve to the stored thread's id; otherwise the
-     * reference is treated as a raw id (used by error scenarios that operate
-     * on a thread that does not exist).
+     * Resolves a thread reference into a numeric id. References stored in
+     * `SharedStorage` go through the base class `referenceToId` helper;
+     * references not in storage are treated as raw ids, so error scenarios
+     * targeting a non-existent thread can pass the id inline in the Gherkin
+     * step without a prior `Given`.
      */
     private function resolveThreadId(string $threadReference): int
     {
-        if (SharedStorage::getStorage()->exists($threadReference)) {
-            return (int) SharedStorage::getStorage()->get($threadReference);
+        if ($this->getSharedStorage()->exists($threadReference)) {
+            return $this->referenceToId($threadReference);
         }
 
         return (int) $threadReference;
@@ -166,9 +163,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
      */
     public function deleteThread(string $threadReference): void
     {
-        $customerThreadId = (int) SharedStorage::getStorage()->get($threadReference);
-
-        $this->getCommandBus()->handle(new DeleteCustomerThreadCommand($customerThreadId));
+        $this->getCommandBus()->handle(new DeleteCustomerThreadCommand($this->referenceToId($threadReference)));
     }
 
     /**
@@ -191,7 +186,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $references = PrimitiveUtils::castStringArrayIntoArray($threadReferences);
 
         $threadIds = array_map(
-            static fn (string $reference): int => (int) SharedStorage::getStorage()->get($reference),
+            fn (string $reference): int => $this->referenceToId($reference),
             $references
         );
 
@@ -222,15 +217,14 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertThreadIsDeleted(string $threadReference): void
     {
-        $customerThreadId = (int) SharedStorage::getStorage()->get($threadReference);
-
         try {
-            $query = new GetCustomerThreadForViewing($customerThreadId);
-            $this->getQueryBus()->handle($query);
+            $this->getQueryBus()->handle(
+                new GetCustomerThreadForViewing($this->referenceToId($threadReference))
+            );
 
             throw new NoExceptionAlthoughExpectedException(sprintf('Thread %s exists, but it was expected to be deleted', $threadReference));
         } catch (CustomerThreadNotFoundException $e) {
-            SharedStorage::getStorage()->clear($threadReference);
+            $this->getSharedStorage()->clear($threadReference);
         }
     }
 
