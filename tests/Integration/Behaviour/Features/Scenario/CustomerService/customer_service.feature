@@ -48,5 +48,5 @@ Feature: Customer service
     Then I should get error that customer thread does not exist
 
   Scenario: Updating status of a non-existent thread raises an error
-    When I update thread "999999" status to open
+    When I update non-existent customer thread with id 999999 status to open
     Then I should get error that customer thread status update failed

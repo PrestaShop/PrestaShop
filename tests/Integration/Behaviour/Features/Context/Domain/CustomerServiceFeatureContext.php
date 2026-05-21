@@ -105,30 +105,25 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * Resolves a thread reference into a numeric id. References stored in
-     * `SharedStorage` go through the base class `referenceToId` helper;
-     * references not in storage are treated as raw ids, so error scenarios
-     * targeting a non-existent thread can pass the id inline in the Gherkin
-     * step without a prior `Given`.
-     */
-    private function resolveThreadId(string $threadReference): int
-    {
-        if ($this->getSharedStorage()->exists($threadReference)) {
-            return $this->referenceToId($threadReference);
-        }
-
-        return (int) $threadReference;
-    }
-
-    /**
      * @When /^I update thread "([^"]+)" status to (open|closed|pending1|pending2)$/
      */
     public function updateThreadStatus(string $threadReference, string $status): void
     {
+        $this->dispatchUpdateThreadStatus($this->referenceToId($threadReference), $status);
+    }
+
+    /**
+     * @When /^I update non-existent customer thread with id (\d+) status to (open|closed|pending1|pending2)$/
+     */
+    public function updateNonExistentThreadStatus(int $threadId, string $status): void
+    {
+        $this->dispatchUpdateThreadStatus($threadId, $status);
+    }
+
+    private function dispatchUpdateThreadStatus(int $threadId, string $status): void
+    {
         try {
-            $this->getCommandBus()->handle(
-                new UpdateCustomerThreadStatusCommand($this->resolveThreadId($threadReference), $status)
-            );
+            $this->getCommandBus()->handle(new UpdateCustomerThreadStatusCommand($threadId, $status));
         } catch (CustomerServiceException $e) {
             $this->setLastException($e);
         }
@@ -141,7 +136,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var CustomerThreadView $customerThreadView */
         $customerThreadView = $this->getQueryBus()->handle(
-            new GetCustomerThreadForViewing($this->resolveThreadId($threadReference))
+            new GetCustomerThreadForViewing($this->referenceToId($threadReference))
         );
 
         Assert::assertSame(
