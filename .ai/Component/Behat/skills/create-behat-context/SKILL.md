@@ -87,18 +87,49 @@ $this->getCommandBus()->handle(new Delete{Domain}Command($id));
 
 When the entity *must* be created via the ObjectModel directly (e.g. a thread that the front-office contact form would normally produce and for which no CQRS command exists), the ObjectModel construction is acceptable — but the value persisted to `SharedStorage` is still just the id.
 
-### Step deduplication via `resolveXxxId`
+### Reading ids — use `referenceToId`, never read `SharedStorage` directly
 
-When the same action needs to cover a happy-path *and* a "non-existent {domain}" error scenario, do **not** create two parallel methods. Add one step and a private helper that falls back to treating the reference as a raw id when it is not in `SharedStorage`:
+Every step that needs an id from a reference should call the base class helper `$this->referenceToId($reference)` — it unwraps the int from `SharedStorage` and throws a clear `RuntimeException` if the reference is missing. Do not read `SharedStorage` manually inside step bodies; the abstraction is there precisely so the storage shape can evolve without touching every context.
 
 ```php
-private function resolve{Domain}Id(string $reference): int
-{
-    if (SharedStorage::getStorage()->exists($reference)) {
-        return (int) SharedStorage::getStorage()->get($reference);
-    }
+// Preferred
+$this->getCommandBus()->handle(new Delete{Domain}Command($this->referenceToId($reference)));
 
-    return (int) $reference;
+// Avoid
+$id = (int) SharedStorage::getStorage()->get($reference);
+$this->getCommandBus()->handle(new Delete{Domain}Command($id));
+```
+
+`SharedStorage::set()` (via `$this->getSharedStorage()->set($reference, $id)`) is only called when the entity is created in a `@Given` / `@When` step; reads always go through `referenceToId`.
+
+### Not-found scenarios — dedicated step, not a polymorphic reference
+
+Error scenarios that operate on a missing entity get their **own step** that accepts the raw id directly. Do **not** overload the regular step by passing a numeric reference and falling back to `(int) $reference` — `referenceToId` is allowed to throw on a missing reference, so the polymorphism creates ambiguity.
+
+```php
+/**
+ * @When I delete {domain} :reference
+ */
+public function delete{Domain}(string $reference): void
+{
+    $this->dispatchDelete{Domain}($this->referenceToId($reference));
+}
+
+/**
+ * @When /^I delete non-existent {domain} with id (\d+)$/
+ */
+public function deleteNonExistent{Domain}(int $id): void
+{
+    $this->dispatchDelete{Domain}($id);
+}
+
+private function dispatchDelete{Domain}(int $id): void
+{
+    try {
+        $this->getCommandBus()->handle(new Delete{Domain}Command($id));
+    } catch ({Domain}Exception $e) {
+        $this->setLastException($e);
+    }
 }
 ```
 
@@ -106,11 +137,11 @@ private function resolve{Domain}Id(string $reference): int
 # Happy path
 When I delete {domain} "ref_1"
 
-# Not-found — same step, raw id as reference
-When I delete {domain} "999999"
+# Not-found — dedicated step with the raw id
+When I delete non-existent {domain} with id 999999
 ```
 
-The single step uses `$this->resolve{Domain}Id($reference)` and wraps the dispatch in try/catch so the error scenario can assert via [the capture-then-assert pattern](#error-steps-capture-then-assert-pattern). Three steps collapse into one.
+The two entry points share the dispatch body via a small private helper — no code duplication, the regex enforces a numeric id at the Gherkin level, and the happy-path step stays predictable (a missing reference is always an error, never silently coerced).
 
 ### Error steps (capture-then-assert pattern)
 

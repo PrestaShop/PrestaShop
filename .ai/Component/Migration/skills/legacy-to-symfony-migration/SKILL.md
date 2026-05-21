@@ -53,7 +53,8 @@ Run this checklist before opening the PR — every item below is something Prest
 - [ ] **SQL — multiple COUNTs grouped.** N independent `SELECT COUNT(*)` queries → one `GROUP BY`.
 - [ ] **DTO — primitive state fields are exposed.** If the ObjectModel has a `status` / `type` / `active` column meaningful for the page, the result DTO has a `getStatus()` / `getType()` / `isActive()` getter (no inferring from derived collections).
 - [ ] **Behat — enum regex for fixed-value parameters.** No `"([^"]+)"` when the values are a closed set.
-- [ ] **Behat — single step covers happy + not-found.** `resolveXxxId` helper falls back to raw id; no triplicated methods.
+- [ ] **Behat — reads go through `referenceToId`.** No direct `SharedStorage::getStorage()->get(...)` inside step bodies.
+- [ ] **Behat — not-found scenarios use a dedicated step.** A regular reference step delegates to `referenceToId` (which throws on a missing reference); the not-found variant has its own regex accepting a raw id (`\d+`). Both share a small private dispatch helper to avoid duplicated try/catch bodies.
 - [ ] **Behat — reads go through the query bus.** No direct `new {ObjectModel}($id)` reload inside an `@Then` step.
 - [ ] **Behat — `assertLastErrorIs` includes the error code** when the exception class has codes.
 - [ ] **Behat — `SharedStorage` holds ids, not entities.** Step bodies that wrote an ObjectModel to shared storage need to switch to the integer id.
