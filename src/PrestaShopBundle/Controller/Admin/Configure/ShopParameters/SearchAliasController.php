@@ -24,6 +24,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface as IdentifiableFormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\AliasFilters;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -66,6 +67,8 @@ class SearchAliasController extends PrestaShopAdminController
         FormHandlerInterface $searchOptionsFormHandler,
         #[Autowire(service: 'prestashop.admin.search_preferences.weight.form_handler')]
         FormHandlerInterface $weightFormHandler,
+        #[Autowire(param: 'cookie_key')]
+        string $cookieKey,
     ): Response {
         $indexedCount = $this->dispatchQuery(new GetIndexedProductsCount());
 
@@ -76,6 +79,7 @@ class SearchAliasController extends PrestaShopAdminController
             'weightForm' => $weightFormHandler->getForm()->createView(),
             'indexedProductsCount' => $indexedCount->getIndexed(),
             'totalProductsCount' => $indexedCount->getTotal(),
+            'cronToken' => substr($cookieKey, 34, 8),
         ]);
     }
 
@@ -132,10 +136,24 @@ class SearchAliasController extends PrestaShopAdminController
         return $this->redirectToRoute('admin_search_preferences_index');
     }
 
-    public function cronIndexationAction(): Response
-    {
+    public function cronIndexationAction(
+        Request $request,
+        #[Autowire(param: 'cookie_key')]
+        string $cookieKey,
+    ): Response {
+        $expectedToken = substr($cookieKey, 34, 8);
+        if ($request->query->get('token') !== $expectedToken) {
+            return new Response('Forbidden', Response::HTTP_FORBIDDEN);
+        }
+
+        $idShop = $request->query->getInt('id_shop');
+        $shopConstraint = $idShop > 0 ? ShopConstraint::shop($idShop) : ShopConstraint::allShops();
+        $full = (bool) $request->query->get('full', false);
+
+        ini_set('max_execution_time', '7200');
+
         try {
-            $this->dispatchCommand(new SearchIndexationCommand(true));
+            $this->dispatchCommand(new SearchIndexationCommand($full, $shopConstraint));
         } catch (Exception $e) {
             return new Response('Indexation failed: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
