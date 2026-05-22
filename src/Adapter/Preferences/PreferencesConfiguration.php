@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\Feature\ShopModeFeature;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType;
 use PrestaShopLogger;
+use ProductSale;
 
 /**
  * This class will provide Shop Preferences configuration.
