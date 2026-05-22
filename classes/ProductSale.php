@@ -230,6 +230,7 @@ class ProductSaleCore
         if ($recalculate) {
             return true;
         }
+
         return Db::getInstance()->execute('
 			INSERT INTO ' . _DB_PREFIX_ . 'product_sale
 			(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
@@ -278,20 +279,26 @@ class ProductSaleCore
 
         return true;
     }
+
     /**
      * refill table when date changes
+     * 
+     * @param bool $change set to true to refill table on configuration edit
+     *
      * @return bool
      */
-    public static function recalculateBestSellers()
+    public static function recalculateBestSellers($change = false)
     {
-        if (!Configuration::get('PS_BEST_SELLERS_DAYS')) {
+        if (!$change && !Configuration::get('PS_BEST_SELLERS_DAYS')) {
             return false;
         }
-        $sql = DB::getInstance()->getValue('SELECT 1 FROM `' . _DB_PREFIX_ . 'product_sale` WHERE date_upd = CURRENT_DATE()');
-        if (!$sql) {
-            DB::getInstance()->execute('TRUNCATE `' . _DB_PREFIX_ . 'product_sale`');
+        $sql = Db::getInstance()->getValue('SELECT 1 FROM `' . _DB_PREFIX_ . 'product_sale` WHERE date_upd = CURRENT_DATE()');
+        if ($change || !$sql) {
+            Db::getInstance()->execute('TRUNCATE `' . _DB_PREFIX_ . 'product_sale`', false);
+
             return self::fillProductSales();
         }
+
         return false;
     }
 }
