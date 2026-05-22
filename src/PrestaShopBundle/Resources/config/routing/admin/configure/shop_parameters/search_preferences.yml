@@ -2,7 +2,7 @@ admin_search_preferences_index:
   path: /preferences/
   methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::preferencesIndexAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::preferencesIndexAction
     _legacy_controller: AdminSearchConf
     _legacy_link: AdminSearchConf
     _legacy_feature_flag: search_page
@@ -74,7 +74,7 @@ admin_search_indexation_save:
   path: /indexation/save
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::processIndexationFormAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::processIndexationFormAction
     _legacy_controller: AdminSearchConf
     _legacy_link: AdminSearchConf:update
     _legacy_feature_flag: search_page
@@ -83,7 +83,7 @@ admin_search_indexation_add_missing:
   path: /indexation/add-missing
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::addMissingToIndexAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::addMissingToIndexAction
     _legacy_controller: AdminSearchConf
     _legacy_feature_flag: search_page
 
@@ -91,7 +91,7 @@ admin_search_indexation_rebuild:
   path: /indexation/rebuild
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::rebuildIndexAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::rebuildIndexAction
     _legacy_controller: AdminSearchConf
     _legacy_feature_flag: search_page
 
@@ -99,7 +99,7 @@ admin_search_indexation_cron:
   path: /indexation/cron
   methods: [ GET, POST ] # Should be exclusively POST, but GET allows the redirection from the legacy
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::cronIndexationAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::cronIndexationAction
     _anonymous_controller: true
     _legacy_controller: AdminSearch
     _legacy_link: AdminSearch:searchCron
@@ -109,7 +109,7 @@ admin_search_options_save:
   path: /options/save
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::processSearchOptionsFormAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::processSearchOptionsFormAction
     _legacy_controller: AdminSearchConf
     _legacy_link: AdminSearchConf:update
     _legacy_feature_flag: search_page
@@ -118,7 +118,7 @@ admin_search_weight_save:
   path: /weight/save
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::processWeightFormAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::processWeightFormAction
     _legacy_controller: AdminSearchConf
     _legacy_link: AdminSearchConf:update
     _legacy_feature_flag: search_page
