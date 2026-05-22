@@ -18,12 +18,15 @@ class ProductSaleCore
     {
         $sql = 'REPLACE INTO ' . _DB_PREFIX_ . 'product_sale
 				(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
-				SELECT od.product_id, SUM(od.product_quantity), COUNT(od.product_id), CAST(o.date_add AS DATE)
+				SELECT od.product_id, SUM(od.product_quantity), COUNT(od.product_id), NOW()
 				FROM ' . _DB_PREFIX_ . 'order_detail od 
                 LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON (o.id_order=od.id_order)
                 LEFT JOIN ' . _DB_PREFIX_ . 'order_state os ON (os.id_order_state=o.current_state)
-                WHERE os.logable=1                
-                GROUP BY  od.product_id, CAST(o.date_add AS DATE)';
+                WHERE os.logable=1';
+        if (Configuration::get('PS_BEST_SELLERS_DAYS')) {
+            $sql .= ' AND o.`date_upd` >= CURRENT_DATE() - INTERVAL ' . (int) Configuration::get('PS_BEST_SELLERS_DAYS') . ' DAY';
+        }
+        $sql .= ' GROUP BY  od.product_id';
 
         return Db::getInstance()->execute($sql);
     }
@@ -35,17 +38,11 @@ class ProductSaleCore
      */
     public static function getNbSales()
     {
-        $sql = 'SELECT COUNT(`id_product`) as nb FROM (
-                SELECT ps.`id_product`
-                FROM `' . _DB_PREFIX_ . 'product_sale` ps
-                LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON p.`id_product` = ps.`id_product`
-                ' . Shop::addSqlAssociation('product', 'p', false) . '
-                WHERE product_shop.`active` = 1';
-        if (Configuration::get('PS_BEST_SELLERS_DAYS')) {
-            $sql .= ' AND DATEDIFF(CURRENT_DATE(), ps.date_upd) <= ' . Configuration::get('PS_BEST_SELLERS_DAYS');
-        }
-
-        $sql .= ' GROUP BY ps.id_product) nbsales';
+        $sql = 'SELECT COUNT(ps.`id_product`) AS nb
+				FROM `' . _DB_PREFIX_ . 'product_sale` ps
+				LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON p.`id_product` = ps.`id_product`
+				' . Shop::addSqlAssociation('product', 'p', false) . '
+				WHERE product_shop.`active` = 1';
 
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
     }
@@ -96,7 +93,7 @@ class ProductSaleCore
 					pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
 					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
 					image_shop.`id_image` id_image, il.`legend`,
-					SUM(ps.`quantity`) AS sales, t.`rate`, pl.`meta_title`, pl.`meta_description`,
+					ps.`quantity` AS sales, t.`rate`, pl.`meta_title`, pl.`meta_description`,
 					DATEDIFF(p.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
 					INTERVAL ' . (int) $interval . ' DAY)) > 0 AS new'
             . ' FROM `' . _DB_PREFIX_ . 'product_sale` ps
@@ -121,12 +118,8 @@ class ProductSaleCore
 				' . Product::sqlStock('p', 0);
 
         $sql .= '
-		WHERE product_shop.`active` = 1
-		AND p.`visibility` != \'none\'';
-
-        if (Configuration::get('PS_BEST_SELLERS_DAYS')) {
-            $sql .= ' AND DATEDIFF(CURRENT_DATE(), ps.date_upd) <= ' . Configuration::get('PS_BEST_SELLERS_DAYS');
-        }
+				WHERE product_shop.`active` = 1
+					AND product_shop.`visibility` != \'none\'';
 
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
@@ -134,10 +127,7 @@ class ProductSaleCore
             JOIN `' . _DB_PREFIX_ . 'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id) . ')
             WHERE cp.`id_product` = p.`id_product`)';
         }
-        
-        $sql .= '
-        GROUP BY ps.id_product ';
-        
+
         if ($finalOrderBy != 'price') {
             $sql .= '
 					ORDER BY ' . (!empty($orderTable) ? '`' . pSQL($orderTable) . '`.' : '') . '`' . pSQL($orderBy) . '` ' . pSQL($orderWay) . '
@@ -184,7 +174,7 @@ class ProductSaleCore
 		SELECT
 			p.id_product, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute, pl.`link_rewrite`, pl.`name`, pl.`description_short`, product_shop.`id_category_default`,
 			image_shop.`id_image` id_image, il.`legend`,
-			SUM(ps.`quantity`) AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category, p.show_price, p.available_for_order, IFNULL(stock.quantity, 0) as quantity, p.customizable,
+			ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category, p.show_price, p.available_for_order, IFNULL(stock.quantity, 0) as quantity, p.customizable,
 			IFNULL(pa.minimal_quantity, p.minimal_quantity) as minimal_quantity, stock.out_of_stock,
 			product_shop.`date_add` > "' . date('Y-m-d', strtotime('-' . (Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY')) . '" as new,
 			product_shop.`on_sale`, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity
@@ -208,10 +198,6 @@ class ProductSaleCore
 		WHERE product_shop.`active` = 1
 		AND p.`visibility` != \'none\'';
 
-        if (Configuration::get('PS_BEST_SELLERS_DAYS')) {
-            $sql .= ' AND DATEDIFF(CURRENT_DATE(), ps.date_upd) <= ' . Configuration::get('PS_BEST_SELLERS_DAYS');
-        }
-
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sql .= ' AND EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
@@ -220,7 +206,6 @@ class ProductSaleCore
         }
 
         $sql .= '
-        GROUP BY ps.id_product
 		ORDER BY ps.quantity DESC
 		LIMIT ' . (int) ($pageNumber * $nbProducts) . ', ' . (int) $nbProducts;
 
@@ -235,42 +220,33 @@ class ProductSaleCore
      * Add Product sale.
      *
      * @param int $productId Product ID
-     * @param string $order_date Order Date Add
      * @param int $qty Quantity
      *
      * @return bool Indicates whether the sale was successfully added
      */
-    public static function addProductSale($productId, $order_date, $qty = 1)
+    public static function addProductSale($productId, $qty = 1)
     {
-        $date = new DateTime($order_date);
-        $order_product_date = $date->format('Y-m-d');
-        $totalSales = ProductSale::getNbrSales($productId, $order_product_date);
-        if ($totalSales >= 1) {
-            return Db::getInstance()->execute(
-                '
-				UPDATE ' . _DB_PREFIX_ . 'product_sale
-				SET `quantity` = CAST(`quantity` AS SIGNED) + ' . (int) $qty . ', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) + 1
-				WHERE `id_product` = ' . (int) $productId . ' AND `date_upd`= "' . $order_product_date . '"'
-            );
+        $recalculate = self::recalculateBestSellers();
+        if ($recalculate) {
+            return true;
         }
         return Db::getInstance()->execute('
 			INSERT INTO ' . _DB_PREFIX_ . 'product_sale
 			(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
-			VALUES (' . (int) $productId . ', ' . (int) $qty . ', 1, "' . $order_product_date . '")
-			ON DUPLICATE KEY UPDATE `quantity` = `quantity` + ' . (int) $qty . ', `sale_nbr` = `sale_nbr` + 1, `date_upd` = "' . $order_product_date . '"');
+			VALUES (' . (int) $productId . ', ' . (int) $qty . ', 1, NOW())
+			ON DUPLICATE KEY UPDATE `quantity` = `quantity` + ' . (int) $qty . ', `sale_nbr` = `sale_nbr` + 1, `date_upd` = NOW()');
     }
 
     /**
      * Get number of sales.
      *
      * @param int $idProduct Product ID
-     * @param string $order_date Order Date Add
      *
      * @return int Number of sales for the given Product
      */
-    public static function getNbrSales($idProduct, $order_date)
+    public static function getNbrSales($idProduct)
     {
-        $result = Db::getInstance()->getRow('SELECT SUM(`sale_nbr`) AS sale_nbr FROM ' . _DB_PREFIX_ . 'product_sale WHERE `id_product` = ' . (int) $idProduct . ' AND `date_upd`= "' . (string) $order_date . '"');
+        $result = Db::getInstance()->getRow('SELECT `sale_nbr` FROM ' . _DB_PREFIX_ . 'product_sale WHERE `id_product` = ' . (int) $idProduct);
         if (empty($result) || !array_key_exists('sale_nbr', $result)) {
             return -1;
         }
@@ -282,27 +258,40 @@ class ProductSaleCore
      * Remove a Product sale.
      *
      * @param int $idProduct Product ID
-     * @param string $order_date Order Date Add
      * @param int $qty Quantity
      *
      * @return bool Indicates whether the product sale has been successfully removed
      */
-    public static function removeProductSale($idProduct, $order_date, $qty = 1)
+    public static function removeProductSale($idProduct, $qty = 1)
     {
-        $date = new DateTime($order_date);
-        $order_product_date = $date->format('Y-m-d');
-        $totalSales = ProductSale::getNbrSales($idProduct, $order_product_date);
+        $totalSales = ProductSale::getNbrSales($idProduct);
         if ($totalSales > 1) {
             return Db::getInstance()->execute(
                 '
 				UPDATE ' . _DB_PREFIX_ . 'product_sale
-				SET `quantity` = CAST(`quantity` AS SIGNED) - ' . (int) $qty . ', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1
-				WHERE `id_product` = ' . (int) $idProduct . ' AND `date_upd`= "' . $order_product_date . '"'
+				SET `quantity` = CAST(`quantity` AS SIGNED) - ' . (int) $qty . ', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1, `date_upd` = NOW()
+				WHERE `id_product` = ' . (int) $idProduct
             );
         } elseif ($totalSales == 1) {
-            return Db::getInstance()->delete('product_sale', 'id_product = ' . (int) $idProduct . ' AND `date_upd`= "' . $order_product_date . '"');
+            return Db::getInstance()->delete('product_sale', 'id_product = ' . (int) $idProduct);
         }
 
         return true;
+    }
+    /**
+     * refill table when date changes
+     * @return bool
+     */
+    public static function recalculateBestSellers()
+    {
+        if (!Configuration::get('PS_BEST_SELLERS_DAYS')) {
+            return false;
+        }
+        $sql = DB::getInstance()->getValue('SELECT 1 FROM `' . _DB_PREFIX_ . 'product_sale` WHERE date_upd = CURRENT_DATE()');
+        if (!$sql) {
+            DB::getInstance()->execute('TRUNCATE `' . _DB_PREFIX_ . 'product_sale`');
+            return self::fillProductSales();
+        }
+        return false;
     }
 }
