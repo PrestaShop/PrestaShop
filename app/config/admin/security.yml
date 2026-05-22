@@ -47,5 +47,6 @@ security:
     - { route: 'admin_homepage', roles: PUBLIC_ACCESS }
     - { route: 'admin_request_password_reset', roles: PUBLIC_ACCESS }
     - { route: 'admin_reset_password', roles: PUBLIC_ACCESS }
+    - { route: 'admin_search_indexation_cron', roles: PUBLIC_ACCESS }
     # Check it the legacy anonymous attribute has been set on the request (set by LegacyRouterChecker)
     - { path: ^/, roles: IS_AUTHENTICATED, allow_if: 'request.attributes.has("_anonymous_controller") and request.attributes.get("_anonymous_controller") == true' }
