@@ -46,7 +46,7 @@
         <p>
           {{ 'You can set a cron job that will rebuild your index using the following URL:'|trans }}
           <br />
-          <a href="{{ path('admin_search_indexation_cron') }}">{{ path('admin_search_indexation_cron') }}</a>
+          <a href="{{ url('admin_search_indexation_cron', {token: cronToken}) }}">{{ url('admin_search_indexation_cron', {token: cronToken}) }}</a>
         </p>
       </div>
       <div class="form-wrapper">
