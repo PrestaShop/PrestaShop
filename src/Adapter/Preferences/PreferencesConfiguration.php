@@ -97,6 +97,8 @@ class PreferencesConfiguration implements DataConfigurationInterface
             );
         }
 
+        $previousBestSellerDays = $this->configuration->getInt('PS_BEST_SELLERS_DAYS');
+
         $this->configuration->set('PS_SSL_ENABLED', $configuration['enable_ssl']);
         $this->configuration->set('PS_TOKEN_ENABLE', $configuration['enable_token']);
         $this->configuration->set(ShopModeFeature::CONFIGURATION_NAME, $newShopModeValue->value);
@@ -109,6 +111,10 @@ class PreferencesConfiguration implements DataConfigurationInterface
         $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
         $this->configuration->set('PS_BEST_SELLERS_DAYS', $configuration['best_sellers_days']);
         $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
+
+        if ($previousBestSellerDays != (int) $configuration['best_sellers_days']) {
+            ProductSale::recalculateBestSellers(true);
+        }
 
         return [];
     }
