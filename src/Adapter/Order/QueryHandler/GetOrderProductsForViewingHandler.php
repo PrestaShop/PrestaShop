@@ -10,14 +10,13 @@ use Currency;
 use Db;
 use Image;
 use ImageManager;
-use Module as LegacyModule;
 use Order;
 use OrderInvoice;
 use OrderReturn;
 use OrderSlip;
 use Pack;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleHtmlAuthorizationChecker;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
@@ -29,7 +28,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Module\ModuleManagerInterface;
 use PrestaShop\PrestaShop\Core\Util\Sorter;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use Product;
@@ -47,7 +45,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         private readonly int $contextLanguageId,
         private readonly Locale $locale,
         private readonly ShipmentRepository $shipmentRepository,
-        private readonly ModuleManagerInterface $moduleManager
+        private readonly ModuleHtmlAuthorizationChecker $moduleHtmlAuthorizationChecker
     ) {
     }
 
@@ -87,7 +85,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                                     (int) $data['type'],
                                     (string) $data['name'],
                                     (string) $data['value'],
-                                    $this->isModuleHtmlAllowed((int) ($data['id_module'] ?? 0))
+                                    $this->moduleHtmlAuthorizationChecker->isModuleHtmlAllowed((int) ($data['id_module'] ?? 0))
                                 );
                             }
                         }
@@ -287,29 +285,5 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
 
         $pack_item['image'] = $id_image ? new Image((int) $id_image) : null;
         $pack_item['image_size'] = null;
-    }
-
-    private function isModuleHtmlAllowed(int $moduleId): bool
-    {
-        static $moduleNames = [];
-
-        if ($moduleId <= 0) {
-            return false;
-        }
-
-        if (!array_key_exists($moduleId, $moduleNames)) {
-            $moduleAdapter = new Module();
-
-            /** @var LegacyModule|false $module */
-            $module = $moduleAdapter->getInstanceById($moduleId);
-
-            if (false === $module) {
-                $moduleNames[$moduleId] = null;
-            } else {
-                $moduleNames[$moduleId] = $module->name;
-            }
-        }
-
-        return !empty($moduleNames[$moduleId]) && $this->moduleManager->isEnabled($moduleNames[$moduleId]);
     }
 }

@@ -89,7 +89,7 @@ class OrderProductCustomizationForViewing
     /**
      * @return bool
      */
-    public function isAllowHtml(): bool
+    public function isHtmlAllowed(): bool
     {
         return $this->allowHtml;
     }

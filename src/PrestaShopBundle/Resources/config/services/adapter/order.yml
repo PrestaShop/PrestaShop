@@ -176,7 +176,7 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - "@prestashop.core.localization.locale.context_locale"
       - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
-      - '@PrestaShop\PrestaShop\Core\Module\ModuleManager'
+      - '@PrestaShop\PrestaShop\Adapter\Module\ModuleHtmlAuthorizationChecker'
 
   prestashop.adapter.order.command_handler.resend_order_email_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ResendOrderEmailHandler

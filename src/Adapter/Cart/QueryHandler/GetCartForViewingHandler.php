@@ -13,18 +13,15 @@ use Customer;
 use DateTime;
 use Gender;
 use Group;
-use Module as LegacyModule;
 use Order;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleHtmlAuthorizationChecker;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartView;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Util\Sorter;
 use Product;
 use StockAvailable;
@@ -247,7 +244,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                                     $productCustomization['fields'][] = [
                                         'name' => $item['name'],
                                         'value' => $item['value'],
-                                        'allow_html' => $this->isModuleHtmlAllowed((int) ($item['id_module'] ?? 0)),
+                                        'allow_html' => $this->moduleHtmlAuthorizationChecker->isModuleHtmlAllowed((int) ($item['id_module'] ?? 0)),
                                         'type' => 'customizable_text_field',
                                     ];
                                 }

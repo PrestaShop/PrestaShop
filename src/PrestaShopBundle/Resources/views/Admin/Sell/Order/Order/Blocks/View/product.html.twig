@@ -164,7 +164,7 @@
       {% for customization in product.customizations.textCustomizations %}
         <p>
           <strong>{{ customization.name }} :</strong>
-          {% if customization.allowHtml %}
+          {% if customization.htmlAllowed %}
             {{ customization.value|raw_purified }}
           {% else %}
             {{ customization.value }}
