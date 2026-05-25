@@ -87,7 +87,7 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
         args: {
           testIdentifier: 'filterName',
           filterType: 'input',
-          filterBy: 'b!name',
+          filterBy: 'name',
           filterValue: dataCountries.netherlands.name,
         },
       },
@@ -110,8 +110,8 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
       {
         args: {
           testIdentifier: 'filterZone',
-          filterType: 'select',
-          filterBy: 'z!id_zone',
+          filterType: 'input',
+          filterBy: 'zone_name',
           filterValue: dataCountries.unitedKingdom.zone,
         },
       },
@@ -119,7 +119,7 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
         args: {
           testIdentifier: 'filterStatus',
           filterType: 'select',
-          filterBy: 'a!active',
+          filterBy: 'active',
           filterValue: dataCountries.france.active ? '1' : '0',
         },
       },
@@ -139,7 +139,7 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
         const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
         expect(numberOfCountriesAfterFilter).to.be.at.most(numberOfCountries);
 
-        if (test.args.filterBy === 'a!active') {
+        if (test.args.filterBy === 'active') {
           const countryStatus = await boCountriesPage.getCountryStatus(page, 1);
           expect(countryStatus).to.equal(test.args.filterValue === '1');
         } else {
@@ -168,14 +168,14 @@ describe('BO - International - Countries : Filter and quick edit', async () => {
       await boCountriesPage.filterTable(
         page,
         'input',
-        'b!name',
+        'name',
         dataCountries.germany.name,
       );
 
       const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterFilter).to.be.below(numberOfCountries);
 
-      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textColumn).to.contains(dataCountries.germany.name);
     });
 

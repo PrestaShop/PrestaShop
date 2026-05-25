@@ -122,13 +122,13 @@ describe('BO - International - Countries : Bulk actions', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       // Filter
-      await boCountriesPage.filterTable(page, 'input', 'b!name', 'todelete');
+      await boCountriesPage.filterTable(page, 'input', 'name', 'todelete');
 
       // Check number of countries
       const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textColumn).to.contains('todelete');
     });
 

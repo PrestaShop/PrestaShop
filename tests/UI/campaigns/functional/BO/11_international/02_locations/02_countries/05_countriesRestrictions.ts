@@ -86,12 +86,12 @@ describe('BO - International - Countries : Restrict country selections in front 
   it(`should search for the country '${dataCountries.afghanistan.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToEnable', baseContext);
 
-    await boCountriesPage.filterTable(page, 'input', 'b!name', dataCountries.afghanistan.name);
+    await boCountriesPage.filterTable(page, 'input', 'name', dataCountries.afghanistan.name);
 
     const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
     expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-    const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+    const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'name');
     expect(textColumn).to.equal(dataCountries.afghanistan.name);
   });
 
@@ -182,12 +182,12 @@ describe('BO - International - Countries : Restrict country selections in front 
   it(`should search for the country '${dataCountries.afghanistan.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToDisable', baseContext);
 
-    await boCountriesPage.filterTable(page, 'input', 'b!name', dataCountries.afghanistan.name);
+    await boCountriesPage.filterTable(page, 'input', 'name', dataCountries.afghanistan.name);
 
     const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
     expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-    const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+    const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'name');
     expect(textColumn).to.equal(dataCountries.afghanistan.name);
   });
 

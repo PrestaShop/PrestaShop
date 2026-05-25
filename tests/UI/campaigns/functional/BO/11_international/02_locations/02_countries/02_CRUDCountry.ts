@@ -211,14 +211,14 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       // Filter
-      await boCountriesPage.filterTable(page, 'input', 'b!name', createCountryData.name);
+      await boCountriesPage.filterTable(page, 'input', 'name', createCountryData.name);
 
       // Check number of countries
       const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
       // row = 1 (first row)
-      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textColumn).to.contains(createCountryData.name);
     });
 
@@ -305,13 +305,13 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       // Filter
-      await boCountriesPage.filterTable(page, 'input', 'b!name', editCountryData.name);
+      await boCountriesPage.filterTable(page, 'input', 'name', editCountryData.name);
 
       // Check number of countries
       const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textColumn).to.contains(editCountryData.name);
     });
 

@@ -100,52 +100,52 @@ describe('BO - International - Countries : Sort and pagination', async () => {
     const sortTests = [
       {
         args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_country', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_country', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByCountryAsc', sortBy: 'b!name', sortDirection: 'up',
+          testIdentifier: 'sortByCountryAsc', sortBy: 'name', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByCountryDesc', sortBy: 'b!name', sortDirection: 'down',
+          testIdentifier: 'sortByCountryDesc', sortBy: 'name', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIsoCodeAsc', sortBy: 'iso_code', sortDirection: 'up',
+          testIdentifier: 'sortByIsoCodeAsc', sortBy: 'iso_code', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIsoCodeDesc', sortBy: 'iso_code', sortDirection: 'down',
+          testIdentifier: 'sortByIsoCodeDesc', sortBy: 'iso_code', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByCallPrefixAsc', sortBy: 'call_prefix', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByCallPrefixAsc', sortBy: 'call_prefix', sortDirection: 'asc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByCallPrefixDesc', sortBy: 'call_prefix', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByCallPrefixDesc', sortBy: 'call_prefix', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByZoneAsc', sortBy: 'z!id_zone', sortDirection: 'up',
+          testIdentifier: 'sortByZoneAsc', sortBy: 'zone_name', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByZoneDesc', sortBy: 'z!id_zone', sortDirection: 'down',
+          testIdentifier: 'sortByZoneDesc', sortBy: 'zone_name', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_country', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_country', sortDirection: 'asc', isFloat: true,
         },
       },
     ];
@@ -166,7 +166,7 @@ describe('BO - International - Countries : Sort and pagination', async () => {
 
           const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.args.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
@@ -174,7 +174,7 @@ describe('BO - International - Countries : Sort and pagination', async () => {
         } else {
           const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.args.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());
