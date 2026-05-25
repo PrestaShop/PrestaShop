@@ -215,6 +215,35 @@ class DispatcherCore
     {
         $this->use_routes = (bool) Configuration::get('PS_REWRITING_SETTINGS');
 
+        if (Configuration::get('PS_REWRITING_IDENTIFIER') == 'rewrite') {
+            // id is no more mandatory
+            unset($this->default_routes['category_rule']['keywords']['id']['param']);
+            unset($this->default_routes['product_rule']['keywords']['id']['param']);
+            unset($this->default_routes['cms_rule']['keywords']['id']['param']);
+            unset($this->default_routes['cms_category_rule']['keywords']['id']['param']);
+            unset($this->default_routes['supplier_rule']['keywords']['id']['param']);
+            unset($this->default_routes['manufacturer_rule']['keywords']['id']['param']);
+
+            $this->default_routes['category_rule']['keywords']['rewrite']['param'] = 'rewrite';
+            // require because the native regexp doesn't support trailing /
+            $this->default_routes['category_rule']['keywords']['rewrite']['regexp'] = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+?';
+
+            // cms page and category
+            // be carrefull : cms page and category share the same controller
+            $this->default_routes['cms_rule']['keywords']['rewrite']['param'] = 'rewrite';
+            $this->default_routes['cms_rule']['keywords']['rewrite']['regexp'] = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+?';
+            $this->default_routes['cms_category_rule']['keywords']['rewrite']['param'] = 'rewrite';
+            $this->default_routes['cms_category_rule']['keywords']['rewrite']['regexp'] = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+?';
+
+            // manufacturer
+            $this->default_routes['manufacturer_rule']['keywords']['rewrite']['param'] = 'rewrite';
+            // require because the native regexp doesn't support trailing /
+            $this->default_routes['manufacturer_rule']['keywords']['rewrite']['regexp'] = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+?';
+            // supplier
+            $this->default_routes['supplier_rule']['keywords']['rewrite']['param'] = 'rewrite';
+            // require because the native regexp doesn't support trailing /
+            $this->default_routes['supplier_rule']['keywords']['rewrite']['regexp'] = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+?';
+        }
         // Select right front controller
         if (defined('_PS_ADMIN_DIR_')) {
             $this->front_controller = self::FC_ADMIN;
@@ -1160,10 +1189,29 @@ class DispatcherCore
 
                 list($uri) = explode('?', $this->request_uri);
 
+                // if (Configuration::get('PS_REWRITING_IDENTIFIER') == 'rewrite' && $uri=='/') {
+                //     $controller = 'index';
+                // }
+
                 if (isset($this->routes[$id_shop][Context::getContext()->language->id])) {
-                    foreach ($this->routes[$id_shop][Context::getContext()->language->id] as $route) {
+                    foreach ($this->routes[$id_shop][Context::getContext()->language->id] as $routeName => $route) {
                         if (preg_match($route['regexp'], $uri, $m)) {
                             // Route found ! Now fill $_GET with parameters of uri
+                            if (Configuration::get('PS_REWRITING_IDENTIFIER') == 'rewrite' && empty($m['id_' . $route['controller']]) && !empty($m['rewrite'])) {
+                                // search for intity id if rewriting identifier is set to rewrite then set the corresponding GET variable.
+                                $foundedId = (int) $this->getIdFromRewrite($m['rewrite'], $route['controller'], $routeName);
+                                if (!empty($foundedId)) {
+                                    if ($routeName == 'cms_category_rule') {
+                                        // cms page and category share the same controller
+                                        $_GET['id_cms_category'] = $foundedId;
+                                    } else {
+                                        $_GET['id_' . $route['controller']] = $foundedId;
+                                    }
+                                } else {
+                                    continue;
+                                }
+                            }
+
                             foreach ($m as $k => $v) {
                                 if (!is_numeric($k)) {
                                     $_GET[$k] = $v;
@@ -1344,5 +1392,67 @@ class DispatcherCore
         }
 
         return $controllersPhpself;
+    }
+
+    /**
+     * Return id of entity matching rewrite
+     *
+     * @param string $rewrite
+     * @param string $controller
+     * @param string $routeName
+     *
+     * @return int the founded id
+     */
+    public function getIdFromRewrite($rewrite, $controller, $routeName): int
+    {
+        if (empty($rewrite) or empty($controller)) {
+            return 0;
+        }
+
+        $idLang = Context::getContext()->language->id;
+        $idShop = Context::getContext()->shop->id;
+
+        $query = new DbQuery();
+        $query->select('tl.id_' . $controller);
+        $query->from($controller . '_lang', 'tl');
+        $query->where('tl.`link_rewrite` = \'' . pSQL($rewrite) . '\'');
+        $query->where('tl.`id_lang` = ' . (int) $idLang);
+        $query->where('tl.`id_shop` = ' . (int) $idShop);
+        if ($controller == 'category') {
+            $query->innerJoin($controller, 't', 't.id_' . $controller . ' = tl.id_' . $controller);
+            $query->orderBy('t.active DESC, t.date_upd DESC');
+        }
+        if ($controller == 'product') {
+            $query->innerJoin($controller . '_shop', 'ts', 'ts.id_' . $controller . ' = tl.id_' . $controller . ' AND ts.`id_shop` = ' . (int) $idShop);
+            $query->orderBy('ts.active DESC, t.date_upd DESC');
+        }
+        if ($routeName == 'cms_rule') {
+            $query->innerJoin($controller . '_shop', 'ts', 'ts.id_' . $controller . ' = tl.id_' . $controller . ' AND ts.`id_shop` = ' . (int) $idShop);
+        }
+        if ($routeName == 'cms_category_rule') {
+            $query = new DbQuery();
+            $query->select('tl.id_cms_category');
+            $query->from('cms_category_lang', 'tl');
+            $query->where('tl.`link_rewrite` = \'' . pSQL($rewrite) . '\'');
+            $query->where('tl.`id_lang` = ' . (int) $idLang);
+            $query->where('tl.`id_shop` = ' . (int) $idShop);
+            $query->innerJoin('cms_category_shop', 'ts', 'ts.id_cms_category = tl.id_cms_category AND ts.`id_shop` = ' . (int) $idShop);
+        }
+        if ($controller == 'manufacturer') {
+            $query = new DbQuery();
+            $query->select('tl.id_manufacturer');
+            $query->from('manufacturer', 'tl');
+            $query->where('REPLACE(LOWER(`name`), \' \', \'-\') = \'' . pSQL($rewrite) . '\'');
+            $query->innerJoin('manufacturer_shop', 'ts', 'ts.id_manufacturer = tl.id_manufacturer AND ts.`id_shop` = ' . (int) $idShop);
+        }
+        if ($controller == 'supplier') {
+            $query = new DbQuery();
+            $query->select('tl.id_supplier');
+            $query->from('supplier', 'tl');
+            $query->where('REPLACE(LOWER(`name`), \' \', \'-\') = \'' . pSQL($rewrite) . '\'');
+            $query->innerJoin('supplier_shop', 'ts', 'ts.id_supplier = tl.id_supplier AND ts.`id_shop` = ' . (int) $idShop);
+        }
+
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 }

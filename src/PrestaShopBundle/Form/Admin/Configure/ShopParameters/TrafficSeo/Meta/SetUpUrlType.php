@@ -88,6 +88,16 @@ class SetUpUrlType extends TranslatorAwareType
                 'help' => $friendlyUrlHelp,
                 'multistore_configuration_key' => 'PS_REWRITING_SETTINGS',
             ])
+            ->add(
+                'friendly_url_identifier',
+                ChoiceType::class,
+                [
+                    'choices' => [$this->trans('Id', 'Admin.Global') => 'id', $this->trans('Rewrite', 'Admin.Global') => 'rewrite'],
+                    'translation_domain' => false,
+                    'label' => $this->trans('Friendly URL identifier', 'Admin.Shopparameters.Feature'),
+                    'multistore_configuration_key' => 'PS_REWRITING_IDENTIFIER',
+                ]
+            )
             ->add('default_language_url_prefix', SwitchType::class, [
                 'label' => $this->trans('Use prefix for default language', 'Admin.Global'),
                 'help' => $this->trans(
