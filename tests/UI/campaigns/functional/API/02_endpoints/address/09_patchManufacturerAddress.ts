@@ -19,7 +19,7 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'functional_API_endpoints_address_patchManufacturerAddressId';
+const baseContext: string = 'functional_API_endpoints_address_patchManufacturerAddress';
 
 describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
   let apiContext: APIRequestContext;
@@ -320,7 +320,7 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
     it('should delete address and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress', baseContext);
 
-      const deleteTextResult = await boBrandsPage.deleteRowInTable(page, 'manufacturer_address');
+      const deleteTextResult = await boBrandsPage.deleteBrandAddress(page);
       expect(deleteTextResult).to.be.equal(boBrandsPage.successfulDeleteMessage);
     });
 

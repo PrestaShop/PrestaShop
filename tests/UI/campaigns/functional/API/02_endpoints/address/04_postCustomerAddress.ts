@@ -20,7 +20,7 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'functional_API_endpoints_address_postAddress';
+const baseContext: string = 'functional_API_endpoints_address_postCustomerAddress';
 
 describe('API : POST /addresses/customers', async () => {
   let apiContext: APIRequestContext;
@@ -223,7 +223,7 @@ describe('API : POST /addresses/customers', async () => {
 
   describe('API : Delete the Address', async () => {
     it('should request the endpoint /addresses/{addressId}', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointToDelete', baseContext);
 
       const apiResponse = await apiContext.delete(`addresses/${idAddress}`, {
         headers: {

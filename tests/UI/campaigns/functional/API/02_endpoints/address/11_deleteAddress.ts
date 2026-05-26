@@ -17,7 +17,7 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'functional_API_endpoints_address_deleteAddressId';
+const baseContext: string = 'functional_API_endpoints_address_deleteAddress';
 
 describe('API : DELETE /addresses/{addressId}', async () => {
   let apiContext: APIRequestContext;

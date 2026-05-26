@@ -215,7 +215,7 @@ describe('API : POST /addresses/manufacturers', async () => {
 
   describe('BackOffice : Delete the Manufacturer Address', async () => {
     it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPageToDelete', baseContext);
 
       await boDashboardPage.goToSubMenu(
         page,
@@ -240,7 +240,7 @@ describe('API : POST /addresses/manufacturers', async () => {
     it('should delete address and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddresses', baseContext);
 
-      const deleteTextResult = await boBrandsPage.deleteRowInTable(page, 'manufacturer_address');
+      const deleteTextResult = await boBrandsPage.deleteBrandAddress(page);
       expect(deleteTextResult).to.be.equal(boBrandsPage.successfulDeleteMessage);
     });
 

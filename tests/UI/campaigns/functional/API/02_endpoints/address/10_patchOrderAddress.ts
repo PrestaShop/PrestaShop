@@ -27,7 +27,7 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'functional_API_endpoints_address_patchOrderAddressId';
+const baseContext: string = 'functional_API_endpoints_address_patchOrderAddress';
 
 describe('API : PATCH /addresses/orders/{addressId}', async () => {
   let apiContext: APIRequestContext;

@@ -19,7 +19,7 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'functional_API_endpoints_address_getManufacturerAddressId';
+const baseContext: string = 'functional_API_endpoints_address_getManufacturerAddress';
 
 describe('API : GET /addresses/manufacturers/{addressId}', async () => {
   let apiContext: APIRequestContext;
@@ -226,7 +226,7 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
 
   describe('BackOffice : Expected data', async () => {
     it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPageToCheckData', baseContext);
 
       await boDashboardPage.goToSubMenu(
         page,
@@ -247,7 +247,7 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
     });
 
     it('should filter list by first name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByFirstName', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByFirstName2', baseContext);
 
       await boBrandsPage.filterAddresses(page, 'input', 'firstname', createAddress.firstName);
 
@@ -333,7 +333,7 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
     it('should delete address and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress', baseContext);
 
-      const deleteTextResult = await boBrandsPage.deleteRowInTable(page, 'manufacturer_address');
+      const deleteTextResult = await boBrandsPage.deleteBrandAddress(page);
       expect(deleteTextResult).to.be.equal(boBrandsPage.successfulDeleteMessage);
     });
 
