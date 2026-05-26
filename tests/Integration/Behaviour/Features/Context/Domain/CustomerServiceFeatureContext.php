@@ -7,6 +7,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Configuration;
 use CustomerThread;
 use Db;
 use PHPUnit\Framework\Assert;
@@ -14,6 +15,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\CustomerMessage;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\SyncImapMessagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
@@ -21,7 +23,9 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceLi
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceListingStatistics;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\ImapSyncResult;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -89,7 +93,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $customerThread->token = Tools::passwdGen(12);
         $customerThread->add();
 
-        $this->getSharedStorage()->set($threadReference, $customerThread);
+        $this->getSharedStorage()->set($threadReference, (int) $customerThread->id);
 
         $customerMessage = new CustomerMessage();
         $customerMessage->id_customer_thread = $customerThread->id;
@@ -220,6 +224,147 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
                 $expectedStatus,
                 $customerThreadView->getStatus()
             )
+        );
+    }
+
+    /**
+     * @When I update customer service options with:
+     */
+    public function updateCustomerServiceOptions(TableNode $table): void
+    {
+        $rows = $table->getRowsHash();
+        $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
+
+        $data = [
+            'file_upload' => filter_var($rows['file_upload'] ?? false, FILTER_VALIDATE_BOOLEAN),
+            'signature' => [$defaultLangId => $rows['signature_in_default'] ?? ''],
+        ];
+
+        /** @var FormDataProviderInterface $provider */
+        $provider = $this->getContainer()->get('prestashop.adapter.customer_service.options.form_provider');
+        $provider->setData($data);
+    }
+
+    /**
+     * @When I update IMAP options with:
+     */
+    public function updateImapOptions(TableNode $table): void
+    {
+        $rows = $table->getRowsHash();
+        $data = [];
+        foreach ($rows as $key => $value) {
+            if ($key === 'imap_url' || $key === 'imap_port' || $key === 'imap_user' || $key === 'imap_password') {
+                $data[$key] = (string) $value;
+            } else {
+                $data[$key] = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+            }
+        }
+
+        /** @var FormDataProviderInterface $provider */
+        $provider = $this->getContainer()->get('prestashop.adapter.customer_service.imap.form_provider');
+        $provider->setData($data);
+    }
+
+    /**
+     * @Then customer service file upload should be :state
+     */
+    public function assertFileUploadState(string $state): void
+    {
+        $expected = $state === 'enabled';
+        $actual = (bool) Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD');
+
+        Assert::assertSame(
+            $expected,
+            $actual,
+            sprintf('Expected file upload to be %s, got %s.', $state, $actual ? 'enabled' : 'disabled')
+        );
+    }
+
+    /**
+     * @Then customer service signature in default language should be :expected
+     */
+    public function assertSignatureInDefaultLanguage(string $expected): void
+    {
+        $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
+        $actual = (string) Configuration::get('PS_CUSTOMER_SERVICE_SIGNATURE', $defaultLangId);
+        Assert::assertSame($expected, $actual);
+    }
+
+    /**
+     * @Then /^IMAP configuration "([^"]+)" should be "([^"]+)"$/
+     */
+    public function assertImapConfigurationStringValue(string $key, string $expected): void
+    {
+        $actual = (string) Configuration::get($key);
+        Assert::assertSame($expected, $actual, sprintf('Configuration "%s" should be "%s", got "%s".', $key, $expected, $actual));
+    }
+
+    /**
+     * @Then /^IMAP configuration "([^"]+)" should be enabled$/
+     */
+    public function assertImapConfigurationEnabled(string $key): void
+    {
+        Assert::assertTrue((bool) Configuration::get($key), sprintf('Configuration "%s" should be enabled.', $key));
+    }
+
+    /**
+     * @Then /^IMAP configuration "([^"]+)" should be disabled$/
+     */
+    public function assertImapConfigurationDisabled(string $key): void
+    {
+        Assert::assertFalse((bool) Configuration::get($key), sprintf('Configuration "%s" should be disabled.', $key));
+    }
+
+    /**
+     * @Given IMAP configuration is unset
+     */
+    public function clearImapConfiguration(): void
+    {
+        foreach (['PS_SAV_IMAP_URL', 'PS_SAV_IMAP_PORT', 'PS_SAV_IMAP_USER', 'PS_SAV_IMAP_PWD'] as $key) {
+            Configuration::updateValue($key, '');
+        }
+    }
+
+    /**
+     * @Given the IMAP server is configured with:
+     */
+    public function setImapConfiguration(TableNode $table): void
+    {
+        $values = $table->getRowsHash();
+        $map = [
+            'imap_url' => 'PS_SAV_IMAP_URL',
+            'imap_port' => 'PS_SAV_IMAP_PORT',
+            'imap_user' => 'PS_SAV_IMAP_USER',
+            'imap_password' => 'PS_SAV_IMAP_PWD',
+        ];
+        foreach ($map as $key => $configurationKey) {
+            Configuration::updateValue($configurationKey, $values[$key] ?? '');
+        }
+    }
+
+    /**
+     * @When I synchronise customer service IMAP messages
+     */
+    public function synchroniseImapMessages(): void
+    {
+        /** @var ImapSyncResult $result */
+        $result = $this->getCommandBus()->handle(new SyncImapMessagesCommand());
+        $this->getSharedStorage()->set('imap_sync_result', $result);
+    }
+
+    /**
+     * @Then customer service IMAP sync should fail with errors:
+     */
+    public function assertImapSyncErrors(TableNode $table): void
+    {
+        /** @var ImapSyncResult $result */
+        $result = $this->getSharedStorage()->get('imap_sync_result');
+
+        Assert::assertTrue($result->hasErrors(), 'Expected IMAP sync to report errors, got none.');
+        Assert::assertSame(
+            array_map('trim', array_column($table->getRows(), 0)),
+            $result->getErrors(),
+            'IMAP sync errors do not match expectations.'
         );
     }
 

@@ -13,14 +13,14 @@
   {% block customer_service_kpis %}
     {{ render(controller(
       'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
-      {kpiRow: customerServiceKpi}
+      {kpiRow: customerServiceKpi},
     )) }}
   {% endblock %}
 
   {% block customer_service_listing_statistics %}
     {{ include(
       '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/listing_statistics.html.twig',
-      {statistics: customerServiceListingStatistics}
+      {statistics: customerServiceListingStatistics},
     ) }}
   {% endblock %}
 
@@ -32,4 +32,33 @@
 
   <script src="{{ asset('themes/new-theme/public/customer_thread.bundle.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      fetch('{{ path('admin_customer_threads_sync_imap') }}', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+      })
+        .then(function (response) {
+          if (!response.ok) {
+            return null;
+          }
+          return response.json();
+        })
+        .then(function (payload) {
+          if (!payload || !payload.hasError || !Array.isArray(payload.errors)) {
+            return;
+          }
+          var container = document.querySelector('.content-div') || document.body;
+          payload.errors.forEach(function (message) {
+            var banner = document.createElement('div');
+            banner.className = 'alert alert-warning';
+            banner.setAttribute('role', 'alert');
+            banner.innerHTML = message;
+            container.insertBefore(banner, container.firstChild);
+          });
+        })
+        .catch(function () {});
+    });
+  </script>
 {% endblock %}

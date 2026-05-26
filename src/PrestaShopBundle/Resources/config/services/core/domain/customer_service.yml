@@ -62,3 +62,12 @@ services:
 
   PrestaShop\PrestaShop\Adapter\CustomerService\QueryHandler\GetCustomerServiceListingStatisticsHandler:
     autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\SyncImapMessagesHandler:
+    autoconfigure: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.configuration'
+      $languageContext: '@PrestaShop\PrestaShop\Core\Context\LanguageContext'
+      $shopContext: '@PrestaShop\PrestaShop\Core\Context\ShopContext'
+      $translator: '@translator'
+      $dbPrefix: '%database_prefix%'

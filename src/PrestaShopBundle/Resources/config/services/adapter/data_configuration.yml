@@ -30,6 +30,20 @@ services:
       - '@prestashop.adapter.shop.context'
       - '@prestashop.adapter.multistore_feature'
 
+  prestashop.adapter.customer_service.options_configuration:
+    class: 'PrestaShop\PrestaShop\Adapter\CustomerService\Configuration\CustomerServiceOptionsConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
+
+  prestashop.adapter.customer_service.imap_configuration:
+    class: 'PrestaShop\PrestaShop\Adapter\CustomerService\Configuration\ImapConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
+
   prestashop.adapter.order_general.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Order\GeneralConfiguration'
     arguments:
