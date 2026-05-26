@@ -13,14 +13,14 @@
   {% block customer_service_kpis %}
     {{ render(controller(
       'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
-      {kpiRow: customerServiceKpi}
+      {kpiRow: customerServiceKpi},
     )) }}
   {% endblock %}
 
   {% block customer_service_listing_statistics %}
     {{ include(
       '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/listing_statistics.html.twig',
-      {statistics: customerServiceListingStatistics}
+      {statistics: customerServiceListingStatistics},
     ) }}
   {% endblock %}
 
