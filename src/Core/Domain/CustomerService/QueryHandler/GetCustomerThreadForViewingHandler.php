@@ -76,6 +76,7 @@ class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingH
         return new CustomerThreadView(
             $query->getCustomerThreadId(),
             new LanguageId((int) $customerThread->id_lang),
+            (string) $customerThread->status,
             $this->getAvailableActions($customerThread),
             $this->getCustomerInformation($customerThread),
             $this->getContactName($customerThread),
