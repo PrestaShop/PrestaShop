@@ -22,7 +22,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_address_postAddress';
 
-describe('API : POST /addresses', async () => {
+describe('API : POST /addresses/customers', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -33,7 +33,7 @@ describe('API : POST /addresses', async () => {
 
   const clientScope: string = 'address_write';
   const createAddress: FakerAddress = new FakerAddress({
-    firstName: dataCustomers.johnDoe.firstName,
+    firstName: 'Test address',
     lastName: dataCustomers.johnDoe.lastName,
     alias: 'test',
     country: 'France',
@@ -86,7 +86,7 @@ describe('API : POST /addresses', async () => {
           city: createAddress.city,
           countryId: dataCountries.france.id,
           postcode: '92400',
-          mobilePhone: createAddress.phone,
+          homePhone: createAddress.phone,
         },
       });
       expect(apiResponse.status()).to.eq(201);
@@ -130,134 +130,108 @@ describe('API : POST /addresses', async () => {
       expect(jsonResponse.address).to.be.equal(createAddress.address);
       expect(jsonResponse.city).to.be.equal(createAddress.city);
       expect(jsonResponse.countryId).to.be.equal(dataCountries.france.id);
-      expect(jsonResponse.mobilePhone).to.be.equal(createAddress.phone);
+      expect(jsonResponse.homePhone).to.be.equal(createAddress.phone);
     });
   });
 
    describe('BackOffice : Check the Address is created', async () => {
      it('should go to \'Customers > Addresses\' page', async function () {
        await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
- 
+
        await boDashboardPage.goToSubMenu(
          page,
          boDashboardPage.customersParentLink,
          boDashboardPage.addressesLink,
        );
        await boAddressesPage.closeSfToolBar(page);
- 
+
        const pageTitle = await boAddressesPage.getPageTitle(page);
        expect(pageTitle).to.contains(boAddressesPage.pageTitle);
      });
- 
+
      it('should reset all filters and get number of addresses in BO', async function () {
        await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
- 
+
        numberOfAddresses = await boAddressesPage.resetAndGetNumberOfLines(page);
        expect(numberOfAddresses).to.be.above(0);
      });
- 
+
      it('should filter list by first name', async function () {
        await testContext.addContextItem(this, 'testIdentifier', 'filterByFirstName', baseContext);
- 
+
        await boAddressesPage.filterAddresses(page, 'input', 'firstname', createAddress.firstName);
- 
+
        const numberOfAddressesAfterCreation = await boAddressesPage.getNumberOfElementInGrid(page);
        expect(numberOfAddressesAfterCreation).to.be.equal(1);
- 
+
        idAddress = parseInt(
          await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'id_address'),
          10,
        );
        expect(idAddress).to.be.gt(0);
      });
- 
+
      it('should go to edit address page', async function () {
        await testContext.addContextItem(this, 'testIdentifier', 'goToEditAddressPage', baseContext);
- 
+
        await boAddressesPage.goToEditAddressPage(page, 1);
- 
+
        const pageTitle = await boAddressesCreatePage.getPageTitle(page);
        expect(pageTitle).to.contains(boAddressesCreatePage.pageTitleEdit);
      });
- 
+
      it('should check the JSON Response : `addressId`', async function () {
        await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddressId', baseContext);
- 
+
        expect(jsonResponse.addressId).to.be.equal(idAddress);
      });
- 
+
      it('should check the JSON Response : `firstName`', async function () {
        await testContext.addContextItem(this, 'testIdentifier', 'checkResponseFirstName', baseContext);
- 
+
        const value = await boAddressesCreatePage.getValue(page, 'firstName');
        expect(jsonResponse.firstName).to.be.equal(value);
      });
- 
+
      it('should check the JSON Response : `lastName`', async function () {
        await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLastName', baseContext);
- 
+
        const value = await boAddressesCreatePage.getValue(page, 'lastName');
        expect(jsonResponse.lastName).to.be.equal(value);
      });
- 
+
      it('should check the JSON Response : `address`', async function () {
        await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddress', baseContext);
- 
+
        const value = await boAddressesCreatePage.getValue(page, 'address');
        expect(jsonResponse.address).to.be.equal(value);
      });
- 
+
      it('should check the JSON Response : `city`', async function () {
        await testContext.addContextItem(this, 'testIdentifier', 'checkResponseCity', baseContext);
- 
+
        const value = await boAddressesCreatePage.getValue(page, 'city');
        expect(jsonResponse.city).to.be.equal(value);
      });
- 
+
      it('should check the JSON Response : `phone`', async function () {
        await testContext.addContextItem(this, 'testIdentifier', 'checkResponsePhone', baseContext);
- 
+
        const value = await boAddressesCreatePage.getValue(page, 'phone');
-       expect(jsonResponse.phone).to.be.equal(value);
+       expect(jsonResponse.homePhone).to.be.equal(value);
      });
    });
- 
-   describe('BackOffice : Delete the Address', async () => {
-     it('should go to \'Customers > Addresses\' page', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageForDeletion', baseContext);
- 
-       await boDashboardPage.goToSubMenu(
-         page,
-         boDashboardPage.customersParentLink,
-         boDashboardPage.addressesLink,
-       );
- 
-       const pageTitle = await boAddressesPage.getPageTitle(page);
-       expect(pageTitle).to.contains(boAddressesPage.pageTitle);
-     });
- 
-     it('should filter list by id', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'filterForDeletion', baseContext);
- 
-       await boAddressesPage.resetFilter(page);
-       await boAddressesPage.filterAddresses(page, 'input', 'id_address', idAddress.toString());
- 
-       const numberOfAddressesAfterFilter = await boAddressesPage.getNumberOfElementInGrid(page);
-       expect(numberOfAddressesAfterFilter).to.be.equal(1);
-     });
- 
-     it('should delete address', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress', baseContext);
- 
-       const textResult = await boAddressesPage.deleteAddress(page, 1);
-       expect(textResult).to.contains(boAddressesPage.successfulDeleteMessage);
-     });
- 
-     it('should reset filter', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
- 
-       const numberOfAddressesAfterDelete = await boAddressesPage.resetAndGetNumberOfLines(page);
-       expect(numberOfAddressesAfterDelete).to.be.equal(numberOfAddresses);
-     });
-   });
+
+  describe('API : Delete the Address', async () => {
+    it('should request the endpoint /addresses/{addressId}', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
+
+      const apiResponse = await apiContext.delete(`addresses/${idAddress}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      expect(apiResponse.status()).to.eq(204);
+    });
+  });
 });

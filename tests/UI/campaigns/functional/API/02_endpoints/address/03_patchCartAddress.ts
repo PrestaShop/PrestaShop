@@ -255,4 +255,7 @@ describe('API : PATCH /addresses/carts/{cartAddressId}', async () => {
       expect(apiResponse.status()).to.eq(204);
     });
   });
+
+  // Post-condition : Delete created customer
+  deleteCustomerTest(customerData, `${baseContext}_postTest`);
 });
