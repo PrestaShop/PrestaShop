@@ -43,6 +43,15 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - 'customers'
 
+  prestashop.core.kpi_row.factory.customer_service:
+    class: PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory
+    arguments:
+      - - '@prestashop.adapter.kpi.pending_discussion_threads'
+        - '@prestashop.adapter.kpi.average_message_response_time'
+        - '@prestashop.adapter.kpi.messages_per_thread'
+      - '@prestashop.core.hook.dispatcher'
+      - 'customer_service'
+
   prestashop.core.kpi_row.factory.cart:
     class: PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory
     arguments:

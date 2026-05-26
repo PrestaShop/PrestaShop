@@ -8,6 +8,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use CustomerThread;
+use Db;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Entity\CustomerMessage;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand;
@@ -16,7 +17,9 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThr
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceListingStatistics;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceListingStatistics;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use RuntimeException;
@@ -59,6 +62,75 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $customerMessage->private = false;
         $customerMessage->read = false;
         $customerMessage->add();
+    }
+
+    /**
+     * @Given there are no customer threads
+     */
+    public function clearCustomerThreads(): void
+    {
+        Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'customer_message');
+        Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'customer_thread');
+    }
+
+    /**
+     * @When I add new customer thread :threadReference with status :status and message :message
+     */
+    public function createCustomerThreadWithStatus(string $threadReference, string $status, string $message): void
+    {
+        $customerThread = new CustomerThread();
+        $customerThread->id_contact = 2;
+        $customerThread->id_customer = 1;
+        $customerThread->id_shop = $this->getDefaultShopId();
+        $customerThread->id_order = 0;
+        $customerThread->id_lang = 1;
+        $customerThread->email = 'test@gmail.com';
+        $customerThread->status = $status;
+        $customerThread->token = Tools::passwdGen(12);
+        $customerThread->add();
+
+        $this->getSharedStorage()->set($threadReference, $customerThread);
+
+        $customerMessage = new CustomerMessage();
+        $customerMessage->id_customer_thread = $customerThread->id;
+        $customerMessage->id_employee = 0;
+        $customerMessage->message = $message;
+        $customerMessage->file_name = '';
+        $customerMessage->ip_address = '';
+        $customerMessage->private = false;
+        $customerMessage->read = false;
+        $customerMessage->add();
+    }
+
+    /**
+     * @Then customer service listing statistics should be:
+     */
+    public function assertListingStatistics(TableNode $table): void
+    {
+        $expected = $table->getRowsHash();
+
+        /** @var CustomerServiceListingStatistics $stats */
+        $stats = $this->getQueryBus()->handle(new GetCustomerServiceListingStatistics());
+
+        $actual = [
+            'total_threads' => $stats->getTotalThreads(),
+            'open_threads' => $stats->getOpenThreads(),
+            'pending_threads' => $stats->getPendingThreads(),
+            'closed_threads' => $stats->getClosedThreads(),
+            'customer_messages' => $stats->getCustomerMessages(),
+            'employee_messages' => $stats->getEmployeeMessages(),
+        ];
+
+        foreach ($expected as $key => $value) {
+            if (!array_key_exists($key, $actual)) {
+                throw new RuntimeException(sprintf('Unknown statistic "%s" in expectations.', $key));
+            }
+            Assert::assertSame(
+                (int) $value,
+                $actual[$key],
+                sprintf('Statistic "%s" should be %s, got %s.', $key, $value, $actual[$key])
+            );
+        }
     }
 
     /**

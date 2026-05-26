@@ -10,6 +10,20 @@
 {% endblock %}
 
 {% block content %}
+  {% block customer_service_kpis %}
+    {{ render(controller(
+      'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
+      {kpiRow: customerServiceKpi}
+    )) }}
+  {% endblock %}
+
+  {% block customer_service_listing_statistics %}
+    {{ include(
+      '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/listing_statistics.html.twig',
+      {statistics: customerServiceListingStatistics}
+    ) }}
+  {% endblock %}
+
   {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: customerThreadGrid}) }}
 {% endblock %}
 

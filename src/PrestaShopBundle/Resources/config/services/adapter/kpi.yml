@@ -88,6 +88,27 @@ services:
     arguments:
       - "@prestashop.core.localization.locale.context_locale"
 
+  prestashop.adapter.kpi.pending_discussion_threads:
+    class: 'PrestaShop\PrestaShop\Adapter\Kpi\PendingDiscussionThreadsKpi'
+    arguments:
+      - '@translator'
+      - '@prestashop.adapter.legacy.kpi_configuration'
+      - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "pending_messages"})'
+
+  prestashop.adapter.kpi.average_message_response_time:
+    class: 'PrestaShop\PrestaShop\Adapter\Kpi\AverageMessageResponseTimeKpi'
+    arguments:
+      - '@translator'
+      - '@prestashop.adapter.legacy.kpi_configuration'
+      - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "avg_msg_response_time"})'
+
+  prestashop.adapter.kpi.messages_per_thread:
+    class: 'PrestaShop\PrestaShop\Adapter\Kpi\MessagesPerThreadKpi'
+    arguments:
+      - '@translator'
+      - '@prestashop.adapter.legacy.kpi_configuration'
+      - '@=service("prestashop.adapter.legacy.context").getAdminLink("AdminStats", true, {"ajax": 1, "action": "getKpi", "kpi": "messages_per_thread"})'
+
   PrestaShop\PrestaShop\Adapter\Kpi\AbandonedCartKpi:
     autowire: true
 
