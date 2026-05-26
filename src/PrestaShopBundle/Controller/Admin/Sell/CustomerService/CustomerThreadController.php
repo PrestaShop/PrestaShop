@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomer
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\SyncImapMessagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CannotDeleteCustomerThreadException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
@@ -20,6 +21,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceLi
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\ImapSyncResult;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
@@ -32,6 +34,7 @@ use PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -300,6 +303,27 @@ class CustomerThreadController extends PrestaShopAdminController
         }
 
         return $this->redirectToRoute('admin_customer_threads');
+    }
+
+    /**
+     * Trigger an IMAP synchronisation pass and return the result as JSON.
+     *
+     * Called asynchronously from the listing page (after first paint) so the
+     * grid loads instantly while the mailbox sync runs in the background.
+     * Any error messages produced by the legacy `syncImap` flow are
+     * returned to the front-end and displayed as a flash banner — matches
+     * the iso-functional behaviour merchants saw on the legacy page.
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function syncImapAction(): JsonResponse
+    {
+        /** @var ImapSyncResult $result */
+        $result = $this->dispatchCommand(new SyncImapMessagesCommand());
+
+        return new JsonResponse([
+            'hasError' => $result->hasErrors(),
+            'errors' => $result->getErrors(),
+        ]);
     }
 
     /**

@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\CustomerMessage;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\SyncImapMessagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
@@ -22,6 +23,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceLi
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceListingStatistics;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\ImapSyncResult;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use RuntimeException;
@@ -311,6 +313,59 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     public function assertImapConfigurationDisabled(string $key): void
     {
         Assert::assertFalse((bool) Configuration::get($key), sprintf('Configuration "%s" should be disabled.', $key));
+    }
+
+    /**
+     * @Given IMAP configuration is unset
+     */
+    public function clearImapConfiguration(): void
+    {
+        foreach (['PS_SAV_IMAP_URL', 'PS_SAV_IMAP_PORT', 'PS_SAV_IMAP_USER', 'PS_SAV_IMAP_PWD'] as $key) {
+            Configuration::updateValue($key, '');
+        }
+    }
+
+    /**
+     * @Given the IMAP server is configured with:
+     */
+    public function setImapConfiguration(TableNode $table): void
+    {
+        $values = $table->getRowsHash();
+        $map = [
+            'imap_url' => 'PS_SAV_IMAP_URL',
+            'imap_port' => 'PS_SAV_IMAP_PORT',
+            'imap_user' => 'PS_SAV_IMAP_USER',
+            'imap_password' => 'PS_SAV_IMAP_PWD',
+        ];
+        foreach ($map as $key => $configurationKey) {
+            Configuration::updateValue($configurationKey, $values[$key] ?? '');
+        }
+    }
+
+    /**
+     * @When I synchronise customer service IMAP messages
+     */
+    public function synchroniseImapMessages(): void
+    {
+        /** @var ImapSyncResult $result */
+        $result = $this->getCommandBus()->handle(new SyncImapMessagesCommand());
+        $this->getSharedStorage()->set('imap_sync_result', $result);
+    }
+
+    /**
+     * @Then customer service IMAP sync should fail with errors:
+     */
+    public function assertImapSyncErrors(TableNode $table): void
+    {
+        /** @var ImapSyncResult $result */
+        $result = $this->getSharedStorage()->get('imap_sync_result');
+
+        Assert::assertTrue($result->hasErrors(), 'Expected IMAP sync to report errors, got none.');
+        Assert::assertSame(
+            array_map('trim', array_column($table->getRows(), 0)),
+            $result->getErrors(),
+            'IMAP sync errors do not match expectations.'
+        );
     }
 
     /**
