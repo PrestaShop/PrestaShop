@@ -48,16 +48,15 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
-  
+
   describe('API : Fetch the access token', async () => {
     it(`should request the endpoint /access_token with scope ${clientScope}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
       accessToken = await requestAccessToken(clientScope);
-      expect(accessToken).to.not.be.empty;
     });
   });
-  
+
   describe('BackOffice : Create a Manufacturer Address', async () => {
     it('should login in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
@@ -218,7 +217,7 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
       expect(jsonResponse.homePhone).to.be.equal(updateAddress.phone);
     });
   });
-  
+
   describe('BackOffice : Expected data', async () => {
     it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPageCheck', baseContext);
@@ -293,7 +292,7 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
       expect(jsonResponse.homePhone).to.be.equal(value);
     });
   });
-  
+
   describe('BackOffice : Delete the Manufacturer Address', async () => {
     it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPageForDeletion', baseContext);

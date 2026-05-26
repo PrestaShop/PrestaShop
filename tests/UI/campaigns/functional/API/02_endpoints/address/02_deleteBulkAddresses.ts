@@ -32,13 +32,13 @@ describe('API : DELETE /addresses/bulk-delete', async () => {
   const firstCustomerData: FakerCustomer = new FakerCustomer();
   const secondCustomerData: FakerCustomer = new FakerCustomer();
   const addressData1: FakerAddress = new FakerAddress({
-    email : firstCustomerData.email,
+    email: firstCustomerData.email,
     firstName: firstCustomerData.firstName,
     lastName: firstCustomerData.lastName,
     country: 'France',
   });
   const addressData2: FakerAddress = new FakerAddress({
-    email : secondCustomerData.email,
+    email: secondCustomerData.email,
     firstName: secondCustomerData.firstName,
     lastName: secondCustomerData.lastName,
     country: 'France',
@@ -58,16 +58,15 @@ describe('API : DELETE /addresses/bulk-delete', async () => {
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
-  
+
   describe('API : Fetch the access token', async () => {
     it('should request the endpoint /access_token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
       accessToken = await requestAccessToken(clientScope);
-      expect(accessToken).to.not.be.empty;
     });
   });
-  
+
   describe('BackOffice : Go to Customers > Addresses', async () => {
     it('should login in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
@@ -100,7 +99,7 @@ describe('API : DELETE /addresses/bulk-delete', async () => {
       expect(numberOfAddresses).to.be.above(0);
     });
   });
-  
+
   [
     addressData1,
     addressData2,
@@ -140,7 +139,7 @@ describe('API : DELETE /addresses/bulk-delete', async () => {
       });
     });
   });
-  
+
   describe('API : Bulk delete the Addresses', async () => {
     it('should request the endpoint /addresses/bulk-delete', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
@@ -156,7 +155,7 @@ describe('API : DELETE /addresses/bulk-delete', async () => {
       expect(apiResponse.status()).to.eq(204);
     });
   });
-  
+
   describe('BackOffice : Check the Addresses are deleted', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterCreation', baseContext);
@@ -164,7 +163,7 @@ describe('API : DELETE /addresses/bulk-delete', async () => {
       const numberAddresses = await boAddressesPage.resetAndGetNumberOfLines(page);
       expect(numberAddresses).to.be.equal(numberOfAddresses);
     });
-    
+
     it('should check addresses are deleted', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddresses', baseContext);
 

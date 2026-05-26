@@ -51,7 +51,7 @@ describe('API : DELETE /addresses/{addressId}', async () => {
   describe('API : Fetch the access token', async () => {
     it(`should request the endpoint /access_token with scope ${clientScope}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
-     accessToken = await requestAccessToken(clientScope);
+      accessToken = await requestAccessToken(clientScope);
     });
   });
 
@@ -80,12 +80,12 @@ describe('API : DELETE /addresses/{addressId}', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForCreation', baseContext);
 
       await boAddressesPage.resetFilter(page);
-      await boAddressesPage.filterAddresses(page, 'input','address1', addressData.address);
+      await boAddressesPage.filterAddresses(page, 'input', 'address1', addressData.address);
 
       const numAddresses = await boAddressesPage.getNumberOfElementInGrid(page);
       expect(numAddresses).to.be.equal(1);
 
-        const address = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'address1');
+      const address = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'address1');
       expect(address).to.contains(addressData.address);
 
       idAddress = parseInt((await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'id_address')).toString(), 10);
@@ -111,7 +111,7 @@ describe('API : DELETE /addresses/{addressId}', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAfterDeletion', baseContext);
 
       await boAddressesPage.resetFilter(page);
-      await boAddressesPage.filterAddresses(page, 'input','address1', addressData.address);
+      await boAddressesPage.filterAddresses(page, 'input', 'address1', addressData.address);
 
       const numAddresses = await boAddressesPage.getNumberOfElementInGrid(page);
       expect(numAddresses).to.be.equal(0);

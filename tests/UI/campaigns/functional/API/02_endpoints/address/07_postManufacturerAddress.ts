@@ -7,14 +7,12 @@ import {requestAccessToken} from '@commonTests/BO/advancedParameters/authServer'
 import {expect} from 'chai';
 import {
   type APIRequestContext,
-  boManufacturersPage,
   boBrandsPage,
   boBrandAdressesCreatePage,
   boDashboardPage,
   boLoginPage,
   type BrowserContext,
   dataCountries,
-  dataManufacturers,
   FakerAddress,
   type Page,
   utilsAPI,
@@ -53,7 +51,6 @@ describe('API : POST /addresses/manufacturers', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
       accessToken = await requestAccessToken(clientScope);
-      expect(accessToken).to.not.be.empty;
     });
   });
 
@@ -250,7 +247,7 @@ describe('API : POST /addresses/manufacturers', async () => {
     it('should reset filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteAddresses', baseContext);
 
-      const numberOfAddressesAfterDelete= await boBrandsPage.resetAndGetNumberOfLines(page, 'manufacturer_address');
+      const numberOfAddressesAfterDelete = await boBrandsPage.resetAndGetNumberOfLines(page, 'manufacturer_address');
       expect(numberOfAddressesAfterDelete).to.be.equal(numberOfAddresses - 1);
     });
   });

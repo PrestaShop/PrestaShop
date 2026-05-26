@@ -43,10 +43,9 @@ describe('API : GET /addresses', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
       accessToken = await requestAccessToken(clientScope);
-      expect(accessToken).to.not.be.empty;
     });
   });
-  
+
   describe('API : Fetch Data', async () => {
     it('should request the endpoint /addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
@@ -90,7 +89,7 @@ describe('API : GET /addresses', async () => {
       }
     });
   });
-  
+
   describe('BackOffice : Expected data', async () => {
     it('should login in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);

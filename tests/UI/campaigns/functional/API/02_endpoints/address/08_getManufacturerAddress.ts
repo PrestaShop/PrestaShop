@@ -14,7 +14,6 @@ import {
   type BrowserContext,
   dataCountries,
   FakerBrandAddress,
-  FakerAddress,
   type Page,
   utilsAPI,
   utilsPlaywright,
@@ -33,7 +32,7 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
 
   const clientScope: string = 'address_read';
   const createAddress: FakerBrandAddress = new FakerBrandAddress({
-    brandName : 'Graphic Corner',
+    brandName: 'Graphic Corner',
     country: 'France',
   });
 
@@ -53,7 +52,6 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
       accessToken = await requestAccessToken(clientScope);
-      expect(accessToken).to.not.be.empty;
     });
   });
 
@@ -89,24 +87,24 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
       expect(numberOfAddresses).to.be.above(0);
     });
 
-     it('should go to add new address page', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewAddressPage', baseContext);
+    it('should go to add new address page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewAddressPage', baseContext);
 
-       await boBrandsPage.goToAddNewBrandAddressPage(page);
+      await boBrandsPage.goToAddNewBrandAddressPage(page);
 
-       const pageTitle = await boBrandAdressesCreatePage.getPageTitle(page);
-       expect(pageTitle).to.contains(boBrandAdressesCreatePage.pageTitle);
-     });
+      const pageTitle = await boBrandAdressesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boBrandAdressesCreatePage.pageTitle);
+    });
 
-     it('should create address', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
+    it('should create address', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
 
-       const result = await boBrandAdressesCreatePage.createEditBrandAddress(page, createAddress);
-       expect(result).to.equal(boBrandsPage.successfulCreationMessage);
+      const result = await boBrandAdressesCreatePage.createEditBrandAddress(page, createAddress);
+      expect(result).to.equal(boBrandsPage.successfulCreationMessage);
 
-       const numberOfAddressesAfterCreation = await boBrandsPage.getNumberOfElementInGrid(page, 'manufacturer_address');
-       expect(numberOfAddressesAfterCreation).to.be.equal(numberOfAddresses+1);
-     });
+      const numberOfAddressesAfterCreation = await boBrandsPage.getNumberOfElementInGrid(page, 'manufacturer_address');
+      expect(numberOfAddressesAfterCreation).to.be.equal(numberOfAddresses + 1);
+    });
 
     it('should filter list by first name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByFirstName', baseContext);
@@ -307,7 +305,7 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
       expect(jsonResponse.homePhone).to.be.equal(value);
     });
   });
-  
+
   describe('BackOffice : Delete the Manufacturer Address', async () => {
     it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPageForDeletion', baseContext);

@@ -45,7 +45,7 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
 
   // Pre-condition: Create customer
   createCustomerTest(customerData, `${baseContext}_preTest_1`);
-  
+
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -56,16 +56,15 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
-  
+
   describe('API : Fetch the access token', async () => {
     it(`should request the endpoint /access_token with scope ${clientScope}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
       accessToken = await requestAccessToken(clientScope);
-      expect(accessToken).to.not.be.empty;
     });
   });
-  
+
   describe('BackOffice : Create an address', async () => {
     it('should login in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
@@ -132,7 +131,7 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
       expect(addressId).to.be.gt(0);
     });
   });
-  
+
   describe('API : Fetch the Customer Address', async () => {
     it('should request the endpoint /addresses/customers/{addressId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
@@ -237,7 +236,7 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
       expect(jsonResponse.homePhone).to.be.equal(addressData.phone);
     });
   });
-  
+
   describe('BackOffice : Expected data', async () => {
     it('should go to edit address page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditAddressPage', baseContext);

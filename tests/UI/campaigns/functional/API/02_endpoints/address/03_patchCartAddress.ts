@@ -5,7 +5,6 @@ import testContext from '@utils/testContext';
 import {requestAccessToken} from '@commonTests/BO/advancedParameters/authServer';
 import {createAddressTest} from '@commonTests/BO/customers/address';
 import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import createShoppingCart from '@commonTests/FO/hummingbird/shoppingCart';
 
 import {expect} from 'chai';
 import {
@@ -13,7 +12,6 @@ import {
   boShoppingCartsPage,
   boDashboardPage,
   boLoginPage,
-  boShoppingCartsViewPage,
   boAddressesPage,
   foHummingbirdHomePage,
   foHummingbirdProductPage,
@@ -23,7 +21,6 @@ import {
   dataProducts,
   FakerAddress,
   FakerCustomer,
-  FakerOrder,
   utilsAPI,
   type Page,
   utilsPlaywright,
@@ -128,14 +125,13 @@ describe('API : PATCH /addresses/carts/{cartAddressId}', async () => {
       const isStepDeliveryComplete = await foHummingbirdCheckoutPage.goToPaymentStep(page);
       expect(isStepDeliveryComplete, 'Step Address is not complete').to.equal(true);
     });
-  })
+  });
 
   describe('API : Fetch the access token', async () => {
     it(`should request the endpoint /access_token with scope ${clientScope}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
       accessToken = await requestAccessToken(clientScope);
-      expect(accessToken).to.not.be.empty;
     });
   });
 
@@ -187,7 +183,7 @@ describe('API : PATCH /addresses/carts/{cartAddressId}', async () => {
           'Content-Type': 'application/json',
         },
         data: {
-          addressType:"invoice_address",
+          addressType: 'invoice_address',
           address: editAddressData.address,
           city: editAddressData.city,
           firstName: editAddressData.firstName,

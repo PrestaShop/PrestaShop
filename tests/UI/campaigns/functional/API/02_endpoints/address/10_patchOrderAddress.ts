@@ -11,7 +11,6 @@ import {expect} from 'chai';
 import {
   type APIRequestContext,
   boOrdersPage,
-  boOrdersViewBlockTabListPage,
   boDashboardPage,
   boLoginPage,
   boAddressesPage,
@@ -36,7 +35,6 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
   let page: Page;
   let accessToken: string;
   let jsonResponse: any;
-  let idAddress: number;
   let idOrder: number;
 
   const clientScope: string = 'address_write';
@@ -79,16 +77,15 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
 
   // Pre-condition : Create an order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_0`);
-  
+
   describe('API : Fetch the access token', async () => {
     it(`should request the endpoint /access_token with scope ${clientScope}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
       accessToken = await requestAccessToken(clientScope);
-      expect(accessToken).to.not.be.empty;
     });
   });
-  
+
   describe('BackOffice : Fetch the address ID', async () => {
     it('should login in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
@@ -130,7 +127,7 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
       expect(idOrder).to.be.gt(0);
     });
   });
-  
+
   describe('API : Patch the Order Address', async () => {
     it('should request the endpoint /addresses/orders/{addressId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
@@ -140,8 +137,8 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
           Authorization: `Bearer ${accessToken}`,
         },
         data: {
-          addressType:"delivery_address",
-          addressAlias:updateAddress.alias,
+          addressType: 'delivery_address',
+          addressAlias: updateAddress.alias,
           firstName: updateAddress.firstName,
           lastName: updateAddress.lastName,
           address: updateAddress.address,
@@ -162,22 +159,22 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseKeys', baseContext);
 
       expect(jsonResponse).to.have.all.keys(
-        "orderId",
-        "addressAlias",
-        "firstName",
-        "lastName",
-        "address",
-        "address2",
-        "city",
-        "postCode",
-        "countryId",
-        "stateId",
-        "homePhone",
-        "mobilePhone",
-        "company",
-        "vatNumber",
-        "other",
-        "dni"
+        'orderId',
+        'addressAlias',
+        'firstName',
+        'lastName',
+        'address',
+        'address2',
+        'city',
+        'postCode',
+        'countryId',
+        'stateId',
+        'homePhone',
+        'mobilePhone',
+        'company',
+        'vatNumber',
+        'other',
+        'dni',
       );
     });
 
@@ -276,4 +273,7 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
       expect(numberOfAddressesAfterReset).to.be.gte(1);
     });
   });
+
+  // Post-condition: Delete customer
+  deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
 });

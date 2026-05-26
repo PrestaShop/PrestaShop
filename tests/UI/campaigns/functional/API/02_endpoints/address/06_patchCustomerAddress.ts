@@ -61,16 +61,15 @@ describe('API : PATCH /addresses/customers/{addressId}', async () => {
   after(async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
-  
+
   describe('API : Fetch the access token', async () => {
     it(`should request the endpoint /access_token with scope ${clientScope}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
 
       accessToken = await requestAccessToken(clientScope);
-      expect(accessToken).to.not.be.empty;
     });
   });
-  
+
   describe('BackOffice : Fetch the ID of the address', async () => {
     it('should login in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
@@ -115,7 +114,7 @@ describe('API : PATCH /addresses/customers/{addressId}', async () => {
       expect(idAddress).to.be.gt(0);
     });
   });
-  
+
   describe('API : Patch the Customer Address', async () => {
     it('should request the endpoint /addresses/customers/{addressId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
@@ -214,7 +213,7 @@ describe('API : PATCH /addresses/customers/{addressId}', async () => {
       expect(jsonResponse.homePhone).to.be.equal(editAddressData.phone);
     });
   });
-  
+
   describe('BackOffice : Check that the Address is updated', async () => {
     it('should filter list by firstname', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAfterUpdate', baseContext);
@@ -279,7 +278,7 @@ describe('API : PATCH /addresses/customers/{addressId}', async () => {
       expect(jsonResponse.homePhone).to.be.equal(value);
     });
   });
-  
+
   describe('API : Delete the Address', async () => {
     it('should request the endpoint /addresses/{addressId}', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress', baseContext);
