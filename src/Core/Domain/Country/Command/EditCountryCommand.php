@@ -122,7 +122,7 @@ class EditCountryCommand
         return $this->isoCode;
     }
 
-    public function setIsoCode(string $isoCode)
+    public function setIsoCode(string $isoCode): EditCountryCommand
     {
         $this->isoCode = $isoCode;
 
