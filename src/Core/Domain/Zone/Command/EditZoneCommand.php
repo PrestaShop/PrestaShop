@@ -71,10 +71,7 @@ class EditZoneCommand
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isEnabled(): bool
+    public function isEnabled(): ?bool
     {
         return $this->enabled;
     }
