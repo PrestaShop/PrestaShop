@@ -127,6 +127,32 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then the business entity :name should belong to customer group :groupId
+     */
+    public function businessEntityShouldBelongToCustomerGroup(string $name, int $groupId)
+    {
+        $businessEntity = $this->getBusinessEntityByName($name);
+        Assert::assertSame(
+            $groupId,
+            $businessEntity->getIdCustomerGroup(),
+            sprintf('Business entity "%s" customer group mismatch', $name)
+        );
+    }
+
+    /**
+     * @Then the business entity :name should be attached to shop :shopId
+     */
+    public function businessEntityShouldBeAttachedToShop(string $name, int $shopId)
+    {
+        $businessEntity = $this->getBusinessEntityByName($name);
+        Assert::assertSame(
+            $shopId,
+            $businessEntity->getIdShop(),
+            sprintf('Business entity "%s" shop mismatch', $name)
+        );
+    }
+
+    /**
      * @Then the business entity :name should have :count address(es)
      */
     public function businessEntityShouldHaveCountAddresses(string $name, int $count)

@@ -15,7 +15,9 @@ class BusinessEntityGeneralInformation
         private readonly string $legalName,
         private readonly ?string $externalRef,
         private readonly bool $deliveryAuthorized,
-        private readonly BusinessEntityStatus $status
+        private readonly BusinessEntityStatus $status,
+        private readonly int $shopId,
+        private readonly int $customerGroupId,
     ) {
     }
 
@@ -42,5 +44,15 @@ class BusinessEntityGeneralInformation
     public function getStatus(): BusinessEntityStatus
     {
         return $this->status;
+    }
+
+    public function getShopId(): int
+    {
+        return $this->shopId;
+    }
+
+    public function getCustomerGroupId(): int
+    {
+        return $this->customerGroupId;
     }
 }

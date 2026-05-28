@@ -21,7 +21,6 @@ class BusinessEntityCommandTransformer implements DataTransformerInterface
      */
     public function transform($value)
     {
-        // todo: implement transformation
         return $value;
     }
 
@@ -50,7 +49,6 @@ class BusinessEntityCommandTransformer implements DataTransformerInterface
 
         $shippingAddresses = [];
         foreach ($value['shipping_address'] ?? [] as $index => $addressData) {
-            $addressData['default'] = $index === (int) $value['default_shipping_address'];
             $shippingAddresses[] = new BusinessEntityShippingAddress(
                 $addressData['alias'],
                 $addressData['address1'],
@@ -58,7 +56,7 @@ class BusinessEntityCommandTransformer implements DataTransformerInterface
                 $addressData['city'],
                 $addressData['postcode'],
                 $addressData['id_country'],
-                $index === (int) $value['default_billing_address'],
+                $index === (int) $value['default_shipping_address'],
                 $addressData['id_state'] ?? null,
             );
         }
@@ -69,13 +67,13 @@ class BusinessEntityCommandTransformer implements DataTransformerInterface
                 $value['general_information']['legal_name'],
                 $value['general_information']['external_ref'],
                 $value['general_information']['delivery_authorized'],
-                $value['general_information']['status']
+                $value['general_information']['status'],
+                (int) $value['shop_id'],
+                (int) $value['general_information']['customer_group_id'],
             ),
             'billing_address' => $billingAddresses,
             'shipping_address' => $shippingAddresses,
             'billingAddressAsShippingAddress' => (bool) $value['billingAddressAsShippingAddress'],
-            'shop_id' => isset($value['shop_id']) ? (int) $value['shop_id'] : null,
-            'customer_group_id' => isset($value['customer_group_id']) ? (int) $value['customer_group_id'] : null,
         ];
     }
 }

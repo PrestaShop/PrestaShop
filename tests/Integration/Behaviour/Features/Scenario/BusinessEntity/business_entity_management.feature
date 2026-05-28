@@ -43,3 +43,22 @@ Feature: Add business entity
     And the business entity "Separate Addresses Entity" should have 2 addresses
     And the address with alias "Billing" for business entity "Separate Addresses Entity" should have type "invoice"
     And the address with alias "Shipping" for business entity "Separate Addresses Entity" should have type "delivery"
+
+  Scenario: Add a new business entity with a non-default customer group and shop
+    Given there is a business entity with the following details:
+      | name                         | Non Default Scope Entity |
+      | legal_name                   | Non Default Legal        |
+      | external_ref                 | EXT-003                  |
+      | delivery_authorized          | 1                        |
+      | status                       | active                   |
+      | billing_as_shipping          | 1                        |
+      | shop_id                      | 1                        |
+      | customer_group_id            | 1                        |
+    And the business entity has the following billing addresses:
+      | alias   | address1      | city     | postcode | country_id | is_default |
+      | Billing | 1 Scope Rd    | Toulouse | 31000    | 8          | 1          |
+    When I add the business entity
+    Then the business entity should be successfully created
+    And the business entity "Non Default Scope Entity" should exist in the database
+    And the business entity "Non Default Scope Entity" should belong to customer group 1
+    And the business entity "Non Default Scope Entity" should be attached to shop 1

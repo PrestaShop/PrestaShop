@@ -79,7 +79,8 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
         $this->logger->info(
             'Business entity created successfully',
             [
-                'id' => $businessEntityId,
+                'object_type' => 'BusinessEntity',
+                'object_id' => $businessEntityId,
             ]
         );
 
@@ -127,9 +128,10 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
         $modelAddress = new Address();
         $modelAddress->id_country = $address->getCountryId()->getValue();
         $modelAddress->alias = $address->getAlias();
-        $modelAddress->lastname = $businessEntity->getLegalName();
-        $modelAddress->firstname = $businessEntity->getLegalName();
+        $modelAddress->lastname = 'business-entity';
+        $modelAddress->firstname = 'business-entity';
         $modelAddress->address1 = $address->getAddress1();
+        $modelAddress->address2 = $address->getAddress2();
         $modelAddress->city = $address->getCity();
         $modelAddress->postcode = $address->getPostCode();
         $modelAddress->id_state = $address->getStateId()->getValue();

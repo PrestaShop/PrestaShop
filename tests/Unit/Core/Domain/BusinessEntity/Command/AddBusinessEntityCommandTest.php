@@ -55,6 +55,54 @@ class AddBusinessEntityCommandTest extends TestCase
         $this->assertTrue(true);
     }
 
+    public function testItExposesAllConstructorParamsViaGetters(): void
+    {
+        $billingAddress = new BusinessEntityBillingAddress(
+            self::DEFAULT_BUSINESS_ENTITY_ALIAS_BILLING,
+            self::DEFAULT_BUSINESS_ENTITY_ADDRESS1,
+            null,
+            self::DEFAULT_BUSINESS_ENTITY_CITY,
+            self::DEFAULT_BUSINESS_ENTITY_POSTCODE,
+            8,
+            true,
+            null
+        );
+        $shippingAddress = new BusinessEntityShippingAddress(
+            self::DEFAULT_BUSINESS_ENTITY_ALIAS_SHIPPING,
+            self::DEFAULT_BUSINESS_ENTITY_ADDRESS1,
+            null,
+            self::DEFAULT_BUSINESS_ENTITY_CITY,
+            self::DEFAULT_BUSINESS_ENTITY_POSTCODE,
+            8,
+            true,
+            null
+        );
+
+        $command = new AddBusinessEntityCommand(
+            self::DEFAULT_BUSINESS_ENTITY_NAME,
+            self::DEFAULT_BUSINESS_ENTITY_LEGAL_NAME,
+            self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
+            true,
+            BusinessEntityStatus::ACTIVE,
+            self::DEFAULT_BUSINESS_ENTITY_SHOP_ID,
+            self::DEFAULT_BUSINESS_ENTITY_CUSTOMER_GROUP_ID,
+            false,
+            [$billingAddress],
+            [$shippingAddress]
+        );
+
+        $this->assertSame(self::DEFAULT_BUSINESS_ENTITY_NAME, $command->getName());
+        $this->assertSame(self::DEFAULT_BUSINESS_ENTITY_LEGAL_NAME, $command->getLegalName());
+        $this->assertSame(self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF, $command->getExternalRef());
+        $this->assertTrue($command->isDeliveryAuthorized());
+        $this->assertSame(BusinessEntityStatus::ACTIVE, $command->getStatus());
+        $this->assertSame(self::DEFAULT_BUSINESS_ENTITY_SHOP_ID, $command->getShopId());
+        $this->assertSame(self::DEFAULT_BUSINESS_ENTITY_CUSTOMER_GROUP_ID, $command->getCustomerGroupId());
+        $this->assertFalse($command->isBillingAddressAsShippingAddress());
+        $this->assertSame([$billingAddress], $command->getBillingAddresses());
+        $this->assertSame([$shippingAddress], $command->getShippingAddresses());
+    }
+
     public function testItWorksWithSeparateAddresses(): void
     {
         $billingAddress = new BusinessEntityBillingAddress(

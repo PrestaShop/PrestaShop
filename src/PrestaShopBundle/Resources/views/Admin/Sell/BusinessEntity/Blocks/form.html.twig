@@ -3,12 +3,12 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
-{% form_theme businessEntityForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme businessEntityForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
 {% macro customAddressPrototype(prototype, prototype_name) %}
   {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
     index: prototype_name,
-    address: prototype
+    address: prototype,
   }) }}
 {% endmacro %}
 
@@ -16,12 +16,46 @@
   {{ form_start(businessEntityForm) }}
   <div class="card">
     <h3 class="card-header">
-      <i class="material-icons">domain</i>
       {{ 'General information'|trans({}, 'Admin.Global') }}
     </h3>
     <div class="card-body">
       <div class="form-wrapper">
-        {{ form_widget(businessEntityForm.general_information) }}
+        <div class="row">
+          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.name) }}</div>
+          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.legal_name) }}</div>
+        </div>
+
+        <hr>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-control-label">{{ 'VAT number'|trans({}, 'Admin.Global') }}</label>
+              <input type="text" class="form-control" placeholder="FR12345678901" disabled>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-control-label">{{ 'SIREN / SIRET'|trans({}, 'Admin.Global') }}</label>
+              <input type="text" class="form-control" placeholder="123 456 789 00012" disabled>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-control-label">{{ 'DUNS number'|trans({}, 'Admin.Global') }}</label>
+              <input type="text" class="form-control" placeholder="12-345-6789" disabled>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+        <div class="row">
+          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.external_ref) }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.status) }}</div>
+          <div class="col-md-6">{{ form_row(businessEntityForm.general_information.customer_group_id) }}</div>
+        </div>
+        {{ form_row(businessEntityForm.general_information.delivery_authorized) }}
       </div>
     </div>
   </div>
@@ -49,7 +83,7 @@
             <li>
               {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
                 index: loop.index,
-                address: address
+                address: address,
               }) }}
             </li>
           {% endfor %}
@@ -81,7 +115,7 @@
             <li>
               {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
                 index: loop.index,
-                address: address
+                address: address,
               }) }}
             </li>
           {% endfor %}
@@ -97,5 +131,6 @@
   {{ form_widget(businessEntityForm._token) }}
   {{ form_widget(businessEntityForm.default_billing_address) }}
   {{ form_widget(businessEntityForm.default_shipping_address) }}
+  {{ form_widget(businessEntityForm.shop_id) }}
   {{ form_end(businessEntityForm, {render_rest: false}) }}
 {% endblock %}

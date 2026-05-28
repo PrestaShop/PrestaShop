@@ -7,12 +7,16 @@
 namespace PrestaShopBundle\Form\Admin\Sell\BusinessEntity;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\BusinessEntityFormDataProvider;
+use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\DataTransformer\BusinessEntityCommandTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BusinessEntityType extends TranslatorAwareType
@@ -76,7 +80,17 @@ class BusinessEntityType extends TranslatorAwareType
                 'label' => false,
                 'attr' => ['class' => 'd-none'],
             ])
+            ->add('shop_id', HiddenType::class)
         ;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
+            $data = $event->getData();
+            if (!empty($data['shop_id'])) {
+                return;
+            }
+
+            $event->getForm()->add('shop_id', ShopSelectorType::class);
+        });
 
         $builder->addModelTransformer($this->commandTransformer);
     }
