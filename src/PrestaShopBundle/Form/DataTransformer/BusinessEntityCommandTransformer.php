@@ -68,12 +68,14 @@ class BusinessEntityCommandTransformer implements DataTransformerInterface
                 $value['general_information']['name'],
                 $value['general_information']['legal_name'],
                 $value['general_information']['external_ref'],
-                $value['general_information']['flag_delivery_authorized'],
+                $value['general_information']['delivery_authorized'],
                 $value['general_information']['status']
             ),
             'billing_address' => $billingAddresses,
             'shipping_address' => $shippingAddresses,
             'billingAddressAsShippingAddress' => (bool) $value['billingAddressAsShippingAddress'],
+            'shop_id' => isset($value['shop_id']) ? (int) $value['shop_id'] : null,
+            'customer_group_id' => isset($value['customer_group_id']) ? (int) $value['customer_group_id'] : null,
         ];
     }
 }

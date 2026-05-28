@@ -82,8 +82,10 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
             $this->businessEntityDetails['name'],
             $this->businessEntityDetails['legal_name'],
             $this->businessEntityDetails['external_ref'] ?? null,
-            (bool) ($this->businessEntityDetails['flag_delivery_authorized'] ?? true),
+            (bool) ($this->businessEntityDetails['delivery_authorized'] ?? true),
             BusinessEntityStatus::from($this->businessEntityDetails['status']),
+            (int) ($this->businessEntityDetails['shop_id'] ?? 1),
+            (int) ($this->businessEntityDetails['customer_group_id'] ?? 3),
             (bool) ($this->businessEntityDetails['billing_as_shipping'] ?? false),
             $this->billingAddresses,
             $this->shippingAddresses

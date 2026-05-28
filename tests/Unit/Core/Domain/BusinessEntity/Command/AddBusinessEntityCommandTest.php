@@ -24,6 +24,8 @@ class AddBusinessEntityCommandTest extends TestCase
     public const DEFAULT_BUSINESS_ENTITY_ADDRESS1 = 'a';
     public const DEFAULT_BUSINESS_ENTITY_LEGAL_NAME = 'b';
     public const DEFAULT_BUSINESS_ENTITY_NAME = 'NAME';
+    public const DEFAULT_BUSINESS_ENTITY_SHOP_ID = 1;
+    public const DEFAULT_BUSINESS_ENTITY_CUSTOMER_GROUP_ID = 3;
 
     public function testItWorksWhenBillingAddressIsShippingAddress(): void
     {
@@ -44,6 +46,8 @@ class AddBusinessEntityCommandTest extends TestCase
             self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
             true,
             BusinessEntityStatus::ACTIVE,
+            self::DEFAULT_BUSINESS_ENTITY_SHOP_ID,
+            self::DEFAULT_BUSINESS_ENTITY_CUSTOMER_GROUP_ID,
             true,
             [$billingAddress]
         );
@@ -81,6 +85,8 @@ class AddBusinessEntityCommandTest extends TestCase
             self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
             true,
             BusinessEntityStatus::ACTIVE,
+            self::DEFAULT_BUSINESS_ENTITY_SHOP_ID,
+            self::DEFAULT_BUSINESS_ENTITY_CUSTOMER_GROUP_ID,
             false,
             [$billingAddress],
             [$shippingAddress]
@@ -100,6 +106,8 @@ class AddBusinessEntityCommandTest extends TestCase
             self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
             true,
             BusinessEntityStatus::ACTIVE,
+            self::DEFAULT_BUSINESS_ENTITY_SHOP_ID,
+            self::DEFAULT_BUSINESS_ENTITY_CUSTOMER_GROUP_ID,
             true,
             []
         );
@@ -127,6 +135,8 @@ class AddBusinessEntityCommandTest extends TestCase
             self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
             true,
             BusinessEntityStatus::ACTIVE,
+            self::DEFAULT_BUSINESS_ENTITY_SHOP_ID,
+            self::DEFAULT_BUSINESS_ENTITY_CUSTOMER_GROUP_ID,
             true,
             [$billingAddress]
         );
@@ -154,6 +164,8 @@ class AddBusinessEntityCommandTest extends TestCase
             self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
             true,
             BusinessEntityStatus::ACTIVE,
+            self::DEFAULT_BUSINESS_ENTITY_SHOP_ID,
+            self::DEFAULT_BUSINESS_ENTITY_CUSTOMER_GROUP_ID,
             false,
             [$billingAddress],
             []
@@ -193,6 +205,8 @@ class AddBusinessEntityCommandTest extends TestCase
             self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
             true,
             BusinessEntityStatus::ACTIVE,
+            self::DEFAULT_BUSINESS_ENTITY_SHOP_ID,
+            self::DEFAULT_BUSINESS_ENTITY_CUSTOMER_GROUP_ID,
             false,
             [$billingAddress],
             [$shippingAddress]

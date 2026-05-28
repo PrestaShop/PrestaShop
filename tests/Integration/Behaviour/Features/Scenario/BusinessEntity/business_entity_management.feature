@@ -11,7 +11,7 @@ Feature: Add business entity
       | name                         | Test Business Entity |
       | legal_name                   | Test Legal Name      |
       | external_ref                 | EXT-001              |
-      | flag_delivery_authorized     | 1                    |
+      | delivery_authorized          | 1                    |
       | status                       | active               |
       | billing_as_shipping          | 1                    |
     And the business entity has the following billing addresses:
@@ -28,7 +28,7 @@ Feature: Add business entity
       | name                         | Separate Addresses Entity |
       | legal_name                   | Separate Legal Name       |
       | external_ref                 | EXT-002                   |
-      | flag_delivery_authorized     | 1                         |
+      | delivery_authorized          | 1                         |
       | status                       | active                    |
       | billing_as_shipping          | 0                         |
     And the business entity has the following billing addresses:

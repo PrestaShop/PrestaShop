@@ -24,8 +24,10 @@ class AddBusinessEntityCommand
         private readonly string $name,
         private readonly string $legalName,
         private readonly ?string $externalRef,
-        private readonly bool $flagDeliveryAuthorized,
+        private readonly bool $deliveryAuthorized,
         private readonly BusinessEntityStatus $status,
+        private readonly int $shopId,
+        private readonly int $customerGroupId,
         private readonly bool $billingAddressAsShippingAddress,
         private readonly array $billingAddresses = [],
         private readonly array $shippingAddresses = [],
@@ -48,14 +50,24 @@ class AddBusinessEntityCommand
         return $this->externalRef;
     }
 
-    public function isFlagDeliveryAuthorized(): bool
+    public function isDeliveryAuthorized(): bool
     {
-        return $this->flagDeliveryAuthorized;
+        return $this->deliveryAuthorized;
     }
 
     public function getStatus(): BusinessEntityStatus
     {
         return $this->status;
+    }
+
+    public function getShopId(): int
+    {
+        return $this->shopId;
+    }
+
+    public function getCustomerGroupId(): int
+    {
+        return $this->customerGroupId;
     }
 
     public function getBillingAddresses(): array

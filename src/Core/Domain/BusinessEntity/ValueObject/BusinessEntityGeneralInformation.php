@@ -14,7 +14,7 @@ class BusinessEntityGeneralInformation
         private readonly string $name,
         private readonly string $legalName,
         private readonly ?string $externalRef,
-        private readonly bool $flagDeliveryAuthorized,
+        private readonly bool $deliveryAuthorized,
         private readonly BusinessEntityStatus $status
     ) {
     }
@@ -34,9 +34,9 @@ class BusinessEntityGeneralInformation
         return $this->externalRef;
     }
 
-    public function isFlagDeliveryAuthorized(): bool
+    public function isDeliveryAuthorized(): bool
     {
-        return $this->flagDeliveryAuthorized;
+        return $this->deliveryAuthorized;
     }
 
     public function getStatus(): BusinessEntityStatus

@@ -53,8 +53,10 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
         $businessEntity->setName($command->getName());
         $businessEntity->setLegalName($command->getLegalName());
         $businessEntity->setExternalRef($command->getExternalRef());
-        $businessEntity->setFlagDeliveryAuthorized($command->isFlagDeliveryAuthorized());
+        $businessEntity->setDeliveryAuthorized($command->isDeliveryAuthorized());
         $businessEntity->setStatus($command->getStatus());
+        $businessEntity->setIdShop($command->getShopId());
+        $businessEntity->setIdCustomerGroup($command->getCustomerGroupId());
 
         try {
             $this->addAddressesToBusinessEntity($businessEntity, $command);
@@ -107,7 +109,7 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
                 ->setAddressId($addressId->getValue())
                 ->setAddressType($addressType);
 
-            $businessEntityAddress->setDefault($item->isDefault());
+            $businessEntityAddress->setIsDefault($item->isDefault());
 
             $businessEntity->addBusinessEntityAddress($businessEntityAddress);
         }

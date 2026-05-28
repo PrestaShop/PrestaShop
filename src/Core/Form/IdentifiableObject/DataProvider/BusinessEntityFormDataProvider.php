@@ -41,7 +41,7 @@ final class BusinessEntityFormDataProvider implements FormDataProviderInterface
                 BusinessEntityGeneralInformationType::FIELD_NAME => '',
                 BusinessEntityGeneralInformationType::FIELD_LEGAL_NAME => '',
                 BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF => '',
-                BusinessEntityGeneralInformationType::FIELD_FLAG_DELIVERY_AUTHORIZED => true,
+                BusinessEntityGeneralInformationType::FIELD_DELIVERY_AUTHORIZED => true,
                 BusinessEntityGeneralInformationType::FIELD_STATUS => BusinessEntityStatus::PENDING,
             ],
             'billing_address' => [

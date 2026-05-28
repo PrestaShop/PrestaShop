@@ -118,9 +118,9 @@ class BusinessEntityAddress
         return $this->isDefault;
     }
 
-    public function setDefault(bool $default): self
+    public function setIsDefault(bool $isDefault): self
     {
-        $this->isDefault = $default;
+        $this->isDefault = $isDefault;
 
         return $this;
     }

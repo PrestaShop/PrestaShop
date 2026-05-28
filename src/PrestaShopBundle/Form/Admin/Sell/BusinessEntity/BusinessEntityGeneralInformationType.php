@@ -18,7 +18,7 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
     public const FIELD_NAME = 'name';
     public const FIELD_LEGAL_NAME = 'legal_name';
     public const FIELD_EXTERNAL_REF = 'external_ref';
-    public const FIELD_FLAG_DELIVERY_AUTHORIZED = 'flag_delivery_authorized';
+    public const FIELD_DELIVERY_AUTHORIZED = 'delivery_authorized';
     public const FIELD_STATUS = 'status';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -36,7 +36,7 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
                 'label' => $this->trans('External Reference', 'Admin.Global'),
                 'required' => false,
             ])
-            ->add(self::FIELD_FLAG_DELIVERY_AUTHORIZED, SwitchType::class, [
+            ->add(self::FIELD_DELIVERY_AUTHORIZED, SwitchType::class, [
                 'label' => $this->trans('Delivery authorized', 'Admin.Global'),
                 'help' => $this->trans('Allow the B2B customer to order using an address that does not belong to the business entity', 'Admin.Catalog.Feature'),
             ])
