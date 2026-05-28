@@ -13,12 +13,14 @@ use PrestaShop\PrestaShop\Core\Domain\Search\Command\SearchIndexationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Search\Query\GetIndexedProductsCount;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Util\Url\UrlCleaner;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Controller responsible for "Configure > Shop Parameters > Search > Preferences" page.
@@ -37,6 +39,11 @@ class SearchConfigurationController extends PrestaShopAdminController
         string $cookieKey,
     ): Response {
         $indexedCount = $this->dispatchQuery(new GetIndexedProductsCount());
+        $cronToken = substr($cookieKey, 34, 8);
+        $cronUrl = UrlCleaner::cleanUrl(
+            $this->generateUrl('admin_search_indexation_cron', ['token' => $cronToken], UrlGeneratorInterface::ABSOLUTE_URL),
+            ['_token']
+        );
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Search/preferences.html.twig', [
             'help_link' => $this->generateSidebarLink('AdminSearchConf'),
@@ -45,7 +52,7 @@ class SearchConfigurationController extends PrestaShopAdminController
             'weightForm' => $weightFormHandler->getForm()->createView(),
             'indexedProductsCount' => $indexedCount->getIndexed(),
             'totalProductsCount' => $indexedCount->getTotal(),
-            'cronToken' => substr($cookieKey, 34, 8),
+            'cronUrl' => $cronUrl,
         ]);
     }
 
