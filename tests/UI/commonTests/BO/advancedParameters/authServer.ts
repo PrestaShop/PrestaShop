@@ -166,8 +166,8 @@ async function requestAccessToken(clientScopes: string): Promise<string> {
   const apiContext: APIRequestContext = await utilsPlaywright.createAPIContext(global.API.URL);
   const apiResponse = await apiContext.post('access_token', {
     form: {
-      client_id: 'test',
-      client_secret: 'aaa303fe74c52964beea2aeb574206ac',
+      client_id: global.API.CLIENT_ID,
+      client_secret: global.API.CLIENT_SECRET,
       grant_type: 'client_credentials',
       scope: clientScopes,
     },
