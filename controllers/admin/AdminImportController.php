@@ -2480,7 +2480,8 @@ class AdminImportControllerCore extends AdminController
                                         $id_shop_list,
                                         (string) $info['isbn'],
                                         $info['low_stock_threshold'],
-                                        $info['low_stock_alert']
+                                        $info['low_stock_alert'],
+                                        (string) $info['mpn']
                                     );
                                     $id_product_attribute_update = true;
                                     if (isset($info['supplier_reference']) && !empty($info['supplier_reference'])) {
@@ -2513,7 +2514,8 @@ class AdminImportControllerCore extends AdminController
                             $info['available_date'],
                             (string) $info['isbn'],
                             $info['low_stock_threshold'],
-                            $info['low_stock_alert']
+                            $info['low_stock_alert'],
+                            (string) $info['mpn']
                         );
 
                         if (isset($info['supplier_reference']) && !empty($info['supplier_reference'])) {
