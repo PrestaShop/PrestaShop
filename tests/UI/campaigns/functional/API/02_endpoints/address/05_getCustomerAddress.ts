@@ -286,16 +286,46 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
     });
   });
 
-  describe('API : Delete the Address', async () => {
-    it('should request the endpoint /addresses/{addressId}', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'requestEndpointToDelete', baseContext);
+  describe('Backoffice : Delete address', async () => {
+    it('should go to \'Customers > Addresses\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToDelete', baseContext);
 
-      const apiResponse = await apiContext.delete(`addresses/${addressId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      expect(apiResponse.status()).to.eq(204);
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.addressesLink,
+      );
+      await boAddressesPage.closeSfToolBar(page);
+
+      const pageTitle = await boAddressesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAddressesPage.pageTitle);
+    });
+
+    it('should filter list by first name and last name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
+
+      await boAddressesPage.resetFilter(page);
+      await boAddressesPage.filterAddresses(page, 'input', 'id_address', addressId.toString());
+
+      const textColumn = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'firstname');
+      expect(textColumn).to.contains(addressData.firstName);
+    });
+
+    it('should delete address', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress', baseContext);
+
+      const textResult = await boAddressesPage.deleteAddress(page, 1);
+      expect(textResult).to.equal(boAddressesPage.successfulDeleteMessage);
+
+      const numberOfAddressesAfterDelete = await boAddressesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfAddressesAfterDelete).to.be.equal(numberOfAddresses);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+
+      const numberOfAddressesAfterReset = await boAddressesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfAddressesAfterReset).to.equal(numberOfAddresses);
     });
   });
 
