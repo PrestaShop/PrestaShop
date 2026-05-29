@@ -101,6 +101,9 @@
   <configuration id="PS_ORDER_RETURN" name="PS_ORDER_RETURN">
     <value>0</value>
   </configuration>
+  <configuration id="PS_ORDER_RETURN_NB_DAYS" name="PS_ORDER_RETURN_CONDITION">
+    <value>1</value>
+  </configuration>
   <configuration id="PS_ORDER_RETURN_NB_DAYS" name="PS_ORDER_RETURN_NB_DAYS">
     <value>14</value>
   </configuration>

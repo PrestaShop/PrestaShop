@@ -40,6 +40,17 @@ class AdminReturnControllerCore extends AdminController
                         'title' => $this->trans('Enable returns', [], 'Admin.Orderscustomers.Feature'),
                         'desc' => $this->trans('Would you like to allow merchandise returns in your shop?', [], 'Admin.Orderscustomers.Help'),
                         'cast' => 'intval', 'type' => 'bool', ],
+                    'PS_ORDER_RETURN_CONDITION' => [
+                        'title' => $this->trans('Return conditions', [], 'Admin.Orderscustomers.Feature'),
+                        'desc' => $this->trans('Choose the type of return conditions.', [], 'Admin.Orderscustomers.Help'),
+                        'type' => 'select',
+                        'list' => [
+                            ['id' => 1, 'name' => $this->trans('If the order is delivered and paid for.', [], 'Admin.Orderscustomers.Feature')],
+                            ['id' => 2, 'name' => $this->trans('If the order is delivered.', [], 'Admin.Orderscustomers.Feature')],
+                            ['id' => 3, 'name' => $this->trans('If the order is paid', [], 'Admin.Orderscustomers.Feature')],
+                        ],
+                        'identifier' => 'id',
+                    ],
                     'PS_ORDER_RETURN_NB_DAYS' => [
                         'title' => $this->trans('Time limit of validity', [], 'Admin.Orderscustomers.Feature'),
                         'desc' => $this->trans('How many days after the delivery date does the customer have to return a product?', [], 'Admin.Orderscustomers.Help'),

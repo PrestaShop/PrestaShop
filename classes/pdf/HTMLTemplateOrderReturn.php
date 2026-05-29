@@ -54,6 +54,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
         $this->smarty->assign([
             'order_return' => $this->order_return,
             'return_nb_days' => (int) Configuration::get('PS_ORDER_RETURN_NB_DAYS'),
+            'return_condition' => Configuration::get('PS_ORDER_RETURN_CONDITION'),
             'products' => OrderReturn::getOrdersReturnProducts((int) $this->order_return->id, $this->order),
             'delivery_address' => $formatted_delivery_address,
             'invoice_address' => $formatted_invoice_address,

@@ -1630,6 +1630,7 @@ class FrontControllerCore extends Controller
             ],
             'voucher_enabled' => (int) CartRule::isFeatureActive(),
             'return_enabled' => (int) Configuration::get('PS_ORDER_RETURN'),
+            'return_condition' => (int) Configuration::get('PS_ORDER_RETURN_CONDITION'),
             'number_of_days_for_return' => (int) Configuration::get('PS_ORDER_RETURN_NB_DAYS'),
             'password_policy' => [
                 'minimum_length' => (int) Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH),

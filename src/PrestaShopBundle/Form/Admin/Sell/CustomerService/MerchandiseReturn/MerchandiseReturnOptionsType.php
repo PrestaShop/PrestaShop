@@ -11,6 +11,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
@@ -21,6 +22,7 @@ use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 class MerchandiseReturnOptionsType extends TranslatorAwareType
 {
     public const FIELD_ENABLE_ORDER_RETURN = 'enable_order_return';
+    public const FIELD_ORDER_RETURN_CONDITION = 'order_return_condition';
     public const FIELD_ORDER_RETURN_PERIOD_IN_DAYS = 'order_return_period_in_days';
     public const FIELD_ORDER_RETURN_PREFIX = 'order_return_prefix';
 
@@ -37,6 +39,18 @@ class MerchandiseReturnOptionsType extends TranslatorAwareType
                 ),
                 'required' => false,
                 'multistore_configuration_key' => 'PS_ORDER_RETURN',
+            ])
+            ->add(static::FIELD_ORDER_RETURN_CONDITION, ChoiceType::class, [
+                'label' => $this->trans(
+                    'Return conditions',
+                    'Admin.Orderscustomers.Feature'
+                ),
+                'choices' => [
+                    $this->trans('If the order is delivered and paid for.', 'Admin.Orderscustomers.Feature') => 1,
+                    $this->trans('If the order is delivered.', 'Admin.Orderscustomers.Feature') => 2,
+                    $this->trans('If the order is paid', 'Admin.Orderscustomers.Feature') => 3,
+                ],
+                'multistore_configuration_key' => 'PS_ORDER_RETURN_CONDITION',
             ])
             ->add(static::FIELD_ORDER_RETURN_PERIOD_IN_DAYS, IntegerType::class, [
                 'label' => $this->trans(
