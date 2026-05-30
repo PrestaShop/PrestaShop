@@ -56,7 +56,7 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(m.id_mail)');
+        $qb->select('COUNT(DISTINCT m.id_mail)');
 
         return $qb;
     }

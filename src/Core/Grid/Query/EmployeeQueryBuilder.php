@@ -71,7 +71,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $countQueryBuilder = $this->getEmployeeQueryBuilder($searchCriteria)
-            ->select('COUNT(e.id_profile)');
+            ->select('COUNT(DISTINCT e.id_profile)');
 
         return $countQueryBuilder;
     }
