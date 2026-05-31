@@ -880,7 +880,7 @@ class ImageManagerCore
      *
      * @return bool
      */
-    private static function isImportImageUrlSafe($parsedUrl)
+    protected static function isImportImageUrlSafe($parsedUrl)
     {
         if (!isset($parsedUrl['scheme'])) {
             return true;
