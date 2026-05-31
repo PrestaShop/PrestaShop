@@ -3437,7 +3437,7 @@ exit;
      *
      * @return mixed|null Unserialized data or false on failure
      */
-    public static function unSerialize($serialized, $allowObjects = false)
+    public static function unSerialize($serialized, $allowObjects = false, array $allowedClasses = [])
     {
         // Only allow if it's a string
         if (!is_string($serialized)) {
@@ -3454,8 +3454,12 @@ exit;
             return @unserialize($serialized, ['allowed_classes' => false]);
         }
 
-        // Otherwise allow objects as usual
-        return @unserialize($serialized);
+        // When objects are allowed, restrict instantiation to an explicit allowlist.
+        // Passing an empty $allowedClasses array falls back to allowing all classes
+        // for backward compatibility, but callers are encouraged to pass a specific list.
+        $options = empty($allowedClasses) ? [] : ['allowed_classes' => $allowedClasses];
+
+        return @unserialize($serialized, $options);
     }
 
     /**
