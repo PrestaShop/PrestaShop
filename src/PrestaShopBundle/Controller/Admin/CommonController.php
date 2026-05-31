@@ -47,6 +47,7 @@ class CommonController extends PrestaShopAdminController
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', 'AdminOrders') || is_granted('read', 'AdminCustomers') || is_granted('read', 'AdminCustomerThreads')", message: 'You do not have permission to view this.')]
     public function notificationsAction(): JsonResponse
     {
         /** @var NotificationsResults $elements */
@@ -62,6 +63,7 @@ class CommonController extends PrestaShopAdminController
      *
      * @return JsonResponse
      */
+    #[AdminSecurity("is_granted('read', 'AdminOrders') || is_granted('read', 'AdminCustomers') || is_granted('read', 'AdminCustomerThreads')", message: 'You do not have permission to view this.')]
     public function notificationsAckAction(Request $request): JsonResponse
     {
         $this->dispatchCommand(new UpdateEmployeeNotificationLastElementCommand($request->request->get('type')));
