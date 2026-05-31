@@ -785,6 +785,12 @@ class ImageManagerCore
         $url = urldecode(trim($url));
         $parced_url = parse_url($url);
 
+        if ($parced_url === false || !self::isImportImageUrlSafe($parced_url)) {
+            @unlink($tmpfile);
+
+            return false;
+        }
+
         if (isset($parced_url['path'])) {
             $uri = ltrim($parced_url['path'], '/');
             $parts = explode('/', $uri);
@@ -862,6 +868,32 @@ class ImageManagerCore
             return false;
         }
         unlink($orig_tmpfile);
+
+        return true;
+    }
+
+    /**
+     * Validates an import image target URL.
+     * Remote URLs are restricted to HTTP(S) and FTP(S).
+     *
+     * @param array $parsedUrl
+     *
+     * @return bool
+     */
+    private static function isImportImageUrlSafe($parsedUrl)
+    {
+        if (!isset($parsedUrl['scheme'])) {
+            return true;
+        }
+
+        $scheme = Tools::strtolower($parsedUrl['scheme']);
+        if (!in_array($scheme, ['http', 'https', 'ftp', 'sftp', 'ftps'], true)) {
+            return false;
+        }
+
+        if (empty($parsedUrl['host'])) {
+            return false;
+        }
 
         return true;
     }
