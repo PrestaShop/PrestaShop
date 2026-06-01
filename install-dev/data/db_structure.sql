@@ -1287,6 +1287,7 @@ CREATE TABLE `PREFIX_orders` (
   KEY (`current_state`),
   KEY `id_shop` (`id_shop`),
   INDEX `date_add`(`date_add`),
+  INDEX `idx_date_upd` (`date_upd`),
   INDEX `invoice_date`(`invoice_date`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
