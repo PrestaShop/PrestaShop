@@ -16,7 +16,6 @@ import {
   boAddressesPage,
   type BrowserContext,
   dataCountries,
-  dataCustomers,
   dataPaymentMethods,
   dataProducts,
   FakerAddress,
@@ -43,6 +42,7 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
   const addressData: FakerAddress = new FakerAddress({
     email: customerData.email,
     firstName: customerData.firstName,
+    lastName: customerData.lastName,
     country: 'France',
   });
   const updateAddress: FakerAddress = new FakerAddress({
@@ -114,7 +114,7 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
     it('should filter order by customer name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrderByCustomer', baseContext);
 
-      await boOrdersPage.filterOrders(page, 'input', 'customer', dataCustomers.johnDoe.lastName);
+      await boOrdersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
 
       const numberOfOrdersAfterFilter = await boOrdersPage.getNumberOfElementInGrid(page);
       expect(numberOfOrdersAfterFilter).to.be.gt(0);
@@ -234,10 +234,7 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
       expect(jsonResponse.homePhone).to.be.equal(updateAddress.phone);
     });
   });
-
-  // =========================================================
-  // BackOffice : Check address is updated in BO
-  // =========================================================
+  
   describe('BackOffice : Expected data', async () => {
     it('should go to \'Customer > Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
