@@ -287,7 +287,7 @@ class ProductSaleCore
      *
      * @return bool
      */
-    public static function recalculateBestSellers($change = false)
+    public static function recalculateBestSellers($force = false)
     {
         if (!$change && !Configuration::get('PS_BEST_SELLERS_DAYS')) {
             return false;
