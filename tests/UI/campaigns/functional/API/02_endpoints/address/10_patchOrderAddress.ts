@@ -160,6 +160,8 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
 
       expect(jsonResponse).to.have.all.keys(
         'orderId',
+        'addressId',
+        'customerId',
         'addressAlias',
         'firstName',
         'lastName',
