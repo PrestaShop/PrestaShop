@@ -39,7 +39,7 @@ describe('API : Check endpoints', async () => {
     '/addresses/orders/{orderId}: PATCH',
     // tests/UI/campaigns/functional/API/02_endpoints/address/11_deleteAddress.ts
     '/addresses/{addressId}: DELETE',
-    // tests/UI/campaigns/functional/API/02_endpoints/01_apiClient/01_getApiClientInfos.ts
+    // tests/UI/campaigns/functional/API/02_endpoints/apiClient/01_getApiClientInfos.ts
     '/api-clients/infos: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/apiClient/02_deleteApiClientId.ts
     '/api-clients/{apiClientId}: DELETE',
