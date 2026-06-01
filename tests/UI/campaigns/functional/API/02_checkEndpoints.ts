@@ -17,29 +17,29 @@ const baseContext: string = 'functional_API_checkEndpoints';
 // It's normal : it's time to add them UI Tests.
 describe('API : Check endpoints', async () => {
   const subsetEndpoints: string[] = [
-    // @todo: add tests
-    '/addresses/bulk-delete: DELETE',
-    // @todo: add tests
-    '/addresses/carts/{cartId}: PATCH',
-    // @todo: add tests
-    '/addresses/customers/{addressId}: GET',
-    // @todo: add tests
-    '/addresses/customers/{addressId}: PATCH',
-    // @todo: add tests
-    '/addresses/customers: POST',
-    // @todo: add tests
-    '/addresses/manufacturers/{addressId}: GET',
-    // @todo: add tests
-    '/addresses/manufacturers/{addressId}: PATCH',
-    // @todo: add tests
-    '/addresses/manufacturers: POST',
-    // @todo: add tests
-    '/addresses/orders/{orderId}: PATCH',
-    // @todo: add tests
-    '/addresses/{addressId}: DELETE',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/address/01_getAddressList.ts
     '/addresses: GET',
-    // tests/UI/campaigns/functional/API/02_endpoints/apiClient/01_getApiClientInfos.ts
+    // tests/UI/campaigns/functional/API/02_endpoints/address/02_bulkDeleteAddress.ts
+    '/addresses/bulk-delete: DELETE',
+    // tests/UI/campaigns/functional/API/02_endpoints/address/03_patchCartAddress.ts
+    '/addresses/carts/{cartId}: PATCH',
+    // tests/UI/campaigns/functional/API/02_endpoints/address/04_postCustomerAddress.ts
+    '/addresses/customers: POST',
+    // tests/UI/campaigns/functional/API/02_endpoints/address/05_getCustomerAddress.ts
+    '/addresses/customers/{addressId}: GET',
+    // tests/UI/campaigns/functional/API/02_endpoints/address/06_patchCustomerAddress.ts
+    '/addresses/customers/{addressId}: PATCH',
+    // tests/UI/campaigns/functional/API/02_endpoints/address/07_postManufacturerAddress.ts
+    '/addresses/manufacturers: POST',
+    // tests/UI/campaigns/functional/API/02_endpoints/address/08_getManufacturerAddress.ts
+    '/addresses/manufacturers/{addressId}: GET',
+    // tests/UI/campaigns/functional/API/02_endpoints/address/09_patchManufacturerAddress.ts
+    '/addresses/manufacturers/{addressId}: PATCH',
+    // tests/UI/campaigns/functional/API/02_endpoints/address/10_patchOrderAddress.ts
+    '/addresses/orders/{orderId}: PATCH',
+    // tests/UI/campaigns/functional/API/02_endpoints/address/11_deleteAddress.ts
+    '/addresses/{addressId}: DELETE',
+    // tests/UI/campaigns/functional/API/02_endpoints/01_apiClient/01_getApiClientInfos.ts
     '/api-clients/infos: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/apiClient/02_deleteApiClientId.ts
     '/api-clients/{apiClientId}: DELETE',
