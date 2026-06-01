@@ -234,7 +234,7 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
       expect(jsonResponse.homePhone).to.be.equal(updateAddress.phone);
     });
   });
-  
+
   describe('BackOffice : Expected data', async () => {
     it('should go to \'Customer > Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);

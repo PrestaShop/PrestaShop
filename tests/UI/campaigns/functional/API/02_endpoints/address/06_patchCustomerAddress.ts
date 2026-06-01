@@ -38,7 +38,7 @@ describe('API : PATCH /addresses/customers/{addressId}', async () => {
 
   const addressData: FakerAddress = new FakerAddress({
     firstName: customerData.firstName,
-    lastName:customerData.lastName,
+    lastName: customerData.lastName,
     email: customerData.email,
     country: 'France',
   });
@@ -99,7 +99,7 @@ describe('API : PATCH /addresses/customers/{addressId}', async () => {
 
     it('should filter list by firstname', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedAddress', baseContext);
-      
+
       await boAddressesPage.filterAddresses(page, 'input', 'firstname', addressData.firstName);
 
       const numberOfAddressesAfterFilter = await boAddressesPage.getNumberOfElementInGrid(page);
