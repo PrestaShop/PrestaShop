@@ -16,7 +16,7 @@ import {
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
 
-const baseContext: string = 'functional_API_endpoints_address_getAddressList';
+const baseContext: string = 'functional_API_endpoints_address_getAddressesList';
 
 describe('API : GET /addresses', async () => {
   let apiContext: APIRequestContext;
