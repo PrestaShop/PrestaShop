@@ -20,7 +20,7 @@ class ProductSaleCore
 				(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
 				SELECT od.product_id, SUM(od.product_quantity), COUNT(od.product_id), NOW()
 				FROM ' . _DB_PREFIX_ . 'order_detail od
-                INNER JOIN ' . DB_PREFIX . 'orders o ON (o.id_order=od.id_order AND o.valid = 1)';
+                INNER JOIN ' . _DB_PREFIX_ . 'orders o ON (o.id_order=od.id_order AND o.valid = 1)';
         if (Configuration::get('PS_BEST_SELLERS_DAYS')) {
             $sql .= ' AND o.`date_upd` >= CURRENT_DATE() - INTERVAL ' . (int) Configuration::get('PS_BEST_SELLERS_DAYS') . ' DAY';
         }
@@ -280,18 +280,18 @@ class ProductSaleCore
 
     /**
      * refill table when date changes
-     * 
+     *
      * @param bool $force set to true to refill table on configuration edit
      *
      * @return bool
      */
     public static function recalculateBestSellers($force = false)
     {
-        if (!$change && !Configuration::get('PS_BEST_SELLERS_DAYS')) {
+        if (!$force && !Configuration::get('PS_BEST_SELLERS_DAYS')) {
             return false;
         }
         $sql = Db::getInstance()->getValue('SELECT 1 FROM `' . _DB_PREFIX_ . 'product_sale` WHERE date_upd = CURRENT_DATE()');
-        if ($change || !$sql) {
+        if ($force || !$sql) {
             Db::getInstance()->execute('TRUNCATE `' . _DB_PREFIX_ . 'product_sale`', false);
 
             return self::fillProductSales();
