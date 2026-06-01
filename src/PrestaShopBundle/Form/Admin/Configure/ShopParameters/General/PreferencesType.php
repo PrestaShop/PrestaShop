@@ -212,7 +212,7 @@ class PreferencesType extends TranslatorAwareType
                 'best_sellers_days', TextType::class, [
                     'label' => $this->trans('Display best sellers from last X Days', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
-                        'Display best selling products from last 30 days. Set 0 to display all best sellers',
+                        'Set the value to 0 to display all bestsellers',
                         'Admin.Shopparameters.Help'
                     ),
                 ])
