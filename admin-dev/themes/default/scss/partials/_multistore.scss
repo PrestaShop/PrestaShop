@@ -79,6 +79,8 @@
   .dropdown-menu {
     min-width: var(--#{$cdk}size-240);
     max-width: var(--#{$cdk}size-320);
+    max-height: 70vh;
+    overflow-y: auto;
 
     li {
       &.active {
