@@ -221,7 +221,7 @@ class ConnectionCore extends ObjectModel
             // Records of connections details older than the beginning of the  specified interval are deleted
             Db::getInstance()->execute('
 			DELETE FROM `' . _DB_PREFIX_ . 'connections_page`
-			WHERE time_start < LAST_DAY(DATE_SUB(NOW(), INTERVAL ' . $interval . '))');
+			WHERE time_start < LAST_DAY(DATE_SUB(\'' . date('Y-m-d H:i:s') . '\', INTERVAL ' . $interval . '))');
         }
     }
 }

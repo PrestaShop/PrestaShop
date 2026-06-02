@@ -6434,7 +6434,7 @@ class ProductCore extends ObjectModel
      */
     public static function getOldTempProducts()
     {
-        $sql = 'SELECT id_product FROM `' . _DB_PREFIX_ . 'product` WHERE state=' . Product::STATE_TEMP . ' AND date_upd < NOW() - INTERVAL 1 DAY';
+        $sql = 'SELECT id_product FROM `' . _DB_PREFIX_ . 'product` WHERE state=' . Product::STATE_TEMP . ' AND date_upd < \'' . date('Y-m-d H:i:s', strtotime('-1 day')) . '\'';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
     }

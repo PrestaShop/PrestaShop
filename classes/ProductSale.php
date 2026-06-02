@@ -18,7 +18,7 @@ class ProductSaleCore
     {
         $sql = 'REPLACE INTO ' . _DB_PREFIX_ . 'product_sale
 				(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
-				SELECT od.product_id, SUM(od.product_quantity), COUNT(od.product_id), NOW()
+				SELECT od.product_id, SUM(od.product_quantity), COUNT(od.product_id), \'' . date('Y-m-d H:i:s') . '\'
 							FROM ' . _DB_PREFIX_ . 'order_detail od GROUP BY od.product_id';
 
         return Db::getInstance()->execute($sql);
@@ -222,8 +222,8 @@ class ProductSaleCore
         return Db::getInstance()->execute('
 			INSERT INTO ' . _DB_PREFIX_ . 'product_sale
 			(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
-			VALUES (' . (int) $productId . ', ' . (int) $qty . ', 1, NOW())
-			ON DUPLICATE KEY UPDATE `quantity` = `quantity` + ' . (int) $qty . ', `sale_nbr` = `sale_nbr` + 1, `date_upd` = NOW()');
+			VALUES (' . (int) $productId . ', ' . (int) $qty . ', 1, \'' . date('Y-m-d H:i:s') . '\')
+			ON DUPLICATE KEY UPDATE `quantity` = `quantity` + ' . (int) $qty . ', `sale_nbr` = `sale_nbr` + 1, `date_upd` = \'' . date('Y-m-d H:i:s') . '\'');
     }
 
     /**
@@ -258,7 +258,7 @@ class ProductSaleCore
             return Db::getInstance()->execute(
                 '
 				UPDATE ' . _DB_PREFIX_ . 'product_sale
-				SET `quantity` = CAST(`quantity` AS SIGNED) - ' . (int) $qty . ', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1, `date_upd` = NOW()
+				SET `quantity` = CAST(`quantity` AS SIGNED) - ' . (int) $qty . ', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1, `date_upd` = \'' . date('Y-m-d H:i:s') . '\'
 				WHERE `id_product` = ' . (int) $idProduct
             );
         } elseif ($totalSales == 1) {
