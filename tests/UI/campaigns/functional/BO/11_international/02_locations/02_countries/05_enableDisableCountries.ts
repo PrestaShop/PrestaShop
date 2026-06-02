@@ -85,7 +85,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
   it('should filter by Enabled countries', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterEnabled', baseContext);
 
-    await boCountriesPage.filterTable(page, 'select', 'a!active', '1');
+    await boCountriesPage.filterTable(page, 'select', 'active', '1');
 
     const numberOfCountries = await boCountriesPage.getNumberOfElementInGrid(page);
     expect(numberOfCountries).to.equal(2);
@@ -176,7 +176,7 @@ describe('BO - International - Countries : Enable / Disable Countries', async ()
     page = await foHummingbirdCheckoutOrderConfirmationPage.closePage(browserContext, page, 0);
 
     await boCountriesPage.resetFilter(page);
-    await boCountriesPage.filterTable(page, 'input', 'b!name', dataCountries.france.name);
+    await boCountriesPage.filterTable(page, 'input', 'name', dataCountries.france.name);
     await boCountriesPage.setCountryStatus(page, 1, false);
 
     const currentStatus = await boCountriesPage.getCountryStatus(page, 1);

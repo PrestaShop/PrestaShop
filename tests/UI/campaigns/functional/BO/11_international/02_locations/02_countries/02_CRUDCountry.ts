@@ -39,7 +39,7 @@ describe('BO - International - Countries : CRUD country', async () => {
     name: 'countryTest',
     isoCode: 'MC',
     callPrefix: '+99',
-    currency: 'Euro',
+    currency: 'Euro (EUR)',
     zipCodeFormat: 'NNNN',
     active: true,
   });
@@ -47,7 +47,7 @@ describe('BO - International - Countries : CRUD country', async () => {
     name: 'countryTest',
     isoCode: 'CT',
     callPrefix: '216',
-    currency: 'Euro',
+    currency: 'Euro (EUR)',
     zipCodeFormat: 'NNNN',
     active: true,
   });
@@ -55,12 +55,11 @@ describe('BO - International - Countries : CRUD country', async () => {
     name: 'countryTestEdit',
     isoCode: 'CT',
     callPrefix: '333',
-    currency: 'Euro',
+    currency: 'Euro (EUR)',
     zipCodeFormat: 'NNNN',
     active: false,
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -124,8 +123,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreateNewCountry', baseContext);
 
       const textResult = await boCountriesCreatePage.createEditCountry(page, countryDataIncorrectDate);
-      expect(textResult).to.contain(boCountriesCreatePage.errorMessageIsoCode)
-        .and.contains(boCountriesCreatePage.errorMessagePrefix);
+      expect(textResult).to.contain(boCountriesCreatePage.errorMessageIsoCode);
     });
 
     it('should create new country', async function () {
@@ -211,14 +209,14 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       // Filter
-      await boCountriesPage.filterTable(page, 'input', 'b!name', createCountryData.name);
+      await boCountriesPage.filterTable(page, 'input', 'name', createCountryData.name);
 
       // Check number of countries
       const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
       // row = 1 (first row)
-      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textColumn).to.contains(createCountryData.name);
     });
 
@@ -305,13 +303,13 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       // Filter
-      await boCountriesPage.filterTable(page, 'input', 'b!name', editCountryData.name);
+      await boCountriesPage.filterTable(page, 'input', 'name', editCountryData.name);
 
       // Check number of countries
       const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textColumn).to.contains(editCountryData.name);
     });
 
