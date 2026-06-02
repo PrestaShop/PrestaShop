@@ -37,6 +37,10 @@ final class ContactDetailsType extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $data = $builder->getData();
+        $countryId = $data['id_country'] ?? 0;
+        $stateChoices = $countryId ? $this->statesChoiceProvider->getChoices(['id_country' => $countryId]) : [];
+
         $builder
             ->add('name', TextType::class, [
                 'label' => $this->trans('Shop name', 'Admin.Shopparameters.Feature'),
@@ -100,19 +104,21 @@ final class ContactDetailsType extends TranslatorAwareType
             ->add('id_country', CountryChoiceType::class, [
                 'label' => $this->trans('Country', 'Admin.Global'),
                 'required' => false,
+                'autocomplete' => true,
                 'attr' => [
                     'data-states-url' => $this->router->generate('admin_country_states'),
-                    'data-toggle' => 'select2',
                 ],
             ])
             ->add('id_state', ChoiceType::class, [
                 'label' => $this->trans('State', 'Admin.Global'),
                 'required' => false,
-                'choices' => [],
-                'row_attr' => ['class' => 'js-store-state-row d-none'],
+                'choices' => $stateChoices,
+                'row_attr' => [
+                    'class' => 'js-store-state-row',
+                ],
+                'autocomplete' => true,
                 'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-country-id' => 0,
+                    'visible' => !empty($stateChoices),
                 ],
             ])
             ->add('phone', TextType::class, [
@@ -124,29 +130,5 @@ final class ContactDetailsType extends TranslatorAwareType
                 'required' => false,
             ])
         ;
-
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
-            $data = $event->getData() ?? [];
-            $this->rebuildStateField($event->getForm(), (int) ($data['id_country'] ?? 0));
-        });
-
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
-            $this->rebuildStateField($event->getForm(), (int) ($event->getData()['id_country'] ?? 0));
-        });
-    }
-
-    private function rebuildStateField(FormInterface $form, int $countryId): void
-    {
-        $stateChoices = $countryId > 0 ? $this->statesChoiceProvider->getChoices(['id_country' => $countryId]) : [];
-        $form->add('id_state', ChoiceType::class, [
-            'label' => $this->trans('State', 'Admin.Global'),
-            'required' => false,
-            'choices' => $stateChoices,
-            'row_attr' => ['class' => 'js-store-state-row' . (empty($stateChoices) ? ' d-none' : '')],
-            'attr' => [
-                'data-toggle' => 'select2',
-                'data-country-id' => $countryId,
-            ],
-        ]);
     }
 }
