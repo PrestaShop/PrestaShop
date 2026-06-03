@@ -35,14 +35,13 @@ final class AddStoreHandler implements AddStoreHandlerInterface
 
         $store = new Store();
         $store->id_country = $command->getCountryId();
-        $store->id_state = $command->getStateId() ?? 0;
+        $store->id_state = $command->getStateId();
         $store->city = $command->getCity();
         $store->postcode = $command->getPostcode();
-        // ObjectModel declares float but the DB column is DEFAULT NULL — @see PREFIX_store schema
-        $store->latitude = $command->getLatitude() !== null  // @phpstan-ignore-line
+        $store->latitude = $command->getLatitude() !== null
             ? (float) number_format($command->getLatitude(), 8, '.', '')
             : null;
-        $store->longitude = $command->getLongitude() !== null  // @phpstan-ignore-line
+        $store->longitude = $command->getLongitude() !== null
             ? (float) number_format($command->getLongitude(), 8, '.', '')
             : null;
         $store->phone = $command->getPhone() ?? '';

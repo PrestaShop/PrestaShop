@@ -38,7 +38,7 @@ final class ContactDetailsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $data = $builder->getData();
-        $countryId = $data['id_country'] ?? 0;
+        $countryId = !empty($data['id_country']) ? (int) $data['id_country'] : 0;
         $stateChoices = $countryId ? $this->statesChoiceProvider->getChoices(['id_country' => $countryId]) : [];
 
         $builder

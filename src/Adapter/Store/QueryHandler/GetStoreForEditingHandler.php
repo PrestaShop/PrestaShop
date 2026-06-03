@@ -33,12 +33,6 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
         try {
             $store = $this->storeRepository->get($query->getStoreId());
 
-            if (0 >= $store->id) {
-                throw new StoreNotFoundException(
-                    sprintf('Store with id %d was not found', $query->getStoreId()->getValue())
-                );
-            }
-
             $localizedHours = $this->decodeHours(is_array($store->hours) ? $store->hours : []);
 
             $shopAssociation = $store->getAssociatedShops();
@@ -52,7 +46,7 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
                 localizedHours: $localizedHours,
                 localizedNotes: is_array($store->note) ? $store->note : [],
                 countryId: (int) $store->id_country,
-                stateId: $store->id_state ? (int) $store->id_state : null,
+                stateId: $store->id_state ?: null,
                 city: (string) $store->city,
                 postcode: (string) $store->postcode,
                 latitude: $store->latitude !== null && $store->latitude !== '' ? (float) $store->latitude : null,
