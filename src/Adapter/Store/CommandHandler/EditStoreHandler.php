@@ -33,10 +33,10 @@ final class EditStoreHandler implements EditStoreHandlerInterface
         }
 
         if ($command->isStateIdProvided()) {
-            $store->id_state = $command->getStateId() ?? 0;
+            $store->id_state = $command->getStateId();
         }
 
-        $this->assertStateCountryConsistency((int) $store->id_country, (int) $store->id_state ?: null);
+        $this->assertStateCountryConsistency((int) $store->id_country, $store->id_state);
 
         if (null !== $command->getCity()) {
             $store->city = $command->getCity();

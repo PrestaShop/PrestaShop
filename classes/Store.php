@@ -20,7 +20,7 @@ class StoreCore extends ObjectModel
     /** @var int Country id */
     public $id_country;
 
-    /** @var int State id */
+    /** @var int|null State id */
     public $id_state;
 
     /** @var string|array<string> Name */
