@@ -50,6 +50,7 @@ class StoreType extends TranslatorAwareType
     {
         $data = $builder->getData();
         $countryId = !empty($data['id_country']) ? (int) $data['id_country'] : $this->contextCountryId;
+        $stateChoices = $this->statesChoiceProvider->getChoices(['id_country' => $countryId]);
 
         $builder
             ->add('name', TranslatableType::class, [
@@ -115,9 +116,9 @@ class StoreType extends TranslatorAwareType
             ->add('id_country', CountryChoiceType::class, [
                 'label' => $this->trans('Country', 'Admin.Global'),
                 'required' => true,
+                'autocomplete' => true,
                 'attr' => [
                     'data-states-url' => $this->router->generate('admin_country_states'),
-                    'data-toggle' => 'select2',
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -132,11 +133,11 @@ class StoreType extends TranslatorAwareType
             ->add('id_state', ChoiceType::class, [
                 'label' => $this->trans('State', 'Admin.Global'),
                 'required' => false,
-                'choices' => $stateChoices = $this->statesChoiceProvider->getChoices(['id_country' => $countryId]),
-                'row_attr' => ['class' => 'js-store-state-row' . (empty($stateChoices) ? ' d-none' : '')],
+                'choices' => $stateChoices,
+                'row_attr' => ['class' => 'js-store-state-row'],
+                'autocomplete' => true,
                 'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-country-id' => $countryId,
+                    'visible' => !empty($stateChoices),
                 ],
             ])
             ->add('latitude', TextType::class, [
@@ -233,22 +234,5 @@ class StoreType extends TranslatorAwareType
                 'required' => false,
             ]);
         }
-
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
-            $data = $event->getData();
-            $form = $event->getForm();
-            $countryId = (int) ($data['id_country'] ?? 0);
-            $stateChoices = $countryId > 0 ? $this->statesChoiceProvider->getChoices(['id_country' => $countryId]) : [];
-            $form->add('id_state', ChoiceType::class, [
-                'label' => $this->trans('State', 'Admin.Global'),
-                'required' => false,
-                'choices' => $stateChoices,
-                'row_attr' => ['class' => 'js-store-state-row' . (empty($stateChoices) ? ' d-none' : '')],
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-country-id' => $countryId,
-                ],
-            ]);
-        });
     }
 }

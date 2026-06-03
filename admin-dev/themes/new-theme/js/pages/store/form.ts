@@ -10,8 +10,8 @@ $(() => {
   ]);
 
   new window.prestashop.component.CountryStateSelectionToggler(
-    '[data-states-url]',
-    '[data-country-id]',
+    '#store_id_country',
+    '#store_id_state',
     '.js-store-state-row',
   );
 });
