@@ -52,6 +52,27 @@ final class RenderedHook implements RenderedHookInterface
      */
     public function outputContent()
     {
-        return implode('', $this->content);
+        return $this->flattenContent($this->content);
+    }
+
+    /**
+     * Concatenates the rendered content into a single string.
+     *
+     * The content is expected to hold strings (['module_name' => 'rendered_content', ...]),
+     * but a legacy module may return an array from a rendering hook. Such values are
+     * concatenated recursively so they never trigger an "Array to string conversion" warning.
+     *
+     * @param array $content
+     *
+     * @return string
+     */
+    private function flattenContent(array $content)
+    {
+        $output = '';
+        foreach ($content as $partialContent) {
+            $output .= is_array($partialContent) ? $this->flattenContent($partialContent) : (string) $partialContent;
+        }
+
+        return $output;
     }
 }
