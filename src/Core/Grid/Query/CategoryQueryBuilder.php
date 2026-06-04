@@ -85,7 +85,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(cp.`id_product`) AS `products_count`, c.id_category, c.id_parent, c.active, cl.name, cl.description, cs.position');
+        $qb->select('COUNT(cp.`id_product`) AS `products_count`, c.id_category, c.id_parent, cs.active, cl.name, cl.description, cs.position');
         $qb->leftJoin(
             'c',
             $this->dbPrefix . 'category_product',
@@ -193,7 +193,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('active' === $filterName) {
-                $qb->andWhere("c.active = :$filterName");
+                $qb->andWhere("cs.active = :$filterName");
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;

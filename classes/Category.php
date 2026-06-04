@@ -101,7 +101,7 @@ class CategoryCore extends ObjectModel
             'nleft' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'nright' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'level_depth' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
-            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
+            'active' => ['type' => self::TYPE_BOOL, 'shop' => 'both', 'validate' => 'isBool', 'required' => true],
             'id_parent' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'id_shop_default' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'is_root_category' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
@@ -641,7 +641,7 @@ class CategoryCore extends ObjectModel
 			' . Shop::addSqlAssociation('category', 'c') . '
 			LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . '
 			WHERE 1 ' . $sqlFilter . ' ' . ($idLang ? 'AND `id_lang` = ' . (int) $idLang : '') . '
-			' . ($active ? 'AND `active` = 1' : '') . '
+			' . ($active ? 'AND category_shop.`active` = 1' : '') . '
 			' . (!$idLang ? 'GROUP BY c.id_category' : '') . '
 			' . ($orderBy != '' ? $orderBy : 'ORDER BY c.`level_depth` ASC, category_shop.`position` ASC') . '
 			' . ($limit != '' ? $limit : '')
@@ -730,7 +730,7 @@ class CategoryCore extends ObjectModel
 				' . (isset($groups) && Group::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'category_group` cg ON c.`id_category` = cg.`id_category`' : '') . '
 				' . (isset($idRootCategory) ? 'RIGHT JOIN `' . _DB_PREFIX_ . 'category` c2 ON c2.`id_category` = ' . (int) $idRootCategory . ' AND c.`nleft` >= c2.`nleft` AND c.`nright` <= c2.`nright`' : '') . '
 				WHERE 1 ' . $sqlFilter . ' ' . ($idLang ? 'AND `id_lang` = ' . (int) $idLang : '') . '
-				' . ($active ? ' AND c.`active` = 1' : '') . '
+				' . ($active ? ($useShopRestriction ? ' AND category_shop.`active` = 1' : ' AND c.`active` = 1') : '') . '
 				' . (isset($groups) && Group::isFeatureActive() ? ' AND cg.`id_group` IN (' . implode(',', array_map('intval', $groups)) . ')' : '') . '
 				' . (!$idLang || (isset($groups) && Group::isFeatureActive()) ? ' GROUP BY c.`id_category`' : '') . '
 				' . ($orderBy != '' ? $orderBy : ' ORDER BY c.`level_depth` ASC') . '
@@ -794,14 +794,14 @@ class CategoryCore extends ObjectModel
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance()->executeS(
                 '
-				SELECT c.*, cl.*
+				SELECT c.*, cl.*' . ($useShopRestriction ? ', category_shop.`active`' : '') . '
 				FROM `' . _DB_PREFIX_ . 'category` c
 				' . ($useShopRestriction ? Shop::addSqlAssociation('category', 'c') : '') . '
 				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . '
 				' . (isset($groups) && Group::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'category_group` cg ON c.`id_category` = cg.`id_category`' : '') . '
 				' . (isset($idRootCategory) ? 'RIGHT JOIN `' . _DB_PREFIX_ . 'category` c2 ON c2.`id_category` = ' . (int) $idRootCategory . ' AND c.`nleft` >= c2.`nleft` AND c.`nright` <= c2.`nright`' : '') . '
 				WHERE 1 ' . $sqlFilter . ' ' . ($idLang ? 'AND `id_lang` = ' . (int) $idLang : '') . '
-				' . ($active ? ' AND c.`active` = 1' : '') . '
+				' . ($active ? ($useShopRestriction ? ' AND category_shop.`active` = 1' : ' AND c.`active` = 1') : '') . '
 				' . (isset($groups) && Group::isFeatureActive() ? ' AND cg.`id_group` IN (' . implode(',', array_map('intval', $groups)) . ')' : '') . '
 				' . (!$idLang || (isset($groups) && Group::isFeatureActive()) ? ' GROUP BY c.`id_category`' : '') . '
 				' . ($orderBy != '' ? $orderBy : ' ORDER BY c.`level_depth` ASC') . '
@@ -930,7 +930,7 @@ class CategoryCore extends ObjectModel
 		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = ' . (int) $idLang . ' ' . Shop::addSqlRestrictionOnLang('cl') . ')
 		' . $sqlGroupsJoin . '
 		WHERE `id_parent` = ' . (int) $this->id . '
-		' . ($active ? 'AND `active` = 1' : '') . '
+		' . ($active ? 'AND category_shop.`active` = 1' : '') . '
 		' . $sqlGroupsWhere . '
 		GROUP BY c.`id_category`
 		ORDER BY `level_depth` ASC, category_shop.`position` ASC');
@@ -1152,7 +1152,7 @@ class CategoryCore extends ObjectModel
 			' . Shop::addSqlAssociation('category', 'c') . '
 			WHERE `id_lang` = ' . (int) $idLang . '
 			AND c.`id_parent` = ' . (int) $idParent . '
-			' . ($active ? 'AND `active` = 1' : '') . '
+			' . ($active ? 'AND category_shop.`active` = 1' : '') . '
 			GROUP BY c.`id_category`
 			ORDER BY category_shop.`position` ASC';
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -1184,7 +1184,7 @@ class CategoryCore extends ObjectModel
 			' . Shop::addSqlAssociation('category', 'c') . '
 			WHERE `id_lang` = ' . (int) $idLang . '
 			AND c.`id_parent` = ' . (int) $idParent . '
-			' . ($active ? 'AND `active` = 1' : '') . ' LIMIT 1';
+			' . ($active ? 'AND category_shop.`active` = 1' : '') . ' LIMIT 1';
             $result = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
             Cache::store($cacheId, $result);
 
@@ -2032,7 +2032,7 @@ class CategoryCore extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'category` c
 		' . Shop::addSqlAssociation('category', 'c') . '
 		WHERE c.`id_parent` = ' . (int) $this->id . '
-		AND c.`active` = 1
+		AND category_shop.`active` = 1
 		ORDER BY category_shop.`position` ASC');
     }
 
@@ -2101,7 +2101,7 @@ class CategoryCore extends ObjectModel
 				WHERE `' . _DB_PREFIX_ . 'category_product`.id_category = c2.id_category
 					AND c2.nleft > ' . (int) $this->nleft . '
 					AND c2.nright < ' . (int) $this->nright . '
-					AND c2.active = 1
+					AND category_shop.active = 1
 			)
 		');
         if (!$nbProductRecursive) {
@@ -2210,9 +2210,10 @@ class CategoryCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT DISTINCT(c.`id_category`), cl.`name`
 		FROM `' . _DB_PREFIX_ . 'category` c
+		' . Shop::addSqlAssociation('category', 'c') . '
 		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (cl.`id_category` = c.`id_category` AND cl.`id_lang`=' . (int) $idLang . ')
 		WHERE `is_root_category` = 1
-		' . ($active ? 'AND `active` = 1' : ''));
+		' . ($active ? 'AND category_shop.`active` = 1' : ''));
     }
 
     /**
