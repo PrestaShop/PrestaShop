@@ -103,20 +103,32 @@ class ModuleController extends ModuleAbstractController
         string $module_name,
         LegacyContext $legacyContext,
     ): Response {
+        // When the back office security tokens are disabled, generated admin links no longer
+        // contain a query string. Modules that build their configuration form action by
+        // concatenating extra query parameters (e.g. the official GDPR module appends
+        // "&page=...") then glue those parameters onto the {module_name} route placeholder
+        // instead of the query string, leading to a "module not found" 500 error.
+        // We extract the real module name so the configuration page keeps working. See #41314.
+        $module_name = preg_replace('/[^a-zA-Z0-9_-].*$/s', '', $module_name);
+
         // Get accessed module object
         /** @var ModuleAdapter $module */
         $module = $this->getModuleRepository()->getModule($module_name);
         if (!$module->getInstance()) {
+            // The configure page relies on the module instance (getContent, translation links,
+            // toolbar buttons, ...) so it cannot be rendered for a missing module. We redirect
+            // back to the module manager with an explicit error instead of failing with a 500.
             $this->addFlash('error', $this->trans(
                 'The module "%modulename%" cannot be found',
                 ['%modulename%' => $module_name],
                 'Admin.Modules.Notification'
             ));
-            $layoutSubTitle = null;
-        } else {
-            $this->saveModuleHistory($module);
-            $layoutSubTitle = $module->getInstance()->displayName;
+
+            return $this->redirectToRoute('admin_module_manage');
         }
+
+        $this->saveModuleHistory($module);
+        $layoutSubTitle = $module->getInstance()->displayName;
 
         // This controller is not purely migrated, in the sense that it still relies on the legacy layout because module implementing
         // getContent need the default theme to be working as expected
