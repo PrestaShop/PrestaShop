@@ -108,11 +108,6 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
       },
       {
         args: {
-          testIdentifier: 'filterSize', filterType: 'input', filterBy: 'file_size', filterValue: '64',
-        },
-      },
-      {
-        args: {
           testIdentifier: 'filterProducts', filterType: 'input', filterBy: 'products', filterValue: '1',
         },
       },
@@ -136,6 +131,39 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
         const numberOfFilesAfterReset = await boFilesPage.resetAndGetNumberOfLines(page);
         expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles + 11);
       });
+    });
+
+    // File size is filtered through a min/max range (in bytes), not a single text input
+    it('should filter list by file size range matching all files', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterSizeRange', baseContext);
+
+      await boFilesPage.filterByFileSize(page, 0, 1000000);
+
+      const numberOfFilesAfterFilter = await boFilesPage.getNumberOfElementInGrid(page);
+      expect(numberOfFilesAfterFilter).to.be.equal(numberOfFiles + 11);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterSizeRangeReset', baseContext);
+
+      const numberOfFilesAfterReset = await boFilesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles + 11);
+    });
+
+    it('should filter list by file size range matching no file', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterSizeRangeEmpty', baseContext);
+
+      await boFilesPage.filterByFileSize(page, 1000000, '');
+
+      const numberOfFilesAfterFilter = await boFilesPage.getNumberOfElementInGrid(page);
+      expect(numberOfFilesAfterFilter).to.be.equal(0);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterSizeRangeEmptyReset', baseContext);
+
+      const numberOfFilesAfterReset = await boFilesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles + 11);
     });
   });
 
