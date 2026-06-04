@@ -132,7 +132,8 @@ abstract class AbstractFormCore implements FormInterface
     {
         foreach ($this->formFields as $field) {
             if ($field->isRequired()) {
-                if (!$field->getValue()) {
+                // A required field filled only with whitespace must be considered empty (see issue #9871)
+                if (!$field->getValue() || (is_string($field->getValue()) && empty(trim($field->getValue())))) {
                     $field->addError(
                         $this->constraintTranslator->translate('required')
                     );
