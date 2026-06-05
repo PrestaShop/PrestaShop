@@ -64,7 +64,6 @@ class CartForOrderCreation
 
     /**
      * @param int $cartId
-     * @param int $customerId
      * @param array $products
      * @param int $currencyId
      * @param int $langId
@@ -72,17 +71,18 @@ class CartForOrderCreation
      * @param CartAddress[] $addresses
      * @param CartSummary $summary
      * @param CartShipping $shipping
+     * @param int $customerId
      */
     public function __construct(
         int $cartId,
-        int $customerId,
         array $products,
         int $currencyId,
         int $langId,
         array $cartRules,
         array $addresses,
         CartSummary $summary,
-        ?CartShipping $shipping = null
+        ?CartShipping $shipping = null,
+        int $customerId = 0
     ) {
         $this->cartId = $cartId;
         $this->customerId = $customerId;
