@@ -8,18 +8,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-
-final class StoreImageUploader extends AbstractImageUploader implements ImageUploaderInterface
+final class StoreImageUploader extends AbstractImageUploader
 {
-    public function upload($storeId, UploadedFile $image): void
+    /**
+     * Uploads the store image from a file path, so it can be used
+     * from both the back office form and the Admin API.
+     */
+    public function upload(int $storeId, string $filePath): void
     {
-        $this->checkImageIsAllowedForUpload($image);
-
-        $temporaryImageName = $this->createTemporaryImage($image);
-
-        $this->uploadFromTemp($temporaryImageName, _PS_STORE_IMG_DIR_ . $storeId . '.jpg');
+        $this->uploadFromTemp($filePath, _PS_STORE_IMG_DIR_ . $storeId . '.jpg');
 
         $this->generateDifferentSize($storeId, _PS_STORE_IMG_DIR_, 'stores');
     }

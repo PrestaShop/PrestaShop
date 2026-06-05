@@ -39,6 +39,7 @@ class AddStoreCommand
     private ?string $fax;
     private ?string $email;
     private bool $active;
+    private ?string $imagePath;
 
     /** @var int[]|null */
     private ?array $shopAssociation;
@@ -70,6 +71,7 @@ class AddStoreCommand
         $this->fax = null;
         $this->email = null;
         $this->active = true;
+        $this->imagePath = null;
         $this->shopAssociation = null;
     }
 
@@ -146,6 +148,11 @@ class AddStoreCommand
     public function isActive(): bool
     {
         return $this->active;
+    }
+
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
     }
 
     public function getShopAssociation(): ?array
@@ -226,6 +233,16 @@ class AddStoreCommand
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @param string|null $imagePath path of the uploaded image file
+     */
+    public function setImagePath(?string $imagePath): self
+    {
+        $this->imagePath = $imagePath;
 
         return $this;
     }

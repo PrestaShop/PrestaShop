@@ -43,6 +43,7 @@ class EditStoreCommand
     private ?string $fax = null;
     private ?string $email = null;
     private ?bool $active = null;
+    private ?string $imagePath = null;
 
     /** @var int[]|null */
     private ?array $shopAssociation = null;
@@ -135,6 +136,11 @@ class EditStoreCommand
     public function getActive(): ?bool
     {
         return $this->active;
+    }
+
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
     }
 
     public function getShopAssociation(): ?array
@@ -244,6 +250,16 @@ class EditStoreCommand
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @param string|null $imagePath path of the uploaded image file
+     */
+    public function setImagePath(?string $imagePath): self
+    {
+        $this->imagePath = $imagePath;
 
         return $this;
     }

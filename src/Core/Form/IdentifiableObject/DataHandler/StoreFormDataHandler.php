@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use PrestaShop\PrestaShop\Adapter\Image\Uploader\StoreImageUploader;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\EditStoreCommand;
@@ -19,19 +18,11 @@ final class StoreFormDataHandler implements FormDataHandlerInterface
 {
     public function __construct(
         private readonly CommandBusInterface $commandBus,
-        private readonly StoreImageUploader $imageUploader,
     ) {
     }
 
     public function create(array $data): int
     {
-        /** @var UploadedFile|null $uploadedImage */
-        $uploadedImage = $data['image'] ?? null;
-
-        if ($uploadedImage instanceof UploadedFile) {
-            $this->imageUploader->checkImageIsAllowedForUpload($uploadedImage);
-        }
-
         $command = new AddStoreCommand(
             $data['name'],
             $data['address1'],
@@ -51,6 +42,7 @@ final class StoreFormDataHandler implements FormDataHandlerInterface
             ->setActive((bool) ($data['active'] ?? true))
             ->setLocalizedNotes($data['note'] ?? [])
             ->setLocalizedHours($this->normalizeHours($data['hours'] ?? []))
+            ->setImagePath($this->extractImagePath($data))
         ;
 
         if (isset($data['shop_association'])) {
@@ -62,22 +54,11 @@ final class StoreFormDataHandler implements FormDataHandlerInterface
         /** @var StoreId $storeId */
         $storeId = $this->commandBus->handle($command);
 
-        if ($uploadedImage instanceof UploadedFile) {
-            $this->imageUploader->upload($storeId->getValue(), $uploadedImage);
-        }
-
         return $storeId->getValue();
     }
 
     public function update($storeId, array $data): void
     {
-        /** @var UploadedFile|null $uploadedImage */
-        $uploadedImage = $data['image'] ?? null;
-
-        if ($uploadedImage instanceof UploadedFile) {
-            $this->imageUploader->upload((int) $storeId, $uploadedImage);
-        }
-
         $command = (new EditStoreCommand((int) $storeId))
             ->setLocalizedNames($data['name'])
             ->setLocalizedAddress1($data['address1'])
@@ -94,6 +75,7 @@ final class StoreFormDataHandler implements FormDataHandlerInterface
             ->setActive((bool) ($data['active'] ?? false))
             ->setLocalizedNotes($data['note'] ?? [])
             ->setLocalizedHours($this->normalizeHours($data['hours'] ?? []))
+            ->setImagePath($this->extractImagePath($data))
         ;
 
         if (isset($data['shop_association'])) {
@@ -103,6 +85,13 @@ final class StoreFormDataHandler implements FormDataHandlerInterface
         }
 
         $this->commandBus->handle($command);
+    }
+
+    private function extractImagePath(array $data): ?string
+    {
+        $uploadedImage = $data['image'] ?? null;
+
+        return $uploadedImage instanceof UploadedFile ? $uploadedImage->getPathname() : null;
     }
 
     /**
