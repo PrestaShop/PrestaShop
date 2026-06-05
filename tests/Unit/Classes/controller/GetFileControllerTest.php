@@ -8,26 +8,60 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Classes\Controller;
 
+use Context;
 use GetFileControllerCore;
+use Link;
 use PHPUnit\Framework\TestCase;
+use ProductDownload;
 use ReflectionClass;
 use UploadControllerCore;
 
 class GetFileControllerTest extends TestCase
 {
     /**
-     * The download links are generated with the "get-file" controller name
-     * (see ProductDownload::getTextLink()). Meta::getPages() builds the list of
-     * pages available in BO > SEO & URLs from the php_self property, so php_self
-     * must match "get-file" for the friendly URL to be applied to download links.
+     * Virtual product download links are generated for the "get-file" controller
+     * (ProductDownload::getTextLink), while the friendly URL configured in
+     * BO > SEO & URLs is registered under the controller php_self (Meta::getPages).
+     * If those two names drift apart, the friendly URL stops being applied and the
+     * link falls back to index.php?controller=get-file.
+     *
+     * This test pins the download link to GetFileController::$php_self so both sides
+     * cannot diverge again.
      *
      * @see https://github.com/PrestaShop/PrestaShop/issues/34339
      */
-    public function testGetFileControllerExposesHyphenatedPhpSelf(): void
+    public function testDownloadLinkTargetsGetFileControllerPhpSelf(): void
     {
-        $properties = (new ReflectionClass(GetFileControllerCore::class))->getDefaultProperties();
+        $capturedController = null;
+        $link = $this->getMockBuilder(Link::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getPageLink'])
+            ->getMock();
+        $link
+            ->method('getPageLink')
+            ->willReturnCallback(function ($controller) use (&$capturedController) {
+                $capturedController = $controller;
 
-        $this->assertSame('get-file', $properties['php_self']);
+                return '';
+            });
+
+        $context = Context::getContext();
+        $previousLink = $context->link;
+        $context->link = $link;
+
+        try {
+            $productDownload = new ProductDownload();
+            $productDownload->filename = 'a1b2c3';
+            $productDownload->getTextLink('orderhash');
+        } finally {
+            $context->link = $previousLink;
+        }
+
+        // getPageLink() receives "<controller>&key=..." so we only compare the controller part.
+        $linkController = explode('&', (string) $capturedController)[0];
+        $phpSelf = (new ReflectionClass(GetFileControllerCore::class))->getDefaultProperties()['php_self'];
+
+        $this->assertSame($phpSelf, $linkController);
     }
 
     /**
