@@ -21,12 +21,16 @@ services:
     autoconfigure: true
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Image\Uploader\StoreImageUploader'
+      - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
 
   prestashop.adapter.store.command_handler.edit_store:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\EditStoreHandler'
     autoconfigure: true
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Image\Uploader\StoreImageUploader'
+      - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
 
   prestashop.adapter.store.command_handler.toggle_store_status:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler'
