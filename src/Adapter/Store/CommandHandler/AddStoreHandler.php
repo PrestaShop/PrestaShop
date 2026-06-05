@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\StoreImageUploader;
 use PrestaShop\PrestaShop\Adapter\Store\Trait\StoreHandlerTrait;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand;
@@ -23,6 +25,8 @@ final class AddStoreHandler implements AddStoreHandlerInterface
 
     public function __construct(
         private readonly StoreRepository $storeRepository,
+        private readonly StoreImageUploader $imageUploader,
+        private readonly ImageValidator $imageValidator,
     ) {
     }
 
@@ -32,6 +36,11 @@ final class AddStoreHandler implements AddStoreHandlerInterface
             $command->getCountryId(),
             $command->getStateId()
         );
+
+        if (null !== $command->getImagePath()) {
+            $this->imageValidator->assertFileUploadLimits($command->getImagePath());
+            $this->imageValidator->assertIsValidImageType($command->getImagePath());
+        }
 
         $store = new Store();
         $store->id_country = $command->getCountryId();
@@ -58,6 +67,10 @@ final class AddStoreHandler implements AddStoreHandlerInterface
 
         if (null !== $command->getShopAssociation()) {
             $this->associateWithShops($store, $command->getShopAssociation());
+        }
+
+        if (null !== $command->getImagePath()) {
+            $this->imageUploader->upload($storeId->getValue(), $command->getImagePath());
         }
 
         return $storeId;
