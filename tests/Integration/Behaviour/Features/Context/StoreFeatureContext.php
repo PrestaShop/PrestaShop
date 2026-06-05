@@ -33,6 +33,6 @@ class StoreFeatureContext extends AbstractPrestaShopFeatureContext
         $store->id_country = (int) Country::getIdByName($this->getDefaultLangId(), $data['country']);
         $store->add();
 
-        SharedStorage::getStorage()->set($storeReference, new Store($store->id));
+        SharedStorage::getStorage()->set($storeReference, (int) $store->id);
     }
 }
