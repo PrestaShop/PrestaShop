@@ -263,6 +263,7 @@ class OrderCore extends ObjectModel
                     'product_ean13' => ['setter' => false],
                     'product_isbn' => ['setter' => false],
                     'product_upc' => ['setter' => false],
+                    'product_mpn' => ['setter' => false],
                     'product_price' => ['setter' => false],
                     'id_customization' => ['required' => false, 'xlink_resource' => 'customizations'],
                     'unit_price_tax_incl' => ['setter' => false],
@@ -1634,6 +1635,7 @@ class OrderCore extends ObjectModel
             `product_ean13`,
             `product_isbn`,
             `product_upc`,
+            `product_mpn`,
             `unit_price_tax_incl`,
             `unit_price_tax_excl`
             FROM `' . _DB_PREFIX_ . 'order_detail`
