@@ -366,6 +366,10 @@ class StockManager
         $product = new Product($productId);
 
         if ($product->id) {
+            if ($productAttributeId > 0 && !Combination::existsInDatabase($productAttributeId)) {
+                return false;
+            }
+
             $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
             $stockAvailable = $stockManager->getStockAvailableByProduct($product, $productAttributeId, $params['id_shop'] ?? null);
 
