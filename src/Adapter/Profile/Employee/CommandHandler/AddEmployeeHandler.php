@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 
 /**
  * Handles command which adds new employee using legacy object model
@@ -42,18 +43,26 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
     private $contextEmployeeProvider;
 
     /**
+     * @var ImageUploaderInterface
+     */
+    private $imageUploader;
+
+    /**
      * @param Hashing $hashing
      * @param ProfileAccessCheckerInterface $profileAccessChecker
      * @param ContextEmployeeProviderInterface $contextEmployeeProvider
+     * @param ImageUploaderInterface $imageUploader
      */
     public function __construct(
         Hashing $hashing,
         ProfileAccessCheckerInterface $profileAccessChecker,
-        ContextEmployeeProviderInterface $contextEmployeeProvider
+        ContextEmployeeProviderInterface $contextEmployeeProvider,
+        ImageUploaderInterface $imageUploader
     ) {
         $this->hashing = $hashing;
         $this->profileAccessChecker = $profileAccessChecker;
         $this->contextEmployeeProvider = $contextEmployeeProvider;
+        $this->imageUploader = $imageUploader;
     }
 
     /**
@@ -76,6 +85,10 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
         $employee = $this->createLegacyEmployeeObjectFromCommand($command);
 
         $this->associateWithShops($employee, $command->getShopAssociation());
+
+        if (null !== $command->getUploadedAvatar()) {
+            $this->imageUploader->upload((int) $employee->id, $command->getUploadedAvatar());
+        }
 
         return new EmployeeId((int) $employee->id);
     }

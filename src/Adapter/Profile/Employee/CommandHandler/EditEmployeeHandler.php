@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Shop;
 
 /**
@@ -49,21 +50,29 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
     private $legacyContext;
 
     /**
+     * @var ImageUploaderInterface
+     */
+    private $imageUploader;
+
+    /**
      * @param Hashing $hashing
      * @param ProfileAccessCheckerInterface $profileAccessChecker
      * @param ContextEmployeeProviderInterface $contextEmployeeProvider
      * @param LegacyContext $legacyContext
+     * @param ImageUploaderInterface $imageUploader
      */
     public function __construct(
         Hashing $hashing,
         ProfileAccessCheckerInterface $profileAccessChecker,
         ContextEmployeeProviderInterface $contextEmployeeProvider,
-        LegacyContext $legacyContext
+        LegacyContext $legacyContext,
+        ImageUploaderInterface $imageUploader
     ) {
         $this->hashing = $hashing;
         $this->profileAccessChecker = $profileAccessChecker;
         $this->contextEmployeeProvider = $contextEmployeeProvider;
         $this->legacyContext = $legacyContext;
+        $this->imageUploader = $imageUploader;
     }
 
     /**
@@ -86,6 +95,10 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $this->assertHomepageIsAccessible($command->getDefaultPageId() ?: ((int) $employee->default_tab), $command->getProfileId() ?: ((int) $employee->id_profile));
 
         $this->updateEmployeeWithCommandData($employee, $command);
+
+        if (null !== $command->getUploadedAvatar()) {
+            $this->imageUploader->upload((int) $employee->id, $command->getUploadedAvatar());
+        }
 
         if (null !== $command->getPlainPassword() && $employee->id == $this->contextEmployeeProvider->getId()) {
             $this->updatePasswordInCookie($employee);
