@@ -72,7 +72,7 @@ final class StoreFormDataHandler implements FormDataHandlerInterface
             ->setPhone($data['phone'] ?: null)
             ->setFax($data['fax'] ?: null)
             ->setEmail($data['email'] ?: null)
-            ->setActive((bool) ($data['active'] ?? false))
+            ->setActive($data['active'])
             ->setLocalizedNotes($data['note'] ?? [])
             ->setLocalizedHours($this->normalizeHours($data['hours'] ?? []))
             ->setImagePath($this->extractImagePath($data))
