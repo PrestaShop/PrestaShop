@@ -217,7 +217,7 @@ class SearchCore
                     ? 'REGEXP CONCAT(\'\\\\b\', alias, \'\\\\b\')'
                     : 'REGEXP CONCAT(\'(^|[[:space:]]|[[:<:]])\', alias, \'([[:space:]]|[[:>:]]|$)\')'
             );
-            $query = str_replace('/TERM/', pSQL($string), $query);
+            $query = str_replace('TERM', pSQL($string), $query);
             $aliases = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS($query);
             $words = explode(' ', $string);
             $processed_words = [];
