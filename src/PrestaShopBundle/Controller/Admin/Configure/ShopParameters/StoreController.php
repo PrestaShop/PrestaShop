@@ -18,7 +18,6 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotToggleStoreStatusExc
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface as IdentifiableFormHandlerInterface;
@@ -135,16 +134,11 @@ class StoreController extends PrestaShopAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        /** @var \PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing $storeForEditing */
-        $storeForEditing = $this->dispatchQuery(new GetStoreForEditing($storeId));
-        $storeImage = $storeForEditing->getStoreImage();
-
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/Contact/Stores/edit.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'storeForm' => $storeForm->createView(),
             'storeId' => $storeId,
-            'storeImage' => $storeImage,
             'layoutTitle' => $this->trans('Edit store', [], 'Admin.Navigation.Menu'),
         ]);
     }

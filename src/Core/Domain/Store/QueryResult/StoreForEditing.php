@@ -39,7 +39,7 @@ class StoreForEditing
         private readonly ?string $phone,
         private readonly ?string $fax,
         private readonly ?string $email,
-        private readonly ?array $storeImage,
+        private readonly ?string $imagePath,
         private readonly array $shopAssociation,
     ) {
     }
@@ -124,9 +124,9 @@ class StoreForEditing
         return $this->email;
     }
 
-    public function getStoreImage(): ?array
+    public function getImagePath(): ?string
     {
-        return $this->storeImage;
+        return $this->imagePath;
     }
 
     public function getShopAssociation(): array

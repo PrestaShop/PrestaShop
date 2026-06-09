@@ -54,7 +54,7 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
                 phone: $store->phone ?: null,
                 fax: $store->fax ?: null,
                 email: $store->email ?: null,
-                storeImage: $this->getStoreImage((int) $store->id),
+                imagePath: $this->getImagePath((int) $store->id),
                 shopAssociation: $shopAssociation,
             );
         } catch (PrestaShopException $e) {
@@ -66,7 +66,7 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
         }
     }
 
-    private function getStoreImage(int $storeId): ?array
+    private function getImagePath(int $storeId): ?string
     {
         $pathToImage = _PS_STORE_IMG_DIR_ . $storeId . '.jpg';
         $imageTag = ImageManager::thumbnail(
@@ -78,16 +78,11 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
             true
         );
 
-        $imageSize = file_exists($pathToImage) ? filesize($pathToImage) / 1000 : '';
-
-        if (empty($imageTag) || empty($imageSize)) {
+        if (empty($imageTag)) {
             return null;
         }
 
-        return [
-            'path' => $this->imageTagSourceParser->parse($imageTag),
-            'size' => sprintf('%1$.2f kB', $imageSize),
-        ];
+        return $this->imageTagSourceParser->parse($imageTag);
     }
 
     /**
