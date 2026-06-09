@@ -400,6 +400,18 @@ abstract class PaymentModuleCore extends Module
         if (!$this->context->country->active) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Country is not active', 3, null, 'Cart', (int) $id_cart, true);
 
+            // The order(s) were already created above; flag them with the payment
+            // error status so they are not left without a status (current_state = 0)
+            // when we abort here.
+            foreach ($order_list as $orderWithError) {
+                if (Validate::isLoadedObject($orderWithError) && !(int) $orderWithError->current_state) {
+                    $history = new OrderHistory();
+                    $history->id_order = (int) $orderWithError->id;
+                    $history->changeIdOrderState((int) Configuration::get('PS_OS_ERROR'), $orderWithError, true);
+                    $history->add();
+                }
+            }
+
             throw new PrestaShopException('The order address country is not active.');
         }
 
