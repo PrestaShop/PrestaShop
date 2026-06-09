@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -213,8 +214,12 @@ class StoreType extends TranslatorAwareType
                 'label' => $this->trans('Active', 'Admin.Global'),
                 'required' => false,
             ])
-            ->add('image', FileType::class, [
+            ->add('image_preview', ImagePreviewType::class, [
                 'label' => $this->trans('Picture', 'Admin.Global'),
+                'required' => false,
+            ])
+            ->add('image', FileType::class, [
+                'label' => null,
                 'required' => false,
             ])
             ->add('hours', TranslatableType::class, [

@@ -40,6 +40,7 @@ final class StoreFormDataProvider implements FormDataProviderInterface
             'email' => $store->getEmail() ?? '',
             'note' => $store->getLocalizedNotes(),
             'active' => $store->isActive(),
+            'image_preview' => $store->getImagePath(),
             'hours' => $this->formatHoursForForm($store->getLocalizedHours()),
             'shop_association' => $store->getShopAssociation(),
         ];
