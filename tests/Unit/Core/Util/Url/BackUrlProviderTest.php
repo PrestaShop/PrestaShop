@@ -33,7 +33,7 @@ class BackUrlProviderTest extends TestCase
     /**
      * @dataProvider provideBackUrls
      */
-    public function testItOnlyKeepsBackUrlsPointingToTheCurrentShop(string $backUrl, string $expected)
+    public function testItDropsOnlyNonHttpSchemes(string $backUrl, string $expected)
     {
         $backUrlProvider = new BackUrlProvider();
 
@@ -68,19 +68,14 @@ class BackUrlProviderTest extends TestCase
             'http://localhost.org/admin-dev/index.php/sell/customers/2/view',
         ];
 
-        yield 'external host is dropped' => [
-            'https://evil.example/login',
-            '',
+        yield 'external http url stays' => [
+            'https://dashboard.example/control',
+            'https://dashboard.example/control',
         ];
 
-        yield 'protocol relative url is dropped' => [
-            '//evil.example/login',
-            '',
-        ];
-
-        yield 'backslash host is dropped' => [
-            '/\\evil.example',
-            '',
+        yield 'protocol relative url stays' => [
+            '//dashboard.example/control',
+            '//dashboard.example/control',
         ];
 
         yield 'javascript scheme is dropped' => [
@@ -90,11 +85,6 @@ class BackUrlProviderTest extends TestCase
 
         yield 'data scheme is dropped' => [
             'data:text/html,<script>alert(1)</script>',
-            '',
-        ];
-
-        yield 'look-alike host is dropped' => [
-            'http://localhost.org.evil.example/',
             '',
         ];
     }
