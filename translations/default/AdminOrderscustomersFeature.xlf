@@ -1001,6 +1001,11 @@ Best regards,</target>
         <target>Order ID</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/linked_orders.html.twig [Line: 19]</note>
       </trans-unit>
+      <trans-unit id="4504ca0156a810f102f9b12cd10e7196">
+        <source>Order creation error</source>
+        <target>Order creation error</target>
+        <note>File: classes/lang/KeysReference/OrderStateLang.php [Line: 20]</note>
+      </trans-unit>
       <trans-unit id="f13673c7e261fd8d00915c9cb768ad95">
         <source>Order message</source>
         <target>Order message</target>

@@ -332,6 +332,9 @@ abstract class PaymentModuleCore extends Module
             $id_order_state = Configuration::get('PS_OS_ERROR');
         }
 
+        // Wrap order creation so a server error mid-process cannot leave an order
+        // with no status (current_state = 0). See PrestaShop issue #32743.
+        try {
         if (!$this->isFeatureFlagIsEnabledForMultiShipment()) {
             foreach ($package_list as $id_address => $packageByAddress) {
                 foreach ($packageByAddress as $id_package => $package) {
@@ -794,6 +797,32 @@ abstract class PaymentModuleCore extends Module
                 (int) $order->id
             );
         } // End foreach $order_detail_list
+        } catch (Exception $e) {
+            // Creation aborted on a server error. Any order row already inserted would
+            // otherwise keep current_state = 0, which the back office then renders with
+            // the first status pre-selected. Flag each one so the merchant can spot and
+            // fix it. See PrestaShop issue #32743.
+            $creationErrorState = (int) Configuration::get('PS_OS_CREATION_ERROR');
+            if ($creationErrorState && !empty($order_list)) {
+                foreach ($order_list as $brokenOrder) {
+                    // Skip orders that never got persisted or already have a status.
+                    if (!Validate::isLoadedObject($brokenOrder) || (int) $brokenOrder->current_state) {
+                        continue;
+                    }
+                    try {
+                        $errorHistory = new OrderHistory();
+                        $errorHistory->id_order = (int) $brokenOrder->id;
+                        $errorHistory->changeIdOrderState($creationErrorState, $brokenOrder, true);
+                        $errorHistory->add();
+                    } catch (Exception $ignored) {
+                        // Never mask the original failure with a secondary error.
+                    }
+                }
+            }
+
+            // Re-throw so the existing error flow (logging, 500 page) stays unchanged.
+            throw $e;
+        }
 
         // Use the last order as currentOrder
         if (isset($order) && $order->id) {

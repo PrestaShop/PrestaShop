@@ -383,6 +383,9 @@
   <configuration id="PS_OS_ERROR" name="PS_OS_ERROR">
     <value>8</value>
   </configuration>
+  <configuration id="PS_OS_CREATION_ERROR" name="PS_OS_CREATION_ERROR">
+    <value>14</value>
+  </configuration>
   <configuration id="PS_OS_OUTOFSTOCK" name="PS_OS_OUTOFSTOCK">
     <value>9</value>
   </configuration>
