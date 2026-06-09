@@ -17,3 +17,4 @@ trans('On backorder (not paid)', 'Admin.Orderscustomers.Feature');
 trans('Awaiting bank wire payment', 'Admin.Orderscustomers.Feature');
 trans('Remote payment accepted', 'Admin.Orderscustomers.Feature');
 trans('Awaiting Cash On Delivery validation', 'Admin.Orderscustomers.Feature');
+trans('Order creation error', 'Admin.Orderscustomers.Feature');
