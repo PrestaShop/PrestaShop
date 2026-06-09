@@ -14,17 +14,7 @@
       </h3>
       <div class="card-body">
         <div class="form-wrapper">
-          {% for child in storeForm %}
-            {{ form_row(child) }}
-            {% if child.vars.name == 'image' and storeImage is defined and storeImage is not null %}
-              <div class="form-group row">
-                <label class="form-control-label col-sm-2"></label>
-                <div class="col-sm">
-                  {{ include('@PrestaShop/Admin/Configure/ShopParameters/Contact/Stores/store_image.html.twig') }}
-                </div>
-              </div>
-            {% endif %}
-          {% endfor %}
+          {{ form_widget(storeForm) }}
         </div>
       </div>
       <div class="card-footer">
