@@ -311,8 +311,8 @@ services:
     autowire: true
     public: false
 
-  prestashop.core.form.identifiable_object.data_provider.store_form_data_provider:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\StoreFormDataProvider'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\StoreFormDataProvider:
+    autowire: true
+    public: false
     arguments:
-      - '@prestashop.core.query_bus'
-      - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+      $contextShopIds: '@=service("prestashop.adapter.shop.context").getContextListShopID()'
