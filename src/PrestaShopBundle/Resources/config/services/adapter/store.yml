@@ -1,9 +1,10 @@
 services:
   _defaults:
     public: true
+    autowire: true
+    autoconfigure: true
 
   PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository:
-    autowire: true
     public: false
     arguments:
       $connection: '@doctrine.dbal.default_connection'
@@ -11,55 +12,21 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Store\HoursEncoder: ~
 
-  prestashop.adapter.store.query_handler.get_store_for_editing:
-    class: 'PrestaShop\PrestaShop\Adapter\Store\QueryHandler\GetStoreForEditingHandler'
-    autoconfigure: true
+  PrestaShop\PrestaShop\Adapter\Store\QueryHandler\GetStoreForEditingHandler:
     arguments:
-      - '@prestashop.core.domain.store.repository.store_repository'
-      - '@prestashop.core.image.parser.image_tag_source_parser'
-      - '@PrestaShop\PrestaShop\Adapter\Store\HoursEncoder'
+      $imageTagSourceParser: '@prestashop.core.image.parser.image_tag_source_parser'
 
-  prestashop.adapter.store.command_handler.add_store:
-    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\AddStoreHandler'
-    autoconfigure: true
-    arguments:
-      - '@prestashop.core.domain.store.repository.store_repository'
-      - '@PrestaShop\PrestaShop\Adapter\Image\Uploader\StoreImageUploader'
-      - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
-      - '@PrestaShop\PrestaShop\Adapter\Store\HoursEncoder'
+  PrestaShop\PrestaShop\Adapter\Store\CommandHandler\AddStoreHandler: ~
 
-  prestashop.adapter.store.command_handler.edit_store:
-    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\EditStoreHandler'
-    autoconfigure: true
-    arguments:
-      - '@prestashop.core.domain.store.repository.store_repository'
-      - '@PrestaShop\PrestaShop\Adapter\Image\Uploader\StoreImageUploader'
-      - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
-      - '@PrestaShop\PrestaShop\Adapter\Store\HoursEncoder'
+  PrestaShop\PrestaShop\Adapter\Store\CommandHandler\EditStoreHandler: ~
 
-  prestashop.adapter.store.command_handler.toggle_store_status:
-    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler'
-    autoconfigure: true
-    arguments:
-      - '@prestashop.core.domain.store.repository.store_repository'
+  PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler: ~
 
-  prestashop.adapter.store.command_handler.bulk_toggle_store_status_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\BulkUpdateStoreStatusHandler'
-    autoconfigure: true
-    arguments:
-      - '@prestashop.core.domain.store.repository.store_repository'
+  PrestaShop\PrestaShop\Adapter\Store\CommandHandler\BulkUpdateStoreStatusHandler: ~
 
-  prestashop.adapter.store.command_handler.delete_store:
-    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\DeleteStoreHandler'
-    autoconfigure: true
-    arguments:
-      - '@prestashop.core.domain.store.repository.store_repository'
+  PrestaShop\PrestaShop\Adapter\Store\CommandHandler\DeleteStoreHandler: ~
 
-  prestashop.adapter.store.command_handler.bulk_delete_store_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\BulkDeleteStoreHandler'
-    autoconfigure: true
-    arguments:
-      - '@prestashop.core.domain.store.repository.store_repository'
+  PrestaShop\PrestaShop\Adapter\Store\CommandHandler\BulkDeleteStoreHandler: ~
 
   PrestaShop\PrestaShop\Adapter\Image\Uploader\StoreImageUploader: ~
 
