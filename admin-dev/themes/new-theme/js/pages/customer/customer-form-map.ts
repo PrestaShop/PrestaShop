@@ -12,8 +12,10 @@ export default {
   requiredFieldsFormAlertOptin: '#customerRequiredFieldsAlertMessageOptin',
   requiredFieldsFormCheckboxOptin: '#customerRequiredFieldsContainer input[type="checkbox"][value="optin"]',
 
-  // Customer group inputs
+  // Customer form and group inputs
+  customerForm: 'form[name="customer"]',
   customerGroupCheckboxes: 'input[type="checkbox"][name="customer[group_ids][]"]',
+  groupAccessErrorClass: 'js-at-least-one-group-error',
   defaultGroupSelect: '#customer_default_group_id',
   defaultGroupSelectedOption: '#customer_default_group_id option:selected',
 

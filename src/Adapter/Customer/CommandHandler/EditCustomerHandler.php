@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerEmptyGroupsException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
@@ -229,6 +230,11 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         // If nothing is updated on groups, nothing to do here
         if (null === $command->getDefaultGroupId() && null === $command->getGroupIds()) {
             return;
+        }
+
+        // A customer must belong to at least one group
+        if (null !== $command->getGroupIds() && empty($command->getGroupIds())) {
+            throw new CustomerEmptyGroupsException('A customer must belong to at least one group');
         }
 
         // Arrange data to compare, we will use customer's original data if not provided in the command

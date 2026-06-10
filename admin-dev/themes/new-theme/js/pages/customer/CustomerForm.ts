@@ -21,6 +21,11 @@ export default class CustomerForm {
     // update default group below if it's no longer in the list.
     $(customerFormMap.customerGroupCheckboxes).on('change', (event) => {
       this.checkOrUpdateDefaultGroup($(event.currentTarget).is(':checked'));
+      if ($(customerFormMap.customerGroupCheckboxes).is(':checked')) {
+        const $formGroup = $(customerFormMap.customerGroupCheckboxes).first().closest('.form-group');
+        $formGroup.removeClass('has-error');
+        $formGroup.find(`.${customerFormMap.groupAccessErrorClass}`).remove();
+      }
     });
 
     // Watch is_guest switch change and update other inputs accordingly
@@ -31,6 +36,31 @@ export default class CustomerForm {
         this.adaptFormForRegisteredCustomer();
       }
     });
+
+    // Prevent submitting the form when no group is selected
+    $(customerFormMap.customerForm).on('submit', (event) => {
+      this.preventSubmitWithoutGroup(event);
+    });
+  }
+
+  private preventSubmitWithoutGroup(event: JQueryEventObject): void {
+    if ($(customerFormMap.customerGroupCheckboxes).is(':checked')) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const message = <string> $(customerFormMap.customerForm).attr('data-at-least-one-group-message');
+    const $formGroup = $(customerFormMap.customerGroupCheckboxes).first().closest('.form-group');
+
+    $formGroup.addClass('has-error');
+    if (!$formGroup.find(`.${customerFormMap.groupAccessErrorClass}`).length) {
+      const $error = $('<div>', {class: `alert alert-danger ${customerFormMap.groupAccessErrorClass}`});
+      $error.append($('<div>', {class: 'alert-text'}).text(message));
+      $formGroup.append($error);
+    }
+
+    $formGroup[0]?.scrollIntoView({behavior: 'smooth', block: 'center'});
   }
 
   private checkOrUpdateDefaultGroup(wasChecked: boolean): void {
