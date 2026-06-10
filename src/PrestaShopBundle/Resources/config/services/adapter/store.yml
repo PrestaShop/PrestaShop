@@ -9,12 +9,15 @@ services:
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
 
+  PrestaShop\PrestaShop\Adapter\Store\HoursEncoder: ~
+
   prestashop.adapter.store.query_handler.get_store_for_editing:
     class: 'PrestaShop\PrestaShop\Adapter\Store\QueryHandler\GetStoreForEditingHandler'
     autoconfigure: true
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
       - '@prestashop.core.image.parser.image_tag_source_parser'
+      - '@PrestaShop\PrestaShop\Adapter\Store\HoursEncoder'
 
   prestashop.adapter.store.command_handler.add_store:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\AddStoreHandler'
@@ -23,6 +26,7 @@ services:
       - '@prestashop.core.domain.store.repository.store_repository'
       - '@PrestaShop\PrestaShop\Adapter\Image\Uploader\StoreImageUploader'
       - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
+      - '@PrestaShop\PrestaShop\Adapter\Store\HoursEncoder'
 
   prestashop.adapter.store.command_handler.edit_store:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\EditStoreHandler'
@@ -31,6 +35,7 @@ services:
       - '@prestashop.core.domain.store.repository.store_repository'
       - '@PrestaShop\PrestaShop\Adapter\Image\Uploader\StoreImageUploader'
       - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
+      - '@PrestaShop\PrestaShop\Adapter\Store\HoursEncoder'
 
   prestashop.adapter.store.command_handler.toggle_store_status:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler'

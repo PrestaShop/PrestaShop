@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\StoreImageUploader;
+use PrestaShop\PrestaShop\Adapter\Store\HoursEncoder;
 use PrestaShop\PrestaShop\Adapter\Store\Trait\StoreHandlerTrait;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\EditStoreCommand;
@@ -25,6 +26,7 @@ final class EditStoreHandler implements EditStoreHandlerInterface
         private readonly StoreRepository $storeRepository,
         private readonly StoreImageUploader $imageUploader,
         private readonly ImageValidator $imageValidator,
+        private readonly HoursEncoder $hoursEncoder,
     ) {
     }
 
@@ -84,7 +86,7 @@ final class EditStoreHandler implements EditStoreHandlerInterface
             $store->note = $command->getLocalizedNotes();
         }
         if (null !== $command->getLocalizedHours()) {
-            $store->hours = $this->encodeHours($command->getLocalizedHours());
+            $store->hours = $this->hoursEncoder->encode($command->getLocalizedHours());
         }
 
         $this->storeRepository->update($store);

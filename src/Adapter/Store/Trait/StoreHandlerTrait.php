@@ -31,24 +31,4 @@ trait StoreHandlerTrait
             );
         }
     }
-
-    /**
-     * @param array<int, array<int, string>> $localizedHours
-     *
-     * @return array<int, string>
-     */
-    private function encodeHours(array $localizedHours): array
-    {
-        $result = [];
-        foreach ($localizedHours as $langId => $days) {
-            $encoded = [];
-            foreach ($days as $day) {
-                $parts = array_map('trim', explode('|', (string) $day, 2));
-                $encoded[] = isset($parts[1]) ? [$parts[0], $parts[1]] : [$parts[0]];
-            }
-            $result[(int) $langId] = json_encode($encoded);
-        }
-
-        return $result;
-    }
 }
