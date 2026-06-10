@@ -9,9 +9,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Store\QueryHandler;
 
 use ImageManager;
+use PrestaShop\PrestaShop\Adapter\Store\HoursEncoder;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
-use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler\GetStoreForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
@@ -25,6 +25,7 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
     public function __construct(
         private readonly StoreRepository $storeRepository,
         private readonly ImageTagSourceParserInterface $imageTagSourceParser,
+        private readonly HoursEncoder $hoursEncoder,
     ) {
     }
 
@@ -33,7 +34,7 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
         try {
             $store = $this->storeRepository->get($query->getStoreId());
 
-            $localizedHours = $this->decodeHours(is_array($store->hours) ? $store->hours : []);
+            $localizedHours = $this->hoursEncoder->decode(is_array($store->hours) ? $store->hours : []);
 
             $shopAssociation = $store->getAssociatedShops();
 
@@ -83,45 +84,5 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
         }
 
         return $this->imageTagSourceParser->parse($imageTag);
-    }
-
-    /**
-     * Converts the raw JSON hours (per-lang array) to an array of 7 "HH:MM | HH:MM" strings per language.
-     *
-     * @param array<int, string> $rawHours keyed by lang id, each value is a JSON string
-     *
-     * @return array<int, array<int, string>> keyed by lang id, each value is an array of 7 day strings
-     */
-    private function decodeHours(array $rawHours): array
-    {
-        $result = [];
-        foreach ($rawHours as $langId => $jsonString) {
-            if (empty($jsonString)) {
-                $result[(int) $langId] = array_fill(0, 7, '');
-                continue;
-            }
-            $decoded = json_decode($jsonString, true);
-            if (!is_array($decoded)) {
-                $result[(int) $langId] = array_fill(0, 7, '');
-                continue;
-            }
-            $days = [];
-            foreach ($decoded as $day) {
-                if (is_array($day) && 2 === count($day)) {
-                    // New format: ["09:00", "18:00"] → "09:00 | 18:00"
-                    $open = trim($day[0]);
-                    $close = trim($day[1]);
-                    $days[] = ($open !== '' && $close !== '') ? $open . ' | ' . $close : $open;
-                } elseif (is_array($day) && 1 === count($day)) {
-                    // Legacy format: ["09:00AM - 07:00PM"] → use as-is
-                    $days[] = trim($day[0]);
-                } else {
-                    $days[] = '';
-                }
-            }
-            $result[(int) $langId] = $days;
-        }
-
-        return $result;
     }
 }
