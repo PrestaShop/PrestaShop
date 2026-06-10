@@ -86,6 +86,21 @@ describe('BO - Header : Quick access links', async () => {
       expect(validationMessage).to.contains(boCartRulesCreatePage.successfulUpdateMessage);
     });
 
+    it('should reload, try to add the current page with an empty name and check the inline error', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addCurrentPageWithEmptyName', baseContext);
+
+      await boCartRulesCreatePage.reloadPage(page);
+
+      const inlineError = await boCartRulesCreatePage.addCurrentPageToQuickAccessWithEmptyName(page);
+
+      if (inlineError === null) {
+        // PrestaShop ≤ 9.1.x still uses the native window.prompt(): there is no inline validation to assert
+        this.skip();
+      } else {
+        expect(inlineError).to.contains('Shortcut name is required');
+      }
+    });
+
     it('should refresh the page and add current page to Quick access', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addCurrentPageToQuickAccess', baseContext);
 
