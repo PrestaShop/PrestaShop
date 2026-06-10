@@ -20,6 +20,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerC
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerEmptyGroupsException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerTransformationException;
@@ -942,6 +943,11 @@ class CustomerController extends PrestaShopAdminController
             ],
             CustomerDefaultGroupAccessException::class => $this->trans(
                 'A default customer group must be selected in group box.',
+                [],
+                'Admin.Orderscustomers.Notification'
+            ),
+            CustomerEmptyGroupsException::class => $this->trans(
+                'You must select at least one group.',
                 [],
                 'Admin.Orderscustomers.Notification'
             ),

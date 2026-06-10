@@ -29,6 +29,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -283,6 +284,12 @@ class CustomerType extends TranslatorAwareType
                 'empty_data' => [],
                 'choices' => $this->groupByIdChoiceProvider->getChoices(),
                 'display_total_items' => true,
+                'constraints' => [
+                    new Count([
+                        'min' => 1,
+                        'minMessage' => $this->trans('You must select at least one group.', 'Admin.Notifications.Error'),
+                    ]),
+                ],
             ])
             ->add('default_group_id', GroupType::class, [
                 'label' => $this->trans('Default customer group', 'Admin.Orderscustomers.Feature'),
