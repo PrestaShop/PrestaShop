@@ -442,4 +442,4 @@ services:
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
     arguments:
       - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Store\StoreType'
-      - '@prestashop.core.form.identifiable_object.data_provider.store_form_data_provider'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\StoreFormDataProvider'
