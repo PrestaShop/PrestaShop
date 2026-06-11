@@ -14,6 +14,7 @@ import {
   boDashboardPage,
   boLoginPage,
   boAddressesPage,
+  boAddressesCreatePage,
   type BrowserContext,
   dataCountries,
   dataPaymentMethods,
@@ -28,7 +29,7 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_address_patchOrderAddress';
 
-describe('API : PATCH /addresses/orders/{addressId}', async () => {
+describe('API : PATCH /addresses/orders/{orderId}', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
@@ -58,6 +59,8 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
     ],
     paymentMethod: dataPaymentMethods.wirePayment,
   });
+  
+  const currentAddress: Record<string, string | number> = {};
 
   // Pre-condition: Create customer
   createCustomerTest(customerData, `${baseContext}_preTest_1`);
@@ -86,7 +89,7 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
     });
   });
 
-  describe('BackOffice : Fetch the address ID', async () => {
+  describe('BackOffice : Fetch the order ID', async () => {
     it('should login in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
 
@@ -125,154 +128,300 @@ describe('API : PATCH /addresses/orders/{addressId}', async () => {
 
       idOrder = parseInt(await boOrdersPage.getTextColumn(page, 'id_order', 1), 10);
       expect(idOrder).to.be.gt(0);
-    });
-  });
-
-  describe('API : Patch the Order Address', async () => {
-    it('should request the endpoint /addresses/orders/{addressId}', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
-
-      const apiResponse = await apiContext.patch(`addresses/orders/${idOrder}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: {
-          addressType: 'delivery_address',
-          addressAlias: updateAddress.alias,
-          firstName: updateAddress.firstName,
-          lastName: updateAddress.lastName,
-          address: updateAddress.address,
-          city: updateAddress.city,
-          countryId: dataCountries.france.id,
-          postCode: '75000',
-          homePhone: updateAddress.phone,
-        },
+      
+      Object.assign(currentAddress, {
+        addressAlias: addressData.alias ?? '',
+        firstName: addressData.firstName,
+        lastName: addressData.lastName,
+        address: addressData.address,
+        address2: addressData.secondAddress ?? '',
+        city: addressData.city,
+        postCode: addressData.postalCode,
+        countryId: dataCountries.france.id,
+        homePhone: addressData.phone ?? '',
+        mobilePhone: addressData.mobilePhone ?? '',
+        company: addressData.company ?? '',
+        vatNumber: addressData.vatNumber ?? '',
+        other: addressData.other ?? '',
+        dni: addressData.dni ?? '',
       });
-      expect(apiResponse.status()).to.eq(200);
-      expect(utilsAPI.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
-      expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
-
-      jsonResponse = await apiResponse.json();
-    });
-
-    it('should check the JSON Response keys', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseKeys', baseContext);
-
-      expect(jsonResponse).to.have.all.keys(
-        'orderId',
-        'addressId',
-        'customerId',
-        'addressAlias',
-        'firstName',
-        'lastName',
-        'address',
-        'address2',
-        'city',
-        'postCode',
-        'countryId',
-        'stateId',
-        'homePhone',
-        'mobilePhone',
-        'company',
-        'vatNumber',
-        'other',
-        'dni',
-      );
-    });
-
-    it('should check the JSON Response : `addressId`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddressId', baseContext);
-
-      expect(jsonResponse).to.have.property('orderId');
-      expect(jsonResponse.orderId).to.be.a('number');
-      expect(jsonResponse.orderId).to.be.equal(idOrder);
-    });
-
-    it('should check the JSON Response : `firstName`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseFirstName', baseContext);
-
-      expect(jsonResponse).to.have.property('firstName');
-      expect(jsonResponse.firstName).to.be.a('string');
-      expect(jsonResponse.firstName).to.be.equal(updateAddress.firstName);
-    });
-
-    it('should check the JSON Response : `lastName`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLastName', baseContext);
-
-      expect(jsonResponse).to.have.property('lastName');
-      expect(jsonResponse.lastName).to.be.a('string');
-      expect(jsonResponse.lastName).to.be.equal(updateAddress.lastName);
-    });
-
-    it('should check the JSON Response : `address`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddress', baseContext);
-
-      expect(jsonResponse).to.have.property('address');
-      expect(jsonResponse.address).to.be.a('string');
-      expect(jsonResponse.address).to.be.equal(updateAddress.address);
-    });
-
-    it('should check the JSON Response : `city`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseCity', baseContext);
-
-      expect(jsonResponse).to.have.property('city');
-      expect(jsonResponse.city).to.be.a('string');
-      expect(jsonResponse.city).to.be.equal(updateAddress.city);
-    });
-
-    it('should check the JSON Response : `countryId`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseCountryId', baseContext);
-
-      expect(jsonResponse).to.have.property('countryId');
-      expect(jsonResponse.countryId).to.be.a('number');
-      expect(jsonResponse.countryId).to.be.equal(dataCountries.france.id);
-    });
-
-    it('should check the JSON Response : `homePhone`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseHomePhone', baseContext);
-
-      expect(jsonResponse).to.have.property('homePhone');
-      expect(jsonResponse.homePhone).to.be.a('string');
-      expect(jsonResponse.homePhone).to.be.equal(updateAddress.phone);
     });
   });
 
-  describe('BackOffice : Expected data', async () => {
-    it('should go to \'Customer > Addresses\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
+  [
+    {
+      propertyName: 'firstName',
+      propertyValue: updateAddress.firstName,
+      propertyType: 'string',
+      boField: 'firstName',
+    },
+    {
+      propertyName: 'addressAlias',
+      propertyValue: updateAddress.alias,
+      propertyType: 'string',
+      boField: 'alias',
+    },
+    {
+      propertyName: 'lastName',
+      propertyValue: updateAddress.lastName,
+      propertyType: 'string',
+      boField: 'lastName',
+    },
+    {
+      propertyName: 'address',
+      propertyValue: updateAddress.address,
+      propertyType: 'string',
+      boField: 'address',
+    },
+    {
+      propertyName: 'address2',
+      propertyValue: updateAddress.secondAddress,
+      propertyType: 'string',
+      boField: 'address2',
+    },
+    {
+      propertyName: 'city',
+      propertyValue: updateAddress.city,
+      propertyType: 'string',
+      boField: 'city',
+    },
+    {
+      propertyName: 'postCode',
+      propertyValue: updateAddress.postalCode,
+      propertyType: 'string',
+      boField: 'postCode',
+    },
+    {
+      propertyName: 'countryId',
+      propertyValue: dataCountries.france.id,
+      propertyType: 'number',
+      boField: 'country',
+    },
+    {
+      propertyName: 'homePhone',
+      propertyValue: updateAddress.phone,
+      propertyType: 'string',
+      boField: 'phone',
+    },
+    {
+      propertyName: 'mobilePhone',
+      propertyValue: updateAddress.mobilePhone,
+      propertyType: 'string',
+      boField: 'mobilePhone',
+    },
+    {
+      propertyName: 'company',
+      propertyValue: updateAddress.company,
+      propertyType: 'string',
+      boField: 'company',
+    },
+    {
+      propertyName: 'vatNumber',
+      propertyValue: updateAddress.vatNumber,
+      propertyType: 'string',
+      boField: 'vatNumber',
+    },
+    {
+      propertyName: 'other',
+      propertyValue: updateAddress.other,
+      propertyType: 'string',
+      boField: 'other',
+    },
+    {
+      propertyName: 'dni',
+      propertyValue: updateAddress.dni,
+      propertyType: 'string',
+      boField: 'dni',
+    },
+  ].forEach((data: {
+    propertyName: string;
+    propertyValue: string | number;
+    propertyType: string;
+    boField: string;
+  }) => {
+    describe(`API : Update the property \`${data.propertyName}\` and check in BO`, async () => {
+      it(`should request the endpoint /addresses/orders/{idOrder} for property "${data.propertyName}"`, async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `requestEndpoint${data.propertyName.charAt(0).toUpperCase() + data.propertyName.slice(1)}`,
+          baseContext,
+        );
 
-      await boDashboardPage.goToSubMenu(
-        page,
-        boDashboardPage.customersParentLink,
-        boDashboardPage.addressesLink,
-      );
+        const dataPatch: any = {
+          addressType: 'delivery_address',
+          countryId: dataCountries.france.id,
+        };
+        dataPatch[data.propertyName] = data.propertyValue;
 
-      const pageTitle = await boAddressesPage.getPageTitle(page);
-      expect(pageTitle).to.contains(boAddressesPage.pageTitle);
+        const apiResponse = await apiContext.patch(`addresses/orders/${idOrder}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: dataPatch,
+        });
+
+        expect(apiResponse.status()).to.eq(200);
+        expect(utilsAPI.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+        expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
+
+        jsonResponse = await apiResponse.json();
+
+        expect(jsonResponse).to.have.all.keys(
+          'orderId',
+          'addressAlias',
+          'firstName',
+          'lastName',
+          'address',
+          'address2',
+          'city',
+          'postCode',
+          'countryId',
+          'stateId',
+          'homePhone',
+          'mobilePhone',
+          'company',
+          'vatNumber',
+          'other',
+          'dni',
+        );
+        
+        expect(jsonResponse.orderId).to.be.a('number').and.equal(idOrder);
+        
+        expect(jsonResponse[data.propertyName]).to.be.a(data.propertyType).and.equal(data.propertyValue);
+        
+        for (const [key, expectedValue] of Object.entries(currentAddress)) {
+          if (key === data.propertyName) continue;
+          if (key === 'countryId') continue;
+          expect(
+            jsonResponse[key],
+            `Property "${key}" should not have changed after patching "${data.propertyName}"`,
+          ).to.equal(expectedValue);
+        }
+        
+        currentAddress[data.propertyName] = data.propertyValue;
+      });
+
+      it('should go to \'Customer > Addresses\' page', async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `goToAddressesPage${data.propertyName.charAt(0).toUpperCase() + data.propertyName.slice(1)}`,
+          baseContext,
+        );
+
+        await boDashboardPage.goToSubMenu(
+          page,
+          boDashboardPage.customersParentLink,
+          boDashboardPage.addressesLink,
+        );
+
+        const pageTitle = await boAddressesPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boAddressesPage.pageTitle);
+      });
+
+      it('should filter list by first name', async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `filterListByName${data.propertyName.charAt(0).toUpperCase() + data.propertyName.slice(1)}`,
+          baseContext,
+        );
+
+        await boAddressesPage.resetFilter(page);
+        await boAddressesPage.filterAddresses(page, 'input', 'firstname', jsonResponse.firstName);
+
+        const firstName = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'firstname');
+        expect(firstName).to.contains(jsonResponse.firstName);
+      });
+
+      it(`should check the property "${data.propertyName}" is updated in BO`, async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `checkBO${data.propertyName.charAt(0).toUpperCase() + data.propertyName.slice(1)}`,
+          baseContext,
+        );
+
+        await boAddressesPage.goToEditAddressPage(page, 1);
+
+        const editPageTitle = await boAddressesCreatePage.getPageTitle(page);
+        expect(editPageTitle).to.contains(boAddressesCreatePage.pageTitleEdit);
+
+        const value = await boAddressesCreatePage.getValue(page, data.boField);
+        if (data.propertyName !== 'countryId') {
+          expect(value).to.equal(data.propertyValue);
+        } else {
+          expect(value).to.equal(dataCountries.france.name);
+        }
+      });
+
+      it('should check that other properties are not modified in BO', async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `checkBOOtherProperties${data.propertyName.charAt(0).toUpperCase() + data.propertyName.slice(1)}`,
+          baseContext,
+        );
+
+        const boFieldMap: Record<string, string> = {
+          addressAlias: 'alias',
+          firstName: 'firstName',
+          lastName: 'lastName',
+          address: 'address',
+          address2: 'address2',
+          city: 'city',
+          postCode: 'postCode',
+          homePhone: 'phone',
+          mobilePhone: 'mobilePhone',
+          company: 'company',
+          vatNumber: 'vatNumber',
+          other: 'other',
+          dni: 'dni',
+        };
+
+        for (const [key, expectedValue] of Object.entries(currentAddress)) {
+          if (key === data.propertyName) continue;
+          if (key === 'countryId') continue;
+
+          if (boFieldMap[key]) {
+            const value = await boAddressesCreatePage.getValue(page, boFieldMap[key]);
+            expect(
+              value,
+              `Property "${key}" should not have changed in BO after patching "${data.propertyName}"`,
+            ).to.equal(String(expectedValue));
+          }
+        }
+        
+        await boDashboardPage.goToSubMenu(page, boDashboardPage.customersParentLink, boDashboardPage.addressesLink);
+      });
     });
+  });
+  
 
-    it('should filter list by first name and last name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToGetID', baseContext);
+  describe('Backoffice : Delete address', async () => {
+    it('should filter list by first name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       await boAddressesPage.resetFilter(page);
-      await boAddressesPage.filterAddresses(page, 'input', 'firstname', updateAddress.firstName);
-      await boAddressesPage.filterAddresses(page, 'input', 'lastname', updateAddress.lastName);
+      await boAddressesPage.filterAddresses(page, 'input', 'firstname', jsonResponse.firstName);
 
       const firstName = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'firstname');
-      expect(firstName).to.contains(updateAddress.firstName);
-
-      const lastName = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'lastname');
-      expect(lastName).to.contains(updateAddress.lastName);
+      expect(firstName).to.contains(jsonResponse.firstName);
     });
 
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+    it('should delete address', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress', baseContext);
 
-      const numberOfAddressesAfterReset = await boAddressesPage.resetAndGetNumberOfLines(page);
-      expect(numberOfAddressesAfterReset).to.be.gte(1);
+      const textResult = await boAddressesPage.deleteAddress(page, 1);
+      expect(textResult).to.equal(boAddressesPage.successfulDeleteMessage);
+
+      const numberOfAddressesAfterDelete = await boAddressesPage.resetAndGetNumberOfLines(page);
+      expect(numberOfAddressesAfterDelete).to.be.gt(1);
     });
   });
 
   // Post-condition: Delete customer
   deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
 });
+ 
