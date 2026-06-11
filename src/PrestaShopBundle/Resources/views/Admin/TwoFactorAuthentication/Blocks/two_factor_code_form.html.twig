@@ -1,0 +1,78 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% set actionUrl = checkPathUrl ?: path(checkPathRoute) %}
+{% set providerSwitchRoute = providerSwitchRoute|default('2fa_login') %}
+{% set providerSwitchRouteParams = providerSwitchRouteParams|default({}) %}
+{% set displayProviderSelector = displayProviderSelector|default(true) %}
+{% set displayCodeForm = displayCodeForm|default(true) %}
+
+{% if displayProviderSelector and availableTwoFactorProviders|default([])|length > 1 %}
+  <div class="form-group">
+    <p class="mb-3 text-center">{{ 'Select a verification method'|trans({}, 'Admin.TwoFactor.Login') }}</p>
+    <div class="d-flex flex-wrap justify-content-center mb-3">
+      {% for provider in availableTwoFactorProviders %}
+        <a
+          href="{{ path(providerSwitchRoute, providerSwitchRouteParams|merge({preferProvider: provider})) }}"
+          class="btn mr-2 mb-2 {% if provider == twoFactorProvider|default(null) %}btn-primary{% else %}btn-outline-secondary{% endif %}"
+        >
+          {{ provider == 'email' ? 'Email'|trans({}, 'Admin.Global') : 'Authenticator app'|trans({}, 'Admin.TwoFactor.Login') }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% if displayCodeForm %}
+  <form method="post" action="{{ actionUrl }}" class="form-horizontal">
+    <div class="form-group">
+      <label class="form-control-label" for="two_factor_code">
+        {{ 'Authentication code'|trans({}, 'Admin.TwoFactor.Login') }}
+      </label>
+
+      <input
+        type="text"
+        id="two_factor_code"
+        name="{{ authCodeParameterName }}"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        class="form-control"
+        required
+        autofocus
+      >
+    </div>
+
+    {% if displayTrustedOption|default(false) %}
+      <div class="form-group">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="two_factor_trusted"
+            name="{{ trustedParameterName }}"
+            value="1"
+          >
+          <label class="form-check-label" for="two_factor_trusted">
+            {{ 'Don\'t ask me again on this device'|trans({}, 'Admin.TwoFactor.Login') }}
+          </label>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if isCsrfProtectionEnabled|default(false) %}
+      <input type="hidden" name="{{ csrfParameterName }}" value="{{ csrf_token(csrfTokenId) }}">
+    {% endif %}
+
+    <button class="btn btn-primary btn-lg btn-block" type="submit">
+      {{ submitLabel|default('Verify'|trans({}, 'Admin.TwoFactor.Login')) }}
+    </button>
+
+    {% if logoutPath|default(null) %}
+      <div class="text-center mt-3">
+        <a href="{{ logoutPath }}">{{ 'Cancel and log out'|trans({}, 'Admin.TwoFactor.Login') }}</a>
+      </div>
+    {% endif %}
+  </form>
+{% endif %}

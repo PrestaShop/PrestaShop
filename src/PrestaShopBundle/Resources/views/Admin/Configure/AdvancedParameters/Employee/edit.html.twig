@@ -3,8 +3,40 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% set backupCodes = app.session.flashbag.get('backup_codes') %}
+
+{% block session_alert %}
+  {{ parent() }}
+{% endblock %}
 
 {% block content %}
+  {% if backupCodes is not empty %}
+    <div class="card mb-3 d-print-none">
+      <h3 class="card-header">
+        {{ 'Backup codes'|trans({}, 'Admin.Advparameters.Feature') }}
+      </h3>
+      <div class="card-body">
+        <p class="mb-3">{{ 'Store these backup codes in a safe place. They will not be shown again.'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+        <div class="border rounded p-3 bg-light">
+          <ul class="list-unstyled mb-0" id="employee-backup-codes-list">
+            {% for backupCode in backupCodes %}
+              <li{% if not loop.last %} class="mb-2"{% endif %}><code>{{ backupCode }}</code></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <button
+          type="button"
+          class="btn btn-outline-secondary mt-3"
+          id="copy-backup-codes-button"
+          data-backup-codes="{{ backupCodes|join('\n') }}"
+          data-success-message="{{ 'Backup codes copied to clipboard.'|trans({}, 'Admin.Advparameters.Feature') }}"
+        >
+          {{ 'Copy backup codes'|trans({}, 'Admin.Advparameters.Feature') }}
+        </button>
+      </div>
+    </div>
+  {% endif %}
+
   {% if employeeForm.vars.errors is not empty %}
     <div class="alert alert-danger">
       {% for error in employeeForm.vars.errors %}
@@ -29,6 +61,9 @@
     isRestrictedAccess: isRestrictedAccess,
     canResetTwoFactor: canResetTwoFactor,
     editableEmployeeId: editableEmployeeId,
+    editableEmployee: editableEmployee,
+    hasBackupCodes: hasBackupCodes,
+    canManageBackupCodes: canManageBackupCodes,
   }) }}
 {% endblock %}
 
@@ -36,4 +71,50 @@
   {{ parent() }}
 
   <script src="{{ asset('themes/new-theme/public/employee_form.bundle.js') }}"></script>
+  {% if backupCodes is not empty %}
+    <script>
+      (function () {
+        var copyButton = document.getElementById('copy-backup-codes-button');
+
+        if (!copyButton) {
+          return;
+        }
+
+        var copyText = function (text) {
+          if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text);
+          }
+
+          return new Promise(function (resolve, reject) {
+            var input = document.createElement('textarea');
+            input.value = text;
+            input.setAttribute('readonly', '');
+            input.style.position = 'absolute';
+            input.style.left = '-9999px';
+            document.body.appendChild(input);
+            input.select();
+            input.setSelectionRange(0, input.value.length);
+
+            try {
+              if (document.execCommand('copy')) {
+                resolve();
+              } else {
+                reject();
+              }
+            } catch (error) {
+              reject(error);
+            } finally {
+              document.body.removeChild(input);
+            }
+          });
+        };
+
+        copyButton.addEventListener('click', function () {
+          copyText(copyButton.dataset.backupCodes || '').then(function () {
+            copyButton.textContent = copyButton.dataset.successMessage;
+          });
+        });
+      }());
+    </script>
+  {% endif %}
 {% endblock %}
