@@ -14,6 +14,7 @@ import {
   boLoginPage,
   type BrowserContext,
   dataCountries,
+  dataStates,
   dataCustomers,
   FakerAddress,
   FakerCustomer,
@@ -39,8 +40,9 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
     email: customerData.email,
     firstName: customerData.firstName,
     lastName: customerData.lastName,
-    country: 'France',
-    phone: '0612345678',
+    alias: 'test',
+    country: 'United States',
+    state: 'California'
   });
 
   // Pre-condition: Create customer
@@ -188,6 +190,14 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
       expect(jsonResponse.customerId).to.not.equal(dataCustomers.johnDoe.id);
     });
 
+    it('should check the JSON Response : `addressAlias`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAlias', baseContext);
+
+      expect(jsonResponse).to.have.property('addressAlias');
+      expect(jsonResponse.addressAlias).to.be.a('string');
+      expect(jsonResponse.addressAlias).to.be.equal(addressData.alias);
+    });
+
     it('should check the JSON Response : `firstName`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseFirstName', baseContext);
 
@@ -212,6 +222,14 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
       expect(jsonResponse.address).to.be.equal(addressData.address);
     });
 
+    it('should check the JSON Response : `address2`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddress2', baseContext);
+
+      expect(jsonResponse).to.have.property('address2');
+      expect(jsonResponse.address2).to.be.a('string');
+      expect(jsonResponse.address2).to.be.equal(addressData.secondAddress);
+    });
+
     it('should check the JSON Response : `city`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseCity', baseContext);
 
@@ -220,20 +238,76 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
       expect(jsonResponse.city).to.be.equal(addressData.city);
     });
 
+    it('should check the JSON Response : `postCode`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponsePostCode', baseContext);
+
+      expect(jsonResponse).to.have.property('postCode');
+      expect(jsonResponse.postCode).to.be.a('string');
+      expect(jsonResponse.postCode).to.be.equal(addressData.postalCode);
+    });
+
     it('should check the JSON Response : `countryId`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseCountryId', baseContext);
 
       expect(jsonResponse).to.have.property('countryId');
       expect(jsonResponse.countryId).to.be.a('number');
-      expect(jsonResponse.countryId).to.be.equal(dataCountries.france.id);
+      expect(jsonResponse.countryId).to.be.equal(dataCountries.unitedStates.id);
+    });
+
+    it('should check the JSON Response : `dni`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDni', baseContext);
+
+      expect(jsonResponse).to.have.property('dni');
+      expect(jsonResponse.dni).to.be.a('string');
+      expect(jsonResponse.dni).to.be.equal(addressData.dni);
+    });
+
+    it('should check the JSON Response : `company`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseCompany', baseContext);
+
+      expect(jsonResponse).to.have.property('company');
+      expect(jsonResponse.company).to.be.a('string');
+      expect(jsonResponse.company).to.be.equal(addressData.company);
+    });
+
+    it('should check the JSON Response : `vatNumber`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseVatNumber', baseContext);
+
+      expect(jsonResponse).to.have.property('vatNumber');
+      expect(jsonResponse.vatNumber).to.be.a('string');
+      expect(jsonResponse.vatNumber).to.be.equal(addressData.vatNumber);
+    });
+
+    it('should check the JSON Response : `stateId`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseStateId', baseContext);
+
+      expect(jsonResponse).to.have.property('stateId');
+      expect(jsonResponse.stateId).to.be.a('number');
+      expect(jsonResponse.stateId).to.be.equal(dataStates.california.id);
     });
 
     it('should check the JSON Response : `homePhone`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponsePhone', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseHomePhone', baseContext);
 
       expect(jsonResponse).to.have.property('homePhone');
       expect(jsonResponse.homePhone).to.be.a('string');
       expect(jsonResponse.homePhone).to.be.equal(addressData.phone);
+    });
+
+    it('should check the JSON Response : `mobilePhone`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponsePhone', baseContext);
+
+      expect(jsonResponse).to.have.property('mobilePhone');
+      expect(jsonResponse.mobilePhone).to.be.a('string');
+      expect(jsonResponse.mobilePhone).to.be.equal(addressData.mobilePhone);
+    });
+
+    it('should check the JSON Response : `other`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseOther', baseContext);
+
+      expect(jsonResponse).to.have.property('other');
+      expect(jsonResponse.other).to.be.a('string');
+      expect(jsonResponse.other).to.be.equal(addressData.other);
     });
   });
 
@@ -249,44 +323,100 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
       const pageTitle = await boAddressesCreatePage.getPageTitle(page);
       expect(pageTitle).to.contains(boAddressesCreatePage.pageTitleEdit);
     });
+    
+    it('should check the JSON Response : `dni`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAlias', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'dni');
+      expect(jsonResponse.dni).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `alias`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAlias', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'alias');
+      expect(jsonResponse.addressAlias).to.be.equal(value);
+    });
 
     it('should check the JSON Response : `firstName`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkBOFirstName', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseFirstName', baseContext);
 
       const value = await boAddressesCreatePage.getValue(page, 'firstName');
       expect(jsonResponse.firstName).to.be.equal(value);
     });
 
     it('should check the JSON Response : `lastName`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkBOLastName', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseLastName', baseContext);
 
       const value = await boAddressesCreatePage.getValue(page, 'lastName');
       expect(jsonResponse.lastName).to.be.equal(value);
     });
 
+    it('should check the JSON Response : `company`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseCompany', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'company');
+      expect(jsonResponse.company).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `vatNumber`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseVatNumber', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'vatNumber');
+      expect(jsonResponse.vatNumber).to.be.equal(value);
+    });
+
     it('should check the JSON Response : `address`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkBOAddress', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddress', baseContext);
 
       const value = await boAddressesCreatePage.getValue(page, 'address');
       expect(jsonResponse.address).to.be.equal(value);
     });
 
+    it('should check the JSON Response : `address2`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddress', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'address2');
+      expect(jsonResponse.address2).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `zipCode`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddress', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'postCode');
+      expect(jsonResponse.postCode).to.be.equal(value);
+    });
+
     it('should check the JSON Response : `city`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkBOCity', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseCity', baseContext);
 
       const value = await boAddressesCreatePage.getValue(page, 'city');
       expect(jsonResponse.city).to.be.equal(value);
     });
 
     it('should check the JSON Response : `phone`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkBOPhone', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponsePhone', baseContext);
 
       const value = await boAddressesCreatePage.getValue(page, 'phone');
       expect(jsonResponse.homePhone).to.be.equal(value);
     });
+
+    it('should check the JSON Response : `mobilePhone`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseMobilePhone', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'mobilePhone');
+      expect(jsonResponse.mobilePhone).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `other`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseOther', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'other');
+      expect(jsonResponse.other).to.be.equal(value);
+    });
   });
 
-  describe('Backoffice : Delete address', async () => {
+  describe('Post-Condition : Delete address', async () => {
     it('should go to \'Customers > Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToDelete', baseContext);
 
@@ -301,14 +431,14 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
       expect(pageTitle).to.contains(boAddressesPage.pageTitle);
     });
 
-    it('should filter list by first name and last name', async function () {
+    it('should filter list by address ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       await boAddressesPage.resetFilter(page);
       await boAddressesPage.filterAddresses(page, 'input', 'id_address', addressId.toString());
 
-      const textColumn = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'firstname');
-      expect(textColumn).to.contains(addressData.firstName);
+      const textColumn = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'id_address');
+      expect(textColumn).to.be.equal(addressId.toString());
     });
 
     it('should delete address', async function () {
@@ -319,13 +449,6 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
 
       const numberOfAddressesAfterDelete = await boAddressesPage.resetAndGetNumberOfLines(page);
       expect(numberOfAddressesAfterDelete).to.be.equal(numberOfAddresses);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
-
-      const numberOfAddressesAfterReset = await boAddressesPage.resetAndGetNumberOfLines(page);
-      expect(numberOfAddressesAfterReset).to.equal(numberOfAddresses);
     });
   });
 

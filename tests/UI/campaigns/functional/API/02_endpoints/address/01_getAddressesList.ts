@@ -150,8 +150,17 @@ describe('API : GET /addresses', async () => {
         const lastName = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'lastname');
         expect(lastName).to.equal(jsonResponse.items[idxItem].lastname);
 
+        const address = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'address1');
+        expect(address).to.equal(jsonResponse.items[idxItem].address1);
+
+        const zipCode = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'postcode');
+        expect(zipCode).to.equal(jsonResponse.items[idxItem].postcode);
+
         const city = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'city');
         expect(city).to.equal(jsonResponse.items[idxItem].city);
+
+        const country = await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'country_name');
+        expect(country).to.equal(jsonResponse.items[idxItem].country_name);
       }
     });
 

@@ -33,7 +33,7 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
   const clientScope: string = 'address_read';
   const createAddress: FakerBrandAddress = new FakerBrandAddress({
     brandName: 'Graphic Corner',
-    country: 'France',
+    country: dataCountries.france.name,
   });
 
   before(async function () {
@@ -199,12 +199,28 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
       expect(jsonResponse.address).to.be.equal(createAddress.address);
     });
 
+    it('should check the JSON Response : `address2`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddress2', baseContext);
+
+      expect(jsonResponse).to.have.property('address2');
+      expect(jsonResponse.address2).to.be.a('string');
+      expect(jsonResponse.address2).to.be.equal(createAddress.secondaryAddress);
+    });
+
     it('should check the JSON Response : `city`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseCity', baseContext);
 
       expect(jsonResponse).to.have.property('city');
       expect(jsonResponse.city).to.be.a('string');
       expect(jsonResponse.city).to.be.equal(createAddress.city);
+    });
+
+    it('should check the JSON Response : `postCode`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponsePostCode', baseContext);
+
+      expect(jsonResponse).to.have.property('postCode');
+      expect(jsonResponse.postCode).to.be.a('string');
+      expect(jsonResponse.postCode).to.be.equal(createAddress.postalCode);
     });
 
     it('should check the JSON Response : `countryId`', async function () {
@@ -215,6 +231,13 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
       expect(jsonResponse.countryId).to.be.equal(dataCountries.france.id);
     });
 
+    it('should check the JSON Response : `stateId`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseStateId', baseContext);
+
+      expect(jsonResponse).to.have.property('stateId');
+      expect(jsonResponse.stateId).to.be.a('number');
+    });
+
     it('should check the JSON Response : `homePhone`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseHomePhone', baseContext);
 
@@ -222,30 +245,33 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
       expect(jsonResponse.homePhone).to.be.a('string');
       expect(jsonResponse.homePhone).to.be.equal(createAddress.homePhone);
     });
+
+    it('should check the JSON Response : `mobilePhone`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseMobilePhone', baseContext);
+
+      expect(jsonResponse).to.have.property('mobilePhone');
+      expect(jsonResponse.mobilePhone).to.be.a('string');
+      expect(jsonResponse.mobilePhone).to.be.equal(createAddress.mobilePhone);
+    });
+
+    it('should check the JSON Response : `other`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseOther', baseContext);
+
+      expect(jsonResponse).to.have.property('other');
+      expect(jsonResponse.other).to.be.a('string');
+      expect(jsonResponse.other).to.be.equal(createAddress.other);
+    });
+
+    it('should check the JSON Response : `dni`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDni', baseContext);
+
+      expect(jsonResponse).to.have.property('other');
+      expect(jsonResponse.dni).to.be.a('string');
+      expect(jsonResponse.dni).to.be.equal(createAddress.other);
+    });
   });
 
   describe('BackOffice : Expected data', async () => {
-    it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPageToCheckData', baseContext);
-
-      await boDashboardPage.goToSubMenu(
-        page,
-        boDashboardPage.catalogParentLink,
-        boDashboardPage.brandsAndSuppliersLink,
-      );
-      await boBrandsPage.closeSfToolBar(page);
-
-      const pageTitle = await boBrandsPage.getPageTitle(page);
-      expect(pageTitle).to.contains(boBrandsPage.pageTitle);
-    });
-
-    it('should reset all filters and get number of addresses in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
-
-      numberOfAddresses = await boBrandsPage.resetAndGetNumberOfLines(page, 'manufacturer_address');
-      expect(numberOfAddresses).to.be.above(0);
-    });
-
     it('should filter list by first name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByFirstName2', baseContext);
 
@@ -253,12 +279,6 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
 
       const numberOfAddressesAfterFilter = await boBrandsPage.getNumberOfElementInGrid(page, 'manufacturer_address');
       expect(numberOfAddressesAfterFilter).to.be.equal(1);
-
-      const idAddressBO = parseInt(
-        await boBrandsPage.getTextColumnFromTableAddresses(page, 1, 'id_address'),
-        10,
-      );
-      expect(idAddressBO).to.be.equal(idAddress);
     });
 
     it('should go to edit manufacturer address page', async function () {
@@ -270,8 +290,14 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
       expect(pageTitle).to.contains(boBrandAdressesCreatePage.pageTitleEdit);
     });
 
+    it('should check the JSON Response : `addressId`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddressId', baseContext);
+
+      expect(jsonResponse.addressId).to.be.equal(idAddress);
+    });
+
     it('should check the JSON Response : `firstName`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkBOFirstName', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseFirstName', baseContext);
 
       const value = await boBrandAdressesCreatePage.getValue(page, 'firstName');
       expect(jsonResponse.firstName).to.be.equal(value);
@@ -291,6 +317,13 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
       expect(jsonResponse.address).to.be.equal(value);
     });
 
+    it('should check the JSON Response : `address2`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkBOAddress2', baseContext);
+
+      const value = await boBrandAdressesCreatePage.getValue(page, 'address2');
+      expect(jsonResponse.address2).to.be.equal(value);
+    });
+
     it('should check the JSON Response : `city`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkBOCity', baseContext);
 
@@ -298,11 +331,46 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
       expect(jsonResponse.city).to.be.equal(value);
     });
 
-    it('should check the JSON Response : `phone`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkBOPhone', baseContext);
+    it('should check the JSON Response : `postCode`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkBOPostCode', baseContext);
+
+      const value = await boBrandAdressesCreatePage.getValue(page, 'postCode');
+      expect(jsonResponse.postCode).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `countryId`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkBOCountryId', baseContext);
+
+      const value = await boBrandAdressesCreatePage.getValue(page, 'countryId');
+      expect(value).to.be.equal(createAddress.country);
+    });
+
+    it('should check the JSON Response : `homePhone`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkBOHomePhone', baseContext);
 
       const value = await boBrandAdressesCreatePage.getValue(page, 'phone');
       expect(jsonResponse.homePhone).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `mobilePhone`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkBOMobilePhone', baseContext);
+
+      const value = await boBrandAdressesCreatePage.getValue(page, 'mobilePhone');
+      expect(jsonResponse.mobilePhone).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `other`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkBOOther', baseContext);
+
+      const value = await boBrandAdressesCreatePage.getValue(page, 'other');
+      expect(jsonResponse.other).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `dni`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkBODni', baseContext);
+
+      const value = await boBrandAdressesCreatePage.getValue(page, 'dni');
+      expect(jsonResponse.dni).to.be.equal(value);
     });
   });
 
