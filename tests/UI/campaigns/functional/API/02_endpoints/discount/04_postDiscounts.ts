@@ -47,6 +47,9 @@ describe('API : POST /admin-api/discounts', async () => {
   });
   const today: string = utilsDate.getDateFormat('yyyy-mm-dd');
 
+  // Pre-condition: Enable experimental endpoints
+  setFeatureFlag(boFeatureFlagPage.featureFlagExperimentalEndpoints, true, `${baseContext}_preTest_0`);
+
   // Pre-condition: Enable discount
   // Pre-condition: Enable discount + experimental endpoints
   setFeatureFlag(boFeatureFlagPage.featureFlagDiscount, true, `${baseContext}_preTest`);

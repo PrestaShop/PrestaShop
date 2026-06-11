@@ -71,7 +71,7 @@
         "prestashop/hummingbird": "^2.1",
         "prestashop/pagesnotfound": "^4",
         "prestashop/productcomments": "^8.0",
-        "prestashop/ps_apiresources": "^0.8.0",
+        "prestashop/ps_apiresources": "dev-taxrules-list",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^2.0",
         "prestashop/ps_brandlist": "^1.0",

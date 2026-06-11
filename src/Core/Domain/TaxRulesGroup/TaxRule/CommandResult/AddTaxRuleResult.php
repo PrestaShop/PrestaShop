@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\TaxRule\CommandResult;
 
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\TaxRule\ValueObject\TaxRuleId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 
 /**
@@ -22,11 +23,19 @@ class AddTaxRuleResult
     private TaxRulesGroupId $taxRulesGroupId;
 
     /**
-     * @param TaxRulesGroupId $taxRulesGroupId the (potentially new) group id after historization
+     * @var TaxRuleId[]
      */
-    public function __construct(TaxRulesGroupId $taxRulesGroupId)
+    private array $taxRuleIds;
+
+    /**
+     * @param TaxRulesGroupId $taxRulesGroupId the (potentially new) group id after historization
+     * @param TaxRuleId[] $taxRuleIds the ids of the tax rule(s) actually created (can be fewer than requested
+     *                                when a country/state pair already had a unique rule)
+     */
+    public function __construct(TaxRulesGroupId $taxRulesGroupId, array $taxRuleIds = [])
     {
         $this->taxRulesGroupId = $taxRulesGroupId;
+        $this->taxRuleIds = $taxRuleIds;
     }
 
     /**
@@ -35,5 +44,13 @@ class AddTaxRuleResult
     public function getTaxRulesGroupId(): TaxRulesGroupId
     {
         return $this->taxRulesGroupId;
+    }
+
+    /**
+     * @return TaxRuleId[]
+     */
+    public function getTaxRuleIds(): array
+    {
+        return $this->taxRuleIds;
     }
 }
