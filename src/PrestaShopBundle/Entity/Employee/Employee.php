@@ -225,6 +225,13 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
      */
     private ?string $twoFactorEmailAuthCode = null;
 
+    /**
+     * @ORM\Column(name="two_factor_backup_codes", type="json", nullable=true)
+     *
+     * @var string[]|null
+     */
+    private ?array $twoFactorBackupCodes = null;
+
     private ?string $twoFactorTotpSecretPlain = null;
 
     public function __construct()
@@ -822,6 +829,24 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface, Equ
     public function setTwoFactorEmailEnabled(bool $twoFactorEmailEnabled): self
     {
         $this->twoFactorEmailEnabled = $twoFactorEmailEnabled;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getTwoFactorBackupCodes(): ?array
+    {
+        return $this->twoFactorBackupCodes;
+    }
+
+    /**
+     * @param string[]|null $twoFactorBackupCodes
+     */
+    public function setTwoFactorBackupCodes(?array $twoFactorBackupCodes): self
+    {
+        $this->twoFactorBackupCodes = $twoFactorBackupCodes === null ? null : array_values($twoFactorBackupCodes);
 
         return $this;
     }
