@@ -23,6 +23,32 @@
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
       <div class="float-right">
+        {% if canManageBackupCodes|default(false) %}
+          {% if hasBackupCodes|default(false) %}
+            <button
+              class="btn btn-outline-primary mr-2"
+              type="button"
+              onclick="window.location.href='{{ path('admin_employees_confirm_regenerate_backup_codes', {employeeId: editableEmployee.employeeId.value}) }}'"
+            >
+              {{ 'Regenerate backup codes'|trans({}, 'Admin.Advparameters.Feature') }}
+            </button>
+          {% else %}
+            <button
+              class="btn btn-outline-primary mr-2"
+              type="submit"
+              formaction="{{ path('admin_employees_generate_backup_codes', {employeeId: editableEmployee.employeeId.value}) }}"
+              formmethod="post"
+              formnovalidate
+            >
+              {{ 'Generate backup codes'|trans({}, 'Admin.Advparameters.Feature') }}
+            </button>
+            <input
+              type="hidden"
+              name="_token_generate_backup_codes"
+              value="{{ csrf_token('generate_backup_codes_' ~ editableEmployee.employeeId.value) }}"
+            >
+          {% endif %}
+        {% endif %}
         {% if canResetTwoFactor|default(false) %}
           <button
             type="submit"

@@ -100,6 +100,33 @@ admin_employees_reset_two_factor:
   requirements:
     employeeId: \d+
 
+admin_employees_generate_backup_codes:
+  path: /{employeeId}/backup-codes/generate
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::generateBackupCodesAction'
+    _legacy_controller: AdminEmployees
+  requirements:
+    employeeId: \d+
+
+admin_employees_confirm_regenerate_backup_codes:
+  path: /{employeeId}/backup-codes/regenerate
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::confirmRegenerateBackupCodesAction'
+    _legacy_controller: AdminEmployees
+  requirements:
+    employeeId: \d+
+
+admin_employees_regenerate_backup_codes:
+  path: /{employeeId}/backup-codes/regenerate
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::regenerateBackupCodesAction'
+    _legacy_controller: AdminEmployees
+  requirements:
+    employeeId: \d+
+
 admin_employees_toggle_navigation:
   path: /toggle-navigation
   methods: [ POST ]
