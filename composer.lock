@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "00aa98197dde6e9793be1d9a64fc173b",
+    "content-hash": "61313e0d8a3b4f27ddce4d96fc235e5d",
     "packages": [
         {
             "name": "api-platform/core",
@@ -8324,6 +8324,55 @@
                 "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/8.4.0"
             },
             "time": "2021-12-11T13:40:54+00:00"
+        },
+        {
+            "name": "scheb/2fa-backup-code",
+            "version": "v6.13.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/scheb/2fa-backup-code.git",
+                "reference": "6dceeb5be0f6339d76f8e380ee09631c8bbebc7e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/scheb/2fa-backup-code/zipball/6dceeb5be0f6339d76f8e380ee09631c8bbebc7e",
+                "reference": "6dceeb5be0f6339d76f8e380ee09631c8bbebc7e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "scheb/2fa-bundle": "self.version"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Scheb\\TwoFactorBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Scheb",
+                    "email": "me@christianscheb.de"
+                }
+            ],
+            "description": "Extends scheb/2fa-bundle with backup codes support",
+            "homepage": "https://github.com/scheb/2fa",
+            "keywords": [
+                "2fa",
+                "Authentication",
+                "backup-codes",
+                "symfony",
+                "two-factor",
+                "two-step"
+            ],
+            "support": {
+                "source": "https://github.com/scheb/2fa-backup-code/tree/v6.13.1"
+            },
+            "time": "2024-11-29T19:22:48+00:00"
         },
         {
             "name": "scheb/2fa-bundle",

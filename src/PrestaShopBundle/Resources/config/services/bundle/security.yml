@@ -61,3 +61,6 @@ services:
 
   PrestaShopBundle\Security\Admin\TwoFactorEmployeeStorage:
     autowire: true
+
+  PrestaShopBundle\SchebTwoFactor\EmployeeBackupCodeManager:
+    autowire: true

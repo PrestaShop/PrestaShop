@@ -12,6 +12,10 @@ scheb_two_factor:
     mailer: 'PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer'
     template: '@PrestaShop/Admin/TwoFactorAuthentication/2fa_form.html.twig'
 
+  backup_codes:
+    enabled: true
+    manager: 'PrestaShopBundle\SchebTwoFactor\EmployeeBackupCodeManager'
+
   trusted_device:
     enabled: true
     cookie_name: trusted_device
