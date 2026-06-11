@@ -11,8 +11,8 @@ use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
 use Exception;
 use ImageManager;
-use PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer;
 use PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider;
+use PrestaShop\PrestaShop\Adapter\TotMailer\TwoFactorAuthCodePrestashopMailer;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
@@ -46,8 +46,8 @@ use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
 use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsCheckerInterface;
-use PrestaShop\PrestaShop\Core\Util\String\RandomString;
 use PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProviderInterface;
+use PrestaShop\PrestaShop\Core\Util\String\RandomString;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
@@ -508,7 +508,9 @@ class EmployeeController extends PrestaShopAdminController
         $entityManager->persist($employee);
         $entityManager->flush();
 
-        $request->getSession()->getFlashBag()->set('backup_codes', $backupCodeSet['plainBackupCodes']);
+        foreach ($backupCodeSet['plainBackupCodes'] as $backupCode) {
+            $this->addFlash('backup_codes', $backupCode);
+        }
         $this->addFlash(
             'success',
             $this->trans(
@@ -748,7 +750,9 @@ class EmployeeController extends PrestaShopAdminController
         $entityManager->persist($employee);
         $entityManager->flush();
 
-        $request->getSession()->getFlashBag()->set('backup_codes', $backupCodeSet['plainBackupCodes']);
+        foreach ($backupCodeSet['plainBackupCodes'] as $backupCode) {
+            $this->addFlash('backup_codes', $backupCode);
+        }
         $this->addFlash(
             'success',
             $this->trans(

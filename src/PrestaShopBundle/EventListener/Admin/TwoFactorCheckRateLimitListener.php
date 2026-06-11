@@ -37,10 +37,7 @@ final class TwoFactorCheckRateLimitListener implements EventSubscriberInterface
             return;
         }
 
-        $retryAfter = $rateLimit->getRetryAfter();
-        $retryAfterInSeconds = null !== $retryAfter
-            ? max(1, $retryAfter->getTimestamp() - (new DateTimeImmutable())->getTimestamp())
-            : 60;
+        $retryAfterInSeconds = max(1, $rateLimit->getRetryAfter()->getTimestamp() - (new DateTimeImmutable())->getTimestamp());
 
         throw new CustomUserMessageAuthenticationException(
             $this->translator->trans(

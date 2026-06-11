@@ -10,6 +10,8 @@ scheb_two_factor:
     enabled: false
   email:
     enabled: false
+  backup_codes:
+    enabled: false
   trusted_device:
     enabled: false
 
