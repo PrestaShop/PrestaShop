@@ -41,10 +41,7 @@ class TwoFactorResendController extends PrestaShopAdminController
 
         $limit = $this->twoFactorResendLimiter->create($this->getRateLimitKey($request, $user))->consume();
         if (!$limit->isAccepted()) {
-            $retryAfter = $limit->getRetryAfter();
-            $retryAfterInSeconds = null !== $retryAfter
-                ? max(1, $retryAfter->getTimestamp() - (new DateTimeImmutable())->getTimestamp())
-                : 60;
+            $retryAfterInSeconds = max(1, $limit->getRetryAfter()->getTimestamp() - (new DateTimeImmutable())->getTimestamp());
 
             $this->addFlash(
                 'error',
