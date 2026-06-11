@@ -13,6 +13,7 @@ import {
   boLoginPage,
   type BrowserContext,
   dataCountries,
+  dataStates,
   dataCustomers,
   FakerAddress,
   type Page,
@@ -36,7 +37,8 @@ describe('API : POST /addresses/customers', async () => {
     firstName: 'Test address',
     lastName: dataCustomers.johnDoe.lastName,
     alias: 'test',
-    country: 'France',
+    country: 'United States',
+    state: 'California'
   });
 
   before(async function () {
@@ -82,10 +84,16 @@ describe('API : POST /addresses/customers', async () => {
           firstName: createAddress.firstName,
           lastName: createAddress.lastName,
           address: createAddress.address,
+          address2: createAddress.secondAddress,
           city: createAddress.city,
-          countryId: dataCountries.france.id,
-          postcode: '92400',
+          postCode: createAddress.postalCode,
+          countryId: dataCountries.unitedStates.id,
+          dni: createAddress.dni,
+          company: createAddress.company,
+          vatNumber: createAddress.vatNumber,
+          stateId: dataStates.california.id,
           homePhone: createAddress.phone,
+          mobilephone: createAddress.phone,
         },
       });
       expect(apiResponse.status()).to.eq(201);
@@ -124,12 +132,20 @@ describe('API : POST /addresses/customers', async () => {
 
       expect(jsonResponse.addressId).to.be.gt(0);
       expect(jsonResponse.customerId).to.be.equal(dataCustomers.johnDoe.id);
+      expect(jsonResponse.addressAlias).to.be.equal(createAddress.alias);
       expect(jsonResponse.firstName).to.be.equal(createAddress.firstName);
       expect(jsonResponse.lastName).to.be.equal(createAddress.lastName);
       expect(jsonResponse.address).to.be.equal(createAddress.address);
+      expect(jsonResponse.address2).to.be.equal(createAddress.secondAddress);
       expect(jsonResponse.city).to.be.equal(createAddress.city);
-      expect(jsonResponse.countryId).to.be.equal(dataCountries.france.id);
+      expect(jsonResponse.postCode).to.be.equal(createAddress.postalCode);
+      expect(jsonResponse.countryId).to.be.equal(dataCountries.unitedStates.id);
+      expect(jsonResponse.dni).to.be.equal(createAddress.dni);
+      expect(jsonResponse.company).to.be.equal(createAddress.company);
+      expect(jsonResponse.vatNumber).to.be.equal(createAddress.vatNumber);
+      expect(jsonResponse.stateId).to.be.equal(dataStates.california.id);
       expect(jsonResponse.homePhone).to.be.equal(createAddress.phone);
+      expect(jsonResponse.other).to.be.equal(createAddress.other);
     });
   });
 
@@ -185,6 +201,20 @@ describe('API : POST /addresses/customers', async () => {
       expect(jsonResponse.addressId).to.be.equal(idAddress);
     });
 
+    it('should check the JSON Response : `dni`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAlias', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'dni');
+      expect(jsonResponse.dni).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `alias`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAlias', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'alias');
+      expect(jsonResponse.addressAlias).to.be.equal(value);
+    });
+
     it('should check the JSON Response : `firstName`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseFirstName', baseContext);
 
@@ -199,11 +229,39 @@ describe('API : POST /addresses/customers', async () => {
       expect(jsonResponse.lastName).to.be.equal(value);
     });
 
+    it('should check the JSON Response : `company`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseCompany', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'company');
+      expect(jsonResponse.company).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `vatNumber`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseVatNumber', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'vatNumber');
+      expect(jsonResponse.vatNumber).to.be.equal(value);
+    });
+
     it('should check the JSON Response : `address`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddress', baseContext);
 
       const value = await boAddressesCreatePage.getValue(page, 'address');
       expect(jsonResponse.address).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `address2`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddress', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'address2');
+      expect(jsonResponse.address2).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `zipCode`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddress', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'postCode');
+      expect(jsonResponse.postCode).to.be.equal(value);
     });
 
     it('should check the JSON Response : `city`', async function () {
@@ -218,6 +276,20 @@ describe('API : POST /addresses/customers', async () => {
 
       const value = await boAddressesCreatePage.getValue(page, 'phone');
       expect(jsonResponse.homePhone).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `mobilePhone`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseMobilePhone', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'mobilePhone');
+      expect(jsonResponse.mobilePhone).to.be.equal(value);
+    });
+
+    it('should check the JSON Response : `other`', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseOther', baseContext);
+
+      const value = await boAddressesCreatePage.getValue(page, 'other');
+      expect(jsonResponse.other).to.be.equal(value);
     });
   });
 
