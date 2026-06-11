@@ -10,6 +10,15 @@ framework:
     strict_requirements: ~
   session:
     cookie_secure: 'auto'
+  rate_limiter:
+    two_factor_resend:
+      policy: 'fixed_window'
+      limit: 3
+      interval: '15 minutes'
+    two_factor_check:
+      policy: 'fixed_window'
+      limit: 5
+      interval: '15 minutes'
 
 ux_icons:
   icon_dir: '%prestashop.admin_dir%/themes/new-theme/icons'

@@ -18,6 +18,11 @@ services:
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
 
+  PrestaShopBundle\EventListener\Admin\TwoFactorCheckRateLimitListener:
+    autowire: true
+    arguments:
+      $twoFactorCheckLimiter: '@limiter.two_factor_check'
+
   PrestaShopBundle\EventListener\Admin\RequiredTwoFactorSetupListener:
     autowire: true
     tags:
