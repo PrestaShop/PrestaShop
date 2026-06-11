@@ -51,6 +51,7 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
+  // API : Fetch access token
   describe('API : Fetch the access token', async () => {
     it(`should request the endpoint /access_token with scope ${clientScope}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
@@ -59,6 +60,7 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
     });
   });
 
+  // BO : Create manufacturer address & init currentAddress
   describe('BackOffice : Create a Manufacturer Address', async () => {
     it('should login in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
@@ -116,6 +118,7 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
       idAddress = createResponse.addressId;
       expect(idAddress).to.be.gt(0);
 
+      // Initialize current address state from creation data
       Object.assign(currentAddress, {
         firstName: createAddress.firstName,
         lastName: createAddress.lastName,
@@ -132,6 +135,8 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
     });
   });
 
+  // API : Patch each property individually
+  // addressId, manufacturerId, stateId are read-only → not patched
   [
     {
       propertyName: 'firstName',
@@ -206,66 +211,78 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
     boField: string;
   }) => {
     describe(`API : Update the property \`${data.propertyName}\` with API`, async () => {
-      it(`should request the endpoint /addresses/manufacturers/{addressId} for property "${data.propertyName}"`, async function () {
+      it(`should request the endpoint /addresses/manufacturers/{addressId} for property "${data.propertyName}"`,
+        async function () {
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `requestEndpoint${data.propertyName.charAt(0).toUpperCase() + data.propertyName.slice(1)}`,
+            baseContext,
+          );
+
+          const dataPatch: any = {
+            countryId: dataCountries.france.id,
+          };
+          dataPatch[data.propertyName] = data.propertyValue;
+
+          const apiResponse = await apiContext.patch(`addresses/manufacturers/${idAddress}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            data: dataPatch,
+          });
+
+          expect(apiResponse.status()).to.eq(200);
+          expect(utilsAPI.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
+          expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
+
+          jsonResponse = await apiResponse.json();
+
+          expect(jsonResponse).to.have.all.keys(
+            'addressId',
+            'manufacturerId',
+            'lastName',
+            'firstName',
+            'address',
+            'address2',
+            'city',
+            'postCode',
+            'countryId',
+            'stateId',
+            'homePhone',
+            'mobilePhone',
+            'other',
+            'dni',
+          );
+
+          // Check read-only properties
+          expect(jsonResponse.addressId).to.be.a('number').and.equal(idAddress);
+          expect(jsonResponse.manufacturerId).to.be.a('number').and.equal(2);
+
+          // Check the patched property
+          expect(jsonResponse[data.propertyName]).to.be.a(data.propertyType).and.equal(data.propertyValue);
+
+          // Check that other properties have not been modified
+          Object.entries(currentAddress)
+            .filter(([key]) => key !== data.propertyName)
+            .forEach(([key, expectedValue]) => {
+              expect(
+                jsonResponse[key],
+                `Property "${key}" should not have changed after patching "${data.propertyName}"`,
+              ).to.equal(expectedValue);
+            });
+
+          // Update current state with the new value
+          currentAddress[data.propertyName] = data.propertyValue;
+        });
+
+      it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
         await testContext.addContextItem(
           this,
           'testIdentifier',
-          `requestEndpoint${data.propertyName.charAt(0).toUpperCase() + data.propertyName.slice(1)}`,
+          `goToBrandsPageToCheck${data.propertyName}`,
           baseContext,
         );
-
-        const dataPatch: any = {
-          countryId: dataCountries.france.id,
-        };
-        dataPatch[data.propertyName] = data.propertyValue;
-
-        const apiResponse = await apiContext.patch(`addresses/manufacturers/${idAddress}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          data: dataPatch,
-        });
-
-        expect(apiResponse.status()).to.eq(200);
-        expect(utilsAPI.hasResponseHeader(apiResponse, 'Content-Type')).to.eq(true);
-        expect(utilsAPI.getResponseHeader(apiResponse, 'Content-Type')).to.contains('application/json');
-
-        jsonResponse = await apiResponse.json();
-
-        expect(jsonResponse).to.have.all.keys(
-          'addressId',
-          'manufacturerId',
-          'lastName',
-          'firstName',
-          'address',
-          'address2',
-          'city',
-          'postCode',
-          'countryId',
-          'stateId',
-          'homePhone',
-          'mobilePhone',
-          'other',
-          'dni',
-        );
-
-        expect(jsonResponse.addressId).to.be.a('number').and.equal(idAddress);
-        expect(jsonResponse.manufacturerId).to.be.a('number').and.equal(2);
-
-        expect(jsonResponse[data.propertyName]).to.be.a(data.propertyType).and.equal(data.propertyValue);
-
-        for (const [key, expectedValue] of Object.entries(currentAddress)) {
-          if (key === data.propertyName) continue;
-          expect(jsonResponse[key],
-            `Property "${key}" should not have changed after patching "${data.propertyName}"`,
-          ).to.equal(expectedValue);
-        }
-
-        currentAddress[data.propertyName] = data.propertyValue;
-      });
-
-      it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToBrandsPageToCheck${data.propertyName}`, baseContext);
 
         await boDashboardPage.goToSubMenu(
           page,
@@ -279,11 +296,19 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
       });
 
       it('should filter list by first name', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `filterByFirstName${data.propertyName}`, baseContext);
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `filterByFirstName${data.propertyName}`,
+          baseContext,
+        );
 
         await boBrandsPage.filterAddresses(page, 'input', 'firstname', jsonResponse.firstName);
 
-        const numberOfAddressesAfterFilter = await boBrandsPage.getNumberOfElementInGrid(page, 'manufacturer_address');
+        const numberOfAddressesAfterFilter = await boBrandsPage.getNumberOfElementInGrid(
+          page,
+          'manufacturer_address',
+        );
         expect(numberOfAddressesAfterFilter).to.be.equal(1);
 
         const idAddressBO = parseInt(
@@ -294,7 +319,12 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
       });
 
       it('should go to edit manufacturer address page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToEditAddressPage${data.propertyName}`, baseContext);
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `goToEditAddressPage${data.propertyName}`,
+          baseContext,
+        );
 
         await boBrandsPage.goToEditBrandAddressPage(page, 1);
 
@@ -311,6 +341,7 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
         );
 
         const value = await boBrandAdressesCreatePage.getValue(page, data.boField);
+
         if (data.boField !== 'countryId') {
           expect(value).to.equal(data.propertyValue);
         } else {
@@ -326,32 +357,36 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
           baseContext,
         );
 
-        for (const [key, expectedValue] of Object.entries(currentAddress)) {
-          if (key === data.propertyName) continue;
-          if (key === 'countryId') continue;
+        const boFieldMap: Record<string, string> = {
+          firstName: 'firstName',
+          lastName: 'lastName',
+          address: 'address',
+          address2: 'address2',
+          city: 'city',
+          postCode: 'postCode',
+          homePhone: 'phone',
+          mobilePhone: 'mobilePhone',
+          other: 'other',
+          dni: 'dni',
+        };
 
-          const boFieldMap: Record<string, string> = {
-            firstName: 'firstName',
-            lastName: 'lastName',
-            address: 'address',
-            address2: 'address2',
-            city: 'city',
-            postCode: 'postCode',
-            homePhone: 'phone',
-            mobilePhone: 'mobilePhone',
-            other: 'other',
-            dni: 'dni',
-          };
-
-          if (boFieldMap[key]) {
-            const value = await boBrandAdressesCreatePage.getValue(page, boFieldMap[key]);
-            expect(value, `Property "${key}" should not have changed in BO after patching "${data.propertyName}"`).to.equal(String(expectedValue));
-          }
-        }
+        // Check that other properties have not been modified in BO
+        await Promise.all(
+          Object.entries(currentAddress)
+            .filter(([key]) => key !== data.propertyName && key !== 'countryId' && boFieldMap[key])
+            .map(async ([key, expectedValue]) => {
+              const value = await boBrandAdressesCreatePage.getValue(page, boFieldMap[key]);
+              expect(
+                value,
+                `Property "${key}" should not have changed in BO after patching "${data.propertyName}"`,
+              ).to.equal(String(expectedValue));
+            }),
+        );
       });
     });
   });
 
+  // BO : Delete the manufacturer address
   describe('BackOffice : Delete the Manufacturer Address', async () => {
     it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPageForDeletion', baseContext);

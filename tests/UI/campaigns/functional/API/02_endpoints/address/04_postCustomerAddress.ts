@@ -38,7 +38,7 @@ describe('API : POST /addresses/customers', async () => {
     lastName: dataCustomers.johnDoe.lastName,
     alias: 'test',
     country: 'United States',
-    state: 'California'
+    state: 'California',
   });
 
   before(async function () {

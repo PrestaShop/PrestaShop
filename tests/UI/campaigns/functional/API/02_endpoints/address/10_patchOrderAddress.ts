@@ -59,7 +59,7 @@ describe('API : PATCH /addresses/orders/{orderId}', async () => {
     ],
     paymentMethod: dataPaymentMethods.wirePayment,
   });
-  
+
   const currentAddress: Record<string, string | number> = {};
 
   // Pre-condition: Create customer
@@ -81,6 +81,7 @@ describe('API : PATCH /addresses/orders/{orderId}', async () => {
   // Pre-condition : Create an order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_0`);
 
+  // API : Fetch access token
   describe('API : Fetch the access token', async () => {
     it(`should request the endpoint /access_token with scope ${clientScope}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
@@ -89,6 +90,7 @@ describe('API : PATCH /addresses/orders/{orderId}', async () => {
     });
   });
 
+  // BO : Fetch order ID & init currentAddress
   describe('BackOffice : Fetch the order ID', async () => {
     it('should login in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
@@ -128,7 +130,8 @@ describe('API : PATCH /addresses/orders/{orderId}', async () => {
 
       idOrder = parseInt(await boOrdersPage.getTextColumn(page, 'id_order', 1), 10);
       expect(idOrder).to.be.gt(0);
-      
+
+      // Initialize current address state from IHM creation data
       Object.assign(currentAddress, {
         addressAlias: addressData.alias ?? '',
         firstName: addressData.firstName,
@@ -147,6 +150,9 @@ describe('API : PATCH /addresses/orders/{orderId}', async () => {
       });
     });
   });
+
+  // API : Patch each property individually
+  // orderId, addressId, customerId, stateId are read-only → not patched
 
   [
     {
@@ -285,20 +291,24 @@ describe('API : PATCH /addresses/orders/{orderId}', async () => {
           'other',
           'dni',
         );
-        
+
+        // Check read-only properties
         expect(jsonResponse.orderId).to.be.a('number').and.equal(idOrder);
-        
+
+        // Check the patched property
         expect(jsonResponse[data.propertyName]).to.be.a(data.propertyType).and.equal(data.propertyValue);
-        
-        for (const [key, expectedValue] of Object.entries(currentAddress)) {
-          if (key === data.propertyName) continue;
-          if (key === 'countryId') continue;
-          expect(
-            jsonResponse[key],
-            `Property "${key}" should not have changed after patching "${data.propertyName}"`,
-          ).to.equal(expectedValue);
-        }
-        
+
+        // Check that other properties have not been modified
+        Object.entries(currentAddress)
+          .filter(([key]) => key !== data.propertyName && key !== 'countryId')
+          .forEach(([key, expectedValue]) => {
+            expect(
+              jsonResponse[key],
+              `Property "${key}" should not have changed after patching "${data.propertyName}"`,
+            ).to.equal(expectedValue);
+          });
+
+        // Update current state with the new value
         currentAddress[data.propertyName] = data.propertyValue;
       });
 
@@ -349,6 +359,7 @@ describe('API : PATCH /addresses/orders/{orderId}', async () => {
         expect(editPageTitle).to.contains(boAddressesCreatePage.pageTitleEdit);
 
         const value = await boAddressesCreatePage.getValue(page, data.boField);
+
         if (data.propertyName !== 'countryId') {
           expect(value).to.equal(data.propertyValue);
         } else {
@@ -380,25 +391,30 @@ describe('API : PATCH /addresses/orders/{orderId}', async () => {
           dni: 'dni',
         };
 
-        for (const [key, expectedValue] of Object.entries(currentAddress)) {
-          if (key === data.propertyName) continue;
-          if (key === 'countryId') continue;
+        // Check that other properties have not been modified in BO
+        await Promise.all(
+          Object.entries(currentAddress)
+            .filter(([key]) => key !== data.propertyName && key !== 'countryId' && boFieldMap[key])
+            .map(async ([key, expectedValue]) => {
+              const value = await boAddressesCreatePage.getValue(page, boFieldMap[key]);
+              expect(
+                value,
+                `Property "${key}" should not have changed in BO after patching "${data.propertyName}"`,
+              ).to.equal(String(expectedValue));
+            }),
+        );
 
-          if (boFieldMap[key]) {
-            const value = await boAddressesCreatePage.getValue(page, boFieldMap[key]);
-            expect(
-              value,
-              `Property "${key}" should not have changed in BO after patching "${data.propertyName}"`,
-            ).to.equal(String(expectedValue));
-          }
-        }
-        
-        await boDashboardPage.goToSubMenu(page, boDashboardPage.customersParentLink, boDashboardPage.addressesLink);
+        // Go back to the addresses list for the next iteration
+        await boDashboardPage.goToSubMenu(
+          page,
+          boDashboardPage.customersParentLink,
+          boDashboardPage.addressesLink,
+        );
       });
     });
   });
-  
 
+  // BO : Delete address
   describe('Backoffice : Delete address', async () => {
     it('should filter list by first name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
@@ -424,4 +440,3 @@ describe('API : PATCH /addresses/orders/{orderId}', async () => {
   // Post-condition: Delete customer
   deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
 });
- 

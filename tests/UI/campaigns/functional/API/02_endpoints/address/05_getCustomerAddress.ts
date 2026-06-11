@@ -42,7 +42,7 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
     lastName: customerData.lastName,
     alias: 'test',
     country: 'United States',
-    state: 'California'
+    state: 'California',
   });
 
   // Pre-condition: Create customer
@@ -323,7 +323,7 @@ describe('API : GET /addresses/customers/{addressId}', async () => {
       const pageTitle = await boAddressesCreatePage.getPageTitle(page);
       expect(pageTitle).to.contains(boAddressesCreatePage.pageTitleEdit);
     });
-    
+
     it('should check the JSON Response : `dni`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAlias', baseContext);
 
