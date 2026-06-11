@@ -23,6 +23,10 @@ services:
     arguments:
       $twoFactorCheckLimiter: '@limiter.two_factor_check'
 
+  PrestaShopBundle\Controller\Admin\TwoFactorResendController:
+    autowire: true
+    autoconfigure: true
+
   PrestaShopBundle\EventListener\Admin\RequiredTwoFactorSetupListener:
     autowire: true
     tags:

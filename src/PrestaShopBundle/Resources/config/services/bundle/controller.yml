@@ -20,6 +20,7 @@ services:
       - "%kernel.project_dir%/src/PrestaShopBundle/Controller/Api"
       - "%kernel.project_dir%/src/PrestaShopBundle/Controller/ArgumentResolver"
       - "%kernel.project_dir%/src/PrestaShopBundle/Controller/Exception"
+      - "%kernel.project_dir%/src/PrestaShopBundle/Controller/Admin/TwoFactorResendController.php"
     autoconfigure: true
     autowire: true
 
