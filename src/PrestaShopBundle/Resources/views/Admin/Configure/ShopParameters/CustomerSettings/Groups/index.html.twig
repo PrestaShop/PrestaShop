@@ -15,8 +15,39 @@
 %}
 
 {% block content %}
+  {% block groups_info_panel %}
+    <div class="alert alert-info">
+      <p>{{ 'PrestaShop has three default customer groups:'|trans({}, 'Admin.Shopparameters.Help') }}</p>
+      <p>{{ '%group_name% - All persons without a customer account or customers that are not logged in.'|trans({'%group_name%': '<b>' ~ unidentifiedGroupName|e ~ '</b>'}, 'Admin.Shopparameters.Help')|raw }}</p>
+      <p>{{ '%group_name% - All persons who placed an order through Guest Checkout.'|trans({'%group_name%': '<b>' ~ guestGroupName|e ~ '</b>'}, 'Admin.Shopparameters.Help')|raw }}</p>
+      <p>{{ '%group_name% - All persons who created an account on this site.'|trans({'%group_name%': '<b>' ~ customerGroupName|e ~ '</b>'}, 'Admin.Shopparameters.Help')|raw }}</p>
+    </div>
+  {% endblock %}
+
   {% block groups_list_panel %}
     {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: customerGroupsGrid}) }}
+  {% endblock %}
+
+  {% block default_groups_options %}
+    {% form_theme defaultGroupsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+    <div class="card mt-3">
+      <h3 class="card-header">
+        {{ 'Default groups'|trans({}, 'Admin.Shopparameters.Feature') }}
+      </h3>
+      {{ form_start(defaultGroupsForm, {action: path('admin_customer_groups_save_default_groups')}) }}
+      <div class="card-body">
+        <div class="form-wrapper">
+          {{ form_errors(defaultGroupsForm) }}
+          {{ form_widget(defaultGroupsForm) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-inline-flex float-right">
+          <button class="btn btn-primary" type="submit">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
+      {{ form_end(defaultGroupsForm) }}
+    </div>
   {% endblock %}
 {% endblock %}
 

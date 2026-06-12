@@ -102,6 +102,8 @@ class CQRSDelete extends CQRSCommand
         array $extraProperties = [],
         ?string $CQRSCommand = null,
         array $scopes = [],
+        ?string $CQRSQuery = null,
+        ?array $CQRSQueryMapping = null,
         ?array $ApiResourceMapping = null,
         ?array $CQRSCommandMapping = null,
         ?bool $experimentalOperation = null,

@@ -1,11 +1,13 @@
 // Import utils
 import testContext from '@utils/testContext';
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 import {
   boCustomerGroupsPage,
   boCustomerGroupsCreatePage,
   boCustomerSettingsPage,
   boDashboardPage,
+  boFeatureFlagPage,
   boLoginPage,
   type BrowserContext,
   dataGroups,
@@ -18,6 +20,8 @@ import {
 import {expect} from 'chai';
 
 const baseContext: string = 'functional_BO_shopParameters_customerSettings_groups_filterSortAndPaginationGroups';
+
+setFeatureFlag(boFeatureFlagPage.featureFlagCustomerGroup, true, `${baseContext}_preTest`);
 
 describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination groups', async () => {
   let browserContext: BrowserContext;
@@ -355,3 +359,5 @@ describe('BO - Shop Parameters - Customer Settings : Filter, sort and pagination
     });
   });
 });
+
+setFeatureFlag(boFeatureFlagPage.featureFlagCustomerGroup, false, `${baseContext}_postTest`);

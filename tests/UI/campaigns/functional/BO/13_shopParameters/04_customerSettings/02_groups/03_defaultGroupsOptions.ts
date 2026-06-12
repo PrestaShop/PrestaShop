@@ -1,11 +1,13 @@
 // Import utils
 import testContext from '@utils/testContext';
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 import {expect} from 'chai';
 import {
   boCustomerGroupsPage,
   boCustomerSettingsPage,
   boDashboardPage,
+  boFeatureFlagPage,
   boLoginPage,
   type BrowserContext,
   type Page,
@@ -13,6 +15,8 @@ import {
 } from '@prestashop-core/ui-testing';
 
 const baseContext: string = 'functional_BO_shopParameters_customerSettings_groups_defaultGroupsOptions';
+
+setFeatureFlag(boFeatureFlagPage.featureFlagCustomerGroup, true, `${baseContext}_preTest`);
 
 describe('BO - Shop Parameters - Customer Settings : Default groups options', async () => {
   let browserContext: BrowserContext;
@@ -103,3 +107,5 @@ describe('BO - Shop Parameters - Customer Settings : Default groups options', as
     expect(options).to.equal('Visitor Guest Customer');
   });
 });
+
+setFeatureFlag(boFeatureFlagPage.featureFlagCustomerGroup, false, `${baseContext}_postTest`);

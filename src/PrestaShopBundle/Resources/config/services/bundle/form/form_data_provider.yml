@@ -330,3 +330,8 @@ services:
 
   PrestaShopBundle\Form\Admin\Login\ResetPasswordFormDataProvider:
     autowire: true
+
+  prestashop.admin.customer_group.default_groups.data_provider:
+    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerGroup\DefaultGroupsFormDataProvider'
+    arguments:
+      - '@prestashop.adapter.customer_group.default_groups.configuration'

@@ -8,48 +8,48 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class CustomerGroupsGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+    use DeleteActionTrait;
+
     public const GRID_ID = 'customer_groups';
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function getId()
+    protected function getId(): string
     {
         return self::GRID_ID;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function getName()
+    protected function getName(): string
     {
         return $this->trans('Customer groups', [], 'Admin.Navigation.Menu');
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function getColumns()
+    protected function getColumns(): ColumnCollection
     {
         return (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('title_bulk'))
                     ->setOptions([
                         'bulk_field' => 'id_group',
+                        'disabled_field' => 'is_default_group',
                     ])
             )
             ->add(
@@ -81,10 +81,22 @@ class CustomerGroupsGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new DataColumn('show_prices'))
+                (new ToggleColumn('show_prices'))
                     ->setName($this->trans('Show prices', [], 'Admin.Shopparameters.Feature'))
                     ->setOptions([
                         'field' => 'show_prices',
+                        'primary_field' => 'id_group',
+                        'route' => 'admin_customer_groups_toggle_show_prices',
+                        'route_param_name' => 'groupId',
+                        'sortable' => false,
+                    ])
+            )
+            ->add(
+                (new DateTimeColumn('date_add'))
+                    ->setName($this->trans('Creation date', [], 'Admin.Shopparameters.Feature'))
+                    ->setOptions([
+                        'field' => 'date_add',
+                        'format' => 'Y-m-d H:i:s',
                     ])
             )
             ->add(
@@ -102,15 +114,25 @@ class CustomerGroupsGridDefinitionFactory extends AbstractGridDefinitionFactory
                                         'route_param_field' => 'id_group',
                                         'clickable_row' => true,
                                     ])
+                            )
+                            ->add(
+                                $this->buildDeleteAction(
+                                    'admin_customer_groups_delete',
+                                    'groupId',
+                                    'id_group'
+                                )
                             ),
                     ])
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getFilters()
+    protected function getBulkActions(): BulkActionCollection
+    {
+        return (new BulkActionCollection())
+            ->add($this->buildBulkDeleteAction('admin_customer_groups_bulk_delete'));
+    }
+
+    protected function getFilters(): FilterCollection
     {
         return (new FilterCollection())
             ->add(
@@ -144,14 +166,18 @@ class CustomerGroupsGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('reduction')
             )
             ->add(
-                (new Filter('show_prices', TextType::class))
+                (new Filter('show_prices', YesAndNoChoiceType::class))
                     ->setTypeOptions([
                         'required' => false,
-                        'attr' => [
-                            'placeholder' => $this->translator->trans('Search', [], 'Admin.Global'),
-                        ],
                     ])
                     ->setAssociatedColumn('show_prices')
+            )
+            ->add(
+                (new Filter('date_add', DateRangeType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('date_add')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
@@ -163,7 +189,6 @@ class CustomerGroupsGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'redirect_route' => 'admin_customer_groups_index',
                     ])
                     ->setAssociatedColumn('actions')
-            )
-        ;
+            );
     }
 }

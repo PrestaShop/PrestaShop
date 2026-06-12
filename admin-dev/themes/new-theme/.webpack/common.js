@@ -78,6 +78,7 @@ module.exports = {
     customer_address_form: './js/pages/address/form',
     customer_form: './js/pages/customer/form',
     customer_groups: './js/pages/customer-groups',
+    customer_groups_form: './js/pages/customer-groups/form',
     customer_outstanding: './js/pages/outstanding',
     customer_preferences: './js/pages/customer-preferences',
     customer_thread: './js/pages/customer-thread/index',
