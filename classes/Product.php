@@ -5614,7 +5614,7 @@ class ProductCore extends ObjectModel
         ]);
 
         // Always recompute unit prices based on initial ratio so that discounts are applied on unit price as well
-        $unitPriceRatio = self::computeUnitPriceRatio($row, $id_product_attribute, $quantityToUseForPriceCalculations, $context);
+        $unitPriceRatio = self::computeUnitPriceRatio($row, $id_product_attribute, $context);
         $row['unit_price_ratio'] = $unitPriceRatio;
         $row['unit_price_tax_excluded'] = $unitPriceRatio != 0 ? $priceTaxExcluded / $unitPriceRatio : 0.0;
         $row['unit_price_tax_included'] = $unitPriceRatio != 0 ? $priceTaxIncluded / $unitPriceRatio : 0.0;
@@ -5631,61 +5631,49 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Compute unit price ratio based on the saved unit price, we make sure that quantities, currency rates and
-     * combination impact are taken into account.
+     * Compute unit price ratio based on the saved prices on both product and combinations.
      *
      * @param array $productRow
      * @param int $combinationId
-     * @param int $quantity
      * @param Context $context
      *
      * @return float
      */
-    private static function computeUnitPriceRatio(array $productRow, int $combinationId, int $quantity, Context $context): float
+    private static function computeUnitPriceRatio(array $productRow, int $combinationId, Context $context): float
     {
+        // If we have a combination Id, we will prepare it
+        if ($combinationId) {
+            $combination = new Combination($combinationId);
+        }
+
+        // First, we get the unit price without tax saved in the database
         $baseUnitPrice = 0.0;
         if (isset($productRow['unit_price'])) {
-            // Unit price is supposed to be in DB and accessible in the row
             $baseUnitPrice = (float) $productRow['unit_price'];
         }
 
-        // Then if combination has an impact we apply it on unit price
+        // Then, if combination has an impact we apply it on unit price
         if ($combinationId) {
-            $combination = new Combination($combinationId);
             $baseUnitPrice = $baseUnitPrice + $combination->unit_price_impact;
         }
 
+        // If there is none, nothing to calculate
         if ($baseUnitPrice == 0) {
             return 0;
         }
 
-        // Finally, we apply the currency rate
-        $defaultCurrencyId = Currency::getDefaultCurrencyId();
-        $currencyId = Validate::isLoadedObject($context->currency) ? (int) $context->currency->id : $defaultCurrencyId;
-        if ($currencyId !== $defaultCurrencyId) {
-            $baseUnitPrice = Tools::convertPrice($baseUnitPrice, $currencyId);
+        // Now, we get a basic price of this product, with no discounts, exactly as in the backoffice.
+        // We are not using new Product because that "breaks" the price attribute in the constructor.
+        $baseProductPrice = (float) Db::getInstance()->getValue('
+            SELECT price
+            FROM ' . _DB_PREFIX_ . 'product_shop
+            WHERE id_product = ' . (int) $productRow['id_product'] . ' AND id_shop = ' . (int) $context->shop->id
+        );
+        if ($combinationId) {
+            $baseProductPrice = $baseProductPrice + $combination->price;
         }
 
-        // Compute price ratio based on initial product price and initial unit price (without taxes, group discount, cart rules)
-        $noSpecificPrice = null;
-        $baseProductPrice = Product::getPriceStatic(
-            (int) $productRow['id_product'],
-            false,
-            $combinationId,
-            6,
-            null,
-            false,
-            false,
-            $quantity,
-            false,
-            null,
-            null,
-            null,
-            $noSpecificPrice,
-            true,
-            false
-        );
-
+        // And we calculate the precise ratio
         return $baseProductPrice / $baseUnitPrice;
     }
 
