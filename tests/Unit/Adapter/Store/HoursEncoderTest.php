@@ -71,12 +71,12 @@ class HoursEncoderTest extends TestCase
             [
                 1 => ['09:00 | 18:00', ''],
                 2 => ['10:00 | 20:00'],
-                2 => ['nope'],
+                3 => ['nope'],
             ],
             [
                 1 => json_encode([['09:00', '18:00'], ['']]),
                 2 => json_encode([['10:00', '20:00']]),
-                2 => json_encode([['nope']]),
+                3 => json_encode([['nope']]),
             ],
         ];
     }
