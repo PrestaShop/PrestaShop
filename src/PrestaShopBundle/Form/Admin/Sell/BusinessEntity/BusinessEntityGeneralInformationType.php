@@ -6,6 +6,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\BusinessEntity;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -14,6 +16,9 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BusinessEntityGeneralInformationType extends TranslatorAwareType
@@ -24,6 +29,8 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
     public const FIELD_DELIVERY_AUTHORIZED = 'delivery_authorized';
     public const FIELD_STATUS = 'status';
     public const FIELD_CUSTOMER_GROUP_ID = 'customer_group_id';
+
+    public const MAX_NAME_LENGTH = 255;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -39,10 +46,12 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
             ->add(self::FIELD_NAME, TextType::class, [
                 'label' => $this->trans('Name', 'Admin.Global'),
                 'help' => $this->trans('The display name of the business entity.', 'Admin.Catalog.Feature'),
+                'constraints' => $this->getNameConstraints(),
             ])
             ->add(self::FIELD_LEGAL_NAME, TextType::class, [
                 'label' => $this->trans('Legal Name', 'Admin.Global'),
                 'help' => $this->trans('The official registered name of the company.', 'Admin.Catalog.Feature'),
+                'constraints' => $this->getNameConstraints(),
             ])
             ->add(self::FIELD_EXTERNAL_REF, TextType::class, [
                 'label' => $this->trans('External Reference', 'Admin.Global'),
@@ -62,5 +71,31 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
                 'choices' => $this->groupByIdChoiceProvider->getChoices(),
                 'required' => true,
             ]);
+    }
+
+    /**
+     * @return array<int, Constraint>
+     */
+    private function getNameConstraints(): array
+    {
+        return [
+            new NotBlank([
+                'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
+            ]),
+            new Length([
+                'max' => self::MAX_NAME_LENGTH,
+                'maxMessage' => $this->trans(
+                    'This field cannot be longer than %limit% characters',
+                    'Admin.Notifications.Error',
+                    ['%limit%' => self::MAX_NAME_LENGTH]
+                ),
+            ]),
+            new TypedRegex([
+                'type' => TypedRegex::TYPE_GENERIC_NAME,
+            ]),
+            new CleanHtml([
+                'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+            ]),
+        ];
     }
 }

@@ -63,7 +63,7 @@ class BusinessEntityType extends TranslatorAwareType
                 'entry_type' => BusinessEntityAddressType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'label' => $this->trans('Billing addresses', 'Admin.Global'),
+                'label' => $this->trans('Shipping addresses', 'Admin.Global'),
                 'entry_options' => [
                     'data' => $shippingAddressCountries,
                 ],

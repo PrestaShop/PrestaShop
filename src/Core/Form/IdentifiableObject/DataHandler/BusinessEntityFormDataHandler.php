@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\AddBusinessEntityHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityGeneralInformation;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityId;
@@ -16,6 +17,7 @@ final class BusinessEntityFormDataHandler implements FormDataHandlerInterface
 {
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
+        protected readonly ShopContext $shopContext,
     ) {
     }
 
@@ -35,7 +37,7 @@ final class BusinessEntityFormDataHandler implements FormDataHandlerInterface
             $generalInformation->getExternalRef(),
             $generalInformation->isDeliveryAuthorized(),
             $generalInformation->getStatus(),
-            $generalInformation->getShopId(),
+            $this->resolveShopId($generalInformation->getShopId()),
             $generalInformation->getCustomerGroupId(),
             $data['billingAddressAsShippingAddress'],
             $data['billing_address'],
@@ -43,6 +45,15 @@ final class BusinessEntityFormDataHandler implements FormDataHandlerInterface
         );
 
         return $this->commandBus->handle($command);
+    }
+
+    private function resolveShopId(int $submittedShopId): int
+    {
+        if ($this->shopContext->isSingleShopContext()) {
+            return $this->shopContext->getId();
+        }
+
+        return $submittedShopId;
     }
 
     /**

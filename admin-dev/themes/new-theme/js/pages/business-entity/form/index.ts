@@ -172,16 +172,17 @@ function addBusinessEntityAddressFormDeleteLink(item: HTMLElement) {
 
   removeFormButton.addEventListener('click', () => {
     if (item.querySelector(businessEntityAddressId) === selectedBusinessEntityShippingAddress) {
-      const adddressCardElementSelector = `${BusinessEntityFormMap.businessEntityShippingAddress} div.card`;
+      const addressIndex = selectedBusinessEntityShippingAddress?.dataset.addressIndex;
+      const addressCardElementSelector = `${businessEntityShippingAddress} div.card:not([data-address-index="${addressIndex}"])`;
       setDefaultBusinessEntityAddress(
-        document.querySelector(adddressCardElementSelector) as AddressCard,
+        document.querySelector(addressCardElementSelector) as AddressCard,
         AddressTypeEnum.SHIPPING,
       );
     }
 
     if (item.querySelector(businessEntityAddressId) === selectedBusinessEntityBillingAddress) {
       const addressIndex = selectedBusinessEntityBillingAddress?.dataset.addressIndex;
-      const addressCardElementSelector = `${businessEntityBillingAddress} div:not([data-address-index="${addressIndex}"])`;
+      const addressCardElementSelector = `${businessEntityBillingAddress} div.card:not([data-address-index="${addressIndex}"])`;
       setDefaultBusinessEntityAddress(
         document
           .querySelector(addressCardElementSelector) as AddressCard,
