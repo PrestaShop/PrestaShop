@@ -31,9 +31,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 #[AsCommandHandler]
 final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterface
 {
-    /** @var AddressId[] */
-    private array $createdAddressId = [];
-
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly AddressRepository $addressRepository,
@@ -58,17 +55,33 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
         $businessEntity->setIdShop($command->getShopId());
         $businessEntity->setIdCustomerGroup($command->getCustomerGroupId());
 
+        /** @var AddressId[] $createdAddressIds */
+        $createdAddressIds = [];
+
+        // Hybrid persistence: the BusinessEntity aggregate is a Doctrine entity, but addresses are
+        // created through the legacy Address ObjectModel (there is no Doctrine Address entity yet, so
+        // BusinessEntityAddress only holds a logical id_address int, not a real ORM relation).
+        // The two persistence layers do NOT share a transaction: the legacy addresses are written to
+        // the database immediately, before the Doctrine flush below. If the flush fails we therefore
+        // have to compensate by deleting the orphan addresses ourselves — there is no transactional
+        // rollback spanning both layers. This stays until Address gets a Doctrine entity of its own.
         try {
-            $this->addAddressesToBusinessEntity($businessEntity, $command);
+            $this->addAddressesToBusinessEntity($businessEntity, $command, $createdAddressIds);
             $this->em->persist($businessEntity);
             $this->em->flush();
         } catch (Exception $e) {
-            if (count($this->createdAddressId)) {
-                foreach ($this->createdAddressId as $addressId) {
-                    try {
-                        $this->addressRepository->delete($addressId);
-                    } catch (Exception) {
-                    }
+            foreach ($createdAddressIds as $addressId) {
+                try {
+                    $this->addressRepository->delete($addressId);
+                } catch (Exception $cleanupException) {
+                    $this->logger->error(
+                        'Failed to roll back business entity address after creation failure',
+                        [
+                            'object_type' => 'Address',
+                            'object_id' => $addressId->getValue(),
+                            'exception' => $cleanupException,
+                        ]
+                    );
                 }
             }
             throw new UnableToCreateBusinessEntityAddress(previous: $e);
@@ -88,19 +101,21 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
     }
 
     /**
+     * @param AddressId[] $createdAddressIds
+     *
      * @throws CountryConstraintException
      * @throws StateConstraintException
      * @throws UnableToCreateBusinessEntityAddress
      */
-    protected function addAddressesToBusinessEntity(BusinessEntity $businessEntity, AddBusinessEntityCommand $command): void
+    protected function addAddressesToBusinessEntity(BusinessEntity $businessEntity, AddBusinessEntityCommand $command, array &$createdAddressIds): void
     {
-        foreach (array_merge($command->getBillingAddresses(), $command->getShippingAddresses()) as $item) {
-            $addressId = $this->addAddressToBusinessEntity($item, $businessEntity);
-            $this->createdAddressId[] = $addressId;
+        foreach (array_merge($command->getBillingAddresses(), $command->getShippingAddresses()) as $address) {
+            $addressId = $this->addAddressToBusinessEntity($address);
+            $createdAddressIds[] = $addressId;
             $businessEntityAddress = new BusinessEntityAddress();
 
-            if ($item instanceof BusinessEntityBillingAddress) {
-                $addressType = $item->isDefault() && $command->isBillingAddressAsShippingAddress()
+            if ($address instanceof BusinessEntityBillingAddress) {
+                $addressType = $address->isDefault() && $command->isBillingAddressAsShippingAddress()
                     ? AddressTypeEnum::BOTH : AddressTypeEnum::INVOICE;
             } else {
                 $addressType = AddressTypeEnum::DELIVERY;
@@ -110,7 +125,7 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
                 ->setAddressId($addressId->getValue())
                 ->setAddressType($addressType);
 
-            $businessEntityAddress->setIsDefault($item->isDefault());
+            $businessEntityAddress->setIsDefault($address->isDefault());
 
             $businessEntity->addBusinessEntityAddress($businessEntityAddress);
         }
@@ -122,8 +137,7 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
      * @throws UnableToCreateBusinessEntityAddress
      */
     protected function addAddressToBusinessEntity(
-        AbstractBusinessEntityAddress $address,
-        BusinessEntity $businessEntity
+        AbstractBusinessEntityAddress $address
     ): AddressId {
         $modelAddress = new Address();
         $modelAddress->id_country = $address->getCountryId()->getValue();
@@ -133,7 +147,7 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
         $modelAddress->address1 = $address->getAddress1();
         $modelAddress->address2 = $address->getAddress2();
         $modelAddress->city = $address->getCity();
-        $modelAddress->postcode = $address->getPostCode();
+        $modelAddress->postcode = $address->getPostcode();
         $modelAddress->id_state = $address->getStateId()->getValue();
 
         try {
