@@ -202,7 +202,7 @@ describe('API : POST /addresses/customers', async () => {
     });
 
     it('should check the JSON Response : `dni`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAlias', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseDni', baseContext);
 
       const value = await boAddressesCreatePage.getValue(page, 'dni');
       expect(jsonResponse.dni).to.be.equal(value);
@@ -251,14 +251,14 @@ describe('API : POST /addresses/customers', async () => {
     });
 
     it('should check the JSON Response : `address2`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddress', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddress2', baseContext);
 
       const value = await boAddressesCreatePage.getValue(page, 'address2');
       expect(jsonResponse.address2).to.be.equal(value);
     });
 
     it('should check the JSON Response : `zipCode`', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseAddress', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkResponseZipCode', baseContext);
 
       const value = await boAddressesCreatePage.getValue(page, 'postCode');
       expect(jsonResponse.postCode).to.be.equal(value);
