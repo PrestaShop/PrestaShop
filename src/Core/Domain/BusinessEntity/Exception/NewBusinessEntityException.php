@@ -6,8 +6,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception;
 
-use Exception;
-
-class NewBusinessEntityException extends Exception
+class NewBusinessEntityException extends BusinessEntityException
 {
 }

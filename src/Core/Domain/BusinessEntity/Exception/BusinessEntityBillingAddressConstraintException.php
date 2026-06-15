@@ -6,9 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception;
 
-use Exception;
-
-class BusinessEntityBillingAddressConstraintException extends Exception
+class BusinessEntityBillingAddressConstraintException extends BusinessEntityException
 {
     public const MISSING_BILLING_ADDRESS = 1;
     public const MISSING_DEFAULT_BILLING_ADDRESS = 2;

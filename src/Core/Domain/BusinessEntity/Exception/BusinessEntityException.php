@@ -6,10 +6,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception;
 
-class BusinessEntityConstraintException extends BusinessEntityException
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+
+/**
+ * Class BusinessEntityException is base "BusinessEntity" context exception
+ */
+class BusinessEntityException extends DomainException
 {
-    /**
-     * When business entity id value is invalid
-     */
-    public const INVALID_ID = 1;
 }

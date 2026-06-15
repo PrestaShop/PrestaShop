@@ -6,14 +6,14 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command;
 
-use PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\AddBusinessEntityHandler;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\AddBusinessEntityHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityBillingAddressConstraintException;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 
 /**
  * Class AddBusinessEntityCommand is used to add a new business entity.
  *
- * @see AddBusinessEntityHandler
+ * @see AddBusinessEntityHandlerInterface
  */
 class AddBusinessEntityCommand
 {

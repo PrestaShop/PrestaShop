@@ -17,6 +17,10 @@ final class BusinessEntityFormDataProvider implements FormDataProviderInterface
     public const DEFAULT_BILLING_ADDRESS_INDEX = 1;
     public const DEFAULT_SHIPPING_ADDRESS_INDEX = 0;
 
+    /**
+     * @todo Hardcoded default customer group. The configurable default (wired through Configuration)
+     *       is delivered in a separate branch; replace this constant with that setting once merged.
+     */
     private const DEFAULT_CUSTOMER_GROUP_ID = 3;
 
     private readonly int $defaultCountryId;
