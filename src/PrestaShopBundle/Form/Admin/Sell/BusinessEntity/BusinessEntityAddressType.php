@@ -55,7 +55,7 @@ class BusinessEntityAddressType extends TranslatorAwareType
         $showStates = !empty($stateChoices);
 
         $builder->add(self::FIELD_ALIAS, TextType::class, [
-            'label' => $this->trans('Address alias', 'Admin.Orderscustomers.Feature'),
+            'label' => $this->trans('Address alias', 'Admin.Catalog.Feature'),
             'help' => $genericInvalidCharsMessage,
             'required' => true,
             'constraints' => [

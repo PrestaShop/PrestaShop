@@ -92,7 +92,7 @@ class BusinessEntitiesController extends PrestaShopAdminController
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_business_entities_create'),
-            'desc' => $this->trans('Add new business entity', [], 'Admin.Orderscustomers.Feature'),
+            'desc' => $this->trans('Add new business entity', [], 'Admin.Catalog.Feature'),
             'icon' => 'add_circle_outline',
         ];
 
@@ -105,28 +105,28 @@ class BusinessEntitiesController extends PrestaShopAdminController
             UnableToCreateBusinessEntityAddress::class => $this->trans(
                 'An error occurred while creating the business entity.',
                 [],
-                'Admin.Orderscustomers.Notification'
+                'Admin.Notifications.Error'
             ),
             BusinessEntityBillingAddressConstraintException::class => [
                 BusinessEntityBillingAddressConstraintException::MISSING_BILLING_ADDRESS => $this->trans(
                     'At least one billing address is required if you want to use default billing address as shipping address.',
                     [],
-                    'Admin.Orderscustomers.Notification'
+                    'Admin.Notifications.Error'
                 ),
                 BusinessEntityBillingAddressConstraintException::MISSING_SHIPPING_ADDRESS => $this->trans(
                     'At least one shipping address is required if you don\'t want to use default billing address as shipping address.',
                     [],
-                    'Admin.Orderscustomers.Notification'
+                    'Admin.Notifications.Error'
                 ),
                 BusinessEntityBillingAddressConstraintException::MISSING_DEFAULT_BILLING_ADDRESS => $this->trans(
                     'You must have one default billing address',
                     [],
-                    'Admin.Orderscustomers.Notification'
+                    'Admin.Notifications.Error'
                 ),
                 BusinessEntityBillingAddressConstraintException::MISSING_DEFAULT_SHIPPING_ADDRESS => $this->trans(
                     'You must have one default shipping address',
                     [],
-                    'Admin.Orderscustomers.Notification'
+                    'Admin.Notifications.Error'
                 ),
             ],
         ];
