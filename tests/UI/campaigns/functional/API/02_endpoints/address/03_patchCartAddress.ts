@@ -297,6 +297,8 @@ describe('API : PATCH /addresses/carts/{cartAddressId}', async () => {
 
         expect(jsonResponse).to.have.all.keys(
           'cartId',
+          'addressId',
+          'customerId',
           'addressAlias',
           'firstName',
           'lastName',
