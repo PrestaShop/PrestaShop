@@ -12,50 +12,27 @@ class AttachmentControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
+        $attachmentPath = _PS_DOWNLOAD_DIR_ . $attachment->file;
+
+        if (!file_exists($attachmentPath)) {
+            Tools::redirect('pagenotfound');
+        }
+
         Hook::exec('actionDownloadAttachment', ['attachment' => &$attachment]);
 
-        if (ob_get_level() && ob_get_length() > 0) {
+        while (ob_get_level()) {
             ob_end_clean();
         }
 
+        $filenameFallback = mb_convert_encoding($attachment->file_name, 'ISO-8859-1');
+
         header('Content-Transfer-Encoding: binary');
         header('Content-Type: ' . $attachment->mime);
-        header('Content-Length: ' . filesize(_PS_DOWNLOAD_DIR_ . $attachment->file));
-        header('Content-Disposition: attachment; filename="' . utf8_decode($attachment->file_name) . '"');
+        header('Content-Length: ' . filesize($attachmentPath));
+        header('Content-Disposition: attachment; filename="' . $filenameFallback . '"; filename*=utf8\'\' ' . urlencode($attachment->file_name));
         @set_time_limit(0);
-        $this->readfileChunked(_PS_DOWNLOAD_DIR_ . $attachment->file);
+        readfile(_PS_DOWNLOAD_DIR_ . $attachment->file);
+
         exit;
-    }
-
-    /**
-     * @see   http://ca2.php.net/manual/en/function.readfile.php#54295
-     */
-    public function readfileChunked(string $filename, bool $retbytes = true)
-    {
-        // how many bytes per chunk
-        $chunksize = 1 * (1024 * 1024);
-        $buffer = '';
-        $totalBytes = 0;
-
-        $handle = fopen($filename, 'rb');
-        if ($handle === false) {
-            return false;
-        }
-        while (!feof($handle)) {
-            $buffer = fread($handle, $chunksize);
-            echo $buffer;
-            ob_flush();
-            flush();
-            if ($retbytes) {
-                $totalBytes += strlen($buffer);
-            }
-        }
-        $status = fclose($handle);
-        if ($retbytes && $status) {
-            // return num. bytes delivered like readfile() does.
-            return $totalBytes;
-        }
-
-        return $status;
     }
 }
