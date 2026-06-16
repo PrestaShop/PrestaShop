@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Search\QueryHandler;
 
-use Db;
+use PrestaShop\PrestaShop\Adapter\Search\Repository\IndexedProductsRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Search\Query\GetIndexedProductsCount;
 use PrestaShop\PrestaShop\Core\Domain\Search\QueryHandler\GetIndexedProductsCountHandlerInterface;
@@ -18,19 +18,18 @@ use Shop;
 #[AsQueryHandler]
 final class GetIndexedProductsCountHandler implements GetIndexedProductsCountHandlerInterface
 {
+    public function __construct(
+        private readonly IndexedProductsRepository $indexedProductsRepository,
+    ) {
+    }
+
     public function handle(GetIndexedProductsCount $query): IndexedProductsCount
     {
-        $row = Db::getInstance()->getRow(
-            'SELECT COUNT(*) as total, SUM(product_shop.indexed) as indexed'
-            . ' FROM `' . _DB_PREFIX_ . 'product` p'
-            . Shop::addSqlAssociation('product', 'p')
-            . ' WHERE product_shop.`visibility` IN ("both", "search")'
-            . ' AND product_shop.`active` = 1'
-        );
+        $counts = $this->indexedProductsRepository->getIndexedProductsCount(Shop::getContextListShopID());
 
         return new IndexedProductsCount(
-            (int) ($row['indexed'] ?? 0),
-            (int) ($row['total'] ?? 0),
+            $counts['indexed'],
+            $counts['total'],
         );
     }
 }
