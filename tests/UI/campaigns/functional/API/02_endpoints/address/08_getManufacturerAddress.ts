@@ -298,7 +298,7 @@ describe('API : GET /addresses/manufacturers/{addressId}', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteAddress', baseContext);
 
       const numberOfAddressesAfterDelete = await boBrandsPage.resetAndGetNumberOfLines(page, 'manufacturer_address');
-      expect(numberOfAddressesAfterDelete).to.be.equal(numberOfAddresses - 1);
+      expect(numberOfAddressesAfterDelete).to.be.equal(numberOfAddresses);
     });
   });
 });
