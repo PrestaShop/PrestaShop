@@ -20,8 +20,6 @@ use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\UnableToCreateBus
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\AbstractBusinessEntityAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityBillingAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityId;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShopBundle\Entity\B2B\BusinessEntity;
 use PrestaShopBundle\Entity\B2B\BusinessEntityAddress;
 use PrestaShopBundle\Entity\Enum\AddressTypeEnum;
@@ -103,11 +101,9 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
     /**
      * @param AddressId[] $createdAddressIds
      *
-     * @throws CountryConstraintException
-     * @throws StateConstraintException
      * @throws UnableToCreateBusinessEntityAddress
      */
-    protected function addAddressesToBusinessEntity(BusinessEntity $businessEntity, AddBusinessEntityCommand $command, array &$createdAddressIds): void
+    private function addAddressesToBusinessEntity(BusinessEntity $businessEntity, AddBusinessEntityCommand $command, array &$createdAddressIds): void
     {
         foreach (array_merge($command->getBillingAddresses(), $command->getShippingAddresses()) as $address) {
             $addressId = $this->addAddressToBusinessEntity($address);
@@ -132,11 +128,9 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
     }
 
     /**
-     * @throws CountryConstraintException
-     * @throws StateConstraintException
      * @throws UnableToCreateBusinessEntityAddress
      */
-    protected function addAddressToBusinessEntity(
+    private function addAddressToBusinessEntity(
         AbstractBusinessEntityAddress $address
     ): AddressId {
         $modelAddress = new Address();

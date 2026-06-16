@@ -8,6 +8,7 @@
 {% macro customAddressPrototype(prototype, prototype_name) %}
   {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
     index: prototype_name,
+    position: prototype_name,
     address: prototype,
   }) }}
 {% endmacro %}
@@ -82,7 +83,8 @@
           {% for address in businessEntityForm.billing_address %}
             <li>
               {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
-                index: loop.index,
+                index: loop.index0,
+                position: loop.index,
                 address: address,
               }) }}
             </li>
@@ -114,7 +116,8 @@
           {% for address in businessEntityForm.shipping_address %}
             <li>
               {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
-                index: loop.index,
+                index: loop.index0,
+                position: loop.index,
                 address: address,
               }) }}
             </li>

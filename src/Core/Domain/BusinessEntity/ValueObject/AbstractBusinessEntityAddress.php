@@ -60,7 +60,7 @@ abstract class AbstractBusinessEntityAddress
         return $this->postcode;
     }
 
-    public function getStateId(): ?StateIdInterface
+    public function getStateId(): StateIdInterface
     {
         return $this->stateId;
     }

@@ -29,7 +29,7 @@ final class BusinessEntityFormDataProvider implements FormDataProviderInterface
         Configuration $configuration,
         private readonly ShopContext $shopContext,
     ) {
-        $this->defaultCountryId = (int) $configuration->get('PS_COUNTRY_DEFAULT');
+        $this->defaultCountryId = $configuration->getInt('PS_COUNTRY_DEFAULT');
     }
 
     /**

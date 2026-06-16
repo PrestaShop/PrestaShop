@@ -12,7 +12,6 @@ use Address;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
-use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 
@@ -32,7 +31,6 @@ class AddressRepository extends AbstractMultiShopObjectModelRepository
      *
      * @return Address
      *
-     * @throws AttributeNotFoundException
      * @throws CoreException
      */
     public function get(AddressId $addressId): Address
@@ -82,7 +80,6 @@ class AddressRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @throws CoreException
-     * @throws AttributeNotFoundException
      */
     public function delete(AddressId $addressId): void
     {

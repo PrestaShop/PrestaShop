@@ -16,8 +16,8 @@ use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityI
 final class BusinessEntityFormDataHandler implements FormDataHandlerInterface
 {
     public function __construct(
-        protected readonly CommandBusInterface $commandBus,
-        protected readonly ShopContext $shopContext,
+        private readonly CommandBusInterface $commandBus,
+        private readonly ShopContext $shopContext,
     ) {
     }
 

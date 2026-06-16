@@ -88,7 +88,7 @@ class AddBusinessEntityCommand
     /**
      * @throws BusinessEntityBillingAddressConstraintException
      */
-    protected function assertBusinessEntityAddressAreConsistent(): void
+    private function assertBusinessEntityAddressAreConsistent(): void
     {
         if (!count($this->getBillingAddresses())) {
             throw new BusinessEntityBillingAddressConstraintException(
