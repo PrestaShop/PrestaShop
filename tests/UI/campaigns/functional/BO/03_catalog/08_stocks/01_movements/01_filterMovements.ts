@@ -69,7 +69,6 @@ describe('BO - Stocks - Movements : Filter by category, movement type, employee 
   // Pre-condition: Create new employee
   createEmployeeTest(employeeData, `${baseContext}_preTest_1`);
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
