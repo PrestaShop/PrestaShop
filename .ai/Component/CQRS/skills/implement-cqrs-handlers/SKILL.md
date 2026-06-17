@@ -102,6 +102,18 @@ Choose Strategy B when possible for cleaner data management. Use Strategy A when
 Most domains use the grid `QueryBuilder` pattern — no handler needed. Only create if the domain
 uses an explicit `Get{Domain}sForListing` query class.
 
+## 8. Stats / aggregation handlers
+
+Some pages need a small set of counters above the listing (total / per-status / per-author counts). These handlers don't fit the entity-CRUD pattern and have their own review traps. Three rules — every one of them comes from real PR review feedback:
+
+- **No `LIKE "%pattern%"` on indexed columns.** Wildcard-prefix LIKE forces a table scan on big tables. Use `IN ("a", "b")` (or `= "a"`) instead.
+- **Never compute one count by subtracting other counts.** `closed = total − open − pending` looks clever but quietly breaks the day a new status value is added. Query each segment directly.
+- **Group multiple COUNTs into a single `GROUP BY` query.** A handler that fires six independent `SELECT COUNT(*)` queries is six roundtrips per page load. One query `SELECT status, COUNT(*) GROUP BY status` returns the same data, then aggregate in PHP.
+
+When the entity is multistore-scoped, preserve `Shop::addSqlRestriction()` (or the equivalent Doctrine where-clause) in the grouped query — multi-shop is part of the contract, not optional.
+
+**Reference:** `src/Adapter/CustomerService/QueryHandler/GetCustomerServiceListingStatisticsHandler.php`
+
 ## Rules
 
 Conventions (attributes, no SQL, no cross-handler calls, return types) are in [CQRS/CONTEXT.md](../../CONTEXT.md#handlers). Skill-specific reminders:
