@@ -21,6 +21,7 @@ admin_search_alias_index_aliases:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchAliasController::indexAction
     _legacy_controller: AdminAliases
+    _legacy_link: AdminAliases
 
 admin_search_alias_search:
   path: /
@@ -85,6 +86,7 @@ admin_search_indexation_add_missing:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::addMissingToIndexAction
     _legacy_controller: AdminSearchConf
+    _legacy_link: AdminSearch:searchCron
     _legacy_feature_flag: search_page
 
 admin_search_indexation_rebuild:
@@ -93,6 +95,7 @@ admin_search_indexation_rebuild:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigurationController::rebuildIndexAction
     _legacy_controller: AdminSearchConf
+    _legacy_link: AdminSearch:searchCron
     _legacy_feature_flag: search_page
 
 admin_search_indexation_cron:
