@@ -8,11 +8,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-use GroupReduction;
-use Module;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
+use PrestaShop\PrestaShop\Core\Group\Provider\CustomerGroupLegacyDataProviderInterface;
 
 class CustomerGroupFormDataProvider implements FormDataProviderInterface
 {
@@ -20,6 +19,7 @@ class CustomerGroupFormDataProvider implements FormDataProviderInterface
         private readonly CommandBusInterface $queryBus,
         private readonly int $contextLanguageId,
         private readonly array $contextShopIds,
+        private readonly CustomerGroupLegacyDataProviderInterface $legacyDataProvider,
     ) {
     }
 
@@ -34,13 +34,15 @@ class CustomerGroupFormDataProvider implements FormDataProviderInterface
             'price_display_method' => (int) $group->displayPriceTaxExcluded(),
             'show_prices' => $group->showPrice(),
             'shop_association' => $group->getShopIds(),
-            'category_reductions' => $this->loadCategoryReductions((int) $id),
-            'authorized_modules' => $this->loadAuthorizedModuleIds((int) $id),
+            'category_reductions' => json_encode($this->legacyDataProvider->getCategoryReductions((int) $id, $this->contextLanguageId)),
+            'authorized_modules' => json_encode($this->legacyDataProvider->getAuthorizedModuleIds((int) $id, $this->contextShopIds)),
         ];
     }
 
     public function getDefaultData(): array
     {
+        $moduleIds = array_column($this->legacyDataProvider->getInstalledModules(), 'id_module');
+
         return [
             'name' => [],
             'reduction' => '0',
@@ -48,39 +50,7 @@ class CustomerGroupFormDataProvider implements FormDataProviderInterface
             'show_prices' => true,
             'shop_association' => $this->contextShopIds,
             'category_reductions' => '[]',
-            'authorized_modules' => $this->loadAllModuleIdsAsAuthorized(),
+            'authorized_modules' => json_encode($moduleIds),
         ];
-    }
-
-    private function loadCategoryReductions(int $groupId): string
-    {
-        $groupReductions = GroupReduction::getGroupReductions($groupId, $this->contextLanguageId);
-        $result = [];
-        foreach ($groupReductions as $row) {
-            $result[] = [
-                'id_category' => (int) $row['id_category'],
-                'reduction' => (float) $row['reduction'] * 100,
-                'name' => $row['name'] ?? '',
-            ];
-        }
-
-        return json_encode($result);
-    }
-
-    private function loadAuthorizedModuleIds(int $groupId): string
-    {
-        $authorizedModules = Module::getAuthorizedModules($groupId, $this->contextShopIds);
-        if (!is_array($authorizedModules)) {
-            return $this->loadAllModuleIdsAsAuthorized();
-        }
-
-        return json_encode(array_column($authorizedModules, 'id_module'));
-    }
-
-    private function loadAllModuleIdsAsAuthorized(): string
-    {
-        $modules = Module::getModulesInstalled();
-
-        return json_encode(array_column($modules, 'id_module'));
     }
 }

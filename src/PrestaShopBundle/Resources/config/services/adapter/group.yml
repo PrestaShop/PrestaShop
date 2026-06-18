@@ -10,6 +10,8 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository: ~
 
+  PrestaShop\PrestaShop\Adapter\Customer\Group\Provider\CustomerGroupLegacyDataProvider: ~
+
   PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider: ~
 
   prestashop.adapter.group.group_data_provider:

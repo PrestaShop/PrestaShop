@@ -8,21 +8,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use Category;
-use Db;
-use Group as CustomerGroup;
-use GroupReduction;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Group\Provider\CustomerGroupLegacyDataProviderInterface;
 
 class CustomerGroupFormDataHandler implements FormDataHandlerInterface
 {
     public function __construct(
         private readonly CommandBusInterface $commandBus,
         private readonly array $contextShopIds,
+        private readonly CustomerGroupLegacyDataProviderInterface $legacyDataProvider,
     ) {
     }
 
@@ -65,32 +63,14 @@ class CustomerGroupFormDataHandler implements FormDataHandlerInterface
 
     private function saveCategoryReductions(int $groupId, array $data): void
     {
-        $db = Db::getInstance();
-        $db->execute('DELETE FROM `' . _DB_PREFIX_ . 'group_reduction` WHERE `id_group` = ' . (int) $groupId);
-        $db->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache` WHERE `id_group` = ' . (int) $groupId);
-
         $reductions = json_decode($data['category_reductions'] ?? '[]', true);
         if (empty($reductions)) {
+            $this->legacyDataProvider->saveCategoryReductions($groupId, []);
+
             return;
         }
 
-        foreach ($reductions as $item) {
-            $idCategory = (int) ($item['id_category'] ?? 0);
-            $reduction = (float) ($item['reduction'] ?? 0);
-
-            if ($idCategory <= 0 || $reduction < 0 || $reduction > 100) {
-                continue;
-            }
-
-            $category = new Category($idCategory);
-            $category->addGroupsIfNoExist($groupId);
-
-            $groupReduction = new GroupReduction();
-            $groupReduction->id_group = $groupId;
-            $groupReduction->id_category = $idCategory;
-            $groupReduction->reduction = $reduction / 100;
-            $groupReduction->save();
-        }
+        $this->legacyDataProvider->saveCategoryReductions($groupId, $reductions);
     }
 
     private function saveModuleRestrictions(int $groupId, array $data): void
@@ -100,6 +80,6 @@ class CustomerGroupFormDataHandler implements FormDataHandlerInterface
             return;
         }
 
-        CustomerGroup::addModulesRestrictions($groupId, array_map('intval', $authorizedIds), $this->contextShopIds);
+        $this->legacyDataProvider->saveModuleRestrictions($groupId, array_map('intval', $authorizedIds), $this->contextShopIds);
     }
 }

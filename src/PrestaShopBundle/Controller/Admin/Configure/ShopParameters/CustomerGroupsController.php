@@ -8,11 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
-use Configuration;
 use Exception;
-use Group;
-use GroupReduction;
-use Module;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\BulkDeleteCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\DeleteCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\ToggleCustomerGroupShowPricesCommand;
@@ -24,6 +20,8 @@ use PrestaShop\PrestaShop\Core\Form\Handler;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
+use PrestaShop\PrestaShop\Core\Group\Provider\CustomerGroupLegacyDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerGroupsFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
@@ -46,14 +44,13 @@ class CustomerGroupsController extends PrestaShopAdminController
         GridFactoryInterface $customerGroupsGridFactory,
         #[Autowire(service: 'prestashop.admin.customer_group.default_groups.form_handler')]
         Handler $defaultGroupsFormHandler,
+        #[Autowire(service: 'prestashop.adapter.group.provider.default_groups_provider')]
+        DefaultGroupsProviderInterface $defaultGroupsProvider,
     ): Response {
         $customerGroupsGrid = $customerGroupsGridFactory->getGrid($filters);
         $defaultGroupsForm = $defaultGroupsFormHandler->getForm();
 
-        $langId = $this->getLanguageContext()->getId();
-        $unidentifiedGroup = new Group((int) Configuration::get('PS_UNIDENTIFIED_GROUP'));
-        $guestGroup = new Group((int) Configuration::get('PS_GUEST_GROUP'));
-        $customerGroup = new Group((int) Configuration::get('PS_CUSTOMER_GROUP'));
+        $defaultGroups = $defaultGroupsProvider->getGroups();
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/CustomerSettings/Groups/index.html.twig', [
             'customerGroupsGrid' => $this->presentGrid($customerGroupsGrid),
@@ -61,9 +58,9 @@ class CustomerGroupsController extends PrestaShopAdminController
             'layoutTitle' => $this->trans('Groups', [], 'Admin.Navigation.Menu'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'unidentifiedGroupName' => $unidentifiedGroup->name[$langId] ?? '',
-            'guestGroupName' => $guestGroup->name[$langId] ?? '',
-            'customerGroupName' => $customerGroup->name[$langId] ?? '',
+            'unidentifiedGroupName' => $defaultGroups->getVisitorsGroup()->getName(),
+            'guestGroupName' => $defaultGroups->getGuestsGroup()->getName(),
+            'customerGroupName' => $defaultGroups->getCustomersGroup()->getName(),
         ]);
     }
 
@@ -74,6 +71,8 @@ class CustomerGroupsController extends PrestaShopAdminController
         FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.customer_group_form_handler')]
         FormHandlerInterface $formHandler,
+        #[Autowire(service: 'PrestaShop\PrestaShop\Adapter\Customer\Group\Provider\CustomerGroupLegacyDataProvider')]
+        CustomerGroupLegacyDataProviderInterface $legacyDataProvider,
     ): Response {
         $form = $formBuilder->getForm();
         $form->handleRequest($request);
@@ -89,7 +88,7 @@ class CustomerGroupsController extends PrestaShopAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $allModules = Module::getModulesInstalled();
+        $allModules = $legacyDataProvider->getInstalledModules();
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/CustomerSettings/Groups/create.html.twig', [
             'customerGroupForm' => $form->createView(),
@@ -110,6 +109,8 @@ class CustomerGroupsController extends PrestaShopAdminController
         FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.customer_group_form_handler')]
         FormHandlerInterface $formHandler,
+        #[Autowire(service: 'PrestaShop\PrestaShop\Adapter\Customer\Group\Provider\CustomerGroupLegacyDataProvider')]
+        CustomerGroupLegacyDataProviderInterface $legacyDataProvider,
     ): Response {
         try {
             $form = $formBuilder->getFormFor($groupId);
@@ -132,23 +133,13 @@ class CustomerGroupsController extends PrestaShopAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $allModules = Module::getModulesInstalled();
+        $allModules = $legacyDataProvider->getInstalledModules();
         $formData = $form->getData();
         $langId = $this->getLanguageContext()->getId();
         $names = $formData['name'] ?? [];
         $groupName = $names[$langId] ?? reset($names) ?: '';
 
-        $categoryReductionsData = [];
-        $groupReductionRows = GroupReduction::getGroupReductions($groupId, $langId);
-        if (is_array($groupReductionRows)) {
-            foreach ($groupReductionRows as $row) {
-                $categoryReductionsData[] = [
-                    'id_category' => (int) $row['id_category'],
-                    'reduction' => (float) $row['reduction'] * 100,
-                    'name' => $row['name'] ?? '',
-                ];
-            }
-        }
+        $categoryReductionsData = json_decode($formData['category_reductions'] ?? '[]', true) ?: [];
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/CustomerSettings/Groups/edit.html.twig', [
             'customerGroupForm' => $form->createView(),
