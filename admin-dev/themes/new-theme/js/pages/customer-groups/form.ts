@@ -1,23 +1,37 @@
-import $ from 'jquery';
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
 import Router from '@components/router';
+
+const {$} = window;
 
 interface CategoryReduction {
   id_category: number;
+
   reduction: number;
+
   name: string;
 }
 
 interface InstalledModule {
   id_module: number;
+
   name: string;
+
   active: number;
 }
 
 interface TreeCategory {
   id: number;
+
   name: string;
+
   displayName: string;
+
   active: boolean;
+
   children: TreeCategory[];
 }
 
@@ -28,11 +42,17 @@ const router = new Router();
 
 class CustomerGroupForm {
   private categoryReductionsField: JQuery;
+
   private authorizedModulesField: JQuery;
+
   private categoryReductions: CategoryReduction[] = [];
+
   private authorizedModuleIds: number[] = [];
+
   private selectedCategoryId: number | null = null;
+
   private selectedCategoryName: string = '';
+
   private categoriesCache: TreeCategory[] | null = null;
 
   constructor() {
@@ -75,6 +95,7 @@ class CustomerGroupForm {
       tbody.append(
         '<tr class="js-no-reductions"><td colspan="3" class="text-center text-muted">No category reductions defined.</td></tr>',
       );
+
       return;
     }
 
@@ -105,6 +126,7 @@ class CustomerGroupForm {
 
     allModules.forEach((mod: InstalledModule) => {
       const option = `<option value="${mod.id_module}">${this.escapeHtml(mod.name)}</option>`;
+
       if (this.authorizedModuleIds.includes(mod.id_module)) {
         authorizedList.append(option);
       } else {
@@ -155,6 +177,7 @@ class CustomerGroupForm {
       const selected = $('#unauthorized-modules-list option:selected');
       selected.each((_i, opt) => {
         const id = parseInt($(opt).val() as string, 10);
+
         if (!this.authorizedModuleIds.includes(id)) {
           this.authorizedModuleIds.push(id);
         }
@@ -180,6 +203,7 @@ class CustomerGroupForm {
 
     if (this.categoriesCache) {
       this.renderCategoryTree(this.categoriesCache);
+
       return;
     }
 
@@ -219,9 +243,13 @@ class CustomerGroupForm {
   private buildTreeHtml(categories: TreeCategory[], depth: number): string {
     let html = '<ul class="list-unstyled mb-0">';
 
-    for (const cat of categories) {
+    categories.forEach((cat) => {
       const indent = depth * 16;
       const hasChildren = cat.children && cat.children.length > 0;
+      const icon = hasChildren
+        ? '<i class="material-icons" style="font-size:16px;margin-right:4px">folder</i>'
+        : '<i class="material-icons" style="font-size:16px;margin-right:4px;color:#ccc">label</i>';
+      const children = hasChildren ? this.buildTreeHtml(cat.children, depth + 1) : '';
       html += `
         <li>
           <div class="d-flex align-items-center py-1 px-2 js-category-node"
@@ -229,14 +257,15 @@ class CustomerGroupForm {
                data-name="${this.escapeHtml(cat.displayName)}"
                style="padding-left:${indent + 8}px;cursor:pointer;border-radius:4px"
                data-depth="${depth}">
-            ${hasChildren ? '<i class="material-icons" style="font-size:16px;margin-right:4px">folder</i>' : '<i class="material-icons" style="font-size:16px;margin-right:4px;color:#ccc">label</i>'}
+            ${icon}
             ${this.escapeHtml(cat.displayName)}
           </div>
-          ${hasChildren ? this.buildTreeHtml(cat.children, depth + 1) : ''}
+          ${children}
         </li>`;
-    }
+    });
 
     html += '</ul>';
+
     return html;
   }
 
@@ -245,6 +274,7 @@ class CustomerGroupForm {
 
     if (!q) {
       $('#category-tree-list .js-category-node').closest('li').show();
+
       return;
     }
 
@@ -260,9 +290,9 @@ class CustomerGroupForm {
     }
 
     const reductionRaw = parseFloat($('#category-reduction-input').val() as string);
-    const reduction = isNaN(reductionRaw) ? 0 : Math.min(100, Math.max(0, reductionRaw));
-
+    const reduction = Number.isNaN(reductionRaw) ? 0 : Math.min(100, Math.max(0, reductionRaw));
     const existing = this.categoryReductions.findIndex((r) => r.id_category === this.selectedCategoryId);
+
     if (existing !== -1) {
       this.categoryReductions[existing].reduction = reduction;
     } else {
