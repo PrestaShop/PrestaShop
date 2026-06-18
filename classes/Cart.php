@@ -2901,6 +2901,26 @@ class CartCore extends ObjectModel
     }
 
     /**
+     * @param array<string, mixed> $package
+     *
+     * @return bool
+     */
+    protected function packageContainsOnlyVirtualProducts(array $package)
+    {
+        if (empty($package['product_list'])) {
+            return false;
+        }
+
+        foreach ($package['product_list'] as $product) {
+            if (empty($product['is_virtual'])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Get all deliveries options available for the current cart.
      *
      * @param Country $default_country
@@ -2932,21 +2952,6 @@ class CartCore extends ObjectModel
      *               );
      *               If there are no carriers available for an address, return an empty  array
      */
-    protected function packageContainsOnlyVirtualProducts(array $package)
-    {
-        if (empty($package['product_list'])) {
-            return false;
-        }
-
-        foreach ($package['product_list'] as $product) {
-            if (empty($product['is_virtual'])) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public function getDeliveryOptionList(?Country $default_country = null, $flush = false)
     {
         if (isset(static::$cacheDeliveryOptionList[$this->id]) && !$flush) {

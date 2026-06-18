@@ -545,7 +545,7 @@ class CarrierCore extends ObjectModel
                 ($id_zone ? 'LEFT JOIN `' . _DB_PREFIX_ . 'zone` z ON (z.`id_zone` = ' . (int) $id_zone . ')' : '') . '
                 ' . Shop::addSqlAssociation('carrier', 'c') . '
                 WHERE c.`deleted` = ' . ($delete ? '1' : '0');
-        if ($ids_carrier && !empty($ids_carrier)) {
+        if (!empty($ids_carrier)) {
             $sql .= ' AND c.`id_carrier` IN (' . implode(',', array_map('intval', $ids_carrier)) . ') ';
         }
         if ($active) {
