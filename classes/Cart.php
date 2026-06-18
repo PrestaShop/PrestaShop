@@ -2741,23 +2741,39 @@ class CartCore extends ObjectModel
             'in_stock' => [],
             'out_of_stock' => [],
         ];
+        $physical_carrier_union = [];
 
         foreach ($product_list as &$product) {
             // Assign delivery address if missing, for compatibility
             $product['id_address_delivery'] = (int) $this->id_address_delivery;
 
-            // Get product's carriers - the product can have some specific limitations
-            $product['carrier_list'] = Carrier::getAvailableCarrierList(
-                new Product($product['id_product']),
-                0,
-                (int) $this->id_address_delivery,
-                null,
-                $this
-            );
+            // Get product's carriers - skip virtual products (they inherit physical carriers later)
+            if (empty($product['is_virtual'])) {
+                $product['carrier_list'] = Carrier::getAvailableCarrierList(
+                    new Product($product['id_product']),
+                    0,
+                    (int) $this->id_address_delivery,
+                    null,
+                    $this
+                );
 
-            // Apply fallback if no carrier is found
-            if (empty($product['carrier_list'])) {
-                $product['carrier_list'] = [0 => 0];
+                // Apply fallback if no carrier is found
+                if (empty($product['carrier_list'])) {
+                    $product['carrier_list'] = [0 => 0];
+                }
+
+                foreach ($product['carrier_list'] as $id_carrier) {
+                    if ($id_carrier) {
+                        $physical_carrier_union[(int) $id_carrier] = (int) $id_carrier;
+                    }
+                }
+            }
+        }
+        unset($product);
+
+        foreach ($product_list as &$product) {
+            if (!empty($product['is_virtual'])) {
+                $product['carrier_list'] = !empty($physical_carrier_union) ? $physical_carrier_union : [0 => 0];
             }
 
             // If "send in-stock items first" is enabled and properly implemented sometime in the future, we separate products by stock
@@ -2916,6 +2932,21 @@ class CartCore extends ObjectModel
      *               );
      *               If there are no carriers available for an address, return an empty  array
      */
+    protected function packageContainsOnlyVirtualProducts(array $package)
+    {
+        if (empty($package['product_list'])) {
+            return false;
+        }
+
+        foreach ($package['product_list'] as $product) {
+            if (empty($product['is_virtual'])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function getDeliveryOptionList(?Country $default_country = null, $flush = false)
     {
         if (isset(static::$cacheDeliveryOptionList[$this->id]) && !$flush) {
@@ -2962,6 +2993,10 @@ class CartCore extends ObjectModel
 
             // Foreach packages, get the carriers with best price, best position and best grade
             foreach ($packages as $id_package => $package) {
+                if ($this->packageContainsOnlyVirtualProducts($package)) {
+                    continue;
+                }
+
                 /*
                  * Usually, there is only one package of products with multiple carriers.
                  * But, if there is no carrier that sends everything in the cart, the core will
@@ -3019,6 +3054,11 @@ class CartCore extends ObjectModel
 
                 $best_price_carriers[$id_package] = $best_price_carrier;
                 $best_grade_carriers[$id_package] = $best_grade_carrier;
+            }
+
+            if (empty($best_price_carriers)) {
+                unset($delivery_option_list[$id_address]);
+                continue;
             }
 
             // Reset $best_price_carrier, it's now an array
@@ -3088,38 +3128,44 @@ class CartCore extends ObjectModel
             $delivery_option_list[$id_address][$key]['is_best_grade'] = true;
 
             // Get all delivery options with a unique carrier
-            foreach ($common_carriers as $id_carrier) {
-                $key = '';
-                $package_list = [];
-                $product_list = [];
-                $price_with_tax = 0;
-                $price_without_tax = 0;
+            if (is_array($common_carriers)) {
+                foreach ($common_carriers as $id_carrier) {
+                    $key = '';
+                    $package_list = [];
+                    $product_list = [];
+                    $price_with_tax = 0;
+                    $price_without_tax = 0;
 
-                foreach ($packages as $id_package => $package) {
-                    $key .= $id_carrier . ',';
-                    $price_with_tax += $carriers_price[$id_address][$id_package][$id_carrier]['with_tax'];
-                    $price_without_tax += $carriers_price[$id_address][$id_package][$id_carrier]['without_tax'];
-                    $package_list[] = $id_package;
-                    $product_list = array_merge($product_list, $package['product_list']);
-                }
+                    foreach ($packages as $id_package => $package) {
+                        if ($this->packageContainsOnlyVirtualProducts($package)) {
+                            continue;
+                        }
 
-                if (!isset($delivery_option_list[$id_address][$key])) {
-                    $delivery_option_list[$id_address][$key] = [
-                        'is_best_price' => false,
-                        'is_best_grade' => false,
-                        'unique_carrier' => true,
-                        'carrier_list' => [
-                            $id_carrier => [
-                                'price_with_tax' => $price_with_tax,
-                                'price_without_tax' => $price_without_tax,
-                                'instance' => $carriers_instance[$id_carrier],
-                                'package_list' => $package_list,
-                                'product_list' => $product_list,
+                        $key .= $id_carrier . ',';
+                        $price_with_tax += $carriers_price[$id_address][$id_package][$id_carrier]['with_tax'];
+                        $price_without_tax += $carriers_price[$id_address][$id_package][$id_carrier]['without_tax'];
+                        $package_list[] = $id_package;
+                        $product_list = array_merge($product_list, $package['product_list']);
+                    }
+
+                    if (!isset($delivery_option_list[$id_address][$key])) {
+                        $delivery_option_list[$id_address][$key] = [
+                            'is_best_price' => false,
+                            'is_best_grade' => false,
+                            'unique_carrier' => true,
+                            'carrier_list' => [
+                                $id_carrier => [
+                                    'price_with_tax' => $price_with_tax,
+                                    'price_without_tax' => $price_without_tax,
+                                    'instance' => $carriers_instance[$id_carrier],
+                                    'package_list' => $package_list,
+                                    'product_list' => $product_list,
+                                ],
                             ],
-                        ],
-                    ];
-                } else {
-                    $delivery_option_list[$id_address][$key]['unique_carrier'] = (count($delivery_option_list[$id_address][$key]['carrier_list']) <= 1);
+                        ];
+                    } else {
+                        $delivery_option_list[$id_address][$key]['unique_carrier'] = (count($delivery_option_list[$id_address][$key]['carrier_list']) <= 1);
+                    }
                 }
             }
         }
@@ -3181,6 +3227,11 @@ class CartCore extends ObjectModel
         //    - Calculate the average position
         foreach ($delivery_option_list as $id_address => $delivery_option) {
             foreach ($delivery_option as $key => $value) {
+                if (empty($value['carrier_list'])) {
+                    unset($delivery_option_list[$id_address][$key]);
+                    continue;
+                }
+
                 $total_price_with_tax = 0;
                 $total_price_without_tax = 0;
                 $total_price_without_tax_with_rules = 0;
