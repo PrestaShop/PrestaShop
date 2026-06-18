@@ -12,13 +12,13 @@ class AttachmentControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
+        Hook::exec('actionDownloadAttachment', ['attachment' => &$attachment]);
+
         $attachmentPath = _PS_DOWNLOAD_DIR_ . $attachment->file;
 
         if (!file_exists($attachmentPath)) {
             Tools::redirect('pagenotfound');
         }
-
-        Hook::exec('actionDownloadAttachment', ['attachment' => &$attachment]);
 
         while (ob_get_level()) {
             ob_end_clean();
@@ -31,7 +31,7 @@ class AttachmentControllerCore extends FrontController
         header('Content-Length: ' . filesize($attachmentPath));
         header('Content-Disposition: attachment; filename="' . $filenameFallback . '"; filename*=utf8\'\' ' . urlencode($attachment->file_name));
         @set_time_limit(0);
-        readfile(_PS_DOWNLOAD_DIR_ . $attachment->file);
+        readfile($attachmentPath);
 
         exit;
     }
