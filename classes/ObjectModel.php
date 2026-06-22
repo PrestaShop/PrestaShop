@@ -2056,6 +2056,11 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         $this->id_lang = $id_lang;
         if (isset($data[$this->def['primary']])) {
             $this->id = (int) $data[$this->def['primary']];
+            unset($data['primary']);
+        }
+
+        if (!empty(static::$definition['multilang'])) {
+            unset($data['id_lang']);
         }
 
         foreach ($data as $key => $value) {
