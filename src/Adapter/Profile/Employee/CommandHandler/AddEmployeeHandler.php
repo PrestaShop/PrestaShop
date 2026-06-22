@@ -11,13 +11,13 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\AddEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\AddEmployeeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\EmployeeImageUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmailAlreadyUsedException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 
 /**
  * Handles command which adds new employee using legacy object model
@@ -43,7 +43,7 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
     private $contextEmployeeProvider;
 
     /**
-     * @var ImageUploaderInterface
+     * @var EmployeeImageUploaderInterface
      */
     private $imageUploader;
 
@@ -51,13 +51,13 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
      * @param Hashing $hashing
      * @param ProfileAccessCheckerInterface $profileAccessChecker
      * @param ContextEmployeeProviderInterface $contextEmployeeProvider
-     * @param ImageUploaderInterface $imageUploader
+     * @param EmployeeImageUploaderInterface $imageUploader
      */
     public function __construct(
         Hashing $hashing,
         ProfileAccessCheckerInterface $profileAccessChecker,
         ContextEmployeeProviderInterface $contextEmployeeProvider,
-        ImageUploaderInterface $imageUploader
+        EmployeeImageUploaderInterface $imageUploader
     ) {
         $this->hashing = $hashing;
         $this->profileAccessChecker = $profileAccessChecker;
@@ -86,8 +86,8 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
 
         $this->associateWithShops($employee, $command->getShopAssociation());
 
-        if (null !== $command->getUploadedAvatar()) {
-            $this->imageUploader->upload((int) $employee->id, $command->getUploadedAvatar());
+        if (null !== $command->getUploadedAvatarPath()) {
+            $this->imageUploader->upload((int) $employee->id, $command->getUploadedAvatarPath());
         }
 
         return new EmployeeId((int) $employee->id);

@@ -161,7 +161,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         /** @var UploadedFile|null $uploadedAvatar */
         $uploadedAvatar = $data['avatarUrl'] ?? null;
         if ($uploadedAvatar instanceof UploadedFile) {
-            $command->setUploadedAvatar($uploadedAvatar);
+            $command->setUploadedAvatarPath($uploadedAvatar->getPathname());
         }
 
         if ($this->employeeFormAccessChecker->isRestrictedAccess((int) $id)) {

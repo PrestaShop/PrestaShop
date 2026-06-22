@@ -12,13 +12,13 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Command\EditEmployeeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\EditEmployeeHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Employee\EmployeeImageUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmailAlreadyUsedException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Shop;
 
 /**
@@ -50,7 +50,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
     private $legacyContext;
 
     /**
-     * @var ImageUploaderInterface
+     * @var EmployeeImageUploaderInterface
      */
     private $imageUploader;
 
@@ -59,14 +59,14 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
      * @param ProfileAccessCheckerInterface $profileAccessChecker
      * @param ContextEmployeeProviderInterface $contextEmployeeProvider
      * @param LegacyContext $legacyContext
-     * @param ImageUploaderInterface $imageUploader
+     * @param EmployeeImageUploaderInterface $imageUploader
      */
     public function __construct(
         Hashing $hashing,
         ProfileAccessCheckerInterface $profileAccessChecker,
         ContextEmployeeProviderInterface $contextEmployeeProvider,
         LegacyContext $legacyContext,
-        ImageUploaderInterface $imageUploader
+        EmployeeImageUploaderInterface $imageUploader
     ) {
         $this->hashing = $hashing;
         $this->profileAccessChecker = $profileAccessChecker;
@@ -96,8 +96,8 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
 
         $this->updateEmployeeWithCommandData($employee, $command);
 
-        if (null !== $command->getUploadedAvatar()) {
-            $this->imageUploader->upload((int) $employee->id, $command->getUploadedAvatar());
+        if (null !== $command->getUploadedAvatarPath()) {
+            $this->imageUploader->upload((int) $employee->id, $command->getUploadedAvatarPath());
         }
 
         if (null !== $command->getPlainPassword() && $employee->id == $this->contextEmployeeProvider->getId()) {

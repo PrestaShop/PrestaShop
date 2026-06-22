@@ -10,7 +10,6 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Adds new employee with given data
@@ -68,9 +67,9 @@ class AddEmployeeCommand
     private $hasEnabledGravatar;
 
     /**
-     * @var UploadedFile|null
+     * @var string|null
      */
-    private $uploadedAvatar;
+    private $uploadedAvatarPath;
 
     /**
      * @param string $firstName
@@ -86,7 +85,7 @@ class AddEmployeeCommand
      * @param int $minLength
      * @param int $maxLength
      * @param int $minScore
-     * @param UploadedFile|null $uploadedAvatar
+     * @param string|null $uploadedAvatarPath
      */
     public function __construct(
         $firstName,
@@ -102,7 +101,7 @@ class AddEmployeeCommand
         int $minLength,
         int $maxLength,
         int $minScore,
-        ?UploadedFile $uploadedAvatar = null
+        ?string $uploadedAvatarPath = null
     ) {
         $this->firstName = new FirstName($firstName);
         $this->lastName = new LastName($lastName);
@@ -114,7 +113,7 @@ class AddEmployeeCommand
         $this->shopAssociation = $shopAssociation;
         $this->plainPassword = new Password($plainPassword, $minLength, $maxLength, $minScore);
         $this->hasEnabledGravatar = $hasEnabledGravatar;
-        $this->uploadedAvatar = $uploadedAvatar;
+        $this->uploadedAvatarPath = $uploadedAvatarPath;
     }
 
     /**
@@ -197,8 +196,8 @@ class AddEmployeeCommand
         return $this->hasEnabledGravatar;
     }
 
-    public function getUploadedAvatar(): ?UploadedFile
+    public function getUploadedAvatarPath(): ?string
     {
-        return $this->uploadedAvatar;
+        return $this->uploadedAvatarPath;
     }
 }

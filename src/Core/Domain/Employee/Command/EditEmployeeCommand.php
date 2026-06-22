@@ -11,7 +11,6 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Edit employee with given data.
@@ -74,9 +73,9 @@ class EditEmployeeCommand
     private $hasEnabledGravatar = false;
 
     /**
-     * @var UploadedFile|null
+     * @var string|null
      */
-    private $uploadedAvatar;
+    private $uploadedAvatarPath;
 
     /**
      * @param int $employeeId
@@ -309,17 +308,17 @@ class EditEmployeeCommand
         return $this;
     }
 
-    public function getUploadedAvatar(): ?UploadedFile
+    public function getUploadedAvatarPath(): ?string
     {
-        return $this->uploadedAvatar;
+        return $this->uploadedAvatarPath;
     }
 
     /**
      * @return EditEmployeeCommand
      */
-    public function setUploadedAvatar(?UploadedFile $uploadedAvatar): self
+    public function setUploadedAvatarPath(?string $uploadedAvatarPath): self
     {
-        $this->uploadedAvatar = $uploadedAvatar;
+        $this->uploadedAvatarPath = $uploadedAvatarPath;
 
         return $this;
     }
