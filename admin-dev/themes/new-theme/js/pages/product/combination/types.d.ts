@@ -17,6 +17,7 @@ export interface AttributeGroup {
   id: number;
   name: string;
   publicName: string;
+  isColorGroup: boolean;
   attributes: Array<Attribute>;
 }
 
