@@ -562,8 +562,7 @@ class LinkCore
         $params['id'] = $cms->id;
         $params['rewrite'] = (!$alias) ? (is_array($cms->link_rewrite) ? $cms->link_rewrite[(int) $idLang] : $cms->link_rewrite) : $alias;
 
-        $params['meta_title'] = '';
-        if (isset($cms->meta_title) && !empty($cms->meta_title)) {
+        if ($dispatcher->hasKeyword('cms_rule', $idLang, 'meta_title', $idShop)) {
             $params['meta_title'] = is_array($cms->meta_title) ? Tools::str2url($cms->meta_title[(int) $idLang]) : Tools::str2url($cms->meta_title);
         }
 
@@ -656,7 +655,10 @@ class LinkCore
         $params = [];
         $params['id'] = $manufacturer->id;
         $params['rewrite'] = (!$alias) ? $manufacturer->link_rewrite : $alias;
-        $params['meta_title'] = Tools::str2url($manufacturer->meta_title);
+
+        if ($dispatcher->hasKeyword('manufacturer_rule', $idLang, 'meta_title', $idShop)) {
+            $params['meta_title'] = Tools::str2url($manufacturer->meta_title);
+        }
 
         return $url . $dispatcher->createUrl('manufacturer_rule', $idLang, $params, $this->allow, '', $idShop);
     }
