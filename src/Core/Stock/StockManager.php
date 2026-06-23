@@ -394,8 +394,10 @@ class StockManager
                 $stockMvt->setDateAdd(new DateTime());
 
                 $employee = (new ContextAdapter())->getContext()->employee;
-                if (!empty($employee)) {
-                    $stockMvt->setIdEmployee($employee->id);
+                // The context may hold an employee without an id (e.g. when the stock movement is
+                // triggered outside the back office, like from the Admin API), keep the default 0.
+                if (!empty($employee) && !empty($employee->id)) {
+                    $stockMvt->setIdEmployee((int) $employee->id);
                     $stockMvt->setEmployeeFirstname($employee->firstname);
                     $stockMvt->setEmployeeLastname($employee->lastname);
                 }
