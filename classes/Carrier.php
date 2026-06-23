@@ -728,7 +728,7 @@ class CarrierCore extends ObjectModel
         $results_array = [];
 
         foreach ($result as $k => $row) {
-            $cache_id = 'Carrier::getCarriersForOrder_' . (int) $id_zone . '-' . (int) $row['id_carrier'];
+            $cache_id = 'Carrier::getCarriersForOrder_' . (int) $id_zone . '-' . (int) $row['id_carrier'] . '-' . (int) $cart->id . '-' . (int) ($id_currency ?? 0);
             if (Cache::isStored($cache_id)) {
                 $results_array[] = Cache::retrieve($cache_id);
                 continue;
