@@ -179,14 +179,14 @@
               </h4>
             </div>
             <div class="modal-body">
-              <div class="hidden" role="alert" id="quick-access-add-error"></div>
+              <div class="hidden" role="alert" id="quick-access-add-error"><div class="alert-text"></div></div>
               <div class="form-group" id="quick-access-name-group">
                 <label for="quick-access-name">
                   {l s='Shortcut name' d='Admin.Navigation.Header'}
                 </label>
                 <input type="text" id="quick-access-name" class="form-control" required aria-required="true" maxlength="32"
                        data-required-message="{l s='Shortcut name is required' d='Admin.Navigation.Header'}">
-                <span class="help-block hidden" id="quick-access-name-error"></span>
+                <span class="help-block hidden" id="quick-access-name-error"><span class="js-error-text"></span></span>
               </div>
               <div class="form-group">
                 <label class="d-block">
