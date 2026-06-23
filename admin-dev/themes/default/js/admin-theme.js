@@ -332,7 +332,8 @@ $(() => {
         doQuickLinkAjax($link, method, name, newWindow, {
           onSuccess: () => $modal.modal('hide'),
           onError: (messages) => {
-            $modalError.addClass('alert alert-danger').removeClass('hidden').find('.alert-text').text(messages.join(' '));
+            $modalError.addClass('alert alert-danger').removeClass('hidden')
+              .find('.alert-text').text(messages.join(' '));
           },
         });
       });
