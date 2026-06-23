@@ -13,6 +13,27 @@ use PHPUnit\Framework\TestCase;
 
 class ImageManagerTest extends TestCase
 {
+    private string $fixturesDir;
+    private string $originalCover;
+    private string $croppedCover;
+
+    protected function setUp(): void
+    {
+        $this->originalCover = 'original.jpg';
+        $this->croppedCover = 'cropped.jpg';
+        $this->fixturesDir = __DIR__ . '/fixtures';
+
+        if (!is_dir($this->fixturesDir)) {
+            mkdir($this->fixturesDir, 0777, true);
+        }
+
+        $url = 'https://picsum.photos/800/600';
+        $testImagePath = $this->fixturesDir . '/' . $this->originalCover;
+
+        $imageData = file_get_contents($url);
+        file_put_contents($testImagePath, $imageData);
+    }
+
     /**
      * @dataProvider dataProviderIsCorrectImageFileExt
      *
@@ -76,4 +97,44 @@ class ImageManagerTest extends TestCase
             ['file', 'image/jpeg'],
         ];
     }
+
+    public function testResizeWithCenterCrop(): void
+    {
+        $src = $this->fixturesDir . '/' . $this->originalCover;
+        $dst = $this->fixturesDir . '/' . $this->croppedCover;
+
+        $error = 0;
+        $targetWidth = '';
+        $targetHeight = '';
+        $sourceWidth = '';
+        $sourceHeight = '';
+
+        $result = ImageManager::resize(
+            $src,
+            $dst,
+            400,
+            400,
+            'jpg',
+            false,
+            $error,
+            $targetWidth,
+            $targetHeight,
+            5,
+            $sourceWidth,
+            $sourceHeight,
+            true
+        );
+
+        self::assertTrue($result);
+        [$w, $h] = getimagesize($dst);
+        self::assertEquals(400, $w);
+        self::assertEquals(400, $h);
+    }
+
+    protected function tearDown(): void
+    {
+        array_map('unlink', glob($this->fixturesDir . '/*'));
+        rmdir($this->fixturesDir);
+    }
+
 }
