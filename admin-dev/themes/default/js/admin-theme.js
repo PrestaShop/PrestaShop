@@ -309,8 +309,8 @@ $(() => {
 
       const resetErrors = () => {
         $nameGroup.removeClass('has-error');
-        $nameError.addClass('hidden').text('');
-        $modalError.removeClass('alert alert-danger').addClass('hidden').text('');
+        $nameError.addClass('hidden').find('.js-error-text').text('');
+        $modalError.removeClass('alert alert-danger').addClass('hidden').find('.alert-text').text('');
       };
 
       $modal.one('hidden.bs.modal', resetErrors);
@@ -323,7 +323,7 @@ $(() => {
 
         if (!name) {
           $nameGroup.addClass('has-error');
-          $nameError.text($nameInput.data('required-message')).removeClass('hidden');
+          $nameError.removeClass('hidden').find('.js-error-text').text($nameInput.data('required-message'));
           $nameInput.trigger('focus');
           return;
         }
@@ -332,7 +332,8 @@ $(() => {
         doQuickLinkAjax($link, method, name, newWindow, {
           onSuccess: () => $modal.modal('hide'),
           onError: (messages) => {
-            $modalError.addClass('alert alert-danger').text(messages.join(' ')).removeClass('hidden');
+            $modalError.addClass('alert alert-danger').removeClass('hidden');
+            $modalError.find('.alert-text').text(messages.join(' '));
           },
         });
       });
