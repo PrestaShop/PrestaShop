@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Store\Command;
 
+use PrestaShop\Decimal\DecimalNumber;
+
 /**
  * Creates a new store.
  * All translatable fields are keyed by language id.
@@ -33,8 +35,8 @@ class AddStoreCommand
     private ?int $stateId;
     private string $city;
     private string $postcode;
-    private ?float $latitude;
-    private ?float $longitude;
+    private ?DecimalNumber $latitude;
+    private ?DecimalNumber $longitude;
     private ?string $phone;
     private ?string $fax;
     private ?string $email;
@@ -120,12 +122,12 @@ class AddStoreCommand
         return $this->postcode;
     }
 
-    public function getLatitude(): ?float
+    public function getLatitude(): ?DecimalNumber
     {
         return $this->latitude;
     }
 
-    public function getLongitude(): ?float
+    public function getLongitude(): ?DecimalNumber
     {
         return $this->longitude;
     }
@@ -195,14 +197,14 @@ class AddStoreCommand
         return $this;
     }
 
-    public function setLatitude(?float $latitude): self
+    public function setLatitude(?DecimalNumber $latitude): self
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    public function setLongitude(?float $longitude): self
+    public function setLongitude(?DecimalNumber $longitude): self
     {
         $this->longitude = $longitude;
 

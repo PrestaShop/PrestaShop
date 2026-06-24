@@ -50,10 +50,10 @@ final class AddStoreHandler implements AddStoreHandlerInterface
         $store->city = $command->getCity();
         $store->postcode = $command->getPostcode();
         $store->latitude = $command->getLatitude() !== null
-            ? round($command->getLatitude(), 8)
+            ? $command->getLatitude()->round(8)
             : null;
         $store->longitude = $command->getLongitude() !== null
-            ? round($command->getLongitude(), 8)
+            ? $command->getLongitude()->round(8)
             : null;
         $store->phone = $command->getPhone() ?? '';
         $store->fax = $command->getFax() ?? '';
