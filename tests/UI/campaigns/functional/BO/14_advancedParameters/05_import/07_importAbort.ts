@@ -27,6 +27,7 @@ describe('BO - Advanced Parameters - Import : Abort a running import', async () 
   const fileName: string = 'ui_import_abort.csv';
 
   let csvContent: string = 'Active (0/1);Name *;Categories (x,y,z...);Price tax excluded;Reference #;Quantity\n';
+
   for (let i = 1; i <= numberOfProducts; i++) {
     csvContent += `1;UI Abort Product ${i};Home;${i}.99;UI-ABORT-${i};10\n`;
   }

@@ -27,7 +27,8 @@ describe('BO - Advanced Parameters - Import : Import categories', async () => {
   const fileName: string = 'ui_import_categories.csv';
   const firstCategory: string = 'UI Import Category A';
   const secondCategory: string = 'UI Import Category B';
-  const csvContent: string = 'Category ID;Active (0/1);Name *;Parent category;Root category (0/1);Description;Meta title;Meta description;URL rewritten;Image URL\n'
+  const csvContent: string = 'Category ID;Active (0/1);Name *;Parent category;Root category (0/1);'
+    + 'Description;Meta title;Meta description;URL rewritten;Image URL\n'
     + `;1;${firstCategory};Home;0;;;;;\n`
     + `;1;${secondCategory};Home;0;;;;;\n`;
 

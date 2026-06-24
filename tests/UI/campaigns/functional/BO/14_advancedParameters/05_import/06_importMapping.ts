@@ -25,7 +25,8 @@ describe('BO - Advanced Parameters - Import : Save and reload a data matching co
 
   const fileName: string = 'ui_import_mapping.csv';
   const mappingName: string = 'UIImportMapping';
-  const csvContent: string = 'Category ID;Active (0/1);Name *;Parent category;Root category (0/1);Description;Meta title;Meta description;URL rewritten;Image URL\n'
+  const csvContent: string = 'Category ID;Active (0/1);Name *;Parent category;Root category (0/1);'
+    + 'Description;Meta title;Meta description;URL rewritten;Image URL\n'
     + ';1;UI Mapping Category;Home;0;;;;;\n';
 
   before(async function () {

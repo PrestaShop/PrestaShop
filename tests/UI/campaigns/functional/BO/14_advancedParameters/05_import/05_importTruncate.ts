@@ -28,6 +28,7 @@ describe('BO - Advanced Parameters - Import : Import with truncate', async () =>
   const fileName: string = 'ui_import_truncate.csv';
 
   let csvContent: string = 'Active (0/1);Name *;Categories (x,y,z...);Price tax excluded;Reference #;Quantity\n';
+
   for (let i = 1; i <= numberOfProducts; i++) {
     csvContent += `1;UI Truncate Product ${i};Home;${i}.99;UI-TRUNC-${i};10\n`;
   }
