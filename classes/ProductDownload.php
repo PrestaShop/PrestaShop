@@ -14,6 +14,9 @@ class ProductDownloadCore extends ObjectModel
     /** @var int Product id which download belongs */
     public $id_product;
 
+    /** @var int Product attribute (combination) id which the download belongs to; 0 = product level */
+    public $id_product_attribute = 0;
+
     /** @var string DisplayFilename the name which appear */
     public $display_filename;
 
@@ -40,6 +43,8 @@ class ProductDownloadCore extends ObjectModel
 
     protected static $_productIds = [];
 
+    protected static $_productIdAttributes = [];
+
     /**
      * @see ObjectModel::$definition
      */
@@ -48,7 +53,8 @@ class ProductDownloadCore extends ObjectModel
         'primary' => 'id_product_download',
         'fields' => [
             'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'display_filename' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => VirtualProductFileSettings::MAX_DISPLAY_FILENAME_LENGTH],
+            'id_product_attribute' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'display_filename' =>['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => VirtualProductFileSettings::MAX_DISPLAY_FILENAME_LENGTH],
             'filename' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => VirtualProductFileSettings::MAX_FILENAME_LENGTH],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_expiration' => ['type' => self::TYPE_DATE, 'validate' => 'isDateOrNull'],
@@ -170,10 +176,38 @@ class ProductDownloadCore extends ObjectModel
 		SELECT `id_product_download`
 		FROM `' . _DB_PREFIX_ . 'product_download`
 		WHERE `id_product` = ' . (int) $idProduct . '
+			AND `id_product_attribute` = 0
 		' . ($active ? ' AND `active` = 1' : '') . '
 		ORDER BY `id_product_download` DESC');
 
         return self::$_productIds[$idProduct];
+    }
+
+    /**
+     * Return the id_product_download from an id_product and id_product_attribute.
+     *
+     * @param int $idProduct Product the id
+     * @param int $idProductAttribute Product attribute (combination) the id
+     * @param bool $active
+     *
+     * @return bool|int Product download the id for this combination
+     */
+    public static function getIdFromCombination($idProduct, $idProductAttribute, $active = true)
+    {
+        if (!ProductDownload::isFeatureActive()) {
+            return false;
+        }
+
+        $key = (int) $idProduct . '-' . (int) $idProductAttribute;
+        self::$_productIdAttributes[$key] = (int) Db::getInstance()->getValue('
+		SELECT `id_product_download`
+		FROM `' . _DB_PREFIX_ . 'product_download`
+		WHERE `id_product` = ' . (int) $idProduct . '
+			AND `id_product_attribute` = ' . (int) $idProductAttribute . '
+		' . ($active ? ' AND `active` = 1' : '') . '
+		ORDER BY `id_product_download` DESC');
+
+        return self::$_productIdAttributes[$key];
     }
 
     /**
@@ -205,6 +239,7 @@ class ProductDownloadCore extends ObjectModel
 			SELECT `filename`
 			FROM `' . _DB_PREFIX_ . 'product_download`
 			WHERE `id_product` = ' . (int) $idProduct . '
+				AND `id_product_attribute` = 0
 				AND `active` = 1
 		');
     }
