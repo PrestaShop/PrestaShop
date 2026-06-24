@@ -46,7 +46,8 @@ final class AddVirtualProductFileHandler implements AddVirtualProductFileHandler
         return $this->virtualProductUpdater->addFile(
             $command->getProductId(),
             $command->getFilePath(),
-            $this->buildObjectModel($command)
+            $this->buildObjectModel($command),
+            $command->getCombinationId()
         );
     }
 

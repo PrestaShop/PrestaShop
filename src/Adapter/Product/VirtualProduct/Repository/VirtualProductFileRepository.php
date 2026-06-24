@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository;
 
+use Db;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Validate\VirtualProductFileValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\CannotAddVirtualProductFileException;
@@ -97,6 +98,75 @@ class VirtualProductFileRepository extends AbstractObjectModelRepository
         }
 
         return $this->get(new VirtualProductFileId($id));
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param int $combinationId
+     *
+     * @return VirtualProductFile
+     *
+     * @throws VirtualProductFileNotFoundException
+     * @throws CoreException
+     */
+    public function findByCombinationId(ProductId $productId, int $combinationId): VirtualProductFile
+    {
+        try {
+            $id = (int) VirtualProductFile::getIdFromCombination($productId->getValue(), $combinationId, false);
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to find VirtualProductFile by product id #%d and combination id #%d',
+                    $productId->getValue(),
+                    $combinationId
+                ),
+                0,
+                $e
+            );
+        }
+
+        if (!$id) {
+            throw new VirtualProductFileNotFoundException(sprintf(
+                'Cannot find VirtualProduct for product %d and combination %d',
+                $productId->getValue(),
+                $combinationId
+            ));
+        }
+
+        return $this->get(new VirtualProductFileId($id));
+    }
+
+    /**
+     * Returns every virtual file row for the product (all combinations + product level).
+     *
+     * @param ProductId $productId
+     *
+     * @return VirtualProductFile[]
+     *
+     * @throws CoreException
+     */
+    public function findAllByProductId(ProductId $productId): array
+    {
+        try {
+            $results = Db::getInstance()->executeS('
+                SELECT `id_product_download`
+                FROM `' . _DB_PREFIX_ . 'product_download`
+                WHERE `id_product` = ' . $productId->getValue()
+            );
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to find VirtualProductFiles by product id #%d', $productId->getValue()),
+                0,
+                $e
+            );
+        }
+
+        $virtualProductFiles = [];
+        foreach ($results ?: [] as $result) {
+            $virtualProductFiles[] = $this->get(new VirtualProductFileId((int) $result['id_product_download']));
+        }
+
+        return $virtualProductFiles;
     }
 
     /**
