@@ -1678,7 +1678,7 @@ CREATE TABLE `PREFIX_product` (
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   `state` int(11) unsigned NOT NULL DEFAULT '1',
   `product_type` ENUM(
-    'standard', 'pack', 'virtual', 'combinations', ''
+    'standard', 'pack', 'virtual', 'combinations', 'virtual_combinations', ''
   ) NOT NULL DEFAULT '',
   PRIMARY KEY (`id_product`),
   INDEX reference_idx(`reference`),
@@ -1830,6 +1830,7 @@ CREATE TABLE `PREFIX_product_attribute_image` (
 CREATE TABLE `PREFIX_product_download` (
   `id_product_download` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_product` int(10) unsigned NOT NULL,
+  `id_product_attribute` int(10) unsigned NOT NULL DEFAULT '0',
   `display_filename` varchar(255) DEFAULT NULL,
   `filename` varchar(255) DEFAULT NULL,
   `date_add` datetime NOT NULL,
@@ -1840,7 +1841,7 @@ CREATE TABLE `PREFIX_product_download` (
   `is_shareable` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_product_download`),
   KEY `product_active` (`id_product`, `active`),
-  UNIQUE KEY `id_product` (`id_product`)
+  UNIQUE KEY `id_product` (`id_product`, `id_product_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* Localized product info */
