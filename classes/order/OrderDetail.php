@@ -305,7 +305,7 @@ class OrderDetailCore extends ObjectModel
         }
         $sql = 'SELECT *
         FROM `' . _DB_PREFIX_ . 'order_detail` od
-        LEFT JOIN `' . _DB_PREFIX_ . 'product_download` pd ON (od.`product_id`=pd.`id_product`)
+        LEFT JOIN `' . _DB_PREFIX_ . 'product_download` pd ON (od.`product_id`=pd.`id_product` AND od.`product_attribute_id`=pd.`id_product_attribute`)
         WHERE od.`download_hash` = \'' . pSQL((string) $hash) . '\'
         AND pd.`active` = 1';
 
@@ -504,7 +504,11 @@ class OrderDetailCore extends ObjectModel
         $this->download_deadline = '0000-00-00 00:00:00';
         $this->download_hash = null;
 
-        if ($id_product_download = ProductDownload::getIdFromIdProduct((int) $product['id_product'])) {
+        $id_product_download = (int) $product['id_product_attribute'] > 0
+            ? ProductDownload::getIdFromCombination((int) $product['id_product'], (int) $product['id_product_attribute'])
+            : ProductDownload::getIdFromIdProduct((int) $product['id_product']);
+
+        if ($id_product_download) {
             $product_download = new ProductDownload((int) $id_product_download);
             $this->download_deadline = $product_download->getDeadLine();
             $this->download_hash = $product_download->getHash();
