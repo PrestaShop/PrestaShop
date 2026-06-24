@@ -151,7 +151,8 @@ class VirtualProductFileRepository extends AbstractObjectModelRepository
             $results = Db::getInstance()->executeS('
                 SELECT `id_product_download`
                 FROM `' . _DB_PREFIX_ . 'product_download`
-                WHERE `id_product` = ' . $productId->getValue()
+                WHERE `id_product` = ' . (int) $productId->getValue() . '
+                ORDER BY `id_product_download`'
             );
         } catch (PrestaShopException $e) {
             throw new CoreException(
