@@ -56,10 +56,10 @@ final class EditStoreHandler implements EditStoreHandlerInterface
             $store->postcode = $command->getPostcode();
         }
         if (null !== $command->getLatitude()) {
-            $store->latitude = $command->getLatitude()->round(8);
+            $store->latitude = (float) $command->getLatitude()->round(8);
         }
         if (null !== $command->getLongitude()) {
-            $store->longitude = $command->getLatitude()->round(8);
+            $store->longitude = (float) $command->getLatitude()->round(8);
         }
         if (null !== $command->getPhone()) {
             $store->phone = $command->getPhone();
