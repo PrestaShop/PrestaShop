@@ -10,6 +10,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Country;
+use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Store\ContactDetailsConfiguration;
@@ -274,10 +275,8 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
      */
     public function editStoreHours(string $reference, TableNode $table): void
     {
-        $langId = $this->getDefaultLangId();
-
         $command = new EditStoreCommand($this->referenceToId($reference));
-        $command->setLocalizedHours($this->buildHoursFromScheduleTable($table, $langId));
+        $command->setLocalizedHours($this->buildHoursFromScheduleTable($table));
         $this->getCommandBus()->handle($command);
     }
 
@@ -334,14 +333,15 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertStoreOpeningHours(string $reference, TableNode $table): void
     {
-        $langId = $this->getDefaultLangId();
-        $expected = $this->buildHoursFromScheduleTable($table, $langId);
+        $expected = $this->buildHoursFromScheduleTable($table);
 
         /** @var StoreForEditing $storeForEditing */
         $storeForEditing = $this->getQueryBus()->handle(new GetStoreForEditing($this->referenceToId($reference)));
         $actual = $storeForEditing->getLocalizedHours();
 
-        Assert::assertSame($expected[$langId], $actual[$langId] ?? [], 'opening hours');
+        foreach ($expected as $langId => $daySlots) {
+            Assert::assertSame($daySlots, $actual[$langId] ?? [], 'opening hours');
+        }
     }
 
     /**
@@ -453,26 +453,54 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
     // ──────────────────────────────────────────────────────────────────────────
 
     /**
-     * Converts a schedule table (columns: day, open, close) to the localized hours format
-     * expected by AddStoreCommand / EditStoreCommand.
+     * Converts a schedule table to the localized hours format expected by
+     * AddStoreCommand / EditStoreCommand.
      *
-     * @return array<int, array<int, string>>
+     * Columns: "day", "open", "close". The day cell is locale-suffixed so the same
+     * day can be declared once per language, e.g. "Monday[en-US]", "Monday[fr-FR]".
+     *
+     * @return array<int, array<int, string>> day slots indexed by language id then day index
      */
-    private function buildHoursFromScheduleTable(TableNode $table, int $langId): array
+    private function buildHoursFromScheduleTable(TableNode $table): array
     {
-        $daySlots = array_fill(0, 7, '');
+        $hoursByLang = [];
 
         foreach ($table->getColumnsHash() as $row) {
-            $dayIndex = array_search($row['day'], self::DAY_ORDER, true);
+            [$dayName, $langId] = $this->parseLocalizedDay($row['day']);
+
+            $dayIndex = array_search($dayName, self::DAY_ORDER, true);
             if (false === $dayIndex) {
-                throw new RuntimeException(sprintf('Unknown day "%s" in schedule table', $row['day']));
+                throw new RuntimeException(sprintf('Unknown day "%s" in schedule table', $dayName));
+            }
+
+            if (!isset($hoursByLang[$langId])) {
+                $hoursByLang[$langId] = array_fill(0, 7, '');
             }
 
             $open = trim($row['open'] ?? '');
             $close = trim($row['close'] ?? '');
-            $daySlots[$dayIndex] = ($open !== '' && $close !== '') ? $open . ' | ' . $close : $open;
+            $hoursByLang[$langId][$dayIndex] = ($open !== '' && $close !== '') ? $open . ' | ' . $close : $open;
         }
 
-        return [$langId => $daySlots];
+        return $hoursByLang;
+    }
+
+    /**
+     * Splits a locale-suffixed day cell like "Monday[en-US]" into its day name and language id.
+     *
+     * @return array{0: string, 1: int}
+     */
+    private function parseLocalizedDay(string $dayCell): array
+    {
+        if (!preg_match('/^(.*?)\[(.+)\]$/', $dayCell, $matches)) {
+            throw new RuntimeException(sprintf('Day "%s" must be suffixed with a locale, e.g. "Monday[en-US]"', $dayCell));
+        }
+
+        $langId = (int) Language::getIdByLocale($matches[2], true);
+        if (!$langId) {
+            throw new RuntimeException(sprintf('Language by locale "%s" was not found', $matches[2]));
+        }
+
+        return [$matches[1], $langId];
     }
 }
