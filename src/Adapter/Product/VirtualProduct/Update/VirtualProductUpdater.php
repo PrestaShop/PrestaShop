@@ -76,32 +76,47 @@ class VirtualProductUpdater
      * @param ProductId $productId
      * @param string $filePath
      * @param VirtualProductFile $virtualProductFile
+     * @param int $combinationId
      *
      * @return VirtualProductFileId
      *
      * @throws InvalidProductTypeException
      * @throws VirtualProductFileConstraintException
      */
-    public function addFile(ProductId $productId, string $filePath, VirtualProductFile $virtualProductFile): VirtualProductFileId
+    public function addFile(ProductId $productId, string $filePath, VirtualProductFile $virtualProductFile, int $combinationId = 0): VirtualProductFileId
     {
         $product = $this->productRepository->getProductByDefaultShop($productId);
-        if ($product->product_type !== ProductType::TYPE_VIRTUAL) {
-            throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_VIRTUAL_TYPE);
+
+        if ($combinationId > 0) {
+            // Combination-scoped files are only allowed on virtual_combinations products
+            if ($product->product_type !== ProductType::TYPE_VIRTUAL_COMBINATIONS) {
+                throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_VIRTUAL_TYPE);
+            }
+        } else {
+            // Product-level files are only allowed on plain virtual products
+            if ($product->product_type !== ProductType::TYPE_VIRTUAL) {
+                throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_VIRTUAL_TYPE);
+            }
         }
 
         try {
-            $this->virtualProductFileRepository->findByProductId($productId);
+            if ($combinationId > 0) {
+                $this->virtualProductFileRepository->findByCombinationId($productId, $combinationId);
+            } else {
+                $this->virtualProductFileRepository->findByProductId($productId);
+            }
             throw new VirtualProductFileConstraintException(
                 sprintf('File already exists for product #%d', $product->id),
                 VirtualProductFileConstraintException::ALREADY_HAS_A_FILE
             );
         } catch (VirtualProductFileNotFoundException) {
-            // Expected behaviour, the product should have no virtual file yet
+            // Expected behaviour, the product/combination should have no virtual file yet
         }
 
         $uploadedFilePath = $this->virtualProductFileUploader->upload($filePath);
         $virtualProductFile->filename = pathinfo($uploadedFilePath, PATHINFO_FILENAME);
         $virtualProductFile->id_product = $productId->getValue();
+        $virtualProductFile->id_product_attribute = $combinationId;
 
         return $this->virtualProductFileRepository->add($virtualProductFile);
     }
@@ -138,5 +153,21 @@ class VirtualProductUpdater
 
         $this->virtualProductFileUploader->remove($virtualProductFile->filename);
         $this->virtualProductFileRepository->delete(new VirtualProductFileId((int) $virtualProductFile->id));
+    }
+
+    /**
+     * Deletes every virtual file row for the product (all combinations + product level),
+     * removing each file from disk.
+     *
+     * @param ProductId $productId
+     */
+    public function deleteAllFilesForProduct(ProductId $productId): void
+    {
+        $virtualProductFiles = $this->virtualProductFileRepository->findAllByProductId($productId);
+
+        foreach ($virtualProductFiles as $virtualProductFile) {
+            $this->virtualProductFileUploader->remove($virtualProductFile->filename);
+            $this->virtualProductFileRepository->delete(new VirtualProductFileId((int) $virtualProductFile->id));
+        }
     }
 }
