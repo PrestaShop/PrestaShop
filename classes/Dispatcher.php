@@ -1087,7 +1087,9 @@ class DispatcherCore
 
             foreach ($params as $key => $value) {
                 if (!isset($routeDefinition['keywords'][$key])) {
-                    $add_param[$key] = $value;
+                    if (!isset($this->default_routes[$routeName]['keywords'][$key])) {
+                        $add_param[$key] = $value;
+                    }
                 } else {
                     if ($params[$key]) {
                         $parameter = $params[$key];
