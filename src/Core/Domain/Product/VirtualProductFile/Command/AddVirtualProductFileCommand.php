@@ -47,6 +47,11 @@ class AddVirtualProductFileCommand
     private $downloadTimesLimit;
 
     /**
+     * @var int
+     */
+    private int $combinationId = 0;
+
+    /**
      * @param int $productId
      * @param string $filePath
      * @param string $displayName display name of the file
@@ -116,5 +121,25 @@ class AddVirtualProductFileCommand
     public function getDownloadTimesLimit(): ?int
     {
         return $this->downloadTimesLimit;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCombinationId(): int
+    {
+        return $this->combinationId;
+    }
+
+    /**
+     * @param int $combinationId
+     *
+     * @return self
+     */
+    public function setCombinationId(int $combinationId): self
+    {
+        $this->combinationId = $combinationId;
+
+        return $this;
     }
 }
