@@ -62,10 +62,11 @@ class ProductTypeListener implements EventSubscriberInterface
             $form->remove('extra_modules');
         }
 
-        if (ProductType::TYPE_COMBINATIONS === $productType) {
+        $combinationTypes = [ProductType::TYPE_COMBINATIONS, ProductType::TYPE_VIRTUAL_COMBINATIONS];
+        if (in_array($productType, $combinationTypes, true)) {
             $this->removeProductSuppliers($form);
             $this->removeStock($form);
-        } elseif ($initialProductType !== ProductType::TYPE_COMBINATIONS) {
+        } elseif (!in_array($initialProductType, $combinationTypes, true)) {
             $this->removeCombinations($form);
         }
 
@@ -89,14 +90,19 @@ class ProductTypeListener implements EventSubscriberInterface
 
         $this->removeStockMovementsIfNecessary($form, $data);
 
-        if (ProductType::TYPE_VIRTUAL === $productType) {
+        $virtualTypes = [ProductType::TYPE_VIRTUAL, ProductType::TYPE_VIRTUAL_COMBINATIONS];
+        if (in_array($productType, $virtualTypes, true)) {
             $this->removeShipping($form);
             // We don't remove the ecotax during the transition request because we could lose the ecotax data
             // and some part of the price with it
-            if (ProductType::TYPE_VIRTUAL === $initialProductType) {
+            if (in_array($initialProductType, $virtualTypes, true)) {
                 $this->removeEcotax($form);
             }
-        } else {
+        }
+
+        // The product-level virtual file section is only relevant for plain virtual products.
+        // For virtual products with combinations the downloadable file is handled per combination.
+        if (ProductType::TYPE_VIRTUAL !== $productType) {
             $this->removeVirtualProduct($form);
         }
 

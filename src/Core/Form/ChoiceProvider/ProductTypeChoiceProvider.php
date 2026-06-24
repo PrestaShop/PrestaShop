@@ -60,6 +60,10 @@ class ProductTypeChoiceProvider implements FormChoiceProviderInterface, FormChoi
                 'data-description' => $this->trans('An intangible product that doesn\'t require shipping. You can also add a downloadable file.', 'Admin.Catalog.Feature'),
                 'icon' => 'qr_code',
             ],
+            $this->trans('Virtual product with combinations', 'Admin.Catalog.Feature') => [
+                'data-description' => $this->trans('A downloadable product available in several variations, each with its own file.', 'Admin.Catalog.Feature'),
+                'icon' => 'cloud_download',
+            ],
         ];
     }
 
@@ -73,10 +77,13 @@ class ProductTypeChoiceProvider implements FormChoiceProviderInterface, FormChoi
             $this->trans('Product with combinations', 'Admin.Catalog.Feature') => ProductType::TYPE_COMBINATIONS,
             $this->trans('Pack of products', 'Admin.Catalog.Feature') => ProductType::TYPE_PACK,
             $this->trans('Virtual product', 'Admin.Catalog.Feature') => ProductType::TYPE_VIRTUAL,
+            $this->trans('Virtual product with combinations', 'Admin.Catalog.Feature') => ProductType::TYPE_VIRTUAL_COMBINATIONS,
         ];
 
         if (!$this->combinationFeature->isActive()) {
             unset($choices[$this->trans('Product with combinations', 'Admin.Catalog.Feature')]);
+            // Virtual products with combinations also rely on the combinations feature
+            unset($choices[$this->trans('Virtual product with combinations', 'Admin.Catalog.Feature')]);
         }
 
         return $choices;
