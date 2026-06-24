@@ -11,6 +11,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Country;
 use PHPUnit\Framework\Assert;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Store\ContactDetailsConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
@@ -163,8 +164,8 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         $countryId = (int) Country::getIdByName($langId, $data['country']);
 
         $command = new AddStoreCommand(
-            is_array($data['name']) ? $data['name'] : [$langId => $data['name']],
-            is_array($data['address1']) ? $data['address1'] : [$langId => $data['address1']],
+            $data['name'],
+            $data['address1'],
             $countryId,
             $data['city']
         );
@@ -173,16 +174,16 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
             $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
         }
         if (!empty($data['address2'])) {
-            $command->setLocalizedAddress2(is_array($data['address2']) ? $data['address2'] : [$langId => $data['address2']]);
+            $command->setLocalizedAddress2($data['address2']);
         }
         if (!empty($data['postcode'])) {
             $command->setPostcode($data['postcode']);
         }
         if (!empty($data['latitude'])) {
-            $command->setLatitude((float) $data['latitude']);
+            $command->setLatitude(new DecimalNumber($data['latitude']));
         }
         if (!empty($data['longitude'])) {
-            $command->setLongitude((float) $data['longitude']);
+            $command->setLongitude(new DecimalNumber($data['longitude']));
         }
         if (!empty($data['phone'])) {
             $command->setPhone($data['phone']);
@@ -221,13 +222,13 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         $command = new EditStoreCommand($this->referenceToId($reference));
 
         if (isset($data['name'])) {
-            $command->setLocalizedNames(is_array($data['name']) ? $data['name'] : [$langId => $data['name']]);
+            $command->setLocalizedNames($data['name']);
         }
         if (isset($data['address1'])) {
-            $command->setLocalizedAddress1(is_array($data['address1']) ? $data['address1'] : [$langId => $data['address1']]);
+            $command->setLocalizedAddress1($data['address1']);
         }
         if (isset($data['address2'])) {
-            $command->setLocalizedAddress2(is_array($data['address2']) ? $data['address2'] : [$langId => $data['address2']]);
+            $command->setLocalizedAddress2($data['address2']);
         }
         if (isset($data['city'])) {
             $command->setCity($data['city']);
@@ -236,10 +237,10 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
             $command->setPostcode($data['postcode']);
         }
         if (isset($data['latitude'])) {
-            $command->setLatitude((float) $data['latitude']);
+            $command->setLatitude(new DecimalNumber($data['latitude']));
         }
         if (isset($data['longitude'])) {
-            $command->setLongitude((float) $data['longitude']);
+            $command->setLongitude(new DecimalNumber($data['longitude']));
         }
         if (isset($data['phone'])) {
             $command->setPhone($data['phone']);
@@ -296,8 +297,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         $storeForEditing = $this->getQueryBus()->handle(new GetStoreForEditing($this->referenceToId($reference)));
 
         if (isset($data['name'])) {
-            $expected = is_array($data['name']) ? $data['name'] : [$langId => $data['name']];
-            foreach ($expected as $lid => $value) {
+            foreach ($data['name'] as $lid => $value) {
                 Assert::assertSame($value, $storeForEditing->getLocalizedNames()[$lid] ?? null, 'name');
             }
         }

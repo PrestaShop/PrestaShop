@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Store\Command;
 
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 
 /**
@@ -37,8 +38,8 @@ class EditStoreCommand
     private bool $stateIdProvided = false;
     private ?string $city = null;
     private ?string $postcode = null;
-    private ?float $latitude = null;
-    private ?float $longitude = null;
+    private ?DecimalNumber $latitude = null;
+    private ?DecimalNumber $longitude = null;
     private ?string $phone = null;
     private ?string $fax = null;
     private ?string $email = null;
@@ -108,12 +109,12 @@ class EditStoreCommand
         return $this->postcode;
     }
 
-    public function getLatitude(): ?float
+    public function getLatitude(): ?DecimalNumber
     {
         return $this->latitude;
     }
 
-    public function getLongitude(): ?float
+    public function getLongitude(): ?DecimalNumber
     {
         return $this->longitude;
     }
@@ -212,14 +213,14 @@ class EditStoreCommand
         return $this;
     }
 
-    public function setLatitude(?float $latitude): self
+    public function setLatitude(?DecimalNumber $latitude): self
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    public function setLongitude(?float $longitude): self
+    public function setLongitude(?DecimalNumber $longitude): self
     {
         $this->longitude = $longitude;
 

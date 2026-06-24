@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\EditStoreCommand;
@@ -34,8 +35,8 @@ final class StoreFormDataHandler implements FormDataHandlerInterface
             ->setLocalizedAddress2($data['address2'] ?? [])
             ->setStateId((int) $data['id_state'] ?: null)
             ->setPostcode($data['postcode'] ?? '')
-            ->setLatitude($data['latitude'] !== '' && $data['latitude'] !== null ? (float) $data['latitude'] : null)
-            ->setLongitude($data['longitude'] !== '' && $data['longitude'] !== null ? (float) $data['longitude'] : null)
+            ->setLatitude($data['latitude'] !== '' && $data['latitude'] !== null ? new DecimalNumber($data['latitude']) : null)
+            ->setLongitude($data['longitude'] !== '' && $data['longitude'] !== null ? new DecimalNumber($data['longitude']) : null)
             ->setPhone($data['phone'] ?: null)
             ->setFax($data['fax'] ?: null)
             ->setEmail($data['email'] ?: null)
@@ -67,8 +68,8 @@ final class StoreFormDataHandler implements FormDataHandlerInterface
             ->setStateId((int) $data['id_state'] ?: null)
             ->setCity($data['city'])
             ->setPostcode($data['postcode'] ?? '')
-            ->setLatitude($data['latitude'] !== '' && $data['latitude'] !== null ? (float) $data['latitude'] : null)
-            ->setLongitude($data['longitude'] !== '' && $data['longitude'] !== null ? (float) $data['longitude'] : null)
+            ->setLatitude($data['latitude'] !== '' && $data['latitude'] !== null ? new DecimalNumber($data['latitude']) : null)
+            ->setLongitude($data['longitude'] !== '' && $data['longitude'] !== null ? new DecimalNumber($data['longitude']) : null)
             ->setPhone($data['phone'] ?: null)
             ->setFax($data['fax'] ?: null)
             ->setEmail($data['email'] ?: null)
