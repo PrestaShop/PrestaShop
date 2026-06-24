@@ -219,23 +219,37 @@ Feature: store management
       | longitude       | 2.352200         |
       | country         | France           |
     When I edit store "storeHours" opening hours with the following schedule:
-      | day       | open  | close |
-      | Monday    | 09:00 | 18:00 |
-      | Tuesday   | 09:00 | 18:00 |
-      | Wednesday | 09:00 | 18:00 |
-      | Thursday  | 09:00 | 18:00 |
-      | Friday    | 09:00 | 17:00 |
-      | Saturday  |       |       |
-      | Sunday    |       |       |
+      | day              | open  | close |
+      | Monday[en-US]    | 09:00 | 18:00 |
+      | Monday[fr-FR]    | 08:30 | 19:00 |
+      | Tuesday[en-US]   | 09:00 | 18:00 |
+      | Tuesday[fr-FR]   | 08:30 | 19:00 |
+      | Wednesday[en-US] | 09:00 | 18:00 |
+      | Wednesday[fr-FR] | 08:30 | 19:00 |
+      | Thursday[en-US]  | 09:00 | 18:00 |
+      | Thursday[fr-FR]  | 08:30 | 19:00 |
+      | Friday[en-US]    | 09:00 | 17:00 |
+      | Friday[fr-FR]    | 08:30 | 18:00 |
+      | Saturday[en-US]  |       |       |
+      | Saturday[fr-FR]  |       |       |
+      | Sunday[en-US]    | Closed      |       |
+      | Sunday[fr-FR]    | Fermé      |       |
     Then store "storeHours" should have the following opening hours:
-      | day       | open  | close |
-      | Monday    | 09:00 | 18:00 |
-      | Tuesday   | 09:00 | 18:00 |
-      | Wednesday | 09:00 | 18:00 |
-      | Thursday  | 09:00 | 18:00 |
-      | Friday    | 09:00 | 17:00 |
-      | Saturday  |       |       |
-      | Sunday    |       |       |
+      | day              | open  | close |
+      | Monday[en-US]    | 09:00 | 18:00 |
+      | Monday[fr-FR]    | 08:30 | 19:00 |
+      | Tuesday[en-US]   | 09:00 | 18:00 |
+      | Tuesday[fr-FR]   | 08:30 | 19:00 |
+      | Wednesday[en-US] | 09:00 | 18:00 |
+      | Wednesday[fr-FR] | 08:30 | 19:00 |
+      | Thursday[en-US]  | 09:00 | 18:00 |
+      | Thursday[fr-FR]  | 08:30 | 19:00 |
+      | Friday[en-US]    | 09:00 | 17:00 |
+      | Friday[fr-FR]    | 08:30 | 18:00 |
+      | Saturday[en-US]  |       |       |
+      | Saturday[fr-FR]  |       |       |
+      | Sunday[en-US]    | Closed      |       |
+      | Sunday[fr-FR]    | Fermé      |       |
 
   Scenario: Editing a store to a country with states without providing a state raises an error
     When I add store "storeCountryEdit" using command with the following properties:
