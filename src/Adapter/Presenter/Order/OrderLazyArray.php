@@ -193,7 +193,9 @@ class OrderLazyArray extends AbstractLazyArray
             );
 
             if ($orderPaid && $orderProduct['is_virtual']) {
-                $id_product_download = ProductDownload::getIdFromIdProduct($orderProduct['product_id']);
+                $id_product_download = (int) $orderProduct['product_attribute_id'] > 0
+                    ? ProductDownload::getIdFromCombination((int) $orderProduct['product_id'], (int) $orderProduct['product_attribute_id'])
+                    : ProductDownload::getIdFromIdProduct((int) $orderProduct['product_id']);
                 $product_download = new ProductDownload($id_product_download);
                 if ($product_download->display_filename != '') {
                     $orderProduct['download_link'] =
