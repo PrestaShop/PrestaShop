@@ -102,6 +102,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         $data = array_merge([
             'id' => $combinationId,
             'product_id' => $combinationForEditing->getProductId(),
+            'product_type' => $combinationForEditing->getProductType(),
             'cover_thumbnail_url' => $combinationForEditing->getCoverThumbnailUrl(),
             'header' => [
                 'name' => $combinationForEditing->getName(),
@@ -110,6 +111,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'stock' => $this->extractStockData($combinationForEditing, $shopConstraint),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
             'references' => $this->extractReferencesData($combinationForEditing),
+            'virtual_product_file' => $this->extractVirtualProductFileData($combinationForEditing),
         ], $suppliersData, ['images' => $combinationForEditing->getImageIds()]);
 
         // The feature values section only exists when the feature flag is enabled (so does the matching
@@ -285,6 +287,33 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'ean_13' => $details->getGtin(),
             'upc' => $details->getUpc(),
             'mpn' => $details->getMpn(),
+        ];
+    }
+
+    /**
+     * @param CombinationForEditing $combinationForEditing
+     *
+     * @return array<string, mixed>
+     */
+    private function extractVirtualProductFileData(CombinationForEditing $combinationForEditing): array
+    {
+        $virtualProductFile = $combinationForEditing->getFile();
+
+        if (null === $virtualProductFile) {
+            return [
+                'has_file' => false,
+            ];
+        }
+
+        return [
+            'has_file' => true,
+            'virtual_product_file_id' => $virtualProductFile->getId(),
+            'name' => $virtualProductFile->getDisplayName(),
+            'download_times_limit' => $virtualProductFile->getDownloadTimesLimit(),
+            'access_days_limit' => $virtualProductFile->getAccessDays(),
+            'expiration_date' => $virtualProductFile->getExpirationDate() ?
+                $virtualProductFile->getExpirationDate()->format(DateTime::DEFAULT_DATE_FORMAT) :
+                null,
         ];
     }
 

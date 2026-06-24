@@ -17,6 +17,8 @@ class CombinationFormOptionsProvider implements FormOptionsProviderInterface
     {
         return [
             'product_id' => $data['product_id'] ?? null,
+            'product_type' => $data['product_type'] ?? null,
+            'virtual_product_file_id' => $data['virtual_product_file']['virtual_product_file_id'] ?? null,
         ];
     }
 
