@@ -37,6 +37,11 @@ class ProductType
     public const TYPE_COMBINATIONS = 'combinations';
 
     /**
+     * Virtual product (downloadable) that has combinations, each combination carrying its own file
+     */
+    public const TYPE_VIRTUAL_COMBINATIONS = 'virtual_combinations';
+
+    /**
      * Product created before 178 or via the legacy page may have empty product type, so it is
      * undefined. To know the product type you can use Product::getDynamicProductType() which
      * computes it based on the existing associations.
@@ -53,6 +58,7 @@ class ProductType
         self::TYPE_PACK,
         self::TYPE_VIRTUAL,
         self::TYPE_COMBINATIONS,
+        self::TYPE_VIRTUAL_COMBINATIONS,
     ];
 
     /**
