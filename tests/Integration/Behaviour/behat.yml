@@ -65,6 +65,12 @@ default:
       contexts:
         - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\EmailBodyTranslationFeatureContext
+    import:
+      paths:
+        - "%paths.base%/Features/Scenario/Import"
+      contexts:
+        - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\ImportFeatureContext
     customer:
       paths:
         - "%paths.base%/Features/Scenario/Customer"

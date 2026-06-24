@@ -1,0 +1,4 @@
+name;reference;price_tex;quantity;active;category
+Behat Product Valid One;BEHAT-V1;10.00;100;1;Home
+Behat Product Valid Two;BEHAT-V2;30.00;25;1;Home
+;BEHAT-INVALID;20.00;50;1;Home

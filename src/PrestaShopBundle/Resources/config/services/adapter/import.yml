@@ -91,3 +91,12 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Tools'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       - '@prestashop.core.hook.dispatcher'
+
+  PrestaShop\PrestaShop\Adapter\Import\LegacyImportExecutor: ~
+
+  PrestaShop\PrestaShop\Adapter\Import\CommandHandler\ImportCsvFromFileHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Import\ImporterInterface'
+      - '@PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerFinderInterface'
+      - '@PrestaShop\PrestaShop\Adapter\Import\LegacyImportExecutor'

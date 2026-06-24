@@ -1,0 +1,3 @@
+email;passwd;lastname;firstname;active
+behat.customer.a@example.com;Azerty123;Doe;John;1
+behat.customer.b@example.com;Azerty123;Roe;Jane;1
