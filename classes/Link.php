@@ -518,7 +518,10 @@ class LinkCore
         $params = [];
         $params['id'] = $cmsCategory->id;
         $params['rewrite'] = (!$alias) ? $cmsCategory->link_rewrite : $alias;
-        $params['meta_title'] = Tools::str2url($cmsCategory->meta_title);
+
+        if ($dispatcher->hasKeyword('cms_category_rule', $idLang, 'meta_title', $idShop)) {
+            $params['meta_title'] = Tools::str2url($cmsCategory->meta_title);
+        }
 
         return $url . $dispatcher->createUrl('cms_category_rule', $idLang, $params, $this->allow, '', $idShop);
     }
