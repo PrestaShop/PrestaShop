@@ -35,6 +35,7 @@ class CombinationVirtualProductFileCommandsBuilder implements CombinationCommand
         }
 
         $virtualProductFileData = $formData['virtual_product_file'];
+        // product_id is always provided by CombinationFormDataProvider; the fallback only guards malformed input.
         $productId = (int) ($formData['product_id'] ?? 0);
 
         if ($addCommand = $this->buildAddCommand($productId, $combinationId, $virtualProductFileData)) {
