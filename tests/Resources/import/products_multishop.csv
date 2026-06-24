@@ -1,0 +1,2 @@
+name;reference;price_tex;quantity;active;category;shop
+Behat Multishop Product;BEHAT-MS;10.00;100;1;Home;{{shop1}},{{shop2}}

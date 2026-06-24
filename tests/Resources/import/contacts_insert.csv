@@ -1,0 +1,3 @@
+name;address1;city;country;latitude;longitude;active
+Behat Store A;1 Test Street;Paris;France;48.8566;2.3522;1
+Behat Store B;2 Test Street;Lyon;France;45.7640;4.8357;1

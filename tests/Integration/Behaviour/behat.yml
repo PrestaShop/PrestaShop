@@ -70,6 +70,7 @@ default:
         - "%paths.base%/Features/Scenario/Import"
       contexts:
         - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\ImportFeatureContext
     customer:
       paths:

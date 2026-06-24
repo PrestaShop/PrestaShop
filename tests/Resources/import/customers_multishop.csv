@@ -1,0 +1,2 @@
+email;passwd;lastname;firstname;active;id_shop
+behat.multishop@example.com;Azerty123;Multi;Shop;1;{{shop2}}

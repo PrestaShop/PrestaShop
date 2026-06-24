@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Domain\Import\Command\ImportCsvFromFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Import\Result\ImportResult;
 use PrestaShop\PrestaShop\Core\Import\ImportSettings;
+use ReflectionClass;
 use ReflectionProperty;
 
 /**
@@ -50,6 +51,7 @@ final class LegacyImportExecutor
             'get' => $_GET,
         ];
 
+        $this->resetLegacyStaticState();
         $this->applyRequestParameters($command);
 
         try {
@@ -115,6 +117,22 @@ final class LegacyImportExecutor
             $_POST = $backup['post'];
             $_GET = $backup['get'];
         }
+    }
+
+    /**
+     * The legacy controller keeps its column mapping, validators and default values in public static
+     * properties that the constructor only adds to (never fully resets). When several entity types are
+     * imported in the same process they would otherwise leak into each other (e.g. the store-contact
+     * import marking "address1" as a multilang field, which then breaks the address import). Restore the
+     * declared defaults before each run.
+     */
+    private function resetLegacyStaticState(): void
+    {
+        $defaults = (new ReflectionClass(AdminImportController::class))->getDefaultProperties();
+
+        AdminImportController::$validators = $defaults['validators'];
+        AdminImportController::$default_values = $defaults['default_values'];
+        AdminImportController::$column_mask = $defaults['column_mask'];
     }
 
     private function injectContainer(AdminImportController $controller): void

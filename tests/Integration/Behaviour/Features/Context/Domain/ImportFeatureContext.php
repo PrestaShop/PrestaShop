@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Domain\Import\Result\ImportResult;
 use PrestaShop\PrestaShop\Core\Import\Entity;
 use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 use RuntimeException;
+use Shop;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -185,6 +186,26 @@ class ImportFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then product with reference :reference should be associated to shops :shopReferences
+     */
+    public function productShouldBeAssociatedToShops(string $reference, string $shopReferences): void
+    {
+        foreach (explode(',', $shopReferences) as $shopReference) {
+            $shopReference = trim($shopReference);
+            Assert::assertSame(
+                1,
+                $this->count(
+                    'SELECT COUNT(*) FROM ' . $this->prefix() . 'product_shop ps'
+                    . ' INNER JOIN ' . $this->prefix() . 'product p ON p.id_product = ps.id_product'
+                    . ' WHERE p.reference = :reference AND ps.id_shop = :shopId',
+                    ['reference' => $reference, 'shopId' => $this->referenceToId($shopReference)]
+                ),
+                sprintf('Expected product "%s" to be associated to shop "%s".', $reference, $shopReference)
+            );
+        }
+    }
+
+    /**
      * @Then product :name should exist
      */
     public function productShouldExist(string $name): void
@@ -246,6 +267,44 @@ class ImportFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then category :name should be associated to shops :shopReferences
+     */
+    public function categoryShouldBeAssociatedToShops(string $name, string $shopReferences): void
+    {
+        foreach (explode(',', $shopReferences) as $shopReference) {
+            $shopReference = trim($shopReference);
+            Assert::assertGreaterThanOrEqual(
+                1,
+                $this->count(
+                    'SELECT COUNT(*) FROM ' . $this->prefix() . 'category_shop cs'
+                    . ' INNER JOIN ' . $this->prefix() . 'category_lang cl ON cl.id_category = cs.id_category AND cl.id_lang = :langId'
+                    . ' WHERE cl.name = :name AND cs.id_shop = :shopId',
+                    ['name' => $name, 'langId' => $this->resolveLangId('en'), 'shopId' => $this->referenceToId($shopReference)]
+                ),
+                sprintf('Expected category "%s" to be associated to shop "%s".', $name, $shopReference)
+            );
+        }
+    }
+
+    /**
+     * @Then product with reference :reference should have a combination associated to shop :shopReference
+     */
+    public function combinationShouldBeAssociatedToShop(string $reference, string $shopReference): void
+    {
+        Assert::assertGreaterThan(
+            0,
+            $this->count(
+                'SELECT COUNT(*) FROM ' . $this->prefix() . 'product_attribute_shop pas'
+                . ' INNER JOIN ' . $this->prefix() . 'product_attribute pa ON pa.id_product_attribute = pas.id_product_attribute'
+                . ' INNER JOIN ' . $this->prefix() . 'product p ON p.id_product = pa.id_product'
+                . ' WHERE p.reference = :reference AND pas.id_shop = :shopId',
+                ['reference' => $reference, 'shopId' => $this->referenceToId($shopReference)]
+            ),
+            sprintf('Expected product "%s" to have a combination associated to shop "%s".', $reference, $shopReference)
+        );
+    }
+
+    /**
      * @Then category :name should not exist
      */
     public function categoryShouldNotExist(string $name): void
@@ -257,6 +316,94 @@ class ImportFeatureContext extends AbstractDomainFeatureContext
                 ['name' => $name, 'langId' => $this->resolveLangId('en')]
             ),
             sprintf('Expected category "%s" not to exist.', $name)
+        );
+    }
+
+    /**
+     * @Then manufacturer :name should exist
+     */
+    public function manufacturerShouldExist(string $name): void
+    {
+        Assert::assertSame(
+            1,
+            $this->count('SELECT COUNT(*) FROM ' . $this->prefix() . 'manufacturer WHERE name = :name', ['name' => $name]),
+            sprintf('Expected exactly one manufacturer "%s".', $name)
+        );
+    }
+
+    /**
+     * @Then supplier :name should exist
+     */
+    public function supplierShouldExist(string $name): void
+    {
+        Assert::assertSame(
+            1,
+            $this->count('SELECT COUNT(*) FROM ' . $this->prefix() . 'supplier WHERE name = :name', ['name' => $name]),
+            sprintf('Expected exactly one supplier "%s".', $name)
+        );
+    }
+
+    /**
+     * @Then alias :alias should exist with search :search
+     */
+    public function aliasShouldExist(string $alias, string $search): void
+    {
+        Assert::assertSame(
+            1,
+            $this->count(
+                'SELECT COUNT(*) FROM ' . $this->prefix() . 'alias WHERE alias = :alias AND search = :search',
+                ['alias' => $alias, 'search' => $search]
+            ),
+            sprintf('Expected alias "%s" with search "%s".', $alias, $search)
+        );
+    }
+
+    /**
+     * @Then store :name should exist
+     */
+    public function storeShouldExist(string $name): void
+    {
+        Assert::assertSame(
+            1,
+            $this->count(
+                'SELECT COUNT(*) FROM ' . $this->prefix() . 'store_lang WHERE name = :name AND id_lang = :langId',
+                ['name' => $name, 'langId' => $this->resolveLangId('en')]
+            ),
+            sprintf('Expected exactly one store "%s".', $name)
+        );
+    }
+
+    /**
+     * @Then address :alias should exist for customer :email
+     */
+    public function addressShouldExistForCustomer(string $alias, string $email): void
+    {
+        Assert::assertSame(
+            1,
+            $this->count(
+                'SELECT COUNT(*) FROM ' . $this->prefix() . 'address a'
+                . ' INNER JOIN ' . $this->prefix() . 'customer c ON c.id_customer = a.id_customer'
+                . ' WHERE a.alias = :alias AND c.email = :email AND a.deleted = 0',
+                ['alias' => $alias, 'email' => $email]
+            ),
+            sprintf('Expected address "%s" for customer "%s".', $alias, $email)
+        );
+    }
+
+    /**
+     * @Then product with reference :reference should have a combination with reference :combinationReference
+     */
+    public function productShouldHaveCombination(string $reference, string $combinationReference): void
+    {
+        Assert::assertGreaterThan(
+            0,
+            $this->count(
+                'SELECT COUNT(*) FROM ' . $this->prefix() . 'product_attribute pa'
+                . ' INNER JOIN ' . $this->prefix() . 'product p ON p.id_product = pa.id_product'
+                . ' WHERE p.reference = :reference AND pa.reference = :combinationReference',
+                ['reference' => $reference, 'combinationReference' => $combinationReference]
+            ),
+            sprintf('Expected product "%s" to have a combination with reference "%s".', $reference, $combinationReference)
         );
     }
 
@@ -296,6 +443,47 @@ class ImportFeatureContext extends AbstractDomainFeatureContext
 
         Assert::assertNotFalse($actual, sprintf('Customer "%s" not found.', $email));
         Assert::assertSame($lastName, $actual);
+    }
+
+    /**
+     * @Given the shop group :groupReference shares its customers
+     */
+    public function shopGroupSharesCustomers(string $groupReference): void
+    {
+        $this->getConnection()->executeStatement(
+            'UPDATE ' . $this->prefix() . 'shop_group SET share_customer = 1 WHERE id_shop_group = :id',
+            ['id' => $this->referenceToId($groupReference)]
+        );
+
+        Shop::resetStaticCache();
+    }
+
+    /**
+     * @Then customer with email :email should be in shop :shopReference
+     */
+    public function customerShouldBeInShop(string $email, string $shopReference): void
+    {
+        $actual = $this->getConnection()->executeQuery(
+            'SELECT id_shop FROM ' . $this->prefix() . 'customer WHERE email = :email',
+            ['email' => $email]
+        )->fetchOne();
+
+        Assert::assertNotFalse($actual, sprintf('Customer "%s" not found.', $email));
+        Assert::assertSame($this->referenceToId($shopReference), (int) $actual);
+    }
+
+    /**
+     * @Then customer with email :email should be shared in shop group :groupReference
+     */
+    public function customerShouldBeSharedInGroup(string $email, string $groupReference): void
+    {
+        $actual = $this->getConnection()->executeQuery(
+            'SELECT id_shop_group FROM ' . $this->prefix() . 'customer WHERE email = :email',
+            ['email' => $email]
+        )->fetchOne();
+
+        Assert::assertNotFalse($actual, sprintf('Customer "%s" not found.', $email));
+        Assert::assertSame($this->referenceToId($groupReference), (int) $actual);
     }
 
     private function runImport(string $entityType, string $fixture, string $langIso, bool $validateOnly, array $rawOptions): void
@@ -398,12 +586,30 @@ class ImportFeatureContext extends AbstractDomainFeatureContext
             throw new RuntimeException(sprintf('Unable to create import directory "%s".', $directory));
         }
 
+        $content = file_get_contents($source);
+        if (false === $content) {
+            throw new RuntimeException(sprintf('Unable to read import fixture "%s".', $fixture));
+        }
+
         $destination = $directory . $fixture;
-        if (!copy($source, $destination)) {
-            throw new RuntimeException(sprintf('Unable to copy import fixture "%s" to %s.', $fixture, $destination));
+        if (false === file_put_contents($destination, $this->replaceReferences($content))) {
+            throw new RuntimeException(sprintf('Unable to write import fixture "%s" to %s.', $fixture, $destination));
         }
 
         $this->copiedFixtures[$destination] = $destination;
+    }
+
+    /**
+     * Replaces {{reference}} placeholders in a fixture with the matching id from shared storage.
+     * Used by multistore fixtures whose shop/group ids are only known at runtime.
+     */
+    private function replaceReferences(string $content): string
+    {
+        return preg_replace_callback(
+            '/\{\{([a-zA-Z0-9_]+)\}\}/',
+            fn (array $matches): string => (string) $this->referenceToId($matches[1]),
+            $content
+        );
     }
 
     /**
