@@ -197,7 +197,7 @@ class TranslationCatalogueExporter
         $finder = Finder::create();
         foreach ($finder->in($path . DIRECTORY_SEPARATOR . $locale)->files() as $file) {
             $currentName = $file->getPathname();
-            $newName = rtrim($currentName, '.xlf') . '.' . $locale . '.xlf';
+            $newName = preg_replace('/\.xlf$/', '.' . $locale . '.xlf', $currentName);
             $this->filesystem->rename($currentName, $newName);
         }
     }
