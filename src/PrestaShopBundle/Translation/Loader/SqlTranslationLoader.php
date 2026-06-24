@@ -60,15 +60,12 @@ class SqlTranslationLoader implements LoaderInterface
             throw new NotFoundResourceException(sprintf('Language not found in database: %s', $locale));
         }
 
-        // If we get translations for a theme, realistically we need to get translations
-        // for all active themes from the database, since different stores can use different themes.
-        // If we don't do that, the first store's theme you visit after the cache is cleared will
-        // be the only one that has translations.
         $selectTranslationsQuery = '
             SELECT `key`, `translation`, `domain`
             FROM `' . _DB_PREFIX_ . 'translation`
             WHERE `id_lang` = ' . $localeResults[$locale]['id_lang'] . '
-            AND theme ' . ($this->theme !== null ? ' IN (SELECT `theme` FROM `' . _DB_PREFIX_ . 'shop` WHERE `active` = 1)' : 'IS NULL');
+            AND ' . $this->buildThemeCondition() . '
+            ORDER BY theme IS NOT NULL';
 
         $translations = Db::getInstance()->executeS($selectTranslationsQuery) ?: [];
 
@@ -76,6 +73,30 @@ class SqlTranslationLoader implements LoaderInterface
         $this->addTranslationsToCatalogue($translations, $catalogue);
 
         return $catalogue;
+    }
+
+    /**
+     * Builds the WHERE sub-condition that restricts which ps_translation rows are loaded.
+     *
+     * Always covers both core rows (theme IS NULL) and theme-specific rows for every
+     * active shop. This is required because in PS9 the Symfony container is always active,
+     * so getTranslator() never calls TranslatorLanguageLoader::loadLanguage() and setTheme()
+     * is never invoked. A single loader instance must therefore handle both row types.
+     *
+     * In the PS8 legacy path, TranslatorLanguageLoader registers two separate instances
+     * (a plain 'db' loader and a 'db.theme' loader with setTheme() called). With the
+     * unified condition both instances load the same rows; the second pass is redundant
+     * but harmless.
+     *
+     * ORDER BY theme IS NOT NULL in the caller ensures theme=NULL rows are processed first
+     * inside addTranslationsToCatalogue(), so shop-specific overrides win on duplicate keys.
+     *
+     * The correct column is ps_shop.theme_name — ps_shop.theme has never existed; referencing
+     * it causes MySQL/MariaDB to silently return an empty result set (issue #41232, Bug A).
+     */
+    protected function buildThemeCondition(): string
+    {
+        return '(theme IS NULL OR theme IN (SELECT `theme_name` FROM `' . _DB_PREFIX_ . 'shop` WHERE `active` = 1))';
     }
 
     /**
