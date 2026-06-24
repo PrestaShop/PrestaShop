@@ -66,11 +66,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
     public function bulkToggleStatus(string $action, string $storeReferences): void
     {
         $expectedStatus = 'enable' === $action;
-        $storeIds = [];
-
-        foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
-            $storeIds[$storeReference] = $this->referenceToId($storeReference);
-        }
+        $storeIds = $this->referencesToIds($storeReferences);
 
         $this->getCommandBus()->handle(new BulkUpdateStoreStatusCommand($expectedStatus, $storeIds));
     }
@@ -116,10 +112,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
      */
     public function bulkDeleteStores(string $storeReferences): void
     {
-        $storeIds = [];
-        foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
-            $storeIds[] = $this->referenceToId($storeReference);
-        }
+        $storeIds = $this->referencesToIds($storeReferences);
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteStoreCommand($storeIds));
