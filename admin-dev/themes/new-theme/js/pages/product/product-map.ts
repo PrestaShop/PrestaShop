@@ -141,6 +141,15 @@ export default {
       // eslint-disable-next-line
       'form[name="combination_form"] input, form[name="combination_form"] textarea, form[name="combination_form"] select',
     editCombinationButtons: '.edit-combination-item',
+    virtualProductFile: {
+      // The combination edit form embeds the shared VirtualProductFileType, so it reuses the same
+      // container classes and field ids (prefixed with the combination_form root) as the product level.
+      contentContainer: '.virtual-product-file-container .virtual-product-file-content',
+      hasFileInputs: 'input[name="combination_form[virtual_product_file][has_file]"]',
+      hasFileEnabled: '#combination_form_virtual_product_file_has_file_1',
+      fileUploadInput: '#combination_form_virtual_product_file_file',
+      filenameInput: '#combination_form_virtual_product_file_name',
+    },
     tableRow: {
       isSelectedCombination: `.${isSelectedCombinationClass}`,
       combinationImg: '.combination-image',
