@@ -758,7 +758,7 @@ class ProductCore extends ObjectModel
      */
     public function add($autodate = true, $null_values = false)
     {
-        if ($this->is_virtual) {
+        if ($this->is_virtual && $this->product_type !== ProductType::TYPE_VIRTUAL_COMBINATIONS) {
             $this->product_type = ProductType::TYPE_VIRTUAL;
         }
 
@@ -798,7 +798,7 @@ class ProductCore extends ObjectModel
      */
     public function update($null_values = false)
     {
-        if ($this->is_virtual) {
+        if ($this->is_virtual && $this->product_type !== ProductType::TYPE_VIRTUAL_COMBINATIONS) {
             $this->product_type = ProductType::TYPE_VIRTUAL;
         }
 
