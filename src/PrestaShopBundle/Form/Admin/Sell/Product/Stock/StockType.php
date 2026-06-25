@@ -124,7 +124,7 @@ class StockType extends TranslatorAwareType
             ->setAllowedTypes('virtual_product_file_id', ['int', 'null'])
             ->setNormalizer('label', function (OptionsResolver $resolver) {
                 $productType = $resolver->offsetGet('product_type');
-                if ($productType === ProductType::TYPE_VIRTUAL || $productType === ProductType::TYPE_VIRTUAL_COMBINATIONS) {
+                if (ProductType::isVirtualType($productType)) {
                     return $this->trans('Virtual product', 'Admin.Catalog.Feature');
                 } elseif ($productType === ProductType::TYPE_PACK) {
                     return $this->trans('Pack', 'Admin.Catalog.Feature');

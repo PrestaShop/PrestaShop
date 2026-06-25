@@ -137,12 +137,12 @@ class ProductTypeUpdater
 
     private function isVirtualType(string $type): bool
     {
-        return in_array($type, [ProductType::TYPE_VIRTUAL, ProductType::TYPE_VIRTUAL_COMBINATIONS], true);
+        return ProductType::isVirtualType($type);
     }
 
     private function hasCombinationsType(string $type): bool
     {
-        return in_array($type, [ProductType::TYPE_COMBINATIONS, ProductType::TYPE_VIRTUAL_COMBINATIONS], true);
+        return ProductType::hasCombinations($type);
     }
 
     private function resetProductStock(ProductId $productId): void
