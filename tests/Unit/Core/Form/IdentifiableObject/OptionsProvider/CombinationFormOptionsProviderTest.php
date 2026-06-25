@@ -33,8 +33,8 @@ class CombinationFormOptionsProviderTest extends TestCase
 
     public function getTestData(): Generator
     {
-        yield [[], ['product_id' => null]];
-        yield [['product_id' => null], ['product_id' => null]];
-        yield [['product_id' => 42], ['product_id' => 42]];
+        yield [[], ['product_id' => null, 'product_type' => null, 'virtual_product_file_id' => null]];
+        yield [['product_id' => null], ['product_id' => null, 'product_type' => null, 'virtual_product_file_id' => null]];
+        yield [['product_id' => 42], ['product_id' => 42, 'product_type' => null, 'virtual_product_file_id' => null]];
     }
 }
