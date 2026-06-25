@@ -86,7 +86,10 @@ class ProductTypeUpdater
         if ($product->product_type === ProductType::TYPE_PACK && $productType->getValue() !== ProductType::TYPE_PACK) {
             $this->productPackUpdater->setPackProducts(new PackId($productId->getValue()), []);
         }
-        if (ProductType::hasCombinations($product->product_type) && !ProductType::hasCombinations($productType->getValue())) {
+        $leavingCombinations = ProductType::hasCombinations($product->product_type) && !ProductType::hasCombinations($productType->getValue());
+        $leavingVirtual = ProductType::isVirtualType($product->product_type) && !ProductType::isVirtualType($productType->getValue());
+
+        if ($leavingCombinations) {
             // When we change the combination type we must reset the stock since all combinations are removed, it must be done before
             // removing all combinations, because the Combination legacy object performs this reset internally, so we won't have the data
             // anymore to create the appropriate stock movement
@@ -94,8 +97,10 @@ class ProductTypeUpdater
 
             $this->combinationDeleter->deleteAllProductCombinations($productId, ShopConstraint::allShops());
         }
-        if (ProductType::isVirtualType($product->product_type) && !ProductType::isVirtualType($productType->getValue())) {
-            // Removes every virtual file for the product (product level and all combinations)
+        // Remove every virtual file (product level and all combinations) when the product stops being virtual,
+        // OR when a virtual product loses its combinations: virtual_combinations stores one file per combination
+        // and Combination::delete() does not cascade to product_download, so they must be removed explicitly.
+        if ($leavingVirtual || ($leavingCombinations && ProductType::isVirtualType($product->product_type))) {
             $this->virtualProductUpdater->deleteAllFilesForProduct($productId);
         }
         // Finally, update product type
