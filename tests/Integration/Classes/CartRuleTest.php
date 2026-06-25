@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Classes;
 
+use Cart;
 use CartRule;
+use Context;
 use Customer;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -62,6 +64,46 @@ class CartRuleTest extends TestCase
         );
 
         $this->assertEquals(1, count($customerCartRules));
+    }
+
+    /**
+     * When a cart is passed explicitly (as the back office customer view does),
+     * the product restriction check must use that cart and not the context cart,
+     * which is null in the back office and used to trigger a TypeError.
+     *
+     * @see https://github.com/PrestaShop/PrestaShop/issues/35841
+     */
+    public function testGetCustomerCartRulesUsesProvidedCartForProductRestriction(): void
+    {
+        $cartRule = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id);
+        $cartRule->product_restriction = true;
+        $cartRule->save();
+
+        $cart = new Cart();
+        $cart->id_customer = (int) $this->dummyCustomer->id;
+        $cart->id_lang = $this->defaultLanguageId;
+        $cart->id_currency = (int) $this->configuration->get('PS_CURRENCY_DEFAULT', null, ShopConstraint::allShops());
+        $cart->add();
+
+        // Back office customer view has no cart in the context.
+        $context = Context::getContext();
+        $previousContextCart = $context->cart;
+        $context->cart = null;
+
+        try {
+            $customerCartRules = CartRule::getCustomerCartRules(
+                $this->defaultLanguageId,
+                (int) $this->dummyCustomer->id,
+                true,
+                true,
+                false,
+                $cart
+            );
+        } finally {
+            $context->cart = $previousContextCart;
+        }
+
+        $this->assertIsArray($customerCartRules);
     }
 
     public function testGetAllCartRulesForCustomerEvenDisabled(): void
