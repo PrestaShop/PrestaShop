@@ -494,9 +494,10 @@ class ProductLazyArray extends AbstractLazyArray
          * fetch them with one query (in more performant way) and pass them here when constructing this object.
          */
         if (!isset($this->product['features'])) {
-            $this->product['features'] = Product::getFrontFeaturesStatic(
+            $this->product['features'] = Product::getFrontFeaturesMergedStatic(
                 (int) $this->language->id,
-                $this->product['id_product']
+                $this->product['id_product'],
+                (int) ($this->product['id_product_attribute'] ?? 0)
             );
         }
 

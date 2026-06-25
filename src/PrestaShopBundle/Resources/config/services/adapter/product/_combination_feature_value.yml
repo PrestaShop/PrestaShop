@@ -1,0 +1,24 @@
+services:
+  _defaults:
+    public: true
+
+  PrestaShop\PrestaShop\Adapter\Product\Combination\FeatureValue\CommandHandler\SetCombinationFeatureValuesHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\FeatureValue\Update\CombinationFeatureValueUpdater'
+
+  PrestaShop\PrestaShop\Adapter\Product\Combination\FeatureValue\CommandHandler\RemoveAllFeatureValuesFromCombinationHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\FeatureValue\Update\CombinationFeatureValueUpdater'
+
+  PrestaShop\PrestaShop\Adapter\Product\Combination\FeatureValue\QueryHandler\GetCombinationFeatureValuesHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository'
+
+  PrestaShop\PrestaShop\Adapter\Product\Combination\FeatureValue\Update\CombinationFeatureValueUpdater:
+    autowire: true
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'

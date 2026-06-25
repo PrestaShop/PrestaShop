@@ -13,6 +13,7 @@ use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
@@ -28,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSup
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\NoSupplierId;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
 use PrestaShopBundle\Form\Extension\DisablingSwitchExtension;
 use RuntimeException;
@@ -669,6 +671,7 @@ class CombinationFormDataProviderTest extends TestCase
                 'upc' => 'upc',
                 'mpn' => 'mpn',
             ],
+            'features' => [],
             'default_supplier_id' => NoSupplierId::NO_SUPPLIER_ID,
             'product_suppliers' => [],
             'images' => [],
@@ -680,8 +683,26 @@ class CombinationFormDataProviderTest extends TestCase
     ): CombinationFormDataProvider {
         return new CombinationFormDataProvider(
             $queryBusMock,
-            $this->mockShopContext()
+            $this->mockShopContext(),
+            self::SHOP_ID,
+            $this->createMock(FeaturesChoiceProvider::class),
+            $this->mockFeatureFlagStateChecker()
         );
+    }
+
+    /**
+     * @return FeatureFlagStateCheckerInterface
+     */
+    private function mockFeatureFlagStateChecker(): FeatureFlagStateCheckerInterface
+    {
+        $featureFlagStateChecker = $this->createMock(FeatureFlagStateCheckerInterface::class);
+        // Feature flag disabled by default, combination feature values are not loaded
+        $featureFlagStateChecker
+            ->method('isEnabled')
+            ->willReturn(false)
+        ;
+
+        return $featureFlagStateChecker;
     }
 
     /**

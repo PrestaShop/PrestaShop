@@ -934,6 +934,18 @@ CREATE TABLE `PREFIX_feature_product` (
   KEY `id_product` (`id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
+/* Association between a feature and a product combination (product_attribute) */
+CREATE TABLE `PREFIX_feature_product_attribute` (
+  `id_feature` int(10) unsigned NOT NULL,
+  `id_product_attribute` int(10) unsigned NOT NULL,
+  `id_feature_value` int(10) unsigned NOT NULL,
+  PRIMARY KEY (
+    `id_feature`, `id_product_attribute`, `id_feature_value`
+  ),
+  KEY `id_feature_value` (`id_feature_value`),
+  KEY `id_product_attribute` (`id_product_attribute`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 /* Various choice associated with a feature */
 CREATE TABLE `PREFIX_feature_value` (
   `id_feature_value` int(10) unsigned NOT NULL auto_increment,

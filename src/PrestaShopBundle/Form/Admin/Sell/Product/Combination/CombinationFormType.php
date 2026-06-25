@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShopBundle\Form\Admin\Sell\Product\Combination\Feature\CombinationFeaturesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Details\ReferencesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
@@ -29,17 +30,33 @@ class CombinationFormType extends TranslatorAwareType
     private $combinationListener;
 
     /**
+     * @var bool
+     */
+    private $isFeatureEnabled;
+
+    /**
+     * @var bool
+     */
+    private $isCombinationFeatureValuesEnabled;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param EventSubscriberInterface $combinationListener
+     * @param bool $isFeatureEnabled
+     * @param bool $isCombinationFeatureValuesEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        EventSubscriberInterface $combinationListener
+        EventSubscriberInterface $combinationListener,
+        bool $isFeatureEnabled,
+        bool $isCombinationFeatureValuesEnabled
     ) {
         parent::__construct($translator, $locales);
         $this->combinationListener = $combinationListener;
+        $this->isFeatureEnabled = $isFeatureEnabled;
+        $this->isCombinationFeatureValuesEnabled = $isCombinationFeatureValuesEnabled;
     }
 
     /**
@@ -72,6 +89,10 @@ class CombinationFormType extends TranslatorAwareType
                 'label_tag_name' => 'h3',
             ])
         ;
+
+        if ($this->isFeatureEnabled && $this->isCombinationFeatureValuesEnabled) {
+            $builder->add('features', CombinationFeaturesType::class);
+        }
 
         /*
          * This listener adapts the content of the form based on the data, it can remove add or transforms some
