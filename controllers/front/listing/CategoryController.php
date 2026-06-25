@@ -75,6 +75,7 @@ class CategoryControllerCore extends ProductListingFrontController
 
         // Otherwise immediately show 404
         if (!Validate::isLoadedObject($this->category)) {
+            Hook::exec('actionNotFound');
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
             $this->errors[] = $this->trans('This category is no longer available.', [], 'Shop.Notifications.Error');

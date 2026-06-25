@@ -5678,5 +5678,10 @@
       <title/>
       <description/>
     </hook>
+    <hook id="actionNotFound">
+      <name>actionNotFound</name>
+      <title>Action when a page is not found</title>
+      <description>Allows modules to react when a page is not found - log it, redirect or perform other actions.</description>
+    </hook>
   </entities>
 </entity_hook>
