@@ -49,7 +49,7 @@ class ProductStockAvailableCommandsBuilder implements ProductCommandsBuilderInte
         }
 
         $productType = $formData['header']['type'] ?? ProductType::TYPE_STANDARD;
-        if ($productType === ProductType::TYPE_COMBINATIONS) {
+        if (ProductType::hasCombinations($productType)) {
             return $this->buildCommandsForProductWithCombinations($productId, $formData, $singleShopConstraint);
         }
 

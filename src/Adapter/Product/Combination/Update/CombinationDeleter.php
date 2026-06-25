@@ -88,7 +88,7 @@ class CombinationDeleter
     public function deleteAllProductCombinations(ProductId $productId, ShopConstraint $shopConstraint): void
     {
         $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
-        if ($product->product_type !== ProductType::TYPE_COMBINATIONS) {
+        if (!ProductType::hasCombinations($product->product_type)) {
             throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_COMBINATIONS_TYPE);
         }
 

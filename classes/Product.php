@@ -466,6 +466,7 @@ class ProductCore extends ObjectModel
                     ProductType::TYPE_PACK,
                     ProductType::TYPE_VIRTUAL,
                     ProductType::TYPE_COMBINATIONS,
+                    ProductType::TYPE_VIRTUAL_COMBINATIONS,
                     ProductType::TYPE_UNDEFINED,
                 ],
                 'default' => ProductType::TYPE_STANDARD,
@@ -2669,7 +2670,7 @@ class ProductCore extends ObjectModel
         }
 
         // If this product does not have any combinations, no need to do any queries
-        if ($this->getProductType() != ProductType::TYPE_COMBINATIONS) {
+        if (!ProductType::hasCombinations($this->getProductType())) {
             return false;
         }
 
@@ -8162,7 +8163,11 @@ class ProductCore extends ObjectModel
      */
     public function getDynamicProductType(): string
     {
-        if ($this->is_virtual) {
+        // A virtual product that also has combinations is a virtual_combinations product.
+        // This combined case must be checked before the single virtual/combinations cases so it isn't shadowed.
+        if ($this->is_virtual && $this->hasCombinations()) {
+            return ProductType::TYPE_VIRTUAL_COMBINATIONS;
+        } elseif ($this->is_virtual) {
             return ProductType::TYPE_VIRTUAL;
         } elseif (Pack::isPack($this->id)) {
             return ProductType::TYPE_PACK;

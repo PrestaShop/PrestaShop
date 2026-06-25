@@ -111,7 +111,7 @@ class ProductSupplierUpdater
 
         // We should always create an association not related to a combination
         $combinationIds = [new NoCombinationId()];
-        if ($productType->getValue() === ProductType::TYPE_COMBINATIONS) {
+        if (ProductType::hasCombinations($productType->getValue())) {
             $combinationIds = array_merge($combinationIds, $this->combinationRepository->getCombinationIds(
                 $productId,
                 ShopConstraint::allShops()
@@ -194,7 +194,7 @@ class ProductSupplierUpdater
     ): array {
         $product = $this->productRepository->getProductByDefaultShop($productId);
 
-        if ($product->getProductType() === ProductType::TYPE_COMBINATIONS) {
+        if (ProductType::hasCombinations($product->getProductType())) {
             $this->throwInvalidTypeException($productId, 'setCombinationSuppliers');
         }
 
@@ -239,7 +239,7 @@ class ProductSupplierUpdater
     public function updateProductDefaultSupplier(ProductId $productId, SupplierId $defaultSupplierId): void
     {
         $productType = $this->productRepository->getProductType($productId);
-        if ($productType->getValue() === ProductType::TYPE_COMBINATIONS) {
+        if (ProductType::hasCombinations($productType->getValue())) {
             // Product must always be updated even for product with combinations, we use the default combination as the reference
             $defaultProductSupplier = $this->getDefaultCombinationProductSupplier($productId, $defaultSupplierId);
             if (!$defaultProductSupplier) {

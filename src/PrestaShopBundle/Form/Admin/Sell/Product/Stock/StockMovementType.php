@@ -44,7 +44,7 @@ class StockMovementType extends TranslatorAwareType
 
                 // For orders, we display the kind of movements instead of the data range
                 if ($type === StockMovement::ORDERS_TYPE) {
-                    $label = ProductType::TYPE_VIRTUAL === $options['product_type'] ?
+                    $label = ProductType::isVirtualType($options['product_type']) ?
                         $this->trans('Sold products', 'Admin.Catalog.Feature') :
                         $this->trans('Shipped products', 'Admin.Catalog.Feature')
                     ;
