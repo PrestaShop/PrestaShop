@@ -26,10 +26,11 @@ describe('BO - Advanced Parameters - Import : Abort a running import', async () 
   const numberOfProducts: number = 300;
   const fileName: string = 'ui_import_abort.csv';
 
-  let csvContent: string = 'Active (0/1);Name *;Categories (x,y,z...);Price tax excluded;Reference #;Quantity\n';
+  // Columns must follow the import field order (positional auto-mapping): id, active, name, category, price.
+  let csvContent: string = 'Product ID;Active (0/1);Name *;Categories (x,y,z...);Price tax excluded\n';
 
   for (let i = 1; i <= numberOfProducts; i++) {
-    csvContent += `1;UI Abort Product ${i};Home;${i}.99;UI-ABORT-${i};10\n`;
+    csvContent += `;1;UI Abort Product ${i};Home;${i}.99\n`;
   }
 
   before(async function () {

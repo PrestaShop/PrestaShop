@@ -27,9 +27,10 @@ describe('BO - Advanced Parameters - Import : Import products', async () => {
   const fileName: string = 'ui_import_products.csv';
   const firstProduct: string = 'UI Import Product A';
   const secondProduct: string = 'UI Import Product B';
-  const csvContent: string = 'Active (0/1);Name *;Categories (x,y,z...);Price tax excluded;Reference #;Quantity\n'
-    + `1;${firstProduct};Home;19.99;UI-IMP-A;100\n`
-    + `1;${secondProduct};Home;29.99;UI-IMP-B;50\n`;
+  // Columns must follow the import field order (positional auto-mapping): id, active, name, category, price.
+  const csvContent: string = 'Product ID;Active (0/1);Name *;Categories (x,y,z...);Price tax excluded\n'
+    + `;1;${firstProduct};Home;19.99\n`
+    + `;1;${secondProduct};Home;29.99\n`;
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
