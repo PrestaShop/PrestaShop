@@ -8,6 +8,8 @@ export default {
   businessEntityAddressId: 'div.card[data-address-index]',
   addBusinessEntityBillingAddress: '#add_business_entity_billing_address',
   addBusinessEntityShippingAddress: '#add_business_entity_shipping_address',
+  businessEntityBillingAddressCollection: 'ul.billing_addresses',
+  businessEntityShippingAddressCollection: 'ul.shipping_addresses',
   businessEntityBillingAddress: 'ul.billing_addresses li',
   businessEntityShippingAddress: 'ul.shipping_addresses li',
   deleteBusinessEntityAddressBtnPlaceholder: '.delete-business-entity-address-btn-placeholder',

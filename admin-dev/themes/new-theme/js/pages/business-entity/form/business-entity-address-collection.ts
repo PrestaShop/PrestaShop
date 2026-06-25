@@ -6,8 +6,6 @@ import BusinessEntityFormMap from '@pages/business-entity/form/business-entity-f
 import CountryPostcodeRequiredToggler from '@components/country-postcode-required-toggler';
 import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
 
-const {$} = window;
-
 // @TODO: typescript-eslint adds a no-shadow there, remove it when it's fixed on their side
 // eslint-disable-next-line no-shadow
 enum AddressTypeEnum {
@@ -30,31 +28,42 @@ export default class BusinessEntityAddressCollection {
 
   constructor() {
     this.attachEventListeners();
-  }
-
-  private attachEventListeners(): void {
-    document
-      .querySelectorAll<HTMLElement>(this.map.addBusinessEntityShippingAddress)
-      .forEach((btn) => {
-        btn.addEventListener('click', (e) => this.addFormToCollection(e, AddressTypeEnum.SHIPPING));
-      });
-    document
-      .querySelectorAll<HTMLElement>(this.map.addBusinessEntityBillingAddress)
-      .forEach((btn) => {
-        btn.addEventListener('click', (e) => this.addFormToCollection(e, AddressTypeEnum.BILLING));
-      });
-
-    document
-      .querySelectorAll<HTMLElement>(
-        `${this.map.businessEntityBillingAddress}, ${this.map.businessEntityShippingAddress}`,
-      )
-      .forEach((input) => {
-        this.addDeleteLink(input);
-      });
-
     this.initDefaultBillingAddress();
     this.initDefaultShippingAddress();
   }
+
+  private attachEventListeners(): void {
+    document.addEventListener('click', this.handleClick);
+  }
+
+  private handleClick = (event: Event): void => {
+    const target = event.target as HTMLElement;
+
+    const addBtn = target.closest<HTMLElement>(
+      `${this.map.addBusinessEntityBillingAddress}, ${this.map.addBusinessEntityShippingAddress}`,
+    );
+
+    if (addBtn) {
+      const addressType = addBtn.matches(this.map.addBusinessEntityBillingAddress)
+        ? AddressTypeEnum.BILLING
+        : AddressTypeEnum.SHIPPING;
+      this.addFormToCollection(addBtn, addressType);
+      return;
+    }
+
+    const deleteBtn = target.closest<HTMLElement>('.delete-business-entity-address');
+
+    if (deleteBtn) {
+      this.removeAddress(deleteBtn);
+      return;
+    }
+
+    const setAsDefaultBtn = target.closest<HTMLElement>('.set-as-default-business-entity-address');
+
+    if (setAsDefaultBtn) {
+      this.setAsDefaultAddress(setAsDefaultBtn);
+    }
+  };
 
   private initDefaultShippingAddress(): void {
     const defaultElement = document
@@ -72,7 +81,7 @@ export default class BusinessEntityAddressCollection {
         this.addRequiredToggler(addressCard);
 
         if (addressCard.dataset.addressIndex !== defaultValue) {
-          this.addSetAsDefaultBtn(input, AddressTypeEnum.SHIPPING);
+          this.addSetAsDefaultBtn(input);
         } else {
           this.selectedShippingAddress = input.querySelector('div.card');
           BusinessEntityAddressCollection.addBgLightToCard(this.selectedShippingAddress);
@@ -96,7 +105,7 @@ export default class BusinessEntityAddressCollection {
         this.addRequiredToggler(addressCard);
 
         if (addressCard.dataset.addressIndex !== defaultValue) {
-          this.addSetAsDefaultBtn(input, AddressTypeEnum.BILLING);
+          this.addSetAsDefaultBtn(input);
         } else {
           this.selectedBillingAddress = input.querySelector('div.card');
           BusinessEntityAddressCollection.addBgLightToCard(this.selectedBillingAddress);
@@ -109,9 +118,8 @@ export default class BusinessEntityAddressCollection {
     this.addCountryStateSelectionToggler(addressCard);
   }
 
-  private addFormToCollection(e: Event, addressType: AddressTypeEnum): void {
-    const target = e.currentTarget as HTMLElement;
-    const collectionHolder = document.querySelector(`.${target.dataset.collectionHolderClass}`) as HTMLElement;
+  private addFormToCollection(addBtn: HTMLElement, addressType: AddressTypeEnum): void {
+    const collectionHolder = document.querySelector(`.${addBtn.dataset.collectionHolderClass}`) as HTMLElement;
 
     const item = document.createElement('li');
 
@@ -131,16 +139,12 @@ export default class BusinessEntityAddressCollection {
     } else if (addressType === AddressTypeEnum.SHIPPING && !this.selectedShippingAddress) {
       this.setDefaultAddress(addressCard, AddressTypeEnum.SHIPPING);
     } else {
-      this.addSetAsDefaultBtn(item, addressType);
+      this.addSetAsDefaultBtn(item);
     }
 
     collectionHolder.appendChild(item);
 
     this.addRequiredToggler(addressCard);
-
-    $(item).find('[data-toggle="select2"]').select2({
-      theme: 'bootstrap4',
-    });
 
     collectionHolder.dataset.index = String(Number(collectionHolder.dataset.index) + 1);
   }
@@ -162,32 +166,39 @@ export default class BusinessEntityAddressCollection {
     if (removeFormButtonLocation) {
       removeFormButtonLocation.replaceChildren(removeFormButton);
     }
-
-    removeFormButton.addEventListener('click', () => {
-      if (item.querySelector(this.map.businessEntityAddressId) === this.selectedShippingAddress) {
-        const addressIndex = this.selectedShippingAddress?.dataset.addressIndex;
-        const addressCardElementSelector = `${this.map.businessEntityShippingAddress} `
-          + `div.card:not([data-address-index="${addressIndex}"])`;
-        this.setDefaultAddress(
-          document.querySelector(addressCardElementSelector) as AddressCard,
-          AddressTypeEnum.SHIPPING,
-        );
-      }
-
-      if (item.querySelector(this.map.businessEntityAddressId) === this.selectedBillingAddress) {
-        const addressIndex = this.selectedBillingAddress?.dataset.addressIndex;
-        const addressCardElementSelector = `${this.map.businessEntityBillingAddress} `
-          + `div.card:not([data-address-index="${addressIndex}"])`;
-        this.setDefaultAddress(
-          document.querySelector(addressCardElementSelector) as AddressCard,
-          AddressTypeEnum.BILLING,
-        );
-      }
-      item.remove();
-    });
   }
 
-  private addSetAsDefaultBtn(item: HTMLElement, addressType: AddressTypeEnum): void {
+  private removeAddress(deleteBtn: HTMLElement): void {
+    const item = deleteBtn.closest('li');
+
+    if (!item) {
+      return;
+    }
+
+    if (item.querySelector(this.map.businessEntityAddressId) === this.selectedShippingAddress) {
+      const addressIndex = this.selectedShippingAddress?.dataset.addressIndex;
+      const addressCardElementSelector = `${this.map.businessEntityShippingAddress} `
+        + `div.card:not([data-address-index="${addressIndex}"])`;
+      this.setDefaultAddress(
+        document.querySelector(addressCardElementSelector) as AddressCard,
+        AddressTypeEnum.SHIPPING,
+      );
+    }
+
+    if (item.querySelector(this.map.businessEntityAddressId) === this.selectedBillingAddress) {
+      const addressIndex = this.selectedBillingAddress?.dataset.addressIndex;
+      const addressCardElementSelector = `${this.map.businessEntityBillingAddress} `
+        + `div.card:not([data-address-index="${addressIndex}"])`;
+      this.setDefaultAddress(
+        document.querySelector(addressCardElementSelector) as AddressCard,
+        AddressTypeEnum.BILLING,
+      );
+    }
+
+    item.remove();
+  }
+
+  private addSetAsDefaultBtn(item: HTMLElement): void {
     const setAsDefaultBtn = document.createElement('button');
     setAsDefaultBtn.type = 'button';
     setAsDefaultBtn.className = 'btn btn-link set-as-default-business-entity-address';
@@ -204,20 +215,19 @@ export default class BusinessEntityAddressCollection {
 
     if (setAsDefaultBtnLocation) {
       setAsDefaultBtnLocation.replaceChildren(setAsDefaultBtn);
-      setAsDefaultBtn.addEventListener(
-        'click',
-        (e) => this.setAsDefaultAddress(e, addressType),
-      );
     }
   }
 
-  private setAsDefaultAddress(e: Event, addressType: AddressTypeEnum): void {
-    const target = e.currentTarget as HTMLElement;
-    const addressCard = target.closest(this.map.businessEntityAddressId) as AddressCard;
+  private setAsDefaultAddress(setAsDefaultBtn: HTMLElement): void {
+    const addressCard = setAsDefaultBtn.closest(this.map.businessEntityAddressId) as AddressCard;
 
     if (!addressCard) {
       return;
     }
+
+    const addressType = setAsDefaultBtn.closest(this.map.businessEntityBillingAddressCollection)
+      ? AddressTypeEnum.BILLING
+      : AddressTypeEnum.SHIPPING;
 
     this.setDefaultAddress(addressCard, addressType);
   }
@@ -247,12 +257,12 @@ export default class BusinessEntityAddressCollection {
 
     if (addressType === AddressTypeEnum.BILLING) {
       if (this.selectedBillingAddress) {
-        this.addSetAsDefaultBtn(this.selectedBillingAddress, addressType);
+        this.addSetAsDefaultBtn(this.selectedBillingAddress);
       }
       this.selectedBillingAddress = element;
     } else if (addressType === AddressTypeEnum.SHIPPING) {
       if (this.selectedShippingAddress) {
-        this.addSetAsDefaultBtn(this.selectedShippingAddress, addressType);
+        this.addSetAsDefaultBtn(this.selectedShippingAddress);
       }
       this.selectedShippingAddress = element;
     }

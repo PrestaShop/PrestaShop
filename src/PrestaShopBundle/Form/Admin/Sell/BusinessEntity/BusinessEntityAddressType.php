@@ -187,7 +187,6 @@ class BusinessEntityAddressType extends TranslatorAwareType
                         ),
                     ]),
                 ],
-                'autocomplete' => true,
                 'attr' => [
                     'data-states-url' => $this->router->generate('admin_country_states'),
                     'class' => 'js-address-country-select',
@@ -204,7 +203,6 @@ class BusinessEntityAddressType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'js-address-state-block',
                 ],
-                'autocomplete' => true,
                 'attr' => [
                     'visible' => $showStates,
                     'class' => 'js-address-state-select',
