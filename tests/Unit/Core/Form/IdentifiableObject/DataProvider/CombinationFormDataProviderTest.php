@@ -716,6 +716,7 @@ class CombinationFormDataProviderTest extends TestCase
         return [
             'id' => self::COMBINATION_ID,
             'product_id' => self::PRODUCT_ID,
+            'product_type' => '',
             'cover_thumbnail_url' => self::COVER_URL,
             'header' => [
                 'name' => self::DEFAULT_NAME,
@@ -758,6 +759,9 @@ class CombinationFormDataProviderTest extends TestCase
                 'ean_13' => 'ean13',
                 'upc' => 'upc',
                 'mpn' => 'mpn',
+            ],
+            'virtual_product_file' => [
+                'has_file' => false,
             ],
             'default_supplier_id' => NoSupplierId::NO_SUPPLIER_ID,
             'product_suppliers' => [],
