@@ -62,11 +62,10 @@ class ProductTypeListener implements EventSubscriberInterface
             $form->remove('extra_modules');
         }
 
-        $combinationTypes = [ProductType::TYPE_COMBINATIONS, ProductType::TYPE_VIRTUAL_COMBINATIONS];
-        if (in_array($productType, $combinationTypes, true)) {
+        if (ProductType::hasCombinations($productType)) {
             $this->removeProductSuppliers($form);
             $this->removeStock($form);
-        } elseif (!in_array($initialProductType, $combinationTypes, true)) {
+        } elseif (!ProductType::hasCombinations($initialProductType)) {
             $this->removeCombinations($form);
         }
 
@@ -90,12 +89,11 @@ class ProductTypeListener implements EventSubscriberInterface
 
         $this->removeStockMovementsIfNecessary($form, $data);
 
-        $virtualTypes = [ProductType::TYPE_VIRTUAL, ProductType::TYPE_VIRTUAL_COMBINATIONS];
-        if (in_array($productType, $virtualTypes, true)) {
+        if (ProductType::isVirtualType($productType)) {
             $this->removeShipping($form);
             // We don't remove the ecotax during the transition request because we could lose the ecotax data
             // and some part of the price with it
-            if (in_array($initialProductType, $virtualTypes, true)) {
+            if (ProductType::isVirtualType($initialProductType)) {
                 $this->removeEcotax($form);
             }
         }
