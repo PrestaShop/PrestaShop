@@ -761,6 +761,7 @@ class ProductCore extends ObjectModel
      */
     public function add($autodate = true, $null_values = false)
     {
+        // Legacy save only knows is_virtual; don't clobber a virtual_combinations product back to plain virtual.
         if ($this->is_virtual && $this->product_type !== ProductType::TYPE_VIRTUAL_COMBINATIONS) {
             $this->product_type = ProductType::TYPE_VIRTUAL;
         }
@@ -801,6 +802,7 @@ class ProductCore extends ObjectModel
      */
     public function update($null_values = false)
     {
+        // Legacy save only knows is_virtual; don't clobber a virtual_combinations product back to plain virtual.
         if ($this->is_virtual && $this->product_type !== ProductType::TYPE_VIRTUAL_COMBINATIONS) {
             $this->product_type = ProductType::TYPE_VIRTUAL;
         }
