@@ -22,10 +22,15 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  * Exercises the import safety net through the ImportCsvFromFileCommand façade.
  *
  * Every scenario dispatches the command via the bus and asserts either against
- * the returned ImportResult or against the persisted data (queried through the
- * Doctrine DBAL connection, never through ObjectModel). The same command covers
+ * the returned ImportResult or against the persisted data. The same command covers
  * both executors: entity types with a modern handler (products, categories) run
  * through the Importer, the others fall back to the legacy controller.
+ *
+ * Assumed deviation: persisted data is read through the Doctrine DBAL connection
+ * rather than the domain repositories. This is deliberate — the repositories only
+ * expose get($id) lookups, not the by-name / by-reference / by-email lookups these
+ * assertions need — and it still respects the rule of never asserting through
+ * ObjectModel.
  */
 class ImportFeatureContext extends AbstractDomainFeatureContext
 {

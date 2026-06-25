@@ -17,6 +17,11 @@ use PrestaShop\PrestaShop\Core\Domain\Import\Result\ImportResult;
  * The interface stays stable across the import migration: today the concrete
  * handler wires the existing Importer / legacy controller, later stories will
  * dispatch the ImportRun aggregate behind the very same method.
+ *
+ * Assumed deviation from the usual "commands return void/an id" rule: this command
+ * intentionally returns an ImportResult. The report (errors/warnings/notices/counts)
+ * is the façade's contract — it is what the safety-net scenarios assert against and
+ * what the UI needs back from a run — so it is returned synchronously here.
  */
 interface ImportCsvFromFileHandlerInterface
 {
