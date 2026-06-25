@@ -23,6 +23,9 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface as FormFormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
@@ -129,16 +132,6 @@ class StoreType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('id_state', ChoiceType::class, [
-                'label' => $this->trans('State', 'Admin.Global'),
-                'required' => false,
-                'choices' => $stateChoices,
-                'row_attr' => ['class' => 'js-store-state-row'],
-                'autocomplete' => true,
-                'attr' => [
-                    'visible' => !empty($stateChoices),
-                ],
-            ])
             ->add('latitude', TextType::class, [
                 'label' => $this->trans('Latitude', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Store coordinates (e.g. 45.265469 or -0.265469)', 'Admin.Shopparameters.Help'),
@@ -237,5 +230,34 @@ class StoreType extends TranslatorAwareType
                 'required' => false,
             ]);
         }
+
+        $this->rebuildStateField($builder, $countryId);
+
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
+            $data = $event->getData() ?? [];
+            $this->rebuildStateField($event->getForm(), (int) ($data['id_country'] ?? 0));
+        });
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
+            $this->rebuildStateField($event->getForm(), (int) ($event->getData()['id_country'] ?? 0));
+        });
+    }
+
+    /**
+     * @param FormFormInterface|FormBuilderInterface $form
+     */
+    private function rebuildStateField($form, int $countryId): void
+    {
+        $stateChoices = $countryId > 0 ? $this->statesChoiceProvider->getChoices(['id_country' => $countryId]) : [];
+        $form->add('id_state', ChoiceType::class, [
+            'label' => $this->trans('State', 'Admin.Global'),
+            'required' => false,
+            'choices' => $stateChoices,
+            'row_attr' => ['class' => 'js-store-state-row'],
+            'autocomplete' => true,
+            'attr' => [
+                'visible' => !empty($stateChoices),
+            ],
+        ]);
     }
 }

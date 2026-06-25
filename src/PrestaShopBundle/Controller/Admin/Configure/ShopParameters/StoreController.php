@@ -107,11 +107,6 @@ class StoreController extends PrestaShopAdminController
     ): Response {
         try {
             $formData = [];
-            // Country needs to be preset before building form type because it is used to build state field choices
-            if ($request->request->has('store') && isset($request->request->all('store')['id_country'])) {
-                $formCountryId = (int) $request->request->all('store')['id_country'];
-                $formData['id_country'] = $formCountryId;
-            }
 
             $storeForm = $storeFormBuilder->getFormFor($storeId, $formData);
         } catch (Exception $e) {
