@@ -67,4 +67,17 @@ class LinkTest extends TestCase
         $this->assertEquals(1, $query['id_product']);
         $this->assertArrayNotHasKey('id_product_attribute', $query);
     }
+
+    public function testSupplierUrlOmitsMetaTitleWhenRouteHasNoMetaTitleKeyword(): void
+    {
+        $reflectionDispatcher = new ReflectionClass('Dispatcher');
+        $property = $reflectionDispatcher->getProperty('use_routes');
+        $property->setAccessible(true);
+        $property->setValue(Dispatcher::getInstance(), true);
+
+        $url = Context::getContext()->link->getSupplierLink(1);
+        parse_str(parse_url($url)['query'] ?? '', $query);
+
+        $this->assertArrayNotHasKey('meta_title', $query);
+    }
 }
