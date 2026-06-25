@@ -47,6 +47,11 @@ class CategoryLazyArray extends AbstractLazyArray
         $this->language = $language;
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
+        $this->initExtraPropertiesBag(
+            Category::class,
+            (int) ($this->category['id_category'] ?? $this->category['id'] ?? 0),
+            $language->getId()
+        );
 
         parent::__construct();
         $this->appendArray($this->category);

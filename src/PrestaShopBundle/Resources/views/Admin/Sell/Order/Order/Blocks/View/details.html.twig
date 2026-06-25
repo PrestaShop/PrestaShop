@@ -33,14 +33,14 @@
       <li class="nav-item">
         <a class="nav-link" id="orderShipmentsTab" data-toggle="tab" href="#orderShipmentsTabContent" role="tab" aria-controls="orderShipmentsTabContent" aria-expanded="true" aria-selected="false">
           <i class="material-icons">local_shipping</i>
-          {{ shipmentsLabel|raw }}
+          {{ shipmentsLabel|raw_purified }}
         </a>
       </li>
     {% else %}
       <li class="nav-item">
         <a class="nav-link" id="orderShippingTab" data-toggle="tab" href="#orderShippingTabContent" role="tab" aria-controls="orderShippingTabContent" aria-expanded="true" aria-selected="false">
           <i class="material-icons">local_shipping</i>
-          {{ carriersLabel|raw }}
+          {{ carriersLabel|raw_purified }}
         </a>
       </li>
     {% endif %}
@@ -80,7 +80,7 @@
       <div class="tab-pane d-print-block fade" id="orderShipmentsTabContent" role="tabpanel" aria-labelledby="orderShipmentsTab">
         {% embed '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details_card.html.twig' %}
           {% block header %}
-            {{ shipmentsLabel|raw }}
+            {{ shipmentsLabel|raw_purified }}
           {% endblock %}
           {% block body %}
             {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {grid: shipmentsGrid}) }}
@@ -91,7 +91,7 @@
       <div class="tab-pane d-print-block fade" id="orderShippingTabContent" role="tabpanel" aria-labelledby="orderShippingTab">
         {% embed '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details_card.html.twig' %}
           {% block header %}
-            {{ carriersLabel|raw }}
+            {{ carriersLabel|raw_purified }}
           {% endblock %}
           {% block body %}
             {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig') }}

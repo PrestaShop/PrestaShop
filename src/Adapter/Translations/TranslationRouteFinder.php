@@ -8,6 +8,8 @@ namespace PrestaShop\PrestaShop\Adapter\Translations;
 
 use Link;
 use Module;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Service\TranslationService;
@@ -55,18 +57,26 @@ class TranslationRouteFinder
     private $moduleRepository;
 
     /**
+     * @var FeatureFlagStateCheckerInterface
+     */
+    private $featureFlagStateChecker;
+
+    /**
      * @param TranslationService $translationService
      * @param Link $link
      * @param ModuleRepositoryInterface $moduleRepository
+     * @param FeatureFlagStateCheckerInterface $featureFlagStateChecker
      */
     public function __construct(
         TranslationService $translationService,
         Link $link,
-        ModuleRepositoryInterface $moduleRepository
+        ModuleRepositoryInterface $moduleRepository,
+        FeatureFlagStateCheckerInterface $featureFlagStateChecker
     ) {
         $this->translationService = $translationService;
         $this->link = $link;
         $this->moduleRepository = $moduleRepository;
+        $this->featureFlagStateChecker = $featureFlagStateChecker;
     }
 
     /**
@@ -84,18 +94,22 @@ class TranslationRouteFinder
             case self::MAILS:
                 if (self::BODY === $propertyAccessor->getValue($routeProperties, '[email_content_type]')) {
                     $language = $propertyAccessor->getValue($routeProperties, '[language]');
-                    $route = $this->link->getAdminLink(
-                        'AdminTranslations',
-                        true,
-                        [],
-                        [
-                            'lang' => $language,
-                            'type' => self::MAILS,
-                            'selected-emails' => self::BODY,
-                            'selected-theme' => $propertyAccessor->getValue($routeProperties, '[theme]'),
-                            'locale' => $this->translationService->langToLocale($language),
-                        ]
-                    );
+                    if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_EMAIL_BODY_TRANSLATION)) {
+                        $route = 'admin_email_body_translation_index';
+                    } else {
+                        $route = $this->link->getAdminLink(
+                            'AdminTranslations',
+                            true,
+                            [],
+                            [
+                                'lang' => $language,
+                                'type' => self::MAILS,
+                                'selected-emails' => self::BODY,
+                                'selected-theme' => $propertyAccessor->getValue($routeProperties, '[theme]'),
+                                'locale' => $this->translationService->langToLocale($language),
+                            ]
+                        );
+                    }
                 }
 
                 break;
@@ -152,7 +166,13 @@ class TranslationRouteFinder
                 $emailContentType = $propertyAccessor->getValue($routeProperties, '[email_content_type]');
 
                 if (self::BODY === $emailContentType) {
-                    $parameters = [];
+                    if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_EMAIL_BODY_TRANSLATION)) {
+                        $parameters = [
+                            'locale' => $language,
+                        ];
+                    } else {
+                        $parameters = [];
+                    }
                 }
 
                 break;

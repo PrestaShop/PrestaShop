@@ -6,6 +6,7 @@
 
 namespace PrestaShopBundle\Entity\B2B;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,6 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  *     @ORM\UniqueConstraint(name="uniq_business_entity_identifier", columns={"id_business_entity", "id_business_identifier"})
  * })
+ *
+ * @ORM\HasLifecycleCallbacks
  *
  * @ORM\Entity()
  */
@@ -52,6 +55,16 @@ class BusinessEntityIdentifier
      * @ORM\Column(name="value", type="string", length=255)
      */
     private string $value;
+
+    /**
+     * @ORM\Column(name="created_at", type="datetime")
+     */
+    private DateTime $createdAt;
+
+    /**
+     * @ORM\Column(name="updated_at", type="datetime")
+     */
+    private DateTime $updatedAt;
 
     public function getId(): int
     {
@@ -92,5 +105,43 @@ class BusinessEntityIdentifier
         $this->value = $value;
 
         return $this;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     *
+     * @ORM\PreUpdate
+     */
+    public function updateTimestamps(): void
+    {
+        $this->updatedAt = new DateTime();
+
+        if (!isset($this->createdAt)) {
+            $this->createdAt = new DateTime();
+        }
     }
 }

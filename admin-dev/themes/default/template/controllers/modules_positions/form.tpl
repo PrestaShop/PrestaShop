@@ -42,7 +42,7 @@
 						<option value="0" selected disabled>{l s='Please select a module' d='Admin.Design.Help'}</option>
 					{/if}
 					{foreach $modules as $module}
-						<option value="{$module->id|intval}"{if $id_module == $module->id || (!$id_module && $show_modules == $module->id)} selected="selected"{/if}>{$module->displayName|stripslashes}</option>
+						<option value="{$module->id|intval}"{if $id_module == $module->id || (!$id_module && $show_modules == $module->id)} selected="selected"{/if}>{$module->displayName|stripslashes|escape:'html':'UTF-8'}</option>
 					{/foreach}
 				</select>
 			</div>
@@ -58,7 +58,7 @@
 					<optgroup id="hooks_unregistered" label="{l s='Available hooks' d='Admin.Design.Feature'}">
 					{foreach $hooks as $hook}
 						{if !$hook['registered']}
-							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}{if isset($hook['description'])} ({$hook['description']|escape:'htmlall':'UTF-8'}){/if}</option>
+							<option value="{$hook['id_hook']|escape:'html':'UTF-8'}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}{if isset($hook['description'])} ({$hook['description']|escape:'htmlall':'UTF-8'}){/if}</option>
 						{/if}
 					{/foreach}
 					</optgroup>
@@ -66,7 +66,7 @@
 					<optgroup id="hooks_registered" label="{l s='Already registered hooks' d='Admin.Design.Feature'}" disabled>
 					{foreach $hooks as $hook}
 						{if $hook['registered']}
-							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}{if isset($hook['description'])} ({$hook['description']|escape:'htmlall':'UTF-8'}){/if}</option>
+							<option value="{$hook['id_hook']|escape:'html':'UTF-8'}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}{if isset($hook['description'])} ({$hook['description']|escape:'htmlall':'UTF-8'}){/if}</option>
 						{/if}
 					{/foreach}
 					</optgroup>
@@ -98,9 +98,9 @@
 				{l s='Cancel' d='Admin.Actions'}
 			</button>
 			{if $edit_graft}
-				<input type="hidden" name="id_module" value="{$id_module}" />
-				<input type="hidden" name="id_hook" value="{$id_hook}" />
-				<input type="hidden" name="new_hook" id="new_hook" value="{$id_hook}" />
+				<input type="hidden" name="id_module" value="{$id_module|intval}" />
+				<input type="hidden" name="id_hook" value="{$id_hook|intval}" />
+				<input type="hidden" name="new_hook" id="new_hook" value="{$id_hook|intval}" />
 			{/if}
 			<button type="submit" name="{if $edit_graft}submitEditGraft{else}submitAddToHook{/if}" id="{$table}_form_submit_btn" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save' d='Admin.Actions'}</button>
 		</div>

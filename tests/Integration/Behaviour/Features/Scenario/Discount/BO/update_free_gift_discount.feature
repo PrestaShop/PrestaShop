@@ -50,7 +50,7 @@ Feature: Update discount
 
   Scenario: Create a complete discount and update it with customizable product
     Given there is a product in the catalog named "customizable-mug" with a price of 20.0 and 1000 items in stock
-    Given product "customizable-mug" has a customization field named "custo1"
+    Given product "customizable-mug" requires customization
     When I create a "free_gift" discount "complete_free_gift_discount_customizable_product" with following properties:
       | name[en-US]  | Promotion           |
       | name[fr-FR]  | Promotion fr        |

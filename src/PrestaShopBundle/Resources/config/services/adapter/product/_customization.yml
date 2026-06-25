@@ -28,6 +28,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Customization\Repository\CustomizationFieldRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Customization\Update\ProductCustomizationFieldUpdater'
+      - '@PrestaShop\PrestaShop\Adapter\CartRule\CartRuleDisablerService'
 
   PrestaShop\PrestaShop\Adapter\Product\Customization\CommandHandler\RemoveAllCustomizationFieldsFromProductHandler:
     autowire: true

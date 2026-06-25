@@ -3,10 +3,21 @@
 > For folder structure and navigation, see [STRUCTURE.md](STRUCTURE.md).
 > For cross-domain naming traps and identity gotchas, see [GOTCHAS.md](GOTCHAS.md).
 > For multi-store scoping (ShopConstraint, AbstractMultistoreConfiguration), see [MULTISTORE.md](MULTISTORE.md).
+> For the service-container / kernel topology (3 Symfony kernels vs the hand-built FO legacy container, and where service definitions live), see [CONTAINERS.md](CONTAINERS.md).
 
 ## Project overview
 
 PrestaShop is an open-source e-commerce platform built on Symfony. It follows a progressive migration from a legacy architecture (ObjectModel, legacy controllers) toward a modern Domain-Driven Design approach (CQRS, Symfony controllers, Doctrine).
+
+## Branching & Versioning
+
+PrestaShop follows [SemVer](https://semver.org/). Active branches merge upward: `9.1.x` → `develop`. Target the lowest applicable branch.
+
+- **`9.1.x`**: Current stable (patch releases). Bug fixes and minor improvements only — no new features.
+- **`develop`**: Next minor (9.2.0). New features and improvements go here. No breaking changes.
+- **`8.2.x`**: LTS, security fixes only. Rarely modified.
+
+Breaking changes are only allowed in major versions. See [ADR 0017](https://github.com/PrestaShop/adr/blob/master/0017-backward-compatibility-promise.md) for the backward compatibility promise. More architecture decisions at https://github.com/PrestaShop/adr.
 
 ## Architecture layers
 
@@ -52,6 +63,18 @@ PrestaShop is an open-source e-commerce platform built on Symfony. It follows a 
 | Behavior | Behat | `tests/Integration/Behaviour/` |
 | UI | Playwright | `tests/UI/` |
 
+- **New behavior / bug fix must come with a test.** Add or adjust a unit test on the class actually touched; prefer Behat for command/handler behavior; if an existing E2E covers the area, unskip it and re-run rather than leaving a `@todo`/skip in place.
+
+## PR hygiene
+
+Common slips unrelated to the feature itself — check before pushing:
+
+- **No unrelated lock-file changes.** A PR must not carry `composer.lock` / `package-lock.json` updates for dependencies it doesn't intentionally bump (a stray `composer install` often rewrites them). Restore them, or squash them out before review.
+- **No IDE / local config files** (`.idea/`, editor settings) and no stray blank-line or missing-end-of-line changes.
+- **Keep lists alphabetically sorted** (interface members, imports where applicable, enum-like lists) — not all of this is caught by php-cs-fixer.
+- **Squash noise commits** (review fixups, reverts) so history stays readable.
+- **Target the lowest applicable branch** (`9.1.x` for bug fixes, `develop` for features) — see Branching & Versioning above.
+
 ## Skills
 
 | Skill | Path | Trigger |
@@ -59,6 +82,7 @@ PrestaShop is an open-source e-commerce platform built on Symfony. It follows a 
 | `create-skill` | [skills/create-skill/SKILL.md](skills/create-skill/SKILL.md) | "create a skill for …" |
 | `domain-context-generator` | [skills/domain-context-generator/SKILL.md](skills/domain-context-generator/SKILL.md) | "generate context for [Domain]" |
 | `component-context-generator` | [skills/component-context-generator/SKILL.md](skills/component-context-generator/SKILL.md) | "generate context for [Component]" |
+| `create-pr` | [skills/create-pr/SKILL.md](skills/create-pr/SKILL.md) | "create a PR", "open a pull request", "submit a PR" |
 
 ## Domain contexts
 
@@ -68,9 +92,9 @@ Domains: Address, Alias, ApiClient, Attachment, AttributeGroup, Carrier, Cart, C
 
 ## Component contexts
 
-All 23 shared infrastructure components have a context file at `Component/{ComponentName}/CONTEXT.md`.
+All 28 shared infrastructure components have a context file at `Component/{ComponentName}/CONTEXT.md`.
 
-Components: BackOfficeHelp, Configuration, Console, Context, ContextStateManager, Cookie, CQRS, Database, Export, FacetedSearch, Forms, GlobalJS, Grid, Hook, Import, Link, Locale, MailTemplate, PositionUpdater, Router, Smarty, TinyMCE, Twig
+Components: AdminAPI, BackOfficeHelp, Behat, Configuration, Console, Context, ContextStateManager, Controller, Cookie, CQRS, Database, Export, ExtraProperty, FacetedSearch, Forms, Grid, Hook, Import, Javascript, Link, Locale, MailTemplate, Migration, Playwright, PositionUpdater, Router, Smarty, TinyMCE, Twig
 
 ## Generated indexes
 

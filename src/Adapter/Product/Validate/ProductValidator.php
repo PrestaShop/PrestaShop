@@ -105,8 +105,43 @@ class ProductValidator extends AbstractObjectModelValidator
     private function validateBasicInfo(Product $product): void
     {
         $this->validateProductLocalizedProperty($product, 'name', ProductConstraintException::INVALID_NAME);
+        $this->validateDescriptionForEmbeddedHtml($product, 'description', ProductConstraintException::INVALID_DESCRIPTION_CONTAINS_EMBEDDED_HTML);
         $this->validateProductLocalizedProperty($product, 'description', ProductConstraintException::INVALID_DESCRIPTION);
+        $this->validateDescriptionForEmbeddedHtml($product, 'description_short', ProductConstraintException::INVALID_DESCRIPTION_CONTAINS_EMBEDDED_HTML);
         $this->validateProductLocalizedProperty($product, 'description_short', ProductConstraintException::INVALID_SHORT_DESCRIPTION);
+    }
+
+    /**
+     * Checks if any localized value of the given description field contains embedded HTML elements
+     * (iframe, frame, form, input, embed, object) while the "Allow iframes on HTML fields" option is disabled.
+     * If so, throws a ProductConstraintException with a dedicated error code before the generic
+     * CleanHtml validation runs, so the caller can display a more specific error message.
+     *
+     * @param Product $product
+     * @param string $fieldName
+     * @param int $errorCode
+     *
+     * @throws ProductConstraintException
+     */
+    private function validateDescriptionForEmbeddedHtml(Product $product, string $fieldName, int $errorCode): void
+    {
+        if ((bool) $this->configuration->get('PS_ALLOW_HTML_IFRAME')) {
+            return;
+        }
+
+        $values = $product->{$fieldName};
+        if (!is_array($values)) {
+            return;
+        }
+
+        foreach ($values as $value) {
+            if (is_string($value) && preg_match('/<[\s]*(i?frame|form|input|embed|object)/ims', $value)) {
+                throw new ProductConstraintException(
+                    sprintf('Product %s contains embedded HTML elements while iframes are disabled.', $fieldName),
+                    $errorCode
+                );
+            }
+        }
     }
 
     /**

@@ -7,3 +7,17 @@
     background-color: var(--#{$cdk}blue-300);
   }
 }
+
+/**
+ * Soft badge variants — light background + dark text, following PUIK badge spec.
+ * @see https://uikit.prestashop.com/?path=/story/components-badge--info
+ */
+.badge-soft-info {
+  padding: 0.25rem 0.75rem;
+  font-size: var(--cdk-size-14);
+  font-weight: 500;
+  line-height: 1.25rem;
+  color: var(--cdk-primary-800);
+  background-color: var(--cdk-blue-100);
+  border-radius: 1rem;
+}

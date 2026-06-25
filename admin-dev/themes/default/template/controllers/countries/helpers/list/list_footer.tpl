@@ -120,7 +120,7 @@
 				<select id="zone_to_affect" name="zone_to_affect" class="form-control">
 					<option value="0">{l s='Zone' d='Admin.Global'}</option>
 					{foreach $zones as $z}
-						<option value="{$z['id_zone']}">{$z['name']}</option>
+						<option value="{$z['id_zone']|intval}">{$z['name']|escape:'html':'UTF-8'}</option>
 					{/foreach}
 				</select>
 			</div>

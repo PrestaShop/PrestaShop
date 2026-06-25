@@ -5,10 +5,14 @@
 
 import PositionsListHandler from './positions-list-handler';
 import HookStatusHandler from './hook-status-handler';
+import HookModuleHandler from './hook-module-handler';
+import ExceptionListHandler from './exception-list-handler';
 
 const {$} = window;
 
 $(() => {
   new PositionsListHandler();
   new HookStatusHandler();
+  new HookModuleHandler();
+  new ExceptionListHandler();
 });

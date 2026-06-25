@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Grid\ExtraPropertiesGridDefinitionModifier:
+    arguments:
+      $repository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
+      $translator: '@translator'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Grid\ExtraPropertiesGridQueryBuilderModifier:
+    arguments:
+      $repository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
+      $dbPrefix: '%database_prefix%'
+      $languageContext: '@PrestaShop\PrestaShop\Core\Context\LanguageContext'
+      $shopContext: '@PrestaShop\PrestaShop\Core\Context\ShopContext'

@@ -149,7 +149,7 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       await foHummingbirdCartPage.editProductQuantity(page, 1, 2);
 
       const totalBeforeDiscount = await foHummingbirdCartPage.getATIPrice(page);
-      expect(totalBeforeDiscount).to.eq(parseFloat((dataProducts.demo_6.combinations[0].price * 2).toFixed(2)));
+      expect(totalBeforeDiscount).to.eq(parseFloat((dataProducts.demo_6.combinations[0].priceTI * 2).toFixed(2)));
     });
 
     it('should add the promo code and check the total', async function () {
@@ -158,12 +158,12 @@ describe('BO - Catalog - Cart rules : Minimum amount', async () => {
       await foHummingbirdCartPage.addPromoCode(page, newCartRuleData.code);
 
       const discount = utilsCore.percentage(
-        dataProducts.demo_6.combinations[0].price * 2,
+        dataProducts.demo_6.combinations[0].priceTI * 2,
         newCartRuleData.getDiscountPercent(),
       );
 
       const totalAfterDiscount = await foHummingbirdCartPage.getATIPrice(page);
-      expect(totalAfterDiscount).to.eq(parseFloat((dataProducts.demo_6.combinations[0].price * 2 - discount).toFixed(2)));
+      expect(totalAfterDiscount).to.eq(parseFloat((dataProducts.demo_6.combinations[0].priceTI * 2 - discount).toFixed(2)));
     });
 
     it('should delete the last product from the cart', async function () {

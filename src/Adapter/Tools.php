@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Context;
 use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
 use PrestaShopException;
 use Tools as LegacyTools;
@@ -105,6 +106,11 @@ class Tools
     public function round($value, $precision = 0, $round_mode = null)
     {
         return LegacyTools::ps_round($value, $precision, $round_mode);
+    }
+
+    public function convertPrice($price, $currency = null, $toCurrency = true, ?Context $context = null)
+    {
+        return LegacyTools::convertPrice($price, $currency, $toCurrency, $context);
     }
 
     /**

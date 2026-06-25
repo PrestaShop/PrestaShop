@@ -62,6 +62,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 
             'admin_modules_positions' => ['/improve/design/modules/positions/', 'AdminModulesPositions'],
             'admin_modules_positions_unhook' => ['/improve/design/modules/positions/unhook', 'AdminModulesPositions', 'unhook'],
+            'admin_modules_positions_hook_module' => ['/improve/design/modules/positions/hook-module', 'AdminModulesPositions', 'addToHook'],
 
             'admin_customer_preferences' => ['/configure/shop/customer-preferences/', 'AdminCustomerPreferences'],
             'admin_customer_preferences_process' => ['/configure/shop/customer-preferences/', 'AdminCustomerPreferences', 'update'],
@@ -241,7 +242,6 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     {
         return [
             ['/admin-dev/index.php?controller=AdminDashboard', 'AdminDashboard'],
-            ['/admin-dev/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
             ['/admin-dev/index.php?controller=AdminModules', 'AdminModules'],
         ];
     }

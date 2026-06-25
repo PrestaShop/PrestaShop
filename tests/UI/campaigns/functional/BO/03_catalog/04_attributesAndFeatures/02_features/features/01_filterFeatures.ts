@@ -20,7 +20,6 @@ describe('BO - Catalog - Attributes & Features : Filter features table', async (
   let page: Page;
   let numberOfFeatures: number = 0;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -71,34 +70,30 @@ describe('BO - Catalog - Attributes & Features : Filter features table', async (
   });
 
   describe('Filter features', async () => {
-    const tests = [
+    [
       {
-        args: {
-          testIdentifier: 'filterId', filterBy: 'id_feature', filterValue: dataFeatures.composition.id.toString(),
-        },
+        testIdentifier: 'filterId',
+        filterBy: 'id_feature',
+        filterValue: dataFeatures.composition.id.toString(),
       },
       {
-        args: {
-          testIdentifier: 'filterName', filterBy: 'name', filterValue: dataFeatures.composition.name,
-        },
+        testIdentifier: 'filterName',
+        filterBy: 'name',
+        filterValue: dataFeatures.composition.name,
       },
       {
-        args: {
-          testIdentifier: 'filterPosition',
-          filterBy: 'position',
-          filterValue: dataFeatures.composition.position,
-        },
+        testIdentifier: 'filterPosition',
+        filterBy: 'position',
+        filterValue: dataFeatures.composition.position,
       },
-    ];
-
-    tests.forEach((test) => {
-      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+    ].forEach((test) => {
+      it(`should filter by ${test.filterBy} '${test.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
         await boFeaturesPage.filterTable(
           page,
-          test.args.filterBy,
-          typeof test.args.filterValue === 'number' ? test.args.filterValue.toString() : test.args.filterValue,
+          test.filterBy,
+          typeof test.filterValue === 'number' ? test.filterValue.toString() : test.filterValue,
         );
 
         const numberOfFeaturesAfterFilter = await boFeaturesPage.getNumberOfElementInGrid(page);
@@ -107,13 +102,13 @@ describe('BO - Catalog - Attributes & Features : Filter features table', async (
         const textColumn = await boFeaturesPage.getTextColumn(
           page,
           1,
-          test.args.filterBy,
+          test.filterBy,
         );
-        expect(textColumn).to.contains(test.args.filterValue);
+        expect(textColumn).to.contains(test.filterValue);
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${test.testIdentifier}Reset`, baseContext);
 
         const numberOfFeaturesAfterReset = await boFeaturesPage.resetAndGetNumberOfLines(page);
         expect(numberOfFeaturesAfterReset).to.equal(numberOfFeatures);

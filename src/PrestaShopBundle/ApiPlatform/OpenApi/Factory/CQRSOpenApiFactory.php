@@ -23,6 +23,7 @@ use ApiPlatform\OpenApi\OpenApi;
 use ArrayObject;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShopBundle\ApiPlatform\OpenApi\Adapter\SchemaAdapterChain;
+use PrestaShopBundle\ApiPlatform\OpenApi\FileUploadRequestBodyBuilder;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -51,6 +52,7 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         protected readonly MultistoreFeature $multistoreFeature,
         protected readonly SchemaAdapterChain $resourceSchemaAdapterChain,
         protected readonly SchemaAdapterChain $operationSchemaAdapterChain,
+        protected readonly FileUploadRequestBodyBuilder $fileUploadRequestBodyBuilder,
         // No property promotion for this one since it's already defined in the ResourceMetadataTrait
         ResourceMetadataCollectionFactoryInterface $resourceMetadataFactory,
     ) {
@@ -67,6 +69,7 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
         $parentOpenApi = $this->decorated->__invoke($context);
         $domainsByUri = [];
         $scopesByUri = [];
+        $uploadedFilesByUri = [];
 
         foreach ($this->resourceNameCollectionFactory->create() as $resourceClass) {
             $resourceMetadataCollection = $this->resourceMetadataFactory->create($resourceClass);
@@ -90,6 +93,13 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
                     }
                     if ($operation instanceof HttpOperation && !empty($operation->getExtraProperties()['scopes'])) {
                         $scopesByUri[$operation->getUriTemplate()][strtolower($operation->getMethod())] = $operation->getExtraProperties()['scopes'];
+                    }
+                    // Detect uploaded file properties for multipart/form-data operations, they are documented in the paths loop below
+                    if ($operation instanceof HttpOperation && !empty($operation->getUriTemplate())) {
+                        $uploadedFileProperties = $this->fileUploadRequestBodyBuilder->getUploadedFileProperties($operation);
+                        if (!empty($uploadedFileProperties)) {
+                            $uploadedFilesByUri[$operation->getUriTemplate()][strtolower($operation->getMethod())] = $uploadedFileProperties;
+                        }
                     }
 
                     $definition = $this->getSchemaDefinition($parentOpenApi, $operation);
@@ -134,6 +144,15 @@ class CQRSOpenApiFactory implements OpenApiFactoryInterface
                     if ($this->multistoreFeature->isActive()) {
                         $existingParameters = $updatedOperation->getParameters() ?? [];
                         $updatedOperation = $updatedOperation->withParameters(array_merge($existingParameters, $this->getMultiShopParameters()));
+                    }
+
+                    // Document uploaded file properties in the multipart/form-data request body
+                    if (!empty($uploadedFilesByUri[$path][$httpMethod])) {
+                        $updatedOperation = $this->fileUploadRequestBodyBuilder->adaptOperation(
+                            $updatedOperation,
+                            $parentOpenApi->getComponents()->getSchemas(),
+                            $uploadedFilesByUri[$path][$httpMethod],
+                        );
                     }
 
                     $setterMethod = 'with' . ucfirst($httpMethod);

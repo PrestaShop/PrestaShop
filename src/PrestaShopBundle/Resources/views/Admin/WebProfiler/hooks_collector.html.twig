@@ -24,15 +24,30 @@
                     <thead>
                     <tr>
                         <th>Hook name</th>
-                        <th>Call(s)</th>
+                        <th>Dispatches</th>
+                        <th>Calls</th>
                     </tr>
                     </thead>
                     <tbody class="sf-toolbar-ajax-request-list">
-                        {% for hookName, hooks in collector.calledHooks %}
-                            <tr><td>{{ hookName }}</td><td>{{ hooks|length }}</td></tr>
+                        {% for hookName, hook in collector.calledHooks %}
+                            <tr><td>{{ hookName }}</td><td>{{ hook.dispatch_count }}</td><td>{{ hook.calls_count }}</td></tr>
                         {% else %}
-                            <tr><td colspan="2">No hook dispatched.</td></tr>
+                            <tr><td colspan="3">No hook dispatched.</td></tr>
                         {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <table class="sf-toolbar-ajax-requests">
+                    <tbody>
+                        <tr>
+                            <td>Dispatched without active modules</td>
+                            <td>{{ collector.notCalledHooks|length }}</td>
+                        </tr>
+                        <tr>
+                            <td>Dispatched without listeners</td>
+                            <td>{{ collector.notRegisteredHooks|length }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -129,7 +144,7 @@
 {% endblock %}
 
 {% macro render_table(hookList, hookModules) %}
-    {% for hookName, hooks in hookList %}
+    {% for hookName, hook in hookList %}
         <h3>{{ hookName }}</h3>
 
         <table>
@@ -137,13 +152,14 @@
                 <tr>
                     <th>Arguments</th>
                     <th>Location</th>
+                    <th>Dispatches</th>
+                    <th>Calls</th>
                     {% if hookModules %}
                         <th>Hooked modules</th>
                     {% endif %}
                 </tr>
             </thead>
             <tbody>
-            {% for position, hook in hooks %}
             <tr>
                 <td>
                     {{ profiler_dump(hook.args) }}
@@ -151,6 +167,8 @@
                 <td>
                     <span class="text-muted">{{ hook.location }}</span>
                 </td>
+                <td>{{ hook.dispatch_count }}</td>
+                <td>{{ hook.calls_count }}</td>
                 {% if hookModules %}
                     <td>
                         {% set modules = hook.modules %}
@@ -177,7 +195,6 @@
                     </td>
                 {% endif %}
             </tr>
-            {% endfor %}
             </tbody>
         </table>
     {% endfor %}

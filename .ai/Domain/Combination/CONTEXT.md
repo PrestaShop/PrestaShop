@@ -31,6 +31,6 @@ Manages product attribute combinations (variants): their creation, update, delet
 ## Related
 
 - [CQRS Component](../../Component/CQRS/CONTEXT.md)
-- [Forms Component](../../Component/Forms/CONTEXT.md) — 5 CombinationCommandBuilders in `src/Core/Form/IdentifiableObject/CommandBuilder/Product/Combination/`
+- [Forms — CRUD pattern](../../Component/Forms/CRUD.md) — 5 CombinationCommandBuilders in `src/Core/Form/IdentifiableObject/CommandBuilder/Product/Combination/`
 - [Product Domain](../Product/CONTEXT.md) — Combinations are sub-entities of Product; `CombinationId` is referenced throughout the Product domain
 - `tests/Integration/Behaviour/Features/Scenario/Product/Combination/` — Behat scenarios (single-shop and multi-shop)

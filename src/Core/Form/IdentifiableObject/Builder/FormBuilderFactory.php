@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder;
 
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormBuilderModifier;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\FormOptionsProviderInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -33,6 +34,11 @@ final class FormBuilderFactory implements FormBuilderFactoryInterface
     private $registry;
 
     /**
+     * @var ExtraPropertiesFormBuilderModifier
+     */
+    private $extraPropertiesFormBuilderModifier;
+
+    /**
      * @param FormFactoryInterface $formFactory
      * @param HookDispatcherInterface $hookDispatcher
      * @param FormRegistryInterface $registry
@@ -40,11 +46,13 @@ final class FormBuilderFactory implements FormBuilderFactoryInterface
     public function __construct(
         FormFactoryInterface $formFactory,
         HookDispatcherInterface $hookDispatcher,
-        FormRegistryInterface $registry
+        FormRegistryInterface $registry,
+        ExtraPropertiesFormBuilderModifier $extraPropertiesFormBuilderModifier
     ) {
         $this->formFactory = $formFactory;
         $this->hookDispatcher = $hookDispatcher;
         $this->registry = $registry;
+        $this->extraPropertiesFormBuilderModifier = $extraPropertiesFormBuilderModifier;
     }
 
     /**
@@ -65,7 +73,8 @@ final class FormBuilderFactory implements FormBuilderFactoryInterface
             $dataProvider,
             $formType,
             $this->registry,
-            $optionProvider
+            $optionProvider,
+            $this->extraPropertiesFormBuilderModifier
         );
     }
 }

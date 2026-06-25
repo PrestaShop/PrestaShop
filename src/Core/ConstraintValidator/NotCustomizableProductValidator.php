@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\NotCustomizableProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -27,8 +28,11 @@ class NotCustomizableProductValidator extends ConstraintValidator
         }
 
         foreach ($value as $product) {
-            $dbProduct = $this->productRepository->getProductByDefaultShop(new ProductId($product['product_id']));
-            if ($dbProduct->customizable) {
+            $dbProduct = $this->productRepository->getProductByDefaultShop(new ProductId($product['product_id'] ?? $product['id']));
+            $isCustomizable = $constraint->requiredOnly
+                ? (int) $dbProduct->customizable === ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION
+                : (int) $dbProduct->customizable !== ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
+            if ($isCustomizable) {
                 $this->context->buildViolation($constraint->message)
                     ->setTranslationDomain('Admin.Notifications.Error')
                     ->addViolation();

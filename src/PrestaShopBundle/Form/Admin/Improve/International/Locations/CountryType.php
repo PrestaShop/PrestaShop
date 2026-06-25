@@ -122,8 +122,7 @@ class CountryType extends AbstractType
                     ]),
                 ],
             ])
-            // todo : create address layout form
-            ->add('address_format', TextType::class, [
+            ->add('address_format', AddressFormatType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Address format', [], 'Admin.International.Feature'),
             ])

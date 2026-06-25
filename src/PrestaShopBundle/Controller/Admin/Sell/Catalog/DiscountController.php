@@ -18,6 +18,9 @@ use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Query\GetDiscountForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Discount\QueryResult\DiscountForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForFreeGift;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForFreeGift;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DiscountGridDefinitionFactory;
@@ -279,6 +282,60 @@ class DiscountController extends PrestaShopAdminController
 
             return $this->redirectToRoute('admin_discounts_index');
         }
+    }
+
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function searchGiftProductsAction(Request $request): JsonResponse
+    {
+        $languageId = $this->getLanguageContext()->getId();
+        $shopId = $this->getShopContext()->getId();
+
+        try {
+            /** @var ProductForFreeGift[] $products */
+            $products = $this->dispatchQuery(new SearchProductsForFreeGift(
+                $request->get('query', ''),
+                $languageId,
+                $shopId,
+                (int) $request->get('limit', 20)
+            ));
+        } catch (ProductConstraintException $e) {
+            return $this->json([
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (empty($products)) {
+            return $this->json([]);
+        }
+
+        return $this->json($this->formatGiftProducts($products));
+    }
+
+    /**
+     * @param ProductForFreeGift[] $products
+     *
+     * @return array
+     */
+    private function formatGiftProducts(array $products): array
+    {
+        $productsData = [];
+        foreach ($products as $product) {
+            $productName = $product->getName();
+            if (!empty($product->getReference())) {
+                $productName .= sprintf(' (ref: %s)', $product->getReference());
+            }
+
+            $productsData[] = [
+                'id' => $product->getProductId(),
+                'name' => $productName,
+                'image' => $product->getImageUrl(),
+                'product_type' => $product->getProductType(),
+                'disabled' => $product->isDisabled(),
+                'disabled_reason' => $product->getDisabledReason(),
+            ];
+        }
+
+        return $productsData;
     }
 
     private function displayFormErrors(FormInterface $form): void

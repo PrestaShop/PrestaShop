@@ -48,7 +48,7 @@ Post-condition:
 - Disable merchandise returns
 - Reset SMTP parameters
  */
-describe('Mail alerts module - Enable/Disable return', async () => {
+describe('Mail alerts module - Merchant notifications : Enable/Disable returns', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let newMail: MailDevEmail;

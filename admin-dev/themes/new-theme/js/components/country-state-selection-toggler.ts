@@ -53,6 +53,7 @@ export default class CountryStateSelectionToggler {
    */
   private onChange(): void {
     const countryId = this.$countryInput.val();
+    const selectedStateId = this.$countryStateSelector.val();
 
     if (countryId === '') {
       return;
@@ -71,6 +72,7 @@ export default class CountryStateSelectionToggler {
           this.$countryStateSelector.append(
             $('<option></option>')
               .attr('value', response.states[value])
+              .prop('selected', String(selectedStateId) === String(response.states[value]))
               .text(value),
           );
         });

@@ -45,5 +45,6 @@ final class AddOrderReturnStateHandler extends AbstractOrderReturnStateHandler i
     {
         $orderReturnState->name = $command->getLocalizedNames();
         $orderReturnState->color = $command->getColor();
+        $orderReturnState->is_cancelling_return = $command->isCancellingReturn();
     }
 }

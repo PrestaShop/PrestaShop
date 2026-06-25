@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\Builder;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormBuilderModifier;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderFactory;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderFactoryInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -24,7 +25,8 @@ class FormBuilderFactoryTest extends TestCase
         $factory = new FormBuilderFactory(
             $this->createMock(FormFactoryInterface::class),
             $this->createMock(HookDispatcherInterface::class),
-            $this->createMock(FormRegistryInterface::class)
+            $this->createMock(FormRegistryInterface::class),
+            $this->createMock(ExtraPropertiesFormBuilderModifier::class)
         );
 
         $this->assertInstanceOf(FormBuilderFactoryInterface::class, $factory);
@@ -38,7 +40,8 @@ class FormBuilderFactoryTest extends TestCase
         $factory = new FormBuilderFactory(
             $this->createMock(FormFactoryInterface::class),
             $this->createMock(HookDispatcherInterface::class),
-            $this->createMock(FormRegistryInterface::class)
+            $this->createMock(FormRegistryInterface::class),
+            $this->createMock(ExtraPropertiesFormBuilderModifier::class)
         );
 
         $builder = $factory->create('a', $dataProviderMock);

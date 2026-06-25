@@ -29,5 +29,3 @@ Stack-based save/restore utility for the legacy `Context` singleton. Allows CQRS
 ## Related
 
 - [Context Component](../Context/CONTEXT.md) — the modern replacement; ContextStateManager wraps the legacy version
-- [Order Domain](../../Domain/Order/CONTEXT.md) — heaviest consumer
-- [Cart Domain](../../Domain/Cart/CONTEXT.md) — second heaviest consumer

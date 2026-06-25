@@ -50,6 +50,7 @@ class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb
             ->select([
                 'tr.`id_tax_rule`',
+                'tr.`id_tax_rules_group`',
                 'tr.`description`',
                 'cl.`name` AS country_name',
                 'IFNULL(s.`name`, \'--\') AS state_name',
@@ -89,7 +90,7 @@ class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters): QueryBuilder
     {
-        return $this->connection
+        $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'tax_rule', 'tr')
             ->leftJoin(
@@ -119,5 +120,51 @@ class TaxRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             ->andWhere('tr.`id_tax_rules_group` = :idTaxRulesGroup')
             ->setParameter('idLang', $this->languageContext->getId())
             ->setParameter('idTaxRulesGroup', $filters['taxRulesGroupId']);
+
+        $this->applyFilters($qb, $filters);
+
+        return $qb;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param array $filters
+     */
+    private function applyFilters(QueryBuilder $qb, array $filters): void
+    {
+        $allowedFilters = ['country', 'state', 'zipcode', 'behavior', 'rate', 'description'];
+
+        foreach ($filters as $filterName => $filterValue) {
+            if (!in_array($filterName, $allowedFilters) || ($filterValue === '' || $filterValue === null)) {
+                continue;
+            }
+
+            switch ($filterName) {
+                case 'country':
+                    $qb->andWhere('cl.`name` LIKE :country');
+                    $qb->setParameter('country', '%' . $filterValue . '%');
+                    break;
+                case 'state':
+                    $qb->andWhere('s.`name` LIKE :state');
+                    $qb->setParameter('state', '%' . $filterValue . '%');
+                    break;
+                case 'zipcode':
+                    $qb->andWhere('(tr.`zipcode_from` LIKE :zipcode OR tr.`zipcode_to` LIKE :zipcode)');
+                    $qb->setParameter('zipcode', '%' . $filterValue . '%');
+                    break;
+                case 'behavior':
+                    $qb->andWhere('tr.`behavior` = :behavior');
+                    $qb->setParameter('behavior', (int) $filterValue);
+                    break;
+                case 'rate':
+                    $qb->andWhere('t.`rate` LIKE :rate');
+                    $qb->setParameter('rate', '%' . $filterValue . '%');
+                    break;
+                case 'description':
+                    $qb->andWhere('tr.`description` LIKE :description');
+                    $qb->setParameter('description', '%' . $filterValue . '%');
+                    break;
+            }
+        }
     }
 }

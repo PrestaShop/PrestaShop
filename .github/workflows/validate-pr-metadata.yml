@@ -1,6 +1,6 @@
 name: Validate PR metadata
 on:
-  pull_request:
+  pull_request_target:
     types: [ opened, edited, reopened, milestoned, demilestoned ]
 
 concurrency:
@@ -8,8 +8,114 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  set-milestone:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Set milestone based on target branch
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const baseBranch = pr.base.ref;
+            const action = context.payload.action;
+
+            // Only attempt to set a milestone on opened, or on edited when the
+            // base branch changed. Other activity types (reopened, milestoned,
+            // demilestoned) must not retrigger milestone selection.
+            if (action !== 'opened' && action !== 'edited') {
+              console.log(`Skipping set-milestone for event action: ${action}`);
+              return;
+            }
+            if (action === 'edited') {
+              const changes = context.payload.changes;
+              if (!changes || !changes.base) {
+                console.log('Edit event but base branch did not change, skipping.');
+                return;
+              }
+            }
+
+            // Fetch all open milestones
+            const milestones = await github.paginate(github.rest.issues.listMilestones, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100,
+            });
+
+            console.log(`Found ${milestones.length} open milestones: ${milestones.map(m => m.title).join(', ')}`);
+            console.log(`Target branch: ${baseBranch}`);
+
+            // Parse semver from milestone title (e.g. "9.2.0" or "9.1.1")
+            const semverRegex = /^(\d+)\.(\d+)\.(\d+)$/;
+
+            function parseMilestone(title) {
+              const match = title.match(semverRegex);
+              if (!match) return null;
+              return { major: parseInt(match[1]), minor: parseInt(match[2]), patch: parseInt(match[3]) };
+            }
+
+            let selectedMilestone = null;
+
+            if (baseBranch === 'develop') {
+              // Find the highest major.minor milestone (highest major, then highest minor)
+              let best = null;
+              for (const ms of milestones) {
+                const v = parseMilestone(ms.title);
+                if (!v) continue;
+                if (!best
+                  || v.major > best.version.major
+                  || (v.major === best.version.major && v.minor > best.version.minor)
+                  || (v.major === best.version.major && v.minor === best.version.minor && v.patch > best.version.patch)
+                ) {
+                  best = { milestone: ms, version: v };
+                }
+              }
+              selectedMilestone = best?.milestone || null;
+            } else {
+              // Match branches like "9.1.x" or "9.0.x"
+              const branchMatch = baseBranch.match(/^(\d+)\.(\d+)\.x$/);
+              if (branchMatch) {
+                const branchMajor = parseInt(branchMatch[1]);
+                const branchMinor = parseInt(branchMatch[2]);
+
+                // Find the highest patch version for this major.minor
+                let best = null;
+                for (const ms of milestones) {
+                  const v = parseMilestone(ms.title);
+                  if (!v) continue;
+                  if (v.major === branchMajor && v.minor === branchMinor) {
+                    if (!best || v.patch > best.version.patch) {
+                      best = { milestone: ms, version: v };
+                    }
+                  }
+                }
+                selectedMilestone = best?.milestone || null;
+              }
+            }
+
+            if (!selectedMilestone) {
+              console.log('No matching milestone found, leaving empty.');
+              return;
+            }
+
+            console.log(`Setting milestone to: ${selectedMilestone.title}`);
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              milestone: selectedMilestone.number,
+            });
+
   convention-check:
+    needs: set-milestone
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Validate PR Metadata
         uses: PrestaShop/.github/.github/actions/validate-pr-metadata@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

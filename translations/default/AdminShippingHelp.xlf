@@ -5,7 +5,7 @@
       <trans-unit id="07b693f09040dc64d3c36b5daf95caae">
         <source>Allowed characters: letters, spaces and "%special_chars%".</source>
         <target>Allowed characters: letters, spaces and "%special_chars%".</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 46]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 47]</note>
       </trans-unit>
       <trans-unit id="8a52ca34a90eb8486886815e62958ac1">
         <source>Apply both regular shipping cost and product-specific shipping costs.</source>
@@ -40,7 +40,7 @@
       <trans-unit id="ff9058a791d671d3cb7ce3117b3f989d">
         <source>Delivery tracking URL: Type '@' where the tracking number should appear. It will be automatically replaced by the tracking number.</source>
         <target>Delivery tracking URL: Type '@' where the tracking number should appear. It will be automatically replaced by the tracking number.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 102]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 115]</note>
       </trans-unit>
       <trans-unit id="7a753d72397847025d0a91c564fa0fdc">
         <source>Delivery tracking URL: Type '@' where the tracking number should appear. It will then be automatically replaced by the tracking number.</source>
@@ -65,7 +65,7 @@
       <trans-unit id="4ca4a355318f45dac9fb0ee632d8dc3c">
         <source>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</source>
         <target>Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 66]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 79]</note>
       </trans-unit>
       <trans-unit id="cdaa245d6e50b5647bfd9fcb77ac9a21">
         <source>Estimated delivery time will be displayed during checkout.</source>
@@ -80,12 +80,12 @@
       <trans-unit id="e4cb2dbfdc6b5b71c8aef1b781712b03">
         <source>For example: 'http://example.com/track.php?num=@' with '@' where the tracking number should appear.</source>
         <target>For example: 'http://example.com/track.php?num=@' with '@' where the tracking number should appear.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 103]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 116]</note>
       </trans-unit>
       <trans-unit id="a788f81b3aa0ef9c9efcb1fb67708d82">
         <source>For in-store pickup, enter 0 to replace the carrier name with your shop name.</source>
         <target>For in-store pickup, enter 0 to replace the carrier name with your shop name.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 48]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 49]</note>
       </trans-unit>
       <trans-unit id="fb2ea703b13d059f6b7ea5da806021df">
         <source>Format:</source>
@@ -125,7 +125,7 @@
       <trans-unit id="d7049d8a068769eb32177e404639b8ce">
         <source>Mark the groups that are allowed access to this carrier.</source>
         <target>Mark the groups that are allowed access to this carrier.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 112]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 125]</note>
       </trans-unit>
       <trans-unit id="71bdad37509062b34c4098a59f98ae7d">
         <source>Maximum depth managed by this carrier. Set the value to "0" to ignore.</source>
@@ -225,12 +225,12 @@
       <trans-unit id="95be6960ce35a5d972b7314203b312be">
         <source>The carrier's name will be displayed during checkout.</source>
         <target>The carrier's name will be displayed during checkout.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 47]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 48]</note>
       </trans-unit>
       <trans-unit id="d2eee8992bbabe7e76562a015ecf0d7f">
         <source>The delivery time will be displayed during checkout.</source>
         <target>The delivery time will be displayed during checkout.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 54]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 60]</note>
       </trans-unit>
       <trans-unit id="497876c111e98a20564817545518f829">
         <source>The value must be an integer.</source>

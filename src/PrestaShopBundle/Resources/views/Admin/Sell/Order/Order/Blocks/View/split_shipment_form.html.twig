@@ -9,7 +9,7 @@
     id: 'split_shipment',
     class: 'shipment-form',
     'data-is-valid': formIsValid and not isShipped,
-  }
+  },
 }) }}
   <div class="shipment-form__loader"></div>
   <p class="shipment-form__tooltip-wrapper">
@@ -94,8 +94,8 @@
     {{ form_widget(splitShipmentForm.carrier, {
       attr: {
         class: 'form-control',
-        id: 'split_shipment_carriers'
-      }
+        id: 'split_shipment_carriers',
+      },
     }) }}
 
     <a href="{{ path('admin_carriers_index') }}" class="shipment-form__carriers-link" target="_blank">

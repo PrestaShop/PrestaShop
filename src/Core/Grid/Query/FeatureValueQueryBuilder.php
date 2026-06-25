@@ -70,6 +70,7 @@ class FeatureValueQueryBuilder extends AbstractDoctrineQueryBuilder
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'feature_value', 'fv')
             ->where('fv.id_feature = :featureId')
+            ->andWhere('(fv.custom IS NULL OR fv.custom = 0)')
             ->setParameter('featureId', $searchCriteria->getFeatureId())
             ->leftJoin(
                 'fv',

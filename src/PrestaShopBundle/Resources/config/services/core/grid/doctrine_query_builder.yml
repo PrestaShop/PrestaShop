@@ -334,8 +334,8 @@ services:
       - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
     public: true
 
-  prestashop.core.grid.query_builder.merchandise_return:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Query\MerchandiseReturnQueryBuilder'
+  prestashop.core.grid.query_builder.order_return:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\OrderReturnQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'
     public: true
     arguments:
@@ -557,3 +557,10 @@ services:
     public: false
     arguments:
       $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
+
+  PrestaShop\PrestaShop\Core\Grid\Query\QuickAccessQueryBuilder:
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: false
+    arguments:
+      $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
+      $languageContext: '@PrestaShop\PrestaShop\Core\Context\LanguageContext'

@@ -1926,11 +1926,11 @@ class ToolsCore
         if (!in_array(strtolower($scheme), ['http', 'https'], true)) {
             return false;
         }
-        $remoteFile = fopen($url, 'rb');
+        $remoteFile = @fopen($url, 'rb');
         if (!$remoteFile) {
             return false;
         }
-        $localFile = fopen(basename($url), 'wb');
+        $localFile = @fopen(basename($url), 'wb');
         if (!$localFile) {
             return false;
         }

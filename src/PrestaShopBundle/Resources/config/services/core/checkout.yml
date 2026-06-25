@@ -2,11 +2,5 @@ services:
   _defaults:
     public: false
 
-  PrestaShop\PrestaShop\Adapter\Order\Checkout\OnePageCheckoutAvailabilityChecker:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Configuration'
-      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
-
-  PrestaShop\PrestaShop\Core\Checkout\OnePageCheckoutAvailabilityCheckerInterface:
-    alias: PrestaShop\PrestaShop\Adapter\Order\Checkout\OnePageCheckoutAvailabilityChecker
+  PrestaShop\PrestaShop\Adapter\Order\Checkout\CheckoutProcessProviderResolver:
     public: true

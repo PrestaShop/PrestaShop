@@ -1,4 +1,4 @@
-# Routes Index (generated 2026-04-08)
+# Routes Index (generated 2026-04-25)
 # ~812 routes across admin / admin-api / api
 #
 # Paths are relative to the routing file's prefix (see parent _*.yml for full prefix).
@@ -465,19 +465,6 @@ POST          /bulk-update-zone                         admin_states_bulk_update
 POST          /{stateId}/toggle-status                  admin_states_toggle_status  [StateController::toggleStatusAction]
 ```
 
-### admin/improve/international/tax_rules_groups
-```
-GET           /                                         admin_tax_rules_groups_index  [TaxRulesGroupController::indexAction]
-POST          /                                         admin_tax_rules_groups_search  [CommonController::searchGridAction]
-GET,POST      /new                                      admin_tax_rules_groups_create  [TaxRulesGroupController::createAction]
-GET,POST      /{taxRulesGroupId}/edit                   admin_tax_rules_groups_edit  [TaxRulesGroupController::editAction]
-POST,DELETE   /{taxRulesGroupId}/delete                 admin_tax_rules_groups_delete  [TaxRulesGroupController::deleteAction]
-POST          /{taxRulesGroupId}/toggle-status          admin_tax_rules_groups_toggle_status  [TaxRulesGroupController::toggleStatusAction]
-POST          /bulk-enable-status                       admin_tax_rules_groups_bulk_enable_status  [TaxRulesGroupController::bulkEnableStatusAction]
-POST          /bulk-disable-status                      admin_tax_rules_groups_bulk_disable_status  [TaxRulesGroupController::bulkDisableStatusAction]
-POST          /bulk-delete                              admin_tax_rules_groups_bulk_delete  [TaxRulesGroupController::bulkDeleteAction]
-```
-
 ### admin/improve/international/tax
 ```
 GET           /                                         admin_taxes_index  [TaxController::indexAction]
@@ -490,6 +477,19 @@ POST          /{taxId}/toggle-status                    admin_taxes_toggle_statu
 POST          /bulk-enable-status                       admin_taxes_bulk_enable_status  [TaxController::bulkEnableStatusAction]
 POST          /bulk-disable-status                      admin_taxes_bulk_disable_status  [TaxController::bulkDisableStatusAction]
 POST          /bulk-delete                              admin_taxes_bulk_delete  [TaxController::bulkDeleteAction]
+```
+
+### admin/improve/international/tax_rules_groups
+```
+GET           /                                         admin_tax_rules_groups_index  [TaxRulesGroupController::indexAction]
+POST          /                                         admin_tax_rules_groups_search  [CommonController::searchGridAction]
+GET,POST      /new                                      admin_tax_rules_groups_create  [TaxRulesGroupController::createAction]
+GET,POST      /{taxRulesGroupId}/edit                   admin_tax_rules_groups_edit  [TaxRulesGroupController::editAction]
+POST,DELETE   /{taxRulesGroupId}/delete                 admin_tax_rules_groups_delete  [TaxRulesGroupController::deleteAction]
+POST          /{taxRulesGroupId}/toggle-status          admin_tax_rules_groups_toggle_status  [TaxRulesGroupController::toggleStatusAction]
+POST          /bulk-enable-status                       admin_tax_rules_groups_bulk_enable_status  [TaxRulesGroupController::bulkEnableStatusAction]
+POST          /bulk-disable-status                      admin_tax_rules_groups_bulk_disable_status  [TaxRulesGroupController::bulkDisableStatusAction]
+POST          /bulk-delete                              admin_tax_rules_groups_bulk_delete  [TaxRulesGroupController::bulkDeleteAction]
 ```
 
 ### admin/improve/international/translations
@@ -939,11 +939,11 @@ POST          /{orderId}/shipment/{shipmentId}/split    admin_orders_split_shipm
 GET           /{orderId}/shipment/split-form            admin_orders_shipment_get_split_form  [OrderController::getSplitShipmentForm]
 POST          /{orderId}/invoice                        admin_orders_generate_invoice  [OrderController::generateInvoiceAction]
 GET           /{orderId}/shipment/merge-form            admin_orders_shipment_get_merge_form  [OrderController::getMergeShipmentForm]
-GET           /{orderId}/shipment/edit-form             admin_orders_shipment_get_edit_form  [OrderController::getEditShipmentForm]
+GET           /{orderId}/shipment/{shipmentId}/edit-form  admin_orders_shipment_get_edit_form  [OrderController::getEditShipmentForm]
 POST          /{orderId}/shipment/merge                 admin_orders_merge_shipment  [OrderController::mergeShipmentAction]
 GET           /{orderId}/product/add                    admin_orders_get_add_product_form  [OrderController::getAddProductForm]
 GET           /{orderId}/product/{orderDetailId}/edit   admin_orders_get_edit_product_form  [OrderController::getEditProductForm]
-POST          /{orderId}/shipment/edit                  admin_orders_edit_shipment  [OrderController::editShipmentAction]
+PUT           /{orderId}/shipment/{shipmentId}/edit     admin_orders_edit_shipment  [OrderController::editShipmentAction]
 POST          /change-customer-address                  admin_orders_change_customer_address  [OrderController::changeCustomerAddressAction]
 POST          /{orderId}/send-message                   admin_orders_send_message  [OrderController::sendMessageAction]
 POST          /{orderId}/partial-refund                 admin_orders_partial_refund  [OrderController::partialRefundAction]

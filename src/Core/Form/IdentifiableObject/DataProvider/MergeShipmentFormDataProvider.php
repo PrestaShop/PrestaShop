@@ -26,7 +26,7 @@ class MergeShipmentFormDataProvider extends ShipmentFormDataProvider
 
     public function getData($orderId)
     {
-        $shipmentId = $this->requestStack->getMainRequest()->query->getInt('shipmentId');
+        $shipmentId = $this->requestStack->getCurrentRequest()->attributes->getInt('shipmentId');
 
         /** @var OrderShipmentProduct[] $products */
         $products = $this->queryBus->handle(new GetShipmentProducts($shipmentId));

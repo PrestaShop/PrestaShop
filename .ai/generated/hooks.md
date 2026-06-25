@@ -1,4 +1,4 @@
-# Hook Names Index (generated 2026-04-08)
+# Hook Names Index (generated 2026-04-25)
 # 128 unique hook names discovered via static source analysis
 #
 # Source: dispatchWithParameters / Hook::exec calls in src/ and classes/
@@ -73,10 +73,10 @@
 - actionModuleInstallBefore
 - actionModuleRegisterHookAfter
 - actionModuleRegisterHookBefore
-- actionModuleUninstallAfter
-- actionModuleUninstallBefore
 - actionModuleUnRegisterHookAfter
 - actionModuleUnRegisterHookBefore
+- actionModuleUninstallAfter
+- actionModuleUninstallBefore
 - actionModuleUpgradeAfter
 - actionObject
 - actionObjectAddAfter
@@ -95,10 +95,10 @@
 - actionOutputHTMLBefore
 - actionOverrideShippingFreePrice
 - actionOverrideShippingFreeWeight
+- actionPDFInvoiceRender
 - actionPaymentCCAdd
 - actionPaymentConfirmation
 - actionPaymentModuleProductVarTplAfter
-- actionPDFInvoiceRender
 - actionPresentPaymentOptions
 - actionProductAttributeDelete
 - actionProductAttributeUpdate

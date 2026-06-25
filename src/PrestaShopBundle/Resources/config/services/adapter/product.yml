@@ -23,6 +23,10 @@ services:
     public: false
     autoconfigure: true
 
+  PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsForFreeGiftHandler:
+    autowire: true
+    autoconfigure: true
+
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductIsEnabledHandler:
     autoconfigure: true
 

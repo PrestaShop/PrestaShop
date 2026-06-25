@@ -19,6 +19,10 @@ class AdminQuickAccessesControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
+        // list_content.tpl uses $tr.link as the row onclick URL when present; quick access links
+        // have no token so row-click would redirect to security/compromised. Use Edit action instead.
+        $this->list_no_link = true;
+
         parent::__construct();
 
         if (!Tools::getValue('realedit')) {
@@ -187,7 +191,7 @@ class AdminQuickAccessesControllerCore extends AdminController
     public function ajaxProcessGetUrl()
     {
         if (Tools::strtolower(Tools::getValue('method')) === 'add') {
-            $params['new_window'] = 0;
+            $params['new_window'] = (int) Tools::getValue('new_window', 0);
             $params['name_' . (int) Configuration::get('PS_LANG_DEFAULT')] = Tools::getValue('name');
             $params['link'] = Tools::getValue('url');
             $params['submitAddquick_access'] = 1;

@@ -28,6 +28,10 @@ class CustomerNameValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, CustomerName::class);
         }
 
+        if (null === $value || '' === $value) {
+            return;
+        }
+
         if (!is_string($value)) {
             throw new UnexpectedTypeException($value, 'string');
         }

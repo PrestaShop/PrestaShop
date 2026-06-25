@@ -146,21 +146,49 @@ abstract class AppKernel extends Kernel
         }
 
         $activeModules = $this->getModuleRepository()->getActiveModules();
+        $servicesFilesList = [
+            'services.php',
+            sprintf('services-%d.%d.yml', Version::MAJOR_VERSION, Version::MINOR_VERSION),
+            sprintf('services-%d.yml', Version::MAJOR_VERSION),
+            'services.yml',
+        ];
+
         // We only load services of active modules (not simply installed)
         foreach ($activeModules as $activeModulePath) {
             $modulePath = _PS_MODULE_DIR_ . $activeModulePath;
-            $configFiles = [
-                sprintf('%s/config/services.yml', $modulePath),
-                sprintf('%s/config/admin/services.yml', $modulePath),
-                // @todo Uncomment to Load this file once we'll have a unique container
-                // sprintf('%s/config/front/services.yml', $modulePath),
-            ];
 
-            foreach ($configFiles as $file) {
-                if (is_file($file)) {
-                    $loader->load($file);
+            foreach ($servicesFilesList as $servicesFile) {
+                $fullPath = sprintf('%s/config/%s', $modulePath, $servicesFile);
+
+                if (is_file($fullPath)) {
+                    $loader->load($fullPath);
+                    // Prevent loading less specific services files if one was found
+                    break;
                 }
             }
+
+            foreach ($servicesFilesList as $servicesFile) {
+                $fullPath = sprintf('%s/config/admin/%s', $modulePath, $servicesFile);
+
+                if (is_file($fullPath)) {
+                    $loader->load($fullPath);
+                    // Prevent loading less specific services files if one was found
+                    break;
+                }
+            }
+
+            /*
+            // @todo Uncomment to Load this file once we'll have a unique container
+            foreach ($servicesFilesList as $servicesFile) {
+                $fullPath = sprintf('%s/config/front/%s', $modulePath, $servicesFile);
+
+                if (is_file($fullPath)) {
+                    $loader->load($fullPath);
+                    // Prevent loading less specific services files if one was found
+                    break;
+                }
+            }
+            */
         }
 
         $installedModules = $this->getModuleRepository()->getInstalledModules();

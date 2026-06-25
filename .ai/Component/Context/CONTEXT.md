@@ -20,6 +20,7 @@ Immutable, injectable representations of the current execution environment: acti
 - Each builder has `buildLegacyContext()` to sync the old `Context::getContext()` global — necessary during the migration period
 - `LanguageContext` implements both `LanguageInterface` **and** `LocaleInterface` — it can format numbers and prices directly
 - Each listener set depends on which Application/Kernel is running — configurations are in `app/config/admin/`, `app/config/admin-api/`, etc.
+- **In new code, inject the context service** (`LanguageContext`, `ShopContext`, `CurrencyContext`, `EmployeeContext`) — never read values from the legacy `Context::getContext()` global, and never pass legacy-context values into services, query builders, or repositories. For example, a grid query builder needing the current language must depend on `LanguageContext`, not on the injected legacy context. `buildLegacyContext()` exists only to sync the old global during migration — it is not an entry point for reading
 
 ## Canonical examples
 

@@ -200,9 +200,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $updateModifications
             );
 
-            // Update totals amount of order
-            $this->orderAmountUpdater->update($order, $cart, null !== $invoice ? (int) $invoice->id : null);
-
             if (
                 $this->featureFlagStateCheckerInterface->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT)
                 && $command->isVirtual() !== null && $command->isVirtual() === false
@@ -219,6 +216,13 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                     $orderDetail,
                     $command->getCarrierId()
                 );
+            }
+
+            if (
+                !$this->featureFlagStateCheckerInterface->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT)
+            ) {
+                // Update totals amount of order
+                $this->orderAmountUpdater->update($order, $cart, null !== $invoice ? (int) $invoice->id : null);
             }
 
             Hook::exec('actionOrderEdited', ['order' => $order]);

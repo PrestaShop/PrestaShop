@@ -395,7 +395,7 @@
       <trans-unit id="cb5feb1b7314637725a2e73bdc9f7295">
         <source>Color</source>
         <target>Color</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 72]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 76]</note>
       </trans-unit>
       <trans-unit id="47ac923d219501859fb68fed8c8db77b">
         <source>Combination</source>
@@ -410,7 +410,7 @@
       <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
         <source>Company</source>
         <target>Company</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 304]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 309]</note>
       </trans-unit>
       <trans-unit id="254f642527b45bc260048e30704edb39">
         <source>Configuration</source>
@@ -640,7 +640,7 @@
       <trans-unit id="5204077231fc7164e2269e96b584dd95">
         <source>Drop-down list</source>
         <target>Drop-down list</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 83]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 90]</note>
       </trans-unit>
       <trans-unit id="e02d2ae03de9d493df2b6b2d2813d302">
         <source>Duration</source>
@@ -1369,7 +1369,7 @@
       <trans-unit id="8bd90a6d76a77fe0b160e8abd85c8590">
         <source>Radio buttons</source>
         <target>Radio buttons</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 84]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeGroupType.php [Line: 91]</note>
       </trans-unit>
       <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
         <source>Reference</source>
@@ -1524,7 +1524,7 @@
       <trans-unit id="9d55fc80bbb875322aa67fd22fc98469">
         <source>Shop association</source>
         <target>Shop association</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 90]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 94]</note>
       </trans-unit>
       <trans-unit id="9bbf46e755597079e0dddc00952516fe">
         <source>Shop context</source>
@@ -1549,7 +1549,7 @@
       <trans-unit id="5e74f2daf4ae8030571ceee5b4837579">
         <source>Social title</source>
         <target>Social title</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 794]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 798]</note>
       </trans-unit>
       <trans-unit id="876f0b745f68db560183928665a225ad">
         <source>Specific price deletion</source>
@@ -1659,7 +1659,7 @@
       <trans-unit id="a3e8ae43188ae76d38f414b2bdb0077b">
         <source>Texture</source>
         <target>Texture</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 79]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Catalog/AttributeType.php [Line: 83]</note>
       </trans-unit>
       <trans-unit id="b78a3223503896721cca1303f776159b">
         <source>Title</source>
@@ -1844,7 +1844,7 @@
       <trans-unit id="4757fe07fd492a8be0ea6a760d683d6e">
         <source>position</source>
         <target>position</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 200]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 199]</note>
       </trans-unit>
       <trans-unit id="dd8921b41e0279a02c6a26a509241700">
         <source>result(s)</source>
@@ -1864,7 +1864,7 @@
       <trans-unit id="f09cc7ee3a9a93273f4b80601cafb00c">
         <source>values</source>
         <target>values</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 199]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php [Line: 198]</note>
       </trans-unit>
     </body>
   </file>

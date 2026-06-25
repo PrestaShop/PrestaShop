@@ -80,12 +80,12 @@
       <trans-unit id="8b7fc06b213f4fb343c72af878e5c64b">
         <source>Only the discount for the selected group will be applied to this customer.</source>
         <target>Only the discount for the selected group will be applied to this customer.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 291]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 296]</note>
       </trans-unit>
       <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
         <source>Password should be at least %length% characters long.</source>
         <target>Password should be at least %length% characters long.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 951]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 955]</note>
       </trans-unit>
       <trans-unit id="a75835a6fe4329ee7884694415c2d46d">
         <source>Please make sure you are complying with the opt-in legislation applicable in your country.</source>
@@ -140,7 +140,7 @@
       <trans-unit id="e7608efcc5a10b78e3a98c438c2a1b7f">
         <source>Select all the groups that you would like to apply to this customer.</source>
         <target>Select all the groups that you would like to apply to this customer.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 275]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 280]</note>
       </trans-unit>
       <trans-unit id="81f32b96f6626b8968e6a0f4a9bce62e">
         <source>Select the fields you would like to be required for this section.</source>
@@ -165,7 +165,7 @@
       <trans-unit id="8c7a8f24423b8519d38fb3ff380e020f">
         <source>This customer will receive your ads via email.</source>
         <target>This customer will receive your ads via email.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 266]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 271]</note>
       </trans-unit>
       <trans-unit id="3c1c7064989da051f0b4b904bcb408cf">
         <source>This customer will receive your newsletter via email.</source>
@@ -175,7 +175,7 @@
       <trans-unit id="395b64636636e968c756f7514313f760">
         <source>This group will be the user's default group.</source>
         <target>This group will be the user's default group.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 287]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 292]</note>
       </trans-unit>
       <trans-unit id="566d26ec62e9c51270b7243440227dbb">
         <source>This note will be displayed to all employees but not to customers.</source>
@@ -200,7 +200,7 @@
       <trans-unit id="75bf7b6b951d3183f7c8f96bdb4fa74c">
         <source>Valid characters:</source>
         <target>Valid characters:</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 337]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 342]</note>
       </trans-unit>
       <trans-unit id="d17f6ab68839ef4a39ead0638cae47a2">
         <source>View details on the customer page</source>

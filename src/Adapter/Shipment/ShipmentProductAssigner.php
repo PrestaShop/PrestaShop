@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Shipment;
 use Exception;
 use Order;
 use OrderDetail;
+use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentNotFoundException;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use PrestaShopBundle\Entity\Shipment;
@@ -18,8 +19,11 @@ use PrestaShopBundle\Entity\ShipmentProduct;
 
 class ShipmentProductAssigner
 {
-    public function __construct(private ShipmentRepository $shipmentRepository)
-    {
+    public function __construct(
+        private readonly ShipmentRepository $shipmentRepository,
+        private readonly AdapterConfiguration $configuration,
+        private readonly ShipmentShippingCostUpdater $shipmentShippingCostUpdater,
+    ) {
     }
 
     public function assign(?int $shipmentId, Order $order, OrderDetail $orderDetail, ?int $carrierId = null): void
@@ -28,6 +32,7 @@ class ShipmentProductAssigner
             if (empty($carrierId)) {
                 throw new Exception('A carrier ID is required to create a new shipment');
             }
+
             $shipment = new Shipment();
             $shipment->setOrderId((int) $order->id);
             $shipment->setCarrierId($carrierId);
@@ -52,5 +57,9 @@ class ShipmentProductAssigner
         $shipment->addShipmentProduct($shipmentProduct);
 
         $this->shipmentRepository->save($shipment);
+
+        if ($this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING')) {
+            $this->shipmentShippingCostUpdater->recalculateForOrder((int) $order->id);
+        }
     }
 }

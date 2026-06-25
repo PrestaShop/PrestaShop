@@ -98,6 +98,14 @@ admin_discounts_duplicate:
   requirements:
     discountId: \d+
 
+admin_discounts_search_gift_products:
+  path: /search-gift-products
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\DiscountController::searchGiftProductsAction'
+    _legacy_controller: AdminCartRules
+    _legacy_feature_flag: discount
+
 admin_discounts_delete:
   path: /{discountId}/delete
   methods: [ POST, DELETE ]

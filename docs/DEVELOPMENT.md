@@ -37,7 +37,7 @@ make docker-start
 
 **Default Admin Credentials:**
 - Email: `demo@prestashop.com`
-- Password: `Correct Horse Battery Staple`
+- Password: `Pr3st4Sh0P`
 
 ## Architecture
 
@@ -148,7 +148,7 @@ make help # Show all available commands
 | | `PS_ERASE_DB` | `0` | Erase database on install |
 | | `PS_USE_DOCKER_MAILDEV` | `1` | Use MailDev for emails |
 | **Admin** | `ADMIN_MAIL` | `demo@prestashop.com` | Admin email |
-| | `ADMIN_PASSWD` | `Correct Horse Battery Staple` | Admin password |
+| | `ADMIN_PASSWD` | `Pr3st4Sh0P` | Admin password |
 | **Development** | `VERSION` | `8.1-apache` | PHP version |
 | | `NODE_VERSION` | `20.19.5` | Node.js version |
 | | `INSTALL_XDEBUG` | `false` | Install Xdebug |

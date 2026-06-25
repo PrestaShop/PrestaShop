@@ -13,3 +13,6 @@ services:
         'ar': 'Tahoma'
 
   PrestaShop\PrestaShop\Core\Language\ContextLanguageProviderInterface: '@PrestaShop\PrestaShop\Adapter\Language\ContextLanguageProvider'
+
+  PrestaShop\PrestaShop\Core\Language\LocalizedNamesFiller:
+    autowire: true

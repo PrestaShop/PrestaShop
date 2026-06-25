@@ -16,12 +16,7 @@ export default class CreateFreeGiftDiscount {
     this.$freeGiftSearchInput = $(DiscountMap.freeGiftProductSearchContainer);
 
     if (this.$freeGiftSearchInput.length) {
-      const autocompleteUrl = (document.querySelector(DiscountMap.freeGiftProductSearchContainer) as HTMLElement)
-        ?.dataset.remoteUrl;
-      this.entitySearchInput = new EntitySearchInput(
-        this.$freeGiftSearchInput,
-        {remoteUrl: autocompleteUrl},
-      );
+      this.entitySearchInput = new EntitySearchInput(this.$freeGiftSearchInput, {});
     }
   }
 }

@@ -24,6 +24,128 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 9
 
 ####################################
+#   v9.1.4 - (2026-06-03)
+####################################
+
+- Core:
+  - Bug fix:
+    - #230: Update dependencies, symfony and twig, and faceted search (by @jolelievre)
+
+####################################
+#   v9.1.3 - (2026-05-21)
+####################################
+
+- Core:
+  - Improvement:
+    - #41515: Upgrade Symfony package to 6.4.40 and twig/twig to 3.26.0 (by @cnavarro-prestashop)
+
+####################################
+#   v9.1.2 - (2026-05-11)
+####################################
+
+- Back Office:
+  - Improvement:
+    - #40912: Handle no value objects, like NoStateId, NoCombinationId in ValueObje… (by @jolelievre)
+    - #40859: Fix: in the customer form from admin side, it is missing the newsletter option as Partner Offers (by @Codencode)
+    - #40636: Always execute non display hooks in backoffice (by @Hlavtox)
+  - Bug fix:
+    - #41334: Fix theme import from web throwing PHP warnings on invalid URLs (by @mattgoud)
+    - #41327: Throw exception on order detail insert failure during conversion (by @nicosomb)
+    - #41320: Fix unable to delete order product when catalog product is deleted (by @mattgoud)
+    - #41193: Fix child theme translation loading in BO translation API (by @Codencode)
+    - #41100: Fix email HTML previews for module emails (by @axel-paillaud)
+    - #41018: Fix #33921 - Add specific error message when embedded HTML is blocked (by @mattgoud)
+    - #40975: Fix sidebar blanking on RTL (by @cnavarro-prestashop)
+    - #40971: Fix pass shop group ID when setting context in LogoUploader (by @mehdiboissat-bron)
+    - #40964: Use sticky positioning for module selection panel in Positions page (by @intraordinaire)
+    - #40866: Fixed bug for free gift button on cart rules (by @Touxten)
+    - #40829: Fix validate medium pass (by @tleon)
+    - #40745: Allow category tree selector to open when no default category (by @Kaikina)
+    - #40736: Fix: Error when creating an attribute for a group in “All shops” context with multiple shops (by @Codencode)
+    - #40706: Fix: Features with the same name are shown only once when creating values and assigning to products (by @Codencode)
+    - #40693: Fix: [BO][Multishop] Design > Theme & Logo: when updating the logo in the “All shops” context, only shop ID 1 gets updated (by @Codencode)
+    - #40070: Fix: actionCarrierUpdate not triggered on migrated carrier page (by @Codencode)
+    - #40015: Fix: BO - Import for Customers will overwrite the already existing customers (by @Codencode)
+- Front Office:
+  - Improvement:
+    - #41087: Add checkout step properties (by @ga-devfront)
+  - Bug fix:
+    - #41319: Fix product details overridden when changing attribute in quickview modal (by @mattgoud)
+    - #41316: Fix wrong state saved when country is changed quickly before AJAX completes (by @mattgoud)
+    - #40853: Fix fuzzy search SQL when closest word contains apostrophe (#40847) (by @Codencode)
+    - #40795: Fix: Fatal error in hookActionCartSave when switching language and calling Product::getPriceStatic() or Cart::getProducts() (by @Codencode)
+  - Refactoring:
+    - #40828: Use context instead of cookie where relevant (by @Hlavtox)
+- Core:
+  - New feature:
+    - #40613: Add --skip-overrides option to prestashop:module CLI command (by @jf-viguier)
+  - Improvement:
+    - #41419: Update Symfony components after 6.4.38 release (by @nicosomb)
+    - #41383: Update Symfony components after 6.4.37 release (by @nicosomb)
+    - #41358: Bump 9.1.2 (by @Progi1984)
+    - #41230: Bump the version of the prestashop/dashgoals package from v2.0.4 to v2.0.5 (by @cnavarro-prestashop)
+    - #41188: Update Symfony components after 6.4.36 release (by @nicosomb)
+    - #41086: Fix tests with admin api (by @boherm)
+    - #41059: Set version to 9.1.1 (by @Progi1984)
+    - #41041: Add workflow to automatically set milestone based on target branch (by @jolelievre)
+    - #41033: Update Symfony components after 6.4.35 release (by @nicosomb)
+    - #41009: Improve bulk actions returns from admin api (by @boherm)
+    - #40431: Feat(FrontController): Add Specialized Hooks (by @Kaikina)
+  - Bug fix:
+    - #41443: Update dependencies for 9.1.2 (by @jolelievre)
+    - #41412: Fix sending test emails from/to idn domains (by @boherm)
+    - #41410: Switch employee email from ps_shop_email when forwarding customer threads to another employee (by @boherm)
+    - #41317: Fix module uninstall failing when override contains multi-line property or constant value (by @mattgoud)
+    - #40894: EditStateHandler : Fixes if ZoneId or Country are null (partial update) (by @Progi1984)
+    - #40888: Add ShopContext and LanguageContext to FeatureAttributeRepository (by @boherm)
+    - #40655: Fix saving module settings when legacy profiler enabled (by @kpodemski)
+    - #40651: Return correct product name for attributes (by @Prestaworks)
+  - Refactoring:
+    - #40834: Use constants for range behavior (by @Hlavtox)
+- Installer:
+  - Improvement:
+    - #41448: Update default catalog 9.1.2-build (by @ps-jarvis)
+- Localization:
+  - Improvement:
+    - #40945: Turkey updated its tax rates on July 10, 2023. (by @metineren)
+- Tests:
+  - Improvement:
+    - #41347: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #41236: Functional Tests : @prestashop-core/ui-testing (by @Progi1984)
+    - #40990: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40954: Functional Tests : Improve nightly (by @Progi1984)
+    - #40946: Functional Tests : Improve `functional:BO:orders:03-05` (by @Progi1984)
+    - #40933: Functional Tests : Improve `functional:BO:orders:01-view-and-edit-order` (by @Progi1984)
+    - #40931: Functional Tests : Audit : BO - Wall of Fame (by @Progi1984)
+    - #40923: Dynamize docker names when using docker exec in CI (by @jolelievre)
+    - #40911: Functional Tests : Improve `functional:BO:orders:03-05` (by @Progi1984)
+    - #40882: Functional Tests : Bump @prestashop-core/ui-testing (by @Progi1984)
+    - #40873: Functional Tests : Stabilize GDPR Tests (by @Progi1984)
+  - Refactoring:
+    - #41025: Functional tests - Refacto create customer from order page (by @nesrineabdmouleh)
+    - #40910: Functional tests - Add first UI test of discount V2 : Minimum purchase amount (On cart amount) (by @nesrineabdmouleh)
+
+####################################
+#   v9.1.1 - (2026-04-16)
+####################################
+
+- Back Office
+  - Improvement:
+    - GHSA-w9f3-qc75-qgx9 Prevent xss exploitation via unprotected variables in customer threads (found by Savio from Doyensec in collaboration with Anthropic Research)
+
+####################################
+#   v9.1.0 - (2026-03-13)
+####################################
+
+- Back Office:
+  - Improvement:
+    - GHSA-35pf-37c6-jxjv Prevent xss exploitation via unprotected variables in template
+    - GHSA-283w-xf3q-788v Fix improper use of validation framework
+  - Bug fix:
+    - #40888: Add ShopContext and LanguageContext to FeatureAttributeRepository
+    - #40923: Dynamize docker names when using docker exec in CI
+
+####################################
 #   v9.1.0 RC 1 - (2026-02-19)
 ####################################
 

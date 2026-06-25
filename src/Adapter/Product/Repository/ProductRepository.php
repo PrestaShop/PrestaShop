@@ -827,6 +827,46 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
         return $qb->executeQuery()->fetchAllAssociative();
     }
 
+    public function hasAnyProduct(): bool
+    {
+        return (bool) $this->connection->createQueryBuilder()
+            ->select('1')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->setMaxResults(1)
+            ->executeQuery()
+            ->fetchOne();
+    }
+
+    /**
+     * @param string $searchPhrase
+     * @param LanguageId $languageId
+     * @param ShopId $shopId
+     * @param int|null $limit
+     *
+     * @return array<int, array<string, int|string>>
+     */
+    public function searchProductsForFreeGift(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
+    {
+        $qb = $this->getSearchQueryBuilder(
+            $searchPhrase,
+            $languageId,
+            $shopId,
+            [],
+            $limit
+        );
+        $qb
+            ->addSelect('p.id_product, pl.name, p.reference, i.id_image, p.product_type')
+            ->addSelect('ps.available_for_order, ps.minimal_quantity, ps.customizable')
+            ->addSelect('sa.quantity as stock_quantity, sa.out_of_stock')
+            ->leftJoin('p', $this->dbPrefix . 'stock_available', 'sa', 'sa.id_product = p.id_product AND sa.id_shop = :shopId AND sa.id_product_attribute = 0')
+            ->addGroupBy('p.id_product')
+            ->addOrderBy('pl.name', 'ASC')
+            ->addOrderBy('p.id_product', 'ASC')
+        ;
+
+        return $qb->executeQuery()->fetchAllAssociative();
+    }
+
     public function getProductTaxRulesGroupId(ProductId $productId, ShopId $shopId): TaxRulesGroupId
     {
         $result = $this->connection->createQueryBuilder()

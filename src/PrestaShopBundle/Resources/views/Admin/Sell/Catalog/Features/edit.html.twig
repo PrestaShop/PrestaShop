@@ -10,7 +10,7 @@
   {% else %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form.html.twig', {
       featureId: editableFeature.featureId.getValue,
-      featureForm: featureForm
+      featureForm: featureForm,
     }) }}
   {% endif %}
 {% endblock %}

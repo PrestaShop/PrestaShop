@@ -13,5 +13,5 @@ enum CustomerB2bStatus: string
 {
     case PENDING = 'pending';
     case ACTIVE = 'active';
-    case REFUSED = 'refused';
+    case REJECTED = 'rejected';
 }

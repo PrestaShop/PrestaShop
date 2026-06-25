@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Discount\DiscountSettings;
 use PrestaShopBundle\Form\Admin\Type\CardType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -40,13 +41,23 @@ class DiscountInformationType extends TranslatorAwareType
         $builder
             ->add('discount_type', TextPreviewType::class, [
                 'data' => $discountType,
-                'label' => $this->trans('Discount type', 'Admin.Catalog.Feature'),
-                'preview_class' => 'badge rounded discount-type-badge badge-light-info',
+                'label' => $this->trans('Discount Type', 'Admin.Catalog.Feature'),
+                'label_attr' => [
+                    'class' => 'font-weight-bold',
+                ],
+                'label_subtitle' => $this->trans(
+                    'You have selected a discount type to apply. Please remember this choice is final and can not be changed.',
+                    'Admin.Catalog.Feature'
+                ),
+                'preview_class' => 'badge badge-soft-info',
                 'prefix' => $discountTypeName,
                 'required' => false,
             ])
             ->add('names', TranslatableType::class, [
-                'label' => $this->trans('Discount name', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Discount Name', 'Admin.Catalog.Feature'),
+                'label_attr' => [
+                    'class' => 'font-weight-bold',
+                ],
                 'label_help_box' => $this->trans('This will be displayed in the cart summary, as well as on the invoice.', 'Admin.Catalog.Help'),
                 'required' => true,
                 'type' => TextType::class,
@@ -71,6 +82,9 @@ class DiscountInformationType extends TranslatorAwareType
             ])
             ->add('description', TextareaType::class, [
                 'label' => $this->trans('Discount description', 'Admin.Global'),
+                'label_attr' => [
+                    'class' => 'font-weight-bold',
+                ],
                 'required' => false,
                 'label_help_box' => $this->trans(
                     'For your eyes only. This will never be displayed to the customer.',
@@ -89,6 +103,24 @@ class DiscountInformationType extends TranslatorAwareType
                         ),
                     ]),
                 ],
+            ])
+            ->add('active', SwitchType::class, [
+                'label' => $this->trans('Enable discount', 'Admin.Catalog.Feature'),
+                'label_attr' => [
+                    'class' => 'font-weight-bold',
+                ],
+                'required' => false,
+            ])
+            ->add('highlight_in_cart', SwitchType::class, [
+                'label' => $this->trans('Highlight', 'Admin.Catalog.Feature'),
+                'label_attr' => [
+                    'class' => 'font-weight-bold',
+                ],
+                'label_help_box' => $this->trans(
+                    'If the voucher is not yet in the cart, it will be displayed in the cart summary.',
+                    'Admin.Catalog.Help'
+                ),
+                'required' => false,
             ])
         ;
     }

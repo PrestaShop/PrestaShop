@@ -1,4 +1,15 @@
 <!-----------------------------------------------------------------------------
+⚠️ SECURITY WARNING — READ BEFORE OPENING THIS PULL REQUEST ⚠️
+
+If this pull request fixes or relates to a SECURITY vulnerability, DO NOT open
+it here. Public pull requests disclose the vulnerability to everyone, including
+attackers, before a fix is released.
+
+Please report security issues privately by contacting
+security-core@prestashop.com instead.
+------------------------------------------------------------------------------>
+
+<!-----------------------------------------------------------------------------
 Thank you for contributing to the PrestaShop project!
 
 Please take the time to edit the "Answers" rows below with the necessary information.

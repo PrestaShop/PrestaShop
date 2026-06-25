@@ -112,6 +112,17 @@ class CustomerAddressFormCore extends AbstractForm
             }
         }
 
+        $stateField = $this->getField('id_state');
+        if ($stateField && $stateField->getValue() && !empty($stateField->getAvailableValues())
+            && !array_key_exists($stateField->getValue(), $stateField->getAvailableValues())) {
+            $stateField->addError($this->translator->trans(
+                'This state is not valid for the selected country.',
+                [],
+                'Shop.Forms.Errors'
+            ));
+            $is_valid = false;
+        }
+
         if ($is_valid && Hook::exec('actionValidateCustomerAddressForm', ['form' => $this]) === false) {
             $is_valid = false;
         }

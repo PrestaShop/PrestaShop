@@ -10,6 +10,7 @@ import {
   boOrdersPage,
   boOrdersCreatePage,
   boOrdersViewBlockCustomersPage,
+  boOrdersViewBlockMessagesPage,
   boOrdersViewBlockProductsPage,
   type BrowserContext,
   dataAddresses,
@@ -31,13 +32,15 @@ Scenario:
 - Add products to cart
 - Choose addresses for delivery and invoice
 - Choose payment status
-- Set order status and save the order
+- Set order status
+- Add an order message and save the order
 - From view order page check these details :
   - Order status
   - Total price
   - Shipping address
   - Invoice address
   - Products names
+  - Order message
 Post-condition:
 - Delete Free shipping cart rule
  */
@@ -62,6 +65,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
     paymentMethod: dataPaymentMethods.checkPayment,
     status: dataOrderStatuses.paymentAccepted,
     totalPrice: (dataProducts.demo_5.priceTaxExcluded * 4) * 1.2, // Price tax included
+    message: 'Order message test',
   });
 
   before(async function () {
@@ -163,6 +167,13 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
         const productName = await boOrdersViewBlockProductsPage.getProductNameFromTable(page, i);
         expect(productName).to.contain(orderToMake.products[i - 1].product.name);
       }
+    });
+
+    it('should check order message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderMessage', baseContext);
+
+      const textMessage = await boOrdersViewBlockMessagesPage.getTextMessage(page, 1, 'customer');
+      expect(textMessage, 'Message is not correct!').to.contains(orderToMake.message);
     });
   });
 

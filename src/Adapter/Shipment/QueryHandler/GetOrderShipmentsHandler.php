@@ -81,6 +81,7 @@ class GetOrderShipmentsHandler implements GetOrderShipmentsHandlerInterface
                 new DecimalNumber((string) $shipment->getShippingCostTaxIncluded()),
                 $shipment->getProducts()->count(),
                 $shipment->getTrackingNumber(),
+                $shipment->getPackedAt(),
                 $shipment->getShippedAt(),
                 $shipment->getDeliveredAt(),
                 $shipment->getCancelledAt(),

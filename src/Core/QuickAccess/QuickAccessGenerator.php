@@ -71,6 +71,7 @@ class QuickAccessGenerator
         }
 
         $url = preg_replace($patterns, '', $savedUrl);
+        $url = (string) preg_replace('/&{2,}/', '&', $url);
         $url = trim($url, '?&/');
 
         return 'index.php' . (!empty($legacyEnvironment) ? '?' : '/') . $url;

@@ -37,3 +37,32 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Validate\TaxRulesGroupValidator'
 
   PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Validate\TaxRulesGroupValidator: ~
+
+  # TaxRule handlers
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\AddTaxRuleHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\EditTaxRuleHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\DeleteTaxRuleHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\BulkDeleteTaxRuleHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\QueryHandler\GetTaxRuleForEditingHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\QueryHandler\GetTaxRuleListHandler:
+    autowire: true
+    autoconfigure: true
+    arguments:
+      $dbPrefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRuleRepository: ~

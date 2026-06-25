@@ -1,6 +1,7 @@
 services:
   _defaults:
     public: true
+    autowire: true
 
   PrestaShop\PrestaShop\Adapter\Configuration: ~
 
@@ -31,6 +32,10 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Order\Repository\OrderDetailRepository'
       - '@PrestaShop\PrestaShop\Adapter\LegacyContext'
       - '@PrestaShop\PrestaShop\Adapter\Tools'
+
+  PrestaShop\PrestaShop\Adapter\Shipment\OrderShippingTotalUpdater:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater:
 
   prestashop.adapter.legacy.context:
     alias: PrestaShop\PrestaShop\Adapter\LegacyContext
@@ -63,3 +68,10 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Bundle\AssetsInstaller:
     class: PrestaShop\PrestaShop\Adapter\Bundle\AssetsInstaller
+
+  PrestaShop\PrestaShop\Adapter\Address\Repository\AddressRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository: ~

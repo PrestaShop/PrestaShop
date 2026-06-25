@@ -21,6 +21,9 @@ function handleCountryChange(selectors) {
     const formFieldsSelector = `${selectors.address} input`;
     const target = $(event.target);
 
+    const submitButton = $(`${selectors.address} [type="submit"]`);
+    submitButton.prop('disabled', true);
+
     $.post(getFormViewUrl, requestData).then((resp) => {
       const inputs = [];
 
@@ -38,6 +41,7 @@ function handleCountryChange(selectors) {
 
       prestashop.emit('updatedAddressForm', {target: $(selectors.address), resp});
     }).fail((resp) => {
+      submitButton.prop('disabled', false);
       prestashop.emit('handleError', {eventType: 'updateAddressForm', resp});
     });
   });

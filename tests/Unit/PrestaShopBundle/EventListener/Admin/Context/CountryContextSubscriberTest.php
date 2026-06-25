@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\EventListener\Admin\Context;
 
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
-use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Context\CountryContextBuilder;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShopBundle\EventListener\Admin\Context\CountryContextSubscriber;
@@ -21,7 +21,7 @@ class CountryContextSubscriberTest extends ContextEventListenerTestCase
     public function testKernelRequest(): void
     {
         $countryContextBuilder = new CountryContextBuilder(
-            $this->createMock(CountryRepository::class),
+            $this->createMock(CountryRepositoryInterface::class),
             $this->createMock(ContextStateManager::class),
             $this->createMock(LanguageContext::class),
         );

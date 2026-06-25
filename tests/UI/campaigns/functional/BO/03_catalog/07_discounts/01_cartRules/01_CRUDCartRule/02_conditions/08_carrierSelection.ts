@@ -188,7 +188,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
 
       const priceATI = await foHummingbirdCheckoutPage.getATIPrice(page);
       expect(priceATI.toFixed(2))
-        .to.equal((dataProducts.demo_6.combinations[0].price + dataCarriers.myCarrier.priceTTC).toFixed(2));
+        .to.equal((dataProducts.demo_6.combinations[0].priceTI + dataCarriers.myCarrier.priceTTC).toFixed(2));
     });
 
     it('should set the promo code for second time and check total after discount', async function () {
@@ -196,7 +196,7 @@ describe('BO - Catalog - Cart rules : Carrier selection', async () => {
 
       await foHummingbirdCheckoutPage.addPromoCode(page, newCartRuleData.code);
 
-      const totalAfterDiscount = dataProducts.demo_6.combinations[0].price
+      const totalAfterDiscount = dataProducts.demo_6.combinations[0].priceTI
         - newCartRuleDiscount + dataCarriers.myCarrier.priceTTC;
 
       const priceATI = await foHummingbirdCheckoutPage.getATIPrice(page);

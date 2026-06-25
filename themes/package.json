@@ -20,7 +20,7 @@
         "@zxcvbn-ts/language-en": "^3.0.0"
     },
     "devDependencies": {
-        "babel-eslint": "^10.1.0",
+        "@babel/eslint-parser": "^7.25.1",
         "esbuild-loader": "^4.2.2",
         "eslint": "^8.18.0",
         "eslint-config-airbnb-base": "^15.0.0",

@@ -40,6 +40,8 @@ services:
       - '@prestashop.adapter.context_state_manager'
       - '@PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductQuantityUpdater'
       - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
+      - '@PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater'
+      - '@PrestaShop\PrestaShop\Adapter\Configuration'
 
   prestashop.adapter.order.command_handler.change_order_delivery_address_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ChangeOrderDeliveryAddressHandler
@@ -155,7 +157,10 @@ services:
     arguments:
       - '@prestashop.adapter.context_state_manager'
       - '@prestashop.adapter.order.product_quantity.updater'
+      - '@PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater'
+      - '@PrestaShop\PrestaShop\Adapter\Configuration'
       - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
+      - '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
 
   prestashop.adapter.order.command_handler.bulk_change_order_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Order\CommandHandler\BulkChangeOrderStatusHandler'
@@ -172,6 +177,7 @@ services:
       - '@prestashop.adapter.data_provider.customer'
       - '@prestashop.adapter.order.query_handler.get_order_products_for_viewing_handler'
       - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
       - '@prestashop.adapter.address.formatter'
 
   prestashop.adapter.order.query_handler.get_order_products_for_viewing_handler:

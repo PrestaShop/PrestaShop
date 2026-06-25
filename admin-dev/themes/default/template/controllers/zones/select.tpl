@@ -4,6 +4,6 @@
  *}
 <select id="zone_to_affect" name="zone_to_affect">
     {foreach $zones as $z}
-        <option value="{$z['id_zone']}">{$z['name']}</option>
+        <option value="{$z['id_zone']}">{$z['name']|escape:'html':'UTF-8'}</option>
     {/foreach}
 </select>

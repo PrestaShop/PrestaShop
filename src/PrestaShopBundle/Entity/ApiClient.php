@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\InstalledApiResourceScope;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -39,6 +40,7 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[Assert\Length(max: 255)]
     #[Assert\NotBlank]
+    #[CleanHtml]
     private string $clientId;
 
     /**
@@ -46,6 +48,7 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[Assert\Length(max: 255)]
     #[Assert\NotBlank]
+    #[CleanHtml]
     private string $clientName;
 
     /**
@@ -67,12 +70,14 @@ class ApiClient implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[Assert\NotNull]
     #[InstalledApiResourceScope]
+    #[Assert\All(constraints: [new CleanHtml()])]
     private array $scopes = [];
 
     /**
      * @ORM\Column(name="description", type="string", options={"default": ""})
      */
     #[Assert\Length(max: 21844)]
+    #[CleanHtml]
     private string $description = '';
 
     /**

@@ -194,7 +194,7 @@
       <trans-unit id="10df6a640ea9625829122dfb5842795e">
         <source>PrestaShop logo</source>
         <target>PrestaShop logo</target>
-        <note>File: admin-dev/themes/default/template/header.tpl [Line: 103]</note>
+        <note>File: admin-dev/themes/default/template/header.tpl [Line: 104]</note>
       </trans-unit>
       <trans-unit id="7f704ff8964f7b5f3f9a6444d450b5f7">
         <source>Product name, SKU, reference...</source>

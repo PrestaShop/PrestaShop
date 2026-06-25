@@ -5,7 +5,7 @@
       <trans-unit id="3ea7689283770958661c27c37275b89c">
         <source>Define the number of products to be displayed in this block.</source>
         <target>Define the number of products to be displayed in this block.</target>
-        <note>File: modules/ps_newproducts/ps_newproducts.php [Line: 149]</note>
+        <note>File: modules/ps_newproducts/ps_newproducts.php [Line: 114]</note>
       </trans-unit>
       <trans-unit id="96844da26fe7558a6fc20f340c16927c">
         <source>Highlight your store's newest products, display a block on the homepage and let the visitors know about your latest news.</source>
@@ -15,7 +15,6 @@
       <trans-unit id="73293a024e644165e9bf48f270af63a0">
         <source>Invalid number.</source>
         <target>Invalid number.</target>
-        <note>File: modules/ps_newproducts/ps_newproducts.php [Line: 120]</note>
       </trans-unit>
       <trans-unit id="f7c34fc4a48bc683445c1e7bbc245508">
         <source>New products block</source>
@@ -25,17 +24,16 @@
       <trans-unit id="eb1cef1202fdc4d7954899fbf9f1734b">
         <source>Number of days for which the product is considered 'new'</source>
         <target>Number of days for which the product is considered 'new'</target>
-        <note>File: modules/ps_newproducts/ps_newproducts.php [Line: 153]</note>
       </trans-unit>
       <trans-unit id="1cd777247f2a6ed79534d4ace72d78ce">
         <source>Please complete the "products to display" field.</source>
         <target>Please complete the "products to display" field.</target>
-        <note>File: modules/ps_newproducts/ps_newproducts.php [Line: 116]</note>
+        <note>File: modules/ps_newproducts/ps_newproducts.php [Line: 88]</note>
       </trans-unit>
       <trans-unit id="26986c3388870d4148b1b5375368a83d">
         <source>Products to display</source>
         <target>Products to display</target>
-        <note>File: modules/ps_newproducts/ps_newproducts.php [Line: 146]</note>
+        <note>File: modules/ps_newproducts/ps_newproducts.php [Line: 111]</note>
       </trans-unit>
     </body>
   </file>

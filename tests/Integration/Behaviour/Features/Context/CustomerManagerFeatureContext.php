@@ -111,6 +111,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
 
         $this->latestResult = $id->getValue();
         $this->customerRegistry[$customerReference] = $id->getValue();
+        $this->getSharedStorage()->set($customerReference, $id->getValue());
     }
 
     /**

@@ -124,7 +124,10 @@ class ContextMocker
      */
     public function backupContext(): void
     {
-        $this->backupContext = Context::getContext();
+        // Clone, do NOT keep a reference: tests mutate the live Context singleton in place
+        // (e.g. Context::getContext()->controller = ...). A reference backup would BE that mutated
+        // object, so resetContext() could not undo it and the mutation would leak into the next test class.
+        $this->backupContext = clone Context::getContext();
     }
 
     /**

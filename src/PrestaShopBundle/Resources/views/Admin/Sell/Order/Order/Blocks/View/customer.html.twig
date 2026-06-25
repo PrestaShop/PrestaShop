@@ -163,8 +163,8 @@
             {{ form_start(privateNoteForm, {
               action: path('admin_customers_set_private_note', {
                 customerId: orderForViewing.customer.id,
-                back: path('admin_orders_view', {orderId: orderForViewing.id})
-              })
+                back: path('admin_orders_view', {orderId: orderForViewing.id}),
+              }),
               }) }}
 
               {{ form_widget(privateNoteForm.note) }}

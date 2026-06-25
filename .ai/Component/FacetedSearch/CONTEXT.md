@@ -24,7 +24,3 @@ Layered/faceted product filtering on the storefront: Core defines the contracts 
 - `src/Core/Product/Search/Facet.php`
 - `modules/ps_facetedsearch/src/Product/SearchProvider.php`
 
-## Related
-
-- [Hook Component](../Hook/CONTEXT.md) — cache invalidation dispatched via hooks on catalog changes
-- [Product Domain](../../Domain/Product/CONTEXT.md) — products are the primary search target

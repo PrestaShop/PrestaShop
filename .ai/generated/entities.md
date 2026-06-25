@@ -1,4 +1,4 @@
-# Doctrine Entities Index (generated 2026-04-08)
+# Doctrine Entities Index (generated 2026-04-25)
 # 24 entities in src/PrestaShopBundle/Entity/
 #
 # Columns: scalar DB-mapped fields. Relations: association targets.
@@ -9,21 +9,21 @@
 ## ApiClient
   columns: id clientId clientName clientSecret enabled scopes description externalIssuer lifetime 
 
-## AttributeGroupLang
-  columns: name publicName 
-  relations: ManyToOne→AttributeGroup ManyToOne→Lang 
+## Attribute
+  columns: id color position 
+  relations: ManyToOne→AttributeGroup ManyToMany→Shop OneToMany→AttributeLang 
 
 ## AttributeGroup
   columns: id isColorGroup groupType position 
   relations: OneToMany→Attribute ManyToMany→Shop OneToMany→AttributeGroupLang 
 
+## AttributeGroupLang
+  columns: name publicName 
+  relations: ManyToOne→AttributeGroup ManyToOne→Lang 
+
 ## AttributeLang
   columns: name 
   relations: ManyToOne→Attribute ManyToOne→Lang 
-
-## Attribute
-  columns: id color position 
-  relations: ManyToOne→AttributeGroup ManyToMany→Shop OneToMany→AttributeLang 
 
 ## FeatureFlag
   columns: id name type state labelWording labelDomain descriptionWording descriptionDomain stability 
@@ -54,13 +54,13 @@
   columns: id orderDetailId quantity 
   relations: ManyToOne→Shipment 
 
-## ShopGroup
-  columns: id name color shareCustomer shareOrder shareStock active deleted 
-  relations: OneToMany→Shop 
-
 ## Shop
   columns: id name color idCategory themeName active deleted 
   relations: ManyToOne→ShopGroup OneToMany→ShopUrl 
+
+## ShopGroup
+  columns: id name color shareCustomer shareOrder shareStock active deleted 
+  relations: OneToMany→Shop 
 
 ## ShopUrl
   columns: id domain domainSsl physicalUri virtualUri main active 
@@ -69,13 +69,13 @@
 ## StockMvt
   columns: idStockMvt idStock idOrder idSupplyOrder idStockMvtReason idEmployee employeeLastname employeeFirstname physicalQuantity dateAdd sign priceTe lastWa currentWa referer 
 
-## TabLang
-  columns: name 
-  relations: ManyToOne→Tab ManyToOne→Lang 
-
 ## Tab
   columns: id idParent position module className routeName active enabled icon wording wordingDomain 
   relations: OneToMany→TabLang 
+
+## TabLang
+  columns: name 
+  relations: ManyToOne→Tab ManyToOne→Lang 
 
 ## Translation
   columns: id key translation domain theme 

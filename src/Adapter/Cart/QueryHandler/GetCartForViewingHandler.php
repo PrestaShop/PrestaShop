@@ -32,24 +32,10 @@ use Validate;
 #[AsQueryHandler]
 final class GetCartForViewingHandler implements GetCartForViewingHandlerInterface
 {
-    /**
-     * @var ImageManager
-     */
-    private $imageManager;
-
-    /**
-     * @var Locale
-     */
-    private $locale;
-
-    /**
-     * @param ImageManager $imageManager
-     * @param Locale $locale
-     */
-    public function __construct(ImageManager $imageManager, Locale $locale)
-    {
-        $this->imageManager = $imageManager;
-        $this->locale = $locale;
+    public function __construct(
+        private ImageManager $imageManager,
+        private Locale $locale
+    ) {
     }
 
     /**
@@ -204,11 +190,10 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
         $formattedProducts = [];
 
         foreach ($products as $product) {
-            if ($product['id_product_attribute']) {
-                $image = Product::getCombinationImageById($product['id_product_attribute'], $languageId);
-            } else {
-                $image = Product::getCover($product['id_product']);
-            }
+            $image = $product['id_product_attribute']
+                ? Product::getCombinationImageById($product['id_product_attribute'], $languageId)
+                : false;
+            $image = $image ?: Product::getCover($product['id_product']);
 
             $formattedProduct = [
                 'id' => $product['id_product'],

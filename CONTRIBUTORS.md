@@ -101,6 +101,7 @@ GitHub contributors:
 - Aurélien Pelletier
 - Aurélien Rita
 - Awit Kuta Rahil
+- Axel Paillaud
 - axi
 - Axome
 - Aylab
@@ -186,6 +187,7 @@ GitHub contributors:
 - crezzur
 - Cristiano Verardi
 - Cyril Dussert
+- Cyril Navarro
 - Cécile Dubouis
 - Cédric Fontaine
 - Cédric Geffroy
@@ -369,6 +371,7 @@ GitHub contributors:
 - GuillaumeKadolis
 - Guisardo
 - Gustavo
+- Guyomar Alexis
 - Gytis
 - Gytis Skėma
 - Ha!*!*y
@@ -634,6 +637,7 @@ GitHub contributors:
 - Mehdi
 - Mehdi Badrani
 - mehdi-ghezal
+- mehdiboissat-bron
 - Mehrshad Zakerian
 - Melvin Moustaid
 - Metin EREN
@@ -866,6 +870,7 @@ GitHub contributors:
 - Sarah Lorenzini
 - Sas-adilis
 - Sauli Maijala
+- Savio (Doyensec)
 - sbordun
 - Seb
 - Seb33300

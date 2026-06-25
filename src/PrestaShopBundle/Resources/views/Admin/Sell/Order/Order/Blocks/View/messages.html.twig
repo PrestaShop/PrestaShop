@@ -40,13 +40,13 @@
 
   <div class="card-body d-print-none">
     {{ form_start(orderMessageForm, {
-      action: path('admin_orders_send_message', {orderId: orderForViewing.id})
+      action: path('admin_orders_send_message', {orderId: orderForViewing.id}),
     }) }}
 
     {{ ps.form_group_row(orderMessageForm.order_message, {}, {
       label: 'Choose your order message'|trans({}, 'Admin.Orderscustomers.Feature'),
       label_on_top: true,
-      class: 'mb-0'
+      class: 'mb-0',
     }) }}
 
     <div class="js-order-messages-container d-none">
@@ -72,7 +72,7 @@
     {{ ps.form_group_row(orderMessageForm.message, {attr: {cols: 30, rows: 3}}, {
       label: 'Message'|trans({}, 'Admin.Global'),
       label_on_top: true,
-      class: 'js-text-with-length-counter'
+      class: 'js-text-with-length-counter',
     }) }}
 
     {% block order_message_form_rest %}

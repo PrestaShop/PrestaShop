@@ -10,12 +10,43 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository'
       - '@prestashop.adapter.order.repository.order_repository'
 
+  prestashop.adapter.order_return.query_handler.get_order_return_products_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderReturnProductsHandler'
+    autoconfigure: true
+    arguments:
+      - '@prestashop.adapter.order_return.repository.order_return_repository'
+
   prestashop.adapter.order_return.command_handler.update_order_return_state_handler:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\UpdateOrderReturnStateHandler'
     autoconfigure: true
     arguments:
       - '@prestashop.adapter.order_return.repository.order_return_repository'
       - '@prestashop.adapter.order_return_state.repository.order_return_state_repository'
+      - '@translator'
+
+  prestashop.adapter.order_return.command_handler.delete_product_from_order_return_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\DeleteProductFromOrderReturnHandler'
+    autoconfigure: true
+    arguments:
+      - '@prestashop.adapter.order_return.repository.order_return_repository'
+
+  prestashop.adapter.order_return.command_handler.bulk_delete_products_from_order_return_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\BulkDeleteProductsFromOrderReturnHandler'
+    autoconfigure: true
+    arguments:
+      - '@prestashop.adapter.order_return.repository.order_return_repository'
+
+  prestashop.adapter.order_return.command_handler.delete_order_return_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\DeleteOrderReturnHandler'
+    autoconfigure: true
+    arguments:
+      - '@prestashop.adapter.order_return.repository.order_return_repository'
+
+  prestashop.adapter.order_return.command_handler.bulk_delete_order_returns_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\BulkDeleteOrderReturnsHandler'
+    autoconfigure: true
+    arguments:
+      - '@prestashop.adapter.order_return.repository.order_return_repository'
 
   prestashop.adapter.order_return.repository.order_return_repository:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository'
@@ -24,3 +55,6 @@ services:
 
   prestashop.adapter.order_return.validator.order_return_validator:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator'
+
+  prestashop.adapter.pdf.order_return_pdf_generator:
+    class: 'PrestaShop\PrestaShop\Adapter\PDF\OrderReturnPdfGenerator'

@@ -50,6 +50,11 @@ class OrderShipment
     /**
      * @var DateTime
      */
+    private ?DateTime $packedAt;
+
+    /**
+     * @var DateTime
+     */
     private ?DateTime $shippedAt;
 
     /**
@@ -76,6 +81,7 @@ class OrderShipment
         DecimalNumber $shippingCostTaxIncluded,
         int $productsCount,
         ?string $trackingNumber,
+        ?DateTime $packedAt,
         ?DateTime $shippedAt,
         ?DateTime $deliveredAt,
         ?DateTime $cancelledAt
@@ -88,6 +94,7 @@ class OrderShipment
         $this->shippingCostTaxIncluded = $shippingCostTaxIncluded;
         $this->productsCount = $productsCount;
         $this->trackingNumber = $trackingNumber;
+        $this->packedAt = $packedAt;
         $this->shippedAt = $shippedAt;
         $this->deliveredAt = $deliveredAt;
         $this->cancelledAt = $cancelledAt;
@@ -147,6 +154,14 @@ class OrderShipment
     public function getTrackingNumber(): ?string
     {
         return $this->trackingNumber;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getPackedAt(): ?DateTime
+    {
+        return $this->packedAt;
     }
 
     /**

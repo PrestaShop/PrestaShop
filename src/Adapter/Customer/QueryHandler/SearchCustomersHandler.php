@@ -81,10 +81,6 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
             }
 
             foreach ($customersResult as $customerArray) {
-                if (!$customerArray['active']) {
-                    continue;
-                }
-
                 $customerArray['fullname_and_email'] = sprintf(
                     '%s %s - %s',
                     $customerArray['firstname'],

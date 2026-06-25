@@ -1,15 +1,12 @@
-// Import utils
 import testContext from '@utils/testContext';
-
 import {expect} from 'chai';
+
 import {
   boDashboardPage,
   boLoginPage,
-  boModuleManagerPage,
+  boProductSettingsPage,
   type BrowserContext,
-  dataModules,
   foHummingbirdHomePage,
-  modPsNewProductsBoMain,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
@@ -20,9 +17,8 @@ describe('New products block module - Configure settings of "Number of days for 
   async () => {
     let browserContext: BrowserContext;
     let page: Page;
-    let defaultValue: string;
+    let defaultValue: number;
 
-    // before and after functions
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
       page = await utilsPlaywright.newTab(browserContext);
@@ -42,84 +38,37 @@ describe('New products block module - Configure settings of "Number of days for 
       expect(pageTitle).to.contains(boDashboardPage.pageTitle);
     });
 
-    it('should go to \'Modules > Module Manager\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
+    it('should go to \'Shop parameters > Product Settings\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
 
       await boDashboardPage.goToSubMenu(
         page,
-        boDashboardPage.modulesParentLink,
-        boDashboardPage.moduleManagerLink,
+        boDashboardPage.shopParametersParentLink,
+        boDashboardPage.productSettingsLink,
       );
-      await boModuleManagerPage.closeSfToolBar(page);
+      await boProductSettingsPage.closeSfToolBar(page);
 
-      const pageTitle = await boModuleManagerPage.getPageTitle(page);
-      expect(pageTitle).to.contains(boModuleManagerPage.pageTitle);
-    });
+      const pageTitle = await boProductSettingsPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
 
-    it(`should search the module ${dataModules.psNewProducts.name}`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchModule', baseContext);
-
-      const isModuleVisible = await boModuleManagerPage.searchModule(page, dataModules.psNewProducts);
-      expect(isModuleVisible).to.eq(true);
-    });
-
-    it(`should go to the configuration page of the module '${dataModules.psNewProducts.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToConfigurationPage', baseContext);
-
-      await boModuleManagerPage.goToConfigurationPage(page, dataModules.psNewProducts.tag);
-
-      const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
-      expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);
-
-      defaultValue = await modPsNewProductsBoMain.getNumDaysConsideredAsNew(page);
+      defaultValue = parseInt(await boProductSettingsPage.getValue(page, 'PS_NB_DAYS_NEW_PRODUCT'), 10);
     });
 
     [
-      {
-        setting: 3,
-        blockIsVisible: true,
-      },
-      {
-        setting: -1,
-        blockIsVisible: false,
-      },
-      {
-        setting: 1000000000,
-        blockIsVisible: false,
-      },
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/35796
-      /*
-      {
-        setting: '1 500',
-        blockIsVisible: false,
-      },
-      */
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/35796
-      /*
-      {
-        setting: 0,
-        blockIsVisible: false,
-      },
-      */
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/35796
-      /*
-      {
-        setting: '@',
-        blockIsVisible: false,
-      },
-      */
-    ].forEach((arg: { setting: number|string, blockIsVisible: boolean }, index: number) => {
-      it(`should change the configuration (${arg.setting}) in the module`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `changeConfiguration${index}`, baseContext);
+      {setting: 3, blockIsVisible: true},
+      {setting: 0, blockIsVisible: false},
+    ].forEach((arg: {setting: number, blockIsVisible: boolean}, index: number) => {
+      it(`should update Number of days to ${arg.setting}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `updateNumberOfDaysTo${arg.setting}${index}`, baseContext);
 
-        const textResult = await modPsNewProductsBoMain.setNumDaysConsideredAsNew(page, arg.setting);
-        expect(textResult).to.contains(modPsNewProductsBoMain.updateSettingsSuccessMessage);
+        const result = await boProductSettingsPage.updateNumberOfDays(page, arg.setting);
+        expect(result).to.contains(boProductSettingsPage.successfulUpdateMessage);
       });
 
-      it('should go to the front office', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToTheFo${index}`, baseContext);
+      it('should view my shop', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
-        page = await modPsNewProductsBoMain.viewMyShop(page);
+        page = await boProductSettingsPage.viewMyShop(page);
         await foHummingbirdHomePage.changeLanguage(page, 'en');
 
         const isHomePage = await foHummingbirdHomePage.isHomePage(page);
@@ -133,20 +82,20 @@ describe('New products block module - Configure settings of "Number of days for 
         expect(hasProductsBlock).to.be.equal(arg.blockIsVisible);
       });
 
-      it('should return to the back office', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `returnToBO${index}`, baseContext);
+      it('should close the page and go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
         page = await foHummingbirdHomePage.closePage(browserContext, page, 0);
 
-        const pageTitle = await modPsNewProductsBoMain.getPageSubtitle(page);
-        expect(pageTitle).to.eq(modPsNewProductsBoMain.pageSubTitle);
+        const pageTitle = await boProductSettingsPage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductSettingsPage.pageTitle);
       });
     });
 
     it('should reset the configuration in the module', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setDefaultValue', baseContext);
 
-      const textResult = await modPsNewProductsBoMain.setNumDaysConsideredAsNew(page, defaultValue);
-      expect(textResult).to.contains(modPsNewProductsBoMain.updateSettingsSuccessMessage);
+      const textResult = await boProductSettingsPage.updateNumberOfDays(page, defaultValue);
+      expect(textResult).to.contains(boProductSettingsPage.successfulUpdateMessage);
     });
   });

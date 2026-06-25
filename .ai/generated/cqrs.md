@@ -1,4 +1,4 @@
-# CQRS Index (generated 2026-04-08)
+# CQRS Index (generated 2026-04-25)
 # 360 commands · 126 queries · 62 top-level domains
 #
 # Sub-domain shown in [brackets] when command/query lives below the top-level domain dir.
@@ -27,8 +27,8 @@
 - DeleteSearchTermAliasesCommand
 - UpdateSearchTermAliasesCommand
 ### Queries
-- GetAliasesBySearchTermForEditing
 - GetAliasForEditing
+- GetAliasesBySearchTermForEditing
 - SearchForSearchTerm
 
 ## ApiClient
@@ -48,9 +48,9 @@
 - DeleteAttachmentCommand
 - EditAttachmentCommand
 ### Queries
+- GetAttachment
 - GetAttachmentForEditing
 - GetAttachmentInformation
-- GetAttachment
 - SearchAttachment
 
 ## AttributeGroup
@@ -306,8 +306,8 @@
 ### Commands
 - AddImageTypeCommand
 - BulkDeleteImageTypeCommand
-- DeleteImagesFromTypeCommand
 - DeleteImageTypeCommand
+- DeleteImagesFromTypeCommand
 - EditImageSettingsCommand
 - EditImageTypeCommand
 - RegenerateThumbnailsCommand
@@ -462,8 +462,8 @@
 - SetProductTagsCommand
 - SetRelatedProductsCommand
 - UpdateProductCommand
-- UpdateProductsPositionsCommand
 - UpdateProductTypeCommand
+- UpdateProductsPositionsCommand
 - RemoveAllCustomizationFieldsFromProductCommand  [Customization]
 - SetProductCustomizationFieldsCommand  [Customization]
 - RemoveAllFeatureValuesFromProductCommand  [FeatureValue]
@@ -506,8 +506,8 @@
 - GetProductForEditing
 - GetProductIsEnabled
 - GetRelatedProducts
-- SearchProductsForAssociation
 - SearchProducts
+- SearchProductsForAssociation
 - GetSpecificPriceForEditing  [SpecificPrice]
 - GetSpecificPriceList  [SpecificPrice]
 - GetCombinationStockMovements  [Stock]
@@ -565,8 +565,8 @@
 - GetShipmentForViewing
 - GetShipmentProducts
 - GetShipmentsForOrderDetail
-- ListAvailableShipmentsForProduct
 - ListAvailableShipments
+- ListAvailableShipmentsForProduct
 
 ## Shop
 ### Commands

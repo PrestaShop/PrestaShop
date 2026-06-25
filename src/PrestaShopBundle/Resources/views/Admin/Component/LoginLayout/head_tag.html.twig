@@ -20,7 +20,7 @@
 {% if this.jsDef %}
   <script type="text/javascript">
     {% for k, def in this.jsDef %}
-    var {{ k }} = {{ def|json_encode|raw }};
+    var {{ k }} = {{ def|json_encode|raw_purified }};
     {% endfor %}
   </script>
 {% endif %}

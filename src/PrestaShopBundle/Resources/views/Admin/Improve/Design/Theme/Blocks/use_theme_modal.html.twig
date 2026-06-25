@@ -4,7 +4,7 @@
  #}
 
 {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
-  id: 'use_theme_modal'
+  id: 'use_theme_modal',
 } %}
   {% block header %}
       <div class="modal-header">
@@ -14,7 +14,7 @@
 
   {% block content %}
     <div class="alert alert-info m-2">
-      {{ 'When applying a new theme to your store, make sure that the modules you are using are still compatible.'|trans({}, 'Admin.Design.Feature')|raw }}
+      {{ 'When applying a new theme to your store, make sure that the modules you are using are still compatible.'|trans({}, 'Admin.Design.Feature') }}
     </div>
   {% endblock %}
 

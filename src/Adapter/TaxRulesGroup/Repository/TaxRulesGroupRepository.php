@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotUpdateStoreException
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\TaxRule\ValueObject\TaxRuleId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
@@ -177,6 +178,48 @@ class TaxRulesGroupRepository extends AbstractMultiShopObjectModelRepository
             CannotUpdateStoreException::class,
             $errorCode
         );
+    }
+
+    /**
+     * Triggers historization if the group is used in orders.
+     * When a group is used, it is duplicated: old group is soft-deleted,
+     * rules are copied to the new group, and product/carrier references are updated.
+     *
+     * @param TaxRulesGroupId $taxRulesGroupId
+     *
+     * @return TaxRulesGroupId the (potentially new) group id
+     */
+    public function historizeIfUsed(TaxRulesGroupId $taxRulesGroupId): TaxRulesGroupId
+    {
+        $taxRulesGroup = $this->get($taxRulesGroupId);
+
+        // TaxRulesGroup::update() handles historization internally:
+        // if the group is used in orders, it duplicates the group and all its rules
+        $taxRulesGroup->update();
+
+        // After update(), the id may have changed if historization occurred
+        return new TaxRulesGroupId((int) $taxRulesGroup->id);
+    }
+
+    /**
+     * After historization, maps an old tax rule id to the new one in the new group.
+     *
+     * @param TaxRulesGroupId $newGroupId the new group id (after historization)
+     * @param TaxRuleId $oldTaxRuleId the old tax rule id
+     *
+     * @return TaxRuleId the remapped tax rule id in the new group
+     */
+    public function remapTaxRuleId(TaxRulesGroupId $newGroupId, TaxRuleId $oldTaxRuleId): TaxRuleId
+    {
+        $taxRulesGroup = $this->get($newGroupId);
+        $newId = (int) $taxRulesGroup->getIdTaxRuleGroupFromHistorizedId($oldTaxRuleId->getValue());
+
+        if ($newId <= 0) {
+            // If no remap is found, the rule was not historized (group wasn't used)
+            return $oldTaxRuleId;
+        }
+
+        return new TaxRuleId($newId);
     }
 
     /**

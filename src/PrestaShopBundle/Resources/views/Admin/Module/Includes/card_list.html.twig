@@ -35,10 +35,10 @@
             class="text-ellipsis module-name-list"
             data-toggle="pstooltip"
             data-placement="top"
-            title="{{ module.attributes.displayName|raw }}"
+            title="{{ module.attributes.displayName }}"
           >
             {% if module.attributes.displayName %}
-              {{ module.attributes.displayName|raw }}
+              {{ module.attributes.displayName|raw_purified }}
 
             {% else %}
               {{ module.attributes.name }}
@@ -49,9 +49,9 @@
           <div class="text-ellipsis small-text">
             {% block addon_version %}
               {% if module.attributes.productType == 'service' %}
-                {{ 'Service by %author%'|trans({'%author%': '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
+                {{ 'Service by %author%'|trans({'%author%': '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw_purified }}
               {% else %}
-                {{ 'v%version% - by %author%'|trans({'%version%': module.attributes.version, '%author%': '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
+                {{ 'v%version% - by %author%'|trans({'%version%': module.attributes.version, '%author%': '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw_purified }}
               {% endif %}
             {% endblock %}
           </div>
@@ -63,14 +63,14 @@
         </div>
         <div class="col-md-8 col-lg-7 scroll-300">
           {% block addon_description %}
-            {{ module.attributes.description|raw }}
+            {{ module.attributes.description|raw_purified }}
             {% if module.attributes.description|length > 0 and module.attributes.description|length < module.attributes.fullDescription|length %}
               ...
             {% endif %}
           {% endblock %}
           {% block addon_additional_description %}
             {% if module.attributes.additional_description is defined %}
-              {{ module.attributes.additional_description|raw }}
+              {{ module.attributes.additional_description|raw_purified }}
             {% endif %}
           {% endblock %}
         </div>

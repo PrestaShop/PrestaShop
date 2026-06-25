@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Mapping\Factory\MetadataFactoryInterface;
  * Resource class, but since the resource carries the constraints the resource needs to be the one validated, so this service
  * is used right before the CQRS object denormalization to validate the input.
  */
-class CQRSApiValidator
+class CQRSApiValidator implements CQRSApiValidatorInterface
 {
     public function __construct(
         protected readonly MetadataFactoryInterface $validatorMetadataFactory,

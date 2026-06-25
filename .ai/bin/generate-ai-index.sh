@@ -5,14 +5,17 @@
 # Output: cqrs.md, routes.md, entities.md, hooks.md
 #
 # Usage:
-#   bash bin/generate-ai-index.sh
-#   bash bin/generate-ai-index.sh --output .ai/generated
+#   bash .ai/bin/generate-ai-index.sh
+#   bash .ai/bin/generate-ai-index.sh --output .ai/generated
 #
 # Design: pure grep/awk/sed — no runtime dependencies beyond bash + coreutils.
 
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Force C locale for deterministic sort order across macOS and Linux
+export LC_ALL=C
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 OUTPUT_DIR="${REPO_ROOT}/.ai/generated"
 TODAY=$(date +%Y-%m-%d)
 
@@ -39,11 +42,32 @@ php_classname() {
         | tr -d '\r' || true
 }
 
+# Replace $final with $tmp atomically only if their content differs modulo the
+# `(generated YYYY-MM-DD)` date line in the header. Avoids pushing date-only diffs.
+finalize_outfile() {
+    local final="$1" tmp="$2" label="$3"
+    local lines
+
+    if [[ -f "$final" ]] && diff -q \
+            <(sed -E 's/\(generated [0-9]{4}-[0-9]{2}-[0-9]{2}\)/(generated DATE)/' "$final") \
+            <(sed -E 's/\(generated [0-9]{4}-[0-9]{2}-[0-9]{2}\)/(generated DATE)/' "$tmp") \
+            > /dev/null 2>&1; then
+        rm -f "$tmp"
+        lines=$(wc -l < "$final" | tr -d ' ')
+        printf "  = %-13s (unchanged, %s lines)\n" "$label" "$lines"
+    else
+        mv -f "$tmp" "$final"
+        lines=$(wc -l < "$final" | tr -d ' ')
+        printf "  ✓ %-13s (%s lines)\n" "$label" "$lines"
+    fi
+}
+
 # ─────────────────────────────────────────────────────────────────────────────
 # 1. cqrs.md — Commands & Queries grouped by domain
 # ─────────────────────────────────────────────────────────────────────────────
 generate_cqrs() {
-    local outfile="$OUTPUT_DIR/cqrs.md"
+    local final="$OUTPUT_DIR/cqrs.md"
+    local outfile="$final.tmp"
     local domain_dir="$REPO_ROOT/src/Core/Domain"
 
     local cmd_count query_count domain_count
@@ -128,14 +152,15 @@ generate_cqrs() {
         if [[ $wrote_domain -eq 1 ]]; then echo "" >> "$outfile"; fi
     done < <(find "$domain_dir" -maxdepth 1 -mindepth 1 -type d | sort)
 
-    echo "  ✓ cqrs.md        ($(wc -l < "$outfile" | tr -d ' ') lines)"
+    finalize_outfile "$final" "$outfile" "cqrs.md"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 2. routes.md — Symfony routes grouped by routing file
 # ─────────────────────────────────────────────────────────────────────────────
 generate_routes() {
-    local outfile="$OUTPUT_DIR/routes.md"
+    local final="$OUTPUT_DIR/routes.md"
+    local outfile="$final.tmp"
     local routing_dir="$REPO_ROOT/src/PrestaShopBundle/Resources/config/routing"
 
     local total_routes
@@ -217,14 +242,15 @@ generate_routes() {
         done <<< "$area_files"
     done
 
-    echo "  ✓ routes.md      ($(wc -l < "$outfile" | tr -d ' ') lines)"
+    finalize_outfile "$final" "$outfile" "routes.md"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 3. entities.md — Doctrine entity properties & relations
 # ─────────────────────────────────────────────────────────────────────────────
 generate_entities() {
-    local outfile="$OUTPUT_DIR/entities.md"
+    local final="$OUTPUT_DIR/entities.md"
+    local outfile="$final.tmp"
     local entity_dir="$REPO_ROOT/src/PrestaShopBundle/Entity"
 
     local entity_count
@@ -250,8 +276,9 @@ generate_entities() {
         columns=$(awk '
             /@ORM\\Column|#\[ORM\\Column/ { in_col=1 }
             in_col && /^[[:space:]]+(private|protected|public)[[:space:]]/ {
-                match($0, /\$([a-zA-Z_][a-zA-Z0-9_]*)/, arr)
-                if (arr[1] != "") printf "%s ", arr[1]
+                if (match($0, /\$[a-zA-Z_][a-zA-Z0-9_]*/)) {
+                    printf "%s ", substr($0, RSTART+1, RLENGTH-1)
+                }
                 in_col=0
             }
         ' "$f")
@@ -262,13 +289,19 @@ generate_entities() {
             /@ORM\\(ManyToOne|OneToMany|ManyToMany|OneToOne)|#\[ORM\\(ManyToOne|OneToMany|ManyToMany|OneToOne)/ {
                 rel_type = $0
                 sub(/.*ORM\\/, "", rel_type); sub(/[\(\[].*/, "", rel_type)
-                # extract targetEntity
+                # extract targetEntity value
                 target = $0
-                if (match(target, /targetEntity[=:][ \t]*["\x27]?([A-Za-z\\]+)["\x27]?/, arr)) {
-                    t = arr[1]; sub(/.*\\/, "", t)
-                    printf "%s→%s ", rel_type, t
-                } else if (match(target, /targetEntity[=:][ \t]*([A-Za-z][A-Za-z0-9_]+)::class/, arr)) {
-                    printf "%s→%s ", rel_type, arr[1]
+                if (match(target, /targetEntity[=:][ \t]*/)) {
+                    val = substr(target, RSTART + RLENGTH)
+                    # strip leading quotes
+                    gsub(/^["'"'"']/, "", val)
+                    # take until non-identifier char (allow backslash for FQCN)
+                    if (match(val, /[A-Za-z\\][A-Za-z0-9_\\]*/)) {
+                        t = substr(val, RSTART, RLENGTH)
+                        sub(/.*\\/, "", t)
+                        sub(/::class$/, "", t)
+                        printf "%s→%s ", rel_type, t
+                    }
                 }
             }
         ' "$f")
@@ -279,23 +312,25 @@ generate_entities() {
         echo "" >> "$outfile"
     done < <(find "$entity_dir" -maxdepth 1 -name "*.php" | sort)
 
-    echo "  ✓ entities.md    ($(wc -l < "$outfile" | tr -d ' ') lines)"
+    finalize_outfile "$final" "$outfile" "entities.md"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 4. hooks.md — Hook names discovered in source
 # ─────────────────────────────────────────────────────────────────────────────
 generate_hooks() {
-    local outfile="$OUTPUT_DIR/hooks.md"
+    local final="$OUTPUT_DIR/hooks.md"
+    local outfile="$final.tmp"
     local src_dir="$REPO_ROOT/src"
 
     # Extract literal hook names passed to dispatch* methods
     # Pattern: dispatchWithParameters('hookName', ...) or dispatchWithParameters("hookName", ...)
+    # Uses sed instead of grep -P for macOS/Linux portability
     local all_hooks
-    all_hooks=$(grep -rh \
-        "dispatchWithParameters\|dispatchRenderingWithParameters\|dispatchHook\b\|dispatchRendering\b" \
+    all_hooks=$(grep -rh -E \
+        "dispatchWithParameters|dispatchRenderingWithParameters|dispatchHook[^a-zA-Z]|dispatchRendering[^a-zA-Z]" \
         "$src_dir" --include="*.php" 2>/dev/null \
-        | grep -oP "(?<=\(')[a-zA-Z][a-zA-Z0-9_]+(?=')|(?<=\")[a-zA-Z][a-zA-Z0-9_]+(?=\")" \
+        | sed -n "s/.*(['\"][[:space:]]*\([a-zA-Z][a-zA-Z0-9_]*\)['\"].*/\1/p" \
         | grep -E "^(action|display|filter|header|footer|Dashboard|leftColumn|rightColumn)" \
         | grep -E "^.{8,}" \
         | sort -u || true)
@@ -303,10 +338,10 @@ generate_hooks() {
     # Also check classes/ legacy dir
     local legacy_hooks=""
     if [[ -d "$REPO_ROOT/classes" ]]; then
-        legacy_hooks=$(grep -rh \
-            "Hook::exec\b\|Hook::execWithoutCache\b" \
+        legacy_hooks=$(grep -rh -E \
+            "Hook::exec[^a-zA-Z]|Hook::execWithoutCache[^a-zA-Z]" \
             "$REPO_ROOT/classes" --include="*.php" 2>/dev/null \
-            | grep -oP "(?<=\(')[a-zA-Z][a-zA-Z0-9_]+(?=')|(?<=\")[a-zA-Z][a-zA-Z0-9_]+(?=\")" \
+            | sed -n "s/.*(['\"][[:space:]]*\([a-zA-Z][a-zA-Z0-9_]*\)['\"].*/\1/p" \
             | grep -E "^(action|display|filter|header|footer|Dashboard|leftColumn|rightColumn)" \
             | grep -E "^.{8,}" \
             | sort -u || true)
@@ -351,7 +386,7 @@ generate_hooks() {
         echo "" >> "$outfile"
     fi
 
-    echo "  ✓ hooks.md       ($(wc -l < "$outfile" | tr -d ' ') lines)"
+    finalize_outfile "$final" "$outfile" "hooks.md"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -378,9 +413,49 @@ sync_skill_symlinks() {
             ln -s "$target" "$link"
             created=$((created + 1))
         fi
-    done < <(find "$REPO_ROOT/.ai" -name "SKILL.md" | sort)
+    done < <(find -L "$REPO_ROOT/.ai" -iname "skill.md" | sort)
 
     echo "  ✓ skill symlinks ($created created, $already already linked)"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 6. discover_module_skills — suggest component associations for module-shipped skills
+# ─────────────────────────────────────────────────────────────────────────────
+discover_module_skills() {
+    local modules_dir="$REPO_ROOT/modules"
+    [[ -d "$modules_dir" ]] || return 0
+
+    local total=0 unattached=0
+    local suggestions=""
+
+    while IFS= read -r skill_md; do
+        local skill_dir skill_name module_path module_name
+        skill_dir="$(dirname "$skill_md")"
+        skill_name="$(basename "$skill_dir")"
+        # extract module dir from: modules/<name>/(.claude|.ai)/skills/<skill_name>/SKILL.md
+        module_path="${skill_dir%/.claude/skills/*}"
+        module_path="${module_path%/.ai/skills/*}"
+        module_name="$(basename "$module_path")"
+
+        total=$((total + 1))
+
+        # Already associated under any .ai/Component/*/skills/<skill_name> symlink?
+        if find "$REPO_ROOT/.ai/Component" -maxdepth 3 -name "$skill_name" -type l 2>/dev/null | grep -q .; then
+            continue
+        fi
+
+        unattached=$((unattached + 1))
+        suggestions+="    - $module_name/$skill_name → consider symlinking under .ai/Component/{?}/skills/$skill_name"$'\n'
+    done < <(find "$modules_dir" -mindepth 4 -maxdepth 5 \
+                  \( -path "*/.claude/skills/*/SKILL.md" -o -path "*/.ai/skills/*/SKILL.md" \) \
+                  -iname "skill.md" 2>/dev/null | sort)
+
+    if [[ $unattached -gt 0 ]]; then
+        echo "  ⚠ module skills  ($total found, $unattached unattached):"
+        printf "%s" "$suggestions"
+    else
+        echo "  ✓ module skills  ($total found, all associated)"
+    fi
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -392,6 +467,7 @@ generate_cqrs
 generate_routes
 generate_entities
 generate_hooks
+discover_module_skills
 sync_skill_symlinks
 
 echo ""

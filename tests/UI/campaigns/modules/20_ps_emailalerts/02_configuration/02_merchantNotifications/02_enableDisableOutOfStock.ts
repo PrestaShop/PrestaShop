@@ -39,7 +39,7 @@ Post-condition:
 - Reset SMTP parameters
 - Delete created products
  */
-describe('Mail alerts module - Enable/Disable out of stock', async () => {
+describe('Mail alerts module - Merchant notifications : Enable/Disable out of stock', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let newMail: MailDevEmail;

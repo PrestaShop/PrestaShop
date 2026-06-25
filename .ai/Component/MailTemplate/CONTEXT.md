@@ -25,7 +25,3 @@ Infrastructure for discovering, rendering, and transforming transactional email 
 - `src/Adapter/MailTemplate/MailTemplateTwigRenderer.php`
 - `src/Core/MailTemplate/Transformation/CSSInlineTransformation.php`
 
-## Related
-
-- [Hook Component](../Hook/CONTEXT.md) — `actionListMailThemes` and `actionGetMailLayoutTransformations`
-- [Twig Component](../Twig/CONTEXT.md) — renderer uses the Twig environment

@@ -23,7 +23,7 @@
         {% for product in cartView.cartSummary.products %}
           {% if product.customization is not empty %}
             <tr>
-              <td>{{ product.image|raw }}</td>
+              <td>{{ product.image|raw_purified }}</td>
               <td>
                 <a href="{{ path('admin_products_edit', {productId: product.id}) }}">
                   {{ product.name }}
@@ -80,7 +80,7 @@
 
           {% if product.customization is empty %}
             <tr>
-              <td>{{ product.image|raw }}</td>
+              <td>{{ product.image|raw_purified }}</td>
               <td>
                 <a href="{{ path('admin_products_edit', {productId: product.id}) }}">
                   {{ product.name }}
@@ -161,7 +161,7 @@
               <td>
                 <a href="{{ getAdminLink('AdminCartRules', true, {
                   id_cart_rule: cartRule.id,
-                  updatecart_rule: 1
+                  updatecart_rule: 1,
                 }) }}">
                   {{ cartRule.name }}
                 </a>

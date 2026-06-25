@@ -206,6 +206,7 @@ class AdminReturnControllerCore extends AdminController
     public function postProcess()
     {
         $this->context = Context::getContext();
+        // Delete
         if (Tools::isSubmit('deleteorder_return_detail')) {
             if ($this->access('delete')) {
                 if (($id_order_detail = (int) Tools::getValue('id_order_detail')) && Validate::isUnsignedId($id_order_detail)) {
@@ -242,6 +243,12 @@ class AdminReturnControllerCore extends AdminController
                     $orderReturn->state = (int) Tools::getValue('state');
                     if ($orderReturn->save()) {
                         $orderReturnState = new OrderReturnState($orderReturn->state);
+                        // Cancel Returns if cancellable
+                        if ($orderReturnState->is_cancelling_return === true) {
+                            OrderReturn::setCancelledStatus((int) $id_order_return, true);
+                        }
+
+                        // Send email
                         $vars = [
                             '{lastname}' => $customer->lastname,
                             '{firstname}' => $customer->firstname,

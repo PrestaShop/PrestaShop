@@ -20,6 +20,12 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 abstract class ProductListingFrontControllerCore extends ProductPresentingFrontController
 {
     /**
+     * This variable is used to cache the result of "getProductSearchVariables", which
+     * is an expensive method that should not be called twice during the same request.
+     */
+    private $productSearchVariablesCache = null;
+
+    /**
      * Generates an URL to a product listing controller
      * with only the essential query params and page remaining.
      *
@@ -274,6 +280,11 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      */
     protected function getProductSearchVariables()
     {
+        // If we've already done the work, no need to do it again
+        if ($this->productSearchVariablesCache !== null) {
+            return $this->productSearchVariablesCache;
+        }
+
         /*
          * To render the page we need to find something (a ProductSearchProviderInterface)
          * that knows how to query products.
@@ -422,6 +433,9 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         Hook::exec('filterProductSearch', ['searchVariables' => &$searchVariables]);
         Hook::exec('actionProductSearchAfter', $searchVariables);
 
+        // Cache the result in case it's needed later during the same request
+        $this->productSearchVariablesCache = $searchVariables;
+
         return $searchVariables;
     }
 
@@ -559,6 +573,55 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         }
 
         return $page;
+    }
+
+    /**
+     * Generates structured data for the current listing, extending the default ones.
+     *
+     * @return array
+     */
+    public function getStructuredData(): array
+    {
+        $structuredData = parent::getStructuredData();
+
+        // Prepare the new key
+        $structuredData['itemlist'] = [
+            '@context' => 'https://schema.org/',
+            '@type' => 'ItemList',
+            'itemListElement' => [],
+        ];
+
+        // Get search data
+        $variables = $this->getProductSearchVariables();
+
+        // Fill the itemListElement with the products of the listing
+        if (!empty($variables['products']) && is_array($variables['products'])) {
+            $index = 0;
+            foreach ($variables['products'] as $product) {
+                $structuredData['itemlist']['itemListElement'][] = [
+                    '@type' => 'ListItem',
+                    'position' => $index + 1,
+                    'name' => $product['name'],
+                    'url' => $product['url'],
+                ];
+                ++$index;
+            }
+        }
+
+        // Fill total count
+        if (isset($variables['pagination']['total_items'])) {
+            $structuredData['itemlist']['numberOfItems'] = $variables['pagination']['total_items'];
+        }
+
+        // Fill label name
+        if (isset($variables['label'])) {
+            $structuredData['itemlist']['name'] = $variables['label'];
+        }
+
+        // Fill canonical URL of this listing
+        $structuredData['itemlist']['url'] = $this->getCanonicalURL();
+
+        return $structuredData;
     }
 
     /**

@@ -241,6 +241,12 @@ $('#cart_rule_form').on('submit', () => {
     $(`#${restrictions[i]}_select_2 option`).each(function (i) {
       $(this).prop('selected', true);
     });
+
+    if (restrictions[i] === 'cart_rule') {
+      $(`#cart_rule_select_1 option`).each(function (i) {
+        $(this).prop('selected', true);
+      });
+    }
   }
 
   $('.product_rule_toselect option').each(function (i) {

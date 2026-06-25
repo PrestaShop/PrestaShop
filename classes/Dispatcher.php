@@ -147,7 +147,11 @@ class DispatcherCore
     /**
      * @var array Store empty route (a route with an empty rule)
      */
-    protected $empty_route;
+    protected $empty_route = [
+        'routeID' => 'index',
+        'rule' => '',
+        'controller' => 'index',
+    ];
 
     /**
      * @var string Set default controller, which will be used if http parameter 'controller' is empty
@@ -326,23 +330,31 @@ class DispatcherCore
     {
         $controller_class = '';
 
-        // Get current controller
+        // Resolve controller name from request (URL, routes, GET parameters etc.)
         $this->getController();
+
+        // If no controller was resolved, fallback to default controller (index or admin dashboard)
         if (!$this->controller) {
             $this->controller = $this->useDefaultController();
         }
-        // Execute hook dispatcher before
+
+        // Execute hook dispatcher before - good for logging, setting very basic environment things
         Hook::exec('actionDispatcherBefore', ['controller_type' => $this->front_controller]);
 
         // Dispatch with right front controller
         switch ($this->front_controller) {
             // Dispatch front office controller
             case self::FC_FRONT:
+                // Load all available front controllers (core + overrides)
                 $controllers = Dispatcher::getControllers([
                     _PS_FRONT_CONTROLLER_DIR_,
                     _PS_OVERRIDE_DIR_ . 'controllers/front/',
                 ]);
+
+                // Ensure index controller is always available
                 $controllers['index'] = 'IndexController';
+
+                // Backward compatibility aliases
                 if (isset($controllers['auth'])) {
                     $controllers['authentication'] = $controllers['auth'];
                 }
@@ -350,9 +362,12 @@ class DispatcherCore
                     $controllers['contactform'] = $controllers['contact'];
                 }
 
+                // If controller does not exist, fallback to 404
                 if (!isset($controllers[strtolower($this->controller)])) {
                     $this->controller = $this->controller_not_found;
                 }
+
+                // Resolve final controller class
                 $controller_class = $controllers[strtolower($this->controller)];
                 $params_hook_action_dispatcher = [
                     'controller_type' => self::FC_FRONT,
@@ -364,19 +379,29 @@ class DispatcherCore
 
                 // Dispatch module controller for front office
             case self::FC_MODULE:
+                // Validate and retrieve module name
                 $module_name = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
                 $module = Module::getInstanceByName($module_name);
+
+                // Default fallback controller
                 $controller_class = 'PageNotFoundController';
+
+                // Only proceed if module exists and is active
                 if (Validate::isLoadedObject($module) && $module->active) {
+                    // Load module controllers
                     $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . "$module_name/controllers/front/");
                     if (isset($controllers[strtolower($this->controller)])) {
+                        // Include base controller file
                         include_once _PS_MODULE_DIR_ . "$module_name/controllers/front/{$this->controller}.php";
+
+                        // If override exists, load it and use override class and it's naming convention
                         if (file_exists(
                             _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php"
                         )) {
                             include_once _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php";
                             $controller_class = $module_name . $this->controller . 'ModuleFrontControllerOverride';
                         } else {
+                            // Otherwise use default module controller class naming convention
                             $controller_class = $module_name . $this->controller . 'ModuleFrontController';
                         }
                     }
@@ -391,6 +416,7 @@ class DispatcherCore
 
                 // Dispatch back office controller + module back office controller
             case self::FC_ADMIN:
+                // Redirect to default controller with token if needed
                 if ($this->use_default_controller
                     && !Tools::getValue('token')
                     && Validate::isLoadedObject(Context::getContext()->employee)
@@ -401,10 +427,12 @@ class DispatcherCore
                     );
                 }
 
+                // Load tab (menu item) associated with controller
                 $tab = Tab::getInstanceFromClassName($this->controller, (int) Configuration::get('PS_LANG_DEFAULT'));
 
                 if ($tab->module) {
                     $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . $tab->module . '/controllers/admin/');
+                    // Controller not found, we fallback to admin 404
                     if (!isset($controllers[strtolower($this->controller)])) {
                         $this->controller = $this->controller_not_found;
                         $controller_class = 'AdminNotFoundController';
@@ -412,6 +440,8 @@ class DispatcherCore
                         $controller_name = $controllers[strtolower($this->controller)];
                         // Controllers in modules can be named AdminXXX.php or AdminXXXController.php
                         include_once _PS_MODULE_DIR_ . "{$tab->module}/controllers/admin/$controller_name.php";
+
+                        // Include override if exists
                         if (file_exists(
                             _PS_OVERRIDE_DIR_ . "modules/{$tab->module}/controllers/admin/$controller_name.php"
                         )) {
@@ -438,6 +468,8 @@ class DispatcherCore
                             _PS_OVERRIDE_DIR_ . 'controllers/admin/',
                         ]
                     );
+
+                    // If controller does not exist
                     if (!isset($controllers[strtolower($this->controller)])) {
                         // If this is a parent tab, load the first child
                         if (Validate::isLoadedObject($tab)
@@ -571,7 +603,26 @@ class DispatcherCore
          */
 
         /*
-         * Step 2 - Module routes
+         * Step 2 - Initialize default routes into $this->routes that will get used.
+         *
+         * This takes each default route we have until now and calls computeRoute upon each route.
+         * This enriches the route by a final regex and strips not needed keywords. Then, we add it
+         * to route list of each language.
+         */
+        foreach ($this->default_routes as $routeName => $routeDefinition) {
+            $computedRoute = $this->computeRoute(
+                $routeDefinition['rule'],
+                $routeDefinition['controller'],
+                $routeDefinition['keywords'],
+                isset($routeDefinition['params']) ? $routeDefinition['params'] : []
+            );
+            foreach ($language_ids as $id_lang) {
+                $this->routes[$id_shop][$id_lang][$routeName] = $computedRoute;
+            }
+        }
+
+        /*
+         * Step 3 - Module routes
          *
          * Loads custom routes from modules for given shop. Beware that these routes are not multilanguage,
          * passed routes will be the same for each language of the shop.
@@ -584,38 +635,21 @@ class DispatcherCore
         if (is_array($modules_routes) && count($modules_routes)) {
             foreach ($modules_routes as $module_route) {
                 if (is_array($module_route) && count($module_route)) {
-                    foreach ($module_route as $route => $route_details) {
-                        if (array_key_exists('controller', $route_details)
-                            && array_key_exists('rule', $route_details)
-                            && array_key_exists('keywords', $route_details)
-                            && array_key_exists('params', $route_details)
-                        ) {
-                            if (!isset($this->default_routes[$route])) {
-                                $this->default_routes[$route] = [];
+                    foreach ($module_route as $routeName => $routeDefinition) {
+                        if (array_key_exists('controller', $routeDefinition) && array_key_exists('rule', $routeDefinition) && array_key_exists('keywords', $routeDefinition)) {
+                            $computedRoute = $this->computeRoute(
+                                $routeDefinition['rule'],
+                                $routeDefinition['controller'],
+                                $routeDefinition['keywords'],
+                                $routeDefinition['params'] ?? []
+                            );
+
+                            foreach ($language_ids as $id_lang) {
+                                $this->routes[$id_shop][$id_lang][$routeName] = $computedRoute;
                             }
-                            $this->default_routes[$route] = array_merge($this->default_routes[$route], $route_details);
                         }
                     }
                 }
-            }
-        }
-
-        /*
-         * Step 3 - Initialize default routes into $this->routes that will get used.
-         *
-         * This takes each default route we have until now and calls computeRoute upon each route.
-         * This enriches the route by a final regex and strips not needed keywords. Then, we add it
-         * to route list of each language.
-         */
-        foreach ($this->default_routes as $id => $route) {
-            $route = $this->computeRoute(
-                $route['rule'],
-                $route['controller'],
-                $route['keywords'],
-                isset($route['params']) ? $route['params'] : []
-            );
-            foreach ($language_ids as $id_lang) {
-                $this->routes[$id_shop][$id_lang][$id] = $route;
             }
         }
 
@@ -644,16 +678,6 @@ class DispatcherCore
                 }
             }
 
-            // Set default empty route if no empty route (that's weird I know).
-            // Should probably be set as default value in the constructor in 9.0.0.
-            if (!$this->empty_route) {
-                $this->empty_route = [
-                    'routeID' => 'index',
-                    'rule' => '',
-                    'controller' => 'index',
-                ];
-            }
-
             /*
              * Step 5 - Custom routes set in ps_configurations. Those are configured product, category,
              * cms etc. rules that you can configure in SEO & URL section in the backoffice.
@@ -662,16 +686,16 @@ class DispatcherCore
              * It probably would not be difficult to make them multilanguage, if route was stored in configuration
              * for each language.
              */
-            foreach ($this->default_routes as $route_id => $route_data) {
-                if ($custom_route = Configuration::get('PS_ROUTE_' . $route_id, null, null, $id_shop)) {
-                    $route = $this->computeRoute(
-                        $custom_route,
-                        $route_data['controller'],
-                        $route_data['keywords'],
-                        isset($route_data['params']) ? $route_data['params'] : []
+            foreach ($this->default_routes as $routeName => $routeDefinition) {
+                if ($customRouteRule = Configuration::get('PS_ROUTE_' . $routeName, null, null, $id_shop)) {
+                    $computedRoute = $this->computeRoute(
+                        $customRouteRule,
+                        $routeDefinition['controller'],
+                        $routeDefinition['keywords'],
+                        isset($routeDefinition['params']) ? $routeDefinition['params'] : []
                     );
                     foreach ($language_ids as $id_lang) {
-                        $this->routes[$id_shop][$id_lang][$route_id] = $route;
+                        $this->routes[$id_shop][$id_lang][$routeName] = $computedRoute;
                     }
                 }
             }
@@ -686,7 +710,10 @@ class DispatcherCore
     }
 
     /**
-     * Create the route array, by computing the final regex & keywords.
+     * Create the route array, by computing the final regex & keywords. The method takes a "human readable"
+     * rule line {id}-{rewrite} and transforms it into a regular expression that will be used to match URLs.
+     * Also, it transforms keywords into a more structured array with all the information about them (regexp,
+     * param, prepend, append, required).
      *
      * @param string $rule Url rule
      * @param string $controller Controller to call if request uri match the rule
@@ -697,31 +724,45 @@ class DispatcherCore
      */
     public function computeRoute($rule, $controller, array $keywords = [], array $params = [])
     {
+        // Basic starting rule of this route, we escape it to have a safe regex base to work with
         $regexp = preg_quote($rule, '#');
+
+        // If the rule contains dynamic parameters like {id}, {rewrite}, we will replace them
+        // by regex groups.
         if ($keywords) {
-            $transform_keywords = [];
+            $transformedKeywords = [];
+
+            // We find all occurrences of {something} in the escaped string
             preg_match_all(
                 '#\\\{(([^{}]*)\\\:)?(' .
                 implode('|', array_keys($keywords)) . ')(\\\:([^{}]*))?\\\}#',
                 $regexp,
                 $m
             );
+
+            // For each found placeholder ({id}, {rewrite}, ...)
             for ($i = 0, $total = count($m[0]); $i < $total; ++$i) {
                 $prepend = $m[2][$i];
                 $keyword = $m[3][$i];
                 $append = $m[5][$i];
-                $transform_keywords[$keyword] = [
+
+                // We prepare metadata for this keyword
+                $transformedKeywords[$keyword] = [
+                    'regexp' => $keywords[$keyword]['regexp'],
+                    'param' => $keywords[$keyword]['param'] ?? null,
                     'required' => isset($keywords[$keyword]['param']),
                     'prepend' => stripslashes($prepend),
                     'append' => stripslashes($append),
                 ];
 
+                // If the keyword has a prefix/suffix, we need to wrap it into an optional group
                 $prepend_regexp = $append_regexp = '';
                 if ($prepend || $append) {
                     $prepend_regexp = '(' . $prepend;
                     $append_regexp = $append . ')?';
                 }
 
+                // If the keyword has a defined "param", we use a named group (?P<name>), otherwise a regular capture group
                 if (isset($keywords[$keyword]['param'])) {
                     $regexp = str_replace(
                         $m[0][$i],
@@ -740,7 +781,9 @@ class DispatcherCore
                     );
                 }
             }
-            $keywords = $transform_keywords;
+
+            // And we rewrite keywords to transformed structure
+            $keywords = $transformedKeywords;
         }
 
         /*
@@ -756,22 +799,28 @@ class DispatcherCore
             $regexp .= '/?';
         }
 
-        // Add some static rules to the regexp for all routes
+        /*
+         * We wrap it into a final complete regex.
+         * ^ start of string
+         * / because all URLs start with a slash
+         * $ end of string
+         * u = unicode modifier
+         */
         $regexp = '#^/' . $regexp . '$#u';
 
         return [
-            'rule' => $rule,
-            'regexp' => $regexp,
             'controller' => $controller,
+            'rule' => $rule,
             'keywords' => $keywords,
             'params' => $params,
+            'regexp' => $regexp,
         ];
     }
 
     /**
      * Adds a new route to the list of routes. If it already exists, it will override the existing one.
      *
-     * @param string $route_id Name of the route
+     * @param string $routeName Name of the route
      * @param string $rule Url rule
      * @param string $controller Controller to call if request uri match the rule
      * @param int $id_lang
@@ -780,7 +829,7 @@ class DispatcherCore
      * @param int $id_shop
      */
     public function addRoute(
-        $route_id,
+        $routeName,
         $rule,
         $controller,
         $id_lang = null,
@@ -798,7 +847,7 @@ class DispatcherCore
             $id_shop = (int) $context->shop->id;
         }
 
-        $route = $this->computeRoute($rule, $controller, $keywords, $params);
+        $computedRoute = $this->computeRoute($rule, $controller, $keywords, $params);
 
         if (!isset($this->routes[$id_shop])) {
             $this->routes[$id_shop] = [];
@@ -807,7 +856,7 @@ class DispatcherCore
             $this->routes[$id_shop][$id_lang] = [];
         }
 
-        $this->routes[$id_shop][$id_lang][$route_id] = $route;
+        $this->routes[$id_shop][$id_lang][$routeName] = $computedRoute;
     }
 
     /**
@@ -859,11 +908,11 @@ class DispatcherCore
     /**
      * Removes a route from a list of processed routes.
      *
-     * @param string $route_id Name of the route
+     * @param string $routeName Name of the route
      * @param int $id_lang
      * @param int $id_shop
      */
-    public function removeRoute($route_id, $id_lang = null, $id_shop = null)
+    public function removeRoute($routeName, $id_lang = null, $id_shop = null)
     {
         $context = Context::getContext();
 
@@ -875,21 +924,21 @@ class DispatcherCore
             $id_shop = (int) $context->shop->id;
         }
 
-        if (isset($this->routes[$id_shop][$id_lang][$route_id])) {
-            unset($this->routes[$id_shop][$id_lang][$route_id]);
+        if (isset($this->routes[$id_shop][$id_lang][$routeName])) {
+            unset($this->routes[$id_shop][$id_lang][$routeName]);
         }
     }
 
     /**
      * Check if a route exists.
      *
-     * @param string $route_id
+     * @param string $routeName
      * @param int $id_lang
      * @param int $id_shop
      *
      * @return bool
      */
-    public function hasRoute($route_id, $id_lang = null, $id_shop = null)
+    public function hasRoute($routeName, $id_lang = null, $id_shop = null)
     {
         if (isset(Context::getContext()->language) && $id_lang === null) {
             $id_lang = (int) Context::getContext()->language->id;
@@ -902,20 +951,20 @@ class DispatcherCore
             $this->loadRoutes($id_shop);
         }
 
-        return isset($this->routes[$id_shop][$id_lang][$route_id]);
+        return isset($this->routes[$id_shop][$id_lang][$routeName]);
     }
 
     /**
      * Check if a keyword is written in a route rule.
      *
-     * @param string $route_id
+     * @param string $routeName
      * @param int $id_lang
      * @param string $keyword
      * @param int $id_shop
      *
      * @return bool
      */
-    public function hasKeyword($route_id, $id_lang, $keyword, $id_shop = null)
+    public function hasKeyword($routeName, $id_lang, $keyword, $id_shop = null)
     {
         if ($id_shop === null) {
             $id_shop = (int) Context::getContext()->shop->id;
@@ -925,46 +974,52 @@ class DispatcherCore
             $this->loadRoutes($id_shop);
         }
 
-        if (!isset($this->routes[$id_shop]) || !isset($this->routes[$id_shop][$id_lang])
-            || !isset($this->routes[$id_shop][$id_lang][$route_id])) {
+        if (!isset($this->routes[$id_shop]) || !isset($this->routes[$id_shop][$id_lang]) || !isset($this->routes[$id_shop][$id_lang][$routeName])) {
             return false;
         }
 
         return preg_match('#\{([^{}]*:)?' . preg_quote($keyword, '#') .
-            '(:[^{}]*)?\}#', $this->routes[$id_shop][$id_lang][$route_id]['rule']);
+            '(:[^{}]*)?\}#', $this->routes[$id_shop][$id_lang][$routeName]['rule']);
     }
 
     /**
-     * Check if a route rule contain all required keywords and if all keywords exist for default route definition.
+     * Check if a route rule contains all required keywords and if all keywords exist.
+     * Supports all native routes specified in $this->default_routes.
      *
-     * @param string $route_id
+     * @param string $routeName
      * @param string $rule Rule to verify
      * @param array $errors List of missing or unknown keywords
      *
      * @return bool
      */
-    public function validateRoute($route_id, $rule, &$errors = [])
+    public function validateRoute($routeName, $rule, &$errors = [])
     {
         $errors = [
             'missing' => [],
             'unknown' => [],
         ];
-        if (!isset($this->default_routes[$route_id])) {
+
+        // If no route like this exist, nothing to validate and we mark it as a fail
+        if (!isset($this->default_routes[$routeName])) {
             return false;
         }
 
+        // Get all keywords from the rule
         preg_match_all('/\{(?:\/:)?([\w_]+)\}/', $rule, $matches);
         $found_keywords = $matches[1];
 
-        $expected_keywords = array_keys($this->default_routes[$route_id]['keywords']);
+        // Get expected keywords from the rule definition
+        $expected_keywords = array_keys($this->default_routes[$routeName]['keywords']);
 
+        // Check for additional keywords
         foreach ($found_keywords as $keyword) {
             if (!in_array($keyword, $expected_keywords)) {
                 $errors['unknown'][] = $keyword;
             }
         }
 
-        foreach ($this->default_routes[$route_id]['keywords'] as $keyword => $data) {
+        // Check for missing keywords or malformed ones
+        foreach ($this->default_routes[$routeName]['keywords'] as $keyword => $data) {
             if (isset($data['param']) && !preg_match('#\{([^{}]*:)?' . $keyword . '(:[^{}]*)?\}#', $rule)) {
                 $errors['missing'][] = $keyword;
             }
@@ -976,7 +1031,7 @@ class DispatcherCore
     /**
      * Create an url from.
      *
-     * @param string $route_id Name the route
+     * @param string $routeName Name the route
      * @param int $id_lang
      * @param array $params
      * @param bool $force_routes
@@ -988,7 +1043,7 @@ class DispatcherCore
      * @throws PrestaShopException
      */
     public function createUrl(
-        $route_id,
+        $routeName,
         $id_lang = null,
         array $params = [],
         $force_routes = false,
@@ -1006,39 +1061,41 @@ class DispatcherCore
             $this->loadRoutes($id_shop);
         }
 
-        if (!isset($this->routes[$id_shop][$id_lang][$route_id])) {
+        // If no route like this exists, we return a link to homepage
+        if (!isset($this->routes[$id_shop][$id_lang][$routeName])) {
             $query = http_build_query($params, '', '&');
             $index_link = $this->use_routes ? '' : 'index.php';
 
-            return ($route_id == 'index') ? $index_link . (($query) ? '?' . $query : '') :
-                ((trim($route_id) == '') ? '' : $index_link . '?controller=' . $route_id) . (($query) ? '&' . $query : '') . $anchor;
+            return ($routeName == 'index') ? $index_link . (($query) ? '?' . $query : '') :
+                ((trim($routeName) == '') ? '' : $index_link . '?controller=' . $routeName) . (($query) ? '&' . $query : '') . $anchor;
         }
-        $route = $this->routes[$id_shop][$id_lang][$route_id];
-        // Check required fields
-        $query_params = isset($route['params']) ? $route['params'] : [];
-        foreach ($route['keywords'] as $key => $data) {
+
+        // Get the computed route definition
+        $routeDefinition = $this->routes[$id_shop][$id_lang][$routeName];
+
+        // Check required parameters we need to include in the URL
+        $query_params = isset($routeDefinition['params']) ? $routeDefinition['params'] : [];
+        foreach ($routeDefinition['keywords'] as $keyword => $data) {
             if (!$data['required']) {
                 continue;
             }
 
-            if (!array_key_exists($key, $params)) {
-                throw new PrestaShopException('Dispatcher::createUrl() miss required parameter "' . $key . '" for route "' . $route_id . '"');
+            // If the keyword is required for the URL and it was NOT provided, we cannot continue
+            if (!array_key_exists($keyword, $params)) {
+                throw new PrestaShopException('Dispatcher::createUrl() miss required parameter "' . $keyword . '" for route "' . $routeName . '"');
             }
-            if (isset($this->default_routes[$route_id])) {
-                $query_params[$this->default_routes[$route_id]['keywords'][$key]['param']] = $params[$key];
-            }
+
+            $query_params[$data['param']] = $params[$keyword];
         }
 
         // Build an url which match a route
         if ($this->use_routes || $force_routes) {
-            $url = $route['rule'];
+            $url = $routeDefinition['rule'];
             $add_param = [];
 
             foreach ($params as $key => $value) {
-                if (!isset($route['keywords'][$key])) {
-                    if (!isset($this->default_routes[$route_id]['keywords'][$key])) {
-                        $add_param[$key] = $value;
-                    }
+                if (!isset($routeDefinition['keywords'][$key])) {
+                    $add_param[$key] = $value;
                 } else {
                     if ($params[$key]) {
                         $parameter = $params[$key];
@@ -1050,7 +1107,7 @@ class DispatcherCore
                                 $parameter = reset($parameter);
                             }
                         }
-                        $replace = $route['keywords'][$key]['prepend'] . $parameter . $route['keywords'][$key]['append'];
+                        $replace = $routeDefinition['keywords'][$key]['prepend'] . $parameter . $routeDefinition['keywords'][$key]['append'];
                     } else {
                         $replace = '';
                     }
@@ -1065,14 +1122,14 @@ class DispatcherCore
             // Build a classic url index.php?controller=foo&...
             $add_params = [];
             foreach ($params as $key => $value) {
-                if (!isset($route['keywords'][$key]) && !isset($this->default_routes[$route_id]['keywords'][$key])) {
+                if (!isset($routeDefinition['keywords'][$key])) {
                     $add_params[$key] = $value;
                 }
             }
 
             // Add controller to parameters if not present
-            if (!empty($route['controller'])) {
-                $query_params['controller'] = $route['controller'];
+            if (!empty($routeDefinition['controller'])) {
+                $query_params['controller'] = $routeDefinition['controller'];
             }
 
             // Build final parameters, add language if needed
@@ -1161,8 +1218,8 @@ class DispatcherCore
                 list($uri) = explode('?', $this->request_uri);
 
                 if (isset($this->routes[$id_shop][Context::getContext()->language->id])) {
-                    foreach ($this->routes[$id_shop][Context::getContext()->language->id] as $route) {
-                        if (preg_match($route['regexp'], $uri, $m)) {
+                    foreach ($this->routes[$id_shop][Context::getContext()->language->id] as $routeDefinition) {
+                        if (preg_match($routeDefinition['regexp'], $uri, $m)) {
                             // Route found ! Now fill $_GET with parameters of uri
                             foreach ($m as $k => $v) {
                                 if (!is_numeric($k)) {
@@ -1170,9 +1227,9 @@ class DispatcherCore
                                 }
                             }
 
-                            $controller = $route['controller'] ? $route['controller'] : $_GET['controller'];
-                            if (!empty($route['params'])) {
-                                foreach ($route['params'] as $k => $v) {
+                            $controller = $routeDefinition['controller'] ? $routeDefinition['controller'] : $_GET['controller'];
+                            if (!empty($routeDefinition['params'])) {
+                                foreach ($routeDefinition['params'] as $k => $v) {
                                     $_GET[$k] = $v;
                                 }
                             }

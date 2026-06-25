@@ -31,7 +31,7 @@ Manages the full product catalog lifecycle: creation, updates, duplication, comb
 
 - [CQRS Component](../../Component/CQRS/CONTEXT.md)
 - [Cart Domain](../Cart/CONTEXT.md) — references `ProductId` via `AddProductToCartCommand`
-- [Forms Component](../../Component/Forms/CONTEXT.md) — `ProductFormDataHandler`, `ProductCommandsBuilder`
+- [Forms — CRUD pattern](../../Component/Forms/CRUD.md) — `ProductFormDataHandler`, `ProductCommandsBuilder`
 - [Grid Component](../../Component/Grid/CONTEXT.md) — `ProductGridDefinitionFactory`
 - [DevDocs](https://devdocs.prestashop-project.org/9/development/page-reference/back-office/catalog/products/)
 - `tests/Integration/Behaviour/Features/Scenario/Product/` — Behat behavior scenarios

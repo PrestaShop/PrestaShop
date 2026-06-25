@@ -11,7 +11,6 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use PrestaShopBundle\Entity\Shipment;
-use Throwable;
 
 class ShipmentRepository extends EntityRepository
 {
@@ -89,6 +88,21 @@ class ShipmentRepository extends EntityRepository
         return $this->findOneBy(['id' => $shipmentId, 'deleted' => false]);
     }
 
+    /**
+     * @param int[] $shipmentIds
+     *
+     * @return Shipment[]
+     */
+    public function findByIds(array $shipmentIds): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.id IN (:ids)')
+            ->andWhere('s.deleted = false')
+            ->setParameter('ids', $shipmentIds)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByCarrierId(int $carrierId): array
     {
         return $this->findBy(['carrierId' => $carrierId, 'deleted' => false]);
@@ -149,39 +163,30 @@ class ShipmentRepository extends EntityRepository
         int $orderId,
         int $orderDetailId
     ): void {
-        $conn = $this->getEntityManager()->getConnection();
-
-        // Delete shipment products
-        $conn->createQueryBuilder()
-            ->delete($this->tablePrefix . 'shipment_product')
-            ->where('id_order_detail = :orderDetailId')
-            ->andWhere(
-                'id_shipment IN (
-                    SELECT id_shipment FROM ' . $this->tablePrefix . 'shipment WHERE id_order = :orderId
-                )'
-            )
-            ->setParameter('orderDetailId', $orderDetailId)
-            ->setParameter('orderId', $orderId)
-            ->executeStatement();
+        $shipments = $this->findByOrderId($orderId);
+        foreach ($shipments as $shipment) {
+            foreach ($shipment->getProducts() as $product) {
+                if ($product->getOrderDetailId() === $orderDetailId) {
+                    $shipment->removeProduct($product);
+                }
+            }
+            if ($shipment->getProducts()->isEmpty()) {
+                $shipment->setDeleted(true);
+            }
+        }
+        $this->getEntityManager()->flush();
     }
 
     public function deleteEmptyShipmentByOrder(
         int $orderId,
     ): void {
-        $conn = $this->getEntityManager()->getConnection();
-
-        // Soft delete empty shipments
-        $conn->createQueryBuilder()
-            ->update($this->tablePrefix . 'shipment')
-            ->set('deleted', '1')
-            ->where('id_order = :orderId')
-            ->andWhere(
-                'id_shipment NOT IN (
-                    SELECT DISTINCT id_shipment FROM ' . $this->tablePrefix . 'shipment_product
-                )'
-            )
-            ->setParameter('orderId', $orderId)
-            ->executeStatement();
+        $shipments = $this->findByOrderId($orderId);
+        foreach ($shipments as $shipment) {
+            if ($shipment->getProducts()->isEmpty()) {
+                $shipment->setDeleted(true);
+            }
+        }
+        $this->getEntityManager()->flush();
     }
 
     public function updateShipmentProductQuantity(
@@ -189,51 +194,26 @@ class ShipmentRepository extends EntityRepository
         int $orderDetailId,
         int $quantity
     ): void {
-        $conn = $this->getEntityManager()->getConnection();
-
-        $conn->beginTransaction();
-
-        try {
-            if ($quantity <= 0) {
-                $conn->createQueryBuilder()
-                    ->delete($this->tablePrefix . 'shipment_product')
-                    ->where('id_shipment = :shipmentId')
-                    ->andWhere('id_order_detail = :orderDetailId')
-                    ->setParameter('shipmentId', $shipmentId)
-                    ->setParameter('orderDetailId', $orderDetailId)
-                    ->executeStatement();
-            } else {
-                $conn->createQueryBuilder()
-                    ->update($this->tablePrefix . 'shipment_product')
-                    ->set('quantity', ':quantity')
-                    ->where('id_shipment = :shipmentId')
-                    ->andWhere('id_order_detail = :orderDetailId')
-                    ->setParameter('quantity', $quantity)
-                    ->setParameter('shipmentId', $shipmentId)
-                    ->setParameter('orderDetailId', $orderDetailId)
-                    ->executeStatement();
-            }
-
-            $remainingProducts = $conn->createQueryBuilder()
-                ->select('COUNT(*)')
-                ->from($this->tablePrefix . 'shipment_product')
-                ->where('id_shipment = :shipmentId')
-                ->setParameter('shipmentId', $shipmentId)
-                ->fetchOne();
-
-            if ((int) $remainingProducts === 0) {
-                $conn->createQueryBuilder()
-                    ->update($this->tablePrefix . 'shipment')
-                    ->set('deleted', '1')
-                    ->where('id_shipment = :shipmentId')
-                    ->setParameter('shipmentId', $shipmentId)
-                    ->executeStatement();
-            }
-
-            $conn->commit();
-        } catch (Throwable $e) {
-            $conn->rollBack();
-            throw $e;
+        $shipment = $this->findById($shipmentId);
+        if (!$shipment) {
+            return;
         }
+
+        foreach ($shipment->getProducts() as $product) {
+            if ($product->getOrderDetailId() === $orderDetailId) {
+                if ($quantity <= 0) {
+                    $shipment->removeProduct($product);
+                } else {
+                    $product->setQuantity($quantity);
+                }
+                break;
+            }
+        }
+
+        if ($shipment->getProducts()->isEmpty()) {
+            $shipment->setDeleted(true);
+        }
+
+        $this->getEntityManager()->flush();
     }
 }

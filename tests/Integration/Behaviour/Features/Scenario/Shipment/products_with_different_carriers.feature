@@ -84,11 +84,12 @@ Feature: Product associated with different carriers
       | location | dtc |
     And I assign product saucisson with following carriers:
       | saucisson_carrier |
-    Then product saucisson should have following shipping information:
+    And product "saucisson" should have following shipping information:
       | carriers | [saucisson_carrier] |
     And I enable product "saucisson"
+    And shop configuration for "PS_ORDER_RECALCULATE_SHIPPING" is set to 1
 
-  Scenario: Retrieve shipments for existing order
+  Scenario: Order products with different carriers and manage shipments (split, merge, delete)
     Given I create an empty cart "dummy_cart" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 1 products "bottle of beer" to the cart "dummy_cart"
@@ -104,6 +105,9 @@ Feature: Product associated with different carriers
       | shipment  | carrier           | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
       | shipment1 | beer_carrier      |                 | US      | 5.0                    | 5.3                   |
       | shipment2 | saucisson_carrier |                 | US      | 10.0                   | 10.6                  |
+    And order "bo_order1" should have the following shipping totals:
+      | total_shipping_tax_excl | 15.0 |
+      | total_shipping_tax_incl | 15.9 |
     Then the shipment "shipment1" should have the following products:
       | product_name   | quantity |
       | bottle of beer | 1        |
@@ -112,7 +116,7 @@ Feature: Product associated with different carriers
       | product_name | quantity |
       | saucisson    | 2        |
 
-  Scenario: Retrieve available shipments for merge action
+    # Retrieve available shipments for merge action
     Then order "bo_order1" should get available shipments for product "bottle of beer":
       | shipment_name                  | can_handle_merge |
       | Shipment 1 Beer carrier        | 1             |
@@ -122,9 +126,17 @@ Feature: Product associated with different carriers
       | Shipment 1 Beer carrier        | 0             |
       | Shipment 2 Saucisson carrier   | 1             |
 
-  Scenario: Splitting a shipment
-    Given I create carrier "pickup_carrier" with specified properties:
+    # Splitting a shipment
+    When I create carrier "pickup_carrier" with specified properties:
       | name | Pickup |
+      | active         | true          |
+      | shippingMethod | price         |
+      | zones          | north_america |
+      | shippingHandling          | false |
+    Then I set ranges for carrier "pickup_carrier" with specified properties for all shops:
+      | id_zone       | range_from | range_to | range_price |
+      | north_america | 0          | 1000     | 3           |
+    When I set tax rule "us-fl-tax-rate" for carrier "pickup_carrier"
     And I assign product "saucisson" with following carriers:
       | pickup_carrier |
     And I split the shipment "shipment2" to create a new shipment with "pickup_carrier" with following products:
@@ -134,18 +146,26 @@ Feature: Product associated with different carriers
       | product_name | quantity |
       | saucisson    | 1        |
     And the order "bo_order1" should have "3" shipments:
+    And the order "bo_order1" should have the following shipments:
+      | shipment  | carrier           | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | beer_carrier      |                 | US      | 5.0                    | 5.3                   |
+      | shipment2 | saucisson_carrier |                 | US      | 10.0                   | 10.6                  |
+      | shipment3 | pickup_carrier    |                 | US      | 3.0                    | 3.18                  |
+    And order "bo_order1" should have the following shipping totals:
+      | total_shipping_tax_excl | 18.0 |
+      | total_shipping_tax_incl | 19.08 |
     Then the shipment "shipment3" should have the following products:
       | product_name | quantity |
       | saucisson    | 1        |
 
-  Scenario: Retrieve shipments for order detail
+    # Retrieve shipments for order detail
     Then the product "saucisson" in the order "bo_order1" is linked to shipments:
       | shipment | quantity |
       | shipment2 |       1 |
       | shipment3 |       1 |
 
-  Scenario: Merge product into a shipment with specified quantity
-    Given I merge product from "shipment2" into "shipment1" with following information:
+    # Merge product into a shipment with specified quantity
+    When I merge product from "shipment2" into "shipment1" with following information:
       | product_name | quantity |
       | saucisson    | 1        |
     Then the shipment "shipment1" should have the following products:
@@ -153,13 +173,17 @@ Feature: Product associated with different carriers
       | bottle of beer | 1        |
       | bottle of sparking water | 2        |
       | saucisson      | 1        |
-    And the shipment "shipment2" should have the following products:
-      | product_name   | quantity |
-      | saucisson      | 1        |
     And the shipment "shipment2" should be deleted
+    And the order "bo_order1" should have the following shipments:
+      | shipment  | carrier           | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | beer_carrier      |                 | US      | 5.0                    | 5.3                   |
+      | shipment3 | pickup_carrier    |                 | US      | 3.0                    | 3.18                  |
+    And order "bo_order1" should have the following shipping totals:
+      | total_shipping_tax_excl | 8.0 |
+      | total_shipping_tax_incl | 8.48 |
 
-  Scenario: Merge product into a shipment with full quantity
-    Given I merge product from "shipment3" into "shipment1" with following information:
+    # Merge product into a shipment with full quantity
+    When I merge product from "shipment3" into "shipment1" with following information:
       | product_name | quantity |
       | saucisson    | 1        |
     Then the shipment "shipment1" should have the following products:
@@ -167,23 +191,30 @@ Feature: Product associated with different carriers
       | bottle of beer | 1        |
       | bottle of sparking water | 2        |
       | saucisson      | 2        |
-    And the shipment "shipment2" should be deleted
+    And the shipment "shipment3" should be deleted
+    And the order "bo_order1" should have the following shipments:
+      | shipment  | carrier           | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | beer_carrier      |                 | US      | 5.0                    | 5.3                   |
+    And order "bo_order1" should have the following shipping totals:
+      | total_shipping_tax_excl | 5.0 |
+      | total_shipping_tax_incl | 5.3 |
 
-  Scenario: Retrieve available shipments for merge action
+    # Retrieve available shipments for merge action
     Then order "bo_order1" should get available shipments for product "bottle of beer":
       | shipment_name                  | can_handle_merge |
       | Shipment 1 Beer carrier        | 1             |
-      | Shipment 2 Saucisson carrier   | 0             |
     Then order "bo_order1" should get available shipments for product "saucisson":
       | shipment_name                  | can_handle_merge |
       | Shipment 1 Beer carrier        | 0             |
-      | Shipment 2 Saucisson carrier   | 1             |
 
-  Scenario: Delete product from a existing shipment:
+    # Delete product from a existing shipment
     When I remove product from the shipment "shipment1" with following properties:
-    | product_name |
-    | bottle of beer |
+      | product_name |
+      | bottle of beer |
     Then the shipment "shipment1" should have the following products:
-    | product_name | quantity |
-    |  bottle of sparking water   |     2    |
-    |  saucisson   |     2    |
+      | product_name | quantity |
+      |  bottle of sparking water   |     2    |
+      |  saucisson   |     2    |
+    And order "bo_order1" should have the following shipping totals:
+      | total_shipping_tax_excl | 5.0 |
+      | total_shipping_tax_incl | 5.3 |

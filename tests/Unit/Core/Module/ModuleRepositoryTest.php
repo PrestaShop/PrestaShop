@@ -44,6 +44,8 @@ class ModuleRepositoryTest extends TestCase
         'bankwire',
     ];
 
+    private const MODULE_COUNT = 12;
+
     /** @var ModuleRepository */
     private $moduleRepository;
 
@@ -69,7 +71,7 @@ class ModuleRepositoryTest extends TestCase
 
     public function testGetList(): void
     {
-        $this->assertCount(10, $this->moduleRepository->getList());
+        $this->assertCount(self::MODULE_COUNT, $this->moduleRepository->getList());
     }
 
     public function testGetInstalledModules(): void

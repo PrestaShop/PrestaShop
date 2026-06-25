@@ -31,7 +31,7 @@ Add delivery address
 Set the same address for delivery and invoice
 Finish the order
 */
-describe('FO - Checkout - Addresses: Use same invoice address', async () => {
+describe('FO - Checkout - Addresses - Guest checkout : Use same invoice address', async () => {
   // Create faker data
   const guestData: FakerCustomer = new FakerCustomer({password: ''});
   const newAddress: FakerAddress = new FakerAddress({country: 'France'});

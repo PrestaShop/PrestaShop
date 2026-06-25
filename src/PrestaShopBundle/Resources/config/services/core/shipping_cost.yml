@@ -1,0 +1,63 @@
+services:
+  _defaults:
+    public: false
+    autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Provider\CarrierDataProvider: ~
+
+  PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Provider\ConfigFreeShippingCriteriaProvider: ~
+
+  PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Provider\ShippingTaxRateProvider: ~
+
+  PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Provider\CarrierDataProviderInterface:
+    alias: PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Provider\CarrierDataProvider
+
+  PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Provider\FreeShippingCriteriaProviderInterface:
+    alias: PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Provider\ConfigFreeShippingCriteriaProvider
+
+  PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Provider\ShippingTaxRateProviderInterface:
+    alias: PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Provider\ShippingTaxRateProvider
+
+  PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Calculator\ZoneResolutionCalculator:
+    tags:
+      - { name: 'prestashop.carrier.shipping_cost_calculator', priority: 900 }
+
+  PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Calculator\CarrierDataCalculator:
+    tags:
+      - { name: 'prestashop.carrier.shipping_cost_calculator', priority: 800 }
+
+  PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Calculator\FreeShippingCalculator:
+    tags:
+      - { name: 'prestashop.carrier.shipping_cost_calculator', priority: 600 }
+
+  PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Calculator\BaseRangeCostCalculator:
+    tags:
+      - { name: 'prestashop.carrier.shipping_cost_calculator', priority: 500 }
+
+  PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Calculator\HandlingCostCalculator:
+    tags:
+      - { name: 'prestashop.carrier.shipping_cost_calculator', priority: 300 }
+
+  PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Calculator\CurrencyConversionCalculator:
+    tags:
+      - { name: 'prestashop.carrier.shipping_cost_calculator', priority: 200 }
+
+  PrestaShop\PrestaShop\Adapter\Carrier\ShippingCost\Calculator\TaxCalculator:
+    tags:
+      - { name: 'prestashop.carrier.shipping_cost_calculator', priority: 100 }
+
+  PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Calculator\WeightCalculator:
+    tags:
+      - { name: 'prestashop.carrier.shipping_cost_calculator', priority: 700 }
+
+  PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Calculator\AdditionalProductCostCalculator:
+    tags:
+      - { name: 'prestashop.carrier.shipping_cost_calculator', priority: 400 }
+
+  prestashop.carrier.shipping_cost.pipeline:
+    class: PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Calculator\ShippingCostCalculator
+    arguments:
+      $calculators: !tagged_iterator { tag: 'prestashop.carrier.shipping_cost_calculator' }
+
+  PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Calculator\ShippingCostCalculatorInterface:
+    alias: prestashop.carrier.shipping_cost.pipeline

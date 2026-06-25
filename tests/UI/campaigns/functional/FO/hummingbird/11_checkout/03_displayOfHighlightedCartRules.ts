@@ -125,7 +125,7 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount3', baseContext);
 
       const discount: number = parseFloat(cartRuleWithCodeData.discountAmount!.value.toString());
-      const totalAfterPromoCode: number = dataProducts.demo_6.combinations[0].price - discount;
+      const totalAfterPromoCode: number = dataProducts.demo_6.combinations[0].priceTI - discount;
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
       expect(priceATI).to.equal(parseFloat(totalAfterPromoCode.toFixed(2)));
@@ -152,7 +152,7 @@ describe('FO - Checkout : Display of highlighted cart rule', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalWithoutDiscount', baseContext);
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
-      expect(priceATI).to.equal(dataProducts.demo_6.combinations[0].price);
+      expect(priceATI).to.equal(dataProducts.demo_6.combinations[0].priceTI);
     });
   });
 

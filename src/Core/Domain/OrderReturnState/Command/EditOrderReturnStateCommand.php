@@ -35,6 +35,8 @@ class EditOrderReturnStateCommand
      */
     private $color;
 
+    private ?bool $isCancellingReturn = null;
+
     /**
      * @param int $orderReturnStateId
      */
@@ -87,5 +89,17 @@ class EditOrderReturnStateCommand
         $this->color = $color;
 
         return $this;
+    }
+
+    public function setCancellingReturn(?bool $isCancellingReturn): self
+    {
+        $this->isCancellingReturn = $isCancellingReturn;
+
+        return $this;
+    }
+
+    public function isCancellingReturn(): ?bool
+    {
+        return $this->isCancellingReturn;
     }
 }

@@ -40,7 +40,12 @@
       <trans-unit id="05c176b8092b42c554d570513026207c">
         <source>Cannot adapt theme to RTL languages.</source>
         <target>Cannot adapt theme to RTL languages.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 504]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 509]</note>
+      </trans-unit>
+      <trans-unit id="febd6362f6c35dbaf3f7297a2bbb7427">
+        <source>Cannot download the theme from the given URL. Please check the URL and try again.</source>
+        <target>Cannot download the theme from the given URL. Please check the URL and try again.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 447]</note>
       </trans-unit>
       <trans-unit id="8b772dad7cc4ed15eaf0c433f861e55c">
         <source>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</source>
@@ -50,7 +55,7 @@
       <trans-unit id="c402321a8e5818b776007e8a2d00474a">
         <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
         <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
-        <note>File: classes/controller/FrontController.php [Line: 264]</note>
+        <note>File: classes/controller/FrontController.php [Line: 265]</note>
       </trans-unit>
       <trans-unit id="01d51bf7619b2c4c234be88fa06ac16b">
         <source>Delete the images linked to this image setting</source>
@@ -60,7 +65,7 @@
       <trans-unit id="2cca9f161ea0cc1102ad4be82b15cbfb">
         <source>Failed to delete theme. Make sure you have permissions and theme is not used.</source>
         <target>Failed to delete theme. Make sure you have permissions and theme is not used.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 487]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php [Line: 492]</note>
       </trans-unit>
       <trans-unit id="985b5b995c4574ae5eba2062a13ef168">
         <source>Failed to resize image file (%filepath%)</source>

@@ -28,7 +28,6 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
 
   let numberOfWebserviceKeys: number = 0;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -66,9 +65,7 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
     await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
     numberOfWebserviceKeys = await boWebservicesPage.resetAndGetNumberOfLines(page);
-    if (numberOfWebserviceKeys !== 0) {
-      expect(numberOfWebserviceKeys).to.be.above(0);
-    }
+    expect(numberOfWebserviceKeys).to.be.greaterThanOrEqual(0);
   });
 
   // 1 - Create 11 webservice keys
@@ -103,56 +100,48 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
 
   // 2 - Filter
   describe('Filter webservice table', async () => {
-    const testsFilter = [
+    [
       {
-        args: {
-          identifier: 'filterByKey',
-          filterType: 'input',
-          filterBy: 'key',
-          filterValue: 'JYGPBFGYHXAP3J6BV42C27ABLW7XJC16',
-        },
+        identifier: 'filterByKey',
+        filterType: 'input',
+        filterBy: 'key',
+        filterValue: 'JYGPBFGYHXAP3J6BV42C27ABLW7XJC16',
       },
       {
-        args: {
-          identifier: 'filterByDescription',
-          filterType: 'input',
-          filterBy: 'description',
-          filterValue: 'todelete2',
-        },
+        identifier: 'filterByDescription',
+        filterType: 'input',
+        filterBy: 'description',
+        filterValue: 'todelete2',
       },
       {
-        args: {
-          identifier: 'filterByStatus',
-          filterType: 'select',
-          filterBy: 'active',
-          filterValue: '1',
-        },
+        identifier: 'filterByStatus',
+        filterType: 'select',
+        filterBy: 'active',
+        filterValue: '1',
       },
-    ];
-
-    testsFilter.forEach((
-      test: {args: {identifier: string, filterType: string, filterBy: string, filterValue: string, }},
+    ].forEach((
+      test: {identifier: string, filterType: string, filterBy: string, filterValue: string, },
       index: number,
     ) => {
-      it(`should filter list by ${test.args.filterBy}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
+      it(`should filter list by ${test.filterBy}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.identifier, baseContext);
 
         await boWebservicesPage.filterWebserviceTable(
           page,
-          test.args.filterType,
-          test.args.filterBy,
-          test.args.filterValue,
+          test.filterType,
+          test.filterBy,
+          test.filterValue,
         );
 
         const numberOfElementAfterFilter = await boWebservicesPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfElementAfterFilter; i++) {
-          if (test.args.filterBy === 'active') {
+          if (test.filterBy === 'active') {
             const wenServiceStatus = await boWebservicesPage.getStatus(page, i);
-            expect(wenServiceStatus).to.equal(test.args.filterValue === '1');
+            expect(wenServiceStatus).to.equal(test.filterValue === '1');
           } else {
-            const textColumn = await boWebservicesPage.getTextColumnFromTable(page, i, test.args.filterBy);
-            expect(textColumn).to.contains(test.args.filterValue);
+            const textColumn = await boWebservicesPage.getTextColumnFromTable(page, i, test.filterBy);
+            expect(textColumn).to.contains(test.filterValue);
           }
         }
       });
@@ -199,24 +188,22 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
 
   // 4 - Sort webservice keys table
   describe('Sort webservice keys table', async () => {
-    const sortTests = [
-      {args: {testIdentifier: 'sortByKeyDesc', sortBy: 'key', sortDirection: 'desc'}},
-      {args: {testIdentifier: 'sortByEnabledAsc', sortBy: 'active', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByEnabledDesc', sortBy: 'active', sortDirection: 'desc'}},
-      {args: {testIdentifier: 'sortByKeyAsc', sortBy: 'key', sortDirection: 'asc'}},
-    ];
+    [
+      {testIdentifier: 'sortByKeyDesc', sortBy: 'key', sortDirection: 'desc'},
+      {testIdentifier: 'sortByEnabledAsc', sortBy: 'active', sortDirection: 'asc'},
+      {testIdentifier: 'sortByEnabledDesc', sortBy: 'active', sortDirection: 'desc'},
+      {testIdentifier: 'sortByKeyAsc', sortBy: 'key', sortDirection: 'asc'},
+    ].forEach((test: {testIdentifier: string, sortBy: string, sortDirection: string}) => {
+      it(`should sort by '${test.sortBy}' '${test.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
-    sortTests.forEach((test: {args: {testIdentifier: string, sortBy: string, sortDirection: string}}) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+        const nonSortedTable = await boWebservicesPage.getAllRowsColumnContent(page, test.sortBy);
+        await boWebservicesPage.sortTable(page, test.sortBy, test.sortDirection);
 
-        const nonSortedTable = await boWebservicesPage.getAllRowsColumnContent(page, test.args.sortBy);
-        await boWebservicesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
-
-        const sortedTable = await boWebservicesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await boWebservicesPage.getAllRowsColumnContent(page, test.sortBy);
         const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
-        if (test.args.sortDirection === 'asc') {
+        if (test.sortDirection === 'asc') {
           expect(sortedTable).to.deep.equal(expectedResult);
         } else {
           expect(sortedTable).to.deep.equal(expectedResult.reverse());
@@ -232,8 +219,13 @@ describe('BO - Advanced Parameters - Webservice : Filter, Sort and pagination we
 
       await boWebservicesPage.filterWebserviceTable(page, 'input', 'description', 'todelete');
 
-      const key = await boWebservicesPage.getTextColumnFromTable(page, 1, 'description');
-      expect(key).to.contains('todelete');
+      const numberOfWebserviceKeysAfterFilter = await boWebservicesPage.getNumberOfElementInGrid(page);
+      expect(numberOfWebserviceKeysAfterFilter).to.be.greaterThanOrEqual(11);
+
+      for (let i = 1; i <= numberOfWebserviceKeysAfterFilter; i++) {
+        const key = await boWebservicesPage.getTextColumnFromTable(page, i, 'description');
+        expect(key).to.contains('todelete');
+      }
     });
 
     it('should delete webservice keys created', async function () {

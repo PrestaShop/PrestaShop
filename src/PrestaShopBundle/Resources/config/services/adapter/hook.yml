@@ -13,6 +13,19 @@ services:
   PrestaShop\PrestaShop\Adapter\Hook\QueryHandler\GetHookHandler:
     autoconfigure: true
 
+  PrestaShop\PrestaShop\Adapter\Hook\CommandHandler\HookModuleCommandHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Hook\CommandHandler\EditHookedModuleCommandHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Hook\QueryHandler\GetPossibleHooksForModuleHandler:
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Hook\FormDataProvider\HookModuleFormDataProvider:
+    autowire: true
+    autoconfigure: true
+
   PrestaShop\PrestaShop\Adapter\HookManager: ~
 
   prestashop.adapter.hook.manager:

@@ -738,19 +738,17 @@ describe('BO - Dashboard : Activity overview', async () => {
       const isConfigureFormVisible = await boDashboardPage.clickOnConfigureActivityOverviewLink(page);
       expect(isConfigureFormVisible).to.eq(true);
 
-      this.skip();
-
       const numActiveCarts = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'active_cart'), 10);
-      expect(numActiveCarts).to.equals(45);
+      expect(numActiveCarts).to.equals(30);
 
       const numOnlineVisitor = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'online_visitor'), 10);
-      expect(numOnlineVisitor).to.equals(45);
+      expect(numOnlineVisitor).to.equals(30);
 
       const numAbandonedCartMin = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'abandoned_cart_min'), 10);
-      expect(numAbandonedCartMin).to.equals(12);
+      expect(numAbandonedCartMin).to.equals(24);
 
       const numAbandonedCartMax = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'abandoned_cart_max'), 10);
-      expect(numAbandonedCartMax).to.equals(96);
+      expect(numAbandonedCartMax).to.equals(48);
     });
 
     it('should reset the form', async function () {
@@ -770,16 +768,16 @@ describe('BO - Dashboard : Activity overview', async () => {
       expect(isConfigureFormVisible).to.eq(true);
 
       const numActiveCarts = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'active_cart'), 10);
-      expect(numActiveCarts).to.equals(30);
+      expect(numActiveCarts).to.equals(45);
 
       const numOnlineVisitor = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'online_visitor'), 10);
-      expect(numOnlineVisitor).to.equals(30);
+      expect(numOnlineVisitor).to.equals(45);
 
       const numAbandonedCartMin = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'abandoned_cart_min'), 10);
-      expect(numAbandonedCartMin).to.equals(24);
+      expect(numAbandonedCartMin).to.equals(12);
 
       const numAbandonedCartMax = parseInt(await boDashboardPage.getFormActivityOverviewValue(page, 'abandoned_cart_max'), 10);
-      expect(numAbandonedCartMax).to.equals(48);
+      expect(numAbandonedCartMax).to.equals(96);
     });
   });
 

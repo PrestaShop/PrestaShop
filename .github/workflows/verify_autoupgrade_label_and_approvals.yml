@@ -43,7 +43,7 @@ jobs:
           echo $PR_AUTHOR > ./author
 
       - name: Upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: approval_count
           path: |

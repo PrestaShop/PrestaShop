@@ -1,0 +1,15 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% set legacyBaseLayout = lightDisplay|default(false) ? 'light_display_layout.tpl' : 'layout.tpl' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  {{ include('@PrestaShop/Admin/Improve/International/TaxRulesGroup/Blocks/tax_rule_form.html.twig', {taxRuleForm: taxRuleForm, taxRulesGroupId: taxRulesGroupId}) }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/tax_rules_form.bundle.js') }}"></script>
+{% endblock %}

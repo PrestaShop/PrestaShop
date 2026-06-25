@@ -90,7 +90,7 @@
       <trans-unit id="c91e596246bbf8fdff9dae7b349d71d9">
         <source>Carrier name</source>
         <target>Carrier name</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 45]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 46]</note>
       </trans-unit>
       <trans-unit id="ba44d024ba9eec02cc432a36dcffb9d9">
         <source>Carrier name:</source>
@@ -180,7 +180,7 @@
       <trans-unit id="920bd1fb6d54c93fca528ce941464225">
         <source>Group access</source>
         <target>Group access</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 111]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 124]</note>
       </trans-unit>
       <trans-unit id="2605fbb693837be42d0cd0e701cb5aa3">
         <source>Handling</source>
@@ -310,7 +310,7 @@
       <trans-unit id="8e6c64a901e609a97351f999949d90d3">
         <source>Please upload a valid jpeg file</source>
         <target>Please upload a valid jpeg file</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 94]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 107]</note>
       </trans-unit>
       <trans-unit id="2ae7cf0472e9c76dee8c098e635b4c87">
         <source>Price (VAT excl.)</source>
@@ -375,7 +375,7 @@
       <trans-unit id="c8b462f779749d2e27abed2e9501b2bd">
         <source>Speed grade</source>
         <target>Speed grade</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 65]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 78]</note>
       </trans-unit>
       <trans-unit id="4b78ac8eb158840e9638a3aeb26c4a9d">
         <source>Tax</source>
@@ -385,7 +385,7 @@
       <trans-unit id="f39b85edce7f4e450d01829da2b70c44">
         <source>The file is too large. Allowed maximum size is 8MB.</source>
         <target>The file is too large. Allowed maximum size is 8MB.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 95]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 108]</note>
       </trans-unit>
       <trans-unit id="97ebdb829cbe654346e6218c60990c03">
         <source>The lighter the cheaper!</source>
@@ -415,7 +415,7 @@
       <trans-unit id="0979779c4569141b98591d326d343ec2">
         <source>Tracking URL</source>
         <target>Tracking URL</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 101]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 114]</note>
       </trans-unit>
       <trans-unit id="5068c162a60b5859f973f701333f45c5">
         <source>Tracking number</source>
@@ -425,7 +425,7 @@
       <trans-unit id="dde695268ea519ababd83f0ca3d274fc">
         <source>Transit time</source>
         <target>Transit time</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 53]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/GeneralSettings.php [Line: 59]</note>
       </trans-unit>
       <trans-unit id="07018153f387118b1dacafee609f13b1">
         <source>Will be applied when the price is</source>

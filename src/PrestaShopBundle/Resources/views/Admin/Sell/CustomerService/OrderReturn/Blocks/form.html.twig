@@ -1,0 +1,126 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% form_theme orderReturnForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{{ form_start(orderReturnForm) }}
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">person</i>
+    {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }}
+  </h3>
+
+  <div class="card-body">
+    <div class="form-wrapper">
+      {{ form_widget(orderReturnForm) }}
+    </div>
+
+    {% block order_return_products %}
+      {% if orderReturnProducts is defined %}
+        <div class="form-group">
+          <label class="form-control-label">
+            {{ 'Products'|trans({}, 'Admin.Global') }}
+          </label>
+          <div class="col-sm">
+            <table class="table" data-role="order-return-products">
+              <thead>
+                <tr>
+                  <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
+                  <th>{{ 'Product name'|trans({}, 'Admin.Global') }}</th>
+                  <th class="text-center">{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
+                  <th class="text-center">{{ 'Action'|trans({}, 'Admin.Global') }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for product in orderReturnProducts %}
+                  <tr
+                    data-role="order-return-product-row"
+                    data-order-detail-id="{{ product.orderDetailId }}"
+                    data-customization-id="{{ product.customizationId }}"
+                    data-is-customization="{{ product.isCustomization ? '1' : '0' }}"
+                  >
+                    <td>{{ product.reference }}</td>
+                    <td>{{ product.productName }}</td>
+                    <td class="text-center">{{ product.quantity }}</td>
+                    <td class="text-center">
+                      <button
+                        type="button"
+                        class="btn btn-link text-danger p-0"
+                        data-role="order-return-delete-product"
+                        data-toggle="pstooltip"
+                        title="{{ 'Delete'|trans({}, 'Admin.Actions') }}"
+                      >
+                        <i class="material-icons">delete</i>
+                      </button>
+                    </td>
+                  </tr>
+                {% else %}
+                  <tr>
+                    <td colspan="4" class="text-center text-muted">
+                      {{ 'No records found'|trans({}, 'Admin.Global') }}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      {% endif %}
+    {% endblock %}
+  </div>
+
+  <div class="card-footer">
+    <a href="{{ path('admin_merchandise_returns_index') }}" class="btn btn-outline-secondary">
+      {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+    </a>
+
+    {% if orderReturnId is defined and orderReturnStateId is defined and pdfDownloadStateId is defined and orderReturnStateId == pdfDownloadStateId %}
+      <a
+        href="{{ path('admin_order_returns_pdf', {orderReturnId: orderReturnId}) }}"
+        class="btn btn-outline-secondary ml-2"
+        data-role="order-return-download-pdf"
+      >
+        <i class="material-icons">picture_as_pdf</i>
+        {{ 'Download PDF'|trans({}, 'Admin.Actions') }}
+      </a>
+    {% endif %}
+
+    <button type="submit" name="submitAddorder_returnAndStay" class="btn btn-outline-primary float-right ml-2">
+      {{ 'Save and stay'|trans({}, 'Admin.Actions') }}
+    </button>
+
+    <button type="submit" class="btn btn-primary float-right">
+      {{ 'Save'|trans({}, 'Admin.Actions') }}
+    </button>
+  </div>
+</div>
+{{ form_end(orderReturnForm) }}
+
+{# Delayed-delete confirmation modal (Issue #27628). The modal stages the deletion in the #}
+{# hidden form field above; the row is only persisted on the main "Save" submit. #}
+<div class="modal fade" id="orderReturnDeleteProductModal" tabindex="-1" role="dialog" aria-hidden="true" data-role="order-return-delete-product-modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ 'Delete product'|trans({}, 'Admin.Actions') }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{{ 'This product will be removed from the merchandise return when you save the page.'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+        <p class="text-muted small mb-0">{{ 'No change is persisted until you click Save.'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </button>
+        <button type="button" class="btn btn-danger" data-role="order-return-confirm-delete-product">
+          {{ 'Delete'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

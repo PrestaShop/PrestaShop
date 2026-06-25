@@ -20,7 +20,7 @@
       <p>{{ 'Order %orderid% was created from this cart on %orderdate%.'|trans({}, 'Admin.Orderscustomers.Feature')|replace({
         '%orderid%': '<a href="' ~ path('admin_orders_view', {orderId: cartView.orderInformation.id}) ~ '">#' ~ cartView.orderInformation.id|format('"%06d') ~ '</a>',
         '%orderdate%': cartView.orderInformation.placed_date,
-      })|raw }}</p>
+      })|raw_purified }}</p>
 
       <a href="{{ path('admin_orders_view', {orderId: cartView.orderInformation.id}) }}" class="btn btn-primary">
         <i class="material-icons">remove_red_eye</i>

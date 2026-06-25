@@ -1,0 +1,33 @@
+# Weekly cron that opens "merge up" PRs for each configured (source -> target)
+# pair by delegating to create-merge-pr.yml. The matrix is the single place
+# where active branch pairs are declared; add a new entry when a new stable
+# branch is opened (e.g. {source: 9.2.x, target: develop}).
+#
+# Also exposes workflow_dispatch so the full matrix can be triggered on demand.
+
+name: Cron create merge PRs
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-merge-pr:
+    name: Merge ${{ matrix.pair.source }} into ${{ matrix.pair.target }}
+    strategy:
+      fail-fast: false
+      matrix:
+        pair:
+          - source: 9.1.x
+            target: develop
+    uses: ./.github/workflows/create-merge-pr.yml
+    with:
+      source_branch: ${{ matrix.pair.source }}
+      target_branch: ${{ matrix.pair.target }}
+      fail_on_empty: false
+    secrets: inherit

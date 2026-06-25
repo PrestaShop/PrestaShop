@@ -105,12 +105,12 @@
       <trans-unit id="c68f674c6a04b2f75537e41318706b5c">
         <source>Add a note on this customer. It will only be visible to you.</source>
         <target>Add a note on this customer. It will only be visible to you.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/PrivateNoteType.php [Line: 44]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/PrivateNoteType.php [Line: 45]</note>
       </trans-unit>
       <trans-unit id="536f22a9d3cc691b4893dc895050c26e">
         <source>Add a note on this order. It will only be visible to you.</source>
         <target>Add a note on this order. It will only be visible to you.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/InternalNoteType.php [Line: 46]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Order/InternalNoteType.php [Line: 47]</note>
       </trans-unit>
       <trans-unit id="a7136d956fbff49c3912e44722dbf000">
         <source>Add a private note</source>
@@ -185,7 +185,7 @@
       <trans-unit id="6e55ad8db6699476d8901b3d439963cb">
         <source>Allowed outstanding amount</source>
         <target>Allowed outstanding amount</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 320]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 325]</note>
       </trans-unit>
       <trans-unit id="064591b2672fd61bdbdb4043ba5303a6">
         <source>Amount spent:</source>
@@ -435,7 +435,7 @@
       <trans-unit id="a3858e268ef19d7ec44b4e849a189a69">
         <source>Default customer group</source>
         <target>Default customer group</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 283]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 288]</note>
       </trans-unit>
       <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
         <source>Delay</source>
@@ -505,7 +505,7 @@
       <trans-unit id="6184e421976bbb88c6f0a3390e203145">
         <source>Edit customer</source>
         <target>Edit customer</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 1067]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 1071]</note>
       </trans-unit>
       <trans-unit id="71e2851d86b252a44c658b896c486921">
         <source>Edit note</source>
@@ -670,7 +670,7 @@
       <trans-unit id="920bd1fb6d54c93fca528ce941464225">
         <source>Group access</source>
         <target>Group access</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 273]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 278]</note>
       </trans-unit>
       <trans-unit id="a37ede293936e29279ed543129451ec3">
         <source>Groups</source>
@@ -784,7 +784,7 @@ Best regards,</target>
       <trans-unit id="5e5914912e8d2f2765525840acf98bea">
         <source>Last visit</source>
         <target>Last visit</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 805]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 809]</note>
       </trans-unit>
       <trans-unit id="a39ee61626da77cb9644fa972a8ac5b5">
         <source>Latest Update</source>
@@ -824,7 +824,7 @@ Best regards,</target>
       <trans-unit id="a7f50f36de1e47026a07b40670b50e1a">
         <source>Maximum number of payment days</source>
         <target>Maximum number of payment days</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 333]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 338]</note>
       </trans-unit>
       <trans-unit id="95923cff2ad4637372adcdf25e4581f8">
         <source>Meaning of status</source>
@@ -894,7 +894,7 @@ Best regards,</target>
       <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">
         <source>Newsletter</source>
         <target>Newsletter</target>
-        <note>File: modules/ps_emailsubscription/ps_emailsubscription.php [Line: 1431]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 264]</note>
       </trans-unit>
       <trans-unit id="d7eb752a5f38ab96a8dcf110aeb9f8b3">
         <source>Newsletter Registrations</source>
@@ -1199,7 +1199,7 @@ Best regards,</target>
       <trans-unit id="0f98b7f230f3c91292f0de4c99e263f2">
         <source>Registration</source>
         <target>Registration</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 804]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 808]</note>
       </trans-unit>
       <trans-unit id="97ce2ccb5de5849fd94203a375054378">
         <source>Registration Date</source>
@@ -1289,7 +1289,7 @@ Best regards,</target>
       <trans-unit id="b5228365ac1cae42b64aa5aecee6cf25">
         <source>Risk rating</source>
         <target>Risk rating</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 359]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 364]</note>
       </trans-unit>
       <trans-unit id="a19330a6fc36ebae6683cc023e295687">
         <source>Run sync</source>
@@ -1719,7 +1719,7 @@ Best regards,</target>
       <trans-unit id="15bbb9d0bbf25e8d2978de1168c749dc">
         <source>Website</source>
         <target>Website</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 316]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php [Line: 321]</note>
       </trans-unit>
       <trans-unit id="ba794350deb07c0c96fe73bd12239059">
         <source>Wrapping</source>

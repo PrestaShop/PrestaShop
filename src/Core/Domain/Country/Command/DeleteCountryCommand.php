@@ -15,22 +15,13 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
  */
 class DeleteCountryCommand
 {
-    /**
-     * @var CountryId
-     */
-    private $countryId;
+    private CountryId $countryId;
 
-    /**
-     * @param int $countryId
-     */
     public function __construct(int $countryId)
     {
         $this->countryId = new CountryId($countryId);
     }
 
-    /**
-     * @return CountryId
-     */
     public function getCountryId(): CountryId
     {
         return $this->countryId;

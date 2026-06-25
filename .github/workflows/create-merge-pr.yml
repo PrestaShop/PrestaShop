@@ -1,0 +1,169 @@
+# Workflow to create a "merge up" PR (e.g. 9.1.x -> develop).
+# Creates a branch named merge-{source}-{target}-{YYYYMMDD} (with '.' stripped
+# from branch names), merges the source into it, and opens a PR using the
+# project's PULL_REQUEST_TEMPLATE.md. Fails on merge conflicts so they can be
+# resolved manually.
+#
+# Triggers:
+#   - workflow_dispatch: manual run from the Actions tab
+#   - workflow_call:     invoked by cron_create_merge_prs.yml on a matrix of pairs
+
+name: Create Merge PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_branch:
+        description: 'Source branch to merge from (e.g. 9.1.x)'
+        required: true
+        type: string
+      target_branch:
+        description: 'Target branch to merge into (e.g. develop)'
+        required: true
+        type: string
+      fail_on_empty:
+        description: 'Fail when the source branch has no commits to merge into the target (uncheck for cron-style runs)'
+        required: false
+        type: boolean
+        default: true
+  workflow_call:
+    inputs:
+      source_branch:
+        description: 'Source branch to merge from (e.g. 9.1.x)'
+        required: true
+        type: string
+      target_branch:
+        description: 'Target branch to merge into (e.g. develop)'
+        required: true
+        type: string
+      fail_on_empty:
+        description: 'Fail when the source branch has no commits to merge into the target'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  merge-pr:
+    name: Create merge PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute branch name and PR title
+        id: meta
+        run: |
+          SOURCE='${{ inputs.source_branch }}'
+          TARGET='${{ inputs.target_branch }}'
+          SOURCE_SLUG="${SOURCE//./}"
+          TARGET_SLUG="${TARGET//./}"
+          DATE_SLUG="$(date -u +%Y%m%d)"
+          DATE_TITLE="$(date -u +%Y/%m/%d)"
+          BRANCH_NAME="merge-${SOURCE_SLUG}-${TARGET_SLUG}-${DATE_SLUG}"
+          TITLE="Merge branch ${SOURCE} into ${TARGET} ${DATE_TITLE}"
+          {
+            echo "branch_name=${BRANCH_NAME}"
+            echo "title=${TITLE}"
+          } >> "$GITHUB_OUTPUT"
+          echo "Source branch: ${SOURCE}"
+          echo "Target branch: ${TARGET}"
+          echo "Merge branch:  ${BRANCH_NAME}"
+          echo "PR title:      ${TITLE}"
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch source and target branches
+        run: |
+          git fetch origin '${{ inputs.source_branch }}' --quiet
+          git fetch origin '${{ inputs.target_branch }}' --quiet
+
+      - name: Verify source has commits not in target
+        id: ancestry
+        run: |
+          if git merge-base --is-ancestor 'origin/${{ inputs.source_branch }}' 'origin/${{ inputs.target_branch }}'; then
+            if [[ '${{ inputs.fail_on_empty }}' == 'true' ]]; then
+              echo "::error::Source branch '${{ inputs.source_branch }}' has no commits that are not already in target '${{ inputs.target_branch }}'. Nothing to merge."
+              exit 1
+            fi
+            echo "::notice::Source branch '${{ inputs.source_branch }}' is already an ancestor of '${{ inputs.target_branch }}'. Nothing to merge - skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create merge branch from target
+        if: steps.ancestry.outputs.skip != 'true'
+        run: |
+          git checkout -B '${{ steps.meta.outputs.branch_name }}' 'origin/${{ inputs.target_branch }}'
+
+      - name: Merge source into merge branch
+        if: steps.ancestry.outputs.skip != 'true'
+        run: |
+          if ! git merge --no-edit -m "Merge branch '${{ inputs.source_branch }}' into ${{ inputs.target_branch }}" 'origin/${{ inputs.source_branch }}'; then
+            echo "::error::Merge conflict detected when merging '${{ inputs.source_branch }}' into '${{ inputs.target_branch }}'. Resolve manually."
+            git merge --abort || true
+            exit 1
+          fi
+
+      - name: Push merge branch
+        if: steps.ancestry.outputs.skip != 'true'
+        run: |
+          git push --force origin 'HEAD:${{ steps.meta.outputs.branch_name }}'
+
+      - name: Create or update Pull Request
+        if: steps.ancestry.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH_NAME='${{ steps.meta.outputs.branch_name }}'
+          TITLE='${{ steps.meta.outputs.title }}'
+          read -r -d '' BODY <<'EOF' || true
+          <!-----------------------------------------------------------------------------
+          Thank you for contributing to the PrestaShop project!
+
+          Please take the time to edit the "Answers" rows below with the necessary information.
+
+          Check out our contribution guidelines to find out how to complete it:
+          https://devdocs.prestashop-project.org/9/contribute/contribution-guidelines/#pull-requests
+
+          For type and category see:
+          https://devdocs.prestashop-project.org/9/contribute/contribution-guidelines/pull-requests/#type--category
+          ------------------------------------------------------------------------------>
+
+          | Questions         | Answers
+          | ----------------- | -------------------------------------------------------
+          | Branch?           | ${{ inputs.target_branch }}
+          | Description?      | ${{ steps.meta.outputs.title }}
+          | Type?             | improvement
+          | Category?         | ME
+          | BC breaks?        | no
+          | Deprecations?     | no
+          | How to test?      |
+          | UI Tests          |
+          | Fixed issue or discussion?     | ~
+          | Related PRs       | ~
+          | Sponsor company   | ~
+          EOF
+
+          EXISTING_PR="$(gh pr list --repo '${{ github.repository }}' --head "${BRANCH_NAME}" --base '${{ inputs.target_branch }}' --json number -q '.[0].number' 2>/dev/null || true)"
+          if [[ -n "${EXISTING_PR}" ]]; then
+            gh pr edit "${EXISTING_PR}" --repo '${{ github.repository }}' --title "${TITLE}" --body "${BODY}"
+            echo "Updated existing PR #${EXISTING_PR}"
+          else
+            gh pr create \
+              --repo '${{ github.repository }}' \
+              --base '${{ inputs.target_branch }}' \
+              --head "${BRANCH_NAME}" \
+              --title "${TITLE}" \
+              --body "${BODY}"
+          fi

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Address;
+use Cart;
 use Configuration;
 use Currency;
 use Order;
@@ -100,6 +101,7 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
         if (null !== $query->getOrderId()) {
             $order = $this->getOrder($query->getOrderId());
             $this->contextStateManager
+                ->setCart(new Cart($order->id_cart))
                 ->setShop(new Shop($order->id_shop))
             ;
         }

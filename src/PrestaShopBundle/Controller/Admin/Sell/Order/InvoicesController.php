@@ -6,11 +6,12 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Adapter\PDF\InvoicePdfGenerator;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -131,12 +132,18 @@ class InvoicesController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message: 'Access denied.')]
     public function generatePdfByIdAction(
         int $invoiceId,
-        #[Autowire(service: 'prestashop.adapter.pdf.generator.single_invoice')] PDFGeneratorInterface $invoicePdfGenerator
-    ) {
-        $invoicePdfGenerator->generatePDF([$invoiceId]);
+        #[Autowire(service: 'prestashop.adapter.pdf.generator.single_invoice')] InvoicePdfGenerator $invoicePdfGenerator
+    ): Response {
+        $generatedPdf = $invoicePdfGenerator->generatePDFForResponse([$invoiceId]);
 
-        // When using legacy generator,
-        // we want to be sure that displaying PDF is the last thing this controller will do
-        die;
+        $response = new Response($generatedPdf->getContent());
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $generatedPdf->getFileName()
+        );
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
     }
 }

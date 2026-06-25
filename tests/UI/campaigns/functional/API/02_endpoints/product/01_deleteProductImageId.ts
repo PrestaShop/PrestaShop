@@ -94,6 +94,10 @@ describe('API : DELETE /admin-api/products/images/{imageId}', async () => {
 
       const pageTitle: string = await boProductsCreatePage.getPageTitle(page);
       expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
+    });
+
+    it('should check the number of images', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumImages', baseContext);
 
       const numOfImages = await boProductsCreateTabDescriptionPage.getNumberOfImages(page);
       expect(numOfImages).to.eq(2);

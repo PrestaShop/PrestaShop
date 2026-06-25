@@ -16,7 +16,7 @@
     'data-data-limit': limit,
     'data-min-length': min_length,
     'data-allow-delete': form.vars.allow_delete ? 1 : 0,
-    'data-suggestion-field': form.vars.suggestion_field
+    'data-suggestion-field': form.vars.suggestion_field,
   }) -%}
   {%- set attr = attr|merge({class: (attr.class|default('') ~ ' entity-search-widget')|trim}) -%}
 
@@ -29,7 +29,7 @@
           class: (search_attr.class|default('') ~ ' entity-search-input form-control')|trim,
           autocomplete: 'off',
           placeholder: placeholder,
-          type: 'text'
+          type: 'text',
         }) -%}
         {%- set id = form.vars.id ~ '_search_input' -%}
         <input {{ block('widget_container_attributes') }} />
@@ -136,12 +136,20 @@
 {%- endblock -%}
 
 {% block searched_customer_row %}
-  {% set attr = attr|merge({class: (attr.class|default('') ~ ' media entity-item')|trim}) %}
+  {%- set attr = attr|merge({
+    class: (attr.class|default('') ~ ' media entity-item')|trim,
+    'data-customer-active': form.active.vars.value,
+    'data-customer-guest': form.is_guest.vars.value,
+  }) -%}
   <li {{ block('widget_container_attributes') }}>
+    <span class="customer-guest-badge badge badge-pill badge-secondary">{{ 'Guest'|trans({}, 'Admin.Shopparameters.Feature') }}</span>
     <div class="media-body media-middle">
       {{ form_widget(form.fullname_and_email) }}
-      <i class="material-icons entity-item-delete">clear</i>
     </div>
+    <span class="customer-disabled-badge badge badge-pill badge-secondary">{{ 'Disabled'|trans({}, 'Admin.Global') }}</span>
+    <i class="material-icons entity-item-delete">clear</i>
     {{ form_widget(form.id_customer) }}
+    {{ form_widget(form.active) }}
+    {{ form_widget(form.is_guest) }}
   </li>
 {% endblock %}

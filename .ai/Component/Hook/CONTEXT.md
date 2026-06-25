@@ -24,8 +24,3 @@ Event/extension system that allows modules to react to and modify PrestaShop beh
 - `src/Adapter/Hook/HookDispatcher.php`
 - Usage in grid: `src/Core/Grid/Definition/Factory/AbstractGridDefinitionFactory.php`
 
-## Related
-
-- [Grid Component](../Grid/CONTEXT.md) — `action{GridId}GridDefinitionModifier` / `action{GridId}GridDataModifier`
-- [Forms Component](../Forms/CONTEXT.md) — `action{Entity}FormBuilderModifier` hook
-- [MailTemplate Component](../MailTemplate/CONTEXT.md) — `actionGetMailLayoutTransformations` hook

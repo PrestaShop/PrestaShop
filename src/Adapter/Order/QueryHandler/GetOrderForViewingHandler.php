@@ -59,15 +59,18 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPricesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnsForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShipmentsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingAddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderSourceForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderSourcesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\ValueObject\DeliverySlipNumber;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use State;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
@@ -122,6 +125,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     private $addressFormatter;
 
     /**
+     * @var ShipmentRepository
+     */
+    private $shipmentRepository;
+
+    /**
      * @param TranslatorInterface $translator
      * @param int $contextLanguageId
      * @param Locale $locale
@@ -137,6 +145,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         CustomerDataProvider $customerDataProvider,
         GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler,
         Configuration $configuration,
+        ShipmentRepository $shipmentRepository,
         ?AddressFormatterInterface $addressFormatter = null
     ) {
         $this->translator = $translator;
@@ -147,6 +156,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $this->customerDataProvider = $customerDataProvider;
         $this->getOrderProductsForViewingHandler = $getOrderProductsForViewingHandler;
         $this->configuration = $configuration;
+        $this->shipmentRepository = $shipmentRepository;
         $this->addressFormatter = $addressFormatter ?? new AddressFormatter();
     }
 
@@ -204,6 +214,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderDiscounts($order),
             $this->getOrderSources($order),
             $this->getLinkedOrders($order),
+            $this->getOrderShipments($order),
             $this->addressFormatter->format(new AddressId((int) $order->id_address_delivery)),
             $this->addressFormatter->format(new AddressId((int) $order->id_address_invoice)),
             (string) $order->note,
@@ -400,6 +411,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
         $documentsForViewing = [];
 
+        $shipments = $this->shipmentRepository->findByOrderId((int) $order->id);
+        $hasShipments = !empty($shipments);
+
         /** @var OrderInvoice|OrderSlip $document */
         foreach ($documents as $document) {
             $type = null;
@@ -413,6 +427,10 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 $type = isset($document->is_delivery) ? OrderDocumentType::DELIVERY_SLIP : OrderDocumentType::INVOICE;
             } elseif ($document instanceof OrderSlip) {
                 $type = OrderDocumentType::CREDIT_SLIP;
+            }
+
+            if ($hasShipments && OrderDocumentType::DELIVERY_SLIP === $type) {
+                continue;
             }
 
             if (OrderDocumentType::INVOICE === $type) {
@@ -485,11 +503,45 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             );
         }
 
+        if ($hasShipments) {
+            $conf = $this->configuration->get(
+                'PS_DELIVERY_PREFIX',
+                null,
+                ShopConstraint::shop((int) $order->id_shop)
+            );
+
+            foreach ($shipments as $shipment) {
+                $shipmentDate = $shipment->getPackedAt();
+
+                if (!$shipmentDate) {
+                    continue;
+                }
+
+                $number = DeliverySlipNumber::format(
+                    $conf[$this->contextLanguageId] ?? '',
+                    $order->id,
+                    $shipment->getId()
+                );
+
+                $documentsForViewing[] = new OrderDocumentForViewing(
+                    $shipment->getId(),
+                    OrderDocumentType::DELIVERY_SLIP,
+                    DateTimeImmutable::createFromMutable($shipmentDate),
+                    $number,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false
+                );
+            }
+        }
+
         $canGenerateInvoice = $this->configuration->get('PS_INVOICE')
             && count($order->getInvoicesCollection())
             && $order->invoice_number;
 
-        $canGenerateDeliverySlip = (bool) $order->delivery_number;
+        $canGenerateDeliverySlip = $hasShipments ? true : (bool) $order->delivery_number;
 
         return new OrderDocumentsForViewing(
             $canGenerateInvoice,
@@ -885,5 +937,12 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $customer->is_guest = true;
 
         return $customer;
+    }
+
+    private function getOrderShipments(Order $order): OrderShipmentsForViewing
+    {
+        return new OrderShipmentsForViewing(
+            $this->shipmentRepository->findByOrderId((int) $order->id)
+        );
     }
 }

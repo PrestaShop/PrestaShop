@@ -26,4 +26,4 @@ Typed, multi-store-aware abstraction over PrestaShop's key-value configuration s
 ## Related
 
 - [Context Component](../Context/CONTEXT.md) — `ShopConstraint` from `ShopContext` scopes config writes
-- [Forms Component](../Forms/CONTEXT.md) — settings pages use `DataConfigurationInterface` instead of `FormDataHandlerInterface`
+- [Forms — settings pattern](../Forms/SETTINGS.md) — settings pages use `DataConfigurationInterface` instead of `FormDataHandlerInterface`

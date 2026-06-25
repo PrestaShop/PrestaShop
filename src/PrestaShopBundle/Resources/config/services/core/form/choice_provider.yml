@@ -9,6 +9,10 @@ services:
   PrestaShop\PrestaShop\Core\Form\ChoiceProvider\:
     resource: '../../../Core/Form/ChoiceProvider/*'
 
+  PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxByIdChoiceProvider:
+    arguments:
+      $dbPrefix: '%database_prefix%'
+
   # Todo, place this service into the correct place, one day
   PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider: ~
 

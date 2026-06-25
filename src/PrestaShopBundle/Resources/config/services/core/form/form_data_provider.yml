@@ -244,6 +244,10 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TaxRuleFormDataProvider:
+    arguments:
+      - '@prestashop.core.query_bus'
+
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\DiscountFormDataProvider:
     autowire: true
 
@@ -285,6 +289,15 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SplitShipmentFormDataProvider:
     autowire: true
     public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FulfillShipmentFormDataProvider:
+    autowire: true
+    public: false
+
+  prestashop.core.form.identifiable_object.data_provider.quick_access_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\QuickAccessFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EditProductFormDataProvider:
     autowire: true

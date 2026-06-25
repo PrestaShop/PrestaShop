@@ -13,6 +13,8 @@ import {
 const baseContext: string = 'functional_API_checkEndpoints';
 
 // @todo : https://github.com/PrestaShop/PrestaShop/issues/41109
+// Dear developers, the CI is broken when you update the module ps_apiresources on the Core.
+// It's normal : it's time to add them UI Tests.
 describe('API : Check endpoints', async () => {
   const subsetEndpoints: string[] = [
     // @todo: add tests
@@ -106,6 +108,10 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/contacts: POST',
     // @todo: add tests
+    '/countries/{countryId}: GET',
+    // @todo: add tests
+    '/countries: POST',
+    // @todo: add tests
     '/customers/bulk-delete: DELETE',
     // @todo: add tests
     '/customers/bulk-disable: PUT',
@@ -133,24 +139,23 @@ describe('API : Check endpoints', async () => {
     '/customers/{customerId}: PATCH',
     // @todo: add tests
     '/customers: POST',
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/40285
-    // tests/UI/campaigns/functional/API/02_endpoints/discount/01_getDiscountTypes.ts
-    '/discount-types: GET',
     // @todo: add tests
     '/discounts/bulk-delete: DELETE',
     // @todo: add tests
     '/discounts/bulk-update-status: PATCH',
+    // tests/UI/campaigns/functional/API/02_endpoints/discount/01_getDiscountTypes.ts
+    '/discounts/types: GET',
     // @todo: add tests
     '/discounts/{discountId}/duplicate: POST',
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
+    // tests/UI/campaigns/functional/API/02_endpoints/discount/02_deleteDiscountsDiscountsId.ts
     '/discounts/{discountId}: DELETE',
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/38647
     '/discounts/{discountId}: GET',
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/39682
     '/discounts/{discountId}: PATCH',
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
+    // tests/UI/campaigns/functional/API/02_endpoints/discount/03_getDiscounts.ts
     '/discounts: GET',
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
+    // tests/UI/campaigns/functional/API/02_endpoints/discount/03_postDiscounts.ts
     '/discounts: POST',
     // @todo: add tests
     '/features/bulk-delete: DELETE',
@@ -240,6 +245,34 @@ describe('API : Check endpoints', async () => {
     '/products: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/product/10_postProduct.ts
     '/products: POST',
+    // @todo: add tests
+    '/profiles/{profileId}: DELETE',
+    // @todo: add tests
+    '/profiles/{profileId}: GET',
+    // @todo: add tests
+    '/profiles: POST',
+    // @todo: add tests
+    '/search-aliases/bulk-delete: DELETE',
+    // @todo: add tests
+    '/search-aliases/{searchTerm}: GET',
+    // @todo: add tests
+    '/search-aliases/{searchTerm}: PUT',
+    // @todo: add tests
+    '/search-aliases: POST',
+    // tests/UI/campaigns/functional/API/02_endpoints/searchAlias/01_deleteSearch.ts
+    // '/search-aliases: DELETE',
+    // @todo: add tests
+    '/search-engines/bulk-delete: DELETE',
+    // @todo: add tests
+    '/search-engines/{searchEngineId}: DELETE',
+    // @todo: add tests
+    '/search-engines/{searchEngineId}: GET',
+    // @todo: add tests
+    '/search-engines/{searchEngineId}: PATCH',
+    // @todo: add tests
+    '/search-engines: GET',
+    // @todo: add tests
+    '/search-engines: POST',
     // @todo: add tests
     '/showcase-cards/{showcaseCardName}/{employeeId}/close: PUT',
     // @todo: add tests
@@ -410,15 +443,15 @@ describe('API : Check endpoints', async () => {
       }
       endpoints = endpoints.sort();
 
+      // @todo : Check regulary
+      //expect(endpoints).to.deep.equals(subsetEndpoints);
+
       expect(endpoints.length).to.be.greaterThan(0);
       subsetEndpoints.forEach((endpoint: string) => {
         const idxEndpoint = endpoints.indexOf(endpoint);
         expect(idxEndpoint).to.be.greaterThan(lastIdxEndpoint);
         lastIdxEndpoint = idxEndpoint;
       });
-
-      // @todo : Check regulary
-      // expect(endpoints).to.deep.equals(subsetEndpoints);
     });
   });
 });

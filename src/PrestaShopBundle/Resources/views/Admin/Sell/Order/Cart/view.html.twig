@@ -8,7 +8,7 @@
   {% block cart_kpis %}
     {{ render(controller(
       'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
-      {kpiRow: cartKpi}
+      {kpiRow: cartKpi},
     )) }}
   {% endblock %}
 

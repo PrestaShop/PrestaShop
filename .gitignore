@@ -232,3 +232,6 @@ docker-compose.override.yml
 
 # config vscode
 .hintrc
+
+# Claude Code - personal settings (commands are shared, settings are not)
+.claude/settings.local.json

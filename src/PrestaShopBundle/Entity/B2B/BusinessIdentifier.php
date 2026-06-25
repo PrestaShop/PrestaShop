@@ -6,6 +6,7 @@
 
 namespace PrestaShopBundle\Entity\B2B;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,7 +14,14 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BusinessIdentifier.
  *
- * @ORM\Table()
+ * @ORM\Table(
+ *     indexes={
+ *
+ *         @ORM\Index(name="business_identifier_zone_idx", columns={"id_zone"})
+ *     }
+ * )
+ *
+ * @ORM\HasLifecycleCallbacks
  *
  * @ORM\Entity()
  */
@@ -34,6 +42,11 @@ class BusinessIdentifier
     private bool $unremovable = false;
 
     /**
+     * @ORM\Column(name="id_zone", type="integer", nullable=true, options={"unsigned"=true})
+     */
+    private ?int $idZone = null;
+
+    /**
      * @ORM\Column(name="deleted", type="boolean", options={"default"=false})
      */
     private bool $deleted = false;
@@ -42,6 +55,16 @@ class BusinessIdentifier
      * @ORM\Column(name="label", type="string", length=255)
      */
     private string $label;
+
+    /**
+     * @ORM\Column(name="created_at", type="datetime")
+     */
+    private DateTime $createdAt;
+
+    /**
+     * @ORM\Column(name="updated_at", type="datetime")
+     */
+    private DateTime $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\B2B\BusinessEntityIdentifier", mappedBy="businessIdentifier")
@@ -66,6 +89,18 @@ class BusinessIdentifier
     public function setUnremovable(bool $unremovable): self
     {
         $this->unremovable = $unremovable;
+
+        return $this;
+    }
+
+    public function getIdZone(): ?int
+    {
+        return $this->idZone;
+    }
+
+    public function setIdZone(?int $idZone): self
+    {
+        $this->idZone = $idZone;
 
         return $this;
     }
@@ -114,5 +149,43 @@ class BusinessIdentifier
         $this->label = $label;
 
         return $this;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     *
+     * @ORM\PreUpdate
+     */
+    public function updateTimestamps(): void
+    {
+        $this->updatedAt = new DateTime();
+
+        if (!isset($this->createdAt)) {
+            $this->createdAt = new DateTime();
+        }
     }
 }

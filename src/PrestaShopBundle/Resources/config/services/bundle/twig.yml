@@ -35,6 +35,11 @@ services:
       logger: "@logger"
       translator: "@translator"
 
+  PrestaShopBundle\Twig\RawPurifiedExtension:
+    arguments:
+      - "@prestashop.utils.html_purifier"
+    tags: [ 'twig.extension' ]
+
   PrestaShopBundle\Twig\HookExtension:
     arguments:
       - "@prestashop.core.hook.dispatcher"

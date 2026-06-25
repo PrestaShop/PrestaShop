@@ -10,17 +10,19 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowJs": true,
-    "downlevelIteration": true,
     "isolatedModules": true,
     "strictPropertyInitialization": true,
-    "baseUrl": "./",
     "paths": {
-      "@commonTests/*": ["commonTests/*"],
-      "@data/*": ["data/*"],
-      "@utils/*": ["utils/*"],
-      "@tools/*": ["tools/*"],
-      "@webservices/*": ["webservices/*"]
+      "@commonTests/*": ["./commonTests/*"],
+      "@data/*": ["./data/*"],
+      "@utils/*": ["./utils/*"],
+      "@tools/*": ["./tools/*"],
+      "@webservices/*": ["./webservices/*"]
     },
+    "rootDir": "./",
+    "types": [
+      "node"
+    ],
     "typeRoots": ["types", "node_modules/@types"],
     "skipLibCheck": true,
     "noEmit": true

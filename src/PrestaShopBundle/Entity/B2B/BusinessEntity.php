@@ -18,8 +18,10 @@ use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
  * @ORM\Table(
  *     indexes={
  *
- *         @ORM\Index(name="business_entity_enterprise_id_idx", columns={"enterprise_id"}),
- *         @ORM\Index(name="business_entity_external_ref_idx", columns={"external_ref"})
+ *         @ORM\Index(name="business_entity_shop_idx", columns={"id_shop"}),
+ *         @ORM\Index(name="business_entity_customer_group_idx", columns={"id_customer_group"}),
+ *         @ORM\Index(name="business_entity_external_ref_idx", columns={"external_ref"}),
+ *         @ORM\Index(name="business_entity_deleted_idx", columns={"deleted"})
  *     }
  *  )
  *
@@ -39,6 +41,16 @@ class BusinessEntity
     private int $id;
 
     /**
+     * @ORM\Column(name="id_shop", type="integer", options={"unsigned"=true})
+     */
+    private int $idShop;
+
+    /**
+     * @ORM\Column(name="id_customer_group", type="integer", options={"unsigned"=true})
+     */
+    private int $idCustomerGroup;
+
+    /**
      * @ORM\Column(name="external_ref", type="string", length=255, nullable=true)
      */
     private ?string $externalRef;
@@ -54,14 +66,19 @@ class BusinessEntity
     private ?string $legalName;
 
     /**
-     * @ORM\Column(name="flag_delivery_authorized", type="boolean", options={"default"=false})
+     * @ORM\Column(name="delivery_authorized", type="boolean", options={"default"=false})
      */
-    private bool $flagDeliveryAuthorized = false;
+    private bool $deliveryAuthorized = false;
 
     /**
      * @ORM\Column(name="status", enumType=BusinessEntityStatus::class, options={"default"="pending"})
      */
     private BusinessEntityStatus $status;
+
+    /**
+     * @ORM\Column(name="deleted", type="boolean", options={"default"=false})
+     */
+    private bool $deleted = false;
 
     /**
      * @ORM\Column(name="created_at", type="datetime")
@@ -108,6 +125,30 @@ class BusinessEntity
         return $this->id;
     }
 
+    public function getIdShop(): int
+    {
+        return $this->idShop;
+    }
+
+    public function setIdShop(int $idShop): self
+    {
+        $this->idShop = $idShop;
+
+        return $this;
+    }
+
+    public function getIdCustomerGroup(): int
+    {
+        return $this->idCustomerGroup;
+    }
+
+    public function setIdCustomerGroup(int $idCustomerGroup): self
+    {
+        $this->idCustomerGroup = $idCustomerGroup;
+
+        return $this;
+    }
+
     public function getExternalRef(): ?string
     {
         return $this->externalRef;
@@ -144,14 +185,14 @@ class BusinessEntity
         return $this;
     }
 
-    public function isFlagDeliveryAuthorized(): bool
+    public function isDeliveryAuthorized(): bool
     {
-        return $this->flagDeliveryAuthorized;
+        return $this->deliveryAuthorized;
     }
 
-    public function setFlagDeliveryAuthorized(bool $flagDeliveryAuthorized): self
+    public function setDeliveryAuthorized(bool $deliveryAuthorized): self
     {
-        $this->flagDeliveryAuthorized = $flagDeliveryAuthorized;
+        $this->deliveryAuthorized = $deliveryAuthorized;
 
         return $this;
     }
@@ -164,6 +205,18 @@ class BusinessEntity
     public function setStatus(BusinessEntityStatus $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted(bool $deleted): self
+    {
+        $this->deleted = $deleted;
 
         return $this;
     }

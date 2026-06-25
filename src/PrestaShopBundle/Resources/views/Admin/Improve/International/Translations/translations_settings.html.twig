@@ -9,7 +9,7 @@
   {% block translations_kpis_row %}
     {{ render(controller(
       'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
-      {kpiRow: kpiRow}
+      {kpiRow: kpiRow},
     )) }}
   {% endblock %}
 

@@ -30,4 +30,3 @@ Back-office URL generation with security token injection and legacy route mappin
 ## Related
 
 - [Link Component](../Link/CONTEXT.md) — front-office URL generation and legacy `Link` class
-- [GlobalJS Component](../GlobalJS/CONTEXT.md) — JS routing metadata generated from the same Symfony route collection

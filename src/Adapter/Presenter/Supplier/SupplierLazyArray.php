@@ -45,6 +45,11 @@ class SupplierLazyArray extends AbstractLazyArray
         $this->language = $language;
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
+        $this->initExtraPropertiesBag(
+            Supplier::class,
+            (int) ($this->supplier['id_supplier'] ?? $this->supplier['id'] ?? 0),
+            $language->getId()
+        );
 
         parent::__construct();
         $this->appendArray($this->supplier);

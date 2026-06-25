@@ -57,3 +57,15 @@ services:
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
     public: true
     autoconfigure: true
+
+  # Email body template translation services
+  PrestaShop\PrestaShop\Adapter\MailTemplate\EmailBodyTemplateRepository:
+    arguments:
+      $coreMailsDir: '%kernel.project_dir%/mails'
+      $modulesDir: '%modules_dir%'
+
+  prestashop.core.grid.data_factory.email_body_template:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\EmailBodyTemplateGridDataFactory'
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\MailTemplate\EmailBodyTemplateRepository'
+      - '@=service("PrestaShop\\PrestaShop\\Core\\Context\\LanguageContext").getIsoCode()'

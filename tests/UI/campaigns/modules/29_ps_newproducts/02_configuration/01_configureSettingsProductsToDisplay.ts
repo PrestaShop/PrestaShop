@@ -134,10 +134,11 @@ describe('New products block module - Configure settings of "Products to display
       setting: 0,
       error: modPsNewProductsBoMain.emptyErrorMessage,
     },
-    {
+    // @todo : https://github.com/PrestaShop/PrestaShop/issues/41351
+    /*{
       setting: 'test',
       error: modPsNewProductsBoMain.invalidNumberMessage,
-    },
+    },*/
   ].forEach((arg: { setting: number|string, error: string }, index: number) => {
     it(`should change the configuration (${arg.setting}) in the module`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `changeConfigurationError${index}`, baseContext);

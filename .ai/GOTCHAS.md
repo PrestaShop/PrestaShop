@@ -59,6 +59,12 @@ Normally: interfaces in Core, concrete implementations in Adapter. Exceptions wh
 
 When adding a handler to these domains, follow the existing pattern (Core) rather than the standard pattern. When handlers are migrated to the future persistence system (probably Doctrine), they should be moved into the Core namespace.
 
+## Translation catalog extraction
+
+**Never wrap `TranslatorInterface::trans()`** — not in a private helper, not in a closure, not in a base-class proxy. The translation-catalog extractor scans for direct `->trans('literal string', [...], 'Domain')` calls in source; anything that hides the call (e.g. `$this->t(...)`, `$t(...)`, `$translatable->translate(...)`) is invisible to the extractor and the wording will not be added to the catalog, or its domain will be lost.
+
+Always call `$this->translator->trans($message, $parameters, $domain)` directly at every call site, even when it's repetitive — readability cost is real but extraction correctness is non-negotiable. If you find an existing helper, fix the helper's call sites instead of adding more.
+
 ## Legacy class size warnings
 
 | Domain | Legacy class | Lines | Risk |

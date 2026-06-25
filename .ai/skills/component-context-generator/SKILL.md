@@ -6,6 +6,7 @@ description: >
   "fill in the CONTEXT.md for [Component]", or when working inside `.ai/Component/` directories.
   Components live under `src/Core/{Name}/` and/or `src/Adapter/{Name}/` — they are shared infrastructure,
   not business domains. Examples: Grid, Form, Hook, CQRS, Translation, Router.
+subagent: recommended
 ---
 
 # PrestaShop Component CONTEXT.md Generator
@@ -59,7 +60,7 @@ Components are **not** business domains — they have no CQRS structure. They pr
 
 **Do NOT include:** `## Coding standards`, `## Do`, `## Don't`, `## Testing expectations`, `## Architecture overview` with verbose subsections. These inflate token cost without adding value.
 
-Target size: **20–35 lines**.
+Target size: **aim for ~30–50 lines.** Simple components fit in that range. If a component legitimately needs more (multiple parallel patterns, several layers, substantial non-obvious behaviour), prefer splitting into sub-contexts over inflating a single file — see "When to split into sub-contexts" below. A single CONTEXT.md above ~80–100 lines is a smell.
 
 ---
 
@@ -102,9 +103,71 @@ Pick 2–3 files: the main interface, the most-used implementation, and one doma
 
 List the contents of `.ai/skills/` and check if any skill targets this component. If one exists, include a `## Skills` section before `## Related` linking to it.
 
-### 7. Write Related
+### 7. Write Related (use sparingly)
 
-Links to other `.ai/Component/` or `.ai/Domain/` context files that are architecturally connected.
+Links to other `.ai/Component/` or `.ai/Domain/` context files — but **only when the relationship is non-obvious**.
+
+The whole point of splitting contexts into separate files is to avoid loading everything at once. Every cross-reference is a potential cascade: an AI agent reads component A, follows a link to component B, follows B's link to C... and ends up loading all contexts. This defeats the purpose of the split.
+
+**Include a link when:**
+- The relationship is architecturally surprising (e.g. PositionUpdater lives inside Grid's source tree)
+- Two components coexist during a migration and the coexistence has gotchas (e.g. Twig ↔ Smarty)
+
+**Do NOT include a link when:**
+- The relationship is obvious from imports (e.g. "Controller dispatches CQRS commands")
+- You're linking just to mention a hook name or a specific class — those are greppable
+- The link points to a domain just because that domain is a heavy consumer of the component
+- The link would create a bidirectional reference (A → B and B → A)
+
+When in doubt, omit the link. An agent can always find related contexts via the index in `.ai/CONTEXT.md`.
+
+---
+
+## When to split into sub-contexts
+
+Most components fit comfortably in a single `CONTEXT.md`. A few don't — when the component has **two (or more) parallel patterns that share little code but coexist under the same umbrella**, split the file rather than letting it grow past ~80 lines.
+
+### Trigger conditions (all should hold)
+
+- Two or more usage patterns coexist (e.g. settings forms vs CRUD forms; legacy ObjectModel vs Doctrine repositories within the same Component).
+- Most readers only work on **one pattern at a time** — loading the other pattern's rules wastes tokens.
+- The patterns each have non-trivial pattern-specific rules (base classes, service folders, hooks, anti-patterns) that don't reduce to a few bullets.
+- A meaningful shared surface exists (decision tree, shared concerns, skills table) — otherwise consider splitting into two separate Components instead.
+
+### Recommended layout
+
+```
+.ai/Component/{Name}/
+├── CONTEXT.md            ← lean root: purpose, decision tree, shared concerns,
+│                            skills table, links to each sub-context.
+│                            Pure routing hub — minimal pattern-specific detail.
+├── {PATTERN_A}.md        ← pattern A: required layers, service definitions,
+│                            hooks, anti-patterns, canonical example.
+├── {PATTERN_B}.md        ← pattern B: same shape as PATTERN_A.
+└── skills/
+    ├── {pattern-a skill}/  ← body opens with: Read CONTEXT.md + PATTERN_A.md
+    ├── {pattern-b skill}/  ← body opens with: Read CONTEXT.md + PATTERN_B.md
+    └── {generic skill}/    ← body opens with: Read CONTEXT.md only
+```
+
+Naming: use the existing `STRUCTURE.md` / `GOTCHAS.md` / `MULTISTORE.md` convention for sub-context files — UPPERCASE single noun describing the pattern (e.g. `SETTINGS.md`, `CRUD.md`).
+
+### Rules
+
+- **Root `CONTEXT.md` stays the entry point.** Every external link from other components/domains points at `CONTEXT.md`, not at a sub-context — the decision tree in the root routes the reader to the right sub-context. External links should only specialise to a sub-context when their own surrounding text is unambiguously pattern-specific (saves a hop without confusing readers).
+- **No duplication between root and sub-contexts.** Shared concerns live in the root. Pattern-specific rules live in exactly one sub-context.
+- **Skills load sub-contexts conditionally.** A pattern-specific skill body opens with `Read @.ai/Component/{Name}/CONTEXT.md` *and* `Read @.ai/Component/{Name}/{PATTERN}.md`. A skill that serves both patterns (e.g. a unified controller-actions skill) opens with `Read @.ai/Component/{Name}/CONTEXT.md` and instructs the reader to load the relevant sub-context based on the branch they're working on.
+- **Skills table in the root** includes a "Pattern detail to load" column so the reader sees the load decision upfront.
+
+### Reference
+
+See `.ai/Component/Forms/` for a worked example: `CONTEXT.md` (decision tree + shared concerns) + `SETTINGS.md` + `CRUD.md`, with skills that route to one sub-context or the other.
+
+### When NOT to split
+
+- The component has only one pattern, just lots of layers — solve with a tighter Layers table instead.
+- The sub-contexts would each be under ~20 lines — the split adds ceremony without saving tokens.
+- The "two patterns" are actually one pattern with optional features — keep them in one file with a "Conditional layers" subsection.
 
 ---
 
@@ -143,9 +206,7 @@ Infrastructure for rendering and managing back-office data tables: column defini
 
 ## Related
 
-- [CQRS Component](../CQRS/CONTEXT.md) — some grids dispatch queries via `QueryBus`
-- [Forms Component](../Forms/CONTEXT.md) — filter forms use `FormChoiceProviderInterface`
-- [Hook Component](../Hook/CONTEXT.md) — `action{GridId}GridDefinitionModifier` hook
+- [PositionUpdater Component](../PositionUpdater/CONTEXT.md) — drag-and-drop reordering sub-layer (lives inside Grid source tree)
 ```
 
 ---

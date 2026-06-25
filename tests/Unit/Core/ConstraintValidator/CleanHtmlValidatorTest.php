@@ -66,7 +66,7 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
 
         $this->validator->validate($htmlTag, new CleanHtml());
 
-        $this->buildViolation((new CleanHtml())->message)
+        $this->buildViolation((new CleanHtml())->embeddableHtmlMessage)
             ->setParameter('%s', '"' . $htmlTag . '"')
             ->assertRaised()
         ;
@@ -78,7 +78,7 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
 
         $this->validator->validate($htmlTag, new CleanHtml());
 
-        $this->buildViolation((new CleanHtml())->message)
+        $this->buildViolation((new CleanHtml())->embeddableHtmlMessage)
             ->setParameter('%s', '"' . $htmlTag . '"')
             ->assertRaised()
         ;
@@ -90,7 +90,7 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
 
         $this->validator->validate($htmlTag, new CleanHtml());
 
-        $this->buildViolation((new CleanHtml())->message)
+        $this->buildViolation((new CleanHtml())->embeddableHtmlMessage)
             ->setParameter('%s', '"' . $htmlTag . '"')
             ->assertRaised()
         ;
@@ -102,7 +102,7 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
 
         $this->validator->validate($htmlTag, new CleanHtml());
 
-        $this->buildViolation((new CleanHtml())->message)
+        $this->buildViolation((new CleanHtml())->embeddableHtmlMessage)
             ->setParameter('%s', '"' . $htmlTag . '"')
             ->assertRaised()
         ;
@@ -114,7 +114,7 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
 
         $this->validator->validate($htmlTag, new CleanHtml());
 
-        $this->buildViolation((new CleanHtml())->message)
+        $this->buildViolation((new CleanHtml())->embeddableHtmlMessage)
             ->setParameter('%s', '"' . $htmlTag . '"')
             ->assertRaised()
         ;
@@ -126,7 +126,7 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
 
         $this->validator->validate($htmlTag, new CleanHtml());
 
-        $this->buildViolation((new CleanHtml())->message)
+        $this->buildViolation((new CleanHtml())->embeddableHtmlMessage)
             ->setParameter('%s', '"' . $htmlTag . '"')
             ->assertRaised()
         ;

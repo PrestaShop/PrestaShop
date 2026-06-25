@@ -12,8 +12,6 @@ class PositionsListHandler {
 
   $panelSelectionMultipleSelection: JQuery;
 
-  $panelSelectionOriginalY: number;
-
   $showModules: JQuery;
 
   $modulesList: JQuery;
@@ -40,12 +38,6 @@ class PositionsListHandler {
     this.$panelSelectionMultipleSelection = $(
       '#modules-position-multiple-selection',
     );
-    const $alertMessage = $('#content-message-box + .alert');
-
-    this.$panelSelectionOriginalY = <number> this.$panelSelection.offset()?.top;
-    if ($alertMessage.length > 0) {
-      this.$panelSelectionOriginalY += <number> $alertMessage.outerHeight();
-    }
     this.$showModules = $('#show-modules');
     this.$modulesList = $('.modules-position-checkbox');
     this.$hookPosition = $('#hook-position');
@@ -74,14 +66,6 @@ class PositionsListHandler {
    */
   handleList(): void {
     const self = this;
-
-    $(window).on('scroll', () => {
-      const $scrollTop = <number>$(window).scrollTop();
-      self.$panelSelection.css(
-        'top',
-        $scrollTop < 20 ? 0 : $scrollTop - self.$panelSelectionOriginalY,
-      );
-    });
 
     self.$modulesList.on('change', () => {
       const $checkedCount = self.$modulesList.filter(':checked').length;
@@ -253,10 +237,14 @@ class PositionsListHandler {
     const $moduleId = <string>self.$showModules.val();
     const $regex = new RegExp(`(${$hookName})`, 'gi');
 
-    // Update "Transplant module" button
-    const transplantModuleHref = new URL(this.$transplantModuleButton.prop('href'));
-    transplantModuleHref.searchParams.set('show_modules', $moduleId);
-    this.$transplantModuleButton.attr('href', transplantModuleHref.toString());
+    // Update "Transplant module" button (only present on the positions list page)
+    const transplantModuleRawHref = this.$transplantModuleButton.prop('href');
+
+    if (transplantModuleRawHref) {
+      const transplantModuleHref = new URL(transplantModuleRawHref);
+      transplantModuleHref.searchParams.set('show_modules', $moduleId);
+      this.$transplantModuleButton.attr('href', transplantModuleHref.toString());
+    }
 
     const isVisible: boolean = $hookName === '' && $moduleId === 'all';
 

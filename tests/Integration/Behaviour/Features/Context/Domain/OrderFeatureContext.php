@@ -678,9 +678,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $shipments = [];
 
             foreach (explode(',', $data['shipment_mapping']) as $pair) {
-                list($shipmentId, $qty) = explode(':', trim($pair));
+                list($shipmentRef, $qty) = explode(':', trim($pair));
                 $shipments[] = [
-                    'shipment_id' => (int) $shipmentId,
+                    'shipment_id' => (int) SharedStorage::getStorage()->get(trim($shipmentRef)),
                     'quantity' => (int) $qty,
                 ];
             }

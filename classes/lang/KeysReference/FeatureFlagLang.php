@@ -65,10 +65,10 @@ trans('Enable / Disable the new discount system.', 'Admin.Advparameters.Help');
 trans('Tag', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the tag page.', 'Admin.Advparameters.Help');
 
-// One-Page Checkout feature flag
-trans('One-page checkout', 'Admin.Advparameters.Feature');
-trans('Enable / Disable one page checkout flow. All checkout steps (address, delivery, payment) are grouped on a single page to reduce friction and improve conversion rate.', 'Admin.Advparameters.Help');
-
 // New pricing feature flag
 trans('New pricing', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the new pricing system. This feature introduces an improved pricing engine.', 'Admin.Advparameters.Help');
+
+// Quick access feature flag
+trans('Quick access', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the migrated quick access page.', 'Admin.Advparameters.Help');

@@ -15,6 +15,7 @@ Feature: Order return Management
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
+    And I add 1 products "Mug The adventure begins" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -29,3 +30,33 @@ Feature: Order return Management
     Then "testOrderReturn" has state "orderReturnState1"
     When I change order return "testOrderReturn" state to "orderReturnState2"
     Then "testOrderReturn" has state "orderReturnState2"
+
+  Scenario: List products attached to an order return
+    When I query the products of order return "testOrderReturn"
+    Then the queried products of order return "testOrderReturn" should contain 2 rows
+    And the queried products of order return "testOrderReturn" should contain a product with reference "demo_11" and quantity 2
+    And the queried products of order return "testOrderReturn" should contain a product with reference "demo_12" and quantity 1
+
+  Scenario: Delete one product from an order return
+    When I delete from order return "testOrderReturn" the product with reference "demo_12"
+    And I query the products of order return "testOrderReturn"
+    Then the queried products of order return "testOrderReturn" should contain 1 row
+    And the queried products of order return "testOrderReturn" should contain a product with reference "demo_11" and quantity 2
+
+  Scenario: Bulk-delete products staged through the form leaves the return intact when at least one product remains
+    When I stage for deletion in order return "testOrderReturn" the product with reference "demo_12"
+    And I commit staged deletions on order return "testOrderReturn"
+    And I query the products of order return "testOrderReturn"
+    Then the queried products of order return "testOrderReturn" should contain 1 row
+    And the queried products of order return "testOrderReturn" should contain a product with reference "demo_11" and quantity 2
+
+  Scenario: Cannot delete the last product from an order return
+    When I delete from order return "testOrderReturn" the product with reference "demo_12"
+    And I try to delete from order return "testOrderReturn" the product with reference "demo_11"
+    Then I should get a "CannotDeleteLastProductFromOrderReturnException"
+
+  Scenario: Cannot bulk-delete every product from an order return
+    When I stage for deletion in order return "testOrderReturn" the product with reference "demo_11"
+    And I stage for deletion in order return "testOrderReturn" the product with reference "demo_12"
+    And I try to commit staged deletions on order return "testOrderReturn"
+    Then I should get a "CannotDeleteLastProductFromOrderReturnException"

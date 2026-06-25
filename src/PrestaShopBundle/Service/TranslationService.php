@@ -24,6 +24,11 @@ class TranslationService
     public $container;
 
     /**
+     * @var \PrestaShop\PrestaShop\Core\Validation\ValidatorInterface
+     */
+    public $validator;
+
+    /**
      * @param string $lang
      *
      * @return mixed
@@ -260,6 +265,10 @@ class TranslationService
                 $logger->error($violation->getMessage(), $log_context);
             }
 
+            return false;
+        }
+
+        if ($this->validator->isCleanHtml($translation->getTranslation()) === false) {
             return false;
         }
 

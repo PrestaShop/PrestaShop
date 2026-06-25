@@ -9,7 +9,7 @@
  */
 class QuickAccessCore extends ObjectModel
 {
-    /** @var string Name */
+    /** @var string|array<int, string> Name — string when loaded with a specific lang ID, array<langId, name> otherwise */
     public $name;
 
     /** @var string Link */

@@ -61,3 +61,7 @@ _security:
 _permission:
   resource: "permission.yml"
   prefix: /permissions
+
+_quick_access:
+  resource: "quick_access.yml"
+  prefix: /quick-accesses

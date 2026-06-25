@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
+use PrestaShopBundle\Form\Admin\Improve\International\Locations\AddressFormatType;
 
 /**
  * Provides data for zone add/edit form.
@@ -88,6 +89,7 @@ class CountryFormDataProvider implements FormDataProviderInterface
             'contains_states' => false,
             'need_identification_number' => false,
             'display_tax_label' => true,
+            'address_format' => AddressFormatType::DEFAULT_LAYOUT,
         ];
 
         if ($this->multistoreEnabled) {

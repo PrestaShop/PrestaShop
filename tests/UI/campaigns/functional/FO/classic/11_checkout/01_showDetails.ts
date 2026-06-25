@@ -125,7 +125,7 @@ describe('FO - Checkout : Show details', async () => {
         expect(result.image).to.contains(dataProducts.demo_6.coverImage),
         expect(result.name).to.equal(dataProducts.demo_6.name),
         expect(result.quantity).to.equal(2),
-        expect(result.price).to.equal(dataProducts.demo_6.combinations[0].price),
+        expect(result.price).to.equal(dataProducts.demo_6.combinations[0].priceTI),
       ]);
 
       const attributes = await foClassicCheckoutPage.getProductAttributes(page, 2);

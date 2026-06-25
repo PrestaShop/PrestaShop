@@ -30,7 +30,21 @@ $(function() {
 	  checkTimeZone(this);
   });
 
-  watchPasswordStrength($('#infosPassword'));
+  watchPasswordStrength($('#infosPassword'), '#btNext');
+
+  // Safety net: prevent submit (e.g. via Enter key) when password does not meet requirements.
+  // The button is already disabled by watchPasswordStrength, but Enter key can bypass that.
+  $('#mainForm').on('submit', function(e) {
+    const $passwordInput = $('#infosPassword');
+    if ($passwordInput.length === 0 || !$passwordInput.val()) {
+      return;
+    }
+    if (!isPasswordInputValid($passwordInput)) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      return false;
+    }
+  });
 });
 
 function checkTimeZone(elt)
@@ -73,28 +87,54 @@ function in_array(needle, haystack) {
 }
 
 /**
+ * Check whether the password in $input meets the minimum score and length requirements
+ * declared via data-minscore, data-minlength, data-maxlength attributes.
+ *
+ * @param {jQuery} $input the password input element.
+ * @returns {boolean}
+ */
+function isPasswordInputValid($input) {
+  const passwordValue = $input.val();
+  if (!passwordValue) {
+    return false;
+  }
+  const result = zxcvbn(passwordValue);
+  const minScore = $input.data('minscore');
+  const minLength = $input.data('minlength');
+  const maxLength = $input.data('maxlength');
+  return result.score >= minScore
+    && passwordValue.length >= minLength
+    && passwordValue.length <= maxLength;
+}
+
+/**
  * Watch password, which is entered in the input, strength and inform about it.
+ * When submitButtonSelector is provided, also disables the submit button when password
+ * does not meet minimum strength or length, and shows the error message in the feedback area.
  *
  * @param {jQuery} element the input to watch.
+ * @param {string} [submitButtonSelector] optional selector for the form submit button to disable when password is invalid.
  */
-function watchPasswordStrength(element) {
+function watchPasswordStrength(element, submitButtonSelector) {
   element.on('keyup', function checkPasswordStrength() {
-    $('.field-password .errorTxt').hide();
-    const passwordValue = $(this).val();
+    const $passwordInput = $(this);
+    const $fieldPassword = $passwordInput.closest('.field-password');
+    $fieldPassword.find('.js-password-client-error').hide();
+    const passwordValue = $passwordInput.val();
     const popoverElement = $('.field-password .popover');
-    let $feedbackContainer = $(this).parent().find('.password-strength-feedback');
+    let $feedbackContainer = $passwordInput.parent().find('.password-strength-feedback');
 
     if ($feedbackContainer.length === 0) {
-      $(this).parent().append($('#password-feedback').html());
-      $feedbackContainer = $(this).parent().find('.password-strength-feedback');
+      $passwordInput.parent().append($('#password-feedback').html());
+      $feedbackContainer = $passwordInput.parent().find('.password-strength-feedback');
     }
 
     const passwordRequirementsLength = $feedbackContainer.find('.password-requirements-length');
     passwordRequirementsLength.find('span').text(
       sprintf(
         passwordRequirementsLength.data('translation'),
-        $(this).data('minlength'),
-        $(this).data('maxlength'),
+        $passwordInput.data('minlength'),
+        $passwordInput.data('maxlength'),
       ),
     );
 
@@ -102,17 +142,31 @@ function watchPasswordStrength(element) {
     passwordRequirementsScore.find('span').text(
       sprintf(
         passwordRequirementsScore.data('translation'),
-        $feedbackContainer.data('translations')[$(this).data('minscore')],
+        $feedbackContainer.data('translations')[$passwordInput.data('minscore')],
       ),
     );
 
     if (passwordValue === '') {
       $feedbackContainer.toggleClass('d-none', true);
       popoverElement.toggleClass('d-none', true);
+      if (submitButtonSelector) {
+        $(submitButtonSelector).prop('disabled', false);
+      }
     } else {
       const result = zxcvbn(passwordValue);
-      displayFeedback($(this), $feedbackContainer, result);
+      displayFeedback($passwordInput, $feedbackContainer, result);
       $feedbackContainer.removeClass('d-none');
+
+      const isValid = isPasswordInputValid($passwordInput);
+
+      if (submitButtonSelector) {
+        $(submitButtonSelector).prop('disabled', !isValid);
+      }
+      if (!isValid) {
+        const errorMessage = $fieldPassword.data('passwordMustBeStrong')
+          || 'The password must be strong (see requirements above).';
+        $fieldPassword.find('.js-password-client-error').show().text(errorMessage);
+      }
     }
   });
 }
@@ -131,7 +185,7 @@ function displayFeedback(
   $outputContainer,
   result,
 ) {
-  const feedback = this.getPasswordStrengthFeedback(result.score);
+  const feedback = getPasswordStrengthFeedback(result.score);
   const translations = $outputContainer.data('translations');
   const popoverContent = [];
   const popoverElement = $('.field-password .popover');

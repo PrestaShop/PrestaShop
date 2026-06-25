@@ -6,6 +6,7 @@ description: >
   "write the context for [Domain]", "document the [X] domain",
   or when working inside `.ai/Domain/` directories.
   Also triggers on "create context for", "add AI context", "populate CONTEXT.md".
+subagent: recommended
 ---
 
 # PrestaShop Domain CONTEXT.md Generator
@@ -106,11 +107,20 @@ Skip anything obvious from the directory structure.
 
 List the contents of `.ai/skills/` and check if any skill targets this domain (e.g. a `create-{entity}` or `add-{domain}-form` skill). If one exists, include a `## Skills` section before `## Related` linking to it.
 
-### 6. Write Related
+### 6. Write Related (use sparingly)
 
-- Component CONTEXT.md files used (CQRS always; Forms/Grid if applicable)
-- Other Domain CONTEXT.md files that consume or are consumed by this one
-- DevDocs URL if one exists
+Every cross-reference is a potential cascade: an AI agent reads domain A, follows a link to domain B, follows B's link to component C... and loads everything. This defeats the purpose of the split.
+
+**Include a link when:**
+- The cross-domain flow is non-obvious and would surprise a developer (e.g. Cart → Order conversion happens in the Order domain, not Cart)
+- A DevDocs URL exists for this domain
+
+**Do NOT include a link when:**
+- The relationship is obvious from imports (e.g. "this domain uses CQRS" — they all do)
+- You're linking to a component just because the domain consumes it (Controller, Forms, Grid are consumed by every migrated domain)
+- The link would create a bidirectional reference (A → B and B → A)
+
+When in doubt, omit the link. An agent can always find related contexts via the index in `.ai/CONTEXT.md`.
 
 ---
 
@@ -153,10 +163,7 @@ Does not handle order creation — that is the Order domain's responsibility.
 
 ## Related
 
-- [CQRS Component](../../Component/CQRS/CONTEXT.md)
-- [Order Domain](../Order/CONTEXT.md) — converts `CartId` into an order
-- [Forms Component](../../Component/Forms/CONTEXT.md) — `CartSummaryType`, `AddOrderCartRuleType`
-- [Grid Component](../../Component/Grid/CONTEXT.md) — `CartGridDefinitionFactory`
+- [Order Domain](../Order/CONTEXT.md) — Cart→Order conversion happens in the Order domain via `AddOrderFromBackOfficeCommand`
 - [DevDocs](https://devdocs.prestashop-project.org/9/development/architecture/domain/references/cart/#cart-domain/)
 ```
 

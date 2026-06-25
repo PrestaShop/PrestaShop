@@ -1428,6 +1428,15 @@ class CartCore extends ObjectModel
             }
         }
 
+        // If the cart rule offers a gift product, verify it exists before inserting into cart_cart_rule
+        $giftProduct = null;
+        if ((int) $cartRule->gift_product) {
+            $giftProduct = new Product((int) $cartRule->gift_product);
+            if (!Validate::isLoadedObject($giftProduct)) {
+                return false;
+            }
+        }
+
         // Add the cart rule to the cart
         if (!Db::getInstance()->insert('cart_cart_rule', [
             'id_cart_rule' => (int) $id_cart_rule,
@@ -1447,7 +1456,8 @@ class CartCore extends ObjectModel
         Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT . '-ids');
         Cache::clean('getContextualValue_*');
 
-        if ((int) $cartRule->gift_product) {
+        // Add the gift product to the cart
+        if ($giftProduct !== null) {
             $this->updateQty(
                 1,
                 $cartRule->gift_product,
@@ -1680,6 +1690,18 @@ class CartCore extends ObjectModel
         }
 
         if (!Validate::isLoadedObject($product)) {
+            // Product may have been deleted from catalog but still exist in a cart/order; deleteProduct only needs IDs.
+            if ($operator === 'down') {
+                PrestaShopLogger::addLog(
+                    sprintf('Cart::updateQty - Product with ID "%s" could not be loaded, removing it from cart.', $id_product),
+                    PrestaShopLogger::LOG_SEVERITY_LEVEL_WARNING,
+                    null,
+                    'Cart',
+                    (int) $this->id
+                );
+
+                return $this->deleteProduct($id_product, $id_product_attribute, (int) $id_customization, 0, $preserveGiftRemoval, $useOrderPrices);
+            }
             throw new PrestaShopException(sprintf('Product with ID "%s" could not be loaded.', $id_product));
         }
 

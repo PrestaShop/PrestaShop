@@ -24,7 +24,6 @@ describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delet
   const createWebserviceData: FakerWebservice = new FakerWebservice({});
   const editWebserviceData: FakerWebservice = new FakerWebservice({});
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -62,7 +61,7 @@ describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delet
     await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
     numberOfWebserviceKeys = await boWebservicesPage.resetAndGetNumberOfLines(page);
-    if (numberOfWebserviceKeys !== 0) expect(numberOfWebserviceKeys).to.be.above(0);
+    expect(numberOfWebserviceKeys).to.be.greaterThanOrEqual(0);
   });
 
   // 1 : Create webservice key

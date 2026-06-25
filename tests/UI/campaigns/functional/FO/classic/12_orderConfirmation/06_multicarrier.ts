@@ -790,17 +790,17 @@ describe('FO - Checkout - Shipping methods : MultiCarrier', async () => {
       expect(isTabOpened).to.equal(true);
     });
 
-    it('should click on edit shipment link of the first carrier', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditShipmentLink', baseContext);
+    it('should click on fulfill link of the first carrier', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickFulfillLink', baseContext);
 
-      const isEditModalVisible = await boOrdersViewBlockTabListPage.clickOnEditShipmentLink(page, 1);
-      expect(isEditModalVisible).to.equal(true);
+      const isFulFillModalVisible = await boOrdersViewBlockTabListPage.clickOnFulfillLink(page, 1);
+      expect(isFulFillModalVisible).to.equal(true);
     });
 
     it('should add a tracking number and save', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addTrackingNumber', baseContext);
 
-      const isModalNotVisible = await boOrdersViewBlockTabListPage.editShipment(page, 'TN12345678', firstCarrierData.name);
+      const isModalNotVisible = await boOrdersViewBlockTabListPage.addTrackingNumber(page, 'TN12345678');
       expect(isModalNotVisible).to.equal(true);
     });
 

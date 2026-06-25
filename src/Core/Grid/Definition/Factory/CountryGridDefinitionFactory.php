@@ -10,6 +10,8 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\ModalFormSubmitBulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -20,6 +22,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
@@ -27,7 +30,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
@@ -97,12 +100,15 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'zone_name',
                     ])
             )
-            // todo: change it to ToggleColumn when toggle status route is created
             ->add(
-                (new DataColumn('active'))
+                (new ToggleColumn('active'))
                     ->setName($this->trans('Enabled', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'active',
+                        'primary_field' => 'id_country',
+                        'route' => 'admin_countries_toggle_status',
+                        'route_param_name' => 'countryId',
+                        'sortable' => false,
                     ])
             )
             ->add(
@@ -248,7 +254,28 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getBulkActions(): BulkActionCollectionInterface
     {
-        // todo: need to implement bulk actions
-        return new BulkActionCollection();
+        return (new BulkActionCollection())
+            ->add(
+                (new SubmitBulkAction('enable_selection'))
+                    ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_countries_bulk_enable_status',
+                    ])
+            )
+            ->add(
+                (new SubmitBulkAction('disable_selection'))
+                    ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_countries_bulk_disable_status',
+                    ])
+            )
+            ->add(
+                (new ModalFormSubmitBulkAction('assign_zone'))
+                    ->setName($this->trans('Assign to a new zone', [], 'Admin.International.Feature'))
+                    ->setOptions([
+                        'submit_route' => 'admin_countries_bulk_update_zone',
+                        'modal_id' => 'changeCountriesZoneModal',
+                    ])
+            );
     }
 }

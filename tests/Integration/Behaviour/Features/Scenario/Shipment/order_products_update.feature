@@ -48,7 +48,7 @@ Feature: Update order products with shipments
       | product_name               | quantity |
       | Mug Today is a good day    | 1        |
     When I edit product "Mug Today is a good day" to order "bo_order1" with following products details:
-      | shipment_mapping       | 1:2, 2:3     |
+      | shipment_mapping       | shipment1:2, shipment2:3     |
       | price                  | 11.90        |
       | amount                 | 5            |
     Then order "bo_order1" should contain 5 products "Mug Today is a good day"
@@ -89,7 +89,7 @@ Feature: Update order products with shipments
       | product_name               | quantity |
       | Mug Today is a good day    | 1        |
     When I edit product "Mug Today is a good day" to order "bo_order2" with following products details:
-      | shipment_mapping       | 3:1, 4:0     |
+      | shipment_mapping       | shipment3:1, shipment4:0     |
       | price                  | 11.90        |
       | amount                 | 1            |
     Then order "bo_order2" should contain 1 products "Mug Today is a good day"

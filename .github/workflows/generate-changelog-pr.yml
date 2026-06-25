@@ -6,13 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       base_branch:
-        description: 'Branch to create the changelog on (e.g. develop)'
+        description: 'Branch to create the changelog on (e.g. develop, 9.1.x, 9.1.2-build)'
         required: true
-        type: choice
-        options:
-          - 'develop'
-          - '9.1.x'
-          - '8.2.x'
+        type: string
         default: 'develop'
       previous_ref:
         description: 'Previous git ref - tag, branch or SHA (e.g. 9.0.2)'

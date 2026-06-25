@@ -18,12 +18,13 @@ import {
 
 const baseContext: string = 'functional_API_endpoints_discount_getDiscountTypes';
 
-describe('API : GET /admin-api/discount-types', async () => {
+describe('API : GET /admin-api/discounts/types', async () => {
   let apiContext: APIRequestContext;
   let browserContext: BrowserContext;
   let page: Page;
   let accessToken: string;
   let jsonResponse: any;
+  const clientScope: string = 'discount_read';
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -42,15 +43,15 @@ describe('API : GET /admin-api/discount-types', async () => {
   describe('API : Fetch the access token', async () => {
     it('should request the endpoint /access_token', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestOauth2Token', baseContext);
-      accessToken = await requestAccessToken('discount_read');
+      accessToken = await requestAccessToken(clientScope);
     });
   });
 
   describe('API : Fetch Data', async () => {
-    it('should request the endpoint /discount-types', async function () {
+    it('should request the endpoint /discounts/types', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
-      const apiResponse = await apiContext.get('discount-types', {
+      const apiResponse = await apiContext.get('discounts/types', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

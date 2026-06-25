@@ -44,7 +44,7 @@ final class GetCmsPageCategoryForEditingHandler implements GetCmsPageCategoryFor
 
         return new EditableCmsPageCategory(
             $cmsPageCategory->name,
-            $cmsPageCategory->active,
+            (bool) $cmsPageCategory->active,
             (int) $cmsPageCategory->id_parent,
             $cmsPageCategory->description,
             $cmsPageCategory->meta_description,

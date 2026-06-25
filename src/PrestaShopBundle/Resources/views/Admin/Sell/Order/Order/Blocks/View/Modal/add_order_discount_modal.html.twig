@@ -57,7 +57,7 @@
                 {{ 'Invoice'|trans({}, 'Admin.Global') }}
               </label>
               {{ form_widget(addOrderCartRuleForm.invoice_id, {attr: {
-                disabled: not orderForViewing.hasInvoice
+                disabled: not orderForViewing.hasInvoice,
               }}) }}
             </div>
 

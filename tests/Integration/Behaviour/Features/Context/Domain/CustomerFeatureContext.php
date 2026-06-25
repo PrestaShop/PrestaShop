@@ -8,10 +8,12 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
+use Customer;
 use Exception;
 use Group;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetRequiredFieldsForCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
@@ -244,6 +246,18 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
     public function transformCustomers(TableNode $customersTable): array
     {
         return $customersTable->getHash();
+    }
+
+    /**
+     * @When I disable customer :customerReference
+     */
+    public function disableCustomer(string $customerReference): void
+    {
+        $command = new EditCustomerCommand($this->getSharedStorage()->get($customerReference));
+        $command->setIsEnabled(false);
+        $this->getCommandBus()->handle($command);
+
+        Customer::resetStaticCache();
     }
 
     /**

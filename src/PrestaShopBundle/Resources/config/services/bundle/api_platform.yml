@@ -71,6 +71,10 @@ services:
     arguments:
       $validatorMetadataFactory: '@validator.mapping.class_metadata_factory'
 
+  # Consumers (CQRSApiNormalizer) depend on the interface so the Admin API kernel can decorate it (extra properties).
+  PrestaShopBundle\ApiPlatform\Validator\CQRSApiValidatorInterface:
+    alias: PrestaShopBundle\ApiPlatform\Validator\CQRSApiValidator
+
 
   # Decorator of api_platform.state_provider.deserialize DeserializeProvider
   PrestaShopBundle\ApiPlatform\Provider\EmptyBodyDeserializerProvider:

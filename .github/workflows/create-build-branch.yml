@@ -1,0 +1,147 @@
+name: Create Build Branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 9.1.5, 9.2.0-beta.1, 9.2.0-rc.1, 9.2.0-alpha.1)'
+        required: true
+      starting_point:
+        description: 'Branch, tag or commit to build from'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  check-membership:
+    name: Check team membership
+    runs-on: ubuntu-latest
+    env:
+      TEAM_SLUG: prestashop-sa
+    steps:
+      - name: Verify actor belongs to ${{ env.TEAM_SLUG }}
+        env:
+          TOKEN: ${{ secrets.JARVIS_TOKEN }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::JARVIS_TOKEN secret is empty. Configure a token with read:org scope before running this workflow."
+            exit 1
+          fi
+
+          API_URL="https://api.github.com/orgs/PrestaShop/teams/${TEAM_SLUG}/memberships/${ACTOR}"
+          echo "Checking membership: ${API_URL}"
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "$API_URL")
+          STATUS=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          if [ "$STATUS" = "200" ]; then
+            ROLE=$(echo "$BODY" | jq -r '.role // "unknown"')
+            STATE=$(echo "$BODY" | jq -r '.state // "unknown"')
+            echo "✅ ${ACTOR} is a member of ${TEAM_SLUG} (role=${ROLE}, state=${STATE})." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::error::${ACTOR} is not a member of ${TEAM_SLUG} (HTTP ${STATUS}). Only members of this team can create a build branch."
+            echo "⛔ ${ACTOR} is not a member of ${TEAM_SLUG} (HTTP ${STATUS})." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+  create-build-branch:
+    name: Create Build Branch
+    runs-on: ubuntu-latest
+    needs: check-membership
+    steps:
+      - name: Parse version and compute branch name
+        id: parse
+        run: |
+          version="${{ github.event.inputs.version }}"
+          if [[ ! "$version" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)(-(alpha|beta|rc)\.([0-9]+))?$ ]]; then
+            echo "::error::Invalid version '$version'. Expected MAJOR.MINOR.PATCH or MAJOR.MINOR.PATCH-(alpha|beta|rc).NUM"
+            exit 1
+          fi
+          major="${BASH_REMATCH[1]}"
+          minor="${BASH_REMATCH[2]}"
+          patch="${BASH_REMATCH[3]}"
+          prerelease_label="${BASH_REMATCH[5]}"
+          prerelease_num="${BASH_REMATCH[6]}"
+          semver="${major}.${minor}.${patch}"
+          numeric_suffix="${major}${minor}${patch}"
+          if [ -n "$prerelease_label" ]; then
+            branch_name="build-${numeric_suffix}-${prerelease_label}${prerelease_num}"
+          else
+            branch_name="build-${numeric_suffix}"
+          fi
+          echo "Parsed: major=${major} minor=${minor} patch=${patch} semver=${semver} branch=${branch_name}"
+          {
+            echo "major=${major}"
+            echo "minor=${minor}"
+            echo "patch=${patch}"
+            echo "semver=${semver}"
+            echo "branch_name=${branch_name}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Checkout starting point
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.starting_point }}
+          fetch-depth: 0
+
+      - name: Ensure build branch does not already exist on remote
+        run: |
+          branch_name="${{ steps.parse.outputs.branch_name }}"
+          if git ls-remote --exit-code --heads origin "${branch_name}" >/dev/null 2>&1; then
+            echo "::error::Branch '${branch_name}' already exists on origin. Delete it manually before re-running."
+            exit 1
+          fi
+
+      - name: Create build branch
+        run: git checkout -b "${{ steps.parse.outputs.branch_name }}"
+
+      - name: Verify version files exist
+        run: |
+          for f in src/Core/Version.php install-dev/install_version.php; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Expected version file '$f' not found at starting point."
+              exit 1
+            fi
+          done
+
+      - name: Sync version files with provided version
+        run: |
+          semver="${{ steps.parse.outputs.semver }}"
+          major="${{ steps.parse.outputs.major }}"
+          minor="${{ steps.parse.outputs.minor }}"
+          patch="${{ steps.parse.outputs.patch }}"
+
+          sed -i -E "s|public const VERSION = '[^']*';|public const VERSION = '${semver}';|" src/Core/Version.php
+          sed -i -E "s|public const MAJOR_VERSION_STRING = '[^']*';|public const MAJOR_VERSION_STRING = '${major}';|" src/Core/Version.php
+          sed -i -E "s|public const MAJOR_VERSION = [0-9]+;|public const MAJOR_VERSION = ${major};|" src/Core/Version.php
+          sed -i -E "s|public const MINOR_VERSION = [0-9]+;|public const MINOR_VERSION = ${minor};|" src/Core/Version.php
+          sed -i -E "s|public const RELEASE_VERSION = [0-9]+;|public const RELEASE_VERSION = ${patch};|" src/Core/Version.php
+          sed -i -E "s|define\('_PS_INSTALL_VERSION_', '[^']*'\);|define('_PS_INSTALL_VERSION_', '${semver}');|" install-dev/install_version.php
+
+          # Sanity check: assert the substitutions landed.
+          grep -q "public const VERSION = '${semver}';" src/Core/Version.php
+          grep -q "public const MAJOR_VERSION_STRING = '${major}';" src/Core/Version.php
+          grep -q "public const MAJOR_VERSION = ${major};" src/Core/Version.php
+          grep -q "public const MINOR_VERSION = ${minor};" src/Core/Version.php
+          grep -q "public const RELEASE_VERSION = ${patch};" src/Core/Version.php
+          grep -q "define('_PS_INSTALL_VERSION_', '${semver}');" install-dev/install_version.php
+
+      - name: Commit version updates if any
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain src/Core/Version.php install-dev/install_version.php)" ]; then
+            git add src/Core/Version.php install-dev/install_version.php
+            git commit -m "Bump version to ${{ github.event.inputs.version }}"
+          else
+            echo "Version files already in sync with ${{ github.event.inputs.version }}; no commit needed."
+          fi
+
+      - name: Push build branch
+        run: git push origin "${{ steps.parse.outputs.branch_name }}"

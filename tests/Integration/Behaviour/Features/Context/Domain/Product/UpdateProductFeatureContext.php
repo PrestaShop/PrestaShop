@@ -375,6 +375,19 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Given /^product "(.+)" is not available for order$/
+     *
+     * @param string $productReference
+     */
+    public function productIsNotAvailableForOrder(string $productReference): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $command = new UpdateProductCommand($productId, ShopConstraint::shop($this->getDefaultShopId()));
+        $command->setAvailableForOrder(false);
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
      * @param UpdateProductCommand $command
      * @param array<string, mixed> $data
      */

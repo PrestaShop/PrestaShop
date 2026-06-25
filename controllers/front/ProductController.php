@@ -28,7 +28,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /** @var int|null */
     protected $id_product_attribute;
 
-    /** @var Product */
+    /** @var Product|null */
     protected $product;
 
     /** @var Category|null */
@@ -57,6 +57,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * @var bool
      */
     protected $isPreview = false;
+
+    /**
+     * This variable is used to cache the result of "getTemplateVarProduct", which
+     * is an expensive method that should not be called twice during the same request.
+     */
+    protected $templateVarProductCache = null;
 
     public function canonicalRedirection(string $canonical_url = ''): void
     {
@@ -135,6 +141,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         // Otherwise immediately show 404
         if (!Validate::isLoadedObject($this->product)) {
+            $this->product = null;
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
             $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
@@ -300,6 +307,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function initContent(): void
     {
+        if ($this->product === null) {
+            parent::initContent();
+
+            return;
+        }
+
         // Assign template vars related to the category + execute hooks related to the category
         $this->assignCategory();
 
@@ -1182,6 +1195,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function getTemplateVarProduct(): ProductLazyArray
     {
+        // If the product array is already built, we return it
+        if ($this->templateVarProductCache !== null) {
+            return $this->templateVarProductCache;
+        }
+
         // Convert product object into array
         $product = $this->objectPresenter->present($this->product);
 
@@ -1243,11 +1261,16 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full['title'] = $this->getProductPageTitle();
 
         // And finally, present it in the modern way
-        return $this->getProductPresenter()->present(
+        $templateVarProduct = $this->getProductPresenter()->present(
             $this->getProductPresentationSettings(),
             $product_full,
             $this->context->language
         );
+
+        // Cache the result in order to avoid multiple calls to this method
+        $this->templateVarProductCache = $templateVarProduct;
+
+        return $templateVarProduct;
     }
 
     /**
@@ -1398,6 +1421,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
+        if ($this->product === null) {
+            return $breadcrumb;
+        }
+
         // $productBreadcrumbCategory can have two possible values
         // - current : Category the product was accessed from
         // - default : Product default category
@@ -1431,6 +1458,104 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         ];
 
         return $breadcrumb;
+    }
+
+    /**
+     * Generates structured data for the current product, extending the default ones.
+     * If you want to enrich or modify this from a module, for example - add reviews, use hook actionFrontControllerSetVariables.
+     *
+     * @return array Enriched structured data for the product page
+     */
+    public function getStructuredData(): array
+    {
+        $structuredData = parent::getStructuredData();
+
+        $product = $this->getTemplateVarProduct();
+
+        // Base structure
+        $structuredData['product'] = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Product',
+            'name' => $product['name'],
+            'description' => preg_replace("/[\r\n]+/", ' ', $product['meta']['description'] ?? ''),
+            'category' => $product['category_name'] ?? '',
+        ];
+
+        // Images, with cover first
+        if (!empty($product['images'])) {
+            $structuredData['product']['image'] = [];
+            if (!empty($product['cover']['large']['url'])) {
+                $structuredData['product']['image'][] = $product['cover']['large']['url'];
+            }
+            foreach ($product['images'] as $image) {
+                if (!empty($image['large']['url']) && (!empty($product['cover']['large']['url']) && $image['large']['url'] !== $product['cover']['large']['url'])) {
+                    $structuredData['product']['image'][] = $image['large']['url'];
+                }
+            }
+        }
+
+        // Identifiers, if set
+        if (!empty($product['reference'])) {
+            $structuredData['product']['sku'] = $product['reference'];
+        }
+        if (!empty($product['mpn'])) {
+            $structuredData['product']['mpn'] = $product['mpn'];
+        }
+        if (!empty($product['ean13'])) {
+            $structuredData['product']['gtin13'] = $product['ean13'];
+        }
+        if (!empty($product['upc'])) {
+            $structuredData['product']['gtin12'] = $product['upc'];
+        }
+
+        // Add brand data
+        if (!empty($product['id_manufacturer']) && !empty($product['manufacturer_name'])) {
+            $structuredData['product']['brand'] = [
+                '@type' => 'Brand',
+                'name' => $product['manufacturer_name'],
+            ];
+        } elseif (!empty($this->context->shop->name)) {
+            $structuredData['product']['brand'] = [
+                '@type' => 'Organization',
+                'name' => $this->context->shop->name,
+            ];
+        }
+
+        // Add weight if filled in
+        if (!empty((float) $product['weight'])) {
+            $structuredData['product']['weight'] = [
+                '@type' => 'QuantitativeValue',
+                'value' => number_format($product['weight'], $this->context->getComputingPrecision(), '.', ''),
+                'unitCode' => $product['weight_unit'],
+            ];
+        }
+
+        // Add offer data if price is shown
+        if ($product['show_price']) {
+            $structuredData['product']['offers'] = [
+                '@type' => 'Offer',
+                'priceCurrency' => $this->context->currency->iso_code,
+                // We are using number format to avoid float encoding issues in the final JSON
+                'price' => number_format($product['price_amount'], $this->context->getComputingPrecision(), '.', ''),
+                'name' => $product['name'],
+                'url' => $this->getCanonicalURL(),
+                'priceValidUntil' => date('Y-m-d', strtotime('+15 day')),
+                'availability' => $product['seo_availability'],
+                'seller' => [
+                    '@type' => 'Organization',
+                    'name' => $this->context->shop->name,
+                ],
+            ];
+
+            if (!empty($product['reference'])) {
+                $structuredData['product']['offers']['sku'] = $product['reference'];
+            }
+            if (!empty($product['mpn'])) {
+                $structuredData['product']['offers']['mpn'] = $product['mpn'];
+            }
+        }
+
+        return $structuredData;
     }
 
     protected function addProductCustomizationData(array $product_full)

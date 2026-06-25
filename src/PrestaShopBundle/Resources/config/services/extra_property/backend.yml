@@ -1,0 +1,54 @@
+# These are the services for the Extra Property feature that are ONLY used on the backend side
+services:
+  _defaults:
+    autowire: true
+    public: false
+
+  # ─── Repository write alias (back-office only) ───────────────────────────────
+  # Registering/unregistering extra property definitions only happens on the back-office side (module install),
+  # so the writer interface is bound here (not in common.yml). It points at the cache decorator so every write
+  # invalidates the definition cache.
+  PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionWriterInterface:
+    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Definition\CachedExtraPropertyDefinitionRepository'
+
+  # ─── Schema manager (raw DDL, no cache) ──────────────────────────────────────
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManager:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $prefix: '%database_prefix%'
+      $logger: '@logger'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManagerInterface:
+    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManager'
+
+  # ─── Registry ────────────────────────────────────────────────────────────────
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistry:
+    arguments:
+      $readRepository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
+      $writeRepository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionWriterInterface'
+      $schemaManager: '@PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManagerInterface'
+      $logger: '@logger'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface:
+    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistry'
+    public: true
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyValueCaster: ~
+
+  # ─── Back-office form services ────────────────────────────────────────────────
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormBuilderModifier:
+    arguments:
+      $repository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
+      $reader: '@PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface'
+      $translator: '@translator'
+      $shopContext: '@PrestaShop\PrestaShop\Core\Context\ShopContext'
+      $formBuilderModifier: '@PrestaShopBundle\Form\FormBuilderModifier'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister:
+    arguments:
+      $repository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
+      $writer: '@PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface'
+      $shopContext: '@PrestaShop\PrestaShop\Core\Context\ShopContext'
