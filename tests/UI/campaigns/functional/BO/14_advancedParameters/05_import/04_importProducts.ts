@@ -25,11 +25,11 @@ describe('BO - Advanced Parameters - Import : Import products', async () => {
   let page: Page;
 
   const fileName: string = 'ui_import_products.csv';
-  const firstReference: string = 'UI-IMP-A';
-  const secondReference: string = 'UI-IMP-B';
+  const firstProduct: string = 'UI Import Product A';
+  const secondProduct: string = 'UI Import Product B';
   const csvContent: string = 'Active (0/1);Name *;Categories (x,y,z...);Price tax excluded;Reference #;Quantity\n'
-    + `1;UI Import Product A;Home;19.99;${firstReference};100\n`
-    + `1;UI Import Product B;Home;29.99;${secondReference};50\n`;
+    + `1;${firstProduct};Home;19.99;UI-IMP-A;100\n`
+    + `1;${secondProduct};Home;29.99;UI-IMP-B;50\n`;
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -120,20 +120,20 @@ describe('BO - Advanced Parameters - Import : Import products', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterFirstProduct', baseContext);
 
     await boProductsPage.resetFilter(page);
-    await boProductsPage.filterProducts(page, 'reference', firstReference, 'input');
+    await boProductsPage.filterProducts(page, 'product_name', firstProduct, 'input');
 
     const numberOfProducts = await boProductsPage.getNumberOfProductsFromList(page);
     expect(numberOfProducts).to.be.eq(1);
 
-    const reference = await boProductsPage.getTextColumn(page, 'reference', 1);
-    expect(reference).to.contains(firstReference);
+    const productName = await boProductsPage.getTextColumn(page, 'product_name', 1);
+    expect(productName).to.contains(firstProduct);
   });
 
   it('should filter the listing and find the second imported product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterSecondProduct', baseContext);
 
     await boProductsPage.resetFilter(page);
-    await boProductsPage.filterProducts(page, 'reference', secondReference, 'input');
+    await boProductsPage.filterProducts(page, 'product_name', secondProduct, 'input');
 
     const numberOfProducts = await boProductsPage.getNumberOfProductsFromList(page);
     expect(numberOfProducts).to.be.eq(1);

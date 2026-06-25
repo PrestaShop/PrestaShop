@@ -78,10 +78,9 @@ describe('BO - Advanced Parameters - Import : Save and reload a data matching co
   it('should save the data matching configuration', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'saveMapping', baseContext);
 
+    // The saved configuration only shows up in the dropdown on a fresh step-2 load,
+    // which is asserted after the log out / log in below.
     await boImportPage.saveDataMatchingConfig(page, mappingName);
-
-    const isVisible = await boImportPage.isLoadDataMatchingConfigVisible(page);
-    expect(isVisible).to.be.eq(true);
   });
 
   it('should log out then log back in', async function () {
@@ -137,9 +136,20 @@ describe('BO - Advanced Parameters - Import : Save and reload a data matching co
   it('should delete the saved data matching configuration', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteMapping', baseContext);
 
+    // Re-select the configuration then delete it (cleanup). Verify on a fresh step-2 load.
+    await boImportPage.loadDataMatchingConfig(page, mappingName);
     await boImportPage.deleteDataMatchingConfig(page);
 
-    const configs = await boImportPage.getDataMatchingConfigs(page);
-    expect(configs).to.not.contains(mappingName);
+    await boDashboardPage.goToSubMenu(
+      page,
+      boDashboardPage.advancedParametersLink,
+      boDashboardPage.importLink,
+    );
+    await boImportPage.closeSfToolBar(page);
+    await boImportPage.uploadImportFile(page, 'Categories', fileName);
+    await boImportPage.goToImportNextStep(page);
+
+    const isVisible = await boImportPage.isLoadDataMatchingConfigVisible(page);
+    expect(isVisible).to.be.eq(false);
   });
 });

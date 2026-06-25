@@ -81,6 +81,9 @@ describe('BO - Advanced Parameters - Import : Import with truncate', async () =>
   it('should go to the data-matching step', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'nextStep', baseContext);
 
+    // Enabling truncate adds a "delete all data" confirm dialog on submit; accept it.
+    await boImportPage.dialogListener(page, true);
+
     const panelTitle = await boImportPage.goToImportNextStep(page);
     expect(panelTitle).to.contains(boImportPage.importPanelTitle);
   });
