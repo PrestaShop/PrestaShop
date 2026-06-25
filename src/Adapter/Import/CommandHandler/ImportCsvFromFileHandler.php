@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfig;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfig;
 use PrestaShop\PrestaShop\Core\Import\Exception\NotSupportedImportTypeException;
 use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerFinderInterface;
+use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
 use PrestaShop\PrestaShop\Core\Import\ImporterInterface;
 use PrestaShop\PrestaShop\Core\Import\ImportSettings;
 
@@ -64,7 +65,7 @@ final class ImportCsvFromFileHandler implements ImportCsvFromFileHandlerInterfac
         return $this->runModernImport($command, $importHandler);
     }
 
-    private function runModernImport(ImportCsvFromFileCommand $command, $importHandler): ImportResult
+    private function runModernImport(ImportCsvFromFileCommand $command, ImportHandlerInterface $importHandler): ImportResult
     {
         $importConfig = $this->buildImportConfig($command);
         $mapping = $command->getDataMapping();
