@@ -83,7 +83,7 @@
           {% for address in businessEntityForm.billing_address %}
             <li>
               {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
-                index: loop.index0,
+                index: address.vars.name,
                 position: loop.index,
                 address: address,
               }) }}
@@ -116,7 +116,7 @@
           {% for address in businessEntityForm.shipping_address %}
             <li>
               {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/address_card.html.twig', {
-                index: loop.index0,
+                index: address.vars.name,
                 position: loop.index,
                 address: address,
               }) }}
