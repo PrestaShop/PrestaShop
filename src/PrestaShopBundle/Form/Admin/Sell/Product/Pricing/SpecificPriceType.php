@@ -96,7 +96,7 @@ class SpecificPriceType extends TranslatorAwareType
 
         $productId = new ProductId((int) $builder->getData()['product_id']);
         $productType = $this->productRepository->getProductType($productId);
-        if ($productType->getValue() === ProductType::TYPE_COMBINATIONS) {
+        if (ProductType::hasCombinations($productType->getValue())) {
             $builder->add('combination_id', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
                 'required' => false,

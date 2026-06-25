@@ -86,6 +86,30 @@ class ProductType
     }
 
     /**
+     * Whether the given type is a virtual (downloadable) product type.
+     *
+     * @param string $type
+     *
+     * @return bool
+     */
+    public static function isVirtualType(string $type): bool
+    {
+        return in_array($type, [self::TYPE_VIRTUAL, self::TYPE_VIRTUAL_COMBINATIONS], true);
+    }
+
+    /**
+     * Whether the given type is a product type carrying combinations.
+     *
+     * @param string $type
+     *
+     * @return bool
+     */
+    public static function hasCombinations(string $type): bool
+    {
+        return in_array($type, [self::TYPE_COMBINATIONS, self::TYPE_VIRTUAL_COMBINATIONS], true);
+    }
+
+    /**
      * @param string $value
      *
      * @throws ProductConstraintException
