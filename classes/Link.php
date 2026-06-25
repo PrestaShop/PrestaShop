@@ -615,7 +615,10 @@ class LinkCore
         $params = [];
         $params['id'] = $supplier->id;
         $params['rewrite'] = (!$alias) ? $supplier->link_rewrite : $alias;
-        $params['meta_title'] = Tools::str2url($supplier->meta_title);
+
+        if ($dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_title', $idShop)) {
+            $params['meta_title'] = Tools::str2url($supplier->meta_title);
+        }
 
         return $url . $dispatcher->createUrl('supplier_rule', $idLang, $params, $this->allow, '', $idShop);
     }
