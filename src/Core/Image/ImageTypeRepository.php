@@ -25,9 +25,17 @@ class ImageTypeRepository
         $this->db_prefix = $db->getPrefix();
     }
 
+    /**
+     * Applies the image types declared by a theme. Types are upserted by name: a theme only
+     * creates or updates its own types and leaves every other row untouched. The table used to be
+     * truncated first, which silently wiped image types the merchant had created by hand as well as
+     * the types required by the theme of another shop (image_type is a global, non shop-scoped
+     * table). Truncating is therefore avoided.
+     *
+     * @see https://github.com/PrestaShop/PrestaShop/issues/20300
+     */
     public function setTypes(array $types)
     {
-        $this->removeAllTypes();
         foreach ($types as $name => $data) {
             $this->createType(
                 $name,
@@ -56,6 +64,14 @@ class ImageTypeRepository
             }
         }
 
+        // image_type.name is unique: update the existing type instead of failing on a duplicate.
+        $existingId = $this->getIdByName($name);
+        if ($existingId) {
+            $this->db->update('image_type', $data, 'id_image_type = ' . $existingId);
+
+            return $existingId;
+        }
+
         $this->db->insert('image_type', $data);
 
         return $this->getIdByName($name);
@@ -75,12 +91,5 @@ class ImageTypeRepository
         );
 
         return (int) $id_image_type;
-    }
-
-    protected function removeAllTypes()
-    {
-        Db::getInstance()->execute(
-            "TRUNCATE TABLE {$this->db_prefix}image_type"
-        );
     }
 }
