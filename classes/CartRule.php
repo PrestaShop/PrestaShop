@@ -1096,11 +1096,6 @@ class CartRuleCore extends ObjectModel
                     return (!$display_error) ? false : $this->trans($errorMessage, [], 'Shop.Notifications.Error');
                 }
 
-                // Remove conflicting discounts that were replaced by higher priority ones
-                foreach ($result->getDiscountsToRemove() as $ruleIdToRemove) {
-                    $cart->removeCartRule($ruleIdToRemove);
-                }
-
                 // Note: The actual application order is determined by the result
                 // The cart will apply discounts in the priority order specified by $result->getDiscountsToApply()
             } catch (Exception $e) {

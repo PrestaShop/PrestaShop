@@ -178,6 +178,11 @@ class CartCore extends ObjectModel
      */
     protected $shouldExcludeGiftsDiscount = false;
 
+    /**
+     * @var int[]
+     */
+    private $cartRuleIdsToReplace = [];
+
     public const ONLY_PRODUCTS = 1;
     public const ONLY_DISCOUNTS = 2;
     public const BOTH = 3;
@@ -1437,6 +1442,8 @@ class CartCore extends ObjectModel
         if ((int) $cartRule->gift_product) {
             $giftProduct = new Product((int) $cartRule->gift_product);
             if (!Validate::isLoadedObject($giftProduct)) {
+                $this->cartRuleIdsToReplace = [];
+
                 return false;
             }
         }
@@ -1446,6 +1453,8 @@ class CartCore extends ObjectModel
             'id_cart_rule' => (int) $id_cart_rule,
             'id_cart' => (int) $this->id,
         ])) {
+            $this->cartRuleIdsToReplace = [];
+
             return false;
         }
 
@@ -1459,6 +1468,10 @@ class CartCore extends ObjectModel
         Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_REDUCTION . '-ids');
         Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT . '-ids');
         Cache::clean('getContextualValue_*');
+
+        // Taken before the gift is added, whose updateQty() can add other cart rules through this method
+        $cartRuleIdsToReplace = $this->cartRuleIdsToReplace;
+        $this->cartRuleIdsToReplace = [];
 
         // Add the gift product to the cart
         if ($giftProduct !== null) {
@@ -1475,6 +1488,12 @@ class CartCore extends ObjectModel
                 true,
                 $useOrderPrices
             );
+        }
+
+        // Removed once the new rule and its gift are in the cart: the auto-add they trigger sees the rule replacing
+        // them, and removing a replaced gift of the same product keeps only the unit the new rule gives away
+        foreach ($cartRuleIdsToReplace as $cartRuleIdToReplace) {
+            $this->removeCartRule($cartRuleIdToReplace, $useOrderPrices);
         }
 
         return true;
@@ -1520,10 +1539,8 @@ class CartCore extends ObjectModel
             );
         }
 
-        // Remove cart rules which are replaced by higher priority ones
-        foreach ($result->getDiscountsToRemove() as $ruleIdToRemove) {
-            $this->removeCartRule($ruleIdToRemove);
-        }
+        // Cart rules replaced by higher priority ones, removed by addCartRule() once the new one is stored
+        $this->cartRuleIdsToReplace = array_map('intval', $result->getDiscountsToRemove());
 
         // Note: The priority order of discounts is determined by $result->getDiscountsToApply()
         // The actual calculation will apply discounts in this priority order
