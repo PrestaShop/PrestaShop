@@ -540,7 +540,7 @@ CREATE TABLE `PREFIX_connections` (
   `date_add` datetime NOT NULL,
   `http_referer` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_connections`),
-  KEY `id_guest` (`id_guest`),
+  KEY `id_guest` (`id_guest`, `date_add`),
   KEY `date_add` (`date_add`),
   KEY `id_page` (`id_page`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
