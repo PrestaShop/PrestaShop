@@ -12,9 +12,34 @@ use Context;
 use Dispatcher;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use ReflectionProperty;
 
 class LinkTest extends TestCase
 {
+    private $originalUseRoutes;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->originalUseRoutes = $this->getUseRoutesProperty()->getValue(Dispatcher::getInstance());
+    }
+
+    protected function tearDown(): void
+    {
+        // Restore the Dispatcher singleton state mutated by the tests, otherwise the forced
+        // use_routes value leaks into other test classes and changes their generated URLs.
+        $this->getUseRoutesProperty()->setValue(Dispatcher::getInstance(), $this->originalUseRoutes);
+        parent::tearDown();
+    }
+
+    private function getUseRoutesProperty(): ReflectionProperty
+    {
+        $property = (new ReflectionClass('Dispatcher'))->getProperty('use_routes');
+        $property->setAccessible(true);
+
+        return $property;
+    }
+
     private function getProductLink(bool $statusUseRoutes, int $id_product, ?int $id_product_attribute): array
     {
         $reflectionDispatcher = new ReflectionClass('Dispatcher');
