@@ -28,7 +28,11 @@ class Router extends BaseRouter
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
         $url = parent::generate($name, $parameters, $referenceType);
-        if (TokenInUrls::isDisabled() || $this->anonymousRouteProvider->isRouteAnonymous($name)) {
+        if (TokenInUrls::isDisabled()
+            || $this->anonymousRouteProvider->isRouteAnonymous($name)
+            // API Platform routes are stateless and OAuth-authenticated; they must not carry the
+            // admin CSRF token in generated IRIs (e.g. the Location header). (#39496)
+            || str_starts_with($name, '_api_')) {
             return $url;
         }
 
