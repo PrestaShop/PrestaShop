@@ -279,6 +279,8 @@ class StockAvailableCore extends ObjectModel
      */
     public function add($autodate = true, $null_values = false)
     {
+        $this->applySharedStockShopConstraint();
+
         if (!parent::add($autodate, $null_values)) {
             return false;
         }
@@ -293,11 +295,36 @@ class StockAvailableCore extends ObjectModel
      */
     public function update($null_values = false)
     {
+        $this->applySharedStockShopConstraint();
+
         if (!parent::update($null_values)) {
             return false;
         }
 
         return $this->postSave();
+    }
+
+    /**
+     * A shop group sharing its stock stores a single row with id_shop = 0.
+     */
+    private function applySharedStockShopConstraint(): void
+    {
+        if (!Shop::isFeatureActive()) {
+            return;
+        }
+
+        $idShopGroup = $this->id_shop
+            ? (int) Shop::getGroupIdFromShopId((int) $this->id_shop)
+            : (int) $this->id_shop_group;
+
+        if (!$idShopGroup) {
+            return;
+        }
+
+        if ((bool) (new ShopGroup($idShopGroup))->share_stock) {
+            $this->id_shop = 0;
+            $this->id_shop_group = $idShopGroup;
+        }
     }
 
     /**
