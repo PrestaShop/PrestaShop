@@ -188,7 +188,7 @@ class FeatureValueRepository extends AbstractObjectModelRepository
             ->setParameter('shopId', $shopId->getValue())
         ;
 
-        $result = $qb->execute()->fetchAllAssociative();
+        $result = $qb->executeQuery()->fetchAllAssociative();
         $featureValues = [];
         foreach ($result as $featureValue) {
             $featureValueId = (int) $featureValue['id_feature_value'];

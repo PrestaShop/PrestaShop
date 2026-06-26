@@ -5862,7 +5862,7 @@ class ProductCore extends ObjectModel
      *
      * @return array Array with feature's data
      */
-    public static function getFrontFeaturesCombinationStatic($id_lang, $id_product_attribute)
+    public static function getFrontFeaturesCombinationStatic(int $id_lang, int $id_product_attribute): array
     {
         if (!Feature::isFeatureActive() || !$id_product_attribute) {
             return [];
@@ -5903,7 +5903,7 @@ class ProductCore extends ObjectModel
      *
      * @return array
      */
-    public static function getFrontFeaturesMergedStatic($id_lang, $id_product, $id_product_attribute)
+    public static function getFrontFeaturesMergedStatic(int $id_lang, int $id_product, int $id_product_attribute): array
     {
         $productFeatures = self::getFrontFeaturesStatic($id_lang, $id_product);
 
