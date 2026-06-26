@@ -412,8 +412,14 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             $this->selected_states = [0];
         }
         $tax_rules_group = new TaxRulesGroup((int) $id_tax_rules_group);
+        // WHY: $first must be reused only once across the whole selection. When editing a rule and
+        // selecting several countries (the "all countries" option), the existing rule should be
+        // updated for the first generated rule and brand-new rules created for the rest. Resetting
+        // $first inside the country loop made every country reuse $id_rule, so a single-state
+        // selection collapsed onto that one row (leaving only the last country) and a multi-country
+        // update left the edited country duplicated. @see https://github.com/PrestaShop/PrestaShop/issues/15689
+        $first = true;
         foreach ($this->selected_countries as $id_country) {
-            $first = true;
             foreach ($this->selected_states as $id_state) {
                 if ($tax_rules_group->hasUniqueTaxRuleForCountry($id_country, $id_state, $id_rule)) {
                     $this->errors[] = $this->trans('A tax rule already exists for this country/state with tax only behavior.', [], 'Admin.International.Notification');
