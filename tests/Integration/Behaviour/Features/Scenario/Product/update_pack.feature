@@ -101,20 +101,20 @@ Feature: Add product to pack from Back Office (BO)
     Then product "productPack2" type should be pack
     And pack "productPack2" should contain products with following details:
       | product  | combination | name             | quantity | image url                            |
-      | product3 |             | summerstreet     | 3        | http://myshop.com/img/p/{image3}.jpg |
-      | product4 |             | winterstreet     | 20       | http://myshop.com/img/p/{image4}.jpg |
+      | product3 |             | summerstreet     | 3        | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | product4 |             | winterstreet     | 20       | http://myshop.com/img/p/{image4}-small_default.jpg |
 
   Scenario: I update pack by removing one of the products
     When pack productPack2 should contain products with following details:
       | product  | combination | name             | quantity | image url                            |
-      | product3 |             | summerstreet     | 3        | http://myshop.com/img/p/{image3}.jpg |
-      | product4 |             | winterstreet     | 20       | http://myshop.com/img/p/{image4}.jpg |
+      | product3 |             | summerstreet     | 3        | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | product4 |             | winterstreet     | 20       | http://myshop.com/img/p/{image4}-small_default.jpg |
     When I update pack "productPack2" with following product quantities:
       | product  | quantity |
       | product3 | 3        |
     And pack "productPack2" should contain products with following details:
       | product  | combination | name             | quantity | image url                            |
-      | product3 |             | summerstreet     | 3        | http://myshop.com/img/p/{image3}.jpg |
+      | product3 |             | summerstreet     | 3        | http://myshop.com/img/p/{image3}-small_default.jpg |
 
   Scenario: I add pack product to a pack
     Given product "productPack1" type should be pack
@@ -138,7 +138,7 @@ Feature: Add product to pack from Back Office (BO)
     And pack productPack4 should contain products with following details:
       | product  | combination | name             | quantity | image url                                              |
       | product2 |             | shady sunglasses | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg |
-      | product3 |             | summerstreet     | 3        | http://myshop.com/img/p/{image3}.jpg                   |
+      | product3 |             | summerstreet     | 3        | http://myshop.com/img/p/{image3}-small_default.jpg                   |
 
   Scenario: I add product with negative quantity to a pack
     Given product "product2" type should be standard
@@ -154,7 +154,7 @@ Feature: Add product to pack from Back Office (BO)
     When pack productPack4 should contain products with following details:
       | product  | name             | combination | quantity | image url                                              |
       | product2 | shady sunglasses |             | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg |
-      | product3 | summerstreet     |             | 3        | http://myshop.com/img/p/{image3}.jpg                   |
+      | product3 | summerstreet     |             | 3        | http://myshop.com/img/p/{image3}-small_default.jpg                   |
     And I remove all products from pack productPack4
     Then product "productPack4" type should be pack
     And pack "productPack4" should be empty
@@ -195,9 +195,9 @@ Feature: Add product to pack from Back Office (BO)
     Then product "productPack4" type should be pack
     And pack productPack4 should contain products with following details:
       | product       | name                                   | combination         | quantity | image url                                 | reference                  |
-      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg | Ref: productSkirtSWhiteRef |
-      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}.jpg | Ref: productSkirtRef       |
-      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}-small_default.jpg | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}-small_default.jpg | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}-small_default.jpg | Ref: productSkirtRef       |
 
   Scenario: Add combination & standard product to a pack
     Given product "product2" type should be standard
@@ -217,18 +217,18 @@ Feature: Add product to pack from Back Office (BO)
     Then product "productPack4" type should be pack
     And pack productPack4 should contain products with following details:
       | product       | name                                   | combination         | quantity | image url                                              | reference                  |
-      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
-      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}.jpg              | Ref: productSkirtRef       |
-      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}-small_default.jpg              | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}-small_default.jpg              | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}-small_default.jpg              | Ref: productSkirtRef       |
       | product2      | shady sunglasses                       |                     | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg | Ref: ref1                  |
 
   Scenario: I remove one combination of same product from existing pack and change another combination quantity
     Given product "productPack4" type should be pack
     When pack productPack4 should contain products with following details:
       | product       | name                                   | combination         | quantity | image url                                              |
-      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              |
-      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}.jpg              |
-      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}-small_default.jpg              |
+      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}-small_default.jpg              |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}-small_default.jpg              |
       | product2      | shady sunglasses                       |                     | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg |
     And I update pack productPack4 with following product quantities:
       | product       | combination         | quantity |
@@ -237,8 +237,8 @@ Feature: Add product to pack from Back Office (BO)
       | product2      |                     | 2        |
     Then pack productPack4 should contain products with following details:
       | product       | name                                   | combination         | quantity | image url                                              |
-      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              |
-      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 9        | http://myshop.com/img/p/{skirtBlackM}.jpg              |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}-small_default.jpg              |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 9        | http://myshop.com/img/p/{skirtBlackM}-small_default.jpg              |
       | product2      | shady sunglasses                       |                     | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg |
     Then product "productPack4" type should be pack
 
@@ -246,8 +246,8 @@ Feature: Add product to pack from Back Office (BO)
     Given product "productPack4" type should be pack
     When pack productPack4 should contain products with following details:
       | product       | name                                   | combination         | quantity | image url                                              |
-      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              |
-      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 9        | http://myshop.com/img/p/{skirtBlackM}.jpg              |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}-small_default.jpg              |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 9        | http://myshop.com/img/p/{skirtBlackM}-small_default.jpg              |
       | product2      | shady sunglasses                       |                     | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg |
     And I remove all products from pack productPack4
     Then product "productPack4" type should be pack
@@ -263,21 +263,21 @@ Feature: Add product to pack from Back Office (BO)
     Then product "productPack4" type should be pack
     And pack productPack4 should contain products with following details:
       | product       | name                                   | combination         | quantity | image url                                              | reference                  |
-      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
-      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}.jpg              | Ref: productSkirtRef       |
-      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}-small_default.jpg              | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}-small_default.jpg              | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}-small_default.jpg              | Ref: productSkirtRef       |
       | product2      | shady sunglasses                       |                     | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg | Ref: ref1                  |
     When I delete product product2
     Then pack productPack4 should contain products with following details:
       | product       | name                                   | combination         | quantity | image url                                              | reference                  |
-      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
-      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}.jpg              | Ref: productSkirtRef       |
-      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}-small_default.jpg              | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}-small_default.jpg              | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}-small_default.jpg              | Ref: productSkirtRef       |
     When I delete combination productSkirt1MWhite
     Then pack productPack4 should contain products with following details:
       | product       | name                                   | combination         | quantity | image url                                              | reference                  |
-      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
-      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}-small_default.jpg              | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}-small_default.jpg              | Ref: productSkirtRef       |
 
   Scenario: I cannot change a product type to a pack if it is already associated with a pack
     Given I add product "product5" with following information:
@@ -292,8 +292,8 @@ Feature: Add product to pack from Back Office (BO)
     Then product "productPack4" type should be pack
     And pack productPack4 should contain products with following details:
       | product       | name                                   | combination         | quantity | image url                                              | reference                  |
-      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
-      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}-small_default.jpg              | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}-small_default.jpg              | Ref: productSkirtRef       |
       | product5      | shady sunglasses                       |                     | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg |                            |
     When I update product "product5" type to pack
     Then I should get error that the product is already associated to a pack
@@ -301,6 +301,6 @@ Feature: Add product to pack from Back Office (BO)
     And product "productPack4" type should be pack
     And pack productPack4 should contain products with following details:
       | product       | name                                   | combination         | quantity | image url                                              | reference                  |
-      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
-      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}-small_default.jpg              | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}-small_default.jpg              | Ref: productSkirtRef       |
       | product5      | shady sunglasses                       |                     | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg |                            |
