@@ -17,6 +17,7 @@ use Link;
 use PHPUnit\Framework\TestCase;
 use Product;
 use ReflectionClass;
+use ReflectionProperty;
 use Shop;
 use ShopUrl;
 use Tests\Resources\DatabaseDump;
@@ -50,10 +51,19 @@ class LinkMultishopTest extends TestCase
      */
     private $categoryId = 3;
 
+    /**
+     * @var bool
+     */
+    private $originalUseRoutes;
+
     protected function setUp(): void
     {
         parent::setUp();
         DatabaseDump::restoreTables(self::TABLES);
+
+        // Capture the baseline Dispatcher routing state before this test forces it, so it can be
+        // restored in tearDown and does not leak into other test classes.
+        $this->originalUseRoutes = $this->getUseRoutesProperty()->getValue(Dispatcher::getInstance());
 
         Configuration::updateGlobalValue('PS_MULTISHOP_FEATURE_ACTIVE', '1');
         Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', '1');
@@ -108,17 +118,25 @@ class LinkMultishopTest extends TestCase
         Context::getContext()->shop = new Shop(1);
         Category::resetStaticCache();
 
-        $dispatcher = new ReflectionClass(Dispatcher::class);
-        $useRoutes = $dispatcher->getProperty('use_routes');
-        $useRoutes->setAccessible(true);
-        $useRoutes->setValue(Dispatcher::getInstance(), true);
+        $this->getUseRoutesProperty()->setValue(Dispatcher::getInstance(), true);
     }
 
     protected function tearDown(): void
     {
+        // Restore the Dispatcher singleton state, otherwise the forced use_routes value leaks into
+        // other test classes and changes their generated URLs.
+        $this->getUseRoutesProperty()->setValue(Dispatcher::getInstance(), $this->originalUseRoutes);
         DatabaseDump::restoreTables(self::TABLES);
         Shop::resetContext();
         parent::tearDown();
+    }
+
+    private function getUseRoutesProperty(): ReflectionProperty
+    {
+        $property = (new ReflectionClass(Dispatcher::class))->getProperty('use_routes');
+        $property->setAccessible(true);
+
+        return $property;
     }
 
     public function testCategoryLinkUsesTargetShopLinkRewrite(): void
