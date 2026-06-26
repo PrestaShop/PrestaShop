@@ -7584,10 +7584,12 @@ class ProductCore extends ObjectModel
      * Get list of parent categories.
      *
      * @param int|null $id_lang Language identifier
+     * @param int|null $id_shop Resolve category link_rewrite for this shop instead of the current
+     *                          context shop, so links generated for another shop are correct
      *
      * @return array
      */
-    public function getParentCategories($id_lang = null)
+    public function getParentCategories($id_lang = null, $id_shop = null)
     {
         if (!$id_lang) {
             $id_lang = Context::getContext()->language->id;
@@ -7600,7 +7602,7 @@ class ProductCore extends ObjectModel
 
         $sql = new DbQuery();
         $sql->from('category', 'c');
-        $sql->leftJoin('category_lang', 'cl', 'c.id_category = cl.id_category AND id_lang = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('cl'));
+        $sql->leftJoin('category_lang', 'cl', 'c.id_category = cl.id_category AND id_lang = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('cl', $id_shop));
         $sql->where('c.nleft <= ' . (int) $interval['nleft'] . ' AND c.nright >= ' . (int) $interval['nright']);
         $sql->orderBy('c.nleft');
 

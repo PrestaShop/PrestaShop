@@ -1541,16 +1541,23 @@ class CategoryCore extends ObjectModel
      * Get Each parent category of this category until the root category.
      *
      * @param int $idLang Language ID
+     * @param int|null $idShop Resolve the tree and its multishop fields (e.g. link_rewrite) for this
+     *                         shop instead of the current context shop. Used when generating a link
+     *                         for another shop than the one the request bootstrapped into.
      *
      * @return array Corresponding categories
      */
-    public function getParentsCategories($idLang = null)
+    public function getParentsCategories($idLang = null, $idShop = null)
     {
         $context = Context::getContext()->cloneContext();
         $context->shop = clone $context->shop;
 
         if (null === $idLang) {
             $idLang = $context->language->id;
+        }
+
+        if (null !== $idShop) {
+            $context->shop = new Shop((int) $idShop);
         }
 
         $categories = null;
@@ -1566,7 +1573,7 @@ class CategoryCore extends ObjectModel
         $sqlAppend = 'FROM `' . _DB_PREFIX_ . 'category` c
 			LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
 				ON (c.`id_category` = cl.`id_category`
-                    AND `id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('cl') . ')';
+                    AND `id_lang` = ' . (int) $idLang . Shop::addSqlRestrictionOnLang('cl', $idShop) . ')';
         if (Shop::isFeatureActive() && Shop::getContext() === Shop::CONTEXT_SHOP) {
             $sqlAppend .= ' LEFT JOIN `' . _DB_PREFIX_ . 'category_shop` cs ' .
                 'ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = ' . (int) $idShop . ')';
