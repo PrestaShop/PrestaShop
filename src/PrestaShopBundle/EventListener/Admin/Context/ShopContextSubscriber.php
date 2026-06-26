@@ -357,7 +357,12 @@ class ShopContextSubscriber implements EventSubscriberInterface
                 $routeInfo = $this->router->matchRequest($request);
                 $controller = $routeInfo['_controller'];
             }
-            [$className, $methodName] = explode('::', $controller);
+            // Invokable controllers (e.g. API Platform actions like the API documentation) are
+            // referenced in the route without an explicit method, so the controller string has no
+            // "::" separator. Fall back to the __invoke method instead of accessing an undefined index.
+            $controllerParts = explode('::', $controller);
+            $className = $controllerParts[0];
+            $methodName = $controllerParts[1] ?? '__invoke';
 
             $reflectionClass = new ReflectionClass($className);
             $classAttributes = $reflectionClass->getAttributes(AllShopContext::class);
