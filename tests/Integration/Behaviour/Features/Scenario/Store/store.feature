@@ -1,4 +1,5 @@
 @restore-all-tables-before-feature
+@store
 Feature: store management
   In order to manage physical store locations
   As a BO user
