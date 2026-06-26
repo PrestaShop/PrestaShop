@@ -95,7 +95,7 @@ class CombinationFeatureValueUpdater
     {
         // First assert that all entities exist
         $this->combinationRepository->assertCombinationExists($combinationId);
-        $previousFeatureIds = [];
+        $previousFeatureValueIds = [];
         foreach ($combinationFeatureValues as $combinationFeatureValue) {
             $this->featureRepository->assertExists($combinationFeatureValue->getFeatureId());
             if (null !== $combinationFeatureValue->getFeatureValueId()) {
@@ -103,10 +103,10 @@ class CombinationFeatureValueUpdater
                 if ((int) $featureValue->id_feature !== $combinationFeatureValue->getFeatureId()->getValue()) {
                     throw new InvalidAssociatedFeatureException('You cannot associate a value to another feature.');
                 }
-                if (in_array($combinationFeatureValue->getFeatureValueId()->getValue(), $previousFeatureIds)) {
+                if (in_array($combinationFeatureValue->getFeatureValueId()->getValue(), $previousFeatureValueIds)) {
                     throw new DuplicateFeatureValueAssociationException('You cannot associate the same feature value more than once.');
                 }
-                $previousFeatureIds[] = $combinationFeatureValue->getFeatureValueId()->getValue();
+                $previousFeatureValueIds[] = $combinationFeatureValue->getFeatureValueId()->getValue();
             }
         }
 
