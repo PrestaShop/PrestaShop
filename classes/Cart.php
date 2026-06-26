@@ -862,6 +862,11 @@ class CartCore extends ObjectModel
         // Thus you can avoid one query per product, because there will be only one query for all the products of the cart
         Product::cacheProductsFeatures($products_ids);
         Cart::cacheSomeAttributesLists($pa_ids, (int) $this->getAssociatedLanguage()->getId());
+        // Same idea, extended to the price lookups every product line triggers (issue #14979): prime,
+        // in one batch query each, the exact per-product caches Product::getPriceStatic() reads. These
+        // also warm the cart-total calculation path, so they are not gated on $fullInfos.
+        $this->cacheCartProductsQuantitySum($products_ids);
+        Product::cachePriceCalculationData($products_ids);
 
         if (empty($products)) {
             $this->{$cacheKey} = [];
@@ -870,6 +875,12 @@ class CartCore extends ObjectModel
         }
 
         if ($fullInfos) {
+            // Presentation-only prefetches (issue #14979): prime the per-product image and colour-list
+            // caches the cart/product presenter reads, in one batch query each. Gated on $fullInfos so
+            // total-only getProducts(false) callers pay nothing extra.
+            Product::cacheProductsImages($products_ids, (int) Context::getContext()->language->id);
+            Product::getAttributesColorList($products_ids);
+
             $cart_shop_context = Context::getContext()->cloneContext();
 
             $givenAwayProductsIds = [];
@@ -948,6 +959,47 @@ class CartCore extends ObjectModel
         }
 
         return $this->{$cacheKey};
+    }
+
+    /**
+     * Primes, in a single grouped query, the "quantity of this product already in the cart" value
+     * that Product::getPriceStatic() looks up once per product (issue #14979). The cache entry uses
+     * the exact same key the per-product path stores at Product::getPriceStatic(), and we only store
+     * when the key is not already set, so the existing refresh behaviour there is left untouched.
+     *
+     * @param array $productIds product ids of the cart rows (duplicates allowed)
+     */
+    private function cacheCartProductsQuantitySum(array $productIds)
+    {
+        if (!$this->id || empty($productIds)) {
+            return;
+        }
+
+        $missing = [];
+        foreach (array_unique(array_map('intval', $productIds)) as $idProduct) {
+            if (!Cache::isStored('Product::getPriceStatic_' . $idProduct . '-' . (int) $this->id)) {
+                $missing[] = $idProduct;
+            }
+        }
+        if (empty($missing)) {
+            return;
+        }
+
+        $rows = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+            SELECT `id_product`, SUM(`quantity`) AS cart_quantity
+            FROM `' . _DB_PREFIX_ . 'cart_product`
+            WHERE `id_cart` = ' . (int) $this->id . '
+            AND `id_product` IN (' . implode(',', $missing) . ')
+            GROUP BY `id_product`');
+
+        $sums = [];
+        foreach ($rows as $row) {
+            $sums[(int) $row['id_product']] = (int) $row['cart_quantity'];
+        }
+        // Store every requested id (0 for ids with no row) so the per-product lookup never re-queries.
+        foreach ($missing as $idProduct) {
+            Cache::store('Product::getPriceStatic_' . $idProduct . '-' . (int) $this->id, $sums[$idProduct] ?? 0);
+        }
     }
 
     /**
@@ -2725,6 +2777,26 @@ class CartCore extends ObjectModel
 
         // Load products, hard refresh if needed
         $product_list = $this->getProducts($flush);
+
+        // Prefetch every line's product->carrier mapping in one query so the loop below hits a warm
+        // cache instead of running one product_carrier query per product line (issue #14979).
+        Carrier::prefetchAvailableCarrierLists(array_column($product_list, 'id_product'), (int) Context::getContext()->shop->id);
+
+        // Prime the per-line Product hydration the loop triggers via new Product($id) below: two
+        // batched queries (product + product_lang) for the whole package instead of two per line
+        // (issue #14979). new Product($id) resolves to id_lang 0 (all languages) and the context shop.
+        if (self::$cache_objects && !empty($product_list)) {
+            /** @var PrestaShop\PrestaShop\Adapter\EntityMapper $entityMapper */
+            $entityMapper = ServiceLocator::get(PrestaShop\PrestaShop\Adapter\EntityMapper::class);
+            $entityMapper->prefetch(
+                array_column($product_list, 'id_product'),
+                0,
+                new Product(),
+                ObjectModel::getDefinition('Product'),
+                (int) Context::getContext()->shop->id,
+                self::$cache_objects
+            );
+        }
 
         // Step 1 - We assign some basic information (load their carriers) to products and separate them by their stock quantities.
         $grouped_by_stock = [
