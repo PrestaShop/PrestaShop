@@ -1103,7 +1103,9 @@ class FrontControllerCore extends Controller
         ];
         $params = array_merge($default_params, $params);
 
-        if (Tools::hasMediaServer() && !Configuration::get('PS_CSS_THEME_CACHE')) {
+        // Only local assets are served from the media server; a remote asset (e.g. a module's
+        // external CDN script) must keep its absolute URL and never be rewritten to the media server.
+        if ($params['server'] === 'local' && Tools::hasMediaServer() && !Configuration::get('PS_CSS_THEME_CACHE')) {
             $fullPath = $this->stylesheetManager->getFullPath($relativePath);
 
             if (!$fullPath) {
@@ -1138,7 +1140,9 @@ class FrontControllerCore extends Controller
         ];
         $params = array_merge($default_params, $params);
 
-        if (Tools::hasMediaServer() && !Configuration::get('PS_JS_THEME_CACHE')) {
+        // Only local assets are served from the media server; a remote asset (e.g. a module's
+        // external CDN script) must keep its absolute URL and never be rewritten to the media server.
+        if ($params['server'] === 'local' && Tools::hasMediaServer() && !Configuration::get('PS_JS_THEME_CACHE')) {
             $fullPath = $this->javascriptManager->getFullPath($relativePath);
 
             if (!$fullPath) {
