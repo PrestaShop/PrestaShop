@@ -40,8 +40,12 @@ class LinkTest extends TestCase
         return $property;
     }
 
-    private function getProductLink(bool $statusUseRoutes, int $id_product, ?int $id_product_attribute): array
-    {
+    private function getProductLink(
+        bool $statusUseRoutes,
+        int $id_product,
+        ?int $id_product_attribute,
+        ?string $ean13 = null
+    ): array {
         $reflectionDispatcher = new ReflectionClass('Dispatcher');
         $property = $reflectionDispatcher->getProperty('use_routes');
         $property->setAccessible(true);
@@ -51,7 +55,7 @@ class LinkTest extends TestCase
             $id_product,
             null,
             null,
-            null,
+            $ean13,
             Context::getContext()->language->id,
             null,
             $id_product_attribute,
@@ -104,5 +108,15 @@ class LinkTest extends TestCase
         parse_str(parse_url($url)['query'] ?? '', $query);
 
         $this->assertArrayNotHasKey('meta_title', $query);
+    }
+
+    public function testProductUrlOmitsEan13WhenRouteHasNoEan13Keyword(): void
+    {
+        parse_str(
+            $this->getProductLink(true, 1, null, '1234567890128')['query'] ?? '',
+            $query
+        );
+
+        $this->assertArrayNotHasKey('ean13', $query);
     }
 }
