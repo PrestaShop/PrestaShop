@@ -184,12 +184,17 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      */
     private function getDetails(Combination $combination): CombinationDetails
     {
+        // WHY: ean13, isbn, mpn, reference and upc are nullable in the product_attribute table, so a
+        // combination whose codes were left NULL (e.g. created through import, the webservice or a raw
+        // SQL insert) yields null values here. CombinationDetails expects strings, so normalise null to
+        // an empty string to avoid a TypeError that made such combinations impossible to edit.
+        // @see https://github.com/PrestaShop/PrestaShop/issues/39988
         return new CombinationDetails(
-            $combination->ean13,
-            $combination->isbn,
-            $combination->mpn,
-            $combination->reference,
-            $combination->upc,
+            (string) $combination->ean13,
+            (string) $combination->isbn,
+            (string) $combination->mpn,
+            (string) $combination->reference,
+            (string) $combination->upc,
             $this->numberExtractor->extract($combination, 'weight')
         );
     }
