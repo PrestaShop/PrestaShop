@@ -1,4 +1,5 @@
 @restore-all-tables-before-feature
+@contact_details
 Feature: contact details configuration
   In order to display shop contact information to customers
   As a BO user
