@@ -137,14 +137,14 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             if (!isset($combinationFeatureCollection[$featureValue->getFeatureId()])) {
                 $combinationFeatureCollection[$featureValue->getFeatureId()] = [
                     'feature_id' => $featureValue->getFeatureId(),
-                    'feature_name' => $featureNames[$featureValue->getFeatureId()],
+                    'feature_name' => $featureNames[$featureValue->getFeatureId()] ?? '',
                     'feature_values' => [],
                 ];
             }
 
             $combinationFeatureValue = [
                 'feature_value_id' => $featureValue->getFeatureValueId(),
-                'feature_value_name' => $featureValue->getLocalizedValues()[$this->contextLangId],
+                'feature_value_name' => $featureValue->getLocalizedValues()[$this->contextLangId] ?? '',
                 'is_custom' => $featureValue->isCustom(),
             ];
             if ($featureValue->isCustom()) {

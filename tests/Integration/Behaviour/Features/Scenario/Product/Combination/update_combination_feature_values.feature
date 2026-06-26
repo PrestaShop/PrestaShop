@@ -164,3 +164,29 @@ Feature: Update product combination feature values from Back Office (BO)
       | element | joy           |
     Then I should get an error that a combination feature value cannot be associated to another feature
     And combination "wrongBookBlue" should have no feature values
+
+  Scenario: Saving product feature values does not delete combination custom feature values
+    Given I add product "sharedBook" with following information:
+      | name[en-US] | Shared book  |
+      | type        | combinations |
+    And I generate combinations for product sharedBook using following attributes:
+      | Color | [Blue] |
+    And product "sharedBook" should have following combinations:
+      | id reference   | combination name | reference | attributes   | impact on price | quantity | is default |
+      | sharedBookBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | true       |
+    When I set to combination "sharedBookBlue" the following feature values:
+      | feature | feature_value | custom_values                | custom_reference |
+      | element |               | en-US:Shared;fr-FR:Partagé   | sharedCustom     |
+    Then combination "sharedBookBlue" should have following feature values:
+      | feature | feature_value | custom_values              |
+      | element | sharedCustom  | en-US:Shared;fr-FR:Partagé |
+    And feature value "sharedCustom" should be associated to feature "element"
+    # Saving the product-level features triggers a global orphan custom-value cleanup;
+    # the combination custom value must survive (regression: it used to be deleted)
+    When I set to product "sharedBook" the following feature values:
+      | feature | feature_value |
+      | emotion | joy           |
+    Then feature value "sharedCustom" should be associated to feature "element"
+    And combination "sharedBookBlue" should have following feature values:
+      | feature | feature_value | custom_values              |
+      | element | sharedCustom  | en-US:Shared;fr-FR:Partagé |
