@@ -500,12 +500,22 @@ class OrderController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.edit_order_product_form_builder')] FormBuilderInterface $editProductFormBuilder,
         ShipmentFilters $filters,
         Tools $tools,
+        #[Autowire(expression: 'service("prestashop.adapter.shop.context").getContextListShopID(parameter("multishop.settings.share_orders"))')]
+        array $contextShopIds = [],
     ): Response {
         try {
             /** @var OrderForViewing $orderForViewing */
             $orderForViewing = $this->dispatchQuery(new GetOrderForViewing($orderId, QuerySorting::DESC));
         } catch (OrderException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_orders_index');
+        }
+
+        // Do not display an order that belongs to a shop outside the current shop context, the same
+        // way the orders list is restricted to the context shops (taking order sharing into account).
+        if (!in_array((int) $orderForViewing->getShopId(), array_map('intval', $contextShopIds), true)) {
+            $this->addFlash('error', $this->trans('The order cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
 
             return $this->redirectToRoute('admin_orders_index');
         }
@@ -2348,6 +2358,11 @@ class OrderController extends PrestaShopAdminController
                 ),
                 InvalidCartRuleDiscountValueException::INVALID_FREE_SHIPPING => $this->trans(
                     'Shipping discount value cannot exceed the total price of this order.',
+                    [],
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::DUPLICATE_FREE_SHIPPING => $this->trans(
+                    'This order already has a free shipping discount.',
                     [],
                     'Admin.Orderscustomers.Notification'
                 ),
