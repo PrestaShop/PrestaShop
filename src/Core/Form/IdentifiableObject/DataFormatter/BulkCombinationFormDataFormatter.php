@@ -32,7 +32,11 @@ class BulkCombinationFormDataFormatter extends AbstractFormDataFormatter
             '[price][price_tax_included]' => '[price_impact][price_tax_included]',
             '[price][wholesale_price]' => '[price_impact][wholesale_price]',
             '[price][price_tax_excluded]' => '[price_impact][price_tax_excluded]',
-            '[price][unit_price]' => '[price_impact][unit_price]',
+            // WHY: the command builder reads the unit price impact from [price_impact][unit_price_tax_excluded]
+            // (mapped to setImpactOnUnitPrice). Formatting the bulk field to [price_impact][unit_price] left it
+            // at a path nothing reads, so bulk editing "Impact on price per unit" silently did not persist
+            // (unit_price_impact stayed unchanged). @see https://github.com/PrestaShop/PrestaShop/issues/38786
+            '[price][unit_price]' => '[price_impact][unit_price_tax_excluded]',
             '[price][weight]' => '[price_impact][weight]',
             '[stock][delta_quantity][delta]' => '[stock][quantities][delta_quantity][delta]',
             '[stock][fixed_quantity]' => '[stock][quantities][fixed_quantity]',
