@@ -5912,6 +5912,25 @@ class ProductCore extends ObjectModel
         }
 
         $combinationFeatures = self::getFrontFeaturesCombinationStatic($id_lang, $id_product_attribute);
+
+        return self::mergeFrontFeatures($productFeatures, $combinationFeatures);
+    }
+
+    /**
+     * Merges two lists of front features (as returned by getFrontFeaturesStatic /
+     * getFrontFeaturesCombinationStatic). When a feature is present in both lists (same id_feature),
+     * the combination values take precedence and the product values for that feature are dropped;
+     * features present in only one list are kept. The result is ordered by feature position.
+     *
+     * This pure merge is extracted so it can be unit-tested independently of the DB and feature flag.
+     *
+     * @param array $productFeatures
+     * @param array $combinationFeatures
+     *
+     * @return array
+     */
+    public static function mergeFrontFeatures(array $productFeatures, array $combinationFeatures): array
+    {
         if (empty($combinationFeatures)) {
             return $productFeatures;
         }
