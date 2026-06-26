@@ -332,7 +332,12 @@ class StockAvailableRepository extends AbstractMultiShopObjectModelRepository
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->addSelect('SUM(od.product_quantity - od.product_quantity_refunded) AS reserved_quantity')
+            // WHY: product_quantity and product_quantity_refunded are UNSIGNED, so an over-refunded
+            // order line (refunded > ordered) makes the subtraction underflow and MySQL aborts the
+            // query with "BIGINT UNSIGNED value is out of range". Clamp each line to >= 0 (such a line
+            // reserves nothing) by casting to SIGNED before subtracting.
+            // @see https://github.com/PrestaShop/PrestaShop/issues/37338
+            ->addSelect('SUM(GREATEST(CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED), 0)) AS reserved_quantity')
             ->from($this->dbPrefix . 'orders', 'o')
             ->innerJoin('o', $this->dbPrefix . 'order_detail', 'od', 'od.id_order = o.id_order')
             ->innerJoin('o', $this->dbPrefix . 'order_state', 'os', 'os.id_order_state = o.current_state')

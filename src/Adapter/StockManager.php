@@ -149,9 +149,14 @@ class StockManager
             ? 'o.id_shop_group = :stock_shop_group_id'
             : 'o.id_shop = :stock_shop_id';
 
+        // WHY: product_quantity and product_quantity_refunded are UNSIGNED, so an over-refunded order
+        // line (refunded > ordered) makes the subtraction underflow and MySQL aborts the whole update
+        // with "BIGINT UNSIGNED value is out of range", which prevented orders from being processed.
+        // Clamp each line to >= 0 (such a line reserves nothing) by casting to SIGNED before subtracting.
+        // @see https://github.com/PrestaShop/PrestaShop/issues/37338
         $updateReservedQuantityQuery .= '
             SET sa.reserved_quantity = (
-                SELECT SUM(od.product_quantity - od.product_quantity_refunded)
+                SELECT SUM(GREATEST(CAST(od.product_quantity AS SIGNED) - CAST(od.product_quantity_refunded AS SIGNED), 0))
                 FROM {table_prefix}orders o
                 INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
                 INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
