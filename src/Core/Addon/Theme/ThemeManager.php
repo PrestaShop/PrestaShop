@@ -465,9 +465,47 @@ class ThemeManager implements AddonManagerInterface
         $this->filesystem->mkdir($themePath);
         $this->filesystem->mirror($sandboxPath, $themePath);
 
+        $this->refreshConfigurationCache($theme->getName());
+
         $this->importTranslationToDatabase($theme);
 
         $this->filesystem->remove($sandboxPath);
+    }
+
+    /**
+     * Refresh the cached per-shop configuration files (config/themes/<name>/shop<id>.json)
+     * from the freshly installed theme.yml.
+     *
+     * WHY: uninstalling a theme removes its directory but leaves these JSON caches behind,
+     * and re-importing is the only way to upgrade a theme (installFromZip throws when the
+     * directory already exists). Without this refresh the stale cache keeps advertising the
+     * previous version on the Theme & Logo page (#39792). The theme.yml-derived data is
+     * refreshed while the merchant's saved page layouts (theme_settings.layouts) are
+     * preserved — the cache must be updated, not deleted.
+     */
+    private function refreshConfigurationCache(string $themeName): void
+    {
+        $configDir = $this->configuration->get('_PS_CONFIG_DIR_') . 'themes/' . $themeName;
+        $themeConfigFile = $this->configuration->get('_PS_ALL_THEMES_DIR_') . $themeName . '/config/theme.yml';
+        if (!$this->filesystem->exists($configDir) || !$this->filesystem->exists($themeConfigFile)) {
+            return;
+        }
+
+        $freshData = (new Parser())->parse(file_get_contents($themeConfigFile));
+
+        foreach ((array) glob($configDir . '/*.json') as $cacheFile) {
+            $cachedData = json_decode((string) file_get_contents($cacheFile), true);
+            if (!is_array($cachedData)) {
+                continue;
+            }
+
+            $refreshedData = array_merge($cachedData, $freshData);
+            if (isset($cachedData['theme_settings']['layouts'])) {
+                $refreshedData['theme_settings']['layouts'] = $cachedData['theme_settings']['layouts'];
+            }
+
+            $this->filesystem->dumpFile($cacheFile, json_encode($refreshedData));
+        }
     }
 
     private function getSandboxPath()
