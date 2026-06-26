@@ -522,15 +522,22 @@ class StockAvailableCore extends ObjectModel
      */
     public static function resetProductFromStockAvailableByShopGroup(ShopGroup $shop_group)
     {
-        $shop_list = $shop_group->share_stock ? Shop::getShops(false, $shop_group->id, true) : [];
+        if ($shop_group->share_stock) {
+            // Stock is now shared at the shop-group level (rows use id_shop = 0, id_shop_group = group).
+            // The per-shop rows of the group's shops became obsolete: remove them instead of leaving
+            // orphan lines that bloat the table and feed inconsistent data (e.g. to the webservice).
+            $shop_list = Shop::getShops(false, $shop_group->id, true);
+            if (count($shop_list) > 0) {
+                $id_shops_list = implode(', ', array_map('intval', $shop_list));
+                Db::getInstance()->delete('stock_available', 'id_shop IN (' . $id_shops_list . ') AND id_shop_group = 0');
+            }
 
-        if (count($shop_list) > 0) {
-            $id_shops_list = implode(', ', $shop_list);
-
-            return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop IN (' . $id_shops_list . ')');
+            return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop_group = ' . (int) $shop_group->id);
         }
 
-        return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop_group = ' . $shop_group->id);
+        // Stock is no longer shared (rows use id_shop = X, id_shop_group = 0). The previous shared
+        // row (id_shop = 0, id_shop_group = group) is now obsolete and must be removed.
+        return Db::getInstance()->delete('stock_available', 'id_shop_group = ' . (int) $shop_group->id);
     }
 
     /**
