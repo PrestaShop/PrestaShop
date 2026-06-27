@@ -5808,14 +5808,22 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Select all features for a given language
+     * Select all features for a given language.
+     *
+     * When $id_product_attribute is provided and the "combination_feature_values" feature flag is
+     * enabled, the feature values defined at combination level are merged over the product ones:
+     * if a feature is defined both at product and combination level, the combination values take
+     * precedence. This keeps the historical signature backward compatible (modules calling it with
+     * only the product id still get the product features) while letting callers that know the
+     * displayed combination benefit from the new behavior.
      *
      * @param int $id_lang Language identifier
      * @param int $id_product Product identifier
+     * @param int $id_product_attribute Combination identifier (0 to ignore combination features)
      *
      * @return array Array with feature's data
      */
-    public static function getFrontFeaturesStatic($id_lang, $id_product)
+    public static function getFrontFeaturesStatic($id_lang, $id_product, $id_product_attribute = 0)
     {
         if (!Feature::isFeatureActive()) {
             return [];
@@ -5841,7 +5849,16 @@ class ProductCore extends ObjectModel
             );
         }
 
-        return self::$_frontFeaturesCache[$id_product . '-' . $id_lang];
+        $productFeatures = self::$_frontFeaturesCache[$id_product . '-' . $id_lang];
+
+        if (!(int) $id_product_attribute || !self::isCombinationFeatureValuesEnabled()) {
+            return $productFeatures;
+        }
+
+        return self::mergeFrontFeatures(
+            $productFeatures,
+            self::getFrontFeaturesCombinationStatic((int) $id_lang, (int) $id_product_attribute)
+        );
     }
 
     /**
@@ -5862,7 +5879,7 @@ class ProductCore extends ObjectModel
      *
      * @return array Array with feature's data
      */
-    public static function getFrontFeaturesCombinationStatic(int $id_lang, int $id_product_attribute): array
+    protected static function getFrontFeaturesCombinationStatic(int $id_lang, int $id_product_attribute): array
     {
         if (!Feature::isFeatureActive() || !$id_product_attribute) {
             return [];
@@ -5893,43 +5910,17 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Merges product features with the features of a given combination. When a feature is defined
-     * both at product and combination level, the combination value takes precedence and the product
-     * values for that feature are dropped.
-     *
-     * @param int $id_lang Language identifier
-     * @param int $id_product Product identifier
-     * @param int $id_product_attribute Combination identifier
-     *
-     * @return array
-     */
-    public static function getFrontFeaturesMergedStatic(int $id_lang, int $id_product, int $id_product_attribute): array
-    {
-        $productFeatures = self::getFrontFeaturesStatic($id_lang, $id_product);
-
-        if (!$id_product_attribute || !self::isCombinationFeatureValuesEnabled()) {
-            return $productFeatures;
-        }
-
-        $combinationFeatures = self::getFrontFeaturesCombinationStatic($id_lang, $id_product_attribute);
-
-        return self::mergeFrontFeatures($productFeatures, $combinationFeatures);
-    }
-
-    /**
      * Merges two lists of front features (as returned by getFrontFeaturesStatic /
      * getFrontFeaturesCombinationStatic). When a feature is present in both lists (same id_feature),
      * the combination values take precedence and the product values for that feature are dropped;
      * features present in only one list are kept. The result is ordered by feature position.
-     *
-     * This pure merge is extracted so it can be unit-tested independently of the DB and feature flag.
      *
      * @param array $productFeatures
      * @param array $combinationFeatures
      *
      * @return array
      */
-    public static function mergeFrontFeatures(array $productFeatures, array $combinationFeatures): array
+    protected static function mergeFrontFeatures(array $productFeatures, array $combinationFeatures): array
     {
         if (empty($combinationFeatures)) {
             return $productFeatures;

@@ -190,3 +190,37 @@ Feature: Update product combination feature values from Back Office (BO)
     And combination "sharedBookBlue" should have following feature values:
       | feature | feature_value | custom_values              |
       | element | sharedCustom  | en-US:Shared;fr-FR:Partagé |
+
+  Scenario: A custom feature value shared by a product and its combination is only cleaned when removed from both
+    Given I add product "linkBook" with following information:
+      | name[en-US] | Link book    |
+      | type        | combinations |
+    And I generate combinations for product linkBook using following attributes:
+      | Color | [Blue] |
+    And product "linkBook" should have following combinations:
+      | id reference | combination name | reference | attributes   | impact on price | quantity | is default |
+      | linkBookBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | true       |
+    # A custom value is first created at product level
+    When I set to product "linkBook" the following feature values:
+      | feature | feature_value | custom_values          | custom_reference |
+      | element |               | en-US:Linked;fr-FR:Lié | linked           |
+    Then feature value "linked" should be associated to feature "element"
+    # The very same custom value is then also associated to the combination
+    When I set to combination "linkBookBlue" the following feature values:
+      | feature | feature_value |
+      | element | linked        |
+    Then combination "linkBookBlue" should have following feature values:
+      | feature | feature_value |
+      | element | linked        |
+    # Removing it from the product must NOT delete it: the combination still references it
+    When I set to product "linkBook" the following feature values:
+      | feature | feature_value |
+      | emotion | joy           |
+    Then feature value "linked" should be associated to feature "element"
+    And combination "linkBookBlue" should have following feature values:
+      | feature | feature_value |
+      | element | linked        |
+    # Removing it from the combination too leaves it orphaned, so it is finally cleaned up
+    When I remove all feature values from combination "linkBookBlue"
+    Then combination "linkBookBlue" should have no feature values
+    And feature value "linked" should not exist

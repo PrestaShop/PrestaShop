@@ -35,9 +35,9 @@ class UpdateCombinationFeatureValuesFeatureContext extends AbstractProductFeatur
         $featuresData = $table->getColumnsHash();
         $combinationFeatures = [];
         foreach ($featuresData as $featuresDatum) {
-            $combinationFeature = ['feature_id' => $this->getSharedStorage()->get($featuresDatum['feature'])];
+            $combinationFeature = ['feature_id' => $this->referenceToId($featuresDatum['feature'])];
             if (!empty($featuresDatum['feature_value'])) {
-                $combinationFeature['feature_value_id'] = $this->getSharedStorage()->get($featuresDatum['feature_value']);
+                $combinationFeature['feature_value_id'] = $this->referenceToId($featuresDatum['feature_value']);
             }
             if (!empty($featuresDatum['custom_values'])) {
                 $combinationFeature['custom_values'] = $this->localizeByCell($featuresDatum['custom_values']);
@@ -45,7 +45,7 @@ class UpdateCombinationFeatureValuesFeatureContext extends AbstractProductFeatur
 
             $combinationFeatures[] = $combinationFeature;
         }
-        $command = new SetCombinationFeatureValuesCommand($this->getSharedStorage()->get($combinationReference), $combinationFeatures);
+        $command = new SetCombinationFeatureValuesCommand($this->referenceToId($combinationReference), $combinationFeatures);
         try {
             $featureIds = $this->getCommandBus()->handle($command);
             if (count($featureIds) !== count($combinationFeatures)) {
@@ -69,7 +69,7 @@ class UpdateCombinationFeatureValuesFeatureContext extends AbstractProductFeatur
      */
     public function removeAllFeatureValuesFromCombination(string $combinationReference): void
     {
-        $this->getCommandBus()->handle(new RemoveAllFeatureValuesFromCombinationCommand($this->getSharedStorage()->get($combinationReference)));
+        $this->getCommandBus()->handle(new RemoveAllFeatureValuesFromCombinationCommand($this->referenceToId($combinationReference)));
     }
 
     /**
@@ -88,7 +88,7 @@ class UpdateCombinationFeatureValuesFeatureContext extends AbstractProductFeatur
                     continue;
                 }
 
-                $featureId = (int) $this->getSharedStorage()->get($featureValueDatum['feature']);
+                $featureId = $this->referenceToId($featureValueDatum['feature']);
                 if ((int) $featureValue->id_feature !== $featureId) {
                     continue;
                 }
@@ -111,7 +111,7 @@ class UpdateCombinationFeatureValuesFeatureContext extends AbstractProductFeatur
     public function assertCombinationFeatureValues(string $combinationReference, TableNode $table): void
     {
         $query = new GetCombinationFeatureValues(
-            $this->getSharedStorage()->get($combinationReference),
+            $this->referenceToId($combinationReference),
             $this->getDefaultShopId()
         );
         /** @var CombinationFeatureValue[] $combinationFeatureValues */
@@ -127,10 +127,24 @@ class UpdateCombinationFeatureValuesFeatureContext extends AbstractProductFeatur
             ));
         }
 
+        foreach ($expectedFeatureValues as $key => $expectedFeatureValue) {
+            // If a new custom value is found (e.g. after a duplication) store its new reference and use
+            // it as the expected feature value reference for the assertion loop below.
+            if (!empty($expectedFeatureValue['new_feature_value']) && !empty($expectedFeatureValue['custom_values'])) {
+                $localizedValues = $this->localizeByCell($expectedFeatureValue['custom_values']);
+                foreach ($combinationFeatureValues as $combinationFeatureValue) {
+                    if ($localizedValues === $combinationFeatureValue->getLocalizedValues()) {
+                        $this->getSharedStorage()->set($expectedFeatureValue['new_feature_value'], $combinationFeatureValue->getFeatureValueId());
+                        $expectedFeatureValues[$key]['feature_value'] = $expectedFeatureValue['new_feature_value'];
+                    }
+                }
+            }
+        }
+
         foreach ($expectedFeatureValues as $expectedFeatureValue) {
             $foundMatchingFeatureValue = false;
-            $expectedFeatureId = $this->getSharedStorage()->get($expectedFeatureValue['feature']);
-            $expectedFeatureValueId = $this->getSharedStorage()->get($expectedFeatureValue['feature_value']);
+            $expectedFeatureId = $this->referenceToId($expectedFeatureValue['feature']);
+            $expectedFeatureValueId = $this->referenceToId($expectedFeatureValue['feature_value']);
             foreach ($combinationFeatureValues as $combinationFeatureValue) {
                 if ($expectedFeatureId !== $combinationFeatureValue->getFeatureId()) {
                     continue;
@@ -166,7 +180,7 @@ class UpdateCombinationFeatureValuesFeatureContext extends AbstractProductFeatur
     public function assertCombinationHasNoFeatureValues(string $combinationReference): void
     {
         $query = new GetCombinationFeatureValues(
-            $this->getSharedStorage()->get($combinationReference),
+            $this->referenceToId($combinationReference),
             $this->getDefaultShopId()
         );
         /** @var CombinationFeatureValue[] $combinationFeatureValues */

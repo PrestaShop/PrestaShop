@@ -8,6 +8,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Form\Admin\Sell\Product\Combination\Feature\CombinationFeaturesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Details\ReferencesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType;
@@ -30,33 +33,33 @@ class CombinationFormType extends TranslatorAwareType
     private $combinationListener;
 
     /**
-     * @var bool
+     * @var Configuration
      */
-    private $isFeatureEnabled;
+    private $configuration;
 
     /**
-     * @var bool
+     * @var FeatureFlagStateCheckerInterface
      */
-    private $isCombinationFeatureValuesEnabled;
+    private $featureFlagStateChecker;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param EventSubscriberInterface $combinationListener
-     * @param bool $isFeatureEnabled
-     * @param bool $isCombinationFeatureValuesEnabled
+     * @param Configuration $configuration
+     * @param FeatureFlagStateCheckerInterface $featureFlagStateChecker
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         EventSubscriberInterface $combinationListener,
-        bool $isFeatureEnabled,
-        bool $isCombinationFeatureValuesEnabled
+        Configuration $configuration,
+        FeatureFlagStateCheckerInterface $featureFlagStateChecker
     ) {
         parent::__construct($translator, $locales);
         $this->combinationListener = $combinationListener;
-        $this->isFeatureEnabled = $isFeatureEnabled;
-        $this->isCombinationFeatureValuesEnabled = $isCombinationFeatureValuesEnabled;
+        $this->configuration = $configuration;
+        $this->featureFlagStateChecker = $featureFlagStateChecker;
     }
 
     /**
@@ -90,7 +93,9 @@ class CombinationFormType extends TranslatorAwareType
             ])
         ;
 
-        if ($this->isFeatureEnabled && $this->isCombinationFeatureValuesEnabled) {
+        if ($this->configuration->getBoolean('PS_FEATURE_FEATURE_ACTIVE')
+            && $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES)
+        ) {
             $builder->add('features', CombinationFeaturesType::class);
         }
 

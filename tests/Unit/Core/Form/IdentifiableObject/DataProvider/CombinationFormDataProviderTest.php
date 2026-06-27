@@ -16,6 +16,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
@@ -671,7 +672,6 @@ class CombinationFormDataProviderTest extends TestCase
                 'upc' => 'upc',
                 'mpn' => 'mpn',
             ],
-            'features' => [],
             'default_supplier_id' => NoSupplierId::NO_SUPPLIER_ID,
             'product_suppliers' => [],
             'images' => [],
@@ -684,7 +684,7 @@ class CombinationFormDataProviderTest extends TestCase
         return new CombinationFormDataProvider(
             $queryBusMock,
             $this->mockShopContext(),
-            self::SHOP_ID,
+            $this->createMock(LanguageContext::class),
             $this->createMock(FeaturesChoiceProvider::class),
             $this->mockFeatureFlagStateChecker()
         );

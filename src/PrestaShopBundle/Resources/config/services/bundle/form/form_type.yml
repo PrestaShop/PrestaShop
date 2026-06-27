@@ -557,8 +557,8 @@ services:
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationFormType:
     arguments:
       $combinationListener: '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener'
-      $isFeatureEnabled: "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FEATURE_FEATURE_ACTIVE')"
-      $isCombinationFeatureValuesEnabled: '@=service("PrestaShop\\PrestaShop\\Core\\FeatureFlag\\FeatureFlagStateCheckerInterface").isEnabled("combination_feature_values")'
+      $configuration: '@prestashop.adapter.legacy.configuration'
+      $featureFlagStateChecker: '@PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface'
 
   PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationPriceImpactType:
     arguments:

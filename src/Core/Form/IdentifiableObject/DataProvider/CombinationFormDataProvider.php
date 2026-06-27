@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\FeatureValue\Query\GetCombinationFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\FeatureValue\QueryResult\CombinationFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
@@ -43,9 +44,9 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     private $shopContext;
 
     /**
-     * @var int
+     * @var LanguageContext
      */
-    private $contextLangId;
+    private $languageContext;
 
     /**
      * @var FeaturesChoiceProvider
@@ -65,20 +66,20 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     /**
      * @param CommandBusInterface $queryBus
      * @param Context $shopContext
-     * @param int $contextLangId
+     * @param LanguageContext $languageContext
      * @param FeaturesChoiceProvider $featuresChoiceProvider
      * @param FeatureFlagStateCheckerInterface $featureFlagStateChecker
      */
     public function __construct(
         CommandBusInterface $queryBus,
         Context $shopContext,
-        int $contextLangId,
+        LanguageContext $languageContext,
         FeaturesChoiceProvider $featuresChoiceProvider,
         FeatureFlagStateCheckerInterface $featureFlagStateChecker
     ) {
         $this->queryBus = $queryBus;
         $this->shopContext = $shopContext;
-        $this->contextLangId = $contextLangId;
+        $this->languageContext = $languageContext;
         $this->featuresChoiceProvider = $featuresChoiceProvider;
         $this->featureFlagStateChecker = $featureFlagStateChecker;
     }
@@ -98,7 +99,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
 
         $suppliersData = $this->extractSuppliersData($combinationForEditing);
 
-        return array_merge([
+        $data = array_merge([
             'id' => $combinationId,
             'product_id' => $combinationForEditing->getProductId(),
             'cover_thumbnail_url' => $combinationForEditing->getCoverThumbnailUrl(),
@@ -109,8 +110,15 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'stock' => $this->extractStockData($combinationForEditing, $shopConstraint),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
             'references' => $this->extractReferencesData($combinationForEditing),
-            'features' => $this->extractFeatureValues($combinationId, $shopConstraint),
         ], $suppliersData, ['images' => $combinationForEditing->getImageIds()]);
+
+        // The feature values section only exists when the feature flag is enabled (so does the matching
+        // form type), hence the data is only populated in that case to avoid feeding an absent field.
+        if ($this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES)) {
+            $data['features'] = $this->extractFeatureValues($combinationId, $shopConstraint);
+        }
+
+        return $data;
     }
 
     /**
@@ -121,10 +129,6 @@ class CombinationFormDataProvider implements FormDataProviderInterface
      */
     private function extractFeatureValues(int $combinationId, ShopConstraint $shopConstraint): array
     {
-        if (!$this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES)) {
-            return [];
-        }
-
         /** @var CombinationFeatureValue[] $featureValues */
         $featureValues = $this->queryBus->handle(new GetCombinationFeatureValues($combinationId, $shopConstraint->getShopId()->getValue()));
         if (empty($featureValues)) {
@@ -144,7 +148,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
 
             $combinationFeatureValue = [
                 'feature_value_id' => $featureValue->getFeatureValueId(),
-                'feature_value_name' => $featureValue->getLocalizedValues()[$this->contextLangId] ?? '',
+                'feature_value_name' => $featureValue->getLocalizedValues()[$this->languageContext->getId()] ?? '',
                 'is_custom' => $featureValue->isCustom(),
             ];
             if ($featureValue->isCustom()) {
