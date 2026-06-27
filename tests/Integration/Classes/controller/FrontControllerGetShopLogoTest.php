@@ -43,10 +43,11 @@ class FrontControllerGetShopLogoTest extends KernelTestCase
      * getimagesize() cannot read an SVG and returns false. getShopLogo() must therefore
      * skip the width/height keys for an SVG logo (rather than feeding false into list(),
      * which yields null dimensions and, on stricter PHP versions, a warning).
+     * Edit: removed height and width info in svg.
      */
     public function testGetShopLogoOmitsDimensionsForAnSvgLogo(): void
     {
-        $this->useLogo('test-shop-logo-41466.svg', '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="40"></svg>');
+        $this->useLogo('test-shop-logo-41466.svg', '<svg xmlns="http://www.w3.org/2000/svg"></svg>');
 
         $logo = $this->makeController()->getShopLogo();
 
