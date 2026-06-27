@@ -79,7 +79,7 @@ class FrontControllerGetShopLogoTest extends KernelTestCase
 
     private function makeController(): FrontControllerCore
     {
-        return new class extends FrontControllerCore {
+        return new class() extends FrontControllerCore {
             public function __construct()
             {
                 $this->context = Context::getContext();
