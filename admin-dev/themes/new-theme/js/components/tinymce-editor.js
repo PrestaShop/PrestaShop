@@ -68,7 +68,10 @@ class TinyMCEEditor {
         /* eslint-disable-next-line max-len */
         'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect,hr',
       toolbar2: '',
-      language: window.iso_user,
+      // WHY: iso_user_editor is iso_user guarded server-side against the available
+      // TinyMCE language packs (falls back to 'en' when the pack is missing), avoiding
+      // a 404 on langs/<iso>.js. Keep iso_user as a fallback for safety.
+      language: window.iso_user_editor || window.iso_user,
       external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
       filemanager_title: 'File manager',
       external_plugins: {
