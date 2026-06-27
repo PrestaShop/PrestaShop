@@ -210,16 +210,16 @@ Feature: Update product combination feature values from Back Office (BO)
       | feature | feature_value |
       | element | linked        |
     Then combination "linkBookBlue" should have following feature values:
-      | feature | feature_value |
-      | element | linked        |
+      | feature | feature_value | custom_values          |
+      | element | linked        | en-US:Linked;fr-FR:Lié |
     # Removing it from the product must NOT delete it: the combination still references it
     When I set to product "linkBook" the following feature values:
       | feature | feature_value |
       | emotion | joy           |
     Then feature value "linked" should be associated to feature "element"
     And combination "linkBookBlue" should have following feature values:
-      | feature | feature_value |
-      | element | linked        |
+      | feature | feature_value | custom_values          |
+      | element | linked        | en-US:Linked;fr-FR:Lié |
     # Removing it from the combination too leaves it orphaned, so it is finally cleaned up
     When I remove all feature values from combination "linkBookBlue"
     Then combination "linkBookBlue" should have no feature values

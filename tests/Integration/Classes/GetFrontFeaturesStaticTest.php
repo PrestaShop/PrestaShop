@@ -71,8 +71,9 @@ class GetFrontFeaturesStaticTest extends TestCase
 
     public function testProductFeaturesAreReturnedWhenNoCombinationIsTargeted(): void
     {
-        $this->enableCombinationFeatureValues(true);
+        // resetStaticCache() also resets the feature flag manager, so the mock must be set afterwards
         Product::resetStaticCache();
+        $this->enableCombinationFeatureValues(true);
 
         $features = Product::getFrontFeaturesStatic($this->langId, self::ID_PRODUCT);
 
@@ -81,8 +82,8 @@ class GetFrontFeaturesStaticTest extends TestCase
 
     public function testCombinationFeaturesAreIgnoredWhenFlagIsDisabled(): void
     {
-        $this->enableCombinationFeatureValues(false);
         Product::resetStaticCache();
+        $this->enableCombinationFeatureValues(false);
 
         $features = Product::getFrontFeaturesStatic($this->langId, self::ID_PRODUCT, self::ID_PRODUCT_ATTRIBUTE);
 
@@ -92,8 +93,8 @@ class GetFrontFeaturesStaticTest extends TestCase
 
     public function testCombinationFeaturesOverrideProductFeaturesWhenFlagIsEnabled(): void
     {
-        $this->enableCombinationFeatureValues(true);
         Product::resetStaticCache();
+        $this->enableCombinationFeatureValues(true);
 
         $features = Product::getFrontFeaturesStatic($this->langId, self::ID_PRODUCT, self::ID_PRODUCT_ATTRIBUTE);
 
