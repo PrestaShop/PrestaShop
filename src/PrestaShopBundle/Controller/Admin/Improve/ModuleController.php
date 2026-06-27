@@ -15,8 +15,8 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
-use PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Entity\ModuleHistory;
@@ -311,7 +311,7 @@ class ModuleController extends ModuleAbstractController
     public function importModuleAction(
         Request $request,
         ModuleManager $moduleManager,
-        ZipSourceHandler $zipSource,
+        SourceHandlerFactory $sourceHandlerFactory,
     ): JsonResponse {
         if ($this->isDemoModeEnabled()) {
             return new JsonResponse(
@@ -381,10 +381,11 @@ class ModuleController extends ModuleAbstractController
                 throw new Exception(implode(PHP_EOL, $violationsMessages));
             }
 
-            $moduleName = $zipSource->getModuleName($fileUploaded->getPathname());
+            $uploadedPath = $fileUploaded->getPathname();
+            $moduleName = $sourceHandlerFactory->getHandler($uploadedPath)->getModuleName($uploadedPath);
 
             $moduleWasAlreadyInstalled = $moduleManager->isInstalled($moduleName);
-            $installationResult = $moduleManager->install($moduleName, $fileUploaded->getPathname());
+            $installationResult = $moduleManager->install($moduleName, $uploadedPath);
 
             // Install the module
             $installationResponse = [
