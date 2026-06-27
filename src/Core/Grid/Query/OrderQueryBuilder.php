@@ -202,15 +202,19 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      */
     private function getNewCustomerSubSelect(): string
     {
-        return $this->connection
+        // WHY: EXISTS stops at the first earlier order, while IF(count(...)) scans every
+        // previous order of the customer. On large order tables this correlated subquery
+        // dominates the listing query, so the cheaper short-circuit form is used here.
+        $hasPreviousOrder = $this->connection
             ->createQueryBuilder()
-            ->select('IF(count(so.id_order) > 0, 0, 1)')
+            ->select('1')
             ->from($this->dbPrefix . 'orders', 'so')
             ->where('so.id_customer = o.id_customer')
             ->andWhere('so.id_order < o.id_order')
-            ->setMaxResults(1)
             ->getSQL()
         ;
+
+        return 'NOT EXISTS(' . $hasPreviousOrder . ')';
     }
 
     /**
