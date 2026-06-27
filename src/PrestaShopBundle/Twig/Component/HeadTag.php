@@ -107,6 +107,17 @@ class HeadTag
         return $this->templateVariables->getIsoUser();
     }
 
+    public function getIsoUserForEditor(): string
+    {
+        $iso = $this->templateVariables->getIsoUser();
+
+        // WHY: TinyMCE only ships a fixed set of language packs in js/tiny_mce/langs.
+        // When the employee's language has no matching file the editor requests a
+        // missing langs/<iso>.js and throws a 404 error in the console and page corner.
+        // Mirror the legacy HelperForm/HelperOptions guard and fall back to English.
+        return file_exists(_PS_ROOT_DIR_ . '/js/tiny_mce/langs/' . $iso . '.js') ? $iso : 'en';
+    }
+
     public function getCountryIsoCode(): string
     {
         return $this->countryContext->getIsoCode();
