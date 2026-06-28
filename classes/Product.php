@@ -6567,6 +6567,13 @@ class ProductCore extends ObjectModel
             return true;
         }
 
+        // A customer can belong to several groups: when none is passed, check those of the context
+        // customer through the customer branch below rather than the default group alone. A visitor
+        // with no customer keeps the current group.
+        if (!$id_customer && Validate::isLoadedObject(Context::getContext()->customer)) {
+            $id_customer = (int) Context::getContext()->customer->id;
+        }
+
         $cache_id = 'Product::checkAccess_' . (int) $id_product . '-' . (int) $id_customer . (!$id_customer ? '-' . (int) Group::getCurrent()->id : '');
         if (!Cache::isStored($cache_id)) {
             if (!$id_customer) {
