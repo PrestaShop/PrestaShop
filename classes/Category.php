@@ -1748,6 +1748,13 @@ class CategoryCore extends ObjectModel
             return true;
         }
 
+        // A customer can belong to several groups: when none is passed, check those of the context
+        // customer through the customer branch below rather than the default group alone. A visitor
+        // with no customer keeps the current group.
+        if (!$idCustomer && Validate::isLoadedObject(Context::getContext()->customer)) {
+            $idCustomer = (int) Context::getContext()->customer->id;
+        }
+
         $cacheId = 'Category::checkAccess_' . (int) $this->id . '-' . $idCustomer . (!$idCustomer ? '-' . (int) Group::getCurrent()->id : '');
         if (!Cache::isStored($cacheId)) {
             if (!$idCustomer) {
