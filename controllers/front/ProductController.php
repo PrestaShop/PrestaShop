@@ -912,7 +912,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
     }
 
-    protected function transformDescriptionWithImg(string $desc)
+    protected function transformDescriptionWithImg(string $desc = ''): string
     {
         $reg = '/\[img\-([0-9]+)\-(left|right)\-([a-zA-Z0-9-_]+)\]/';
         while (preg_match($reg, $desc, $matches)) {
