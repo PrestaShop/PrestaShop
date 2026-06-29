@@ -9,9 +9,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
-use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\FeatureValue\Query\GetCombinationFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\FeatureValue\QueryResult\CombinationFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
@@ -39,7 +39,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @var Context
+     * @var ShopContext
      */
     private $shopContext;
 
@@ -65,14 +65,14 @@ class CombinationFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param CommandBusInterface $queryBus
-     * @param Context $shopContext
+     * @param ShopContext $shopContext
      * @param LanguageContext $languageContext
      * @param FeaturesChoiceProvider $featuresChoiceProvider
      * @param FeatureFlagStateCheckerInterface $featureFlagStateChecker
      */
     public function __construct(
         CommandBusInterface $queryBus,
-        Context $shopContext,
+        ShopContext $shopContext,
         LanguageContext $languageContext,
         FeaturesChoiceProvider $featuresChoiceProvider,
         FeatureFlagStateCheckerInterface $featureFlagStateChecker

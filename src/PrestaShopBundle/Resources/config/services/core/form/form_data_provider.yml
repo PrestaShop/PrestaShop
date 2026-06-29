@@ -199,7 +199,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider'
     autowire: true
     arguments:
-      $shopContext: '@prestashop.adapter.shop.context'
       $featuresChoiceProvider: '@prestashop.adapter.form.choice_provider.features_choice_provider'
 
   prestashop.core.form.identifiable_object.data_provider.bulk_combination_form_data_provider:

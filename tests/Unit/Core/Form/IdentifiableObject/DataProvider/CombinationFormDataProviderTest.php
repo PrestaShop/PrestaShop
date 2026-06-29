@@ -14,9 +14,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider;
-use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
@@ -706,11 +706,12 @@ class CombinationFormDataProviderTest extends TestCase
     }
 
     /**
-     * @return Context
+     * @return ShopContext
      */
-    private function mockShopContext(): Context
+    private function mockShopContext(): ShopContext
     {
-        $shopContext = $this->getMockBuilder(Context::class)
+        $shopContext = $this->getMockBuilder(ShopContext::class)
+            ->disableOriginalConstructor()
             ->onlyMethods(['getShopConstraint'])
             ->getMock()
         ;
