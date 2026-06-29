@@ -505,7 +505,7 @@ class LinkCore
             if ($alias !== null && !$dispatcher->hasKeyword('cms_category_rule', $idLang, 'meta_title', $idShop)) {
                 return $url . $dispatcher->createUrl('cms_category_rule', $idLang, ['id' => (int) $cmsCategory, 'rewrite' => (string) $alias], $this->allow, '', $idShop);
             }
-            $cmsCategory = new CMSCategory($cmsCategory, $idLang);
+            $cmsCategory = new CMSCategory($cmsCategory, $idLang, $idShop);
         }
         if (is_array($cmsCategory->link_rewrite) && isset($cmsCategory->link_rewrite[(int) $idLang])) {
             $cmsCategory->link_rewrite = $cmsCategory->link_rewrite[(int) $idLang];
@@ -557,7 +557,7 @@ class LinkCore
             if ($alias !== null && !$dispatcher->hasKeyword('cms_rule', $idLang, 'meta_title', $idShop)) {
                 return $url . $dispatcher->createUrl('cms_rule', $idLang, ['id' => (int) $cms, 'rewrite' => (string) $alias], $this->allow, '', $idShop);
             }
-            $cms = new CMS($cms, $idLang);
+            $cms = new CMS($cms, $idLang, $idShop);
         }
 
         // Set available keywords
@@ -1221,9 +1221,9 @@ class LinkCore
         } elseif ($controller == 'manufacturer' && isset($params['id_manufacturer'])) {
             return $this->getManufacturerLink((int) $params['id_manufacturer'], null, (int) $idLang);
         } elseif ($controller == 'cms' && isset($params['id_cms'])) {
-            return $this->getCMSLink(new CMS((int) $params['id_cms']), null, null, (int) $idLang);
+            return $this->getCMSLink((int) $params['id_cms'], null, null, (int) $idLang, (int) $context->shop->id);
         } elseif ($controller == 'cms' && isset($params['id_cms_category'])) {
-            return $this->getCMSCategoryLink(new CMSCategory((int) $params['id_cms_category']), null, (int) $idLang);
+            return $this->getCMSCategoryLink((int) $params['id_cms_category'], null, (int) $idLang, (int) $context->shop->id);
         } elseif (isset($params['fc']) && $params['fc'] == 'module') {
             $module = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
             if (!empty($module)) {
@@ -1621,7 +1621,7 @@ class LinkCore
                 break;
             case 'cms':
                 $link = $context->link->getCMSLink(
-                    new CMS($params['id'], $params['id_lang']),
+                    (int) $params['id'],
                     $params['alias'],
                     $params['ssl'],
                     $params['id_lang'],
