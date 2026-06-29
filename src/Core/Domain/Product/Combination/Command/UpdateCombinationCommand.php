@@ -40,6 +40,11 @@ class UpdateCombinationCommand
     private $isDefault;
 
     /**
+     * @var bool|null
+     */
+    private $isVirtual;
+
+    /**
      * @var Gtin|null
      */
     private $gtin;
@@ -156,6 +161,26 @@ class UpdateCombinationCommand
     public function setIsDefault(?bool $isDefault): self
     {
         $this->isDefault = $isDefault;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIsVirtual(): ?bool
+    {
+        return $this->isVirtual;
+    }
+
+    /**
+     * @param bool $isVirtual
+     *
+     * @return self
+     */
+    public function setIsVirtual(bool $isVirtual): self
+    {
+        $this->isVirtual = $isVirtual;
 
         return $this;
     }

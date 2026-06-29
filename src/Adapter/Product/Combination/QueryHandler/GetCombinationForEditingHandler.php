@@ -170,7 +170,8 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             $this->getCoverUrl($images, $productId, $shopConstraint),
             (bool) $combination->default_on,
             $product->getProductType(),
-            $this->getVirtualProductFile($productId, $query->getCombinationId())
+            $this->getVirtualProductFile($productId, $query->getCombinationId()),
+            (bool) $combination->is_virtual
         );
     }
 
