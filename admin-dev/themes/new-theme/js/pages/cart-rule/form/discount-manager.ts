@@ -19,6 +19,8 @@ export default class DiscountManager {
       CartRuleMap.includeTaxInput,
       CartRuleMap.currencySelect,
       CartRuleMap.reductionValueSymbol,
+      // TODO <cnc-notice> NOTE: I don't know which page this script belongs to.
+      CartRuleMap.reductionValueInput,
     );
     this.toggleCurrency();
     document.querySelector(CartRuleMap.reductionTypeSelect)?.addEventListener('change', this.toggleCurrency);

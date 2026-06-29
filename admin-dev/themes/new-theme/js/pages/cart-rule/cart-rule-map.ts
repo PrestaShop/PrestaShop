@@ -21,4 +21,6 @@ export default {
   reductionValueSymbol: `${discountContainer} .price-reduction-value .input-group .input-group-append .input-group-text, .price-reduction-value .input-group .input-group-prepend .input-group-text`,
   specificProductSearchComponent: '#cart_rule_actions_discount_specific_product',
   specificProductSearchContainer: '.specific-product-search-container',
+  // TODO <cnc-notice> NOTE: I don't know which page this script belongs to.
+  reductionValueInput: '#specific_price_impact_reduction_value',
 };

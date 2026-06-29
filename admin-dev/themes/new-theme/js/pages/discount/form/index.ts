@@ -45,6 +45,7 @@ $(() => {
       DiscountMap.includeTaxInput,
       DiscountMap.currencySelect,
       DiscountMap.reductionValueSymbol,
+      DiscountMap.reductionValueInput,
       DiscountMap.currencySelectContainer,
     );
     toggleCurrency();

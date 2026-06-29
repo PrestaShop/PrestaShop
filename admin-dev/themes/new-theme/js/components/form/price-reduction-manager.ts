@@ -16,6 +16,8 @@ export default class PriceReductionManager {
 
   private readonly $taxInclusionInputs: JQuery;
 
+  private readonly $reductionValueInputs: JQuery;
+
   private readonly currencySelect: string;
 
   private readonly reductionValueSymbolSelector: string;
@@ -29,14 +31,17 @@ export default class PriceReductionManager {
     taxInclusionInputs: string,
     currencySelect: string,
     reductionValueSymbolSelector: string,
+    reductionValueSelector: string,
     toggleCurrencySelector: string | null = null,
   ) {
     this.reductionTypeSelector = reductionTypeSelector;
     this.$reductionTypeSelect = $(reductionTypeSelector);
     this.$taxInclusionInputs = $(taxInclusionInputs);
+    this.$reductionValueInputs = $(reductionValueSelector);
     this.currencySelect = currencySelect;
     this.reductionValueSymbolSelector = reductionValueSymbolSelector;
     this.toggleCurrencySelector = toggleCurrencySelector;
+
     this.currencySymbolUpdater = new CurrencySymbolUpdater(
       this.currencySelect,
       ((symbol: string): void => {
@@ -53,16 +58,25 @@ export default class PriceReductionManager {
   }
 
   /**
-   * When source value is 'percentage', target field is shown, else hidden
+   * Update reduction fields according to the selected reduction type.
    */
   private handle(): void {
-    if (this.$reductionTypeSelect.val() === 'percentage') {
+    const isPercentage = this.$reductionTypeSelect.val() === 'percentage';
+
+    this.$reductionValueInputs.toggleClass(
+      'js-comma-transformer',
+      !isPercentage,
+    );
+
+    if (isPercentage) {
       this.$taxInclusionInputs.fadeOut();
+
       if (this.toggleCurrencySelector) {
         $(this.toggleCurrencySelector).fadeOut();
       }
     } else {
       this.$taxInclusionInputs.fadeIn();
+
       if (this.toggleCurrencySelector) {
         $(this.toggleCurrencySelector).fadeIn();
       }
@@ -72,7 +86,9 @@ export default class PriceReductionManager {
   }
 
   private updateSymbol(symbol: string): void {
-    const reductionTypeSelect = <HTMLSelectElement> document.querySelector(this.reductionTypeSelector);
+    const reductionTypeSelect = <HTMLSelectElement> document.querySelector(
+      this.reductionTypeSelector,
+    );
 
     if (reductionTypeSelect) {
       for (let i = 0; i < reductionTypeSelect.options.length; i += 1) {
@@ -84,10 +100,12 @@ export default class PriceReductionManager {
         }
       }
 
-      const selectedReduction = <string> reductionTypeSelect.options[reductionTypeSelect.selectedIndex].value;
-      const reductionValueSymbols = <NodeListOf<HTMLSelectElement>> document.querySelectorAll(
-        this.reductionValueSymbolSelector,
-      );
+      const selectedReduction = <string> reductionTypeSelect.options[
+        reductionTypeSelect.selectedIndex
+      ].value;
+
+      const reductionValueSymbols = <NodeListOf<HTMLSelectElement>>
+        document.querySelectorAll(this.reductionValueSymbolSelector);
 
       if (reductionValueSymbols.length === 0) {
         return;
