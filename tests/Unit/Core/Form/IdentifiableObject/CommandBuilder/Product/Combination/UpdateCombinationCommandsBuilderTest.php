@@ -91,6 +91,25 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [$command],
         ];
 
+        // Is virtual (single shop scalar field, independent of the virtual_product_file section)
+        $command = $this->getSingleShopCommand();
+        $command->setIsVirtual(true);
+        yield 'is_virtual truthy' => [
+            [
+                'is_virtual' => true,
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setIsVirtual(false);
+        yield 'is_virtual falsy' => [
+            [
+                'is_virtual' => '0',
+            ],
+            [$command],
+        ];
+
         // Price impact
         $command = $this->getSingleShopCommand();
         $command->setImpactOnWeight('12');

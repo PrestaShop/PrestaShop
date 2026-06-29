@@ -670,6 +670,7 @@ class CombinationFormDataProviderTest extends TestCase
                 'upc' => 'upc',
                 'mpn' => 'mpn',
             ],
+            'is_virtual' => false,
             'virtual_product_file' => [
                 'has_file' => false,
             ],

@@ -76,6 +76,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'stock' => $this->extractStockData($combinationForEditing, $shopConstraint),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
             'references' => $this->extractReferencesData($combinationForEditing),
+            'is_virtual' => (bool) $combinationForEditing->isVirtual(),
             'virtual_product_file' => $this->extractVirtualProductFileData($combinationForEditing),
         ], $suppliersData, ['images' => $combinationForEditing->getImageIds()]);
     }
