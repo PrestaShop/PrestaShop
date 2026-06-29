@@ -98,8 +98,7 @@ class ProductTypeListener implements EventSubscriberInterface
             }
         }
 
-        // The product-level virtual file section is only relevant for plain virtual products.
-        // For virtual products with combinations the downloadable file is handled per combination.
+        // The virtual product file section is only relevant for virtual products.
         if (ProductType::TYPE_VIRTUAL !== $productType) {
             $this->removeVirtualProduct($form);
         }

@@ -16,8 +16,6 @@ use ReflectionClass;
 
 /**
  * Product::getDynamicProductType() computes the product type from existing associations.
- * The combined virtual+combinations case must be evaluated before the single cases so it
- * is not shadowed by the plain virtual / combinations branches.
  */
 class ProductDynamicTypeTest extends TestCase
 {
@@ -53,7 +51,6 @@ class ProductDynamicTypeTest extends TestCase
 
     public function provideDynamicTypeCases(): iterable
     {
-        yield 'virtual + combinations => virtual_combinations' => [true, true, ProductType::TYPE_VIRTUAL_COMBINATIONS];
         yield 'virtual only => virtual' => [true, false, ProductType::TYPE_VIRTUAL];
         yield 'combinations only => combinations' => [false, true, ProductType::TYPE_COMBINATIONS];
         yield 'neither => standard' => [false, false, ProductType::TYPE_STANDARD];

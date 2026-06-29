@@ -9,13 +9,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Form\Admin\Sell\Product\Combination\Feature\CombinationFeaturesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Details\ReferencesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Stock\VirtualProductFileType;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -99,16 +97,6 @@ class CombinationFormType extends TranslatorAwareType
             && $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES)
         ) {
             $builder->add('features', CombinationFeaturesType::class);
-        }
-
-        // The downloadable file section is only relevant - and therefore only added - for the virtual_combinations
-        // product type, so that other product types are unaffected.
-        if (ProductType::TYPE_VIRTUAL_COMBINATIONS === $options['product_type']) {
-            $builder->add('virtual_product_file', VirtualProductFileType::class, [
-                'virtual_product_file_id' => $options['virtual_product_file_id'],
-                'required' => false,
-                'label' => false,
-            ]);
         }
 
         /*

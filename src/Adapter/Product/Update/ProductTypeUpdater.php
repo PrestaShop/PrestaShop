@@ -97,10 +97,8 @@ class ProductTypeUpdater
 
             $this->combinationDeleter->deleteAllProductCombinations($productId, ShopConstraint::allShops());
         }
-        // Remove every virtual file (product level and all combinations) when the product stops being virtual,
-        // OR when a virtual product loses its combinations: virtual_combinations stores one file per combination
-        // and Combination::delete() does not cascade to product_download, so they must be removed explicitly.
-        if ($leavingVirtual || ($leavingCombinations && ProductType::isVirtualType($product->product_type))) {
+        // Remove every virtual file (product level and all combinations) when the product stops being virtual.
+        if ($leavingVirtual) {
             $this->virtualProductUpdater->deleteAllFilesForProduct($productId);
         }
         // Finally, update product type
