@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetInstalledModules;
@@ -18,7 +19,7 @@ class CustomerGroupFormDataProvider implements FormDataProviderInterface
 {
     public function __construct(
         private readonly CommandBusInterface $queryBus,
-        private readonly array $contextShopIds,
+        private readonly ShopContext $shopContext,
     ) {
     }
 
@@ -80,7 +81,7 @@ class CustomerGroupFormDataProvider implements FormDataProviderInterface
             'reduction' => '0',
             'price_display_method' => 0,
             'show_prices' => true,
-            'shop_association' => $this->contextShopIds,
+            'shop_association' => $this->shopContext->getAssociatedShopIds(),
             'category_reductions' => [],
             'module_restrictions' => $moduleRestrictions,
         ];

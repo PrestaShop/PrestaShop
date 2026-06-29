@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\CustomerGroupId;
@@ -18,7 +19,7 @@ class CustomerGroupFormDataHandler implements FormDataHandlerInterface
 {
     public function __construct(
         private readonly CommandBusInterface $commandBus,
-        private readonly array $contextShopIds,
+        private readonly ShopContext $shopContext,
     ) {
     }
 
@@ -29,7 +30,7 @@ class CustomerGroupFormDataHandler implements FormDataHandlerInterface
             new DecimalNumber((string) ($data['reduction'] ?? '0')),
             (bool) $data['price_display_method'],
             (bool) ($data['show_prices'] ?? true),
-            $data['shop_association'] ?? $this->contextShopIds
+            $data['shop_association'] ?? $this->shopContext->getAssociatedShopIds()
         );
 
         $command->setCategoryReductions($this->extractCategoryReductions($data));
