@@ -1,4 +1,8 @@
 <?php
+
+use Symfony\Component\HttpFoundation\HeaderUtils;
+use Symfony\Component\String\UnicodeString;
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -20,16 +24,19 @@ class AttachmentControllerCore extends FrontController
             Tools::redirect('pagenotfound');
         }
 
-        while (ob_get_level()) {
-            ob_end_clean();
+        while (ob_get_level() && @ob_end_clean()) {
         }
 
-        $filenameFallback = mb_convert_encoding($attachment->file_name, 'ISO-8859-1');
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $attachment->file_name,
+            (new UnicodeString($attachment->file_name))->ascii(),
+        );
 
         header('Content-Transfer-Encoding: binary');
         header('Content-Type: ' . $attachment->mime);
         header('Content-Length: ' . filesize($attachmentPath));
-        header('Content-Disposition: attachment; filename="' . $filenameFallback . '"; filename*=utf8\'\' ' . urlencode($attachment->file_name));
+        header('Content-Disposition: ' . $disposition);
         @set_time_limit(0);
         readfile($attachmentPath);
 
