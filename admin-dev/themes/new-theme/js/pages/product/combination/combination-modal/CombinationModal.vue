@@ -313,9 +313,11 @@
 
         const fileUploadInput = iframeBody.querySelector<HTMLInputElement>(VirtualFileMap.fileUploadInput);
         const filenameInput = iframeBody.querySelector<HTMLInputElement>(VirtualFileMap.filenameInput);
+
         if (fileUploadInput && filenameInput) {
           fileUploadInput.addEventListener('change', (event: Event) => {
             const selectedFile = (<HTMLInputElement> event.currentTarget)?.files?.[0];
+
             if (selectedFile) {
               filenameInput.value = selectedFile.name;
             }
