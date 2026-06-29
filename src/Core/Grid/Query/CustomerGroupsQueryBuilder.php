@@ -10,23 +10,18 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
 {
-    private int $languageId;
-    private DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator;
-
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        int $languageId
+        private readonly DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
+        private readonly LanguageContext $languageContext,
     ) {
         parent::__construct($connection, $dbPrefix);
-
-        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->languageId = $languageId;
     }
 
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
@@ -54,7 +49,7 @@ class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
 
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        return $this->getCustomerGroupsQueryBuilder($searchCriteria)->select('COUNT(DISTINCT g.id_group)');
+        return $this->getCustomerGroupsQueryBuilder($searchCriteria)->select('COUNT(g.id_group)');
     }
 
     private function getCustomerGroupsQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
@@ -62,7 +57,7 @@ class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
         $builder = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'group', 'g')
             ->innerJoin('g', $this->dbPrefix . 'group_lang', 'gl', 'g.id_group = gl.id_group AND gl.id_lang = :language')
-            ->setParameter('language', $this->languageId)
+            ->setParameter('language', $this->languageContext->getId())
         ;
 
         $this->applyFilters($builder, $searchCriteria);

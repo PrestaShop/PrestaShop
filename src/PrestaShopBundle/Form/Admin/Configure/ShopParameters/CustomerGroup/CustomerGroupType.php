@@ -13,7 +13,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
@@ -99,17 +99,21 @@ class CustomerGroupType extends TranslatorAwareType
                 'required' => false,
                 'help' => $this->trans('Customers in this group can view prices.', 'Admin.Shopparameters.Help'),
             ])
-            ->add('category_reductions', HiddenType::class, [
-                'mapped' => false,
+            ->add('category_reductions', CollectionType::class, [
+                'label' => $this->trans('Category discount', 'Admin.Shopparameters.Feature'),
+                'entry_type' => CategoryReductionEntryType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
                 'required' => false,
-                'data' => $options['data']['category_reductions'] ?? '[]',
-                'attr' => ['class' => 'js-category-reductions-data'],
+                'attr' => ['class' => 'js-category-reductions-collection'],
             ])
-            ->add('authorized_modules', HiddenType::class, [
-                'mapped' => false,
+            ->add('module_restrictions', CollectionType::class, [
+                'label' => $this->trans('Authorized modules', 'Admin.Shopparameters.Feature'),
+                'entry_type' => ModuleRestrictionEntryType::class,
+                'allow_add' => false,
+                'allow_delete' => false,
                 'required' => false,
-                'data' => $options['data']['authorized_modules'] ?? '[]',
-                'attr' => ['class' => 'js-authorized-modules-data'],
+                'attr' => ['class' => 'js-module-restrictions-collection'],
             ])
         ;
 

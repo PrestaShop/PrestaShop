@@ -20,7 +20,6 @@ use PrestaShop\PrestaShop\Core\Form\Handler;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
-use PrestaShop\PrestaShop\Core\Group\Provider\CustomerGroupLegacyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerGroupsFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
@@ -71,8 +70,6 @@ class CustomerGroupsController extends PrestaShopAdminController
         FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.customer_group_form_handler')]
         FormHandlerInterface $formHandler,
-        #[Autowire(service: 'PrestaShop\PrestaShop\Adapter\Customer\Group\Provider\CustomerGroupLegacyDataProvider')]
-        CustomerGroupLegacyDataProviderInterface $legacyDataProvider,
     ): Response {
         $form = $formBuilder->getForm();
         $form->handleRequest($request);
@@ -88,11 +85,8 @@ class CustomerGroupsController extends PrestaShopAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $allModules = $legacyDataProvider->getInstalledModules();
-
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/CustomerSettings/Groups/create.html.twig', [
             'customerGroupForm' => $form->createView(),
-            'allModules' => $allModules,
             'layoutTitle' => $this->trans('New group', [], 'Admin.Shopparameters.Feature'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
@@ -109,8 +103,6 @@ class CustomerGroupsController extends PrestaShopAdminController
         FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.customer_group_form_handler')]
         FormHandlerInterface $formHandler,
-        #[Autowire(service: 'PrestaShop\PrestaShop\Adapter\Customer\Group\Provider\CustomerGroupLegacyDataProvider')]
-        CustomerGroupLegacyDataProviderInterface $legacyDataProvider,
     ): Response {
         try {
             $form = $formBuilder->getFormFor($groupId);
@@ -133,19 +125,14 @@ class CustomerGroupsController extends PrestaShopAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $allModules = $legacyDataProvider->getInstalledModules();
         $formData = $form->getData();
         $langId = $this->getLanguageContext()->getId();
         $names = $formData['name'] ?? [];
         $groupName = $names[$langId] ?? reset($names) ?: '';
 
-        $categoryReductionsData = json_decode($formData['category_reductions'] ?? '[]', true) ?: [];
-
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/CustomerSettings/Groups/edit.html.twig', [
             'customerGroupForm' => $form->createView(),
             'groupId' => $groupId,
-            'allModules' => $allModules,
-            'categoryReductionsData' => $categoryReductionsData,
             'layoutTitle' => $this->trans('Edit: %name%', ['%name%' => $groupName], 'Admin.Actions'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
@@ -214,10 +201,9 @@ class CustomerGroupsController extends PrestaShopAdminController
             $this->dispatchCommand(new BulkDeleteCustomerGroupCommand($groupIds));
             $this->addFlash('success', $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success'));
         } catch (BulkDeleteCustomerGroupException $e) {
-            $this->addFlashErrors(array_map(
-                fn (int $id) => $this->trans('Failed to delete Customer Group #%id%', ['%id%' => $id], 'Admin.Notifications.Error'),
-                $e->getGroupIds()
-            ));
+            foreach ($e->getExceptions() as $exception) {
+                $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+            }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }

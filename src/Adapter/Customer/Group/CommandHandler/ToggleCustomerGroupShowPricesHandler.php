@@ -27,8 +27,6 @@ final class ToggleCustomerGroupShowPricesHandler implements ToggleCustomerGroupS
     {
         $group = $this->customerGroupRepository->get($command->getCustomerGroupId());
         $group->show_prices = !$group->show_prices;
-        // Preserve existing shop associations so partialUpdate does not clear them
-        $group->id_shop_list = $this->customerGroupRepository->getAssociatedShopIds((int) $group->id);
 
         try {
             $this->customerGroupRepository->partialUpdate($group, ['show_prices']);

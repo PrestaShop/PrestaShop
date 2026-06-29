@@ -11,13 +11,16 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleDisablerService;
 use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\BulkDeleteCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\CommandHandler\BulkDeleteCustomerGroupHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\BulkDeleteCustomerGroupException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotDeleteGroupException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\CustomerGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 
 #[AsCommandHandler]
-final class BulkDeleteCustomerGroupHandler implements BulkDeleteCustomerGroupHandlerInterface
+final class BulkDeleteCustomerGroupHandler extends AbstractBulkCommandHandler implements BulkDeleteCustomerGroupHandlerInterface
 {
     public function __construct(
         private readonly GroupRepository $customerGroupRepository,
@@ -27,22 +30,29 @@ final class BulkDeleteCustomerGroupHandler implements BulkDeleteCustomerGroupHan
 
     public function handle(BulkDeleteCustomerGroupCommand $command): void
     {
-        $errors = [];
+        $this->handleBulkAction(
+            $command->getCustomerGroupIds(),
+            CannotDeleteGroupException::class,
+            $command
+        );
+    }
 
-        foreach ($command->getCustomerGroupIds() as $groupId) {
-            try {
-                $this->cartRuleDisablerService->disableCartRulesThatHadOnlyGroup($groupId->getValue());
-                $this->customerGroupRepository->delete($groupId);
-            } catch (GroupException) {
-                $errors[] = $groupId->getValue();
-            }
-        }
+    protected function handleSingleAction(mixed $id, mixed $command): void
+    {
+        $this->cartRuleDisablerService->disableCartRulesThatHadOnlyGroup($id->getValue());
+        $this->customerGroupRepository->delete($id);
+    }
 
-        if (!empty($errors)) {
-            throw new BulkDeleteCustomerGroupException(
-                $errors,
-                'Failed to delete all selected customer groups'
-            );
-        }
+    protected function supports($id): bool
+    {
+        return $id instanceof CustomerGroupId;
+    }
+
+    protected function buildBulkException(array $caughtExceptions): BulkCommandExceptionInterface
+    {
+        return new BulkDeleteCustomerGroupException(
+            $caughtExceptions,
+            'Failed to delete all selected customer groups'
+        );
     }
 }

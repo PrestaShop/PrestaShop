@@ -9,25 +9,27 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
+use Throwable;
 
-class BulkDeleteCustomerGroupException extends GroupException
+class BulkDeleteCustomerGroupException extends GroupException implements BulkCommandExceptionInterface
 {
-    /** @var int[] */
-    private array $groupIds;
+    /** @var Throwable[] */
+    private array $exceptions;
 
     /**
-     * @param int[] $groupIds
+     * @param Throwable[] $exceptions
      */
-    public function __construct(array $groupIds, string $message = '', int $code = 0, ?Exception $previous = null)
+    public function __construct(array $exceptions, string $message = '', int $code = 0, ?Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
 
-        $this->groupIds = $groupIds;
+        $this->exceptions = $exceptions;
     }
 
-    /** @return int[] */
-    public function getGroupIds(): array
+    /** @return Throwable[] */
+    public function getExceptions(): array
     {
-        return $this->groupIds;
+        return $this->exceptions;
     }
 }

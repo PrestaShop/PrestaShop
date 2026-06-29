@@ -13,36 +13,26 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class AddCustomerGroupCommand
 {
-    /**
-     * @var string[]
-     */
-    private $localizedNames;
+    /** @var string[] */
+    private array $localizedNames;
 
-    /**
-     * @var DecimalNumber
-     */
-    private $reductionPercent;
+    private DecimalNumber $reductionPercent;
 
-    /**
-     * @var bool
-     */
-    private $displayPriceTaxExcluded;
+    private bool $displayPriceTaxExcluded;
 
-    /**
-     * @var bool
-     */
-    private $showPrice;
+    private bool $showPrice;
 
-    /**
-     * @var ShopId[]
-     */
-    private $shopIds;
+    /** @var ShopId[] */
+    private array $shopIds;
+
+    /** @var array<int, DecimalNumber> category id => reduction percent */
+    private array $categoryReductions = [];
+
+    /** @var int[] */
+    private array $authorizedModuleIds = [];
 
     /**
      * @param string[] $localizedNames
-     * @param DecimalNumber $reductionPercent
-     * @param bool $displayPriceTaxExcluded
-     * @param bool $showPrice
      * @param array<int> $shopIds
      */
     public function __construct(
@@ -58,49 +48,68 @@ class AddCustomerGroupCommand
         $this->reductionPercent = $reductionPercent;
         $this->displayPriceTaxExcluded = $displayPriceTaxExcluded;
         $this->showPrice = $showPrice;
-        $this->shopIds = array_map(function (int $shopId) {
-            return new ShopId($shopId);
-        }, $shopIds);
+        $this->shopIds = array_map(fn (int $shopId) => new ShopId($shopId), $shopIds);
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getLocalizedNames(): array
     {
         return $this->localizedNames;
     }
 
-    /**
-     * @return bool
-     */
     public function displayPriceTaxExcluded(): bool
     {
         return $this->displayPriceTaxExcluded;
     }
 
-    /**
-     * @return DecimalNumber
-     */
     public function getReductionPercent(): DecimalNumber
     {
         return $this->reductionPercent;
     }
 
-    /**
-     * @return bool
-     */
     public function showPrice(): bool
     {
         return $this->showPrice;
     }
 
-    /**
-     * @return ShopId[]
-     */
+    /** @return ShopId[] */
     public function getShopIds(): array
     {
         return $this->shopIds;
+    }
+
+    /** @return array<int, DecimalNumber> */
+    public function getCategoryReductions(): array
+    {
+        return $this->categoryReductions;
+    }
+
+    /**
+     * @param array<int, string|float> $categoryReductions category id => reduction percent
+     */
+    public function setCategoryReductions(array $categoryReductions): self
+    {
+        foreach ($categoryReductions as $categoryId => $reduction) {
+            $this->categoryReductions[(int) $categoryId] = new DecimalNumber((string) $reduction);
+        }
+
+        return $this;
+    }
+
+    /** @return int[] */
+    public function getAuthorizedModuleIds(): array
+    {
+        return $this->authorizedModuleIds;
+    }
+
+    /**
+     * @param int[] $authorizedModuleIds
+     */
+    public function setAuthorizedModuleIds(array $authorizedModuleIds): self
+    {
+        $this->authorizedModuleIds = array_map('intval', $authorizedModuleIds);
+
+        return $this;
     }
 
     private function assertReductionIsValid(DecimalNumber $reductionPercent): void

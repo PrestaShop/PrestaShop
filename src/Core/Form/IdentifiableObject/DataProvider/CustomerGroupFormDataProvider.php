@@ -11,15 +11,14 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
-use PrestaShop\PrestaShop\Core\Group\Provider\CustomerGroupLegacyDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetInstalledModules;
+use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\InstalledModule;
 
 class CustomerGroupFormDataProvider implements FormDataProviderInterface
 {
     public function __construct(
         private readonly CommandBusInterface $queryBus,
-        private readonly int $contextLanguageId,
         private readonly array $contextShopIds,
-        private readonly CustomerGroupLegacyDataProviderInterface $legacyDataProvider,
     ) {
     }
 
@@ -28,20 +27,53 @@ class CustomerGroupFormDataProvider implements FormDataProviderInterface
         /** @var EditableCustomerGroup $group */
         $group = $this->queryBus->handle(new GetCustomerGroupForEditing((int) $id));
 
+        /** @var InstalledModule[] $installedModules */
+        $installedModules = $this->queryBus->handle(new GetInstalledModules());
+
+        $authorizedModuleIds = $group->getAuthorizedModuleIds();
+
+        $moduleRestrictions = array_map(
+            static fn (InstalledModule $module) => [
+                'id' => $module->getId(),
+                'name' => $module->getName(),
+                'authorized' => in_array($module->getId(), $authorizedModuleIds, true),
+            ],
+            $installedModules
+        );
+
+        $categoryReductions = [];
+        foreach ($group->getCategoryReductions() as $categoryId => $entry) {
+            $categoryReductions[] = [
+                'id_category' => $categoryId,
+                'name' => $entry['name'],
+                'reduction' => (float) (string) $entry['reduction'],
+            ];
+        }
+
         return [
             'name' => $group->getLocalizedNames(),
             'reduction' => (string) $group->getReduction(),
             'price_display_method' => (int) $group->displayPriceTaxExcluded(),
             'show_prices' => $group->showPrice(),
             'shop_association' => $group->getShopIds(),
-            'category_reductions' => json_encode($this->legacyDataProvider->getCategoryReductions((int) $id, $this->contextLanguageId)),
-            'authorized_modules' => json_encode($this->legacyDataProvider->getAuthorizedModuleIds((int) $id, $this->contextShopIds)),
+            'category_reductions' => $categoryReductions,
+            'module_restrictions' => $moduleRestrictions,
         ];
     }
 
     public function getDefaultData(): array
     {
-        $moduleIds = array_column($this->legacyDataProvider->getInstalledModules(), 'id_module');
+        /** @var InstalledModule[] $installedModules */
+        $installedModules = $this->queryBus->handle(new GetInstalledModules());
+
+        $moduleRestrictions = array_map(
+            static fn (InstalledModule $module) => [
+                'id' => $module->getId(),
+                'name' => $module->getName(),
+                'authorized' => true,
+            ],
+            $installedModules
+        );
 
         return [
             'name' => [],
@@ -49,8 +81,8 @@ class CustomerGroupFormDataProvider implements FormDataProviderInterface
             'price_display_method' => 0,
             'show_prices' => true,
             'shop_association' => $this->contextShopIds,
-            'category_reductions' => '[]',
-            'authorized_modules' => json_encode($moduleIds),
+            'category_reductions' => [],
+            'module_restrictions' => $moduleRestrictions,
         ];
     }
 }

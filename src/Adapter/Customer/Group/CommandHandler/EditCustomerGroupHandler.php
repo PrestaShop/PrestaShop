@@ -8,6 +8,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler;
 
+use Category;
+use Db;
+use Group as CustomerGroup;
+use GroupReduction;
 use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
 use PrestaShop\PrestaShop\Adapter\Customer\Group\Validate\CustomerGroupValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
@@ -52,11 +56,46 @@ class EditCustomerGroupHandler implements EditCustomerGroupHandlerInterface
         if (null !== $command->getShopIds()) {
             $customerGroup->id_shop_list = array_map(fn (ShopId $shopId) => $shopId->getValue(), $command->getShopIds());
         } else {
-            // We force the id_shop_list with the currently associated values or the associations will be messed with whatever is in the legacy context
+            // Force id_shop_list with currently associated values to avoid clearing associations
             $customerGroup->id_shop_list = $this->customerGroupRepository->getAssociatedShopIds((int) $customerGroup->id);
         }
 
         $this->customerGroupValidator->validate($customerGroup);
         $this->customerGroupRepository->partialUpdate($customerGroup, $propertiesToUpdate);
+
+        $groupId = $command->getCustomerGroupId()->getValue();
+
+        if (null !== $command->getCategoryReductions()) {
+            $this->saveCategoryReductions($groupId, $command);
+        }
+
+        if (null !== $command->getAuthorizedModuleIds()) {
+            $this->saveModuleRestrictions($groupId, $customerGroup, $command);
+        }
+    }
+
+    private function saveCategoryReductions(int $groupId, EditCustomerGroupCommand $command): void
+    {
+        $db = Db::getInstance();
+        $db->execute('DELETE FROM `' . _DB_PREFIX_ . 'group_reduction` WHERE `id_group` = ' . $groupId);
+        $db->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_group_reduction_cache` WHERE `id_group` = ' . $groupId);
+
+        foreach ($command->getCategoryReductions() as $categoryId => $reduction) {
+            $category = new Category($categoryId);
+            $category->addGroupsIfNoExist($groupId);
+
+            $groupReduction = new GroupReduction();
+            $groupReduction->id_group = $groupId;
+            $groupReduction->id_category = $categoryId;
+            $groupReduction->reduction = (float) (string) $reduction / 100;
+            $groupReduction->save();
+        }
+    }
+
+    private function saveModuleRestrictions(int $groupId, CustomerGroup $customerGroup, EditCustomerGroupCommand $command): void
+    {
+        $shopIds = $customerGroup->id_shop_list;
+
+        CustomerGroup::addModulesRestrictions($groupId, $command->getAuthorizedModuleIds(), $shopIds);
     }
 }

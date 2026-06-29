@@ -29,66 +29,27 @@
     {{ 'Category discount'|trans({}, 'Admin.Shopparameters.Feature') }}
   </h3>
   <div class="card-body">
-    {{ form_widget(customerGroupForm.category_reductions) }}
-
-    <table class="table js-category-reductions-table" id="category-reductions-table">
-      <thead>
-        <tr>
-          <th>{{ 'Category'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Discount (%)'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
-        </tr>
-      </thead>
-      <tbody id="category-reductions-body">
-        {# Rows injected by JS based on hidden field value #}
-      </tbody>
-    </table>
-
-    <div class="mt-3">
-      <button type="button" class="btn btn-outline-secondary js-add-category-reduction" id="add-category-reduction">
-        <i class="material-icons">add_circle_outline</i>
-        {{ 'Add a category discount'|trans({}, 'Admin.Shopparameters.Feature') }}
-      </button>
-    </div>
-
-    {# Category tree picker modal #}
-    <div class="modal fade" id="categoryTreeModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">{{ 'Choose a category'|trans({}, 'Admin.Catalog.Feature') }}</h5>
-            <button type="button" class="close" data-dismiss="modal">
-              <span>&times;</span>
-            </button>
-          </div>
-          <div class="modal-body" id="category-tree-content">
-            <div id="category-tree-loader" class="text-center py-3">
-              <div class="spinner-border text-secondary" role="status"></div>
-            </div>
-            <div id="category-tree-search" class="mb-2" style="display:none">
-              <input type="text" class="form-control" id="category-tree-search-input"
-                     placeholder="{{ 'Search'|trans({}, 'Admin.Actions') }}">
-            </div>
-            <div id="category-tree-list" style="max-height:400px;overflow-y:auto;display:none"></div>
-          </div>
-          <div class="modal-footer">
-            <div class="input-group" style="max-width:200px">
-              <input type="number" class="form-control" id="category-reduction-input"
-                     min="0" max="100" step="0.01"
-                     placeholder="{{ 'Discount (%)'|trans({}, 'Admin.Global') }}">
-              <div class="input-group-append">
-                <span class="input-group-text">%</span>
-              </div>
-            </div>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-              {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-            </button>
-            <button type="button" class="btn btn-primary" id="category-tree-confirm" disabled>
-              {{ 'Confirm'|trans({}, 'Admin.Actions') }}
+    <div class="js-category-reductions-collection"
+         data-prototype="{{ form_widget(customerGroupForm.category_reductions.vars.prototype)|e('html_attr') }}"
+         data-index="{{ customerGroupForm.category_reductions|length }}">
+      {% for entry in customerGroupForm.category_reductions %}
+        <div class="category-reduction-entry row mb-2">
+          {{ form_widget(entry.id_category) }}
+          <div class="col-md-5">{{ form_widget(entry.name) }}</div>
+          <div class="col-md-3">{{ form_widget(entry.reduction) }}</div>
+          <div class="col-md-2">
+            <button type="button" class="btn btn-sm btn-outline-danger js-remove-category-reduction">
+              <i class="material-icons">delete</i>
             </button>
           </div>
         </div>
-      </div>
+      {% endfor %}
+    </div>
+    <div class="mt-2">
+      <button type="button" class="btn btn-outline-secondary js-add-category-reduction">
+        <i class="material-icons">add_circle_outline</i>
+        {{ 'Add a category discount'|trans({}, 'Admin.Shopparameters.Feature') }}
+      </button>
     </div>
   </div>
 </div>
@@ -96,37 +57,13 @@
 {# Module restrictions #}
 <div class="card mt-3" id="module-restrictions-card">
   <h3 class="card-header">
-    {{ 'Module restrictions'|trans({}, 'Admin.Shopparameters.Feature') }}
+    {{ 'Authorized modules'|trans({}, 'Admin.Shopparameters.Feature') }}
   </h3>
   <div class="card-body">
-    {{ form_widget(customerGroupForm.authorized_modules) }}
-
     <p class="alert alert-info">
-      {{ 'Select which modules this group can access. Modules listed on the left are authorized, on the right are unauthorized.'|trans({}, 'Admin.Shopparameters.Help') }}
+      {{ 'Toggle which modules are accessible to this customer group.'|trans({}, 'Admin.Shopparameters.Help') }}
     </p>
-
-    <div class="row js-module-restrictions">
-      <div class="col-md-5">
-        <h5>{{ 'Authorized modules'|trans({}, 'Admin.Shopparameters.Feature') }}</h5>
-        <select multiple class="form-control js-authorized-modules-list" id="authorized-modules-list" size="15">
-          {# Populated by JS #}
-        </select>
-      </div>
-      <div class="col-md-2 d-flex flex-column align-items-center justify-content-center">
-        <button type="button" class="btn btn-outline-secondary mb-2 js-remove-module-auth" title="{{ 'Remove authorization'|trans({}, 'Admin.Actions') }}">
-          <i class="material-icons">chevron_right</i>
-        </button>
-        <button type="button" class="btn btn-outline-secondary js-add-module-auth" title="{{ 'Add authorization'|trans({}, 'Admin.Actions') }}">
-          <i class="material-icons">chevron_left</i>
-        </button>
-      </div>
-      <div class="col-md-5">
-        <h5>{{ 'Unauthorized modules'|trans({}, 'Admin.Shopparameters.Feature') }}</h5>
-        <select multiple class="form-control js-unauthorized-modules-list" id="unauthorized-modules-list" size="15">
-          {# Populated by JS #}
-        </select>
-      </div>
-    </div>
+    {{ form_widget(customerGroupForm.module_restrictions) }}
   </div>
 </div>
 
@@ -153,8 +90,3 @@
 </div>
 
 {{ form_end(customerGroupForm) }}
-
-<script>
-  var allModules = {{ allModules|json_encode|raw }};
-  var initialCategoryReductions = {{ categoryReductionsData is defined ? categoryReductionsData|json_encode|raw : 'undefined' }};
-</script>

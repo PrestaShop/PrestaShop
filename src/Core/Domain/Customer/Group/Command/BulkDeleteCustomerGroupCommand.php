@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\CustomerGroupId;
 
 class BulkDeleteCustomerGroupCommand
 {
-    /** @var GroupId[] */
+    /** @var CustomerGroupId[] */
     private array $customerGroupIds;
 
     /**
@@ -24,12 +24,12 @@ class BulkDeleteCustomerGroupCommand
     public function __construct(array $customerGroupIds)
     {
         $this->customerGroupIds = array_map(
-            static fn (int $id) => new GroupId($id),
+            static fn (int $id) => new CustomerGroupId($id),
             $customerGroupIds
         );
     }
 
-    /** @return GroupId[] */
+    /** @return CustomerGroupId[] */
     public function getCustomerGroupIds(): array
     {
         return $this->customerGroupIds;

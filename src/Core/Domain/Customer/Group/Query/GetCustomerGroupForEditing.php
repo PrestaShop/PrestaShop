@@ -7,24 +7,18 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\CustomerGroupId;
 
 class GetCustomerGroupForEditing
 {
-    /**
-     * @var GroupId
-     */
-    private $customerGroupId;
+    private CustomerGroupId $customerGroupId;
 
     public function __construct(int $customerGroupId)
     {
-        $this->customerGroupId = new GroupId($customerGroupId);
+        $this->customerGroupId = new CustomerGroupId($customerGroupId);
     }
 
-    /**
-     * @return GroupId
-     */
-    public function getCustomerGroupId(): GroupId
+    public function getCustomerGroupId(): CustomerGroupId
     {
         return $this->customerGroupId;
     }
