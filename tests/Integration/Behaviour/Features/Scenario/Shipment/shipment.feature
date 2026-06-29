@@ -90,3 +90,38 @@ Feature: Retrieving shipment for orders
       | city            | Miami           |
       | state           | Florida         |
       | country         | United States   |
+
+  Scenario: Fulfill a shipment with a tracking number
+    Given the order "bo_order1" should have the following shipments:
+      | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
+    When I fulfill the shipment "shipment1" with tracking number "TRACK-2026-001"
+    Then the shipment "shipment1" should have tracking number "TRACK-2026-001"
+    And the shipment "shipment1" should be packed
+
+  Scenario: Fulfill a shipment updates the tracking number in order shipments listing
+    Given the order "bo_order1" should have the following shipments:
+      | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
+    When I fulfill the shipment "shipment1" with tracking number "TRACK-ABC-123"
+    Then the order "bo_order1" should have the following shipments:
+      | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | default_carrier | TRACK-ABC-123   | US      |                    7.0 |                   7.42 |
+
+  Scenario: Try to fulfill a non-existing shipment
+    When I try to fulfill a non-existing shipment with tracking number "TRACK-999"
+    Then I should get an error that the shipment was not found
+
+  Scenario: Try to fulfill a shipment with an empty tracking number
+    Given the order "bo_order1" should have the following shipments:
+      | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
+    When I try to fulfill the shipment "shipment1" with an empty tracking number
+    Then I should get an error that the tracking number is invalid
+
+  Scenario: Try to fulfill a shipment with a whitespace-only tracking number
+    Given the order "bo_order1" should have the following shipments:
+      | shipment  | carrier         | tracking_number | address | shipping_cost_tax_excl | shipping_cost_tax_incl |
+      | shipment1 | default_carrier |                 | US      |                    7.0 |                   7.42 |
+    When I try to fulfill the shipment "shipment1" with a whitespace-only tracking number
+    Then I should get an error that the tracking number is invalid

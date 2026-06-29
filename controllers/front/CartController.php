@@ -710,4 +710,16 @@ class CartControllerCore extends FrontController
             }
         }
     }
+
+    public function getBreadcrumbLinks(): array
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Cart', [], 'Shop.Theme.Checkout'),
+            'url' => $this->context->link->getPageLink('cart', null, null, ['action' => 'show']),
+        ];
+
+        return $breadcrumb;
+    }
 }

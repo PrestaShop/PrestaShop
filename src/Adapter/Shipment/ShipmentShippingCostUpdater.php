@@ -31,7 +31,7 @@ class ShipmentShippingCostUpdater
     ) {
     }
 
-    public function recalculateForOrder(int $orderId): void
+    public function recalculateForOrder(int $orderId): Order
     {
         $order = $this->orderRepository->get(new OrderId($orderId));
         $productsDetail = $order->getProductsDetail();
@@ -40,7 +40,7 @@ class ShipmentShippingCostUpdater
             $this->recalculateShipment($shipment, $order, $productsDetail);
         }
 
-        $this->orderShippingTotalUpdater->update($order);
+        return $this->orderShippingTotalUpdater->update($order);
     }
 
     /**

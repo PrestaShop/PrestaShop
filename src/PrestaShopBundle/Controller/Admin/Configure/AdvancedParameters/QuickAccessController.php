@@ -186,7 +186,7 @@ class QuickAccessController extends PrestaShopAdminController
             $createdId = $this->dispatchCommand(new AddQuickAccessCommand(
                 [$languageContext->getId() => $request->request->getString('name')],
                 $request->request->getString('url'),
-                false,
+                $request->request->getBoolean('new_window'),
             ));
         } catch (QuickAccessException $e) {
             return new JsonResponse([

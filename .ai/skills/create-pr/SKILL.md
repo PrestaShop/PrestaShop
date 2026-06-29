@@ -30,7 +30,7 @@ From code analysis and git context, infer as much as possible:
 | **Branch** | Current git branch or merge target |
 | **Description** | Summarize from commits and diff. Be specific (versions, browser/server config, module/theme). |
 | **Type** | `bug fix` · `improvement` · `new feature` · `refacto` — infer from changes |
-| **Category** | `FO` · `BO` · `CO` · `IN` · `WS` · `TE` · `LO` · `ME` · `PM` — infer from files changed. See [category reference](https://devdocs.prestashop-project.org/9/contribute/contribution-guidelines/pull-requests/#type--category). |
+| **Category** | `FO` · `BO` · `CO` · `IN` · `WS` · `TE` · `LO` · `ME` · `PM` — infer from files changed. See [category reference](https://devdocs.prestashop-project.org/9/contribute/contribution-guidelines/pull-requests/#type--category). **`ME` (Merge) is reserved exclusively for PRs that only import one git branch into another (e.g. an upward `9.1.x` → `develop` merge) — never use it for a normal feature/bugfix/refacto PR.** For documentation/tooling PRs (e.g. `.ai/` context files) use `PM` (Project Management). |
 | **BC breaks** | Analyze public API changes → `yes` / `no` |
 | **Deprecations** | Check for new `@deprecated` annotations → `yes` / `no` |
 | **How to test** | Write step-by-step verification instructions from the PR context |

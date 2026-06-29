@@ -1,4 +1,5 @@
 <?php
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -10,6 +11,9 @@ use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
 use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryProvider;
@@ -25,6 +29,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Admin controller for the common actions across the whole admin interface.
@@ -35,6 +40,8 @@ class CommonController extends PrestaShopAdminController
     {
         return parent::getSubscribedServices() + [
             ControllerResponseBuilder::class => ControllerResponseBuilder::class,
+            ExtraPropertyDefinitionRepositoryInterface::class => ExtraPropertyDefinitionRepositoryInterface::class,
+            ExtraPropertyWriterInterface::class => ExtraPropertyWriterInterface::class,
         ];
     }
 
@@ -67,6 +74,75 @@ class CommonController extends PrestaShopAdminController
         $this->dispatchCommand(new UpdateEmployeeNotificationLastElementCommand($request->request->get('type')));
 
         return new JsonResponse(true);
+    }
+
+    /**
+     * Toggle one extra property value from a grid toggle column.
+     *
+     * This endpoint is designed for ToggleColumn async usage in BO grids.
+     * It performs an UPSERT and toggles the value in SQL without doing a preliminary SELECT.
+     *
+     * Security: the legacy controller name is derived server-side from the entityName URL path
+     * parameter (non-forgeable), NOT from any client-supplied value. This prevents privilege
+     * escalation where an authenticated admin could bypass per-entity permission checks by
+     * forging a _legacy_controller value they hold rights on.
+     *
+     * The shop context of shop-scoped properties is resolved from ShopContext (not from the
+     * route): the writer receives the current ShopConstraint and toggles the matching row.
+     *
+     * @param string $entityName
+     * @param int $entityId
+     * @param string $moduleName normalized module name, can be "_core" for core properties
+     * @param string $propertyName
+     */
+    #[AdminSecurity("is_granted('ROLE_EMPLOYEE')")]
+    public function toggleExtraPropertyAction(
+        string $entityName,
+        int $entityId,
+        string $moduleName,
+        string $propertyName,
+    ): JsonResponse {
+        // Derive the legacy controller from the entityName URL path param (trusted, non-forgeable).
+        // Never trust a _legacy_controller value coming from the request body/query string.
+        $legacyController = self::legacyControllerFromEntityName($entityName);
+        if (!$this->isGranted('update', $legacyController)) {
+            return new JsonResponse([
+                'status' => false,
+                'message' => 'Access denied.',
+            ], 403);
+        }
+
+        /** @var ExtraPropertyDefinitionRepositoryInterface $repository */
+        $repository = $this->container->get(ExtraPropertyDefinitionRepositoryInterface::class);
+
+        // '_core' is the display sentinel for core properties; the DB stores null.
+        $resolvedModuleName = ExtraPropertyDefinition::CORE_MODULE_KEY === $moduleName ? null : $moduleName;
+
+        // (entity, module, property) is unique across scopes — the definition carries its own scope.
+        $matched = $repository->findDefinitionByModuleAndField($entityName, $resolvedModuleName, $propertyName);
+        if (null === $matched) {
+            return new JsonResponse([
+                'status' => false,
+                'message' => $this->trans('Field not found.', [], 'Admin.Notifications.Error'),
+            ], 404);
+        }
+
+        /** @var ExtraPropertyWriterInterface $writer */
+        $writer = $this->container->get(ExtraPropertyWriterInterface::class);
+
+        try {
+            $writer->toggleExtraProperty($matched, $entityId, $this->getShopContext()->getShopConstraint());
+        } catch (Throwable) {
+            return new JsonResponse([
+                'status' => false,
+                'message' => $this->trans('An error occurred while saving.', [], 'Admin.Notifications.Error'),
+            ], 500);
+        }
+
+        return new JsonResponse([
+            'status' => true,
+            'message' => $this->trans('Update successful.', [], 'Admin.Notifications.Success'),
+        ]);
     }
 
     /**
@@ -273,7 +349,7 @@ class CommonController extends PrestaShopAdminController
         Request $request,
         string $gridDefinitionFactoryServiceId,
         string $redirectRoute,
-        array $redirectQueryParamsToKeep = []
+        array $redirectQueryParamsToKeep = [],
     ) {
         $definitionFactory = $gridDefinitionFactoryCollection->getFactory($gridDefinitionFactoryServiceId);
 
@@ -310,6 +386,39 @@ class CommonController extends PrestaShopAdminController
             $redirectRoute,
             $redirectQueryParamsToKeep
         );
+    }
+
+    /**
+     * Derives the BO legacy controller name for a given entity name.
+     *
+     * Applies standard English pluralization rules to match PS controller naming conventions:
+     * - consonant + 'y' → 'ies'  (category → AdminCategories)
+     * - 's', 'x', 'z', 'sh', 'ch' → append 'es'  (address → AdminAddresses)
+     * - everything else → append 's'  (product → AdminProducts)
+     *
+     * Used server-side to verify employee permissions without trusting any
+     * client-supplied value (e.g. for the extra-property toggle endpoint).
+     */
+    private static function legacyControllerFromEntityName(string $entityName): string
+    {
+        $length = strlen($entityName);
+        if ($length > 1) {
+            $last = strtolower($entityName[$length - 1]);
+            $prev = strtolower($entityName[$length - 2]);
+
+            // consonant + 'y' → 'ies'
+            if ('y' === $last && !in_array($prev, ['a', 'e', 'i', 'o', 'u'], true)) {
+                return 'Admin' . ucfirst(substr($entityName, 0, -1)) . 'ies';
+            }
+
+            // 's', 'x', 'z', 'sh', 'ch' → 'es'
+            if ('s' === $last || 'x' === $last || 'z' === $last
+                || ('h' === $last && in_array($prev, ['s', 'c'], true))) {
+                return 'Admin' . ucfirst($entityName) . 'es';
+            }
+        }
+
+        return 'Admin' . ucfirst($entityName) . 's';
     }
 
     /**

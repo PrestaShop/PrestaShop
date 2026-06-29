@@ -36,6 +36,7 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@translator'
             - '@=service("prestashop.adapter.legacy.configuration").get("_PS_MODE_DEMO_")'
+            - '@PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister'
 
     # Decoration handler because authorization checker does not work in test environment
     test.integration.utility.authorization_checker:

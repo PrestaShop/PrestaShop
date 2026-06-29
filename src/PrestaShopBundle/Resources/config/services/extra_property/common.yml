@@ -1,0 +1,73 @@
+# These are the services for the Extra Property feature that are used BOTH on the backend side AND the frontend side
+services:
+  _defaults:
+    autowire: true
+    public: false
+
+  # Single filesystem cache pool shared by the repository (reads) and the registry decorator (invalidation).
+  prestashop.extra_property.definition.filesystem_cache:
+    class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+    arguments:
+      - ''
+      - 0
+      - '%ps_cache_dir%/extra_property_definition'
+
+  # ─── Repository ──────────────────────────────────────────────────────────────
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepository:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $prefix: '%database_prefix%'
+
+  # Note: the definition WRITER interface (ExtraPropertyDefinitionWriterInterface) is intentionally NOT aliased
+  # here. Writing definitions (register/unregister) is a back-office-only concern, so the alias lives in
+  # backend.yml. Defining it here too would both leak it into the legacy FO container (where it is never used)
+  # and — because this file is imported after backend.yml by the services/extra_property/*.yml glob — override
+  # the back-office alias.
+
+  # ─── Cached repository decorator (read-only, production use) ─────────────────
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Definition\CachedExtraPropertyDefinitionRepository:
+    arguments:
+      $repository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepository'
+      $definitionCache: '@prestashop.extra_property.definition.filesystem_cache'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface:
+    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Definition\CachedExtraPropertyDefinitionRepository'
+    public: true
+
+  # ─── Validation ──────────────────────────────────────────────────────────────
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator:
+    arguments:
+      # Required. Present in every container that runs this service: the three Symfony kernels, and the FO legacy
+      # container where it is hand-wired by PrestaShop\PrestaShop\Adapter\Container\ValidatorBuilderExtension.
+      $validator: '@validator'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidatorInterface:
+    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidator'
+    public: true
+
+  # ─── Reader ──────────────────────────────────────────────────────────────────
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReader:
+    arguments:
+      $repository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
+      $connection: '@doctrine.dbal.default_connection'
+      $prefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface:
+    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReader'
+    public: true
+
+  # ─── Writer ──────────────────────────────────────────────────────────────────
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriter:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $prefix: '%database_prefix%'
+      $definitionRepository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface:
+    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriter'
+    public: true

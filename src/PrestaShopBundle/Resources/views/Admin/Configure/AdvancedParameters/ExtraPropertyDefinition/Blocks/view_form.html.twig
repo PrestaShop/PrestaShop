@@ -1,0 +1,25 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+
+{% form_theme extraPropertyDefinitionForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% block extra_property_definition_view %}
+  <div class="alert alert-info" role="alert">
+    <p class="alert-text">
+      {{ 'This extra property is managed by module "%module%" and is read-only from the back office.'|trans({'%module%': extraPropertyDefinitionForm.field_definition.module_name.vars.value}) }}
+    </p>
+  </div>
+
+  <div class="form-horizontal">
+    {{ form_row(extraPropertyDefinitionForm) }}
+  </div>
+
+  <div class="card-footer">
+    <a href="{{ path('admin_extra_property_definitions_index') }}" class="btn btn-outline-secondary">
+      {{ 'Back to list'|trans({}, 'Admin.Actions') }}
+    </a>
+  </div>
+{% endblock %}

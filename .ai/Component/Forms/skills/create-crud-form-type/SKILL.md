@@ -88,6 +88,6 @@ For image/logo uploads (see [Forms/CONTEXT.md](../../CONTEXT.md) for file upload
 
 Conventions (base classes, file uploads, choice providers, NavigationTabType) are in [Forms/CONTEXT.md](../../CONTEXT.md). Skill-specific reminders:
 
-- Add Symfony validation constraints directly on form fields (`NotBlank`, `Length`, `Regex`)
+- Add Symfony validation constraints directly on form fields. Use `NotBlank` / `Length` inline; for character-set / format validation prefer **`TypedRegex`** (with a reused or newly-added `TYPE_*`) over an inline `Regex` — never hard-code a raw pattern in the FormType. See the "Field validation" row in [Forms/CONTEXT.md](../../CONTEXT.md)
 - For multi-tab layout, use the `create-form-tab-layout` skill instead
 - If the page persists into `ps_configuration` (and not into an entity table), this is NOT a CRUD form — switch to [`create-settings-form`](../create-settings-form/SKILL.md)

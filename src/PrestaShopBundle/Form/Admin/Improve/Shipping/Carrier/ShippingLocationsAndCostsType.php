@@ -10,6 +10,8 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\CarrierRangesType;
 use PrestaShopBundle\Form\Admin\Improve\Shipping\Carrier\Type\CostsZoneType;
 use PrestaShopBundle\Form\Admin\Type\MultipleZoneChoiceType;
@@ -29,7 +31,8 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
         array $locales,
         private readonly RouterInterface $router,
         private readonly ConfigurationInterface $configuration,
-        private readonly CurrencyDataProviderInterface $currencyDataProvider
+        private readonly CurrencyDataProviderInterface $currencyDataProvider,
+        private readonly FeatureFlagStateCheckerInterface $featureFlagChecker,
     ) {
         parent::__construct($translator, $locales);
     }
@@ -37,6 +40,12 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
+
+        if ($this->featureFlagChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT)) {
+            $shippingWeightTraduction = $this->trans("Based on the shipment's total weight", 'Admin.Shipping.Feature');
+        } else {
+            $shippingWeightTraduction = $this->trans("Based on the order's total weight", 'Admin.Shipping.Feature');
+        }
 
         $builder
             ->add('zones', MultipleZoneChoiceType::class, [
@@ -90,7 +99,7 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
                 'label' => $this->trans('Shipping costs', 'Admin.Shipping.Feature'),
                 'choices' => [
                     $this->trans("Based on the order's total price", 'Admin.Shipping.Feature') => ShippingMethod::BY_PRICE,
-                    $this->trans("Based on the order's total weight", 'Admin.Shipping.Feature') => ShippingMethod::BY_WEIGHT,
+                    $shippingWeightTraduction => ShippingMethod::BY_WEIGHT,
                 ],
                 'default_empty_data' => ShippingMethod::BY_PRICE,
                 'expanded' => true,

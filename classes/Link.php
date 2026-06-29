@@ -180,10 +180,13 @@ class LinkCore
             $product = $this->getProductObject($product, $idLang, $idShop);
         }
         $params['rewrite'] = (!$alias) ? $product->getFieldByLang('link_rewrite') : $alias;
-        if (!$ean13) {
-            $product = $this->getProductObject($product, $idLang, $idShop);
+
+        if ($dispatcher->hasKeyword('product_rule', $idLang, 'ean13', $idShop)) {
+            if (!$ean13) {
+                $product = $this->getProductObject($product, $idLang, $idShop);
+            }
+            $params['ean13'] = (!$ean13) ? $product->ean13 : $ean13;
         }
-        $params['ean13'] = (!$ean13) ? $product->ean13 : $ean13;
         if ($dispatcher->hasKeyword('product_rule', $idLang, 'meta_title', $idShop)) {
             $product = $this->getProductObject($product, $idLang, $idShop);
             $params['meta_title'] = Tools::str2url($product->getFieldByLang('meta_title'));

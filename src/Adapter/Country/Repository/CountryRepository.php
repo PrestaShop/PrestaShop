@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotDeleteCountryExcep
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DuplicateCountryIsoCodeException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -67,6 +68,7 @@ final class CountryRepository extends AbstractObjectModelRepository implements C
      * @return Country
      *
      * @throws CountryConstraintException
+     * @throws DuplicateCountryIsoCodeException
      * @throws CoreException
      */
     public function add(Country $country): Country
@@ -84,6 +86,7 @@ final class CountryRepository extends AbstractObjectModelRepository implements C
      * @return Country
      *
      * @throws CannotEditCountryException
+     * @throws DuplicateCountryIsoCodeException
      * @throws CoreException
      */
     public function update(Country $country): Country

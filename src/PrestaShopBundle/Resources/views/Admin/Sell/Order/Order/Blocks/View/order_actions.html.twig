@@ -63,7 +63,7 @@
     </div>
   </form>
 
-  {% if orderForViewing.documents.canGenerateDeliverySlip %}
+  {% if orderForViewing.documents.canGenerateDeliverySlip and (not orderHasShipment) %}
     <form class="order-actions-delivery">
       <div class="input-group">
         <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {orderId: orderForViewing.id}) }}"
@@ -73,6 +73,38 @@
         </a>
       </div>
     </form>
+  {% endif %}
+
+  {# All shipments delivery slips - disabled until all shipments are fulfilled #}
+  {% set totalShipments = orderForViewing.shipments.totalCount %}
+  {% set fulfilledShipments = orderForViewing.shipments.fulfilledCount %}
+  {% set allShipmentsFulfilled = orderForViewing.shipments.areAllShipmentsPacked() %}
+
+  {% if orderForViewing.documents.canGenerateDeliverySlip and orderHasShipment %}
+  <form class="order-actions-delivery-all">
+    <div class="input-group">
+      {% if not allShipmentsFulfilled %}
+        <button
+          type="button"
+          class="btn btn-action"
+          data-toggle="pstooltip"
+          data-placement="bottom"
+          title="{{ 'Only %fulfilled% on %total% shipments have been fulfilled'|trans({'%fulfilled%': fulfilledShipments, '%total%': totalShipments}, 'Admin.Orderscustomers.Feature') }}"
+          disabled
+        >
+          {{ 'Download delivery slips'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
+      {% else %}
+        <a
+          href="{{ path('admin_orders_generate_shipments_delivery_slip_pdf', {orderId: orderForViewing.id}) }}"
+          class="btn btn-action"
+        >
+          <i class="material-icons">local_shipping</i>
+          {{ 'Download delivery slips'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </a>
+      {% endif %}
+    </div>
+  </form>
   {% endif %}
 
   {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig') }}

@@ -25,7 +25,7 @@ final class OrderReturnFilters extends Filters
             'limit' => 50,
             'offset' => 0,
             'orderBy' => 'id_order_return',
-            'sortOrder' => 'ASC',
+            'sortOrder' => 'DESC',
             'filters' => [],
         ];
     }

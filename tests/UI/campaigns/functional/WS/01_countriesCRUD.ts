@@ -41,7 +41,6 @@ describe('WS - Countries : CRUD', async () => {
   const xmlCreate: string = getCountryXml();
   let xmlUpdate: string;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);

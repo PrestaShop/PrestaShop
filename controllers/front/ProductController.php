@@ -1462,6 +1462,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     /**
      * Generates structured data for the current product, extending the default ones.
+     * If you want to enrich or modify this from a module, for example - add reviews, use hook actionFrontControllerSetVariables.
      *
      * @return array Enriched structured data for the product page
      */
@@ -1524,7 +1525,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         if (!empty((float) $product['weight'])) {
             $structuredData['product']['weight'] = [
                 '@type' => 'QuantitativeValue',
-                'value' => $product['weight'],
+                'value' => number_format($product['weight'], $this->context->getComputingPrecision(), '.', ''),
                 'unitCode' => $product['weight_unit'],
             ];
         }
@@ -1534,7 +1535,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $structuredData['product']['offers'] = [
                 '@type' => 'Offer',
                 'priceCurrency' => $this->context->currency->iso_code,
-                'price' => $product['price_amount'],
+                // We are using number format to avoid float encoding issues in the final JSON
+                'price' => number_format($product['price_amount'], $this->context->getComputingPrecision(), '.', ''),
                 'name' => $product['name'],
                 'url' => $this->getCanonicalURL(),
                 'priceValidUntil' => date('Y-m-d', strtotime('+15 day')),

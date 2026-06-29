@@ -329,7 +329,7 @@ describe('FO - Account : Consult return details', async () => {
         it('should check the existence of the merchandise returns in the table', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkExistenceOfReturns${index}`, baseContext);
 
-          await boMerchandiseReturnsPage.filterMerchandiseReturnsTable(page, 'a!id_order', orderID.toString());
+          await boMerchandiseReturnsPage.filterMerchandiseReturnsTable(page, 'id_order', orderID.toString());
 
           const result = await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'id_order');
           expect(result).to.contains(orderID);

@@ -9,11 +9,13 @@ declare(strict_types=1);
 namespace PrestaShopBundle\ApiPlatform\Provider;
 
 use ApiPlatform\Metadata\CollectionOperationInterface;
+use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Api\ExtraPropertyApiListRecordCollector;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Builder\FiltersBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
@@ -45,6 +47,7 @@ class QueryListProvider implements ProviderInterface
         protected readonly CommandBusInterface $queryBus,
         protected readonly ContextParametersProvider $contextParametersProvider,
         protected readonly PropertyAccessorInterface $propertyAccessor,
+        protected readonly ?ExtraPropertyApiListRecordCollector $extraPropertyListCollector = null,
     ) {
     }
 
@@ -101,6 +104,16 @@ class QueryListProvider implements ProviderInterface
         $gridData = $gridDataFactory->getData($filter);
         $gridDataItems = $gridData->getRecords()->all();
         $count = $gridData->getRecordsTotal();
+
+        // The grid query already fetched and cast any grid-associated extra property; hand those records to the
+        // collector so the response subscriber can inline them per item instead of re-reading the database.
+        if ($operation instanceof HttpOperation) {
+            $this->extraPropertyListCollector?->capture(
+                $gridDataItems,
+                (string) $operation->getUriTemplate(),
+                (string) $operation->getMethod(),
+            );
+        }
 
         $normalizedQueryResult = [];
         foreach ($gridDataItems as $key => $result) {

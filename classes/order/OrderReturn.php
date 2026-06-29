@@ -59,7 +59,16 @@ class OrderReturnCore extends ObjectModel
                 if ($qty = (int) $product_qty_list[$key]) {
                     $orderdetail = new OrderDetail((int) $order_detail);
                     $id_customization = $orderdetail->id_customization;
-                    Db::getInstance()->insert('order_return_detail', ['id_order_return' => (int) $this->id, 'id_order_detail' => (int) $order_detail, 'product_quantity' => $qty, 'id_customization' => (int) $id_customization]);
+                    Db::getInstance()->insert(
+                        'order_return_detail',
+                        [
+                            'id_order_return' => (int) $this->id,
+                            'id_order_detail' => (int) $order_detail,
+                            'product_quantity' => $qty,
+                            'id_customization' => (int) $id_customization,
+                            'cancelled' => '0',
+                        ]
+                    );
                 }
             }
         }
@@ -108,7 +117,7 @@ class OrderReturnCore extends ObjectModel
         if (!$data = Db::getInstance()->getRow('
 		SELECT COUNT(`id_order_return`) AS total
 		FROM `' . _DB_PREFIX_ . 'order_return_detail`
-		WHERE `id_order_return` = ' . (int) $this->id)) {
+		WHERE `id_order_return` = ' . (int) $this->id . ' AND `cancelled` = 0')) {
             return false;
         }
 
@@ -142,10 +151,11 @@ class OrderReturnCore extends ObjectModel
 
     public static function getOrdersReturnDetail($id_order_return)
     {
-        return Db::getInstance()->executeS('
-		SELECT *
-		FROM `' . _DB_PREFIX_ . 'order_return_detail`
-		WHERE `id_order_return` = ' . (int) $id_order_return);
+        return Db::getInstance()->executeS(
+            'SELECT *
+		    FROM `' . _DB_PREFIX_ . 'order_return_detail`
+		    WHERE `id_order_return` = ' . (int) $id_order_return
+        );
     }
 
     /**
@@ -229,8 +239,7 @@ class OrderReturnCore extends ObjectModel
         $details = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT od.id_order_detail, GREATEST(od.product_quantity_return, IFNULL(SUM(ord.product_quantity),0)) as qty_returned
 			FROM ' . _DB_PREFIX_ . 'order_detail od
-			LEFT JOIN ' . _DB_PREFIX_ . 'order_return_detail ord
-			ON ord.id_order_detail = od.id_order_detail
+			LEFT JOIN ' . _DB_PREFIX_ . 'order_return_detail ord ON ord.id_order_detail = od.id_order_detail AND ord.cancelled = 0
 			WHERE od.id_order = ' . (int) $id_order . '
 			GROUP BY od.id_order_detail'
         );
@@ -248,5 +257,14 @@ class OrderReturnCore extends ObjectModel
                 $product['qty_returned'] = $detail_list[$product['id_order_detail']]['qty_returned'];
             }
         }
+    }
+
+    public static function setCancelledStatus(int $idOrderReturn, bool $cancelled): void
+    {
+        Db::getInstance()->execute(
+            'UPDATE ' . _DB_PREFIX_ . 'order_return_detail ord '
+            . 'SET cancelled = ' . ($cancelled ? '1' : '0') . ' '
+            . 'WHERE id_order_return = ' . (string) $idOrderReturn
+        );
     }
 }

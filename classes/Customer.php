@@ -1099,8 +1099,8 @@ class CustomerCore extends ObjectModel
             return [Configuration::get('PS_CUSTOMER_GROUP')];
         }
 
-        if ($idCustomer == 0) {
-            self::$_customer_groups[$idCustomer] = [(int) Configuration::get('PS_UNIDENTIFIED_GROUP')];
+        if (empty($idCustomer)) {
+            return [(int) Configuration::get('PS_UNIDENTIFIED_GROUP')];
         }
 
         if (!isset(self::$_customer_groups[$idCustomer])) {

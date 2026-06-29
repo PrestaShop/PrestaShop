@@ -88,6 +88,21 @@ class ShipmentRepository extends EntityRepository
         return $this->findOneBy(['id' => $shipmentId, 'deleted' => false]);
     }
 
+    /**
+     * @param int[] $shipmentIds
+     *
+     * @return Shipment[]
+     */
+    public function findByIds(array $shipmentIds): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.id IN (:ids)')
+            ->andWhere('s.deleted = false')
+            ->setParameter('ids', $shipmentIds)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByCarrierId(int $carrierId): array
     {
         return $this->findBy(['carrierId' => $carrierId, 'deleted' => false]);

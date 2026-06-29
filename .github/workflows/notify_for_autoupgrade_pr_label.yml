@@ -14,7 +14,7 @@ jobs:
     steps:
       - id: download_artifact
         name: Download artifact
-        uses: actions/github-script@v6
+        uses: actions/github-script@v8
         with:
           script: |
             const allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({

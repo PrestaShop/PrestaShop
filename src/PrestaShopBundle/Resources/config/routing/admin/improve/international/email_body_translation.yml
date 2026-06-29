@@ -4,7 +4,6 @@ admin_email_body_translation_index:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\EmailBodyTranslationController::indexAction
     _legacy_controller: AdminTranslations
-    _legacy_link: AdminTranslations
     _legacy_feature_flag: email_body_translation
 
 admin_email_body_translation_search:
@@ -13,7 +12,6 @@ admin_email_body_translation_search:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\EmailBodyTranslationController::searchAction
     _legacy_controller: AdminTranslations
-    _legacy_link: AdminTranslations
     _legacy_feature_flag: email_body_translation
 
 admin_email_body_translation_edit:
@@ -22,5 +20,4 @@ admin_email_body_translation_edit:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\EmailBodyTranslationController::editAction
     _legacy_controller: AdminTranslations
-    _legacy_link: AdminTranslations
     _legacy_feature_flag: email_body_translation

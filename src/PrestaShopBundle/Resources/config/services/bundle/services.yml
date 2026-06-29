@@ -47,6 +47,11 @@ services:
     arguments:
       $prefix: "%database_prefix%"
 
+  # Aligns the MySQL session time zone with PHP's time zone on each DBAL connection (issue #30828)
+  PrestaShopBundle\Doctrine\Middleware\SetSessionTimeZoneMiddleware:
+    tags:
+      - { name: doctrine.middleware }
+
   prestashop.service.translation:
     class: PrestaShopBundle\Service\TranslationService
     properties:

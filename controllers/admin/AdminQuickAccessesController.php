@@ -191,7 +191,7 @@ class AdminQuickAccessesControllerCore extends AdminController
     public function ajaxProcessGetUrl()
     {
         if (Tools::strtolower(Tools::getValue('method')) === 'add') {
-            $params['new_window'] = 0;
+            $params['new_window'] = (int) Tools::getValue('new_window', 0);
             $params['name_' . (int) Configuration::get('PS_LANG_DEFAULT')] = Tools::getValue('name');
             $params['link'] = Tools::getValue('url');
             $params['submitAddquick_access'] = 1;

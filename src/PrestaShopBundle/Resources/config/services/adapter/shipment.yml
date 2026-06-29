@@ -33,3 +33,5 @@ services:
   PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler\CreateShipmentHandler:
 
   PrestaShop\PrestaShop\Adapter\Shipment\QueryHandler\GetShipmentsForOrderDetailHandler:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler\FulfillShipmentCommandHandler:

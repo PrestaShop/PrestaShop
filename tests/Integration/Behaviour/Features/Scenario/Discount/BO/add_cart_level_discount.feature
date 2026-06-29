@@ -106,3 +106,14 @@ Feature: Add discount
       | reduction_currency     | usd                 |
       | reduction_tax_included | false               |
     Then I should get error that discount field reduction_amount is invalid
+
+  Scenario: Create a discount with name only in default language, non-default languages should fallback to default language name
+    When I create a "cart_level" discount "fallback_name_discount" with following properties:
+      | name[en-US]       | Promotion fallback  |
+      | active            | true                |
+      | valid_from        | 2019-01-01 11:05:00 |
+      | valid_to          | 2019-12-01 00:00:00 |
+      | reduction_percent | 10.0                |
+    And discount "fallback_name_discount" should have the following properties:
+      | name[en-US]       | Promotion fallback  |
+      | name[fr-FR]       | Promotion fallback  |

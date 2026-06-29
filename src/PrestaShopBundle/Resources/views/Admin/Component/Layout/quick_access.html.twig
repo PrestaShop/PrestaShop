@@ -47,7 +47,6 @@
            data-icon="{{ this.currentPageIcon }}"
            data-url="{{ this.currentPageQuickAccessLink }}"
            data-post-link="{{ this.ajaxAddUrl }}"
-           data-prompt-text="{{ 'Please name this shortcut:'|trans({}, 'Admin.Navigation.Header') }}"
            data-link="{{ this.currentPageTitle }}"
         >
           <i class="material-icons">add_circle</i>
@@ -61,3 +60,5 @@
     </div>
   </div>
 </div>
+
+{{ include('@PrestaShop/Admin/Component/quick_access_add_modal.html.twig') }}

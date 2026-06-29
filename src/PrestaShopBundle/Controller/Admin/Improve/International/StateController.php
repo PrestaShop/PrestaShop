@@ -270,32 +270,25 @@ class StateController extends PrestaShopAdminController
      *
      * @param int $stateId
      *
-     * @return JsonResponse
+     * @return RedirectResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_states_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_states_index')]
-    public function toggleStatusAction(int $stateId): JsonResponse
+    public function toggleStatusAction(int $stateId): RedirectResponse
     {
         try {
             $this->dispatchCommand(
                 new ToggleStateStatusCommand((int) $stateId)
             );
-            $response = [
-                'status' => true,
-                'message' => $this->trans(
-                    'The status has been successfully updated.',
-                    [],
-                    'Admin.Notifications.Success'
-                ),
-            ];
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
+            );
         } catch (StateException $e) {
-            $response = [
-                'status' => false,
-                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
-            ];
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        return $this->json($response);
+        return $this->redirectToRoute('admin_states_index');
     }
 
     /**

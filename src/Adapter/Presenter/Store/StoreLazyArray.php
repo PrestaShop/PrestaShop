@@ -47,6 +47,11 @@ class StoreLazyArray extends AbstractLazyArray
         $this->language = $language;
         $this->imageRetriever = $imageRetriever;
         $this->translator = $translator;
+        $this->initExtraPropertiesBag(
+            Store::class,
+            (int) ($this->store['id_store'] ?? $this->store['id'] ?? 0),
+            $language->getId()
+        );
 
         parent::__construct();
         $this->appendArray($this->store);

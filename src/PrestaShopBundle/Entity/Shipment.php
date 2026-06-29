@@ -294,5 +294,8 @@ class Shipment
         if (!isset($this->createdAt)) {
             $this->createdAt = new DateTime();
         }
+        if (!isset($this->packedAt)) {
+            $this->packedAt = null;
+        }
     }
 }

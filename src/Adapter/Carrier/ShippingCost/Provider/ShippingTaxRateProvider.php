@@ -23,7 +23,7 @@ class ShippingTaxRateProvider implements ShippingTaxRateProviderInterface
     public function __construct(
         private readonly CarrierRepository $carrierRepository,
         private readonly AddressRepository $addressRepository,
-        private readonly LoggerInterface $logger,
+        private readonly ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -35,10 +35,12 @@ class ShippingTaxRateProvider implements ShippingTaxRateProviderInterface
 
             return new TaxRate(new DecimalNumber((string) $carrier->getTaxesRate($address)));
         } catch (Exception $e) {
-            $this->logger->error(
-                sprintf('Failed to retrieve tax rate for carrier %d and address %d: %s', $carrierId, $addressId, $e->getMessage()),
-                ['exception' => $e]
-            );
+            if ($this->logger) {
+                $this->logger->error(
+                    sprintf('Failed to retrieve tax rate for carrier %d and address %d: %s', $carrierId, $addressId, $e->getMessage()),
+                    ['exception' => $e]
+                );
+            }
 
             return TaxRate::zero();
         }

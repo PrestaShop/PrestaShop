@@ -782,17 +782,17 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
       expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
     });
 
-    it('should click on edit shipment link of the first carrier', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditShipmentLink', baseContext);
+    it('should click on fulfill link of the first carrier', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickFulfillLink', baseContext);
 
-      const isEditModalVisible = await boOrdersViewBlockTabListPage.clickOnEditShipmentLink(page, 1);
-      expect(isEditModalVisible).to.equal(true);
+      const isFulFillModalVisible = await boOrdersViewBlockTabListPage.clickOnFulfillLink(page, 1);
+      expect(isFulFillModalVisible).to.equal(true);
     });
 
     it('should add a tracking number and save', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addTrackingNumber', baseContext);
 
-      const isModalNotVisible = await boOrdersViewBlockTabListPage.editShipment(page, 'TN12345678', firstCarrierData.name);
+      const isModalNotVisible = await boOrdersViewBlockTabListPage.addTrackingNumber(page, 'TN12345678');
       expect(isModalNotVisible).to.equal(true);
     });
 
@@ -806,97 +806,25 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
       expect(trackingNumber).to.equal('TN12345678');
     });
 
-    it('should click on split link of the first shipment', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnSplitLink2', baseContext);
+    it('should check that the edit icon is not displayed for the first shipment', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEditIconNotVisible', baseContext);
 
-      const isModalVisible = await boOrdersViewBlockTabListPage.clickOnSplitLink(page, 1);
-      expect(isModalVisible, 'Split shipping modal is not visible!').to.equal(true);
+      const isVisible = await boOrdersViewBlockTabListPage.isEditIconVisible(page);
+      expect(isVisible).to.equal(false);
     });
 
-    it('should check the alert mesage in the split modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkAlertText', baseContext);
+    it('should check that the dropdown list of actions is not visible for the first shipment', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDropDownListNotVisible', baseContext);
 
-      const alertText = await boOrdersViewBlockTabListPage.getAlertTextFromSplitModal(page);
-      expect(alertText).to.equal(boOrdersViewBlockTabListPage.alertTextInSplitModal);
+      const isVisible = await boOrdersViewBlockTabListPage.isDropdownActionsButtonVisible(page);
+      expect(isVisible).to.equal(false);
     });
 
-    it('should select a product and a carrier and check that the Split shipment button is disabled', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkButtonStillDisabled', baseContext);
+    it('should check that the merge link is not visible for the second shipment', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkMergeNotVisible', baseContext);
 
-      await boOrdersViewBlockTabListPage.selectProductAndQuantityInSplitShipment(page, 2, 1);
-
-      const isSplitButtonDisabled = await boOrdersViewBlockTabListPage.selectCarrierInSplitShipment(page, secondCarrierData.name);
-      expect(isSplitButtonDisabled).to.equal(1);
-    });
-
-    it('should close the split modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeSplitModal', baseContext);
-
-      const isSplitModalNotVisible = await boOrdersViewBlockTabListPage.closeSplitModal(page);
-      expect(isSplitModalNotVisible).to.equal(true);
-    });
-
-    it('should click on merge link of the first shipment', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'mergeFirstShipment', baseContext);
-
-      secondShipmentNumber = await boOrdersViewBlockTabListPage.getShipmentNumber(page, 2);
-
-      const isModalVisible = await boOrdersViewBlockTabListPage.clickOnMergeLink(page, 1);
-      expect(isModalVisible, 'Merge shipping modal is not visible!').to.equal(true);
-    });
-
-    it('should check the alert mesage in the split modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkAlertTextInMergeModal', baseContext);
-
-      const alertText = await boOrdersViewBlockTabListPage.getAlertTextFromMergeModal(page);
-      expect(alertText).to.equal(boOrdersViewBlockTabListPage.alertTextInMergeModal);
-    });
-
-    it('should select the first product and check that the list of carriers is enabled', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkListCarriersEnabled', baseContext);
-
-      await boOrdersViewBlockTabListPage.selectProductInMergeShipment(page, 1);
-
-      const isCarrierDisabled = await boOrdersViewBlockTabListPage.checkCarrierStatusInMergeModal(page);
-      expect(isCarrierDisabled).to.equal(0);
-    });
-
-    it('should check that the Merge shipment button is disabled', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkMergeButtonDisabled', baseContext);
-
-      const isButtonNotDisabled = await boOrdersViewBlockTabListPage
-        .selectCarrierInMergeShipment(page, `Shipment ${secondShipmentNumber} - carrier ${secondCarrierData.name}`);
-      expect(isButtonNotDisabled).to.equal(false);
-    });
-
-    it('should close the merge modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeMergeModal', baseContext);
-
-      const isMergeModalNotVisible = await boOrdersViewBlockTabListPage.closeMergeModal(page);
-      expect(isMergeModalNotVisible).to.equal(true);
-    });
-
-    it('should click on merge link of the second shipment', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'mergeSecondShipment', baseContext);
-
-      const isModalVisible = await boOrdersViewBlockTabListPage.clickOnMergeLink(page, 2);
-      expect(isModalVisible, 'Merge shipping modal is not visible!').to.equal(true);
-    });
-
-    it('should select the second product and check that the list of carriers is disbled', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkListCarriersDisabled2', baseContext);
-
-      await boOrdersViewBlockTabListPage.selectProductInMergeShipment(page, 1);
-
-      const isCarrierDisabled = await boOrdersViewBlockTabListPage.checkCarrierStatusInMergeModal(page);
-      expect(isCarrierDisabled).to.equal(1);
-    });
-
-    it('should close the merge modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeMergeModal2', baseContext);
-
-      const isMergeModalNotVisible = await boOrdersViewBlockTabListPage.closeMergeModal(page);
-      expect(isMergeModalNotVisible).to.equal(true);
+      const isMergeLinkVisible = await boOrdersViewBlockTabListPage.isMergeLinkVisible(page, 2);
+      expect(isMergeLinkVisible, 'Merge link is visible!').to.equal(false);
     });
   });
 

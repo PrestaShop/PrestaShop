@@ -22,6 +22,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPricesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnsForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShipmentsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingAddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderSourcesForViewing;
@@ -45,6 +46,7 @@ class OrderForViewingTest extends TestCase
         $mockDiscounts = $this->createMock(OrderDiscountsForViewing::class);
         $mockSources = $this->createMock(OrderSourcesForViewing::class);
         $mockLinkedOrders = $this->createMock(LinkedOrdersForViewing::class);
+        $mockShipments = $this->createMock(OrderShipmentsForViewing::class);
 
         $instance = new OrderForViewing(
             0,
@@ -76,7 +78,8 @@ class OrderForViewingTest extends TestCase
             $mockPrices,
             $mockDiscounts,
             $mockSources,
-            $mockLinkedOrders
+            $mockLinkedOrders,
+            $mockShipments
         );
 
         self::assertSame(0, $instance->getId());
@@ -109,6 +112,7 @@ class OrderForViewingTest extends TestCase
         self::assertSame($mockDiscounts, $instance->getDiscounts());
         self::assertSame($mockSources, $instance->getSources());
         self::assertSame($mockLinkedOrders, $instance->getLinkedOrders());
+        self::assertSame($mockShipments, $instance->getShipments());
         self::assertSame('', $instance->getShippingAddressFormatted());
         self::assertSame('', $instance->getInvoiceAddressFormatted());
     }
@@ -130,6 +134,7 @@ class OrderForViewingTest extends TestCase
         $mockDiscounts = $this->createMock(OrderDiscountsForViewing::class);
         $mockSources = $this->createMock(OrderSourcesForViewing::class);
         $mockLinkedOrders = $this->createMock(LinkedOrdersForViewing::class);
+        $mockShipments = $this->createMock(OrderShipmentsForViewing::class);
 
         $instance = new OrderForViewing(
             0,
@@ -162,6 +167,7 @@ class OrderForViewingTest extends TestCase
             $mockDiscounts,
             $mockSources,
             $mockLinkedOrders,
+            $mockShipments,
             'd'
         );
 
@@ -195,6 +201,7 @@ class OrderForViewingTest extends TestCase
         self::assertSame($mockDiscounts, $instance->getDiscounts());
         self::assertSame($mockSources, $instance->getSources());
         self::assertSame($mockLinkedOrders, $instance->getLinkedOrders());
+        self::assertSame($mockShipments, $instance->getShipments());
         self::assertSame('d', $instance->getShippingAddressFormatted());
         self::assertSame('', $instance->getInvoiceAddressFormatted());
     }
@@ -216,6 +223,7 @@ class OrderForViewingTest extends TestCase
         $mockDiscounts = $this->createMock(OrderDiscountsForViewing::class);
         $mockSources = $this->createMock(OrderSourcesForViewing::class);
         $mockLinkedOrders = $this->createMock(LinkedOrdersForViewing::class);
+        $mockShipments = $this->createMock(OrderShipmentsForViewing::class);
 
         $instance = new OrderForViewing(
             0,
@@ -248,6 +256,7 @@ class OrderForViewingTest extends TestCase
             $mockDiscounts,
             $mockSources,
             $mockLinkedOrders,
+            $mockShipments,
             'd',
             'e'
         );
@@ -282,6 +291,7 @@ class OrderForViewingTest extends TestCase
         self::assertSame($mockDiscounts, $instance->getDiscounts());
         self::assertSame($mockSources, $instance->getSources());
         self::assertSame($mockLinkedOrders, $instance->getLinkedOrders());
+        self::assertSame($mockShipments, $instance->getShipments());
         self::assertSame('d', $instance->getShippingAddressFormatted());
         self::assertSame('e', $instance->getInvoiceAddressFormatted());
     }

@@ -20,6 +20,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DeleteCountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DuplicateCountryIsoCodeException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
@@ -351,6 +352,11 @@ class CountryController extends PrestaShopAdminController
                 'Country contains invalid field values.',
                 [],
                 'Admin.International.Feature'
+            ),
+            DuplicateCountryIsoCodeException::class => $this->trans(
+                'This ISO code already exists. You cannot create two countries with the same ISO code.',
+                [],
+                'Admin.International.Notification'
             ),
             DeleteCountryException::class => $this->trans(
                 'Country cannot be deleted.',

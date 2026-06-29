@@ -54,3 +54,4 @@ Conventions (stateless, no Context, typed exceptions) are in [CQRS/CONTEXT.md](.
 
 - Never use `Db::getInstance()` — use Doctrine DBAL or ObjectModel methods
 - Never hard-code `Context::getContext()->shop->id` — receive shop as parameter
+- The repository **only persists** — no business validation (uniqueness, required-by-config, related-record existence). That belongs in the `{Domain}Validator` service the handler calls (see [CQRS/CONTEXT.md](../../CONTEXT.md) → Handlers → Validation placement). The only checks here are existence guards via the base helper `assertObjectModelExists` (add a dedicated `assert{Related}Exists` rather than fetching-and-discarding)

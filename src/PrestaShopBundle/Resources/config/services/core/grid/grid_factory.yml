@@ -50,6 +50,14 @@ services:
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
+  prestashop.core.grid.factory.extra_property_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@prestashop.core.grid.definition.factory.extra_property_definition'
+      - '@prestashop.core.grid.data_factory.extra_property_definition'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
+
   prestashop.core.grid.factory.meta:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:

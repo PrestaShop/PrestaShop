@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use Link;
+use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
 use PrestaShopException;
@@ -42,6 +43,10 @@ class OrderReturnLazyArray extends AbstractLazyArray
         $this->prefix = $prefix;
         $this->link = $link;
         $this->orderReturn = $orderReturn;
+        $this->initExtraPropertiesBag(
+            OrderReturn::class,
+            (int) ($this->orderReturn['id_order_return'] ?? 0)
+        );
         parent::__construct();
         $this->appendArray($orderReturn);
     }

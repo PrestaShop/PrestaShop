@@ -82,3 +82,7 @@ services:
   PrestaShop\PrestaShop\Core\Domain\Employee\CommandHandler\ResetEmployeePasswordHandler:
     autoconfigure: true
     autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Employee\EmployeeContextInitializer:
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'

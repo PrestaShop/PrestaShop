@@ -68,7 +68,7 @@
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
         "prestashop/gsitemap": "^5",
-        "prestashop/hummingbird": "^2.0",
+        "prestashop/hummingbird": "^2.1.0-beta.2",
         "prestashop/pagesnotfound": "^3",
         "prestashop/productcomments": "^8.0",
         "prestashop/ps_apiresources": "dev-feature/41324-country-address-format-builder",

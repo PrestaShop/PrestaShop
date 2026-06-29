@@ -744,3 +744,9 @@ services:
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerGroup\DefaultGroupsType:
     arguments:
       $groupChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyDefinitionFieldDefinitionType:
+    arguments:
+      $typeChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ExtraPropertyTypeChoiceProvider'
+      $scopeChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ExtraPropertyScopeChoiceProvider'
+      $sqlIndexChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ExtraPropertySqlIndexChoiceProvider'

@@ -80,8 +80,10 @@ class CountryControllerTest extends FormGridControllerTestCase
 
         // Use a different format than testCreate so the assertion proves the edit
         // round-trips. All required fields are present.
+        // ISO code must be a user-assigned code absent from the country fixtures
+        // (e.g. ZZ), otherwise the duplicate ISO code validation rejects the edit.
         $addressFormat = "firstname lastname\ncompany\naddress1\npostcode city\nCountry:name";
-        $isoCode = 'BB';
+        $isoCode = 'ZZ';
         $zipCodeFormat = '2NL';
 
         // First update the country with new data
@@ -124,7 +126,7 @@ class CountryControllerTest extends FormGridControllerTestCase
         $gridFilters = [
             ['country[id_country]' => $countryId],
             ['country[name]' => 'editName'],
-            ['country[iso_code]' => 'BB'],
+            ['country[iso_code]' => 'ZZ'],
             ['country[call_prefix]' => 1234],
             ['country[zone_name]' => 'Europe'],
             ['country[active]' => 1],

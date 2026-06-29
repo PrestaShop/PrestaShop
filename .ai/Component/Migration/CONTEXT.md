@@ -42,6 +42,16 @@ All fully migrated unless noted:
 - `stability="beta"` to `"stable"` is a formal step requiring its own PR
 - Vue components are only needed when a form field is too dynamic for standard JS components — most pages use `initComponents()`
 
+## Clean-break rules (don't carry legacy shape into the migrated code)
+
+The migration is the occasion to do things cleanly — replicating the legacy structure is a common mistake:
+
+- **No legacy context.** Don't inject values read from the legacy `Context` (e.g. `Context::getContext()->language->id`). Use the modern context services — `LanguageContext`, `ShopContext`, etc. — passed where needed. This applies to query builders, providers, and services alike
+- **One URL = one action.** Don't keep the legacy controller's habit of a single endpoint that branches on a `method`/`action` parameter to do create *and* delete. Migrated controllers get distinct actions + routes per operation
+- **Generic logic goes in a generic Core component, not a domain namespace.** If a helper has no business logic specific to the domain being migrated (e.g. filling localized names from defaults), put it under the matching `PrestaShop\PrestaShop\Core\{Concern}` namespace so other domains can reuse it — not under `Core\Domain\{ThisDomain}\`
+- **Keep shared-component changes out of scope.** Don't modify shared JS components (`modal.ts`, `confirm-modal.ts`, `Link.php`, generic legacy list behavior) to make one page work — it risks side effects on every other consumer. If a shared component genuinely needs a change, do it in a dedicated PR; otherwise adapt at the call site
+- **Don't replicate legacy bugs as features.** When the legacy page did something dubious, flag it rather than faithfully porting it; a pre-existing legacy-wide bug is a separate dedicated fix, not part of the migration
+
 ## Lifecycle rules
 
 ### GA (promote to stable)

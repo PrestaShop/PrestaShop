@@ -15,3 +15,5 @@ services:
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\DiscountFormOptionsProvider:
     autowire: true
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ExtraPropertyDefinitionFormOptionsProvider: ~

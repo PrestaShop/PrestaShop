@@ -10,9 +10,14 @@ use ArrayAccess;
 use ArrayIterator;
 use ArrayObject;
 use Closure;
+use Context;
 use Countable;
 use Iterator;
 use JsonSerializable;
+use ObjectModelCore;
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
+use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertiesBag;
 use PrestaShop\PrestaShop\Core\Util\Inflector;
 use ReflectionClass;
 use ReflectionException;
@@ -48,6 +53,13 @@ use RuntimeException;
  */
 abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, JsonSerializable
 {
+    /**
+     * When set by a concrete LazyArray, exposes front-office extra fields under the `extra_properties` key.
+     *
+     * @var ExtraPropertiesBag|null
+     */
+    protected $extraPropertiesBag = null;
+
     /**
      * @var ArrayObject
      */
@@ -86,7 +98,83 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
                 );
             }
         }
+        // The extra_properties index is opt-in: it is only exposed when the concrete LazyArray
+        // initialized the bag (presenters call initExtraPropertiesBag() before this constructor),
+        // so lazy arrays without extra properties never leak a bag in loops/serialization.
+        if (null !== $this->extraPropertiesBag) {
+            $this->registerExtraPropertiesIndex();
+        }
         $this->arrayAccessIterator = $this->arrayAccessList->getIterator();
+    }
+
+    /**
+     * Initializes the extra properties bag for the wrapped entity.
+     *
+     * Concrete LazyArrays call this in their constructor. Legacy resolution
+     * (Context / ContainerFinder) is done here, in the Adapter layer, and the
+     * resolved container is passed to the Core factory.
+     *
+     * displayFront filtering is derived from the running context like in ObjectModel:
+     * filtered on front-office requests, unfiltered elsewhere (BO, CLI, API).
+     *
+     * @param class-string<ObjectModelCore> $objectModelClass
+     * @param int $entityId Entity row id (<= 0 results in an empty bag)
+     * @param int|null $langId Language id carried by the entity; null falls back to context language
+     */
+    protected function initExtraPropertiesBag(string $objectModelClass, int $entityId, ?int $langId = null): void
+    {
+        $context = Context::getContext();
+        try {
+            $container = (new ContainerFinder($context))->getContainer();
+        } catch (ContainerNotFoundException) {
+            return; // bag stays null → empty extra properties
+        }
+        $this->extraPropertiesBag = ExtraPropertiesBag::createForEntity(
+            $container,
+            $objectModelClass,
+            $entityId,
+            $langId ?? (int) $context->language->id,
+            $context->getShopConstraint(),
+            forFrontOffice: Context::isFrontOfficeContext(),
+        );
+
+        // Covers the init-after-construct ordering; presenters init before parent::__construct(),
+        // in which case the constructor performs the registration.
+        if (null !== $this->arrayAccessList) {
+            $this->registerExtraPropertiesIndex();
+        }
+    }
+
+    /**
+     * Exposes the `extra_properties` index on this lazy array.
+     *
+     * Not registered through LazyArrayAttribute on purpose: the index must only exist on
+     * lazy arrays that initialized the bag, so generic templates iterating all entries
+     * (e.g. order subtotals) never meet a non-printable ExtraPropertiesBag value.
+     */
+    private function registerExtraPropertiesIndex(): void
+    {
+        $this->arrayAccessList->offsetSet('extra_properties', [
+            'type' => 'method',
+            'value' => 'getExtraProperties',
+            'isRewritable' => false,
+        ]);
+    }
+
+    /**
+     * Returns the extra properties bag for front-office templates (`extra_properties` in Smarty
+     * and array access alike: $product['extra_properties']['module']['field']).
+     *
+     * Same API as ObjectModel::$extra_properties — both bag levels implement
+     * ArrayAccess and JsonSerializable, so Smarty chained access and json_encode work unchanged.
+     *
+     * The `extra_properties` array index only exists on lazy arrays that called
+     * initExtraPropertiesBag() (see registerExtraPropertiesIndex()); this method stays callable
+     * directly on any instance and falls back to an empty bag.
+     */
+    public function getExtraProperties(): ExtraPropertiesBag
+    {
+        return $this->extraPropertiesBag ??= new ExtraPropertiesBag(static fn (): array => []);
     }
 
     /**

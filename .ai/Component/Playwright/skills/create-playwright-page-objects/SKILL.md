@@ -55,5 +55,8 @@ See [Playwright/CONTEXT.md](../../CONTEXT.md) for POM conventions (never assert,
 - One page object per distinct BO page (listing page, create/edit page)
 - Prefer `data-test` attribute selectors when available over CSS classes
 - Check if page objects already exist before creating new ones
+- **Sort interface / page-object members alphabetically** — this is an expected convention in the ui-testing-library
+- **Expose expected messages and selectors here, not in the campaign** — message strings (success/error) belong as properties on the page object so campaigns assert against them; never hard-code message text in the core campaign
+- **Stay compatible with older branches (≥ `9.1.x`)** — a change must not crash the library on lower versions; branch on version when the DOM differs rather than assuming the latest
 
 **Reference:** check existing page objects in the ui-testing-library for the exact inheritance pattern and method signatures.

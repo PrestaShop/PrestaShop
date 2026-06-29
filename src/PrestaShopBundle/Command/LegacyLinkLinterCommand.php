@@ -62,6 +62,9 @@ class LegacyLinkLinterCommand extends Command
         'admin_customer_threads_filter',
         'admin_discounts_reset_grid',
         'admin_discounts_search_gift_products',
+        'admin_email_body_translation_index',
+        'admin_email_body_translation_search',
+        'admin_email_body_translation_edit',
         'admin_employees_get_tabs',
         'admin_feature_get_feature_values',
         'admin_import_data_configuration_index',
@@ -164,6 +167,7 @@ class LegacyLinkLinterCommand extends Command
      */
     private const CONTROLLER_WHITE_LIST = [
         'AdminAdminAPI',
+        'AdminExtraPropertyDefinitions',
     ];
 
     public function __construct(LegacyLinkLinter $legacyLinkLinter, AdminRouteProvider $adminRouteProvider)

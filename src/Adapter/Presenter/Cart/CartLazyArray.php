@@ -1,4 +1,5 @@
 <?php
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -73,6 +74,7 @@ class CartLazyArray extends AbstractLazyArray
         $this->shouldSeparateGifts = $shouldSeparateGifts;
         $this->cart = $cart;
         $this->cartPresenter = $cartPresenter;
+        $this->initExtraPropertiesBag(Cart::class, (int) $cart->id, (int) $cart->id_lang ?: null);
         $context = Context::getContext();
         $this->translator = $context->getTranslator();
         $this->link = $context->link;

@@ -12,7 +12,3 @@ services:
   PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductQuantityUpdater:
 
   PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductAssigner:
-
-  PrestaShop\PrestaShop\Adapter\Shipment\OrderShippingTotalUpdater:
-
-  PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater:

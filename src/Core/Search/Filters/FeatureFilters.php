@@ -25,7 +25,7 @@ final class FeatureFilters extends ShopFilters
         return [
             'limit' => self::LIST_LIMIT,
             'offset' => 0,
-            'orderBy' => 'name',
+            'orderBy' => 'position',
             'sortOrder' => 'asc',
             'filters' => [],
         ];

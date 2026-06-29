@@ -147,8 +147,7 @@
                    data-method="add"
                    data-url="{$link->getQuickLink($smarty.server.REQUEST_URI)|escape:'html':'UTF-8'}"
                    data-post-link="{$quick_access_ajax_add_url|escape:'html':'UTF-8'}"
-                   data-prompt-text="{l s='Please name this shortcut:' d='Admin.Navigation.Header'}"
-                   data-link="{$quick_access_current_link_short_name|escape:'html':'UTF-8'|truncate:32}"
+                   data-link="{$quick_access_current_link_short_name|escape:'html':'UTF-8'}"
                    data-icon="{$quick_access_current_link_icon|escape:'html':'UTF-8'}"
                 >
                   <i class="material-icons">add_circle</i>
@@ -163,6 +162,54 @@
               </a>
             </li>
           </ul>
+        </div>
+      </div>
+
+      <div class="modal fade" id="quick-access-add-modal" tabindex="-1" role="dialog"
+           aria-labelledby="quick-access-add-modal-title" aria-modal="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"
+                      aria-label="{l s='Close' d='Admin.Actions'}">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title" id="quick-access-add-modal-title">
+                {l s='Add to Quick Access' d='Admin.Navigation.Header'}
+              </h4>
+            </div>
+            <div class="modal-body">
+              <div class="hidden" role="alert" id="quick-access-add-error"></div>
+              <div class="form-group" id="quick-access-name-group">
+                <label for="quick-access-name">
+                  {l s='Shortcut name' d='Admin.Navigation.Header'}
+                </label>
+                <input type="text" id="quick-access-name" class="form-control" required aria-required="true" maxlength="32"
+                       data-required-message="{l s='Shortcut name is required' d='Admin.Navigation.Header'}">
+                <span class="help-block hidden" id="quick-access-name-error"></span>
+              </div>
+              <div class="form-group">
+                <label class="d-block">
+                  {l s='Open in new window' d='Admin.Navigation.Header'}
+                </label>
+                <span class="ps-switch">
+                  <input id="quick-access-new-window-off" name="quick_access_new_window" value="0" checked type="radio">
+                  <label for="quick-access-new-window-off">{l s='No' d='Admin.Global'}</label>
+                  <input id="quick-access-new-window-on" name="quick_access_new_window" value="1" type="radio">
+                  <label for="quick-access-new-window-on">{l s='Yes' d='Admin.Global'}</label>
+                  <span class="slide-button"></span>
+                </span>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">
+                {l s='Cancel' d='Admin.Actions'}
+              </button>
+              <button type="button" class="btn btn-primary btn-lg" id="quick-access-save-btn">
+                {l s='Save' d='Admin.Actions'}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

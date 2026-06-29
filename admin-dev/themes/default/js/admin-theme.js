@@ -202,65 +202,142 @@ $(() => {
       },
     });
   });
+  const doQuickLinkAjax = ($link, method, name, newWindow, callbacks = {}) => {
+    const reportErrors = (messages) => {
+      if (callbacks.onError) {
+        callbacks.onError(messages);
+        return;
+      }
+
+      messages.forEach((message) => {
+        $.growl.error({title: '', message});
+      });
+    };
+
+    $.ajax({
+      type: 'POST',
+      headers: {'cache-control': 'no-cache'},
+      async: true,
+      url: $link.data('post-link'),
+      data: {
+        method,
+        url: $link.data('url'),
+        name,
+        icon: $link.data('icon'),
+        id_quick_access: $link.data('quicklink-id'),
+        new_window: newWindow ? 1 : 0,
+      },
+      dataType: 'json',
+      success: (data) => {
+        if (typeof data.has_errors !== 'undefined' && data.has_errors) {
+          const messages = [];
+          $.each(data, (index) => {
+            if (typeof data[index] === 'string') {
+              messages.push(data[index]);
+            }
+          });
+          reportErrors(messages);
+        } else if (Array.isArray(data)) {
+          let quicklinkList = '';
+          $.each(data, (index, item) => {
+            if (typeof item.name !== 'undefined') {
+              const activeClass = item.active ? ' active' : '';
+              const classAttr = item.class ? ` class="${item.class}"` : '';
+              quicklinkList += `<li class="quick-row-link${activeClass}">`
+                + `<a${classAttr} href="${item.link}" data-item="${item.name}">${item.name}</a></li>`;
+            }
+          });
+          if (quicklinkList) {
+            $('#header_quick ul.dropdown-menu .divider').prevAll().remove();
+            $('#header_quick ul.dropdown-menu').prepend(quicklinkList);
+            $link.closest('li').remove();
+            if (callbacks.onSuccess) {
+              callbacks.onSuccess();
+            }
+            window.showSuccessMessage(window.update_success_msg);
+          }
+        }
+      },
+      error: (xhr, textStatus) => {
+        const message = textStatus === 'parsererror'
+          ? `Server returned non-JSON (status ${xhr.status})`
+          : `${xhr.status} ${xhr.statusText}`;
+
+        if (callbacks.onError) {
+          callbacks.onError([message]);
+          return;
+        }
+
+        $.growl.error({title: 'Quick access error', message});
+      },
+    });
+  };
+
   $(document).on('click', '.js-quick-link', (e) => {
     e.preventDefault();
 
     const $link = $(e.target).closest('.js-quick-link');
     const method = $link.data('method');
-    let name = null;
 
-    if (method === 'add') {
-      name = prompt($link.data('prompt-text'), $link.data('link'));
+    if (method === 'remove') {
+      doQuickLinkAjax($link, method, null, false);
+      return;
     }
 
-    if ((method === 'add' && name) || method === 'remove') {
-      $.ajax({
-        type: 'POST',
-        headers: {'cache-control': 'no-cache'},
-        async: true,
-        url: $link.data('post-link'),
-        data: {
-          method,
-          url: $link.data('url'),
-          name,
-          icon: $link.data('icon'),
-          id_quick_access: $link.data('quicklink-id'),
-        },
-        dataType: 'json',
-        success: (data) => {
-          if (typeof data.has_errors !== 'undefined' && data.has_errors) {
-            $.each(data, (index) => {
-              if (typeof data[index] === 'string') {
-                $.growl.error({title: '', message: data[index]});
-              }
-            });
-          } else if (Array.isArray(data)) {
-            let quicklinkList = '';
-            $.each(data, (index, item) => {
-              if (typeof item.name !== 'undefined') {
-                const activeClass = item.active ? ' active' : '';
-                const classAttr = item.class ? ` class="${item.class}"` : '';
-                quicklinkList += `<li class="quick-row-link${activeClass}">`
-                  + `<a${classAttr} href="${item.link}" data-item="${item.name}">${item.name}</a></li>`;
-              }
-            });
-            if (quicklinkList) {
-              $('#header_quick ul.dropdown-menu .divider').prevAll().remove();
-              $('#header_quick ul.dropdown-menu').prepend(quicklinkList);
-              $link.closest('li').remove();
-              window.showSuccessMessage(window.update_success_msg);
-            }
-          }
-        },
-        error: (xhr, textStatus) => {
-          $.growl.error({
-            title: 'Quick access error',
-            message: textStatus === 'parsererror'
-              ? `Server returned non-JSON (status ${xhr.status})`
-              : `${xhr.status} ${xhr.statusText}`,
-          });
-        },
+    if (method === 'add') {
+      const $modal = $('#quick-access-add-modal');
+      document.body.appendChild($modal[0]);
+      const defaultName = ($link.data('link') || '').substring(0, 32);
+
+      $modal.find('#quick-access-name').val(defaultName);
+      $modal.find('input[name="quick_access_new_window"][value="0"]').prop('checked', true);
+
+      $modal.one('shown.bs.modal', () => {
+        $modal.find('#quick-access-name').trigger('focus');
       });
+
+      $modal.find('#quick-access-name').off('keypress').on('keypress', (keyEvent) => {
+        if (keyEvent.key === 'Enter') {
+          $modal.find('#quick-access-save-btn').trigger('click');
+        }
+      });
+
+      const $nameInput = $modal.find('#quick-access-name');
+      const $nameGroup = $modal.find('#quick-access-name-group');
+      const $nameError = $modal.find('#quick-access-name-error');
+      const $modalError = $modal.find('#quick-access-add-error');
+
+      const resetErrors = () => {
+        $nameGroup.removeClass('has-error');
+        $nameError.addClass('hidden').text('');
+        $modalError.removeClass('alert alert-danger').addClass('hidden').text('');
+      };
+
+      $modal.one('hidden.bs.modal', resetErrors);
+      $nameInput.off('input').on('input', resetErrors);
+
+      $modal.find('#quick-access-save-btn').off('click').on('click', () => {
+        resetErrors();
+
+        const name = String($nameInput.val()).trim();
+
+        if (!name) {
+          $nameGroup.addClass('has-error');
+          $nameError.text($nameInput.data('required-message')).removeClass('hidden');
+          $nameInput.trigger('focus');
+          return;
+        }
+
+        const newWindow = $modal.find('input[name="quick_access_new_window"]:checked').val() === '1';
+        doQuickLinkAjax($link, method, name, newWindow, {
+          onSuccess: () => $modal.modal('hide'),
+          onError: (messages) => {
+            $modalError.addClass('alert alert-danger').text(messages.join(' ')).removeClass('hidden');
+          },
+        });
+      });
+
+      $modal.modal('show');
     }
   });
 

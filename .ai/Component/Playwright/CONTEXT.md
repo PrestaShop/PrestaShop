@@ -115,6 +115,9 @@ describe('BO - International - Taxes : CRUD Tax', async () => {
 - **Use `function()` not arrow functions** in `describe()` blocks — Mocha needs `this` context
 - **Clean up after tests:** `afterAll` must leave the system in its pre-test state. Delete created entities, revert settings
 - **Feature flag:** for pages still in beta, enable the flag in `before()` and it will be removed at GA
+- **No E2E behind a disabled feature flag** — hard rule. Don't add campaigns for a page only reachable with a not-yet-GA flag; the test ships in the GA PR that promotes the flag (see [`promote-feature-flag-to-stable`](../Migration/skills/promote-feature-flag-to-stable/SKILL.md))
+- **Library compatibility with older versions:** ui-testing-library code is shared across supported branches (down to `9.1.x`). A page object / helper change must not break on older versions — when behavior differs by version, branch on it rather than assuming the latest DOM. See your `ui-testing-library-versioning` note
+- **Messages and selectors live in the library, never in the campaign** — assert against a page-object getter / message property exported by ui-testing-library; don't hard-code expected message strings or raw selectors in the core campaign file
 - **Common tests:** reusable setup/teardown functions live in `tests/UI/commonTests/`. Import and call them to avoid duplication (e.g. `createProductTest`, `deleteProductTest`)
 - **No random data in assertions:** use deterministic Faker values or predefined data for assertions
 - **Toggle switches (quick-edit):** toggle status changes happen via AJAX without page reload — assert the new status directly on the grid row

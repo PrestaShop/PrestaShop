@@ -45,6 +45,11 @@ class ManufacturerLazyArray extends AbstractLazyArray
         $this->language = $language;
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
+        $this->initExtraPropertiesBag(
+            Manufacturer::class,
+            (int) ($this->manufacturer['id_manufacturer'] ?? $this->manufacturer['id'] ?? 0),
+            $language->getId()
+        );
 
         parent::__construct();
         $this->appendArray($this->manufacturer);

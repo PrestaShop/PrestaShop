@@ -1,4 +1,5 @@
 <?php
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -101,7 +102,7 @@ class ProductLazyArray extends AbstractLazyArray
         ProductColorsRetriever $productColorsRetriever,
         TranslatorInterface $translator,
         ?HookManager $hookManager = null,
-        ?Configuration $configuration = null
+        ?Configuration $configuration = null,
     ) {
         $this->settings = $settings;
         $this->product = $product;
@@ -113,6 +114,11 @@ class ProductLazyArray extends AbstractLazyArray
         $this->translator = $translator;
         $this->hookManager = $hookManager ?? new HookManager();
         $this->configuration = $configuration ?? new Configuration();
+        $this->initExtraPropertiesBag(
+            Product::class,
+            (int) ($this->product['id_product'] ?? 0),
+            $language->getId()
+        );
 
         // Load image information right away
         $this->fillImages($product, $language);
@@ -887,7 +893,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     protected function shouldShowPrice(
         ProductPresentationSettings $settings,
-        array $product
+        array $product,
     ): bool {
         return $settings->shouldShowPrice() && (bool) $product['show_price'];
     }
@@ -899,7 +905,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     protected function shouldShowOutOfStockLabel(
         ProductPresentationSettings $settings,
-        array $product
+        array $product,
     ): bool {
         if (!$settings->showLabelOOSListingPages) {
             return false;
@@ -1003,7 +1009,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     protected function filterImagesForCombination(
         array $images,
-        int $productAttributeId
+        int $productAttributeId,
     ) {
         $filteredImages = [];
 
@@ -1022,7 +1028,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     protected function addPriceInformation(
         ProductPresentationSettings $settings,
-        array $product
+        array $product,
     ): void {
         $this->product['has_discount'] = false;
         $this->product['discount_type'] = null;
@@ -1168,7 +1174,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     protected function shouldEnableAddToCartButton(
         array $product,
-        ProductPresentationSettings $settings
+        ProductPresentationSettings $settings,
     ) {
         // If the product is disabled, we disable add to cart button
         if ($product['active'] != 1) {
@@ -1304,7 +1310,7 @@ class ProductLazyArray extends AbstractLazyArray
     protected function getProductURL(
         array $product,
         Language $language,
-        $canonical = false
+        $canonical = false,
     ) {
         $linkRewrite = isset($product['link_rewrite'])
             ? $product['link_rewrite']
@@ -1336,7 +1342,7 @@ class ProductLazyArray extends AbstractLazyArray
     public function addQuantityInformation(
         ProductPresentationSettings $settings,
         array $product,
-        Language $language
+        Language $language,
     ) {
         $show_price = $this->shouldShowPrice($settings, $product);
         $show_availability = $show_price && $settings->stock_management_enabled;
@@ -1612,6 +1618,7 @@ class ProductLazyArray extends AbstractLazyArray
             'ecotax',
             'ecotax_rate',
             'extraContent',
+            'extra_properties',
             'features',
             'flags',
             'has_discount',

@@ -39,6 +39,44 @@ Feature: country management
       | display_tax_label          | true                                             |
       | shop_association           | 1                                                |
 
+  Scenario: Adding a country with an already existing ISO code is rejected
+    When I add new country "duplicate" with following properties:
+      | name[en-US]                | duplicateName                                    |
+      | name[fr-FR]                | duplicateNameFr                                  |
+      | iso_code                   | TE                                               |
+      | call_prefix                | 123                                              |
+      | default_currency           | 1                                                |
+      | zone                       | 1                                                |
+      | need_zip_code              | true                                             |
+      | zip_code_format            | 1 NL                                             |
+      | address_format             | firstname lastname\naddress1\ncity\nCountry:name |
+      | is_enabled                 | true                                             |
+      | contains_states            | false                                            |
+      | need_identification_number | false                                            |
+      | display_tax_label          | true                                             |
+      | shop_association           | 1                                                |
+    Then I should get an "DuplicateCountryIsoCode" error
+
+  Scenario: Editing a country to use an already existing ISO code is rejected
+    When I add new country "second" with following properties:
+      | name[en-US]                | secondName                                       |
+      | name[fr-FR]                | secondNameFr                                     |
+      | iso_code                   | TS                                               |
+      | call_prefix                | 123                                              |
+      | default_currency           | 1                                                |
+      | zone                       | 1                                                |
+      | need_zip_code              | true                                             |
+      | zip_code_format            | 1 NL                                             |
+      | address_format             | firstname lastname\naddress1\ncity\nCountry:name |
+      | is_enabled                 | true                                             |
+      | contains_states            | false                                            |
+      | need_identification_number | false                                            |
+      | display_tax_label          | true                                             |
+      | shop_association           | 1                                                |
+    And I edit country "second" with following properties:
+      | iso_code | TE |
+    Then I should get an "DuplicateCountryIsoCode" error
+
   Scenario: edit country
     Given language "language1" with locale "en-US" exists
     And language "language2" with locale "fr-FR" exists

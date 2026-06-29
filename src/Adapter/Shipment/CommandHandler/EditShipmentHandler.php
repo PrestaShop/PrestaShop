@@ -44,7 +44,6 @@ class EditShipmentHandler implements EditShipmentHandlerInterface
     {
         $shipmentId = $command->getShipmentId()->getValue();
         $carrierId = $command->getCarrierId()->getValue();
-        $trackingNumber = $command->getTrackingNumber();
 
         try {
             /** @var Shipment|null $shipment */
@@ -72,7 +71,6 @@ class EditShipmentHandler implements EditShipmentHandlerInterface
         }
 
         $shipment->setCarrierId($carrierId);
-        $shipment->setTrackingNumber($trackingNumber);
 
         try {
             $this->shipmentRepository->save($shipment);

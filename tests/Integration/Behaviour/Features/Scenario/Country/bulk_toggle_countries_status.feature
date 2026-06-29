@@ -10,7 +10,7 @@ Feature: Bulk toggle countries status
     Given language "language1" with locale "en-US" exists
     And I add new country "bulk_country_1" with following properties:
       | name[en-US]                | Bulk Country 1                                   |
-      | iso_code                   | QA                                               |
+      | iso_code                   | QX                                               |
       | call_prefix                | 21                                               |
       | default_currency           | 1                                                |
       | zone                       | 1                                                |

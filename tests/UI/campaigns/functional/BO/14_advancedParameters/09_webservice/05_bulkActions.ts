@@ -20,10 +20,9 @@ describe('BO - Advanced Parameters - Webservice : Bulk actions', async () => {
 
   let numberOfWebserviceKeys: number = 0;
 
-  const firstWebServiceData: FakerWebservice = new FakerWebservice({keyDescription: 'todelete'});
-  const secondWebServiceData: FakerWebservice = new FakerWebservice();
+  const firstWebServiceData: FakerWebservice = new FakerWebservice({keyDescription: 'todelete10'});
+  const secondWebServiceData: FakerWebservice = new FakerWebservice({keyDescription: 'todelete20'});
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -61,15 +60,13 @@ describe('BO - Advanced Parameters - Webservice : Bulk actions', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
     numberOfWebserviceKeys = await boWebservicesPage.resetAndGetNumberOfLines(page);
-    if (numberOfWebserviceKeys !== 0) expect(numberOfWebserviceKeys).to.be.above(0);
+    expect(numberOfWebserviceKeys).to.be.greaterThanOrEqual(0);
   });
 
-  const tests = [
-    {args: {webserviceToCreate: firstWebServiceData}},
-    {args: {webserviceToCreate: secondWebServiceData}},
-  ];
-
-  tests.forEach((test: { args: { webserviceToCreate: FakerWebservice } }, index: number) => {
+  [
+    firstWebServiceData,
+    secondWebServiceData,
+  ].forEach((data: FakerWebservice, index: number) => {
     it('should go to add new webservice key page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToAddNewWebserviceKeyPage_${index}`, baseContext);
 
@@ -84,7 +81,7 @@ describe('BO - Advanced Parameters - Webservice : Bulk actions', async () => {
 
       const textResult = await boWebservicesCreatePage.createEditWebservice(
         page,
-        test.args.webserviceToCreate,
+        data,
         false,
       );
       expect(textResult).to.equal(boWebservicesCreatePage.successfulCreationMessage);
@@ -104,23 +101,21 @@ describe('BO - Advanced Parameters - Webservice : Bulk actions', async () => {
       expect(key).to.contains('todelete');
     });
 
-    const tests = [
-      {args: {action: 'disable', enabledValue: false}},
-      {args: {action: 'enable', enabledValue: true}},
-    ];
+    [
+      {action: 'disable', enabledValue: false},
+      {action: 'enable', enabledValue: true},
+    ].forEach((arg: { action: string, enabledValue: boolean}) => {
+      it(`should ${arg.action} with bulk actions and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${arg.action}WebserviceKey`, baseContext);
 
-    tests.forEach((test: { args: { action: string, enabledValue: boolean } }) => {
-      it(`should ${test.args.action} with bulk actions and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}WebserviceKey`, baseContext);
-
-        const textResult = await boWebservicesPage.bulkSetStatus(page, test.args.enabledValue);
+        const textResult = await boWebservicesPage.bulkSetStatus(page, arg.enabledValue);
         expect(textResult).to.be.equal(boWebservicesPage.successfulUpdateStatusMessage);
 
-        const numberOfWebserviceKeys = await boWebservicesPage.getNumberOfElementInGrid(page);
+        const numberOfWebserviceKeysAfterBulk = await boWebservicesPage.getNumberOfElementInGrid(page);
 
-        for (let i = 1; i <= numberOfWebserviceKeys; i++) {
+        for (let i = 1; i <= numberOfWebserviceKeysAfterBulk; i++) {
           const webserviceStatus = await boWebservicesPage.getStatus(page, i);
-          expect(webserviceStatus).to.equal(test.args.enabledValue);
+          expect(webserviceStatus).to.equal(arg.enabledValue);
         }
       });
     });
@@ -132,6 +127,15 @@ describe('BO - Advanced Parameters - Webservice : Bulk actions', async () => {
 
       const numberOfElement = await boWebservicesPage.resetAndGetNumberOfLines(page);
       expect(numberOfElement).to.be.equal(numberOfWebserviceKeys + 2);
+    });
+
+    it('should filter list by key description', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterBeforeBulkDelete', baseContext);
+
+      await boWebservicesPage.filterWebserviceTable(page, 'input', 'description', 'todelete');
+
+      const key = await boWebservicesPage.getTextColumnFromTable(page, 1, 'description');
+      expect(key).to.contains('todelete');
     });
 
     it('should delete webservice keys created', async function () {

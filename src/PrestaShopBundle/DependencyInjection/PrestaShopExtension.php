@@ -14,6 +14,8 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Throwable;
@@ -127,9 +129,12 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
                 // APIPlatform is looping on included resources and doing a require_once on those resources in ReflectionClassRecursiveIterator::getReflectionClassesFromDirectories.
                 // This means that everything in those files is interpreted including the exit statement in some of those files ( especially in some index.php files used as an old way to make the directory read only ).
                 // Since we cannot override or decorate the reflection class itself we have no other choice but to delete those files.
-                if (file_exists($entitiesRessourcesPath . '/index.php')) {
-                    unlink($entitiesRessourcesPath . '/index.php');
-                }
+                (new Filesystem())->remove(
+                    Finder::create()
+                        ->files()
+                        ->in($entitiesRessourcesPath)
+                        ->name('index.php')
+                );
                 $paths[] = $entitiesRessourcesPath;
             }
 

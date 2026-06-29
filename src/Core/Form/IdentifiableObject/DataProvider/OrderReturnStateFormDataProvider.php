@@ -38,6 +38,7 @@ final class OrderReturnStateFormDataProvider implements FormDataProviderInterfac
         return [
             'name' => $editableOrderReturnState->getLocalizedNames(),
             'color' => $editableOrderReturnState->getColor(),
+            'is_cancelling_return' => $editableOrderReturnState->isCancellingReturn(),
         ];
     }
 

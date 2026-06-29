@@ -3,6 +3,7 @@
 > For folder structure and navigation, see [STRUCTURE.md](STRUCTURE.md).
 > For cross-domain naming traps and identity gotchas, see [GOTCHAS.md](GOTCHAS.md).
 > For multi-store scoping (ShopConstraint, AbstractMultistoreConfiguration), see [MULTISTORE.md](MULTISTORE.md).
+> For the service-container / kernel topology (3 Symfony kernels vs the hand-built FO legacy container, and where service definitions live), see [CONTAINERS.md](CONTAINERS.md).
 
 ## Project overview
 
@@ -62,6 +63,18 @@ Breaking changes are only allowed in major versions. See [ADR 0017](https://gith
 | Behavior | Behat | `tests/Integration/Behaviour/` |
 | UI | Playwright | `tests/UI/` |
 
+- **New behavior / bug fix must come with a test.** Add or adjust a unit test on the class actually touched; prefer Behat for command/handler behavior; if an existing E2E covers the area, unskip it and re-run rather than leaving a `@todo`/skip in place.
+
+## PR hygiene
+
+Common slips unrelated to the feature itself — check before pushing:
+
+- **No unrelated lock-file changes.** A PR must not carry `composer.lock` / `package-lock.json` updates for dependencies it doesn't intentionally bump (a stray `composer install` often rewrites them). Restore them, or squash them out before review.
+- **No IDE / local config files** (`.idea/`, editor settings) and no stray blank-line or missing-end-of-line changes.
+- **Keep lists alphabetically sorted** (interface members, imports where applicable, enum-like lists) — not all of this is caught by php-cs-fixer.
+- **Squash noise commits** (review fixups, reverts) so history stays readable.
+- **Target the lowest applicable branch** (`9.1.x` for bug fixes, `develop` for features) — see Branching & Versioning above.
+
 ## Skills
 
 | Skill | Path | Trigger |
@@ -79,9 +92,9 @@ Domains: Address, Alias, ApiClient, Attachment, AttributeGroup, Carrier, Cart, C
 
 ## Component contexts
 
-All 27 shared infrastructure components have a context file at `Component/{ComponentName}/CONTEXT.md`.
+All 28 shared infrastructure components have a context file at `Component/{ComponentName}/CONTEXT.md`.
 
-Components: AdminAPI, BackOfficeHelp, Behat, Configuration, Console, Context, ContextStateManager, Controller, Cookie, CQRS, Database, Export, FacetedSearch, Forms, Grid, Hook, Import, Javascript, Link, Locale, MailTemplate, Migration, Playwright, PositionUpdater, Router, Smarty, TinyMCE, Twig
+Components: AdminAPI, BackOfficeHelp, Behat, Configuration, Console, Context, ContextStateManager, Controller, Cookie, CQRS, Database, Export, ExtraProperty, FacetedSearch, Forms, Grid, Hook, Import, Javascript, Link, Locale, MailTemplate, Migration, Playwright, PositionUpdater, Router, Smarty, TinyMCE, Twig
 
 ## Generated indexes
 

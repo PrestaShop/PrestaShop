@@ -1595,7 +1595,11 @@
     {% set cardSubtitle = label_subtitle %}
   {% endif %}
   <div class="card">
-    {{ form_label(form, null, {label_tag_name: 'h3', label_attr: {class: 'card-header'}, required: false, label_subtitle: null}) }}
+    {% if icon is defined and icon is not empty %}
+      <h3 class="card-header"><i class="material-icons">{{ icon }}</i> {{ form.vars.label }}</h3>
+    {% else %}
+      {{ form_label(form, null, {label_tag_name: 'h3', label_attr: {class: 'card-header'}, required: false, label_subtitle: null}) }}
+    {% endif %}
     <div class="card-body">
       {# Subtitle is rendered insiade the card body to prevent padding offsets #}
       {% if cardSubtitle is defined %}

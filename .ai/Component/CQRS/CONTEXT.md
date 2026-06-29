@@ -63,6 +63,9 @@ Error code constants must be unique integers within the class. Never throw gener
 - **Never call another handler** from within a handler — compose at controller level
 - **Add handler** returns `{Domain}Id`; all other command handlers return `void`
 - Query handlers always return a typed DTO — never void, never ObjectModel instances
+- **Validation placement** — single-value format validation belongs in the field's Value Object constructor (a `{Domain}ConstraintException`). Cross-field / entity-level business rules (uniqueness, required-fields-by-config, existence of related records) belong in a dedicated **`{Domain}Validator` service** (in `src/Adapter/{Domain}/`) that the handler calls — **not inline in the repository, the controller, or the FormType**. The repository only persists. See `src/Adapter/Country/Validate/CountryValidator.php`
+- **Handler is the single integration point** — cross-cutting/derived logic (auto-filling defaults, normalizing values, side effects) belongs in the command handler, **not** in the FormType or controller. Putting it in the handler means the Admin API, AJAX endpoints, Behat and programmatic callers all get the same behavior for free; logic that only lives in the form is silently bypassed everywhere else
+- **Edit commands are partial updates** — an `Edit{Domain}Command` carries only the fields the caller intends to change (often nullable setters). A handler must apply only what the command actually provides and preserve untouched fields (e.g. don't overwrite all language values when only one was submitted). The command is the source of truth for *what changed*, not for the full entity state
 
 ### Bulk handlers
 

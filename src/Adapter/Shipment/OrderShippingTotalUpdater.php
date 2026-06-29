@@ -21,7 +21,7 @@ class OrderShippingTotalUpdater
     ) {
     }
 
-    public function update(Order $order): void
+    public function update(Order $order): Order
     {
         $totalTaxExcluded = 0.00;
         $totalTaxIncluded = 0.00;
@@ -35,5 +35,7 @@ class OrderShippingTotalUpdater
         $order->total_shipping_tax_incl = $totalTaxIncluded;
         $order->total_shipping = $totalTaxIncluded;
         $order->update();
+
+        return $order;
     }
 }

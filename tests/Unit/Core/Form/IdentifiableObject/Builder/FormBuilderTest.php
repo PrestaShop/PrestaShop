@@ -7,6 +7,7 @@
 namespace Tests\Unit\Core\Form\IdentifiableObject\Builder;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormBuilderModifier;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
@@ -58,12 +59,21 @@ class FormBuilderTest extends TestCase
         $formBuilderMock = $this->createSymfonyFormBuilderMock($formMock, 'Abcd');
         $formFactoryMock = $this->createFormFactoryMock($formBuilderMock);
 
+        $extraPropertiesModifier = $this->createMock(ExtraPropertiesFormBuilderModifier::class);
+        $extraPropertiesModifier->expects($this->once())->method('apply')->with(
+            $formBuilderMock,
+            'Abcd',
+            1
+        );
+
         $builder = new FormBuilder(
             $formFactoryMock,
             $this->createHookDispatcherMock($formBuilderMock, 'Abcd', 1),
             $this->createDataProviderMock(),
             'a',
-            $this->createMockFormRegistryInterface('Abcd')
+            $this->createMockFormRegistryInterface('Abcd'),
+            null,
+            $extraPropertiesModifier
         );
 
         $form = $builder->getFormFor(1, [], []);

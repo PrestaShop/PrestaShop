@@ -111,6 +111,17 @@ class DiscountInformationType extends TranslatorAwareType
                 ],
                 'required' => false,
             ])
+            ->add('highlight_in_cart', SwitchType::class, [
+                'label' => $this->trans('Highlight', 'Admin.Catalog.Feature'),
+                'label_attr' => [
+                    'class' => 'font-weight-bold',
+                ],
+                'label_help_box' => $this->trans(
+                    'If the voucher is not yet in the cart, it will be displayed in the cart summary.',
+                    'Admin.Catalog.Help'
+                ),
+                'required' => false,
+            ])
         ;
     }
 

@@ -662,6 +662,12 @@ default:
         - Tests\Integration\Behaviour\Features\Context\Domain\AliasFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
         - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+    extra-property-definition:
+      paths:
+        - "%paths.base%/Features/Scenario/ExtraProperty"
+      contexts:
+        - Tests\Integration\Behaviour\Features\Context\Domain\ExtraPropertyDefinitionFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
     api-client:
       paths:
         - "%paths.base%/Features/Scenario/ApiClient"

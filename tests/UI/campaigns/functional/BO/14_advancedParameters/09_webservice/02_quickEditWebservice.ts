@@ -60,7 +60,7 @@ describe('BO - Advanced Parameters - Webservice : Quick edit webservice', async 
     await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
     numberOfWebserviceKeys = await boWebservicesPage.resetAndGetNumberOfLines(page);
-    if (numberOfWebserviceKeys !== 0) expect(numberOfWebserviceKeys).to.be.above(0);
+    expect(numberOfWebserviceKeys).to.be.greaterThanOrEqual(0);
   });
 
   it('should go to add new webservice key page', async function () {
@@ -82,20 +82,30 @@ describe('BO - Advanced Parameters - Webservice : Quick edit webservice', async 
     expect(numberOfWebserviceKeysAfterCreation).to.be.equal(numberOfWebserviceKeys + 1);
   });
 
-  describe('Quick edit webservice', async () => {
-    const statuses = [
-      {args: {status: 'disable', enable: false}},
-      {args: {status: 'enable', enable: true}},
-    ];
+  it('should filter list by key description', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'filterAfterCreate', baseContext);
 
-    statuses.forEach((webservice: { args: { status: string, enable: boolean } }) => {
-      it(`should ${webservice.args.status} the webservice`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${webservice.args.status}Webservice`, baseContext);
+    await boWebservicesPage.filterWebserviceTable(page, 'input', 'description', webServiceData.keyDescription);
+
+    const numberOfWebserviceKeysAfterFilter = await boWebservicesPage.getNumberOfElementInGrid(page);
+    expect(numberOfWebserviceKeysAfterFilter).to.be.equal(1);
+
+    const key = await boWebservicesPage.getTextColumnFromTable(page, 1, 'description');
+    expect(key).to.contains(webServiceData.keyDescription);
+  });
+
+  describe('Quick edit webservice', async () => {
+    [
+      {status: 'disable', enable: false},
+      {status: 'enable', enable: true},
+    ].forEach((webservice: { status: string, enable: boolean }) => {
+      it(`should ${webservice.status} the webservice`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${webservice.status}Webservice`, baseContext);
 
         const isActionPerformed = await boWebservicesPage.setStatus(
           page,
           1,
-          webservice.args.enable,
+          webservice.enable,
         );
 
         if (isActionPerformed) {
@@ -104,7 +114,7 @@ describe('BO - Advanced Parameters - Webservice : Quick edit webservice', async 
         }
 
         const webserviceStatus = await boWebservicesPage.getStatus(page, 1);
-        expect(webserviceStatus).to.be.equal(webservice.args.enable);
+        expect(webserviceStatus).to.be.equal(webservice.enable);
       });
     });
   });

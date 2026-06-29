@@ -163,7 +163,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                     )
                 )
                 ->setRequired($this->password_is_required)
-                ->setAutocompleteAttribute('new-password');
+                ->setAutocompleteAttribute($this->ask_for_new_password ? 'current-password' : 'new-password');
         }
 
         if ($this->ask_for_new_password) {

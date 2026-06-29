@@ -931,9 +931,10 @@ class OrderCore extends ObjectModel
             SELECT IFNULL(SUM(ord.product_quantity), SUM(product_quantity_return))
             FROM `' . _DB_PREFIX_ . 'orders` o
             INNER JOIN `' . _DB_PREFIX_ . 'order_detail` od
-            ON od.id_order = o.id_order
+                ON od.id_order = o.id_order
             LEFT JOIN `' . _DB_PREFIX_ . 'order_return_detail` ord
-            ON ord.id_order_detail = od.id_order_detail
+                ON ord.id_order_detail = od.id_order_detail
+                    AND ord.cancelled = 0 
             WHERE o.id_order = ' . (int) $this->id);
     }
 

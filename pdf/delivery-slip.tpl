@@ -45,14 +45,16 @@
 		<td colspan="12" height="20">&nbsp;</td>
 	</tr>
 
-	<tr>
-		<td colspan="7" class="left">
+	{if isset($payment_tab)}
+		<tr>
+			<td colspan="7" class="left">
 
-			{$payment_tab}
+				{$payment_tab}
 
-		</td>
-		<td colspan="5">&nbsp;</td>
-	</tr>
+			</td>
+			<td colspan="5">&nbsp;</td>
+		</tr>
+	{/if}
 
 	<!-- Hook -->
 	{if isset($HOOK_DISPLAY_PDF)}

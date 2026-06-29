@@ -1,0 +1,68 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% set legacyLayout = legacyLayout|default(false) %}
+<div class="modal fade" id="quick-access-add-modal" tabindex="-1" role="dialog"
+     aria-labelledby="quick-access-add-modal-title" aria-modal="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        {% set modalTitle %}
+          <h4 class="modal-title" id="quick-access-add-modal-title">
+            {{ 'Add to Quick Access'|trans({}, 'Admin.Navigation.Header') }}
+          </h4>
+        {% endset %}
+        {% set closeButton %}
+          <button type="button" class="close" data-dismiss="modal"
+                  aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        {% endset %}
+        {% if legacyLayout %}
+          {{ closeButton }}
+          {{ modalTitle }}
+        {% else %}
+          {{ modalTitle }}
+          {{ closeButton }}
+        {% endif %}
+      </div>
+      <div class="modal-body">
+        <div class="d-print-none d-none" role="alert" id="quick-access-add-error">
+          <div class="alert-text"></div>
+        </div>
+        <div class="form-group" id="quick-access-name-group">
+          <label class="form-control-label" for="quick-access-name">
+            {{ 'Shortcut name'|trans({}, 'Admin.Navigation.Header') }}
+          </label>
+          <input type="text" id="quick-access-name" class="form-control" required aria-required="true" maxlength="32"
+                 data-required-message="{{ 'Shortcut name is required'|trans({}, 'Admin.Navigation.Header') }}">
+          <div class="align-baseline text-danger mt-1 d-none" role="alert" id="quick-access-name-error">
+            <i class="material-icons form-error-icon">error_outline</i>
+            <span class="js-error-text"></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-control-label d-block">
+            {{ 'Open in new window'|trans({}, 'Admin.Navigation.Header') }}
+          </label>
+          <span class="ps-switch">
+            <input id="quick-access-new-window-off" name="quick_access_new_window" value="0" checked type="radio">
+            <label for="quick-access-new-window-off">{{ 'No'|trans({}, 'Admin.Global') }}</label>
+            <input id="quick-access-new-window-on" name="quick_access_new_window" value="1" type="radio">
+            <label for="quick-access-new-window-on">{{ 'Yes'|trans({}, 'Admin.Global') }}</label>
+            <span class="slide-button"></span>
+          </span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn {{ legacyLayout ? 'btn-default' : 'btn-outline-secondary' }} btn-lg" data-dismiss="modal">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </button>
+        <button type="button" class="btn btn-primary btn-lg" id="quick-access-save-btn">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -28,9 +28,9 @@ class SplitShipmentFormDataProvider extends ShipmentFormDataProvider
 
     public function getData($orderId)
     {
-        $shipmentId = $this->requestStack->getMainRequest()->query->getInt('shipmentId');
-        $productsFromQuery = $this->requestStack->getMainRequest()->get('products', []);
-        $selectedCarrier = $this->requestStack->getMainRequest()->query->getInt('carrier');
+        $shipmentId = $this->requestStack->getCurrentRequest()->attributes->getInt('shipmentId');
+        $productsFromQuery = $this->requestStack->getCurrentRequest()->get('products', []);
+        $selectedCarrier = $this->requestStack->getCurrentRequest()->get('carrier');
         $orderShipmentProducts = $this->mergeProductsFromQueries($shipmentId, $productsFromQuery);
 
         return [

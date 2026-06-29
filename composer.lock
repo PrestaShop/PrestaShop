@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "289ad4da9b89731edd32108c32142228",
+    "content-hash": "95a71dd97e02f35f52a3724f5717db52",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5082,21 +5082,21 @@
         },
         {
             "name": "prestashop/hummingbird",
-            "version": "v2.0.0",
+            "version": "v2.1.0-beta.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/hummingbird.git",
-                "reference": "b481f9d67dbf2852df34ab6de9b89882d8154886"
+                "reference": "238dd265b4c73cbaa35c84e7340d9f62d97eaf76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/b481f9d67dbf2852df34ab6de9b89882d8154886",
-                "reference": "b481f9d67dbf2852df34ab6de9b89882d8154886",
+                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/238dd265b4c73cbaa35c84e7340d9f62d97eaf76",
+                "reference": "238dd265b4c73cbaa35c84e7340d9f62d97eaf76",
                 "shasum": ""
             },
             "require-dev": {
-                "symfony/console": "~4.4 || ^5.0 || ^6.4",
-                "symfony/yaml": "~4.4 || ^5.0 || ^6.4"
+                "prestashop/autoindex": "^2.1",
+                "prestashop/header-stamp": "^3.1"
             },
             "type": "prestashop-theme",
             "notification-url": "https://packagist.org/downloads/",
@@ -5116,9 +5116,9 @@
             "description": "Hummingbird development theme for PrestaShop",
             "support": {
                 "issues": "https://github.com/PrestaShop/hummingbird/issues",
-                "source": "https://github.com/PrestaShop/hummingbird/tree/v2.0.0"
+                "source": "https://github.com/PrestaShop/hummingbird/tree/v2.1.0-beta.2"
             },
-            "time": "2026-02-11T08:38:15+00:00"
+            "time": "2026-06-26T13:01:05+00:00"
         },
         {
             "name": "prestashop/pagesnotfound",
@@ -6019,16 +6019,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v4.0.3",
+            "version": "v4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "bd9f09e81d1d49a936b4c0c3fa6b7e846bc53e76"
+                "reference": "08d80f46ef101389a8128232b1a208142c28a718"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/bd9f09e81d1d49a936b4c0c3fa6b7e846bc53e76",
-                "reference": "bd9f09e81d1d49a936b4c0c3fa6b7e846bc53e76",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/08d80f46ef101389a8128232b1a208142c28a718",
+                "reference": "08d80f46ef101389a8128232b1a208142c28a718",
                 "shasum": ""
             },
             "require": {
@@ -6065,9 +6065,9 @@
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
             "support": {
                 "issues": "https://github.com/PrestaShop/ps_facetedsearch/issues",
-                "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v4.0.3"
+                "source": "https://github.com/PrestaShop/ps_facetedsearch/tree/v4.0.4"
             },
-            "time": "2025-12-31T13:27:28+00:00"
+            "time": "2026-06-03T10:20:29+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
@@ -6383,16 +6383,16 @@
         },
         {
             "name": "prestashop/ps_newproducts",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_newproducts.git",
-                "reference": "001719211d2cb6847c33458ad64bef056017f0ba"
+                "reference": "ebfc0dd2a838f2ea8ceeb7f6aa5638c1aff99611"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_newproducts/zipball/001719211d2cb6847c33458ad64bef056017f0ba",
-                "reference": "001719211d2cb6847c33458ad64bef056017f0ba",
+                "url": "https://api.github.com/repos/PrestaShop/ps_newproducts/zipball/ebfc0dd2a838f2ea8ceeb7f6aa5638c1aff99611",
+                "reference": "ebfc0dd2a838f2ea8ceeb7f6aa5638c1aff99611",
                 "shasum": ""
             },
             "require": {
@@ -6416,9 +6416,9 @@
             "homepage": "https://github.com/PrestaShop/ps_newproducts",
             "support": {
                 "issues": "https://github.com/PrestaShop/ps_newproducts/issues",
-                "source": "https://github.com/PrestaShop/ps_newproducts/tree/v2.0.0"
+                "source": "https://github.com/PrestaShop/ps_newproducts/tree/v2.0.1"
             },
-            "time": "2026-04-16T13:22:45+00:00"
+            "time": "2026-06-07T18:46:03+00:00"
         },
         {
             "name": "prestashop/ps_searchbar",
@@ -13654,7 +13654,7 @@
         },
         {
             "name": "symfony/ux-icons",
-            "version": "v2.35.0",
+            "version": "v2.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-icons.git",
@@ -13723,7 +13723,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-icons/tree/v2.35.0"
+                "source": "https://github.com/symfony/ux-icons/tree/v2.36.0"
             },
             "funding": [
                 {
@@ -13747,7 +13747,7 @@
         },
         {
             "name": "symfony/ux-twig-component",
-            "version": "v2.35.0",
+            "version": "v2.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-twig-component.git",
@@ -13812,7 +13812,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-twig-component/tree/v2.35.0"
+                "source": "https://github.com/symfony/ux-twig-component/tree/v2.36.0"
             },
             "funding": [
                 {
@@ -14679,16 +14679,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v3.26.0",
+            "version": "v3.27.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "1fcae487b180d78e6351f4e0afa91f9eab96a2bc"
+                "reference": "ae2071bffb38f04847fc0864d730c94b9cb8ab74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/1fcae487b180d78e6351f4e0afa91f9eab96a2bc",
-                "reference": "1fcae487b180d78e6351f4e0afa91f9eab96a2bc",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ae2071bffb38f04847fc0864d730c94b9cb8ab74",
+                "reference": "ae2071bffb38f04847fc0864d730c94b9cb8ab74",
                 "shasum": ""
             },
             "require": {
@@ -14743,7 +14743,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v3.26.0"
+                "source": "https://github.com/twigphp/Twig/tree/v3.27.1"
             },
             "funding": [
                 {
@@ -14755,7 +14755,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-20T07:31:59+00:00"
+            "time": "2026-05-30T17:09:26+00:00"
         },
         {
             "name": "wikimedia/cssjanus",
@@ -18440,9 +18440,9 @@
         "ext-simplexml": "*",
         "ext-zip": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.3.0"
 }

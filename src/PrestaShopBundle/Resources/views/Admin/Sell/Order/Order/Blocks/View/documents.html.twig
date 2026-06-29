@@ -48,7 +48,7 @@
             </a>
           {% elseif document.type == 'delivery_slip' %}
             <a target="_blank" rel="noopener noreferrer nofollow"
-               href="{{ path('admin_orders_generate_delivery_slip_pdf', {orderId: orderForViewing.id}) }}"
+               href="{{ orderHasShipment ? path('admin_orders_generate_shipment_delivery_slip_pdf', {shipmentId: document.id}) : path('admin_orders_generate_delivery_slip_pdf', {orderId: orderForViewing.id}) }}"
             >
               {{ document.referenceNumber }}
             </a>

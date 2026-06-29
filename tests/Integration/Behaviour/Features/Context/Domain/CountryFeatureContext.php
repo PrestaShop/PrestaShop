@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\BulkCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DuplicateCountryIsoCodeException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\InvalidAddressFormatException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
@@ -197,6 +198,7 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
     {
         $map = [
             'InvalidAddressFormat' => InvalidAddressFormatException::class,
+            'DuplicateCountryIsoCode' => DuplicateCountryIsoCodeException::class,
         ];
 
         if (!isset($map[$exceptionShortName])) {

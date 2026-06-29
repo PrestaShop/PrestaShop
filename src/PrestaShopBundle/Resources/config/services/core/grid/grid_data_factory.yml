@@ -2,6 +2,11 @@ services:
   _defaults:
     public: true
 
+  _instanceof:
+    PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory:
+      bind:
+        $extraPropertiesGridQueryBuilderModifier: '@PrestaShop\PrestaShop\Core\ExtraProperty\Grid\ExtraPropertiesGridQueryBuilderModifier'
+
   prestashop.core.grid.data_factory.log:
     class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
     arguments:
@@ -40,6 +45,14 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'webservice_key'
+
+  prestashop.core.grid.data_factory.extra_property_definition:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.core.grid.query_builder.extra_property_definition'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'extra_property_definition'
 
   prestashop.core.grid.data_provider.meta:
     class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'

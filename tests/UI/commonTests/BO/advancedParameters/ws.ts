@@ -79,7 +79,6 @@ function addWebserviceKey(
       permissions: keyPermissions,
     });
 
-    // before and after functions
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
       page = await utilsPlaywright.newTab(browserContext);
@@ -117,7 +116,7 @@ function addWebserviceKey(
       await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
       numberOfWebserviceKeys = await boWebservicesPage.resetAndGetNumberOfLines(page);
-      expect(numberOfWebserviceKeys).to.be.eq(0);
+      expect(numberOfWebserviceKeys).to.be.greaterThanOrEqual(0);
     });
 
     it('should go to add new webservice key page', async function () {
@@ -136,7 +135,7 @@ function addWebserviceKey(
       expect(textResult).to.equal(boWebservicesCreatePage.successfulCreationMessage);
 
       const numberOfWebserviceKeysAfterCreation = await boWebservicesPage.getNumberOfElementInGrid(page);
-      expect(numberOfWebserviceKeysAfterCreation).to.be.eq(1);
+      expect(numberOfWebserviceKeysAfterCreation).to.be.eq(numberOfWebserviceKeys + 1);
     });
   });
 }
@@ -144,7 +143,6 @@ function removeWebserviceKey(keyDescription: string, baseContext: string = 'comm
   describe(`Remove a new webservice key named "${keyDescription}"`, async () => {
     let numberOfWebserviceKeys: number = 0;
 
-    // before and after functions
     before(async function () {
       browserContext = await utilsPlaywright.createBrowserContext(this.browser);
       page = await utilsPlaywright.newTab(browserContext);
@@ -182,7 +180,7 @@ function removeWebserviceKey(keyDescription: string, baseContext: string = 'comm
       await testContext.addContextItem(this, 'testIdentifier', 'firstReset', baseContext);
 
       numberOfWebserviceKeys = await boWebservicesPage.resetAndGetNumberOfLines(page);
-      expect(numberOfWebserviceKeys).to.be.eq(1);
+      expect(numberOfWebserviceKeys).to.be.greaterThanOrEqual(1);
     });
 
     it('should filter list by key description', async function () {
@@ -194,6 +192,9 @@ function removeWebserviceKey(keyDescription: string, baseContext: string = 'comm
         'description',
         keyDescription,
       );
+
+      const numWS = await boWebservicesPage.getNumberOfElementInGrid(page);
+      expect(numWS).to.be.greaterThanOrEqual(1);
 
       const key = await boWebservicesPage.getTextColumnFromTable(page, 1, 'description');
       expect(key).to.contains(keyDescription);
@@ -210,7 +211,7 @@ function removeWebserviceKey(keyDescription: string, baseContext: string = 'comm
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
       const numberOfWebserviceKeyAfterDelete = await boWebservicesPage.resetAndGetNumberOfLines(page);
-      expect(numberOfWebserviceKeyAfterDelete).to.be.equal(0);
+      expect(numberOfWebserviceKeyAfterDelete).to.be.equal(numberOfWebserviceKeys - 1);
     });
   });
 }

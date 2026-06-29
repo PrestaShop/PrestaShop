@@ -37,7 +37,8 @@ final class GetOrderReturnStateForEditingHandler implements GetOrderReturnStateF
         return new EditableOrderReturnState(
             $orderReturnStateId,
             $orderReturnState->name,
-            $orderReturnState->color
+            $orderReturnState->color,
+            $orderReturnState->is_cancelling_return
         );
     }
 }

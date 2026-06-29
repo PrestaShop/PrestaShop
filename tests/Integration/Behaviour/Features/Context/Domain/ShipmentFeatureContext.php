@@ -1,5 +1,4 @@
 <?php
-
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -16,9 +15,12 @@ use OrderDetail;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\CreateShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\DeleteProductFromShipment;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\FulfillShipmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\MergeProductsToShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\SplitShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\SwitchShipmentCarrierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\InvalidShipmentTrackingNumberException;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetOrderShipments;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentProducts;
@@ -26,6 +28,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\GetShipmentsForOrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Query\ListAvailableShipments;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForOrderDetail;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\QueryResult\ShipmentForViewing;
+use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
@@ -318,6 +321,111 @@ class ShipmentFeatureContext extends AbstractDomainFeatureContext
         $this->getCommandBus()->handle(
             new DeleteProductFromShipment($shipmentId, $orderReferenceIds)
         );
+    }
+
+    /**
+     * @When I fulfill the shipment :shipmentReference with tracking number :trackingNumber
+     */
+    public function fulfillShipment(string $shipmentReference, string $trackingNumber): void
+    {
+        $shipmentId = SharedStorage::getStorage()->get($shipmentReference);
+
+        try {
+            $this->getCommandBus()->handle(new FulfillShipmentCommand($shipmentId, $trackingNumber));
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I try to fulfill a non-existing shipment with tracking number :trackingNumber
+     */
+    public function tryToFulfillNonExistingShipment(string $trackingNumber): void
+    {
+        try {
+            $this->getCommandBus()->handle(new FulfillShipmentCommand(999, $trackingNumber));
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then the shipment :shipmentReference should have tracking number :trackingNumber
+     */
+    public function assertShipmentTrackingNumber(string $shipmentReference, string $trackingNumber): void
+    {
+        $shipmentId = SharedStorage::getStorage()->get($shipmentReference);
+        /** @var ShipmentRepository $shipmentRepository */
+        $shipmentRepository = $this->getContainer()->get(ShipmentRepository::class);
+        $shipment = $shipmentRepository->findById($shipmentId);
+
+        Assert::assertNotNull($shipment, sprintf('Shipment with id "%d" was not found', $shipmentId));
+        Assert::assertEquals(
+            $trackingNumber,
+            $shipment->getTrackingNumber(),
+            sprintf('Expected tracking number "%s", got "%s"', $trackingNumber, $shipment->getTrackingNumber())
+        );
+    }
+
+    /**
+     * @Then the shipment :shipmentReference should be packed
+     */
+    public function assertShipmentIsPacked(string $shipmentReference): void
+    {
+        $shipmentId = SharedStorage::getStorage()->get($shipmentReference);
+        /** @var ShipmentRepository $shipmentRepository */
+        $shipmentRepository = $this->getContainer()->get(ShipmentRepository::class);
+        $shipment = $shipmentRepository->findById($shipmentId);
+
+        Assert::assertNotNull($shipment, sprintf('Shipment with id "%d" was not found', $shipmentId));
+        Assert::assertNotNull(
+            $shipment->getPackedAt(),
+            sprintf('Shipment with id "%d" is not packed (packed_at is null)', $shipmentId)
+        );
+    }
+
+    /**
+     * @When I try to fulfill the shipment :shipmentReference with an empty tracking number
+     */
+    public function tryToFulfillShipmentWithEmptyTrackingNumber(string $shipmentReference): void
+    {
+        $shipmentId = SharedStorage::getStorage()->get($shipmentReference);
+
+        try {
+            $this->getCommandBus()->handle(new FulfillShipmentCommand($shipmentId, ''));
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I try to fulfill the shipment :shipmentReference with a whitespace-only tracking number
+     */
+    public function tryToFulfillShipmentWithWhitespaceTrackingNumber(string $shipmentReference): void
+    {
+        $shipmentId = SharedStorage::getStorage()->get($shipmentReference);
+
+        try {
+            $this->getCommandBus()->handle(new FulfillShipmentCommand($shipmentId, '   '));
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get an error that the tracking number is invalid
+     */
+    public function assertInvalidShipmentTrackingNumberException(): void
+    {
+        $this->assertLastErrorIs(InvalidShipmentTrackingNumberException::class);
+    }
+
+    /**
+     * @Then I should get an error that the shipment was not found
+     */
+    public function assertShipmentNotFoundException(): void
+    {
+        $this->assertLastErrorIs(ShipmentNotFoundException::class);
     }
 
     /**
