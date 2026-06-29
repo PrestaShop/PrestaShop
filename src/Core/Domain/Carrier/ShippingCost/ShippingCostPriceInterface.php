@@ -24,7 +24,9 @@ interface ShippingCostPriceInterface
 
     public function getCurrencyId(): int;
 
-    public function getOrderTotal(): DecimalNumber;
+    public function getShipmentTotal(): DecimalNumber;
+
+    public function setShipmentTotal(DecimalNumber $shipmentTotal): void;
 
     public function getCountryZoneId(): int;
 
@@ -59,8 +61,4 @@ interface ShippingCostPriceInterface
     public function getTaxIncluded(): ?DecimalNumber;
 
     public function setTaxIncluded(DecimalNumber $taxIncluded): void;
-
-    public function getPrecision(): ?int;
-
-    public function setPrecision(int $precision): void;
 }

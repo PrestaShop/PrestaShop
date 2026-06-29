@@ -39,7 +39,7 @@ class FreeShippingCalculator implements ShippingCostCalculatorInterface
                 $this->currencyRepository->get(new CurrencyId($context->getCurrencyId()))
             ));
 
-            if ($context->getOrderTotal()->isGreaterOrEqualThan($convertedPrice)) {
+            if ($context->getShipmentTotal()->isGreaterOrEqualThan($convertedPrice)) {
                 $context->setFreeShipping(true);
 
                 return;

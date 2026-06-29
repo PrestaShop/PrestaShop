@@ -74,7 +74,7 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
                     countryZoneId: 0,
                     currencyId: (int) $order->id_currency,
                     customerId: (int) $order->id_customer,
-                    orderTotal: (float) $order->total_products,
+                    shipmentTotal: (float) $order->total_products,
                 );
 
                 $context = ShippingCostPrice::createFromRequest($request);

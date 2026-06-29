@@ -45,20 +45,20 @@ class CarrierDataProvider implements CarrierDataProviderInterface
     public function getRangeCost(
         CarrierShippingData $carrierData,
         DecimalNumber $totalWeight,
-        DecimalNumber $orderTotal,
+        DecimalNumber $shipmentTotal,
         int $zoneId,
         int $currencyId,
     ): ?DecimalNumber {
         $carrier = $this->carrierRepository->get(new CarrierId($carrierData->getCarrierId()));
 
         $weightFloat = (float) (string) $totalWeight;
-        $orderTotalFloat = (float) (string) $orderTotal;
+        $shipmentTotalFloat = (float) (string) $shipmentTotal;
         $isWeightMethod = $carrierData->getShippingMethod() === Carrier::SHIPPING_METHOD_WEIGHT;
 
         if ($carrierData->getRangeBehavior()) {
             $isInRange = $isWeightMethod
                 ? Carrier::checkDeliveryPriceByWeight($carrier->id, $weightFloat, $zoneId)
-                : Carrier::checkDeliveryPriceByPrice($carrier->id, $orderTotalFloat, $zoneId, $currencyId);
+                : Carrier::checkDeliveryPriceByPrice($carrier->id, $shipmentTotalFloat, $zoneId, $currencyId);
 
             if ($isInRange === false) {
                 return null;
@@ -67,7 +67,7 @@ class CarrierDataProvider implements CarrierDataProviderInterface
 
         $cost = $isWeightMethod
             ? $carrier->getDeliveryPriceByWeight($weightFloat, $zoneId)
-            : $carrier->getDeliveryPriceByPrice($orderTotalFloat, $zoneId, $currencyId);
+            : $carrier->getDeliveryPriceByPrice($shipmentTotalFloat, $zoneId, $currencyId);
 
         if ($cost === false) {
             return null;

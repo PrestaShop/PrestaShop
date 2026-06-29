@@ -26,7 +26,7 @@ final class ShippingCostPrice implements ShippingCostPriceInterface
     private DecimalNumber $cost;
     private ?DecimalNumber $taxExcluded = null;
     private ?DecimalNumber $taxIncluded = null;
-    private ?int $precision = null;
+    private DecimalNumber $shipmentTotal;
 
     /**
      * @param array<array{
@@ -45,9 +45,10 @@ final class ShippingCostPrice implements ShippingCostPriceInterface
         private readonly int $carrierId,
         private readonly ?int $addressId,
         private readonly int $currencyId,
-        private readonly DecimalNumber $orderTotal,
+        DecimalNumber $shipmentTotal,
         private readonly int $countryZoneId,
     ) {
+        $this->shipmentTotal = $shipmentTotal;
         $this->totalWeight = new DecimalNumber('0');
         $this->cost = new DecimalNumber('0');
     }
@@ -63,7 +64,7 @@ final class ShippingCostPrice implements ShippingCostPriceInterface
             $request->getCarrierId(),
             $request->getAddressId(),
             $request->getCurrencyId(),
-            new DecimalNumber((string) $request->getOrderTotal()),
+            new DecimalNumber((string) $request->getShipmentTotal()),
             $request->getCountryZoneId(),
         );
 
@@ -106,9 +107,14 @@ final class ShippingCostPrice implements ShippingCostPriceInterface
         return $this->currencyId;
     }
 
-    public function getOrderTotal(): DecimalNumber
+    public function getShipmentTotal(): DecimalNumber
     {
-        return $this->orderTotal;
+        return $this->shipmentTotal;
+    }
+
+    public function setShipmentTotal(DecimalNumber $shipmentTotal): void
+    {
+        $this->shipmentTotal = $shipmentTotal;
     }
 
     public function getCountryZoneId(): int
@@ -194,15 +200,5 @@ final class ShippingCostPrice implements ShippingCostPriceInterface
     public function setTaxIncluded(DecimalNumber $taxIncluded): void
     {
         $this->taxIncluded = $taxIncluded;
-    }
-
-    public function getPrecision(): ?int
-    {
-        return $this->precision;
-    }
-
-    public function setPrecision(int $precision): void
-    {
-        $this->precision = $precision;
     }
 }

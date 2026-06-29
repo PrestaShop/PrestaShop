@@ -115,7 +115,7 @@ class BaseRangeCostCalculatorTest extends TestCase
             2, // countryZoneId
             1, // currencyId
             null, // customerId
-            10.0 // orderTotal
+            10.0 // shipmentTotal
         );
 
         $context = ShippingCostPrice::createFromRequest($request);

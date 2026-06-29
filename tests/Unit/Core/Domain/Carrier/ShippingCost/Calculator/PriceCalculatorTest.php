@@ -10,18 +10,18 @@ namespace Tests\Unit\Core\Domain\Carrier\ShippingCost\Calculator;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Calculator\AdditionalProductCostCalculator;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Calculator\TotalShipmentPriceCalculator;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\ShippingCostPrice;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\ShippingCostPriceInterface;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingCalculationRequest;
 
-class AdditionalProductCostCalculatorTest extends TestCase
+class TotalShipmentPriceCalculatorTest extends TestCase
 {
-    private AdditionalProductCostCalculator $calculator;
+    private TotalShipmentPriceCalculator $calculator;
 
     protected function setUp(): void
     {
-        $this->calculator = new AdditionalProductCostCalculator();
+        $this->calculator = new TotalShipmentPriceCalculator();
     }
 
     public function testItReturnsEarlyIfAlreadyUnavailable(): void
@@ -31,36 +31,34 @@ class AdditionalProductCostCalculatorTest extends TestCase
 
         $this->calculator->compute($context);
 
-        $this->assertTrue($context->getCost()->equals(new DecimalNumber('0')));
+        $this->assertTrue($context->getShipmentTotal()->equals(new DecimalNumber('10.0')));
     }
 
     public function testItReturnsEarlyIfFreeShipping(): void
     {
         $context = $this->createContext([
-            ['id_product' => 1, 'additional_shipping_cost' => 5.0, 'quantity' => 1, 'is_virtual' => false],
+            ['id_product' => 1, 'price_wt' => 10.0, 'quantity' => 2, 'is_virtual' => false],
         ]);
         $context->setFreeShipping(true);
 
         $this->calculator->compute($context);
 
-        $this->assertTrue($context->getCost()->equals(new DecimalNumber('0')));
+        $this->assertTrue($context->getShipmentTotal()->equals(new DecimalNumber('10.0')));
     }
 
-    public function testItAddsAdditionalCostCorrectly(): void
+    public function testItComputesTotalPriceCorrectly(): void
     {
         $products = [
-            ['id_product' => 1, 'additional_shipping_cost' => 5.0, 'quantity' => 2, 'is_virtual' => false], // 10.0
-            ['id_product' => 2, 'additional_shipping_cost' => 2.5, 'quantity' => 1, 'is_virtual' => false], // 2.5
-            ['id_product' => 3, 'additional_shipping_cost' => 10.0, 'quantity' => 1, 'is_virtual' => true], // Ignored
+            ['id_product' => 1, 'price_wt' => 1.5, 'quantity' => 2, 'is_virtual' => false],
+            ['id_product' => 2, 'price_wt' => 0.5, 'quantity' => 3, 'is_virtual' => false],
+            ['id_product' => 3, 'price_wt' => 10.0, 'quantity' => 1, 'is_virtual' => true], // Should be filtered out by ShippingCostPrice
         ];
 
         $context = $this->createContext($products);
-        $context->setCost(new DecimalNumber('10.00')); // Base cost
-
         $this->calculator->compute($context);
 
-        // 10.00 + 10.0 + 2.5 = 22.5
-        $this->assertTrue($context->getCost()->equals(new DecimalNumber('22.5')));
+        // (1.5 * 2) + (0.5 * 3) = 3.0 + 1.5 = 4.5
+        $this->assertTrue($context->getShipmentTotal()->equals(new DecimalNumber('4.5')));
     }
 
     private function createContext(array $products): ShippingCostPriceInterface

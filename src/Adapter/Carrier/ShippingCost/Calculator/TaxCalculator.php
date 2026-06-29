@@ -35,7 +35,6 @@ class TaxCalculator implements ShippingCostCalculatorInterface
 
         $currency = $this->currencyRepository->get(new CurrencyId($context->getCurrencyId()));
         $precision = (int) $currency->precision;
-        $context->setPrecision($precision);
 
         if ($context->isFreeShipping()) {
             $zero = new DecimalNumber('0');

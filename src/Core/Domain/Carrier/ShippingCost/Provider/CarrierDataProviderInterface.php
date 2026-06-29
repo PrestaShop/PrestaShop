@@ -17,7 +17,7 @@ interface CarrierDataProviderInterface extends ShippingCostProviderInterface
     public function getRangeCost(
         CarrierShippingData $carrierData,
         DecimalNumber $totalWeight,
-        DecimalNumber $orderTotal,
+        DecimalNumber $shipmentTotal,
         int $zoneId,
         int $currencyId,
     ): ?DecimalNumber;

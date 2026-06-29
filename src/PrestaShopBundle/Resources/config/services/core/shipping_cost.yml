@@ -50,6 +50,10 @@ services:
     tags:
       - { name: 'prestashop.carrier.shipping_cost_calculator', priority: 700 }
 
+  PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Calculator\TotalShipmentPriceCalculator:
+    tags:
+      - { name: 'prestashop.carrier.shipping_cost_calculator', priority: 700 }
+
   PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Calculator\AdditionalProductCostCalculator:
     tags:
       - { name: 'prestashop.carrier.shipping_cost_calculator', priority: 400 }

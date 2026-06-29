@@ -94,7 +94,7 @@ class FreeShippingCalculatorTest extends TestCase
         $this->assertTrue($context->isFreeShipping());
     }
 
-    private function createContext(int $currencyId, DecimalNumber $orderTotal): ShippingCostPriceInterface
+    private function createContext(int $currencyId, DecimalNumber $shipmentTotal): ShippingCostPriceInterface
     {
         $request = new ShippingCalculationRequest(
             [], // products
@@ -104,7 +104,7 @@ class FreeShippingCalculatorTest extends TestCase
             1, // countryZoneId
             $currencyId,
             null, // customerId
-            (float) $orderTotal->__toString()
+            (float) $shipmentTotal->__toString()
         );
 
         return ShippingCostPrice::createFromRequest($request);
