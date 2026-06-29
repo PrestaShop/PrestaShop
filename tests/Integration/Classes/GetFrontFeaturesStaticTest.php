@@ -13,13 +13,13 @@ use Db;
 use Feature;
 use FeatureValue;
 use Language;
-use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagManager;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use Product;
-use ReflectionProperty;
 use Shop;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Integration\Utility\ContextMockerTrait;
+use Tests\Resources\Resetter\FeatureFlagResetter;
 
 /**
  * Covers the front-office feature retrieval that merges product-level and combination-level
@@ -27,7 +27,7 @@ use Tests\Integration\Utility\ContextMockerTrait;
  * flag is off Product::getFrontFeaturesStatic() keeps its historical product-only behavior, and
  * when it is on the combination values take precedence over the product ones for a shared feature.
  */
-class GetFrontFeaturesStaticTest extends TestCase
+class GetFrontFeaturesStaticTest extends KernelTestCase
 {
     use ContextMockerTrait;
 
@@ -49,10 +49,31 @@ class GetFrontFeaturesStaticTest extends TestCase
      */
     private $featureId;
 
+    /**
+     * @var FeatureFlagManager
+     */
+    private $featureFlagManager;
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        FeatureFlagResetter::resetFeatureFlags();
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
+
         self::mockContext();
+
+        // Init Symfony so the container is reachable: Product::getFrontFeaturesStatic resolves the
+        // feature flag checker through ContainerFinder.
+        self::bootKernel();
+        // Global var read by SymfonyContainer::getInstance() / ContainerFinder.
+        global $kernel;
+        $kernel = self::$kernel;
+
+        $this->featureFlagManager = self::getContainer()->get(FeatureFlagManager::class);
 
         $this->langId = (int) Configuration::get('PS_LANG_DEFAULT');
         $this->shopId = (int) Shop::getContextShopID() ?: 1;
@@ -64,16 +85,14 @@ class GetFrontFeaturesStaticTest extends TestCase
     protected function tearDown(): void
     {
         $this->cleanFixtures();
-        $this->setFeatureFlagManager(null);
+        $this->setCombinationFeatureValuesEnabled(false);
         Product::resetStaticCache();
         parent::tearDown();
     }
 
     public function testProductFeaturesAreReturnedWhenNoCombinationIsTargeted(): void
     {
-        // resetStaticCache() also resets the feature flag manager, so the mock must be set afterwards
-        Product::resetStaticCache();
-        $this->enableCombinationFeatureValues(true);
+        $this->setCombinationFeatureValuesEnabled(true);
 
         $features = Product::getFrontFeaturesStatic($this->langId, self::ID_PRODUCT);
 
@@ -82,8 +101,7 @@ class GetFrontFeaturesStaticTest extends TestCase
 
     public function testCombinationFeaturesAreIgnoredWhenFlagIsDisabled(): void
     {
-        Product::resetStaticCache();
-        $this->enableCombinationFeatureValues(false);
+        $this->setCombinationFeatureValuesEnabled(false);
 
         $features = Product::getFrontFeaturesStatic($this->langId, self::ID_PRODUCT, self::ID_PRODUCT_ATTRIBUTE);
 
@@ -93,8 +111,7 @@ class GetFrontFeaturesStaticTest extends TestCase
 
     public function testCombinationFeaturesOverrideProductFeaturesWhenFlagIsEnabled(): void
     {
-        Product::resetStaticCache();
-        $this->enableCombinationFeatureValues(true);
+        $this->setCombinationFeatureValuesEnabled(true);
 
         $features = Product::getFrontFeaturesStatic($this->langId, self::ID_PRODUCT, self::ID_PRODUCT_ATTRIBUTE);
 
@@ -159,22 +176,16 @@ class GetFrontFeaturesStaticTest extends TestCase
         $feature->delete();
     }
 
-    private function enableCombinationFeatureValues(bool $enabled): void
+    private function setCombinationFeatureValuesEnabled(bool $enabled): void
     {
-        $checker = $this->createMock(FeatureFlagStateCheckerInterface::class);
-        $checker->method('isEnabled')->willReturnCallback(
-            static function (string $flag) use ($enabled): bool {
-                return $enabled && $flag === FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES;
-            }
-        );
-
-        $this->setFeatureFlagManager($checker);
-    }
-
-    private function setFeatureFlagManager(?FeatureFlagStateCheckerInterface $manager): void
-    {
-        $property = new ReflectionProperty(Product::class, 'featureFlagManager');
-        $property->setAccessible(true);
-        $property->setValue(null, $manager);
+        if ($enabled) {
+            $this->featureFlagManager->enable(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES);
+        } else {
+            $this->featureFlagManager->disable(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES);
+        }
+        // Drop the per-request state cache so the new DB value is read back, and the product caches
+        // so the merge is recomputed.
+        $this->featureFlagManager->reset();
+        Product::resetStaticCache();
     }
 }
