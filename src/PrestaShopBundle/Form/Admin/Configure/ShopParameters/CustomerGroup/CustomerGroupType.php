@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerGroup;
 
+use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -98,6 +99,11 @@ class CustomerGroupType extends TranslatorAwareType
                 'label' => $this->trans('Show prices', 'Admin.Shopparameters.Feature'),
                 'required' => false,
                 'help' => $this->trans('Customers in this group can view prices.', 'Admin.Shopparameters.Help'),
+            ])
+            ->add('category_picker', CategoryChoiceTreeType::class, [
+                'label' => $this->trans('Select a category', 'Admin.Shopparameters.Feature'),
+                'required' => false,
+                'mapped' => false,
             ])
             ->add('category_reductions', CollectionType::class, [
                 'label' => $this->trans('Category discount', 'Admin.Shopparameters.Feature'),
