@@ -156,6 +156,26 @@ class VirtualProductUpdater
     }
 
     /**
+     * Removes the virtual file attached to a specific combination (file on disk + product_download row).
+     * Combinations without a file are a silent no-op.
+     *
+     * @param ProductId $productId
+     * @param int $combinationId
+     */
+    public function deleteFileForCombination(ProductId $productId, int $combinationId): void
+    {
+        try {
+            $virtualProductFile = $this->virtualProductFileRepository->findByCombinationId($productId, $combinationId);
+        } catch (VirtualProductFileNotFoundException) {
+            // No virtual file attached to this combination, nothing to remove
+            return;
+        }
+
+        $this->virtualProductFileUploader->remove($virtualProductFile->filename);
+        $this->virtualProductFileRepository->delete(new VirtualProductFileId((int) $virtualProductFile->id));
+    }
+
+    /**
      * Deletes every virtual file row for the product (all combinations + product level),
      * removing each file from disk.
      *
