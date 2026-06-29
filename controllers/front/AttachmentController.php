@@ -1,12 +1,12 @@
 <?php
-
-use Symfony\Component\HttpFoundation\HeaderUtils;
-use Symfony\Component\String\UnicodeString;
-
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
+use Symfony\Component\HttpFoundation\HeaderUtils;
+use Symfony\Component\String\UnicodeString;
+
 class AttachmentControllerCore extends FrontController
 {
     public function postProcess(): void
