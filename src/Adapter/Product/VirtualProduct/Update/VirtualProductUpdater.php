@@ -88,8 +88,8 @@ class VirtualProductUpdater
         $product = $this->productRepository->getProductByDefaultShop($productId);
 
         if ($combinationId > 0) {
-            // Combination-scoped files are only allowed on virtual_combinations products
-            if ($product->product_type !== ProductType::TYPE_VIRTUAL_COMBINATIONS) {
+            // Combination-scoped files are only allowed on products carrying combinations
+            if (!ProductType::hasCombinations($product->product_type)) {
                 throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_VIRTUAL_TYPE);
             }
         } else {

@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * This mirrors the product-level @see \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\VirtualProductFileCommandsBuilder
  * but reads the form data from the combination form structure and sets the combination id on the Add command so that
- * the file is attached to a specific combination of a virtual_combinations product.
+ * the file is attached to a specific combination.
  */
 class CombinationVirtualProductFileCommandsBuilder implements CombinationCommandsBuilderInterface
 {

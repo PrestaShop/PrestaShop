@@ -466,7 +466,6 @@ class ProductCore extends ObjectModel
                     ProductType::TYPE_PACK,
                     ProductType::TYPE_VIRTUAL,
                     ProductType::TYPE_COMBINATIONS,
-                    ProductType::TYPE_VIRTUAL_COMBINATIONS,
                     ProductType::TYPE_UNDEFINED,
                 ],
                 'default' => ProductType::TYPE_STANDARD,
@@ -758,8 +757,7 @@ class ProductCore extends ObjectModel
      */
     public function add($autodate = true, $null_values = false)
     {
-        // Legacy save only knows is_virtual; don't clobber a virtual_combinations product back to plain virtual.
-        if ($this->is_virtual && $this->product_type !== ProductType::TYPE_VIRTUAL_COMBINATIONS) {
+        if ($this->is_virtual) {
             $this->product_type = ProductType::TYPE_VIRTUAL;
         }
 
@@ -799,8 +797,7 @@ class ProductCore extends ObjectModel
      */
     public function update($null_values = false)
     {
-        // Legacy save only knows is_virtual; don't clobber a virtual_combinations product back to plain virtual.
-        if ($this->is_virtual && $this->product_type !== ProductType::TYPE_VIRTUAL_COMBINATIONS) {
+        if ($this->is_virtual) {
             $this->product_type = ProductType::TYPE_VIRTUAL;
         }
 
@@ -8165,11 +8162,7 @@ class ProductCore extends ObjectModel
      */
     public function getDynamicProductType(): string
     {
-        // A virtual product that also has combinations is a virtual_combinations product.
-        // This combined case must be checked before the single virtual/combinations cases so it isn't shadowed.
-        if ($this->is_virtual && $this->hasCombinations()) {
-            return ProductType::TYPE_VIRTUAL_COMBINATIONS;
-        } elseif ($this->is_virtual) {
+        if ($this->is_virtual) {
             return ProductType::TYPE_VIRTUAL;
         } elseif (Pack::isPack($this->id)) {
             return ProductType::TYPE_PACK;

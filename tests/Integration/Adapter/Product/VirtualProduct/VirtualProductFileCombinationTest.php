@@ -22,7 +22,7 @@ use Tests\Resources\DummyFileUploader;
 /**
  * Combination-scoped virtual product file persistence.
  *
- * Creates a virtual_combinations product with two combinations, adds a distinct file
+ * Creates a combinations product with two combinations, adds a distinct file
  * to each combination, and asserts that:
  *  - getIdFromCombination returns a different id_product_download per combination;
  *  - the product-level lookup (findByProductId / id_product_attribute = 0) finds nothing;
@@ -61,7 +61,7 @@ class VirtualProductFileCombinationTest extends KernelTestCase
         $this->repository = $container->get(VirtualProductFileRepository::class);
         $this->commandBus = $container->get('prestashop.core.command_bus');
 
-        $this->productId = $this->createVirtualCombinationsProduct();
+        $this->productId = $this->createCombinationsProduct();
         $this->combinationIds = [
             $this->createCombination($this->productId),
             $this->createCombination($this->productId),
@@ -123,13 +123,13 @@ class VirtualProductFileCombinationTest extends KernelTestCase
         $this->commandBus->handle($command);
     }
 
-    private function createVirtualCombinationsProduct(): int
+    private function createCombinationsProduct(): int
     {
         /** @var ProductId $productId */
         $productId = $this->commandBus->handle(new AddProductCommand(
-            ProductType::TYPE_VIRTUAL_COMBINATIONS,
+            ProductType::TYPE_COMBINATIONS,
             (int) \Context::getContext()->shop->id,
-            ['1' => 'Virtual combinations product']
+            ['1' => 'Combinations product']
         ));
 
         return $productId->getValue();

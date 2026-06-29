@@ -282,9 +282,9 @@
         this.initVirtualProductFile(iframeBody);
       },
       /**
-       * Wires the per-combination virtual file section, only present for the virtual_combinations
-       * product type: toggles the file fields with the "Has file" switch and prefills the display
-       * name on upload. Mirrors the product-level VirtualProductManager. No-op for other types.
+       * Wires the per-combination downloadable file section when present: toggles the file fields
+       * with the "Has file" switch and prefills the display name on upload. Mirrors the product-level
+       * VirtualProductManager. No-op when the combination form has no file section.
        */
       initVirtualProductFile(iframeBody: HTMLElement): void {
         const VirtualFileMap = ProductMap.combinations.virtualProductFile;

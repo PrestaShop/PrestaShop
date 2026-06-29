@@ -8,10 +8,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Details\ReferencesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Stock\VirtualProductFileType;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -74,16 +72,6 @@ class CombinationFormType extends TranslatorAwareType
                 'label_tag_name' => 'h3',
             ])
         ;
-
-        // The downloadable file section is only relevant - and therefore only added - for the virtual_combinations
-        // product type, so that other product types are unaffected.
-        if (ProductType::TYPE_VIRTUAL_COMBINATIONS === $options['product_type']) {
-            $builder->add('virtual_product_file', VirtualProductFileType::class, [
-                'virtual_product_file_id' => $options['virtual_product_file_id'],
-                'required' => false,
-                'label' => false,
-            ]);
-        }
 
         /*
          * This listener adapts the content of the form based on the data, it can remove add or transforms some
