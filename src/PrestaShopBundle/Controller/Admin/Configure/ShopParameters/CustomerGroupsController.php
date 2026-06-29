@@ -90,8 +90,6 @@ class CustomerGroupsController extends PrestaShopAdminController
             'layoutTitle' => $this->trans('New group', [], 'Admin.Shopparameters.Feature'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'multistoreInfoTip' => $this->trans('Note that this feature is only available in the "all stores" context. It will be added to all your stores.', [], 'Admin.Notifications.Info'),
-            'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed(),
         ]);
     }
 
@@ -136,8 +134,6 @@ class CustomerGroupsController extends PrestaShopAdminController
             'layoutTitle' => $this->trans('Edit: %name%', ['%name%' => $groupName], 'Admin.Actions'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'multistoreInfoTip' => $this->trans('Note that this feature is only available in the "all stores" context. It will be added to all your stores.', [], 'Admin.Notifications.Info'),
-            'multistoreIsUsed' => $this->getShopContext()->isMultiShopUsed(),
         ]);
     }
 
