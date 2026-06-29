@@ -14,9 +14,9 @@ class ToggleCustomerGroupShowPricesCommand
 {
     private CustomerGroupId $customerGroupId;
 
-    public function __construct(int $groupId)
+    public function __construct(int $customerGroupId)
     {
-        $this->customerGroupId = new CustomerGroupId($groupId);
+        $this->customerGroupId = new CustomerGroupId($customerGroupId);
     }
 
     public function getCustomerGroupId(): CustomerGroupId

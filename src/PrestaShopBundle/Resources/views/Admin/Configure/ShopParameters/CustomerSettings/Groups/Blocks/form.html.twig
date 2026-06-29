@@ -15,66 +15,10 @@
   <div class="card-body">
     <div class="form-wrapper">
       {{ form_errors(customerGroupForm) }}
-      {{ form_row(customerGroupForm.name) }}
-      {{ form_row(customerGroupForm.reduction) }}
-      {{ form_row(customerGroupForm.price_display_method) }}
-      {{ form_row(customerGroupForm.show_prices) }}
+      {{ form_row(customerGroupForm) }}
     </div>
   </div>
 </div>
-
-{# Category-specific discounts #}
-<div class="card mt-3" id="category-reductions-card">
-  <h3 class="card-header">
-    {{ 'Category discount'|trans({}, 'Admin.Shopparameters.Feature') }}
-  </h3>
-  <div class="card-body">
-    <div class="js-category-reductions-collection"
-         data-prototype="{{ form_widget(customerGroupForm.category_reductions.vars.prototype)|e('html_attr') }}"
-         data-index="{{ customerGroupForm.category_reductions|length }}">
-      {% for entry in customerGroupForm.category_reductions %}
-        <div class="category-reduction-entry row mb-2">
-          {{ form_widget(entry.id_category) }}
-          <div class="col-md-5">{{ form_widget(entry.name) }}</div>
-          <div class="col-md-3">{{ form_widget(entry.reduction) }}</div>
-          <div class="col-md-2">
-            <button type="button" class="btn btn-sm btn-outline-danger js-remove-category-reduction">
-              <i class="material-icons">delete</i>
-            </button>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-    <div class="mt-2">
-      <button type="button" class="btn btn-outline-secondary js-add-category-reduction">
-        <i class="material-icons">add_circle_outline</i>
-        {{ 'Add a category discount'|trans({}, 'Admin.Shopparameters.Feature') }}
-      </button>
-    </div>
-  </div>
-</div>
-
-{# Module restrictions #}
-<div class="card mt-3" id="module-restrictions-card">
-  <h3 class="card-header">
-    {{ 'Authorized modules'|trans({}, 'Admin.Shopparameters.Feature') }}
-  </h3>
-  <div class="card-body">
-    <p class="alert alert-info">
-      {{ 'Toggle which modules are accessible to this customer group.'|trans({}, 'Admin.Shopparameters.Help') }}
-    </p>
-    {{ form_widget(customerGroupForm.module_restrictions) }}
-  </div>
-</div>
-
-{% if customerGroupForm.shop_association is defined %}
-  <div class="card mt-3">
-    <h3 class="card-header">{{ 'Store association'|trans({}, 'Admin.Global') }}</h3>
-    <div class="card-body">
-      {{ form_row(customerGroupForm.shop_association) }}
-    </div>
-  </div>
-{% endif %}
 
 <div class="card-footer mt-3">
   <div class="d-inline-flex">
