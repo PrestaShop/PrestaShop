@@ -27,23 +27,15 @@ class DeliveryOptionsFinderCore implements DeliveryOptionsInterface
         $this->priceFormatter = $priceFormatter;
     }
 
-    private function isFreeShipping($cart, array $carrier)
+    private function cartHasFreeShippingCartRule($cart)
     {
-        $free_shipping = false;
-
-        if ($carrier['is_free']) {
-            $free_shipping = true;
-        } else {
-            foreach ($cart->getCartRules() as $rule) {
-                if ($rule['free_shipping'] && !$rule['carrier_restriction']) {
-                    $free_shipping = true;
-
-                    break;
-                }
+        foreach ($cart->getCartRules() as $rule) {
+            if ($rule['free_shipping'] && !$rule['carrier_restriction']) {
+                return true;
             }
         }
 
-        return $free_shipping;
+        return false;
     }
 
     public function getSelectedDeliveryOption()
@@ -59,6 +51,11 @@ class DeliveryOptionsFinderCore implements DeliveryOptionsInterface
 
         $carriers_available = [];
 
+        // A free-shipping cart rule applies to the whole cart, not to a specific carrier, so
+        // evaluate it once here instead of re-running getCartRules() (and its uncached cart-rule
+        // resolution) for every carrier in the matrix below.
+        $cartHasFreeShippingRule = $this->cartHasFreeShippingCartRule($this->context->cart);
+
         if (isset($delivery_option_list[$this->context->cart->id_address_delivery])) {
             foreach ($delivery_option_list[$this->context->cart->id_address_delivery] as $id_carriers_list => $carriers_list) {
                 foreach ($carriers_list as $carriers) {
@@ -68,7 +65,7 @@ class DeliveryOptionsFinderCore implements DeliveryOptionsInterface
                             $delay = $carrier['delay'][$this->context->language->id];
                             unset($carrier['instance'], $carrier['delay']);
                             $carrier['delay'] = $delay;
-                            if ($this->isFreeShipping($this->context->cart, $carriers_list)) {
+                            if ($carriers_list['is_free'] || $cartHasFreeShippingRule) {
                                 $carrier['price'] = $this->translator->trans(
                                     'Free',
                                     [],
