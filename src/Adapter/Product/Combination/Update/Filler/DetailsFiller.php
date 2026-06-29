@@ -53,6 +53,11 @@ class DetailsFiller implements CombinationFillerInterface
             $updatableProperties[] = 'weight';
         }
 
+        if (null !== $command->getIsVirtual()) {
+            $combination->is_virtual = $command->getIsVirtual();
+            $updatableProperties[] = 'is_virtual';
+        }
+
         return $updatableProperties;
     }
 }

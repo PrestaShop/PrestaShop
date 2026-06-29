@@ -71,6 +71,11 @@ class CombinationForEditing
     private $file;
 
     /**
+     * @var bool
+     */
+    private $isVirtual;
+
+    /**
      * @param int $combinationId
      * @param int $productId
      * @param string $name
@@ -82,6 +87,7 @@ class CombinationForEditing
      * @param bool $isDefault
      * @param string $productType
      * @param VirtualProductFileForEditing|null $file
+     * @param bool $isVirtual
      */
     public function __construct(
         int $combinationId,
@@ -94,7 +100,8 @@ class CombinationForEditing
         string $coverThumbnailUrl,
         bool $isDefault,
         string $productType = '',
-        ?VirtualProductFileForEditing $file = null
+        ?VirtualProductFileForEditing $file = null,
+        bool $isVirtual = false
     ) {
         $this->combinationId = $combinationId;
         $this->productId = $productId;
@@ -107,6 +114,7 @@ class CombinationForEditing
         $this->isDefault = $isDefault;
         $this->productType = $productType;
         $this->file = $file;
+        $this->isVirtual = $isVirtual;
     }
 
     /**
@@ -195,5 +203,13 @@ class CombinationForEditing
     public function getFile(): ?VirtualProductFileForEditing
     {
         return $this->file;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVirtual(): bool
+    {
+        return $this->isVirtual;
     }
 }
