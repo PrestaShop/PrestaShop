@@ -9,7 +9,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Import\Exception;
 
 /**
- * Thrown when an import run cannot be updated.
+ * Thrown when an import run's persisted state cannot be updated (e.g. advancing the offset or
+ * stashing the shared data after a batch).
  */
 final class CannotUpdateImportRunException extends ImportException
 {

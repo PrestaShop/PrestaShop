@@ -12,7 +12,11 @@ use PrestaShop\PrestaShop\Core\Domain\Import\Exception\ImportRunConstraintExcept
 use PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\ImportRunId;
 
 /**
- * Runs one batch (offset/limit) of an import run.
+ * Runs the next batch of an import run.
+ *
+ * The payload is just the run id: the offset (server-tracked progress) and the limit (batch size
+ * frozen at start) live on the persisted run, so they are no longer re-posted on every AJAX call —
+ * the handler reads and advances them itself.
  *
  * The handler returns an {@see PrestaShop\PrestaShop\Core\Domain\Import\QueryResult\ImportBatchReport}: returning a DTO from a
  * command is intentional here — the batch report is the façade's contract and mirrors the payload
@@ -26,23 +30,11 @@ final class RunImportBatchCommand
     private $importRunId;
 
     /**
-     * @var int
-     */
-    private $offset;
-
-    /**
-     * @var int
-     */
-    private $limit;
-
-    /**
      * @throws ImportRunConstraintException
      */
-    public function __construct(string $importRunId, int $offset, int $limit)
+    public function __construct(string $importRunId)
     {
         $this->importRunId = $importRunId;
-        $this->offset = $offset;
-        $this->limit = $limit;
     }
 
     /**
@@ -51,15 +43,5 @@ final class RunImportBatchCommand
     public function getImportRunId(): ImportRunId
     {
         return new ImportRunId($this->importRunId);
-    }
-
-    public function getOffset(): int
-    {
-        return $this->offset;
-    }
-
-    public function getLimit(): int
-    {
-        return $this->limit;
     }
 }

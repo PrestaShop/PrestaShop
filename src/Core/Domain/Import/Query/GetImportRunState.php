@@ -12,9 +12,14 @@ use PrestaShop\PrestaShop\Core\Domain\Import\Exception\ImportRunConstraintExcept
 use PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\ImportRunId;
 
 /**
- * Gets the editable state of an import run (to render the data-matching step).
+ * Gets everything the wizard needs about an import run: its status, progression and frozen config.
+ *
+ * Single read for the progress modal (load / refresh / resume); during active polling the per-batch
+ * {@see \PrestaShop\PrestaShop\Core\Domain\Import\QueryResult\ImportBatchReport} already carries live
+ * progress, so no extra query per tick is required. Replaces the previously-separate
+ * GetImportRunForEditing + GetImportRunProgress.
  */
-final class GetImportRunForEditing
+final class GetImportRunState
 {
     /**
      * @var string

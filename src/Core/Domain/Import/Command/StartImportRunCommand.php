@@ -17,7 +17,10 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 /**
  * Starts a new import run from an uploaded file and the chosen options/mapping.
  *
- * The handler persists the run and returns its {@see \PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\ImportRunId}.
+ * Dispatched by the "Start import" button on the data-matching screen — it carries the full
+ * Step-1 + Step-2 config in one shot (including the column mapping and the frozen batch size),
+ * so there is no separate "update column mapping" command. The handler persists the run and
+ * returns its {@see \PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\ImportRunId}.
  */
 final class StartImportRunCommand
 {
@@ -52,6 +55,11 @@ final class StartImportRunCommand
     private $validateOnly;
 
     /**
+     * @var int
+     */
+    private $limit;
+
+    /**
      * @var ShopConstraint|null
      */
     private $shopConstraint;
@@ -59,6 +67,7 @@ final class StartImportRunCommand
     /**
      * @param array<string, mixed> $options
      * @param array<int, string> $dataMapping
+     * @param int $limit batch size frozen at start (0 = let the handler pick a default)
      *
      * @throws ImportRunConstraintException
      */
@@ -69,6 +78,7 @@ final class StartImportRunCommand
         array $options = [],
         array $dataMapping = [],
         bool $validateOnly = false,
+        int $limit = 0,
         ?ShopConstraint $shopConstraint = null
     ) {
         if ('' === $filename) {
@@ -77,6 +87,9 @@ final class StartImportRunCommand
         if ('' === $langIso) {
             throw new ImportRunConstraintException('Import language ISO code cannot be empty.', ImportRunConstraintException::INVALID_LANG_ISO);
         }
+        if ($limit < 0) {
+            throw new ImportRunConstraintException('Import batch size cannot be negative.', ImportRunConstraintException::INVALID_LIMIT);
+        }
 
         $this->filename = $filename;
         $this->entityType = $entityType;
@@ -84,6 +97,7 @@ final class StartImportRunCommand
         $this->options = $options;
         $this->dataMapping = $dataMapping;
         $this->validateOnly = $validateOnly;
+        $this->limit = $limit;
         $this->shopConstraint = $shopConstraint;
     }
 
@@ -145,6 +159,11 @@ final class StartImportRunCommand
     public function isValidateOnly(): bool
     {
         return $this->validateOnly;
+    }
+
+    public function getLimit(): int
+    {
+        return $this->limit;
     }
 
     public function getShopConstraint(): ?ShopConstraint
