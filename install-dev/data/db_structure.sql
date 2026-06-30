@@ -2297,6 +2297,31 @@ CREATE TABLE `PREFIX_import_match` (
   PRIMARY KEY (`id_import_match`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
+CREATE TABLE `PREFIX_import_run` (
+  `id_import_run` varchar(36) NOT NULL,
+  `entity_type` int(10) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `lang_iso` varchar(8) NOT NULL,
+  `csv_separator` varchar(8) NOT NULL,
+  `multiple_value_separator` varchar(8) NOT NULL,
+  `skip_rows` int(10) NOT NULL,
+  `field_map` JSON NOT NULL,
+  `options` JSON NOT NULL,
+  `validate_only` tinyint(1) NOT NULL DEFAULT 0,
+  `batch_limit` int(10) NOT NULL,
+  `current_offset` int(10) NOT NULL DEFAULT 0,
+  `total_rows` int(10) NOT NULL DEFAULT 0,
+  `shared_data` JSON NOT NULL,
+  `status` varchar(16) NOT NULL,
+  `errors` JSON NOT NULL,
+  `warnings` JSON NOT NULL,
+  `notices` JSON NOT NULL,
+  `id_shop` int(10) UNSIGNED DEFAULT NULL,
+  `date_add` datetime NOT NULL,
+  `date_upd` datetime NOT NULL,
+  PRIMARY KEY (`id_import_run`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 CREATE TABLE `PREFIX_country_shop` (
   `id_country` INT(11) UNSIGNED NOT NULL,
   `id_shop` INT(11) UNSIGNED NOT NULL,
