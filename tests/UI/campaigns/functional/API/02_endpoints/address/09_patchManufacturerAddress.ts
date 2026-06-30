@@ -276,62 +276,6 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
           currentAddress[data.propertyName] = data.propertyValue;
         });
 
-      it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `goToBrandsPageToCheck${data.propertyName}`,
-          baseContext,
-        );
-
-        await boDashboardPage.goToSubMenu(
-          page,
-          boDashboardPage.catalogParentLink,
-          boDashboardPage.brandsAndSuppliersLink,
-        );
-        await boBrandsPage.closeSfToolBar(page);
-
-        const pageTitle = await boBrandsPage.getPageTitle(page);
-        expect(pageTitle).to.contains(boBrandsPage.pageTitle);
-      });
-
-      it('should filter list by first name', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `filterByFirstName${data.propertyName}`,
-          baseContext,
-        );
-
-        await boBrandsPage.filterAddresses(page, 'input', 'firstname', jsonResponse.firstName);
-
-        const numberOfAddressesAfterFilter = await boBrandsPage.getNumberOfElementInGrid(
-          page,
-          'manufacturer_address',
-        );
-        expect(numberOfAddressesAfterFilter).to.be.equal(1);
-
-        const idAddressBO = parseInt(
-          await boBrandsPage.getTextColumnFromTableAddresses(page, 1, 'id_address'),
-          10,
-        );
-        expect(idAddressBO).to.be.equal(idAddress);
-      });
-
-      it('should go to edit manufacturer address page', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `goToEditAddressPage${data.propertyName}`,
-          baseContext,
-        );
-
-        await boBrandsPage.goToEditBrandAddressPage(page, 1);
-
-        const pageTitle = await boBrandAdressesCreatePage.getPageTitle(page);
-        expect(pageTitle).to.contains(boBrandAdressesCreatePage.pageTitleEdit);
-      });
-
       it(`should check the property "${data.propertyName}" is updated in BO`, async function () {
         await testContext.addContextItem(
           this,
@@ -339,6 +283,8 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
           `checkBO${data.propertyName.charAt(0).toUpperCase() + data.propertyName.slice(1)}`,
           baseContext,
         );
+
+        await boBrandAdressesCreatePage.reloadPage(page);
 
         const value = await boBrandAdressesCreatePage.getValue(page, data.boField);
 

@@ -44,6 +44,8 @@ describe('API : PATCH /addresses/carts/{cartAddressId}', async () => {
   const customerData: FakerCustomer = new FakerCustomer();
 
   const addressData: FakerAddress = new FakerAddress({
+    firstName: customerData.firstName,
+    lastName: customerData.lastName,
     email: customerData.email,
     country: 'France',
   });
@@ -180,7 +182,46 @@ describe('API : PATCH /addresses/carts/{cartAddressId}', async () => {
     });
   });
 
-  // API : Patch each property individually ────────────────────────────────────
+  describe('BackOffice : Go to edit address page', async () => {
+    it('should go to \'Customers > Addresses\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
+
+      await boDashboardPage.goToSubMenu(
+        page,
+        boDashboardPage.customersParentLink,
+        boDashboardPage.addressesLink,
+      );
+      await boAddressesPage.closeSfToolBar(page);
+
+      const pageTitle = await boAddressesPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAddressesPage.pageTitle);
+    });
+
+    it('should filter Addresses table by the firstName of the created address', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterAddressesTable', baseContext);
+
+      await boAddressesPage.filterAddresses(page, 'input', 'firstname', addressData.firstName);
+
+      const numberOfAddresses = await boAddressesPage.getNumberOfElementInGrid(page);
+      expect(numberOfAddresses).to.be.gte(1);
+
+      idAddress = parseInt(
+        (await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'id_address')).toString(),
+        10,
+      );
+      expect(idAddress).to.be.gt(0);
+    });
+
+    it('should go to Edit address page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditAddressPage', baseContext);
+
+      await boAddressesPage.goToEditAddressPage(page, 1);
+
+      const pageTitle = await boAddressesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAddressesCreatePage.pageTitleEdit);
+    });
+  });
+
   // cartId, stateId are read-only → not patched
   [
     {
@@ -365,25 +406,7 @@ describe('API : PATCH /addresses/carts/{cartAddressId}', async () => {
           baseContext,
         );
 
-        await boDashboardPage.goToSubMenu(page, boDashboardPage.customersParentLink, boDashboardPage.addressesLink);
-        await boAddressesPage.closeSfToolBar(page);
-
-        await boAddressesPage.resetFilter(page);
-        await boAddressesPage.filterAddresses(page, 'input', 'firstname', jsonResponse.firstName);
-
-        const numberOfAddresses = await boAddressesPage.getNumberOfElementInGrid(page);
-        expect(numberOfAddresses).to.be.gte(1);
-
-        idAddress = parseInt(
-          (await boAddressesPage.getTextColumnFromTableAddresses(page, 1, 'id_address')).toString(),
-          10,
-        );
-        expect(idAddress).to.be.gt(0);
-
-        await boAddressesPage.goToEditAddressPage(page, 1);
-
-        const pageTitle = await boAddressesCreatePage.getPageTitle(page);
-        expect(pageTitle).to.contains(boAddressesCreatePage.pageTitleEdit);
+        await boAddressesCreatePage.reloadPage(page);
 
         const value = await boAddressesCreatePage.getValue(page, data.boField);
 
@@ -428,10 +451,6 @@ describe('API : PATCH /addresses/carts/{cartAddressId}', async () => {
               ).to.equal(String(expectedValue));
             }),
         );
-
-        // Go back to the addresses list for the next iteration
-        await boDashboardPage.goToSubMenu(page, boDashboardPage.customersParentLink, boDashboardPage.addressesLink);
-        await boAddressesPage.closeSfToolBar(page);
       });
     });
   });

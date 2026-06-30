@@ -136,6 +136,15 @@ describe('API : PATCH /addresses/customers/{addressId}', async () => {
         dni: addressData.dni ?? '',
       });
     });
+
+    it('should go to edit address page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToEditAddressPage', baseContext);
+
+      await boAddressesPage.goToEditAddressPage(page, 1);
+
+      const pageTitle = await boAddressesCreatePage.getPageTitle(page);
+      expect(pageTitle).to.contains(boAddressesCreatePage.pageTitleEdit);
+    });
   });
 
   // API : Patch each property individually
@@ -307,16 +316,7 @@ describe('API : PATCH /addresses/customers/{addressId}', async () => {
           baseContext,
         );
 
-        await boAddressesPage.resetFilter(page);
-        await boAddressesPage.filterAddresses(page, 'input', 'firstname', jsonResponse.firstName);
-
-        const numberOfAddressesAfterFilter = await boAddressesPage.getNumberOfElementInGrid(page);
-        expect(numberOfAddressesAfterFilter).to.equal(1);
-
-        await boAddressesPage.goToEditAddressPage(page, 1);
-
-        const pageTitle = await boAddressesCreatePage.getPageTitle(page);
-        expect(pageTitle).to.contains(boAddressesCreatePage.pageTitleEdit);
+        await boAddressesCreatePage.reloadPage(page);
 
         const value = await boAddressesCreatePage.getValue(page, data.boField);
 
@@ -363,10 +363,6 @@ describe('API : PATCH /addresses/customers/{addressId}', async () => {
               ).to.equal(String(expectedValue));
             }),
         );
-
-        // Go back to the addresses list for the next iteration
-        await boDashboardPage.goToSubMenu(page, boDashboardPage.customersParentLink, boDashboardPage.addressesLink);
-        await boAddressesPage.closeSfToolBar(page);
       });
     });
   });
