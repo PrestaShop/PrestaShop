@@ -20,4 +20,5 @@ final class ImportRunConstraintException extends ImportException
     public const INVALID_COLUMN_MAPPING = 5;
     public const INVALID_OPTIONS = 6;
     public const INVALID_STATUS = 7;
+    public const INVALID_LIMIT = 8;
 }
