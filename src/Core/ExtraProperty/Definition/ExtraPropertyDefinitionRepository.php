@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefinitionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
@@ -44,7 +45,17 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
             ->from($table, 'eef')
             ->orderBy('eef.id_extra_property_definition', 'ASC');
 
-        $rows = $this->enrichRowsWithColumnMetadata($qb->executeQuery()->fetchAllAssociative() ?: []);
+        try {
+            $rows = $qb->executeQuery()->fetchAllAssociative() ?: [];
+        } catch (Throwable $exception) {
+            if ($this->isMissingDefinitionTableException($exception)) {
+                return ExtraPropertyDefinitionCollection::empty();
+            }
+
+            throw $exception;
+        }
+
+        $rows = $this->enrichRowsWithColumnMetadata($rows);
 
         return new ExtraPropertyDefinitionCollection(array_values(array_map(
             static fn (array $row): ExtraPropertyDefinition => ExtraPropertyDefinition::fromRow($row),
@@ -326,5 +337,18 @@ class ExtraPropertyDefinitionRepository implements ExtraPropertyDefinitionReposi
         }
 
         return $metadata;
+    }
+
+    private function isMissingDefinitionTableException(Throwable $exception): bool
+    {
+        do {
+            if ($exception instanceof TableNotFoundException) {
+                return true;
+            }
+
+            $exception = $exception->getPrevious();
+        } while (null !== $exception);
+
+        return false;
     }
 }
