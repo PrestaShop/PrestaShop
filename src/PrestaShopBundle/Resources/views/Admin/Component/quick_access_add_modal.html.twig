@@ -7,7 +7,8 @@
   {# Legacy (BS3) pages don't load the UI Kit. Center the modal vertically and
      reuse the new theme's slide-in (top:50% + translateY(-50%)) instead of BS3's
      top-anchored drop, and space the inline error from the input. BS3 toggles
-     `.in` (not `.show`), so the transforms are keyed on `.fade`/`.in`. #}
+     `.in` (not `.show`), so the transforms are keyed on `.fade`/`.in`. Also drop
+     BS3's header/footer separator borders to match the borderless UI Kit modal. #}
   <style>
     #quick-access-add-modal .modal-dialog {
       top: 50%;
@@ -18,6 +19,12 @@
     }
     #quick-access-add-modal.in .modal-dialog {
       transform: translateY(-50%);
+    }
+    #quick-access-add-modal .modal-header {
+      border-bottom: 0;
+    }
+    #quick-access-add-modal .modal-footer {
+      border-top: 0;
     }
     #quick-access-add-modal #quick-access-name-error {
       margin-top: 0.25rem;
