@@ -316,6 +316,21 @@ $(() => {
       $modal.one('hidden.bs.modal', resetErrors);
       $nameInput.off('input').on('input', resetErrors);
 
+      // Only dismiss on backdrop click when the press also started on the backdrop.
+      // Without this, a mousedown inside the modal released outside (e.g. text selection)
+      // bubbles a click whose target is the modal itself, which Bootstrap 3.1 treats as a
+      // backdrop click and closes the modal. These guards run before Bootstrap's own
+      // click.dismiss handler (bound during .modal('show') below) so they can stop it.
+      let mouseDownOnBackdrop = false;
+      $modal.off('mousedown.qaBackdrop').on('mousedown.qaBackdrop', (downEvent) => {
+        mouseDownOnBackdrop = downEvent.target === downEvent.currentTarget;
+      });
+      $modal.off('click.qaBackdrop').on('click.qaBackdrop', (clickEvent) => {
+        if (clickEvent.target === clickEvent.currentTarget && !mouseDownOnBackdrop) {
+          clickEvent.stopImmediatePropagation();
+        }
+      });
+
       $modal.find('#quick-access-save-btn').off('click').on('click', () => {
         resetErrors();
 
