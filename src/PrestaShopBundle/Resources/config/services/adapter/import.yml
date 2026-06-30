@@ -91,3 +91,45 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Tools'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       - '@prestashop.core.hook.dispatcher'
+
+  # --- ImportRun aggregate (Symfony migration step 2) ---
+
+  prestashop.adapter.import.run.lock_store:
+    class: 'Symfony\Component\Lock\Store\FlockStore'
+    arguments:
+      - '%kernel.cache_dir%'
+
+  prestashop.adapter.import.run.lock_factory:
+    class: 'Symfony\Component\Lock\LockFactory'
+    arguments:
+      - '@prestashop.adapter.import.run.lock_store'
+
+  PrestaShopBundle\Entity\Repository\ImportRunRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\ImportRun
+
+  PrestaShop\PrestaShop\Adapter\Import\CommandHandler\StartImportRunHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\ImportRunRepository'
+
+  PrestaShop\PrestaShop\Adapter\Import\CommandHandler\CancelImportRunHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\ImportRunRepository'
+
+  PrestaShop\PrestaShop\Adapter\Import\CommandHandler\RunImportBatchHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\ImportRunRepository'
+      - '@prestashop.core.import.importer'
+      - '@prestashop.adapter.import.handler_finder'
+      - '@prestashop.core.import.csv_file_reader'
+      - '@prestashop.core.import.dir'
+      - '@prestashop.adapter.import.run.lock_factory'
+
+  PrestaShop\PrestaShop\Adapter\Import\QueryHandler\GetImportRunStateHandler:
+    autoconfigure: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\ImportRunRepository'
