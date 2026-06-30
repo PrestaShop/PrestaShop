@@ -139,7 +139,7 @@ class ProductCategoryAccessTest extends TestCase
         $group->name = [(int) Configuration::get('PS_LANG_DEFAULT') => $name];
         $group->price_display_method = 0;
         $group->show_prices = true;
-        $group->reduction = 0;
+        $group->reduction = '0';
         $group->add();
 
         return (int) $group->id;
