@@ -10,6 +10,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkDeleteCountriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkToggleCountriesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkUpdateCountryZoneCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
@@ -260,6 +261,32 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
     {
         try {
             $this->getCommandBus()->handle(new BulkToggleCountriesStatusCommand(true, []));
+        } catch (CountryException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I bulk delete countries :countryReferences
+     */
+    public function bulkDeleteCountries(string $countryReferences): void
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCountriesCommand(
+                $this->getCountryIdsFromReferences($countryReferences)
+            ));
+        } catch (CountryException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I bulk delete an empty list of countries
+     */
+    public function bulkDeleteEmptyCountriesList(): void
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCountriesCommand([]));
         } catch (CountryException $e) {
             $this->setLastException($e);
         }

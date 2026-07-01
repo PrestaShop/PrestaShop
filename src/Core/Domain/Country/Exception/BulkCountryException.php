@@ -15,6 +15,7 @@ final class BulkCountryException extends CountryException implements BulkCommand
 {
     public const FAILED_BULK_UPDATE_STATUS = 1;
     public const FAILED_BULK_UPDATE_ZONE = 2;
+    public const FAILED_BULK_DELETE = 3;
 
     /**
      * @param Throwable[] $exceptions
