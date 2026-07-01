@@ -276,6 +276,9 @@ final class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'submit_route' => 'admin_countries_bulk_update_zone',
                         'modal_id' => 'changeCountriesZoneModal',
                     ])
+            )
+            ->add(
+                $this->buildBulkDeleteAction('admin_countries_bulk_delete')
             );
     }
 }

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkDeleteCountriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkToggleCountriesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkUpdateCountryZoneCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\DeleteCountryCommand;
@@ -286,6 +287,33 @@ class CountryController extends PrestaShopAdminController
     }
 
     /**
+     * Deletes countries in bulk action
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    #[DemoRestricted(redirectRoute: 'admin_countries_index')]
+    #[AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute: 'admin_countries_index')]
+    public function bulkDeleteAction(Request $request): RedirectResponse
+    {
+        $countryIds = $this->getBulkCountriesFromRequest($request);
+
+        try {
+            $this->dispatchCommand(new BulkDeleteCountriesCommand($countryIds));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success')
+            );
+        } catch (CountryException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_countries_index');
+    }
+
+    /**
      * @return array
      */
     protected function getCountryToolbarButtons(): array
@@ -317,6 +345,11 @@ class CountryController extends PrestaShopAdminController
                 ),
                 BulkCountryException::FAILED_BULK_UPDATE_ZONE => $this->trans(
                     'An error occurred when updating the zone for one or several countries.',
+                    [],
+                    'Admin.International.Feature'
+                ),
+                BulkCountryException::FAILED_BULK_DELETE => $this->trans(
+                    'An error occurred while deleting one or several countries.',
                     [],
                     'Admin.International.Feature'
                 ),

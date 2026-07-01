@@ -90,6 +90,15 @@ admin_countries_bulk_update_zone:
     _legacy_link: AdminCountries:submitBulkAffectZonecountry
     _legacy_feature_flag: country
 
+admin_countries_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CountryController::bulkDeleteAction'
+    _legacy_controller: AdminCountries
+    _legacy_link: AdminCountries:submitBulkdeletecountry
+    _legacy_feature_flag: country
+
 admin_countries_toggle_status:
   path: /{countryId}/toggle-status
   methods: [ POST ]
