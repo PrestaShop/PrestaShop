@@ -110,12 +110,12 @@ describe('BO - Catalog - Cart rules : Country selection', async () => {
     it(`should search for the country '${dataCountries.unitedStates.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToEnable', baseContext);
 
-      await boCountriesPage.filterTable(page, 'input', 'b!name', dataCountries.unitedStates.name);
+      await boCountriesPage.filterTable(page, 'input', 'name', dataCountries.unitedStates.name);
 
       const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
       expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+      const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'name');
       expect(textColumn).to.equal(dataCountries.unitedStates.name);
     });
 
