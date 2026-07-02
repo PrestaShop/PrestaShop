@@ -15,6 +15,9 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\DeleteExtraPropertyD
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\BulkExtraPropertyException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefinitionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\AssociationExistenceChecker;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProviderInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyFormOptionsException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
@@ -23,6 +26,8 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,6 +74,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      * @param Request $request
      * @param FormBuilderInterface $formBuilder
      * @param FormHandlerInterface $formHandler
+     * @param AssociationExistenceChecker $associationChecker
      *
      * @return Response|RedirectResponse
      */
@@ -79,6 +85,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
         FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.extra_property_definition_form_handler')]
         FormHandlerInterface $formHandler,
+        AssociationExistenceChecker $associationChecker,
     ): Response|RedirectResponse {
         // is_edit: false — structural fields (entity_name, property_name, type, scope) stay
         // editable on creation. See ExtraPropertyDefinitionFieldDefinitionType for the exact list.
@@ -90,6 +97,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
 
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', [], 'Admin.Notifications.Success'));
+                $this->flashAssociationExistenceWarnings($form, $associationChecker);
 
                 return $this->redirectToRoute('admin_extra_property_definitions_edit', [
                     'extraPropertyDefinitionId' => $result->getIdentifiableObjectId(),
@@ -111,6 +119,26 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
     }
 
     /**
+     * Returns the recursive field tree of an identifiable-object form as JSON, so the
+     * "associated forms" picker can lazily suggest placement paths for one formId at a time
+     * (the tree is too expensive to inline for every form on page load).
+     *
+     * Always responds 200: an unknown or un-introspectable form yields {"available": false}
+     * and the UI falls back to a free-text path input.
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function formFieldsAction(string $formId, FormFieldTreeProviderInterface $treeProvider): JsonResponse
+    {
+        $fields = $treeProvider->getTree($formId);
+
+        return new JsonResponse([
+            'formId' => $formId,
+            'available' => null !== $fields,
+            'fields' => $fields ?? [],
+        ]);
+    }
+
+    /**
      * Displays and handles the extra property definition edit form.
      *
      * Module-owned definitions are not editable: the grid only ever links such rows to
@@ -121,6 +149,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      * @param Request $request
      * @param FormBuilderInterface $formBuilder
      * @param FormHandlerInterface $formHandler
+     * @param AssociationExistenceChecker $associationChecker
      *
      * @return Response|RedirectResponse
      */
@@ -132,6 +161,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
         FormBuilderInterface $formBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.extra_property_definition_form_handler')]
         FormHandlerInterface $formHandler,
+        AssociationExistenceChecker $associationChecker,
     ): Response|RedirectResponse {
         try {
             // is_edit: true — structural fields are read-only past creation. See
@@ -154,6 +184,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
 
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', [], 'Admin.Notifications.Success'));
+                $this->flashAssociationExistenceWarnings($form, $associationChecker);
 
                 return $this->redirectToRoute('admin_extra_property_definitions_edit', [
                     'extraPropertyDefinitionId' => $extraPropertyDefinitionId,
@@ -337,6 +368,41 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
     }
 
     /**
+     * Flashes one non-blocking warning per association target (formId/gridId/API path) the
+     * catalogs do not know about — the save itself succeeded, these placements are simply
+     * inert until the target exists. Called on the create/edit success paths only.
+     */
+    private function flashAssociationExistenceWarnings(FormInterface $form, AssociationExistenceChecker $associationChecker): void
+    {
+        $advanced = $form->getData()['advanced'] ?? [];
+
+        $warnings = $associationChecker->check(
+            $this->splitAssociationLines($advanced['associated_forms'] ?? null),
+            $this->splitAssociationLines($advanced['associated_grids'] ?? null),
+            $this->splitAssociationLines($advanced['associated_apis'] ?? null)
+        );
+
+        foreach ($warnings as $warning) {
+            $this->addFlash('warning', $warning);
+        }
+    }
+
+    /**
+     * Splits a "one placement entry per line" textarea value into a list of trimmed,
+     * non-empty entries (null when the textarea is blank).
+     *
+     * @return list<string>|null
+     */
+    private function splitAssociationLines(?string $rawValue): ?array
+    {
+        if (null === $rawValue || '' === trim($rawValue)) {
+            return null;
+        }
+
+        return array_values(array_filter(array_map('trim', explode("\n", $rawValue)), static fn (string $v): bool => '' !== $v)) ?: null;
+    }
+
+    /**
      * Maps domain exceptions to human-readable error messages for flash display.
      *
      * @return array<string, string>
@@ -346,6 +412,11 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
         return [
             ExtraPropertyDefinitionNotFoundException::class => $this->trans(
                 'The extra property definition was not found.',
+                [],
+                'Admin.Advparameters.Notification'
+            ),
+            InvalidExtraPropertyFormOptionsException::class => $this->trans(
+                'The form options are not compatible with the form field type: the field could not be built. Fix the "Advanced form integration" card and try again.',
                 [],
                 'Admin.Advparameters.Notification'
             ),

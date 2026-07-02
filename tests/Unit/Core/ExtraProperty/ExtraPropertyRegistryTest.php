@@ -15,8 +15,14 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionW
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistry;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyFormOptionsException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyFormTypeMap;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManagerInterface;
 use Psr\Log\NullLogger;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Component\Form\Forms;
+use Symfony\Component\Validator\Validation;
 
 /**
  * Covers ExtraPropertyRegistry::register() change handling on already-registered
@@ -154,6 +160,33 @@ class ExtraPropertyRegistryTest extends TestCase
         $this->assertFalse($registry->register($this->definition(scope: ExtraPropertyScope::COMMON)));
     }
 
+    public function testInvalidFormOptionsAreRejectedBeforeSave(): void
+    {
+        $registry = $this->buildRegistry(existing: null, expectSave: false);
+
+        $this->expectException(InvalidExtraPropertyFormOptionsException::class);
+        $this->expectExceptionMessage('not_a_real_option');
+
+        $registry->register($this->definition(formOptions: ['not_a_real_option' => true]));
+    }
+
+    public function testInvalidFormFieldTypeIsRejectedBeforeSave(): void
+    {
+        $registry = $this->buildRegistry(existing: null, expectSave: false);
+
+        $this->expectException(InvalidExtraPropertyFormOptionsException::class);
+        $this->expectExceptionMessage('is not a Symfony form type');
+
+        $registry->register($this->definition(formFieldType: 'Vendor\Unknown\FancyType'));
+    }
+
+    public function testValidFormOptionsAreAccepted(): void
+    {
+        $registry = $this->buildRegistry(existing: null, expectSave: true);
+
+        $this->assertSame(1, $registry->register($this->definition(formOptions: ['attr' => ['class' => 'custom-class']])));
+    }
+
     private function buildRegistry(
         ?ExtraPropertyDefinition $existing,
         bool $expectSave,
@@ -175,6 +208,13 @@ class ExtraPropertyRegistryTest extends TestCase
             $writeRepository,
             $schemaManager,
             new NullLogger(),
+            new FormOptionsValidator(
+                Forms::createFormFactoryBuilder()
+                    // The validator's option merge carries 'constraints', defined by this extension.
+                    ->addExtension(new ValidatorExtension(Validation::createValidator()))
+                    ->getFormFactory(),
+                new ExtraPropertyFormTypeMap()
+            ),
         );
     }
 
@@ -185,6 +225,8 @@ class ExtraPropertyRegistryTest extends TestCase
         bool $nullable = true,
         ?array $enumValues = null,
         int|float|string|bool|null $defaultValue = null,
+        ?string $formFieldType = null,
+        ?array $formOptions = null,
     ): ExtraPropertyDefinition {
         return new ExtraPropertyDefinition(
             entityName: 'product',
@@ -196,6 +238,8 @@ class ExtraPropertyRegistryTest extends TestCase
             defaultValue: $defaultValue,
             nullable: $nullable,
             size: $size,
+            formFieldType: $formFieldType,
+            formOptions: $formOptions,
         );
     }
 }

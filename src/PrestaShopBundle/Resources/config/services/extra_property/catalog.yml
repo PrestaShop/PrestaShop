@@ -1,0 +1,77 @@
+# Catalog services for the Extra Property feature (Symfony kernels only, not the FO legacy container).
+#
+# They enumerate the back-office surfaces an extra property definition can be associated with
+# (grids, identifiable-object forms, Admin API endpoints) and expose a lazy per-form field tree,
+# to power the autocomplete UX of the Extra Property definition page.
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  # Filesystem cache pool for the catalogs. Declared now so the caching seam is ready, but nothing
+  # consumes it yet — cached catalog decorators will be plugged on it later.
+  prestashop.extra_property.catalog.filesystem_cache:
+    class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+    arguments:
+      - 'extra_property_catalog'
+      - 0
+      - '%ps_cache_dir%'
+
+  # ─── Grid catalog ────────────────────────────────────────────────────────────
+  # The tagged locator is autowired via the #[AutowireLocator('core.grid_definition_factory')]
+  # constructor attribute (same pattern as GridDefinitionFactoryProvider).
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalog:
+    arguments:
+      $logger: '@logger'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalogInterface:
+    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalog'
+
+  # ─── Form catalog ────────────────────────────────────────────────────────────
+  # The form types parameter is built by IdentifiableObjectFormTypesCollectorPass (all environments).
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalog:
+    arguments:
+      $identifiableObjectFormTypes: '%prestashop.core.form.identifiable_object.form_types%'
+      $logger: '@logger'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalogInterface:
+    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalog'
+
+  # ─── Admin API endpoint catalog ──────────────────────────────────────────────
+  # Same scanning dependencies as PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor
+  # (see services/bundle/api_platform.yml); the resource metadata collection factory is autowired.
+
+  PrestaShopBundle\ApiPlatform\Catalog\ApiEndpointCatalog:
+    arguments:
+      $moduleDir: '%prestashop.module_dir%'
+      $installedModules: '%prestashop.installed_modules%'
+      $projectDir: '%kernel.project_dir%'
+      $logger: '@logger'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ApiEndpointCatalogInterface:
+    alias: 'PrestaShopBundle\ApiPlatform\Catalog\ApiEndpointCatalog'
+
+  # ─── Form field tree provider ────────────────────────────────────────────────
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProvider:
+    arguments:
+      $logger: '@logger'
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProviderInterface:
+    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProvider'
+
+  # ─── Presenter ───────────────────────────────────────────────────────────────
+  # Aggregates the JSON-ready payloads inlined into the definition form page (one block per card).
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ExtraPropertyCatalogPresenter: ~
+
+  # ─── Association existence checker ───────────────────────────────────────────
+  # Turns unknown formIds/gridIds/API paths of a saved definition into non-blocking warnings
+  # (flashed by ExtraPropertyDefinitionController after a successful save).
+
+  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\AssociationExistenceChecker:
+    arguments:
+      $translator: '@translator'

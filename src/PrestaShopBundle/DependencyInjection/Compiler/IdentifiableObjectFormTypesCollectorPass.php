@@ -12,7 +12,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Form\FormTypeInterface;
 
 /**
- * Collects services information which contains hooks.
+ * Collects the form type classes used by the identifiable object form builders and exposes them
+ * through the prestashop.core.form.identifiable_object.form_types parameter, in every environment.
+ * The parameter feeds the hook listing commands (dev-only services) and the extra property form catalog.
  */
 class IdentifiableObjectFormTypesCollectorPass implements CompilerPassInterface
 {
@@ -26,10 +28,6 @@ class IdentifiableObjectFormTypesCollectorPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
-            return;
-        }
-
         $serviceDefinitions = $container->getDefinitions();
 
         $formTypes = [];
