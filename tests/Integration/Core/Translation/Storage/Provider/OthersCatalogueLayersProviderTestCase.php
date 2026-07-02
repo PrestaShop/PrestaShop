@@ -162,7 +162,8 @@ class OthersCatalogueLayersProviderTestCase extends AbstractCatalogueLayersProvi
             ),
             $this->translationsDir,
             $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
+            $providerDefinition->getTranslationDomains(),
+            $this->createEmptyExtraPropertyTranslationExtractor()
         );
     }
 }

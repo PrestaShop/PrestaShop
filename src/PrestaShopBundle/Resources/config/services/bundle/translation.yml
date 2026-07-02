@@ -6,6 +6,7 @@ services:
     class: PrestaShopBundle\Translation\TranslatorLanguageLoader
     arguments:
       - '@prestashop.adapter.module.repository.module_repository'
+      - '@prestashop.translation.extractor.extra_property'
 
   prestashop.translation.builder.translation_tree:
     class: PrestaShop\PrestaShop\Core\Translation\Builder\TranslationsTreeBuilder
@@ -60,6 +61,7 @@ services:
       - '%themes_translations_dir%'
       - '%modules_dir%'
       - "%translations_dir%"
+      - '@prestashop.translation.extractor.extra_property'
 
   prestashop.translation.backoffice_provider:
     class: PrestaShopBundle\Translation\Provider\BackOfficeProvider
@@ -168,6 +170,13 @@ services:
     tags:
       - { name: translation.loader, alias: db }
 
+  prestashop.translation.loader.extra_property:
+    class: PrestaShopBundle\Translation\Loader\ExtraPropertyTranslationLoader
+    arguments:
+      - '@prestashop.translation.extractor.extra_property'
+    tags:
+      - { name: translation.loader, alias: extra_property }
+
   prestashop.translation.reader.legacy_file:
     class: PrestaShop\PrestaShop\Core\Translation\Storage\Loader\LegacyFileReader
     arguments:
@@ -219,6 +228,11 @@ services:
       - "@prestashop.translation.extractor.twig"
       - "%modules_dir%"
       - "%translations_catalogue_extract_excluded_dirs%"
+
+  prestashop.translation.extractor.extra_property:
+    class: PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ExtraPropertyTranslationExtractor
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
 
   prestashop.translation.legacy_module.extractor:
     class: PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor

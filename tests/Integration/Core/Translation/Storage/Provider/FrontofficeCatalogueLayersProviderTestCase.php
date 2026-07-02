@@ -160,7 +160,8 @@ class FrontofficeCatalogueLayersProviderTestCase extends AbstractCatalogueLayers
             ),
             $this->translationsDir,
             $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
+            $providerDefinition->getTranslationDomains(),
+            $this->createEmptyExtraPropertyTranslationExtractor()
         );
     }
 }

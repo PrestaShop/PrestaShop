@@ -9,6 +9,7 @@ namespace Tests\Integration\Core\Translation\Storage\Provider;
 
 use Generator;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ExtraPropertyTranslationExtractor;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CoreCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\CoreDomainProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
@@ -187,6 +188,58 @@ class CoreDomainCatalogueLayersProviderTest extends KernelTestCase
         ];
     }
 
+    /**
+     * Test it merges the label/description wordings declared in the extra property registry into the
+     * default catalogue, keeping only the domains that belong to this core type.
+     */
+    public function testItMergesExtraPropertyWordingsIntoDefaultCatalogue(): void
+    {
+        $extraPropertyTranslationExtractor = $this->createMock(ExtraPropertyTranslationExtractor::class);
+        $extraPropertyTranslationExtractor->method('extract')
+            ->willReturnCallback(function (string $locale) {
+                $catalogue = new MessageCatalogue($locale);
+                // belongs to this core domain: must be kept (normalized to AdminActions)
+                $catalogue->set('A core registry label', 'A core registry label', 'Admin.Actions');
+                // belongs to another domain: must be filtered out
+                $catalogue->set('A foreign label', 'A foreign label', 'Admin.Catalog');
+
+                return $catalogue;
+            });
+
+        $catalogue = $this->getProvider('AdminActions', [], $extraPropertyTranslationExtractor)->getDefaultCatalogue('fr-FR');
+
+        // the core registry wording is present under the normalized domain, with key == value
+        $this->assertSame('A core registry label', $catalogue->get('A core registry label', 'AdminActions'));
+
+        // a wording belonging to another domain is filtered out
+        $this->assertNotContains('AdminCatalog', $catalogue->getDomains());
+    }
+
+    /**
+     * A core domain can exist only through the extra property registry, with no XLF file shipped for
+     * it. Opening such a domain must not fail: the default catalogue serves the registry wording and
+     * the file-translated catalogue is simply empty (regression test for the per-domain editor 400).
+     */
+    public function testItServesARegistryOnlyCoreDomainWithoutAnXlfFile(): void
+    {
+        $extractor = $this->createMock(ExtraPropertyTranslationExtractor::class);
+        $extractor->method('extract')
+            ->willReturnCallback(function (string $locale) {
+                $catalogue = new MessageCatalogue($locale);
+                $catalogue->set('Core only label', 'Core only label', 'Admin.Coreextrafield.Test');
+
+                return $catalogue;
+            });
+
+        $provider = $this->getProvider('AdminCoreextrafieldTest', [], $extractor);
+
+        $defaultCatalogue = $provider->getDefaultCatalogue('fr-FR');
+        $this->assertSame('Core only label', $defaultCatalogue->get('Core only label', 'AdminCoreextrafieldTest'));
+
+        // no XLF file exists for this domain: the file-translated catalogue must be empty, not throw
+        $this->assertSame([], $provider->getFileTranslatedCatalogue('fr-FR')->getDomains());
+    }
+
     private function getDefaultCatalogue(string $domain, string $locale): MessageCatalogue
     {
         return $this->getProvider($domain)->getDefaultCatalogue($locale);
@@ -233,7 +286,7 @@ class CoreDomainCatalogueLayersProviderTest extends KernelTestCase
      *
      * @return CoreCatalogueLayersProvider
      */
-    private function getProvider(string $domain, array $databaseContent = []): CoreCatalogueLayersProvider
+    private function getProvider(string $domain, array $databaseContent = [], ?ExtraPropertyTranslationExtractor $extraPropertyTranslationExtractor = null): CoreCatalogueLayersProvider
     {
         $providerDefinition = new CoreDomainProviderDefinition($domain);
 
@@ -245,7 +298,22 @@ class CoreDomainCatalogueLayersProviderTest extends KernelTestCase
             ),
             $this->translationsDir,
             $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
+            $providerDefinition->getTranslationDomains(),
+            $extraPropertyTranslationExtractor ?? $this->createEmptyExtraPropertyTranslationExtractor()
         );
+    }
+
+    /**
+     * Builds an extra property extractor that contributes nothing, so the catalogue is unchanged.
+     */
+    private function createEmptyExtraPropertyTranslationExtractor(): ExtraPropertyTranslationExtractor
+    {
+        $extractor = $this->createMock(ExtraPropertyTranslationExtractor::class);
+        $extractor->method('extract')
+            ->willReturnCallback(function (string $locale) {
+                return new MessageCatalogue($locale);
+            });
+
+        return $extractor;
     }
 }
