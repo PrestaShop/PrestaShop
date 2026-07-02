@@ -43,8 +43,10 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
 
         if ($this->featureFlagChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT)) {
             $shippingWeightTraduction = $this->trans("Based on the shipment's total weight", 'Admin.Shipping.Feature');
+            $shippingTotalTraduction = $this->trans("Based on the shipment's total price", 'Admin.Shipping.Feature');
         } else {
             $shippingWeightTraduction = $this->trans("Based on the order's total weight", 'Admin.Shipping.Feature');
+            $shippingTotalTraduction = $this->trans("Based on the order's total price", 'Admin.Shipping.Feature');
         }
 
         $builder
@@ -98,8 +100,8 @@ class ShippingLocationsAndCostsType extends TranslatorAwareType
             ->add('shipping_method', ChoiceType::class, [
                 'label' => $this->trans('Shipping costs', 'Admin.Shipping.Feature'),
                 'choices' => [
-                    $this->trans("Based on the shipment's total price", 'Admin.Shipping.Feature') => ShippingMethod::BY_PRICE,
-                    $this->trans("Based on the order's total weight", 'Admin.Shipping.Feature') => ShippingMethod::BY_WEIGHT,
+                    $shippingTotalTraduction => ShippingMethod::BY_PRICE,
+                    $shippingWeightTraduction => ShippingMethod::BY_WEIGHT,
                 ],
                 'default_empty_data' => ShippingMethod::BY_PRICE,
                 'expanded' => true,

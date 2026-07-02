@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingCalculationReq
 final class ShippingCostPrice implements ShippingCostPriceInterface
 {
     private DecimalNumber $totalWeight;
+    private DecimalNumber $shipmentTotal;
     private ?int $resolvedZoneId = null;
     private ?CarrierShippingData $carrierData = null;
     private bool $isFreeShipping = false;
@@ -26,7 +27,6 @@ final class ShippingCostPrice implements ShippingCostPriceInterface
     private DecimalNumber $cost;
     private ?DecimalNumber $taxExcluded = null;
     private ?DecimalNumber $taxIncluded = null;
-    private DecimalNumber $shipmentTotal;
 
     /**
      * @param array<array{
@@ -45,11 +45,10 @@ final class ShippingCostPrice implements ShippingCostPriceInterface
         private readonly int $carrierId,
         private readonly ?int $addressId,
         private readonly int $currencyId,
-        DecimalNumber $shipmentTotal,
         private readonly int $countryZoneId,
     ) {
-        $this->shipmentTotal = $shipmentTotal;
         $this->totalWeight = new DecimalNumber('0');
+        $this->shipmentTotal = new DecimalNumber('0');
         $this->cost = new DecimalNumber('0');
     }
 
@@ -64,13 +63,14 @@ final class ShippingCostPrice implements ShippingCostPriceInterface
             $request->getCarrierId(),
             $request->getAddressId(),
             $request->getCurrencyId(),
-            new DecimalNumber((string) $request->getShipmentTotal()),
             $request->getCountryZoneId(),
         );
 
         if ($request->getZoneId() !== null) {
             $ctx->setResolvedZoneId($request->getZoneId());
         }
+
+        $ctx->setShipmentTotal(new DecimalNumber((string) $request->getShipmentTotal()));
 
         return $ctx;
     }
