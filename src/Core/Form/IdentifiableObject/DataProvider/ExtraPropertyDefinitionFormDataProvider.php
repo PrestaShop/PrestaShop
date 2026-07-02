@@ -71,11 +71,11 @@ final class ExtraPropertyDefinitionFormDataProvider implements FormDataProviderI
                 'constraints' => ExtraPropertyConstraintMapper::toNames($definition->getConstraints()),
             ],
             'advanced' => [
-                'form_type' => $definition->getFormType(),
-                'form_options' => null !== $definition->getFormOptions() ? json_encode($definition->getFormOptions(), JSON_UNESCAPED_SLASHES) : null,
-                'associated_forms' => null !== $definition->getAssociatedForms() ? json_encode($definition->getAssociatedForms(), JSON_UNESCAPED_SLASHES) : null,
-                'associated_grids' => null !== $definition->getAssociatedGrids() ? json_encode($definition->getAssociatedGrids(), JSON_UNESCAPED_SLASHES) : null,
-                'associated_apis' => null !== $definition->getAssociatedApis() ? json_encode($definition->getAssociatedApis(), JSON_UNESCAPED_SLASHES) : null,
+                'form_field_type' => $definition->getFormType(),
+                'form_options' => null !== $definition->getFormOptions() ? json_encode($definition->getFormOptions(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : null,
+                'associated_forms' => null !== $definition->getAssociatedForms() ? implode("\n", $definition->getAssociatedForms()) : null,
+                'associated_grids' => null !== $definition->getAssociatedGrids() ? implode("\n", $definition->getAssociatedGrids()) : null,
+                'associated_apis' => null !== $definition->getAssociatedApis() ? implode("\n", $definition->getAssociatedApis()) : null,
             ],
         ];
     }

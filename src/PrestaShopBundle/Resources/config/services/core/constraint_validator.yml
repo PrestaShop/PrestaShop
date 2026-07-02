@@ -92,3 +92,7 @@ services:
   PrestaShop\PrestaShop\Core\ConstraintValidator\NotCustomizableProductValidator:
     autowire: true
     autoconfigure: true
+
+  PrestaShop\PrestaShop\Core\ConstraintValidator\ValidExtraPropertyAssociationsValidator:
+    autowire: true
+    autoconfigure: true

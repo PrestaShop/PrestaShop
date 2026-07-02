@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use JsonException;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\AddExtraPropertyDefinitionCommand;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\UpdateExtraPropertyDefinitionCommand;
@@ -16,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\ValueObject\ExtraPropertyDef
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
@@ -30,9 +32,13 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintM
  * create() dispatches AddExtraPropertyDefinitionCommand (no module_name — always null for BO-created fields).
  * update() dispatches UpdateExtraPropertyDefinitionCommand (structural fields are intentionally excluded).
  *
- * The advanced card's textareas (form_options, associated_forms/grids/apis) are still edited as
- * raw JSON in the form — this is the one boundary where JSON encoding/decoding belongs; the CQRS
- * commands themselves only ever carry native arrays.
+ * The advanced card's association textareas (associated_forms/grids/apis) are edited as
+ * newline-separated plain entries (one placement entry per line); only form_options is still
+ * edited as raw JSON — the one boundary where JSON decoding belongs; the CQRS commands
+ * themselves only ever carry native arrays. Malformed form_options JSON throws instead of
+ * being silently dropped — the form's Json constraint normally blocks it before this handler
+ * runs (see ExtraPropertyDefinitionAdvancedType), so a throw here only surfaces for
+ * programmatic submissions or hook-mutated form data.
  */
 final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInterface
 {
@@ -75,9 +81,9 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
             constraints: ExtraPropertyConstraintMapper::fromNames($validation['constraints'] ?? null),
             formType: $advanced['form_type'] ?: null,
             formOptions: $this->parseJsonObject($advanced['form_options'] ?? null),
-            associatedForms: $this->parseJsonList($advanced['associated_forms'] ?? null),
-            associatedGrids: $this->parseJsonList($advanced['associated_grids'] ?? null),
-            associatedApis: $this->parseJsonList($advanced['associated_apis'] ?? null),
+            associatedForms: $this->parseLines($advanced['associated_forms'] ?? null),
+            associatedGrids: $this->parseLines($advanced['associated_grids'] ?? null),
+            associatedApis: $this->parseLines($advanced['associated_apis'] ?? null),
         ));
 
         return $id->getValue();
@@ -109,9 +115,9 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
             ->setConstraints(ExtraPropertyConstraintMapper::fromNames($validation['constraints'] ?? null))
             ->setFormType($advanced['form_type'] ?: null)
             ->setFormOptions($this->parseJsonObject($advanced['form_options'] ?? null))
-            ->setAssociatedForms($this->parseJsonList($advanced['associated_forms'] ?? null))
-            ->setAssociatedGrids($this->parseJsonList($advanced['associated_grids'] ?? null))
-            ->setAssociatedApis($this->parseJsonList($advanced['associated_apis'] ?? null));
+            ->setAssociatedForms($this->parseLines($advanced['associated_forms'] ?? null))
+            ->setAssociatedGrids($this->parseLines($advanced['associated_grids'] ?? null))
+            ->setAssociatedApis($this->parseLines($advanced['associated_apis'] ?? null));
 
         if (!empty($fieldDefinition['size'])) {
             $command->setSize((int) $fieldDefinition['size']);
@@ -142,33 +148,34 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
     }
 
     /**
-     * Decodes a JSON array of strings submitted by a textarea (associated_forms/grids/apis).
+     * Parses a "one placement entry per line" textarea (associated_forms/grids/apis) into a list
+     * of trimmed, non-empty entries.
+     *
+     * A blank textarea returns [] (never null): in the update path an empty list means "clear the
+     * associations" while null on the command means "leave untouched" (see
+     * UpdateExtraPropertyDefinitionHandler) — so returning null here would make clearing impossible.
      *
      * @param string|null $rawValue
      *
-     * @return list<string>|null
+     * @return list<string>
      */
-    protected function parseJsonList(?string $rawValue): ?array
+    private function parseLines(?string $rawValue): array
     {
-        // Return array so we can reset the value if needed
-        if (null === $rawValue || '' === trim($rawValue)) {
+        if (null === $rawValue) {
             return [];
         }
 
-        $decoded = json_decode($rawValue, true);
-        if (!is_array($decoded)) {
-            return null;
-        }
-
-        return array_values(array_filter($decoded, static fn (mixed $v): bool => is_string($v) && '' !== $v)) ?: null;
+        return array_values(array_filter(array_map('trim', explode("\n", $rawValue)), static fn (string $v): bool => '' !== $v));
     }
 
     /**
-     * Decodes a JSON object submitted by the form_options textarea.
+     * Decodes the JSON object submitted by the form_options textarea.
      *
      * @param string|null $rawValue
      *
      * @return array<string, mixed>|null
+     *
+     * @throws InvalidExtraPropertyDefinitionException when the value is not valid JSON or does not decode to an object/array
      */
     protected function parseJsonObject(?string $rawValue): ?array
     {
@@ -176,8 +183,23 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
             return null;
         }
 
-        $decoded = json_decode($rawValue, true);
+        try {
+            $decoded = json_decode($rawValue, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            throw new InvalidExtraPropertyDefinitionException(
+                sprintf('The form options field contains invalid JSON: %s.', $e->getMessage()),
+                0,
+                $e
+            );
+        }
 
-        return is_array($decoded) ? $decoded : null;
+        if (!is_array($decoded)) {
+            throw new InvalidExtraPropertyDefinitionException(sprintf(
+                'The form options field must contain a JSON object, got %s.',
+                get_debug_type($decoded)
+            ));
+        }
+
+        return $decoded;
     }
 }
