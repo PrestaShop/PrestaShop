@@ -242,6 +242,7 @@ $component-name: multishop-modal;
     max-height: 500px;
     padding-right: var(--#{$cdk}size-16);
     margin: 0;
+    overflow: auto;
   }
 
   &-shop-view {
