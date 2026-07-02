@@ -39,6 +39,15 @@ class DiscountQueryBuilder extends AbstractDoctrineQueryBuilder
                 'cr.id_cart_rule AS id_discount,
                 crl.name,
                 crt.discount_type,
+                COALESCE(crtl.name, crt.discount_type) AS discount_type_label,
+                CASE crt.discount_type
+                    WHEN \'free_shipping\' THEN \'success\'
+                    WHEN \'cart_level\' THEN \'info\'
+                    WHEN \'order_level\' THEN \'info\'
+                    WHEN \'product_level\' THEN \'warning\'
+                    WHEN \'free_gift\' THEN \'warning\'
+                    ELSE \'\'
+                END AS discount_type_badge,
                 cr.code,
                 cr.date_from,
                 cr.date_to,
@@ -90,6 +99,12 @@ class DiscountQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'cart_rule_type',
                 'crt',
                 'cr.id_cart_rule_type = crt.id_cart_rule_type'
+            )
+            ->leftJoin(
+                'crt',
+                $this->dbPrefix . 'cart_rule_type_lang',
+                'crtl',
+                'crt.id_cart_rule_type = crtl.id_cart_rule_type AND crtl.id_lang = :contextLangId'
             )
             ->setParameter('contextLangId', $this->languageContext->getId())
         ;
