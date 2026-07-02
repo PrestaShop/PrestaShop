@@ -8,6 +8,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand;
@@ -56,6 +57,7 @@ class CustomerThreadController extends PrestaShopAdminController
         GridFactoryInterface $customerGridFactory,
         #[Autowire(service: 'prestashop.core.kpi_row.factory.customer_service')]
         KpiRowFactoryInterface $customerServiceKpiFactory,
+        ShopContext $shopContext,
         CustomerThreadFilter $filters
     ): Response {
         $customerThreadGrid = $customerGridFactory->getGrid($filters);
@@ -64,7 +66,7 @@ class CustomerThreadController extends PrestaShopAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerThreadGrid' => $this->presentGrid($customerThreadGrid),
             'customerServiceKpi' => $customerServiceKpiFactory->build(),
-            'customerServiceListingStatistics' => $this->dispatchQuery(new GetCustomerServiceListingStatistics()),
+            'customerServiceListingStatistics' => $this->dispatchQuery(new GetCustomerServiceListingStatistics($shopContext->getShopConstraint())),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Customer service', [], 'Admin.Navigation.Menu'),
         ]);

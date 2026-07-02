@@ -60,5 +60,13 @@ services:
   prestashop.core.domain.customer_service.repository.customer_thread_repository:
     class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadRepository'
 
+  PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerThreadRepository:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $shopRepository: '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
+      $dbPrefix: '%database_prefix%'
+
   PrestaShop\PrestaShop\Adapter\CustomerService\QueryHandler\GetCustomerServiceListingStatisticsHandler:
     autoconfigure: true
+    arguments:
+      $customerThreadRepository: '@PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerThreadRepository'
