@@ -518,7 +518,7 @@ class SpecificPriceCore extends ObjectModel
         $id_customer = 0,
         $id_cart = 0,
         $real_quantity = 0,
-        $cache_all_variants = true
+		$cache_all_variants = false
     ) {
         if (!SpecificPrice::isFeatureActive()) {
             return [];
