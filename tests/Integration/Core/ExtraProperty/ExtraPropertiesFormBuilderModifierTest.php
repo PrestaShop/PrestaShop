@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionR
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormBuilderModifier;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyFormTypeMap;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyReaderInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
 use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
@@ -95,6 +96,28 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
         // — NOT nested per-language under the children's options (which is where per-element rules used to live).
         $this->assertSame([$all], $field->getOption('constraints'));
         $this->assertArrayNotHasKey('constraints', (array) $field->getOption('options'));
+    }
+
+    public function testDefaultFormTypeIsDerivedFromLogicalTypeWhenNoOverride(): void
+    {
+        $definition = new ExtraPropertyDefinition(
+            entityName: 'product',
+            propertyName: 'is_dangerous',
+            type: \PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType::BOOL,
+            scope: ExtraPropertyScope::COMMON,
+            moduleName: 'demoextrafield',
+            associatedForms: ['product'],
+            labelWording: 'Dangerous product',
+        );
+
+        $builder = $this->createSimpleFormBuilder();
+        $this->makeModifier($definition)->apply($builder, 'product', null);
+
+        // No formFieldType declared: the type map supplies the widget (BOOL => SwitchType), not TextType.
+        $this->assertInstanceOf(
+            \PrestaShopBundle\Form\Admin\Type\SwitchType::class,
+            $builder->get(self::FIELD_NAME)->getType()->getInnerType()
+        );
     }
 
     public function testBareFormIdOnNavigationTabFormCreatesExtraFieldsSection(): void
@@ -238,6 +261,7 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
             $translator,
             $this->shopContext(),
             new FormBuilderModifier(),
+            new ExtraPropertyFormTypeMap(),
         );
     }
 
