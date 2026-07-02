@@ -116,9 +116,16 @@ class ExtraPropertyConstraintMapperTest extends TestCase
 
     public function testFromNamesThrowsOnANonWhitelistedConstraint(): void
     {
-        // Length/Range/Regex are real Symfony constraints deliberately kept out of the textarea
-        // whitelist (Length/Range need keyed options; Regex carries unsafe delimiters).
+        // Callback/Expression are deliberately kept out of the whitelist (code execution, not serializable).
         $this->expectException(UnknownExtraPropertyConstraintException::class);
+
+        ExtraPropertyConstraintMapper::fromNames('Callback');
+    }
+
+    public function testFromNamesThrowsWhenAMultiOptionConstraintMissesItsRequiredOptions(): void
+    {
+        // Length is whitelisted but needs min/max — a bare name cannot satisfy them.
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
 
         ExtraPropertyConstraintMapper::fromNames('Length');
     }
@@ -407,15 +414,16 @@ class ExtraPropertyConstraintMapperTest extends TestCase
             new Assert\Email(),
         ]);
 
-        // Length has no default option → bare name; nothing is dropped any more.
-        $this->assertSame("NotBlank\nLength\nEmail", $names);
+        // Length has no default option → named-options shape; nothing is dropped any more.
+        $this->assertSame("NotBlank\nLength(max: 10)\nEmail", $names);
     }
 
     public function testToNamesRendersANonWhitelistedConstraintWithItsPrimaryOption(): void
     {
         $names = ExtraPropertyConstraintMapper::toNames([new Assert\Regex(['pattern' => '/^\d+$/'])]);
 
-        $this->assertSame("Regex('/^\d+$/')", $names);
+        // The backslash is escaped so the rendered value parses back to the same pattern.
+        $this->assertSame("Regex('/^\\\\d+$/')", $names);
     }
 
     public function testToNamesReturnsRenderedStringWhenAllConstraintsAreNonWhitelisted(): void
@@ -425,7 +433,7 @@ class ExtraPropertyConstraintMapperTest extends TestCase
             new Assert\Regex(['pattern' => '/^\d+$/']),
         ]);
 
-        $this->assertSame("Length\nRegex('/^\d+$/')", $names);
+        $this->assertSame("Length(max: 10)\nRegex('/^\\\\d+$/')", $names);
     }
 
     // -- toNames(): parametric rendering -----------------------------------------------------
@@ -600,6 +608,8 @@ class ExtraPropertyConstraintMapperTest extends TestCase
                 'Hostname',
                 'CssColor',
                 'NoSuspiciousCharacters',
+                'Length',
+                'Regex',
                 'Date',
                 'DateTime',
                 'Time',
@@ -609,6 +619,7 @@ class ExtraPropertyConstraintMapperTest extends TestCase
                 'Negative',
                 'NegativeOrZero',
                 'Luhn',
+                'Range',
                 'EqualTo',
                 'NotEqualTo',
                 'IdenticalTo',
@@ -631,12 +642,267 @@ class ExtraPropertyConstraintMapperTest extends TestCase
                 'Locale',
                 'Currency',
                 'Choice',
+                'Count',
                 'Type',
+                'All',
+                'AtLeastOneOf',
+                'Collection',
+                'Sequentially',
                 'TypedRegex',
                 'DefaultLanguage',
                 'CleanHtml',
             ],
             ExtraPropertyConstraintMapper::getAllowedNames()
         );
+    }
+
+    // -- fromNames(): named options ------------------------------------------------------------
+
+    public function testFromNamesResolvesNamedOptions(): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames('Length(min: 2, max: 64)');
+
+        $this->assertNotNull($constraints);
+        $this->assertInstanceOf(Assert\Length::class, $constraints[0]);
+        $this->assertSame(2, $constraints[0]->min);
+        $this->assertSame(64, $constraints[0]->max);
+    }
+
+    public function testFromNamesResolvesNamedOptionsWithListAndBoolValues(): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames("Choice(choices: ['a', 'b'], multiple: true, min: 1)");
+
+        $this->assertNotNull($constraints);
+        /** @var Assert\Choice $constraint */
+        $constraint = $constraints[0];
+        $this->assertSame(['a', 'b'], $constraint->choices);
+        $this->assertTrue($constraint->multiple);
+        $this->assertSame(1, $constraint->min);
+    }
+
+    public function testFromNamesResolvesRangeNamedOptions(): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames('Range(min: 1, max: 10)');
+
+        $this->assertNotNull($constraints);
+        /** @var Assert\Range $constraint */
+        $constraint = $constraints[0];
+        $this->assertSame(1, $constraint->min);
+        $this->assertSame(10, $constraint->max);
+    }
+
+    public function testFromNamesThrowsOnAnUnknownNamedOption(): void
+    {
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+
+        ExtraPropertyConstraintMapper::fromNames('Length(bogus: 2)');
+    }
+
+    public function testAQuotedValueContainingAColonIsNotMistakenForANamedOption(): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames("EqualTo('a:b')");
+
+        $this->assertNotNull($constraints);
+        /** @var Assert\EqualTo $constraint */
+        $constraint = $constraints[0];
+        $this->assertSame('a:b', $constraint->value);
+    }
+
+    // -- fromNames(): composites ---------------------------------------------------------------
+
+    public function testFromNamesResolvesACompositeWithNestedConstraints(): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames('All[Url]');
+
+        $this->assertNotNull($constraints);
+        $this->assertInstanceOf(Assert\All::class, $constraints[0]);
+        $nested = array_values($constraints[0]->getNestedConstraints());
+        $this->assertCount(1, $nested);
+        $this->assertInstanceOf(Assert\Url::class, $nested[0]);
+    }
+
+    public function testFromNamesResolvesACompositeWithMultipleAndParametricChildren(): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames("All[\n  TypedRegex('generic_name'),\n  NotBlank\n]");
+
+        $this->assertNotNull($constraints);
+        $this->assertInstanceOf(Assert\All::class, $constraints[0]);
+        $nested = array_values($constraints[0]->getNestedConstraints());
+        $this->assertCount(2, $nested);
+        $this->assertInstanceOf(TypedRegex::class, $nested[0]);
+        $this->assertSame('generic_name', $nested[0]->type);
+        $this->assertInstanceOf(Assert\NotBlank::class, $nested[1]);
+    }
+
+    public function testFromNamesResolvesNestedComposites(): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames('AtLeastOneOf[Url, All[NotBlank]]');
+
+        $this->assertNotNull($constraints);
+        $this->assertInstanceOf(Assert\AtLeastOneOf::class, $constraints[0]);
+        $nested = array_values($constraints[0]->getNestedConstraints());
+        $this->assertInstanceOf(Assert\Url::class, $nested[0]);
+        $this->assertInstanceOf(Assert\All::class, $nested[1]);
+    }
+
+    public function testFromNamesResolvesACollectionWithKeyedChildren(): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames('Collection[name: NotBlank, code: Length(max: 5)]');
+
+        $this->assertNotNull($constraints);
+        $this->assertInstanceOf(Assert\Collection::class, $constraints[0]);
+        $fields = $constraints[0]->fields;
+        $this->assertArrayHasKey('name', $fields);
+        $this->assertArrayHasKey('code', $fields);
+    }
+
+    public function testFromNamesRejectsBracketsOnANonCompositeConstraint(): void
+    {
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+
+        ExtraPropertyConstraintMapper::fromNames('NotBlank[Url]');
+    }
+
+    public function testFromNamesRejectsKeyedChildrenOutsideCollection(): void
+    {
+        $this->expectException(InvalidExtraPropertyConstraintException::class);
+
+        ExtraPropertyConstraintMapper::fromNames('All[name: NotBlank]');
+    }
+
+    public function testFromNamesRejectsUnknownNestedConstraintNames(): void
+    {
+        $this->expectException(UnknownExtraPropertyConstraintException::class);
+
+        ExtraPropertyConstraintMapper::fromNames('All[Bogus]');
+    }
+
+    // -- fromNames(): literals & escapes --------------------------------------------------------
+
+    public function testUnquotedLiteralsBecomeNativeTypes(): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames('EqualTo(true)');
+
+        $this->assertNotNull($constraints);
+        /** @var Assert\EqualTo $constraint */
+        $constraint = $constraints[0];
+        $this->assertTrue($constraint->value);
+    }
+
+    public function testQuotedLiteralsStayStrings(): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames("EqualTo('true')");
+
+        $this->assertNotNull($constraints);
+        /** @var Assert\EqualTo $constraint */
+        $constraint = $constraints[0];
+        $this->assertSame('true', $constraint->value);
+    }
+
+    public function testEscapedQuotesInsideAQuotedValueAreHonored(): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames("EqualTo('it\\'s')");
+
+        $this->assertNotNull($constraints);
+        /** @var Assert\EqualTo $constraint */
+        $constraint = $constraints[0];
+        $this->assertSame("it's", $constraint->value);
+    }
+
+    public function testUnrecognizedBackslashSequencesAreKeptVerbatim(): void
+    {
+        // A hand-typed regex keeps its \d — only \\ \' \" are escape sequences.
+        $constraints = ExtraPropertyConstraintMapper::fromNames("Regex('/^\\d+$/')");
+
+        $this->assertNotNull($constraints);
+        /** @var Assert\Regex $constraint */
+        $constraint = $constraints[0];
+        $this->assertSame('/^\d+$/', $constraint->pattern);
+    }
+
+    // -- errors carry the offending line --------------------------------------------------------
+
+    public function testParseErrorsReportTheOffendingLine(): void
+    {
+        $this->expectException(UnknownExtraPropertyConstraintException::class);
+        $this->expectExceptionMessageMatches('/^Line 3:/');
+
+        ExtraPropertyConstraintMapper::fromNames("NotBlank\nEmail\nBogus");
+    }
+
+    public function testMultilineCompositeErrorsReportItsStartingLine(): void
+    {
+        $this->expectException(UnknownExtraPropertyConstraintException::class);
+        $this->expectExceptionMessageMatches('/^Line 2:/');
+
+        ExtraPropertyConstraintMapper::fromNames("NotBlank\nAll[\n  Bogus\n]");
+    }
+
+    // -- round-trip: new shapes ------------------------------------------------------------------
+
+    public function testRoundTripsComposites(): void
+    {
+        $raw = "DefaultLanguage('Video link')\nAll[\n  Url\n]";
+
+        $constraints = ExtraPropertyConstraintMapper::fromNames($raw);
+        $this->assertNotNull($constraints);
+
+        $this->assertSame($raw, ExtraPropertyConstraintMapper::toNames($constraints));
+    }
+
+    public function testRoundTripsNamedOptions(): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames('Length(min: 2, max: 64)');
+        $this->assertNotNull($constraints);
+
+        // Options render in deterministic (alphabetical) order, and that shape parses back identically.
+        $rendered = ExtraPropertyConstraintMapper::toNames($constraints);
+        $this->assertSame('Length(max: 64, min: 2)', $rendered);
+        $reparsed = ExtraPropertyConstraintMapper::fromNames($rendered);
+        $this->assertNotNull($reparsed);
+        $this->assertSame($rendered, ExtraPropertyConstraintMapper::toNames($reparsed));
+    }
+
+    public function testRoundTripsEscapedStrings(): void
+    {
+        $original = new Assert\EqualTo(['value' => "it's a \\ backslash"]);
+
+        $rendered = ExtraPropertyConstraintMapper::toNames([$original]);
+        $this->assertNotNull($rendered);
+        $parsed = ExtraPropertyConstraintMapper::fromNames($rendered);
+
+        $this->assertNotNull($parsed);
+        /** @var Assert\EqualTo $constraint */
+        $constraint = $parsed[0];
+        $this->assertSame("it's a \\ backslash", $constraint->value);
+    }
+
+    public function testRoundTripsBooleanValues(): void
+    {
+        $raw = 'EqualTo(true)';
+
+        $constraints = ExtraPropertyConstraintMapper::fromNames($raw);
+        $this->assertNotNull($constraints);
+
+        $this->assertSame($raw, ExtraPropertyConstraintMapper::toNames($constraints));
+    }
+
+    public function testRoundTripsTheMultilangExampleFromTheDemoModule(): void
+    {
+        // The canonical multilang case: default-language requiredness + per-language Url validation.
+        $constraints = [
+            new DefaultLanguage(fieldName: 'Video link'),
+            new Assert\All([new Assert\Url()]),
+        ];
+
+        $rendered = ExtraPropertyConstraintMapper::toNames($constraints);
+        $this->assertSame("DefaultLanguage('Video link')\nAll[\n  Url\n]", $rendered);
+
+        $parsed = ExtraPropertyConstraintMapper::fromNames($rendered);
+        $this->assertNotNull($parsed);
+        $this->assertInstanceOf(DefaultLanguage::class, $parsed[0]);
+        $this->assertSame('Video link', $parsed[0]->fieldName);
+        $this->assertInstanceOf(Assert\All::class, $parsed[1]);
+        $this->assertInstanceOf(Assert\Url::class, array_values($parsed[1]->getNestedConstraints())[0]);
     }
 }
