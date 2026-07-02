@@ -2351,6 +2351,11 @@ class OrderController extends PrestaShopAdminController
                     [],
                     'Admin.Orderscustomers.Notification'
                 ),
+                InvalidCartRuleDiscountValueException::DUPLICATE_FREE_SHIPPING => $this->trans(
+                    'This order already has a free shipping discount.',
+                    [],
+                    'Admin.Orderscustomers.Notification'
+                ),
             ],
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(

@@ -1396,6 +1396,17 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get error that order already has a free shipping discount
+     */
+    public function assertDuplicateFreeShippingCartRule(): void
+    {
+        $this->assertLastErrorIs(
+            InvalidCartRuleDiscountValueException::class,
+            InvalidCartRuleDiscountValueException::DUPLICATE_FREE_SHIPPING
+        );
+    }
+
+    /**
      * @Then the last invoice for order :orderReference should have following prices:
      */
     public function assertLastInvoicePrices(string $orderReference, TableNode $table)

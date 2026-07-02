@@ -223,6 +223,19 @@ Feature: Add discounts to order from Back Office (BO)
       | total paid tax excluded   | 18.90 |
       | total paid tax included   | 20.03 |
 
+  Scenario: Free shipping discount cannot be cumulated
+    Given order "bo_order1" does not have any invoices
+    When I add discount to order "bo_order1" with following details:
+      | name      | first free shipping |
+      | type      | free_shipping       |
+    Then I should get no order error
+    And order "bo_order1" should have 1 cart rule
+    When I add discount to order "bo_order1" with following details:
+      | name      | second free shipping |
+      | type      | free_shipping        |
+    Then I should get error that order already has a free shipping discount
+    And order "bo_order1" should have 1 cart rule
+
   Scenario: Add invalid percent value
     Given order "bo_order1" does not have any invoices
     When I add discount to order "bo_order1" with following details:
