@@ -15,10 +15,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class HTMLPurifier
 {
-    /**
-     * @var \HTMLPurifier
-     */
-    private $instance;
+    private \HTMLPurifier $instance;
 
     private readonly string $serializerPath;
 
@@ -28,17 +25,17 @@ class HTMLPurifier
         private readonly string $cacheDir,
     ) {
         $config = HTMLPurifier_Config::createDefault();
+
         // We must keep IDs that are by JS used to target element
         $config->set('Attr.EnableID', true);
         $config->set('Attr.AllowedFrameTargets', ['_blank']);
-
+        // Cache for the serializer path
         $this->serializerPath = $this->cacheDir . 'purifier';
         $this->filesystem->mkdir($this->serializerPath);
 
         $config->set('Cache.SerializerPath', $this->serializerPath);
 
-        $purifier = new \HTMLPurifier($config);
-        $this->instance = $purifier;
+        $this->instance = new \HTMLPurifier($config);
     }
 
     /**

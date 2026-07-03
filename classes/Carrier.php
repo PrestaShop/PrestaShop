@@ -650,7 +650,7 @@ class CarrierCore extends ObjectModel
         $states = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT s.*
             FROM `' . _DB_PREFIX_ . 'state` s
-            WHERE s.id_country IN (' . implode(',', array_keys($countries)) . ')
+            WHERE s.id_country IN (' . implode(',', array_keys($result)) . ')
               AND s.active = 1
             ORDER BY s.`name` ASC'
         );

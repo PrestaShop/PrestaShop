@@ -278,21 +278,20 @@ export default class FeatureValuesManager {
 
   private doRenderFeatureValueChoices(featureValuesData: FeatureValue[]): void {
     this.$featureValueSelector.empty();
-    if (featureValuesData.length) {
-      const selectedFeatureValues = this.getFeatureValueIds();
-      // First add placeholder and custom value options
-      this.addFeatureValue(this.$featureValueSelector.data('placeholderLabel'), 0);
-      this.addFeatureValue(this.$featureValueSelector.data('customValueLabel'), -1);
 
-      // Then loop through the pre-defined feature values
-      $.each(featureValuesData, (index, featureValue) => {
-        if (featureValue.id !== 0 && !selectedFeatureValues.includes(featureValue.id)) {
-          this.addFeatureValue(featureValue.value, featureValue.id);
-        }
-      });
-    }
+    const selectedFeatureValues = this.getFeatureValueIds();
+    // Always add placeholder and custom value options, even when no predefined values exist.
+    this.addFeatureValue(this.$featureValueSelector.data('placeholderLabel'), 0);
+    this.addFeatureValue(this.$featureValueSelector.data('customValueLabel'), -1);
 
-    this.$featureValueSelector.prop('disabled', featureValuesData.length === 0);
+    // Then add the available predefined feature values.
+    $.each(featureValuesData, (index, featureValue) => {
+      if (featureValue.id !== 0 && !selectedFeatureValues.includes(featureValue.id)) {
+        this.addFeatureValue(featureValue.value, featureValue.id);
+      }
+    });
+
+    this.$featureValueSelector.prop('disabled', false);
     this.$featureValueSelector.val(0).trigger('change');
     this.$featureValueSelector.select2();
   }

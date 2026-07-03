@@ -11,6 +11,7 @@ $component-name: shop-selector;
     max-height: 500px;
     padding: 0 var(--#{$cdk}size-16) 0 0;
     margin-left: 0;
+    overflow: auto;
     list-style-type: none;
   }
 
