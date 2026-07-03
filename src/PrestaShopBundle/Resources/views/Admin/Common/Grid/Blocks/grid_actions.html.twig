@@ -22,34 +22,44 @@
          id="{{ gridActionsDropdownMenuId }}"
     >
       {% for action in grid.actions.grid %}
-        {{ include('@PrestaShop/Admin/Common/Grid/Actions/Grid/' ~ action.type ~ '.html.twig', {action: action, grid: grid}) }}
+        {# The SQL query actions expose the grid's SQL, so they are limited to employees who
+           may use the SQL Manager, the same permission that guards the query itself. #}
+        {% if action.id in ['common_show_query', 'common_export_sql_manager'] and not is_granted('create', 'AdminRequestSql') %}
+        {% else %}
+          {{ include('@PrestaShop/Admin/Common/Grid/Actions/Grid/' ~ action.type ~ '.html.twig', {action: action, grid: grid}) }}
+        {% endif %}
       {% endfor %}
     </div>
 
-    {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
-      id: grid.id ~ '_grid_common_show_query_modal',
-      title: 'SQL query'|trans({}, 'Admin.Global'),
-      closable: true,
-      actions: [{
-        type: 'button',
-        label: 'Export to SQL Manager'|trans({}, 'Admin.Actions'),
-        value: 'sql_manager',
-        class: 'btn btn-primary btn-lg btn-sql-submit',
-      }],
-    } %}
-      {% block content %}
-          <div class="modal-body">
-            <form method="post"
-                  action="{{ path('admin_sql_requests_create') }}"
-                  id="{{ grid.id ~ '_common_show_query_modal_form' }}"
-            >
-              <div class="form-group">
-                <textarea name="sql" rows="10" cols="65" title="" class="form-control"></textarea>
-                <input type="hidden" name="name" value="" />
-              </div>
-            </form>
-          </div>
-      {% endblock %}
-    {% endembed %}
+    {% if is_granted('create', 'AdminRequestSql') %}
+      {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
+        id: grid.id ~ '_grid_common_show_query_modal',
+        title: 'SQL query'|trans({}, 'Admin.Global'),
+        closable: true,
+        actions: [{
+          type: 'button',
+          label: 'Export to SQL Manager'|trans({}, 'Admin.Actions'),
+          value: 'sql_manager',
+          class: 'btn btn-primary btn-lg btn-sql-submit',
+        }],
+      } %}
+        {% block content %}
+            <div class="modal-body">
+              <form method="post"
+                    action="{{ grid.sql_export_grid_factory_service_id ? path('admin_common_grid_sql') : path('admin_sql_requests_create') }}"
+                    id="{{ grid.id ~ '_common_show_query_modal_form' }}"
+              >
+                <div class="form-group">
+                  <textarea name="sql" rows="10" cols="65" title="" class="form-control"></textarea>
+                  <input type="hidden" name="name" value="" />
+                  {% if grid.sql_export_grid_factory_service_id %}
+                    <input type="hidden" name="gridFactoryServiceId" value="{{ grid.sql_export_grid_factory_service_id }}" />
+                  {% endif %}
+                </div>
+              </form>
+            </div>
+        {% endblock %}
+      {% endembed %}
+    {% endif %}
   </div>
 {% endif %}
