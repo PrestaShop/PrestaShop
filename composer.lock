@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5bd08ebf7e2cb4220e2247741666c1a",
+    "content-hash": "a5af1d2c527ee6dd8e43b300513b31d3",
     "packages": [
         {
             "name": "api-platform/core",
@@ -6422,16 +6422,16 @@
         },
         {
             "name": "prestashop/ps_onepagecheckout",
-            "version": "v0.6.0",
+            "version": "v0.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_onepagecheckout.git",
-                "reference": "376576dad2583669b55b1c7d033dbdc97a12a419"
+                "reference": "521db0a4d459069b367b7be5292e5520632d2a09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_onepagecheckout/zipball/376576dad2583669b55b1c7d033dbdc97a12a419",
-                "reference": "376576dad2583669b55b1c7d033dbdc97a12a419",
+                "url": "https://api.github.com/repos/PrestaShop/ps_onepagecheckout/zipball/521db0a4d459069b367b7be5292e5520632d2a09",
+                "reference": "521db0a4d459069b367b7be5292e5520632d2a09",
                 "shasum": ""
             },
             "require": {
@@ -6465,9 +6465,9 @@
             "homepage": "https://github.com/PrestaShop/ps_onepagecheckout",
             "support": {
                 "issues": "https://github.com/PrestaShop/ps_onepagecheckout/issues",
-                "source": "https://github.com/PrestaShop/ps_onepagecheckout/tree/v0.6.0"
+                "source": "https://github.com/PrestaShop/ps_onepagecheckout/tree/v0.6.2"
             },
-            "time": "2026-06-19T13:07:42+00:00"
+            "time": "2026-07-02T14:45:01+00:00"
         },
         {
             "name": "prestashop/ps_searchbar",
