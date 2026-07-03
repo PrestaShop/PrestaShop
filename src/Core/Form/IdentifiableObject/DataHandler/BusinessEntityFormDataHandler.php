@@ -39,7 +39,7 @@ final class BusinessEntityFormDataHandler implements FormDataHandlerInterface
             $generalInformation->getStatus(),
             $this->resolveShopId($generalInformation->getShopId()),
             $generalInformation->getCustomerGroupId(),
-            $data['billingAddressAsShippingAddress'],
+            $data['billing_address_as_shipping_address'],
             $data['billing_address'],
             $data['shipping_address'],
         );

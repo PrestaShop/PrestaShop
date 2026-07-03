@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\AddBusinessEntityHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityBillingAddressConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\AbstractBusinessEntityAddress;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 
 /**
@@ -96,15 +97,15 @@ class AddBusinessEntityCommand
             );
         }
 
-        $atLeastOneDefaultBillingAddress = false;
-        foreach ($this->getBillingAddresses() as $billingAddress) {
-            if ($billingAddress->isDefault()) {
-                $atLeastOneDefaultBillingAddress = true;
-            }
-        }
-        if (!$atLeastOneDefaultBillingAddress) {
+        $defaultBillingAddressCount = $this->countDefaultAddresses($this->getBillingAddresses());
+        if (0 === $defaultBillingAddressCount) {
             throw new BusinessEntityBillingAddressConstraintException(
                 code: BusinessEntityBillingAddressConstraintException::MISSING_DEFAULT_BILLING_ADDRESS
+            );
+        }
+        if ($defaultBillingAddressCount > 1) {
+            throw new BusinessEntityBillingAddressConstraintException(
+                code: BusinessEntityBillingAddressConstraintException::MULTIPLE_DEFAULT_BILLING_ADDRESSES
             );
         }
 
@@ -115,19 +116,32 @@ class AddBusinessEntityCommand
                 );
             }
 
-            $atLeastOneDefaultShippingAddress = false;
-
-            foreach ($this->getShippingAddresses() as $shippingAddress) {
-                if ($shippingAddress->isDefault()) {
-                    $atLeastOneDefaultShippingAddress = true;
-                }
-            }
-
-            if (!$atLeastOneDefaultShippingAddress) {
+            $defaultShippingAddressCount = $this->countDefaultAddresses($this->getShippingAddresses());
+            if (0 === $defaultShippingAddressCount) {
                 throw new BusinessEntityBillingAddressConstraintException(
                     code: BusinessEntityBillingAddressConstraintException::MISSING_DEFAULT_SHIPPING_ADDRESS
                 );
             }
+            if ($defaultShippingAddressCount > 1) {
+                throw new BusinessEntityBillingAddressConstraintException(
+                    code: BusinessEntityBillingAddressConstraintException::MULTIPLE_DEFAULT_SHIPPING_ADDRESSES
+                );
+            }
         }
+    }
+
+    /**
+     * @param array<AbstractBusinessEntityAddress> $addresses
+     */
+    private function countDefaultAddresses(array $addresses): int
+    {
+        $count = 0;
+        foreach ($addresses as $address) {
+            if ($address->isDefault()) {
+                ++$count;
+            }
+        }
+
+        return $count;
     }
 }

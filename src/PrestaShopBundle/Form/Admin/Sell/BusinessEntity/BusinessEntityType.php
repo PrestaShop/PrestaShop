@@ -36,11 +36,11 @@ class BusinessEntityType extends TranslatorAwareType
     {
         $data = $builder->getData();
 
-        $billingAddressCountries = $this->getDataForBusinessEntityAddressType(
+        $billingAddressCountries = $this->extractSelectedCountriesPerAddress(
             $data,
             self::BILLING_ADDRESS_TYPE
         );
-        $shippingAddressCountries = $this->getDataForBusinessEntityAddressType(
+        $shippingAddressCountries = $this->extractSelectedCountriesPerAddress(
             $data,
             self::SHIPPING_ADDRESS_TYPE
         );
@@ -69,7 +69,7 @@ class BusinessEntityType extends TranslatorAwareType
                 ],
                 'prototype_data' => $defaultAddressData,
             ])
-            ->add('billingAddressAsShippingAddress', SwitchType::class, [
+            ->add('billing_address_as_shipping_address', SwitchType::class, [
                 'label' => $this->trans('Use default billing address as shipping address', 'Admin.Global'),
             ])
             ->add('default_billing_address', TextType::class, [
@@ -95,18 +95,29 @@ class BusinessEntityType extends TranslatorAwareType
         $builder->addModelTransformer($this->commandTransformer);
     }
 
-    protected function getDataForBusinessEntityAddressType(array $data, string $addressType): array
+    /**
+     * Pre-fills each existing address entry with its already selected country
+     * so the country choice keeps its value when the form re-renders (e.g. after
+     * a validation error). It does not restrict the country list: every entry
+     * still offers all countries. Entries without a country are skipped so the
+     * empty prototype falls back to the default data.
+     *
+     * @param array<string, mixed> $data
+     *
+     * @return array<int, array{countryId: int}>
+     */
+    protected function extractSelectedCountriesPerAddress(array $data, string $addressType): array
     {
-        $dataForBusinessEntityAddressType = [];
+        $selectedCountriesPerAddress = [];
         foreach ($data[$addressType] as $formIndex => $address) {
             if (!isset($address['countryId'])) {
                 continue;
             }
-            $dataForBusinessEntityAddressType[$formIndex] = [
+            $selectedCountriesPerAddress[$formIndex] = [
                 'countryId' => (int) $address['countryId'],
             ];
         }
 
-        return $dataForBusinessEntityAddressType;
+        return $selectedCountriesPerAddress;
     }
 }

@@ -12,4 +12,6 @@ class BusinessEntityBillingAddressConstraintException extends BusinessEntityExce
     public const MISSING_DEFAULT_BILLING_ADDRESS = 2;
     public const MISSING_SHIPPING_ADDRESS = 3;
     public const MISSING_DEFAULT_SHIPPING_ADDRESS = 4;
+    public const MULTIPLE_DEFAULT_BILLING_ADDRESSES = 5;
+    public const MULTIPLE_DEFAULT_SHIPPING_ADDRESSES = 6;
 }

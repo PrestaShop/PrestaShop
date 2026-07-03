@@ -33,6 +33,9 @@ class BusinessEntityAddressType extends TranslatorAwareType
     public const FIELD_COUNTRY_ID = 'id_country';
     public const FIELD_STATE_ID = 'id_state';
 
+    /**
+     * @param array<int, array<string, mixed>> $locales
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -48,9 +51,10 @@ class BusinessEntityAddressType extends TranslatorAwareType
         $countryId = $options['data'][$builder->getForm()->getName()]['countryId'] ?? $this->contextCountryId;
 
         $genericInvalidCharsMessage = $this->trans(
-            'Invalid characters:',
-            'Admin.Notifications.Info'
-        ) . ' ' . TypedRegexValidator::GENERIC_NAME_CHARS;
+            'Invalid characters: %characters%',
+            'Admin.Notifications.Info',
+            ['%characters%' => TypedRegexValidator::GENERIC_NAME_CHARS]
+        );
         $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
         $showStates = !empty($stateChoices);
 

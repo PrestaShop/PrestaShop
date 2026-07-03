@@ -47,11 +47,13 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
                 'label' => $this->trans('Name', 'Admin.Global'),
                 'help' => $this->trans('The display name of the business entity.', 'Admin.Catalog.Feature'),
                 'constraints' => $this->getNameConstraints(),
+                'required' => true,
             ])
             ->add(self::FIELD_LEGAL_NAME, TextType::class, [
                 'label' => $this->trans('Legal Name', 'Admin.Global'),
                 'help' => $this->trans('The official registered name of the company.', 'Admin.Catalog.Feature'),
                 'constraints' => $this->getNameConstraints(),
+                'required' => true,
             ])
             ->add(self::FIELD_EXTERNAL_REF, TextType::class, [
                 'label' => $this->trans('External Reference', 'Admin.Global'),

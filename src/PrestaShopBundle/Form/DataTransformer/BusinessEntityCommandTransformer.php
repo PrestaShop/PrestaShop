@@ -73,7 +73,7 @@ class BusinessEntityCommandTransformer implements DataTransformerInterface
             ),
             'billing_address' => $billingAddresses,
             'shipping_address' => $shippingAddresses,
-            'billingAddressAsShippingAddress' => (bool) $value['billingAddressAsShippingAddress'],
+            'billing_address_as_shipping_address' => (bool) $value['billing_address_as_shipping_address'],
         ];
     }
 }

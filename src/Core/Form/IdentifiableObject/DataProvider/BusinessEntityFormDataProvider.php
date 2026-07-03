@@ -61,7 +61,7 @@ final class BusinessEntityFormDataProvider implements FormDataProviderInterface
             ],
             'shipping_address' => [
             ],
-            'billingAddressAsShippingAddress' => true,
+            'billing_address_as_shipping_address' => true,
             'default_billing_address' => self::DEFAULT_BILLING_ADDRESS_INDEX,
             'default_shipping_address' => self::DEFAULT_SHIPPING_ADDRESS_INDEX,
             'shop_id' => $this->shopContext->isSingleShopContext() ? $this->shopContext->getId() : null,

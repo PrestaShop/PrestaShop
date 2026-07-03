@@ -260,4 +260,93 @@ class AddBusinessEntityCommandTest extends TestCase
             [$shippingAddress]
         );
     }
+
+    public function testItThrowsExceptionWhenMultipleDefaultBillingAddresses(): void
+    {
+        $firstDefaultBillingAddress = new BusinessEntityBillingAddress(
+            self::DEFAULT_BUSINESS_ENTITY_ALIAS_BILLING,
+            self::DEFAULT_BUSINESS_ENTITY_ADDRESS1,
+            null,
+            self::DEFAULT_BUSINESS_ENTITY_CITY,
+            self::DEFAULT_BUSINESS_ENTITY_POSTCODE,
+            8,
+            true,
+            null
+        );
+        $secondDefaultBillingAddress = new BusinessEntityBillingAddress(
+            self::DEFAULT_BUSINESS_ENTITY_ALIAS_BILLING,
+            self::DEFAULT_BUSINESS_ENTITY_ADDRESS1,
+            null,
+            self::DEFAULT_BUSINESS_ENTITY_CITY,
+            self::DEFAULT_BUSINESS_ENTITY_POSTCODE,
+            8,
+            true,
+            null
+        );
+
+        $this->expectException(BusinessEntityBillingAddressConstraintException::class);
+        $this->expectExceptionCode(BusinessEntityBillingAddressConstraintException::MULTIPLE_DEFAULT_BILLING_ADDRESSES);
+
+        new AddBusinessEntityCommand(
+            self::DEFAULT_BUSINESS_ENTITY_NAME,
+            self::DEFAULT_BUSINESS_ENTITY_LEGAL_NAME,
+            self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
+            true,
+            BusinessEntityStatus::ACTIVE,
+            self::DEFAULT_BUSINESS_ENTITY_SHOP_ID,
+            self::DEFAULT_BUSINESS_ENTITY_CUSTOMER_GROUP_ID,
+            true,
+            [$firstDefaultBillingAddress, $secondDefaultBillingAddress]
+        );
+    }
+
+    public function testItThrowsExceptionWhenMultipleDefaultShippingAddresses(): void
+    {
+        $billingAddress = new BusinessEntityBillingAddress(
+            self::DEFAULT_BUSINESS_ENTITY_ALIAS_BILLING,
+            self::DEFAULT_BUSINESS_ENTITY_ADDRESS1,
+            null,
+            self::DEFAULT_BUSINESS_ENTITY_CITY,
+            self::DEFAULT_BUSINESS_ENTITY_POSTCODE,
+            8,
+            true,
+            null
+        );
+        $firstDefaultShippingAddress = new BusinessEntityShippingAddress(
+            self::DEFAULT_BUSINESS_ENTITY_ALIAS_SHIPPING,
+            self::DEFAULT_BUSINESS_ENTITY_ADDRESS1,
+            null,
+            self::DEFAULT_BUSINESS_ENTITY_CITY,
+            self::DEFAULT_BUSINESS_ENTITY_POSTCODE,
+            8,
+            true,
+            null
+        );
+        $secondDefaultShippingAddress = new BusinessEntityShippingAddress(
+            self::DEFAULT_BUSINESS_ENTITY_ALIAS_SHIPPING,
+            self::DEFAULT_BUSINESS_ENTITY_ADDRESS1,
+            null,
+            self::DEFAULT_BUSINESS_ENTITY_CITY,
+            self::DEFAULT_BUSINESS_ENTITY_POSTCODE,
+            8,
+            true,
+            null
+        );
+
+        $this->expectException(BusinessEntityBillingAddressConstraintException::class);
+        $this->expectExceptionCode(BusinessEntityBillingAddressConstraintException::MULTIPLE_DEFAULT_SHIPPING_ADDRESSES);
+
+        new AddBusinessEntityCommand(
+            self::DEFAULT_BUSINESS_ENTITY_NAME,
+            self::DEFAULT_BUSINESS_ENTITY_LEGAL_NAME,
+            self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
+            true,
+            BusinessEntityStatus::ACTIVE,
+            self::DEFAULT_BUSINESS_ENTITY_SHOP_ID,
+            self::DEFAULT_BUSINESS_ENTITY_CUSTOMER_GROUP_ID,
+            false,
+            [$billingAddress],
+            [$firstDefaultShippingAddress, $secondDefaultShippingAddress]
+        );
+    }
 }

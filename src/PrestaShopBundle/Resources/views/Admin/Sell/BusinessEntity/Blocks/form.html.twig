@@ -123,13 +123,13 @@
             </li>
           {% endfor %}
         </ul>
-        {{ form_row(businessEntityForm.billingAddressAsShippingAddress) }}
+        {{ form_row(businessEntityForm.billing_address_as_shipping_address) }}
       </div>
     </div>
   </div>
   <div class="d-flex justify-content-end">
     <a href="{{ path('admin_business_entities_list') }}" class="btn btn-outline-secondary mr-3">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</a>
-    <button class="btn btn-primary">{{ 'Create business entity'|trans({}, 'Admin.Actions') }}</button>
+    <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
   </div>
   {{ form_widget(businessEntityForm._token) }}
   {{ form_widget(businessEntityForm.default_billing_address) }}
