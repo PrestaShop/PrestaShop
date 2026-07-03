@@ -37,14 +37,19 @@ class UpdateOrderStatusType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $hasCurrentStatus = !empty($options['data']['new_order_status_id']);
         $choiceProviderParams = [];
-        if (!empty($options['data']['new_order_status_id'])) {
+        if ($hasCurrentStatus) {
             $choiceProviderParams = ['current_state' => $options['data']['new_order_status_id']];
         }
         $builder
             ->add('new_order_status_id', ChoiceType::class, [
                 'required' => false,
-                'placeholder' => false,
+                // WHY: an order that has no current status (e.g. one left statusless by a failed
+                // creation) must show an empty dropdown, like the orders list does. Without a
+                // placeholder the ChoiceType would pre-select the first status. When the order has
+                // a status we keep placeholder=false so its current status stays selected.
+                'placeholder' => $hasCurrentStatus ? false : '',
                 'choices' => $this->statusChoiceProvider->getChoices($choiceProviderParams),
                 'choice_attr' => $this->statusChoiceAttributes,
                 'translation_domain' => false,
