@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFac
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryProvider;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SqlExportableGridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactory;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryProvider;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionProvider;
@@ -442,18 +443,27 @@ class CommonController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('create', 'AdminRequestSql')")]
     public function exportGridSqlAction(
         Request $request,
-        GridDefinitionFactoryProvider $gridDefinitionFactoryProvider,
         GridFactoryProvider $gridFactoryProvider,
         #[Autowire(service: 'prestashop.core.search.builder')]
         FiltersBuilderInterface $filtersBuilder,
     ) {
-        $definitionFactoryServiceId = (string) $request->request->get('gridDefinitionFactoryServiceId');
-        $definitionFactory = $gridDefinitionFactoryProvider->getFactory($definitionFactoryServiceId);
+        // The grid factory service id is emitted server-side by the grid template for opted-in
+        // grids only, and is resolved through a locator that exposes only tagged grid factories,
+        // so no arbitrary service or class name can be injected from the request.
+        $gridFactoryServiceId = (string) $request->request->get('gridFactoryServiceId');
+        $gridFactory = $gridFactoryProvider->getFactory($gridFactoryServiceId);
 
+        if (!$gridFactory instanceof GridFactory) {
+            return new JsonResponse(['error' => 'This grid does not support SQL export.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $definitionFactory = $gridFactory->getDefinitionFactory();
         if (!$definitionFactory instanceof SqlExportableGridDefinitionFactoryInterface) {
             return new JsonResponse(['error' => 'This grid does not support SQL export.'], Response::HTTP_BAD_REQUEST);
         }
 
+        // Rebuild the concrete Filters (ShopFilters for shop-scoped grids) so the regenerated
+        // query keeps the same filters, sorting, pagination and shop scope as the displayed grid.
         $filtersBuilder->setConfig([
             'filters_class' => $definitionFactory->getFiltersClass(),
             'request' => $request,
@@ -461,11 +471,7 @@ class CommonController extends PrestaShopAdminController
         ]);
         $searchCriteria = $filtersBuilder->buildFilters();
 
-        $grid = $gridFactoryProvider
-            ->getFactory($definitionFactory->getGridFactoryServiceId())
-            ->getGrid($searchCriteria);
-
-        $sql = $grid->getData()->getQuery();
+        $sql = $gridFactory->getGrid($searchCriteria)->getData()->getQuery();
 
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse(['sql' => $sql]);
