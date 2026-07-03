@@ -19,8 +19,8 @@ services:
 
   PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder:
     calls:
-      - [ setLanguageId, [ "@=service('prestashop.adapter.legacy.context').getContext().language.id ?: 1" ] ]
-      - [ setDefaultLanguageId, [ "@=service('prestashop.adapter.legacy.context').getContext().language.id == null ? 1 : service('prestashop.adapter.legacy.configuration').get('PS_LANG_DEFAULT')" ] ]
+            - [ setLanguageId, [ "@=service('prestashop.adapter.legacy.context').getContext().language ? (service('prestashop.adapter.legacy.context').getContext().language.id ?: 1) : 1" ] ]
+      - [ setDefaultLanguageId, [ "@=service('prestashop.adapter.legacy.context').getContext().language and service('prestashop.adapter.legacy.context').getContext().language.id != null ? service('prestashop.adapter.legacy.configuration').get('PS_LANG_DEFAULT') : 1" ] ]
 
   PrestaShop\PrestaShop\Core\Context\LanguageContext:
     lazy: true
