@@ -17,14 +17,18 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryProvider;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\SqlExportableGridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryProvider;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionProvider;
+use PrestaShop\PrestaShop\Core\Search\Builder\FiltersBuilderInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenter;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use ReflectionClass;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -426,6 +430,55 @@ class CommonController extends PrestaShopAdminController
      *
      * @return RedirectResponse
      */
+    /**
+     * Regenerate a grid's SQL query server-side for the "Export to SQL Manager" / "Show SQL
+     * query" toolbar actions, so the SQL no longer needs to be embedded in the page HTML.
+     *
+     * Only grids whose definition factory opts in via SqlExportableGridDefinitionFactoryInterface
+     * use this endpoint. Access requires the same permission as SQL Manager itself.
+     *
+     * @return JsonResponse|RedirectResponse
+     */
+    #[AdminSecurity("is_granted('create', 'AdminRequestSql')")]
+    public function exportGridSqlAction(
+        Request $request,
+        GridDefinitionFactoryProvider $gridDefinitionFactoryProvider,
+        GridFactoryProvider $gridFactoryProvider,
+        #[Autowire(service: 'prestashop.core.search.builder')]
+        FiltersBuilderInterface $filtersBuilder,
+    ) {
+        $definitionFactoryServiceId = (string) $request->request->get('gridDefinitionFactoryServiceId');
+        $definitionFactory = $gridDefinitionFactoryProvider->getFactory($definitionFactoryServiceId);
+
+        if (!$definitionFactory instanceof SqlExportableGridDefinitionFactoryInterface) {
+            return new JsonResponse(['error' => 'This grid does not support SQL export.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $filtersBuilder->setConfig([
+            'filters_class' => $definitionFactory->getFiltersClass(),
+            'request' => $request,
+            'shop_constraint' => $request->attributes->get('shopConstraint'),
+        ]);
+        $searchCriteria = $filtersBuilder->buildFilters();
+
+        $grid = $gridFactoryProvider
+            ->getFactory($definitionFactory->getGridFactoryServiceId())
+            ->getGrid($searchCriteria);
+
+        $sql = $grid->getData()->getQuery();
+
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse(['sql' => $sql]);
+        }
+
+        $request->getSession()->set('grid_sql_export', [
+            'sql' => $sql,
+            'name' => (string) $request->request->get('name'),
+        ]);
+
+        return $this->redirectToRoute('admin_sql_requests_create');
+    }
+
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
     public function updatePositionAction(
         Request $request,
