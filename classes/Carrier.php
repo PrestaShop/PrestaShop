@@ -388,27 +388,27 @@ class CarrierCore extends ObjectModel
     /**
      * Get delivery price for a given order by total MINUS shipping costs.
      *
-     * @param float $total total to pay
+     * @param float $order_total Shipment or order total to pay
      * @param int $id_zone Zone id (for customer delivery address)
      * @param int|null $id_currency Currency ID
      *
      * @return float Maximum delivery price
      */
-    public function getDeliveryPriceByPrice($total, $id_zone, $id_currency = null)
+    public function getDeliveryPriceByPrice($order_total, $id_zone, $id_currency = null)
     {
         $id_carrier = (int) $this->id;
-        $cache_key = $this->id . '_' . $total . '_' . $id_zone . '_' . $id_currency;
+        $cache_key = $this->id . '_' . $order_total . '_' . $id_zone . '_' . $id_currency;
         if (!isset(self::$price_by_price[$cache_key])) {
             if (!empty($id_currency)) {
-                $price = Tools::convertPrice($total, $id_currency, false);
+                $order_total = Tools::convertPrice($order_total, $id_currency, false);
             }
 
             $sql = 'SELECT d.`price`
                     FROM `' . _DB_PREFIX_ . 'delivery` d
                     LEFT JOIN `' . _DB_PREFIX_ . 'range_price` r ON d.`id_range_price` = r.`id_range_price`
                     WHERE d.`id_zone` = ' . (int) $id_zone . '
-                        AND ' . (float) $total . ' >= r.`delimiter1`
-                        AND ' . (float) $total . ' < r.`delimiter2`
+                        AND ' . (float) $order_total . ' >= r.`delimiter1`
+                        AND ' . (float) $order_total . ' < r.`delimiter2`
                         AND d.`id_carrier` = ' . $id_carrier . '
                         ' . Carrier::sqlDeliveryRangeShop('range_price') . '
                     ORDER BY r.`delimiter1` ASC';
@@ -420,9 +420,8 @@ class CarrierCore extends ObjectModel
             }
         }
 
-        $price_by_price = Hook::exec('actionDeliveryPriceByPrice', ['id_carrier' => $id_carrier, 'order_total' => $total, 'total' => $total, 'id_zone' => $id_zone]);
+        $price_by_price = Hook::exec('actionDeliveryPriceByPrice', ['id_carrier' => $id_carrier, 'order_total' => $order_total, 'total' => $order_total, 'id_zone' => $id_zone]);
         if (is_numeric($price_by_price)) {
-            trigger_deprecation('prestashop/prestashop', '9.3', 'The `actionDeliveryPriceByPrice` hook `order_total` parameter will be changed to `total` starting from version 10.0.');
             self::$price_by_price[$cache_key] = $price_by_price;
         }
 
@@ -433,27 +432,27 @@ class CarrierCore extends ObjectModel
      * Check if the carrier is available for a given order total, currency and zone
      *
      * @param int $id_carrier Carrier ID
-     * @param float $total Order total to pay
+     * @param float $order_total Order total to pay
      * @param int $id_zone Zone id (for customer delivery address)
      * @param int|null $id_currency Currency ID
      *
      * @return bool true if carrier is available
      */
-    public static function checkDeliveryPriceByPrice($id_carrier, $total, $id_zone, $id_currency = null)
+    public static function checkDeliveryPriceByPrice($id_carrier, $order_total, $id_zone, $id_currency = null)
     {
         $id_carrier = (int) $id_carrier;
-        $cache_key = $id_carrier . '_' . $total . '_' . $id_zone . '_' . $id_currency;
+        $cache_key = $id_carrier . '_' . $order_total . '_' . $id_zone . '_' . $id_currency;
         if (!isset(self::$price_by_price2[$cache_key])) {
             if (!empty($id_currency)) {
-                $total = Tools::convertPrice($total, $id_currency, false);
+                $order_total = Tools::convertPrice($order_total, $id_currency, false);
             }
 
             $sql = 'SELECT d.`price`
                     FROM `' . _DB_PREFIX_ . 'delivery` d
                     LEFT JOIN `' . _DB_PREFIX_ . 'range_price` r ON d.`id_range_price` = r.`id_range_price`
                     WHERE d.`id_zone` = ' . (int) $id_zone . '
-                        AND ' . (float) $total . ' >= r.`delimiter1`
-                        AND ' . (float) $total . ' < r.`delimiter2`
+                        AND ' . (float) $order_total . ' >= r.`delimiter1`
+                        AND ' . (float) $order_total . ' < r.`delimiter2`
                         AND d.`id_carrier` = ' . $id_carrier . '
                         ' . Carrier::sqlDeliveryRangeShop('range_price') . '
                     ORDER BY r.`delimiter1` ASC';
@@ -461,10 +460,9 @@ class CarrierCore extends ObjectModel
             self::$price_by_price2[$cache_key] = (isset($result['price']));
         }
 
-        $price_by_price = Hook::exec('actionDeliveryPriceByPrice', ['id_carrier' => $id_carrier, 'order_total' => $total, 'total' => $total, 'id_zone' => $id_zone]);
+        $price_by_price = Hook::exec('actionDeliveryPriceByPrice', ['id_carrier' => $id_carrier, 'order_total' => $order_total, 'total' => $order_total, 'id_zone' => $id_zone]);
         if (is_numeric($price_by_price)) {
-            trigger_deprecation('prestashop/prestashop', '9.3', 'The `actionDeliveryPriceByPrice` hook `order_total` parameter will be changed to `total` starting from version 10.0.');
-            self::$price_by_price[$cache_key] = $price_by_price;
+            self::$price_by_price2[$cache_key] = true;
         }
 
         return self::$price_by_price2[$cache_key];
