@@ -309,12 +309,27 @@ $(() => {
 
       const resetErrors = () => {
         $nameGroup.removeClass('has-error');
-        $nameError.addClass('hidden').text('');
-        $modalError.removeClass('alert alert-danger').addClass('hidden').text('');
+        $nameError.addClass('hidden').find('.js-error-text').text('');
+        $modalError.removeClass('alert alert-danger').addClass('hidden').find('.alert-text').text('');
       };
 
       $modal.one('hidden.bs.modal', resetErrors);
       $nameInput.off('input').on('input', resetErrors);
+
+      // Only dismiss on backdrop click when the press also started on the backdrop.
+      // Without this, a mousedown inside the modal released outside (e.g. text selection)
+      // bubbles a click whose target is the modal itself, which Bootstrap 3.1 treats as a
+      // backdrop click and closes the modal. These guards run before Bootstrap's own
+      // click.dismiss handler (bound during .modal('show') below) so they can stop it.
+      let mouseDownOnBackdrop = false;
+      $modal.off('mousedown.qaBackdrop').on('mousedown.qaBackdrop', (downEvent) => {
+        mouseDownOnBackdrop = downEvent.target === downEvent.currentTarget;
+      });
+      $modal.off('click.qaBackdrop').on('click.qaBackdrop', (clickEvent) => {
+        if (clickEvent.target === clickEvent.currentTarget && !mouseDownOnBackdrop) {
+          clickEvent.stopImmediatePropagation();
+        }
+      });
 
       $modal.find('#quick-access-save-btn').off('click').on('click', () => {
         resetErrors();
@@ -323,7 +338,7 @@ $(() => {
 
         if (!name) {
           $nameGroup.addClass('has-error');
-          $nameError.text($nameInput.data('required-message')).removeClass('hidden');
+          $nameError.removeClass('hidden').find('.js-error-text').text($nameInput.data('required-message'));
           $nameInput.trigger('focus');
           return;
         }
@@ -332,7 +347,8 @@ $(() => {
         doQuickLinkAjax($link, method, name, newWindow, {
           onSuccess: () => $modal.modal('hide'),
           onError: (messages) => {
-            $modalError.addClass('alert alert-danger').text(messages.join(' ')).removeClass('hidden');
+            $modalError.addClass('alert alert-danger').removeClass('hidden')
+              .find('.alert-text').text(messages.join(' '));
           },
         });
       });
