@@ -34,8 +34,34 @@ class ThemeValidator
 
     public function isValid(Theme $theme)
     {
-        return $this->hasRequiredFiles($theme)
+        return $this->hasValidName($theme)
+            && $this->hasRequiredFiles($theme)
             && $this->hasRequiredProperties($theme);
+    }
+
+    private function hasValidName(Theme $theme)
+    {
+        $themeName = $theme->getName();
+
+        // A missing name is reported by hasRequiredProperties; here we only make sure a
+        // provided name is a plain directory segment (same rule as Validate::isThemeName).
+        // The name is later concatenated to _PS_ALL_THEMES_DIR_ to build the theme folder,
+        // so a value like "../../evil" would let an uploaded theme be written outside themes/.
+        if (empty($themeName) || preg_match('/^[\w-]{3,255}$/u', $themeName)) {
+            return true;
+        }
+
+        if (!array_key_exists($themeName, $this->errors)) {
+            $this->errors[$themeName] = [];
+        }
+
+        $this->errors[$themeName][] = $this->translator->trans(
+            'Invalid theme name. Please use only letters, numbers, underscores and dashes.',
+            [],
+            'Admin.Design.Notification'
+        );
+
+        return false;
     }
 
     private function hasRequiredProperties(Theme $theme)
