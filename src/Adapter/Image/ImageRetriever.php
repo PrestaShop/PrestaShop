@@ -7,7 +7,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use Category;
+use Combination;
 use Configuration;
+use Context;
+use Db;
 use Image;
 use ImageManager;
 use ImageType;
@@ -19,6 +22,7 @@ use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
+use Shop;
 use Store;
 use Supplier;
 
@@ -32,9 +36,96 @@ class ImageRetriever
      */
     private $link;
 
+    /**
+     * Request-scoped prefetch of Product::getImages() rows, keyed by "id_product-id_lang-id_shop".
+     *
+     * @var array<string, array>
+     */
+    private static $prefetchedProductImages = [];
+
+    /**
+     * Request-scoped prefetch of Product::getCombinationImages() results (false = no combination images).
+     *
+     * @var array<string, array|false>
+     */
+    private static $prefetchedCombinationImages = [];
+
     public function __construct(Link $link)
     {
         $this->link = $link;
+    }
+
+    /**
+     * Prefetches the images of a whole set of products (e.g. a listing page) in one query per table,
+     * so getAllProductImages() does not run getImages()/getCombinationImages() once per product. The
+     * result is stored request-scoped and consumed by getAllProductImages().
+     *
+     * @param int[] $productIds
+     * @param int $idLang
+     */
+    public function prefetchImagesForProducts(array $productIds, int $idLang): void
+    {
+        $idShop = (int) Context::getContext()->shop->id;
+
+        $toFetch = [];
+        foreach (array_unique(array_map('intval', $productIds)) as $idProduct) {
+            if ($idProduct > 0 && !isset(self::$prefetchedProductImages[self::prefetchKey($idProduct, $idLang, $idShop)])) {
+                $toFetch[] = $idProduct;
+            }
+        }
+        if (empty($toFetch)) {
+            return;
+        }
+
+        // Mark every requested product as prefetched up front, so a product with no image keeps an
+        // empty set (and is not re-queried one by one) rather than looking "not prefetched".
+        foreach ($toFetch as $idProduct) {
+            self::$prefetchedProductImages[self::prefetchKey($idProduct, $idLang, $idShop)] = [];
+            self::$prefetchedCombinationImages[self::prefetchKey($idProduct, $idLang, $idShop)] = false;
+        }
+
+        $idList = implode(',', $toFetch);
+
+        // Same columns and shop scoping as Product::getImages(), batched by id_product.
+        $imageRows = Db::getInstance()->executeS('
+            SELECT i.`id_product`, image_shop.`cover`, i.`id_image`, il.`legend`, i.`position`
+            FROM `' . _DB_PREFIX_ . 'image` i
+            ' . Shop::addSqlAssociation('image', 'i') . '
+            LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = ' . $idLang . ')
+            WHERE i.`id_product` IN (' . $idList . ')
+            ORDER BY i.`id_product`, `position`') ?: [];
+        foreach ($imageRows as $row) {
+            $idProduct = (int) $row['id_product'];
+            unset($row['id_product']);
+            self::$prefetchedProductImages[self::prefetchKey($idProduct, $idLang, $idShop)][] = $row;
+        }
+
+        if (!Combination::isFeatureActive()) {
+            return;
+        }
+
+        // Same columns as Product::getCombinationImages(), batched by id_product.
+        $combinationRows = Db::getInstance()->executeS('
+            SELECT i.`id_product`, pai.`id_image`, pai.`id_product_attribute`, il.`legend`
+            FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
+            LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (il.`id_image` = pai.`id_image`)
+            INNER JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_image` = pai.`id_image`)
+            WHERE i.`id_product` IN (' . $idList . ') AND il.`id_lang` = ' . $idLang . '
+            ORDER BY i.`id_product`, i.`position`, pai.`id_product_attribute`') ?: [];
+        $combinationsByProduct = [];
+        foreach ($combinationRows as $row) {
+            $idProduct = (int) $row['id_product'];
+            unset($row['id_product']);
+            $combinationsByProduct[$idProduct][$row['id_product_attribute']][] = $row;
+        }
+        foreach ($combinationsByProduct as $idProduct => $grouped) {
+            self::$prefetchedCombinationImages[self::prefetchKey($idProduct, $idLang, $idShop)] = $grouped;
+        }
+    }
+
+    private static function prefetchKey(int $idProduct, int $idLang, int $idShop): string
+    {
+        return $idProduct . '-' . $idLang . '-' . $idShop;
     }
 
     /**
@@ -51,14 +142,17 @@ class ImageRetriever
             $language->id
         );
 
+        // Use the request-scoped prefetch when available (listing pages), otherwise load per product.
+        $prefetchKey = self::prefetchKey((int) $product['id_product'], (int) $language->id, (int) Context::getContext()->shop->id);
+
         // Get all product images that are related to this object
-        $images = $productInstance->getImages($language->id);
+        $images = self::$prefetchedProductImages[$prefetchKey] ?? $productInstance->getImages($language->id);
         if (empty($images)) {
             return [];
         }
 
         // Load all pairs of images assigned to combinations
-        $combinationImages = $productInstance->getCombinationImages($language->id);
+        $combinationImages = self::$prefetchedCombinationImages[$prefetchKey] ?? $productInstance->getCombinationImages($language->id);
         if (!$combinationImages) {
             $combinationImages = [];
         }

@@ -3,6 +3,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Core\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Product\Search\FacetsRendererInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
@@ -90,6 +91,12 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     {
         // Enrich data set of products
         $products = (new ProductAssembler($this->context))->assembleProducts($products);
+
+        // Prefetch every product's images in one query instead of once per product during presentation.
+        $productIds = array_map(static function (array $product): int {
+            return (int) $product['id_product'];
+        }, $products);
+        (new ImageRetriever($this->context->link))->prefetchImagesForProducts($productIds, (int) $this->context->language->id);
 
         // Prepare configuration
         $presenter = $this->getProductPresenter();
