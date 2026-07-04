@@ -90,6 +90,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     {
         // Enrich data set of products
         $products = (new ProductAssembler($this->context))->assembleProducts($products);
+        Product::cacheProductsImages(array_column($products, 'id_product'), (int) $this->context->language->id);
 
         // Prepare configuration
         $presenter = $this->getProductPresenter();
