@@ -544,6 +544,21 @@ class StockAvailableCore extends ObjectModel
                     AND duplicate.id_shop < sa.id_shop
             ');
 
+            // A row may already exist at group scope for this product/combination
+            // (id_shop = 0, id_shop_group = X). Moving a shop-level row onto it would hit the
+            // `product_sqlstock` unique key, so drop that stale group-scope row first; the
+            // reset shop-level row then takes its place at quantity 0.
+            $db->execute('
+                DELETE sa
+                FROM ' . _DB_PREFIX_ . 'stock_available sa
+                INNER JOIN ' . _DB_PREFIX_ . 'stock_available shop_row
+                    ON shop_row.id_product = sa.id_product
+                    AND shop_row.id_product_attribute = sa.id_product_attribute
+                    AND shop_row.id_shop IN (' . $id_shops_list . ')
+                WHERE sa.id_shop = 0
+                    AND sa.id_shop_group = ' . (int) $shop_group->id . '
+            ');
+
             // Move the remaining rows to the shared stock scope expected by shop groups.
             return $db->update(
                 'stock_available',
