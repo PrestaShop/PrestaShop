@@ -140,6 +140,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         $productsForViewing = [];
 
         $isOrderTaxExcluded = ($taxCalculationMethod == PS_TAX_EXC);
+        // The shipments belong to the order, not to a product line, so resolve them once.
+        $shipments = $this->shipmentRepository->findByOrderId($order->id);
         foreach ($products as $product) {
             $unitPrice = $isOrderTaxExcluded ?
                 $product['unit_price_tax_excl'] :
@@ -166,7 +168,6 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 OrderProductForViewing::TYPE_PRODUCT_WITHOUT_COMBINATIONS;
 
             $orderInvoice = new OrderInvoice($product['id_order_invoice']);
-            $shipments = $this->shipmentRepository->findByOrderId($order->id);
             $shipmentIds = [];
 
             if ($shipments) {
