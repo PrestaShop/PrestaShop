@@ -8,7 +8,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Catalog;
 
+use PrestaShopBundle\Form\Admin\Type\TranslatableChoiceType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Throwable;
@@ -31,10 +36,28 @@ final class FormFieldTreeProvider implements FormFieldTreeProviderInterface
      */
     private const MAX_DEPTH = 6;
 
+    /**
+     * Types (matched anywhere in the resolved type hierarchy) whose children are internal
+     * machinery rather than placeable fields: a translatable field's per-language inputs, a
+     * choice's expanded options, a collection's dynamic entries. The node itself stays a valid
+     * before/after anchor — it just stops the recursion and reads as a leaf.
+     */
+    private const LEAF_TYPES = [
+        ChoiceType::class,
+        CollectionType::class,
+        TranslatableChoiceType::class,
+        TranslatableType::class,
+        TranslateType::class,
+    ];
+
+    /**
+     * @param iterable<FormIntrospectionOptionsProviderInterface> $introspectionOptionsProviders
+     */
     public function __construct(
         private readonly FormCatalogInterface $formCatalog,
         private readonly FormFactoryInterface $formFactory,
         private readonly LoggerInterface $logger,
+        private readonly iterable $introspectionOptionsProviders = [],
     ) {
     }
 
@@ -46,7 +69,11 @@ final class FormFieldTreeProvider implements FormFieldTreeProviderInterface
         }
 
         try {
-            $formBuilder = $this->formFactory->createBuilder($formTypeClass);
+            $formBuilder = $this->formFactory->createBuilder($formTypeClass, null, $this->introspectionOptions($formId, $formTypeClass));
+
+            // Child builders resolve lazily: the first buildNodes() level is what actually runs
+            // the children's buildForm(), so it must sit inside this try too.
+            return $this->buildNodes($formBuilder, '', 1);
         } catch (Throwable $e) {
             $this->logger->warning(
                 sprintf('Extra property form field tree: could not build form "%s" (%s): %s', $formId, $formTypeClass, $e->getMessage()),
@@ -55,8 +82,23 @@ final class FormFieldTreeProvider implements FormFieldTreeProviderInterface
 
             return null;
         }
+    }
 
-        return $this->buildNodes($formBuilder, '', 1);
+    /**
+     * Options for the throwaway introspection build of a form type with REQUIRED options (first
+     * supporting provider wins, none = empty options as before).
+     *
+     * @return array<string, mixed>
+     */
+    private function introspectionOptions(string $formId, string $formTypeClass): array
+    {
+        foreach ($this->introspectionOptionsProviders as $provider) {
+            if ($provider->supports($formId, $formTypeClass)) {
+                return $provider->getOptions($formId, $formTypeClass);
+            }
+        }
+
+        return [];
     }
 
     /**
@@ -66,6 +108,12 @@ final class FormFieldTreeProvider implements FormFieldTreeProviderInterface
     {
         $nodes = [];
         foreach ($builder->all() as $name => $childBuilder) {
+            // Underscore-prefixed children are internal machinery (_toolbar_buttons, _token…),
+            // not placeable fields.
+            if (str_starts_with((string) $name, '_')) {
+                continue;
+            }
+
             try {
                 $nodes[] = $this->buildNode((string) $name, $childBuilder, $parentPath, $depth);
             } catch (Throwable $e) {
@@ -83,7 +131,7 @@ final class FormFieldTreeProvider implements FormFieldTreeProviderInterface
     {
         $path = '' === $parentPath ? $name : $parentPath . '.' . $name;
         // getCompound() reflects the resolved "compound" option (applied on the builder by the base FormType)
-        $compound = $childBuilder->getCompound();
+        $compound = $childBuilder->getCompound() && !$this->isLeafType($childBuilder);
 
         $children = [];
         if ($compound && $depth < self::MAX_DEPTH && count($childBuilder->all()) > 0) {
@@ -98,6 +146,23 @@ final class FormFieldTreeProvider implements FormFieldTreeProviderInterface
             $compound,
             $children,
         );
+    }
+
+    /**
+     * Walks the resolved type hierarchy (a custom type "extends" another through getParent(),
+     * not through class inheritance — e.g. MaterialChoiceTableType resolves to ChoiceType).
+     */
+    private function isLeafType(FormBuilderInterface $childBuilder): bool
+    {
+        $resolved = $childBuilder->getType();
+        while (null !== $resolved) {
+            if (in_array(get_class($resolved->getInnerType()), self::LEAF_TYPES, true)) {
+                return true;
+            }
+            $resolved = $resolved->getParent();
+        }
+
+        return false;
     }
 
     private function resolveLabel(FormBuilderInterface $childBuilder, string $name): string

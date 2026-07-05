@@ -55,10 +55,22 @@ services:
     alias: 'PrestaShopBundle\ApiPlatform\Catalog\ApiEndpointCatalog'
 
   # ─── Form field tree provider ────────────────────────────────────────────────
+  # Form types with REQUIRED options cannot be introspected with an empty options array: a tagged
+  # options provider supplies sample values good enough to BUILD the form (no data is ever set).
+  # Add a provider + the tag below to make another such form introspectable.
+
+  prestashop.extra_property.catalog.product_form_introspection_options_provider:
+    class: PrestaShopBundle\Form\Admin\Sell\Product\ProductFormIntrospectionOptionsProvider
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+    tags:
+      - { name: 'core.extra_property.form_introspection_options_provider' }
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProvider:
     arguments:
       $logger: '@logger'
+      $introspectionOptionsProviders: !tagged_iterator core.extra_property.form_introspection_options_provider
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProviderInterface:
     alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProvider'

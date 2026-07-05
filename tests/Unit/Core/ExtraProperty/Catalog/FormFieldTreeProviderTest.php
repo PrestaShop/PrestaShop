@@ -11,13 +11,16 @@ namespace Tests\Unit\Core\ExtraProperty\Catalog;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalogInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProvider;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormIntrospectionOptionsProviderInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Forms;
 use Tests\Unit\Core\ExtraProperty\Catalog\Fixtures\AddressFixtureType;
 use Tests\Unit\Core\ExtraProperty\Catalog\Fixtures\BrokenFixtureType;
 use Tests\Unit\Core\ExtraProperty\Catalog\Fixtures\DeepFixtureType;
+use Tests\Unit\Core\ExtraProperty\Catalog\Fixtures\RequiredOptionsFixtureType;
 use Tests\Unit\Core\ExtraProperty\Catalog\Fixtures\RootFixtureType;
 
 class FormFieldTreeProviderTest extends TestCase
@@ -27,9 +30,9 @@ class FormFieldTreeProviderTest extends TestCase
         $tree = $this->createProvider()->getTree('root_fixture');
 
         $this->assertNotNull($tree);
-        $this->assertCount(3, $tree);
+        $this->assertCount(4, $tree);
 
-        [$name, $address, $active] = $tree;
+        [$name, $address, $active, $groups] = $tree;
 
         $this->assertSame('name', $name->name);
         $this->assertSame('name', $name->path);
@@ -56,6 +59,15 @@ class FormFieldTreeProviderTest extends TestCase
 
         $this->assertSame(CheckboxType::class, $active->typeClass);
         $this->assertFalse($active->compound);
+
+        // An expanded choice is compound on the builder (one child per option), but its children
+        // are internal machinery, not placeable fields: it reads as a leaf. The same rule stops
+        // the recursion on anything resolving to ChoiceType / CollectionType / Translatable*
+        // through its parent chain (e.g. MaterialChoiceTableType, per-language inputs).
+        $this->assertSame('groups', $groups->name);
+        $this->assertSame(ChoiceType::class, $groups->typeClass);
+        $this->assertFalse($groups->compound);
+        $this->assertSame([], $groups->children);
     }
 
     public function testTreeIsCappedAtDepthSix(): void
@@ -89,7 +101,34 @@ class FormFieldTreeProviderTest extends TestCase
         $this->assertNull($this->createProvider()->getTree('broken_fixture'));
     }
 
-    private function createProvider(): FormFieldTreeProvider
+    public function testFormWithRequiredOptionsNeedsAnIntrospectionOptionsProvider(): void
+    {
+        // Without a supporting provider the build fails and the form is not introspectable.
+        $this->assertNull($this->createProvider()->getTree('required_options_fixture'));
+
+        $optionsProvider = new class() implements FormIntrospectionOptionsProviderInterface {
+            public function supports(string $formId, string $formTypeClass): bool
+            {
+                return RequiredOptionsFixtureType::class === $formTypeClass;
+            }
+
+            public function getOptions(string $formId, string $formTypeClass): array
+            {
+                return ['mode' => 'advanced'];
+            }
+        };
+
+        $tree = $this->createProvider([$optionsProvider])->getTree('required_options_fixture');
+
+        $this->assertNotNull($tree);
+        // The sample options drove the build: the mode-dependent field is present.
+        $this->assertSame(['reference', 'advanced_reference'], array_map(static fn ($node) => $node->path, $tree));
+    }
+
+    /**
+     * @param list<FormIntrospectionOptionsProviderInterface> $introspectionOptionsProviders
+     */
+    private function createProvider(array $introspectionOptionsProviders = []): FormFieldTreeProvider
     {
         $formCatalog = $this->createMock(FormCatalogInterface::class);
         $formCatalog->method('getFormTypeClass')->willReturnCallback(
@@ -97,9 +136,10 @@ class FormFieldTreeProviderTest extends TestCase
                 'root_fixture' => RootFixtureType::class,
                 'deep_fixture' => DeepFixtureType::class,
                 'broken_fixture' => BrokenFixtureType::class,
+                'required_options_fixture' => RequiredOptionsFixtureType::class,
             ][$formId] ?? null
         );
 
-        return new FormFieldTreeProvider($formCatalog, Forms::createFormFactory(), new NullLogger());
+        return new FormFieldTreeProvider($formCatalog, Forms::createFormFactory(), new NullLogger(), $introspectionOptionsProviders);
     }
 }

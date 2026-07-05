@@ -19,7 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * override (the catalogs are best-effort detections), so an unknown target must never fail
  * the save — the warnings simply tell the user what will happen until the target exists.
  *
- * Entry syntax is validated upstream (ValidExtraPropertyAssociations + the definition VO), so
+ * Entry syntax is validated upstream (the row form types + the definition VO), so
  * unparseable entries are silently skipped here.
  */
 final class AssociationExistenceChecker

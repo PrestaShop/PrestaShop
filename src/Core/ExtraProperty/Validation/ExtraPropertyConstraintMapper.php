@@ -199,6 +199,19 @@ class ExtraPropertyConstraintMapper
     }
 
     /**
+     * Splits a raw textarea value into its top-level constraint tokens without interpreting them,
+     * each with the 1-based line it starts on. This is the exact tokenization used by fromNames(),
+     * exposed so other readers of the DSL (e.g. the BO builder's row presenter) stay pinned to the
+     * same grammar authority instead of re-implementing the quote/bracket rules.
+     *
+     * @return list<array{0: string, 1: int}>
+     */
+    public static function tokenize(string $raw): array
+    {
+        return self::splitTopLevelWithLines($raw, ",\n");
+    }
+
+    /**
      * Splits a string on any of the given separator characters, but only at the top level — separators
      * inside "(...)"/"[...]" or inside a 'single'- or "double"-quoted run are part of a value and kept.
      * A backslash escapes the next character inside a quoted run. Returned parts are trimmed and the
@@ -386,9 +399,14 @@ class ExtraPropertyConstraintMapper
     }
 
     /**
+     * The whitelisted names whose token uses the composite bracket shape ("Name[ children ]")
+     * instead of the parenthesis shape — the same distinction parseToken() applies. Exposed so
+     * other writers of the DSL (e.g. the BO builder's row serializer) stay pinned to the same
+     * grammar authority.
+     *
      * @return list<string>
      */
-    private static function compositeNames(): array
+    public static function compositeNames(): array
     {
         return array_keys(array_filter(
             self::ALLOWED_CONSTRAINTS,
