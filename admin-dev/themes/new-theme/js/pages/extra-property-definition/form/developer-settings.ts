@@ -1,0 +1,145 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+import SuggestionDropdown from '@pages/extra-property-definition/form/suggestion-dropdown';
+import {ExtraPropertyCatalogs} from '@pages/extra-property-definition/form/types';
+
+/**
+ * Curated shortlist of the form type FQCNs a developer typically overrides with — free text
+ * stays allowed, this only feeds the suggestion dropdown.
+ */
+const COMMON_FORM_TYPES = [
+  'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextType',
+  'Symfony\\Component\\Form\\Extension\\Core\\Type\\TextareaType',
+  'Symfony\\Component\\Form\\Extension\\Core\\Type\\IntegerType',
+  'Symfony\\Component\\Form\\Extension\\Core\\Type\\NumberType',
+  'Symfony\\Component\\Form\\Extension\\Core\\Type\\MoneyType',
+  'Symfony\\Component\\Form\\Extension\\Core\\Type\\EmailType',
+  'Symfony\\Component\\Form\\Extension\\Core\\Type\\UrlType',
+  'Symfony\\Component\\Form\\Extension\\Core\\Type\\CheckboxType',
+  'Symfony\\Component\\Form\\Extension\\Core\\Type\\ChoiceType',
+  'Symfony\\Component\\Form\\Extension\\Core\\Type\\DateType',
+  'PrestaShopBundle\\Form\\Admin\\Type\\SwitchType',
+  'PrestaShopBundle\\Form\\Admin\\Type\\DatePickerType',
+  'PrestaShopBundle\\Form\\Admin\\Type\\FormattedTextareaType',
+  'PrestaShopBundle\\Form\\Admin\\Type\\ColorPickerType',
+];
+
+const shortName = (fqcn: string): string => fqcn.split('\\').pop() ?? fqcn;
+
+/**
+ * Developer corner of the Placement card (kept as plain rows — no disclosure):
+ * - the Symfony form type input shows the EFFECTIVE default as its placeholder, recomputed live
+ *   from the field type select and the inline type=>FormType map, plus an FQCN suggestion
+ *   dropdown (free text always allowed);
+ * - the form options textarea gets blur-time JSON.parse feedback and a "Format JSON"
+ *   pretty-print action. Server-side validation stays authoritative.
+ */
+export default class DeveloperSettings {
+  private container: HTMLElement;
+
+  private catalogs: ExtraPropertyCatalogs;
+
+  private typeInput: HTMLInputElement | null;
+
+  private optionsTextarea: HTMLTextAreaElement | null;
+
+  constructor(container: HTMLElement, catalogs: ExtraPropertyCatalogs) {
+    this.container = container;
+    this.catalogs = catalogs;
+    this.typeInput = container.querySelector<HTMLInputElement>('input[name$="[form_field_type]"]');
+    this.optionsTextarea = container.querySelector<HTMLTextAreaElement>('textarea[name$="[form_options]"]');
+
+    this.wireDefaultPlaceholder();
+    this.wireTypeSuggestions();
+    this.wireJsonFeedback();
+  }
+
+  private label(key: string, fallback: string): string {
+    return this.container.dataset[key] ?? fallback;
+  }
+
+  private wireDefaultPlaceholder(): void {
+    const typeSelect = document.querySelector<HTMLSelectElement>('#extra_property_definition_field_definition_type');
+
+    if (!this.typeInput) {
+      return;
+    }
+
+    const refresh = (): void => {
+      const defaultFqcn = this.catalogs.defaultFormTypes[typeSelect?.value ?? ''];
+
+      if (defaultFqcn) {
+        (<HTMLInputElement> this.typeInput).placeholder = this.label('labelDefaultType', 'Default: %type%')
+          .replace('%type%', shortName(defaultFqcn));
+      }
+    };
+
+    typeSelect?.addEventListener('change', refresh);
+    refresh();
+  }
+
+  private wireTypeSuggestions(): void {
+    if (!this.typeInput || this.typeInput.disabled) {
+      return;
+    }
+
+    new SuggestionDropdown(this.container, 'input[name$="[form_field_type]"]', {
+      items: () => COMMON_FORM_TYPES.map((fqcn) => ({value: fqcn, label: shortName(fqcn), detail: fqcn})),
+    });
+  }
+
+  private wireJsonFeedback(): void {
+    const textarea = this.optionsTextarea;
+
+    if (!textarea || textarea.disabled) {
+      return;
+    }
+
+    textarea.classList.add('text-monospace');
+
+    const status = document.createElement('div');
+    status.className = 'extra-property-lint';
+    status.setAttribute('aria-live', 'polite');
+
+    const formatButton = document.createElement('button');
+    formatButton.type = 'button';
+    formatButton.className = 'btn btn-link extra-property-format-json';
+    formatButton.textContent = this.label('labelFormatJson', 'Format JSON');
+
+    textarea.insertAdjacentElement('afterend', status);
+    status.insertAdjacentElement('afterend', formatButton);
+
+    const refresh = (): void => {
+      if (textarea.value.trim() === '') {
+        status.textContent = '';
+        status.className = 'extra-property-lint';
+
+        return;
+      }
+
+      try {
+        JSON.parse(textarea.value);
+        status.className = 'extra-property-lint extra-property-lint--ok';
+        status.textContent = `✓ ${this.label('labelValidJson', 'Valid JSON')}`;
+      } catch (error) {
+        status.className = 'extra-property-lint extra-property-lint--warn';
+        status.textContent = this.label('labelInvalidJson', 'Invalid JSON: %error%')
+          .replace('%error%', error instanceof Error ? error.message : String(error));
+      }
+    };
+
+    textarea.addEventListener('blur', refresh);
+    formatButton.addEventListener('click', () => {
+      try {
+        textarea.value = JSON.stringify(JSON.parse(textarea.value), null, 4);
+        refresh();
+      } catch (error) {
+        refresh();
+      }
+    });
+    refresh();
+  }
+}

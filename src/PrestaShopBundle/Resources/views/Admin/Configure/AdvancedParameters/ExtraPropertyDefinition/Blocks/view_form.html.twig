@@ -4,7 +4,10 @@
  #}
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
-{% form_theme extraPropertyDefinitionForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme extraPropertyDefinitionForm with [
+  '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig',
+  '@PrestaShop/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig'
+] %}
 
 {% block extra_property_definition_view %}
   <div class="alert alert-info" role="alert">

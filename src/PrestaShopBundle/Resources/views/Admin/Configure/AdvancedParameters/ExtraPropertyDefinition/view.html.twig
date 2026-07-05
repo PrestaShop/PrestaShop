@@ -8,3 +8,9 @@
 {% block content %}
   {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/Blocks/view_form.html.twig') }}
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/extra_property_definition_form.bundle.js') }}"></script>
+{% endblock %}
