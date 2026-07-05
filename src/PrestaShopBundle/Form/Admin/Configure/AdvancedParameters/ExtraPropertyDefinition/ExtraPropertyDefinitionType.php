@@ -89,9 +89,9 @@ class ExtraPropertyDefinitionType extends TranslatorAwareType
             return;
         }
 
-        $associatedForms = trim((string) ($data['advanced']['associated_forms'] ?? ''));
-        $associatedGrids = trim((string) ($data['advanced']['associated_grids'] ?? ''));
-        if ('' === $associatedForms && '' === $associatedGrids) {
+        // associated_forms/associated_grids are row collections; abandoned rows were already
+        // dropped by delete_empty, so any remaining row is a real placement.
+        if ([] === ($data['advanced']['associated_forms'] ?? []) && [] === ($data['advanced']['associated_grids'] ?? [])) {
             return;
         }
 

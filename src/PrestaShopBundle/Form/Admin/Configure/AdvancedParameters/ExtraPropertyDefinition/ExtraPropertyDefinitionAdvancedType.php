@@ -9,22 +9,31 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ValidExtraPropertyAssociations;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ExtraPropertyCatalogPresenter;
 use PrestaShopBundle\Form\Admin\Type\CardType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Json;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * "Advanced form integration" card: how the field renders in BO forms/grids beyond the
- * default mapping.
+ * "Placement" card: where the field appears in the back office (forms, grids) and Admin API,
+ * plus the developer-oriented form type/options overrides.
+ *
+ * Each association is a MAPPED collection of builder rows — the submitted form data itself. The
+ * form data provider splits the stored entries into rows (AssociationRowPresenter) and the data
+ * handler serializes them back (AssociationRowSerializer). Each row validates its own grammar
+ * (see the row types); the collections only add the cross-row rule the value object enforces too:
+ * a form/grid may only be referenced once. Abandoned rows (all fields empty) are dropped at
+ * submit by delete_empty.
  *
  * The card exposes the forms/grids/APIs catalogs and the type=>default form type map as the
  * "extra_property_catalogs" view var, inlined by the form theme as a JSON block so the picker
@@ -53,7 +62,7 @@ class ExtraPropertyDefinitionAdvancedType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('form_options', TextareaType::class, [
-                'label' => $this->trans('Form options (JSON)', 'Admin.Advparameters.Feature'),
+                'label' => $this->trans('Form options', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Extra options merged into the Symfony form type constructor, as a JSON object. Example: {"attr": {"class": "my-class"}, "row_attr": {"data-toggle": "tooltip"}}', 'Admin.Advparameters.Help'),
                 'required' => false,
                 'attr' => ['rows' => 3],
@@ -61,33 +70,67 @@ class ExtraPropertyDefinitionAdvancedType extends TranslatorAwareType
                     new Json(['message' => $this->trans('The form options must be a valid JSON object.', 'Admin.Advparameters.Notification')]),
                 ],
             ])
-            ->add('associated_forms', TextareaType::class, [
-                'label' => $this->trans('Associated forms', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('One form placement entry per line: "formId", "formId:path", or "formId:path:before|after" (nested path segments separated by dots). Example: product_combination:combination_details.reference:after', 'Admin.Advparameters.Help'),
-                'required' => false,
-                'attr' => ['rows' => 3],
-                'constraints' => [
-                    new ValidExtraPropertyAssociations(['type' => ValidExtraPropertyAssociations::TYPE_FORM]),
-                ],
-            ])
-            ->add('associated_grids', TextareaType::class, [
-                'label' => $this->trans('Associated grids', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('One grid placement entry per line: "gridId", "gridId:columnId", or "gridId:columnId:before|after". Example: product:reference:after', 'Admin.Advparameters.Help'),
-                'required' => false,
-                'attr' => ['rows' => 3],
-                'constraints' => [
-                    new ValidExtraPropertyAssociations(['type' => ValidExtraPropertyAssociations::TYPE_GRID]),
-                ],
-            ])
-            ->add('associated_apis', TextareaType::class, [
-                'label' => $this->trans('Associated APIs', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('One Admin API placement entry per line: an operation URI template, optionally followed by ":" and comma-separated HTTP methods. Examples: /products or /products/{productId}:GET,PATCH', 'Admin.Advparameters.Help'),
-                'required' => false,
-                'attr' => ['rows' => 3],
-                'constraints' => [
-                    new ValidExtraPropertyAssociations(['type' => ValidExtraPropertyAssociations::TYPE_API]),
-                ],
-            ]);
+            ->add('associated_forms', CollectionType::class, array_merge($this->rowCollectionOptions(), [
+                'entry_type' => ExtraPropertyFormPlacementRowType::class,
+                'constraints' => [new Callback($this->uniqueIdValidator('form_id', $this->trans('Duplicate form "%id%" — each form may only be referenced once.', 'Admin.Advparameters.Notification')))],
+            ]))
+            ->add('associated_grids', CollectionType::class, array_merge($this->rowCollectionOptions(), [
+                'entry_type' => ExtraPropertyGridPlacementRowType::class,
+                'constraints' => [new Callback($this->uniqueIdValidator('grid_id', $this->trans('Duplicate grid "%id%" — each grid may only be referenced once.', 'Admin.Advparameters.Notification')))],
+            ]))
+            ->add('associated_apis', CollectionType::class, array_merge($this->rowCollectionOptions(), [
+                'entry_type' => ExtraPropertyApiPlacementRowType::class,
+            ]));
+    }
+
+    /**
+     * Common options of the placement-row collections: mapped form data, rows freely added and
+     * removed client-side against the standard data-prototype, abandoned rows dropped at submit.
+     *
+     * @return array<string, mixed>
+     */
+    private function rowCollectionOptions(): array
+    {
+        return [
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'prototype' => true,
+            // Keep collection-level violations (duplicate ids) ON the collection.
+            'error_bubbling' => false,
+            'entry_options' => ['label' => false],
+            'delete_empty' => static fn (?array $row): bool => null === $row
+                || [] === array_filter($row, static fn (?string $value): bool => '' !== trim((string) $value)),
+        ];
+    }
+
+    /**
+     * The collection-level rule a single row cannot check: a form/grid may only be referenced once
+     * across the rows (the same uniqueness the ExtraPropertyDefinition constructor enforces). The
+     * violation lands on the duplicate row's id field.
+     *
+     * @return callable(list<array<string, string|null>>|null, ExecutionContextInterface): void
+     */
+    private function uniqueIdValidator(string $idField, string $message): callable
+    {
+        return static function (?array $rows, ExecutionContextInterface $context) use ($idField, $message): void {
+            $seen = [];
+            foreach ((array) $rows as $index => $row) {
+                $id = trim((string) ($row[$idField] ?? ''));
+                if ('' === $id) {
+                    continue;
+                }
+                if (isset($seen[$id])) {
+                    $context->buildViolation($message)
+                        ->setParameter('%id%', $id)
+                        ->atPath(sprintf('[%d][%s]', $index, $idField))
+                        ->addViolation();
+                    continue;
+                }
+                $seen[$id] = true;
+            }
+        };
     }
 
     /**
@@ -104,8 +147,9 @@ class ExtraPropertyDefinitionAdvancedType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'label' => $this->trans('Advanced form integration', 'Admin.Advparameters.Feature'),
-            'icon' => 'build',
+            'label' => $this->trans('Placement', 'Admin.Advparameters.Feature'),
+            'label_subtitle' => $this->trans('Where this field appears in the back office and Admin API.', 'Admin.Advparameters.Help'),
+            'icon' => 'place_item',
         ]);
     }
 

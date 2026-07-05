@@ -14,10 +14,12 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\AddExtraPropertyDefinitionCommand;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\UpdateExtraPropertyDefinitionCommand;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\ValueObject\ExtraPropertyDefinitionId;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\AssociationRowSerializer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ConstraintRowSerializer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
@@ -32,13 +34,15 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintM
  * create() dispatches AddExtraPropertyDefinitionCommand (no module_name — always null for BO-created fields).
  * update() dispatches UpdateExtraPropertyDefinitionCommand (structural fields are intentionally excluded).
  *
- * The advanced card's association textareas (associated_forms/grids/apis) are edited as
- * newline-separated plain entries (one placement entry per line); only form_options is still
- * edited as raw JSON — the one boundary where JSON decoding belongs; the CQRS commands
- * themselves only ever carry native arrays. Malformed form_options JSON throws instead of
- * being silently dropped — the form's Json constraint normally blocks it before this handler
- * runs (see ExtraPropertyDefinitionAdvancedType), so a throw here only surfaces for
- * programmatic submissions or hook-mutated form data.
+ * The associations and constraints arrive as builder-row arrays (the mapped row collections'
+ * data) and are serialized back into the entry strings / DSL value the commands accept — the
+ * inverse of what the form data provider presented. The row form types already validated every
+ * row through the same parser/mapper, so serialization cannot fail here on a form-validated
+ * submission. Only form_options is edited as raw JSON — the one boundary where JSON decoding
+ * belongs; the CQRS commands themselves only ever carry native arrays. Malformed form_options
+ * JSON throws instead of being silently dropped — the form's Json constraint normally blocks it
+ * before this handler runs (see ExtraPropertyDefinitionAdvancedType), so a throw here only
+ * surfaces for programmatic submissions or hook-mutated form data.
  */
 final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInterface
 {
@@ -78,12 +82,12 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
             labelDomain: $labels['label_domain'] ?: null,
             descriptionWording: $labels['description_wording'] ?: null,
             descriptionDomain: $labels['description_domain'] ?: null,
-            constraints: ExtraPropertyConstraintMapper::fromNames($validation['constraints'] ?? null),
+            constraints: ExtraPropertyConstraintMapper::fromNames(ConstraintRowSerializer::serialize($validation['constraints'] ?? [])),
             formType: $advanced['form_type'] ?: null,
             formOptions: $this->parseJsonObject($advanced['form_options'] ?? null),
-            associatedForms: $this->parseLines($advanced['associated_forms'] ?? null),
-            associatedGrids: $this->parseLines($advanced['associated_grids'] ?? null),
-            associatedApis: $this->parseLines($advanced['associated_apis'] ?? null),
+            associatedForms: AssociationRowSerializer::formEntries($advanced['associated_forms'] ?? []),
+            associatedGrids: AssociationRowSerializer::gridEntries($advanced['associated_grids'] ?? []),
+            associatedApis: AssociationRowSerializer::apiEntries($advanced['associated_apis'] ?? []),
         ));
 
         return $id->getValue();
@@ -112,12 +116,12 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
             ->setLabelDomain($labels['label_domain'] ?: null)
             ->setDescriptionWording($labels['description_wording'] ?: null)
             ->setDescriptionDomain($labels['description_domain'] ?: null)
-            ->setConstraints(ExtraPropertyConstraintMapper::fromNames($validation['constraints'] ?? null))
+            ->setConstraints(ExtraPropertyConstraintMapper::fromNames(ConstraintRowSerializer::serialize($validation['constraints'] ?? [])))
             ->setFormType($advanced['form_type'] ?: null)
             ->setFormOptions($this->parseJsonObject($advanced['form_options'] ?? null))
-            ->setAssociatedForms($this->parseLines($advanced['associated_forms'] ?? null))
-            ->setAssociatedGrids($this->parseLines($advanced['associated_grids'] ?? null))
-            ->setAssociatedApis($this->parseLines($advanced['associated_apis'] ?? null));
+            ->setAssociatedForms(AssociationRowSerializer::formEntries($advanced['associated_forms'] ?? []))
+            ->setAssociatedGrids(AssociationRowSerializer::gridEntries($advanced['associated_grids'] ?? []))
+            ->setAssociatedApis(AssociationRowSerializer::apiEntries($advanced['associated_apis'] ?? []));
 
         if (!empty($fieldDefinition['size'])) {
             $command->setSize((int) $fieldDefinition['size']);
@@ -145,27 +149,6 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
         }
 
         return array_values(array_filter(array_map('trim', explode("\n", $rawValue)), static fn (string $v): bool => '' !== $v)) ?: null;
-    }
-
-    /**
-     * Parses a "one placement entry per line" textarea (associated_forms/grids/apis) into a list
-     * of trimmed, non-empty entries.
-     *
-     * A blank textarea returns [] (never null): in the update path an empty list means "clear the
-     * associations" while null on the command means "leave untouched" (see
-     * UpdateExtraPropertyDefinitionHandler) — so returning null here would make clearing impossible.
-     *
-     * @param string|null $rawValue
-     *
-     * @return list<string>
-     */
-    private function parseLines(?string $rawValue): array
-    {
-        if (null === $rawValue) {
-            return [];
-        }
-
-        return array_values(array_filter(array_map('trim', explode("\n", $rawValue)), static fn (string $v): bool => '' !== $v));
     }
 
     /**

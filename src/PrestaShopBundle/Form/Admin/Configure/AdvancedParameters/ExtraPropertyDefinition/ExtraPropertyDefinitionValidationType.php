@@ -9,27 +9,28 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition;
 
-use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCatalog;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 use PrestaShopBundle\Form\Admin\Type\CardType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * "Validation" card: Symfony Constraint(s) applied to the value before persistence.
  *
- * Limited to a whitelist (see ExtraPropertyConstraintMapper). Each entry is bare (NotBlank), carries
- * a single value via the constraint's default option (TypedRegex('generic_name'), Choice(['a', 'b'])),
- * carries named options (Length(min: 2, max: 64)), or nests constraints via the composite bracket
- * shape (All[Url] — used for per-language validation of multilingual fields).
+ * Limited to a whitelist (see ExtraPropertyConstraintMapper). Each row is one constraint: bare
+ * (NotBlank), a single value via the constraint's default option (TypedRegex('generic_name')),
+ * named options (Length(min: 2, max: 64)), or a composite (per_language rows fold into one
+ * All[...] — the per-language validation of multilingual fields).
+ *
+ * The constraint rows are the MAPPED form data: the form data provider splits the stored
+ * constraints into rows (ConstraintRowPresenter) and the data handler folds them back
+ * (ConstraintRowSerializer -> ExtraPropertyConstraintMapper). Each row validates its own token
+ * (see ExtraPropertyConstraintRowType); abandoned rows are dropped at submit by delete_empty.
  */
 class ExtraPropertyDefinitionValidationType extends TranslatorAwareType
 {
@@ -46,35 +47,20 @@ class ExtraPropertyDefinitionValidationType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('constraints', TextareaType::class, [
-            'label' => $this->trans('Constraints', 'Admin.Advparameters.Feature'),
-            'help' => $this->trans("One constraint per line or comma-separated. Some accept a value, e.g. GreaterThan(5), TypedRegex('generic_name') or Choice(['a', 'b', 'c']); some accept named options, e.g. Length(min: 2, max: 64). Composites nest constraints between brackets, e.g. All[Url] to validate each language of a multilingual field. Quote string values; unquoted numbers are read as int/float and true/false/null as literals. Allowed: %names%. Leave empty to skip validation.", 'Admin.Advparameters.Help', ['%names%' => implode(', ', ExtraPropertyConstraintMapper::getAllowedNames())]),
+        $builder->add('constraints', CollectionType::class, [
+            'label' => false,
             'required' => false,
-            'attr' => ['rows' => 3],
-            'constraints' => [
-                new Callback([$this, 'validateConstraintNames']),
-            ],
+            'allow_add' => true,
+            'allow_delete' => true,
+            'prototype' => true,
+            'error_bubbling' => false,
+            'entry_type' => ExtraPropertyConstraintRowType::class,
+            'entry_options' => ['label' => false],
+            // per_language alone is zone bookkeeping, not content: a row is abandoned when it
+            // carries neither a name nor an options tail.
+            'delete_empty' => static fn (?array $row): bool => null === $row
+                || ('' === trim((string) ($row['name'] ?? '')) && '' === trim((string) ($row['options'] ?? ''))),
         ]);
-    }
-
-    /**
-     * Surfaces a field-level error when the textarea can't be parsed, by running the exact same
-     * mapper used downstream by the data handler — an unknown name, a missing required value or a
-     * value on a constraint that takes none all become a form error instead of a 500.
-     */
-    public function validateConstraintNames(?string $value, ExecutionContextInterface $context): void
-    {
-        if (null === $value || '' === trim($value)) {
-            return;
-        }
-
-        try {
-            ExtraPropertyConstraintMapper::fromNames($value);
-        } catch (ExtraPropertyException $e) {
-            $context->buildViolation(
-                $this->trans('Invalid constraint definition: %error%', 'Admin.Advparameters.Notification', ['%error%' => $e->getMessage()])
-            )->addViolation();
-        }
     }
 
     /**

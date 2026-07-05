@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefin
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\AssociationExistenceChecker;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProviderInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\AssociationRowSerializer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyFormOptionsException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -376,30 +377,17 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
     {
         $advanced = $form->getData()['advanced'] ?? [];
 
+        // The associations are row collections; serializing them here yields the exact entry
+        // strings the data handler passed to the command.
         $warnings = $associationChecker->check(
-            $this->splitAssociationLines($advanced['associated_forms'] ?? null),
-            $this->splitAssociationLines($advanced['associated_grids'] ?? null),
-            $this->splitAssociationLines($advanced['associated_apis'] ?? null)
+            AssociationRowSerializer::formEntries($advanced['associated_forms'] ?? []) ?: null,
+            AssociationRowSerializer::gridEntries($advanced['associated_grids'] ?? []) ?: null,
+            AssociationRowSerializer::apiEntries($advanced['associated_apis'] ?? []) ?: null
         );
 
         foreach ($warnings as $warning) {
             $this->addFlash('warning', $warning);
         }
-    }
-
-    /**
-     * Splits a "one placement entry per line" textarea value into a list of trimmed,
-     * non-empty entries (null when the textarea is blank).
-     *
-     * @return list<string>|null
-     */
-    private function splitAssociationLines(?string $rawValue): ?array
-    {
-        if (null === $rawValue || '' === trim($rawValue)) {
-            return null;
-        }
-
-        return array_values(array_filter(array_map('trim', explode("\n", $rawValue)), static fn (string $v): bool => '' !== $v)) ?: null;
     }
 
     /**
