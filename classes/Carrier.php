@@ -1016,11 +1016,6 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * Copy old carrier informations when update carrier.
-     *
-     * @param int $old_id Old id carrier (copy from that id)
-     */
-    /**
      * Reassigns every configuration scope whose default carrier is $oldCarrierId to $newCarrierId.
      *
      * Editing a carrier re-versions it (a new carrier id replaces the old one), so a per-shop or
@@ -1049,6 +1044,11 @@ class CarrierCore extends ObjectModel
         }
     }
 
+    /**
+     * Copy old carrier informations when update carrier.
+     *
+     * @param int $old_id Old id carrier (copy from that id)
+     */
     public function copyCarrierData($old_id)
     {
         if (!Validate::isUnsignedId($old_id)) {
