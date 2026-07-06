@@ -7,6 +7,7 @@ import ExtraPropertyFormMap from '@pages/extra-property-definition/form/extra-pr
 import FormCollection from '@pages/extra-property-definition/form/form-collection';
 import groupConstraintNames from '@pages/extra-property-definition/form/constraint-groups';
 import SuggestionDropdown, {SuggestionItem} from '@pages/extra-property-definition/form/suggestion-dropdown';
+import cloneTemplate from '@pages/extra-property-definition/form/templates';
 import {
   quoteValue,
   parseTail,
@@ -61,10 +62,6 @@ export default class ConstraintBuilder {
 
     this.wireEvents();
     this.updateZone();
-  }
-
-  private label(key: string, fallback: string): string {
-    return this.container.dataset[key] ?? fallback;
   }
 
   private allRows(): HTMLElement[] {
@@ -131,29 +128,27 @@ export default class ConstraintBuilder {
   // ── Typed option editor ───────────────────────────────────────────────────────────────────
 
   /**
-   * Replaces the server-rendered tail display with catalog-driven typed inputs: one field per
-   * option present in the tail (label + int/bool/string-typed input + remove), an "add option"
-   * select for the remaining catalog options, a single unlabeled value input for default-option
-   * constraints, and a raw monospace tail input when the tail cannot be lexed (or for
-   * composites, whose tail is nested constraints).
+   * Fills the row's editor container (rendered empty by the form theme) with catalog-driven
+   * typed inputs cloned from the option-* templates: one field per option present in the tail
+   * (label + int/bool/string-typed input + remove), an "add option" select for the remaining
+   * catalog options, a single value input for default-option constraints, and a raw monospace
+   * tail input when the tail cannot be lexed (or for composites, whose tail is nested
+   * constraints). The server-rendered tail display is dropped once the editor takes over.
    */
   private renderOptionsEditor(row: HTMLElement): void {
     const optionsInput = row.querySelector<HTMLInputElement>(ExtraPropertyFormMap.rowField('options'));
     const structuredFields = row.querySelector<HTMLElement>(ExtraPropertyFormMap.subsection.structuredFields);
+    const editor = structuredFields?.querySelector<HTMLElement>('[data-role="options-editor"]');
 
-    if (!optionsInput || !structuredFields) {
+    if (!optionsInput || !structuredFields || !editor) {
       return;
     }
 
     structuredFields.querySelector('[data-role="options-display"]')?.remove();
-    structuredFields.querySelector('[data-role="options-editor"]')?.remove();
+    editor.replaceChildren();
 
     const {name} = FormCollection.read(row, ['name']);
     const entry = this.catalog[name];
-    const editor = document.createElement('span');
-    editor.className = 'extra-property-options-editor';
-    editor.dataset.role = 'options-editor';
-    structuredFields.appendChild(editor);
 
     if (!entry) {
       return;
@@ -165,7 +160,7 @@ export default class ConstraintBuilder {
     };
 
     if (entry.composite) {
-      this.rawTailInput(editor, optionsInput, this.label('labelNested', 'Nested constraints'));
+      this.rawTailInput(editor, optionsInput, 'option-nested');
 
       return;
     }
@@ -173,7 +168,7 @@ export default class ConstraintBuilder {
     const lexed = parseTail(optionsInput.value);
 
     if (lexed === null) {
-      this.rawTailInput(editor, optionsInput, this.label('labelOptions', 'Options'));
+      this.rawTailInput(editor, optionsInput, 'option-raw');
 
       return;
     }
@@ -205,10 +200,7 @@ export default class ConstraintBuilder {
 
     // No configured value on the read-only view, or nothing configurable at all: plain text.
     if (options.length === 0 && (this.readOnly || Object.keys(entry.options).length === 0)) {
-      const muted = document.createElement('span');
-      muted.className = 'text-muted';
-      muted.textContent = this.label('labelNoOptions', 'no options');
-      editor.appendChild(muted);
+      editor.appendChild(cloneTemplate('option-none'));
 
       return;
     }
@@ -227,15 +219,10 @@ export default class ConstraintBuilder {
     );
 
     if (remaining.length > 0 && !this.readOnly) {
-      const addSelect = document.createElement('select');
-      addSelect.className = 'extra-property-options-editor__add';
-      addSelect.setAttribute('aria-label', this.label('labelAddOption', 'Add an option'));
-      addSelect.innerHTML = `<option value="">+ ${this.label('labelAddOption', 'Add an option')}</option>`;
+      const addSelect = <HTMLSelectElement>cloneTemplate('option-add');
       remaining.forEach((optionName) => {
-        const item = document.createElement('option');
-        item.value = optionName;
-        item.textContent = optionName;
-        addSelect.appendChild(item);
+        // Bare data elements (not layout) — no template needed.
+        addSelect.appendChild(new Option(optionName, optionName));
       });
       addSelect.addEventListener('change', () => {
         if (addSelect.value !== '') {
@@ -260,30 +247,31 @@ export default class ConstraintBuilder {
     writeTail: (tailOptions: TailOption[]) => void,
     rerender: (focus?: string | null) => void,
   ): HTMLElement {
-    const field = document.createElement('span');
-    field.className = 'extra-property-options-editor__field';
+    const field = cloneTemplate('option-field');
     field.dataset.optionKey = String(option.key);
 
     // A positional value feeds the constraint's default option: show that name so the user
     // knows which option is being edited.
     const labelText = option.key ?? entry.defaultOption;
+    const label = <HTMLElement>field.querySelector('.extra-property-options-editor__label');
 
-    if (labelText !== null) {
-      const label = document.createElement('span');
-      label.className = 'extra-property-options-editor__label';
+    if (labelText === null) {
+      label.remove();
+    } else {
       label.textContent = labelText;
-      field.appendChild(label);
     }
 
     const type = entry.options[option.key ?? entry.defaultOption ?? '']?.type ?? '';
     const isNumber = ['int', 'integer', 'float', 'number'].includes(type);
     const isString = ['string'].includes(type);
-    const input = document.createElement('input');
+    const input = <HTMLInputElement>field.querySelector('input');
     input.type = isNumber ? 'number' : 'text';
-    input.className = 'extra-property-options-editor__input';
     input.disabled = this.readOnly;
-    input.setAttribute('aria-label', labelText ?? this.label('labelValue', 'Value'));
     input.value = isString ? unquoteValue(option.value) : option.value;
+
+    if (labelText !== null) {
+      input.setAttribute('aria-label', labelText);
+    }
 
     if (!isNumber && !isString) {
       input.classList.add('text-monospace');
@@ -296,32 +284,27 @@ export default class ConstraintBuilder {
       /* eslint-enable no-param-reassign */
       writeTail(options);
     });
-    field.appendChild(input);
 
-    if (!this.readOnly) {
-      const remove = document.createElement('button');
-      remove.type = 'button';
-      remove.className = 'extra-property-options-editor__remove';
-      remove.setAttribute('aria-label', `${this.label('labelRemoveOption', 'Remove option')} ${labelText ?? ''}`.trim());
-      remove.innerHTML = '<i class="material-icons" aria-hidden="true">close</i>';
+    const remove = <HTMLButtonElement>field.querySelector('.extra-property-options-editor__remove');
+
+    if (this.readOnly) {
+      remove.remove();
+    } else {
+      remove.setAttribute('aria-label', `${remove.getAttribute('aria-label') ?? ''} ${labelText ?? ''}`.trim());
       remove.addEventListener('click', () => {
         options.splice(options.indexOf(option), 1);
         writeTail(options);
         rerender();
       });
-      field.appendChild(remove);
     }
 
     return field;
   }
 
-  private rawTailInput(editor: HTMLElement, optionsInput: HTMLInputElement, ariaLabel: string): void {
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'extra-property-options-editor__input extra-property-options-editor__input--raw text-monospace';
+  private rawTailInput(editor: HTMLElement, optionsInput: HTMLInputElement, template: 'option-raw' | 'option-nested'): void {
+    const input = <HTMLInputElement>cloneTemplate(template);
     input.value = optionsInput.value;
     input.disabled = this.readOnly;
-    input.setAttribute('aria-label', ariaLabel);
     input.addEventListener('input', () => {
       /* eslint-disable no-param-reassign */
       optionsInput.value = input.value;

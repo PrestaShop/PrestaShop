@@ -3,6 +3,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+import cloneTemplate from '@pages/extra-property-definition/form/templates';
+
 export interface SuggestionItem {
   /** Written into the input on selection (unless writeValue is false). */
   value: string;
@@ -92,27 +94,20 @@ export default class SuggestionDropdown {
 
     this.activeInput = input;
 
-    const dropdown = document.createElement('div');
-    dropdown.className = 'extra-property-anchor-dropdown';
-    dropdown.setAttribute('role', 'listbox');
+    const dropdown = cloneTemplate('suggestion-dropdown');
 
     let lastGroup: string | null = null;
     items.forEach((item) => {
       if (item.group !== undefined && item.group !== lastGroup) {
         lastGroup = item.group;
-        const heading = document.createElement('div');
-        heading.className = 'extra-property-anchor-heading';
+        const heading = cloneTemplate('suggestion-heading');
         heading.textContent = item.group;
         dropdown.appendChild(heading);
       }
 
-      const option = document.createElement('button');
-      option.type = 'button';
-      option.className = `extra-property-anchor-option${item.custom ? ' extra-property-anchor-option--custom' : ''}`;
-      option.setAttribute('role', 'option');
+      const option = cloneTemplate('suggestion-option');
+      option.classList.toggle('extra-property-anchor-option--custom', item.custom === true);
       option.dataset.value = item.value;
-      option.innerHTML = '<span class="extra-property-anchor-option__label"></span>'
-        + '<span class="extra-property-anchor-option__path"></span>';
       const label = <HTMLElement>option.querySelector('.extra-property-anchor-option__label');
       label.textContent = item.label;
 

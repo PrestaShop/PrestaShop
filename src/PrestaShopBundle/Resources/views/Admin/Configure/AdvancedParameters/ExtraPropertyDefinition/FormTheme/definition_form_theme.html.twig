@@ -45,8 +45,6 @@
        data-role="placement-list"
        data-list-type="{{ subsection.listType }}"
        {% if disabled %}data-read-only="true"{% endif %}
-       data-label-unknown="{{ 'Not in catalog'|trans({}, 'Admin.Advparameters.Notification') }}"
-       data-label-loading="{{ 'Loading fields…'|trans({}, 'Admin.Advparameters.Notification') }}"
        {%- for name, value in subsection.attrs|default({}) %} {{ name }}="{{ value }}"{% endfor %}>
     {{ block('extra_property_subsection_header') }}
     <div class="extra-property-subsection__builder" data-role="builder-view">
@@ -125,12 +123,13 @@
     or form.form_options.vars.value is not empty
     or form.form_field_type.vars.errors|length > 0
     or form.form_options.vars.errors|length > 0 %}
+  {# The data-label-* attributes carry TEXT PATTERNS the JS composes with runtime values —
+     everything that is plain markup lives in the templates block below instead. #}
   <details class="extra-property-dev-fields" data-role="developer-fields"
        {% if devFieldsOpen %}open{% endif %}
        data-label-default-type="{{ 'Default: %type% — derived from the field type'|trans({}, 'Admin.Advparameters.Help') }}"
        data-label-valid-json="{{ 'Valid JSON'|trans({}, 'Admin.Advparameters.Notification') }}"
-       data-label-invalid-json="{{ 'Invalid JSON: %error%'|trans({}, 'Admin.Advparameters.Notification') }}"
-       data-label-format-json="{{ 'Format JSON'|trans({}, 'Admin.Advparameters.Feature') }}">
+       data-label-invalid-json="{{ 'Invalid JSON: %error%'|trans({}, 'Admin.Advparameters.Notification') }}">
     <summary class="extra-property-dev-fields__summary">
       <i class="material-icons extra-property-dev-fields__chevron" aria-hidden="true">chevron_right</i>
       {{ 'Advanced form'|trans({}, 'Admin.Advparameters.Feature') }}
@@ -147,11 +146,74 @@
         {{ form_label(form.form_options) }}
         {{ form_widget(form.form_options) }}
         {{ form_errors(form.form_options) }}
+        <div class="extra-property-json-status" data-role="json-status" aria-live="polite"></div>
+        {# Revealed by the page JS, which wires the pretty-print action. #}
+        <button type="button" class="btn btn-link extra-property-format-json d-none" data-role="format-json">
+          {{ 'Format JSON'|trans({}, 'Admin.Advparameters.Feature') }}
+        </button>
       </div>
     </div>
   </details>
 
   <script type="application/json" data-role="extra-property-catalogs">{{ extra_property_catalogs|json_encode(constant('JSON_HEX_TAG'))|raw }}</script>
+  {{ block('extra_property_js_templates') }}
+{% endblock %}
+
+{# ─── Markup templates cloned by the page JS ─────────────────────────────────────────────── #}
+
+{# Every dynamic element the page JS creates is cloned from one of these inert templates — the
+   JS only fills text/values and toggles attributes, in the same spirit as the collection rows
+   driven by the standard data-prototype. Rendered once (with the Placement card, always
+   present); the constraint builder templates are looked up document-wide. #}
+{% block extra_property_js_templates %}
+  {# Suggestion dropdown — shared by every picker (ids, columns, constraint names, FQCNs,
+     endpoint search) and reused by the form field tree. #}
+  <template data-tpl="suggestion-dropdown"><div class="extra-property-anchor-dropdown" role="listbox"></div></template>
+  <template data-tpl="suggestion-heading"><div class="extra-property-anchor-heading"></div></template>
+  <template data-tpl="suggestion-option">
+    <button type="button" class="extra-property-anchor-option" role="option">
+      <span class="extra-property-anchor-option__label"></span>
+      <span class="extra-property-anchor-option__path"></span>
+    </button>
+  </template>
+  {# Form field tree fetch state (Forms placement path picker). #}
+  <template data-tpl="tree-loading">
+    <div class="extra-property-anchor-dropdown">
+      <div class="extra-property-anchor-loading" role="status">
+        <span class="extra-property-spinner" aria-hidden="true"></span>
+        <span>{{ 'Loading fields…'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+      </div>
+    </div>
+  </template>
+  {# Admin API method chips (one chip cloned per method the endpoint exposes). #}
+  <template data-tpl="method-chips">
+    <span class="extra-property-method-chips" data-role="method-chips">
+      <button type="button" class="extra-property-method-chip extra-property-method-chip--all" data-role="all-methods">{{ 'All methods'|trans }}</button>
+    </span>
+  </template>
+  <template data-tpl="method-chip"><button type="button" class="extra-property-method-chip"></button></template>
+  {# Constraint typed option editor (one field cloned per option present in the row's tail). #}
+  <template data-tpl="option-field">
+    <span class="extra-property-options-editor__field">
+      <span class="extra-property-options-editor__label"></span>
+      <input type="text" class="extra-property-options-editor__input" aria-label="{{ 'Value'|trans({}, 'Admin.Global') }}">
+      <button type="button" class="extra-property-options-editor__remove" aria-label="{{ 'Remove option'|trans }}">
+        <i class="material-icons" aria-hidden="true">close</i>
+      </button>
+    </span>
+  </template>
+  <template data-tpl="option-add">
+    <select class="extra-property-options-editor__add" aria-label="{{ 'Add an option'|trans }}">
+      <option value="">+ {{ 'Add an option'|trans }}</option>
+    </select>
+  </template>
+  <template data-tpl="option-raw">
+    <input type="text" class="extra-property-options-editor__input extra-property-options-editor__input--raw text-monospace" aria-label="{{ 'Options'|trans }}">
+  </template>
+  <template data-tpl="option-nested">
+    <input type="text" class="extra-property-options-editor__input extra-property-options-editor__input--raw text-monospace" aria-label="{{ 'Nested constraints'|trans }}">
+  </template>
+  <template data-tpl="option-none"><span class="text-muted">{{ 'no options'|trans({}, 'Admin.Advparameters.Help') }}</span></template>
 {% endblock %}
 
 {# ─── Validation card ────────────────────────────────────────────────────────────────────── #}
@@ -169,13 +231,7 @@
   } %}
 
   <div class="extra-property-subsection" data-role="constraint-builder"
-       {% if disabled %}data-read-only="true"{% endif %}
-       data-label-nested="{{ 'Nested constraints'|trans({}, 'Admin.Advparameters.Feature') }}"
-       data-label-options="{{ 'Options'|trans({}, 'Admin.Advparameters.Feature') }}"
-       data-label-no-options="{{ 'no options'|trans({}, 'Admin.Advparameters.Help') }}"
-       data-label-add-option="{{ 'Add an option'|trans({}, 'Admin.Advparameters.Feature') }}"
-       data-label-remove-option="{{ 'Remove option'|trans({}, 'Admin.Advparameters.Feature') }}"
-       data-label-value="{{ 'Value'|trans({}, 'Admin.Global') }}">
+       {% if disabled %}data-read-only="true"{% endif %}>
     {{ block('extra_property_subsection_header') }}
     <div class="extra-property-subsection__builder" data-role="builder-view">
       <div id="{{ constraintRows.vars.id }}"
@@ -239,6 +295,7 @@
         {{ form_widget(form.path, {attr: {'data-role': 'path-input', class: 'extra-property-row__path', placeholder: 'Automatic (default placement)'|trans, 'aria-label': 'Field path'|trans, autocomplete: 'off'}}) }}
       </div>
       {{ form_widget(form.mode, {attr: {'data-role': 'mode-select', class: 'extra-property-row__mode', 'aria-label': 'Position'|trans}}) }}
+      {{ block('extra_property_unknown_pill') }}
     </div>
     {{ block('extra_property_row_remove') }}
     {{ block('extra_property_row_errors') }}
@@ -256,6 +313,7 @@
         {{ form_widget(form.column_id, {attr: {'data-role': 'column-input', class: 'extra-property-row__path', placeholder: 'Automatic (end of grid)'|trans, 'aria-label': 'Column'|trans, autocomplete: 'off'}}) }}
       </div>
       {{ form_widget(form.mode, {attr: {'data-role': 'mode-select', class: 'extra-property-row__mode', 'aria-label': 'Position'|trans}}) }}
+      {{ block('extra_property_unknown_pill') }}
     </div>
     {{ block('extra_property_row_remove') }}
     {{ block('extra_property_row_errors') }}
@@ -268,6 +326,7 @@
     <div class="extra-property-row__fields" data-role="structured-fields">
       {{ form_widget(form.uri, {attr: {'data-role': 'uri-input', class: 'extra-property-row__uri text-monospace', placeholder: 'URI template (e.g. /products)'|trans, 'aria-label': 'URI template'|trans, autocomplete: 'off'}}) }}
       {{ form_widget(form.methods, {attr: {'data-role': 'methods-input', class: 'extra-property-row__methods', placeholder: 'All methods'|trans, 'aria-label': 'HTTP methods'|trans, autocomplete: 'off'}}) }}
+      {{ block('extra_property_unknown_pill') }}
     </div>
     {{ block('extra_property_row_remove') }}
     {{ block('extra_property_row_errors') }}
@@ -288,12 +347,21 @@
           <span class="text-muted">{{ 'no options'|trans({}, 'Admin.Advparameters.Help') }}</span>
         {%- endif -%}
       </span>
+      {# Filled by the page JS with typed inputs cloned from the option-* templates; the
+         server-rendered display above is then removed. #}
+      <span class="extra-property-options-editor" data-role="options-editor"></span>
       {{ form_widget(form.options, {attr: {'data-role': 'options-input'}}) }}
     </div>
     {{ form_widget(form.per_language, {attr: {'data-role': 'per-language-input'}}) }}
     {{ block('extra_property_row_remove') }}
     {{ block('extra_property_row_errors') }}
   </div>
+{% endblock %}
+
+{# Amber pre-warning on rows whose id the catalog does not know — revealed by the page JS, a
+   manual placement is supported and never blocks saving. #}
+{% block extra_property_unknown_pill %}
+  <span class="extra-property-tag extra-property-tag--warning d-none" data-role="unknown-pill">{{ 'Not in catalog'|trans({}, 'Admin.Advparameters.Notification') }}</span>
 {% endblock %}
 
 {% block extra_property_row_remove %}

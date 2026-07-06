@@ -4,6 +4,7 @@
  */
 
 import ExtraPropertyFormMap from '@pages/extra-property-definition/form/extra-property-form-map';
+import cloneTemplate from '@pages/extra-property-definition/form/templates';
 import {ExtraPropertyCatalogs} from '@pages/extra-property-definition/form/types';
 
 // Whitelist mirror of AssociationEntryParser::ALLOWED_HTTP_METHODS (display fallback for
@@ -47,22 +48,15 @@ export default class ApiMethodChips {
     // Union keeps manually-typed methods visible even when the catalog does not list them.
     const available = catalogMethods.concat(selected.filter((method) => !catalogMethods.includes(method)));
 
-    const chips = document.createElement('span');
-    chips.className = 'extra-property-method-chips';
-    chips.dataset.role = 'method-chips';
-
-    const allPill = document.createElement('button');
-    allPill.type = 'button';
-    allPill.className = `extra-property-method-chip extra-property-method-chip--all${selected.length === 0 ? ' active' : ''}`;
+    const chips = cloneTemplate('method-chips');
+    const allPill = <HTMLButtonElement>chips.querySelector('[data-role="all-methods"]');
+    allPill.classList.toggle('active', selected.length === 0);
     allPill.setAttribute('aria-pressed', selected.length === 0 ? 'true' : 'false');
-    allPill.textContent = methodsInput.placeholder || 'All methods';
     allPill.addEventListener('click', () => ApiMethodChips.write(row, uriInput, methodsInput, [], this));
-    chips.appendChild(allPill);
 
     available.forEach((method) => {
-      const chip = document.createElement('button');
-      chip.type = 'button';
-      chip.className = `extra-property-method-chip${selected.includes(method) ? ' active' : ''}`;
+      const chip = cloneTemplate('method-chip');
+      chip.classList.toggle('active', selected.includes(method));
       chip.setAttribute('aria-pressed', selected.includes(method) ? 'true' : 'false');
       chip.textContent = method;
       chip.addEventListener('click', () => {

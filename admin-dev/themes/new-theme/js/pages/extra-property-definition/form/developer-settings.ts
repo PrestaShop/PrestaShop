@@ -93,39 +93,31 @@ export default class DeveloperSettings {
 
   private wireJsonFeedback(): void {
     const textarea = this.optionsTextarea;
+    const status = this.container.querySelector<HTMLElement>('[data-role="json-status"]');
+    const formatButton = this.container.querySelector<HTMLButtonElement>('[data-role="format-json"]');
 
-    if (!textarea || textarea.disabled) {
+    if (!textarea || textarea.disabled || !status || !formatButton) {
       return;
     }
 
     textarea.classList.add('text-monospace');
-
-    const status = document.createElement('div');
-    status.className = 'extra-property-lint';
-    status.setAttribute('aria-live', 'polite');
-
-    const formatButton = document.createElement('button');
-    formatButton.type = 'button';
-    formatButton.className = 'btn btn-link extra-property-format-json';
-    formatButton.textContent = this.label('labelFormatJson', 'Format JSON');
-
-    textarea.insertAdjacentElement('afterend', status);
-    status.insertAdjacentElement('afterend', formatButton);
+    // Rendered hidden by the form theme — only useful once this wiring exists.
+    formatButton.classList.remove('d-none');
 
     const refresh = (): void => {
       if (textarea.value.trim() === '') {
         status.textContent = '';
-        status.className = 'extra-property-lint';
+        status.className = 'extra-property-json-status';
 
         return;
       }
 
       try {
         JSON.parse(textarea.value);
-        status.className = 'extra-property-lint extra-property-lint--ok';
+        status.className = 'extra-property-json-status extra-property-json-status--ok';
         status.textContent = `✓ ${this.label('labelValidJson', 'Valid JSON')}`;
       } catch (error) {
-        status.className = 'extra-property-lint extra-property-lint--warn';
+        status.className = 'extra-property-json-status extra-property-json-status--warn';
         status.textContent = this.label('labelInvalidJson', 'Invalid JSON: %error%')
           .replace('%error%', error instanceof Error ? error.message : String(error));
       }

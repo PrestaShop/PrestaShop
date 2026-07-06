@@ -317,6 +317,14 @@
     font-weight: 600;
   }
 
+  // Tree indentation of the form field anchor picker — one class per nesting level (deeper
+  // nodes clamp to the last one, see MAX_DEPTH_CLASS in anchor-tree.ts).
+  @for $depth from 1 through 6 {
+    &--depth-#{$depth} {
+      padding-left: #{0.75 + $depth * 0.9}rem;
+    }
+  }
+
   &__path {
     font-family: var(--#{$cdk}font-family-monospace, ui-monospace, monospace);
     font-size: var(--#{$cdk}size-12, 12px);
@@ -459,6 +467,19 @@
 
   .extra-property-anchor-wrap {
     display: block;
+  }
+}
+
+.extra-property-json-status {
+  margin-top: 0.25rem;
+  font-size: var(--#{$cdk}size-12, 12px);
+
+  &--ok {
+    color: #207f4b;
+  }
+
+  &--warn {
+    color: #8a5b00;
   }
 }
 

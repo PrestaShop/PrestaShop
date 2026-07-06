@@ -22,8 +22,7 @@ export default {
     addRow: '[data-role="add-row"]',
     removeRow: '[data-role="remove-row"]',
     structuredFields: '[data-role="structured-fields"]',
+    unknownPill: '[data-role="unknown-pill"]',
   },
   rowField: (field: string): string => `[name$="[${field}]"]`,
-  unknownPillClass: 'extra-property-tag extra-property-tag--warning',
-  unknownPillRole: 'unknown-pill',
 };

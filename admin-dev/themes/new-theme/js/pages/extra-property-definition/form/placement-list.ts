@@ -185,28 +185,18 @@ export default class PlacementList {
 
   /**
    * Amber "not in catalog" pill on rows whose id is unknown — a well-formed manual placement is
-   * supported and never blocks saving, the pill only pre-warns.
+   * supported and never blocks saving, the pill only pre-warns. The pill is rendered hidden by
+   * the form theme on every row; this only toggles it.
    */
   private refreshUnknownPill(row: HTMLElement): void {
-    const fields = row.querySelector(ExtraPropertyFormMap.subsection.structuredFields);
+    const pill = row.querySelector<HTMLElement>(ExtraPropertyFormMap.subsection.unknownPill);
 
-    if (!fields) {
+    if (!pill) {
       return;
     }
 
     const idValue = FormCollection.read(row, [this.config.idField])[this.config.idField];
-    const unknown = idValue !== '' && !this.knownIds.has(idValue);
-    let pill = fields.querySelector<HTMLElement>(`[data-role="${ExtraPropertyFormMap.unknownPillRole}"]`);
-
-    if (unknown && !pill) {
-      pill = document.createElement('span');
-      pill.className = ExtraPropertyFormMap.unknownPillClass;
-      pill.dataset.role = ExtraPropertyFormMap.unknownPillRole;
-      pill.textContent = this.container.dataset.labelUnknown ?? 'Not in catalog';
-      fields.appendChild(pill);
-    } else if (!unknown && pill) {
-      pill.remove();
-    }
+    pill.classList.toggle('d-none', idValue === '' || this.knownIds.has(idValue));
   }
 
   private updateChrome(): void {

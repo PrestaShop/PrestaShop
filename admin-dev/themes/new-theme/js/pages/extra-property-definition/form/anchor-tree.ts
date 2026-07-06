@@ -4,6 +4,7 @@
  */
 
 import ExtraPropertyFormMap from '@pages/extra-property-definition/form/extra-property-form-map';
+import cloneTemplate from '@pages/extra-property-definition/form/templates';
 
 interface FormFieldNode {
   name: string;
@@ -27,6 +28,9 @@ interface AnchorItem {
   depth: number;
 }
 
+/** Deepest indentation class defined in SCSS — deeper nodes clamp to it and stay readable. */
+const MAX_DEPTH_CLASS = 6;
+
 /**
  * Lazy anchor picker of the Forms placement rows: focusing a row's path input opens a dropdown
  * with the target form's recursive field tree, fetched ONCE per formId from the
@@ -38,8 +42,6 @@ interface AnchorItem {
  * always accepted as a free-text path.
  */
 export default class AnchorTreeEnhancer {
-  private container: HTMLElement;
-
   private urlTemplate: string;
 
   private cache = new Map<string, Promise<FormFieldsResponse>>();
@@ -51,7 +53,6 @@ export default class AnchorTreeEnhancer {
   private activeIndex = -1;
 
   constructor(container: HTMLElement) {
-    this.container = container;
     this.urlTemplate = container.dataset.formFieldsUrl ?? '';
 
     container.addEventListener('focusin', (event) => {
@@ -142,35 +143,23 @@ export default class AnchorTreeEnhancer {
    * cache); replaced by the tree, or silently removed for a non-introspectable form.
    */
   private renderLoading(input: HTMLInputElement): void {
-    const dropdown = document.createElement('div');
-    dropdown.className = 'extra-property-anchor-dropdown';
-
-    const item = document.createElement('div');
-    item.className = 'extra-property-anchor-loading';
-    item.setAttribute('role', 'status');
-    item.innerHTML = '<span class="extra-property-spinner" aria-hidden="true"></span><span></span>';
-    (<HTMLElement>item.lastElementChild).textContent = this.container.dataset.labelLoading ?? 'Loading fields…';
-
-    dropdown.appendChild(item);
+    const dropdown = cloneTemplate('tree-loading');
     input.closest('[data-role="anchor-wrap"]')?.appendChild(dropdown);
     this.dropdown = dropdown;
   }
 
   private render(input: HTMLInputElement, items: AnchorItem[]): void {
-    const dropdown = document.createElement('div');
-    dropdown.className = 'extra-property-anchor-dropdown';
-    dropdown.setAttribute('role', 'listbox');
+    const dropdown = cloneTemplate('suggestion-dropdown');
 
     items.forEach((item) => {
-      const option = document.createElement('button');
-      option.type = 'button';
-      option.className = `extra-property-anchor-option${item.compound ? ' extra-property-anchor-option--group' : ''}`;
-      option.setAttribute('role', 'option');
-      option.style.paddingLeft = `${0.75 + item.depth * 0.9}rem`;
+      const option = cloneTemplate('suggestion-option');
+      option.classList.toggle('extra-property-anchor-option--group', item.compound);
+
+      if (item.depth > 0) {
+        option.classList.add(`extra-property-anchor-option--depth-${Math.min(item.depth, MAX_DEPTH_CLASS)}`);
+      }
       option.dataset.path = item.path;
       option.dataset.compound = item.compound ? '1' : '0';
-      option.innerHTML = '<span class="extra-property-anchor-option__label"></span>'
-        + '<span class="extra-property-anchor-option__path"></span>';
       (<HTMLElement>option.querySelector('.extra-property-anchor-option__label')).textContent = item.label;
       (<HTMLElement>option.querySelector('.extra-property-anchor-option__path')).textContent = item.path;
       option.addEventListener('mousedown', (event) => {
