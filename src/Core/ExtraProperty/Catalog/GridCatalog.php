@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Catalog;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 use Throwable;
 
@@ -21,13 +22,17 @@ use Throwable;
  * are included). Factories whose definition cannot be built are logged and skipped, so one
  * broken grid never breaks the whole catalog.
  *
- * The scan is memoized per instance; a cache decorator can later wrap this service for
- * cross-request caching (see the prestashop.extra_property.catalog.filesystem_cache pool).
+ * The scan is memoized per instance and cached cross-request in the
+ * prestashop.extra_property.catalog.filesystem_cache pool — the grids are bound to the deployed
+ * code and installed modules, whose management already clears the Symfony cache the pool lives
+ * in, so no dedicated invalidation is needed.
  *
  * @phpstan-type GridEntry array{id: string, label: string, columns: list<array{id: string, label: string, position: int}>}
  */
 class GridCatalog
 {
+    private const CACHE_KEY = 'grids';
+
     /**
      * @var array<string, GridEntry>|null indexed by grid id, sorted by label
      */
@@ -37,6 +42,7 @@ class GridCatalog
         #[AutowireLocator('core.grid_definition_factory')]
         private readonly ServiceProviderInterface $gridDefinitionFactories,
         private readonly LoggerInterface $logger,
+        private readonly CacheInterface $cache,
     ) {
     }
 
@@ -66,10 +72,14 @@ class GridCatalog
      */
     private function getEntries(): array
     {
-        if (null !== $this->entries) {
-            return $this->entries;
-        }
+        return $this->entries ??= $this->cache->get(self::CACHE_KEY, fn (): array => $this->scanEntries());
+    }
 
+    /**
+     * @return array<string, GridEntry>
+     */
+    private function scanEntries(): array
+    {
         $entries = [];
         foreach (array_keys($this->gridDefinitionFactories->getProvidedServices()) as $serviceId) {
             try {
@@ -106,6 +116,6 @@ class GridCatalog
 
         uasort($entries, static fn (array $a, array $b): int => strcasecmp($a['label'], $b['label']));
 
-        return $this->entries = $entries;
+        return $entries;
     }
 }

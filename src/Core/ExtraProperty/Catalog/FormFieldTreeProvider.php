@@ -15,6 +15,7 @@ use PrestaShopBundle\Form\Admin\Sell\Product\EditProductFormType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -34,6 +35,7 @@ use Throwable;
  *
  * Recursion stops at {@see self::MAX_DEPTH} levels to keep the payload bounded (deeper nodes are
  * pruned); a child that cannot be introspected is logged and skipped without breaking its siblings.
+ * Trees are cached per form in the prestashop.extra_property.catalog.filesystem_cache pool.
  *
  * @phpstan-type FieldNode array{name: string, path: string, label: string, typeClass: class-string, compound: bool, children: list<mixed>}
  */
@@ -62,6 +64,7 @@ class FormFieldTreeProvider
         private readonly FormCatalog $formCatalog,
         private readonly FormFactoryInterface $formFactory,
         private readonly LoggerInterface $logger,
+        private readonly CacheItemPoolInterface $cache,
         private readonly ShopContext $shopContext,
         private readonly Connection $connection,
         private readonly string $dbPrefix,
@@ -81,12 +84,23 @@ class FormFieldTreeProvider
             return null;
         }
 
+        // Cached per form in the extra property catalog pool (cleared with the Symfony cache,
+        // which module management already triggers); an un-introspectable form (null) is never
+        // cached, so a transient failure is retried on the next request.
+        $item = $this->cache->getItem('form_fields_' . md5($formId));
+        if ($item->isHit()) {
+            return $item->get();
+        }
+
         try {
             $formBuilder = $this->formFactory->createBuilder($formTypeClass, null, $this->introspectionOptions($formId, $formTypeClass));
 
             // Child builders resolve lazily: the first buildNodes() level is what actually runs
             // the children's buildForm(), so it must sit inside this try too.
-            return $this->buildNodes($formBuilder, '', 1);
+            $tree = $this->buildNodes($formBuilder, '', 1);
+            $this->cache->save($item->set($tree));
+
+            return $tree;
         } catch (Throwable $e) {
             $this->logger->warning(
                 sprintf('Extra property form field tree: could not build form "%s" (%s): %s', $formId, $formTypeClass, $e->getMessage()),

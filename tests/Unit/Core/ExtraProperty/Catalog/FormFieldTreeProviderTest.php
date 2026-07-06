@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalog;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProvider;
 use Psr\Log\NullLogger;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -126,6 +127,7 @@ class FormFieldTreeProviderTest extends TestCase
             $formCatalog,
             Forms::createFormFactory(),
             new NullLogger(),
+            new ArrayAdapter(),
             $this->createMock(ShopContext::class),
             $this->createMock(Connection::class),
             'ps_',

@@ -91,6 +91,7 @@ services:
     arguments:
       $openApiFactory: '@api_platform.openapi.factory'
       $logger: '@logger'
+      $cache: '@prestashop.extra_property.catalog.filesystem_cache'
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\AssociationExistenceChecker:
     arguments:

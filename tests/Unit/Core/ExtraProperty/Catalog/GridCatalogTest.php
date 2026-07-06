@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInte
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use Psr\Log\NullLogger;
 use RuntimeException;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class GridCatalogTest extends TestCase
@@ -26,7 +27,7 @@ class GridCatalogTest extends TestCase
             'grid.factory.zone' => $this->createFactory('zone', 'Zones', ['id_zone' => 'ID', 'name' => 'Zone name']),
             'grid.factory.broken' => $this->createBrokenFactory(),
             'grid.factory.customer' => $this->createFactory('customer', 'Customers', ['id_customer' => 'ID']),
-        ]), new NullLogger());
+        ]), new NullLogger(), new ArrayAdapter());
 
         $entries = $catalog->getAll();
 
@@ -51,7 +52,7 @@ class GridCatalogTest extends TestCase
         $catalog = new GridCatalog($this->createProvider([
             'grid.factory.zone' => $this->createFactory('zone', 'Zones', ['id_zone' => 'ID']),
             'grid.factory.broken' => $this->createBrokenFactory(),
-        ]), new NullLogger());
+        ]), new NullLogger(), new ArrayAdapter());
 
         $this->assertTrue($catalog->has('zone'));
         $this->assertFalse($catalog->has('unknown'));
@@ -69,11 +70,17 @@ class GridCatalogTest extends TestCase
         $factory = $this->createMock(GridDefinitionFactoryInterface::class);
         $factory->expects($this->once())->method('getDefinition')->willReturn($definition);
 
-        $catalog = new GridCatalog($this->createProvider(['grid.factory.zone' => $factory]), new NullLogger());
+        $cache = new ArrayAdapter();
+        $catalog = new GridCatalog($this->createProvider(['grid.factory.zone' => $factory]), new NullLogger(), $cache);
 
         $catalog->getAll();
         $catalog->getAll();
         $this->assertTrue($catalog->has('zone'));
+
+        // A second instance sharing the pool never scans: the cache is cross-request.
+        $brokenProvider = $this->createProvider([]);
+        $cachedCatalog = new GridCatalog($brokenProvider, new NullLogger(), $cache);
+        $this->assertTrue($cachedCatalog->has('zone'));
     }
 
     /**

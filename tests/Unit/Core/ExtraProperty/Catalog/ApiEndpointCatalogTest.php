@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ApiEndpointCatalog;
 use Psr\Log\NullLogger;
 use RuntimeException;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class ApiEndpointCatalogTest extends TestCase
 {
@@ -51,15 +52,18 @@ class ApiEndpointCatalogTest extends TestCase
         $this->assertFalse($catalog->hasUriTemplate('/ghosts'));
     }
 
-    public function testABrokenDocumentYieldsAnEmptyCatalog(): void
+    public function testABrokenDocumentYieldsAnEmptyCatalogAndIsNotCached(): void
     {
         $factory = $this->createMock(OpenApiFactoryInterface::class);
         $factory->method('__invoke')->willThrowException(new RuntimeException('a module resource is broken'));
+        $cache = new ArrayAdapter();
 
-        $catalog = new ApiEndpointCatalog($factory, new NullLogger());
+        $catalog = new ApiEndpointCatalog($factory, new NullLogger(), $cache);
 
         $this->assertSame([], $catalog->getAll());
         $this->assertFalse($catalog->hasUriTemplate('/products'));
+        // The failure was not cached: a healthy instance sharing the pool scans again.
+        $this->assertFalse($cache->getItem('api_endpoints')->isHit());
     }
 
     public function testTheDocumentIsGeneratedOnce(): void
@@ -71,7 +75,7 @@ class ApiEndpointCatalogTest extends TestCase
         $factory->expects($this->once())->method('__invoke')
             ->willReturn(new OpenApi(new Info('Admin API', '1.0'), [], $paths));
 
-        $catalog = new ApiEndpointCatalog($factory, new NullLogger());
+        $catalog = new ApiEndpointCatalog($factory, new NullLogger(), new ArrayAdapter());
         $catalog->getAll();
         $catalog->getAll();
         $this->assertTrue($catalog->hasUriTemplate('/products'));
@@ -82,6 +86,6 @@ class ApiEndpointCatalogTest extends TestCase
         $factory = $this->createMock(OpenApiFactoryInterface::class);
         $factory->method('__invoke')->willReturn(new OpenApi(new Info('Admin API', '1.0'), [], $paths));
 
-        return new ApiEndpointCatalog($factory, new NullLogger());
+        return new ApiEndpointCatalog($factory, new NullLogger(), new ArrayAdapter());
     }
 }

@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Catalog;
 
 use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 use Throwable;
 
 /**
@@ -31,11 +32,15 @@ use Throwable;
  * defined in app/config/admin/services.yml instead of the shared catalog.yml; using them in
  * another kernel requires enabling swagger there first, and will fail loudly until then.
  *
- * The scan is memoized per instance; a cache decorator can later wrap this service for
- * cross-request caching (see the prestashop.extra_property.catalog.filesystem_cache pool).
+ * The scan is memoized per instance and cached cross-request in the
+ * prestashop.extra_property.catalog.filesystem_cache pool — the endpoints are bound to the
+ * deployed code and installed modules, whose management already clears the Symfony cache the
+ * pool lives in, so no dedicated invalidation is needed. A generation failure is never cached.
  */
 class ApiEndpointCatalog
 {
+    private const CACHE_KEY = 'api_endpoints';
+
     /**
      * @var array<string, array{uriTemplate: string, methods: list<string>}>|null indexed and sorted by normalized URI template
      */
@@ -44,6 +49,7 @@ class ApiEndpointCatalog
     public function __construct(
         private readonly OpenApiFactoryInterface $openApiFactory,
         private readonly LoggerInterface $logger,
+        private readonly CacheInterface $cache,
     ) {
     }
 
@@ -72,10 +78,10 @@ class ApiEndpointCatalog
             return $this->entries;
         }
 
-        $entries = [];
-
         try {
-            $paths = ($this->openApiFactory)()->getPaths()->getPaths();
+            // A throw inside the callback aborts the cache write: a broken document is retried
+            // on the next request instead of being cached until the next cache clear.
+            return $this->entries = $this->cache->get(self::CACHE_KEY, fn (): array => $this->scanEntries());
         } catch (Throwable $e) {
             $this->logger->warning(
                 sprintf('Extra property API endpoint catalog: could not generate the OpenApi document: %s', $e->getMessage()),
@@ -84,6 +90,15 @@ class ApiEndpointCatalog
 
             return $this->entries = [];
         }
+    }
+
+    /**
+     * @return array<string, array{uriTemplate: string, methods: list<string>}>
+     */
+    private function scanEntries(): array
+    {
+        $entries = [];
+        $paths = ($this->openApiFactory)()->getPaths()->getPaths();
 
         foreach ($paths as $path => $pathItem) {
             $methods = [];
@@ -109,7 +124,7 @@ class ApiEndpointCatalog
 
         ksort($entries, SORT_STRING);
 
-        return $this->entries = $entries;
+        return $entries;
     }
 
     /**

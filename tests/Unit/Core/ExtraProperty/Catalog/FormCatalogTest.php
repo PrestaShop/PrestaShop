@@ -13,6 +13,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalog;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalog;
 use Psr\Log\NullLogger;
 use RuntimeException;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Form\FormRegistryInterface;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
 
@@ -92,6 +93,7 @@ class FormCatalogTest extends TestCase
             $this->createRegistry(),
             $this->createGridCatalog(['product' => 'Products list']),
             new NullLogger(),
+            new ArrayAdapter(),
         );
     }
 

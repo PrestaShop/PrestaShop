@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Catalog;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormRegistryInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 use Throwable;
 
 /**
@@ -23,11 +24,15 @@ use Throwable;
  * id when one exists (e.g. "product", "customer"), and falls back to a humanized block
  * prefix otherwise. Unresolvable form types are logged and skipped.
  *
- * The scan is memoized per instance; a cache decorator can later wrap this service for
- * cross-request caching (see the prestashop.extra_property.catalog.filesystem_cache pool).
+ * The scan is memoized per instance and cached cross-request in the
+ * prestashop.extra_property.catalog.filesystem_cache pool — the forms are bound to the deployed
+ * code and installed modules, whose management already clears the Symfony cache the pool lives
+ * in, so no dedicated invalidation is needed.
  */
 class FormCatalog
 {
+    private const CACHE_KEY = 'forms';
+
     /**
      * The form type class is kept internally (for getFormTypeClass()) but never exposed by
      * getAll(): it is a server-side implementation detail the client payload must not leak.
@@ -45,6 +50,7 @@ class FormCatalog
         private readonly FormRegistryInterface $formRegistry,
         private readonly GridCatalog $gridCatalog,
         private readonly LoggerInterface $logger,
+        private readonly CacheInterface $cache,
     ) {
     }
 
@@ -77,10 +83,14 @@ class FormCatalog
      */
     private function getEntries(): array
     {
-        if (null !== $this->entries) {
-            return $this->entries;
-        }
+        return $this->entries ??= $this->cache->get(self::CACHE_KEY, fn (): array => $this->scanEntries());
+    }
 
+    /**
+     * @return array<string, array{id: string, label: string, formTypeClass: class-string}>
+     */
+    private function scanEntries(): array
+    {
         $entries = [];
         foreach ($this->identifiableObjectFormTypes as $formTypeClass) {
             try {
@@ -106,7 +116,7 @@ class FormCatalog
 
         uasort($entries, static fn (array $a, array $b): int => strcasecmp($a['label'], $b['label']));
 
-        return $this->entries = $entries;
+        return $entries;
     }
 
     private function resolveLabel(string $formId): string

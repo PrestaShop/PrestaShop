@@ -9,14 +9,17 @@ services:
     autoconfigure: true
     public: false
 
-  # Filesystem cache pool for the catalogs. Declared now so the caching seam is ready, but nothing
-  # consumes it yet — cached catalog decorators will be plugged on it later.
+  # Filesystem cache pool shared by every catalog below (and the admin-only endpoint catalog).
+  # It lives inside the Symfony kernel cache dir (these services are Symfony-only — ps_cache_dir
+  # is the legacy folder for services shared with the FO), so the cache:clear that module
+  # management already triggers wipes it — no dedicated invalidation is needed: the catalogs are
+  # bound to the deployed code and installed modules.
   prestashop.extra_property.catalog.filesystem_cache:
     class: Symfony\Component\Cache\Adapter\FilesystemAdapter
     arguments:
       - 'extra_property_catalog'
       - 0
-      - '%ps_cache_dir%'
+      - '%kernel.cache_dir%'
 
   # ─── Grid catalog ────────────────────────────────────────────────────────────
   # The tagged locator is autowired via the #[AutowireLocator('core.grid_definition_factory')]
@@ -25,6 +28,7 @@ services:
   PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalog:
     arguments:
       $logger: '@logger'
+      $cache: '@prestashop.extra_property.catalog.filesystem_cache'
 
   # ─── Form catalog ────────────────────────────────────────────────────────────
   # The form types parameter is built by IdentifiableObjectFormTypesCollectorPass (all environments).
@@ -33,6 +37,7 @@ services:
     arguments:
       $identifiableObjectFormTypes: '%prestashop.core.form.identifiable_object.form_types%'
       $logger: '@logger'
+      $cache: '@prestashop.extra_property.catalog.filesystem_cache'
 
   # The Admin API endpoint catalog and its consumers (AssociationExistenceChecker, the Placement
   # card form type) are defined in app/config/admin/services.yml ONLY: they need the OpenApi
@@ -46,6 +51,7 @@ services:
   PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProvider:
     arguments:
       $logger: '@logger'
+      $cache: '@prestashop.extra_property.catalog.filesystem_cache'
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
 
