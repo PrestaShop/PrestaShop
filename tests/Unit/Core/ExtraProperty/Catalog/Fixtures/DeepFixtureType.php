@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Recursively nested form (one "child" sub-form per level) used by FormFieldTreeProviderTest
  * to assert the depth cap of the tree.
  */
-final class DeepFixtureType extends AbstractType
+class DeepFixtureType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

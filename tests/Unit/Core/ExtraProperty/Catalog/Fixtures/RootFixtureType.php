@@ -17,7 +17,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 /**
  * Small nested form used by FormFieldTreeProviderTest.
  */
-final class RootFixtureType extends AbstractType
+class RootFixtureType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

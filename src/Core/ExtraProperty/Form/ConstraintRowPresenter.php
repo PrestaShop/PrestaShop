@@ -27,7 +27,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintM
  * Name[...] shape cannot be represented as a row and is skipped; the mapper never renders such a
  * token, so this only drops hand-edited database values.
  */
-final class ConstraintRowPresenter
+class ConstraintRowPresenter
 {
     /**
      * Static-only class.

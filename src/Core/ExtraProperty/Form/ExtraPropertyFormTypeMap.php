@@ -27,7 +27,7 @@ use Symfony\Component\Form\FormTypeInterface;
  * The definition's formOptions are merged OVER the base options returned here, so a definition
  * can refine the defaults (e.g. change the NumberType scale) without replacing the whole type.
  */
-final class ExtraPropertyFormTypeMap
+class ExtraPropertyFormTypeMap
 {
     /**
      * FLOAT storage columns are DECIMAL(20,6) (see ColumnDefinitionMapper), so the form input

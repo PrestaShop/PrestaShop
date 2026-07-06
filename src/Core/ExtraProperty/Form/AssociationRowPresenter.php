@@ -23,7 +23,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefin
  * ExtraPropertyDefinition constructor runs) is skipped — every persisted entry went through that
  * grammar already, so this only drops hand-edited database values.
  */
-final class AssociationRowPresenter
+class AssociationRowPresenter
 {
     /**
      * Static-only class.

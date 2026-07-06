@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraints\Composite;
  * tell a UI-relevant option from an edge-case one, nor order them meaningfully). Message-template
  * options are left out — they are parseable but noise for a builder UI.
  */
-final class ExtraPropertyConstraintCatalog
+class ExtraPropertyConstraintCatalog
 {
     /**
      * Curated option lists (ordered, typed) taking precedence over reflection.

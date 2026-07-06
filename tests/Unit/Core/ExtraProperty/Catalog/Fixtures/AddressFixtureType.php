@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 /**
  * Compound sub-form used by FormFieldTreeProviderTest.
  */
-final class AddressFixtureType extends AbstractType
+class AddressFixtureType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

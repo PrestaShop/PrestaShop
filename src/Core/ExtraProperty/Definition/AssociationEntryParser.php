@@ -26,7 +26,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefin
  * Note: they intentionally do NOT check that the formId/gridId/uriPath exists — pointing to a
  * form or grid not (yet) detected by the catalog is a supported manual override.
  */
-final class AssociationEntryParser
+class AssociationEntryParser
 {
     /**
      * HTTP methods accepted as modifiers of an associated_apis entry.

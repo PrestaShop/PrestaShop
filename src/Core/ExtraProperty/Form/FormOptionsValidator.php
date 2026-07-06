@@ -27,7 +27,7 @@ use Throwable;
  * Runtime-only option values injected by the modifier (label, help) are replaced by dummy
  * strings: they never influence option resolution.
  */
-final class FormOptionsValidator
+class FormOptionsValidator
 {
     public function __construct(
         private readonly FormFactoryInterface $formFactory,

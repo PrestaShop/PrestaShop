@@ -26,7 +26,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintM
  * token. No name/options check happens here — the row form type validates each serialized token
  * through the mapper before the data handler runs.
  */
-final class ConstraintRowSerializer
+class ConstraintRowSerializer
 {
     /**
      * Static-only class.

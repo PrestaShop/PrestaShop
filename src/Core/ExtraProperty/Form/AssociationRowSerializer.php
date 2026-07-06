@@ -19,7 +19,7 @@ namespace PrestaShop\PrestaShop\Core\ExtraProperty\Form;
  * produce an entry. No grammar check happens here — the row form types validate each serialized
  * entry through AssociationEntryParser before the data handler runs.
  */
-final class AssociationRowSerializer
+class AssociationRowSerializer
 {
     /**
      * Static-only class.

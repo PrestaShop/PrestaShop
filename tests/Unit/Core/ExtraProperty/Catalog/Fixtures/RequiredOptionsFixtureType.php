@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * required product_id/shop_id/product_type) — used by FormFieldTreeProviderTest to cover the
  * introspection options providers.
  */
-final class RequiredOptionsFixtureType extends AbstractType
+class RequiredOptionsFixtureType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

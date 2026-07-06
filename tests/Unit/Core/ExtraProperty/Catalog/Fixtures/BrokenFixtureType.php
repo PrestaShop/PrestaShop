@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 /**
  * Form type that cannot be built, used by FormFieldTreeProviderTest to assert resilience.
  */
-final class BrokenFixtureType extends AbstractType
+class BrokenFixtureType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
