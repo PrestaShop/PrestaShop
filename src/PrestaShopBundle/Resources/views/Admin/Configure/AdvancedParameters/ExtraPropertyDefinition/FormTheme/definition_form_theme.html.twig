@@ -1,13 +1,14 @@
 {#
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
- #
- # Form theme of the extra property definition form's two redesigned cards (Validation and
- # Placement). The builder rows ARE the mapped form data (collections of row sub-forms, split
- # from the stored entries by the form data provider and serialized back by the data handler);
- # the page JS only adds affordances on top (suggestions, chips, typed option inputs, add/remove
- # against the collection prototype). Row validation errors render inside the offending row.
  #}
+
+{# Form theme of the extra property definition form's two redesigned cards (Validation and
+ # Placement), applied through the form type's form_theme option. The builder rows ARE the mapped
+ # form data (collections of row sub-forms, split from the stored entries by the form data
+ # provider and serialized back by the data handler); the page JS only adds affordances on top
+ # (suggestions, chips, typed option inputs, add/remove against the collection prototype). Row
+ # validation errors render inside the offending row. #}
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 

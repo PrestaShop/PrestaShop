@@ -68,6 +68,12 @@ class ExtraPropertyDefinitionType extends TranslatorAwareType
         $resolver->setDefaults([
             'label' => false,
             'is_edit' => false,
+            // Applied through FormThemeExtension so every template rendering this form (create,
+            // edit, read-only view) gets the card/row blocks without repeating a form_theme tag.
+            'form_theme' => [
+                '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig',
+                '@PrestaShop/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig',
+            ],
             'constraints' => [
                 new Callback([$this, 'validateLabelWordingRequirement']),
                 new Callback([$this, 'validateFormFieldTypeAndOptions']),
