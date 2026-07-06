@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroups;
 use PrestaShopBundle\Form\Admin\Sell\Category\SEO\RedirectOptionType;
 use PrestaShopBundle\Form\Admin\Type\CategorySeoPreviewType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
@@ -26,6 +27,8 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -51,24 +54,32 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     protected $configuration;
 
     /**
+     * @var DefaultGroups|null
+     */
+    private $defaultGroups;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
      * @param FeatureInterface $multiStoreFeature
      * @param ConfigurationInterface $configuration
+     * @param DefaultGroups|null $defaultGroups
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $customerGroupChoices,
         FeatureInterface $multiStoreFeature,
-        ConfigurationInterface $configuration
+        ConfigurationInterface $configuration,
+        ?DefaultGroups $defaultGroups = null
     ) {
         parent::__construct($translator, $locales);
 
         $this->customerGroupChoices = $customerGroupChoices;
         $this->multiStoreFeature = $multiStoreFeature;
         $this->configuration = $configuration;
+        $this->defaultGroups = $defaultGroups;
     }
 
     /**
@@ -273,6 +284,20 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             $builder->add('shop_association', ShopChoiceTreeType::class, [
                 'label' => $this->trans('Store association', 'Admin.Global'),
             ]);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Expose the default customer groups on the group access field so the
+     * informative alert stays bound to that field wherever it is rendered,
+     * instead of being hardcoded at the end of the form template.
+     */
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        if (null !== $this->defaultGroups && isset($view['group_association'])) {
+            $view['group_association']->vars['default_groups'] = $this->defaultGroups;
         }
     }
 

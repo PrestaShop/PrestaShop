@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
-use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
@@ -129,8 +128,6 @@ class CategoryController extends PrestaShopAdminController
         FormBuilderInterface $categoryFormBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.category_form_handler')]
         FormHandlerInterface $categoryFormHandler,
-        #[Autowire(service: 'prestashop.adapter.group.provider.default_groups_provider')]
-        DefaultGroupsProviderInterface $defaultGroupsProvider
     ): Response {
         $configuration = $this->getConfiguration();
         $parentId = (int) $request->query->get('id_parent', (int) $configuration->get('PS_HOME_CATEGORY'));
@@ -161,15 +158,12 @@ class CategoryController extends PrestaShopAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $defaultGroups = $defaultGroupsProvider->getGroups();
-
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/create.html.twig',
             [
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
                 'categoryForm' => $categoryForm->createView(),
-                'defaultGroups' => $defaultGroups,
                 'layoutTitle' => $this->trans('New category', [], 'Admin.Navigation.Menu'),
                 'categoryUrl' => null,
             ]
@@ -190,8 +184,6 @@ class CategoryController extends PrestaShopAdminController
         FormBuilderInterface $rootCategoryFormBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.root_category_form_handler')]
         FormHandlerInterface $rootCategoryFormHandler,
-        #[Autowire(service: 'prestashop.adapter.group.provider.default_groups_provider')]
-        DefaultGroupsProviderInterface $defaultGroupsProvider
     ): Response {
         $rootCategoryForm = $rootCategoryFormBuilder->getForm();
         $rootCategoryForm->handleRequest($request);
@@ -210,15 +202,12 @@ class CategoryController extends PrestaShopAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $defaultGroups = $defaultGroupsProvider->getGroups();
-
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/create_root.html.twig',
             [
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
                 'rootCategoryForm' => $rootCategoryForm->createView(),
-                'defaultGroups' => $defaultGroups,
                 'layoutTitle' => $this->trans('New category', [], 'Admin.Navigation.Menu'),
             ]
         );
@@ -240,8 +229,6 @@ class CategoryController extends PrestaShopAdminController
         FormBuilderInterface $categoryFormBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.category_form_handler')]
         FormHandlerInterface $categoryFormHandler,
-        #[Autowire(service: 'prestashop.adapter.group.provider.default_groups_provider')]
-        DefaultGroupsProviderInterface $defaultGroupsProvider,
     ): Response {
         try {
             /** @var EditableCategory $editableCategory */
@@ -284,8 +271,6 @@ class CategoryController extends PrestaShopAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $defaultGroups = $defaultGroupsProvider->getGroups();
-
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig',
             [
@@ -295,7 +280,6 @@ class CategoryController extends PrestaShopAdminController
                 'contextLangId' => $this->getLanguageContext()->getId(),
                 'editCategoryForm' => $categoryForm->createView(),
                 'editableCategory' => $editableCategory,
-                'defaultGroups' => $defaultGroups,
                 'layoutTitle' => $this->trans(
                     'Editing category %category_name%',
                     [
@@ -323,8 +307,6 @@ class CategoryController extends PrestaShopAdminController
         FormBuilderInterface $rootCategoryFormBuilder,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.handler.root_category_form_handler')]
         FormHandlerInterface $rootCategoryFormHandler,
-        #[Autowire(service: 'prestashop.adapter.group.provider.default_groups_provider')]
-        DefaultGroupsProviderInterface $defaultGroupsProvider
     ): Response {
         try {
             /** @var EditableCategory $editableCategory */
@@ -362,8 +344,6 @@ class CategoryController extends PrestaShopAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
-        $defaultGroups = $defaultGroupsProvider->getGroups();
-
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig',
             [
@@ -373,7 +353,6 @@ class CategoryController extends PrestaShopAdminController
                 'contextLangId' => $this->getLanguageContext()->getId(),
                 'editRootCategoryForm' => $rootCategoryForm->createView(),
                 'editableCategory' => $editableCategory,
-                'defaultGroups' => $defaultGroups,
                 'layoutTitle' => $this->trans(
                     'Editing category %category_name%',
                     [

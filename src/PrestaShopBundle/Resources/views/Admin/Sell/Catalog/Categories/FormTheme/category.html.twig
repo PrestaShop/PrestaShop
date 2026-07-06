@@ -10,3 +10,23 @@
       {{ 'Here is a preview of how your page will appear in search engine results.'|trans({}, 'Admin.Global') }}
     </small>
 {% endblock category_seo_preview_widget %}
+
+{% block material_choice_table_row %}
+    {{ block('form_row') }}
+    {% if default_groups is defined %}
+      <div class="form-group row">
+        <label class="form-control-label"></label>
+        <div class="col-sm">
+          <div class="alert alert-info">
+            <p class="mb-1">
+              <strong>{{ 'You now have three default customer groups.'|trans({}, 'Admin.Catalog.Help') }}</strong>
+            </p>
+
+            <p>{{ '%group_name% - All people without a valid customer account.'|trans({'%group_name%': '<strong>' ~ default_groups.visitorsGroup.name ~ '</strong>'}, 'Admin.Catalog.Feature')|raw_purified }}</p>
+            <p>{{ '%group_name% - Customer who placed an order with the guest checkout.'|trans({'%group_name%': '<strong>' ~ default_groups.guestsGroup.name ~ '</strong>'}, 'Admin.Catalog.Feature')|raw_purified }}</p>
+            <p>{{ '%group_name% - All people who have created an account on this site.'|trans({'%group_name%': '<strong>' ~ default_groups.customersGroup.name ~ '</strong>'}, 'Admin.Catalog.Feature')|raw_purified }}</p>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+{% endblock material_choice_table_row %}
