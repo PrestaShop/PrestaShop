@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\ExtraProperty;
+namespace Tests\Unit\Core\ExtraProperty\Form;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\AssociationRowPresenter;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\AssociationRowPresenter;
 
 /**
  * The row presenter feeds the definition form's placement collections: one stored entry = one row

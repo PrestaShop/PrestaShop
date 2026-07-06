@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\ExtraProperty;
+namespace Tests\Unit\Core\ExtraProperty\Form;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\AssociationRowPresenter;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\AssociationRowSerializer;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\AssociationRowPresenter;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\AssociationRowSerializer;
 
 /**
  * The row serializer is the data handler's inverse of AssociationRowPresenter: rows only carry an

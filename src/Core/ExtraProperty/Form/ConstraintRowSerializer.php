@@ -7,7 +7,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\ExtraProperty\Validation;
+namespace PrestaShop\PrestaShop\Core\ExtraProperty\Form;
+
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
  * Turns the definition form's constraint rows back into the DSL string the constraint mapper

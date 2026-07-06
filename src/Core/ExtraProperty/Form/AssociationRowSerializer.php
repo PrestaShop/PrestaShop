@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
+namespace PrestaShop\PrestaShop\Core\ExtraProperty\Form;
 
 /**
  * Turns the definition form's placement rows back into the "one placement entry" strings the

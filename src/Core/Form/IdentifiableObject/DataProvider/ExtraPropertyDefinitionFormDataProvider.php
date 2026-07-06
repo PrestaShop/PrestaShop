@@ -12,11 +12,11 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Query\GetExtraPropertyDefinitionForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\QueryResult\EditableExtraPropertyDefinition;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\AssociationRowPresenter;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ConstraintRowPresenter;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\AssociationRowPresenter;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowPresenter;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**

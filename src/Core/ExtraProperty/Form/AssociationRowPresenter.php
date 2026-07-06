@@ -7,8 +7,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
+namespace PrestaShop\PrestaShop\Core\ExtraProperty\Form;
 
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\AssociationEntryParser;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
 
 /**

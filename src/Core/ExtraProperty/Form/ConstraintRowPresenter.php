@@ -7,7 +7,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\ExtraProperty\Validation;
+namespace PrestaShop\PrestaShop\Core\ExtraProperty\Form;
+
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
  * Splits a constraints DSL string (the mapper's toNames() render) into the row models backing the

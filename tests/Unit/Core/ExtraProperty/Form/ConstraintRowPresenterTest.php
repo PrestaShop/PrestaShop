@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\ExtraProperty\Validation;
+namespace Tests\Unit\Core\ExtraProperty\Form;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ConstraintRowPresenter;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowPresenter;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**

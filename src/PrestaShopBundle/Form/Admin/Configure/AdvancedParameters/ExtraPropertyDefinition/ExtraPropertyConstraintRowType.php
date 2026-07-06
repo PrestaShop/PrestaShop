@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition;
 
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ConstraintRowSerializer;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowSerializer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
