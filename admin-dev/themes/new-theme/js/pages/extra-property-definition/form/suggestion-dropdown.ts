@@ -4,26 +4,39 @@
  */
 
 export interface SuggestionItem {
-  /** Written into the input on selection. */
+  /** Written into the input on selection (unless writeValue is false). */
   value: string;
   /** Main display text (human label). */
   label: string;
-  /** Gray secondary text (technical id / FQCN). */
+  /** Gray secondary text (technical id / FQCN / methods). */
   detail: string;
+  /** Optional heading: consecutive items sharing a group render under one heading row. */
+  group?: string;
+  /** Escape-hatch styling (e.g. "use as a custom path"). */
+  custom?: boolean;
 }
 
 interface SuggestionDropdownOptions {
   /** Receives the focused input so items can depend on the row context (e.g. its grid id). */
   items: (input: HTMLInputElement) => SuggestionItem[];
-  /** Called after a suggestion was written into the input (side effects like defaulting siblings). */
+  /** Called after a suggestion was picked (side effects like defaulting siblings, adding rows). */
   onSelect?: (value: string, input: HTMLInputElement) => void;
+  /** Write the picked value into the input and fire "input" (default true) — search-to-add pickers turn it off. */
+  writeValue?: boolean;
+  /** Rebuild the items on every keystroke instead of filtering the opened list — for item sets that depend on the query itself. */
+  dynamicItems?: boolean;
+  /** Enter with nothing highlighted picks the first visible option (default false). */
+  enterSelectsFirst?: boolean;
+  /** Extra class on option labels (e.g. text-monospace for URI templates). */
+  labelClass?: string;
 }
 
 /**
- * Generic "free text + suggestions" enhancer shared by the catalog-backed inputs (form/grid id
- * pickers, form type FQCN): the input always accepts free text — pointing outside the catalog
- * is supported — and focusing/typing shows a filtered dropdown of catalog entries. Delegated on
- * a container so it survives dynamically added rows. Keyboard operable (arrows/Enter/Escape).
+ * Generic "free text + suggestions" enhancer shared by every picker of the page (form/grid id,
+ * grid column, constraint name, form type FQCN, endpoint search): the input always accepts free
+ * text — pointing outside the catalog is supported — and focusing/typing shows a filtered
+ * dropdown of catalog entries, optionally grouped under headings. Delegated on a container so it
+ * survives dynamically added rows. Keyboard operable (arrows/Enter/Escape).
  */
 export default class SuggestionDropdown {
   private options: SuggestionDropdownOptions;
@@ -46,8 +59,14 @@ export default class SuggestionDropdown {
     });
 
     container.addEventListener('input', (event) => {
-      if (event.target === this.activeInput) {
-        this.filter(this.activeInput?.value ?? '');
+      if (event.target !== this.activeInput || this.activeInput === null) {
+        return;
+      }
+
+      if (this.options.dynamicItems) {
+        this.open(this.activeInput);
+      } else {
+        this.filter(this.activeInput.value);
       }
     });
 
@@ -77,15 +96,29 @@ export default class SuggestionDropdown {
     dropdown.className = 'extra-property-anchor-dropdown';
     dropdown.setAttribute('role', 'listbox');
 
+    let lastGroup: string | null = null;
     items.forEach((item) => {
+      if (item.group !== undefined && item.group !== lastGroup) {
+        lastGroup = item.group;
+        const heading = document.createElement('div');
+        heading.className = 'extra-property-anchor-heading';
+        heading.textContent = item.group;
+        dropdown.appendChild(heading);
+      }
+
       const option = document.createElement('button');
       option.type = 'button';
-      option.className = 'extra-property-anchor-option';
+      option.className = `extra-property-anchor-option${item.custom ? ' extra-property-anchor-option--custom' : ''}`;
       option.setAttribute('role', 'option');
       option.dataset.value = item.value;
       option.innerHTML = '<span class="extra-property-anchor-option__label"></span>'
         + '<span class="extra-property-anchor-option__path"></span>';
-      (<HTMLElement>option.querySelector('.extra-property-anchor-option__label')).textContent = item.label;
+      const label = <HTMLElement>option.querySelector('.extra-property-anchor-option__label');
+      label.textContent = item.label;
+
+      if (this.options.labelClass) {
+        label.classList.add(this.options.labelClass);
+      }
       (<HTMLElement>option.querySelector('.extra-property-anchor-option__path')).textContent = item.detail;
       option.addEventListener('mousedown', (event) => {
         // mousedown (not click) so the selection beats the input's focusout.
@@ -106,7 +139,8 @@ export default class SuggestionDropdown {
 
     wrap.appendChild(dropdown);
     this.dropdown = dropdown;
-    this.filter(input.value);
+    // Query-dependent items are already narrowed by items() itself.
+    this.filter(this.options.dynamicItems ? '' : input.value);
   }
 
   private select(option: HTMLElement): void {
@@ -116,9 +150,13 @@ export default class SuggestionDropdown {
       return;
     }
 
-    input.value = option.dataset.value ?? '';
-    input.dispatchEvent(new Event('input', {bubbles: true}));
-    this.options.onSelect?.(input.value, input);
+    const value = option.dataset.value ?? '';
+
+    if (this.options.writeValue !== false) {
+      input.value = value;
+      input.dispatchEvent(new Event('input', {bubbles: true}));
+    }
+    this.options.onSelect?.(value, input);
     this.close();
     input.focus();
   }
@@ -139,7 +177,34 @@ export default class SuggestionDropdown {
       option.classList.toggle('d-none', needle !== '' && !haystack.includes(needle));
     });
 
+    this.refreshHeadings();
     this.highlight(-1);
+  }
+
+  /**
+   * A heading hides when the filter left it no visible option before the next heading.
+   */
+  private refreshHeadings(): void {
+    if (!this.dropdown) {
+      return;
+    }
+
+    let heading: HTMLElement | null = null;
+    let hasVisibleOption = false;
+    const flush = (): void => {
+      heading?.classList.toggle('d-none', !hasVisibleOption);
+    };
+
+    Array.from(this.dropdown.children).forEach((child) => {
+      if (child.classList.contains('extra-property-anchor-heading')) {
+        flush();
+        heading = <HTMLElement>child;
+        hasVisibleOption = false;
+      } else if (!child.classList.contains('d-none')) {
+        hasVisibleOption = true;
+      }
+    });
+    flush();
   }
 
   private highlight(index: number): void {
@@ -172,6 +237,9 @@ export default class SuggestionDropdown {
         if (this.activeIndex >= 0 && options[this.activeIndex]) {
           event.preventDefault();
           this.select(options[this.activeIndex]);
+        } else if (this.options.enterSelectsFirst && options.length > 0) {
+          event.preventDefault();
+          this.select(options[0]);
         }
         break;
       case 'Escape':

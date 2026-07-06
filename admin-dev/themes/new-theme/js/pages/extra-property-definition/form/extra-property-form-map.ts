@@ -24,7 +24,6 @@ export default {
     structuredFields: '[data-role="structured-fields"]',
   },
   rowField: (field: string): string => `[name$="[${field}]"]`,
-  errorRowClass: 'extra-property-row--error',
   unknownPillClass: 'extra-property-tag extra-property-tag--warning',
   unknownPillRole: 'unknown-pill',
 };

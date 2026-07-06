@@ -6,6 +6,7 @@
 import ExtraPropertyFormMap from '@pages/extra-property-definition/form/extra-property-form-map';
 import FormCollection from '@pages/extra-property-definition/form/form-collection';
 import groupConstraintNames from '@pages/extra-property-definition/form/constraint-groups';
+import SuggestionDropdown, {SuggestionItem} from '@pages/extra-property-definition/form/suggestion-dropdown';
 import {
   quoteValue,
   parseTail,
@@ -41,10 +42,6 @@ export default class ConstraintBuilder {
   private scopeSelect: HTMLSelectElement | null;
 
   private readOnly: boolean;
-
-  private nameDropdown: HTMLElement | null = null;
-
-  private nameInput: HTMLInputElement | null = null;
 
   constructor(container: HTMLElement, catalog: ConstraintCatalog) {
     this.container = container;
@@ -106,23 +103,10 @@ export default class ConstraintBuilder {
       }
     });
 
-    builderView.addEventListener('focusin', (event) => {
-      const input = <HTMLElement>event.target;
-
-      if (input.matches(ExtraPropertyFormMap.rowField('name'))) {
-        this.openNameDropdown(<HTMLInputElement>input);
-      }
-    });
-
-    builderView.addEventListener('focusout', () => {
-      window.setTimeout(() => {
-        if (
-          document.activeElement !== this.nameInput
-          && !this.nameDropdown?.contains(document.activeElement)
-        ) {
-          this.closeNameDropdown();
-        }
-      }, 150);
+    // Grouped constraint name picker (Presence / Text / Number / ... headings); picking a name
+    // fires "input", which re-renders the row's typed option editor through the listener above.
+    new SuggestionDropdown(builderView, ExtraPropertyFormMap.rowField('name'), {
+      items: () => this.nameSuggestions(),
     });
 
     this.container
@@ -347,74 +331,13 @@ export default class ConstraintBuilder {
     editor.appendChild(input);
   }
 
-  // ── Name picker ───────────────────────────────────────────────────────────────────────────
-
-  private openNameDropdown(input: HTMLInputElement): void {
-    this.closeNameDropdown();
-    this.nameInput = input;
-
-    const dropdown = document.createElement('div');
-    dropdown.className = 'extra-property-anchor-dropdown';
-    dropdown.setAttribute('role', 'listbox');
-
-    groupConstraintNames(Object.keys(this.catalog)).forEach(({group, names}) => {
-      const heading = document.createElement('div');
-      heading.className = 'extra-property-anchor-heading';
-      heading.textContent = group;
-      dropdown.appendChild(heading);
-
-      names.forEach((name) => {
-        const option = document.createElement('button');
-        option.type = 'button';
-        option.className = 'extra-property-anchor-option';
-        option.setAttribute('role', 'option');
-        option.dataset.name = name;
-        option.innerHTML = '<span class="extra-property-anchor-option__label"></span>'
-          + '<span class="extra-property-anchor-option__path"></span>';
-        (<HTMLElement>option.querySelector('.extra-property-anchor-option__label')).textContent = name;
-        (<HTMLElement>option.querySelector('.extra-property-anchor-option__path')).textContent = Object
-          .keys(this.catalog[name]?.options ?? {})
-          .slice(0, 3)
-          .join(', ');
-        option.addEventListener('mousedown', (event) => {
-          event.preventDefault();
-          /* eslint-disable no-param-reassign */
-          input.value = name;
-          /* eslint-enable no-param-reassign */
-          input.dispatchEvent(new Event('input', {bubbles: true}));
-          this.closeNameDropdown();
-          input.focus();
-        });
-        dropdown.appendChild(option);
-      });
-    });
-
-    let wrap = input.closest<HTMLElement>('.extra-property-anchor-wrap');
-
-    if (!wrap) {
-      wrap = document.createElement('span');
-      wrap.className = 'extra-property-anchor-wrap';
-      input.insertAdjacentElement('beforebegin', wrap);
-      wrap.appendChild(input);
-    }
-
-    wrap.appendChild(dropdown);
-    this.nameDropdown = dropdown;
-
-    const filter = (): void => {
-      const needle = input.value.trim().toLowerCase();
-      dropdown.querySelectorAll<HTMLElement>('.extra-property-anchor-option').forEach((option) => {
-        option.classList.toggle('d-none', needle !== '' && !(option.dataset.name ?? '').toLowerCase().includes(needle));
-      });
-    };
-    input.addEventListener('input', filter);
-    filter();
-  }
-
-  private closeNameDropdown(): void {
-    this.nameDropdown?.remove();
-    this.nameDropdown = null;
-    this.nameInput = null;
+  private nameSuggestions(): SuggestionItem[] {
+    return groupConstraintNames(Object.keys(this.catalog)).flatMap(({group, names}) => names.map((name) => ({
+      value: name,
+      label: name,
+      detail: Object.keys(this.catalog[name]?.options ?? {}).slice(0, 3).join(', '),
+      group,
+    })));
   }
 
   // ── Chrome ────────────────────────────────────────────────────────────────────────────────

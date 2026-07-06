@@ -221,8 +221,4 @@ export default class PlacementList {
 
     emptyState?.classList.toggle('d-none', count > 0);
   }
-
-  rows(): HTMLElement[] {
-    return this.collection.rows();
-  }
 }
