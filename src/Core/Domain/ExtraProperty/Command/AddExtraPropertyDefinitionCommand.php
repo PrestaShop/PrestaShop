@@ -40,7 +40,7 @@ class AddExtraPropertyDefinitionCommand
      * @param string|null $descriptionWording i18n wording for the BO description
      * @param string|null $descriptionDomain Translation domain for the description
      * @param list<Constraint>|null $constraints Symfony validation constraints applied to each value before persistence
-     * @param string|null $formFieldType Symfony form type FQCN override
+     * @param string|null $formType Symfony form type FQCN override
      * @param array<string, mixed>|null $formOptions Extra options for the Symfony form type
      * @param list<string>|null $associatedForms Form placement entries (e.g. "product:reference:after")
      * @param list<string>|null $associatedGrids Grid placement entries (e.g. "product:reference:after")
@@ -63,7 +63,7 @@ class AddExtraPropertyDefinitionCommand
         protected readonly ?string $descriptionWording = null,
         protected readonly ?string $descriptionDomain = null,
         protected readonly ?array $constraints = null,
-        protected readonly ?string $formFieldType = null,
+        protected readonly ?string $formType = null,
         protected readonly ?array $formOptions = null,
         protected readonly ?array $associatedForms = null,
         protected readonly ?array $associatedGrids = null,
@@ -157,9 +157,9 @@ class AddExtraPropertyDefinitionCommand
         return $this->constraints;
     }
 
-    public function getFormFieldType(): ?string
+    public function getFormType(): ?string
     {
-        return $this->formFieldType;
+        return $this->formType;
     }
 
     /**

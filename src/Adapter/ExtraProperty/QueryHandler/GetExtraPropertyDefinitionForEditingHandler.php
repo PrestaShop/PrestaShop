@@ -62,7 +62,7 @@ final class GetExtraPropertyDefinitionForEditingHandler implements GetExtraPrope
             descriptionWording: $definition->getDescriptionWording(),
             descriptionDomain: $definition->getDescriptionDomain(),
             constraints: $definition->getConstraints(),
-            formFieldType: $definition->getFormFieldType(),
+            formType: $definition->getFormType(),
             formOptions: $definition->getFormOptions(),
             associatedForms: $definition->getAssociatedForms(),
             associatedGrids: $definition->getAssociatedGrids(),

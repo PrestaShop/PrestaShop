@@ -43,7 +43,7 @@ class EditableExtraPropertyDefinition
      * @param string|null $descriptionWording
      * @param string|null $descriptionDomain
      * @param list<Constraint>|null $constraints
-     * @param string|null $formFieldType
+     * @param string|null $formType
      * @param array<string, mixed>|null $formOptions
      * @param list<string>|null $associatedForms
      * @param list<string>|null $associatedGrids
@@ -68,7 +68,7 @@ class EditableExtraPropertyDefinition
         protected readonly ?string $descriptionWording,
         protected readonly ?string $descriptionDomain,
         protected readonly ?array $constraints,
-        protected readonly ?string $formFieldType,
+        protected readonly ?string $formType,
         protected readonly ?array $formOptions,
         protected readonly ?array $associatedForms,
         protected readonly ?array $associatedGrids,
@@ -175,9 +175,9 @@ class EditableExtraPropertyDefinition
         return $this->constraints;
     }
 
-    public function getFormFieldType(): ?string
+    public function getFormType(): ?string
     {
-        return $this->formFieldType;
+        return $this->formType;
     }
 
     /**

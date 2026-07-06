@@ -166,7 +166,7 @@ class ExtraPropertiesGridQueryBuilderModifierTest extends TestCase
             scope: ExtraPropertyScope::COMMON,
             moduleName: 'mymodule',
             associatedGrids: ['product'],
-            formFieldType: \Symfony\Component\Form\Extension\Core\Type\CheckboxType::class,
+            formType: \Symfony\Component\Form\Extension\Core\Type\CheckboxType::class,
             labelWording: 'Flag',
         );
         $modifier = $this->buildModifier($definition);

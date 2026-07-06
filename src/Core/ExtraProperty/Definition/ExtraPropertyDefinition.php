@@ -83,7 +83,7 @@ final class ExtraPropertyDefinition
      * @param list<string>|null $associatedForms Form placement entries: "formId[:path[:before|after]]". Each formId must be unique.
      * @param list<string>|null $associatedGrids Grid placement entries: "gridId[:columnId[:before|after]]". Each gridId must be unique.
      * @param list<string>|null $associatedApis Admin API placement entries: "uriPath[:METHOD[,METHOD...]]", matched against the operation URI template (+ optional HTTP methods). No method modifier matches every method.
-     * @param string|null $formFieldType fully-qualified Symfony Form type FQCN override for BO forms
+     * @param string|null $formType fully-qualified Symfony Form type FQCN override for BO forms
      * @param array<string, mixed>|null $formOptions extra options passed verbatim to the Symfony form type constructor
      * @param list<Constraint>|null $constraints Symfony validation constraints applied to each value before persistence. Null/empty means no validation. Must be serializable (no Callback with a closure).
      * @param string|null $labelWording Translation wording key shown in BO. Required when associatedForms or associatedGrids is set.
@@ -109,7 +109,7 @@ final class ExtraPropertyDefinition
         protected readonly ?array $associatedForms = null,
         protected readonly ?array $associatedGrids = null,
         protected readonly ?array $associatedApis = null,
-        protected readonly ?string $formFieldType = null,
+        protected readonly ?string $formType = null,
         protected readonly ?array $formOptions = null,
         protected readonly ?array $constraints = null,
         protected readonly ?string $labelWording = null,
@@ -308,7 +308,7 @@ final class ExtraPropertyDefinition
             associatedForms: is_array($associatedForms) ? $associatedForms : null,
             associatedGrids: is_array($associatedGrids) ? $associatedGrids : null,
             associatedApis: is_array($associatedApis) ? $associatedApis : null,
-            formFieldType: isset($row['form_field_type']) && '' !== $row['form_field_type'] ? (string) $row['form_field_type'] : null,
+            formType: isset($row['form_type']) && '' !== $row['form_type'] ? (string) $row['form_type'] : null,
             formOptions: is_array($formOptions) ? $formOptions : null,
             constraints: self::decodeConstraints($row['constraints'] ?? null),
             labelWording: isset($row['label_wording']) && '' !== $row['label_wording'] ? (string) $row['label_wording'] : null,
@@ -389,7 +389,7 @@ final class ExtraPropertyDefinition
             associatedForms: $this->associatedForms,
             associatedGrids: $this->associatedGrids,
             associatedApis: $this->associatedApis,
-            formFieldType: $this->formFieldType,
+            formType: $this->formType,
             formOptions: $this->formOptions,
             constraints: $this->constraints,
             labelWording: $this->labelWording,
@@ -427,7 +427,7 @@ final class ExtraPropertyDefinition
             associatedForms: array_key_exists('associatedForms', $overrides) ? $overrides['associatedForms'] : $this->associatedForms,
             associatedGrids: array_key_exists('associatedGrids', $overrides) ? $overrides['associatedGrids'] : $this->associatedGrids,
             associatedApis: array_key_exists('associatedApis', $overrides) ? $overrides['associatedApis'] : $this->associatedApis,
-            formFieldType: array_key_exists('formFieldType', $overrides) ? $overrides['formFieldType'] : $this->formFieldType,
+            formType: array_key_exists('formType', $overrides) ? $overrides['formType'] : $this->formType,
             formOptions: array_key_exists('formOptions', $overrides) ? $overrides['formOptions'] : $this->formOptions,
             constraints: array_key_exists('constraints', $overrides) ? $overrides['constraints'] : $this->constraints,
             labelWording: array_key_exists('labelWording', $overrides) ? $overrides['labelWording'] : $this->labelWording,
@@ -563,9 +563,9 @@ final class ExtraPropertyDefinition
         return $this->constraints;
     }
 
-    public function getFormFieldType(): ?string
+    public function getFormType(): ?string
     {
-        return $this->formFieldType;
+        return $this->formType;
     }
 
     /**

@@ -92,7 +92,7 @@ class UpdateExtraPropertyDefinitionCommand
     /**
      * @var string|null
      */
-    protected ?string $formFieldType = null;
+    protected ?string $formType = null;
 
     /**
      * @var array<string, mixed>|null
@@ -353,19 +353,19 @@ class UpdateExtraPropertyDefinitionCommand
     /**
      * @return string|null
      */
-    public function getFormFieldType(): ?string
+    public function getFormType(): ?string
     {
-        return $this->formFieldType;
+        return $this->formType;
     }
 
     /**
-     * @param string|null $formFieldType
+     * @param string|null $formType
      *
      * @return self
      */
-    public function setFormFieldType(?string $formFieldType): self
+    public function setFormType(?string $formType): self
     {
-        $this->formFieldType = $formFieldType;
+        $this->formType = $formType;
 
         return $this;
     }

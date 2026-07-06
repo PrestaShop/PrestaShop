@@ -28,7 +28,7 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
  *     ExtraPropertiesGridQueryBuilderModifier).
  *   - castForDb:  PHP → DB, for persisting values submitted by form widgets.
  *
- * Casting is based on ExtraPropertyType only (not on the registered form field type), so the
+ * Casting is based on ExtraPropertyType only (not on the registered form type), so the
  * behavior is consistent regardless of which Symfony form widget is used.
  *
  * NULL handling is nullable-aware: a NULL read from a nullable column stays NULL for every

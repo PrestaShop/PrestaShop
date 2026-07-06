@@ -71,7 +71,7 @@ final class ExtraPropertyDefinitionFormDataProvider implements FormDataProviderI
                 'constraints' => ExtraPropertyConstraintMapper::toNames($definition->getConstraints()),
             ],
             'advanced' => [
-                'form_field_type' => $definition->getFormFieldType(),
+                'form_type' => $definition->getFormType(),
                 'form_options' => null !== $definition->getFormOptions() ? json_encode($definition->getFormOptions(), JSON_UNESCAPED_SLASHES) : null,
                 'associated_forms' => null !== $definition->getAssociatedForms() ? json_encode($definition->getAssociatedForms(), JSON_UNESCAPED_SLASHES) : null,
                 'associated_grids' => null !== $definition->getAssociatedGrids() ? json_encode($definition->getAssociatedGrids(), JSON_UNESCAPED_SLASHES) : null,

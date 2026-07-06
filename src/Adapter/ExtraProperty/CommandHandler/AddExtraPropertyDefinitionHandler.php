@@ -54,7 +54,7 @@ final class AddExtraPropertyDefinitionHandler implements AddExtraPropertyDefinit
             associatedForms: $command->getAssociatedForms(),
             associatedGrids: $command->getAssociatedGrids(),
             associatedApis: $command->getAssociatedApis(),
-            formFieldType: $command->getFormFieldType() ?: null,
+            formType: $command->getFormType() ?: null,
             formOptions: $command->getFormOptions(),
             constraints: $command->getConstraints(),
             labelWording: $command->getLabelWording() ?: null,

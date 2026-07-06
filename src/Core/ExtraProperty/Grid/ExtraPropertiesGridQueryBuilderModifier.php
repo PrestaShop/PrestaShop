@@ -310,7 +310,7 @@ class ExtraPropertiesGridQueryBuilderModifier
             }
 
             $paramName = $this->buildFilterParamName($selectAlias);
-            $isBoolean = CheckboxType::class === $definition->getFormFieldType();
+            $isBoolean = CheckboxType::class === $definition->getFormType();
 
             foreach ($builders as [$qb]) {
                 if ($isBoolean) {

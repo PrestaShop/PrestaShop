@@ -83,7 +83,7 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
             descriptionWording: null,
             descriptionDomain: null,
             constraints: isset($data['constraints']) ? ExtraPropertyConstraintMapper::fromNames($data['constraints']) : null,
-            formFieldType: null,
+            formType: null,
             formOptions: null,
             associatedForms: isset($data['associated_forms']) ? explode(',', $data['associated_forms']) : null,
             associatedGrids: isset($data['associated_grids']) ? explode(',', $data['associated_grids']) : null,
