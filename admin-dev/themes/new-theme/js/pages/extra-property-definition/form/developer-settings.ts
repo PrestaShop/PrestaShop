@@ -50,7 +50,7 @@ export default class DeveloperSettings {
   constructor(container: HTMLElement, catalogs: ExtraPropertyCatalogs) {
     this.container = container;
     this.catalogs = catalogs;
-    this.typeInput = container.querySelector<HTMLInputElement>(ExtraPropertyFormMap.developer.formFieldTypeInput);
+    this.typeInput = container.querySelector<HTMLInputElement>(ExtraPropertyFormMap.developer.formTypeInput);
     this.optionsTextarea = container.querySelector<HTMLTextAreaElement>(ExtraPropertyFormMap.developer.formOptionsTextarea);
 
     this.wireDefaultPlaceholder();
@@ -87,7 +87,7 @@ export default class DeveloperSettings {
       return;
     }
 
-    new SuggestionDropdown(this.container, ExtraPropertyFormMap.developer.formFieldTypeInput, {
+    new SuggestionDropdown(this.container, ExtraPropertyFormMap.developer.formTypeInput, {
       items: () => COMMON_FORM_TYPES.map((fqcn) => ({value: fqcn, label: shortName(fqcn), detail: fqcn})),
     });
   }

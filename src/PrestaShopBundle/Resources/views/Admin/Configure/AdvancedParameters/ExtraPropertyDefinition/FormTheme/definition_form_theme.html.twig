@@ -119,9 +119,9 @@
   {# Collapsed disclosure, auto-open when a field carries a value or an error. Rows render
      label-above-input (the prestashop_ui_kit_base vertical form_row shape) — the horizontal
      label-column layout of the rest of the page reads wrong between the builder subsections. #}
-  {% set devFieldsOpen = form.form_field_type.vars.value is not empty
+  {% set devFieldsOpen = form.form_type.vars.value is not empty
     or form.form_options.vars.value is not empty
-    or form.form_field_type.vars.errors|length > 0
+    or form.form_type.vars.errors|length > 0
     or form.form_options.vars.errors|length > 0 %}
   {# The data-label-* attributes carry TEXT PATTERNS the JS composes with runtime values —
      everything that is plain markup lives in the templates block below instead. #}
@@ -137,10 +137,10 @@
     </summary>
     <div class="extra-property-dev-fields__body">
       <div class="form-group">
-        {{ form_label(form.form_field_type) }}
+        {{ form_label(form.form_type) }}
         {# autocomplete off: the browser's own history suggestions would overlap the catalog dropdown #}
-        {{ form_widget(form.form_field_type, {attr: {autocomplete: 'off'}}) }}
-        {{ form_errors(form.form_field_type) }}
+        {{ form_widget(form.form_type, {attr: {autocomplete: 'off'}}) }}
+        {{ form_errors(form.form_type) }}
       </div>
       <div class="form-group">
         {{ form_label(form.form_options) }}

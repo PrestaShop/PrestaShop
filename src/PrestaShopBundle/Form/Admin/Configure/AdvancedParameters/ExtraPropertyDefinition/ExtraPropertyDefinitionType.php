@@ -32,7 +32,7 @@ use ValueError;
  * (ExtraPropertyDefinition value object, ExtraPropertyRegistry) as inline errors on the
  * relevant fields instead of failing later in the command handler:
  *  - a label wording is required as soon as the property is associated with a form or a grid;
- *  - form_field_type/form_options must build a working form field (the rule needs the
+ *  - form_type/form_options must build a working form field (the rule needs the
  *    field_definition card's type/scope/enum_values, hence root level — see FormOptionsValidator).
  */
 class ExtraPropertyDefinitionType extends TranslatorAwareType
@@ -76,7 +76,7 @@ class ExtraPropertyDefinitionType extends TranslatorAwareType
             ],
             'constraints' => [
                 new Callback([$this, 'validateLabelWordingRequirement']),
-                new Callback([$this, 'validateFormFieldTypeAndOptions']),
+                new Callback([$this, 'validateFormTypeAndOptions']),
             ],
         ]);
         $resolver->setAllowedTypes('is_edit', 'bool');
@@ -114,20 +114,20 @@ class ExtraPropertyDefinitionType extends TranslatorAwareType
 
     /**
      * Mirrors the ExtraPropertyRegistry save-time gate: the advanced card's
-     * form_field_type/form_options must build a working form field for the type/scope/enum
+     * form_type/form_options must build a working form field for the type/scope/enum
      * values declared on the field_definition card. Validated here at form level so the user
      * gets an inline error on the offending field instead of a generic flash message.
      *
      * @param array<string, mixed>|null $data the whole nested form data, keyed by card section
      */
-    public function validateFormFieldTypeAndOptions(?array $data, ExecutionContextInterface $context): void
+    public function validateFormTypeAndOptions(?array $data, ExecutionContextInterface $context): void
     {
         if (null === $data) {
             return;
         }
 
         $advanced = $data['advanced'] ?? [];
-        $formFieldType = trim((string) ($advanced['form_field_type'] ?? '')) ?: null;
+        $formType = trim((string) ($advanced['form_type'] ?? '')) ?: null;
 
         $formOptions = null;
         $rawFormOptions = trim((string) ($advanced['form_options'] ?? ''));
@@ -161,7 +161,7 @@ class ExtraPropertyDefinitionType extends TranslatorAwareType
         }
 
         $errors = $this->formOptionsValidator->validate(
-            $formFieldType,
+            $formType,
             $type,
             $this->parseEnumValues($fieldDefinition['enum_values'] ?? null),
             $scope,
@@ -172,10 +172,10 @@ class ExtraPropertyDefinitionType extends TranslatorAwareType
         }
 
         // A rejected FQCN is the validator's only early-return error (options are then not
-        // validated), so all errors target the same field: form_field_type when the declared
+        // validated), so all errors target the same field: form_type when the declared
         // type is not a form type, form_options otherwise.
-        $errorPath = null !== $formFieldType && !is_subclass_of($formFieldType, FormTypeInterface::class)
-            ? '[advanced][form_field_type]'
+        $errorPath = null !== $formType && !is_subclass_of($formType, FormTypeInterface::class)
+            ? '[advanced][form_type]'
             : '[advanced][form_options]';
 
         foreach ($errors as $error) {

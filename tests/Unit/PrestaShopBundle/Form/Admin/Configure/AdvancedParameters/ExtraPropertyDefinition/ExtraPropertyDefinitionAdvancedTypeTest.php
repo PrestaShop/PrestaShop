@@ -58,7 +58,7 @@ class ExtraPropertyDefinitionAdvancedTypeTest extends TypeTestCase
     public function testProviderRowsRoundTripThroughSubmit(): void
     {
         $form = $this->factory->create(ExtraPropertyDefinitionAdvancedType::class, [
-            'form_field_type' => null,
+            'form_type' => null,
             'form_options' => null,
             'associated_forms' => [
                 ['form_id' => 'product', 'path' => 'options.suppliers', 'mode' => 'before'],
@@ -68,7 +68,7 @@ class ExtraPropertyDefinitionAdvancedTypeTest extends TypeTestCase
         ]);
 
         $form->submit([
-            'form_field_type' => '',
+            'form_type' => '',
             'form_options' => '',
             'associated_forms' => [
                 ['form_id' => 'category', 'path' => 'parent', 'mode' => 'after'],
@@ -196,7 +196,7 @@ class ExtraPropertyDefinitionAdvancedTypeTest extends TypeTestCase
     private function emptyCardData(): array
     {
         return [
-            'form_field_type' => null,
+            'form_type' => null,
             'form_options' => null,
             'associated_forms' => [],
             'associated_grids' => [],
@@ -210,7 +210,7 @@ class ExtraPropertyDefinitionAdvancedTypeTest extends TypeTestCase
     private function emptyCardSubmission(): array
     {
         return [
-            'form_field_type' => '',
+            'form_type' => '',
             'form_options' => '',
             'associated_forms' => [],
             'associated_grids' => [],

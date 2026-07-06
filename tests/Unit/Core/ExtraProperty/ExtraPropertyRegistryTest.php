@@ -170,14 +170,14 @@ class ExtraPropertyRegistryTest extends TestCase
         $registry->register($this->definition(formOptions: ['not_a_real_option' => true]));
     }
 
-    public function testInvalidFormFieldTypeIsRejectedBeforeSave(): void
+    public function testInvalidFormTypeIsRejectedBeforeSave(): void
     {
         $registry = $this->buildRegistry(existing: null, expectSave: false);
 
         $this->expectException(InvalidExtraPropertyFormOptionsException::class);
         $this->expectExceptionMessage('is not a Symfony form type');
 
-        $registry->register($this->definition(formFieldType: 'Vendor\Unknown\FancyType'));
+        $registry->register($this->definition(formType: 'Vendor\Unknown\FancyType'));
     }
 
     public function testValidFormOptionsAreAccepted(): void
@@ -225,7 +225,7 @@ class ExtraPropertyRegistryTest extends TestCase
         bool $nullable = true,
         ?array $enumValues = null,
         int|float|string|bool|null $defaultValue = null,
-        ?string $formFieldType = null,
+        ?string $formType = null,
         ?array $formOptions = null,
     ): ExtraPropertyDefinition {
         return new ExtraPropertyDefinition(
@@ -238,7 +238,7 @@ class ExtraPropertyRegistryTest extends TestCase
             defaultValue: $defaultValue,
             nullable: $nullable,
             size: $size,
-            formFieldType: $formFieldType,
+            formType: $formType,
             formOptions: $formOptions,
         );
     }

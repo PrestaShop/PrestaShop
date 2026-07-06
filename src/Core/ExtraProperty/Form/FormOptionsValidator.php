@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\Exception\ExceptionInterface as OptionsRes
 use Throwable;
 
 /**
- * Validates the formFieldType/formOptions pair of an extra property definition by building a
+ * Validates the formType/formOptions pair of an extra property definition by building a
  * throwaway form with the EXACT type and merged options ExtraPropertiesFormBuilderModifier
  * will use at render time (see resolveFieldTypeAndOptions()), so an accepted definition is
  * guaranteed to build later and a refused one fails at save time instead of breaking the

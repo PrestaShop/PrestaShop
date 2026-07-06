@@ -49,7 +49,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
      * The registry additionally validates:
      * - scope-uniqueness: a module cannot register the same propertyName in two different scopes for the same entity
      * - destructive schema changes on already-registered definitions are refused (see hasStorageChanges())
-     * - formFieldType/formOptions must build a working form field (see FormOptionsValidator) — being the single
+     * - formType/formOptions must build a working form field (see FormOptionsValidator) — being the single
      *   write choke point, this covers every path: BO form, CQRS commands and Module::registerExtraProperty()
      *
      * Non-destructive schema changes (defaultValue change, STRING size increase, nullable
@@ -62,7 +62,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
      * Destructive changes (type/scope change, size decrease, nullable tightening, enum value
      * removal) require unregister() + register() — automatic data migration is not supported.
      *
-     * @throws InvalidExtraPropertyFormOptionsException when the declared formFieldType/formOptions cannot build a form field
+     * @throws InvalidExtraPropertyFormOptionsException when the declared formType/formOptions cannot build a form field
      */
     public function register(ExtraPropertyDefinition $definition): int|false
     {
@@ -105,7 +105,7 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
         // structural refusals above (module programming errors, logged + false), this throws:
         // the errors must reach the human who typed the options (BO form flash, API error).
         $formOptionErrors = $this->formOptionsValidator->validate(
-            $definition->getFormFieldType(),
+            $definition->getFormType(),
             $definition->getType(),
             $definition->getEnumValues(),
             $definition->getScope(),

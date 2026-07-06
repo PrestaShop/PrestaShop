@@ -68,7 +68,7 @@ export default {
     endpointSearchWrapper: '[data-role="endpoint-search-wrapper"]',
   },
   developer: {
-    formFieldTypeInput: 'input[name$="[form_field_type]"]',
+    formTypeInput: 'input[name$="[form_type]"]',
     formOptionsTextarea: 'textarea[name$="[form_options]"]',
     jsonStatus: '[data-role="json-status"]',
     formatJson: '[data-role="format-json"]',

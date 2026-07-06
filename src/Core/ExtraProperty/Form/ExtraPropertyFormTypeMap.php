@@ -22,7 +22,7 @@ use Symfony\Component\Form\FormTypeInterface;
 
 /**
  * Maps a logical extra property type to the Symfony form type (and base options) used to render
- * it in back-office forms when the definition does not declare an explicit formFieldType.
+ * it in back-office forms when the definition does not declare an explicit formType.
  *
  * The definition's formOptions are merged OVER the base options returned here, so a definition
  * can refine the defaults (e.g. change the NumberType scale) without replacing the whole type.

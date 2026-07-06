@@ -43,7 +43,7 @@ services:
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyFormTypeMap: ~
 
-  # Save-time validation of the formFieldType/formOptions pair: builds a throwaway form with
+  # Save-time validation of the formType/formOptions pair: builds a throwaway form with
   # the same type + options merge as ExtraPropertiesFormBuilderModifier. Consumed by the
   # registry (blocking gate) and by the BO definition form (inline errors).
   PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator:

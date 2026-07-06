@@ -113,7 +113,7 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
         $builder = $this->createSimpleFormBuilder();
         $this->makeModifier($definition)->apply($builder, 'product', null);
 
-        // No formFieldType declared: the type map supplies the widget (BOOL => SwitchType), not TextType.
+        // No formType declared: the type map supplies the widget (BOOL => SwitchType), not TextType.
         $this->assertInstanceOf(
             \PrestaShopBundle\Form\Admin\Type\SwitchType::class,
             $builder->get(self::FIELD_NAME)->getType()->getInnerType()
