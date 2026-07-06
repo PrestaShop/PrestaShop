@@ -894,7 +894,7 @@ CREATE TABLE `PREFIX_extra_property_definition` (
   `associated_apis` text DEFAULT NULL,
   `associated_grids` text DEFAULT NULL,
   `associated_forms` text DEFAULT NULL,
-  `form_field_type` varchar(255) DEFAULT NULL,
+  `form_type` varchar(255) DEFAULT NULL,
   `form_options` text DEFAULT NULL,
   `label_wording` varchar(191) DEFAULT NULL,
   `label_domain` varchar(255) DEFAULT NULL,

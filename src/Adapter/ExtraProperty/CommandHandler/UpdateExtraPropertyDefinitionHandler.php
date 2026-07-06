@@ -83,8 +83,8 @@ final class UpdateExtraPropertyDefinitionHandler implements UpdateExtraPropertyD
         if (null !== $command->getConstraints()) {
             $overrides['constraints'] = $command->getConstraints();
         }
-        if (null !== $command->getFormFieldType()) {
-            $overrides['formFieldType'] = $command->getFormFieldType() ?: null;
+        if (null !== $command->getFormType()) {
+            $overrides['formType'] = $command->getFormType() ?: null;
         }
         if (null !== $command->getFormOptions()) {
             $overrides['formOptions'] = $command->getFormOptions();

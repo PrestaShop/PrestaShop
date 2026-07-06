@@ -55,7 +55,7 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
             moduleName: 'demoextrafield',
             required: true,
             associatedForms: ['product'],
-            formFieldType: TextType::class,
+            formType: TextType::class,
             constraints: [$url],
             labelWording: 'Dangerous product',
         );
@@ -82,7 +82,7 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
             scope: ExtraPropertyScope::LANG,
             moduleName: 'demoextrafield',
             associatedForms: ['product'],
-            formFieldType: TextType::class,
+            formType: TextType::class,
             constraints: [$all],
             labelWording: 'Video link',
         );
@@ -222,7 +222,7 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
             scope: ExtraPropertyScope::COMMON,
             moduleName: 'demoextrafield',
             associatedForms: [$formEntry],
-            formFieldType: TextType::class,
+            formType: TextType::class,
             labelWording: 'Dangerous product',
         );
     }

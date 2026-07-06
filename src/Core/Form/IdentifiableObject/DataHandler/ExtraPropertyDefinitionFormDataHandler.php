@@ -73,7 +73,7 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
             descriptionWording: $labels['description_wording'] ?: null,
             descriptionDomain: $labels['description_domain'] ?: null,
             constraints: ExtraPropertyConstraintMapper::fromNames($validation['constraints'] ?? null),
-            formFieldType: $advanced['form_field_type'] ?: null,
+            formType: $advanced['form_type'] ?: null,
             formOptions: $this->parseJsonObject($advanced['form_options'] ?? null),
             associatedForms: $this->parseJsonList($advanced['associated_forms'] ?? null),
             associatedGrids: $this->parseJsonList($advanced['associated_grids'] ?? null),
@@ -107,7 +107,7 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
             ->setDescriptionWording($labels['description_wording'] ?: null)
             ->setDescriptionDomain($labels['description_domain'] ?: null)
             ->setConstraints(ExtraPropertyConstraintMapper::fromNames($validation['constraints'] ?? null))
-            ->setFormFieldType($advanced['form_field_type'] ?: null)
+            ->setFormType($advanced['form_type'] ?: null)
             ->setFormOptions($this->parseJsonObject($advanced['form_options'] ?? null))
             ->setAssociatedForms($this->parseJsonList($advanced['associated_forms'] ?? null))
             ->setAssociatedGrids($this->parseJsonList($advanced['associated_grids'] ?? null))

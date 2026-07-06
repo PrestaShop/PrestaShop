@@ -28,7 +28,7 @@ class ExtraPropertyDefinitionAdvancedType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('form_field_type', TextType::class, [
+            ->add('form_type', TextType::class, [
                 'label' => $this->trans('Symfony form type', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Fully-qualified Symfony form type class name to override the default type mapping (e.g. Symfony\Component\Form\Extension\Core\Type\UrlType).', 'Admin.Advparameters.Help'),
                 'required' => false,

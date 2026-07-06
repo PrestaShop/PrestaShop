@@ -110,7 +110,7 @@ class ExtraPropertiesFormBuilderModifier
      */
     protected function resolveFieldTypeAndOptions(ExtraPropertyDefinition $definition): array
     {
-        $declaredType = $definition->getFormFieldType();
+        $declaredType = $definition->getFormType();
         $extraOptions = $definition->getFormOptions() ?? [];
 
         $baseType = (null !== $declaredType && class_exists($declaredType)) ? $declaredType : TextType::class;
