@@ -34,14 +34,9 @@ services:
       $identifiableObjectFormTypes: '%prestashop.core.form.identifiable_object.form_types%'
       $logger: '@logger'
 
-  # ─── Admin API endpoint catalog ──────────────────────────────────────────────
-  # Reads the OpenApi document API Platform generates: PrestaShopExtension::prepend() registers
-  # the core and active module resource paths in every kernel's api_platform mapping, so the
-  # document already aggregates every endpoint.
-
-  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ApiEndpointCatalog:
-    arguments:
-      $logger: '@logger'
+  # The Admin API endpoint catalog and its consumers (AssociationExistenceChecker, the Placement
+  # card form type) are defined in app/config/admin/services.yml ONLY: they need the OpenApi
+  # factory, which API Platform registers solely where enable_swagger is on — the admin kernel.
 
   # ─── Form field tree provider ────────────────────────────────────────────────
   # Form types with REQUIRED options cannot be introspected with an empty options array; the
@@ -54,10 +49,3 @@ services:
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
 
-  # ─── Association existence checker ───────────────────────────────────────────
-  # Turns unknown formIds/gridIds/API paths of a saved definition into non-blocking warnings
-  # (flashed by ExtraPropertyDefinitionController after a successful save).
-
-  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\AssociationExistenceChecker:
-    arguments:
-      $translator: '@translator'

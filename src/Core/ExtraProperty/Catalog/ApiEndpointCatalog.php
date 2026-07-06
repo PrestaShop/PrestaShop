@@ -25,6 +25,12 @@ use Throwable;
  * is enabled. A document that cannot be generated at all is logged and yields an empty catalog
  * — the pickers degrade to free text, never a broken page.
  *
+ * KERNEL LIMITATION: API Platform only registers its OpenApi services (the factory injected
+ * here) where enable_swagger is on — currently the admin kernel only. This service and its
+ * consumers (AssociationExistenceChecker, ExtraPropertyDefinitionAdvancedType) are therefore
+ * defined in app/config/admin/services.yml instead of the shared catalog.yml; using them in
+ * another kernel requires enabling swagger there first, and will fail loudly until then.
+ *
  * The scan is memoized per instance; a cache decorator can later wrap this service for
  * cross-request caching (see the prestashop.extra_property.catalog.filesystem_cache pool).
  */

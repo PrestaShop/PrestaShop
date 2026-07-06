@@ -42,6 +42,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * "extra_property_catalogs" view var, inlined by the form theme as a JSON block so the picker
  * components can suggest ids without AJAX (the per-form field tree stays lazy — see
  * ExtraPropertyDefinitionController::formFieldsAction()).
+ *
+ * Defined in app/config/admin/services.yml ONLY (excluded from the form types prototype glob):
+ * ApiEndpointCatalog needs the OpenApi services that exist solely in the admin kernel (see its
+ * docblock). Building this form in another kernel fails until swagger is enabled there.
  */
 class ExtraPropertyDefinitionAdvancedType extends TranslatorAwareType
 {

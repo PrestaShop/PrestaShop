@@ -21,6 +21,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *
  * Entry syntax is validated upstream (the row form types + the definition VO), so
  * unparseable entries are silently skipped here.
+ *
+ * Defined in app/config/admin/services.yml ONLY: ApiEndpointCatalog needs the OpenApi services
+ * that exist solely in the admin kernel (see its docblock).
  */
 class AssociationExistenceChecker
 {
