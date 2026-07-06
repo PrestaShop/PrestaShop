@@ -8,6 +8,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Catalog;
 
+use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShopBundle\Form\Admin\Sell\Product\EditProductFormType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
@@ -20,7 +24,9 @@ use Throwable;
 
 /**
  * Builds the field tree of a single back-office form by creating its form builder (without any
- * data) and walking the child builders recursively.
+ * data) and walking the child builders recursively. Lazily called per form (one form at a time —
+ * building every form eagerly would be far too expensive), see
+ * ExtraPropertyDefinitionController::formFieldsAction().
  *
  * Known limitation: fields added dynamically through form events (e.g. PRE_SET_DATA listeners)
  * do not exist on the builder yet, so they cannot appear in the tree. This is acceptable for the
@@ -28,8 +34,10 @@ use Throwable;
  *
  * Recursion stops at {@see self::MAX_DEPTH} levels to keep the payload bounded (deeper nodes are
  * pruned); a child that cannot be introspected is logged and skipped without breaking its siblings.
+ *
+ * @phpstan-type FieldNode array{name: string, path: string, label: string, typeClass: class-string, compound: bool, children: list<mixed>}
  */
-final class FormFieldTreeProvider implements FormFieldTreeProviderInterface
+class FormFieldTreeProvider
 {
     /**
      * Maximum node depth of the returned tree (root fields are at depth 1).
@@ -50,17 +58,22 @@ final class FormFieldTreeProvider implements FormFieldTreeProviderInterface
         TranslateType::class,
     ];
 
-    /**
-     * @param iterable<FormIntrospectionOptionsProviderInterface> $introspectionOptionsProviders
-     */
     public function __construct(
-        private readonly FormCatalogInterface $formCatalog,
+        private readonly FormCatalog $formCatalog,
         private readonly FormFactoryInterface $formFactory,
         private readonly LoggerInterface $logger,
-        private readonly iterable $introspectionOptionsProviders = [],
+        private readonly ShopContext $shopContext,
+        private readonly Connection $connection,
+        private readonly string $dbPrefix,
     ) {
     }
 
+    /**
+     * @param string $formId a form id known to the form catalog (form type block prefix)
+     *
+     * @return list<FieldNode>|null the root fields of the form, or null when the form id is
+     *                              unknown or the form cannot be built
+     */
     public function getTree(string $formId): ?array
     {
         $formTypeClass = $this->formCatalog->getFormTypeClass($formId);
@@ -85,24 +98,40 @@ final class FormFieldTreeProvider implements FormFieldTreeProviderInterface
     }
 
     /**
-     * Options for the throwaway introspection build of a form type with REQUIRED options (first
-     * supporting provider wins, none = empty options as before).
+     * Options for the throwaway introspection build of a form type with REQUIRED options.
+     *
+     * The product edit form — the most commonly targeted form of the BO — is the one known such
+     * type, so its exception is handled inline. The values only need to make the form BUILD, but
+     * the product id must point at a REAL product: FooterType generates the preview/FO links at
+     * build time and the legacy Link class rejects a product it cannot link to. The standard
+     * product type exposes the common field set, the shop comes from the context. On a catalog
+     * with no product at all the build fails and the form gracefully reads as not introspectable.
+     *
+     * If more forms with required options ever need introspection, this is the seam to
+     * generalize: a tagged "introspection options provider" collection (supports($formId,
+     * $formTypeClass) + getOptions()) injected as an iterable, with this product case as its
+     * first implementation.
      *
      * @return array<string, mixed>
      */
     private function introspectionOptions(string $formId, string $formTypeClass): array
     {
-        foreach ($this->introspectionOptionsProviders as $provider) {
-            if ($provider->supports($formId, $formTypeClass)) {
-                return $provider->getOptions($formId, $formTypeClass);
-            }
+        if (is_a($formTypeClass, EditProductFormType::class, true)) {
+            return [
+                'product_id' => (int) $this->connection->fetchOne(
+                    'SELECT MIN(id_product) FROM ' . $this->dbPrefix . 'product'
+                ),
+                'shop_id' => $this->shopContext->getId(),
+                'product_type' => ProductType::TYPE_STANDARD,
+                'tax_rules_group_id' => 0,
+            ];
         }
 
         return [];
     }
 
     /**
-     * @return list<FormFieldNode>
+     * @return list<FieldNode>
      */
     private function buildNodes(FormBuilderInterface $builder, string $parentPath, int $depth): array
     {
@@ -127,7 +156,10 @@ final class FormFieldTreeProvider implements FormFieldTreeProviderInterface
         return $nodes;
     }
 
-    private function buildNode(string $name, FormBuilderInterface $childBuilder, string $parentPath, int $depth): FormFieldNode
+    /**
+     * @return FieldNode
+     */
+    private function buildNode(string $name, FormBuilderInterface $childBuilder, string $parentPath, int $depth): array
     {
         $path = '' === $parentPath ? $name : $parentPath . '.' . $name;
         // getCompound() reflects the resolved "compound" option (applied on the builder by the base FormType)
@@ -138,14 +170,14 @@ final class FormFieldTreeProvider implements FormFieldTreeProviderInterface
             $children = $this->buildNodes($childBuilder, $path, $depth + 1);
         }
 
-        return new FormFieldNode(
-            $name,
-            $path,
-            $this->resolveLabel($childBuilder, $name),
-            get_class($childBuilder->getType()->getInnerType()),
-            $compound,
-            $children,
-        );
+        return [
+            'name' => $name,
+            'path' => $path,
+            'label' => $this->resolveLabel($childBuilder, $name),
+            'typeClass' => get_class($childBuilder->getType()->getInnerType()),
+            'compound' => $compound,
+            'children' => $children,
+        ];
     }
 
     /**

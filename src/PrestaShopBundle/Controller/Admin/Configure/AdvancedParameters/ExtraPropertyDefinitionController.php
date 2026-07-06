@@ -16,7 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\BulkExtraPropertyE
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefinitionNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\AssociationExistenceChecker;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProviderInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProvider;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\AssociationRowSerializer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyFormOptionsException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -128,7 +128,7 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
      * and the UI falls back to a free-text path input.
      */
     #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
-    public function formFieldsAction(string $formId, FormFieldTreeProviderInterface $treeProvider): JsonResponse
+    public function formFieldsAction(string $formId, FormFieldTreeProvider $treeProvider): JsonResponse
     {
         $fields = $treeProvider->getTree($formId);
 

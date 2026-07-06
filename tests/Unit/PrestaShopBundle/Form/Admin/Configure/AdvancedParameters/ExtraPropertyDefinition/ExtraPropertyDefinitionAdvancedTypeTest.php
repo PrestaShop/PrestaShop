@@ -9,12 +9,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition;
 
-use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ApiEndpointCatalogInterface;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ExtraPropertyCatalogPresenter;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalogInterface;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalogInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ApiEndpointCatalog;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalog;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalog;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyFormTypeMap;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCatalog;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyApiPlacementRowType;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyDefinitionAdvancedType;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyFormPlacementRowType;
@@ -38,17 +36,16 @@ class ExtraPropertyDefinitionAdvancedTypeTest extends TypeTestCase
         $translator = $this->createMock(TranslatorInterface::class);
         $translator->method('trans')->willReturnArgument(0);
 
-        $presenter = new ExtraPropertyCatalogPresenter(
-            $this->createMock(FormCatalogInterface::class),
-            $this->createMock(GridCatalogInterface::class),
-            $this->createMock(ApiEndpointCatalogInterface::class),
-            new ExtraPropertyConstraintCatalog(),
-            new ExtraPropertyFormTypeMap(),
-        );
-
         return [
             new PreloadedExtension([
-                new ExtraPropertyDefinitionAdvancedType($translator, [], $presenter),
+                new ExtraPropertyDefinitionAdvancedType(
+                    $translator,
+                    [],
+                    $this->createMock(FormCatalog::class),
+                    $this->createMock(GridCatalog::class),
+                    $this->createMock(ApiEndpointCatalog::class),
+                    new ExtraPropertyFormTypeMap(),
+                ),
                 new ExtraPropertyFormPlacementRowType($translator, []),
                 new ExtraPropertyGridPlacementRowType($translator, []),
                 new ExtraPropertyApiPlacementRowType($translator, []),

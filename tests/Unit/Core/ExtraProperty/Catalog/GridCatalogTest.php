@@ -32,18 +32,18 @@ class GridCatalogTest extends TestCase
 
         $this->assertCount(2, $entries);
         // Sorted by label: Customers before Zones
-        $this->assertSame('customer', $entries[0]->id);
-        $this->assertSame('Customers', $entries[0]->label);
-        $this->assertSame('zone', $entries[1]->id);
-        $this->assertSame('Zones', $entries[1]->label);
+        $this->assertSame('customer', $entries[0]['id']);
+        $this->assertSame('Customers', $entries[0]['label']);
+        $this->assertSame('zone', $entries[1]['id']);
+        $this->assertSame('Zones', $entries[1]['label']);
 
-        $this->assertCount(2, $entries[1]->columns);
-        $this->assertSame('id_zone', $entries[1]->columns[0]->id);
-        $this->assertSame('ID', $entries[1]->columns[0]->label);
-        $this->assertSame(0, $entries[1]->columns[0]->position);
-        $this->assertSame('name', $entries[1]->columns[1]->id);
-        $this->assertSame('Zone name', $entries[1]->columns[1]->label);
-        $this->assertSame(1, $entries[1]->columns[1]->position);
+        $this->assertCount(2, $entries[1]['columns']);
+        $this->assertSame('id_zone', $entries[1]['columns'][0]['id']);
+        $this->assertSame('ID', $entries[1]['columns'][0]['label']);
+        $this->assertSame(0, $entries[1]['columns'][0]['position']);
+        $this->assertSame('name', $entries[1]['columns'][1]['id']);
+        $this->assertSame('Zone name', $entries[1]['columns'][1]['label']);
+        $this->assertSame(1, $entries[1]['columns'][1]['position']);
     }
 
     public function testGetAndHas(): void
@@ -58,7 +58,7 @@ class GridCatalogTest extends TestCase
 
         $entry = $catalog->get('zone');
         $this->assertNotNull($entry);
-        $this->assertSame('Zones', $entry->label);
+        $this->assertSame('Zones', $entry['label']);
 
         $this->assertNull($catalog->get('unknown'));
     }

@@ -13,9 +13,9 @@ use Symfony\Component\Form\FormRegistryInterface;
 use Throwable;
 
 /**
- * Enumerates the identifiable-object back-office forms from the
- * prestashop.core.form.identifiable_object.form_types parameter (built by
- * IdentifiableObjectFormTypesCollectorPass in every environment).
+ * Enumerates the identifiable-object back-office forms an extra property definition can be
+ * associated with, from the prestashop.core.form.identifiable_object.form_types parameter
+ * (built by IdentifiableObjectFormTypesCollectorPass in every environment).
  *
  * The form id is the type's block prefix — the exact id a form builder reports to
  * ExtraPropertiesFormBuilderModifier at runtime. Since block prefixes have no display
@@ -26,10 +26,13 @@ use Throwable;
  * The scan is memoized per instance; a cache decorator can later wrap this service for
  * cross-request caching (see the prestashop.extra_property.catalog.filesystem_cache pool).
  */
-final class FormCatalog implements FormCatalogInterface
+class FormCatalog
 {
     /**
-     * @var array<string, FormCatalogEntry>|null indexed by form id, sorted by label
+     * The form type class is kept internally (for getFormTypeClass()) but never exposed by
+     * getAll(): it is a server-side implementation detail the client payload must not leak.
+     *
+     * @var array<string, array{id: string, label: string, formTypeClass: class-string}>|null indexed by form id, sorted by label
      */
     private ?array $entries = null;
 
@@ -40,14 +43,20 @@ final class FormCatalog implements FormCatalogInterface
     public function __construct(
         private readonly array $identifiableObjectFormTypes,
         private readonly FormRegistryInterface $formRegistry,
-        private readonly GridCatalogInterface $gridCatalog,
+        private readonly GridCatalog $gridCatalog,
         private readonly LoggerInterface $logger,
     ) {
     }
 
+    /**
+     * @return list<array{id: string, label: string}> sorted by label
+     */
     public function getAll(): array
     {
-        return array_values($this->getEntries());
+        return array_values(array_map(
+            static fn (array $entry): array => ['id' => $entry['id'], 'label' => $entry['label']],
+            $this->getEntries()
+        ));
     }
 
     public function has(string $formId): bool
@@ -55,15 +64,16 @@ final class FormCatalog implements FormCatalogInterface
         return isset($this->getEntries()[$formId]);
     }
 
+    /**
+     * @return class-string|null the form type FQCN behind the given form id
+     */
     public function getFormTypeClass(string $formId): ?string
     {
-        $entry = $this->getEntries()[$formId] ?? null;
-
-        return $entry?->formTypeClass;
+        return $this->getEntries()[$formId]['formTypeClass'] ?? null;
     }
 
     /**
-     * @return array<string, FormCatalogEntry>
+     * @return array<string, array{id: string, label: string, formTypeClass: class-string}>
      */
     private function getEntries(): array
     {
@@ -87,19 +97,23 @@ final class FormCatalog implements FormCatalogInterface
                 continue;
             }
 
-            $entries[$formId] = new FormCatalogEntry($formId, $this->resolveLabel($formId), $formTypeClass);
+            $entries[$formId] = [
+                'id' => $formId,
+                'label' => $this->resolveLabel($formId),
+                'formTypeClass' => $formTypeClass,
+            ];
         }
 
-        uasort($entries, static fn (FormCatalogEntry $a, FormCatalogEntry $b): int => strcasecmp($a->label, $b->label));
+        uasort($entries, static fn (array $a, array $b): int => strcasecmp($a['label'], $b['label']));
 
         return $this->entries = $entries;
     }
 
     private function resolveLabel(string $formId): string
     {
-        $gridEntry = $this->gridCatalog->get($formId);
-        if (null !== $gridEntry && '' !== $gridEntry->label) {
-            return $gridEntry->label;
+        $gridLabel = $this->gridCatalog->get($formId)['label'] ?? '';
+        if ('' !== $gridLabel) {
+            return $gridLabel;
         }
 
         return ucfirst(str_replace('_', ' ', $formId));

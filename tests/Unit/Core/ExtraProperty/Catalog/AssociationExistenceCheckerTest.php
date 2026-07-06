@@ -9,12 +9,10 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\ExtraProperty\Catalog;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ApiEndpointCatalogInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ApiEndpointCatalog;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\AssociationExistenceChecker;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalogInterface;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalogEntry;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalogInterface;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridColumnEntry;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalog;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalog;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AssociationExistenceCheckerTest extends TestCase
@@ -95,22 +93,26 @@ class AssociationExistenceCheckerTest extends TestCase
 
     private function buildChecker(): AssociationExistenceChecker
     {
-        $formCatalog = $this->createMock(FormCatalogInterface::class);
+        $formCatalog = $this->createMock(FormCatalog::class);
         $formCatalog->method('has')->willReturnCallback(
             static fn (string $formId): bool => in_array($formId, ['product', 'category'], true)
         );
 
-        $gridCatalog = $this->createMock(GridCatalogInterface::class);
+        $gridCatalog = $this->createMock(GridCatalog::class);
         $gridCatalog->method('get')->willReturnCallback(
-            static fn (string $gridId): ?GridCatalogEntry => 'product' === $gridId
-                ? new GridCatalogEntry('product', 'Products', [
-                    new GridColumnEntry('id_product', 'ID', 0),
-                    new GridColumnEntry('reference', 'Reference', 1),
-                ])
+            static fn (string $gridId): ?array => 'product' === $gridId
+                ? [
+                    'id' => 'product',
+                    'label' => 'Products',
+                    'columns' => [
+                        ['id' => 'id_product', 'label' => 'ID', 'position' => 0],
+                        ['id' => 'reference', 'label' => 'Reference', 'position' => 1],
+                    ],
+                ]
                 : null
         );
 
-        $apiEndpointCatalog = $this->createMock(ApiEndpointCatalogInterface::class);
+        $apiEndpointCatalog = $this->createMock(ApiEndpointCatalog::class);
         $apiEndpointCatalog->method('hasUriTemplate')->willReturnCallback(
             static fn (string $path): bool => in_array($path, ['/products', '/products/{productId}'], true)
         );

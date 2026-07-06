@@ -26,9 +26,6 @@ services:
     arguments:
       $logger: '@logger'
 
-  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalogInterface:
-    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalog'
-
   # ─── Form catalog ────────────────────────────────────────────────────────────
   # The form types parameter is built by IdentifiableObjectFormTypesCollectorPass (all environments).
 
@@ -37,48 +34,25 @@ services:
       $identifiableObjectFormTypes: '%prestashop.core.form.identifiable_object.form_types%'
       $logger: '@logger'
 
-  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalogInterface:
-    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalog'
-
   # ─── Admin API endpoint catalog ──────────────────────────────────────────────
-  # Same scanning dependencies as PrestaShopBundle\ApiPlatform\Scopes\ApiResourceScopesExtractor
-  # (see services/bundle/api_platform.yml); the resource metadata collection factory is autowired.
+  # Reads the OpenApi document API Platform generates: PrestaShopExtension::prepend() registers
+  # the core and active module resource paths in every kernel's api_platform mapping, so the
+  # document already aggregates every endpoint.
 
-  PrestaShopBundle\ApiPlatform\Catalog\ApiEndpointCatalog:
+  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ApiEndpointCatalog:
     arguments:
-      $moduleDir: '%prestashop.module_dir%'
-      $installedModules: '%prestashop.installed_modules%'
-      $projectDir: '%kernel.project_dir%'
       $logger: '@logger'
 
-  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ApiEndpointCatalogInterface:
-    alias: 'PrestaShopBundle\ApiPlatform\Catalog\ApiEndpointCatalog'
-
   # ─── Form field tree provider ────────────────────────────────────────────────
-  # Form types with REQUIRED options cannot be introspected with an empty options array: a tagged
-  # options provider supplies sample values good enough to BUILD the form (no data is ever set).
-  # Add a provider + the tag below to make another such form introspectable.
-
-  prestashop.extra_property.catalog.product_form_introspection_options_provider:
-    class: PrestaShopBundle\Form\Admin\Sell\Product\ProductFormIntrospectionOptionsProvider
-    arguments:
-      $connection: '@doctrine.dbal.default_connection'
-      $dbPrefix: '%database_prefix%'
-    tags:
-      - { name: 'core.extra_property.form_introspection_options_provider' }
+  # Form types with REQUIRED options cannot be introspected with an empty options array; the
+  # provider supplies sample values good enough to BUILD the known exceptions (the product edit
+  # form — no data is ever set), see FormFieldTreeProvider::introspectionOptions().
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProvider:
     arguments:
       $logger: '@logger'
-      $introspectionOptionsProviders: !tagged_iterator core.extra_property.form_introspection_options_provider
-
-  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProviderInterface:
-    alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProvider'
-
-  # ─── Presenter ───────────────────────────────────────────────────────────────
-  # Aggregates the JSON-ready payloads inlined into the definition form page (one block per card).
-
-  PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ExtraPropertyCatalogPresenter: ~
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
 
   # ─── Association existence checker ───────────────────────────────────────────
   # Turns unknown formIds/gridIds/API paths of a saved definition into non-blocking warnings

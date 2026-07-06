@@ -22,12 +22,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Entry syntax is validated upstream (the row form types + the definition VO), so
  * unparseable entries are silently skipped here.
  */
-final class AssociationExistenceChecker
+class AssociationExistenceChecker
 {
     public function __construct(
-        private readonly FormCatalogInterface $formCatalog,
-        private readonly GridCatalogInterface $gridCatalog,
-        private readonly ApiEndpointCatalogInterface $apiEndpointCatalog,
+        private readonly FormCatalog $formCatalog,
+        private readonly GridCatalog $gridCatalog,
+        private readonly ApiEndpointCatalog $apiEndpointCatalog,
         private readonly TranslatorInterface $translator,
     ) {
     }
@@ -141,10 +141,13 @@ final class AssociationExistenceChecker
         return $warnings;
     }
 
-    private function gridHasColumn(GridCatalogEntry $grid, string $columnId): bool
+    /**
+     * @param array{columns: list<array{id: string}>} $grid
+     */
+    private function gridHasColumn(array $grid, string $columnId): bool
     {
-        foreach ($grid->columns as $column) {
-            if ($column->id === $columnId) {
+        foreach ($grid['columns'] as $column) {
+            if ($column['id'] === $columnId) {
                 return true;
             }
         }

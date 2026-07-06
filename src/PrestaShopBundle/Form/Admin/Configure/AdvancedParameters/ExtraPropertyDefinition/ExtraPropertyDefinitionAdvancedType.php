@@ -9,7 +9,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition;
 
-use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ExtraPropertyCatalogPresenter;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\ApiEndpointCatalog;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalog;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalog;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyFormTypeMap;
 use PrestaShopBundle\Form\Admin\Type\CardType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -45,7 +48,10 @@ class ExtraPropertyDefinitionAdvancedType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        private readonly ExtraPropertyCatalogPresenter $catalogPresenter,
+        private readonly FormCatalog $formCatalog,
+        private readonly GridCatalog $gridCatalog,
+        private readonly ApiEndpointCatalog $apiEndpointCatalog,
+        private readonly ExtraPropertyFormTypeMap $formTypeMap,
     ) {
         parent::__construct($translator, $locales);
     }
@@ -138,7 +144,12 @@ class ExtraPropertyDefinitionAdvancedType extends TranslatorAwareType
      */
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
-        $view->vars['extra_property_catalogs'] = $this->catalogPresenter->presentAdvancedCard();
+        $view->vars['extra_property_catalogs'] = [
+            'forms' => $this->formCatalog->getAll(),
+            'grids' => $this->gridCatalog->getAll(),
+            'apis' => $this->apiEndpointCatalog->getAll(),
+            'defaultFormTypes' => $this->formTypeMap->getMap(),
+        ];
     }
 
     /**

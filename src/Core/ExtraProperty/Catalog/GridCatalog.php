@@ -15,18 +15,21 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 use Throwable;
 
 /**
- * Enumerates the back-office grids by iterating every service tagged core.grid_definition_factory
- * (the tag is applied to all GridDefinitionFactoryInterface implementations via _instanceof, so
- * module-provided factories are included). Factories whose definition cannot be built are logged
- * and skipped, so one broken grid never breaks the whole catalog.
+ * Enumerates the back-office grids an extra property definition can be associated with, by
+ * iterating every service tagged core.grid_definition_factory (the tag is applied to all
+ * GridDefinitionFactoryInterface implementations via _instanceof, so module-provided factories
+ * are included). Factories whose definition cannot be built are logged and skipped, so one
+ * broken grid never breaks the whole catalog.
  *
  * The scan is memoized per instance; a cache decorator can later wrap this service for
  * cross-request caching (see the prestashop.extra_property.catalog.filesystem_cache pool).
+ *
+ * @phpstan-type GridEntry array{id: string, label: string, columns: list<array{id: string, label: string, position: int}>}
  */
-final class GridCatalog implements GridCatalogInterface
+class GridCatalog
 {
     /**
-     * @var array<string, GridCatalogEntry>|null indexed by grid id, sorted by label
+     * @var array<string, GridEntry>|null indexed by grid id, sorted by label
      */
     private ?array $entries = null;
 
@@ -37,12 +40,18 @@ final class GridCatalog implements GridCatalogInterface
     ) {
     }
 
+    /**
+     * @return list<GridEntry> sorted by label
+     */
     public function getAll(): array
     {
         return array_values($this->getEntries());
     }
 
-    public function get(string $gridId): ?GridCatalogEntry
+    /**
+     * @return GridEntry|null
+     */
+    public function get(string $gridId): ?array
     {
         return $this->getEntries()[$gridId] ?? null;
     }
@@ -53,7 +62,7 @@ final class GridCatalog implements GridCatalogInterface
     }
 
     /**
-     * @return array<string, GridCatalogEntry>
+     * @return array<string, GridEntry>
      */
     private function getEntries(): array
     {
@@ -74,15 +83,19 @@ final class GridCatalog implements GridCatalogInterface
                 $columns = [];
                 $position = 0;
                 foreach ($definition->getColumns() as $column) {
-                    $columns[] = new GridColumnEntry(
-                        (string) $column->getId(),
-                        (string) $column->getName(),
-                        $position++,
-                    );
+                    $columns[] = [
+                        'id' => (string) $column->getId(),
+                        'label' => (string) $column->getName(),
+                        'position' => $position++,
+                    ];
                 }
 
                 $gridId = (string) $definition->getId();
-                $entries[$gridId] = new GridCatalogEntry($gridId, (string) $definition->getName(), $columns);
+                $entries[$gridId] = [
+                    'id' => $gridId,
+                    'label' => (string) $definition->getName(),
+                    'columns' => $columns,
+                ];
             } catch (Throwable $e) {
                 $this->logger->warning(
                     sprintf('Extra property grid catalog: skipped grid definition factory "%s": %s', $serviceId, $e->getMessage()),
@@ -91,7 +104,7 @@ final class GridCatalog implements GridCatalogInterface
             }
         }
 
-        uasort($entries, static fn (GridCatalogEntry $a, GridCatalogEntry $b): int => strcasecmp($a->label, $b->label));
+        uasort($entries, static fn (array $a, array $b): int => strcasecmp($a['label'], $b['label']));
 
         return $this->entries = $entries;
     }

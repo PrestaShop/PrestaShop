@@ -10,8 +10,7 @@ namespace Tests\Unit\Core\ExtraProperty\Catalog;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalog;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalogEntry;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalogInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\GridCatalog;
 use Psr\Log\NullLogger;
 use RuntimeException;
 use Symfony\Component\Form\FormRegistryInterface;
@@ -36,12 +35,12 @@ class FormCatalogTest extends TestCase
 
         $this->assertCount(2, $entries);
         // Sorted by label: "My settings" before "Products list"
-        $this->assertSame('my_settings', $entries[0]->id);
+        $this->assertSame('my_settings', $entries[0]['id']);
         // No grid with the "my_settings" id: humanized block prefix
-        $this->assertSame('My settings', $entries[0]->label);
-        $this->assertSame('product', $entries[1]->id);
+        $this->assertSame('My settings', $entries[0]['label']);
+        $this->assertSame('product', $entries[1]['id']);
         // A grid with the "product" id exists: its translated label is reused
-        $this->assertSame('Products list', $entries[1]->label);
+        $this->assertSame('Products list', $entries[1]['label']);
     }
 
     public function testBrokenFormTypeIsSkipped(): void
@@ -54,7 +53,7 @@ class FormCatalogTest extends TestCase
         $entries = $catalog->getAll();
 
         $this->assertCount(1, $entries);
-        $this->assertSame('product', $entries[0]->id);
+        $this->assertSame('product', $entries[0]['id']);
     }
 
     public function testDuplicatedBlockPrefixKeepsFirstFormType(): void
@@ -116,12 +115,12 @@ class FormCatalogTest extends TestCase
     /**
      * @param array<string, string> $gridLabelsById
      */
-    private function createGridCatalog(array $gridLabelsById): GridCatalogInterface
+    private function createGridCatalog(array $gridLabelsById): GridCatalog
     {
-        $gridCatalog = $this->createMock(GridCatalogInterface::class);
+        $gridCatalog = $this->createMock(GridCatalog::class);
         $gridCatalog->method('get')->willReturnCallback(
-            static fn (string $gridId): ?GridCatalogEntry => isset($gridLabelsById[$gridId])
-                ? new GridCatalogEntry($gridId, $gridLabelsById[$gridId], [])
+            static fn (string $gridId): ?array => isset($gridLabelsById[$gridId])
+                ? ['id' => $gridId, 'label' => $gridLabelsById[$gridId], 'columns' => []]
                 : null
         );
 

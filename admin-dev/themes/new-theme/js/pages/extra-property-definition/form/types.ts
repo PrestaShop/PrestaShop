@@ -4,8 +4,8 @@
  */
 
 /**
- * Shapes of the inline JSON payloads rendered by the form theme (frozen contracts — see
- * ExtraPropertyCatalogPresenter and ExtraPropertyConstraintCatalog).
+ * Shapes of the inline JSON payloads rendered by the form theme (frozen contracts — see the
+ * catalog services under PrestaShop\Core\ExtraProperty\Catalog and ExtraPropertyConstraintCatalog).
  */
 
 export interface FormCatalogEntry {
@@ -28,7 +28,6 @@ export interface GridCatalogEntry {
 export interface ApiEndpointEntry {
   uriTemplate: string;
   methods: string[];
-  source: string;
 }
 
 export interface ExtraPropertyCatalogs {
