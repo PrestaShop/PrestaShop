@@ -1,0 +1,45 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% form_theme customerServiceOptionsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme imapOptionsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{{ form_start(customerServiceOptionsForm, {action: path('admin_customer_threads_options_save')}) }}
+  <div class="card mt-3">
+    <h3 class="card-header">
+      <i class="material-icons">settings</i>
+      {{ 'Contact options'|trans({}, 'Admin.Catalog.Feature') }}
+    </h3>
+    <div class="card-body">
+      <div class="form-wrapper">
+        {{ form_widget(customerServiceOptionsForm) }}
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
+{{ form_end(customerServiceOptionsForm) }}
+
+{{ form_start(imapOptionsForm, {action: path('admin_customer_threads_imap_options_save')}) }}
+  <div class="card mt-3">
+    <h3 class="card-header">
+      <i class="material-icons">mail</i>
+      {{ 'Customer service options'|trans({}, 'Admin.Catalog.Feature') }}
+    </h3>
+    <div class="card-body">
+      <div class="form-wrapper">
+        {{ form_widget(imapOptionsForm) }}
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  </div>
+{{ form_end(imapOptionsForm) }}

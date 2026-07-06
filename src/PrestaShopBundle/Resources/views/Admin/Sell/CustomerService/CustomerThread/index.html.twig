@@ -25,6 +25,10 @@
   {% endblock %}
 
   {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: customerThreadGrid}) }}
+
+  {% block customer_service_options %}
+    {{ include('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/options.html.twig') }}
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}
