@@ -54,4 +54,3 @@ services:
       $cache: '@prestashop.extra_property.catalog.filesystem_cache'
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
-
