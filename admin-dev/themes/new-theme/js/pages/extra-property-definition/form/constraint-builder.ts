@@ -48,9 +48,9 @@ export default class ConstraintBuilder {
     this.container = container;
     this.catalog = catalog;
     this.rowsContainer = <HTMLElement>container.querySelector(ExtraPropertyFormMap.subsection.rows);
-    this.zone = <HTMLElement>container.querySelector('[data-role="per-language-zone"]');
-    this.langRowsContainer = <HTMLElement> this.zone.querySelector('[data-role="lang-rows"]');
-    this.scopeSelect = document.querySelector<HTMLSelectElement>('#extra_property_definition_field_definition_scope');
+    this.zone = <HTMLElement>container.querySelector(ExtraPropertyFormMap.constraint.perLanguageZone);
+    this.langRowsContainer = <HTMLElement> this.zone.querySelector(ExtraPropertyFormMap.constraint.langRows);
+    this.scopeSelect = document.querySelector<HTMLSelectElement>(ExtraPropertyFormMap.scopeSelect);
     this.readOnly = container.dataset.readOnly === 'true';
     this.collection = new FormCollection(this.rowsContainer);
 
@@ -110,7 +110,7 @@ export default class ConstraintBuilder {
       .querySelector(ExtraPropertyFormMap.subsection.addRow)
       ?.addEventListener('click', () => this.addRow('0'));
     this.container
-      .querySelector('[data-role="add-lang-row"]')
+      .querySelector(ExtraPropertyFormMap.constraint.addLangRow)
       ?.addEventListener('click', () => this.addRow('1'));
 
     this.scopeSelect?.addEventListener('change', () => this.updateZone());
@@ -138,13 +138,13 @@ export default class ConstraintBuilder {
   private renderOptionsEditor(row: HTMLElement): void {
     const optionsInput = row.querySelector<HTMLInputElement>(ExtraPropertyFormMap.rowField('options'));
     const structuredFields = row.querySelector<HTMLElement>(ExtraPropertyFormMap.subsection.structuredFields);
-    const editor = structuredFields?.querySelector<HTMLElement>('[data-role="options-editor"]');
+    const editor = structuredFields?.querySelector<HTMLElement>(ExtraPropertyFormMap.constraint.optionsEditor);
 
     if (!optionsInput || !structuredFields || !editor) {
       return;
     }
 
-    structuredFields.querySelector('[data-role="options-display"]')?.remove();
+    structuredFields.querySelector(ExtraPropertyFormMap.constraint.optionsDisplay)?.remove();
     editor.replaceChildren();
 
     const {name} = FormCollection.read(row, ['name']);
@@ -234,9 +234,9 @@ export default class ConstraintBuilder {
     }
 
     if (focusKey !== undefined) {
-      const focusField = Array.from(editor.querySelectorAll<HTMLElement>('.extra-property-options-editor__field'))
+      const focusField = Array.from(editor.querySelectorAll<HTMLElement>(ExtraPropertyFormMap.constraint.optionField))
         .find((field) => field.dataset.optionKey === String(focusKey));
-      focusField?.querySelector('input')?.focus();
+      focusField?.querySelector<HTMLInputElement>(ExtraPropertyFormMap.constraint.optionInput)?.focus();
     }
   }
 
@@ -253,7 +253,7 @@ export default class ConstraintBuilder {
     // A positional value feeds the constraint's default option: show that name so the user
     // knows which option is being edited.
     const labelText = option.key ?? entry.defaultOption;
-    const label = <HTMLElement>field.querySelector('.extra-property-options-editor__label');
+    const label = <HTMLElement>field.querySelector(ExtraPropertyFormMap.constraint.optionLabel);
 
     if (labelText === null) {
       label.remove();
@@ -264,7 +264,7 @@ export default class ConstraintBuilder {
     const type = entry.options[option.key ?? entry.defaultOption ?? '']?.type ?? '';
     const isNumber = ['int', 'integer', 'float', 'number'].includes(type);
     const isString = ['string'].includes(type);
-    const input = <HTMLInputElement>field.querySelector('input');
+    const input = <HTMLInputElement>field.querySelector(ExtraPropertyFormMap.constraint.optionInput);
     input.type = isNumber ? 'number' : 'text';
     input.disabled = this.readOnly;
     input.value = isString ? unquoteValue(option.value) : option.value;
@@ -285,7 +285,7 @@ export default class ConstraintBuilder {
       writeTail(options);
     });
 
-    const remove = <HTMLButtonElement>field.querySelector('.extra-property-options-editor__remove');
+    const remove = <HTMLButtonElement>field.querySelector(ExtraPropertyFormMap.constraint.optionRemove);
 
     if (this.readOnly) {
       remove.remove();
@@ -347,6 +347,6 @@ export default class ConstraintBuilder {
     const isLangScope = (this.scopeSelect?.value ?? '') === 'lang';
 
     this.zone.classList.toggle('d-none', !isLangScope && !hasLangRows);
-    this.zone.classList.toggle('extra-property-lang-zone--inactive', hasLangRows && !isLangScope);
+    this.zone.classList.toggle(ExtraPropertyFormMap.constraint.inactiveZoneClass, hasLangRows && !isLangScope);
   }
 }

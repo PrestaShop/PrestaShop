@@ -63,7 +63,7 @@ $(() => {
     new ConstraintBuilder(constraintContainer, constraintCatalog);
   }
 
-  const developerFields = document.querySelector<HTMLElement>('[data-role="developer-fields"]');
+  const developerFields = document.querySelector<HTMLElement>(ExtraPropertyFormMap.developerFields);
 
   if (developerFields) {
     new DeveloperSettings(developerFields, catalogs);

@@ -144,7 +144,7 @@ export default class AnchorTreeEnhancer {
    */
   private renderLoading(input: HTMLInputElement): void {
     const dropdown = cloneTemplate('tree-loading');
-    input.closest('[data-role="anchor-wrap"]')?.appendChild(dropdown);
+    input.closest(ExtraPropertyFormMap.dropdown.anchorWrap)?.appendChild(dropdown);
     this.dropdown = dropdown;
   }
 
@@ -153,15 +153,15 @@ export default class AnchorTreeEnhancer {
 
     items.forEach((item) => {
       const option = cloneTemplate('suggestion-option');
-      option.classList.toggle('extra-property-anchor-option--group', item.compound);
+      option.classList.toggle(ExtraPropertyFormMap.dropdown.groupOptionClass, item.compound);
 
       if (item.depth > 0) {
-        option.classList.add(`extra-property-anchor-option--depth-${Math.min(item.depth, MAX_DEPTH_CLASS)}`);
+        option.classList.add(ExtraPropertyFormMap.dropdown.depthClass(Math.min(item.depth, MAX_DEPTH_CLASS)));
       }
       option.dataset.path = item.path;
       option.dataset.compound = item.compound ? '1' : '0';
-      (<HTMLElement>option.querySelector('.extra-property-anchor-option__label')).textContent = item.label;
-      (<HTMLElement>option.querySelector('.extra-property-anchor-option__path')).textContent = item.path;
+      (<HTMLElement>option.querySelector(ExtraPropertyFormMap.dropdown.optionLabel)).textContent = item.label;
+      (<HTMLElement>option.querySelector(ExtraPropertyFormMap.dropdown.optionDetail)).textContent = item.path;
       option.addEventListener('mousedown', (event) => {
         // mousedown (not click) so the selection beats the input's focusout.
         event.preventDefault();
@@ -170,7 +170,7 @@ export default class AnchorTreeEnhancer {
       dropdown.appendChild(option);
     });
 
-    input.closest('[data-role="anchor-wrap"]')?.appendChild(dropdown);
+    input.closest(ExtraPropertyFormMap.dropdown.anchorWrap)?.appendChild(dropdown);
     this.dropdown = dropdown;
     this.activeIndex = -1;
   }
@@ -210,7 +210,7 @@ export default class AnchorTreeEnhancer {
   }
 
   private visibleOptions(): HTMLElement[] {
-    return Array.from(this.dropdown?.querySelectorAll<HTMLElement>('.extra-property-anchor-option:not(.d-none)') ?? []);
+    return Array.from(this.dropdown?.querySelectorAll<HTMLElement>(ExtraPropertyFormMap.dropdown.visibleOption) ?? []);
   }
 
   private filter(query: string): void {
@@ -220,7 +220,7 @@ export default class AnchorTreeEnhancer {
 
     const needle = query.trim().toLowerCase();
 
-    this.dropdown.querySelectorAll<HTMLElement>('.extra-property-anchor-option').forEach((option) => {
+    this.dropdown.querySelectorAll<HTMLElement>(ExtraPropertyFormMap.dropdown.option).forEach((option) => {
       const haystack = `${option.dataset.path} ${option.textContent}`.toLowerCase();
       option.classList.toggle('d-none', needle !== '' && !haystack.includes(needle));
     });

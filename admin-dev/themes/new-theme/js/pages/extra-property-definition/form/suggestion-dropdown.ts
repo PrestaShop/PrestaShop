@@ -4,6 +4,7 @@
  */
 
 import cloneTemplate from '@pages/extra-property-definition/form/templates';
+import ExtraPropertyFormMap from '@pages/extra-property-definition/form/extra-property-form-map';
 
 export interface SuggestionItem {
   /** Written into the input on selection (unless writeValue is false). */
@@ -106,15 +107,15 @@ export default class SuggestionDropdown {
       }
 
       const option = cloneTemplate('suggestion-option');
-      option.classList.toggle('extra-property-anchor-option--custom', item.custom === true);
+      option.classList.toggle(ExtraPropertyFormMap.dropdown.customOptionClass, item.custom === true);
       option.dataset.value = item.value;
-      const label = <HTMLElement>option.querySelector('.extra-property-anchor-option__label');
+      const label = <HTMLElement>option.querySelector(ExtraPropertyFormMap.dropdown.optionLabel);
       label.textContent = item.label;
 
       if (this.options.labelClass) {
         label.classList.add(this.options.labelClass);
       }
-      (<HTMLElement>option.querySelector('.extra-property-anchor-option__path')).textContent = item.detail;
+      (<HTMLElement>option.querySelector(ExtraPropertyFormMap.dropdown.optionDetail)).textContent = item.detail;
       option.addEventListener('mousedown', (event) => {
         // mousedown (not click) so the selection beats the input's focusout.
         event.preventDefault();
@@ -123,11 +124,11 @@ export default class SuggestionDropdown {
       dropdown.appendChild(option);
     });
 
-    let wrap = input.closest<HTMLElement>('.extra-property-anchor-wrap');
+    let wrap = input.closest<HTMLElement>(ExtraPropertyFormMap.dropdown.wrap);
 
     if (!wrap) {
       wrap = document.createElement('span');
-      wrap.className = 'extra-property-anchor-wrap';
+      wrap.className = ExtraPropertyFormMap.dropdown.wrapClass;
       input.insertAdjacentElement('beforebegin', wrap);
       wrap.appendChild(input);
     }
@@ -157,7 +158,7 @@ export default class SuggestionDropdown {
   }
 
   private visibleOptions(): HTMLElement[] {
-    return Array.from(this.dropdown?.querySelectorAll<HTMLElement>('.extra-property-anchor-option:not(.d-none)') ?? []);
+    return Array.from(this.dropdown?.querySelectorAll<HTMLElement>(ExtraPropertyFormMap.dropdown.visibleOption) ?? []);
   }
 
   private filter(query: string): void {
@@ -167,7 +168,7 @@ export default class SuggestionDropdown {
 
     const needle = query.trim().toLowerCase();
 
-    this.dropdown.querySelectorAll<HTMLElement>('.extra-property-anchor-option').forEach((option) => {
+    this.dropdown.querySelectorAll<HTMLElement>(ExtraPropertyFormMap.dropdown.option).forEach((option) => {
       const haystack = `${option.dataset.value} ${option.textContent}`.toLowerCase();
       option.classList.toggle('d-none', needle !== '' && !haystack.includes(needle));
     });
@@ -191,7 +192,7 @@ export default class SuggestionDropdown {
     };
 
     Array.from(this.dropdown.children).forEach((child) => {
-      if (child.classList.contains('extra-property-anchor-heading')) {
+      if (child.classList.contains(ExtraPropertyFormMap.dropdown.headingClass)) {
         flush();
         heading = <HTMLElement>child;
         hasVisibleOption = false;

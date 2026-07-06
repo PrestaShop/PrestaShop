@@ -6,6 +6,7 @@
 import PlacementList from '@pages/extra-property-definition/form/placement-list';
 import SuggestionDropdown, {SuggestionItem} from '@pages/extra-property-definition/form/suggestion-dropdown';
 import {ExtraPropertyCatalogs} from '@pages/extra-property-definition/form/types';
+import ExtraPropertyFormMap from '@pages/extra-property-definition/form/extra-property-form-map';
 
 /**
  * Search-to-add affordance of the Admin API subsection — a SuggestionDropdown in search mode
@@ -17,16 +18,16 @@ import {ExtraPropertyCatalogs} from '@pages/extra-property-definition/form/types
  */
 export default class EndpointSearch {
   constructor(container: HTMLElement, catalogs: ExtraPropertyCatalogs, list: PlacementList) {
-    const input = container.querySelector<HTMLInputElement>('[data-role="endpoint-search"]');
+    const input = container.querySelector<HTMLInputElement>(ExtraPropertyFormMap.api.endpointSearch);
 
     if (!input) {
       throw new Error('Endpoint search input not found');
     }
 
-    const wrapper = input.closest<HTMLElement>('[data-role="endpoint-search-wrapper"]') ?? container;
-    wrapper.classList.add('extra-property-anchor-wrap');
+    const wrapper = input.closest<HTMLElement>(ExtraPropertyFormMap.api.endpointSearchWrapper) ?? container;
+    wrapper.classList.add(ExtraPropertyFormMap.dropdown.wrapClass);
 
-    new SuggestionDropdown(wrapper, '[data-role="endpoint-search"]', {
+    new SuggestionDropdown(wrapper, ExtraPropertyFormMap.api.endpointSearch, {
       dynamicItems: true,
       writeValue: false,
       enterSelectsFirst: true,

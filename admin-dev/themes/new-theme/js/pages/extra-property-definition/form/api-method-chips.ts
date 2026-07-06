@@ -41,7 +41,7 @@ export default class ApiMethodChips {
   }
 
   private render(row: HTMLElement, uriInput: HTMLInputElement, methodsInput: HTMLInputElement): void {
-    row.querySelector('[data-role="method-chips"]')?.remove();
+    row.querySelector(ExtraPropertyFormMap.api.methodChips)?.remove();
 
     const selected = methodsInput.value.split(',').map((method) => method.trim()).filter((method) => method !== '');
     const catalogMethods = this.methodsByUri.get(uriInput.value.trim()) ?? ALLOWED_HTTP_METHODS;
@@ -49,7 +49,7 @@ export default class ApiMethodChips {
     const available = catalogMethods.concat(selected.filter((method) => !catalogMethods.includes(method)));
 
     const chips = cloneTemplate('method-chips');
-    const allPill = <HTMLButtonElement>chips.querySelector('[data-role="all-methods"]');
+    const allPill = <HTMLButtonElement>chips.querySelector(ExtraPropertyFormMap.api.allMethodsChip);
     allPill.classList.toggle('active', selected.length === 0);
     allPill.setAttribute('aria-pressed', selected.length === 0 ? 'true' : 'false');
     allPill.addEventListener('click', () => ApiMethodChips.write(row, uriInput, methodsInput, [], this));

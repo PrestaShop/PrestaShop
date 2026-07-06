@@ -3,6 +3,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+import ExtraPropertyFormMap from '@pages/extra-property-definition/form/extra-property-form-map';
+
 /**
  * Clones one of the inert <template data-tpl="..."> skeletons rendered by the form theme (see
  * the extra_property_js_templates block). All dynamic markup of the page comes from these
@@ -10,7 +12,7 @@
  * collection rows driven by the standard data-prototype.
  */
 export default function cloneTemplate(name: string): HTMLElement {
-  const template = document.querySelector<HTMLTemplateElement>(`template[data-tpl="${name}"]`);
+  const template = document.querySelector<HTMLTemplateElement>(ExtraPropertyFormMap.template(name));
   const root = template?.content.firstElementChild;
 
   if (!root) {

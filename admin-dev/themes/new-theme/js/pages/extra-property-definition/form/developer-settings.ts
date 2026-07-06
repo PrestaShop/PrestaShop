@@ -5,6 +5,7 @@
 
 import SuggestionDropdown from '@pages/extra-property-definition/form/suggestion-dropdown';
 import {ExtraPropertyCatalogs} from '@pages/extra-property-definition/form/types';
+import ExtraPropertyFormMap from '@pages/extra-property-definition/form/extra-property-form-map';
 
 /**
  * Curated shortlist of the form type FQCNs a developer typically overrides with — free text
@@ -49,8 +50,8 @@ export default class DeveloperSettings {
   constructor(container: HTMLElement, catalogs: ExtraPropertyCatalogs) {
     this.container = container;
     this.catalogs = catalogs;
-    this.typeInput = container.querySelector<HTMLInputElement>('input[name$="[form_field_type]"]');
-    this.optionsTextarea = container.querySelector<HTMLTextAreaElement>('textarea[name$="[form_options]"]');
+    this.typeInput = container.querySelector<HTMLInputElement>(ExtraPropertyFormMap.developer.formFieldTypeInput);
+    this.optionsTextarea = container.querySelector<HTMLTextAreaElement>(ExtraPropertyFormMap.developer.formOptionsTextarea);
 
     this.wireDefaultPlaceholder();
     this.wireTypeSuggestions();
@@ -62,7 +63,7 @@ export default class DeveloperSettings {
   }
 
   private wireDefaultPlaceholder(): void {
-    const typeSelect = document.querySelector<HTMLSelectElement>('#extra_property_definition_field_definition_type');
+    const typeSelect = document.querySelector<HTMLSelectElement>(ExtraPropertyFormMap.fieldTypeSelect);
 
     if (!this.typeInput) {
       return;
@@ -86,15 +87,15 @@ export default class DeveloperSettings {
       return;
     }
 
-    new SuggestionDropdown(this.container, 'input[name$="[form_field_type]"]', {
+    new SuggestionDropdown(this.container, ExtraPropertyFormMap.developer.formFieldTypeInput, {
       items: () => COMMON_FORM_TYPES.map((fqcn) => ({value: fqcn, label: shortName(fqcn), detail: fqcn})),
     });
   }
 
   private wireJsonFeedback(): void {
     const textarea = this.optionsTextarea;
-    const status = this.container.querySelector<HTMLElement>('[data-role="json-status"]');
-    const formatButton = this.container.querySelector<HTMLButtonElement>('[data-role="format-json"]');
+    const status = this.container.querySelector<HTMLElement>(ExtraPropertyFormMap.developer.jsonStatus);
+    const formatButton = this.container.querySelector<HTMLButtonElement>(ExtraPropertyFormMap.developer.formatJson);
 
     if (!textarea || textarea.disabled || !status || !formatButton) {
       return;
