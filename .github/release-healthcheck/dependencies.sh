@@ -14,16 +14,29 @@ HC_GROUP="Dependencies — modules & themes"
 # "released"/"tag exists" is tautological (a release publishes the tag, so a lock pin implies
 # it shipped), and "outdated"/"no dev pin" are already covered by B1/B2.
 
-# spec ref: B1 — native modules up to date (excluding the blocked psgdpr V2)
+# spec ref: B1 — native modules up to date. Two graded signals:
+#   • semver-safe (in-constraint) updates → FAIL: a pending lock bump the release MUST pick up.
+#     `--minor-only` caps "latest" at the installed major so an available major can't mask an
+#     in-constraint minor; the status filter then keeps only the actionable bumps.
+#   • out-of-constraint MAJOR releases (latest-status "update-possible") → WARN: reported so the
+#     roadmap stays visible, but they need breaking-change review so they don't block a release.
+# This pair subsumes the old hard-coded psgdpr V2 exclusion — psgdpr V2 is a major, so it now
+# surfaces in the WARN signal instead of being silently dropped.
 check_native_modules_up_to_date() {
-  local out names
+  local safe majors
   HC_LINK="https://github.com/$REPO/blob/$REF/composer.json"
-  out=$(composer outdated -D -f json "prestashop/*" 2>/dev/null)
-  names=$(printf '%s' "$out" | jq -r '.installed[]? | select(.name != "prestashop/psgdpr") | "\(.name) \(.version)→\(.latest)"' 2>/dev/null)
-  if [ -z "$names" ]; then
-    emit "deps/native-modules-up-to-date" "Native modules up to date" "$HC_PASS" "$HC_SEV_FAIL" "no outdated prestashop/* packages (psgdpr excluded)"
+  safe=$(composer outdated -D --minor-only -f json "prestashop/*" 2>/dev/null | jq -r '.installed[]? | select(."latest-status"=="semver-safe-update") | "\(.name) \(.version)→\(.latest)"' 2>/dev/null)
+  if [ -z "$safe" ]; then
+    emit "deps/native-modules-up-to-date" "Native modules up to date" "$HC_PASS" "$HC_SEV_FAIL" "no in-constraint module updates pending"
   else
-    emit "deps/native-modules-up-to-date" "Native modules up to date" "$HC_FAIL" "$HC_SEV_FAIL" "outdated: $(printf '%s' "$names" | paste -sd'; ' -)"
+    emit "deps/native-modules-up-to-date" "Native modules up to date" "$HC_FAIL" "$HC_SEV_FAIL" "outdated: $(printf '%s' "$safe" | paste -sd'; ' -)"
+  fi
+
+  majors=$(composer outdated -D -f json "prestashop/*" 2>/dev/null | jq -r '.installed[]? | select(."latest-status"=="update-possible") | "\(.name) \(.version)→\(.latest)"' 2>/dev/null)
+  if [ -z "$majors" ]; then
+    emit "deps/native-modules-major-available" "No new module majors" "$HC_PASS" "$HC_SEV_WARN" "no out-of-constraint major releases available"
+  else
+    emit "deps/native-modules-major-available" "Module majors available" "$HC_FAIL" "$HC_SEV_WARN" "major available: $(printf '%s' "$majors" | paste -sd'; ' -)"
   fi
 }
 
@@ -39,8 +52,8 @@ check_no_dev_branch_pins() {
   fi
 }
 
-# spec ref: B7 — composer audit (security vulnerabilities). NB: the psgdpr exclusion applies
-# only to module *updates* (B1), NOT to security audit — every advisory counts here.
+# spec ref: B7 — composer audit (security vulnerabilities). NB: B1's lenient handling of
+# out-of-constraint majors (WARN, not FAIL) does NOT carry over here — every advisory counts.
 check_composer_audit() {
   local out count
   out=$(composer audit --no-interaction 2>&1)
