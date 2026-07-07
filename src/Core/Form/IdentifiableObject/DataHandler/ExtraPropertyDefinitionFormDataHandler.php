@@ -20,6 +20,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\AssociationRowSerializer;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowSerializer;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\EnumValuesParser;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
@@ -44,7 +45,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintM
  * before this handler runs (see ExtraPropertyDefinitionAdvancedType), so a throw here only
  * surfaces for programmatic submissions or hook-mutated form data.
  */
-final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInterface
+class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInterface
 {
     public function __construct(protected readonly CommandBusInterface $commandBus)
     {
@@ -77,7 +78,7 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
             nullable: (bool) ($fieldDefinition['nullable'] ?? true),
             size: $fieldDefinition['size'] ?: null,
             defaultValue: $fieldDefinition['default_value'] ?: null,
-            enumValues: $this->parseEnumValues($fieldDefinition['enum_values'] ?? null),
+            enumValues: EnumValuesParser::parse($fieldDefinition['enum_values'] ?? null),
             labelWording: $labels['label_wording'] ?: null,
             labelDomain: $labels['label_domain'] ?: null,
             descriptionWording: $labels['description_wording'] ?: null,
@@ -127,28 +128,12 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
             $command->setSize((int) $fieldDefinition['size']);
         }
 
-        $enumValues = $this->parseEnumValues($fieldDefinition['enum_values'] ?? null);
+        $enumValues = EnumValuesParser::parse($fieldDefinition['enum_values'] ?? null);
         if (null !== $enumValues) {
             $command->setEnumValues($enumValues);
         }
 
         $this->commandBus->handle($command);
-    }
-
-    /**
-     * Parses the "one value per line" enum_values textarea into a list of trimmed, non-empty strings.
-     *
-     * @param string|null $rawValue
-     *
-     * @return list<string>|null
-     */
-    protected function parseEnumValues(?string $rawValue): ?array
-    {
-        if (null === $rawValue || '' === trim($rawValue)) {
-            return null;
-        }
-
-        return array_values(array_filter(array_map('trim', explode("\n", $rawValue)), static fn (string $v): bool => '' !== $v)) ?: null;
     }
 
     /**
@@ -158,7 +143,7 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
      *
      * @return array<string, mixed>|null
      *
-     * @throws InvalidExtraPropertyDefinitionException when the value is not valid JSON or does not decode to an object/array
+     * @throws InvalidExtraPropertyDefinitionException when the value is not valid JSON or does not decode to a JSON object
      */
     protected function parseJsonObject(?string $rawValue): ?array
     {
@@ -176,10 +161,12 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
             );
         }
 
-        if (!is_array($decoded)) {
+        // A JSON list ([1, 2]) is an array too but is not a set of named form options — reject it
+        // like any other non-object so the message matches what is actually accepted ({} is fine).
+        if (!is_array($decoded) || ($decoded !== [] && array_is_list($decoded))) {
             throw new InvalidExtraPropertyDefinitionException(sprintf(
                 'The form options field must contain a JSON object, got %s.',
-                get_debug_type($decoded)
+                is_array($decoded) ? 'a JSON list' : get_debug_type($decoded)
             ));
         }
 

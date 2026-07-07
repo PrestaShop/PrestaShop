@@ -103,6 +103,10 @@ class AssociationEntryParser
      * The ":" separates the grid id from the column id, and the column id from the optional mode.
      * Grid columns are flat (no nesting), so the column id never contains a separator.
      *
+     * Unlike parseFormEntry() — where a path without a mode means "append inside the container"
+     * (mode null) — a column id without an explicit mode defaults to 'after': a grid has no
+     * containers, a column is always a before/after anchor.
+     *
      * @return array{gridId: string, columnId: string|null, mode: 'before'|'after'|null}
      */
     public static function parseGridEntry(string $entry): array
@@ -180,8 +184,10 @@ class AssociationEntryParser
     {
         $parsed = self::parseFormEntry($entry);
         if ('' === $parsed['formId']) {
-            throw new InvalidExtraPropertyDefinitionException(sprintf(
-                'ExtraPropertyDefinition: invalid associatedForms entry "%s" — formId must not be empty.',
+            // prefixed() keeps the bare message retrievable for consumers already pointing at
+            // the offending entry (e.g. a placement form row).
+            throw InvalidExtraPropertyDefinitionException::prefixed('ExtraPropertyDefinition: ', sprintf(
+                'invalid associatedForms entry "%s" — formId must not be empty.',
                 $entry
             ));
         }
@@ -200,8 +206,8 @@ class AssociationEntryParser
     {
         $parsed = self::parseGridEntry($entry);
         if ('' === $parsed['gridId']) {
-            throw new InvalidExtraPropertyDefinitionException(sprintf(
-                'ExtraPropertyDefinition: invalid associatedGrids entry "%s" — gridId must not be empty.',
+            throw InvalidExtraPropertyDefinitionException::prefixed('ExtraPropertyDefinition: ', sprintf(
+                'invalid associatedGrids entry "%s" — gridId must not be empty.',
                 $entry
             ));
         }
@@ -224,8 +230,8 @@ class AssociationEntryParser
         $colonPos = strpos($entry, ':');
         $rawPath = trim(false !== $colonPos ? substr($entry, 0, $colonPos) : $entry);
         if ('' === $rawPath) {
-            throw new InvalidExtraPropertyDefinitionException(sprintf(
-                'ExtraPropertyDefinition: invalid associatedApis entry "%s" — URI path must not be empty.',
+            throw InvalidExtraPropertyDefinitionException::prefixed('ExtraPropertyDefinition: ', sprintf(
+                'invalid associatedApis entry "%s" — URI path must not be empty.',
                 $entry
             ));
         }
@@ -233,8 +239,8 @@ class AssociationEntryParser
         $parsed = self::parseApiEntry($entry);
         foreach ($parsed['methods'] ?? [] as $method) {
             if (!in_array($method, self::ALLOWED_HTTP_METHODS, true)) {
-                throw new InvalidExtraPropertyDefinitionException(sprintf(
-                    'ExtraPropertyDefinition: invalid HTTP method "%s" in associatedApis entry "%s" (allowed: %s).',
+                throw InvalidExtraPropertyDefinitionException::prefixed('ExtraPropertyDefinition: ', sprintf(
+                    'invalid HTTP method "%s" in associatedApis entry "%s" (allowed: %s).',
                     $method,
                     $entry,
                     implode(', ', self::ALLOWED_HTTP_METHODS)

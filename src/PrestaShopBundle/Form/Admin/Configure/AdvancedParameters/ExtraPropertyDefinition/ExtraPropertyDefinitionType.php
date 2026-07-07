@@ -11,6 +11,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraProperty
 
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\EnumValuesParser;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -137,9 +138,10 @@ class ExtraPropertyDefinitionType extends TranslatorAwareType
                 // Invalid JSON is already flagged by the field's own Assert\Json constraint.
                 return;
             }
-            if (!is_array($decoded)) {
-                // Valid scalar JSON (e.g. "123") is NOT flagged by Assert\Json — flag it here
-                // with the same wording, it would otherwise only fail later in the form data handler.
+            if (!is_array($decoded) || ($decoded !== [] && array_is_list($decoded))) {
+                // Valid scalar JSON (e.g. "123") and JSON lists (e.g. "[1, 2]") are NOT flagged
+                // by Assert\Json — flag them here with the same wording, they would otherwise
+                // only fail later in the form data handler.
                 $context->buildViolation(
                     $this->trans('The form options must be a valid JSON object.', 'Admin.Advparameters.Notification')
                 )
@@ -163,7 +165,7 @@ class ExtraPropertyDefinitionType extends TranslatorAwareType
         $errors = $this->formOptionsValidator->validate(
             $formType,
             $type,
-            $this->parseEnumValues($fieldDefinition['enum_values'] ?? null),
+            EnumValuesParser::parse($fieldDefinition['enum_values'] ?? null),
             $scope,
             $formOptions
         );
@@ -181,20 +183,5 @@ class ExtraPropertyDefinitionType extends TranslatorAwareType
         foreach ($errors as $error) {
             $context->buildViolation($error)->atPath($errorPath)->addViolation();
         }
-    }
-
-    /**
-     * Parses the "one value per line" enum_values textarea the same way as
-     * ExtraPropertyDefinitionFormDataHandler::parseEnumValues().
-     *
-     * @return list<string>|null
-     */
-    private function parseEnumValues(mixed $rawValue): ?array
-    {
-        if (!is_string($rawValue) || '' === trim($rawValue)) {
-            return null;
-        }
-
-        return array_values(array_filter(array_map('trim', explode("\n", $rawValue)), static fn (string $v): bool => '' !== $v)) ?: null;
     }
 }

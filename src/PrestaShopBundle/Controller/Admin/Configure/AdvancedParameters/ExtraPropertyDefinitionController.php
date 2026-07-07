@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefin
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\AssociationExistenceChecker;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProvider;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyFormOptionsException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\AssociationRowSerializer;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -400,6 +401,11 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
         return [
             ExtraPropertyDefinitionNotFoundException::class => $this->trans(
                 'The extra property definition was not found.',
+                [],
+                'Admin.Advparameters.Notification'
+            ),
+            InvalidExtraPropertyDefinitionException::class => $this->trans(
+                'The submitted extra property definition is invalid. Check the form values and try again.',
                 [],
                 'Admin.Advparameters.Notification'
             ),

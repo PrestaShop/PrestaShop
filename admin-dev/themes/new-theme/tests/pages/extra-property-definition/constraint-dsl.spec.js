@@ -84,4 +84,42 @@ describe('extra property constraint tail lexer', () => {
       expect(unquoteValue(quoteValue("it's a \\ test"))).to.equal("it's a \\ test");
     });
   });
+
+  // PARITY FIXTURES — mirror of ExtraPropertyConstraintMapperTest::tailParityProvider() (PHP).
+  // The same tails are asserted against the server-side mapper: a quoting/splitting rule changed
+  // on one side without the other makes the sibling suite fail, surfacing the drift in CI.
+  describe('parity fixtures with the PHP mapper', () => {
+    const QUOTING_PARITY = [
+      {tail: "'simple'", decoded: 'simple'},
+      {tail: '"double"', decoded: 'double'},
+      {tail: "'it\\'s'", decoded: "it's"},
+      {tail: '"she said \\"hi\\""', decoded: 'she said "hi"'},
+      {tail: "'back\\\\slash'", decoded: 'back\\slash'},
+      {tail: "'a, b'", decoded: 'a, b'},
+      {tail: "'with (parens) and [brackets]'", decoded: 'with (parens) and [brackets]'},
+      {tail: 'unquoted_text', decoded: 'unquoted_text'},
+    ];
+
+    QUOTING_PARITY.forEach(({tail, decoded}) => {
+      it(`lexes and unquotes ${tail} like the mapper`, () => {
+        const options = parseTail(tail);
+
+        expect(options).to.have.lengthOf(1);
+        expect(options[0].key).to.equal(null);
+        expect(unquoteValue(options[0].value)).to.equal(decoded);
+        expect(serializeTail(options)).to.equal(tail);
+      });
+    });
+
+    it('splits named options like the mapper', () => {
+      expect(parseTail('min: 2, max: 64')).to.deep.equal([
+        {key: 'min', value: '2'},
+        {key: 'max', value: '64'},
+      ]);
+      expect(parseTail("choices: ['a', 'b,c'], multiple: true")).to.deep.equal([
+        {key: 'choices', value: "['a', 'b,c']"},
+        {key: 'multiple', value: 'true'},
+      ]);
+    });
+  });
 });

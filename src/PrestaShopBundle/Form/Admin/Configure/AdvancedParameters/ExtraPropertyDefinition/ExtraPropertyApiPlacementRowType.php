@@ -67,8 +67,8 @@ class ExtraPropertyApiPlacementRowType extends TranslatorAwareType
         try {
             AssociationEntryParser::assertValidApiEntry($entries[0]);
         } catch (InvalidExtraPropertyDefinitionException $e) {
-            $context->buildViolation(preg_replace('/^ExtraPropertyDefinition: /', '', $e->getMessage()))
-                ->addViolation();
+            // The VO-oriented "ExtraPropertyDefinition: " prefix is noise on the row itself.
+            $context->buildViolation($e->getBareMessage())->addViolation();
         }
     }
 

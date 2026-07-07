@@ -76,9 +76,8 @@ class ExtraPropertyConstraintRowType extends TranslatorAwareType
         try {
             ExtraPropertyConstraintMapper::fromNames($token);
         } catch (ExtraPropertyException $e) {
-            // The mapper prefixes messages with the token's line — meaningless for a single row.
-            $context->buildViolation(preg_replace('/^Line 1: /', '', $e->getMessage()))
-                ->addViolation();
+            // The mapper's "Line N: " prefix is meaningless for a single row.
+            $context->buildViolation($e->getBareMessage())->addViolation();
         }
     }
 

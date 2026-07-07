@@ -82,9 +82,8 @@ class ExtraPropertyFormPlacementRowType extends TranslatorAwareType
         try {
             AssociationEntryParser::assertValidFormEntry($entries[0]);
         } catch (InvalidExtraPropertyDefinitionException $e) {
-            // Strip the VO-oriented prefix: in a form context "ExtraPropertyDefinition: " is noise.
-            $context->buildViolation(preg_replace('/^ExtraPropertyDefinition: /', '', $e->getMessage()))
-                ->addViolation();
+            // The VO-oriented "ExtraPropertyDefinition: " prefix is noise on the row itself.
+            $context->buildViolation($e->getBareMessage())->addViolation();
         }
     }
 

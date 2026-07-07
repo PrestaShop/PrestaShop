@@ -838,6 +838,75 @@ class ExtraPropertyConstraintMapperTest extends TestCase
         ExtraPropertyConstraintMapper::fromNames("NotBlank\nAll[\n  Bogus\n]");
     }
 
+    // -- parity fixtures with the client-side tail lexer -----------------------------------------
+
+    /**
+     * PARITY FIXTURES — mirror of "parity fixtures with the PHP mapper" in
+     * admin-dev/themes/new-theme/tests/pages/extra-property-definition/constraint-dsl.spec.js.
+     * The same tails are lexed by the TS typed-option editor: a quoting/splitting rule changed on
+     * one side without the other makes the sibling suite fail, surfacing the drift in CI.
+     *
+     * @dataProvider tailParityProvider
+     */
+    public function testTailQuotingParityWithTheClientLexer(string $tail, string $decoded): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames(sprintf('EqualTo(%s)', $tail));
+
+        $this->assertNotNull($constraints);
+        $this->assertCount(1, $constraints);
+        /** @var Assert\EqualTo $constraint */
+        $constraint = $constraints[0];
+        $this->assertSame($decoded, $constraint->value);
+    }
+
+    /**
+     * @return array<string, array{string, string}>
+     */
+    public static function tailParityProvider(): array
+    {
+        return [
+            'single quotes' => ["'simple'", 'simple'],
+            'double quotes' => ['"double"', 'double'],
+            'escaped single quote' => ["'it\\'s'", "it's"],
+            'escaped double quotes' => ['"she said \\"hi\\""', 'she said "hi"'],
+            'escaped backslash' => ["'back\\\\slash'", 'back\\slash'],
+            'separator inside quotes' => ["'a, b'", 'a, b'],
+            'delimiters inside quotes' => ["'with (parens) and [brackets]'", 'with (parens) and [brackets]'],
+            'unquoted string' => ['unquoted_text', 'unquoted_text'],
+        ];
+    }
+
+    /**
+     * The named-options half of the parity fixtures (see tailParityProvider()).
+     */
+    public function testNamedOptionsParityWithTheClientLexer(): void
+    {
+        $constraints = ExtraPropertyConstraintMapper::fromNames("Length(min: 2, max: 64)\nChoice(choices: ['a', 'b,c'], multiple: true)");
+
+        $this->assertNotNull($constraints);
+        /** @var Assert\Length $length */
+        $length = $constraints[0];
+        $this->assertSame(2, $length->min);
+        $this->assertSame(64, $length->max);
+        /** @var Assert\Choice $choice */
+        $choice = $constraints[1];
+        $this->assertSame(['a', 'b,c'], $choice->choices);
+        $this->assertTrue($choice->multiple);
+    }
+
+    public function testLinePrefixedErrorsKeepTheBareMessageRetrievable(): void
+    {
+        try {
+            ExtraPropertyConstraintMapper::fromNames("NotBlank\nEmail\nBogus");
+            $this->fail('An UnknownExtraPropertyConstraintException was expected.');
+        } catch (UnknownExtraPropertyConstraintException $e) {
+            // Consumers already pointing at the offending token (e.g. a constraint form row)
+            // display the message without the "Line N: " locator.
+            $this->assertStringStartsWith('Line 3: ', $e->getMessage());
+            $this->assertSame('Line 3: ' . $e->getBareMessage(), $e->getMessage());
+        }
+    }
+
     // -- round-trip: new shapes ------------------------------------------------------------------
 
     public function testRoundTripsComposites(): void

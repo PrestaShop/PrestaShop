@@ -37,7 +37,7 @@ use Throwable;
  * pruned); a child that cannot be introspected is logged and skipped without breaking its siblings.
  * Trees are cached per form in the prestashop.extra_property.catalog.filesystem_cache pool.
  *
- * @phpstan-type FieldNode array{name: string, path: string, label: string, typeClass: class-string, compound: bool, children: list<mixed>}
+ * @phpstan-type FieldNode array{name: string, path: string, label: string, compound: bool, children: list<mixed>}
  */
 class FormFieldTreeProvider
 {
@@ -86,8 +86,9 @@ class FormFieldTreeProvider
 
         // Cached per form in the extra property catalog pool (cleared with the Symfony cache,
         // which module management already triggers); an un-introspectable form (null) is never
-        // cached, so a transient failure is retried on the next request.
-        $item = $this->cache->getItem('form_fields_' . md5($formId));
+        // cached, so a transient failure is retried on the next request. The form id is a block
+        // prefix ([A-Za-z0-9_]+), so it is PSR-6-safe as-is.
+        $item = $this->cache->getItem('form_fields_' . $formId);
         if ($item->isHit()) {
             return $item->get();
         }
@@ -132,8 +133,12 @@ class FormFieldTreeProvider
     {
         if (is_a($formTypeClass, EditProductFormType::class, true)) {
             return [
+                // Constrained to the current shop: on a multishop setup the catalog-wide lowest
+                // id may not be associated to this shop, and FooterType's link generation would
+                // reject it — reading the whole tree as not introspectable.
                 'product_id' => (int) $this->connection->fetchOne(
-                    'SELECT MIN(id_product) FROM ' . $this->dbPrefix . 'product'
+                    'SELECT MIN(ps.id_product) FROM ' . $this->dbPrefix . 'product_shop ps WHERE ps.id_shop = :shopId',
+                    ['shopId' => $this->shopContext->getId()]
                 ),
                 'shop_id' => $this->shopContext->getId(),
                 'product_type' => ProductType::TYPE_STANDARD,
@@ -184,11 +189,13 @@ class FormFieldTreeProvider
             $children = $this->buildNodes($childBuilder, $path, $depth + 1);
         }
 
+        // No typeClass in the payload: the field FQCN is a server-side implementation detail the
+        // client must not leak (same policy as FormCatalog::getAll()) — the picker only needs
+        // name/path/label/compound.
         return [
             'name' => $name,
             'path' => $path,
             'label' => $this->resolveLabel($childBuilder, $name),
-            'typeClass' => get_class($childBuilder->getType()->getInnerType()),
             'compound' => $compound,
             'children' => $children,
         ];

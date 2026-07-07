@@ -66,6 +66,9 @@ class ExtraPropertyConstraintMapper
         'CssColor' => Assert\CssColor::class,
         'NoSuspiciousCharacters' => Assert\NoSuspiciousCharacters::class,
         'Length' => Assert\Length::class,
+        // Regex takes a user-supplied pattern, so a pathological pattern is a theoretical ReDoS
+        // at validation time. Accepted: the DSL is only writable by BO admins (or module code),
+        // and PCRE's backtracking limit aborts a runaway match instead of hanging the request.
         'Regex' => Assert\Regex::class,
         // Date / time
         'Date' => Assert\Date::class,
@@ -144,10 +147,10 @@ class ExtraPropertyConstraintMapper
         foreach (self::splitTopLevelWithLines($rawNames, ",\n") as [$token, $line]) {
             try {
                 $constraints[] = self::parseToken($token);
-            } catch (UnknownExtraPropertyConstraintException $e) {
-                throw new UnknownExtraPropertyConstraintException(sprintf('Line %d: %s', $line, $e->getMessage()), 0, $e);
-            } catch (InvalidExtraPropertyConstraintException $e) {
-                throw new InvalidExtraPropertyConstraintException(sprintf('Line %d: %s', $line, $e->getMessage()), 0, $e);
+            } catch (UnknownExtraPropertyConstraintException|InvalidExtraPropertyConstraintException $e) {
+                // Same exception class, line-located message; the bare message stays retrievable
+                // for consumers that already point at the offending token (e.g. a form row).
+                throw $e::prefixed(sprintf('Line %d: ', $line), $e->getMessage(), $e);
             }
         }
 

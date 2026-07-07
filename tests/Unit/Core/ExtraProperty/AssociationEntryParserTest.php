@@ -243,6 +243,19 @@ class AssociationEntryParserTest extends TestCase
         ];
     }
 
+    public function testAssertionErrorsKeepTheBareMessageRetrievable(): void
+    {
+        try {
+            AssociationEntryParser::assertValidFormEntry(':options');
+            $this->fail('An InvalidExtraPropertyDefinitionException was expected.');
+        } catch (InvalidExtraPropertyDefinitionException $e) {
+            // Consumers already pointing at the offending entry (e.g. a placement form row)
+            // display the message without the "ExtraPropertyDefinition: " locator.
+            $this->assertStringStartsWith('ExtraPropertyDefinition: ', $e->getMessage());
+            $this->assertSame('ExtraPropertyDefinition: ' . $e->getBareMessage(), $e->getMessage());
+        }
+    }
+
     public function testAssertValidGridEntryReturnsParsedEntry(): void
     {
         $this->assertSame(

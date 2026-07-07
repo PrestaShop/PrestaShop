@@ -15,11 +15,7 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormCatalog;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProvider;
 use Psr\Log\NullLogger;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Forms;
-use Tests\Unit\Core\ExtraProperty\Catalog\Fixtures\AddressFixtureType;
 use Tests\Unit\Core\ExtraProperty\Catalog\Fixtures\BrokenFixtureType;
 use Tests\Unit\Core\ExtraProperty\Catalog\Fixtures\DeepFixtureType;
 use Tests\Unit\Core\ExtraProperty\Catalog\Fixtures\RequiredOptionsFixtureType;
@@ -27,7 +23,7 @@ use Tests\Unit\Core\ExtraProperty\Catalog\Fixtures\RootFixtureType;
 
 class FormFieldTreeProviderTest extends TestCase
 {
-    public function testTreePathsLabelsTypesAndCompound(): void
+    public function testTreePathsLabelsAndCompound(): void
     {
         $tree = $this->createProvider()->getTree('root_fixture');
 
@@ -40,7 +36,8 @@ class FormFieldTreeProviderTest extends TestCase
         $this->assertSame('name', $name['path']);
         // Explicit label option is used as is
         $this->assertSame('The name', $name['label']);
-        $this->assertSame(TextType::class, $name['typeClass']);
+        // The field FQCN is a server-side detail the payload must not leak
+        $this->assertArrayNotHasKey('typeClass', $name);
         $this->assertFalse($name['compound']);
         $this->assertSame([], $name['children']);
 
@@ -48,7 +45,6 @@ class FormFieldTreeProviderTest extends TestCase
         $this->assertSame('shipping_address', $address['path']);
         // No label option: humanized field name
         $this->assertSame('Shipping address', $address['label']);
-        $this->assertSame(AddressFixtureType::class, $address['typeClass']);
         $this->assertTrue($address['compound']);
         $this->assertCount(2, $address['children']);
 
@@ -59,7 +55,6 @@ class FormFieldTreeProviderTest extends TestCase
         $this->assertSame('shipping_address.city', $city['path']);
         $this->assertSame('City', $city['label']);
 
-        $this->assertSame(CheckboxType::class, $active['typeClass']);
         $this->assertFalse($active['compound']);
 
         // An expanded choice is compound on the builder (one child per option), but its children
@@ -67,7 +62,6 @@ class FormFieldTreeProviderTest extends TestCase
         // the recursion on anything resolving to ChoiceType / CollectionType / Translatable*
         // through its parent chain (e.g. MaterialChoiceTableType, per-language inputs).
         $this->assertSame('groups', $groups['name']);
-        $this->assertSame(ChoiceType::class, $groups['typeClass']);
         $this->assertFalse($groups['compound']);
         $this->assertSame([], $groups['children']);
     }
