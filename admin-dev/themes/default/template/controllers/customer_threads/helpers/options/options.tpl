@@ -38,7 +38,7 @@
 						syncImapMail: "1",
 						ajax:"1",
 						action:"syncImap",
-						tab:"AdminCustomerThreads"
+						controller:"AdminCustomerThreads"
 					},
 					dataType : "json",
 					success: function(jsonData) {
