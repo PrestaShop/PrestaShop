@@ -507,27 +507,32 @@ class CartCore extends ObjectModel
             $result = Cache::retrieve($cache_key);
         }
 
-        // Define virtual context to prevent case where the cart is not the in the global context
-        $virtual_context = Context::getContext()->cloneContext();
-        /* @phpstan-ignore-next-line */
-        $virtual_context->cart = $this;
+        // The base cart total below is only consumed while enriching applied cart rules, so skip
+        // the Context clone and the getOrderTotal(ONLY_PRODUCTS) computations for carts that have
+        // no cart rules (the common case on shops that run promotions).
+        if (!empty($result)) {
+            // Define virtual context to prevent case where the cart is not the in the global context
+            $virtual_context = Context::getContext()->cloneContext();
+            /* @phpstan-ignore-next-line */
+            $virtual_context->cart = $this;
 
-        // set base cart total values, they will be updated and used for percentage cart rules (because percentage cart rules
-        // are applied to the cart total's value after previously applied cart rules)
-        $virtual_context->virtualTotalTaxExcluded = $virtual_context->cart->getOrderTotal(false, self::ONLY_PRODUCTS);
-        if (!Configuration::get('PS_TAX')) {
-            $virtual_context->virtualTotalTaxIncluded = $virtual_context->virtualTotalTaxExcluded;
-        } else {
-            $virtual_context->virtualTotalTaxIncluded = $virtual_context->cart->getOrderTotal(true, self::ONLY_PRODUCTS);
-        }
+            // set base cart total values, they will be updated and used for percentage cart rules (because percentage cart rules
+            // are applied to the cart total's value after previously applied cart rules)
+            $virtual_context->virtualTotalTaxExcluded = $virtual_context->cart->getOrderTotal(false, self::ONLY_PRODUCTS);
+            if (!Configuration::get('PS_TAX')) {
+                $virtual_context->virtualTotalTaxIncluded = $virtual_context->virtualTotalTaxExcluded;
+            } else {
+                $virtual_context->virtualTotalTaxIncluded = $virtual_context->cart->getOrderTotal(true, self::ONLY_PRODUCTS);
+            }
 
-        foreach ($result as &$row) {
-            $row['obj'] = new CartRule($row['id_cart_rule'], (int) $this->id_lang);
-            $row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context, $filter);
-            $row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context, $filter);
-            // Retro compatibility < 1.5.0.2
-            $row['id_discount'] = $row['id_cart_rule'];
-            $row['description'] = $row['obj']->description;
+            foreach ($result as &$row) {
+                $row['obj'] = new CartRule($row['id_cart_rule'], (int) $this->id_lang);
+                $row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context, $filter);
+                $row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context, $filter);
+                // Retro compatibility < 1.5.0.2
+                $row['id_discount'] = $row['id_cart_rule'];
+                $row['description'] = $row['obj']->description;
+            }
         }
 
         return $result;
