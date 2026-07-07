@@ -31,6 +31,7 @@ services:
       $writeRepository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionWriterInterface'
       $schemaManager: '@PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManagerInterface'
       $logger: '@logger'
+      $formOptionsValidator: '@PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator'
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface:
     alias: 'PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistry'
@@ -40,6 +41,20 @@ services:
 
   # ─── Back-office form services ────────────────────────────────────────────────
 
+  PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyFormTypeMap: ~
+
+  # Save-time validation of the formType/formOptions pair: builds a throwaway form with
+  # the same type + options merge as ExtraPropertiesFormBuilderModifier. Consumed by the
+  # registry (blocking gate) and by the BO definition form (inline errors).
+  PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator:
+    arguments:
+      $formFactory: '@form.factory'
+      $formTypeMap: '@PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyFormTypeMap'
+
+  # Machine-readable description of the constraint whitelist, serialized into the definition
+  # page so the Validation card UI can offer constraints with their configurable options.
+  PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintCatalog: ~
+
   PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormBuilderModifier:
     arguments:
       $repository: '@PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface'
@@ -47,6 +62,7 @@ services:
       $translator: '@translator'
       $shopContext: '@PrestaShop\PrestaShop\Core\Context\ShopContext'
       $formBuilderModifier: '@PrestaShopBundle\Form\FormBuilderModifier'
+      $formTypeMap: '@PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertyFormTypeMap'
 
   PrestaShop\PrestaShop\Core\ExtraProperty\Form\ExtraPropertiesFormDataPersister:
     arguments:

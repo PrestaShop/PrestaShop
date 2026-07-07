@@ -54,6 +54,9 @@ services:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Catalog/Category/*"
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/*"
+    # The Placement card type needs the Admin API endpoint catalog, which only exists in the
+    # admin kernel — it is registered in app/config/admin/services.yml instead.
+    exclude: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionAdvancedType.php"
   PrestaShopBundle\Form\Admin\Improve\International\Localization\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Improve/International/Localization/*"
   PrestaShopBundle\Form\Admin\Improve\International\Locations\:

@@ -4,8 +4,8 @@
  #}
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
-{% form_theme extraPropertyDefinitionForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
-
+{# The form themes (UI kit + definition card/row blocks) are set by the form type itself through
+ # the form_theme option — see ExtraPropertyDefinitionType::configureOptions(). #}
 {% block extra_property_definition_form %}
   {{ form_start(extraPropertyDefinitionForm) }}
   {{ form_row(extraPropertyDefinitionForm) }}

@@ -15,13 +15,17 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\QueryResult\EditableExtraPro
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\AssociationRowPresenter;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowPresenter;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
  * Provides form data for the extra property definition create / edit form.
  *
  * The data is nested by card section (field_definition, visibility, labels, validation,
- * advanced), matching ExtraPropertyDefinitionType's sub-form structure.
+ * advanced), matching ExtraPropertyDefinitionType's sub-form structure. The stored association
+ * entries and constraints are pre-split into builder-row arrays (one row per entry — see the row
+ * presenters), the shape the mapped row collections edit; the data handler serializes them back.
  *
  * getData() dispatches GetExtraPropertyDefinitionForEditing and maps the DTO to form field names.
  * getDefaultData() provides sensible defaults for the creation form.
@@ -68,14 +72,14 @@ final class ExtraPropertyDefinitionFormDataProvider implements FormDataProviderI
                 'description_domain' => $definition->getDescriptionDomain(),
             ],
             'validation' => [
-                'constraints' => ExtraPropertyConstraintMapper::toNames($definition->getConstraints()),
+                'constraints' => ConstraintRowPresenter::rows(ExtraPropertyConstraintMapper::toNames($definition->getConstraints())),
             ],
             'advanced' => [
                 'form_type' => $definition->getFormType(),
-                'form_options' => null !== $definition->getFormOptions() ? json_encode($definition->getFormOptions(), JSON_UNESCAPED_SLASHES) : null,
-                'associated_forms' => null !== $definition->getAssociatedForms() ? json_encode($definition->getAssociatedForms(), JSON_UNESCAPED_SLASHES) : null,
-                'associated_grids' => null !== $definition->getAssociatedGrids() ? json_encode($definition->getAssociatedGrids(), JSON_UNESCAPED_SLASHES) : null,
-                'associated_apis' => null !== $definition->getAssociatedApis() ? json_encode($definition->getAssociatedApis(), JSON_UNESCAPED_SLASHES) : null,
+                'form_options' => null !== $definition->getFormOptions() ? json_encode($definition->getFormOptions(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : null,
+                'associated_forms' => AssociationRowPresenter::formRows(null !== $definition->getAssociatedForms() ? implode("\n", $definition->getAssociatedForms()) : null),
+                'associated_grids' => AssociationRowPresenter::gridRows(null !== $definition->getAssociatedGrids() ? implode("\n", $definition->getAssociatedGrids()) : null),
+                'associated_apis' => AssociationRowPresenter::apiRows(null !== $definition->getAssociatedApis() ? implode("\n", $definition->getAssociatedApis()) : null),
             ],
         ];
     }

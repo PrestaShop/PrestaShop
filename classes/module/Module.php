@@ -1236,9 +1236,15 @@ abstract class ModuleCore implements ModuleInterface
      * About BO label translations: store wording/domain pairs in the definition, and also call
      * $this->trans() in the module code so strings are discoverable by the BO translation UI.
      *
+     * The registry signals failure two ways: false for a structural refusal (see
+     * ExtraPropertyRegistryInterface::register()), an exception for form options that cannot
+     * build the field — module install code should handle both.
+     *
      * @param ExtraPropertyDefinition $definition definition
      *
      * @return bool
+     *
+     * @throws PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyFormOptionsException when the definition's form options cannot build the form field
      */
     public function registerExtraProperty(ExtraPropertyDefinition $definition): bool
     {

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use JsonException;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\AddExtraPropertyDefinitionCommand;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\UpdateExtraPropertyDefinitionCommand;
@@ -16,6 +17,10 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\ValueObject\ExtraPropertyDef
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\AssociationRowSerializer;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\ConstraintRowSerializer;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\EnumValuesParser;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintMapper;
 
 /**
@@ -30,11 +35,17 @@ use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyConstraintM
  * create() dispatches AddExtraPropertyDefinitionCommand (no module_name — always null for BO-created fields).
  * update() dispatches UpdateExtraPropertyDefinitionCommand (structural fields are intentionally excluded).
  *
- * The advanced card's textareas (form_options, associated_forms/grids/apis) are still edited as
- * raw JSON in the form — this is the one boundary where JSON encoding/decoding belongs; the CQRS
- * commands themselves only ever carry native arrays.
+ * The associations and constraints arrive as builder-row arrays (the mapped row collections'
+ * data) and are serialized back into the entry strings / DSL value the commands accept — the
+ * inverse of what the form data provider presented. The row form types already validated every
+ * row through the same parser/mapper, so serialization cannot fail here on a form-validated
+ * submission. Only form_options is edited as raw JSON — the one boundary where JSON decoding
+ * belongs; the CQRS commands themselves only ever carry native arrays. Malformed form_options
+ * JSON throws instead of being silently dropped — the form's Json constraint normally blocks it
+ * before this handler runs (see ExtraPropertyDefinitionAdvancedType), so a throw here only
+ * surfaces for programmatic submissions or hook-mutated form data.
  */
-final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInterface
+class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInterface
 {
     public function __construct(protected readonly CommandBusInterface $commandBus)
     {
@@ -67,17 +78,17 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
             nullable: (bool) ($fieldDefinition['nullable'] ?? true),
             size: $fieldDefinition['size'] ?: null,
             defaultValue: $fieldDefinition['default_value'] ?: null,
-            enumValues: $this->parseEnumValues($fieldDefinition['enum_values'] ?? null),
+            enumValues: EnumValuesParser::parse($fieldDefinition['enum_values'] ?? null),
             labelWording: $labels['label_wording'] ?: null,
             labelDomain: $labels['label_domain'] ?: null,
             descriptionWording: $labels['description_wording'] ?: null,
             descriptionDomain: $labels['description_domain'] ?: null,
-            constraints: ExtraPropertyConstraintMapper::fromNames($validation['constraints'] ?? null),
+            constraints: ExtraPropertyConstraintMapper::fromNames(ConstraintRowSerializer::serialize($validation['constraints'] ?? [])),
             formType: $advanced['form_type'] ?: null,
             formOptions: $this->parseJsonObject($advanced['form_options'] ?? null),
-            associatedForms: $this->parseJsonList($advanced['associated_forms'] ?? null),
-            associatedGrids: $this->parseJsonList($advanced['associated_grids'] ?? null),
-            associatedApis: $this->parseJsonList($advanced['associated_apis'] ?? null),
+            associatedForms: AssociationRowSerializer::formEntries($advanced['associated_forms'] ?? []),
+            associatedGrids: AssociationRowSerializer::gridEntries($advanced['associated_grids'] ?? []),
+            associatedApis: AssociationRowSerializer::apiEntries($advanced['associated_apis'] ?? []),
         ));
 
         return $id->getValue();
@@ -106,18 +117,18 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
             ->setLabelDomain($labels['label_domain'] ?: null)
             ->setDescriptionWording($labels['description_wording'] ?: null)
             ->setDescriptionDomain($labels['description_domain'] ?: null)
-            ->setConstraints(ExtraPropertyConstraintMapper::fromNames($validation['constraints'] ?? null))
+            ->setConstraints(ExtraPropertyConstraintMapper::fromNames(ConstraintRowSerializer::serialize($validation['constraints'] ?? [])))
             ->setFormType($advanced['form_type'] ?: null)
             ->setFormOptions($this->parseJsonObject($advanced['form_options'] ?? null))
-            ->setAssociatedForms($this->parseJsonList($advanced['associated_forms'] ?? null))
-            ->setAssociatedGrids($this->parseJsonList($advanced['associated_grids'] ?? null))
-            ->setAssociatedApis($this->parseJsonList($advanced['associated_apis'] ?? null));
+            ->setAssociatedForms(AssociationRowSerializer::formEntries($advanced['associated_forms'] ?? []))
+            ->setAssociatedGrids(AssociationRowSerializer::gridEntries($advanced['associated_grids'] ?? []))
+            ->setAssociatedApis(AssociationRowSerializer::apiEntries($advanced['associated_apis'] ?? []));
 
         if (!empty($fieldDefinition['size'])) {
             $command->setSize((int) $fieldDefinition['size']);
         }
 
-        $enumValues = $this->parseEnumValues($fieldDefinition['enum_values'] ?? null);
+        $enumValues = EnumValuesParser::parse($fieldDefinition['enum_values'] ?? null);
         if (null !== $enumValues) {
             $command->setEnumValues($enumValues);
         }
@@ -126,49 +137,13 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
     }
 
     /**
-     * Parses the "one value per line" enum_values textarea into a list of trimmed, non-empty strings.
-     *
-     * @param string|null $rawValue
-     *
-     * @return list<string>|null
-     */
-    protected function parseEnumValues(?string $rawValue): ?array
-    {
-        if (null === $rawValue || '' === trim($rawValue)) {
-            return null;
-        }
-
-        return array_values(array_filter(array_map('trim', explode("\n", $rawValue)), static fn (string $v): bool => '' !== $v)) ?: null;
-    }
-
-    /**
-     * Decodes a JSON array of strings submitted by a textarea (associated_forms/grids/apis).
-     *
-     * @param string|null $rawValue
-     *
-     * @return list<string>|null
-     */
-    protected function parseJsonList(?string $rawValue): ?array
-    {
-        // Return array so we can reset the value if needed
-        if (null === $rawValue || '' === trim($rawValue)) {
-            return [];
-        }
-
-        $decoded = json_decode($rawValue, true);
-        if (!is_array($decoded)) {
-            return null;
-        }
-
-        return array_values(array_filter($decoded, static fn (mixed $v): bool => is_string($v) && '' !== $v)) ?: null;
-    }
-
-    /**
-     * Decodes a JSON object submitted by the form_options textarea.
+     * Decodes the JSON object submitted by the form_options textarea.
      *
      * @param string|null $rawValue
      *
      * @return array<string, mixed>|null
+     *
+     * @throws InvalidExtraPropertyDefinitionException when the value is not valid JSON or does not decode to a JSON object
      */
     protected function parseJsonObject(?string $rawValue): ?array
     {
@@ -176,8 +151,25 @@ final class ExtraPropertyDefinitionFormDataHandler implements FormDataHandlerInt
             return null;
         }
 
-        $decoded = json_decode($rawValue, true);
+        try {
+            $decoded = json_decode($rawValue, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            throw new InvalidExtraPropertyDefinitionException(
+                sprintf('The form options field contains invalid JSON: %s.', $e->getMessage()),
+                0,
+                $e
+            );
+        }
 
-        return is_array($decoded) ? $decoded : null;
+        // A JSON list ([1, 2]) is an array too but is not a set of named form options — reject it
+        // like any other non-object so the message matches what is actually accepted ({} is fine).
+        if (!is_array($decoded) || ($decoded !== [] && array_is_list($decoded))) {
+            throw new InvalidExtraPropertyDefinitionException(sprintf(
+                'The form options field must contain a JSON object, got %s.',
+                is_array($decoded) ? 'a JSON list' : get_debug_type($decoded)
+            ));
+        }
+
+        return $decoded;
     }
 }

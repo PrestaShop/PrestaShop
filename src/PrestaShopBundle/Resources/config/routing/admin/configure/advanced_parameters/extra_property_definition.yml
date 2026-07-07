@@ -14,6 +14,15 @@ admin_extra_property_definitions_search:
     redirectRoute: admin_extra_property_definitions_index
     _legacy_controller: AdminExtraPropertyDefinitions
 
+admin_extra_property_definitions_form_fields:
+  path: /form-fields/{formId}
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ExtraPropertyDefinitionController::formFieldsAction'
+    _legacy_controller: AdminExtraPropertyDefinitions
+  requirements:
+    formId: '[A-Za-z0-9_]+'
+
 admin_extra_property_definitions_create:
   path: /new
   methods: [ GET, POST ]

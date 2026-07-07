@@ -165,13 +165,7 @@ final class ExtraPropertyDefinition
         if (!empty($associatedForms)) {
             $seenFormIds = [];
             foreach ($associatedForms as $entry) {
-                $parsed = self::parseFormEntry((string) $entry);
-                if ('' === $parsed['formId']) {
-                    throw new InvalidExtraPropertyDefinitionException(sprintf(
-                        'ExtraPropertyDefinition: invalid associatedForms entry "%s" — formId must not be empty.',
-                        $entry
-                    ));
-                }
+                $parsed = AssociationEntryParser::assertValidFormEntry((string) $entry);
                 if (isset($seenFormIds[$parsed['formId']])) {
                     throw new InvalidExtraPropertyDefinitionException(sprintf(
                         'ExtraPropertyDefinition: duplicate formId "%s" in associatedForms.',
@@ -185,13 +179,7 @@ final class ExtraPropertyDefinition
         if (!empty($associatedGrids)) {
             $seenGridIds = [];
             foreach ($associatedGrids as $entry) {
-                $parsed = self::parseGridEntry((string) $entry);
-                if ('' === $parsed['gridId']) {
-                    throw new InvalidExtraPropertyDefinitionException(sprintf(
-                        'ExtraPropertyDefinition: invalid associatedGrids entry "%s" — gridId must not be empty.',
-                        $entry
-                    ));
-                }
+                $parsed = AssociationEntryParser::assertValidGridEntry((string) $entry);
                 if (isset($seenGridIds[$parsed['gridId']])) {
                     throw new InvalidExtraPropertyDefinitionException(sprintf(
                         'ExtraPropertyDefinition: duplicate gridId "%s" in associatedGrids.',
@@ -203,28 +191,8 @@ final class ExtraPropertyDefinition
         }
 
         if (!empty($associatedApis)) {
-            $allowedMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
             foreach ($associatedApis as $entry) {
-                $entryString = (string) $entry;
-                $colonPos = strpos($entryString, ':');
-                $rawPath = trim(false !== $colonPos ? substr($entryString, 0, $colonPos) : $entryString);
-                if ('' === $rawPath) {
-                    throw new InvalidExtraPropertyDefinitionException(sprintf(
-                        'ExtraPropertyDefinition: invalid associatedApis entry "%s" — URI path must not be empty.',
-                        $entry
-                    ));
-                }
-                $parsedApi = self::parseApiEntry($entryString);
-                foreach ($parsedApi['methods'] ?? [] as $method) {
-                    if (!in_array($method, $allowedMethods, true)) {
-                        throw new InvalidExtraPropertyDefinitionException(sprintf(
-                            'ExtraPropertyDefinition: invalid HTTP method "%s" in associatedApis entry "%s" (allowed: %s).',
-                            $method,
-                            $entry,
-                            implode(', ', $allowedMethods)
-                        ));
-                    }
-                }
+                AssociationEntryParser::assertValidApiEntry((string) $entry);
             }
         }
 
@@ -773,121 +741,42 @@ final class ExtraPropertyDefinition
     }
 
     /**
-     * Parses one entry from the associated_grids JSON array into its components.
+     * Parses one associated_grids entry into its components.
      *
-     * Format: "gridId[:columnId[:before|after]]"
-     * The ":" separates the grid id from the column id, and the column id from the optional mode.
-     * Grid columns are flat (no nesting), so the column id never contains a separator.
+     * Format: "gridId[:columnId[:before|after]]" — see AssociationEntryParser::parseGridEntry()
+     * for the full grammar.
      *
      * @return array{gridId: string, columnId: string|null, mode: 'before'|'after'|null}
      */
     protected static function parseGridEntry(string $entry): array
     {
-        $colonPos = strpos($entry, ':');
-        if (false === $colonPos) {
-            return ['gridId' => $entry, 'columnId' => null, 'mode' => null];
-        }
-
-        $gridId = substr($entry, 0, $colonPos);
-        $rest = substr($entry, $colonPos + 1);
-
-        $mode = 'after';
-        foreach ([':before', ':after'] as $suffix) {
-            if (str_ends_with($rest, $suffix)) {
-                $mode = ltrim($suffix, ':');
-                $rest = substr($rest, 0, -strlen($suffix));
-                break;
-            }
-        }
-
-        return ['gridId' => $gridId, 'columnId' => '' !== $rest ? $rest : null, 'mode' => '' !== $rest ? $mode : null];
+        return AssociationEntryParser::parseGridEntry($entry);
     }
 
     /**
-     * Parses one entry from the associated_forms JSON array into its fully-resolved components.
+     * Parses one associated_forms entry into its fully-resolved components.
      *
-     * Format: "formId[:path[:before|after]]"
-     * The ":" separates the form id from the field path, and the field path from the optional mode.
-     * Nesting *within* the path still uses "." (e.g. "options.suppliers").
-     *
-     * Placement is resolved here, once, so consumers never re-interpret the entry. path is the form node
-     * the field belongs to; it is null (and only then) when there is no path — the signal for fallback:
-     * - no path  => fallback section (path/anchor are null).
-     * - no mode  => the path is a container; path is the full path, anchor is null
-     *               (the field is appended inside that node).
-     * - mode set => the last raw segment is an anchor; path is its parent (the raw path minus its last
-     *               segment, "" when the anchor is at the root) and anchor is that last segment
-     *               (the field is positioned before/after the anchor inside the parent).
+     * Format: "formId[:path[:before|after]]" — see AssociationEntryParser::parseFormEntry()
+     * for the full grammar and placement-resolution rules.
      *
      * @return array{formId: string, mode: 'before'|'after'|null, path: string|null, anchor: string|null}
      */
     protected static function parseFormEntry(string $entry): array
     {
-        $colonPos = strpos($entry, ':');
-        if (false === $colonPos) {
-            return ['formId' => $entry, 'mode' => null, 'path' => null, 'anchor' => null];
-        }
-
-        $formId = substr($entry, 0, $colonPos);
-        $rest = substr($entry, $colonPos + 1);
-
-        $mode = null;
-        foreach ([':before', ':after'] as $suffix) {
-            if (str_ends_with($rest, $suffix)) {
-                $mode = ltrim($suffix, ':');
-                $rest = substr($rest, 0, -strlen($suffix));
-                break;
-            }
-        }
-
-        $rawPath = '' !== $rest ? $rest : null;
-
-        if (null === $rawPath) {
-            $path = null;
-            $anchor = null;
-        } elseif (null === $mode) {
-            // Container placement: the field is appended inside the full path.
-            $path = $rawPath;
-            $anchor = null;
-        } else {
-            // Anchor placement: the field is a sibling of the last raw segment inside its parent.
-            $lastDot = strrpos($rawPath, '.');
-            $path = false !== $lastDot ? substr($rawPath, 0, $lastDot) : '';
-            $anchor = false !== $lastDot ? substr($rawPath, $lastDot + 1) : $rawPath;
-        }
-
-        return ['formId' => $formId, 'mode' => $mode, 'path' => $path, 'anchor' => $anchor];
+        return AssociationEntryParser::parseFormEntry($entry);
     }
 
     /**
-     * Parses one entry from the associated_apis JSON array.
+     * Parses one associated_apis entry.
      *
-     * Format: "uriPath[:METHOD[,METHOD...]]"
-     * The ":" separates the URI path from an optional comma-separated HTTP method list; URI
-     * templates never contain ":", so splitting on the first ":" is unambiguous. With no method
-     * list the entry matches every HTTP method on that URI template.
+     * Format: "uriPath[:METHOD[,METHOD...]]" — see AssociationEntryParser::parseApiEntry()
+     * for the full grammar.
      *
      * @return array{path: string, methods: list<string>|null}
      */
     protected static function parseApiEntry(string $entry): array
     {
-        $colonPos = strpos($entry, ':');
-        if (false === $colonPos) {
-            return ['path' => self::normalizeApiPath($entry), 'methods' => null];
-        }
-
-        $path = self::normalizeApiPath(substr($entry, 0, $colonPos));
-        $methodsSpec = trim(substr($entry, $colonPos + 1));
-        if ('' === $methodsSpec) {
-            return ['path' => $path, 'methods' => null];
-        }
-
-        $methods = array_values(array_filter(
-            array_map(static fn (string $m): string => strtoupper(trim($m)), explode(',', $methodsSpec)),
-            static fn (string $m): bool => '' !== $m
-        ));
-
-        return ['path' => $path, 'methods' => [] !== $methods ? $methods : null];
+        return AssociationEntryParser::parseApiEntry($entry);
     }
 
     /**
@@ -896,8 +785,6 @@ final class ExtraPropertyDefinition
      */
     protected static function normalizeApiPath(string $path): string
     {
-        $normalized = '/' . ltrim(trim($path), '/');
-
-        return '/' !== $normalized ? rtrim($normalized, '/') : $normalized;
+        return AssociationEntryParser::normalizeApiPath($path);
     }
 }

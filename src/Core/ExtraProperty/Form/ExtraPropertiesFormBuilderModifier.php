@@ -19,7 +19,6 @@ use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\FormBuilderModifier;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
@@ -55,6 +54,7 @@ class ExtraPropertiesFormBuilderModifier
         protected readonly TranslatorInterface $translator,
         protected readonly ShopContext $shopContext,
         protected readonly FormBuilderModifier $formBuilderModifier,
+        protected readonly ExtraPropertyFormTypeMap $formTypeMap,
     ) {
     }
 
@@ -113,7 +113,12 @@ class ExtraPropertiesFormBuilderModifier
         $declaredType = $definition->getFormType();
         $extraOptions = $definition->getFormOptions() ?? [];
 
-        $baseType = (null !== $declaredType && class_exists($declaredType)) ? $declaredType : TextType::class;
+        if (null !== $declaredType && is_subclass_of($declaredType, FormTypeInterface::class)) {
+            $baseType = $declaredType;
+            $baseOptions = [];
+        } else {
+            [$baseType, $baseOptions] = $this->formTypeMap->getDefaultFor($definition->getType(), $definition->getEnumValues());
+        }
 
         // Validation is fully constraint-based: attach the definition's Symfony constraints to the field so the
         // form's own validation runs them and surfaces one error per failing constraint. Requiredness is the
@@ -137,7 +142,7 @@ class ExtraPropertiesFormBuilderModifier
                     'mapped' => false,
                     'required' => $definition->isRequired(),
                     'constraints' => $constraints,
-                    'options' => $extraOptions,
+                    'options' => array_merge($baseOptions, $extraOptions),
                 ],
             ];
         }
@@ -145,6 +150,7 @@ class ExtraPropertiesFormBuilderModifier
         return [
             $baseType,
             array_merge(
+                $baseOptions,
                 [
                     'mapped' => false,
                     'required' => $definition->isRequired(),

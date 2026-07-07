@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Definition;
 
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyFormOptionsException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Form\FormOptionsValidator;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Schema\ExtraPropertySchemaManagerInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -32,6 +34,9 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
         protected readonly ExtraPropertyDefinitionWriterInterface $writeRepository,
         protected readonly ExtraPropertySchemaManagerInterface $schemaManager,
         protected readonly LoggerInterface $logger,
+        // Required: the registry is only defined in Symfony kernels (services/extra_property/backend.yml),
+        // where the form factory is always available — never in the FO legacy container.
+        protected readonly FormOptionsValidator $formOptionsValidator,
     ) {
     }
 
@@ -44,6 +49,8 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
      * The registry additionally validates:
      * - scope-uniqueness: a module cannot register the same propertyName in two different scopes for the same entity
      * - destructive schema changes on already-registered definitions are refused (see hasStorageChanges())
+     * - formType/formOptions must build a working form field (see FormOptionsValidator) — being the single
+     *   write choke point, this covers every path: BO form, CQRS commands and Module::registerExtraProperty()
      *
      * Non-destructive schema changes (defaultValue change, STRING size increase, nullable
      * relaxing, CHOICE enum value addition) are applied to the live column by the schema
@@ -54,6 +61,8 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
      * Note: if DDL fails after DB persistence, a retry of register() re-attempts the DDL.
      * Destructive changes (type/scope change, size decrease, nullable tightening, enum value
      * removal) require unregister() + register() — automatic data migration is not supported.
+     *
+     * @throws InvalidExtraPropertyFormOptionsException when the declared formType/formOptions cannot build a form field
      */
     public function register(ExtraPropertyDefinition $definition): int|false
     {
@@ -92,14 +101,28 @@ class ExtraPropertyRegistry implements ExtraPropertyRegistryInterface
             return false;
         }
 
-        // 3. Insert or update the registry row.
+        // 3. Refuse a definition whose form field could not be built at render time — unlike the
+        // structural refusals above (module programming errors, logged + false), this throws:
+        // the errors must reach the human who typed the options (BO form flash, API error).
+        $formOptionErrors = $this->formOptionsValidator->validate(
+            $definition->getFormType(),
+            $definition->getType(),
+            $definition->getEnumValues(),
+            $definition->getScope(),
+            $definition->getFormOptions()
+        );
+        if ([] !== $formOptionErrors) {
+            throw new InvalidExtraPropertyFormOptionsException($formOptionErrors);
+        }
+
+        // 4. Insert or update the registry row.
         $savedId = $this->writeRepository->save($definition);
 
         if (false === $savedId) {
             return false;
         }
 
-        // 4. Ensure the *_extra table and column exist and match the definition: the schema
+        // 5. Ensure the *_extra table and column exist and match the definition: the schema
         //    manager also syncs remaining non-destructive changes on the live column
         //    (DDL after DB write).
         try {

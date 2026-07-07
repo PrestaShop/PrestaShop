@@ -1,0 +1,384 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{# Form theme of the extra property definition form's two redesigned cards (Validation and
+ # Placement), applied through the form type's form_theme option. The builder rows ARE the mapped
+ # form data (collections of row sub-forms, split from the stored entries by the form data
+ # provider and serialized back by the data handler); the page JS only adds affordances on top
+ # (suggestions, chips, typed option inputs, add/remove against the collection prototype). Row
+ # validation errors render inside the offending row. #}
+
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+
+{# ─── Shared chrome ──────────────────────────────────────────────────────────────────────── #}
+
+{% block extra_property_ownership_banner %}
+  {% if disabled %}
+    <div class="alert alert-info extra-property-ownership-banner" role="alert">
+      <p class="alert-text">
+        <i class="material-icons" aria-hidden="true">extension</i>
+        {{ 'Registered by the module "%module%" — definitions owned by modules are read-only.'|trans({'%module%': form.parent.field_definition.module_name.vars.value}, 'Admin.Advparameters.Notification') }}
+      </p>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{# Header shared by every subsection: title + row count badge.
+   Expects a "subsection" hash: {title, icon (optional), rows (FormView)} #}
+{% block extra_property_subsection_header %}
+  <div class="extra-property-subsection__header">
+    {% if subsection.icon is defined %}
+      <i class="material-icons extra-property-subsection__icon" aria-hidden="true">{{ subsection.icon }}</i>
+    {% endif %}
+    <h4 class="extra-property-subsection__title">{{ subsection.title }}</h4>
+    <span class="badge extra-property-count-badge{% if subsection.rows|length == 0 %} d-none{% endif %}" data-role="count-badge">{{ subsection.rows|length }}</span>
+  </div>
+{% endblock %}
+
+{# One placement subsection (Forms / Grids / Admin API): header + rows + collection-level errors.
+   Expects "subsection": {title, icon, listType, rows, emptyIcon, emptyText,
+   addLabel (null = no add button), searchPlaceholder (optional), attrs (optional hash)} #}
+{% block extra_property_placement_subsection %}
+  <div class="extra-property-subsection"
+       data-role="placement-list"
+       data-list-type="{{ subsection.listType }}"
+       {% if disabled %}data-read-only="true"{% endif %}
+       {%- for name, value in subsection.attrs|default({}) %} {{ name }}="{{ value }}"{% endfor %}>
+    {{ block('extra_property_subsection_header') }}
+    <div class="extra-property-subsection__builder" data-role="builder-view">
+      {{ form_widget(subsection.rows, {attr: {'data-role': 'rows', 'data-row-index': subsection.rows|length}}) }}
+      {# Cross-row errors (duplicate ids) that could not be mapped onto a specific row. #}
+      {{ form_errors(subsection.rows) }}
+      <div class="extra-property-empty{% if subsection.rows|length > 0 %} d-none{% endif %}" data-role="empty-state">
+        <i class="material-icons" aria-hidden="true">{{ subsection.emptyIcon }}</i>
+        <span>{{ subsection.emptyText }}</span>
+      </div>
+      {% if not disabled %}
+        {% if subsection.addLabel is not null %}
+          <button type="button" class="btn btn-default extra-property-add-row" data-role="add-row">
+            <i class="material-icons" aria-hidden="true">add_circle</i>
+            {{ subsection.addLabel }}
+          </button>
+        {% endif %}
+        {% if subsection.searchPlaceholder is defined %}
+          <div class="extra-property-endpoint-search" data-role="endpoint-search-wrapper">
+            <i class="material-icons" aria-hidden="true">search</i>
+            <input type="text" class="form-control" data-role="endpoint-search"
+                   data-custom-label="{{ 'Use as a custom path'|trans({}, 'Admin.Advparameters.Feature') }}"
+                   placeholder="{{ subsection.searchPlaceholder }}" aria-label="{{ subsection.searchPlaceholder }}"
+                   autocomplete="off">
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+
+{# ─── Placement card ─────────────────────────────────────────────────────────────────────── #}
+
+{% block _extra_property_definition_advanced_widget %}
+  {{ block('extra_property_ownership_banner') }}
+
+  {% set subsection = {
+    title: 'Forms'|trans,
+    icon: 'web_asset',
+    listType: 'forms',
+    rows: form.associated_forms,
+    emptyIcon: 'web_asset',
+    emptyText: "This field doesn't appear in any back-office form yet."|trans({}, 'Admin.Advparameters.Help'),
+    addLabel: 'Add a form'|trans,
+    attrs: {'data-form-fields-url': path('admin_extra_property_definitions_form_fields', {formId: '__FORM_ID__'})},
+  } %}
+  {{ block('extra_property_placement_subsection') }}
+
+  {% set subsection = {
+    title: 'Grids'|trans,
+    icon: 'table_chart',
+    listType: 'grids',
+    rows: form.associated_grids,
+    emptyIcon: 'table_chart',
+    emptyText: "This field doesn't appear in any back-office grid yet."|trans({}, 'Admin.Advparameters.Help'),
+    addLabel: 'Add a grid'|trans,
+  } %}
+  {{ block('extra_property_placement_subsection') }}
+
+  {% set subsection = {
+    title: 'Admin API'|trans,
+    icon: 'api',
+    listType: 'apis',
+    rows: form.associated_apis,
+    emptyIcon: 'api',
+    emptyText: 'Not exposed on the Admin API yet.'|trans({}, 'Admin.Advparameters.Help'),
+    addLabel: null,
+    searchPlaceholder: 'Add an endpoint…'|trans,
+  } %}
+  {{ block('extra_property_placement_subsection') }}
+
+  {# Collapsed disclosure, auto-open when a field carries a value or an error. Rows render
+     label-above-input (the prestashop_ui_kit_base vertical form_row shape) — the horizontal
+     label-column layout of the rest of the page reads wrong between the builder subsections. #}
+  {% set devFieldsOpen = form.form_type.vars.value is not empty
+    or form.form_options.vars.value is not empty
+    or form.form_type.vars.errors|length > 0
+    or form.form_options.vars.errors|length > 0 %}
+  {# The data-label-* attributes carry TEXT PATTERNS the JS composes with runtime values —
+     everything that is plain markup lives in the templates block below instead. #}
+  <details class="extra-property-dev-fields" data-role="developer-fields"
+       {% if devFieldsOpen %}open{% endif %}
+       data-label-default-type="{{ 'Default: %type% — derived from the field type'|trans({}, 'Admin.Advparameters.Help') }}"
+       data-label-valid-json="{{ 'Valid JSON'|trans({}, 'Admin.Advparameters.Notification') }}"
+       data-label-invalid-json="{{ 'Invalid JSON: %error%'|trans({}, 'Admin.Advparameters.Notification') }}">
+    <summary class="extra-property-dev-fields__summary">
+      <i class="material-icons extra-property-dev-fields__chevron" aria-hidden="true">chevron_right</i>
+      {{ 'Advanced form'|trans({}, 'Admin.Advparameters.Feature') }}
+      <span class="extra-property-tag extra-property-tag--info">{{ 'Optional'|trans({}, 'Admin.Global') }}</span>
+    </summary>
+    <div class="extra-property-dev-fields__body">
+      <div class="form-group">
+        {{ form_label(form.form_type) }}
+        {# autocomplete off: the browser's own history suggestions would overlap the catalog dropdown #}
+        {{ form_widget(form.form_type, {attr: {autocomplete: 'off'}}) }}
+        {{ form_errors(form.form_type) }}
+      </div>
+      <div class="form-group">
+        {{ form_label(form.form_options) }}
+        {{ form_widget(form.form_options) }}
+        {{ form_errors(form.form_options) }}
+        <div class="extra-property-json-status" data-role="json-status" aria-live="polite"></div>
+        {# Revealed by the page JS, which wires the pretty-print action. #}
+        <button type="button" class="btn btn-link extra-property-format-json d-none" data-role="format-json">
+          {{ 'Format JSON'|trans({}, 'Admin.Advparameters.Feature') }}
+        </button>
+      </div>
+    </div>
+  </details>
+
+  <script type="application/json" data-role="extra-property-catalogs">{{ extra_property_catalogs|json_encode(constant('JSON_HEX_TAG'))|raw }}</script>
+  {{ block('extra_property_js_templates') }}
+{% endblock %}
+
+{# ─── Markup templates cloned by the page JS ─────────────────────────────────────────────── #}
+
+{# Every dynamic element the page JS creates is cloned from one of these inert templates — the
+   JS only fills text/values and toggles attributes, in the same spirit as the collection rows
+   driven by the standard data-prototype. Rendered once (with the Placement card, always
+   present); the constraint builder templates are looked up document-wide. #}
+{% block extra_property_js_templates %}
+  {# Suggestion dropdown — shared by every picker (ids, columns, constraint names, FQCNs,
+     endpoint search) and reused by the form field tree. #}
+  <template data-tpl="suggestion-dropdown"><div class="extra-property-anchor-dropdown" role="listbox"></div></template>
+  <template data-tpl="suggestion-heading"><div class="extra-property-anchor-heading"></div></template>
+  <template data-tpl="suggestion-option">
+    <button type="button" class="extra-property-anchor-option" role="option">
+      <span class="extra-property-anchor-option__label"></span>
+      <span class="extra-property-anchor-option__path"></span>
+    </button>
+  </template>
+  {# Form field tree fetch state (Forms placement path picker). #}
+  <template data-tpl="tree-loading">
+    <div class="extra-property-anchor-dropdown">
+      <div class="extra-property-anchor-loading" role="status">
+        <span class="extra-property-spinner" aria-hidden="true"></span>
+        <span>{{ 'Loading fields…'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+      </div>
+    </div>
+  </template>
+  {# Admin API method chips (one chip cloned per method the endpoint exposes). #}
+  <template data-tpl="method-chips">
+    <span class="extra-property-method-chips" data-role="method-chips">
+      <button type="button" class="extra-property-method-chip extra-property-method-chip--all" data-role="all-methods">{{ 'All methods'|trans }}</button>
+    </span>
+  </template>
+  <template data-tpl="method-chip"><button type="button" class="extra-property-method-chip"></button></template>
+  {# Constraint typed option editor (one field cloned per option present in the row's tail). #}
+  <template data-tpl="option-field">
+    <span class="extra-property-options-editor__field">
+      <span class="extra-property-options-editor__label"></span>
+      <input type="text" class="extra-property-options-editor__input" aria-label="{{ 'Value'|trans({}, 'Admin.Global') }}">
+      <button type="button" class="extra-property-options-editor__remove" aria-label="{{ 'Remove option'|trans }}">
+        <i class="material-icons" aria-hidden="true">close</i>
+      </button>
+    </span>
+  </template>
+  <template data-tpl="option-add">
+    <select class="extra-property-options-editor__add" aria-label="{{ 'Add an option'|trans }}">
+      <option value="">+ {{ 'Add an option'|trans }}</option>
+    </select>
+  </template>
+  <template data-tpl="option-raw">
+    <input type="text" class="extra-property-options-editor__input extra-property-options-editor__input--raw text-monospace" aria-label="{{ 'Options'|trans }}">
+  </template>
+  <template data-tpl="option-nested">
+    <input type="text" class="extra-property-options-editor__input extra-property-options-editor__input--raw text-monospace" aria-label="{{ 'Nested constraints'|trans }}">
+  </template>
+  <template data-tpl="option-none"><span class="text-muted">{{ 'no options'|trans({}, 'Admin.Advparameters.Help') }}</span></template>
+{% endblock %}
+
+{# ─── Validation card ────────────────────────────────────────────────────────────────────── #}
+
+{% block _extra_property_definition_validation_widget %}
+  {{ block('extra_property_ownership_banner') }}
+
+  {% set constraintRows = form.constraints %}
+  {% set langRowCount = constraintRows|filter(row => row.per_language.vars.value == '1')|length %}
+  {% set scopeValue = form.parent.field_definition.scope.vars.value %}
+  {% set subsection = {
+    title: 'Constraints'|trans,
+    icon: 'rule',
+    rows: constraintRows,
+  } %}
+
+  <div class="extra-property-subsection" data-role="constraint-builder"
+       {% if disabled %}data-read-only="true"{% endif %}>
+    {{ block('extra_property_subsection_header') }}
+    <div class="extra-property-subsection__builder" data-role="builder-view">
+      <div id="{{ constraintRows.vars.id }}"
+           data-role="rows"
+           data-row-index="{{ constraintRows|length }}"
+           data-prototype="{{ form_row(constraintRows.vars.prototype)|e('html_attr') }}">
+        {% for row in constraintRows %}
+          {% if row.per_language.vars.value != '1' %}{{ form_row(row) }}{% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="extra-property-lang-zone{% if langRowCount == 0 and scopeValue != 'lang' %} d-none{% endif %}" data-role="per-language-zone">
+        <div class="extra-property-lang-zone__header">
+          <i class="material-icons" aria-hidden="true">translate</i>
+          <span class="extra-property-lang-zone__title">{{ "Applied to each language's value"|trans }}</span>
+          <span class="extra-property-tag extra-property-tag--info">{{ 'Serialized as All[…]'|trans({}, 'Admin.Advparameters.Help') }}</span>
+        </div>
+        <div data-role="lang-rows">
+          {% for row in constraintRows %}
+            {% if row.per_language.vars.value == '1' %}{{ form_row(row) }}{% endif %}
+          {% endfor %}
+        </div>
+        {% if not disabled %}
+          <button type="button" class="btn btn-link extra-property-add-lang-row" data-role="add-lang-row">
+            {{ 'Add a per-language rule'|trans }}
+          </button>
+        {% endif %}
+      </div>
+
+      {{ form_errors(constraintRows) }}
+      <div class="extra-property-empty{% if constraintRows|length > 0 %} d-none{% endif %}" data-role="empty-state">
+        <i class="material-icons" aria-hidden="true">rule</i>
+        <span>{{ 'No rules — any value is accepted.'|trans({}, 'Admin.Advparameters.Help') }}</span>
+      </div>
+      {% if not disabled %}
+        <button type="button" class="btn btn-default extra-property-add-row" data-role="add-row">
+          <i class="material-icons" aria-hidden="true">add_circle</i>
+          {{ 'Add a constraint'|trans }}
+        </button>
+      {% endif %}
+    </div>
+  </div>
+  {% do constraintRows.setRendered %}
+
+  <script type="application/json" data-role="extra-property-constraint-catalog">{{ extra_property_constraint_catalog|json_encode(constant('JSON_HEX_TAG'))|raw }}</script>
+{% endblock %}
+
+{# ─── Builder rows ───────────────────────────────────────────────────────────────────────── #}
+
+{# Row validation errors (the row's own Callback + its fields) render inside the row, which also
+   gets the error chrome. #}
+
+{% block extra_property_form_placement_row_row %}
+  {% set rowHasErrors = form.vars.errors|length > 0 or form|filter(child => child.vars.errors|length > 0)|length > 0 %}
+  <div class="extra-property-row{% if rowHasErrors %} extra-property-row--error{% endif %}" data-role="row">
+    <div class="extra-property-row__fields" data-role="structured-fields">
+      <span class="extra-property-anchor-wrap extra-property-row__id-wrap">
+        {{ form_widget(form.form_id, {attr: {'data-role': 'id-input', class: 'extra-property-row__id', placeholder: 'Form id'|trans, 'aria-label': 'Form'|trans, autocomplete: 'off'}}) }}
+      </span>
+      <div class="extra-property-anchor-wrap" data-role="anchor-wrap">
+        {{ form_widget(form.path, {attr: {'data-role': 'path-input', class: 'extra-property-row__path', placeholder: 'Automatic (default placement)'|trans, 'aria-label': 'Field path'|trans, autocomplete: 'off'}}) }}
+      </div>
+      {{ form_widget(form.mode, {attr: {'data-role': 'mode-select', class: 'extra-property-row__mode', 'aria-label': 'Position'|trans}}) }}
+      {{ block('extra_property_unknown_pill') }}
+    </div>
+    {{ block('extra_property_row_remove') }}
+    {{ block('extra_property_row_errors') }}
+  </div>
+{% endblock %}
+
+{% block extra_property_grid_placement_row_row %}
+  {% set rowHasErrors = form.vars.errors|length > 0 or form|filter(child => child.vars.errors|length > 0)|length > 0 %}
+  <div class="extra-property-row{% if rowHasErrors %} extra-property-row--error{% endif %}" data-role="row">
+    <div class="extra-property-row__fields" data-role="structured-fields">
+      <span class="extra-property-anchor-wrap extra-property-row__id-wrap">
+        {{ form_widget(form.grid_id, {attr: {'data-role': 'id-input', class: 'extra-property-row__id', placeholder: 'Grid id'|trans, 'aria-label': 'Grid'|trans, autocomplete: 'off'}}) }}
+      </span>
+      <div class="extra-property-anchor-wrap" data-role="anchor-wrap">
+        {{ form_widget(form.column_id, {attr: {'data-role': 'column-input', class: 'extra-property-row__path', placeholder: 'Automatic (end of grid)'|trans, 'aria-label': 'Column'|trans, autocomplete: 'off'}}) }}
+      </div>
+      {{ form_widget(form.mode, {attr: {'data-role': 'mode-select', class: 'extra-property-row__mode', 'aria-label': 'Position'|trans}}) }}
+      {{ block('extra_property_unknown_pill') }}
+    </div>
+    {{ block('extra_property_row_remove') }}
+    {{ block('extra_property_row_errors') }}
+  </div>
+{% endblock %}
+
+{% block extra_property_api_placement_row_row %}
+  {% set rowHasErrors = form.vars.errors|length > 0 or form|filter(child => child.vars.errors|length > 0)|length > 0 %}
+  <div class="extra-property-row{% if rowHasErrors %} extra-property-row--error{% endif %}" data-role="row">
+    <div class="extra-property-row__fields" data-role="structured-fields">
+      {{ form_widget(form.uri, {attr: {'data-role': 'uri-input', class: 'extra-property-row__uri text-monospace', placeholder: 'URI template (e.g. /products)'|trans, 'aria-label': 'URI template'|trans, autocomplete: 'off'}}) }}
+      {{ form_widget(form.methods, {attr: {'data-role': 'methods-input', class: 'extra-property-row__methods', placeholder: 'All methods'|trans, 'aria-label': 'HTTP methods'|trans, autocomplete: 'off'}}) }}
+      {{ block('extra_property_unknown_pill') }}
+    </div>
+    {{ block('extra_property_row_remove') }}
+    {{ block('extra_property_row_errors') }}
+  </div>
+{% endblock %}
+
+{% block extra_property_constraint_row_row %}
+  {% set rowHasErrors = form.vars.errors|length > 0 or form|filter(child => child.vars.errors|length > 0)|length > 0 %}
+  <div class="extra-property-row{% if rowHasErrors %} extra-property-row--error{% endif %}" data-role="row">
+    <div class="extra-property-row__fields" data-role="structured-fields">
+      <span class="extra-property-anchor-wrap extra-property-row__id-wrap">
+        {{ form_widget(form.name, {attr: {'data-role': 'name-input', class: 'extra-property-row__name', placeholder: 'Constraint'|trans, 'aria-label': 'Constraint'|trans, autocomplete: 'off'}}) }}
+      </span>
+      <span class="extra-property-row__options" data-role="options-display">
+        {%- if form.options.vars.value is not empty -%}
+          <code>{{ form.options.vars.value }}</code>
+        {%- else -%}
+          <span class="text-muted">{{ 'no options'|trans({}, 'Admin.Advparameters.Help') }}</span>
+        {%- endif -%}
+      </span>
+      {# Filled by the page JS with typed inputs cloned from the option-* templates; the
+         server-rendered display above is then removed. #}
+      <span class="extra-property-options-editor" data-role="options-editor"></span>
+      {{ form_widget(form.options, {attr: {'data-role': 'options-input'}}) }}
+    </div>
+    {{ form_widget(form.per_language, {attr: {'data-role': 'per-language-input'}}) }}
+    {{ block('extra_property_row_remove') }}
+    {{ block('extra_property_row_errors') }}
+  </div>
+{% endblock %}
+
+{# Amber pre-warning on rows whose id the catalog does not know — revealed by the page JS, a
+   manual placement is supported and never blocks saving. #}
+{% block extra_property_unknown_pill %}
+  <span class="extra-property-tag extra-property-tag--warning d-none" data-role="unknown-pill">{{ 'Not in catalog'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+{% endblock %}
+
+{% block extra_property_row_remove %}
+  {% if not form.vars.disabled %}
+    <button type="button" class="btn btn-link extra-property-row__remove" data-role="remove-row" aria-label="{{ 'Remove'|trans({}, 'Admin.Actions') }}">
+      <i class="material-icons" aria-hidden="true">close</i>
+    </button>
+  {% endif %}
+{% endblock %}
+
+{% block extra_property_row_errors %}
+  {% if rowHasErrors %}
+    <div class="extra-property-row__errors">
+      {{ form_errors(form) }}
+      {% for child in form %}
+        {{ form_errors(child) }}
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

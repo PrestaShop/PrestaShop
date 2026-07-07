@@ -92,6 +92,7 @@ module.exports = {
     employee_form: './js/pages/employee/form',
     error: './js/pages/error',
     extra_property_definition: './js/pages/extra-property-definition',
+    extra_property_definition_form: './js/pages/extra-property-definition/form',
     feature: './js/pages/feature',
     feature_flag: './js/pages/feature-flag/index',
     feature_form: './js/pages/feature/form',
