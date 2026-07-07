@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "95a71dd97e02f35f52a3724f5717db52",
+    "content-hash": "4548743a74fa7b7ea459f665203aa4ee",
     "packages": [
         {
             "name": "api-platform/core",
@@ -6419,6 +6419,55 @@
                 "source": "https://github.com/PrestaShop/ps_newproducts/tree/v2.0.1"
             },
             "time": "2026-06-07T18:46:03+00:00"
+        },
+        {
+            "name": "prestashop/ps_onepagecheckout",
+            "version": "v0.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_onepagecheckout.git",
+                "reference": "521db0a4d459069b367b7be5292e5520632d2a09"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_onepagecheckout/zipball/521db0a4d459069b367b7be5292e5520632d2a09",
+                "reference": "521db0a4d459069b367b7be5292e5520632d2a09",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^4.3"
+            },
+            "type": "prestashop-module",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\Module\\PsOnePageCheckout\\": "src/"
+                },
+                "classmap": [
+                    "ps_onepagecheckout.php",
+                    "controllers/",
+                    "src/Checkout/Ajax/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module ps_onepagecheckout",
+            "homepage": "https://github.com/PrestaShop/ps_onepagecheckout",
+            "support": {
+                "issues": "https://github.com/PrestaShop/ps_onepagecheckout/issues",
+                "source": "https://github.com/PrestaShop/ps_onepagecheckout/tree/v0.6.2"
+            },
+            "time": "2026-07-02T14:45:01+00:00"
         },
         {
             "name": "prestashop/ps_searchbar",
