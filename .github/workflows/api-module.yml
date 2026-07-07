@@ -73,6 +73,11 @@ jobs:
       - name: Composer Install
         run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
+      # API clients can only grant the scopes they hold, the module tests must use a client holding them.
+      # Remove this step (and the patch file) once ps_apiresources includes this change in its tests.
+      - name: Patch ps_apiresources tests
+        run: patch -p1 -d modules/ps_apiresources -i ../../tests/Resources/patches/ps_apiresources-api-client-scopes.patch
+
       # Front assets are needed for the theme to be installed and image types to be inserted in DB, admin assets required
       # because some built files (like preload.html.twig) are included and cause errors when absent
       - name: Build all assets
