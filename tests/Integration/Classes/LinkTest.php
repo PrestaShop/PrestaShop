@@ -12,11 +12,40 @@ use Context;
 use Dispatcher;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use ReflectionProperty;
 
 class LinkTest extends TestCase
 {
-    private function getProductLink(bool $statusUseRoutes, int $id_product, ?int $id_product_attribute): array
+    private $originalUseRoutes;
+
+    protected function setUp(): void
     {
+        parent::setUp();
+        $this->originalUseRoutes = $this->getUseRoutesProperty()->getValue(Dispatcher::getInstance());
+    }
+
+    protected function tearDown(): void
+    {
+        // Restore the Dispatcher singleton state mutated by the tests, otherwise the forced
+        // use_routes value leaks into other test classes and changes their generated URLs.
+        $this->getUseRoutesProperty()->setValue(Dispatcher::getInstance(), $this->originalUseRoutes);
+        parent::tearDown();
+    }
+
+    private function getUseRoutesProperty(): ReflectionProperty
+    {
+        $property = (new ReflectionClass('Dispatcher'))->getProperty('use_routes');
+        $property->setAccessible(true);
+
+        return $property;
+    }
+
+    private function getProductLink(
+        bool $statusUseRoutes,
+        int $id_product,
+        ?int $id_product_attribute,
+        ?string $ean13 = null
+    ): array {
         $reflectionDispatcher = new ReflectionClass('Dispatcher');
         $property = $reflectionDispatcher->getProperty('use_routes');
         $property->setAccessible(true);
@@ -26,7 +55,7 @@ class LinkTest extends TestCase
             $id_product,
             null,
             null,
-            null,
+            $ean13,
             Context::getContext()->language->id,
             null,
             $id_product_attribute,
@@ -66,5 +95,28 @@ class LinkTest extends TestCase
 
         $this->assertEquals(1, $query['id_product']);
         $this->assertArrayNotHasKey('id_product_attribute', $query);
+    }
+
+    public function testSupplierUrlOmitsMetaTitleWhenRouteHasNoMetaTitleKeyword(): void
+    {
+        $reflectionDispatcher = new ReflectionClass('Dispatcher');
+        $property = $reflectionDispatcher->getProperty('use_routes');
+        $property->setAccessible(true);
+        $property->setValue(Dispatcher::getInstance(), true);
+
+        $url = Context::getContext()->link->getSupplierLink(1);
+        parse_str(parse_url($url)['query'] ?? '', $query);
+
+        $this->assertArrayNotHasKey('meta_title', $query);
+    }
+
+    public function testProductUrlOmitsEan13WhenRouteHasNoEan13Keyword(): void
+    {
+        parse_str(
+            $this->getProductLink(true, 1, null, '1234567890128')['query'] ?? '',
+            $query
+        );
+
+        $this->assertArrayNotHasKey('ean13', $query);
     }
 }
