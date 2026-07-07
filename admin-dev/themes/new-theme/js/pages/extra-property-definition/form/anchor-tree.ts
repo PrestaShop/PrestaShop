@@ -10,7 +10,6 @@ interface FormFieldNode {
   name: string;
   path: string;
   label: string;
-  typeClass: string;
   compound: boolean;
   children: FormFieldNode[];
 }
@@ -34,12 +33,12 @@ const MAX_DEPTH_CLASS = 6;
 /**
  * Lazy anchor picker of the Forms placement rows: focusing a row's path input opens a dropdown
  * with the target form's recursive field tree, fetched ONCE per formId from the
- * /form-fields/{formId} endpoint and cached. Selecting a compound node targets the container
- * (append inside — position cleared and disabled); selecting a leaf targets an anchor
- * (before/after enabled, "after" preselected). When the endpoint answers available:false the
- * input silently stays free text — pointing inside a form the introspection cannot build is a
- * supported manual override. Typing while the dropdown is open filters it; typing is also
- * always accepted as a free-text path.
+ * /form-fields/{formId} endpoint and cached. Selecting a leaf preselects "after" (a leaf is only
+ * an anchor); selecting a compound node keeps "Automatic" (append inside the container) but the
+ * position stays editable — placing before/after a sub-section (description.categories:before)
+ * is legitimate. When the endpoint answers available:false the input silently stays free text —
+ * pointing inside a form the introspection cannot build is a supported manual override. Typing
+ * while the dropdown is open filters it; typing is also always accepted as a free-text path.
  */
 export default class AnchorTreeEnhancer {
   private urlTemplate: string;
@@ -91,7 +90,13 @@ export default class AnchorTreeEnhancer {
       this.cache.set(
         formId,
         fetch(this.urlTemplate.replace('__FORM_ID__', encodeURIComponent(formId)))
-          .then((response) => <Promise<FormFieldsResponse>>response.json())
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`form-fields endpoint answered ${response.status}`);
+            }
+
+            return <Promise<FormFieldsResponse>>response.json();
+          })
           .catch(() => ({formId, available: false, fields: []})),
       );
     }
@@ -189,16 +194,14 @@ export default class AnchorTreeEnhancer {
     input.value = option.dataset.path ?? '';
 
     if (modeSelect) {
-      if (compound) {
-        // Container target: the field is appended inside — no before/after anchor.
-        modeSelect.value = '';
-        modeSelect.disabled = true;
-      } else {
-        modeSelect.disabled = false;
+      // Recover from the disabled state older sessions could leave behind.
+      modeSelect.disabled = false;
 
-        if (modeSelect.value === '') {
-          modeSelect.value = 'after';
-        }
+      // A leaf can only be an anchor, so "after" beats the meaningless "Automatic"; a compound
+      // defaults to "Automatic" (append inside the container) but before/after stays available —
+      // placing relative to a sub-section is legitimate.
+      if (!compound && modeSelect.value === '') {
+        modeSelect.value = 'after';
       }
 
       modeSelect.dispatchEvent(new Event('change', {bubbles: true}));
