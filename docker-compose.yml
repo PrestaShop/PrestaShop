@@ -59,7 +59,7 @@ services:
       - mysql
     volumes:
       - ./:/var/www/html
-      - ../logistic:/var/www/logistic
+      - ../logistic:/var/www/html/modules/logistic
       - ../deusacasa-theme:/var/www/html/themes/deusacasa-theme
     networks:
       - prestashop-network
