@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -22,6 +23,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -88,6 +90,13 @@ final class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Height', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'height',
+                    ])
+            )
+            ->add(
+                (new DataColumn('image_fitment'))
+                    ->setName($this->trans('Image fitment', [], 'Admin.Design.Feature'))
+                    ->setOptions([
+                        'field' => 'image_fitment_name',
                     ])
             )
             ->add(
@@ -218,6 +227,18 @@ final class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'required' => false,
                     ])
                     ->setAssociatedColumn('height')
+            )
+            ->add(
+                (new Filter('image_fitment', ChoiceType::class))
+                    ->setTypeOptions([
+                        'choices' => [
+                            $this->trans('Fit the thumbnail and fill the rest with empty space', [], 'Admin.Design.Feature') => ImageFitment::FIT,
+                            $this->trans('Fill the thumbnail and crop the rest', [], 'Admin.Design.Feature') => ImageFitment::CROP,
+                            $this->trans('Keep the ratio of the original image', [], 'Admin.Design.Feature') => ImageFitment::BOUND,
+                        ],
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('image_fitment')
             )
             ->add(
                 (new Filter('products', YesAndNoChoiceType::class))

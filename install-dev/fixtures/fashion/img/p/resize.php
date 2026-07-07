@@ -15,7 +15,13 @@ foreach ($files as $file) {
     if (preg_match('/^Fotolia_([0-9]+)_X\.jpg$/i', $file, $match)) {
         foreach ($types as $type) {
             if (!file_exists($match[1].'-'.$type['name'].'.jpg')) {
-                ImageManager::resize($file, $match[1].'-'.$type['name'].'.jpg', $type['width'], $type['height'], 'jpg', true);
+                $error = 0;
+                $targetWidth = null;
+                $targetHeight = null;
+                $sourceWidth = null;
+                $sourceHeight = null;
+
+                ImageManager::resize($file, $match[1].'-'.$type['name'].'.jpg', $type['width'], $type['height'], 'jpg', true, $error, $targetWidth, $targetHeight, 5, $sourceWidth, $sourceHeight, $type['image_fitment']);
             }
         }
         ImageManager::resize($file, $match[1].'.jpg', 800, 800, 'jpg', true);
