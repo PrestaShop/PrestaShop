@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <localizationPack name="Spain" version="1.0">
   <currencies>
-    <currency name="IT SHOULD FAIL NOW" iso_code="EUR" iso_code_num="978" sign="€" blank="1" format="2" decimals="1"/>
+    <currency name="Euro" iso_code="EUR" iso_code_num="978" sign="€" blank="1" format="2" decimals="1"/>
   </currencies>
   <languages>
     <language iso_code="es"/>
