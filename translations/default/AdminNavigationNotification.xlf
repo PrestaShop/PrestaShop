@@ -15,12 +15,12 @@
       <trans-unit id="c059561b30601ffaf8759ae84f2b44b9">
         <source>An error occurred while updating new window property.</source>
         <target>An error occurred while updating new window property.</target>
-        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 211]</note>
+        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 215]</note>
       </trans-unit>
       <trans-unit id="aeaf2891ec065451798dc21794358950">
         <source>An error occurred while updating the new window property for this object.</source>
         <target>An error occurred while updating the new window property for this object.</target>
-        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 214]</note>
+        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 218]</note>
       </trans-unit>
       <trans-unit id="70821661a53b31c40fdd6c9f3bbff741">
         <source>Are you active on social media these days?</source>

@@ -42,10 +42,14 @@
         <target>Apply voucher</target>
         <note>File: themes/hummingbird/templates/checkout/_partials/cart-voucher.tpl [Line: 46]</note>
       </trans-unit>
+      <trans-unit id="759b8dedba55e334c23095b18ac87810">
+        <source>Back to %step_title%</source>
+        <target>Back to %step_title%</target>
+        <note>File: themes/hummingbird/templates/checkout/_partials/checkout-step-buttons.tpl [Line: 9]</note>
+      </trans-unit>
       <trans-unit id="b462bf27c356e050705366b91640879f">
         <source>Back to Addresses</source>
         <target>Back to Addresses</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/steps/shipping.tpl [Line: 94]</note>
       </trans-unit>
       <trans-unit id="95e6faaba5e8b016e5f9bcf5ea6c8270">
         <source>Back to Login</source>
@@ -55,12 +59,10 @@
       <trans-unit id="6570c9efe2714d079977afd8249dcd0f">
         <source>Back to Personal Information</source>
         <target>Back to Personal Information</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/steps/addresses.tpl [Line: 106]</note>
       </trans-unit>
       <trans-unit id="05320401a3e19e894fa8de3bc4bee93c">
         <source>Back to Shipping</source>
         <target>Back to Shipping</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/steps/payment.tpl [Line: 157]</note>
       </trans-unit>
       <trans-unit id="407b538c47571d18e57f3559718aaf6d">
         <source>Back to Shipping method</source>
@@ -79,7 +81,7 @@
       <trans-unit id="ea4788705e6873b424c65e91c2846b19">
         <source>Cancel</source>
         <target>Cancel</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/address-form.tpl [Line: 41]</note>
+        <note>File: themes/hummingbird/templates/checkout/_partials/address-form.tpl [Line: 45]</note>
       </trans-unit>
       <trans-unit id="a85eba4c6c699122b2bb1387ea4813ad">
         <source>Cart</source>
@@ -104,7 +106,7 @@
       <trans-unit id="961f2247a2070bedff9f9cd8d64e2650">
         <source>Choose</source>
         <target>Choose</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/steps/payment.tpl [Line: 48]</note>
+        <note>File: themes/hummingbird/templates/checkout/_partials/steps/payment.tpl [Line: 52]</note>
       </trans-unit>
       <trans-unit id="cbe55e77ffa67d13322eb1ce7d22f1ba">
         <source>Choose file</source>
@@ -131,20 +133,22 @@
         <target>Continue shopping</target>
         <note>File: themes/hummingbird/templates/checkout/cart.tpl [Line: 26]</note>
       </trans-unit>
+      <trans-unit id="400424605605bde572bf8e517998b492">
+        <source>Continue to %step_title%</source>
+        <target>Continue to %step_title%</target>
+        <note>File: themes/hummingbird/templates/checkout/_partials/checkout-step-buttons.tpl [Line: 15]</note>
+      </trans-unit>
       <trans-unit id="7e77653b25dc948c9e098f65e7833f9d">
         <source>Continue to Addresses</source>
         <target>Continue to Addresses</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/steps/personal-information.tpl [Line: 50]</note>
       </trans-unit>
       <trans-unit id="126b444426d0010500f74b50848486e0">
         <source>Continue to Payment</source>
         <target>Continue to Payment</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/steps/shipping.tpl [Line: 98]</note>
       </trans-unit>
       <trans-unit id="df0bf7488be2178e7d50206bb7830a64">
         <source>Continue to Shipping</source>
         <target>Continue to Shipping</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/steps/addresses.tpl [Line: 111]</note>
       </trans-unit>
       <trans-unit id="42369faa6a6b243aac58683f3874bf99">
         <source>Create account</source>
@@ -269,7 +273,7 @@
       <trans-unit id="3f5b7abc4738f2132264c2510f9dc39f">
         <source>Hide password</source>
         <target>Hide password</target>
-        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 152]</note>
+        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 167]</note>
       </trans-unit>
       <trans-unit id="22ed8430f63617cd786209dc98df780a">
         <source>Increase quantity of %product_name%</source>
@@ -313,12 +317,12 @@
       <trans-unit id="c91e4ee170226d66e90f99ba917e4c20">
         <source>Quick view</source>
         <target>Quick view</target>
-        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/product-quickview.tpl [Line: 7]</note>
+        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/product-quickview.tpl [Line: 11]</note>
       </trans-unit>
       <trans-unit id="3459a024e77408cebe1f0cec4177cf5f">
         <source>Quick view %product_name%</source>
         <target>Quick view %product_name%</target>
-        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/product-quickview.tpl [Line: 14]</note>
+        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/product-quickview.tpl [Line: 18]</note>
       </trans-unit>
       <trans-unit id="1063e38cb53d94d386f21227fcd84717">
         <source>Remove</source>
@@ -358,7 +362,7 @@
       <trans-unit id="8e46f6ecf73c49b1c8962c6dcaa98835">
         <source>See details</source>
         <target>See details</target>
-        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/product.tpl [Line: 106]</note>
+        <note>File: themes/hummingbird/templates/catalog/_partials/miniatures/product.tpl [Line: 110]</note>
       </trans-unit>
       <trans-unit id="a5e6d898ad3fae1dba64143c1848ba54">
         <source>Select address: %addressAlias%</source>
@@ -413,7 +417,7 @@
       <trans-unit id="a1cc7ba89ca3016cf59d7c31506a9681">
         <source>Show password</source>
         <target>Show password</target>
-        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 153]</note>
+        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 168]</note>
       </trans-unit>
       <trans-unit id="b6d4223e60986fa4c9af77ee5f7149c5">
         <source>Sign in</source>
@@ -428,7 +432,7 @@
       <trans-unit id="b26917587d98330d93f87808fc9d7267">
         <source>Subscribe</source>
         <target>Subscribe</target>
-        <note>File: themes/hummingbird/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl [Line: 21]</note>
+        <note>File: themes/hummingbird/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl [Line: 22]</note>
       </trans-unit>
       <trans-unit id="12a7a93d72ded50311b52c7d0a853e3c">
         <source>Take advantage of our exclusive offers:</source>

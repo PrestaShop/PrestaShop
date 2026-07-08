@@ -2,6 +2,21 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="Emails.Body.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="7a351763d8af425401ef8fd5f217c6a3">
+        <source> - %attributes%</source>
+        <target>- %attributes%</target>
+        <note>File: src/Adapter/MailTemplate/MailPreviewVariablesBuilder.php [Line: 379]</note>
+      </trans-unit>
+      <trans-unit id="2c41bb03e31b351556f12c7e5d05f499">
+        <source> - Carrier: %carrier_name%</source>
+        <target>- Carrier: %carrier_name%</target>
+        <note>File: src/Adapter/MailTemplate/MailPreviewVariablesBuilder.php [Line: 380]</note>
+      </trans-unit>
+      <trans-unit id="a206fe3ef35260b1f923e0e9ebd915bf">
+        <source>%name%%attributes%%carrier%</source>
+        <target>%name%%attributes%%carrier%</target>
+        <note>File: src/Adapter/MailTemplate/MailPreviewVariablesBuilder.php [Line: 376]</note>
+      </trans-unit>
       <trans-unit id="44aa13304026bb46ad79f4151f16634a">
         <source>(waiting for validation)</source>
         <target>(waiting for validation)</target>

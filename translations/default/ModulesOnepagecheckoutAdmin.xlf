@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="Modules.Onepagecheckout.Admin.xlf" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ec64e645d72d4c3cdca80ab5104b61d2">
+        <source>Allow faster checkout for higher conversion and spontaneous purchases.</source>
+        <target>Allow faster checkout for higher conversion and spontaneous purchases.</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 138]</note>
+      </trans-unit>
+      <trans-unit id="fccee95d87b2e6e3eddf1a85aa9f52e5">
+        <source>Before you proceed, please make sure that:</source>
+        <target>Before you proceed, please make sure that:</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 146]</note>
+      </trans-unit>
+      <trans-unit id="c3337ea0531a306e4aea3a91f32d855e">
+        <source>Change checkout appearance</source>
+        <target>Change checkout appearance</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 153]</note>
+      </trans-unit>
+      <trans-unit id="cee57cb006ba12e6402b14f3fc393a4c">
+        <source>Check theme compatibility</source>
+        <target>Check theme compatibility</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 143]</note>
+      </trans-unit>
+      <trans-unit id="6ff063fbc860a79759a7369ac32cee22">
+        <source>Checkout</source>
+        <target>Checkout</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 38]</note>
+      </trans-unit>
+      <trans-unit id="da6f527d7d866cb7975e57c47da10023">
+        <source>Checkout layout</source>
+        <target>Checkout layout</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 136]</note>
+      </trans-unit>
+      <trans-unit id="c21346b94c2c1630e1a831fbe9058e91">
+        <source>Checkout layout has been changed. Shop is now in maintenance mode.</source>
+        <target>Checkout layout has been changed. Shop is now in maintenance mode.</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 87]</note>
+      </trans-unit>
+      <trans-unit id="0cd8068aca1d887a9a644725aa222509">
+        <source>Four-page checkout</source>
+        <target>Four-page checkout</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 121]</note>
+      </trans-unit>
+      <trans-unit id="ada026618947a599e34290bda4b398b7">
+        <source>Increased conversion with a seamless and frictionless experience</source>
+        <target>Increased conversion with a seamless and frictionless experience</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 174]</note>
+      </trans-unit>
+      <trans-unit id="38a27c0c7ef7a05e13efa2798ee21533">
+        <source>Maintenance mode</source>
+        <target>Maintenance mode</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 155]</note>
+      </trans-unit>
+      <trans-unit id="f634a229f83b25dc4592a8b64ccb106e">
+        <source>Mobile-friendly checkout</source>
+        <target>Mobile-friendly checkout</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 177]</note>
+      </trans-unit>
+      <trans-unit id="e92b7763bf05359a5c3e52e36edfb2e7">
+        <source>Native one-page checkout.</source>
+        <target>Native one-page checkout.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 55]</note>
+      </trans-unit>
+      <trans-unit id="1ba3df1cf88c632f7ca93b77bfd76668">
+        <source>One-page checkout</source>
+        <target>One-page checkout</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 120]</note>
+      </trans-unit>
+      <trans-unit id="c781371b1a691a63ee588a2229962425">
+        <source>One-page checkout layout requires a Bootstrap 5-compatible theme.</source>
+        <target>One-page checkout layout requires a Bootstrap 5-compatible theme.</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 145]</note>
+      </trans-unit>
+      <trans-unit id="4f321a3ff04171c34aa055cf7d930082">
+        <source>Propose a step-by-step checkout experience. All the usual payment steps will be displayed on different screens. Choose this method if:</source>
+        <target>Propose a step-by-step checkout experience. All the usual payment steps will be displayed on different screens. Choose this method if:</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 188]</note>
+      </trans-unit>
+      <trans-unit id="14e8c77f88c994856f00a8b49d0ebc99">
+        <source>Propose the best checkout experience to your clients with the one-page layout. All the payment steps will be displayed in one page and let you benefit from:</source>
+        <target>Propose the best checkout experience to your clients with the one-page layout. All the payment steps will be displayed in one page and let you benefit from:</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 168]</note>
+      </trans-unit>
+      <trans-unit id="654866693fd91ce8e9764a218f569918">
+        <source>Recommended</source>
+        <target>Recommended</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 166]</note>
+      </trans-unit>
+      <trans-unit id="4f16487db4b644698260e29bdd5782d6">
+        <source><![CDATA[Reduced time spent, less clicks & no extra-step]]></source>
+        <target><![CDATA[Reduced time spent, less clicks & no extra-step]]></target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 172]</note>
+      </trans-unit>
+      <trans-unit id="16351a612732de591e64521038c0f7f1">
+        <source>Unable to enable maintenance mode. Checkout layout was not changed.</source>
+        <target>Unable to enable maintenance mode. Checkout layout was not changed.</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 68]</note>
+      </trans-unit>
+      <trans-unit id="c710e4392b32f074df87f1eb78b6a0e3">
+        <source><![CDATA[We strongly recommend enabling <strong>Maintenance Mode</strong> or testing this in a <strong>Staging Environment</strong> first to ensure a smooth transition for your customers.]]></source>
+        <target><![CDATA[We strongly recommend enabling <strong>Maintenance Mode</strong> or testing this in a <strong>Staging Environment</strong> first to ensure a smooth transition for your customers.]]></target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 157]</note>
+      </trans-unit>
+      <trans-unit id="a73b3889adecdd23c5094d3cbfc72dd3">
+        <source>You are NOT using the "Classic" theme: This layout is incompatible with the legacy Classic theme and will break your storefront.</source>
+        <target>You are NOT using the "Classic" theme: This layout is incompatible with the legacy Classic theme and will break your storefront.</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 148]</note>
+      </trans-unit>
+      <trans-unit id="fba68e398f20119b30a84bae39e49cea">
+        <source>You need flexibility for complex or specific information</source>
+        <target>You need flexibility for complex or specific information</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 193]</note>
+      </trans-unit>
+      <trans-unit id="c8b0f63509a75545caf50247c29587e9">
+        <source><![CDATA[You want to integrate upsell & cross-sell strategies]]></source>
+        <target><![CDATA[You want to integrate upsell & cross-sell strategies]]></target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 197]</note>
+      </trans-unit>
+      <trans-unit id="fa31280be452dcd3a41efc92f942d58f">
+        <source>You're about to update the Checkout appearance of your store.</source>
+        <target>You're about to update the Checkout appearance of your store.</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 144]</note>
+      </trans-unit>
+      <trans-unit id="82731408c0c3dddac93387c326a65a5a">
+        <source>You're under regulatory compliance</source>
+        <target>You're under regulatory compliance</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 196]</note>
+      </trans-unit>
+      <trans-unit id="06ffb3035c4aa49cde99e2dc912421c8">
+        <source>Your checkout modules are compatible. Some older modules may not be compatible with a one-page layout.</source>
+        <target>Your checkout modules are compatible. Some older modules may not be compatible with a one-page layout.</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 150]</note>
+      </trans-unit>
+      <trans-unit id="92b7816a95eed69d740dbe3567ac6617">
+        <source>Your theme is compatible with the one-page checkout DOM and Bootstrap 5: Custom or third-party themes must support this new checkout architecture.</source>
+        <target>Your theme is compatible with the one-page checkout DOM and Bootstrap 5: Custom or third-party themes must support this new checkout architecture.</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/BackOfficeConfigurationForm.php [Line: 149]</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

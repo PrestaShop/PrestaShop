@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="Modules.Onepagecheckout.Shop.xlf" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1625e29c02062efe5dbc42c3efeeebc4">
+        <source>-- please choose --</source>
+        <target>-- please choose --</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/address-modal-fields.tpl [Line: 72]</note>
+      </trans-unit>
+      <trans-unit id="85af2203cc9500c9de15a53a2cb28a77">
+        <source>Account successfully created</source>
+        <target>Account successfully created</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/checkout.tpl [Line: 20]</note>
+      </trans-unit>
+      <trans-unit id="1412f7dcbcbe951b817f3f65b77b8e57">
+        <source>Address details:</source>
+        <target>Address details:</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/address-list.tpl [Line: 40]</note>
+      </trans-unit>
+      <trans-unit id="45bf37e13a06d2475492f79a350638e4">
+        <source>Address options</source>
+        <target>Address options</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/address-list.tpl [Line: 54]</note>
+      </trans-unit>
+      <trans-unit id="2db4fbd930cf5c255363c0cf81db24dd">
+        <source>Address successfully deleted.</source>
+        <target>Address successfully deleted.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Address/OnePageCheckoutDeleteAddressHandler.php [Line: 77]</note>
+      </trans-unit>
+      <trans-unit id="548a3bc9bd5a65835dff0bc6ddee5687">
+        <source>Already have an account? Sign in</source>
+        <target>Already have an account? Sign in</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/contact-section.tpl [Line: 16]</note>
+      </trans-unit>
+      <trans-unit id="0f2128487e1f02160ea77f4093546bb1">
+        <source>An error occurred while loading addresses. Please try again.</source>
+        <target>An error occurred while loading addresses. Please try again.</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/addresses-section.tpl [Line: 54]</note>
+      </trans-unit>
+      <trans-unit id="b028ccd04708b8c3c7722956e149a718">
+        <source>An error occurred. Please try again.</source>
+        <target>An error occurred. Please try again.</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/opc-error.tpl [Line: 18]</note>
+      </trans-unit>
+      <trans-unit id="cae1b369089f67ab3f25a4dfaa0dffeb">
+        <source>Are you sure you want to delete this address?</source>
+        <target>Are you sure you want to delete this address?</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/address-list.tpl [Line: 90]</note>
+      </trans-unit>
+      <trans-unit id="1fbc7e5f1b92c7ec072397b59a0bb5da">
+        <source>Billing address</source>
+        <target>Billing address</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/addresses-section.tpl [Line: 101]</note>
+      </trans-unit>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/delete-address-modal.tpl [Line: 38]</note>
+      </trans-unit>
+      <trans-unit id="6ff063fbc860a79759a7369ac32cee22">
+        <source>Checkout</source>
+        <target>Checkout</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/CheckoutOnePageStep.php [Line: 199]</note>
+      </trans-unit>
+      <trans-unit id="d3d2e617335f08df83599665eef8a418">
+        <source>Close</source>
+        <target>Close</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/delete-address-modal.tpl [Line: 24]</note>
+      </trans-unit>
+      <trans-unit id="a2cd64d8c759e7e23a31025618b4fca8">
+        <source>Complete your delivery address above to see your delivery options.</source>
+        <target>Complete your delivery address above to see your delivery options.</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/delivery-section.tpl [Line: 79]</note>
+      </trans-unit>
+      <trans-unit id="f4a26c5b3758c271b9f588007d49a12c">
+        <source>Complete your delivery address above to see your payment options.</source>
+        <target>Complete your delivery address above to see your payment options.</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/payment-section.tpl [Line: 61]</note>
+      </trans-unit>
+      <trans-unit id="6280ed214163d6e214763ff970910cdc">
+        <source>Connected as [1]%firstname% %lastname%[/1].</source>
+        <target>Connected as [1]%firstname% %lastname%[/1].</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/connected-account-info.tpl [Line: 13]</note>
+      </trans-unit>
+      <trans-unit id="5e3d6d040d8a81befd75127d526646bc">
+        <source>Contact information</source>
+        <target>Contact information</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/contact-section.tpl [Line: 47]</note>
+      </trans-unit>
+      <trans-unit id="73dcb1add64570efc166580263215412">
+        <source>Continue as guest</source>
+        <target>Continue as guest</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/contact-section.tpl [Line: 26]</note>
+      </trans-unit>
+      <trans-unit id="42369faa6a6b243aac58683f3874bf99">
+        <source>Create account</source>
+        <target>Create account</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/contact-section.tpl [Line: 19]</note>
+      </trans-unit>
+      <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
+        <source>Delete</source>
+        <target>Delete</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/delete-address-modal.tpl [Line: 44]</note>
+      </trans-unit>
+      <trans-unit id="0f1556b1cbbbce852b830d243c684460">
+        <source>Delete this address?</source>
+        <target>Delete this address?</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/delete-address-modal.tpl [Line: 18]</note>
+      </trans-unit>
+      <trans-unit id="af0f5bdc5be121b9307687aeeae38c17">
+        <source>Delivery address</source>
+        <target>Delivery address</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/addresses-section.tpl [Line: 65]</note>
+      </trans-unit>
+      <trans-unit id="6310f29293c902c64db619c29179d99a">
+        <source>Delivery method</source>
+        <target>Delivery method</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/delivery-section.tpl [Line: 20]</note>
+      </trans-unit>
+      <trans-unit id="7dce122004969d56ae2e0245cb754d35">
+        <source>Edit</source>
+        <target>Edit</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/address-list.tpl [Line: 81]</note>
+      </trans-unit>
+      <trans-unit id="0cbf677caf425ccdc93236a70356602d">
+        <source>Edit billing address</source>
+        <target>Edit billing address</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/addresses-section.tpl [Line: 21]</note>
+      </trans-unit>
+      <trans-unit id="8e1572c93c613c98c4ae49073feb2fed">
+        <source>Edit delivery address</source>
+        <target>Edit delivery address</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/addresses-section.tpl [Line: 11]</note>
+      </trans-unit>
+      <trans-unit id="89babba4d36e2672b08faac369b849eb">
+        <source>Enter your email address above to see the delivery and payment options.</source>
+        <target>Enter your email address above to see the delivery and payment options.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 339]</note>
+      </trans-unit>
+      <trans-unit id="7e0740b66b9d7d6578358ecc5bce8b92">
+        <source>Gift wrapping is currently unavailable.</source>
+        <target>Gift wrapping is currently unavailable.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/OrderOptions/OnePageCheckoutGiftWrappingHandler.php [Line: 47]</note>
+      </trans-unit>
+      <trans-unit id="9193b58520051d8b59ca64a5cc5353ff">
+        <source>I would like to receive my order in recycled packaging.</source>
+        <target>I would like to receive my order in recycled packaging.</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/order-options.tpl [Line: 43]</note>
+      </trans-unit>
+      <trans-unit id="3e0b39c8cd14dd15fff36eecf9c19861">
+        <source>If you sign out now, your cart will be emptied.</source>
+        <target>If you sign out now, your cart will be emptied.</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/connected-account-info.tpl [Line: 35]</note>
+      </trans-unit>
+      <trans-unit id="5153f37f9159735ef4ae472c19b732e3">
+        <source>If you'd like, you can add a note to the gift:</source>
+        <target>If you'd like, you can add a note to the gift:</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/order-options.tpl [Line: 65]</note>
+      </trans-unit>
+      <trans-unit id="999240422d91520da77051a8ef2af9f9">
+        <source>Invalid delivery address.</source>
+        <target>Invalid delivery address.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Carrier/OnePageCheckoutCarriersHandler.php [Line: 57]</note>
+      </trans-unit>
+      <trans-unit id="5a5e1e87a8eaa7a31d48ee128302f2bc">
+        <source>Invalid email format.</source>
+        <target>Invalid email format.</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/OnePageCheckoutForm.php [Line: 580]</note>
+      </trans-unit>
+      <trans-unit id="66dff4bc6149738292b7b2737e7e2e8c">
+        <source>Invalid security token.</source>
+        <target>Invalid security token.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Customer/OnePageCheckoutGuestInitHandler.php [Line: 135]</note>
+      </trans-unit>
+      <trans-unit id="601d8c4b9f72fc1862013c19b677a499">
+        <source>Invoice address</source>
+        <target>Invoice address</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/OnePageCheckoutForm.php [Line: 359]</note>
+      </trans-unit>
+      <trans-unit id="9a1e1ced2c95b8cc8ee5cb713637326f">
+        <source>Loading addresses...</source>
+        <target>Loading addresses...</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/addresses-section.tpl [Line: 48]</note>
+      </trans-unit>
+      <trans-unit id="6bf1e23d73a0a3866a539285165851cd">
+        <source>Loading delivery methods...</source>
+        <target>Loading delivery methods...</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/delivery-section.tpl [Line: 66]</note>
+      </trans-unit>
+      <trans-unit id="a6f21e1a3fe54c9c2f733a952de0c69d">
+        <source>Loading payment methods...</source>
+        <target>Loading payment methods...</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/payment-section.tpl [Line: 46]</note>
+      </trans-unit>
+      <trans-unit id="8524de963f07201e5c086830d370797f">
+        <source>Loading...</source>
+        <target>Loading...</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/opc-loader.tpl [Line: 15]</note>
+      </trans-unit>
+      <trans-unit id="f4ac0281c7bfebb39bb90934628c40e2">
+        <source>Missing delivery option.</source>
+        <target>Missing delivery option.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Carrier/OnePageCheckoutSelectCarrierHandler.php [Line: 44]</note>
+      </trans-unit>
+      <trans-unit id="f7410e96ce082dd92c8e63a27d7fa809">
+        <source>Missing payment selection payload.</source>
+        <target>Missing payment selection payload.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Payment/OnePageCheckoutSelectPaymentHandler.php [Line: 31]</note>
+      </trans-unit>
+      <trans-unit id="0bf3928d84fde940f6feafac75062280">
+        <source>My Address</source>
+        <target>My Address</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/OnePageCheckoutForm.php [Line: 331]</note>
+      </trans-unit>
+      <trans-unit id="dc8350c8bd88911cabd243b705284f04">
+        <source>My account (%firstname% %lastname%)</source>
+        <target>My account (%firstname% %lastname%)</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/connected-account-info.tpl [Line: 7]</note>
+      </trans-unit>
+      <trans-unit id="8cad959f414b692c94d7cebbeedd3188">
+        <source>New billing address</source>
+        <target>New billing address</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/addresses-section.tpl [Line: 20]</note>
+      </trans-unit>
+      <trans-unit id="32c2d21acbef75699237601dd8c01220">
+        <source>New delivery address</source>
+        <target>New delivery address</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/addresses-section.tpl [Line: 10]</note>
+      </trans-unit>
+      <trans-unit id="82dc57da54e2a0ed4db0a04ce7dd1949">
+        <source>Not you? [1]Sign out[/1]</source>
+        <target>Not you? [1]Sign out[/1]</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/connected-account-info.tpl [Line: 26]</note>
+      </trans-unit>
+      <trans-unit id="e84403ce2ed14f42eebf1c507795792c">
+        <source>One-page checkout is currently unavailable.</source>
+        <target>One-page checkout is currently unavailable.</target>
+        <note>File: modules/ps_onepagecheckout/controllers/front/AbstractOpcJsonFrontController.php [Line: 65]</note>
+      </trans-unit>
+      <trans-unit id="17ae274a6886db8dd6d8d2c5697205ec">
+        <source>One-page checkout is not enabled.</source>
+        <target>One-page checkout is not enabled.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Customer/OnePageCheckoutGuestInitHandler.php [Line: 122]</note>
+      </trans-unit>
+      <trans-unit id="f1d3b424cd68795ecaa552883759aceb">
+        <source>Order summary</source>
+        <target>Order summary</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/checkout.tpl [Line: 40]</note>
+      </trans-unit>
+      <trans-unit id="99938b17c91170dfb0c2f3f8bc9f2a85">
+        <source>Pay</source>
+        <target>Pay</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/steps/one-page-checkout.tpl [Line: 74]</note>
+      </trans-unit>
+      <trans-unit id="f0aaaae189e9c7711931a65ffcd22543">
+        <source>Payment method</source>
+        <target>Payment method</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/payment-section.tpl [Line: 19]</note>
+      </trans-unit>
+      <trans-unit id="9c8ca7810846ba6ed6a281e4413e8eca">
+        <source>Please accept the required terms above to see the delivery and payment options.</source>
+        <target>Please accept the required terms above to see the delivery and payment options.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 340]</note>
+      </trans-unit>
+      <trans-unit id="688000bea2f79c9ca3d2d1755456024f">
+        <source>Please accept the terms of service.</source>
+        <target>Please accept the terms of service.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Submit/OnePageCheckoutSubmitProcessor.php [Line: 237]</note>
+      </trans-unit>
+      <trans-unit id="301600ed849201b73f53f828fcc6fdfd">
+        <source>Please correct the highlighted address fields.</source>
+        <target>Please correct the highlighted address fields.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 337]</note>
+      </trans-unit>
+      <trans-unit id="b5bccda6d3a04e1d8f79846355290435">
+        <source>Please enter a valid email address.</source>
+        <target>Please enter a valid email address.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 341]</note>
+      </trans-unit>
+      <trans-unit id="898e86c98d478a49b76c60b2d65266c0">
+        <source>Please select a delivery method.</source>
+        <target>Please select a delivery method.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 329]</note>
+      </trans-unit>
+      <trans-unit id="7c35f5beee619d9244ee3f3d7acfed6b">
+        <source>Please select a payment method.</source>
+        <target>Please select a payment method.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Submit/OnePageCheckoutSubmitProcessor.php [Line: 213]</note>
+      </trans-unit>
+      <trans-unit id="3a27a24bff20b8e1cf0bcc9afc8f04ff">
+        <source>Please select a shipping method.</source>
+        <target>Please select a shipping method.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Submit/OnePageCheckoutSubmitProcessor.php [Line: 173]</note>
+      </trans-unit>
+      <trans-unit id="6327b4e59f58137083214a1fec358855">
+        <source>Retry</source>
+        <target>Retry</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/payment-section.tpl [Line: 54]</note>
+      </trans-unit>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
+        <source>Save</source>
+        <target>Save</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/address-modal.tpl [Line: 42]</note>
+      </trans-unit>
+      <trans-unit id="f1e8f49d1d8ddba0394ca883412a8c7b">
+        <source>Select address: %alias%</source>
+        <target>Select address: %alias%</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/address-list.tpl [Line: 30]</note>
+      </trans-unit>
+      <trans-unit id="46a2a41cc6e552044816a2d04634545d">
+        <source>State</source>
+        <target>State</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/address-modal-fields.tpl [Line: 63]</note>
+      </trans-unit>
+      <trans-unit id="68fbf1d995b5467bd49e06e3eb4305d0">
+        <source>Still needed:</source>
+        <target>Still needed:</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 338]</note>
+      </trans-unit>
+      <trans-unit id="beb82bccc3495c14997d4ce277c434ba">
+        <source>This action will remove the selected address from your checkout.</source>
+        <target>This action will remove the selected address from your checkout.</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/delete-address-modal.tpl [Line: 29]</note>
+      </trans-unit>
+      <trans-unit id="19ab27c1f898f3fa7652f7ca2a3c5d2f">
+        <source>Unable to delete address.</source>
+        <target>Unable to delete address.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Address/OnePageCheckoutDeleteAddressHandler.php [Line: 56]</note>
+      </trans-unit>
+      <trans-unit id="0cc35c7acbd573ed83e89dac16ce5573">
+        <source>Unable to initialize checkout customer.</source>
+        <target>Unable to initialize checkout customer.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 325]</note>
+      </trans-unit>
+      <trans-unit id="39a762ed88fa8f4b4cc0d3edfd5e865b">
+        <source>Unable to initialize the selected payment method.</source>
+        <target>Unable to initialize the selected payment method.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 348]</note>
+      </trans-unit>
+      <trans-unit id="7b62f44e0c590071478b90b31e22e456">
+        <source>Unable to load address fields.</source>
+        <target>Unable to load address fields.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 336]</note>
+      </trans-unit>
+      <trans-unit id="423c3d9a7feb297656d8abdbe59cb7d1">
+        <source>Unable to load delivery methods.</source>
+        <target>Unable to load delivery methods.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 327]</note>
+      </trans-unit>
+      <trans-unit id="5641fbf5ff3a7f9ed8340f2752248e3c">
+        <source>Unable to load payment methods.</source>
+        <target>Unable to load payment methods.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 331]</note>
+      </trans-unit>
+      <trans-unit id="fe166f359a0f562c5b90c4b0eb412d28">
+        <source>Unable to load states.</source>
+        <target>Unable to load states.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 335]</note>
+      </trans-unit>
+      <trans-unit id="e8ae1f23e882fa6b0914930c9e9860b9">
+        <source>Unable to load the requested address.</source>
+        <target>Unable to load the requested address.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Address/OnePageCheckoutSaveAddressHandler.php [Line: 49]</note>
+      </trans-unit>
+      <trans-unit id="46adf24b089e8b8b6d58d7b24695e2a2">
+        <source>Unable to refresh addresses.</source>
+        <target>Unable to refresh addresses.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 347]</note>
+      </trans-unit>
+      <trans-unit id="66fe14c61ce185bcc46dfbdaa355c03b">
+        <source>Unable to resolve checkout cart.</source>
+        <target>Unable to resolve checkout cart.</target>
+        <note>File: modules/ps_onepagecheckout/controllers/front/selectaddress.php [Line: 28]</note>
+      </trans-unit>
+      <trans-unit id="d13a4cb4a391399e099cb802757ed4f1">
+        <source>Unable to resolve checkout customer.</source>
+        <target>Unable to resolve checkout customer.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Address/OnePageCheckoutSaveAddressHandler.php [Line: 38]</note>
+      </trans-unit>
+      <trans-unit id="9b0e8775368f8c648327cf0401538874">
+        <source>Unable to resolve the current cart.</source>
+        <target>Unable to resolve the current cart.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/OrderOptions/OnePageCheckoutGiftWrappingHandler.php [Line: 41]</note>
+      </trans-unit>
+      <trans-unit id="5aace64d0cf0bbaff29f6847e52ff282">
+        <source>Unable to resolve the current delivery address.</source>
+        <target>Unable to resolve the current delivery address.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Carrier/OnePageCheckoutSelectCarrierHandler.php [Line: 68]</note>
+      </trans-unit>
+      <trans-unit id="7e4ce39f86900b9ccef423a30041c1e5">
+        <source>Unable to save address.</source>
+        <target>Unable to save address.</target>
+        <note>File: modules/ps_onepagecheckout/src/Checkout/Ajax/Address/OnePageCheckoutSaveAddressHandler.php [Line: 63]</note>
+      </trans-unit>
+      <trans-unit id="21286c5a3bf880ec178485353ef0b5f0">
+        <source>Unable to select the delivery method.</source>
+        <target>Unable to select the delivery method.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 330]</note>
+      </trans-unit>
+      <trans-unit id="5c9a8d4b5ddbb8a15b1d3c64b05dcb2b">
+        <source>Unable to select the payment method.</source>
+        <target>Unable to select the payment method.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 334]</note>
+      </trans-unit>
+      <trans-unit id="d001e703f1dd8eaa0f5ac2122811dec6">
+        <source>Unable to submit checkout.</source>
+        <target>Unable to submit checkout.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 350]</note>
+      </trans-unit>
+      <trans-unit id="9a605fc0e1667ebdbd0ac37cf9f90789">
+        <source>Unfortunately, there are no carriers available for your delivery address.</source>
+        <target>Unfortunately, there are no carriers available for your delivery address.</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/delivery-section.tpl [Line: 32]</note>
+      </trans-unit>
+      <trans-unit id="97b72d419a22e2d1144b2fb05ee26901">
+        <source>Unfortunately, there are no payment method available.</source>
+        <target>Unfortunately, there are no payment method available.</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/payment-methods.tpl [Line: 73]</note>
+      </trans-unit>
+      <trans-unit id="0c7789282e40ec6011abadf2763198f6">
+        <source>Use a different delivery address</source>
+        <target>Use a different delivery address</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/address-list.tpl [Line: 121]</note>
+      </trans-unit>
+      <trans-unit id="564d26a146ad07a32a17b625e828cdd6">
+        <source>Use the same address for invoice</source>
+        <target>Use the same address for invoice</target>
+        <note>File: modules/ps_onepagecheckout/src/Form/OnePageCheckoutFormatter.php [Line: 154]</note>
+      </trans-unit>
+      <trans-unit id="5c74d926c4b89517ad64133990d04413">
+        <source>Use this address for invoice too</source>
+        <target>Use this address for invoice too</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/addresses-section.tpl [Line: 92]</note>
+      </trans-unit>
+      <trans-unit id="af77decd40733d4edeb2fddf7b5c1eaa">
+        <source>We couldn't load your delivery options. Please try again.</source>
+        <target>We couldn't load your delivery options. Please try again.</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/delivery-section.tpl [Line: 72]</note>
+      </trans-unit>
+      <trans-unit id="dc8d1142b28b0d143c963cdb57093cc4">
+        <source>We couldn't load your payment options. Please try again.</source>
+        <target>We couldn't load your payment options. Please try again.</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/payment-section.tpl [Line: 53]</note>
+      </trans-unit>
+      <trans-unit id="6f29417363e10b59c2e17c79ee2c76b6">
+        <source>We couldn't save your delivery address. Please check the fields above and try again.</source>
+        <target>We couldn't save your delivery address. Please check the fields above and try again.</target>
+        <note>File: modules/ps_onepagecheckout/ps_onepagecheckout.php [Line: 342]</note>
+      </trans-unit>
+      <trans-unit id="51cb70bea00ccdb79e8458d4a683e369">
+        <source>Write a comment about this order</source>
+        <target>Write a comment about this order</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/order-options.tpl [Line: 21]</note>
+      </trans-unit>
+      <trans-unit id="77a65c29dba3f45446aa813d7c48ad93">
+        <source>Write your comment...</source>
+        <target>Write your comment...</target>
+        <note>File: modules/ps_onepagecheckout/views/templates/front/checkout/_partials/one-page-checkout/order-options.tpl [Line: 28]</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
