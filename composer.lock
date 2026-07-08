@@ -7557,16 +7557,16 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v6.1.0",
+            "version": "v6.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "b939f9833c222fd26b46c0f2225b0828259077e1"
+                "reference": "f2766d229e5eab6bf46c6d0b666cc25deda24653"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/b939f9833c222fd26b46c0f2225b0828259077e1",
-                "reference": "b939f9833c222fd26b46c0f2225b0828259077e1",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/f2766d229e5eab6bf46c6d0b666cc25deda24653",
+                "reference": "f2766d229e5eab6bf46c6d0b666cc25deda24653",
                 "shasum": ""
             },
             "require": {
@@ -7579,7 +7579,7 @@
             "require-dev": {
                 "doctrine/common": "^3",
                 "friendsofphp/php-cs-fixer": "^3.2",
-                "phpunit/phpunit": "~9.5.10",
+                "phpunit/phpunit": "~9.6",
                 "symfony/framework-bundle": "^3.4 || ^4.4 || ^5.0 || ^6.0",
                 "symfony/symfony": "^6.0",
                 "symfony/translation": "^3.4 || ^4.4 || ^5.0 || ^6.0"
@@ -7612,9 +7612,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PrestaShop/TranslationToolsBundle/issues",
-                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v6.1.0"
+                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v6.1.1"
             },
-            "time": "2025-04-11T09:24:35+00:00"
+            "time": "2026-07-08T09:12:01+00:00"
         },
         {
             "name": "psr/cache",
@@ -18493,5 +18493,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
