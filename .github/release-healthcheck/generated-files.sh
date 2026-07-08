@@ -10,6 +10,7 @@
 #   app          : C1 hooks listing, C2 JS routing  (need a booted PrestaShop: PHP+MySQL+assets)
 #   composer     : C3 translation fixtures, C4 license headers, C5 linters (no DB)
 #   translation  : C6 default catalogue extraction (checks out the external TranslationTool)
+#   static       : C7 localization packs sync with LocalizationFiles (git + public clone only)
 
 # HC_GROUP is read by emit() in lib.sh (sourced separately) — silence cross-file SC2034.
 # shellcheck disable=SC2034
@@ -130,6 +131,34 @@ check_default_catalogue_extracted() {
   git -C "$core_dir" checkout -- translations/ 2>/dev/null || true
 }
 
+# spec ref: C7 — bundled localization packs in sync with PrestaShop/LocalizationFiles.
+# Mirrors sync_localization_files.yml: copy every top-level *.xml pack from the source
+# repo (copy-only — core-only packs and CLDR/.htaccess are never touched) and expect no
+# git diff. A diff means the packs are stale: run the sync workflow on this branch.
+check_localization_packs_in_sync() {
+  local id="generated/localization-packs" title="Localization packs in sync"
+  HC_LINK="https://github.com/$REPO/tree/$REF/localization"
+  if ! ge_9_1; then
+    emit "$id" "$title" "$HC_NA" "$HC_SEV_FAIL" "sync with LocalizationFiles only covers >= 9.1" ">= 9.1"
+    return
+  fi
+
+  local src_dir
+  src_dir="$(mktemp -d 2>/dev/null)" || { emit "$id" "$title" "$HC_FAIL" "$HC_SEV_WARN" "could not verify (no temp dir)"; return; }
+  if ! git clone --quiet --depth 1 https://github.com/PrestaShop/LocalizationFiles "$src_dir" 2>/dev/null; then
+    emit "$id" "$title" "$HC_FAIL" "$HC_SEV_WARN" "could not verify (LocalizationFiles clone failed)"; return
+  fi
+
+  find "$src_dir" -maxdepth 1 -name '*.xml' -exec cp {} localization/ \;
+  if git diff --quiet -- localization/ 2>/dev/null; then
+    emit "$id" "$title" "$HC_PASS" "$HC_SEV_FAIL" "no diff after copying packs from LocalizationFiles master"
+  else
+    local changed; changed="$(git diff --name-only -- localization/ 2>/dev/null | wc -l | tr -d ' ')"
+    emit "$id" "$title" "$HC_FAIL" "$HC_SEV_FAIL" "$changed stale pack(s) — run the sync-localization-files workflow on $REF"
+    git checkout -- localization/ 2>/dev/null || true
+  fi
+}
+
 run_generated_files_app_checks() {
   HC_GROUP="Generated files in sync"
   guard check_hooks_listing_in_sync
@@ -146,4 +175,9 @@ run_generated_files_deps_checks() {
 run_generated_files_translation_checks() {
   HC_GROUP="Generated files in sync"
   guard check_default_catalogue_extracted
+}
+
+run_generated_files_static_checks() {
+  HC_GROUP="Generated files in sync"
+  guard check_localization_packs_in_sync
 }

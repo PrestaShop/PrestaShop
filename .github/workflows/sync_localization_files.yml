@@ -7,6 +7,8 @@ name: Sync localization files from LocalizationFiles
 # Run manually from the Actions tab (Run workflow). It copies every country
 # pack from the chosen LocalizationFiles branch into localization/ and, if
 # anything changed, opens a Pull Request against the selected core branch(es).
+# The target accepts any branch name (e.g. a build branch during the release
+# process); "all" targets the active version branches.
 #
 # Notes:
 #  - Files present in core but absent from LocalizationFiles are
@@ -19,13 +21,9 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: 'Core branch(es) to open a sync PR for'
-        type: choice
+        description: 'Core branch to open a sync PR for — "all" = develop + 9.2.x + 9.1.x, or any branch name (e.g. build-920)'
+        type: string
         default: all
-        options:
-          - all
-          - develop
-          - 9.1.x
       lf_branch:
         description: 'LocalizationFiles branch to sync from'
         type: string
@@ -44,12 +42,14 @@ jobs:
       matrix: ${{ steps.pick.outputs.matrix }}
     steps:
       - id: pick
+        env:
+          TARGET: ${{ inputs.target }}
         run: |
-          case "${{ inputs.target }}" in
-            develop) echo 'matrix=["develop"]' >> "$GITHUB_OUTPUT" ;;
-            9.1.x)   echo 'matrix=["9.1.x"]' >> "$GITHUB_OUTPUT" ;;
-            *)       echo 'matrix=["develop","9.1.x"]' >> "$GITHUB_OUTPUT" ;;
-          esac
+          if [ "$TARGET" = "all" ]; then
+            echo 'matrix=["develop","9.2.x","9.1.x"]' >> "$GITHUB_OUTPUT"
+          else
+            echo "matrix=$(jq -cn --arg b "$TARGET" '[$b]')" >> "$GITHUB_OUTPUT"
+          fi
 
   sync-localization-files:
     needs: setup

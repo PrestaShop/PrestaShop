@@ -46,8 +46,10 @@ case "$TIER" in
   static)
     . "$SELF_DIR/version-integrity.sh"
     . "$SELF_DIR/release-content.sh"
+    . "$SELF_DIR/generated-files.sh"
     run_version_integrity_checks
     run_release_content_checks
+    run_generated_files_static_checks
     ;;
   deps)
     . "$SELF_DIR/dependencies.sh"
