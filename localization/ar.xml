@@ -29,6 +29,32 @@
       <taxRule iso_code_country="ar" id_tax="4"/>
     </taxRulesGroup>
 	</taxes>
+	<states>
+		<state name="Buenos Aires" iso_code="B" country="AR" zone="South America" />
+		<state name="Catamarca" iso_code="K" country="AR" zone="South America" />
+		<state name="Chaco" iso_code="H" country="AR" zone="South America" />
+		<state name="Chubut" iso_code="U" country="AR" zone="South America" />
+		<state name="Ciudad de Buenos Aires" iso_code="C" country="AR" zone="South America" />
+		<state name="Córdoba" iso_code="X" country="AR" zone="South America" />
+		<state name="Corrientes" iso_code="W" country="AR" zone="South America" />
+		<state name="Entre Ríos" iso_code="E" country="AR" zone="South America" />
+		<state name="Formosa" iso_code="P" country="AR" zone="South America" />
+		<state name="Jujuy" iso_code="Y" country="AR" zone="South America" />
+		<state name="La Pampa" iso_code="L" country="AR" zone="South America" />
+		<state name="La Rioja" iso_code="F" country="AR" zone="South America" />
+		<state name="Mendoza" iso_code="M" country="AR" zone="South America" />
+		<state name="Misiones" iso_code="N" country="AR" zone="South America" />
+		<state name="Neuquén" iso_code="Q" country="AR" zone="South America" />
+		<state name="Río Negro" iso_code="R" country="AR" zone="South America" />
+		<state name="Salta" iso_code="A" country="AR" zone="South America" />
+		<state name="San Juan" iso_code="J" country="AR" zone="South America" />
+		<state name="San Luis" iso_code="D" country="AR" zone="South America" />
+		<state name="Santa Cruz" iso_code="Z" country="AR" zone="South America" />
+		<state name="Santa Fe" iso_code="S" country="AR" zone="South America" />
+		<state name="Santiago del Estero" iso_code="G" country="AR" zone="South America" />
+		<state name="Tierra del Fuego" iso_code="V" country="AR" zone="South America" />
+		<state name="Tucumán" iso_code="T" country="AR" zone="South America" />
+	</states>
 	<units>
 		<unit type="weight" value="kg" />
 		<unit type="volume" value="L" />

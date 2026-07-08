@@ -282,11 +282,10 @@
     <state name="Mantova" iso_code="MN" country="IT" zone="Europe"/>
     <state name="Massa-Carrara" iso_code="MS" country="IT" zone="Europe"/>
     <state name="Matera" iso_code="MT" country="IT" zone="Europe"/>
-    <state name="Medio Campidano" iso_code="VS" country="IT" zone="Europe"/>
     <state name="Messina" iso_code="ME" country="IT" zone="Europe"/>
     <state name="Milano" iso_code="MI" country="IT" zone="Europe"/>
     <state name="Modena" iso_code="MO" country="IT" zone="Europe"/>
-    <state name="Monza e Brianza" iso_code="MB" country="IT" zone="Europe"/>
+    <state name="Monza e della Brianza" iso_code="MB" country="IT" zone="Europe"/>
     <state name="Napoli" iso_code="NA" country="IT" zone="Europe"/>
     <state name="Novara" iso_code="NO" country="IT" zone="Europe"/>
     <state name="Nuoro" iso_code="NU" country="IT" zone="Europe"/>
@@ -318,7 +317,7 @@
     <state name="Siena" iso_code="SI" country="IT" zone="Europe"/>
     <state name="Siracusa" iso_code="SR" country="IT" zone="Europe"/>
     <state name="Sondrio" iso_code="SO" country="IT" zone="Europe"/>
-    <state name="Sulcis Iglesiente" iso_code="SU" country="IT" zone="Europe"/>
+    <state name="Sud Sardegna" iso_code="SU" country="IT" zone="Europe"/>
     <state name="Taranto" iso_code="TA" country="IT" zone="Europe"/>
     <state name="Teramo" iso_code="TE" country="IT" zone="Europe"/>
     <state name="Terni" iso_code="TR" country="IT" zone="Europe"/>
