@@ -1477,6 +1477,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             '@context' => 'https://schema.org',
             '@type' => 'Product',
             'name' => $product['name'],
+            'url' => $this->getCanonicalURL(),
             'description' => preg_replace("/[\r\n]+/", ' ', $product['meta']['description'] ?? ''),
             'category' => $product['category_name'] ?? '',
         ];
@@ -1547,6 +1548,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 ],
             ];
 
+            // Add item condition if available
+            if (!empty($product['show_condition']) && !empty($product['condition']['schema_url'])) {
+                $structuredData['product']['offers']['itemCondition'] = $product['condition']['schema_url'];
+            }
+
+            // Add codes if available
             if (!empty($product['reference'])) {
                 $structuredData['product']['offers']['sku'] = $product['reference'];
             }
