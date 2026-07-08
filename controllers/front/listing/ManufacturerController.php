@@ -15,7 +15,6 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
     /** @var Manufacturer|null */
     protected $manufacturer;
-    protected $label;
 
     /** @var ManufacturerPresenter */
     protected $manufacturerPresenter;
@@ -79,24 +78,12 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
                 $this->assignManufacturer();
-                $this->label = $this->trans(
-                    'List of products by brand %brand_name%',
-                    [
-                        '%brand_name%' => $this->manufacturer->name,
-                    ],
-                    'Shop.Theme.Catalog'
-                );
                 $this->doProductSearch(
                     'catalog/listing/manufacturer',
                     ['entity' => 'manufacturer', 'id' => $this->manufacturer->id]
                 );
             } else {
                 $this->assignAll();
-                $this->label = $this->trans(
-                    'List of all brands',
-                    [],
-                    'Shop.Theme.Catalog'
-                );
                 $this->setTemplate('catalog/manufacturers', ['entity' => 'manufacturers']);
             }
         } else {
@@ -214,7 +201,11 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
     public function getListingLabel(): string
     {
-        return $this->label;
+        if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
+            return $this->trans('List of products by brand %brand_name%', ['%brand_name%' => $this->manufacturer->name], 'Shop.Theme.Catalog');
+        } else {
+            return $this->trans('List of all brands', [], 'Shop.Theme.Catalog');
+        }
     }
 
     public function getBreadcrumbLinks(): array
@@ -233,6 +224,22 @@ class ManufacturerControllerCore extends ProductListingFrontController
         }
 
         return $breadcrumb;
+    }
+
+    /**
+     * Generates structured data this page, depending on if we are displaying a manufacturer or a list of manufacturers.
+     *
+     * @return array
+     */
+    public function getStructuredData(): array
+    {
+        // If we are displaying a manufacturer, we will use the product listing structured data
+        if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
+            return parent::getStructuredData();
+        }
+
+        // Otherwise, we will display the basic data, the same as in FrontController
+        return FrontController::getStructuredData();
     }
 
     /**
