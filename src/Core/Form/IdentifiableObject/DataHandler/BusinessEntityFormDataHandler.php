@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityGeneralInformation;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityId;
+use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityType;
 
 final class BusinessEntityFormDataHandler implements FormDataHandlerInterface
 {
@@ -29,7 +30,7 @@ final class BusinessEntityFormDataHandler implements FormDataHandlerInterface
     public function create(array $data): BusinessEntityId
     {
         /** @var BusinessEntityGeneralInformation $generalInformation */
-        $generalInformation = $data['general_information'];
+        $generalInformation = $data[BusinessEntityType::GENERAL_INFORMATION];
 
         $command = new AddBusinessEntityCommand(
             $generalInformation->getName(),
@@ -39,9 +40,9 @@ final class BusinessEntityFormDataHandler implements FormDataHandlerInterface
             $generalInformation->getStatus(),
             $this->resolveShopId($generalInformation->getShopId()),
             $generalInformation->getCustomerGroupId(),
-            $data['billing_address_as_shipping_address'],
-            $data['billing_address'],
-            $data['shipping_address'],
+            $data[BusinessEntityType::BILLING_ADDRESS_AS_SHIPPING_ADDRESS],
+            $data[BusinessEntityType::BILLING_ADDRESS_TYPE],
+            $data[BusinessEntityType::SHIPPING_ADDRESS_TYPE],
         );
 
         return $this->commandBus->handle($command);

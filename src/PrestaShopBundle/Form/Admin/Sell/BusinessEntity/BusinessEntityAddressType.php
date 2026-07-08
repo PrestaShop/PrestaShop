@@ -48,7 +48,7 @@ class BusinessEntityAddressType extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $countryId = $options['data'][$builder->getForm()->getName()]['countryId'] ?? $this->contextCountryId;
+        $countryId = $this->contextCountryId;
 
         $genericInvalidCharsMessage = $this->trans(
             'Invalid characters: %characters%',

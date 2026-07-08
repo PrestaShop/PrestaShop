@@ -11,6 +11,7 @@ use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityAddressType;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityGeneralInformationType;
+use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityType;
 
 final class BusinessEntityFormDataProvider implements FormDataProviderInterface
 {
@@ -46,7 +47,7 @@ final class BusinessEntityFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return [
-            'general_information' => [
+            BusinessEntityType::GENERAL_INFORMATION => [
                 BusinessEntityGeneralInformationType::FIELD_NAME => '',
                 BusinessEntityGeneralInformationType::FIELD_LEGAL_NAME => '',
                 BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF => '',
@@ -54,17 +55,17 @@ final class BusinessEntityFormDataProvider implements FormDataProviderInterface
                 BusinessEntityGeneralInformationType::FIELD_STATUS => BusinessEntityStatus::PENDING,
                 BusinessEntityGeneralInformationType::FIELD_CUSTOMER_GROUP_ID => self::DEFAULT_CUSTOMER_GROUP_ID,
             ],
-            'billing_address' => [
+            BusinessEntityType::BILLING_ADDRESS_TYPE => [
                 self::DEFAULT_BILLING_ADDRESS_INDEX => [
                     BusinessEntityAddressType::FIELD_COUNTRY_ID => $this->defaultCountryId,
                 ],
             ],
-            'shipping_address' => [
+            BusinessEntityType::SHIPPING_ADDRESS_TYPE => [
             ],
-            'billing_address_as_shipping_address' => true,
-            'default_billing_address' => self::DEFAULT_BILLING_ADDRESS_INDEX,
-            'default_shipping_address' => self::DEFAULT_SHIPPING_ADDRESS_INDEX,
-            'shop_id' => $this->shopContext->isSingleShopContext() ? $this->shopContext->getId() : null,
+            BusinessEntityType::BILLING_ADDRESS_AS_SHIPPING_ADDRESS => true,
+            BusinessEntityType::DEFAULT_BILLING_ADDRESS => self::DEFAULT_BILLING_ADDRESS_INDEX,
+            BusinessEntityType::DEFAULT_SHIPPING_ADDRESS => self::DEFAULT_SHIPPING_ADDRESS_INDEX,
+            BusinessEntityType::SHOP_ID => $this->shopContext->isSingleShopContext() ? $this->shopContext->getId() : null,
         ];
     }
 }

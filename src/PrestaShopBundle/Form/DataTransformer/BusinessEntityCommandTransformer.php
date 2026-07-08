@@ -9,6 +9,7 @@ namespace PrestaShopBundle\Form\DataTransformer;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityBillingAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityGeneralInformation;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityShippingAddress;
+use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityType;
 use Symfony\Component\Form\DataTransformerInterface;
 
 /**
@@ -34,7 +35,7 @@ class BusinessEntityCommandTransformer implements DataTransformerInterface
         }
 
         $billingAddresses = [];
-        foreach ($value['billing_address'] ?? [] as $index => $addressData) {
+        foreach ($value[BusinessEntityType::BILLING_ADDRESS_TYPE] ?? [] as $index => $addressData) {
             $billingAddresses[] = new BusinessEntityBillingAddress(
                 $addressData['alias'],
                 $addressData['address1'],
@@ -42,13 +43,13 @@ class BusinessEntityCommandTransformer implements DataTransformerInterface
                 $addressData['city'],
                 $addressData['postcode'],
                 $addressData['id_country'],
-                $index === (int) $value['default_billing_address'],
+                $index === (int) $value[BusinessEntityType::DEFAULT_BILLING_ADDRESS],
                 $addressData['id_state'] ?? null,
             );
         }
 
         $shippingAddresses = [];
-        foreach ($value['shipping_address'] ?? [] as $index => $addressData) {
+        foreach ($value[BusinessEntityType::SHIPPING_ADDRESS_TYPE] ?? [] as $index => $addressData) {
             $shippingAddresses[] = new BusinessEntityShippingAddress(
                 $addressData['alias'],
                 $addressData['address1'],
@@ -56,24 +57,24 @@ class BusinessEntityCommandTransformer implements DataTransformerInterface
                 $addressData['city'],
                 $addressData['postcode'],
                 $addressData['id_country'],
-                $index === (int) $value['default_shipping_address'],
+                $index === (int) $value[BusinessEntityType::DEFAULT_SHIPPING_ADDRESS],
                 $addressData['id_state'] ?? null,
             );
         }
 
         return [
-            'general_information' => new BusinessEntityGeneralInformation(
-                $value['general_information']['name'],
-                $value['general_information']['legal_name'],
-                $value['general_information']['external_ref'],
-                $value['general_information']['delivery_authorized'],
-                $value['general_information']['status'],
-                (int) $value['shop_id'],
-                (int) $value['general_information']['customer_group_id'],
+            BusinessEntityType::GENERAL_INFORMATION => new BusinessEntityGeneralInformation(
+                $value[BusinessEntityType::GENERAL_INFORMATION]['name'],
+                $value[BusinessEntityType::GENERAL_INFORMATION]['legal_name'],
+                $value[BusinessEntityType::GENERAL_INFORMATION]['external_ref'],
+                $value[BusinessEntityType::GENERAL_INFORMATION]['delivery_authorized'],
+                $value[BusinessEntityType::GENERAL_INFORMATION]['status'],
+                (int) $value[BusinessEntityType::SHOP_ID],
+                (int) $value[BusinessEntityType::GENERAL_INFORMATION]['customer_group_id'],
             ),
-            'billing_address' => $billingAddresses,
-            'shipping_address' => $shippingAddresses,
-            'billing_address_as_shipping_address' => (bool) $value['billing_address_as_shipping_address'],
+            BusinessEntityType::BILLING_ADDRESS_TYPE => $billingAddresses,
+            BusinessEntityType::SHIPPING_ADDRESS_TYPE => $shippingAddresses,
+            BusinessEntityType::BILLING_ADDRESS_AS_SHIPPING_ADDRESS => (bool) $value[BusinessEntityType::BILLING_ADDRESS_AS_SHIPPING_ADDRESS],
         ];
     }
 }
