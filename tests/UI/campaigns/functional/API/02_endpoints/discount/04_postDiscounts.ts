@@ -48,7 +48,9 @@ describe('API : POST /admin-api/discounts', async () => {
   const today: string = utilsDate.getDateFormat('yyyy-mm-dd');
 
   // Pre-condition: Enable discount
+  // Pre-condition: Enable discount + experimental endpoints
   setFeatureFlag(boFeatureFlagPage.featureFlagDiscount, true, `${baseContext}_preTest`);
+  setFeatureFlag(boFeatureFlagPage.featureFlagExperimentalEndpoints, true, `${baseContext}_preTest2`);
 
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
@@ -497,6 +499,7 @@ describe('API : POST /admin-api/discounts', async () => {
     });
   });
 
-  // Post-condition: Disable discount
-  setFeatureFlag(boFeatureFlagPage.featureFlagDiscount, false, `${baseContext}_postTest`);
+  // Post-condition: Disable discount + experimental endpoints
+  setFeatureFlag(boFeatureFlagPage.featureFlagExperimentalEndpoints, false, `${baseContext}_postTest`);
+  setFeatureFlag(boFeatureFlagPage.featureFlagDiscount, false, `${baseContext}_postTest2`);
 });

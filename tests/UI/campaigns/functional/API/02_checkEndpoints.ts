@@ -140,23 +140,23 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/customers: POST',
     // @todo: add tests
-    '/discounts/bulk-delete: DELETE',
+    //'/discounts/bulk-delete: DELETE',
     // @todo: add tests
-    '/discounts/bulk-update-status: PATCH',
+    //'/discounts/bulk-update-status: PATCH',
     // tests/UI/campaigns/functional/API/02_endpoints/discount/01_getDiscountTypes.ts
-    '/discounts/types: GET',
+    //'/discounts/types: GET',
     // @todo: add tests
-    '/discounts/{discountId}/duplicate: POST',
+    //'/discounts/{discountId}/duplicate: POST',
     // tests/UI/campaigns/functional/API/02_endpoints/discount/02_deleteDiscountsDiscountsId.ts
-    '/discounts/{discountId}: DELETE',
+    //'/discounts/{discountId}: DELETE',
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/38647
-    '/discounts/{discountId}: GET',
+    //'/discounts/{discountId}: GET',
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/39682
-    '/discounts/{discountId}: PATCH',
+    //'/discounts/{discountId}: PATCH',
     // tests/UI/campaigns/functional/API/02_endpoints/discount/03_getDiscounts.ts
-    '/discounts: GET',
+    //'/discounts: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/discount/03_postDiscounts.ts
-    '/discounts: POST',
+    //'/discounts: POST',
     // @todo: add tests
     '/features/bulk-delete: DELETE',
     // @todo: add tests
@@ -449,6 +449,7 @@ describe('API : Check endpoints', async () => {
       expect(endpoints.length).to.be.greaterThan(0);
       subsetEndpoints.forEach((endpoint: string) => {
         const idxEndpoint = endpoints.indexOf(endpoint);
+        expect(idxEndpoint).not.to.equals(-1, `Cound not find expected endpoint ${endpoint}`);
         expect(idxEndpoint).to.be.greaterThan(lastIdxEndpoint);
         lastIdxEndpoint = idxEndpoint;
       });
