@@ -55,7 +55,7 @@
       <trans-unit id="c7d2c17ab5d3a8c4cc23b32760f3b0d5">
         <source>Does the carrier have additional fees</source>
         <target>Does the carrier have additional fees</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 79]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 88]</note>
       </trans-unit>
       <trans-unit id="1c6c9d089ce4b751673e3dd09e97b935">
         <source>Enable the carrier in the front office.</source>
@@ -268,7 +268,7 @@
       <trans-unit id="52dbc6fa2418548ded20ae17862f4ca1">
         <source>Zones that the carrier can handle</source>
         <target>Zones that the carrier can handle</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 44]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Shipping/Carrier/ShippingLocationsAndCostsType.php [Line: 53]</note>
       </trans-unit>
       <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
         <source>or</source>

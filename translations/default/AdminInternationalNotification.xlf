@@ -122,6 +122,11 @@
         <target>An error occurred while installing the module: %s</target>
         <note>File: classes/LocalizationPack.php [Line: 480]</note>
       </trans-unit>
+      <trans-unit id="0c61fa91c77d83697b433553ae0f9669">
+        <source>An error occurred while processing the email template.</source>
+        <target>An error occurred while processing the email template.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/EmailBodyTranslationController.php [Line: 167]</note>
+      </trans-unit>
       <trans-unit id="28194875b1f41da98a320b0c31e658a2">
         <source>An error occurred while setting the units.</source>
         <target>An error occurred while setting the units.</target>
@@ -137,6 +142,11 @@
         <target>Apache mod_security is activated on your server. This could result in some Bad Request errors</target>
         <note>File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl [Line: 31]</note>
       </trans-unit>
+      <trans-unit id="7a73c9567905bf2d6e7021d643c57638">
+        <source>Are you sure you want to clear this address format?</source>
+        <target>Are you sure you want to clear this address format?</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Locations/AddressFormatType.php [Line: 208]</note>
+      </trans-unit>
       <trans-unit id="708526e44bef1d8fcd0d67ddf61044d5">
         <source>Are you sure you want to restore the default address format for this country?</source>
         <target>Are you sure you want to restore the default address format for this country?</target>
@@ -145,7 +155,7 @@
       <trans-unit id="ae99f365ee39176c3ab50b76a95cf629">
         <source>Cannot add configuration %1$s for %2$s language</source>
         <target>Cannot add configuration %1$s for %2$s language</target>
-        <note>File: classes/controller/AdminController.php [Line: 1567]</note>
+        <note>File: classes/controller/AdminController.php [Line: 1569]</note>
       </trans-unit>
       <trans-unit id="4d7541fb66c9fc832a20a6f48b4d5613">
         <source>Cannot create the folder "%folder%". Please check your directory writing permissions.</source>
@@ -216,6 +226,11 @@
         <source>Directory "%folder%" cannot be created</source>
         <target>Directory "%folder%" cannot be created</target>
         <note>File: controllers/admin/AdminTranslationsController.php [Line: 1490]</note>
+      </trans-unit>
+      <trans-unit id="25315acb1e5d59f1a4c36e6ecc776960">
+        <source>Email template "%template%" has been successfully updated.</source>
+        <target>Email template "%template%" has been successfully updated.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/EmailBodyTranslationController.php [Line: 99]</note>
       </trans-unit>
       <trans-unit id="5dc4babbd10d00e89d8e46a12942d394">
         <source>Empty string found, please edit: "%file%"</source>
@@ -357,6 +372,11 @@
         <target>No Subject was found for %mail_name% in the database.</target>
         <note>File: controllers/admin/AdminTranslationsController.php [Line: 2258]</note>
       </trans-unit>
+      <trans-unit id="7475ec0d41372a307c497acb7eeea8c4">
+        <source>No Tax</source>
+        <target>No Tax</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/International/Tax/TaxRuleType.php [Line: 83]</note>
+      </trans-unit>
       <trans-unit id="6f3455d187a23443796efdcbe044096b">
         <source>No tax</source>
         <target>No tax</target>
@@ -412,6 +432,16 @@
         <target>The Zip/Postal code is invalid. It must be typed as follows: %format% for %country%.</target>
         <note>File: controllers/admin/AdminTaxRulesGroupController.php [Line: 447]</note>
       </trans-unit>
+      <trans-unit id="1dd03f15498f4fea8aa9e993f5ecaea0">
+        <source>The email template content is invalid. JavaScript is not allowed in HTML email templates.</source>
+        <target>The email template content is invalid. JavaScript is not allowed in HTML email templates.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/EmailBodyTranslationController.php [Line: 162]</note>
+      </trans-unit>
+      <trans-unit id="ca01d4f77bfecf1b02f4911fae4d311e">
+        <source>The email template was not found.</source>
+        <target>The email template was not found.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/EmailBodyTranslationController.php [Line: 157]</note>
+      </trans-unit>
       <trans-unit id="7e093dcb7a9f75c8124b2adc265c5302">
         <source>The geolocation database is unavailable.</source>
         <target>The geolocation database is unavailable.</target>
@@ -461,6 +491,11 @@
         <source>This %type_content% file extension is not accepted.</source>
         <target>This %type_content% file extension is not accepted.</target>
         <note>File: controllers/admin/AdminTranslationsController.php [Line: 1460]</note>
+      </trans-unit>
+      <trans-unit id="9c2e0751b2731096ec18835c0660777a">
+        <source>This ISO code already exists. You cannot create two countries with the same ISO code.</source>
+        <target>This ISO code already exists. You cannot create two countries with the same ISO code.</target>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/CountryController.php [Line: 390]</note>
       </trans-unit>
       <trans-unit id="e07a23e507642ef04f449a7a78f59d38">
         <source>This ISO code already exists.You cannot create two countries with the same ISO code.</source>

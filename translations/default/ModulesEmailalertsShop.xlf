@@ -25,12 +25,12 @@
       <trans-unit id="fac1a67fd950c5714ba830a4b1fb04e6">
         <source>Interested in this product? Click below and we will let you know when it's available for order.</source>
         <target>Interested in this product? Click below and we will let you know when it's available for order.</target>
-        <note>File: themes/hummingbird/modules/ps_emailalerts/views/templates/hook/product.tpl [Line: 51]</note>
+        <note>File: themes/hummingbird/modules/ps_emailalerts/views/templates/hook/product.tpl [Line: 31]</note>
       </trans-unit>
       <trans-unit id="439d1a21c4b17f02f379d129211b2a66">
         <source>Interested in this product? Drop us an email and we will let you know when it's available for order.</source>
         <target>Interested in this product? Drop us an email and we will let you know when it's available for order.</target>
-        <note>File: themes/hummingbird/modules/ps_emailalerts/views/templates/hook/product.tpl [Line: 38]</note>
+        <note>File: themes/hummingbird/modules/ps_emailalerts/views/templates/hook/product.tpl [Line: 18]</note>
       </trans-unit>
       <trans-unit id="e38be0301f0fbc8ae72a1c26be626d62">
         <source>Manage your mail alerts to stay informed about product availability and updates.</source>
@@ -50,7 +50,7 @@
       <trans-unit id="546e02eaa9a986c83cc347e273269f2c">
         <source>Notify me when available</source>
         <target>Notify me when available</target>
-        <note>File: themes/hummingbird/modules/ps_emailalerts/views/templates/hook/product.tpl [Line: 67]</note>
+        <note>File: themes/hummingbird/modules/ps_emailalerts/views/templates/hook/product.tpl [Line: 47]</note>
       </trans-unit>
       <trans-unit id="8229eb3bbcf499e71184b4825fda2f05">
         <source>Remove mail alert</source>
@@ -74,12 +74,12 @@
       <trans-unit id="d3618b65315f6c6c9270964484f4ca4c">
         <source>You will be notified when this product is available.</source>
         <target>You will be notified when this product is available.</target>
-        <note>File: themes/hummingbird/modules/ps_emailalerts/views/templates/hook/product.tpl [Line: 84]</note>
+        <note>File: themes/hummingbird/modules/ps_emailalerts/views/templates/hook/product.tpl [Line: 64]</note>
       </trans-unit>
       <trans-unit id="198584454b0ce1101ff5b50323325aa8">
         <source>Your email address</source>
         <target>Your email address</target>
-        <note>File: themes/hummingbird/modules/ps_emailalerts/views/templates/hook/product.tpl [Line: 46]</note>
+        <note>File: themes/hummingbird/modules/ps_emailalerts/views/templates/hook/product.tpl [Line: 26]</note>
       </trans-unit>
       <trans-unit id="72af53019e3ff98e70637357a59d69ae">
         <source>Your email address is invalid.</source>
