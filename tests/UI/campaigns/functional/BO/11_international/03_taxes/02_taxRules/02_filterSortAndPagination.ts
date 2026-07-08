@@ -80,64 +80,53 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
 
   // 1 - Filter tax rules
   describe('Filter tax rules table', async () => {
-    const tests = [
+    [
       {
-        args:
-          {
-            testIdentifier: 'filterById',
-            filterType: 'input',
-            filterBy: 'id_tax_rules_group',
-            filterValue: dataTaxRules[3].id.toString(),
-          },
+        testIdentifier: 'filterById',
+        filterType: 'input',
+        filterBy: 'id_tax_rules_group',
+        filterValue: dataTaxRules[3].id.toString(),
       },
       {
-        args:
-          {
-            testIdentifier: 'filterByName',
-            filterType: 'input',
-            filterBy: 'name',
-            filterValue: dataTaxRules[1].name,
-          },
+        testIdentifier: 'filterByName',
+        filterType: 'input',
+        filterBy: 'name',
+        filterValue: dataTaxRules[1].name,
       },
       {
-        args:
-          {
-            testIdentifier: 'filterByStatus',
-            filterType: 'select',
-            filterBy: 'active',
-            filterValue: '1',
-          },
+        testIdentifier: 'filterByStatus',
+        filterType: 'select',
+        filterBy: 'active',
+        filterValue: '1',
         expected: 'Enabled',
       },
-    ];
-
-    tests.forEach((test) => {
-      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+    ].forEach((test) => {
+      it(`should filter by ${test.filterBy} '${test.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
         await boTaxRulesPage.filterTable(
           page,
-          test.args.filterType,
-          test.args.filterBy,
-          test.args.filterValue,
+          test.filterType,
+          test.filterBy,
+          test.filterValue,
         );
 
         const numberOfLinesAfterFilter = await boTaxRulesPage.getNumberOfElementInGrid(page);
         expect(numberOfLinesAfterFilter).to.be.at.most(numberOfTaxRules);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
-          const textColumn = await boTaxRulesPage.getTextColumnFromTable(page, row, test.args.filterBy);
+          const textColumn = await boTaxRulesPage.getTextColumnFromTable(page, row, test.filterBy);
 
           if (test.expected !== undefined) {
             expect(textColumn).to.contains(test.expected);
           } else {
-            expect(textColumn).to.contains(test.args.filterValue);
+            expect(textColumn).to.contains(test.filterValue);
           }
         }
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${test.testIdentifier}Reset`, baseContext);
 
         const numberOfLinesAfterReset = await boTaxRulesPage.resetAndGetNumberOfLines(page);
         expect(numberOfLinesAfterReset).to.equal(numberOfTaxRules);
@@ -147,46 +136,46 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
 
   // 2 - Sort tax rules table
   describe('Sort tax rules table', async () => {
-    const sortTests = [
+    [
       {
-        args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_tax_rules_group', sortDirection: 'down', isFloat: true,
-        },
+        testIdentifier: 'sortByIdDesc',
+        sortBy: 'id_tax_rules_group',
+        sortDirection: 'desc',
+        isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
-        },
+        testIdentifier: 'sortByNameAsc',
+        sortBy: 'name',
+        sortDirection: 'asc',
       },
       {
-        args: {
-          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
-        },
+        testIdentifier: 'sortByNameDesc',
+        sortBy: 'name',
+        sortDirection: 'desc',
       },
       {
-        args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_tax_rules_group', sortDirection: 'up', isFloat: true,
-        },
+        testIdentifier: 'sortByIdAsc',
+        sortBy: 'id_tax_rules_group',
+        sortDirection: 'asc',
+        isFloat: true,
       },
-    ];
+    ].forEach((test) => {
+      it(`should sort by '${test.sortBy}' '${test.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
-    sortTests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+        const nonSortedTable = await boTaxRulesPage.getAllRowsColumnContent(page, test.sortBy);
 
-        const nonSortedTable = await boTaxRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await boTaxRulesPage.sortTable(page, test.sortBy, test.sortDirection);
 
-        await boTaxRulesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const sortedTable = await boTaxRulesPage.getAllRowsColumnContent(page, test.sortBy);
 
-        const sortedTable = await boTaxRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
-
-        if (test.args.isFloat) {
+        if (test.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
@@ -194,7 +183,7 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
         } else {
           const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());
@@ -240,28 +229,28 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await boTaxRulesPage.selectPaginationLimit(page, 20);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
       const paginationNumber = await boTaxRulesPage.paginationNext(page);
-      expect(paginationNumber).to.equal('2');
+      expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
       const paginationNumber = await boTaxRulesPage.paginationPrevious(page);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await boTaxRulesPage.selectPaginationLimit(page, 50);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
 
