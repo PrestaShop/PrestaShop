@@ -36,16 +36,28 @@ permissions:
   pull-requests: write
 
 jobs:
+  # Build the branch matrix from the "target" input (matrix can't be filtered
+  # from a job-level `if`, so we compute it here).
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.pick.outputs.matrix }}
+    steps:
+      - id: pick
+        run: |
+          case "${{ inputs.target }}" in
+            develop) echo 'matrix=["develop"]' >> "$GITHUB_OUTPUT" ;;
+            9.1.x)   echo 'matrix=["9.1.x"]' >> "$GITHUB_OUTPUT" ;;
+            *)       echo 'matrix=["develop","9.1.x"]' >> "$GITHUB_OUTPUT" ;;
+          esac
+
   sync-localization-files:
-    # Skip matrix branches the user did not select (target == 'all' runs both).
-    if: ${{ inputs.target == 'all' || inputs.target == matrix.BRANCH }}
+    needs: setup
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        BRANCH:
-          - develop
-          - 9.1.x
+        BRANCH: ${{ fromJSON(needs.setup.outputs.matrix) }}
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}
       # Branch of PrestaShop/LocalizationFiles to sync from.
