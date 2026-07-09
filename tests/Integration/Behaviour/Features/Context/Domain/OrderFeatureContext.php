@@ -870,7 +870,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderStateByIdChoiceProvider $orderStateChoiceProvider */
         $orderStateChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.order_state_by_id');
         $availableOrderStates = $orderStateChoiceProvider->getChoices();
-        $statusId = (int) $availableOrderStates[$status];
+        // An order state added by a scenario is referenced by its storage key
+        $statusId = isset($availableOrderStates[$status])
+            ? (int) $availableOrderStates[$status]
+            : (int) SharedStorage::getStorage()->get($status);
 
         $this->getCommandBus()->handle(
             new UpdateOrderStatusCommand(
