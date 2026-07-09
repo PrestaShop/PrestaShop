@@ -1,8 +1,5 @@
 GitHub contributors:
 --------------------------------
-- "documentation_url": "https://docs.github.com/rest",
-- "message": "Not Found",
-- "status": "404"
 - (d)oekia
 - 0kph
 - 123monsite-regis
@@ -1082,8 +1079,6 @@ GitHub contributors:
 - ZiZuu.com
 - Zollner Robert
 - zuzul
-- {
-- }
 - Ángel Guzmán Maeso
 - Òscar Casajuana
 - Óscar García
