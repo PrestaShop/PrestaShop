@@ -84,6 +84,23 @@ runs:
         sparse-checkout: .github/release-bootstrap
         path: _scripts
 
+    # The docker transform runs the repo's own generator (prestashop_docker.py),
+    # which needs the same Python environment as docker's sync-releases.yml
+    # workflow: Python 3.9 + pinned requirements.txt (newer interpreters reject
+    # some of the pins).
+    - name: Set up Python (docker transform only)
+      if: inputs.transform_id == 'docker'
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.9'
+    - name: Install docker generator dependencies (docker transform only)
+      if: inputs.transform_id == 'docker'
+      working-directory: target
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
     - name: Apply transform & detect changes
       id: tf
       working-directory: target
@@ -202,6 +219,15 @@ runs:
           --arg transform "${TRANSFORM_ID}" \
           '{repo:$repo, action:$action, url:$url, transform:$transform}' > pr-result.json
         cat pr-result.json
+
+        # Per-leg report: surface the PR in THIS job's summary right away — the
+        # consolidated report job only runs once every leg has finished (slow
+        # when the opened PRs saturate the runners with their own CI).
+        case "${ACTION}" in
+          created|updated) echo "🔗 ${REPO}: PR ${ACTION} — ${URL_IN}" >> "$GITHUB_STEP_SUMMARY" ;;
+          dry-run)         echo "🧪 ${REPO}: [dry_run] diff computed — no PR pushed." >> "$GITHUB_STEP_SUMMARY" ;;
+          failed)          echo "❌ ${REPO}: transform or PR step failed — see job log." >> "$GITHUB_STEP_SUMMARY" ;;
+        esac
 
     - name: Upload result artifact
       if: always()
