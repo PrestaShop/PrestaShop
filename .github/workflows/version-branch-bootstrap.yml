@@ -196,6 +196,10 @@ jobs:
             base: dev
             transform_id: ps-apiresources
             reviewers: ""
+          - repo: PrestaShop/docker
+            base: master
+            transform_id: docker
+            reviewers: ""
     steps:
       - name: Checkout bootstrap action
         uses: actions/checkout@v5
