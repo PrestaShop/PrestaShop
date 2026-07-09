@@ -35,11 +35,8 @@ final class StringModifier implements StringModifierInterface
      */
     public function cutEnd(string $string, int $expectedLength): string
     {
-        $length = strlen($string);
-
-        if ($length > $expectedLength) {
-            // cut symbols difference from the end of the string
-            $string = substr($string, 0, $expectedLength - $length);
+        if (mb_strlen($string, 'UTF-8') > $expectedLength) {
+            return mb_substr($string, 0, $expectedLength, 'UTF-8');
         }
 
         return $string;
