@@ -6,17 +6,19 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler;
 
 use Contact;
 use Context;
 use Customer;
 use CustomerMessage;
 use CustomerThread;
+use PrestaShop\PrestaShop\Adapter\CustomerService\Configuration\ImapConfiguration;
 use PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerMessageSyncImapRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\SyncCustomerServiceImapMailboxCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\SyncCustomerServiceImapMailboxHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\ImapSyncResult;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use PrestaShopException;
@@ -34,7 +36,7 @@ use Validate;
  * @internal
  */
 #[AsCommandHandler]
-class SyncCustomerServiceImapMailboxHandler implements SyncCustomerServiceImapMailboxHandlerInterface
+final class SyncCustomerServiceImapMailboxHandler implements SyncCustomerServiceImapMailboxHandlerInterface
 {
     private const OPTION_CONFIGURATION_KEYS = [
         'PS_SAV_IMAP_OPT_POP3' => '/pop3',
@@ -46,43 +48,24 @@ class SyncCustomerServiceImapMailboxHandler implements SyncCustomerServiceImapMa
         'PS_SAV_IMAP_OPT_NOTLS' => '/notls',
     ];
 
-    /**
-     * @var Context
-     */
-    private $context;
-
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @var CustomerMessageSyncImapRepository
-     */
-    private $syncImapRepository;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private readonly TranslatorInterface $translator;
 
     public function __construct(
-        Context $context,
-        ConfigurationInterface $configuration,
-        CustomerMessageSyncImapRepository $syncImapRepository
+        private readonly Context $context,
+        private readonly ConfigurationInterface $configuration,
+        private readonly ImapConfiguration $imapConfiguration,
+        private readonly CustomerMessageSyncImapRepository $syncImapRepository,
     ) {
-        $this->context = $context;
-        $this->configuration = $configuration;
-        $this->syncImapRepository = $syncImapRepository;
         $this->translator = $context->getTranslator();
     }
 
     public function handle(SyncCustomerServiceImapMailboxCommand $command): ImapSyncResult
     {
-        $url = $this->configuration->get('PS_SAV_IMAP_URL');
-        $port = $this->configuration->get('PS_SAV_IMAP_PORT');
-        $user = $this->configuration->get('PS_SAV_IMAP_USER');
-        $password = $this->configuration->get('PS_SAV_IMAP_PWD');
+        $settings = $this->imapConfiguration->getConnectionSettings();
+        $url = $settings['PS_SAV_IMAP_URL'];
+        $port = $settings['PS_SAV_IMAP_PORT'];
+        $user = $settings['PS_SAV_IMAP_USER'];
+        $password = $settings['PS_SAV_IMAP_PWD'];
 
         if (!$url || !$port || !$user || !$password) {
             return new ImapSyncResult([
@@ -96,7 +79,7 @@ class SyncCustomerServiceImapMailboxHandler implements SyncCustomerServiceImapMa
             ]);
         }
 
-        $mbox = @imap_open('{' . $url . ':' . $port . $this->buildConnectionOptions() . '}', $user, $password);
+        $mbox = @imap_open('{' . $url . ':' . $port . $this->buildConnectionOptions($settings) . '}', $user, $password);
 
         $errors = imap_errors();
         $mailboxErrors = is_array($errors) ? array_unique($errors) : [];
@@ -143,17 +126,25 @@ class SyncCustomerServiceImapMailboxHandler implements SyncCustomerServiceImapMa
 
         foreach ($overviews as $overview) {
             $subject = $overview->subject ?? '';
-            $md5 = md5($overview->date . $overview->from . $subject . $overview->msgno);
+            // The Message-ID header is a stable identity for a given email.
+            // The IMAP sequence number (msgno) is NOT: it shifts every time
+            // imap_expunge() runs (called at the end of every sync below),
+            // so keying the dedupe hash on it could reprocess/duplicate a
+            // message the very next time the mailbox is synced.
+            $messageId = $overview->message_id ?? '';
+            $md5 = '' !== $messageId
+                ? md5($messageId)
+                : md5($overview->date . $overview->from . $subject);
 
             if ($this->syncImapRepository->isAlreadyProcessed($md5)) {
-                if ($this->configuration->get('PS_SAV_IMAP_DELETE_MSG') && !imap_delete($mbox, $overview->msgno)) {
+                if (($settings['PS_SAV_IMAP_DELETE_MSG'] ?? false) && !imap_delete($mbox, $overview->msgno)) {
                     $strErrorDelete = ', ' . $this->translator->trans('Fail to delete message', [], 'Admin.Orderscustomers.Notification');
                 }
 
                 continue;
             }
 
-            $error = $this->processOverview($mbox, $overview, $subject);
+            $error = $this->processOverview($mbox, $overview, $subject, $settings);
             if (null !== $error) {
                 $messageErrors[] = $error;
             }
@@ -164,7 +155,10 @@ class SyncCustomerServiceImapMailboxHandler implements SyncCustomerServiceImapMa
         imap_expunge($mbox);
         imap_close($mbox);
 
-        $trailingError = $strErrors . $strErrorDelete;
+        $trailingError = '' !== $strErrors
+            ? $this->translator->trans('IMAP warning: %error%', ['%error%' => $strErrors], 'Admin.Orderscustomers.Notification') . $strErrorDelete
+            : $strErrorDelete;
+
         if (count($messageErrors) > 0) {
             return new ImapSyncResult('' !== $trailingError ? array_merge([$trailingError], $messageErrors) : $messageErrors);
         }
@@ -180,14 +174,15 @@ class SyncCustomerServiceImapMailboxHandler implements SyncCustomerServiceImapMa
      * Returns an error message, or null when the message (if any) was processed successfully.
      *
      * @param resource|\IMAP\Connection $mbox
+     * @param array<string, string|bool> $settings
      */
-    private function processOverview($mbox, object $overview, string $subject): ?string
+    private function processOverview($mbox, object $overview, string $subject, array $settings): ?string
     {
         preg_match('/#ct([0-9]*)/', $subject, $threadIdMatch);
         preg_match('/#tc([0-9-a-z-A-Z]*)/', $subject, $tokenMatch);
         $matchFound = isset($threadIdMatch[1], $tokenMatch[1]);
 
-        $createNewThread = $this->configuration->get('PS_SAV_IMAP_CREATE_THREADS')
+        $createNewThread = ($settings['PS_SAV_IMAP_CREATE_THREADS'] ?? false)
             && !$matchFound
             && false === strpos($subject, '[no_sync]');
 
@@ -251,7 +246,12 @@ class SyncCustomerServiceImapMailboxHandler implements SyncCustomerServiceImapMa
         $customerThread->id_shop = $this->context->shop->id;
         $customerThread->status = CustomerThreadStatus::OPEN;
         $customerThread->token = Tools::passwdGen(12);
-        $customerThread->add();
+
+        try {
+            $customerThread->add();
+        } catch (PrestaShopException) {
+            return null;
+        }
 
         return $customerThread;
     }
@@ -284,7 +284,18 @@ class SyncCustomerServiceImapMailboxHandler implements SyncCustomerServiceImapMa
                 break;
         }
 
-        $body = nl2br(iconv($this->getEncoding($structure), 'utf-8', $body));
+        // iconv() returns false on illegal/mismatched charset bytes, which
+        // real-world mail regularly contains. Under strict_types, passing
+        // that false straight into nl2br(string) throws a TypeError that
+        // would otherwise abort the whole sync (and, since this runs on
+        // every Customer Service page load, break the listing page until
+        // the offending message is purged from the mailbox).
+        $decodedBody = iconv($this->getEncoding($structure), 'utf-8//IGNORE', $body);
+        if (false === $decodedBody) {
+            return $this->translator->trans('Invalid message encoding for subject: %subject%', ['%subject%' => $subject], 'Admin.Orderscustomers.Notification');
+        }
+
+        $body = nl2br($decodedBody);
 
         if ('' === $body) {
             return $this->translator->trans('The message body is empty, cannot import it.', [], 'Admin.Orderscustomers.Notification');
@@ -307,11 +318,14 @@ class SyncCustomerServiceImapMailboxHandler implements SyncCustomerServiceImapMa
         return null;
     }
 
-    private function buildConnectionOptions(): string
+    /**
+     * @param array<string, string|bool> $settings
+     */
+    private function buildConnectionOptions(array $settings): string
     {
         $options = '';
         foreach (self::OPTION_CONFIGURATION_KEYS as $configurationKey => $flag) {
-            if ($this->configuration->get($configurationKey)) {
+            if ($settings[$configurationKey] ?? false) {
                 $options .= $flag;
             }
         }

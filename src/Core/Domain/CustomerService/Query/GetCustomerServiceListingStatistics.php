@@ -14,7 +14,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
  * Aggregates the counters displayed above the customer thread listing:
  * total threads, threads by status, and message totals split by author type.
  */
-class GetCustomerServiceListingStatistics
+final class GetCustomerServiceListingStatistics
 {
     public function __construct(
         private readonly ShopConstraint $shopConstraint,

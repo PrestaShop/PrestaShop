@@ -7,6 +7,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\CustomerService\Configuration\ImapConfiguration;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
@@ -65,6 +66,8 @@ class CustomerThreadController extends PrestaShopAdminController
         FormHandlerInterface $optionsFormHandler,
         #[Autowire(service: 'prestashop.adapter.customer_service.imap.form_handler')]
         FormHandlerInterface $imapFormHandler,
+        #[Autowire(service: 'prestashop.adapter.customer_service.imap_configuration')]
+        ImapConfiguration $imapConfiguration,
         ShopContext $shopContext,
         LanguageContext $languageContext,
         CustomerThreadFilter $filters
@@ -76,13 +79,19 @@ class CustomerThreadController extends PrestaShopAdminController
         $session = $request->getSession();
         $justRanManualSync = $session instanceof FlashBagAwareSessionInterface && $session->getFlashBag()->has('imap_sync_ran');
 
-        if (!$justRanManualSync && $this->hasImapConfigurationStarted()) {
-            $syncResult = $this->dispatchCommand(new SyncCustomerServiceImapMailboxCommand());
+        $canAutoRunImapSync = $this->isGranted('update', $request->attributes->get('_legacy_controller'));
 
-            if ($syncResult->hasError()) {
-                foreach ($syncResult->getErrors() as $error) {
-                    $this->addFlash('warning', $error);
+        if ($canAutoRunImapSync && !$justRanManualSync && $this->hasImapConfigurationStarted($imapConfiguration)) {
+            try {
+                $syncResult = $this->dispatchCommand(new SyncCustomerServiceImapMailboxCommand());
+
+                if ($syncResult->hasError()) {
+                    foreach ($syncResult->getErrors() as $error) {
+                        $this->addFlash('warning', $error);
+                    }
                 }
+            } catch (Exception $e) {
+                $this->addFlash('warning', $this->getErrorMessageForException($e, []));
             }
         }
 
@@ -96,7 +105,7 @@ class CustomerThreadController extends PrestaShopAdminController
             ),
             'customerServiceOptionsForm' => $optionsFormHandler->getForm()->createView(),
             'imapOptionsForm' => $imapFormHandler->getForm()->createView(),
-            'canRunImapSync' => $this->isImapConfigurationComplete(),
+            'canRunImapSync' => $this->isImapConfigurationComplete($imapConfiguration),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Customer service', [], 'Admin.Navigation.Menu'),
         ]);
@@ -107,8 +116,14 @@ class CustomerThreadController extends PrestaShopAdminController
      */
     #[DemoRestricted(redirectRoute: 'admin_customer_threads')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads')]
-    public function runImapSyncAction(): RedirectResponse
+    public function runImapSyncAction(Request $request): RedirectResponse
     {
+        if (!$this->isCsrfTokenValid('run-imap-sync', $request->request->get('_token'))) {
+            $this->addFlash('error', $this->trans('Invalid security token.', [], 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_customer_threads');
+        }
+
         $syncResult = $this->dispatchCommand(new SyncCustomerServiceImapMailboxCommand());
 
         if ($syncResult->hasError()) {
@@ -490,28 +505,28 @@ class CustomerThreadController extends PrestaShopAdminController
      * True as soon as one of the 4 core IMAP connection settings is filled in,
      * mirroring the legacy guard before attempting a sync on every list load.
      */
-    private function hasImapConfigurationStarted(): bool
+    private function hasImapConfigurationStarted(ImapConfiguration $imapConfiguration): bool
     {
-        $configuration = $this->getConfiguration();
+        $configuration = $imapConfiguration->getConfiguration();
 
-        return (bool) $configuration->get('PS_SAV_IMAP_URL')
-            || (bool) $configuration->get('PS_SAV_IMAP_PORT')
-            || (bool) $configuration->get('PS_SAV_IMAP_USER')
-            || (bool) $configuration->get('PS_SAV_IMAP_PWD');
+        return '' !== $configuration['imap_url']
+            || '' !== $configuration['imap_port']
+            || '' !== $configuration['imap_user']
+            || '' !== $configuration['imap_password'];
     }
 
     /**
      * True only when all 4 core IMAP connection settings are filled in,
      * gating the manual "Run sync" button like the legacy `$use_sync` flag.
      */
-    private function isImapConfigurationComplete(): bool
+    private function isImapConfigurationComplete(ImapConfiguration $imapConfiguration): bool
     {
-        $configuration = $this->getConfiguration();
+        $configuration = $imapConfiguration->getConfiguration();
 
-        return (bool) $configuration->get('PS_SAV_IMAP_URL')
-            && (bool) $configuration->get('PS_SAV_IMAP_PORT')
-            && (bool) $configuration->get('PS_SAV_IMAP_USER')
-            && (bool) $configuration->get('PS_SAV_IMAP_PWD');
+        return '' !== $configuration['imap_url']
+            && '' !== $configuration['imap_port']
+            && '' !== $configuration['imap_user']
+            && '' !== $configuration['imap_password'];
     }
 
     private function handleCustomerThreadStatusUpdate(int $customerThreadId, string $newStatus)

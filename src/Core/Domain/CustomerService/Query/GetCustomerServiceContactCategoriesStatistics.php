@@ -17,7 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
  * per-category panels (e.g. "Webmaster", "Customer service") displayed
  * above the customer thread listing.
  */
-class GetCustomerServiceContactCategoriesStatistics
+final class GetCustomerServiceContactCategoriesStatistics
 {
     /**
      * @var LanguageId

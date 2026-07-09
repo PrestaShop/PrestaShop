@@ -11,12 +11,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult;
 /**
  * Outcome of an IMAP mailbox synchronization.
  */
-class ImapSyncResult
+final class ImapSyncResult
 {
     /**
      * @var string[]
      */
-    private $errors;
+    private array $errors;
 
     /**
      * @param string[] $errors

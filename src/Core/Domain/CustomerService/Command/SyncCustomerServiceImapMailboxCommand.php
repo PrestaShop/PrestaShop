@@ -13,6 +13,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Command;
  * matches them to existing customer threads via the `#ct<id> #tc<token>` subject
  * markers, and creates new threads for unrecognized senders when enabled.
  */
-class SyncCustomerServiceImapMailboxCommand
+final class SyncCustomerServiceImapMailboxCommand
 {
 }

@@ -54,7 +54,6 @@ final class ImapOptionsType extends TranslatorAwareType
                     'Admin.Catalog.Help'
                 ),
                 'required' => false,
-                'always_empty' => false,
             ])
             ->add('imap_delete_msg', SwitchType::class, [
                 'label' => $this->trans('Delete messages', 'Admin.Catalog.Feature'),

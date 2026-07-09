@@ -118,6 +118,30 @@ final class ImapConfiguration extends AbstractMultistoreConfiguration
         return [];
     }
 
+    /**
+     * Raw connection settings needed to open the IMAP mailbox, keyed by their
+     * underlying `Configuration` key rather than the form field name, and
+     * correctly scoped to the current shop like every other value this class
+     * exposes. Used by `SyncCustomerServiceImapMailboxHandler` so the sync
+     * logic and the options form always read the exact same shop-scoped
+     * settings instead of maintaining a second, hand-kept mapping.
+     *
+     * @return array<string, string|bool>
+     */
+    public function getConnectionSettings(): array
+    {
+        $shopConstraint = $this->getShopConstraint();
+        $settings = [];
+
+        foreach (self::FIELD_TO_CONFIG_KEY as $field => $configKey) {
+            $settings[$configKey] = in_array($field, self::BOOLEAN_FIELDS, true)
+                ? (bool) $this->configuration->get($configKey, false, $shopConstraint)
+                : (string) $this->configuration->get($configKey, '', $shopConstraint);
+        }
+
+        return $settings;
+    }
+
     protected function buildResolver(): OptionsResolver
     {
         $resolver = (new OptionsResolver())

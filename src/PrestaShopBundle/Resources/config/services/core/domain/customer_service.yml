@@ -81,10 +81,10 @@ services:
       $connection: '@doctrine.dbal.default_connection'
       $dbPrefix: '%database_prefix%'
 
-  prestashop.core.domain.customer_service.command_handler.sync_customer_service_imap_mailbox_handler:
-    class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\SyncCustomerServiceImapMailboxHandler'
+  PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\SyncCustomerServiceImapMailboxHandler:
     autoconfigure: true
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext()'
-      - '@prestashop.adapter.legacy.configuration'
-      - '@PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerMessageSyncImapRepository'
+      $context: '@=service("prestashop.adapter.legacy.context").getContext()'
+      $configuration: '@prestashop.adapter.legacy.configuration'
+      $imapConfiguration: '@prestashop.adapter.customer_service.imap_configuration'
+      $syncImapRepository: '@PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerMessageSyncImapRepository'
