@@ -5690,8 +5690,8 @@
     </hook>
     <hook id="displayCartBelowSummary">
       <name>displayCartBelowSummary</name>
-      <title/>
-      <description/>
+      <title>Display content below summary on cart page</title>
+      <description>Allows you to display content on front office cart page, below the totals summary.</description>
     </hook>
     <hook id="actionExtraPropertyDefinitionFormBuilderModifier">
       <name>actionExtraPropertyDefinitionFormBuilderModifier</name>
