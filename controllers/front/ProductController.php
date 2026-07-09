@@ -131,6 +131,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         // Otherwise immediately show 404
         if (!Validate::isLoadedObject($this->product)) {
+            Hook::exec('actionNotFound');
             $this->product = null;
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
