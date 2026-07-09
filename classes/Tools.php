@@ -4005,6 +4005,18 @@ exit;
 
         return false;
     }
+
+    /**
+     * Converts HTML content to readable plain text.
+     *
+     * @param string $html
+     *
+     * @return string
+     */
+    public static function htmlToText($html)
+    {
+        return self::getStringModifier()->htmlToText($html);
+    }
 }
 
 /**

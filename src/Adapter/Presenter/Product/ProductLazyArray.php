@@ -222,6 +222,17 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * Get the short description converted to readable plain text.
+     *
+     * @return string
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function getDescriptionShortText(): string
+    {
+        return Tools::htmlToText($this->product['description_short'] ?? '');
+    }
+
+    /**
      * @return string
      */
     #[LazyArrayAttribute(arrayAccess: true)]
