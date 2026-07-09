@@ -5685,8 +5685,8 @@
     </hook>
     <hook id="displaySubcategories">
       <name>displaySubcategories</name>
-      <title/>
-      <description/>
+      <title>Display content in subcategory list</title>
+      <description>This hooks allows you to display additional items in a list of subcategories in front office. Related blog posts, links to other categories, landing pages etc.</description>
     </hook>
     <hook id="displayCartBelowSummary">
       <name>displayCartBelowSummary</name>
