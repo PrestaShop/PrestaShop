@@ -9,7 +9,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForEditing;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\EditableBusinessEntity;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityAddressType;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityGeneralInformationType;
@@ -31,16 +34,37 @@ final class BusinessEntityFormDataProvider implements FormDataProviderInterface
     public function __construct(
         Configuration $configuration,
         private readonly ShopContext $shopContext,
+        private readonly CommandBusInterface $queryBus,
     ) {
         $this->defaultCountryId = $configuration->getInt('PS_COUNTRY_DEFAULT');
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @return array<string, mixed>
      */
     public function getData($id)
     {
-        return [];
+        /** @var EditableBusinessEntity $editableBusinessEntity */
+        $editableBusinessEntity = $this->queryBus->handle(new GetBusinessEntityForEditing((int) $id));
+
+        return [
+            BusinessEntityType::GENERAL_INFORMATION => [
+                BusinessEntityGeneralInformationType::FIELD_NAME => $editableBusinessEntity->getName(),
+                BusinessEntityGeneralInformationType::FIELD_LEGAL_NAME => $editableBusinessEntity->getLegalName() ?? '',
+                BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF => $editableBusinessEntity->getExternalRef() ?? '',
+                BusinessEntityGeneralInformationType::FIELD_DELIVERY_AUTHORIZED => $editableBusinessEntity->isDeliveryAuthorized(),
+                BusinessEntityGeneralInformationType::FIELD_STATUS => $editableBusinessEntity->getStatus(),
+                BusinessEntityGeneralInformationType::FIELD_CUSTOMER_GROUP_ID => $editableBusinessEntity->getCustomerGroupId(),
+            ],
+            BusinessEntityType::BILLING_ADDRESS_TYPE => [],
+            BusinessEntityType::SHIPPING_ADDRESS_TYPE => [],
+            BusinessEntityType::BILLING_ADDRESS_AS_SHIPPING_ADDRESS => true,
+            BusinessEntityType::DEFAULT_BILLING_ADDRESS => self::DEFAULT_BILLING_ADDRESS_INDEX,
+            BusinessEntityType::DEFAULT_SHIPPING_ADDRESS => self::DEFAULT_SHIPPING_ADDRESS_INDEX,
+            BusinessEntityType::SHOP_ID => $editableBusinessEntity->getShopId(),
+        ];
     }
 
     /**

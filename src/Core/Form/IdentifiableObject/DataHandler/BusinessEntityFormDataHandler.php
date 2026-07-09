@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\AddBusinessEntit
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\EditBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\AbstractBusinessEntityAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityBillingAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityGeneralInformation;
@@ -115,6 +116,20 @@ final class BusinessEntityFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        // TODO: US2.1.3
+        $generalInformationData = $data[BusinessEntityType::GENERAL_INFORMATION];
+
+        $command = new EditBusinessEntityCommand(
+            (int) $id,
+            $generalInformationData[BusinessEntityGeneralInformationType::FIELD_NAME],
+            $generalInformationData[BusinessEntityGeneralInformationType::FIELD_LEGAL_NAME],
+            $generalInformationData[BusinessEntityGeneralInformationType::FIELD_EXTERNAL_REF],
+            $generalInformationData[BusinessEntityGeneralInformationType::FIELD_DELIVERY_AUTHORIZED],
+            $generalInformationData[BusinessEntityGeneralInformationType::FIELD_STATUS],
+            (int) $generalInformationData[BusinessEntityGeneralInformationType::FIELD_CUSTOMER_GROUP_ID],
+        );
+
+        $this->commandBus->handle($command);
+
+        return (int) $id;
     }
 }

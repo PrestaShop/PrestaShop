@@ -1,0 +1,96 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% form_theme businessEntityForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+
+{% block pageTitle %}
+  {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/header.html.twig') }}
+{% endblock %}
+
+{% block content %}
+  {{ form_start(businessEntityForm) }}
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <h3 class="card-header">
+          {{ 'General information'|trans({}, 'Admin.Global') }}
+        </h3>
+        <div class="card-body">
+          <div class="form-wrapper">
+            <div class="row">
+              <div class="col-md-6">{{ form_row(businessEntityForm.general_information.name) }}</div>
+              <div class="col-md-6">{{ form_row(businessEntityForm.general_information.legal_name) }}</div>
+            </div>
+
+            {# Business identifiers are read-only here; their management is handled in US2.1.6 / US2.1.7. #}
+            {% set identifiers = businessEntity.getIdentifiers %}
+            {% if identifiers is not empty %}
+              <hr>
+              <div class="row">
+                {% for identifier in identifiers %}
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-control-label">{{ identifier.getLabel }}</label>
+                      <input type="text" class="form-control" value="{{ identifier.getValue }}" disabled>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <hr>
+            <div class="row">
+              <div class="col-md-6">{{ form_row(businessEntityForm.general_information.external_ref) }}</div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">{{ form_row(businessEntityForm.general_information.status) }}</div>
+              <div class="col-md-6">{{ form_row(businessEntityForm.general_information.customer_group_id) }}</div>
+            </div>
+            {{ form_row(businessEntityForm.general_information.delivery_authorized) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/company_summary.html.twig') }}
+    </div>
+  </div>
+
+  {# Addresses are read-only here; linking/editing addresses is handled in US2.1.8. #}
+  <div class="alert alert-info mt-3" role="alert">
+    {{ 'Editing addresses will be available in a future release.'|trans({}, 'Admin.Notifications.Info') }}
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/billing_address.html.twig') }}
+    </div>
+    <div class="col-md-6">
+      {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/shipping_address.html.twig') }}
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end mt-3">
+    <a href="{{ path('admin_business_entities_view', {businessEntityId: businessEntityId}) }}"
+       class="btn btn-outline-secondary mr-3">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</a>
+    <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+  </div>
+
+  {{ form_widget(businessEntityForm._token) }}
+  {{ form_widget(businessEntityForm.shop_id) }}
+  {{ form_widget(businessEntityForm.default_billing_address) }}
+  {{ form_widget(businessEntityForm.default_shipping_address) }}
+  {{ form_end(businessEntityForm, {render_rest: false}) }}
+
+  <div class="row mt-3">
+    <div class="col">
+      {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/linked_customers.html.twig') }}
+    </div>
+  </div>
+{% endblock %}

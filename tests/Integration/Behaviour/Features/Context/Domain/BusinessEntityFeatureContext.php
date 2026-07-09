@@ -15,6 +15,7 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\EditBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForViewing;
@@ -452,6 +453,81 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
         $businessEntityId = $this->getBusinessEntityByName($name)->getId();
 
         return $this->getQueryBus()->handle(new GetBusinessEntityForViewing($businessEntityId));
+    }
+
+    /**
+     * @When I edit the business entity :name with the following details:
+     */
+    public function iEditTheBusinessEntity(string $name, TableNode $table)
+    {
+        $businessEntity = $this->getBusinessEntityByName($name);
+        $data = $table->getRowsHash();
+
+        $command = new EditBusinessEntityCommand(
+            $businessEntity->getId(),
+            $data['name'] ?? $businessEntity->getName(),
+            $data['legal_name'] ?? (string) $businessEntity->getLegalName(),
+            $data['external_ref'] ?? $businessEntity->getExternalRef(),
+            isset($data['delivery_authorized']) ? (bool) $data['delivery_authorized'] : $businessEntity->isDeliveryAuthorized(),
+            isset($data['status']) ? BusinessEntityStatus::from($data['status']) : $businessEntity->getStatus(),
+            isset($data['customer_group_id']) ? (int) $data['customer_group_id'] : $businessEntity->getIdCustomerGroup()
+        );
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then the business entity :name should have the following details:
+     */
+    public function businessEntityShouldHaveDetails(string $name, TableNode $table)
+    {
+        $businessEntity = $this->getBusinessEntityByName($name);
+        $data = $table->getRowsHash();
+
+        if (isset($data['name'])) {
+            Assert::assertSame($data['name'], $businessEntity->getName());
+        }
+        if (isset($data['legal_name'])) {
+            Assert::assertSame($data['legal_name'], $businessEntity->getLegalName());
+        }
+        if (isset($data['external_ref'])) {
+            Assert::assertSame($data['external_ref'], $businessEntity->getExternalRef());
+        }
+        if (isset($data['delivery_authorized'])) {
+            Assert::assertSame((bool) $data['delivery_authorized'], $businessEntity->isDeliveryAuthorized());
+        }
+        if (isset($data['status'])) {
+            Assert::assertSame(BusinessEntityStatus::from($data['status']), $businessEntity->getStatus());
+        }
+        if (isset($data['customer_group_id'])) {
+            Assert::assertSame((int) $data['customer_group_id'], $businessEntity->getIdCustomerGroup());
+        }
+    }
+
+    /**
+     * @Then editing the business entity with id :businessEntityId should raise a not found error
+     */
+    public function editingBusinessEntityShouldRaiseNotFound(int $businessEntityId)
+    {
+        try {
+            $this->getCommandBus()->handle(new EditBusinessEntityCommand(
+                $businessEntityId,
+                'Missing',
+                'Missing Legal',
+                null,
+                false,
+                BusinessEntityStatus::PENDING,
+                3
+            ));
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+
+        $this->assertLastErrorIs(BusinessEntityNotFoundException::class);
     }
 
     private function getBusinessEntityByName(string $name): BusinessEntity
