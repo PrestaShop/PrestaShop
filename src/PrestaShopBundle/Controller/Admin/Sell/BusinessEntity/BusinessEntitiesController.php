@@ -177,6 +177,54 @@ class BusinessEntitiesController extends PrestaShopAdminController
         );
     }
 
+    #[AdminSecurity("is_granted('update', 'AdminBusinessEntities')", message: 'You do not have permission to edit this.', redirectRoute: 'admin_business_entities_list')]
+    public function editAction(
+        int $businessEntityId,
+        Request $request,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.business_entity_form_builder')]
+        FormBuilderInterface $formBuilder,
+        #[Autowire(service: 'prestashop.core.form.identifiable_object.business_entity_form_handler')]
+        FormHandlerInterface $formHandler,
+    ): Response {
+        try {
+            $form = $formBuilder->getFormFor($businessEntityId);
+        } catch (BusinessEntityException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_business_entities_list');
+        }
+
+        $form->handleRequest($request);
+
+        try {
+            $result = $formHandler->handleFor($businessEntityId, $form);
+
+            if ($result->getIdentifiableObjectId()) {
+                $this->addFlash(
+                    'success',
+                    $this->trans('Business entity successfully updated.', [], 'Admin.Notifications.Success')
+                );
+
+                return $this->redirectToRoute('admin_business_entities_view', ['businessEntityId' => $businessEntityId]);
+            }
+        } catch (BusinessEntityException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        /** @var BusinessEntityForViewing $businessEntityForViewing */
+        $businessEntityForViewing = $this->dispatchQuery(new GetBusinessEntityForViewing($businessEntityId));
+
+        return $this->render(
+            '@PrestaShop/Admin/Sell/BusinessEntity/edit.html.twig',
+            [
+                'layoutTitle' => $businessEntityForViewing->getName(),
+                'businessEntityForm' => $form->createView(),
+                'businessEntity' => $businessEntityForViewing,
+                'businessEntityId' => $businessEntityId,
+            ]
+        );
+    }
+
     private function getBusinessEntitiesToolbarButtons(): array
     {
         $toolbarButtons = [];

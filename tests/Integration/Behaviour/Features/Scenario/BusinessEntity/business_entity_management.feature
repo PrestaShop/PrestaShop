@@ -4,7 +4,7 @@
 Feature: Manage business entities
   In order to manage B2B entities
   As a BO user
-  I need to be able to add, view and list business entities
+  I need to be able to add, view, list and edit business entities
 
   Scenario: Add a new business entity with billing address used as shipping address
     Given there is a business entity with the following details:
@@ -183,3 +183,33 @@ Feature: Manage business entities
     And there is a business entity named "Pending Beta" with status "pending"
     And there is a business entity named "Active Gamma" with status "active"
     Then the pending business entities count should be 2
+
+  Scenario: Edit the general information of a business entity
+    Given there is a business entity with the following details:
+      | name                | Editable Entity |
+      | legal_name          | Editable Legal  |
+      | external_ref        | EXT-010         |
+      | delivery_authorized | 0               |
+      | status              | pending         |
+      | billing_as_shipping | 1               |
+    And the business entity has the following billing addresses:
+      | alias   | address1  | city  | postcode | country_id | is_default |
+      | Billing | 1 Edit St | Paris | 75001    | 8          | 1          |
+    When I add the business entity
+    And I edit the business entity "Editable Entity" with the following details:
+      | name                | Edited Entity |
+      | legal_name          | Edited Legal  |
+      | external_ref        | EXT-010-B     |
+      | delivery_authorized | 1             |
+      | status              | active        |
+      | customer_group_id   | 1             |
+    Then the business entity "Edited Entity" should have the following details:
+      | legal_name          | Edited Legal |
+      | external_ref        | EXT-010-B    |
+      | delivery_authorized | 1            |
+      | status              | active       |
+      | customer_group_id   | 1            |
+    And the business entity "Edited Entity" should have 1 address
+
+  Scenario: Editing a business entity that does not exist raises a not found error
+    When editing the business entity with id 999999 should raise a not found error
