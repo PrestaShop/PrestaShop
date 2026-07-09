@@ -7,6 +7,8 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\File\Exception\FileException;
+use PrestaShop\PrestaShop\Core\File\PathResolver;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigFactoryInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigFactoryInterface;
 use PrestaShop\PrestaShop\Core\Import\EntityField\Provider\EntityFieldsProviderFinder;
@@ -186,9 +188,18 @@ class ImportController extends PrestaShopAdminController
     public function downloadAction(
         Request $request,
         ImportDirectory $importDirectory,
+        PathResolver $pathResolver,
     ): RedirectResponse|BinaryFileResponse {
         if ($filename = $request->query->get('filename')) {
-            $response = new BinaryFileResponse($importDirectory . $filename);
+            try {
+                $filePath = $pathResolver->resolveFileUnderDirectory($importDirectory->getDir(), $filename);
+            } catch (FileException) {
+                $this->addFlash('error', $this->trans('The file could not be found.', [], 'Admin.Notifications.Error'));
+
+                return $this->redirectToRoute('admin_import');
+            }
+
+            $response = new BinaryFileResponse($filePath);
             $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
 
             return $response;

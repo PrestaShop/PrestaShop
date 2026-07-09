@@ -82,6 +82,8 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\File\Exception\FileException;
+use PrestaShop\PrestaShop\Core\File\PathResolver;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
@@ -117,7 +119,6 @@ use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use ReflectionClass;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
@@ -2040,25 +2041,19 @@ class OrderController extends PrestaShopAdminController
     public function displayCustomizationImageAction(
         int $orderId,
         string $value,
-        LegacyContext $context
+        LegacyContext $context,
+        PathResolver $pathResolver
     ) {
         $uploadDir = $context->getUploadDirectory();
-        $filePath = $uploadDir . $value;
-        $filesystem = new Filesystem();
 
         try {
-            if (!$filesystem->exists($filePath)) {
-                $this->addFlash('error', $this->trans('The product customization picture could not be found.', [], 'Admin.Notifications.Error'));
-
-                return $this->redirectToRoute('admin_orders_view', [
-                    'orderId' => $orderId,
-                ]);
-            }
-
+            $filePath = $pathResolver->resolveFileUnderDirectory($uploadDir, $value);
             $imageFile = new File($filePath);
             $fileName = sprintf('%s-customization-%s.%s', $orderId, $value, $imageFile->guessExtension() ?? 'jpg');
 
             return $this->file($filePath, $fileName);
+        } catch (FileException) {
+            $this->addFlash('error', $this->trans('The product customization picture could not be found.', [], 'Admin.Notifications.Error'));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }

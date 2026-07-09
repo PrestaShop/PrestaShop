@@ -2,6 +2,8 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\PrestaShop\Core\File\PathResolver:
+
   prestashop.core.file.finder.invoice_model:
     class: 'PrestaShop\PrestaShop\Core\File\InvoiceModelFinder'
     arguments:
