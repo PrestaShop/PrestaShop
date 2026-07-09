@@ -5,7 +5,7 @@
       <trans-unit id="5868129c4526891dddb05b8e59c33572">
         <source>GDPR - Personal data</source>
         <target>GDPR - Personal data</target>
-        <note>File: themes/hummingbird/modules/psgdpr/views/templates/front/customerAccount.tpl [Line: 27]</note>
+        <note>File: themes/hummingbird/modules/psgdpr/views/templates/front/customerAccount.tpl [Line: 12]</note>
       </trans-unit>
     </body>
   </file>

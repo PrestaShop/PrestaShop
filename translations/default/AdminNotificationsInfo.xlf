@@ -10,7 +10,7 @@
       <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
         <source>Delete selected item?</source>
         <target>Delete selected item?</target>
-        <note>File: controllers/admin/AdminCartRulesController.php [Line: 843]</note>
+        <note>File: controllers/admin/AdminCartRulesController.php [Line: 866]</note>
       </trans-unit>
       <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
         <source>Delete selected items?</source>
@@ -30,7 +30,7 @@
       <trans-unit id="3e053943605d9e4bf7dd7588ea19e9d2">
         <source>Forbidden characters:</source>
         <target>Forbidden characters:</target>
-        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 70]</note>
+        <note>File: controllers/admin/AdminQuickAccessesController.php [Line: 74]</note>
       </trans-unit>
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
         <source>Invalid characters:</source>

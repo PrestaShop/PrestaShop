@@ -265,7 +265,7 @@
       <trans-unit id="d4e3353b723d705ed7a41ba11c17c9f2">
         <source>WishList: %wishlist_name%</source>
         <target>WishList: %wishlist_name%</target>
-        <note>File: modules/blockwishlist/controllers/front/view.php [Line: 137]</note>
+        <note>File: modules/blockwishlist/controllers/front/view.php [Line: 139]</note>
       </trans-unit>
       <trans-unit id="dc3c28e6a07d4429838e1d4b21dcd408">
         <source>Wishlist created!</source>

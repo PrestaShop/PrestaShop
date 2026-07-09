@@ -50,7 +50,7 @@
       <trans-unit id="85265e940fbb820dd2475946e7bc48d9">
         <source>Invalid configuration</source>
         <target>Invalid configuration</target>
-        <note>File: src/Core/MerchandiseReturn/Configuration/MerchandiseReturnOptionsConfiguration.php [Line: 44]</note>
+        <note>File: src/Core/OrderReturn/Configuration/OrderReturnOptionsConfiguration.php [Line: 44]</note>
       </trans-unit>
       <trans-unit id="db26e10564e958809d798e8048fcbc0a">
         <source>Invalid security token</source>

@@ -2,6 +2,16 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="Admin.Design.Feature.xlf" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ec5170279019c61bfe3a7dc8b0948fa0">
+        <source>-- Select a hook --</source>
+        <target>-- Select a hook --</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/HookModuleType.php [Line: 46]</note>
+      </trans-unit>
+      <trans-unit id="f949e4c604002d0eb0a3a3898225b849">
+        <source>-- Select a module --</source>
+        <target>-- Select a module --</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/HookModuleType.php [Line: 27]</note>
+      </trans-unit>
       <trans-unit id="fdf4e26a28a557ccfae6ddea1881687e">
         <source>1 module selected</source>
         <target>1 module selected</target>
@@ -35,7 +45,7 @@
       <trans-unit id="1cc06efffbc5252916c871f45098a50f">
         <source>Admin modules controller</source>
         <target>Admin modules controller</target>
-        <note>File: controllers/admin/AdminModulesPositionsController.php [Line: 369]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Blocks/hook_module_form.html.twig [Line: 42]</note>
       </trans-unit>
       <trans-unit id="4ba24d91566786f5315acf453418dbb6">
         <source>All modules</source>
@@ -122,6 +132,11 @@
         <target>Erase previous images</target>
         <note>File: admin-dev/themes/default/template/controllers/images/content.tpl [Line: 86]</note>
       </trans-unit>
+      <trans-unit id="9b1aa5409e82313d3f1cc66eb49857de">
+        <source>Except pages</source>
+        <target>Except pages</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/HookModuleType.php [Line: 62]</note>
+      </trans-unit>
       <trans-unit id="d5f1381c5f97f928df4ef8d18c2a27c0">
         <source>Exceptions</source>
         <target>Exceptions</target>
@@ -145,7 +160,7 @@
       <trans-unit id="2f75fd5bb638eb1353d6941aac58700e">
         <source>Front modules controller</source>
         <target>Front modules controller</target>
-        <note>File: controllers/admin/AdminModulesPositionsController.php [Line: 369]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Blocks/hook_module_form.html.twig [Line: 47]</note>
       </trans-unit>
       <trans-unit id="24e61dc70866cb84d375a6270035c7cf">
         <source>Full width</source>
@@ -171,6 +186,11 @@
         <source>Header logo</source>
         <target>Header logo</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/Blocks/logo_configuration.html.twig [Line: 22]</note>
+      </trans-unit>
+      <trans-unit id="b9b371458ab7c314f88b81c553f6ce51">
+        <source>Hook</source>
+        <target>Hook</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/HookModuleType.php [Line: 56]</note>
       </trans-unit>
       <trans-unit id="5c2b87239d42c84af3c12eb45d5469b5">
         <source>Hook a module</source>
@@ -246,6 +266,11 @@
         <source>Maximum file size of product customization pictures</source>
         <target>Maximum file size of product customization pictures</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/ImageSettings/ImageSettingsType.php [Line: 140]</note>
+      </trans-unit>
+      <trans-unit id="e55f75a29310d7b60f7ac1d390c8ae42">
+        <source>Module</source>
+        <target>Module</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/HookModuleType.php [Line: 36]</note>
       </trans-unit>
       <trans-unit id="874d3deed67e503cac1d8bc00417794a">
         <source>Move images</source>
@@ -425,12 +450,12 @@
       <trans-unit id="d97628f4b34d5ca2a77cc1bfa7914aa9">
         <source>Unhook</source>
         <target>Unhook</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Design/positions.html.twig [Line: 196]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Design/positions.html.twig [Line: 204]</note>
       </trans-unit>
       <trans-unit id="feb6f2e19409f021e5fd65c51d21d254">
         <source>Unhook the selection</source>
         <target>Unhook the selection</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Design/positions.html.twig [Line: 216]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Design/positions.html.twig [Line: 224]</note>
       </trans-unit>
       <trans-unit id="2a911eb0d71d1b707a3f9d722a5935c2">
         <source>Use JPEG</source>
@@ -480,12 +505,12 @@
       <trans-unit id="700e2c3b7b442c597c781eac801408b6">
         <source>___________ CUSTOM ___________</source>
         <target>___________ CUSTOM ___________</target>
-        <note>File: controllers/admin/AdminModulesPositionsController.php [Line: 351]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Blocks/hook_module_form.html.twig [Line: 32]</note>
       </trans-unit>
       <trans-unit id="6957667301f05bce7e2c0b5cd8567df5">
         <source>____________ CORE ____________</source>
         <target>____________ CORE ____________</target>
-        <note>File: controllers/admin/AdminModulesPositionsController.php [Line: 363]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Blocks/hook_module_form.html.twig [Line: 37]</note>
       </trans-unit>
       <trans-unit id="2451f8c34b91d6d3b6e7ee63c23d13fc">
         <source>modules selected</source>

@@ -115,7 +115,7 @@
       <trans-unit id="c69e7f4e04439e0f04383334801c3790">
         <source>Enter a password between %s and %s characters</source>
         <target>Enter a password between %s and %s characters</target>
-        <note>File: themes/hummingbird/templates/components/password-policy-template.tpl [Line: 67]</note>
+        <note>File: themes/hummingbird/templates/components/password-policy-template.tpl [Line: 45]</note>
       </trans-unit>
       <trans-unit id="93aef17b1541efc1c3f8bd6679972096">
         <source>Fast and easy checkout</source>
@@ -245,7 +245,7 @@
       <trans-unit id="dc8350c8bd88911cabd243b705284f04">
         <source>My account (%firstname% %lastname%)</source>
         <target>My account (%firstname% %lastname%)</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/steps/personal-information.tpl [Line: 15]</note>
+        <note>File: themes/hummingbird/templates/checkout/_partials/steps/personal-information.tpl [Line: 19]</note>
       </trans-unit>
       <trans-unit id="a2b9439af1d404835095e78a68c88216">
         <source>My account navigation sidebar</source>
@@ -275,7 +275,7 @@
       <trans-unit id="82dc57da54e2a0ed4db0a04ce7dd1949">
         <source>Not you? [1]Sign out[/1]</source>
         <target>Not you? [1]Sign out[/1]</target>
-        <note>File: themes/hummingbird/templates/checkout/_partials/steps/personal-information.tpl [Line: 29]</note>
+        <note>File: themes/hummingbird/templates/checkout/_partials/steps/personal-information.tpl [Line: 33]</note>
       </trans-unit>
       <trans-unit id="a240fa27925a635b08dc28c9e4f9216d">
         <source>Order</source>
@@ -369,7 +369,7 @@
       <trans-unit id="a9e3d6296e9b194ee466230d8438935a">
         <source>Receive offers from our partners</source>
         <target>Receive offers from our partners</target>
-        <note>File: classes/form/CustomerFormatter.php [Line: 207]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/OnePageCheckoutFormatter.php [Line: 121]</note>
       </trans-unit>
       <trans-unit id="92a9774c2a5df29ac4bffb46219ea9cd">
         <source>Reminder</source>
@@ -429,7 +429,7 @@
       <trans-unit id="f43333ea2272fed37fc121a2e09755c3">
         <source>The minimum score must be: %s</source>
         <target>The minimum score must be: %s</target>
-        <note>File: themes/hummingbird/templates/components/password-policy-template.tpl [Line: 72]</note>
+        <note>File: themes/hummingbird/templates/components/password-policy-template.tpl [Line: 50]</note>
       </trans-unit>
       <trans-unit id="d2948a89e47a4ad7eb8412c1c260ea88">
         <source>To track your order, please enter the following information:</source>
@@ -547,17 +547,17 @@
       <trans-unit id="2ae49cd1041030cbd47f0167e9cdc58b">
         <source>Your password is too weak</source>
         <target>Your password is too weak</target>
-        <note>File: themes/hummingbird/templates/components/password-policy-template.tpl [Line: 47]</note>
+        <note>File: themes/hummingbird/templates/components/password-policy-template.tpl [Line: 25]</note>
       </trans-unit>
       <trans-unit id="adabee37688f9eff4b4f6c255dbbbffc">
         <source>Your password is valid</source>
         <target>Your password is valid</target>
-        <note>File: themes/hummingbird/templates/components/password-policy-template.tpl [Line: 52]</note>
+        <note>File: themes/hummingbird/templates/components/password-policy-template.tpl [Line: 30]</note>
       </trans-unit>
       <trans-unit id="aea83cdff1f4d31e83a909f8960ad293">
         <source>Your password length is invalid</source>
         <target>Your password length is invalid</target>
-        <note>File: themes/hummingbird/templates/components/password-policy-template.tpl [Line: 57]</note>
+        <note>File: themes/hummingbird/templates/components/password-policy-template.tpl [Line: 35]</note>
       </trans-unit>
       <trans-unit id="6335a00a08fde0fbb8f6d6630cdadd92">
         <source>Your personal information</source>

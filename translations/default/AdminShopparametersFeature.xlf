@@ -105,7 +105,7 @@
       <trans-unit id="9fc8691fab39cc1433cd39430edb0501">
         <source>Add new tag</source>
         <target>Add new tag</target>
-        <note>File: controllers/admin/AdminTagsController.php [Line: 58]</note>
+        <note>File: controllers/admin/AdminTagsController.php [Line: 60]</note>
       </trans-unit>
       <trans-unit id="b046b7367b515d1c137cae8f10622b4d">
         <source>Add new title</source>
@@ -129,7 +129,7 @@
       <trans-unit id="913d66c5648cf0317ed371371fe44534">
         <source>Allow iframes on HTML fields</source>
         <target>Allow iframes on HTML fields</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 106]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 138]</note>
       </trans-unit>
       <trans-unit id="be6be43cab36ddf8024d237c4a2414f7">
         <source>Allow ordering of out-of-stock products</source>
@@ -175,6 +175,21 @@
         <target>Authorized modules:</target>
         <note>File: admin-dev/themes/default/template/controllers/groups/helpers/form/form.tpl [Line: 11]</note>
       </trans-unit>
+      <trans-unit id="5061068a39da58085984b8b0239b7418">
+        <source>B2B and B2C</source>
+        <target>B2B and B2C</target>
+        <note>File: src/Core/Feature/Enum/ShopModeEnum.php [Line: 23]</note>
+      </trans-unit>
+      <trans-unit id="7db1d5d236200b7c34b1aa51f520529d">
+        <source>B2B only</source>
+        <target>B2B only</target>
+        <note>File: src/Core/Feature/Enum/ShopModeEnum.php [Line: 22]</note>
+      </trans-unit>
+      <trans-unit id="42556e79687db08a95a3ecab41bb2bf8">
+        <source>B2C only</source>
+        <target>B2C only</target>
+        <note>File: src/Core/Feature/Enum/ShopModeEnum.php [Line: 21]</note>
+      </trans-unit>
       <trans-unit id="c274743f6bf3e3682c41e9ee269913f4">
         <source>Base URI</source>
         <target>Base URI</target>
@@ -199,6 +214,11 @@
         <source>Building the product index may take a few minutes.</source>
         <target>Building the product index may take a few minutes.</target>
         <note>File: controllers/admin/AdminSearchConfController.php [Line: 53]</note>
+      </trans-unit>
+      <trans-unit id="87c714dec6487341c1dffd99ec834e4c">
+        <source>Cancelling order returns.</source>
+        <target>Cancelling order returns.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderReturnStates/OrderReturnStateType.php [Line: 72]</note>
       </trans-unit>
       <trans-unit id="bb98eaca8d91531f4ae177c9d395f1d4">
         <source>Catalog mode</source>
@@ -407,12 +427,12 @@ Customer service</target>
       <trans-unit id="922256753aa354c111471e85d4809ec5">
         <source>Display best sellers</source>
         <target>Display best sellers</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 172]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 204]</note>
       </trans-unit>
       <trans-unit id="9cc328444bdc1b5f54550d04d57138a9">
         <source>Display brands</source>
         <target>Display brands</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 164]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 196]</note>
       </trans-unit>
       <trans-unit id="2bb07e2df83a5b9fe9d16e3f1fee9dd1">
         <source>Display notifications if the product is already in the cart</source>
@@ -432,7 +452,7 @@ Customer service</target>
       <trans-unit id="9fcc7a5ba2d12f5c77290e0bc6457a93">
         <source>Display suppliers</source>
         <target>Display suppliers</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 156]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 188]</note>
       </trans-unit>
       <trans-unit id="0437fc99d975a98ce5face0651102b15">
         <source>Display the discounted unit price</source>
@@ -482,7 +502,7 @@ Customer service</target>
       <trans-unit id="43b266c605d67eaa27801cc5dc0b3995">
         <source>Enable Multistore</source>
         <target>Enable Multistore</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 181]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 213]</note>
       </trans-unit>
       <trans-unit id="1656072e927c8d3acd24359cbb648bb5">
         <source>Enable SSL</source>
@@ -602,7 +622,7 @@ Customer service</target>
       <trans-unit id="adb831a7fdd83dd1e2a309ce7591dff8">
         <source>Guest</source>
         <target>Guest</target>
-        <note>File: classes/lang/KeysReference/GroupLang.php [Line: 8]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/entity_search_input.html.twig [Line: 145]</note>
       </trans-unit>
       <trans-unit id="312541921a98c69b0f3ac8f5de1b6bb3">
         <source>Guests group</source>
@@ -655,7 +675,7 @@ Customer service</target>
       <trans-unit id="cd1b98322104dbd61ca6ae0ab16df348">
         <source>Increase front office security</source>
         <target>Increase front office security</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 96]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 109]</note>
       </trans-unit>
       <trans-unit id="b9a7c2c18f61b96ff75de6468d1c7519">
         <source>Indexed products</source>
@@ -680,7 +700,7 @@ Customer service</target>
       <trans-unit id="a4bb440d400f4dc30f148b44d08680b4">
         <source>Invalid characters: numbers and</source>
         <target>Invalid characters: numbers and</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderReturnStates/OrderReturnStateType.php [Line: 39]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderReturnStates/OrderReturnStateType.php [Line: 40]</note>
       </trans-unit>
       <trans-unit id="a597397e45519dd1d39a170b28d318ff">
         <source>Invalid search term.</source>
@@ -1098,57 +1118,57 @@ Customer service</target>
       <trans-unit id="35853630b5da054ef55e8e02d8df4954">
         <source>Round down to the nearest value</source>
         <target>Round down to the nearest value</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 133]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 165]</note>
       </trans-unit>
       <trans-unit id="9d70eb834e3574ca07a1f28083ecba1e">
         <source>Round down towards zero, when it is half way there</source>
         <target>Round down towards zero, when it is half way there</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 129]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 161]</note>
       </trans-unit>
       <trans-unit id="ac2021d3c67ee796d7ab20a466ebd583">
         <source>Round mode</source>
         <target>Round mode</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 135]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 167]</note>
       </trans-unit>
       <trans-unit id="41032c67b9a3d88ff9a824a1f0845513">
         <source>Round on each item</source>
         <target>Round on each item</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 144]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 176]</note>
       </trans-unit>
       <trans-unit id="a899eacfb98f1740127be5fe16bee5c7">
         <source>Round on each line</source>
         <target>Round on each line</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 145]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 177]</note>
       </trans-unit>
       <trans-unit id="6d19eb8a9ca35d858824737173ebd011">
         <source>Round on the total</source>
         <target>Round on the total</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 146]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 178]</note>
       </trans-unit>
       <trans-unit id="5f9d1d092dc5658734b8af7187460b32">
         <source>Round towards the next even value</source>
         <target>Round towards the next even value</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 130]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 162]</note>
       </trans-unit>
       <trans-unit id="8700a0015f3fc1c5d96ccc5140475dc3">
         <source>Round towards the next odd value</source>
         <target>Round towards the next odd value</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 131]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 163]</note>
       </trans-unit>
       <trans-unit id="019e96f05f09a70e37792a04e9e78cdc">
         <source>Round type</source>
         <target>Round type</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 148]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 180]</note>
       </trans-unit>
       <trans-unit id="843fbaec27e324378999e09cc665a7f4">
         <source>Round up away from zero, when it is half way there (recommended)</source>
         <target>Round up away from zero, when it is half way there (recommended)</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 128]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 160]</note>
       </trans-unit>
       <trans-unit id="6186ae4fe9ec55025a9777dd973e0af2">
         <source>Round up to the nearest value</source>
         <target>Round up to the nearest value</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 132]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 164]</note>
       </trans-unit>
       <trans-unit id="1dc5f89ed6e4425ecef2613fda85e5c0">
         <source>Route to brand</source>
@@ -1351,6 +1371,11 @@ Customer service</target>
         <target>Shop group</target>
         <note>File: controllers/admin/AdminShopController.php [Line: 488]</note>
       </trans-unit>
+      <trans-unit id="e134ec187f02cea9cdbdecfa40e1a600">
+        <source>Shop mode</source>
+        <target>Shop mode</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 122]</note>
+      </trans-unit>
       <trans-unit id="e93c33bd1341ab74195430daeb63db13">
         <source>Shop name</source>
         <target>Shop name</target>
@@ -1414,7 +1439,7 @@ Customer service</target>
       <trans-unit id="c101058e7ea21bbbf2a5ac893088e90b">
         <source>Tag</source>
         <target>Tag</target>
-        <note>File: controllers/admin/AdminTagsController.php [Line: 124]</note>
+        <note>File: controllers/admin/AdminTagsController.php [Line: 126]</note>
       </trans-unit>
       <trans-unit id="c152439199cebb7e1c27633efeaf1eda">
         <source>Tags weight</source>
@@ -1444,7 +1469,7 @@ Customer service</target>
       <trans-unit id="0d2054b7a56db47a97f65e3da632fe8b">
         <source>The route %routeRule% is not valid</source>
         <target>The route %routeRule% is not valid</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/MetaSettingsUrlSchemaFormDataProvider.php [Line: 92]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/MetaSettingsUrlSchemaFormDataProvider.php [Line: 97]</note>
       </trans-unit>
       <trans-unit id="8e40a8bbaf38ae7dd7776be347be2dce">
         <source>This alias does not exist.</source>
@@ -1489,7 +1514,7 @@ Customer service</target>
       <trans-unit id="06918a784fb394b84de012810120b75c">
         <source>Use HTMLPurifier Library</source>
         <target>Use HTMLPurifier Library</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 116]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php [Line: 148]</note>
       </trans-unit>
       <trans-unit id="b6b078b61ffe1889ac4f449f55864577">
         <source>Use combination image in listings</source>

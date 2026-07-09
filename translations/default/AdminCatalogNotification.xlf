@@ -20,7 +20,7 @@
       <trans-unit id="bbc6a34f03def2d56def8e7685a3fcae">
         <source>An action is required for this cart rule.</source>
         <target>An action is required for this cart rule.</target>
-        <note>File: controllers/admin/AdminCartRulesController.php [Line: 244]</note>
+        <note>File: controllers/admin/AdminCartRulesController.php [Line: 249]</note>
       </trans-unit>
       <trans-unit id="f19434225ce7712f091bcfc109413732">
         <source>An attachment name is required.</source>
@@ -200,7 +200,7 @@
       <trans-unit id="b4be93136a337fcef40c9eb87004c9d0">
         <source>No product has been found.</source>
         <target>No product has been found.</target>
-        <note>File: controllers/admin/AdminCartRulesController.php [Line: 657]</note>
+        <note>File: controllers/admin/AdminCartRulesController.php [Line: 680]</note>
       </trans-unit>
       <trans-unit id="5566045e38ed5e7bb072b8d55f3ceb2f">
         <source>No product matches your search. Try changing search terms.</source>
@@ -470,17 +470,17 @@
       <trans-unit id="e9e6c1ea4c16a7bd1b64b53209a8659f">
         <source>Product with required customization fields cannot be used as a gift.</source>
         <target>Product with required customization fields cannot be used as a gift.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountType.php [Line: 71]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountFreeGiftType.php [Line: 30]</note>
       </trans-unit>
       <trans-unit id="a3ad09e600d30676504b705e29be782d">
         <source>Reduction amount cannot be lower than zero.</source>
         <target>Reduction amount cannot be lower than zero.</target>
-        <note>File: controllers/admin/AdminCartRulesController.php [Line: 238]</note>
+        <note>File: controllers/admin/AdminCartRulesController.php [Line: 243]</note>
       </trans-unit>
       <trans-unit id="93c331edf337bac96fcbac751a492fe1">
         <source>Reduction percentage must be between 0% and 100%</source>
         <target>Reduction percentage must be between 0% and 100%</target>
-        <note>File: controllers/admin/AdminCartRulesController.php [Line: 235]</note>
+        <note>File: controllers/admin/AdminCartRulesController.php [Line: 240]</note>
       </trans-unit>
       <trans-unit id="3af7787bf8822cfd0cbeab09c9176a54">
         <source>Remember to properly edit all information after duplicating - including SEO information and friendly URL.</source>
@@ -490,7 +490,7 @@
       <trans-unit id="06430c125dde1297792cbfdba133c1af">
         <source>Remember to properly edit all information after duplicating.</source>
         <target>Remember to properly edit all information after duplicating.</target>
-        <note>File: src/Core/Grid/Definition/Factory/DiscountGridDefinitionFactory.php [Line: 157]</note>
+        <note>File: src/Core/Grid/Definition/Factory/DiscountGridDefinitionFactory.php [Line: 171]</note>
       </trans-unit>
       <trans-unit id="4c8eca5abe96ae48ab05070588455d6a">
         <source>Search phrase length is not valid.</source>
@@ -505,7 +505,7 @@
       <trans-unit id="4fce600d4fc0429af2f5bc5861eefb3e">
         <source>Selected products were successfully canceled.</source>
         <target>Selected products were successfully canceled.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 1971]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2085]</note>
       </trans-unit>
       <trans-unit id="65d09c7dfa652d616875eddb50c18d2b">
         <source>Stock Manager class not found [%s]</source>
@@ -520,7 +520,7 @@
       <trans-unit id="95ac8bc6255b6740202d83865577f942">
         <source>The "%s" restriction is checked, but no item is selected.</source>
         <target>The "%s" restriction is checked, but no item is selected.</target>
-        <note>File: controllers/admin/AdminCartRulesController.php [Line: 208]</note>
+        <note>File: controllers/admin/AdminCartRulesController.php [Line: 213]</note>
       </trans-unit>
       <trans-unit id="d7e9bf98e857f83943b3b75fce04cea9">
         <source>The "Force update of friendly URL" option is currently enabled.</source>
@@ -555,7 +555,7 @@
       <trans-unit id="5c7f52b03569889081067d1413b5edbd">
         <source>The minimum amount cannot be lower than zero.</source>
         <target>The minimum amount cannot be lower than zero.</target>
-        <note>File: controllers/admin/AdminCartRulesController.php [Line: 232]</note>
+        <note>File: controllers/admin/AdminCartRulesController.php [Line: 237]</note>
       </trans-unit>
       <trans-unit id="17668cbc24213c8d43211a67139c3939">
         <source>The root category of a shop cannot be edited.</source>
@@ -570,17 +570,17 @@
       <trans-unit id="6fa399e3aa4a2225168b822c8626e563">
         <source>The usage limit per customer cannot be higher than the total usage limit.</source>
         <target>The usage limit per customer cannot be higher than the total usage limit.</target>
-        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityType.php [Line: 84]</note>
+        <note>File: src/PrestaShopBundle/Form/Admin/Sell/Discount/DiscountUsabilityType.php [Line: 79]</note>
       </trans-unit>
       <trans-unit id="fdf5ec6ad9d20c9985038e5d6521159f">
         <source>The voucher cannot end before it begins.</source>
         <target>The voucher cannot end before it begins.</target>
-        <note>File: controllers/admin/AdminCartRulesController.php [Line: 229]</note>
+        <note>File: controllers/admin/AdminCartRulesController.php [Line: 234]</note>
       </trans-unit>
       <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
         <source>There are not enough products in stock.</source>
         <target>There are not enough products in stock.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2274]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php [Line: 2393]</note>
       </trans-unit>
       <trans-unit id="b385b71f1d14c0afa6d7ca6cb18927b3">
         <source>There is no attachment yet.</source>
@@ -595,7 +595,7 @@
       <trans-unit id="7f5ef3543345170784cc954cffa697d6">
         <source>This cart rule code is already used (conflict with cart rule %rulename%)</source>
         <target>This cart rule code is already used (conflict with cart rule %rulename%)</target>
-        <note>File: controllers/admin/AdminCartRulesController.php [Line: 241]</note>
+        <note>File: controllers/admin/AdminCartRulesController.php [Line: 246]</note>
       </trans-unit>
       <trans-unit id="a8b62b581b171eef3a4d73f53a1a1804">
         <source>This combination doesn't exist anymore</source>
@@ -611,6 +611,26 @@
         <source>This file is associated with the following products. Are you sure you want to delete it?</source>
         <target>This file is associated with the following products. Are you sure you want to delete it?</target>
         <note>File: src/Core/Grid/Data/Factory/AttachmentGridDataFactoryDecorator.php [Line: 71]</note>
+      </trans-unit>
+      <trans-unit id="caf857a86b47722d884bf4d919e71e28">
+        <source>This product has required customization fields.</source>
+        <target>This product has required customization fields.</target>
+        <note>File: src/Adapter/Product/QueryHandler/SearchProductsForFreeGiftHandler.php [Line: 93]</note>
+      </trans-unit>
+      <trans-unit id="3d1abab6694f1cad8d73472e2359b3b5">
+        <source>This product is not available for order.</source>
+        <target>This product is not available for order.</target>
+        <note>File: src/Adapter/Product/QueryHandler/SearchProductsForFreeGiftHandler.php [Line: 85]</note>
+      </trans-unit>
+      <trans-unit id="a6e2197a13fe06907ebb2eebe599c7c7">
+        <source>This product is out of stock.</source>
+        <target>This product is out of stock.</target>
+        <note>File: src/Adapter/Product/QueryHandler/SearchProductsForFreeGiftHandler.php [Line: 103]</note>
+      </trans-unit>
+      <trans-unit id="56ca93609bcd2a90499e40bd18b060fe">
+        <source>This product requires a minimum quantity greater than 1.</source>
+        <target>This product requires a minimum quantity greater than 1.</target>
+        <note>File: src/Adapter/Product/QueryHandler/SearchProductsForFreeGiftHandler.php [Line: 89]</note>
       </trans-unit>
       <trans-unit id="cf456ee90912d9e25795925d067f8952">
         <source>This value is too long. It should have %limit% characters or less.</source>
@@ -657,6 +677,11 @@
         <target>To enable it, go to [1]SEO and URLs[/1]</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php [Line: 216]</note>
       </trans-unit>
+      <trans-unit id="3cef59522550723a914dd885f52f3772">
+        <source>To offer a free gift, you first need to add a product to your catalog.</source>
+        <target>To offer a free gift, you first need to add a product to your catalog.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Type/FreeGiftProductSearchType.php [Line: 66]</note>
+      </trans-unit>
       <trans-unit id="323970e84c7dc4bc7432a513f09959b6">
         <source>To put this product online, please enter a name.</source>
         <target>To put this product online, please enter a name.</target>
@@ -688,12 +713,12 @@
       <trans-unit id="30a367ba686890c829937e768d588b8f">
         <source>You cannot set 0 or a negative position, the minimum is 1.</source>
         <target>You cannot set 0 or a negative position, the minimum is 1.</target>
-        <note>File: classes/Product.php [Line: 6922]</note>
+        <note>File: classes/Product.php [Line: 6999]</note>
       </trans-unit>
       <trans-unit id="cf99dad7d7306d9ac01ba5a2e2d2c715">
         <source>You cannot set a position greater than the total number of products in the category, starting at 1.</source>
         <target>You cannot set a position greater than the total number of products in the category, starting at 1.</target>
-        <note>File: classes/Product.php [Line: 6945]</note>
+        <note>File: classes/Product.php [Line: 7022]</note>
       </trans-unit>
       <trans-unit id="c66dabfc7eef924ee6319911a0f3e3a3">
         <source>You must select a customer when using the "Single customer" option.</source>

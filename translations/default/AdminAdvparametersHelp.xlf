@@ -82,6 +82,11 @@
         <target>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.7+. Otherwise, CCC will cause problems.</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig [Line: 149]</note>
       </trans-unit>
+      <trans-unit id="571696489833d0436b478e10c526d6f2">
+        <source>Can be changed at any time.</source>
+        <target>Can be changed at any time.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionFieldDefinitionType.php [Line: 95]</note>
+      </trans-unit>
       <trans-unit id="45d7b1d28cb1afbb45fdb620db725c10">
         <source>Check that URL rewriting is available on this server.</source>
         <target>Check that URL rewriting is available on this server.</target>
@@ -177,6 +182,11 @@
         <target>Debug</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig [Line: 16]</note>
       </trans-unit>
+      <trans-unit id="37d7cc8fbd7928aa4a070298b5c65f65">
+        <source>Default: %type% — derived from the field type</source>
+        <target>Default: %type% — derived from the field type</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 130]</note>
+      </trans-unit>
       <trans-unit id="dae623d110235f2837ca0a6e753305b8">
         <source>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</source>
         <target>Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).</target>
@@ -207,6 +217,11 @@
         <target>Enable / Disable the merchandise return page.</target>
         <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 57]</note>
       </trans-unit>
+      <trans-unit id="653da7468215e92375e35507b38e8baa">
+        <source>Enable / Disable the migrated quick access page.</source>
+        <target>Enable / Disable the migrated quick access page.</target>
+        <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 74]</note>
+      </trans-unit>
       <trans-unit id="ba40d461815161e3564db4c519f5ba32">
         <source>Enable / Disable the module configuration page.</source>
         <target>Enable / Disable the module configuration page.</target>
@@ -220,6 +235,11 @@
         <source>Enable / Disable the new front container.</source>
         <target>Enable / Disable the new front container.</target>
         <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 48]</note>
+      </trans-unit>
+      <trans-unit id="996e7f50eaeadbb91f9dca2c2d1b9003">
+        <source>Enable / Disable the new pricing system. This feature introduces an improved pricing engine.</source>
+        <target>Enable / Disable the new pricing system. This feature introduces an improved pricing engine.</target>
+        <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 70]</note>
       </trans-unit>
       <trans-unit id="619c636194b7d9017b2f76f37ae7e781">
         <source>Enable / Disable the newly improved shipment system.</source>
@@ -333,10 +353,20 @@
         <target>Experimental API endpoints are disabled by default in prod environment, this configuration allows to forcefully enable them.</target>
         <note>File: classes/lang/KeysReference/FeatureFlagLang.php [Line: 13]</note>
       </trans-unit>
+      <trans-unit id="9801b5b0fd3f6e9dd65fe57fc5414b03">
+        <source>Expose this field in front-office presenters (Smarty templates).</source>
+        <target>Expose this field in front-office presenters (Smarty templates).</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 31]</note>
+      </trans-unit>
+      <trans-unit id="1978b25a26b9b14b908d39cf95e627c1">
+        <source>Extra options merged into the Symfony form type constructor, as a JSON object. Example: {"attr": {"class": "my-class"}, "row_attr": {"data-toggle": "tooltip"}}</source>
+        <target>Extra options merged into the Symfony form type constructor, as a JSON object. Example: {"attr": {"class": "my-class"}, "row_attr": {"data-toggle": "tooltip"}}</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionAdvancedType.php [Line: 76]</note>
+      </trans-unit>
       <trans-unit id="b8dc7c80939667637db7ac31ece215b9">
         <source>Fabulous</source>
         <target>Fabulous</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1657]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1661]</note>
       </trans-unit>
       <trans-unit id="6fe4a9d3d016ffb7ac0c79b9b34f759b">
         <source>Fill in the fields and click "%save_label%".</source>
@@ -357,10 +387,15 @@
         <target>Fully qualified domain name (keep this field empty if you don't know).</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/SmtpConfigurationType.php [Line: 30]</note>
       </trans-unit>
+      <trans-unit id="e74177cfd62cc619b5801c684550f633">
+        <source>Fully-qualified Symfony form type class name to override the default type mapping (e.g. Symfony\Component\Form\Extension\Core\Type\UrlType).</source>
+        <target>Fully-qualified Symfony form type class name to override the default type mapping (e.g. Symfony\Component\Form\Extension\Core\Type\UrlType).</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionAdvancedType.php [Line: 71]</note>
+      </trans-unit>
       <trans-unit id="0c6ad70beb3a7e76c3fc7adab7c46acc">
         <source>Good</source>
         <target>Good</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1656]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1660]</note>
       </trans-unit>
       <trans-unit id="68db67219aa1fd6e5f8820e20fd78b25">
         <source>How do I create a new SQL query?</source>
@@ -376,6 +411,11 @@
         <source>IP address or server name (e.g. smtp.mydomain.com).</source>
         <target>IP address or server name (e.g. smtp.mydomain.com).</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/SmtpConfigurationType.php [Line: 38]</note>
+      </trans-unit>
+      <trans-unit id="6719fa135d15e3a9e1ec09409e5e09da">
+        <source>Identifier used as the column name (e.g. internal_code). Only letters, digits, and underscores.</source>
+        <target>Identifier used as the column name (e.g. internal_code). Only letters, digits, and underscores.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionFieldDefinitionType.php [Line: 67]</note>
       </trans-unit>
       <trans-unit id="a1e749fdff79ab0d40843bacb8fe0de2">
         <source>If enabled, the backup script will drop your tables prior to restoring data. (ie. "DROP TABLE IF EXISTS")</source>
@@ -420,7 +460,7 @@
       <trans-unit id="4bbb8f967da6d1a610596d7257179c2b">
         <source>Invalid</source>
         <target>Invalid</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1654]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1658]</note>
       </trans-unit>
       <trans-unit id="a5d35e0a66d41c7d12c0df6e643fa0ff">
         <source>Leave blank if not applicable.</source>
@@ -437,6 +477,11 @@
         <target>Major issue (crash)!</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig [Line: 36]</note>
       </trans-unit>
+      <trans-unit id="a2e5956fbf71415db2731d4a42a312ad">
+        <source>Mark the field as required in the BO form and in the Admin API schema. This only drives the HTML/OpenAPI "required" flag — it never adds a server-side validation constraint by itself.</source>
+        <target>Mark the field as required in the BO form and in the Admin API schema. This only drives the HTML/OpenAPI "required" flag — it never adds a server-side validation constraint by itself.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionVisibilityType.php [Line: 36]</note>
+      </trans-unit>
       <trans-unit id="1e4e1915fcb0b296ce2ffb029b27d730">
         <source>Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.</source>
         <target>Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.</target>
@@ -452,15 +497,30 @@
         <target>Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/MediaServersType.php [Line: 32]</note>
       </trans-unit>
+      <trans-unit id="3ba4d8f6bfe74084fe07e4af68de0b41">
+        <source>No rules — any value is accepted.</source>
+        <target>No rules — any value is accepted.</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 267]</note>
+      </trans-unit>
+      <trans-unit id="a41f275826ca47fb692cd336d4592706">
+        <source>Not exposed on the Admin API yet.</source>
+        <target>Not exposed on the Admin API yet.</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 113]</note>
+      </trans-unit>
       <trans-unit id="2566fed9ede40ae26636b773594094cf">
         <source>Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop's name. They display the number of new items since you last clicked on them.</source>
         <target>Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop's name. They display the number of new items since you last clicked on them.</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/administration.html.twig [Line: 66]</note>
       </trans-unit>
+      <trans-unit id="63516ccf290d2c29026e49372588fc26">
+        <source>ObjectModel table name (e.g. product, customer, order).</source>
+        <target>ObjectModel table name (e.g. product, customer, order).</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionFieldDefinitionType.php [Line: 59]</note>
+      </trans-unit>
       <trans-unit id="26b63f278101527e06a5547719568bb5">
         <source>Okay</source>
         <target>Okay</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1655]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig [Line: 1659]</note>
       </trans-unit>
       <trans-unit id="059a6f0b1a0a28d15ee51fe80670f6f2">
         <source>Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer's cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.</source>
@@ -471,6 +531,16 @@
         <source>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</source>
         <target>Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.</target>
         <note>File: controllers/admin/AdminShopGroupController.php [Line: 207]</note>
+      </trans-unit>
+      <trans-unit id="7c9a4bcccbddf2c0e59d5fab8a3c36b9">
+        <source>One value per line. Only used for the "Choice list" field type.</source>
+        <target>One value per line. Only used for the "Choice list" field type.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionFieldDefinitionType.php [Line: 118]</note>
+      </trans-unit>
+      <trans-unit id="22536a0dd81fcab274a357e29a36d0d6">
+        <source>One value per line. Only used for the "Choice list" field type. Existing values cannot be removed, only new ones added.</source>
+        <target>One value per line. Only used for the "Choice list" field type. Existing values cannot be removed, only new ones added.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionFieldDefinitionType.php [Line: 117]</note>
       </trans-unit>
       <trans-unit id="c9f7248e8f5712f5438def77389e1c46">
         <source>Only UTF-8 and ISO 8859-1 encodings are allowed</source>
@@ -512,6 +582,11 @@
         <target>Receive an email when the import is complete. It can be useful when handling large files, as the import may take some time.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportType.php [Line: 105]</note>
       </trans-unit>
+      <trans-unit id="93374083974efdc447b9dff0c649a670">
+        <source>SQL DEFAULT clause value. Leave empty for no default.</source>
+        <target>SQL DEFAULT clause value. Leave empty for no default.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionFieldDefinitionType.php [Line: 124]</note>
+      </trans-unit>
       <trans-unit id="04da1735a100af1089236ff39c5021ca">
         <source>Scores are integers from 0 to 4.</source>
         <target>Scores are integers from 0 to 4.</target>
@@ -521,6 +596,11 @@
         <source>Select the stores the employee is allowed to access.</source>
         <target>Select the stores the employee is allowed to access.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Employee/EmployeeType.php [Line: 203]</note>
+      </trans-unit>
+      <trans-unit id="3671c56ff8fdb767b599fa7f0942de2a">
+        <source>Serialized as All[…]</source>
+        <target>Serialized as All[…]</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 250]</note>
       </trans-unit>
       <trans-unit id="7bf215c957e661c3bd8ad7f6221675c9">
         <source>Set "Enable Shop" to "No" in the "Maintenance" page under the "Preferences" menu.</source>
@@ -557,6 +637,21 @@
         <target>Some features can be disabled in order to improve performance.</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig [Line: 117]</note>
       </trans-unit>
+      <trans-unit id="405fb020d5b119508ae22b0c885fb0df">
+        <source>Symfony translation domain for the description wording.</source>
+        <target>Symfony translation domain for the description wording.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionLabelsType.php [Line: 46]</note>
+      </trans-unit>
+      <trans-unit id="11760cb45895447ee908431c7d706b9e">
+        <source>Symfony translation domain for the label wording (e.g. "Admin.Catalog.Feature").</source>
+        <target>Symfony translation domain for the label wording (e.g. "Admin.Catalog.Feature").</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionLabelsType.php [Line: 36]</note>
+      </trans-unit>
+      <trans-unit id="0b89d9e2b2fcb4f0c78ba70999eb2e94">
+        <source>The URL must start with "index.php" (e.g. index.php?controller=AdminProducts).</source>
+        <target>The URL must start with "index.php" (e.g. index.php?controller=AdminProducts).</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/QuickAccess/QuickAccessType.php [Line: 47]</note>
+      </trans-unit>
       <trans-unit id="632302a9aad39525dd7c924a2cd01053">
         <source>The duration for which an access token remains valid.</source>
         <target>The duration for which an access token remains valid.</target>
@@ -587,6 +682,16 @@
         <target>This feature allows you to identify modules that might be causing bugs on your store. Disable all non-built-in modules (not listed in composer.json). Then, re-enable each module one by one and check that everything works properly before moving on to the next one.</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig [Line: 73]</note>
       </trans-unit>
+      <trans-unit id="e24cfb028e792dcb7072b340106e7b86">
+        <source>This field doesn't appear in any back-office form yet.</source>
+        <target>This field doesn't appear in any back-office form yet.</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 90]</note>
+      </trans-unit>
+      <trans-unit id="4ad6dbf7bfa141bb4acd0c80563ab577">
+        <source>This field doesn't appear in any back-office grid yet.</source>
+        <target>This field doesn't appear in any back-office grid yet.</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 102]</note>
+      </trans-unit>
       <trans-unit id="7e7b350e5cee624789b1e263ec59db26">
         <source>This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.</source>
         <target>This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.</target>
@@ -602,6 +707,16 @@
         <target>This will add directives to your .htaccess file, which should improve caching and compression.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CombineCompressCacheType.php [Line: 32]</note>
       </trans-unit>
+      <trans-unit id="19255a75ba7ff68fd04da7f41d7601ce">
+        <source>Translation wording shown as help text below the BO form field.</source>
+        <target>Translation wording shown as help text below the BO form field.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionLabelsType.php [Line: 41]</note>
+      </trans-unit>
+      <trans-unit id="b15d3d3b1286c0558048cfc81a2f6dde">
+        <source>Translation wording shown as label in BO forms and grids (e.g. "Internal code").</source>
+        <target>Translation wording shown as label in BO forms and grids (e.g. "Internal code").</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionLabelsType.php [Line: 31]</note>
+      </trans-unit>
       <trans-unit id="f6e7829277b67d5a8805d6728a810362">
         <source>URL rewriting must be activated on your server to use this feature.</source>
         <target>URL rewriting must be activated on your server to use this feature.</target>
@@ -616,6 +731,16 @@
         <source>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</source>
         <target>Use this option to associate data (products, modules, etc.) the same way for each selected shop.</target>
         <note>File: controllers/admin/AdminShopController.php [Line: 638]</note>
+      </trans-unit>
+      <trans-unit id="5d35a5091a1ea7c3463a9d36938921fa">
+        <source>VARCHAR size for string type only (defaults to 255). Can only be increased once set.</source>
+        <target>VARCHAR size for string type only (defaults to 255). Can only be increased once set.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionFieldDefinitionType.php [Line: 102]</note>
+      </trans-unit>
+      <trans-unit id="6157d830a73f46b873bfd8f80622bc2d">
+        <source>VARCHAR size for string type only (defaults to 255). Ignored for other types.</source>
+        <target>VARCHAR size for string type only (defaults to 255). Ignored for other types.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionFieldDefinitionType.php [Line: 103]</note>
       </trans-unit>
       <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
         <source>Warning</source>
@@ -652,6 +777,21 @@
         <target>Where customers send messages from the order page.</target>
         <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Email/EmailConfigurationType.php [Line: 58]</note>
       </trans-unit>
+      <trans-unit id="482587f62d9271292565e699a38d1fdc">
+        <source>Where this field appears in the back office and Admin API.</source>
+        <target>Where this field appears in the back office and Admin API.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionAdvancedType.php [Line: 166]</note>
+      </trans-unit>
+      <trans-unit id="8c9efd21dc4745179cd578c8288f0766">
+        <source>Whether the storage column allows NULL values.</source>
+        <target>Whether the storage column allows NULL values.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionFieldDefinitionType.php [Line: 111]</note>
+      </trans-unit>
+      <trans-unit id="09b11e8e027ae8a936c05c1920ff3cd5">
+        <source>Whether the storage column allows NULL values. Can only be relaxed (not tightened) once set.</source>
+        <target>Whether the storage column allows NULL values. Can only be relaxed (not tightened) once set.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionFieldDefinitionType.php [Line: 110]</note>
+      </trans-unit>
       <trans-unit id="09fac4ee316f450e3defd79540c2d9fe">
         <source>You can also export the query results as a CSV file by clicking on the "%export_label%" button</source>
         <target>You can also export the query results as a CSV file by clicking on the "%export_label%" button</target>
@@ -682,6 +822,11 @@
         <target>You cannot set this parameter to No when combinations are already used by some of your products</target>
         <note>File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/OptionalFeaturesType.php [Line: 48]</note>
       </trans-unit>
+      <trans-unit id="8db282bbacb665026960e0792359ed0a">
+        <source>common: one value per entity. lang: one value per entity × language. shop: one value per entity × shop.</source>
+        <target>common: one value per entity. lang: one value per entity × language. shop: one value per entity × shop.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionFieldDefinitionType.php [Line: 87]</note>
+      </trans-unit>
       <trans-unit id="45af6698125d6f9be9517cd8879d0285">
         <source>e.g. 1; Blouse; 129.90; 5</source>
         <target>e.g. 1; Blouse; 129.90; 5</target>
@@ -701,6 +846,11 @@
         <source>https://en.wikipedia.org/wiki/Comma-separated_values</source>
         <target>https://en.wikipedia.org/wiki/Comma-separated_values</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Blocks/import_panel.html.twig [Line: 27]</note>
+      </trans-unit>
+      <trans-unit id="8f721ea172bf088a113e7ba6a62f381d">
+        <source>no options</source>
+        <target>no options</target>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/FormTheme/definition_form_theme.html.twig [Line: 347]</note>
       </trans-unit>
       <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
         <source>or</source>
