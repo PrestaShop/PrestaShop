@@ -46,6 +46,13 @@ final class ImapConfiguration extends AbstractMultistoreConfiguration
         'imap_opt_notls' => 'PS_SAV_IMAP_OPT_NOTLS',
     ];
 
+    private const STRING_FIELDS = [
+        'imap_url',
+        'imap_port',
+        'imap_user',
+        'imap_password',
+    ];
+
     private const BOOLEAN_FIELDS = [
         'imap_delete_msg',
         'imap_create_threads',
@@ -61,7 +68,7 @@ final class ImapConfiguration extends AbstractMultistoreConfiguration
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration()
+    public function getConfiguration(): array
     {
         $shopConstraint = $this->getShopConstraint();
         $values = [
@@ -81,8 +88,17 @@ final class ImapConfiguration extends AbstractMultistoreConfiguration
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $configuration)
+    public function updateConfiguration(array $configuration): array
     {
+        // IMAP synchronization is optional: the browser submits `null` for
+        // empty text/password inputs, but leaving every connection field
+        // blank (sync disabled) must remain a valid, savable state.
+        foreach (self::STRING_FIELDS as $field) {
+            if (array_key_exists($field, $configuration)) {
+                $configuration[$field] = (string) ($configuration[$field] ?? '');
+            }
+        }
+
         if ($this->validateConfiguration($configuration)) {
             $shopConstraint = $this->getShopConstraint();
 

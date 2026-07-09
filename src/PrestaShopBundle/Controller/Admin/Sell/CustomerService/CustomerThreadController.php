@@ -8,15 +8,18 @@ namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\SyncCustomerServiceImapMailboxCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CannotDeleteCustomerThreadException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceContactCategoriesStatistics;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceListingStatistics;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
@@ -36,6 +39,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 /**
  * Manages page under "Sell > Customer Service > Customer Service"
@@ -62,20 +66,62 @@ class CustomerThreadController extends PrestaShopAdminController
         #[Autowire(service: 'prestashop.adapter.customer_service.imap.form_handler')]
         FormHandlerInterface $imapFormHandler,
         ShopContext $shopContext,
+        LanguageContext $languageContext,
         CustomerThreadFilter $filters
     ): Response {
         $customerThreadGrid = $customerGridFactory->getGrid($filters);
+
+        // Skip the automatic sync right after a manual "Run sync": runImapSyncAction()
+        // already synced and flashed its own result, avoid syncing (and flashing) twice.
+        $session = $request->getSession();
+        $justRanManualSync = $session instanceof FlashBagAwareSessionInterface && $session->getFlashBag()->has('imap_sync_ran');
+
+        if (!$justRanManualSync && $this->hasImapConfigurationStarted()) {
+            $syncResult = $this->dispatchCommand(new SyncCustomerServiceImapMailboxCommand());
+
+            if ($syncResult->hasError()) {
+                foreach ($syncResult->getErrors() as $error) {
+                    $this->addFlash('warning', $error);
+                }
+            }
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerThreadGrid' => $this->presentGrid($customerThreadGrid),
             'customerServiceKpi' => $customerServiceKpiFactory->build(),
             'customerServiceListingStatistics' => $this->dispatchQuery(new GetCustomerServiceListingStatistics($shopContext->getShopConstraint())),
+            'customerServiceContactCategoriesStatistics' => $this->dispatchQuery(
+                new GetCustomerServiceContactCategoriesStatistics($languageContext->getId(), $shopContext->getShopConstraint())
+            ),
             'customerServiceOptionsForm' => $optionsFormHandler->getForm()->createView(),
             'imapOptionsForm' => $imapFormHandler->getForm()->createView(),
+            'canRunImapSync' => $this->isImapConfigurationComplete(),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Customer service', [], 'Admin.Navigation.Menu'),
         ]);
+    }
+
+    /**
+     * Run the customer service IMAP mailbox synchronization.
+     */
+    #[DemoRestricted(redirectRoute: 'admin_customer_threads')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads')]
+    public function runImapSyncAction(): RedirectResponse
+    {
+        $syncResult = $this->dispatchCommand(new SyncCustomerServiceImapMailboxCommand());
+
+        if ($syncResult->hasError()) {
+            $this->addFlashErrors($syncResult->getErrors());
+        } else {
+            $this->addFlash('success', $this->trans('Synchronization completed successfully.', [], 'Admin.Orderscustomers.Notification'));
+        }
+
+        // Marker consumed by indexAction() to skip its own automatic sync on
+        // the very next load, so the result is not synced and flashed twice.
+        $this->addFlash('imap_sync_ran', '1');
+
+        return $this->redirectToRoute('admin_customer_threads');
     }
 
     /**
@@ -438,6 +484,34 @@ class CustomerThreadController extends PrestaShopAdminController
         $this->addFlashErrors($saveErrors);
 
         return $this->redirectToRoute('admin_customer_threads');
+    }
+
+    /**
+     * True as soon as one of the 4 core IMAP connection settings is filled in,
+     * mirroring the legacy guard before attempting a sync on every list load.
+     */
+    private function hasImapConfigurationStarted(): bool
+    {
+        $configuration = $this->getConfiguration();
+
+        return (bool) $configuration->get('PS_SAV_IMAP_URL')
+            || (bool) $configuration->get('PS_SAV_IMAP_PORT')
+            || (bool) $configuration->get('PS_SAV_IMAP_USER')
+            || (bool) $configuration->get('PS_SAV_IMAP_PWD');
+    }
+
+    /**
+     * True only when all 4 core IMAP connection settings are filled in,
+     * gating the manual "Run sync" button like the legacy `$use_sync` flag.
+     */
+    private function isImapConfigurationComplete(): bool
+    {
+        $configuration = $this->getConfiguration();
+
+        return (bool) $configuration->get('PS_SAV_IMAP_URL')
+            && (bool) $configuration->get('PS_SAV_IMAP_PORT')
+            && (bool) $configuration->get('PS_SAV_IMAP_USER')
+            && (bool) $configuration->get('PS_SAV_IMAP_PWD');
     }
 
     private function handleCustomerThreadStatusUpdate(int $customerThreadId, string $newStatus)

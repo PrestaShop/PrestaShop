@@ -12,6 +12,7 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
@@ -78,6 +79,90 @@ final class CustomerThreadRepository
         }
 
         return $counts;
+    }
+
+    /**
+     * Lists the "customer service" contact categories (e.g. "Webmaster",
+     * "Customer service") visible in the given shop scope, with their
+     * translated name/description.
+     *
+     * @return array<int, array{id_contact: int, name: string, description: string}>
+     */
+    public function getCustomerServiceContactCategories(int $languageId, ShopConstraint $shopConstraint): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('DISTINCT c.id_contact, cl.name, cl.description')
+            ->from($this->dbPrefix . 'contact', 'c')
+            ->innerJoin('c', $this->dbPrefix . 'contact_lang', 'cl', 'cl.id_contact = c.id_contact AND cl.id_lang = :languageId')
+            ->where('c.customer_service = 1')
+            ->orderBy('c.id_contact')
+            ->setParameter('languageId', $languageId)
+        ;
+
+        if (!$shopConstraint->forAllShops()) {
+            $shopIds = $this->shopRepository->getAssociatedShopIds($shopConstraint);
+            if (empty($shopIds)) {
+                return [];
+            }
+
+            $qb
+                ->innerJoin('c', $this->dbPrefix . 'contact_shop', 'cs', 'cs.id_contact = c.id_contact')
+                ->andWhere('cs.id_shop IN (:shopIds)')
+                ->setParameter('shopIds', $shopIds, ArrayParameterType::INTEGER)
+            ;
+        }
+
+        return $qb->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * Counts open threads per contact category, and finds the oldest one
+     * still waiting for a reply in each category (the thread with the
+     * least recently updated `date_upd`).
+     *
+     * @return array<int, array{count: int, oldestThreadId: int|null}>
+     */
+    public function countOpenThreadsGroupedByContact(ShopConstraint $shopConstraint): array
+    {
+        $shopRestriction = '';
+        $params = ['status' => CustomerThreadStatus::OPEN];
+        $types = [];
+
+        if (!$shopConstraint->forAllShops()) {
+            $shopIds = $this->shopRepository->getAssociatedShopIds($shopConstraint);
+            if (empty($shopIds)) {
+                return [];
+            }
+
+            $shopRestriction = ' AND %1$s.id_shop IN (:shopIds)';
+            $params['shopIds'] = $shopIds;
+            $types['shopIds'] = ArrayParameterType::INTEGER;
+        }
+
+        $sql = '
+            SELECT ct.id_contact, COUNT(*) AS thread_count, (
+                SELECT ct2.id_customer_thread
+                FROM ' . $this->dbPrefix . 'customer_thread ct2
+                WHERE ct2.id_contact = ct.id_contact AND ct2.status = :status' . sprintf($shopRestriction, 'ct2') . '
+                ORDER BY ct2.date_upd ASC
+                LIMIT 1
+            ) AS oldest_thread_id
+            FROM ' . $this->dbPrefix . 'customer_thread ct
+            WHERE ct.status = :status AND ct.id_contact IS NOT NULL' . sprintf($shopRestriction, 'ct') . '
+            GROUP BY ct.id_contact
+        ';
+
+        $rows = $this->connection->executeQuery($sql, $params, $types)->fetchAllAssociative();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $result[(int) $row['id_contact']] = [
+                'count' => (int) $row['thread_count'],
+                'oldestThreadId' => null !== $row['oldest_thread_id'] ? (int) $row['oldest_thread_id'] : null,
+            ];
+        }
+
+        return $result;
     }
 
     /**
