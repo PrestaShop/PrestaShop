@@ -24,6 +24,22 @@
       <taxRule iso_code_country="pa" behavior="0" id_tax="4"/>
     </taxRulesGroup>
   </taxes>
+	<states>
+		<state name="Bocas del Toro" iso_code="1" country="PA" zone="Central America/Antilla" />
+		<state name="Chiriquí" iso_code="4" country="PA" zone="Central America/Antilla" />
+		<state name="Coclé" iso_code="2" country="PA" zone="Central America/Antilla" />
+		<state name="Colón" iso_code="3" country="PA" zone="Central America/Antilla" />
+		<state name="Darién" iso_code="5" country="PA" zone="Central America/Antilla" />
+		<state name="Emberá" iso_code="EM" country="PA" zone="Central America/Antilla" />
+		<state name="Guna Yala" iso_code="KY" country="PA" zone="Central America/Antilla" />
+		<state name="Herrera" iso_code="6" country="PA" zone="Central America/Antilla" />
+		<state name="Los Santos" iso_code="7" country="PA" zone="Central America/Antilla" />
+		<state name="Naso Tjër Di" iso_code="NT" country="PA" zone="Central America/Antilla" />
+		<state name="Ngöbe-Buglé" iso_code="NB" country="PA" zone="Central America/Antilla" />
+		<state name="Panamá Oeste" iso_code="10" country="PA" zone="Central America/Antilla" />
+		<state name="Panamá" iso_code="8" country="PA" zone="Central America/Antilla" />
+		<state name="Veraguas" iso_code="9" country="PA" zone="Central America/Antilla" />
+	</states>
   <units>
     <unit type="weight" value="kg"/>
     <unit type="volume" value="L"/>
