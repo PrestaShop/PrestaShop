@@ -106,6 +106,7 @@ abstract class Controller extends ControllerCore
         $this->context->smarty->assign(
             $this->profiler->getSmartyVariables()
         );
+        $this->context->smarty->assign('profilingMarkdownBase64', base64_encode($this->profiler->getMarkdownReport()));
 
         if (strpos($content, '{$content}') === false) {
             return str_replace(
