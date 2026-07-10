@@ -13,7 +13,6 @@ use Carrier;
 use Exception;
 use Group;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\AddCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\EditCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
@@ -24,8 +23,6 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\ShippingMethod;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductQuantity;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
@@ -443,13 +440,14 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $productQuantities = [];
 
         foreach ($productNames as $productName) {
-            $productQuantity = new ProductQuantity(new ProductId($this->referenceToId(trim($productName))), 1);
-            $productQuantities[] = $productQuantity;
+            $productQuantities[] = [
+                'productId' => $this->referenceToId(trim($productName)),
+                'quantity' => 1,
+            ];
         }
 
         $carriersResult = $this->getQueryBus()->handle(
-            new GetAvailableCarriers($productQuantities, new AddressId($this->referenceToId($address)), $currentCarrierId
-            )
+            new GetAvailableCarriers($productQuantities, $this->referenceToId($address), $currentCarrierId)
         );
 
         $actualAvailable = array_map(function ($carrierSummary) {

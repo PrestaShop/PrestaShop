@@ -7,11 +7,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetAvailableCarriers;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\GetCarriersResult;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductQuantity;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceFormatter;
@@ -50,16 +47,16 @@ final class AvailableCarriersForShipmentChoiceProvider implements ConfigurableFo
 
         $productQuantities = [];
         foreach ($options['selectedProducts'] as $productId => $quantity) {
-            $productQuantities[] = new ProductQuantity(
-                new ProductId($productId),
-                (int) $quantity
-            );
+            $productQuantities[] = [
+                'productId' => (int) $productId,
+                'quantity' => (int) $quantity,
+            ];
         }
 
         /** @var GetCarriersResult $carriers */
         $carriers = $this->commandBus->handle(new GetAvailableCarriers(
             $productQuantities,
-            new AddressId($shipment->getAddressId()),
+            $shipment->getAddressId(),
             $useCurrentCarrierId === true ? $shipment->getCarrierId() : null
         ));
 

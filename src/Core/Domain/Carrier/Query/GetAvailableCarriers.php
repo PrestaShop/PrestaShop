@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductQuantity;
 
 /**
@@ -33,12 +34,18 @@ class GetAvailableCarriers
     private $currentCarrierId;
 
     /**
-     * @param ProductQuantity[] $productQuantities
+     * @param array<array{productId: int, quantity: int}> $productQuantities
      */
-    public function __construct(array $productQuantities, AddressId $addressId, ?int $currentCarrierId = null)
+    public function __construct(array $productQuantities, int $addressId, ?int $currentCarrierId = null)
     {
-        $this->productQuantities = $productQuantities;
-        $this->addressId = $addressId;
+        $this->productQuantities = array_map(
+            fn (array $productQuantity) => new ProductQuantity(
+                new ProductId((int) $productQuantity['productId']),
+                (int) $productQuantity['quantity']
+            ),
+            $productQuantities
+        );
+        $this->addressId = new AddressId($addressId);
         $this->currentCarrierId = $currentCarrierId;
     }
 
@@ -66,9 +73,9 @@ class GetAvailableCarriers
         return $this->addressId;
     }
 
-    public function setAddressId(AddressId $addressId): void
+    public function setAddressId(int $addressId): void
     {
-        $this->addressId = $addressId;
+        $this->addressId = new AddressId($addressId);
     }
 
     public function getCurrentCarrierId(): ?int
