@@ -1959,13 +1959,206 @@ class ToolsCore
         return Cache::retrieve($cache_id);
     }
 
-    public static function copy($source, $destination, $stream_context = null)
+    public static function copy($source, $destination, $stream_context = null, array $options = [])
     {
+        // Opt-in SSRF-hardened mode for untrusted (user-supplied) sources, e.g. CSV imports.
+        // Disabled by default to preserve backward compatibility for the many internal callers.
+        if (!empty($options['restrict_ssrf'])) {
+            return self::copyRestricted($source, $destination);
+        }
+
         if (null === $stream_context && !preg_match('/^https?:\/\//', $source)) {
             return @copy($source, $destination);
         }
 
         return @file_put_contents($destination, Tools::file_get_contents($source, false, $stream_context));
+    }
+
+    /**
+     * SSRF-hardened variant of copy() for untrusted sources.
+     *
+     * - Local (scheme-less) sources keep the historical @copy() behaviour.
+     * - Remote sources are restricted to an HTTP(S)/FTP(S) allow-list; any other
+     *   wrapper (phar://, file://, gopher://, data://, ...) is rejected.
+     * - Remote fetches go through downloadRemoteFileSafely(), which blocks
+     *   private/reserved hosts, pins the resolved IP (anti DNS-rebinding) and
+     *   re-validates every redirect hop.
+     *
+     * @param string $source
+     * @param string $destination
+     *
+     * @return bool
+     */
+    protected static function copyRestricted($source, $destination)
+    {
+        $parsed = parse_url($source);
+        if ($parsed === false) {
+            return false;
+        }
+
+        if (isset($parsed['scheme'])) {
+            $scheme = Tools::strtolower($parsed['scheme']);
+            if (!in_array($scheme, ['http', 'https', 'ftp', 'ftps', 'sftp'], true)) {
+                return false;
+            }
+
+            return static::downloadRemoteFileSafely($source, $destination);
+        }
+
+        // No scheme => local path: preserve the historical copy behaviour.
+        return @copy($source, $destination);
+    }
+
+    /**
+     * SSRF-hardened remote file download.
+     *
+     * Defense in depth against CWE-918:
+     *  - every hostname is resolved and MUST resolve only to public addresses
+     *    (blocks loopback, RFC1918, link-local 169.254/16 incl. cloud metadata, and IPv6 equivalents)
+     *  - the validated IP is pinned via CURLOPT_RESOLVE so curl cannot be re-pointed
+     *    at an internal host between our check and the connection (DNS rebinding)
+     *  - redirects are followed manually so each hop is re-validated
+     *    (an initial-URL-only check is otherwise trivially bypassed by an
+     *    allow-listed URL that 302-redirects to an internal address)
+     *
+     * @param string $url
+     * @param string $destination
+     * @param int $maxRedirects
+     *
+     * @return bool
+     */
+    protected static function downloadRemoteFileSafely($url, $destination, $maxRedirects = 5)
+    {
+        if (!function_exists('curl_init')) {
+            return false;
+        }
+
+        Tools::refreshCACertFile();
+
+        $current = $url;
+        for ($hop = 0; $hop <= $maxRedirects; ++$hop) {
+            $parts = parse_url($current);
+            if ($parts === false || empty($parts['scheme']) || empty($parts['host'])) {
+                return false;
+            }
+
+            $scheme = Tools::strtolower($parts['scheme']);
+            if (!in_array($scheme, ['http', 'https', 'ftp', 'ftps', 'sftp'], true)) {
+                return false;
+            }
+
+            $host = trim($parts['host'], '[]');
+            $defaultPorts = ['http' => 80, 'https' => 443, 'ftp' => 21, 'ftps' => 990, 'sftp' => 22];
+            $port = isset($parts['port']) ? (int) $parts['port'] : ($defaultPorts[$scheme] ?? 80);
+
+            // Resolve and ensure every candidate IP is a public address.
+            $publicIps = static::resolvePublicIps($host);
+            if (empty($publicIps)) {
+                return false;
+            }
+            $pinnedIp = $publicIps[0];
+
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $current);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            // Follow redirects manually so each target is re-validated.
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
+            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($curl, CURLOPT_CAINFO, _PS_CACHE_CA_CERT_FILE_);
+            if (defined('CURLPROTO_HTTP')) {
+                $allowed = CURLPROTO_HTTP | CURLPROTO_HTTPS | CURLPROTO_FTP | CURLPROTO_FTPS;
+                curl_setopt($curl, CURLOPT_PROTOCOLS, $allowed);
+                curl_setopt($curl, CURLOPT_REDIR_PROTOCOLS, $allowed);
+            }
+            // Pin the validated public IP: curl connects to this exact address,
+            // preventing a rebind to an internal host after our DNS check.
+            curl_setopt($curl, CURLOPT_RESOLVE, [$host . ':' . $port . ':' . $pinnedIp]);
+
+            $body = curl_exec($curl);
+            $errno = curl_errno($curl);
+            $status = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $redirectUrl = curl_getinfo($curl, CURLINFO_REDIRECT_URL);
+            curl_close($curl);
+
+            if ($errno !== 0 || $body === false) {
+                return false;
+            }
+
+            // Manual redirect handling with per-hop re-validation.
+            if ($status >= 300 && $status < 400 && !empty($redirectUrl)) {
+                $current = $redirectUrl;
+
+                continue;
+            }
+
+            return (bool) @file_put_contents($destination, $body);
+        }
+
+        // Too many redirects.
+        return false;
+    }
+
+    /**
+     * Resolves a host to its IP addresses and returns them only if ALL of them
+     * are public. Returns an empty array when resolution fails or any address is
+     * private/reserved (fail-closed).
+     *
+     * @param string $host hostname or IP literal
+     *
+     * @return string[] validated public IPs (empty if unsafe/unresolvable)
+     */
+    public static function resolvePublicIps($host)
+    {
+        // IP literal: validate directly.
+        if (filter_var($host, FILTER_VALIDATE_IP)) {
+            return static::isPublicIp($host) ? [$host] : [];
+        }
+
+        $ips = [];
+        $ipv4 = @gethostbynamel($host);
+        if (is_array($ipv4)) {
+            $ips = array_merge($ips, $ipv4);
+        }
+        if (function_exists('dns_get_record')) {
+            $records = @dns_get_record($host, DNS_AAAA);
+            if (is_array($records)) {
+                foreach ($records as $record) {
+                    if (!empty($record['ipv6'])) {
+                        $ips[] = $record['ipv6'];
+                    }
+                }
+            }
+        }
+
+        if (empty($ips)) {
+            return [];
+        }
+
+        // Every resolved address must be public, otherwise refuse.
+        foreach ($ips as $ip) {
+            if (!static::isPublicIp($ip)) {
+                return [];
+            }
+        }
+
+        return array_values(array_unique($ips));
+    }
+
+    /**
+     * @param string $ip
+     *
+     * @return bool true when $ip is a valid, non-private, non-reserved address
+     */
+    public static function isPublicIp($ip)
+    {
+        return (bool) filter_var(
+            $ip,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+        );
     }
 
     /**

@@ -811,7 +811,8 @@ class ImageManagerCore
 
         $orig_tmpfile = $tmpfile;
 
-        if (Tools::copy($url, $tmpfile)) {
+        // Untrusted URL (import): use the SSRF-hardened download path.
+        if (Tools::copy($url, $tmpfile, null, ['restrict_ssrf' => true])) {
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             if (!ImageManager::checkImageMemoryLimit($tmpfile)) {
                 @unlink($tmpfile);
