@@ -63,7 +63,10 @@ check_version_consistency() {
   fi
 }
 
-# spec ref: A4 — build branch descends from the version branch OR the previous patch tag
+# spec ref: A4 — build branch forked from the version branch OR the previous patch tag.
+# The version branch keeps moving after the build branch is cut, so being behind its
+# current tip is normal: any fork point passes, with ahead/behind counts as detail
+# (a huge ahead count is the tell for a branch cut from the wrong base).
 check_build_branch_base() {
   if [ "$BRANCH_KIND" != "build" ]; then
     emit "version/build-branch-base" "Build branch base" "$HC_NA" "$HC_SEV_WARN" "ref kind '$BRANCH_KIND' — build-branch lineage check N/A"
@@ -71,9 +74,20 @@ check_build_branch_base() {
   fi
   HC_LINK="https://github.com/$REPO/compare/$VERSION_BRANCH...$REF"
   local detail=""
-  if git fetch --quiet origin "$VERSION_BRANCH" 2>/dev/null && git merge-base --is-ancestor FETCH_HEAD HEAD 2>/dev/null; then
-    emit "version/build-branch-base" "Build branch base" "$HC_PASS" "$HC_SEV_WARN" "HEAD descends from origin/$VERSION_BRANCH"
-    return
+  if git fetch --quiet origin "$VERSION_BRANCH" 2>/dev/null; then
+    if git merge-base --is-ancestor FETCH_HEAD HEAD 2>/dev/null; then
+      emit "version/build-branch-base" "Build branch base" "$HC_PASS" "$HC_SEV_WARN" "HEAD descends from origin/$VERSION_BRANCH (up to date with its tip)"
+      return
+    fi
+    local fork
+    fork="$(git merge-base HEAD FETCH_HEAD 2>/dev/null)"
+    if [ -n "$fork" ]; then
+      local behind ahead
+      behind="$(git rev-list --count "HEAD..FETCH_HEAD" 2>/dev/null)"
+      ahead="$(git rev-list --count "FETCH_HEAD..HEAD" 2>/dev/null)"
+      emit "version/build-branch-base" "Build branch base" "$HC_PASS" "$HC_SEV_WARN" "forked from origin/$VERSION_BRANCH at ${fork:0:9}; behind by ${behind:-?} commit(s), ahead by ${ahead:-?}"
+      return
+    fi
   fi
   if [ "$PATCH" -gt 0 ]; then
     local prev="$MAJOR.$MINOR.$((PATCH - 1))"
@@ -83,7 +97,7 @@ check_build_branch_base() {
     fi
     detail=" (also not a descendant of tag $prev)"
   fi
-  emit "version/build-branch-base" "Build branch base" "$HC_FAIL" "$HC_SEV_WARN" "HEAD does not descend from origin/$VERSION_BRANCH$detail"
+  emit "version/build-branch-base" "Build branch base" "$HC_FAIL" "$HC_SEV_WARN" "HEAD shares no history with origin/$VERSION_BRANCH$detail"
 }
 
 # spec ref: A5 — branch follows the build-branch naming convention for target_version
