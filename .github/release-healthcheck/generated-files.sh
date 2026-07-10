@@ -99,7 +99,9 @@ check_default_catalogue_extracted() {
   if ! git clone --quiet "$clone_url" "$tool_dir" 2>/dev/null; then
     emit "$id" "$title" "$HC_FAIL" "$HC_SEV_WARN" "could not verify (TranslationTool clone failed — needs PrestaShopCorp access)"; return
   fi
-  latest_tag="$(git -C "$tool_dir" tag -l | sort -V | tail -n1)"
+  # Same tag selection as the canonical "Create default catalog PR" workflow
+  # (most recently created tag, not highest version-sorted name) — keep in sync.
+  latest_tag="$(git -C "$tool_dir" describe --tags "$(git -C "$tool_dir" rev-list --tags --max-count=1 2>/dev/null)" 2>/dev/null)"
   [ -n "$latest_tag" ] && git -C "$tool_dir" checkout --quiet "$latest_tag" 2>/dev/null
 
   if ! ( cd "$tool_dir" && COMPOSER_PROCESS_TIMEOUT=600 composer install --no-dev --ansi --no-interaction --no-progress ) >/dev/null 2>&1; then
@@ -123,12 +125,26 @@ check_default_catalogue_extracted() {
   rm -rf "$core_dir/translations/default"
   mkdir -p "$core_dir/translations/default"
   cp -R "$dump/." "$core_dir/translations/default/"
-  if git -C "$core_dir" diff --quiet -- translations/ 2>/dev/null; then
+  # `git status --porcelain` (not `git diff`) so brand-new catalogue files — untracked
+  # after the rm+cp — count as drift too, exactly like the canonical workflow's `git add`.
+  local drift
+  drift="$(git -C "$core_dir" status --porcelain -- translations/ 2>/dev/null)"
+  if [ -z "$drift" ]; then
     emit "$id" "$title" "$HC_PASS" "$HC_SEV_FAIL" "catalogue fully extracted (no diff under translations/)"
   else
-    emit "$id" "$title" "$HC_FAIL" "$HC_SEV_FAIL" "catalogue not fully extracted: $(git -C "$core_dir" diff --name-only -- translations/ | wc -l | tr -d ' ') file(s) differ"
+    local n names
+    n="$(printf '%s\n' "$drift" | wc -l | tr -d ' ')"
+    names="$(printf '%s\n' "$drift" | awk '{print $NF}' | head -n 10 | paste -sd, - | sed 's/,/, /g')"
+    [ "$n" -gt 10 ] && names="$names, …"
+    emit "$id" "$title" "$HC_FAIL" "$HC_SEV_FAIL" "catalogue not fully extracted: $n file(s) differ — $names"
+    # Full drift goes to the job log (stderr) so the mismatch is diagnosable.
+    log "default-catalogue drift (git status --porcelain -- translations/):"
+    printf '%s\n' "$drift" >&2
+    git -C "$core_dir" diff --stat -- translations/ >&2 2>/dev/null || true
+    git -C "$core_dir" diff -- translations/ 2>/dev/null | head -n 200 >&2 || true
   fi
   git -C "$core_dir" checkout -- translations/ 2>/dev/null || true
+  git -C "$core_dir" clean -qfd translations/ 2>/dev/null || true
 }
 
 # spec ref: C7 — bundled localization packs in sync with PrestaShop/LocalizationFiles.

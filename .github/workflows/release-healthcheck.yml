@@ -330,13 +330,17 @@ jobs:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
           path: target
+      # PHP version and --no-dev mirror the canonical PrestaShopCorp/TranslationTool
+      # "Create default catalog PR" workflow — the extraction must run in the same
+      # environment or the regenerated catalogue can drift from the committed one.
+      # Keep both in sync with that workflow.
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ env.PHP_VERSION }}
+          php-version: '8.1'
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
       - name: Install Composer dependencies
-        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --no-dev --ansi --prefer-dist --no-interaction --no-progress
       - name: Run translation catalogue check
         env:
           HC_RESULTS_FILE: ${{ github.workspace }}/results-translation.json
