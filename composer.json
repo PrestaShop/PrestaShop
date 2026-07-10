@@ -38,7 +38,7 @@
         "doctrine/orm": "^2.15",
         "ezyang/htmlpurifier": "^4.16",
         "friendsofsymfony/jsrouting-bundle": "^3.5",
-        "geoip2/geoip2": "~2.4.2",
+        "geoip2/geoip2": "^3.3",
         "greenlion/php-sql-parser": "^4.7",
         "ircmaxell/password-compat": "^1.0.4",
         "ircmaxell/random-lib": "^1.2.0",
