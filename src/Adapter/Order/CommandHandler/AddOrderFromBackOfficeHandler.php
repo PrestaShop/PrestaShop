@@ -13,10 +13,13 @@ use Configuration;
 use Context;
 use Currency;
 use Customer;
+use CustomerMessage;
+use CustomerThread;
 use Employee;
 use Exception;
 use Message;
 use Module;
+use Order;
 use PaymentModule;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
@@ -27,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShopDatabaseException;
 use PrestaShopException;
+use Tools;
 use Validate;
 
 /**
@@ -68,19 +72,6 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
         // Context country, language and currency is used in PaymentModule::validateOrder (it should rely on cart address country instead)
         $this->setCartContext($this->contextStateManager, $cart);
 
-        if ($command->getEmployeeId()->getValue()) {
-            $translator = Context::getContext()->getTranslator();
-            $employee = new Employee($command->getEmployeeId()->getValue());
-            $message = sprintf(
-                '%s %s. %s',
-                $translator->trans('Manual order -- Employee:', [], 'Admin.Orderscustomers.Feature'),
-                $employee->firstname[0],
-                $employee->lastname
-            );
-        } else {
-            $message = '';
-        }
-
         try {
             $orderMessage = $command->getOrderMessage();
             if (!empty($orderMessage)) {
@@ -92,7 +83,7 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
                 $command->getOrderStateId(),
                 $cart->getOrderTotal(),
                 $paymentModule->displayName,
-                $message,
+                '',
                 [],
                 null,
                 false,
@@ -108,7 +99,66 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
             throw new OrderException('Failed to add order.');
         }
 
-        return new OrderId((int) $paymentModule->currentOrder);
+        $orderId = (int) $paymentModule->currentOrder;
+
+        // Keep track of which employee created the order from the back office, so it is
+        // displayed in the order "Messages" block (regression from 1.6, see issue #9676).
+        if ($command->getEmployeeId()->getValue()) {
+            $this->addEmployeeCreationMessage($orderId, (int) $command->getEmployeeId()->getValue());
+        }
+
+        return new OrderId($orderId);
+    }
+
+    /**
+     * Records, as a private message attached to the order's customer thread, which employee
+     * created the order from the back office, so it is displayed in the order "Messages" block.
+     *
+     * @param int $orderId
+     * @param int $employeeId
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    private function addEmployeeCreationMessage(int $orderId, int $employeeId): void
+    {
+        $employee = new Employee($employeeId);
+        if (!Validate::isLoadedObject($employee)) {
+            return;
+        }
+
+        $order = new Order($orderId);
+        $customer = new Customer((int) $order->id_customer);
+
+        $customerThreadId = (int) CustomerThread::getIdCustomerThreadByEmailAndIdOrder($customer->email, (int) $order->id);
+        if (!$customerThreadId) {
+            $customerThread = new CustomerThread();
+            $customerThread->id_contact = 0;
+            $customerThread->id_customer = (int) $order->id_customer;
+            $customerThread->id_shop = (int) $order->id_shop;
+            $customerThread->id_order = (int) $order->id;
+            $customerThread->id_lang = (int) $order->id_lang;
+            $customerThread->email = $customer->email;
+            $customerThread->status = 'open';
+            $customerThread->token = Tools::passwdGen(12);
+            $customerThread->add();
+            $customerThreadId = (int) $customerThread->id;
+        }
+
+        $translator = Context::getContext()->getTranslator();
+        $message = sprintf(
+            '%s %s. %s',
+            $translator->trans('Manual order -- Employee:', [], 'Admin.Orderscustomers.Feature'),
+            $employee->firstname[0],
+            $employee->lastname
+        );
+
+        $customerMessage = new CustomerMessage();
+        $customerMessage->id_customer_thread = $customerThreadId;
+        $customerMessage->id_employee = $employeeId;
+        $customerMessage->message = $message;
+        $customerMessage->private = true;
+        $customerMessage->add();
     }
 
     /**
