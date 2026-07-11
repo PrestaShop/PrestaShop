@@ -1,4 +1,5 @@
 <?php
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -17,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotAddStateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotUpdateStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\DeleteStateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
@@ -484,6 +486,13 @@ class StateController extends PrestaShopAdminController
             CountryConstraintException::class => [
                 CountryConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            DeleteStateException::class => [
+                DeleteStateException::FAILED_DELETE => $this->trans(
+                    'An error occurred while deleting the object.',
                     [],
                     'Admin.Notifications.Error'
                 ),
