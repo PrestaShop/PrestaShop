@@ -72,6 +72,26 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         ]);
 
         if (isset($requestParams['saveAddress'])) {
+            // The customer session may have expired while the cart is still available.
+            // Redirect to authentication instead of attempting to save an orphan address.
+            if (!Validate::isLoadedObject($this->context->customer)) {
+                $this->context->controller->error[] = $this->getTranslator()->trans(
+                    'Your session has expired. Please sign in again to continue your order.',
+                    [],
+                    'Shop.Notifications.Error'
+                );
+                $this->context->controller->redirectWithNotifications(
+                    $this->context->link->getPageLink(
+                        'authentication',
+                        true,
+                        null,
+                        [
+                            'back' => $this->getCheckoutSession()->getCheckoutURL(),
+                        ]
+                    )
+                );
+            }
+
             $saved = $this->addressForm->fillWith($requestParams)->submit();
             if (!$saved) {
                 $this->setCurrent(true);
