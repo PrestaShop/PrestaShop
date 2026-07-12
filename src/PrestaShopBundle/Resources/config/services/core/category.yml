@@ -6,7 +6,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
       - ' > '
-      - '@prestashop.core.category.cache.adapter'
+      - '@prestashop.core.category.cache'
 
   prestashop.core.category.name_builder.category_display_name_builder:
     alias: PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder
@@ -20,9 +20,6 @@ services:
     arguments:
       - !php/const _PS_CAT_IMG_DIR_
 
-  prestashop.core.category.cache.adapter:
-    class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+  PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameCacheInvalidator:
     arguments:
-      - 'categories'
-      - 0
-      - "%kernel.cache_dir%"
+      $cache: '@prestashop.core.category.cache'
