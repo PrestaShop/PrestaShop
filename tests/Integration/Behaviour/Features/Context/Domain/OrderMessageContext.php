@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Employee;
 use OrderMessage;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -127,6 +128,35 @@ class OrderMessageContext extends AbstractDomainFeatureContext
         if (!$messageFound) {
             throw new RuntimeException(sprintf('Message "%s" not found in Order #%s messages', $messageContent, $orderId));
         }
+    }
+
+    /**
+     * @Then order :orderReference must have a customer message created by employee :employeeEmail
+     *
+     * @param string $orderReference
+     * @param string $employeeEmail
+     *
+     * @throws RuntimeException
+     */
+    public function orderMustHaveCustomerMessageFromEmployee(string $orderReference, string $employeeEmail): void
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $employee = (new Employee())->getByEmail($employeeEmail);
+        if (!$employee) {
+            throw new RuntimeException(sprintf('Employee with email "%s" was not found', $employeeEmail));
+        }
+
+        foreach ($orderForViewing->getMessages()->getMessages() as $orderMessageForViewing) {
+            if ((int) $orderMessageForViewing->getEmployeeId() === (int) $employee->id) {
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf('No customer message created by employee "%s" was found in Order #%s', $employeeEmail, $orderId));
     }
 
     /**
