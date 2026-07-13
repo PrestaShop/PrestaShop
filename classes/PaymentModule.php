@@ -572,7 +572,7 @@ abstract class PaymentModuleCore extends Module
 
             // Specify order id for message
             $old_message = Message::getMessageByCartId((int) $this->context->cart->id);
-            if ($old_message && !$old_message['private']) {
+            if ($old_message && !$old_message['private'] && !empty($old_message['message'])) {
                 $update_message = new Message((int) $old_message['id_message']);
                 $update_message->id_order = (int) $order->id;
                 $update_message->update();
