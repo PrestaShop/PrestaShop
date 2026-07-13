@@ -555,7 +555,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
       - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ImageTypeGridDefinitionFactory'
-      - '@prestashop.core.grid.data_factory.image_type'
+      - '@PrestaShop\PrestaShop\Core\Grid\Data\Factory\ImageTypeGridDataFactory'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 

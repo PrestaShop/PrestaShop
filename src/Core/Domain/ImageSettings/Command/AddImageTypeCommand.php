@@ -8,11 +8,24 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\ImageSettings\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
+
 /**
  * Adds new image type with provided data.
  */
 class AddImageTypeCommand
 {
+    /**
+     * @param string $name Name of the image type
+     * @param int $width Width of the image
+     * @param int $height Height of the image
+     * @param bool $products Whether the image type is used for products
+     * @param bool $categories Whether the image type is used for categories
+     * @param bool $manufacturers Whether the image type is used for manufacturers
+     * @param bool $suppliers Whether the image type is used for suppliers
+     * @param bool $stores Whether the image type is used for stores
+     * @param value-of<ImageFitment::AVAILABLE_VALUES> $imageFitment
+     */
     public function __construct(
         private readonly string $name,
         private readonly int $width,
@@ -21,8 +34,10 @@ class AddImageTypeCommand
         private readonly bool $categories,
         private readonly bool $manufacturers,
         private readonly bool $suppliers,
-        private readonly bool $stores
+        private readonly bool $stores,
+        private readonly string $imageFitment = ImageFitment::FIT
     ) {
+        ImageFitment::assertIsValid($imageFitment);
     }
 
     public function getName(): string
@@ -38,6 +53,16 @@ class AddImageTypeCommand
     public function getHeight(): int
     {
         return $this->height;
+    }
+
+    /**
+     * Gets the image fitment used when generating thumbnails.
+     *
+     * @return value-of<ImageFitment::AVAILABLE_VALUES>
+     */
+    public function getImageFitment(): string
+    {
+        return $this->imageFitment;
     }
 
     public function isProducts(): bool

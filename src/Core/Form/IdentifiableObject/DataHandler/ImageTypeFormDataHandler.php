@@ -30,6 +30,7 @@ class ImageTypeFormDataHandler implements FormDataHandlerInterface
             (bool) $data['manufacturers'],
             (bool) $data['suppliers'],
             (bool) $data['stores'],
+            $data['image_fitment'],
         ));
     }
 
@@ -40,6 +41,7 @@ class ImageTypeFormDataHandler implements FormDataHandlerInterface
             ->setName($data['name'])
             ->setWidth((int) $data['width'])
             ->setHeight((int) $data['height'])
+            ->setImageFitment($data['image_fitment'])
             ->setProducts((bool) $data['products'])
             ->setCategories((bool) $data['categories'])
             ->setManufacturers((bool) $data['manufacturers'])
