@@ -75,7 +75,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             // The customer session may have expired while the cart is still available.
             // Redirect to authentication instead of attempting to save an orphan address.
             if (!Validate::isLoadedObject($this->context->customer)) {
-                $this->context->controller->error[] = $this->getTranslator()->trans(
+                $this->context->controller->errors[] = $this->getTranslator()->trans(
                     'Your session has expired. Please sign in again to continue your order.',
                     [],
                     'Shop.Notifications.Error'

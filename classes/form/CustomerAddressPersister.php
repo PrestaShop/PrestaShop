@@ -29,6 +29,15 @@ class CustomerAddressPersisterCore
             return false;
         }
 
+        // Prevent modifying customer addresses when the current cart
+        // belongs to another customer.
+        if (
+            (int) $this->cart->id_customer > 0
+            && (int) $this->cart->id_customer !== (int) $this->customer->id
+        ) {
+            return false;
+        }
+
         if ($address->id_customer && (int) $address->id_customer !== (int) $this->customer->id) {
             // Can't touch anybody else's address
             return false;
