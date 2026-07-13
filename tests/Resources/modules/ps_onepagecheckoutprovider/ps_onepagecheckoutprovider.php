@@ -5,7 +5,7 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\Order\Checkout\CheckoutProcessProviderInterface;
-use PrestaShopBundle\Translation\TranslatorComponent;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PsOnePageCheckoutTestProvider implements CheckoutProcessProviderInterface
 {
@@ -22,7 +22,7 @@ class PsOnePageCheckoutTestProvider implements CheckoutProcessProviderInterface
 
     public function buildCheckoutProcess(
         $session,
-        TranslatorComponent $translator
+        TranslatorInterface $translator
     ): CheckoutProcess {
         return new CheckoutProcess($this->context, $session);
     }

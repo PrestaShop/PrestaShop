@@ -5,7 +5,7 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\Order\Checkout\CheckoutProcessProviderInterface;
-use PrestaShopBundle\Translation\TranslatorComponent;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PsConflictingCheckoutTestProvider implements CheckoutProcessProviderInterface
 {
@@ -20,7 +20,7 @@ class PsConflictingCheckoutTestProvider implements CheckoutProcessProviderInterf
 
     public function buildCheckoutProcess(
         $session,
-        TranslatorComponent $translator
+        TranslatorInterface $translator
     ): CheckoutProcess {
         return new CheckoutProcess($this->context, $session);
     }
