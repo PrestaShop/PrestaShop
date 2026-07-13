@@ -38,6 +38,24 @@ class SetProductImagesForAllShopCommand
     }
 
     /**
+     * Bulk-replace the per-image settings.
+     *
+     * The existing addProductSetting() adder is fine for hand-crafted call sites
+     * that already have a stream of ProductImageSetting objects to feed in one at
+     * a time, but it does not let the Symfony serializer bind an incoming array
+     * of settings from a request body in a single hop: the denormalizer needs a
+     * matching public setter for the property to fill it.
+     *
+     * @param ProductImageSetting[] $productImageSettings
+     */
+    public function setProductImageSettings(array $productImageSettings): self
+    {
+        $this->productImageSettings = $productImageSettings;
+
+        return $this;
+    }
+
+    /**
      * @return ProductImageSetting[]
      */
     public function getProductImageSettings(): array
