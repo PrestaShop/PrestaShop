@@ -19,13 +19,34 @@ class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
     private const SHOP_ID = 42;
 
     private const VALID_CONFIGURATION = [
-        'category_rule' => '{id}-{rewrite}{id}',
-        'supplier_rule' => 'supplier/{id}-{rewrite}{id}',
-        'manufacturer_rule' => 'brand/{id}-{rewrite}{id}',
-        'cms_rule' => 'content/{id}-{rewrite}{id}',
-        'cms_category_rule' => 'content/category/{id}-{rewrite}{id}',
-        'module' => 'module/{module}{/:controller}{id}',
-        'product_rule' => '{category:/}{id}{-:id_product_attribute}-{rewrite}{-:ean13}{id}.html',
+        'category_rule' => [
+            1 => '{id}-{rewrite}{id}',
+            2 => '{id}-{rewrite}{id}',
+        ],
+        'supplier_rule' => [
+            1 => 'supplier/{id}-{rewrite}{id}',
+            2 => 'supplier/{id}-{rewrite}{id}',
+        ],
+        'manufacturer_rule' => [
+            1 => 'brand/{id}-{rewrite}{id}',
+            2 => 'brand/{id}-{rewrite}{id}',
+        ],
+        'cms_rule' => [
+            1 => 'content/{id}-{rewrite}{id}',
+            2 => 'content/{id}-{rewrite}{id}',
+        ],
+        'cms_category_rule' => [
+            1 => 'content/category/{id}-{rewrite}{id}',
+            2 => 'content/category/{id}-{rewrite}{id}',
+        ],
+        'module' => [
+            1 => 'module/{module}{/:controller}{id}',
+            2 => 'module/{module}{/:controller}{id}',
+        ],
+        'product_rule' => [
+            1 => '{category:/}{id}{-:id_product_attribute}-{rewrite}{-:ean13}{id}.html',
+            2 => '{category:/}{id}{-:id_product_attribute}-{rewrite}{-:ean13}{id}.html',
+        ],
     ];
 
     /**
@@ -42,6 +63,14 @@ class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
     ];
 
     /**
+     * @var array
+     */
+    private const LANGUAGES = [
+        ['id_lang' => 1],
+        ['id_lang' => 2],
+    ];
+
+    /**
      * @dataProvider provideShopConstraints
      *
      * @param ShopConstraint $shopConstraint
@@ -52,7 +81,8 @@ class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
             $this->mockConfiguration,
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
-            self::RULES
+            self::RULES,
+            self::LANGUAGES
         );
 
         $this->mockShopConfiguration
@@ -79,6 +109,65 @@ class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
     }
 
     /**
+     * @dataProvider provideShopConstraints
+     *
+     * @param ShopConstraint $shopConstraint
+     */
+    public function testGetConfigurationAsArray(ShopConstraint $shopConstraint): void
+    {
+        $urlSchemaDataConfiguration = new UrlSchemaDataConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature,
+            self::RULES,
+            self::LANGUAGES
+        );
+
+        $this->mockShopConfiguration
+            ->method('getShopConstraint')
+            ->willReturn($shopConstraint);
+
+        $this->mockConfiguration
+            ->method('get')
+            ->willReturnMap(
+                [
+                    ['PS_ROUTE_product_rule', null, $shopConstraint, [
+                        1 => '{category:/}{id}{-:id_product_attribute}-{rewrite}{-:ean13}{id}.html',
+                        2 => '{category:/}{id}{-:id_product_attribute}-{rewrite}{-:ean13}{id}.html',
+                    ]],
+                    ['PS_ROUTE_category_rule', null, $shopConstraint, [
+                        1 => '{id}-{rewrite}{id}',
+                        2 => '{id}-{rewrite}{id}',
+                    ]],
+                    ['PS_ROUTE_supplier_rule', null, $shopConstraint, [
+                        1 => 'supplier/{id}-{rewrite}{id}',
+                        2 => 'supplier/{id}-{rewrite}{id}',
+                    ]],
+                    ['PS_ROUTE_manufacturer_rule', null, $shopConstraint, [
+                        1 => 'brand/{id}-{rewrite}{id}',
+                        2 => 'brand/{id}-{rewrite}{id}',
+                    ]],
+                    ['PS_ROUTE_cms_rule', null, $shopConstraint, [
+                        1 => 'content/{id}-{rewrite}{id}',
+                        2 => 'content/{id}-{rewrite}{id}',
+                    ]],
+                    ['PS_ROUTE_cms_category_rule', null, $shopConstraint, [
+                        1 => 'content/category/{id}-{rewrite}{id}',
+                        2 => 'content/category/{id}-{rewrite}{id}',
+                    ]],
+                    ['PS_ROUTE_module', null, $shopConstraint, [
+                        1 => 'module/{module}{/:controller}{id}',
+                        2 => 'module/{module}{/:controller}{id}',
+                    ]],
+                ]
+            );
+
+        $result = $urlSchemaDataConfiguration->getConfiguration();
+
+        $this->assertSame(self::VALID_CONFIGURATION, $result);
+    }
+
+    /**
      * @dataProvider provideInvalidConfiguration
      *
      * @param string $exception
@@ -90,7 +179,8 @@ class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
             $this->mockConfiguration,
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
-            self::RULES
+            self::RULES,
+            self::LANGUAGES
         );
 
         $this->expectException($exception);
@@ -119,7 +209,8 @@ class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
             $this->mockConfiguration,
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
-            self::RULES
+            self::RULES,
+            self::LANGUAGES
         );
 
         $res = $urlSchemaDataConfiguration->updateConfiguration(self::VALID_CONFIGURATION);

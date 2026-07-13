@@ -10,6 +10,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -24,18 +25,25 @@ final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
     private $rules;
 
     /**
+     * @var LanguageInterface[]
+     */
+    private $languages;
+
+    /**
      * UrlSchemaDataConfiguration constructor.
      *
      * @param Configuration $configuration
      * @param Context $shopContext
      * @param FeatureInterface $multistoreFeature
      * @param array $rules
+     * @param array $languages
      */
-    public function __construct(Configuration $configuration, Context $shopContext, FeatureInterface $multistoreFeature, array $rules)
+    public function __construct(Configuration $configuration, Context $shopContext, FeatureInterface $multistoreFeature, array $rules, array $languages)
     {
         parent::__construct($configuration, $shopContext, $multistoreFeature);
 
         $this->rules = $rules;
+        $this->languages = $languages;
     }
 
     /**
@@ -47,8 +55,18 @@ final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         foreach ($this->rules as $routeId => $defaultRule) {
-            $result = $this->configuration->get($this->getConfigurationKey($routeId), null, $shopConstraint) ?: $defaultRule;
-            $configResult[$routeId] = $result;
+            // Get value from configuration
+            $currentValue = $this->configuration->get($this->getConfigurationKey($routeId), null, $shopConstraint);
+            if (is_array($currentValue)) {
+                $configResult[$routeId] = $currentValue;
+                continue;
+            } elseif (is_string($currentValue)) {
+                $configResult[$routeId] = array_fill_keys(array_column($this->languages, 'id_lang'), $currentValue);
+                continue;
+            } else {
+                $configResult[$routeId] = array_fill_keys(array_column($this->languages, 'id_lang'), $defaultRule);
+                continue;
+            }
         }
 
         return $configResult;
@@ -80,7 +98,7 @@ final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
         $resolver = new OptionsResolver();
         $resolver->setDefined($rulesIds);
         foreach ($rulesIds as $ruleId) {
-            $resolver->setAllowedTypes($ruleId, 'string');
+            $resolver->setAllowedTypes($ruleId, 'array');
         }
 
         return $resolver;
