@@ -871,7 +871,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             );
 
             // These two variables are deprecated are kept just for backward compatibility and will be removed in v10
-            $manufacturerImageUrl = $productManufacturer['image']['small']['url'];
+            $manufacturerImageUrl = $productManufacturer['image']['small']['url'] ?? null;
             $productBrandUrl = $productManufacturer['url'];
         }
 
