@@ -91,6 +91,20 @@ class ConfigurablePermissions
     }
 
     /**
+     * Raw bulk-configuration map — { profileId: { view: bool, add: bool, edit: bool, delete: bool, all: bool } }.
+     *
+     * The existing per-profile-per-action `isBulk*Enabled(int $profileId)` methods are convenient for
+     * template consumers but they do not let API callers surface the whole map in one shot. This getter
+     * returns the underlying array as-is so it can be JSON-serialized.
+     *
+     * @return array<int, array<string, bool>>
+     */
+    public function getBulkConfiguration(): array
+    {
+        return $this->bulkConfiguration;
+    }
+
+    /**
      * @return array
      */
     public function getProfiles(): array
