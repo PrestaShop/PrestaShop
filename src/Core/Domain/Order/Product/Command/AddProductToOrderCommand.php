@@ -176,13 +176,15 @@ class AddProductToOrderCommand
      * @throws InvalidAmountException
      * @throws OrderException
      */
-    private function __construct(
+    public function __construct(
         int $orderId,
         int $productId,
         int $combinationId,
         string $productPriceTaxIncluded,
         string $productPriceTaxExcluded,
-        int $productQuantity
+        int $productQuantity,
+        ?int $orderInvoiceId = null,
+        ?bool $hasFreeShipping = null
     ) {
         $this->orderId = new OrderId($orderId);
         $this->productId = new ProductId($productId);
@@ -194,6 +196,8 @@ class AddProductToOrderCommand
             throw new InvalidAmountException();
         }
         $this->setProductQuantity($productQuantity);
+        $this->orderInvoiceId = $orderInvoiceId;
+        $this->hasFreeShipping = $hasFreeShipping;
     }
 
     /**
