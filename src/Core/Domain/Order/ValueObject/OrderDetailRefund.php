@@ -77,7 +77,7 @@ class OrderDetailRefund
      *
      * @throws OrderException
      */
-    private function __construct(int $orderDetailId, int $productQuantity, ?DecimalNumber $refundedAmount)
+    public function __construct(int $orderDetailId, int $productQuantity, ?DecimalNumber $refundedAmount = null)
     {
         $this->assertOrderDetailIdIsGreaterThanZero($orderDetailId);
         if (0 >= $productQuantity) {
