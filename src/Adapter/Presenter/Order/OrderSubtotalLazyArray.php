@@ -193,4 +193,44 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
     {
         return $this->taxConfiguration->includeTaxes();
     }
+
+    /**
+     * @return Order
+     */
+    public function getOrder(): Order
+    {
+        return $this->order;
+    }
+
+    /**
+     * @return TaxConfiguration
+     */
+    public function getTaxConfiguration(): TaxConfiguration
+    {
+        return $this->taxConfiguration;
+    }
+
+    /**
+     * @return PriceFormatter
+     */
+    public function getPriceFormatter(): PriceFormatter
+    {
+        return $this->priceFormatter;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIncludeTaxes(): bool
+    {
+        return $this->includeTaxes;
+    }
+
+    /**
+     * @return TranslatorComponent
+     */
+    public function getTranslator(): TranslatorComponent
+    {
+        return $this->translator;
+    }
 }

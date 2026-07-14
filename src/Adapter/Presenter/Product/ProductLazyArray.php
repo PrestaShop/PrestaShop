@@ -1736,4 +1736,84 @@ class ProductLazyArray extends AbstractLazyArray
 
         return $groupedFeatures;
     }
+
+    /**
+     * @return ImageRetriever
+     */
+    public function getImageRetriever(): ImageRetriever
+    {
+        return $this->imageRetriever;
+    }
+
+    /**
+     * @return Link
+     */
+    public function getLinkObject(): Link
+    {
+        return $this->link;
+    }
+
+    /**
+     * @return PriceFormatter
+     */
+    public function getPriceFormatter(): PriceFormatter
+    {
+        return $this->priceFormatter;
+    }
+
+    /**
+     * @return ProductColorsRetriever
+     */
+    public function getProductColorsRetriever(): ProductColorsRetriever
+    {
+        return $this->productColorsRetriever;
+    }
+
+    /**
+     * @return TranslatorInterface
+     */
+    public function getTranslator(): TranslatorInterface
+    {
+        return $this->translator;
+    }
+
+    /**
+     * @return Language
+     */
+    public function getLanguage(): Language
+    {
+        return $this->language;
+    }
+
+    /**
+     * @return HookManager
+     */
+    public function getHookManager(): HookManager
+    {
+        return $this->hookManager;
+    }
+
+    /**
+     * @return Configuration
+     */
+    public function getConfiguration(): Configuration
+    {
+        return $this->configuration;
+    }
+
+    /**
+     * @return ProductPresentationSettings
+     */
+    public function getSettings(): ProductPresentationSettings
+    {
+        return $this->settings;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProduct(): array
+    {
+        return $this->product;
+    }
 }

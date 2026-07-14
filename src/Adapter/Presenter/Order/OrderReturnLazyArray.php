@@ -123,4 +123,28 @@ class OrderReturnLazyArray extends AbstractLazyArray
             )
             : '';
     }
+
+    /**
+     * @return string
+     */
+    public function getPrefix(): string
+    {
+        return $this->prefix;
+    }
+
+    /**
+     * @return Link
+     */
+    public function getLink(): Link
+    {
+        return $this->link;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrderReturn(): array
+    {
+        return $this->orderReturn;
+    }
 }

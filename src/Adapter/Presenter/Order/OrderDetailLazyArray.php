@@ -270,4 +270,36 @@ class OrderDetailLazyArray extends AbstractLazyArray
 
         return $orderShipping;
     }
+
+    /**
+     * @return LocaleInterface
+     */
+    public function getLocale(): LocaleInterface
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @return Order
+     */
+    public function getOrder(): Order
+    {
+        return $this->order;
+    }
+
+    /**
+     * @return Context
+     */
+    public function getContext(): Context
+    {
+        return $this->context;
+    }
+
+    /**
+     * @return TranslatorComponent
+     */
+    public function getTranslator(): TranslatorComponent
+    {
+        return $this->translator;
+    }
 }

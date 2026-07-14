@@ -129,4 +129,36 @@ class CategoryLazyArray extends AbstractLazyArray
     {
         return file_exists(_PS_CAT_IMG_DIR_ . $idImage . '.jpg');
     }
+
+    /**
+     * @return ImageRetriever
+     */
+    public function getImageRetriever(): ImageRetriever
+    {
+        return $this->imageRetriever;
+    }
+
+    /**
+     * @return Link
+     */
+    public function getLink(): Link
+    {
+        return $this->link;
+    }
+
+    /**
+     * @return Language
+     */
+    public function getLanguage(): Language
+    {
+        return $this->language;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCategory(): array
+    {
+        return $this->category;
+    }
 }
