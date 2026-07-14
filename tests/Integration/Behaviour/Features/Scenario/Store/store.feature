@@ -15,14 +15,14 @@ Feature: store management
   # ──────────────────────────────────────────────────────────────
 
   Scenario: Toggle store status
-    When I add new store "storeToggle" with following properties:
-      | name      | Toggle Store     |
-      | enabled   | true             |
-      | address1  | 1 rue de la paix |
-      | city      | Paris            |
-      | latitude  | 48.8566          |
-      | longitude | 2.3522           |
-      | country   | France           |
+    When I add store "storeToggle" using command with the following properties:
+      | name[en-US]     | Toggle Store     |
+      | active          | true             |
+      | address1[en-US] | 1 rue de la paix |
+      | city            | Paris            |
+      | latitude        | 48.8566          |
+      | longitude       | 2.3522           |
+      | country         | France           |
     Then the store "storeToggle" should have status enabled
     When I toggle "storeToggle"
     Then the store "storeToggle" should have status disabled
@@ -34,30 +34,30 @@ Feature: store management
   # ──────────────────────────────────────────────────────────────
 
   Scenario: Bulk enable and disable stores
-    When I add new store "StorePau" with following properties:
-      | name      | StorePau               |
-      | enabled   | true                   |
-      | address1  | 1 rue de la republique |
-      | city      | Pau                    |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
-    And I add new store "StoreSerresCastet" with following properties:
-      | name      | StoreSerresCastet      |
-      | enabled   | true                   |
-      | address1  | 1 rue de la foire      |
-      | city      | Serres-Castet          |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
-    And I add new store "StoreBuros" with following properties:
-      | name      | StoreBuros             |
-      | enabled   | true                   |
-      | address1  | 1 chemin de carrere    |
-      | city      | Buros                  |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
+    When I add store "StorePau" using command with the following properties:
+      | name[en-US]     | StorePau               |
+      | active          | true                   |
+      | address1[en-US] | 1 rue de la republique |
+      | city            | Pau                    |
+      | latitude        | 43.2951                |
+      | longitude       | -0.370797              |
+      | country         | France                 |
+    And I add store "StoreSerresCastet" using command with the following properties:
+      | name[en-US]     | StoreSerresCastet      |
+      | active          | true                   |
+      | address1[en-US] | 1 rue de la foire      |
+      | city            | Serres-Castet          |
+      | latitude        | 43.2951                |
+      | longitude       | -0.370797              |
+      | country         | France                 |
+    And I add store "StoreBuros" using command with the following properties:
+      | name[en-US]     | StoreBuros             |
+      | active          | true                   |
+      | address1[en-US] | 1 chemin de carrere    |
+      | city            | Buros                  |
+      | latitude        | 43.2951                |
+      | longitude       | -0.370797              |
+      | country         | France                 |
     Then stores "StorePau, StoreSerresCastet, StoreBuros" should be enabled
     When I disable multiple stores "StorePau, StoreSerresCastet" using bulk action
     Then stores "StorePau, StoreSerresCastet" should be disabled
@@ -70,52 +70,52 @@ Feature: store management
   # ──────────────────────────────────────────────────────────────
 
   Scenario: Delete a store
-    When I add new store "StorePau" with following properties:
-      | name      | StorePau               |
-      | enabled   | true                   |
-      | address1  | 1 rue de la republique |
-      | city      | Pau                    |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
-    And I add new store "StoreSerresCastet" with following properties:
-      | name      | StoreSerresCastet      |
-      | enabled   | true                   |
-      | address1  | 1 rue de la foire      |
-      | city      | Serres-Castet          |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
+    When I add store "StorePau" using command with the following properties:
+      | name[en-US]     | StorePau               |
+      | active          | true                   |
+      | address1[en-US] | 1 rue de la republique |
+      | city            | Pau                    |
+      | latitude        | 43.2951                |
+      | longitude       | -0.370797              |
+      | country         | France                 |
+    And I add store "StoreSerresCastet" using command with the following properties:
+      | name[en-US]     | StoreSerresCastet      |
+      | active          | true                   |
+      | address1[en-US] | 1 rue de la foire      |
+      | city            | Serres-Castet          |
+      | latitude        | 43.2951                |
+      | longitude       | -0.370797              |
+      | country         | France                 |
     And stores "StorePau, StoreSerresCastet" should exist
     When I delete store "StorePau"
     Then stores "StorePau" should be deleted
     And stores "StoreSerresCastet" should exist
 
   Scenario: Bulk delete stores
-    When I add new store "StorePau" with following properties:
-      | name      | StorePau               |
-      | enabled   | true                   |
-      | address1  | 1 rue de la republique |
-      | city      | Pau                    |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
-    And I add new store "StoreSerresCastet" with following properties:
-      | name      | StoreSerresCastet      |
-      | enabled   | true                   |
-      | address1  | 1 rue de la foire      |
-      | city      | Serres-Castet          |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
-    And I add new store "StoreBuros" with following properties:
-      | name      | StoreBuros             |
-      | enabled   | true                   |
-      | address1  | 1 chemin de carrere    |
-      | city      | Buros                  |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
+    When I add store "StorePau" using command with the following properties:
+      | name[en-US]     | StorePau               |
+      | active          | true                   |
+      | address1[en-US] | 1 rue de la republique |
+      | city            | Pau                    |
+      | latitude        | 43.2951                |
+      | longitude       | -0.370797              |
+      | country         | France                 |
+    And I add store "StoreSerresCastet" using command with the following properties:
+      | name[en-US]     | StoreSerresCastet      |
+      | active          | true                   |
+      | address1[en-US] | 1 rue de la foire      |
+      | city            | Serres-Castet          |
+      | latitude        | 43.2951                |
+      | longitude       | -0.370797              |
+      | country         | France                 |
+    And I add store "StoreBuros" using command with the following properties:
+      | name[en-US]     | StoreBuros             |
+      | active          | true                   |
+      | address1[en-US] | 1 chemin de carrere    |
+      | city            | Buros                  |
+      | latitude        | 43.2951                |
+      | longitude       | -0.370797              |
+      | country         | France                 |
     And stores "StorePau, StoreSerresCastet, StoreBuros" should exist
     When I delete stores "StorePau, StoreBuros" using bulk action
     Then stores "StorePau, StoreBuros" should be deleted
