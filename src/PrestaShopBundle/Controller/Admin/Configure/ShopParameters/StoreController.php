@@ -106,9 +106,7 @@ class StoreController extends PrestaShopAdminController
         IdentifiableFormHandlerInterface $storeFormHandler,
     ): Response {
         try {
-            $formData = [];
-
-            $storeForm = $storeFormBuilder->getFormFor($storeId, $formData);
+            $storeForm = $storeFormBuilder->getFormFor($storeId);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
