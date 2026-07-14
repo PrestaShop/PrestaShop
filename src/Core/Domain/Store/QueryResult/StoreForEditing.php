@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Store\QueryResult;
 
+use PrestaShop\Decimal\DecimalNumber;
+
 /**
  * Carries all data needed to pre-fill the store add/edit form.
  * Translatable fields are arrays keyed by language id.
@@ -34,8 +36,8 @@ class StoreForEditing
         private readonly ?int $stateId,
         private readonly string $city,
         private readonly string $postcode,
-        private readonly ?float $latitude,
-        private readonly ?float $longitude,
+        private readonly ?DecimalNumber $latitude,
+        private readonly ?DecimalNumber $longitude,
         private readonly ?string $phone,
         private readonly ?string $fax,
         private readonly ?string $email,
@@ -99,12 +101,12 @@ class StoreForEditing
         return $this->postcode;
     }
 
-    public function getLatitude(): ?float
+    public function getLatitude(): ?DecimalNumber
     {
         return $this->latitude;
     }
 
-    public function getLongitude(): ?float
+    public function getLongitude(): ?DecimalNumber
     {
         return $this->longitude;
     }

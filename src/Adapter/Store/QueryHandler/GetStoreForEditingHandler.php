@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Store\QueryHandler;
 
 use ImageManager;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Store\HoursEncoder;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
@@ -50,8 +51,8 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
                 stateId: $store->id_state ?: null,
                 city: (string) $store->city,
                 postcode: (string) $store->postcode,
-                latitude: $store->latitude !== null && $store->latitude !== '' ? (float) $store->latitude : null,
-                longitude: $store->longitude !== null && $store->longitude !== '' ? (float) $store->longitude : null,
+                latitude: $store->latitude !== null && $store->latitude !== '' ? new DecimalNumber((string) $store->latitude) : null,
+                longitude: $store->longitude !== null && $store->longitude !== '' ? new DecimalNumber((string) $store->longitude) : null,
                 phone: $store->phone ?: null,
                 fax: $store->fax ?: null,
                 email: $store->email ?: null,
