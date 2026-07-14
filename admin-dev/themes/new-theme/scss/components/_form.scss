@@ -241,6 +241,12 @@
       padding: var(--#{$cdk}size-8) var(--#{$cdk}size-32) var(--#{$cdk}size-8) var(--#{$cdk}size-16);
     }
   }
+
+  .select2-selection--single {
+    .select2-selection__rendered {
+      min-height: 2rem;
+    }
+  }
 }
 
 .small.form-external-link,
