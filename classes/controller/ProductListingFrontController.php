@@ -91,6 +91,11 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         // Enrich data set of products
         $products = (new ProductAssembler($this->context))->assembleProducts($products);
 
+        // Prefetch every product's "new" flag in one query instead of once per product during presentation.
+        Product::prefetchIsNew(array_map(static function (array $product): int {
+            return (int) $product['id_product'];
+        }, $products));
+
         // Prepare configuration
         $presenter = $this->getProductPresenter();
         $settings = $this->getProductPresentationSettings();
