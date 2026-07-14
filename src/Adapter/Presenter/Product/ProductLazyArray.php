@@ -92,6 +92,11 @@ class ProductLazyArray extends AbstractLazyArray
      */
     protected $configuration;
 
+    /**
+     * @var ProductPresentationContext|null
+     */
+    protected $presentationContext;
+
     public function __construct(
         ProductPresentationSettings $settings,
         array $product,
@@ -103,6 +108,7 @@ class ProductLazyArray extends AbstractLazyArray
         TranslatorInterface $translator,
         ?HookManager $hookManager = null,
         ?Configuration $configuration = null,
+        ?ProductPresentationContext $presentationContext = null,
     ) {
         $this->settings = $settings;
         $this->product = $product;
@@ -114,6 +120,7 @@ class ProductLazyArray extends AbstractLazyArray
         $this->translator = $translator;
         $this->hookManager = $hookManager ?? new HookManager();
         $this->configuration = $configuration ?? new Configuration();
+        $this->presentationContext = $presentationContext;
         $this->initExtraPropertiesBag(
             Product::class,
             (int) ($this->product['id_product'] ?? 0),
@@ -674,9 +681,17 @@ class ProductLazyArray extends AbstractLazyArray
     public function getNew()
     {
         if (!isset($this->product['new'])) {
-            $this->product['new'] = (int) Product::isNewStatic(
-                $this->product['id_product']
-            );
+            $idProduct = (int) $this->product['id_product'];
+
+            if ($this->presentationContext !== null) {
+                $newFlags = $this->presentationContext->remember(
+                    'new',
+                    fn (array $ids) => Product::getNewProductsFlags($ids)
+                );
+                $this->product['new'] = (int) ($newFlags[$idProduct] ?? false);
+            } else {
+                $this->product['new'] = (int) Product::isNewStatic($idProduct);
+            }
         }
 
         return $this->product['new'];
@@ -800,9 +815,17 @@ class ProductLazyArray extends AbstractLazyArray
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getMainVariants()
     {
-        $colors = $this->productColorsRetriever->getColoredVariants(
-            $this->product['id_product']
-        );
+        $idProduct = (int) $this->product['id_product'];
+
+        if ($this->presentationContext !== null) {
+            $coloredVariants = $this->presentationContext->remember(
+                'colored_variants',
+                fn (array $ids) => Product::getAttributesColorList($ids)
+            );
+            $colors = $coloredVariants[$idProduct] ?? null;
+        } else {
+            $colors = $this->productColorsRetriever->getColoredVariants($idProduct);
+        }
 
         if (!is_array($colors)) {
             return [];
@@ -954,10 +977,18 @@ class ProductLazyArray extends AbstractLazyArray
     protected function fillImages(array $product, Language $language): void
     {
         // Get all product images assigned to this product.
-        $productImages = $this->imageRetriever->getAllProductImages(
-            $product,
-            $language
-        );
+        if ($this->presentationContext !== null) {
+            $imagesByProduct = $this->presentationContext->remember(
+                'images',
+                fn (array $ids) => $this->imageRetriever->getProductsImages($ids, $language)
+            );
+            $productImages = $imagesByProduct[(int) $product['id_product']] ?? [];
+        } else {
+            $productImages = $this->imageRetriever->getAllProductImages(
+                $product,
+                $language
+            );
+        }
 
         // Get filtered product images matching the specified id_product_attribute
         $this->product['images'] = $this->filterImagesForCombination(

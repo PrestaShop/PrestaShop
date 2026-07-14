@@ -7,7 +7,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use Category;
+use Combination;
 use Configuration;
+use Db;
 use Image;
 use ImageManager;
 use ImageType;
@@ -19,6 +21,7 @@ use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
+use Shop;
 use Store;
 use Supplier;
 
@@ -43,7 +46,7 @@ class ImageRetriever
      *
      * @return array
      */
-    public function getAllProductImages(array $product, Language $language)
+    public function getAllProductImages(array $product, Language $language, ?array $prefetchedImages = null, ?array $prefetchedCombinationImages = null)
     {
         $productInstance = new Product(
             $product['id_product'],
@@ -51,14 +54,16 @@ class ImageRetriever
             $language->id
         );
 
-        // Get all product images that are related to this object
-        $images = $productInstance->getImages($language->id);
+        // Get all product images that are related to this object.
+        // WHY: when the caller already loaded the image rows in bulk (see getProductsImages),
+        // reuse them instead of running one getImages() query per product on a listing.
+        $images = $prefetchedImages ?? $productInstance->getImages($language->id);
         if (empty($images)) {
             return [];
         }
 
-        // Load all pairs of images assigned to combinations
-        $combinationImages = $productInstance->getCombinationImages($language->id);
+        // Load all pairs of images assigned to combinations (bulk-provided by the caller when available).
+        $combinationImages = $prefetchedCombinationImages ?? $productInstance->getCombinationImages($language->id);
         if (!$combinationImages) {
             $combinationImages = [];
         }
@@ -100,6 +105,106 @@ class ImageRetriever
         }, $images);
 
         return $images;
+    }
+
+    /**
+     * Load, for a whole set of products, the same image data that {@see getAllProductImages}
+     * returns for a single one - but with the per-product image and combination-image queries
+     * collapsed into one query each. Used by the product listing presenter to avoid an N+1.
+     *
+     * @param int[] $productIds
+     * @param Language $language
+     *
+     * @return array<int, array> Image lists keyed by product identifier (identical shape to getAllProductImages)
+     */
+    public function getProductsImages(array $productIds, Language $language): array
+    {
+        $productIds = array_values(array_unique(array_map('intval', $productIds)));
+        if (empty($productIds)) {
+            return [];
+        }
+
+        $imagesByProduct = $this->getImageRowsForProducts($productIds, (int) $language->id);
+        $combinationImagesByProduct = $this->getCombinationImageRowsForProducts($productIds, (int) $language->id);
+
+        $result = [];
+        foreach ($productIds as $idProduct) {
+            // A product with no image rows resolves to no images without loading the Product object.
+            if (empty($imagesByProduct[$idProduct])) {
+                $result[$idProduct] = [];
+
+                continue;
+            }
+
+            $result[$idProduct] = $this->getAllProductImages(
+                ['id_product' => $idProduct],
+                $language,
+                $imagesByProduct[$idProduct],
+                $combinationImagesByProduct[$idProduct] ?? []
+            );
+        }
+
+        return $result;
+    }
+
+    /**
+     * Batched equivalent of Product::getImages() for several products at once.
+     *
+     * @param int[] $productIds
+     *
+     * @return array<int, array> Image rows keyed by product identifier
+     */
+    private function getImageRowsForProducts(array $productIds, int $idLang): array
+    {
+        $rows = Db::getInstance()->executeS(
+            'SELECT i.`id_product`, image_shop.`cover`, i.`id_image`, il.`legend`, i.`position`
+            FROM `' . _DB_PREFIX_ . 'image` i
+            ' . Shop::addSqlAssociation('image', 'i') . '
+            LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = ' . $idLang . ')
+            WHERE i.`id_product` IN (' . implode(',', $productIds) . ')
+            ORDER BY i.`id_product`, `position`'
+        ) ?: [];
+
+        $byProduct = [];
+        foreach ($rows as $row) {
+            $idProduct = (int) $row['id_product'];
+            unset($row['id_product']);
+            $byProduct[$idProduct][] = $row;
+        }
+
+        return $byProduct;
+    }
+
+    /**
+     * Batched equivalent of Product::getCombinationImages() for several products at once.
+     *
+     * @param int[] $productIds
+     *
+     * @return array<int, array> Combination-image rows grouped by id_product_attribute, keyed by product identifier
+     */
+    private function getCombinationImageRowsForProducts(array $productIds, int $idLang): array
+    {
+        if (!Combination::isFeatureActive()) {
+            return [];
+        }
+
+        $rows = Db::getInstance()->executeS(
+            'SELECT i.`id_product`, pai.`id_image`, pai.`id_product_attribute`, il.`legend`
+            FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
+            LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (il.`id_image` = pai.`id_image`)
+            INNER JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_image` = pai.`id_image`)
+            WHERE i.`id_product` IN (' . implode(',', $productIds) . ') AND il.`id_lang` = ' . $idLang . '
+            ORDER BY i.`id_product`, i.`position`'
+        ) ?: [];
+
+        $byProduct = [];
+        foreach ($rows as $row) {
+            $idProduct = (int) $row['id_product'];
+            unset($row['id_product']);
+            $byProduct[$idProduct][$row['id_product_attribute']][] = $row;
+        }
+
+        return $byProduct;
     }
 
     /**
