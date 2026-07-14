@@ -92,6 +92,11 @@ class ProductLazyArray extends AbstractLazyArray
      */
     protected $configuration;
 
+    /**
+     * @var ProductPresentationContext|null
+     */
+    protected $presentationContext;
+
     public function __construct(
         ProductPresentationSettings $settings,
         array $product,
@@ -103,6 +108,7 @@ class ProductLazyArray extends AbstractLazyArray
         TranslatorInterface $translator,
         ?HookManager $hookManager = null,
         ?Configuration $configuration = null,
+        ?ProductPresentationContext $presentationContext = null,
     ) {
         $this->settings = $settings;
         $this->product = $product;
@@ -114,6 +120,7 @@ class ProductLazyArray extends AbstractLazyArray
         $this->translator = $translator;
         $this->hookManager = $hookManager ?? new HookManager();
         $this->configuration = $configuration ?? new Configuration();
+        $this->presentationContext = $presentationContext;
         $this->initExtraPropertiesBag(
             Product::class,
             (int) ($this->product['id_product'] ?? 0),
@@ -812,9 +819,17 @@ class ProductLazyArray extends AbstractLazyArray
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getMainVariants()
     {
-        $colors = $this->productColorsRetriever->getColoredVariants(
-            $this->product['id_product']
-        );
+        $idProduct = (int) $this->product['id_product'];
+
+        if ($this->isInPresentationContext($idProduct)) {
+            $coloredVariants = $this->presentationContext->remember(
+                'colored_variants',
+                fn (array $ids) => $this->productColorsRetriever->getColoredVariantsForProducts($ids)
+            );
+            $colors = $coloredVariants[$idProduct] ?? null;
+        } else {
+            $colors = $this->productColorsRetriever->getColoredVariants($idProduct);
+        }
 
         if (!is_array($colors)) {
             return [];
@@ -947,10 +962,18 @@ class ProductLazyArray extends AbstractLazyArray
     protected function fillImages(array $product, Language $language): void
     {
         // Get all product images assigned to this product.
-        $productImages = $this->imageRetriever->getAllProductImages(
-            $product,
-            $language
-        );
+        if ($this->isInPresentationContext((int) $product['id_product'])) {
+            $imagesByProduct = $this->presentationContext->remember(
+                'images',
+                fn (array $ids) => $this->imageRetriever->getProductsImages($ids, $language)
+            );
+            $productImages = $imagesByProduct[(int) $product['id_product']] ?? [];
+        } else {
+            $productImages = $this->imageRetriever->getAllProductImages(
+                $product,
+                $language
+            );
+        }
 
         // Get filtered product images matching the specified id_product_attribute
         $this->product['images'] = $this->filterImagesForCombination(
@@ -1752,5 +1775,13 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         return $groupedFeatures;
+    }
+
+    /**
+     * A product outside the presented set is loaded on its own
+     */
+    private function isInPresentationContext(int $productId): bool
+    {
+        return null !== $this->presentationContext && in_array($productId, $this->presentationContext->getProductIds(), true);
     }
 }
