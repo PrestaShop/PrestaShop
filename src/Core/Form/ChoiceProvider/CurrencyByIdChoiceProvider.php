@@ -21,11 +21,18 @@ final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface, F
     private $currencyDataProvider;
 
     /**
-     * @param CurrencyDataProviderInterface $currencyDataProvider
+     * @var bool
      */
-    public function __construct(CurrencyDataProviderInterface $currencyDataProvider)
+    private $activeOnly;
+
+    /**
+     * @param CurrencyDataProviderInterface $currencyDataProvider
+     * @param bool $activeOnly When false, inactive (but not deleted) currencies are included
+     */
+    public function __construct(CurrencyDataProviderInterface $currencyDataProvider, bool $activeOnly = true)
     {
         $this->currencyDataProvider = $currencyDataProvider;
+        $this->activeOnly = $activeOnly;
     }
 
     /**
@@ -61,6 +68,6 @@ final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface, F
 
     private function getCurrencies(): array
     {
-        return $this->currencyDataProvider->getCurrencies(false, true, true);
+        return $this->currencyDataProvider->getCurrencies(false, $this->activeOnly, true);
     }
 }
