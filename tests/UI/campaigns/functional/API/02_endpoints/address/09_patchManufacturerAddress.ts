@@ -133,8 +133,8 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
         dni: createResponse.dni ?? '',
       });
     });
-    
-    it('should go to the created address page', async function (){
+
+    it('should go to the created address page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditAddressPage', baseContext);
 
       await boBrandsPage.filterAddresses(page, 'input', 'firstname', createAddress.firstName);
@@ -286,8 +286,6 @@ describe('API : PATCH /addresses/manufacturers/{addressId}', async () => {
           currentAddress[data.propertyName] = data.propertyValue;
         });
 
-      
-      
       it(`should check the property "${data.propertyName}" is updated in BO`, async function () {
         await testContext.addContextItem(
           this,
