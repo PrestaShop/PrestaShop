@@ -40,3 +40,8 @@ Feature: Customer service options
     And IMAP configuration "PS_SAV_IMAP_OPT_SSL" should be enabled
     And IMAP configuration "PS_SAV_IMAP_OPT_VALIDATE-CERT" should be enabled
     And IMAP configuration "PS_SAV_IMAP_OPT_NOVALIDATE-CERT" should be disabled
+
+  Scenario: Keep the saved IMAP password when the password field is left empty
+    When I update IMAP options with:
+      | imap_password | |
+    Then IMAP configuration "PS_SAV_IMAP_PWD" should be "secret"

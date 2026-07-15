@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Adapter\CustomerService\Configuration\ImapConfiguratio
 use PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerMessageSyncImapRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\ValidImapServerValidator;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\SyncCustomerServiceImapMailboxCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\SyncCustomerServiceImapMailboxHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\ImapSyncResult;
@@ -61,21 +62,39 @@ final class SyncCustomerServiceImapMailboxHandler implements SyncCustomerService
 
     public function handle(SyncCustomerServiceImapMailboxCommand $command): ImapSyncResult
     {
+        // Single source of truth for "is the connection fully configured",
+        // shared with the controller's "Run sync" button gating so the two
+        // never drift into checking a different subset of fields.
+        if (!$this->imapConfiguration->isConnectionComplete()) {
+            return new ImapSyncResult([
+                $this->translator->trans('IMAP configuration is not correct', [], 'Admin.Orderscustomers.Notification'),
+            ]);
+        }
+
         $settings = $this->imapConfiguration->getConnectionSettings();
         $url = $settings['PS_SAV_IMAP_URL'];
         $port = $settings['PS_SAV_IMAP_PORT'];
         $user = $settings['PS_SAV_IMAP_USER'];
         $password = $settings['PS_SAV_IMAP_PWD'];
 
-        if (!$url || !$port || !$user || !$password) {
-            return new ImapSyncResult([
-                $this->translator->trans('IMAP configuration is not correct', [], 'Admin.Orderscustomers.Notification'),
-            ]);
-        }
-
         if (!function_exists('imap_open')) {
             return new ImapSyncResult([
                 $this->translator->trans('IMAP is not installed on this server', [], 'Admin.Orderscustomers.Notification'),
+            ]);
+        }
+
+        // Defense-in-depth: re-check the connection settings right before
+        // building the mailbox string, regardless of the Form-time
+        // `ValidImapServer` constraint on the options page — this settings
+        // is read from configuration on every sync, so a value set through
+        // any other path (direct DB write, module, future API endpoint)
+        // still gets checked here before it can reach `imap_open()`.
+        if (ValidImapServerValidator::containsSuspiciousPattern($url)
+            || ValidImapServerValidator::containsSuspiciousPattern($port)
+            || ValidImapServerValidator::containsSuspiciousPattern($user)
+        ) {
+            return new ImapSyncResult([
+                $this->translator->trans('The IMAP configuration contains characters that are not allowed.', [], 'Admin.Orderscustomers.Notification'),
             ]);
         }
 
@@ -124,6 +143,13 @@ final class SyncCustomerServiceImapMailboxHandler implements SyncCustomerService
         $strErrorDelete = '';
         $overviews = imap_fetch_overview($mbox, "1:{$check->Nmsgs}", 0);
 
+        // Compute both hashes for every message up front so a single query
+        // can check them all at once. This used to issue one query PER
+        // message, and since this sync fires on every Customer Service page
+        // load, a mailbox with hundreds of already-processed messages meant
+        // hundreds of round-trips on every admin page view.
+        $overviewHashes = [];
+        $allHashes = [];
         foreach ($overviews as $overview) {
             $subject = $overview->subject ?? '';
             // The Message-ID header is a stable identity for a given email.
@@ -134,9 +160,35 @@ final class SyncCustomerServiceImapMailboxHandler implements SyncCustomerService
             $messageId = $overview->message_id ?? '';
             $md5 = '' !== $messageId
                 ? md5($messageId)
-                : md5($overview->date . $overview->from . $subject);
+                : md5(($overview->date ?? '') . ($overview->from ?? '') . $subject);
+            // The legacy controller included the unstable sequence number in
+            // its hash. Check that value as well so mail already imported by
+            // the legacy page is not imported a second time — though this
+            // only holds up to the first imap_expunge() run by this handler,
+            // since msgno (baked into the legacy hash) shifts on every
+            // expunge afterwards. It's a best-effort, first-sync-only bridge
+            // between the two hashing schemes, not a permanent one.
+            $legacyMd5 = md5(($overview->date ?? '') . ($overview->from ?? '') . $subject . $overview->msgno);
 
-            if ($this->syncImapRepository->isAlreadyProcessed($md5)) {
+            $overviewHashes[] = [$overview, $subject, $md5, $legacyMd5];
+            $allHashes[] = $md5;
+            $allHashes[] = $legacyMd5;
+        }
+
+        $processedHashes = array_flip($this->syncImapRepository->getAlreadyProcessedHashes(array_unique($allHashes)));
+
+        foreach ($overviewHashes as [$overview, $subject, $md5, $legacyMd5]) {
+            if (isset($processedHashes[$md5]) || isset($processedHashes[$legacyMd5])) {
+                // Stabilize legacy entries immediately: their hash contains an
+                // IMAP sequence number which may change after an expunge. The
+                // old legacy-hash row is intentionally left in place rather
+                // than deleted — one small row per migrated message is
+                // harmless to keep once superseded by the new hash.
+                if (!isset($processedHashes[$md5])) {
+                    $this->syncImapRepository->markAsProcessed($md5);
+                    $processedHashes[$md5] = true;
+                }
+
                 if (($settings['PS_SAV_IMAP_DELETE_MSG'] ?? false) && !imap_delete($mbox, $overview->msgno)) {
                     $strErrorDelete = ', ' . $this->translator->trans('Fail to delete message', [], 'Admin.Orderscustomers.Notification');
                 }
@@ -144,12 +196,15 @@ final class SyncCustomerServiceImapMailboxHandler implements SyncCustomerService
                 continue;
             }
 
-            $error = $this->processOverview($mbox, $overview, $subject, $settings);
-            if (null !== $error) {
-                $messageErrors[] = $error;
+            $processingResult = $this->processOverview($mbox, $overview, $subject, $settings);
+            if (null !== $processingResult->getError()) {
+                $messageErrors[] = $processingResult->getError();
             }
 
-            $this->syncImapRepository->markAsProcessed($md5);
+            if ($processingResult->shouldMarkAsProcessed()) {
+                $this->syncImapRepository->markAsProcessed($md5);
+                $processedHashes[$md5] = true;
+            }
         }
 
         imap_expunge($mbox);
@@ -171,12 +226,10 @@ final class SyncCustomerServiceImapMailboxHandler implements SyncCustomerService
     }
 
     /**
-     * Returns an error message, or null when the message (if any) was processed successfully.
-     *
      * @param resource|\IMAP\Connection $mbox
      * @param array<string, string|bool> $settings
      */
-    private function processOverview($mbox, object $overview, string $subject, array $settings): ?string
+    private function processOverview($mbox, object $overview, string $subject, array $settings): ImapMessageProcessingResult
     {
         preg_match('/#ct([0-9]*)/', $subject, $threadIdMatch);
         preg_match('/#tc([0-9-a-z-A-Z]*)/', $subject, $tokenMatch);
@@ -187,25 +240,54 @@ final class SyncCustomerServiceImapMailboxHandler implements SyncCustomerService
             && false === strpos($subject, '[no_sync]');
 
         if (!$matchFound && !$createNewThread) {
-            return null;
+            return ImapMessageProcessingResult::processed();
         }
 
+        $newThreadCreated = false;
         if ($createNewThread) {
-            $customerThread = $this->createThreadForUnrecognizedSender($overview);
-            if (null === $customerThread) {
-                return $this->translator->trans('Cannot create message in a new thread.', [], 'Admin.Orderscustomers.Notification');
+            $senderEmail = $this->parseSenderEmail($overview);
+            if (null === $senderEmail) {
+                // The sender's email is a fixed property of this message: it
+                // will never become parseable on a later sync, so this is
+                // marked processed (not retried) even though it failed.
+                return ImapMessageProcessingResult::processed(
+                    $this->translator->trans('Cannot create message in a new thread.', [], 'Admin.Orderscustomers.Notification')
+                );
             }
+
+            $customerThread = $this->createThreadForUnrecognizedSender($senderEmail, $overview);
+            if (null === $customerThread) {
+                return ImapMessageProcessingResult::failed(
+                    $this->translator->trans('Cannot create message in a new thread.', [], 'Admin.Orderscustomers.Notification')
+                );
+            }
+            $newThreadCreated = true;
         } else {
             $customerThread = new CustomerThread((int) $threadIdMatch[1]);
             if (!Validate::isLoadedObject($customerThread) || $customerThread->token !== $tokenMatch[1]) {
-                return null;
+                return ImapMessageProcessingResult::processed();
             }
         }
 
-        return $this->createMessageFromOverview($mbox, $overview, $customerThread, $subject);
+        $processingResult = $this->createMessageFromOverview($mbox, $overview, $customerThread, $subject);
+        // Keyed on getError(), not shouldMarkAsProcessed(): a thread created
+        // for this attempt is orphaned (no message ever got attached to it)
+        // whether the failure is transient (retried) or permanent (marked
+        // processed and never retried) — either way it must not be left
+        // behind, otherwise a transient failure would also leave a new
+        // empty thread behind on every retry.
+        if ($newThreadCreated && null !== $processingResult->getError()) {
+            try {
+                $customerThread->delete();
+            } catch (PrestaShopException) {
+                // Keep the original processing failure as the sync result.
+            }
+        }
+
+        return $processingResult;
     }
 
-    private function createThreadForUnrecognizedSender(object $overview): ?CustomerThread
+    private function parseSenderEmail(object $overview): ?string
     {
         $fromParsed = [];
         $from = $overview->from ?? null;
@@ -217,8 +299,11 @@ final class SyncCustomerServiceImapMailboxHandler implements SyncCustomerService
             return null;
         }
 
-        $senderEmail = $fromParsed[1] ?? $from;
+        return $fromParsed[1] ?? $from;
+    }
 
+    private function createThreadForUnrecognizedSender(string $senderEmail, object $overview): ?CustomerThread
+    {
         $contacts = Contact::getContacts($this->context->language->id);
         if (!$contacts) {
             return null;
@@ -257,20 +342,45 @@ final class SyncCustomerServiceImapMailboxHandler implements SyncCustomerService
     }
 
     /**
-     * Returns an error message, or null on success.
-     *
      * @param resource|\IMAP\Connection $mbox
      */
-    private function createMessageFromOverview($mbox, object $overview, CustomerThread $customerThread, string $subject): ?string
+    private function createMessageFromOverview($mbox, object $overview, CustomerThread $customerThread, string $subject): ImapMessageProcessingResult
     {
         $structure = imap_bodystruct($mbox, $overview->msgno, '1');
+        if (false === $structure) {
+            // A read failure at the protocol level can be transient (a
+            // network/server hiccup); retry on the next sync.
+            return ImapMessageProcessingResult::failed(
+                $this->translator->trans('Could not read the message structure for subject: %subject%', ['%subject%' => $subject], 'Admin.Orderscustomers.Notification')
+            );
+        }
+
         if (0 === $structure->type) {
             $body = imap_fetchbody($mbox, $overview->msgno, '1');
         } elseif (1 === $structure->type) {
             $structure = imap_bodystruct($mbox, $overview->msgno, '1.1');
+            if (false === $structure) {
+                return ImapMessageProcessingResult::failed(
+                    $this->translator->trans('Could not read the message structure for subject: %subject%', ['%subject%' => $subject], 'Admin.Orderscustomers.Notification')
+                );
+            }
             $body = imap_fetchbody($mbox, $overview->msgno, '1.1');
         } else {
-            return null;
+            // The message's top-level MIME type (anything but TEXT or
+            // MULTIPART) is a fixed property of this email: it will never
+            // become one this handler supports on a later sync, so this is
+            // marked processed (not retried) even though it failed.
+            return ImapMessageProcessingResult::processed(
+                $this->translator->trans('Unsupported message format for subject: %subject%', ['%subject%' => $subject], 'Admin.Orderscustomers.Notification')
+            );
+        }
+
+        if (false === $body) {
+            // Same as the imap_bodystruct() reads above: can be a transient
+            // protocol-level failure, so retry on the next sync.
+            return ImapMessageProcessingResult::failed(
+                $this->translator->trans('Could not read the message body for subject: %subject%', ['%subject%' => $subject], 'Admin.Orderscustomers.Notification')
+            );
         }
 
         switch ($structure->encoding) {
@@ -289,20 +399,30 @@ final class SyncCustomerServiceImapMailboxHandler implements SyncCustomerService
         // that false straight into nl2br(string) throws a TypeError that
         // would otherwise abort the whole sync (and, since this runs on
         // every Customer Service page load, break the listing page until
-        // the offending message is purged from the mailbox).
+        // the offending message is purged from the mailbox). This and the
+        // two checks below are all fixed properties of this message's
+        // charset/body bytes: if they fail, they will fail identically on
+        // every later sync, so all three are marked processed (not
+        // retried) even though they failed.
         $decodedBody = iconv($this->getEncoding($structure), 'utf-8//IGNORE', $body);
         if (false === $decodedBody) {
-            return $this->translator->trans('Invalid message encoding for subject: %subject%', ['%subject%' => $subject], 'Admin.Orderscustomers.Notification');
+            return ImapMessageProcessingResult::processed(
+                $this->translator->trans('Invalid message encoding for subject: %subject%', ['%subject%' => $subject], 'Admin.Orderscustomers.Notification')
+            );
         }
 
         $body = nl2br($decodedBody);
 
         if ('' === $body) {
-            return $this->translator->trans('The message body is empty, cannot import it.', [], 'Admin.Orderscustomers.Notification');
+            return ImapMessageProcessingResult::processed(
+                $this->translator->trans('The message body is empty, cannot import it.', [], 'Admin.Orderscustomers.Notification')
+            );
         }
 
         if (!Validate::isCleanHtml($body)) {
-            return $this->translator->trans('Invalid message content for subject: %subject%', ['%subject%' => $subject], 'Admin.Orderscustomers.Notification');
+            return ImapMessageProcessingResult::processed(
+                $this->translator->trans('Invalid message content for subject: %subject%', ['%subject%' => $subject], 'Admin.Orderscustomers.Notification')
+            );
         }
 
         $customerMessage = new CustomerMessage();
@@ -312,10 +432,14 @@ final class SyncCustomerServiceImapMailboxHandler implements SyncCustomerService
         try {
             $customerMessage->add();
         } catch (PrestaShopException) {
-            return $this->translator->trans('The message content is not valid, cannot import it.', [], 'Admin.Orderscustomers.Notification');
+            // A validation failure against this same, fixed message content
+            // (e.g. length) will recur identically on every later sync.
+            return ImapMessageProcessingResult::processed(
+                $this->translator->trans('The message content is not valid, cannot import it.', [], 'Admin.Orderscustomers.Notification')
+            );
         }
 
-        return null;
+        return ImapMessageProcessingResult::processed();
     }
 
     /**
@@ -323,8 +447,20 @@ final class SyncCustomerServiceImapMailboxHandler implements SyncCustomerService
      */
     private function buildConnectionOptions(array $settings): string
     {
-        $options = '';
+        // /norsh is always forced, regardless of the PS_SAV_IMAP_OPT_NORSH
+        // toggle: it disables the rsh/ssh preauthentication mechanism that
+        // some IMAP c-client builds shell out to, which is the actual code
+        // path CVE-2018-19518-class imap_open() RCEs exploit via a crafted
+        // host/user string (see ValidImapServerValidator). No legitimate
+        // modern IMAP server needs rsh/ssh preauth, so this trades an
+        // obsolete, unauthenticated legacy transport for closing off the
+        // vulnerability at its root rather than only filtering input to it.
+        $options = '/norsh';
         foreach (self::OPTION_CONFIGURATION_KEYS as $configurationKey => $flag) {
+            if ('/norsh' === $flag) {
+                continue;
+            }
+
             if ($settings[$configurationKey] ?? false) {
                 $options .= $flag;
             }

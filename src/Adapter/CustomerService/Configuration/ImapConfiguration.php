@@ -103,11 +103,13 @@ final class ImapConfiguration extends AbstractMultistoreConfiguration
             $shopConstraint = $this->getShopConstraint();
 
             foreach (self::FIELD_TO_CONFIG_KEY as $field => $configKey) {
-                // The password field renders empty in the form when the
-                // stored value is masked; persisting it as-is would wipe the
-                // previously saved credentials. Skip it when blank so existing
-                // credentials are preserved.
-                if ($field === 'imap_password' && ($configuration[$field] ?? '') === '') {
+                // PasswordType intentionally renders an existing password as an
+                // empty input. As on the migrated SMTP configuration form, an
+                // empty submission therefore means "keep the saved password".
+                if ('imap_password' === $field
+                    && '' === $configuration[$field]
+                    && $this->configuration->get($configKey, false, $shopConstraint)
+                ) {
                     continue;
                 }
 
@@ -120,26 +122,55 @@ final class ImapConfiguration extends AbstractMultistoreConfiguration
 
     /**
      * Raw connection settings needed to open the IMAP mailbox, keyed by their
-     * underlying `Configuration` key rather than the form field name, and
-     * correctly scoped to the current shop like every other value this class
-     * exposes. Used by `SyncCustomerServiceImapMailboxHandler` so the sync
-     * logic and the options form always read the exact same shop-scoped
-     * settings instead of maintaining a second, hand-kept mapping.
+     * underlying `Configuration` key rather than the form field name. Simply
+     * re-keys `getConfiguration()` so this can never drift out of sync with
+     * it (e.g. a different default for the same setting): both the sync
+     * handler and the options form always read the exact same shop-scoped
+     * values, from a single place.
      *
      * @return array<string, string|bool>
      */
     public function getConnectionSettings(): array
     {
-        $shopConstraint = $this->getShopConstraint();
+        $configuration = $this->getConfiguration();
         $settings = [];
 
         foreach (self::FIELD_TO_CONFIG_KEY as $field => $configKey) {
-            $settings[$configKey] = in_array($field, self::BOOLEAN_FIELDS, true)
-                ? (bool) $this->configuration->get($configKey, false, $shopConstraint)
-                : (string) $this->configuration->get($configKey, '', $shopConstraint);
+            $settings[$configKey] = $configuration[$field];
         }
 
         return $settings;
+    }
+
+    /**
+     * True as soon as one of the 3 core IMAP connection settings that have
+     * no meaningful default is filled in. `imap_port` is deliberately
+     * excluded: `getConfiguration()` always reports 143 as a display
+     * default even on a completely unconfigured shop, so including it here
+     * would trigger automatic sync on every fresh install. Single source of
+     * truth for both the automatic-sync gate in the controller and (via
+     * `isConnectionComplete()`) the sync handler itself.
+     */
+    public function isConnectionStarted(): bool
+    {
+        $configuration = $this->getConfiguration();
+
+        return '' !== $configuration['imap_url']
+            || '' !== $configuration['imap_user']
+            || '' !== $configuration['imap_password'];
+    }
+
+    /**
+     * True only when all 4 core IMAP connection settings are filled in.
+     */
+    public function isConnectionComplete(): bool
+    {
+        $configuration = $this->getConfiguration();
+
+        return '' !== $configuration['imap_url']
+            && '' !== $configuration['imap_port']
+            && '' !== $configuration['imap_user']
+            && '' !== $configuration['imap_password'];
     }
 
     protected function buildResolver(): OptionsResolver

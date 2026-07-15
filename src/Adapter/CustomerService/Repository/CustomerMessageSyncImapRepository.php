@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\CustomerService\Repository;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 
 /**
@@ -25,17 +26,20 @@ final class CustomerMessageSyncImapRepository
     ) {
     }
 
-    public function isAlreadyProcessed(string $md5Header): bool
+    /**
+     * @param string[] $md5Headers
+     *
+     * @return string[]
+     */
+    public function getAlreadyProcessedHashes(array $md5Headers): array
     {
-        $result = $this->connection->createQueryBuilder()
+        return $this->connection->createQueryBuilder()
             ->select('md5_header')
             ->from($this->dbPrefix . 'customer_message_sync_imap')
-            ->where('md5_header = :hash')
-            ->setParameter('hash', $md5Header)
+            ->where('md5_header IN (:hashes)')
+            ->setParameter('hashes', $md5Headers, ArrayParameterType::STRING)
             ->executeQuery()
-            ->fetchOne();
-
-        return false !== $result;
+            ->fetchFirstColumn();
     }
 
     public function markAsProcessed(string $md5Header): void

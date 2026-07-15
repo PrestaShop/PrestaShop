@@ -354,7 +354,10 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     public function updateImapOptions(TableNode $table): void
     {
         $rows = $table->getRowsHash();
-        $data = [];
+
+        /** @var FormDataProviderInterface $provider */
+        $provider = $this->getContainer()->get('prestashop.adapter.customer_service.imap.form_provider');
+        $data = $provider->getData();
         foreach ($rows as $key => $value) {
             if ($key === 'imap_url' || $key === 'imap_port' || $key === 'imap_user' || $key === 'imap_password') {
                 $data[$key] = (string) $value;
@@ -363,8 +366,6 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
             }
         }
 
-        /** @var FormDataProviderInterface $provider */
-        $provider = $this->getContainer()->get('prestashop.adapter.customer_service.imap.form_provider');
         $provider->setData($data);
     }
 
@@ -394,7 +395,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^IMAP configuration "([^"]+)" should be "([^"]+)"$/
+     * @Then /^IMAP configuration "([^"]+)" should be "([^"]*)"$/
      */
     public function assertImapConfigurationStringValue(string $key, string $expected): void
     {

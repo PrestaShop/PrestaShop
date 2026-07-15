@@ -8,12 +8,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\CustomerService;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ValidImapServer;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * "Customer service options" IMAP panel powering the inbox synchronization.
@@ -30,6 +32,11 @@ final class ImapOptionsType extends TranslatorAwareType
                     'Admin.Catalog.Help'
                 ),
                 'required' => false,
+                'constraints' => [
+                    new ValidImapServer(
+                        message: $this->trans('The IMAP URL is invalid.', 'Admin.Notifications.Error')
+                    ),
+                ],
             ])
             ->add('imap_port', TextType::class, [
                 'label' => $this->trans('IMAP port', 'Admin.Catalog.Feature'),
@@ -38,6 +45,18 @@ final class ImapOptionsType extends TranslatorAwareType
                     'Admin.Catalog.Help'
                 ),
                 'required' => false,
+                'constraints' => [
+                    // Whitelisting digits-only is a complete fix for this
+                    // field specifically (unlike the blocklist-style
+                    // ValidImapServer used below, a port can never
+                    // legitimately need any other character), and it also
+                    // closes off the same {host:port/options} injection
+                    // surface ValidImapServer protects on imap_url/imap_user.
+                    new Regex([
+                        'pattern' => '/^\d*$/',
+                        'message' => $this->trans('The IMAP port must contain digits only.', 'Admin.Notifications.Error'),
+                    ]),
+                ],
             ])
             ->add('imap_user', TextType::class, [
                 'label' => $this->trans('IMAP user', 'Admin.Catalog.Feature'),
@@ -46,6 +65,11 @@ final class ImapOptionsType extends TranslatorAwareType
                     'Admin.Catalog.Help'
                 ),
                 'required' => false,
+                'constraints' => [
+                    new ValidImapServer(
+                        message: $this->trans('The IMAP user is invalid.', 'Admin.Notifications.Error')
+                    ),
+                ],
             ])
             ->add('imap_password', PasswordType::class, [
                 'label' => $this->trans('IMAP password', 'Admin.Catalog.Feature'),
@@ -54,6 +78,9 @@ final class ImapOptionsType extends TranslatorAwareType
                     'Admin.Catalog.Help'
                 ),
                 'required' => false,
+                'attr' => [
+                    'autocomplete' => 'new-password',
+                ],
             ])
             ->add('imap_delete_msg', SwitchType::class, [
                 'label' => $this->trans('Delete messages', 'Admin.Catalog.Feature'),
