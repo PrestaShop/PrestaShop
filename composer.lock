@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5e99877b976b48992fc2de115178abf",
+    "content-hash": "34f1b13063758d6bbdc21a0d4ff911aa",
     "packages": [
         {
             "name": "api-platform/core",
@@ -6429,16 +6429,16 @@
         },
         {
             "name": "prestashop/ps_onepagecheckout",
-            "version": "v0.6.2",
+            "version": "v0.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_onepagecheckout.git",
-                "reference": "521db0a4d459069b367b7be5292e5520632d2a09"
+                "reference": "49f564de4136e12fdfbfe1611493c8b9cfe938f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_onepagecheckout/zipball/521db0a4d459069b367b7be5292e5520632d2a09",
-                "reference": "521db0a4d459069b367b7be5292e5520632d2a09",
+                "url": "https://api.github.com/repos/PrestaShop/ps_onepagecheckout/zipball/49f564de4136e12fdfbfe1611493c8b9cfe938f6",
+                "reference": "49f564de4136e12fdfbfe1611493c8b9cfe938f6",
                 "shasum": ""
             },
             "require": {
@@ -6472,9 +6472,9 @@
             "homepage": "https://github.com/PrestaShop/ps_onepagecheckout",
             "support": {
                 "issues": "https://github.com/PrestaShop/ps_onepagecheckout/issues",
-                "source": "https://github.com/PrestaShop/ps_onepagecheckout/tree/v0.6.2"
+                "source": "https://github.com/PrestaShop/ps_onepagecheckout/tree/v0.6.4"
             },
-            "time": "2026-07-02T14:45:01+00:00"
+            "time": "2026-07-15T14:02:21+00:00"
         },
         {
             "name": "prestashop/ps_searchbar",
@@ -18501,5 +18501,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
