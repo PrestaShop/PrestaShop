@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Adapter\Product\VirtualProduct;
 
 use Combination;
+use Context;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand;
@@ -22,6 +23,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use ProductDownload as VirtualProductFile;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Resources\DummyFileUploader;
+use Throwable;
 
 /**
  * Deleting a combination must remove its virtual file: both the product_download
@@ -68,7 +70,7 @@ class CombinationDeleteRemovesFileTest extends KernelTestCase
         if ($this->productId) {
             try {
                 $this->commandBus->handle(new DeleteProductCommand($this->productId, ShopConstraint::allShops()));
-            } catch (\Throwable) {
+            } catch (Throwable) {
                 // Best effort cleanup
             }
             $this->productId = null;
@@ -143,7 +145,7 @@ class CombinationDeleteRemovesFileTest extends KernelTestCase
         /** @var ProductId $productId */
         $productId = $this->commandBus->handle(new AddProductCommand(
             ProductType::TYPE_COMBINATIONS,
-            (int) \Context::getContext()->shop->id,
+            (int) Context::getContext()->shop->id,
             ['1' => 'Combinations product']
         ));
 
