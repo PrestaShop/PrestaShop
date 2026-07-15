@@ -6,6 +6,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
@@ -64,26 +65,33 @@ class ForwardCustomerThreadCommand
     }
 
     /**
-     * @param int         $customerThreadId
-     * @param string      $comment
-     * @param int|null    $employeeId Forward to another employee. Mutually exclusive with $email.
-     * @param string|null $email      Forward to someone else by email. Mutually exclusive with $employeeId.
+     * @param int $customerThreadId
+     * @param string $comment
+     * @param int|null $employeeId Forward to another employee. Mutually exclusive with $email.
+     * @param string|null $email Forward to someone else by email. Mutually exclusive with $employeeId.
+     *
+     * @throws CustomerServiceException if neither or both of $employeeId and $email are provided
      */
     public function __construct(
-        int $customerThreadId = 0,
-        string $comment = '',
+        int $customerThreadId,
+        string $comment,
         ?int $employeeId = null,
         ?string $email = null
     ) {
-        if ($customerThreadId > 0) {
-            $this->customerThreadId = new CustomerThreadId($customerThreadId);
-            $this->comment = $comment;
-            if (null !== $employeeId) {
-                $this->employeeId = new EmployeeId($employeeId);
-            }
-            if (null !== $email) {
-                $this->email = new Email($email);
-            }
+        if ((null === $employeeId) === (null === $email)) {
+            throw new CustomerServiceException(
+                'Exactly one of $employeeId or $email must be provided to forward a customer thread',
+                CustomerServiceException::INVALID_FORWARD_TARGET
+            );
+        }
+
+        $this->customerThreadId = new CustomerThreadId($customerThreadId);
+        $this->comment = $comment;
+        if (null !== $employeeId) {
+            $this->employeeId = new EmployeeId($employeeId);
+        }
+        if (null !== $email) {
+            $this->email = new Email($email);
         }
     }
 
