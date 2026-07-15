@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Adapter\Product\VirtualProduct;
 
 use Combination;
+use Context;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -128,7 +129,7 @@ class VirtualProductFileCombinationTest extends KernelTestCase
         /** @var ProductId $productId */
         $productId = $this->commandBus->handle(new AddProductCommand(
             ProductType::TYPE_COMBINATIONS,
-            (int) \Context::getContext()->shop->id,
+            (int) Context::getContext()->shop->id,
             ['1' => 'Combinations product']
         ));
 

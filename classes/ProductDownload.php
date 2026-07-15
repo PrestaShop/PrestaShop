@@ -54,7 +54,7 @@ class ProductDownloadCore extends ObjectModel
         'fields' => [
             'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_product_attribute' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'display_filename' =>['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => VirtualProductFileSettings::MAX_DISPLAY_FILENAME_LENGTH],
+            'display_filename' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => VirtualProductFileSettings::MAX_DISPLAY_FILENAME_LENGTH],
             'filename' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => VirtualProductFileSettings::MAX_FILENAME_LENGTH],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_expiration' => ['type' => self::TYPE_DATE, 'validate' => 'isDateOrNull'],
