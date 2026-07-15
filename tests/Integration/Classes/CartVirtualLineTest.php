@@ -14,9 +14,9 @@ use Combination;
 use Configuration;
 use Context;
 use Currency;
-use PHPUnit\Framework\TestCase;
 use Product;
 use ProductDownload;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tools;
 
 /**
@@ -26,7 +26,7 @@ use Tools;
  *
  * @group virtual-combinations
  */
-class CartVirtualLineTest extends TestCase
+class CartVirtualLineTest extends KernelTestCase
 {
     /**
      * @var int
@@ -36,6 +36,11 @@ class CartVirtualLineTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+
+        // Boot the Symfony kernel so ContainerFinder resolves inside Cart internals.
+        self::bootKernel();
+        global $kernel;
+        $kernel = self::$kernel;
 
         Configuration::loadConfiguration();
         Configuration::updateValue('PS_TAX_ADDRESS_TYPE', 'id_address_invoice');
@@ -105,7 +110,7 @@ class CartVirtualLineTest extends TestCase
         $product->price = 10.0;
         $product->link_rewrite = Tools::str2url($name);
         // Product-level is_virtual stays 0: virtuality is decided per combination.
-        $product->is_virtual = 0;
+        $product->is_virtual = false;
         self::assertTrue($product->save());
 
         return $product;

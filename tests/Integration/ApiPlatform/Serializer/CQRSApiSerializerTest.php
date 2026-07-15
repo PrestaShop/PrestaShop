@@ -630,6 +630,7 @@ class CQRSApiSerializerTest extends KernelTestCase
                 'accessDays' => 23,
                 'downloadTimesLimit' => 1,
                 'expirationDate' => '1969-07-11 00:00:00',
+                'combinationId' => 0,
             ],
         ];
 
