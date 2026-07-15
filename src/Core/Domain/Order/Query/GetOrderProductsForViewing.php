@@ -51,17 +51,15 @@ class GetOrderProductsForViewing
      * @throws InvalidSortingException
      */
     public function __construct(
-        int $orderId = 0,
+        int $orderId,
         ?int $offset = null,
         ?int $limit = null,
         string $productsSorting = QuerySorting::ASC
     ) {
-        if ($orderId > 0) {
-            $this->orderId = new OrderId($orderId);
-            $this->productsSorting = new QuerySorting($productsSorting);
-            $this->offset = $offset;
-            $this->limit = $limit;
-        }
+        $this->orderId = new OrderId($orderId);
+        $this->productsSorting = new QuerySorting($productsSorting);
+        $this->offset = $offset;
+        $this->limit = $limit;
     }
 
     public static function paginated(
