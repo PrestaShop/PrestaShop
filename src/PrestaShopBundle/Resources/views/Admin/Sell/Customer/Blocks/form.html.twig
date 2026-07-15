@@ -8,7 +8,7 @@
 {% set isGuest = isGuest|default(false) %}
 
 {% block customer_form %}
-  {{ form_start(customerForm) }}
+  {{ form_start(customerForm, {attr: {'data-at-least-one-group-message': 'You must select at least one group.'|trans({}, 'Admin.Notifications.Error')}}) }}
     <div class="card">
       <h3 class="card-header">
         <i class="material-icons">person</i>

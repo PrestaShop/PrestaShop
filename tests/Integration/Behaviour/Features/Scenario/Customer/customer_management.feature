@@ -218,3 +218,25 @@ Feature: Customer Management
     And I attempt to edit customer "CUST-13" and I change the following properties:
       | defaultGroupId | Visitor |
     Then I should be returned an error message 'Customer default group with id "1" must be in access groups'
+
+  Scenario: Fail to create a customer with no groups
+    When I attempt to create a customer "CUST-14" with following properties:
+      | firstName      | Mathieu                          |
+      | lastName       | Napoler                          |
+      | email          | customerfourteen@prestashop.com  |
+      | password       | PrestaShopForever1_!             |
+      | defaultGroupId | Customer                         |
+      | groupIds       | []                               |
+    Then I should be returned an error message 'A customer must belong to at least one group'
+
+  Scenario: Fail to remove all groups from a customer
+    When I create a customer "CUST-15" with following properties:
+      | firstName      | Mathieu                          |
+      | lastName       | Customer                         |
+      | email          | customerfifteen@prestashop.com   |
+      | password       | PrestaShopForever1_!             |
+      | defaultGroupId | Customer                         |
+      | groupIds       | [Customer]                       |
+    And I attempt to edit customer "CUST-15" and I change the following properties:
+      | groupIds | [] |
+    Then I should be returned an error message 'A customer must belong to at least one group'
