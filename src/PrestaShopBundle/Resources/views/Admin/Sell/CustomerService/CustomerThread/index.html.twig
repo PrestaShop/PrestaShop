@@ -13,18 +13,28 @@
   {% block customer_service_kpis %}
     {{ render(controller(
       'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
-      {kpiRow: customerServiceKpi}
+      {kpiRow: customerServiceKpi},
     )) }}
   {% endblock %}
 
-  {% block customer_service_listing_statistics %}
-    {{ include(
-      '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/listing_statistics.html.twig',
-      {statistics: customerServiceListingStatistics}
-    ) }}
+  {% block customer_service_statistics_row %}
+    <div class="row mb-3">
+      {{ include(
+        '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/contact_categories_statistics.html.twig',
+        {categories: customerServiceContactCategoriesStatistics},
+      ) }}
+      {{ include(
+        '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/listing_statistics.html.twig',
+        {statistics: customerServiceListingStatistics},
+      ) }}
+    </div>
   {% endblock %}
 
   {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: customerThreadGrid}) }}
+
+  {% block customer_service_options %}
+    {{ include('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/options.html.twig') }}
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}

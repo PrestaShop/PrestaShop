@@ -1,0 +1,27 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% for category in categories %}
+  <div class="col-lg-3 mb-3">
+    <div class="card h-100">
+      <h3 class="card-header">
+        {{ category.name }}
+      </h3>
+      <div class="card-body">
+        {% if categories|length < 6 and category.description is not empty %}
+          <p>{{ category.description }}</p>
+        {% endif %}
+        {% if category.openThreadsCount == 0 %}
+          <span class="text-muted">{{ 'No new messages'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+        {% else %}
+          <a href="{{ path('admin_customer_threads_view', {customerThreadId: category.oldestOpenThreadId}) }}" class="btn btn-primary">
+            {{ category.openThreadsCount }}
+            {{ (category.openThreadsCount > 1 ? 'New messages' : 'New message')|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endfor %}

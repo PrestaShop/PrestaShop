@@ -190,6 +190,8 @@ class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandlerInterf
      */
     protected function renderMessage(array $message, $id_employee = null)
     {
+        $this->context->smarty->setTemplateDir(_PS_BO_ALL_THEMES_DIR_ . 'default' . DIRECTORY_SEPARATOR . 'template');
+
         $tpl = $this->context->smarty->createTemplate(
             'controllers' . DIRECTORY_SEPARATOR . 'customer_threads/message.tpl',
             $this->context->smarty

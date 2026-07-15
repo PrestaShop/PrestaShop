@@ -27,3 +27,35 @@ Feature: Customer service listing statistics
       | closed_threads    | 1 |
       | customer_messages | 4 |
       | employee_messages | 0 |
+
+  Scenario: Employee messages are counted separately from customer messages
+    When I add new customer thread "stats-employee-msg" with status "open" and message "customer message"
+    And employee replies to customer thread "stats-employee-msg" with message "employee reply"
+    Then customer service listing statistics should be:
+      | total_threads     | 1 |
+      | open_threads      | 1 |
+      | pending_threads   | 0 |
+      | closed_threads    | 0 |
+      | customer_messages | 1 |
+      | employee_messages | 1 |
+
+  Scenario: Statistics are scoped by shop context
+    Given customer service statistics shops are available
+    When I add new customer thread "stats-shop1" in shop "stats_shop_1" with status "open" and message "shop 1 thread"
+    And I add new customer thread "stats-shop2" in shop "stats_shop_2" with status "closed" and message "shop 2 thread"
+    And customer service statistics are scoped to shop "stats_shop_1"
+    Then customer service listing statistics should be:
+      | total_threads     | 1 |
+      | open_threads      | 1 |
+      | pending_threads   | 0 |
+      | closed_threads    | 0 |
+      | customer_messages | 1 |
+      | employee_messages | 0 |
+    When customer service statistics are scoped to all shops
+    Then customer service listing statistics should be:
+      | total_threads     | 2 |
+      | open_threads      | 1 |
+      | pending_threads   | 0 |
+      | closed_threads    | 1 |
+      | customer_messages | 2 |
+      | employee_messages | 0 |

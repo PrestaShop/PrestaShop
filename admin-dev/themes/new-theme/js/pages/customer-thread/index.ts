@@ -4,6 +4,12 @@
  */
 
 $(() => {
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+    ],
+  );
+
   const grid = new window.prestashop.component.Grid('customer_thread');
 
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());

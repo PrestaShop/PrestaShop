@@ -60,5 +60,31 @@ services:
   prestashop.core.domain.customer_service.repository.customer_thread_repository:
     class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadRepository'
 
+  PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerThreadRepository:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $shopRepository: '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
+      $dbPrefix: '%database_prefix%'
+
   PrestaShop\PrestaShop\Adapter\CustomerService\QueryHandler\GetCustomerServiceListingStatisticsHandler:
     autoconfigure: true
+    arguments:
+      $customerThreadRepository: '@PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerThreadRepository'
+
+  PrestaShop\PrestaShop\Adapter\CustomerService\QueryHandler\GetCustomerServiceContactCategoriesStatisticsHandler:
+    autoconfigure: true
+    arguments:
+      $customerThreadRepository: '@PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerThreadRepository'
+
+  PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerMessageSyncImapRepository:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\SyncCustomerServiceImapMailboxHandler:
+    autoconfigure: true
+    arguments:
+      $context: '@=service("prestashop.adapter.legacy.context").getContext()'
+      $configuration: '@prestashop.adapter.legacy.configuration'
+      $imapConfiguration: '@prestashop.adapter.customer_service.imap_configuration'
+      $syncImapRepository: '@PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerMessageSyncImapRepository'

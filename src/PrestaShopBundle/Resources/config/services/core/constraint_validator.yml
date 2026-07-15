@@ -21,6 +21,11 @@ services:
     tags:
       - { name: validator.constraint_validator }
 
+  prestashop.core.constraint_validator.valid_imap_server_validator:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\ValidImapServerValidator'
+    tags:
+      - { name: validator.constraint_validator }
+
   prestashop.core.constraint_validator.typed_regex_validator:
     class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator'
     arguments:

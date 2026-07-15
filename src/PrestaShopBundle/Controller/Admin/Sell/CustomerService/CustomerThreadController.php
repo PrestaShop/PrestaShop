@@ -7,21 +7,28 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\CustomerService\Configuration\ImapConfiguration;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\SyncCustomerServiceImapMailboxCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CannotDeleteCustomerThreadException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceContactCategoriesStatistics;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceListingStatistics;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceListingStatistics;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerThreadFilter;
@@ -29,10 +36,12 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
 use PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
+use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 /**
  * Manages page under "Sell > Customer Service > Customer Service"
@@ -54,18 +63,95 @@ class CustomerThreadController extends PrestaShopAdminController
         GridFactoryInterface $customerGridFactory,
         #[Autowire(service: 'prestashop.core.kpi_row.factory.customer_service')]
         KpiRowFactoryInterface $customerServiceKpiFactory,
+        #[Autowire(service: 'prestashop.adapter.customer_service.options.form_handler')]
+        FormHandlerInterface $optionsFormHandler,
+        #[Autowire(service: 'prestashop.adapter.customer_service.imap.form_handler')]
+        FormHandlerInterface $imapFormHandler,
+        #[Autowire(service: 'prestashop.adapter.customer_service.imap_configuration')]
+        ImapConfiguration $imapConfiguration,
+        ShopContext $shopContext,
+        LanguageContext $languageContext,
         CustomerThreadFilter $filters
     ): Response {
+        // Skip the automatic sync right after a manual "Run sync": runImapSyncAction()
+        // already synced and flashed its own result, avoid syncing (and flashing) twice.
+        $session = $request->getSession();
+        $justRanManualSync = $session instanceof FlashBagAwareSessionInterface && $session->getFlashBag()->has('imap_sync_ran');
+
+        $canAutoRunImapSync = $this->isGranted('update', $request->attributes->get('_legacy_controller'));
+
+        if ($canAutoRunImapSync && !$justRanManualSync && $imapConfiguration->isConnectionStarted()) {
+            try {
+                $syncResult = $this->dispatchCommand(new SyncCustomerServiceImapMailboxCommand());
+
+                if ($syncResult->hasError()) {
+                    foreach ($syncResult->getErrors() as $error) {
+                        $this->addFlash('warning', $error);
+                    }
+                }
+            } catch (Exception $e) {
+                $this->addFlash('warning', $this->getErrorMessageForException($e, []));
+            }
+        }
+
+        // Build the grid after synchronization so newly imported threads and
+        // messages are visible on the current page load.
         $customerThreadGrid = $customerGridFactory->getGrid($filters);
+
+        try {
+            $customerServiceListingStatistics = $this->dispatchQuery(new GetCustomerServiceListingStatistics($shopContext->getShopConstraint()));
+            $customerServiceContactCategoriesStatistics = $this->dispatchQuery(
+                new GetCustomerServiceContactCategoriesStatistics($languageContext->getId(), $shopContext->getShopConstraint())
+            );
+        } catch (Exception $e) {
+            // A failure here must not prevent the grid itself from
+            // rendering: fall back to empty statistics rather than 500-ing
+            // the whole listing page over a KPI/stats read.
+            $this->addFlash('warning', $this->getErrorMessageForException($e, []));
+            $customerServiceListingStatistics = new CustomerServiceListingStatistics(0, 0, 0, 0, 0, 0);
+            $customerServiceContactCategoriesStatistics = [];
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerThreadGrid' => $this->presentGrid($customerThreadGrid),
             'customerServiceKpi' => $customerServiceKpiFactory->build(),
-            'customerServiceListingStatistics' => $this->dispatchQuery(new GetCustomerServiceListingStatistics()),
+            'customerServiceListingStatistics' => $customerServiceListingStatistics,
+            'customerServiceContactCategoriesStatistics' => $customerServiceContactCategoriesStatistics,
+            'customerServiceOptionsForm' => $optionsFormHandler->getForm()->createView(),
+            'imapOptionsForm' => $imapFormHandler->getForm()->createView(),
+            'canRunImapSync' => $imapConfiguration->isConnectionComplete(),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Customer service', [], 'Admin.Navigation.Menu'),
         ]);
+    }
+
+    /**
+     * Run the customer service IMAP mailbox synchronization.
+     */
+    #[DemoRestricted(redirectRoute: 'admin_customer_threads')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads')]
+    public function runImapSyncAction(Request $request): RedirectResponse
+    {
+        if (!$this->isCsrfTokenValid('run-imap-sync', $request->request->get('_token'))) {
+            $this->addFlash('error', $this->trans('Invalid security token.', [], 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_customer_threads');
+        }
+
+        $syncResult = $this->dispatchCommand(new SyncCustomerServiceImapMailboxCommand());
+
+        if ($syncResult->hasError()) {
+            $this->addFlashErrors($syncResult->getErrors());
+        } else {
+            $this->addFlash('success', $this->trans('Synchronization completed successfully.', [], 'Admin.Orderscustomers.Notification'));
+        }
+
+        // Marker consumed by indexAction() to skip its own automatic sync on
+        // the very next load, so the result is not synced and flashed twice.
+        $this->addFlash('imap_sync_ran', '1');
+
+        return $this->redirectToRoute('admin_customer_threads');
     }
 
     /**
@@ -301,6 +387,32 @@ class CustomerThreadController extends PrestaShopAdminController
     }
 
     /**
+     * Save the "Contact options" panel.
+     */
+    #[DemoRestricted(redirectRoute: 'admin_customer_threads')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads')]
+    public function saveOptionsAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.customer_service.options.form_handler')]
+        FormHandlerInterface $optionsFormHandler,
+    ): RedirectResponse {
+        return $this->processOptionsForm($request, $optionsFormHandler);
+    }
+
+    /**
+     * Save the "Customer service options" IMAP panel.
+     */
+    #[DemoRestricted(redirectRoute: 'admin_customer_threads')]
+    #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_customer_threads')]
+    public function saveImapOptionsAction(
+        Request $request,
+        #[Autowire(service: 'prestashop.adapter.customer_service.imap.form_handler')]
+        FormHandlerInterface $imapFormHandler,
+    ): RedirectResponse {
+        return $this->processOptionsForm($request, $imapFormHandler);
+    }
+
+    /**
      * Bulk delete customer thread
      *
      * @param Request $request
@@ -380,6 +492,36 @@ class CustomerThreadController extends PrestaShopAdminController
         }
 
         return array_map('intval', $customerThreadIds);
+    }
+
+    private function processOptionsForm(Request $request, FormHandlerInterface $formHandler): RedirectResponse
+    {
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if (!$form->isSubmitted()) {
+            return $this->redirectToRoute('admin_customer_threads');
+        }
+
+        if (!$form->isValid()) {
+            foreach ($form->getErrors(true) as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
+
+            return $this->redirectToRoute('admin_customer_threads');
+        }
+
+        $saveErrors = $formHandler->save($form->getData());
+
+        if (0 === count($saveErrors)) {
+            $this->addFlash('success', $this->trans('Successful update', [], 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_customer_threads');
+        }
+
+        $this->addFlashErrors($saveErrors);
+
+        return $this->redirectToRoute('admin_customer_threads');
     }
 
     private function handleCustomerThreadStatusUpdate(int $customerThreadId, string $newStatus)

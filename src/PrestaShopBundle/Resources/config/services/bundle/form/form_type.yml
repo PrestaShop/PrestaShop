@@ -384,6 +384,10 @@ services:
 
   PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType:
 
+  PrestaShopBundle\Form\Admin\Sell\CustomerService\CustomerServiceOptionsType:
+
+  PrestaShopBundle\Form\Admin\Sell\CustomerService\ImapOptionsType:
+
   PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType:
     arguments:
       $employeeChoiceProvider: '@prestashop.adapter.form.choice_provider.employee_name_by_id'

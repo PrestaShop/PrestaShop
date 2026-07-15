@@ -4,13 +4,18 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Configuration;
 use CustomerThread;
 use Db;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Entity\CustomerMessage;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
+use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
@@ -22,7 +27,10 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadFor
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceListingStatistics;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use RuntimeException;
+use Shop;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tools;
@@ -74,14 +82,111 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given customer service statistics shops are available
+     */
+    public function customerServiceStatisticsShopsAreAvailable(): void
+    {
+        $defaultShop = new Shop($this->getDefaultShopId());
+        if (!$defaultShop->id) {
+            throw new RuntimeException('Default shop was not found.');
+        }
+
+        $this->getSharedStorage()->set('stats_shop_1', (int) $defaultShop->id);
+
+        $secondShopId = (int) Shop::getIdByName('stats_shop_2');
+        if (!$secondShopId) {
+            $secondShop = new Shop();
+            $secondShop->active = true;
+            $secondShop->id_shop_group = (int) $defaultShop->id_shop_group;
+            $secondShop->id_category = (int) $defaultShop->id_category;
+            $secondShop->theme_name = _THEME_NAME_;
+            $secondShop->name = 'stats_shop_2';
+            $secondShop->color = 'blue';
+
+            if (!$secondShop->add()) {
+                throw new RuntimeException(sprintf('Could not create shop: %s', Db::getInstance()->getMsgError()));
+            }
+
+            $secondShop->setTheme();
+            $secondShopId = (int) $secondShop->id;
+        }
+
+        $this->getSharedStorage()->set('stats_shop_2', $secondShopId);
+    }
+
+    /**
+     * @When customer service statistics are scoped to shop :shopReference
+     */
+    public function customerServiceStatisticsAreScopedToShop(string $shopReference): void
+    {
+        $shopId = $this->referenceToId($shopReference);
+
+        /** @var ShopContextBuilder $shopContextBuilder */
+        $shopContextBuilder = $this->getContainer()->get('test_shop_context_builder');
+        $shopContextBuilder->setShopConstraint(ShopConstraint::shop($shopId));
+        $shopContextBuilder->setShopId($shopId);
+    }
+
+    /**
+     * @When customer service statistics are scoped to all shops
+     */
+    public function customerServiceStatisticsAreScopedToAllShops(): void
+    {
+        /** @var ShopContextBuilder $shopContextBuilder */
+        $shopContextBuilder = $this->getContainer()->get('test_shop_context_builder');
+        $shopContextBuilder->setShopConstraint(ShopConstraint::allShops());
+        $shopContextBuilder->setShopId($this->getDefaultShopId());
+    }
+
+    /**
+     * @AfterScenario @customer-service-statistics
+     */
+    public function resetShopConstraintAfterStatisticsScenario(): void
+    {
+        /** @var ShopContextBuilder $shopContextBuilder */
+        $shopContextBuilder = $this->getContainer()->get('test_shop_context_builder');
+        $shopContextBuilder->setShopConstraint(ShopConstraint::allShops());
+        $shopContextBuilder->setShopId($this->getDefaultShopId());
+    }
+
+    /**
      * @When I add new customer thread :threadReference with status :status and message :message
      */
     public function createCustomerThreadWithStatus(string $threadReference, string $status, string $message): void
     {
+        $this->createCustomerThreadWithStatusInShop($threadReference, $status, $message, $this->getDefaultShopId());
+    }
+
+    /**
+     * @When I add new customer thread :threadReference in shop :shopReference with status :status and message :message
+     */
+    public function createCustomerThreadInShopWithStatus(string $threadReference, string $shopReference, string $status, string $message): void
+    {
+        $this->createCustomerThreadWithStatusInShop($threadReference, $status, $message, $this->referenceToId($shopReference));
+    }
+
+    /**
+     * @When employee replies to customer thread :threadReference with message :message
+     */
+    public function addEmployeeReplyToThread(string $threadReference, string $message): void
+    {
+        $customerMessage = new CustomerMessage();
+        $customerMessage->id_customer_thread = $this->referenceToId($threadReference);
+        $customerMessage->id_employee = 1;
+        $customerMessage->message = $message;
+        $customerMessage->file_name = '';
+        $customerMessage->ip_address = '';
+        $customerMessage->private = false;
+        $customerMessage->read = false;
+        $customerMessage->add();
+    }
+
+    private function createCustomerThreadWithStatusInShop(string $threadReference, string $status, string $message, int $shopId): void
+    {
         $customerThread = new CustomerThread();
         $customerThread->id_contact = 2;
         $customerThread->id_customer = 1;
-        $customerThread->id_shop = $this->getDefaultShopId();
+        $customerThread->id_shop = $shopId;
         $customerThread->id_order = 0;
         $customerThread->id_lang = 1;
         $customerThread->email = 'test@gmail.com';
@@ -89,7 +194,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $customerThread->token = Tools::passwdGen(12);
         $customerThread->add();
 
-        $this->getSharedStorage()->set($threadReference, $customerThread);
+        $this->getSharedStorage()->set($threadReference, (int) $customerThread->id);
 
         $customerMessage = new CustomerMessage();
         $customerMessage->id_customer_thread = $customerThread->id;
@@ -110,7 +215,9 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $expected = $table->getRowsHash();
 
         /** @var CustomerServiceListingStatistics $stats */
-        $stats = $this->getQueryBus()->handle(new GetCustomerServiceListingStatistics());
+        $stats = $this->getQueryBus()->handle(new GetCustomerServiceListingStatistics(
+            $this->getContainer()->get(ShopContext::class)->getShopConstraint()
+        ));
 
         $actual = [
             'total_threads' => $stats->getTotalThreads(),
@@ -221,6 +328,95 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
                 $customerThreadView->getStatus()
             )
         );
+    }
+
+    /**
+     * @When I update customer service options with:
+     */
+    public function updateCustomerServiceOptions(TableNode $table): void
+    {
+        $rows = $table->getRowsHash();
+        $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
+
+        $data = [
+            'file_upload' => filter_var($rows['file_upload'] ?? false, FILTER_VALIDATE_BOOLEAN),
+            'signature' => [$defaultLangId => $rows['signature_in_default'] ?? ''],
+        ];
+
+        /** @var FormDataProviderInterface $provider */
+        $provider = $this->getContainer()->get('prestashop.adapter.customer_service.options.form_provider');
+        $provider->setData($data);
+    }
+
+    /**
+     * @When I update IMAP options with:
+     */
+    public function updateImapOptions(TableNode $table): void
+    {
+        $rows = $table->getRowsHash();
+
+        /** @var FormDataProviderInterface $provider */
+        $provider = $this->getContainer()->get('prestashop.adapter.customer_service.imap.form_provider');
+        $data = $provider->getData();
+        foreach ($rows as $key => $value) {
+            if ($key === 'imap_url' || $key === 'imap_port' || $key === 'imap_user' || $key === 'imap_password') {
+                $data[$key] = (string) $value;
+            } else {
+                $data[$key] = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+            }
+        }
+
+        $provider->setData($data);
+    }
+
+    /**
+     * @Then customer service file upload should be :state
+     */
+    public function assertFileUploadState(string $state): void
+    {
+        $expected = $state === 'enabled';
+        $actual = (bool) Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD');
+
+        Assert::assertSame(
+            $expected,
+            $actual,
+            sprintf('Expected file upload to be %s, got %s.', $state, $actual ? 'enabled' : 'disabled')
+        );
+    }
+
+    /**
+     * @Then customer service signature in default language should be :expected
+     */
+    public function assertSignatureInDefaultLanguage(string $expected): void
+    {
+        $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
+        $actual = (string) Configuration::get('PS_CUSTOMER_SERVICE_SIGNATURE', $defaultLangId);
+        Assert::assertSame($expected, $actual);
+    }
+
+    /**
+     * @Then /^IMAP configuration "([^"]+)" should be "([^"]*)"$/
+     */
+    public function assertImapConfigurationStringValue(string $key, string $expected): void
+    {
+        $actual = (string) Configuration::get($key);
+        Assert::assertSame($expected, $actual, sprintf('Configuration "%s" should be "%s", got "%s".', $key, $expected, $actual));
+    }
+
+    /**
+     * @Then /^IMAP configuration "([^"]+)" should be enabled$/
+     */
+    public function assertImapConfigurationEnabled(string $key): void
+    {
+        Assert::assertTrue((bool) Configuration::get($key), sprintf('Configuration "%s" should be enabled.', $key));
+    }
+
+    /**
+     * @Then /^IMAP configuration "([^"]+)" should be disabled$/
+     */
+    public function assertImapConfigurationDisabled(string $key): void
+    {
+        Assert::assertFalse((bool) Configuration::get($key), sprintf('Configuration "%s" should be disabled.', $key));
     }
 
     /**

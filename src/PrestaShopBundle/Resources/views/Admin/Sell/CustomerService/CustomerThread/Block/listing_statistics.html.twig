@@ -3,55 +3,53 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
-<div class="row mb-3">
-  <div class="col-lg-6">
-    <div class="card">
-      <h3 class="card-header">
-        {{ 'Statistics'|trans({}, 'Admin.Catalog.Feature') }}
-      </h3>
-      <div class="card-body">
-        <ul class="list-unstyled mb-0">
-          <li class="d-flex justify-content-between">
-            <span>{{ 'Total threads'|trans({}, 'Admin.Catalog.Feature') }}</span>
-            <span class="badge badge-primary rounded">{{ statistics.totalThreads }}</span>
-          </li>
-          <li class="d-flex justify-content-between">
-            <span>{{ 'Threads pending'|trans({}, 'Admin.Catalog.Feature') }}</span>
-            <span class="badge badge-warning rounded">{{ statistics.pendingThreads }}</span>
-          </li>
-          <li class="d-flex justify-content-between">
-            <span>{{ 'Total number of customer messages'|trans({}, 'Admin.Catalog.Feature') }}</span>
-            <span class="badge badge-primary rounded">{{ statistics.customerMessages }}</span>
-          </li>
-          <li class="d-flex justify-content-between">
-            <span>{{ 'Total number of employee messages'|trans({}, 'Admin.Catalog.Feature') }}</span>
-            <span class="badge badge-primary rounded">{{ statistics.employeeMessages }}</span>
-          </li>
-          <li class="d-flex justify-content-between">
-            <span>{{ 'Unread threads'|trans({}, 'Admin.Catalog.Feature') }}</span>
-            <span class="badge badge-success rounded">{{ statistics.openThreads }}</span>
-          </li>
-          <li class="d-flex justify-content-between">
-            <span>{{ 'Closed threads'|trans({}, 'Admin.Catalog.Feature') }}</span>
-            <span class="badge badge-secondary rounded">{{ statistics.closedThreads }}</span>
-          </li>
-        </ul>
-      </div>
+<div class="col-lg-3 mb-3">
+  <div class="card h-100">
+    <h3 class="card-header">
+      {{ 'Statistics'|trans({}, 'Admin.Catalog.Feature') }}
+    </h3>
+    <div class="card-body">
+      <ul class="list-unstyled mb-0">
+        <li class="d-flex justify-content-between">
+          <span>{{ 'Total threads'|trans({}, 'Admin.Catalog.Feature') }}</span>
+          <span class="badge badge-primary rounded">{{ statistics.totalThreads }}</span>
+        </li>
+        <li class="d-flex justify-content-between">
+          <span>{{ 'Threads pending'|trans({}, 'Admin.Catalog.Feature') }}</span>
+          <span class="badge badge-warning rounded">{{ statistics.pendingThreads }}</span>
+        </li>
+        <li class="d-flex justify-content-between">
+          <span>{{ 'Total number of customer messages'|trans({}, 'Admin.Catalog.Feature') }}</span>
+          <span class="badge badge-primary rounded">{{ statistics.customerMessages }}</span>
+        </li>
+        <li class="d-flex justify-content-between">
+          <span>{{ 'Total number of employee messages'|trans({}, 'Admin.Catalog.Feature') }}</span>
+          <span class="badge badge-primary rounded">{{ statistics.employeeMessages }}</span>
+        </li>
+        <li class="d-flex justify-content-between">
+          <span>{{ 'Unread threads'|trans({}, 'Admin.Catalog.Feature') }}</span>
+          <span class="badge badge-success rounded">{{ statistics.openThreads }}</span>
+        </li>
+        <li class="d-flex justify-content-between">
+          <span>{{ 'Closed threads'|trans({}, 'Admin.Catalog.Feature') }}</span>
+          <span class="badge badge-secondary rounded">{{ statistics.closedThreads }}</span>
+        </li>
+      </ul>
     </div>
   </div>
-  <div class="col-lg-6">
-    <div class="card">
-      <h3 class="card-header">
-        {{ 'Meaning of status'|trans({}, 'Admin.Catalog.Feature') }}
-      </h3>
-      <div class="card-body">
-        <ul class="list-unstyled mb-0">
-          <li><span class="text-success">●</span> {{ 'Open'|trans({}, 'Admin.Catalog.Feature') }}</li>
-          <li><span class="text-danger">●</span> {{ 'Closed'|trans({}, 'Admin.Catalog.Feature') }}</li>
-          <li><span class="text-warning">●</span> {{ 'Pending 1'|trans({}, 'Admin.Catalog.Feature') }}</li>
-          <li><span class="text-warning">●</span> {{ 'Pending 2'|trans({}, 'Admin.Catalog.Feature') }}</li>
-        </ul>
-      </div>
+</div>
+<div class="col-lg-3 mb-3">
+  <div class="card h-100">
+    <h3 class="card-header">
+      {{ 'Meaning of status'|trans({}, 'Admin.Catalog.Feature') }}
+    </h3>
+    <div class="card-body">
+      <ul class="list-unstyled mb-0">
+        <li><span class="text-success">●</span> {{ 'Open'|trans({}, 'Admin.Catalog.Feature') }}</li>
+        <li><span class="text-danger">●</span> {{ 'Closed'|trans({}, 'Admin.Catalog.Feature') }}</li>
+        <li><span class="text-warning">●</span> {{ 'Pending 1'|trans({}, 'Admin.Catalog.Feature') }}</li>
+        <li><span class="text-warning">●</span> {{ 'Pending 2'|trans({}, 'Admin.Catalog.Feature') }}</li>
+      </ul>
     </div>
   </div>
 </div>
