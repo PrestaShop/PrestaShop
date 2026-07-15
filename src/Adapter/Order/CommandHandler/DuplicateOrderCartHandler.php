@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\DuplicateOrderCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateOrderCartException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use Shop;
 
 /**
@@ -43,6 +44,9 @@ final class DuplicateOrderCartHandler implements DuplicateOrderCartHandlerInterf
     {
         // IMPORTANT: context customer must be set in order to correctly fill the address
         $cart = Cart::getCartByOrderId($command->getOrderId()->getValue());
+        if (!$cart instanceof Cart) {
+            throw new OrderNotFoundException($command->getOrderId(), sprintf('Order "%s" was not found.', $command->getOrderId()->getValue()));
+        }
         $this->contextStateManager
             ->setCart($cart)
             ->setCustomer(new Customer($cart->id_customer))
