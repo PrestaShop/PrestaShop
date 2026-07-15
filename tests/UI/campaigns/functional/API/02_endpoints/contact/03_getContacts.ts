@@ -12,7 +12,7 @@ import {
 } from '@prestashop-core/ui-testing';
 import testContext from '@utils/testContext';
 
-const baseContext: string = 'functional_API_endpoints_contacts_getContacts';
+const baseContext: string = 'functional_API_endpoints_contact_getContacts';
 
 describe('API : GET /contacts', async () => {
   let apiContext: APIRequestContext;
@@ -42,7 +42,7 @@ describe('API : GET /contacts', async () => {
   });
 
   describe('API : Fetch Data', async () => {
-    it('should request the endpoint /addresses', async function () {
+    it('should request the endpoint /contacts', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'requestEndpoint', baseContext);
 
       const apiResponse = await apiContext.get('contacts', {
