@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace Tests\Integration\Classes;
 
 use Configuration as LegacyConfiguration;
+use Db;
+use Language;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
@@ -19,9 +21,11 @@ use Tests\Resources\DatabaseDump;
 
 class StoreAtLeastOneExistsShopScopeTest extends KernelTestCase
 {
-    private const TABLES_TO_RESTORE = ['shop', 'shop_url', 'configuration'];
+    private const TABLES_TO_RESTORE = ['shop', 'shop_url', 'configuration', 'store', 'store_lang', 'store_shop'];
 
     private static int $secondShopId;
+
+    private static int $thirdShopId;
 
     public static function setUpBeforeClass(): void
     {
@@ -51,6 +55,39 @@ class StoreAtLeastOneExistsShopScopeTest extends KernelTestCase
         $entityManager->flush();
         self::$secondShopId = (int) $shop->getId();
 
+        // Third shop whose only associated store is inactive, to cover the active = 1 condition.
+        $thirdShop = new Shop();
+        $thirdShop->setActive(true);
+        $thirdShop->setIdCategory(2);
+        $thirdShop->setName('test_shop_store_inactive');
+        $thirdShop->setShopGroup($shopGroup);
+        $thirdShop->setColor('blue');
+        $thirdShop->setThemeName(Theme::getDefaultTheme());
+        $thirdShop->setDeleted(false);
+        $entityManager->persist($thirdShop);
+        $entityManager->flush();
+        self::$thirdShopId = (int) $thirdShop->getId();
+
+        LegacyShop::resetStaticCache();
+
+        $inactiveStore = new Store();
+        $inactiveStore->id_country = (int) LegacyConfiguration::get('PS_COUNTRY_DEFAULT') ?: 1;
+        $inactiveStore->city = 'Inactive city';
+        $inactiveStore->active = false;
+        $names = [];
+        $addresses = [];
+        foreach (Language::getIDs(false) as $langId) {
+            $names[(int) $langId] = 'Inactive store';
+            $addresses[(int) $langId] = 'Inactive address';
+        }
+        $inactiveStore->name = $names;
+        $inactiveStore->address1 = $addresses;
+        $inactiveStore->add();
+        Db::getInstance()->insert('store_shop', [
+            'id_store' => (int) $inactiveStore->id,
+            'id_shop' => self::$thirdShopId,
+        ]);
+
         LegacyShop::resetStaticCache();
     }
 
@@ -78,5 +115,17 @@ class StoreAtLeastOneExistsShopScopeTest extends KernelTestCase
         // Shop 2 has no store associated; the previous global query wrongly returned true.
         LegacyShop::setContext(LegacyShop::CONTEXT_SHOP, self::$secondShopId);
         self::assertFalse(Store::atLeastOneStoreExists(), 'shop 2 has no stores associated');
+    }
+
+    /**
+     * A shop whose only associated store is inactive must report no stores: the "our stores" link
+     * should not appear when there is nothing active to show, matching Store::getStores().
+     */
+    public function testAtLeastOneStoreExistsIgnoresInactiveStores(): void
+    {
+        self::bootKernel();
+
+        LegacyShop::setContext(LegacyShop::CONTEXT_SHOP, self::$thirdShopId);
+        self::assertFalse(Store::atLeastOneStoreExists(), 'shop 3 has only an inactive store associated');
     }
 }
