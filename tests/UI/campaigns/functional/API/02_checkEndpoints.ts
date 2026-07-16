@@ -269,7 +269,7 @@ describe('API : Check endpoints', async () => {
     '/search-engines/{searchEngineId}: GET',
     // @todo: add tests
     '/search-engines/{searchEngineId}: PATCH',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/searchEngine/05_getSearchEngines.ts
     '/search-engines: GET',
     // @todo: add tests
     '/search-engines: POST',
