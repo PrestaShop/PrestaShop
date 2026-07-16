@@ -113,6 +113,8 @@ services:
     autoconfigure: true
     arguments:
       - '@PrestaShopBundle\Entity\Repository\ImportRunRepository'
+      - '@prestashop.adapter.import.file_opener'
+      - '@prestashop.core.import.dir'
 
   PrestaShop\PrestaShop\Adapter\Import\CommandHandler\CancelImportRunHandler:
     autoconfigure: true
@@ -125,8 +127,6 @@ services:
       - '@PrestaShopBundle\Entity\Repository\ImportRunRepository'
       - '@prestashop.core.import.importer'
       - '@prestashop.adapter.import.handler_finder'
-      - '@prestashop.core.import.csv_file_reader'
-      - '@prestashop.core.import.dir'
       - '@prestashop.adapter.import.run.lock_factory'
 
   PrestaShop\PrestaShop\Adapter\Import\QueryHandler\GetImportRunStateHandler:

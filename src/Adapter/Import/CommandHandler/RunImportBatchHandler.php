@@ -17,13 +17,10 @@ use PrestaShop\PrestaShop\Core\Domain\Import\QueryResult\ImportBatchReport;
 use PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\ImportRunStatus;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfig;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfig;
-use PrestaShop\PrestaShop\Core\Import\File\FileReaderInterface;
 use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerFinderInterface;
-use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use PrestaShop\PrestaShop\Core\Import\ImporterInterface;
 use PrestaShopBundle\Entity\ImportRun;
 use PrestaShopBundle\Entity\Repository\ImportRunRepository;
-use SplFileInfo;
 use Symfony\Component\Lock\LockFactory;
 
 /**
@@ -48,8 +45,6 @@ final class RunImportBatchHandler implements RunImportBatchHandlerInterface
         private readonly ImportRunRepository $importRunRepository,
         private readonly ImporterInterface $importer,
         private readonly ImportHandlerFinderInterface $importHandlerFinder,
-        private readonly FileReaderInterface $fileReader,
-        private readonly ImportDirectory $importDirectory,
         private readonly LockFactory $lockFactory
     ) {
     }
@@ -74,11 +69,6 @@ final class RunImportBatchHandler implements RunImportBatchHandlerInterface
         try {
             if (ImportRunStatus::PENDING === $importRun->getStatus()) {
                 $importRun->markRunning();
-            }
-
-            // The total is counted once, on the first batch, and stored on the run.
-            if (0 === $importRun->getOffset() && 0 === $importRun->getTotalRows()) {
-                $importRun->setTotalRows($this->countRows($importRun));
             }
 
             $runtimeConfig = new ImportRuntimeConfig(
@@ -136,15 +126,6 @@ final class RunImportBatchHandler implements RunImportBatchHandlerInterface
             (bool) ($options['sendemail'] ?? true),
             $importRun->getSkipRows()
         );
-    }
-
-    private function countRows(ImportRun $importRun): int
-    {
-        $file = new SplFileInfo($this->importDirectory . $importRun->getFilename());
-
-        $count = iterator_count($this->fileReader->read($file));
-
-        return max(0, $count - $importRun->getSkipRows());
     }
 
     private function buildReport(ImportRun $importRun, bool $finished): ImportBatchReport
