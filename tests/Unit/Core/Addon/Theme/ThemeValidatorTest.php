@@ -79,6 +79,27 @@ class ThemeValidatorTest extends TestCase
         yield 'absolute path' => ['/var/www/html/evil'];
         yield 'separator' => ['foo/bar'];
         yield 'backslash' => ['..\\evil'];
+        yield 'current dir' => ['.'];
+        yield 'parent dir' => ['..'];
+        yield 'null byte' => ["evil\0"];
+    }
+
+    /**
+     * @dataProvider provideSafeThemeNames
+     */
+    public function testIsValidAcceptsSafeThemeName(string $themeName): void
+    {
+        $isValid = $this->validator->isValid($this->getThemeWithName($themeName));
+        $this->assertTrue($isValid, self::NOTICE . sprintf('expected isValid to return true for safe theme name "%s"', $themeName));
+    }
+
+    public static function provideSafeThemeNames(): iterable
+    {
+        yield 'single character' => ['a'];
+        yield 'two characters' => ['ab'];
+        yield 'contains a dot' => ['my.theme'];
+        yield 'leading dot' => ['.hidden'];
+        yield 'unicode letters' => ['thème'];
     }
 
     private function getThemeWithName(string $themeName): Theme

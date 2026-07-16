@@ -44,10 +44,10 @@ class ThemeValidator
         $themeName = $theme->getName();
 
         // A missing name is reported by hasRequiredProperties; here we only make sure a
-        // provided name is a plain directory segment (same rule as Validate::isThemeName).
-        // The name is later concatenated to _PS_ALL_THEMES_DIR_ to build the theme folder,
-        // so a value like "../../evil" would let an uploaded theme be written outside themes/.
-        if (empty($themeName) || preg_match('/^[\w-]{3,255}$/u', $themeName)) {
+        // provided name stays a single, safe directory segment. The name is later
+        // concatenated to _PS_ALL_THEMES_DIR_ to build the theme folder, so a value like
+        // "../../evil" or "/var/www/evil" would let an uploaded theme be written outside themes/.
+        if (empty($themeName) || $this->isSafePathSegment($themeName)) {
             return true;
         }
 
@@ -56,12 +56,23 @@ class ThemeValidator
         }
 
         $this->errors[$themeName][] = $this->translator->trans(
-            'Invalid theme name. Please use only letters, numbers, underscores and dashes.',
+            'Invalid theme name. It must not contain a directory separator or a path traversal sequence.',
             [],
             'Admin.Design.Notification'
         );
 
         return false;
+    }
+
+    private function isSafePathSegment($themeName)
+    {
+        if ('.' === $themeName || '..' === $themeName) {
+            return false;
+        }
+
+        return false === strpos($themeName, '/')
+            && false === strpos($themeName, '\\')
+            && false === strpos($themeName, "\0");
     }
 
     private function hasRequiredProperties(Theme $theme)
