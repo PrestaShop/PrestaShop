@@ -15,8 +15,12 @@ use PrestaShop\PrestaShop\Core\Domain\Import\CommandHandler\StartImportRunHandle
 use PrestaShop\PrestaShop\Core\Domain\Import\Exception\CannotStartImportRunException;
 use PrestaShop\PrestaShop\Core\Domain\Import\ValueObject\ImportRunId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Import\File\CsvFileReader;
+use PrestaShop\PrestaShop\Core\Import\File\FileOpenerInterface;
+use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use PrestaShopBundle\Entity\ImportRun;
 use PrestaShopBundle\Entity\Repository\ImportRunRepository;
+use SplFileInfo;
 
 /**
  * @internal
@@ -31,7 +35,9 @@ final class StartImportRunHandler implements StartImportRunHandlerInterface
     private const DEFAULT_BATCH_SIZE = 100;
 
     public function __construct(
-        private readonly ImportRunRepository $importRunRepository
+        private readonly ImportRunRepository $importRunRepository,
+        private readonly FileOpenerInterface $fileOpener,
+        private readonly ImportDirectory $importDirectory
     ) {
     }
 
@@ -63,12 +69,26 @@ final class StartImportRunHandler implements StartImportRunHandlerInterface
         );
 
         try {
+            // The total is counted once, up front, from the uploaded file and the frozen config, so the
+            // run knows its size from the start (batches only advance the offset). Reading here uses the
+            // run's frozen separator rather than the session, keeping this handler web-context free.
+            $importRun->setTotalRows($this->countRows($importRun));
             $this->importRunRepository->add($importRun);
         } catch (Exception $e) {
             throw new CannotStartImportRunException(sprintf('Failed to start import run "%s": %s', $uuid, $e->getMessage()), 0, $e);
         }
 
         return new ImportRunId($uuid);
+    }
+
+    private function countRows(ImportRun $importRun): int
+    {
+        $file = new SplFileInfo($this->importDirectory . $importRun->getFilename());
+
+        $reader = new CsvFileReader($this->fileOpener, $importRun->getSeparator());
+        $count = iterator_count($reader->read($file));
+
+        return max(0, $count - $importRun->getSkipRows());
     }
 
     private function resolveShopId(?ShopConstraint $shopConstraint): ?int

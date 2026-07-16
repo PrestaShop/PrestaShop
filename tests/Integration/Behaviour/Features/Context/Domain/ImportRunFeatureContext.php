@@ -33,10 +33,17 @@ class ImportRunFeatureContext extends AbstractDomainFeatureContext
     private const DEFAULT_LANG_ISO = 'en';
 
     /**
+     * @var string[] files copied into the import directory, removed after each scenario
+     */
+    private $importFilesToClean = [];
+
+    /**
      * @When I start an import run :reference for :entityType from file :filename
      */
     public function startSimpleImportRun(string $reference, string $entityType, string $filename): void
     {
+        $this->prepareImportFile($filename);
+
         $importRunId = $this->getCommandBus()->handle(new StartImportRunCommand(
             $filename,
             EntityType::fromName($entityType)->getValue(),
@@ -47,6 +54,37 @@ class ImportRunFeatureContext extends AbstractDomainFeatureContext
         ));
 
         $this->getSharedStorage()->set($reference, $importRunId->getValue());
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function cleanUpImportFiles(): void
+    {
+        foreach ($this->importFilesToClean as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
+
+        $this->importFilesToClean = [];
+    }
+
+    /**
+     * Starting a run now counts the file rows up front, so the referenced file must exist in the
+     * import directory. Copies a dummy CSV fixture under the requested name and schedules cleanup.
+     */
+    private function prepareImportFile(string $filename): void
+    {
+        $importDir = _PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR . 'import' . DIRECTORY_SEPARATOR;
+        if (!is_dir($importDir)) {
+            mkdir($importDir, 0777, true);
+        }
+
+        $destination = $importDir . $filename;
+        copy(dirname(__DIR__, 5) . '/Resources/import/dummy.csv', $destination);
+
+        $this->importFilesToClean[] = $destination;
     }
 
     /**
