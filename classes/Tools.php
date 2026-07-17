@@ -2049,7 +2049,7 @@ class ToolsCore
 
             $host = trim($parts['host'], '[]');
             $defaultPorts = ['http' => 80, 'https' => 443, 'ftp' => 21, 'ftps' => 990, 'sftp' => 22];
-            $port = isset($parts['port']) ? (int) $parts['port'] : ($defaultPorts[$scheme] ?? 80);
+            $port = isset($parts['port']) ? (int) $parts['port'] : $defaultPorts[$scheme];
 
             // Resolve and ensure every candidate IP is a public address.
             $publicIps = static::resolvePublicIps($host);
