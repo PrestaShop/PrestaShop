@@ -62,6 +62,7 @@ class BusinessEntityType extends TranslatorAwareType
             ])
             ->add(self::BILLING_ADDRESS_AS_SHIPPING_ADDRESS, SwitchType::class, [
                 'label' => $this->trans('Use default billing address as shipping address', 'Admin.Global'),
+                'required' => false,
             ])
             ->add(self::DEFAULT_BILLING_ADDRESS, TextType::class, [
                 'label' => false,

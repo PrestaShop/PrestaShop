@@ -30,10 +30,37 @@ export default class BusinessEntityAddressCollection {
     this.attachEventListeners();
     this.initDefaultBillingAddress();
     this.initDefaultShippingAddress();
+    this.initShippingVisibilityToggle();
   }
 
   private attachEventListeners(): void {
     document.addEventListener('click', this.handleClick);
+  }
+
+  private initShippingVisibilityToggle(): void {
+    const toggles = document.querySelectorAll<HTMLInputElement>(
+      this.map.businessEntityBillingAddressAsShippingToggle,
+    );
+
+    if (toggles.length === 0) {
+      return;
+    }
+
+    toggles.forEach((toggle) => toggle.addEventListener('change', () => this.updateShippingFormVisibility()));
+    this.updateShippingFormVisibility();
+  }
+
+  private updateShippingFormVisibility(): void {
+    const checked = document.querySelector<HTMLInputElement>(
+      `${this.map.businessEntityBillingAddressAsShippingToggle}:checked`,
+    );
+
+    const useBillingAsShipping = checked?.value === '1';
+    const elements = document.querySelectorAll<HTMLElement>(this.map.businessEntityShippingForm);
+
+    for (let index = 0; index < elements.length; index += 1) {
+      elements[index].classList.toggle('d-none', useBillingAsShipping);
+    }
   }
 
   private handleClick = (event: Event): void => {
@@ -147,6 +174,18 @@ export default class BusinessEntityAddressCollection {
     this.addRequiredToggler(addressCard);
 
     collectionHolder.dataset.index = String(Number(collectionHolder.dataset.index) + 1);
+
+    this.renumberAddresses(collectionHolder);
+  }
+
+  private renumberAddresses(collectionHolder: HTMLElement): void {
+    const template = collectionHolder.dataset.addressLabelTemplate ?? '';
+    const labels = collectionHolder
+      .querySelectorAll<HTMLElement>(`li ${this.map.businessEntityAddressPosition}`);
+
+    for (let index = 0; index < labels.length; index += 1) {
+      labels[index].textContent = template.replace('%position%', String(index + 1));
+    }
   }
 
   private addDeleteLink(item: HTMLElement): void {
@@ -175,6 +214,8 @@ export default class BusinessEntityAddressCollection {
       return;
     }
 
+    const collectionHolder = item.parentElement;
+
     if (item.querySelector(this.map.businessEntityAddressId) === this.selectedShippingAddress) {
       const addressIndex = this.selectedShippingAddress?.dataset.addressIndex;
       const addressCardElementSelector = `${this.map.businessEntityShippingAddress} `
@@ -196,6 +237,10 @@ export default class BusinessEntityAddressCollection {
     }
 
     item.remove();
+
+    if (collectionHolder) {
+      this.renumberAddresses(collectionHolder);
+    }
   }
 
   private addSetAsDefaultBtn(item: HTMLElement): void {

@@ -49,7 +49,9 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
                 $row['postcode'],
                 (int) $row['country_id'],
                 (bool) $row['is_default'],
-                isset($row['state_id']) ? (int) $row['state_id'] : null
+                isset($row['state_id']) ? (int) $row['state_id'] : null,
+                $row['phone'] ?? null,
+                $row['phone_mobile'] ?? null
             );
         }
     }
@@ -68,7 +70,9 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
                 $row['postcode'],
                 (int) $row['country_id'],
                 (bool) $row['is_default'],
-                isset($row['state_id']) ? (int) $row['state_id'] : null
+                isset($row['state_id']) ? (int) $row['state_id'] : null,
+                $row['phone'] ?? null,
+                $row['phone_mobile'] ?? null
             );
         }
     }
@@ -178,6 +182,17 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
         $businessEntityAddress = $this->getBusinessEntityAddressByAlias($name, $alias);
         Assert::assertEquals(AddressTypeEnum::from($type), $businessEntityAddress->getAddressType());
         Assert::assertTrue($businessEntityAddress->isDefault());
+    }
+
+    /**
+     * @Then the address with alias :alias for business entity :name should have phone :phone and mobile phone :mobile
+     */
+    public function addressWithAliasShouldHavePhones(string $alias, string $name, string $phone, string $mobile): void
+    {
+        $businessEntityAddress = $this->getBusinessEntityAddressByAlias($name, $alias);
+        $address = new Address($businessEntityAddress->getAddressId());
+        Assert::assertEquals($phone, $address->phone);
+        Assert::assertEquals($mobile, $address->phone_mobile);
     }
 
     private function getBusinessEntityByName(string $name): BusinessEntity

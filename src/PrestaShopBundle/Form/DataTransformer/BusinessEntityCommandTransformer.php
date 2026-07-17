@@ -9,6 +9,7 @@ namespace PrestaShopBundle\Form\DataTransformer;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityBillingAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityGeneralInformation;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityShippingAddress;
+use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityAddressType;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityType;
 use Symfony\Component\Form\DataTransformerInterface;
 
@@ -37,28 +38,32 @@ class BusinessEntityCommandTransformer implements DataTransformerInterface
         $billingAddresses = [];
         foreach ($value[BusinessEntityType::BILLING_ADDRESS_TYPE] ?? [] as $index => $addressData) {
             $billingAddresses[] = new BusinessEntityBillingAddress(
-                $addressData['alias'],
-                $addressData['address1'],
-                $addressData['address2'],
-                $addressData['city'],
-                $addressData['postcode'],
-                $addressData['id_country'],
+                $addressData[BusinessEntityAddressType::FIELD_ALIAS],
+                $addressData[BusinessEntityAddressType::FIELD_ADDRESS_1],
+                $addressData[BusinessEntityAddressType::FIELD_ADDRESS_2],
+                $addressData[BusinessEntityAddressType::FIELD_CITY],
+                $addressData[BusinessEntityAddressType::FIELD_POSTCODE],
+                $addressData[BusinessEntityAddressType::FIELD_COUNTRY_ID],
                 $index === (int) $value[BusinessEntityType::DEFAULT_BILLING_ADDRESS],
-                $addressData['id_state'] ?? null,
+                $addressData[BusinessEntityAddressType::FIELD_STATE_ID] ?? null,
+                $addressData[BusinessEntityAddressType::FIELD_PHONE] ?? null,
+                $addressData[BusinessEntityAddressType::FIELD_PHONE_MOBILE] ?? null,
             );
         }
 
         $shippingAddresses = [];
         foreach ($value[BusinessEntityType::SHIPPING_ADDRESS_TYPE] ?? [] as $index => $addressData) {
             $shippingAddresses[] = new BusinessEntityShippingAddress(
-                $addressData['alias'],
-                $addressData['address1'],
-                $addressData['address2'],
-                $addressData['city'],
-                $addressData['postcode'],
-                $addressData['id_country'],
+                $addressData[BusinessEntityAddressType::FIELD_ALIAS],
+                $addressData[BusinessEntityAddressType::FIELD_ADDRESS_1],
+                $addressData[BusinessEntityAddressType::FIELD_ADDRESS_2],
+                $addressData[BusinessEntityAddressType::FIELD_CITY],
+                $addressData[BusinessEntityAddressType::FIELD_POSTCODE],
+                $addressData[BusinessEntityAddressType::FIELD_COUNTRY_ID],
                 $index === (int) $value[BusinessEntityType::DEFAULT_SHIPPING_ADDRESS],
-                $addressData['id_state'] ?? null,
+                $addressData[BusinessEntityAddressType::FIELD_STATE_ID] ?? null,
+                $addressData[BusinessEntityAddressType::FIELD_PHONE] ?? null,
+                $addressData[BusinessEntityAddressType::FIELD_PHONE_MOBILE] ?? null,
             );
         }
 

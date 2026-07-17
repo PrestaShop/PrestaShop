@@ -18,6 +18,8 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -32,6 +34,8 @@ class BusinessEntityAddressType extends TranslatorAwareType
     public const FIELD_CITY = 'city';
     public const FIELD_COUNTRY_ID = 'id_country';
     public const FIELD_STATE_ID = 'id_state';
+    public const FIELD_PHONE = 'phone';
+    public const FIELD_PHONE_MOBILE = 'phone_mobile';
 
     /**
      * @param array<int, array<string, mixed>> $locales
@@ -48,20 +52,22 @@ class BusinessEntityAddressType extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $countryId = $this->contextCountryId;
+        $data = $builder->getData();
+        $countryId = !empty($data[self::FIELD_COUNTRY_ID])
+            ? (int) $data[self::FIELD_COUNTRY_ID]
+            : $this->contextCountryId;
 
         $genericInvalidCharsMessage = $this->trans(
             'Invalid characters: %characters%',
             'Admin.Notifications.Info',
             ['%characters%' => TypedRegexValidator::GENERIC_NAME_CHARS]
         );
-        $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
-        $showStates = !empty($stateChoices);
 
         $builder->add(self::FIELD_ALIAS, TextType::class, [
             'label' => $this->trans('Address alias', 'Admin.Catalog.Feature'),
             'help' => $genericInvalidCharsMessage,
             'required' => true,
+            'attr' => ['autocomplete' => 'off'],
             'constraints' => [
                 new NotBlank([
                     'message' => $this->trans(
@@ -195,23 +201,84 @@ class BusinessEntityAddressType extends TranslatorAwareType
                     'data-states-url' => $this->router->generate('admin_country_states'),
                     'class' => 'js-address-country-select',
                 ],
-            ])->add(self::FIELD_STATE_ID, ChoiceType::class, [
-                'label' => $this->trans('State', 'Admin.Global'),
-                'required' => false, // Manage by AddressStateRequired and CountryPostcodeRequiredToggler object in FO
-                'choices' => $stateChoices,
+            ])
+            ->add(self::FIELD_STATE_ID, ChoiceType::class, ['choices' => []])
+            ->add(self::FIELD_PHONE, TextType::class, [
+                'label' => $this->trans('Phone', 'Admin.Global'),
+                'required' => false,
+                'empty_data' => '',
                 'constraints' => [
-                    new AddressStateRequired([
-                        'id_country' => $countryId,
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_PHONE_NUMBER,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_PHONE_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => AddressConstraint::MAX_PHONE_LENGTH]
+                        ),
                     ]),
                 ],
-                'row_attr' => [
-                    'class' => 'js-address-state-block',
-                ],
-                'attr' => [
-                    'visible' => $showStates,
-                    'class' => 'js-address-state-select',
+            ])
+            ->add(self::FIELD_PHONE_MOBILE, TextType::class, [
+                'label' => $this->trans('Mobile phone', 'Admin.Global'),
+                'required' => false,
+                'empty_data' => '',
+                'constraints' => [
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_PHONE_NUMBER,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_PHONE_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => AddressConstraint::MAX_PHONE_LENGTH]
+                        ),
+                    ]),
                 ],
             ])
         ;
+
+        $rebuildStateChoices = function (FormEvent $event): void {
+            $data = $event->getData();
+            $countryId = !empty($data[self::FIELD_COUNTRY_ID])
+                ? (int) $data[self::FIELD_COUNTRY_ID]
+                : $this->contextCountryId;
+
+            $event->getForm()->add(self::FIELD_STATE_ID, ChoiceType::class, $this->getStateFieldOptions($countryId));
+        };
+
+        $builder->addEventListener(FormEvents::POST_SET_DATA, $rebuildStateChoices);
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, $rebuildStateChoices);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function getStateFieldOptions(int $countryId): array
+    {
+        $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
+
+        return [
+            'label' => $this->trans('State', 'Admin.Global'),
+            'required' => false,
+            'choices' => $stateChoices,
+            'constraints' => [
+                new AddressStateRequired([
+                    'id_country' => $countryId,
+                ]),
+            ],
+            'row_attr' => [
+                'class' => 'js-address-state-block',
+            ],
+            'attr' => [
+                'visible' => !empty($stateChoices),
+                'class' => 'js-address-state-select',
+            ],
+        ];
     }
 }

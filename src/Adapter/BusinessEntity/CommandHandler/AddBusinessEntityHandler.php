@@ -143,6 +143,8 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
         $modelAddress->city = $address->getCity();
         $modelAddress->postcode = $address->getPostcode();
         $modelAddress->id_state = $address->getStateId()->getValue();
+        $modelAddress->phone = $address->getPhone();
+        $modelAddress->phone_mobile = $address->getPhoneMobile();
 
         try {
             return $this->addressRepository->add($modelAddress);

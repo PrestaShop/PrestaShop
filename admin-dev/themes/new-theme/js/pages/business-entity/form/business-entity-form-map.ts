@@ -19,4 +19,7 @@ export default {
   businessEntityAddressPostcodeLabel: '.js-address-postcode-label',
   businessEntityAddressStateSelect: '.js-address-state-select',
   businessEntityAddressStateBlock: '.js-address-state-block',
+  businessEntityAddressPosition: '.js-business-entity-address-position',
+  businessEntityShippingForm: '.js-business-entity-shipping-form',
+  businessEntityBillingAddressAsShippingToggle: 'input[name="business_entity[billing_address_as_shipping_address]"]',
 };

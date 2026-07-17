@@ -25,6 +25,8 @@ abstract class AbstractBusinessEntityAddress
         int $countryId,
         private readonly bool $default,
         ?int $stateId,
+        private readonly ?string $phone = null,
+        private readonly ?string $phoneMobile = null,
     ) {
         $this->countryId = new CountryId($countryId);
         $this->stateId = $stateId !== null ? new StateId($stateId) : new NoStateId();
@@ -63,6 +65,16 @@ abstract class AbstractBusinessEntityAddress
     public function getStateId(): StateIdInterface
     {
         return $this->stateId;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function getPhoneMobile(): ?string
+    {
+        return $this->phoneMobile;
     }
 
     public function isDefault(): bool

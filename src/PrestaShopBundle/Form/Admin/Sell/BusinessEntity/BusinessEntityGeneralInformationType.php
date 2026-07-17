@@ -61,7 +61,7 @@ class BusinessEntityGeneralInformationType extends TranslatorAwareType
             ])
             ->add(self::FIELD_DELIVERY_AUTHORIZED, SwitchType::class, [
                 'label' => $this->trans('Delivery authorized', 'Admin.Global'),
-                'help' => $this->trans('Allow the B2B customer to order using an address that does not belong to the business entity', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Allow the B2B customer to order using an address that does not belong to the business entity.', 'Admin.Catalog.Feature'),
             ])
             ->add(self::FIELD_STATUS, EnumType::class, [
                 'label' => $this->trans('Status', 'Admin.Global'),

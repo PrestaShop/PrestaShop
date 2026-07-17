@@ -78,6 +78,7 @@
         <ul class="billing_addresses list-unstyled"
             {% set billingAddressIndex = businessEntityForm.billing_address|length > 0 ? businessEntityForm.billing_address|last.vars.name + 1 : 1 %}
             data-index="{{ billingAddressIndex }}"
+            data-address-label-template="{{ 'Address #%position%'|trans({}, 'Admin.Global') }}"
             data-prototype="{{ _self.customAddressPrototype(businessEntityForm.billing_address.vars.prototype, businessEntityForm.billing_address.vars.prototype.vars.name)|e('html_attr') }}"
         >
           {% for address in businessEntityForm.billing_address %}
@@ -95,22 +96,26 @@
   </div>
 
   <div class="card">
+    {% set shippingHiddenClass = businessEntityForm.billing_address_as_shipping_address.vars.data ? ' d-none' : '' %}
     <h3 class="card-header d-flex justify-content-between">
       <span>
         <i class="material-icons">place</i>
         {{ 'Shipping address'|trans({}, 'Admin.Global') }}
       </span>
 
-      <button type="button" id="add_business_entity_shipping_address" class="btn btn-outline-secondary"
+      <button type="button" id="add_business_entity_shipping_address"
+              class="btn btn-outline-secondary js-business-entity-shipping-form{{ shippingHiddenClass }}"
               data-collection-holder-class="shipping_addresses"><i
           class="material-icons">add</i>{{ 'Add address'|trans({}, 'Admin.Global') }}
       </button>
     </h3>
     <div class="card-body">
       <div class="form-wrapper">
-        <ul class="shipping_addresses list-unstyled"
+        {{ form_row(businessEntityForm.billing_address_as_shipping_address) }}
+        <ul class="shipping_addresses list-unstyled js-business-entity-shipping-form{{ shippingHiddenClass }}"
             {% set shippingAddressIndex = businessEntityForm.shipping_address|length > 0 ? businessEntityForm.shipping_address|last.vars.name + 1 : 1 %}
             data-index="{{ shippingAddressIndex }}"
+            data-address-label-template="{{ 'Address #%position%'|trans({}, 'Admin.Global') }}"
             data-prototype="{{ _self.customAddressPrototype(businessEntityForm.shipping_address.vars.prototype, businessEntityForm.shipping_address.vars.prototype.vars.name)|e('html_attr') }}"
         >
           {% for address in businessEntityForm.shipping_address %}
@@ -123,7 +128,6 @@
             </li>
           {% endfor %}
         </ul>
-        {{ form_row(businessEntityForm.billing_address_as_shipping_address) }}
       </div>
     </div>
   </div>
