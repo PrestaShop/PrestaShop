@@ -32,5 +32,6 @@
     <feature_flag id="hook_module_v2" name="hook_module_v2" type="env,dotenv,db" label_wording="Hook a module" label_domain="Admin.Design.Feature" description_wording="Enable / Disable the migrated Hook a module form page." description_domain="Admin.Design.Help" state="1" stability="stable" />
     <feature_flag id="quick_access" name="quick_access" type="env,dotenv,db" label_wording="Quick access" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the migrated quick access page." description_domain="Admin.Advparameters.Help" state="1" stability="stable" />
     <feature_flag id="stats" name="stats" type="env,dotenv,db" label_wording="Stats" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the migrated stats page." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
+    <feature_flag id="dashboard" name="dashboard" type="env,dotenv,db" label_wording="Dashboard page" label_domain="Admin.Advparameters.Feature" description_wording="Enable / Disable the migrated Symfony dashboard page. Native dashboard modules are not yet compatible with the new page and will not display until they are migrated." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
   </entities>
 </entity_feature_flag>

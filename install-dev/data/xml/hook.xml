@@ -771,6 +771,31 @@
       <title>Dashboard Top</title>
       <description>Displays the content in the dashboard's top area</description>
     </hook>
+    <hook id="displayAdminDashboardZoneOne">
+      <name>displayAdminDashboardZoneOne</name>
+      <title>Symfony Dashboard - Zone one</title>
+      <description>Displays module content in the first column of the migrated (Symfony) dashboard page. Modern counterpart of the legacy dashboardZoneOne hook.</description>
+    </hook>
+    <hook id="displayAdminDashboardZoneTwo">
+      <name>displayAdminDashboardZoneTwo</name>
+      <title>Symfony Dashboard - Zone two</title>
+      <description>Displays module content in the second column of the migrated (Symfony) dashboard page. Modern counterpart of the legacy dashboardZoneTwo hook.</description>
+    </hook>
+    <hook id="displayAdminDashboardZoneThree">
+      <name>displayAdminDashboardZoneThree</name>
+      <title>Symfony Dashboard - Zone three</title>
+      <description>Displays module content in the third column of the migrated (Symfony) dashboard page. Modern counterpart of the legacy dashboardZoneThree hook.</description>
+    </hook>
+    <hook id="displayAdminDashboardTop">
+      <name>displayAdminDashboardTop</name>
+      <title>Symfony Dashboard - Top</title>
+      <description>Displays module content in the top area of the migrated (Symfony) dashboard page. Modern counterpart of the legacy displayDashboardTop hook.</description>
+    </hook>
+    <hook id="displayAdminDashboardToolbar">
+      <name>displayAdminDashboardToolbar</name>
+      <title>Symfony Dashboard - Toolbar</title>
+      <description>Displays module content in the toolbar area of the migrated (Symfony) dashboard page. Modern counterpart of the legacy displayDashboardToolbarTopMenu hook.</description>
+    </hook>
     <hook id="actionUpdateLangAfter">
       <name>actionUpdateLangAfter</name>
       <title>Update "lang" tables</title>

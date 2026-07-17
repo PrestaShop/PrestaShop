@@ -1,3 +1,7 @@
+_admin_dashboard_routing:
+  resource: "admin/dashboard.yml"
+  prefix: /dashboard
+
 _admin_common_routing:
   resource: "admin/_common.yml"
   prefix: /common

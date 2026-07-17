@@ -1,0 +1,93 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% import _self as dashboard %}
+
+{#
+ # Placeholder shown when a single zone receives no content while others do.
+ #}
+{% macro empty_zone() %}
+  <div class="panel dashboard-zone-empty text-center">
+    <div class="panel-body text-muted">
+      <i class="material-icons">extension</i>
+      <p class="mb-0">{{ 'No module is displaying content here yet.'|trans({}, 'Admin.Dashboard.Feature') }}</p>
+    </div>
+  </div>
+{% endmacro %}
+
+{% block content %}
+  {% set toolbarContent = renderhook('displayAdminDashboardToolbar') %}
+  {% set topContent = renderhook('displayAdminDashboardTop', {date_from: dateFrom, date_to: dateTo}) %}
+  {% set hasZoneContent = zoneOneContent|trim is not empty or zoneTwoContent|trim is not empty or zoneThreeContent|trim is not empty %}
+
+  <div id="dashboard">
+    {% if toolbarContent|trim is not empty %}
+      <div class="row">
+        <div class="col-lg-12" id="displayAdminDashboardToolbar">{{ toolbarContent }}</div>
+      </div>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div id="dashboard-calendar" class="panel">
+          <form action="{{ path('admin_dashboard_index') }}" method="get" id="dashboard_calendar_form" class="form-inline">
+            <div class="form-group">
+              <label class="mr-1" for="dashboard_date_from">{{ 'From'|trans({}, 'Admin.Global') }}</label>
+              <input type="date" name="date_from" id="dashboard_date_from" value="{{ dateFrom }}" class="form-control mr-2">
+              <label class="mr-1" for="dashboard_date_to">{{ 'To'|trans({}, 'Admin.Global') }}</label>
+              <input type="date" name="date_to" id="dashboard_date_to" value="{{ dateTo }}" class="form-control mr-2">
+            </div>
+            <button type="submit" class="btn btn-primary">{{ 'Apply'|trans({}, 'Admin.Actions') }}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {% if topContent|trim is not empty %}
+      <div class="row">
+        <div class="col-lg-12" id="displayAdminDashboardTop">{{ topContent }}</div>
+      </div>
+    {% endif %}
+
+    {% if not hasZoneContent %}
+      {# Nominal case in beta: no dashboard module has been migrated to the new hooks yet. #}
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="panel dashboard-zone-empty text-center">
+            <div class="panel-body text-muted">
+              <i class="material-icons">dashboard_customize</i>
+              <p class="mt-2 mb-0">{{ 'No module is displaying content on the dashboard yet.'|trans({}, 'Admin.Dashboard.Feature') }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="row">
+        <div class="col-md-4 col-lg-3" id="displayAdminDashboardZoneOne">
+          {% if zoneOneContent|trim is not empty %}
+            {{ zoneOneContent|raw }}
+          {% else %}
+            {{ dashboard.empty_zone() }}
+          {% endif %}
+        </div>
+
+        <div class="col-md-8 col-lg-{{ zoneThreeContent|trim is not empty ? 7 : 9 }}" id="displayAdminDashboardZoneTwo">
+          {% if zoneTwoContent|trim is not empty %}
+            {{ zoneTwoContent|raw }}
+          {% else %}
+            {{ dashboard.empty_zone() }}
+          {% endif %}
+        </div>
+
+        {% if zoneThreeContent|trim is not empty %}
+          <div class="col-md-12 col-lg-2" id="displayAdminDashboardZoneThree">
+            {{ zoneThreeContent|raw }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
