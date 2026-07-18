@@ -293,7 +293,7 @@ class PackCore extends Product
         if ($packStockType === null || $packStockType === '' || (int) $packStockType == self::STOCK_TYPE_DEFAULT) {
             $packStockType = Configuration::get('PS_PACK_STOCK_TYPE');
         }
-        
+
         // If the quantity of the pack depends only on the pack or both packs and products,
         // we need to load the quantity of the pack from stock_available table.
         if (in_array($packStockType, [self::STOCK_TYPE_PACK_ONLY, self::STOCK_TYPE_PACK_BOTH])) {
