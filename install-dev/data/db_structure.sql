@@ -2897,6 +2897,7 @@ CREATE TABLE `PREFIX_image_type` (
   `name`          VARCHAR(64) NOT NULL,
   `width`         INT UNSIGNED NOT NULL,
   `height`        INT UNSIGNED NOT NULL,
+  `image_fitment` ENUM('fit', 'crop', 'bound') NOT NULL DEFAULT 'fit',
   `products`      TINYINT(1) DEFAULT 1 NOT NULL,
   `categories`    TINYINT(1) DEFAULT 1 NOT NULL,
   `manufacturers` TINYINT(1) DEFAULT 1 NOT NULL,

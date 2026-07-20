@@ -1916,16 +1916,26 @@ class FrontControllerCore extends Controller
      */
     public function getStructuredData()
     {
-        // Basic organization and webpage
+        // Basic organization, website and webpage
         $structuredData = [
             'organization' => [
                 '@context' => 'https://schema.org',
                 '@type' => 'Organization',
-                'name' => Configuration::get('PS_SHOP_NAME'),
+                'name' => $this->context->shop->name,
                 'url' => $this->getTemplateVarUrls()['pages']['index'],
-                'logo' => [
-                    '@type' => 'ImageObject',
-                    'url' => $this->getShopLogo()['src'],
+            ],
+            'website' => [
+                '@context' => 'https://schema.org',
+                '@type' => 'WebSite',
+                'url' => $this->getTemplateVarUrls()['pages']['index'],
+                'name' => $this->context->shop->name,
+                'potentialAction' => [
+                    '@type' => 'SearchAction',
+                    'target' => [
+                        '@type' => 'EntryPoint',
+                        'urlTemplate' => $this->context->link->getPageLink('search') . '?s={search_term_string}',
+                    ],
+                    'query-input' => 'required name=search_term_string',
                 ],
             ],
             'webpage' => [
@@ -1934,16 +1944,27 @@ class FrontControllerCore extends Controller
                 'isPartOf' => [
                     '@type' => 'WebSite',
                     'url' => $this->getTemplateVarUrls()['pages']['index'],
-                    'name' => Configuration::get('PS_SHOP_NAME'),
+                    'name' => $this->context->shop->name,
                 ],
                 'name' => $this->getTemplateVarPage()['meta']['title'],
                 'url' => $this->getTemplateVarUrls()['current_url'],
             ],
         ];
 
-        // Add breadcrumbs
+        // Add logo to organization if available
+        $logo = $this->getShopLogo();
+        if (!empty($logo['src'])) {
+            $structuredData['organization']['logo'] = [
+                '@type' => 'ImageObject',
+                'url' => $logo['src'],
+                'width' => $logo['width'],
+                'height' => $logo['height'],
+            ];
+        }
+
+        // Add breadcrumbs, if at least 2 links are present (home + at least one other)
         $breadcrumbLinks = $this->getBreadcrumbLinks();
-        if (!empty($breadcrumbLinks['links'][0])) {
+        if (!empty($breadcrumbLinks['links'][1])) {
             $breadcrumbStructuredData = [
                 '@context' => 'https://schema.org',
                 '@type' => 'BreadcrumbList',

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\ImageSettings\Command;
 
 /**
- * Command that edits zone
+ * Command that edits image settings
  */
 class EditImageSettingsCommand
 {

@@ -79,6 +79,10 @@ class ManufacturerLazyArray extends AbstractLazyArray
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getImage()
     {
+        if (!$this->doesManufacturerImageExist($this->manufacturer['id'])) {
+            return null;
+        }
+
         return $this->imageRetriever->getImage(
             new Manufacturer($this->manufacturer['id'], $this->language->getId()),
             $this->manufacturer['id']
@@ -99,5 +103,17 @@ class ManufacturerLazyArray extends AbstractLazyArray
         }
 
         return $this->manufacturer['nb_products'];
+    }
+
+    /**
+     * Checks if an image exists for our manufacturer.
+     *
+     * @param int|string $idImage
+     *
+     * @return bool
+     */
+    private function doesManufacturerImageExist(int|string $idImage): bool
+    {
+        return file_exists(_PS_MANU_IMG_DIR_ . $idImage . '.jpg');
     }
 }

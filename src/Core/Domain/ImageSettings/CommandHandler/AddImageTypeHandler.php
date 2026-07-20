@@ -34,6 +34,7 @@ final class AddImageTypeHandler implements AddImageTypeHandlerInterface
         $imageType->setName($command->getName());
         $imageType->setWidth($command->getWidth());
         $imageType->setHeight($command->getHeight());
+        $imageType->setImageFitment($command->getImageFitment());
         $imageType->setProducts($command->isProducts());
         $imageType->setCategories($command->isCategories());
         $imageType->setManufacturers($command->isManufacturers());

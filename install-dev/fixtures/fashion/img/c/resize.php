@@ -15,7 +15,13 @@ foreach ($files as $file) {
     if (preg_match('/^([a-z0-9-_]+)\.jpg$/i', $file, $match) && !preg_match('/default\.jpg$/i', $file)) {
         foreach ($types as $type) {
             if (!file_exists($match[1].'-'.$type['name'].'.jpg')) {
-                ImageManager::resize($file, $match[1].'-'.$type['name'].'.jpg', $type['width'], $type['height'], 'jpg', true);
+                $error = 0;
+                $targetWidth = null;
+                $targetHeight = null;
+                $sourceWidth = null;
+                $sourceHeight = null;
+
+                ImageManager::resize($file, $match[1].'-'.$type['name'].'.jpg', $type['width'], $type['height'], 'jpg', true, $error, $targetWidth, $targetHeight, 5, $sourceWidth, $sourceHeight, $type['image_fitment']);
             }
         }
     }

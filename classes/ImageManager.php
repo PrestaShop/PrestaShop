@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
+
 /**
  * Class ImageManagerCore.
  *
@@ -159,6 +161,7 @@ class ImageManagerCore
      * @param int $quality Needed by AdminImportController to speed up the import process
      * @param int $sourceWidth Needed by AdminImportController to speed up the import process
      * @param int $sourceHeight Needed by AdminImportController to speed up the import process
+     * @param value-of<ImageFitment::AVAILABLE_VALUES> $imageFitment Defines how the source image fits generated dimensions
      *
      * @return bool Operation result
      */
@@ -174,7 +177,8 @@ class ImageManagerCore
         &$targetHeight = null,
         $quality = 5,
         &$sourceWidth = null,
-        &$sourceHeight = null
+        &$sourceHeight = null,
+        string $imageFitment = ImageFitment::FIT
     ) {
         clearstatcache(true, $sourceFile);
 
@@ -254,23 +258,38 @@ class ImageManagerCore
             $destinationHeight = $sourceHeight;
         }
 
+        // Unknown fitments fall back to legacy behavior to keep old integrations working.
+        if (!in_array($imageFitment, ImageFitment::AVAILABLE_VALUES, true)) {
+            $imageFitment = ImageFitment::FIT;
+        }
+
         $widthDiff = $destinationWidth / $sourceWidth;
         $heightDiff = $destinationHeight / $sourceHeight;
 
         $psImageGenerationMethod = Configuration::get('PS_IMAGE_GENERATION_METHOD');
-        if ($widthDiff > 1 && $heightDiff > 1) {
+
+        // Calculate target dimensions according to the selected thumbnail fitment.
+        if ($imageFitment === ImageFitment::BOUND) {
+            $ratio = min(1, $widthDiff, $heightDiff);
+            $nextWidth = (int) round($sourceWidth * $ratio);
+            $nextHeight = (int) round($sourceHeight * $ratio);
+            $destinationWidth = $nextWidth;
+            $destinationHeight = $nextHeight;
+        } elseif ($imageFitment === ImageFitment::CROP) {
+            $ratio = max($widthDiff, $heightDiff);
+            $nextWidth = (int) round($sourceWidth * $ratio);
+            $nextHeight = (int) round($sourceHeight * $ratio);
+        } elseif ($widthDiff > 1 && $heightDiff > 1) {
             $nextWidth = $sourceWidth;
             $nextHeight = $sourceHeight;
+        } elseif ($psImageGenerationMethod == 2 || (!$psImageGenerationMethod && $widthDiff > $heightDiff)) {
+            $nextHeight = $destinationHeight;
+            $nextWidth = round(($sourceWidth * $nextHeight) / $sourceHeight);
+            $destinationWidth = (int) (!$psImageGenerationMethod ? $destinationWidth : $nextWidth);
         } else {
-            if ($psImageGenerationMethod == 2 || (!$psImageGenerationMethod && $widthDiff > $heightDiff)) {
-                $nextHeight = $destinationHeight;
-                $nextWidth = round(($sourceWidth * $nextHeight) / $sourceHeight);
-                $destinationWidth = (int) (!$psImageGenerationMethod ? $destinationWidth : $nextWidth);
-            } else {
-                $nextWidth = $destinationWidth;
-                $nextHeight = round($sourceHeight * $destinationWidth / $sourceWidth);
-                $destinationHeight = (int) (!$psImageGenerationMethod ? $destinationHeight : $nextHeight);
-            }
+            $nextWidth = $destinationWidth;
+            $nextHeight = round($sourceHeight * $destinationWidth / $sourceWidth);
+            $destinationHeight = (int) (!$psImageGenerationMethod ? $destinationHeight : $nextHeight);
         }
 
         if (!ImageManager::checkImageMemoryLimit($sourceFile)) {
@@ -837,7 +856,8 @@ class ImageManagerCore
                         $tgt_height,
                         5,
                         $src_width,
-                        $src_height
+                        $src_height,
+                        $image_type['image_fitment']
                     )) {
                         // the last image should not be added in the candidate list if it's bigger than the original image
                         if ($tgt_width <= $src_width && $tgt_height <= $src_height) {

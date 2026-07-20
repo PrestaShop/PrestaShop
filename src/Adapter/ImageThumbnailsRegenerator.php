@@ -146,12 +146,26 @@ class ImageThumbnailsRegenerator
                                 if (!file_exists($dir . $originalImageName) || !filesize($dir . $originalImageName)) {
                                     $errors[] = $this->translator->trans('Source file does not exist or is empty (%filepath%)', ['%filepath%' => $dir . $originalImageName], 'Admin.Design.Notification');
                                 } else {
+                                    $error = 0;
+                                    $targetWidth = null;
+                                    $targetHeight = null;
+                                    $sourceWidth = null;
+                                    $sourceHeight = null;
+
                                     if (!LegacyImageManager::resize(
                                         $dir . $originalImageName,
                                         $newDir . $thumbnailName,
                                         (int) $imageType->getWidth(),
                                         (int) $imageType->getHeight(),
-                                        $imageFormat
+                                        $imageFormat,
+                                        false,
+                                        $error,
+                                        $targetWidth,
+                                        $targetHeight,
+                                        5,
+                                        $sourceWidth,
+                                        $sourceHeight,
+                                        $imageType->getImageFitment()
                                     )) {
                                         $errors[] = $this->translator->trans('Failed to resize image file (%filepath%)', ['%filepath%' => $dir . $originalImageName], 'Admin.Design.Notification');
                                     }
@@ -181,12 +195,26 @@ class ImageThumbnailsRegenerator
                             );
 
                             if (!file_exists($thumbnailPath)) {
+                                $error = 0;
+                                $targetWidth = null;
+                                $targetHeight = null;
+                                $sourceWidth = null;
+                                $sourceHeight = null;
+
                                 if (!LegacyImageManager::resize(
                                     $originalImagePath,
                                     $thumbnailPath,
                                     (int) $imageType->getWidth(),
                                     (int) $imageType->getHeight(),
-                                    $imageFormat
+                                    $imageFormat,
+                                    false,
+                                    $error,
+                                    $targetWidth,
+                                    $targetHeight,
+                                    5,
+                                    $sourceWidth,
+                                    $sourceHeight,
+                                    $imageType->getImageFitment()
                                 )) {
                                     $errors[] = $this->translator->trans(
                                         'Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.',
@@ -294,12 +322,26 @@ class ImageThumbnailsRegenerator
 
                 foreach ($configuredImageFormats as $imageFormat) {
                     if (!file_exists($dir . $language->getIsoCode() . '-default-' . stripslashes($image_type->getName()) . '.' . $imageFormat)) {
+                        $error = 0;
+                        $targetWidth = null;
+                        $targetHeight = null;
+                        $sourceWidth = null;
+                        $sourceHeight = null;
+
                         if (!LegacyImageManager::resize(
                             $file,
                             $dir . $language->getIsoCode() . '-default-' . stripslashes($image_type->getName()) . '.' . $imageFormat,
                             (int) $image_type->getWidth(),
                             (int) $image_type->getHeight(),
-                            $imageFormat
+                            $imageFormat,
+                            false,
+                            $error,
+                            $targetWidth,
+                            $targetHeight,
+                            5,
+                            $sourceWidth,
+                            $sourceHeight,
+                            $image_type->getImageFitment()
                         )) {
                             $errors = true;
                         }
