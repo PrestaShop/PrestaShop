@@ -138,12 +138,26 @@ abstract class AbstractImageUploader
         $ext = '.jpg';
         $width = $imageType['width'];
         $height = $imageType['height'];
+        $error = 0;
+        $targetWidth = null;
+        $targetHeight = null;
+        $sourceWidth = null;
+        $sourceHeight = null;
 
         if (!ImageManager::resize(
             $imageDir . $id . '.jpg',
             $imageDir . $id . '-' . stripslashes($imageType['name']) . $ext,
             (int) $width,
-            (int) $height
+            (int) $height,
+            'jpg',
+            false,
+            $error,
+            $targetWidth,
+            $targetHeight,
+            5,
+            $sourceWidth,
+            $sourceHeight,
+            $imageType['image_fitment']
         )) {
             return false;
         }

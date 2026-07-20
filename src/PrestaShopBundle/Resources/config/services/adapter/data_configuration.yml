@@ -263,6 +263,7 @@ services:
       - '@prestashop.adapter.shop.context'
       - '@prestashop.adapter.multistore_feature'
       - '@=service("prestashop.adapter.data_provider.default_route").getRules()'
+      - '@=service("prestashop.core.admin.lang.repository").findAll()'
 
   prestashop.adapter.meta.seo_options.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Meta\SEOOptionsDataConfiguration'

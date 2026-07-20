@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
+
 /**
  * Class ImageTypeCore.
  */
@@ -19,6 +21,9 @@ class ImageTypeCore extends ObjectModel
 
     /** @var int Height */
     public $height;
+
+    /** @var value-of<ImageFitment::AVAILABLE_VALUES> Image fitment */
+    public $image_fitment = ImageFitment::FIT;
 
     /** @var bool Apply to products */
     public $products;
@@ -45,6 +50,7 @@ class ImageTypeCore extends ObjectModel
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isImageTypeName', 'required' => true, 'size' => 64],
             'width' => ['type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true],
             'height' => ['type' => self::TYPE_INT, 'validate' => 'isImageSize', 'required' => true],
+            'image_fitment' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 16, 'values' => ImageFitment::AVAILABLE_VALUES],
             'categories' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'products' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'manufacturers' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],

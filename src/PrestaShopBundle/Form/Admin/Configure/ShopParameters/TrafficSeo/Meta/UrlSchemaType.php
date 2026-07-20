@@ -8,12 +8,14 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use PrestaShop\PrestaShop\Adapter\Routes\DefaultRouteProvider;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Extension\MultistoreConfigurationTypeExtension;
 use PrestaShopException;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -42,61 +44,152 @@ class UrlSchemaType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('product_rule', TextType::class, [
+            ->add('product_rule', TranslatableType::class, [
                 'label' => $this->trans(
                     'Route to products',
                     'Admin.Shopparameters.Feature'
                 ),
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
                 'help' => $this->getKeywords('product_rule'),
                 'multistore_configuration_key' => 'PS_ROUTE_product_rule',
+                'options' => [
+                    'required' => true,
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => $this->trans(
+                                'This field cannot be empty.',
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
+                ],
             ])
-            ->add('category_rule', TextType::class, [
+            ->add('category_rule', TranslatableType::class, [
                 'label' => $this->trans(
                     'Route to category',
                     'Admin.Shopparameters.Feature'
                 ),
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
                 'help' => $this->getKeywords('category_rule'),
                 'multistore_configuration_key' => 'PS_ROUTE_category_rule',
+                'options' => [
+                    'required' => true,
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => $this->trans(
+                                'This field cannot be empty.',
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
+                ],
             ])
-            ->add('supplier_rule', TextType::class, [
+            ->add('supplier_rule', TranslatableType::class, [
                 'label' => $this->trans(
                     'Route to supplier',
                     'Admin.Shopparameters.Feature'
                 ),
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
                 'help' => $this->getKeywords('supplier_rule'),
                 'multistore_configuration_key' => 'PS_ROUTE_supplier_rule',
+                'options' => [
+                    'required' => true,
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => $this->trans(
+                                'This field cannot be empty.',
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
+                ],
             ])
-            ->add('manufacturer_rule', TextType::class, [
+            ->add('manufacturer_rule', TranslatableType::class, [
                 'label' => $this->trans(
                     'Route to brand',
                     'Admin.Shopparameters.Feature'
                 ),
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
                 'help' => $this->getKeywords('manufacturer_rule'),
                 'multistore_configuration_key' => 'PS_ROUTE_manufacturer_rule',
+                'options' => [
+                    'required' => true,
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => $this->trans(
+                                'This field cannot be empty.',
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
+                ],
             ])
-            ->add('cms_rule', TextType::class, [
+            ->add('cms_rule', TranslatableType::class, [
                 'label' => $this->trans(
                     'Route to page',
                     'Admin.Shopparameters.Feature'
                 ),
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
                 'help' => $this->getKeywords('cms_rule'),
                 'multistore_configuration_key' => 'PS_ROUTE_cms_rule',
+                'options' => [
+                    'required' => true,
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => $this->trans(
+                                'This field cannot be empty.',
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
+                ],
             ])
-            ->add('cms_category_rule', TextType::class, [
+            ->add('cms_category_rule', TranslatableType::class, [
                 'label' => $this->trans(
                     'Route to page category',
                     'Admin.Shopparameters.Feature'
                 ),
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
                 'help' => $this->getKeywords('cms_category_rule'),
                 'multistore_configuration_key' => 'PS_ROUTE_cms_category_rule',
+                'options' => [
+                    'required' => true,
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => $this->trans(
+                                'This field cannot be empty.',
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
+                ],
             ])
-            ->add('module', TextType::class, [
+            ->add('module', TranslatableType::class, [
                 'label' => $this->trans(
                     'Route to modules',
                     'Admin.Shopparameters.Feature'
                 ),
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
                 'help' => $this->getKeywords('module'),
                 'multistore_configuration_key' => 'PS_ROUTE_module',
+                'options' => [
+                    'required' => true,
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => $this->trans(
+                                'This field cannot be empty.',
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
+                ],
             ]);
     }
 

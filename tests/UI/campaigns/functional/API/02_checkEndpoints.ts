@@ -103,7 +103,7 @@ describe('API : Check endpoints', async () => {
     '/contacts/{contactId}: GET',
     // @todo: add tests
     '/contacts/{contactId}: PATCH',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/contacts/03_getContacts.ts
     '/contacts: GET',
     // @todo: add tests
     '/contacts: POST',
@@ -123,9 +123,9 @@ describe('API : Check endpoints', async () => {
     '/customers/groups/{customerGroupId}: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/03_putCustomerGroupsId.ts
     '/customers/groups/{customerGroupId}: PUT',
-    // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/05_getCustomersGroups.ts
+    // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/04_getCustomersGroups.ts
     '/customers/groups: GET',
-    // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/04_postCustomersGroup.ts
+    // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/05_postCustomersGroup.ts
     '/customers/groups: POST',
     // @todo: add tests
     '/customers/search: GET',
@@ -177,7 +177,7 @@ describe('API : Check endpoints', async () => {
     '/features/{featureId}: GET',
     // @todo: add tests
     '/features/{featureId}: PATCH',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/features/11_getFeatures.ts
     '/features: GET',
     // @todo: add tests
     '/features: POST',
@@ -269,7 +269,7 @@ describe('API : Check endpoints', async () => {
     '/search-engines/{searchEngineId}: GET',
     // @todo: add tests
     '/search-engines/{searchEngineId}: PATCH',
-    // @todo: add tests
+    // tests/UI/campaigns/functional/API/02_endpoints/searchEngine/05_getSearchEngines.ts
     '/search-engines: GET',
     // @todo: add tests
     '/search-engines: POST',
