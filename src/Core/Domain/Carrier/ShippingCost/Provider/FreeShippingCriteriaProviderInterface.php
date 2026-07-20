@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\Provider;
 
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ShippingCost\ShippingCostPriceInterface;
+
 interface FreeShippingCriteriaProviderInterface extends ShippingCostProviderInterface
 {
-    public function getCriteria(): FreeShippingCriteria;
+    public function getCriteria(ShippingCostPriceInterface $context): FreeShippingCriteria;
 }

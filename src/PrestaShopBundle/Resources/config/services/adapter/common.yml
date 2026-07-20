@@ -5,6 +5,8 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Configuration: ~
 
+  PrestaShop\PrestaShop\Adapter\HookManager: ~
+
   prestashop.adapter.legacy.configuration:
     alias: PrestaShop\PrestaShop\Adapter\Configuration
 

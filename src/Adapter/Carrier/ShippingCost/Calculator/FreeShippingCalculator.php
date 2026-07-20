@@ -31,7 +31,7 @@ class FreeShippingCalculator implements ShippingCostCalculatorInterface
             return;
         }
 
-        $thresholds = $this->criteriaProvider->getCriteria();
+        $thresholds = $this->criteriaProvider->getCriteria($context);
 
         if ($thresholds->hasFreePrice()) {
             $convertedPrice = new DecimalNumber((string) $this->tools->convertPrice(
