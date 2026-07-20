@@ -72,3 +72,7 @@ trans('Enable / Disable the new pricing system. This feature introduces an impro
 // Quick access feature flag
 trans('Quick access', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the migrated quick access page.', 'Admin.Advparameters.Help');
+
+// Stats feature flag
+trans('Stats', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the migrated stats page.', 'Admin.Advparameters.Help');
