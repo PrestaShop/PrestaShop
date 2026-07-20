@@ -27,7 +27,7 @@ class AddProductToShipment
     /** @var ?CombinationId */
     private $combinationId;
 
-    public function __construct(int $shipmentId, int $productId, int $orderId, int $combinationId = 0)
+    public function __construct(int $shipmentId, int $productId, int $orderId, ?int $combinationId = 0)
     {
         $this->shipmentId = new ShipmentId($shipmentId);
         $this->productId = new ProductId($productId);

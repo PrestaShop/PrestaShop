@@ -21,6 +21,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\CreateShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\CommandHandler\CreateShipmentHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentException;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\ValueObject\ShipmentId;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use PrestaShopBundle\Entity\Shipment;
 
@@ -36,7 +37,7 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
     ) {
     }
 
-    public function handle(CreateShipment $command): int
+    public function handle(CreateShipment $command): ShipmentId
     {
         try {
             $order = $this->orderRepository->get($command->getOrderId());
@@ -102,7 +103,7 @@ class CreateShipmentHandler implements CreateShipmentHandlerInterface
                 $this->orderShippingTotalUpdater->update($order);
             }
 
-            return $shipmentId;
+            return new ShipmentId($shipmentId);
         } catch (Exception $e) {
             if ($e instanceof ShipmentException || $e instanceof OrderException) {
                 throw $e;
