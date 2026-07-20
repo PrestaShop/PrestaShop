@@ -3,7 +3,7 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
-{% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block accordion_widget %}
   {% if empty_scopes is not defined or empty_scopes == false %}
