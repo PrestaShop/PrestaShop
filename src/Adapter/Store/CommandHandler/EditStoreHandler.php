@@ -15,7 +15,12 @@ use PrestaShop\PrestaShop\Adapter\Store\Trait\StoreHandlerTrait;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\EditStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\EditStoreHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageFileNotFoundException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
+use PrestaShopDatabaseException;
 
 #[AsCommandHandler]
 final class EditStoreHandler implements EditStoreHandlerInterface
@@ -30,6 +35,13 @@ final class EditStoreHandler implements EditStoreHandlerInterface
     ) {
     }
 
+    /**
+     * @throws ImageUploadException
+     * @throws ImageFileNotFoundException
+     * @throws UploadedImageConstraintException
+     * @throws PrestaShopDatabaseException
+     * @throws StoreConstraintException
+     */
     public function handle(EditStoreCommand $command): void
     {
         $store = $this->storeRepository->get($command->getStoreId());

@@ -40,17 +40,17 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
             $shopAssociation = $store->getAssociatedShops();
 
             return new StoreForEditing(
-                storeId: (int) $store->id,
+                storeId: $store->id,
                 active: (bool) $store->active,
                 localizedNames: $store->name,
                 localizedAddress1: (array) $store->address1,
                 localizedAddress2: is_array($store->address2) ? $store->address2 : [],
                 localizedHours: $localizedHours,
                 localizedNotes: is_array($store->note) ? $store->note : [],
-                countryId: (int) $store->id_country,
+                countryId: $store->id_country,
                 stateId: $store->id_state ?: null,
-                city: (string) $store->city,
-                postcode: (string) $store->postcode,
+                city: $store->city,
+                postcode: $store->postcode,
                 latitude: $store->latitude !== null && $store->latitude !== '' ? new DecimalNumber((string) $store->latitude) : null,
                 longitude: $store->longitude !== null && $store->longitude !== '' ? new DecimalNumber((string) $store->longitude) : null,
                 phone: $store->phone ?: null,

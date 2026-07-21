@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Store;
 
 use Country;
+use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use State;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -33,6 +34,9 @@ final class ContactDetailsConfiguration extends AbstractMultistoreConfiguration
         ];
     }
 
+    /**
+     * @throws Exception
+     */
     public function updateConfiguration(array $configuration): array
     {
         $countryId = (int) ($configuration['id_country'] ?? 0);

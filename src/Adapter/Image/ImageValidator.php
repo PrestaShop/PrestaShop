@@ -11,7 +11,6 @@ namespace PrestaShop\PrestaShop\Adapter\Image;
 use ImageManager;
 use ImageManagerCore;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageFileNotFoundException;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 
@@ -36,8 +35,8 @@ class ImageValidator
     /**
      * @param string $filePath
      *
-     * @throws ImageUploadException
      * @throws UploadedImageConstraintException
+     * @throws MemoryLimitException
      */
     public function assertFileUploadLimits(string $filePath): void
     {
@@ -56,7 +55,7 @@ class ImageValidator
      * @param string $filePath
      * @param array $allowedMimeTypes
      *
-     * @throws ImageUploadException
+     * @throws ImageFileNotFoundException
      * @throws UploadedImageConstraintException
      */
     public function assertIsValidImageType(string $filePath, ?array $allowedMimeTypes = null): void
