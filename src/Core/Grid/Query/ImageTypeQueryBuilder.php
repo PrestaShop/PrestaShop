@@ -104,7 +104,6 @@ class ImageTypeQueryBuilder extends AbstractDoctrineQueryBuilder
             'name',
             'width',
             'height',
-            'image_fitment',
             'products',
             'categories',
             'manufacturers',

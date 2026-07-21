@@ -107,26 +107,12 @@ final class CategoryThumbnailImageUploader extends AbstractImageUploader impleme
         $imagesTypes = ImageType::getImagesTypes('categories');
         foreach ($imagesTypes as $imageType) {
             foreach ($configuredImageFormats as $imageFormat) {
-                $error = 0;
-                $targetWidth = null;
-                $targetHeight = null;
-                $sourceWidth = null;
-                $sourceHeight = null;
-
                 $generated = ImageManager::resize(
                     _PS_CAT_IMG_DIR_ . $id . '_thumb.jpg',
                     _PS_CAT_IMG_DIR_ . $id . '_thumb-' . stripslashes($imageType['name']) . '.' . $imageFormat,
                     (int) $imageType['width'],
                     (int) $imageType['height'],
-                    $imageFormat,
-                    false,
-                    $error,
-                    $targetWidth,
-                    $targetHeight,
-                    5,
-                    $sourceWidth,
-                    $sourceHeight,
-                    $imageType['image_fitment']
+                    $imageFormat
                 );
 
                 if (!$generated) {

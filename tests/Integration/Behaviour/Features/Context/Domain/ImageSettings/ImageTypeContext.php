@@ -14,7 +14,6 @@ use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Command\EditImageTypeCommand
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Exception\ImageTypeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Query\GetImageTypeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\QueryResult\EditableImageType;
-use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageTypeId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
@@ -37,8 +36,7 @@ class ImageTypeContext extends AbstractDomainFeatureContext
             $data['categories'],
             $data['manufacturers'],
             $data['suppliers'],
-            $data['stores'],
-            $data['image_fitment'] ?? ImageFitment::FIT
+            $data['stores']
         );
 
         /** @var ImageTypeId $imageTypeId */
@@ -63,10 +61,6 @@ class ImageTypeContext extends AbstractDomainFeatureContext
 
         if (isset($data['height'])) {
             $command->setHeight($data['height']);
-        }
-
-        if (isset($data['image_fitment'])) {
-            $command->setImageFitment($data['image_fitment']);
         }
 
         if (isset($data['products'])) {
@@ -141,12 +135,6 @@ class ImageTypeContext extends AbstractDomainFeatureContext
         if (isset($expectedData['height'])) {
             if ($imageType->getHeight() != (int) $expectedData['height']) {
                 $errors[] = 'height';
-            }
-        }
-
-        if (isset($expectedData['image_fitment'])) {
-            if ($imageType->getImageFitment() !== $expectedData['image_fitment']) {
-                $errors[] = 'image_fitment';
             }
         }
 

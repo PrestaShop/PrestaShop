@@ -8,11 +8,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\ImageSettings\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageTypeId;
 
 /**
- * Command that edits image type
+ * Command that edits zone
  */
 class EditImageTypeCommand
 {
@@ -20,9 +19,6 @@ class EditImageTypeCommand
     private ?string $name = null;
     private ?int $width = null;
     private ?int $height = null;
-
-    /** @var value-of<ImageFitment::AVAILABLE_VALUES>|null */
-    private ?string $imageFitment = null;
     private ?bool $products = null;
     private ?bool $categories = null;
     private ?bool $manufacturers = null;
@@ -71,30 +67,6 @@ class EditImageTypeCommand
     public function setHeight(int $height): self
     {
         $this->height = $height;
-
-        return $this;
-    }
-
-    /**
-     * Gets the image fitment used when generating thumbnails.
-     *
-     * @return value-of<ImageFitment::AVAILABLE_VALUES>|null
-     */
-    public function getImageFitment(): ?string
-    {
-        return $this->imageFitment;
-    }
-
-    /**
-     * Sets the image fitment used when generating thumbnails.
-     *
-     * @param value-of<ImageFitment::AVAILABLE_VALUES> $imageFitment
-     */
-    public function setImageFitment(string $imageFitment): self
-    {
-        ImageFitment::assertIsValid($imageFitment);
-
-        $this->imageFitment = $imageFitment;
 
         return $this;
     }

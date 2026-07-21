@@ -3,8 +3,6 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
-
 class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManagementInterface
 {
     /** @var WebserviceOutputBuilder */
@@ -885,7 +883,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      *
      * @throws WebserviceException
      */
-    protected function writeImageOnDisk($base_path, $new_path, $dest_width = null, $dest_height = null, $image_types = null, $parent_path = null, $image_fitment = ImageFitment::FIT)
+    protected function writeImageOnDisk($base_path, $new_path, $dest_width = null, $dest_height = null, $image_types = null, $parent_path = null)
     {
         list($source_width, $source_height, $type, $attr) = getimagesize($base_path);
         if (!$source_width) {
@@ -897,12 +895,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         if ($dest_height == null) {
             $dest_height = $source_height;
         }
-
-        // Unknown fitments fall back to legacy behavior to keep webservice uploads backward-compatible.
-        if (!in_array($image_fitment, ImageFitment::AVAILABLE_VALUES, true)) {
-            $image_fitment = ImageFitment::FIT;
-        }
-
         switch ($type) {
             case IMAGETYPE_GIF:
                 $source_image = imagecreatefromgif($base_path);
@@ -922,18 +914,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         $width_diff = $dest_width / $source_width;
         $height_diff = $dest_height / $source_height;
 
-        // Calculate generated dimensions with the same fitment rules as ImageManager::resize().
-        if ($image_fitment === ImageFitment::BOUND) {
-            $ratio = min(1, $width_diff, $height_diff);
-            $next_width = (int) round($source_width * $ratio);
-            $next_height = (int) round($source_height * $ratio);
-            $dest_width = $next_width;
-            $dest_height = $next_height;
-        } elseif ($image_fitment === ImageFitment::CROP) {
-            $ratio = max($width_diff, $height_diff);
-            $next_width = (int) round($source_width * $ratio);
-            $next_height = (int) round($source_height * $ratio);
-        } elseif ($width_diff > 1 && $height_diff > 1) {
+        if ($width_diff > 1 && $height_diff > 1) {
             $next_width = $source_width;
             $next_height = $source_height;
         } else {
@@ -1012,7 +993,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         $thumbnail_path = $parent_path . $this->wsObject->urlSegment[2] . '-' . $image_type['name'] . '.jpg';
                     }
                 }
-                if (!$this->writeImageOnDisk($base_path, $thumbnail_path, $image_type['width'], $image_type['height'], null, null, $image_type['image_fitment'])) {
+                if (!$this->writeImageOnDisk($base_path, $thumbnail_path, $image_type['width'], $image_type['height'])) {
                     throw new WebserviceException(sprintf('Unable to save the thumbnail "%s" of this image.', $image_type['name']), [71, 500]);
                 }
             }
@@ -1139,27 +1120,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         } else {
                             $images_types = ImageType::getImagesTypes('products');
                             foreach ($images_types as $imageType) {
-                                $error = 0;
-                                $targetWidth = null;
-                                $targetHeight = null;
-                                $sourceWidth = null;
-                                $sourceHeight = null;
-
-                                if (!ImageManager::resize(
-                                    $tmp_name,
-                                    _PS_PRODUCT_IMG_DIR_ . $image->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $image->image_format,
-                                    $imageType['width'],
-                                    $imageType['height'],
-                                    $image->image_format,
-                                    false,
-                                    $error,
-                                    $targetWidth,
-                                    $targetHeight,
-                                    5,
-                                    $sourceWidth,
-                                    $sourceHeight,
-                                    $imageType['image_fitment']
-                                )) {
+                                if (!ImageManager::resize($tmp_name, _PS_PRODUCT_IMG_DIR_ . $image->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
                                     $this->getWsObject()->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
                                 }
                             }
@@ -1181,27 +1142,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         }
                         $images_types = ImageType::getImagesTypes($this->imageType);
                         foreach ($images_types as $imageType) {
-                            $error = 0;
-                            $targetWidth = null;
-                            $targetHeight = null;
-                            $sourceWidth = null;
-                            $sourceHeight = null;
-
-                            if (!ImageManager::resize(
-                                $tmp_name,
-                                $parent_path . $this->wsObject->urlSegment[2] . '-' . stripslashes($imageType['name']) . '.jpg',
-                                $imageType['width'],
-                                $imageType['height'],
-                                'jpg',
-                                false,
-                                $error,
-                                $targetWidth,
-                                $targetHeight,
-                                5,
-                                $sourceWidth,
-                                $sourceHeight,
-                                $imageType['image_fitment']
-                            )) {
+                            if (!ImageManager::resize($tmp_name, $parent_path . $this->wsObject->urlSegment[2] . '-' . stripslashes($imageType['name']) . '.jpg', $imageType['width'], $imageType['height'])) {
                                 $this->getWsObject()->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
                             }
                         }

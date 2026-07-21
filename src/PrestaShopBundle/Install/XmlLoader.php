@@ -756,11 +756,6 @@ class XmlLoader
             foreach ($types as $type) {
                 $origin_file = $from_path . $identifier . '-' . $type['name'] . '.' . $extension;
                 $target_file = $dst_path . $entity_id . '-' . $type['name'] . '.' . $extension;
-                $error = 0;
-                $targetWidth = null;
-                $targetHeight = null;
-                $sourceWidth = null;
-                $sourceHeight = null;
 
                 // Test if dest folder is writable
                 if (!is_writable(dirname($target_file))) {
@@ -788,16 +783,7 @@ class XmlLoader
                     $from_path . $identifier . '.' . $extension,
                     $target_file,
                     $type['width'],
-                    $type['height'],
-                    'jpg',
-                    false,
-                    $error,
-                    $targetWidth,
-                    $targetHeight,
-                    5,
-                    $sourceWidth,
-                    $sourceHeight,
-                    $type['image_fitment']
+                    $type['height']
                 )) {
                     // Resize the image if no cache was prepared in fixtures
                     $this->setError(
@@ -870,11 +856,6 @@ class XmlLoader
         foreach ($types as $type) {
             $origin_file = $path . $identifier . '-' . $type['name'] . '.jpg';
             $target_file = $dst_path . '-' . $type['name'] . '.' . $image->image_format;
-            $error = 0;
-            $targetWidth = null;
-            $targetHeight = null;
-            $sourceWidth = null;
-            $sourceHeight = null;
 
             // Test if dest folder is writable
             if (!is_writable(dirname($target_file))) {
@@ -898,21 +879,7 @@ class XmlLoader
                     );
                 }
                 @chmod($target_file, FileSystem::DEFAULT_MODE_FILE);
-            } elseif (!ImageManager::resize(
-                $path . $identifier . '.jpg',
-                $target_file,
-                $type['width'],
-                $type['height'],
-                'jpg',
-                false,
-                $error,
-                $targetWidth,
-                $targetHeight,
-                5,
-                $sourceWidth,
-                $sourceHeight,
-                $type['image_fitment']
-            )) {
+            } elseif (!ImageManager::resize($path . $identifier . '.jpg', $target_file, $type['width'], $type['height'])) {
                 // Resize the image if no cache was prepared in fixtures
                 $this->setError(
                     $this->translator->trans(

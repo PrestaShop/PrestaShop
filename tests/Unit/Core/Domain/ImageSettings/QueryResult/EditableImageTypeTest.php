@@ -10,7 +10,6 @@ namespace Tests\Core\Domain\ImageSettings\QueryResult;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\QueryResult\EditableImageType;
-use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageTypeId;
 
 class EditableImageTypeTest extends TestCase
@@ -28,7 +27,6 @@ class EditableImageTypeTest extends TestCase
             true,
             true,
             true,
-            ImageFitment::CROP,
         );
 
         self::assertSame($imageTypeId, $instance->getImageTypeId());
@@ -40,6 +38,5 @@ class EditableImageTypeTest extends TestCase
         self::assertTrue($instance->isManufacturers());
         self::assertTrue($instance->isSuppliers());
         self::assertTrue($instance->isStores());
-        self::assertSame(ImageFitment::CROP, $instance->getImageFitment());
     }
 }

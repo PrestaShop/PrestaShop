@@ -11,7 +11,6 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\Query\GetImageTypeForEditing;
 use PrestaShop\PrestaShop\Core\Domain\ImageSettings\QueryResult\EditableImageType;
-use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
 
 /**
  * Provides data for image type add/edit form.
@@ -36,7 +35,6 @@ final class ImageTypeFormDataProvider implements FormDataProviderInterface
             'name' => $result->getName(),
             'width' => $result->getWidth(),
             'height' => $result->getHeight(),
-            'image_fitment' => $result->getImageFitment(),
             'products' => $result->isProducts(),
             'categories' => $result->isCategories(),
             'manufacturers' => $result->isManufacturers(),
@@ -54,7 +52,6 @@ final class ImageTypeFormDataProvider implements FormDataProviderInterface
             'name' => '',
             'width' => null,
             'height' => null,
-            'image_fitment' => ImageFitment::FIT,
             'products' => false,
             'categories' => false,
             'manufacturers' => false,

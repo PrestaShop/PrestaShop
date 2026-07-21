@@ -699,26 +699,11 @@ class Install extends AbstractInstall
                         $dst_path . $iso . '-default-' . $type['name'] . '.jpg'
                     );
                 } else {
-                    $error = 0;
-                    $targetWidth = null;
-                    $targetHeight = null;
-                    $sourceWidth = null;
-                    $sourceHeight = null;
-
                     ImageManager::resize(
                         $img_path . $iso . '.jpg',
                         $dst_path . $iso . '-default-' . $type['name'] . '.jpg',
                         $type['width'],
-                        $type['height'],
-                        'jpg',
-                        false,
-                        $error,
-                        $targetWidth,
-                        $targetHeight,
-                        5,
-                        $sourceWidth,
-                        $sourceHeight,
-                        $type['image_fitment']
+                        $type['height']
                     );
                 }
             }

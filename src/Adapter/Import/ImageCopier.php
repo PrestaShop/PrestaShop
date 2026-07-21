@@ -161,8 +161,7 @@ final class ImageCopier
                         $targetHeight,
                         5,
                         $sourceWidth,
-                        $sourceHeight,
-                        $imageType['image_fitment']
+                        $sourceHeight
                     )) {
                         // the last image should not be added in the candidate list if it's bigger than the original image
                         if ($targetWidth <= $sourceWidth && $targetHeight <= $sourceHeight) {

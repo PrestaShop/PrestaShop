@@ -69,26 +69,12 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
 
                 foreach ($imageTypes as $imageType) {
                     foreach ($configuredImageFormats as $imageFormat) {
-                        $error = 0;
-                        $targetWidth = null;
-                        $targetHeight = null;
-                        $sourceWidth = null;
-                        $sourceHeight = null;
-
                         $resized &= ImageManager::resize(
                             _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg',
                             _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '.' . $imageFormat,
                             (int) $imageType['width'],
                             (int) $imageType['height'],
-                            $imageFormat,
-                            false,
-                            $error,
-                            $targetWidth,
-                            $targetHeight,
-                            5,
-                            $sourceWidth,
-                            $sourceHeight,
-                            $imageType['image_fitment']
+                            $imageFormat
                         );
                     }
                 }

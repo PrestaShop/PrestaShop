@@ -50,10 +50,6 @@ final class EditImageTypeHandler extends AbstractObjectModelHandler implements E
             $imageType->setHeight($command->getHeight());
         }
 
-        if (null !== $command->getImageFitment()) {
-            $imageType->setImageFitment($command->getImageFitment());
-        }
-
         if (null !== $command->isProducts()) {
             $imageType->setProducts($command->isProducts());
         }
