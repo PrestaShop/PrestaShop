@@ -1224,6 +1224,11 @@ abstract class PaymentModuleCore extends Module
                 continue;
             }
 
+            // The "new remainder voucher" notification is captured here and only sent once the
+            // cart rule has been persisted and consumed below, so a failing/slow Mail::Send can
+            // never leave a paid order with a still-reusable single-use voucher.
+            $voucherEmail = null;
+
             // IF
             //  This is not multi-shipping
             //  The value of the voucher is greater than the total of the order
@@ -1283,28 +1288,20 @@ abstract class PaymentModuleCore extends Module
                     CartRule::copyConditions($cartRule->id, $voucher->id);
                     $orderLanguage = new Language((int) $order->id_lang);
 
-                    $params = [
-                        '{voucher_amount}' => Tools::getContextLocale($this->context)->formatPrice($voucher->reduction_amount, $this->context->currency->iso_code),
-                        '{voucher_num}' => $voucher->code,
-                        '{firstname}' => $this->context->customer->firstname,
-                        '{lastname}' => $this->context->customer->lastname,
-                        '{id_order}' => $order->id,
-                        '{order_name}' => $order->getUniqReference(),
+                    $voucherEmail = [
+                        'id_lang' => (int) $order->id_lang,
+                        'locale' => $orderLanguage->locale,
+                        'reference' => $order->reference,
+                        'id_shop' => (int) $order->id_shop,
+                        'params' => [
+                            '{voucher_amount}' => Tools::getContextLocale($this->context)->formatPrice($voucher->reduction_amount, $this->context->currency->iso_code),
+                            '{voucher_num}' => $voucher->code,
+                            '{firstname}' => $this->context->customer->firstname,
+                            '{lastname}' => $this->context->customer->lastname,
+                            '{id_order}' => $order->id,
+                            '{order_name}' => $order->getUniqReference(),
+                        ],
                     ];
-                    Mail::Send(
-                        (int) $order->id_lang,
-                        'voucher',
-                        Context::getContext()->getTranslator()->trans(
-                            'New voucher for your order %s',
-                            [$order->reference],
-                            'Emails.Subject',
-                            $orderLanguage->locale
-                        ),
-                        $params,
-                        $this->context->customer->email,
-                        $this->context->customer->firstname . ' ' . $this->context->customer->lastname,
-                        null, null, null, null, _PS_MAIL_DIR_, false, (int) $order->id_shop
-                    );
                 }
 
                 $values['tax_incl'] = $order->total_products_wt - $total_reduction_value_ti;
@@ -1329,6 +1326,29 @@ abstract class PaymentModuleCore extends Module
                     $cart_rule_to_update->quantity = max(0, $cart_rule_to_update->quantity - 1);
                 }
                 $cart_rule_to_update->update();
+            }
+
+            // The cart rule is now persisted and consumed: sending the remainder voucher email is
+            // best-effort and must not be able to interrupt the order flow.
+            if ($voucherEmail !== null) {
+                try {
+                    Mail::Send(
+                        $voucherEmail['id_lang'],
+                        'voucher',
+                        Context::getContext()->getTranslator()->trans(
+                            'New voucher for your order %s',
+                            [$voucherEmail['reference']],
+                            'Emails.Subject',
+                            $voucherEmail['locale']
+                        ),
+                        $voucherEmail['params'],
+                        $this->context->customer->email,
+                        $this->context->customer->firstname . ' ' . $this->context->customer->lastname,
+                        null, null, null, null, _PS_MAIL_DIR_, false, $voucherEmail['id_shop']
+                    );
+                } catch (Exception $e) {
+                    PrestaShopLogger::addLog('PaymentModule::createOrderCartRules - Could not send the remainder voucher email: ' . $e->getMessage(), 3, null, 'Order', (int) $order->id, true);
+                }
             }
 
             $cart_rules_list[] = [
