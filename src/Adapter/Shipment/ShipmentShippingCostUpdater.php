@@ -87,7 +87,7 @@ class ShipmentShippingCostUpdater
             countryZoneId: 0,
             currencyId: (int) $order->id_currency,
             customerId: (int) $order->id_customer,
-            orderTotal: $shipmentTotalProducts,
+            shipmentTotal: $shipmentTotalProducts,
         );
 
         $context = ShippingCostPrice::createFromRequest($request);

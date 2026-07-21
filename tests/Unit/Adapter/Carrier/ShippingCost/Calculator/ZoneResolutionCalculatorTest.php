@@ -99,7 +99,7 @@ class ZoneResolutionCalculatorTest extends TestCase
             2, // countryZoneId (default)
             1, // currencyId
             null, // customerId
-            10.0 // orderTotal
+            10.0 // shipmentTotal
         );
 
         return ShippingCostPrice::createFromRequest($request);

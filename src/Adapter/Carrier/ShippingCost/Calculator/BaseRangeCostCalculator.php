@@ -38,7 +38,7 @@ class BaseRangeCostCalculator implements ShippingCostCalculatorInterface
         $cost = $this->carrierDataProvider->getRangeCost(
             $carrierData,
             $context->getTotalWeight(),
-            $context->getOrderTotal(),
+            $context->getShipmentTotal(),
             $zoneId,
             $context->getCurrencyId(),
         );

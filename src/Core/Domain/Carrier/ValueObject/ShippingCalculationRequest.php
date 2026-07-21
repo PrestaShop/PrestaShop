@@ -29,7 +29,7 @@ final class ShippingCalculationRequest
      * @param int $countryZoneId Country's default zone ID (fallback)
      * @param int $currencyId Currency ID
      * @param int|null $customerId Customer ID
-     * @param float $orderTotal Total order amount
+     * @param float $shipmentTotal Total shipment amount
      *
      * @throws InvalidArgumentException If products array is invalid or missing required fields
      */
@@ -41,7 +41,7 @@ final class ShippingCalculationRequest
         private readonly int $countryZoneId,
         private readonly int $currencyId,
         private readonly ?int $customerId,
-        private readonly float $orderTotal,
+        private readonly float $shipmentTotal,
     ) {
         foreach ($products as $product) {
             $this->validateProduct($product);
@@ -114,8 +114,8 @@ final class ShippingCalculationRequest
         return $this->customerId;
     }
 
-    public function getOrderTotal(): float
+    public function getShipmentTotal(): float
     {
-        return $this->orderTotal;
+        return $this->shipmentTotal;
     }
 }

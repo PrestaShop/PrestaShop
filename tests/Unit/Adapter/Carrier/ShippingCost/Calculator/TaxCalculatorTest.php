@@ -114,7 +114,7 @@ class TaxCalculatorTest extends TestCase
             1, // countryZoneId
             $currencyId,
             null, // customerId
-            10.0 // orderTotal
+            10.0 // shipmentTotal
         );
 
         return ShippingCostPrice::createFromRequest($request);
