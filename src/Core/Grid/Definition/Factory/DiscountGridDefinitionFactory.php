@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BadgeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
@@ -92,10 +93,12 @@ final class DiscountGridDefinitionFactory extends AbstractGridDefinitionFactory 
                     ])
             )
             ->add(
-                (new DataColumn('discount_type'))
+                (new BadgeColumn('discount_type'))
                     ->setName($this->trans('Type', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
-                        'field' => 'discount_type',
+                        'field' => 'discount_type_label',
+                        'badge_type' => '',
+                        'badge_type_field' => 'discount_type_badge',
                     ])
             )
             ->add(
