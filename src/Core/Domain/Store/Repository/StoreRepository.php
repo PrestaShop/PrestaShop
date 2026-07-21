@@ -19,6 +19,8 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+// @phpstan-ignore-next-line as the class is only used for PHPDoc
+use PrestaShopDatabaseException;
 use Store;
 
 class StoreRepository extends AbstractObjectModelRepository
@@ -85,6 +87,8 @@ class StoreRepository extends AbstractObjectModelRepository
      * Replaces the shop associations for the given store.
      *
      * @param int[] $shopIds
+     *
+     * @throws PrestaShopDatabaseException
      */
     public function updateShopAssociation(Store $store, array $shopIds): void
     {

@@ -13,6 +13,9 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
 
 trait StoreHandlerTrait
 {
+    /**
+     * @throws StoreConstraintException
+     */
     private function assertStateCountryConsistency(int $countryId, ?int $stateId): void
     {
         $country = new Country($countryId);
