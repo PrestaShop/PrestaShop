@@ -314,5 +314,3 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\StoreFormDataProvider:
     autowire: true
     public: false
-    arguments:
-      $contextShopIds: '@=service("prestashop.adapter.shop.context").getContextListShopID()'

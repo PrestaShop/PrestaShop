@@ -10,6 +10,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\Store;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Store\Configuration\StoreConstraint;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
@@ -34,9 +35,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StoreType extends TranslatorAwareType
 {
-    private const MAX_PHONE_LENGTH = 16;
-    private const MAX_POSTCODE_LENGTH = 12;
-
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -52,7 +50,6 @@ class StoreType extends TranslatorAwareType
     {
         $data = $builder->getData();
         $countryId = !empty($data['id_country']) ? (int) $data['id_country'] : $this->contextCountryId;
-        $stateChoices = $this->statesChoiceProvider->getChoices(['id_country' => $countryId]);
 
         $builder
             ->add('name', TranslatableType::class, [
@@ -94,11 +91,11 @@ class StoreType extends TranslatorAwareType
                 'required' => false,
                 'constraints' => [
                     new Length([
-                        'max' => self::MAX_POSTCODE_LENGTH,
+                        'max' => StoreConstraint::MAX_POSTCODE_LENGTH,
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
                             'Admin.Notifications.Error',
-                            ['%limit%' => self::MAX_POSTCODE_LENGTH]
+                            ['%limit%' => StoreConstraint::MAX_POSTCODE_LENGTH]
                         ),
                     ]),
                 ],
@@ -162,11 +159,11 @@ class StoreType extends TranslatorAwareType
                 'required' => false,
                 'constraints' => [
                     new Length([
-                        'max' => self::MAX_PHONE_LENGTH,
+                        'max' => StoreConstraint::MAX_PHONE_LENGTH,
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
                             'Admin.Notifications.Error',
-                            ['%limit%' => self::MAX_PHONE_LENGTH]
+                            ['%limit%' => StoreConstraint::MAX_PHONE_LENGTH]
                         ),
                     ]),
                     new TypedRegex(['type' => TypedRegex::TYPE_PHONE_NUMBER]),
@@ -177,11 +174,11 @@ class StoreType extends TranslatorAwareType
                 'required' => false,
                 'constraints' => [
                     new Length([
-                        'max' => self::MAX_PHONE_LENGTH,
+                        'max' => StoreConstraint::MAX_PHONE_LENGTH,
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
                             'Admin.Notifications.Error',
-                            ['%limit%' => self::MAX_PHONE_LENGTH]
+                            ['%limit%' => StoreConstraint::MAX_PHONE_LENGTH]
                         ),
                     ]),
                     new TypedRegex(['type' => TypedRegex::TYPE_PHONE_NUMBER]),

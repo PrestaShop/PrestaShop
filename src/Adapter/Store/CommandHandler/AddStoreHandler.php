@@ -15,8 +15,13 @@ use PrestaShop\PrestaShop\Adapter\Store\Trait\StoreHandlerTrait;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\AddStoreHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageFileNotFoundException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
+use PrestaShopDatabaseException;
 use Store;
 
 #[AsCommandHandler]
@@ -32,6 +37,13 @@ final class AddStoreHandler implements AddStoreHandlerInterface
     ) {
     }
 
+    /**
+     * @throws ImageUploadException
+     * @throws ImageFileNotFoundException
+     * @throws UploadedImageConstraintException
+     * @throws PrestaShopDatabaseException
+     * @throws StoreConstraintException
+     */
     public function handle(AddStoreCommand $command): StoreId
     {
         $this->assertStateCountryConsistency(
@@ -68,7 +80,7 @@ final class AddStoreHandler implements AddStoreHandlerInterface
         $storeId = $this->storeRepository->add($store);
 
         if (null !== $command->getShopAssociation()) {
-            $this->associateWithShops($store, $command->getShopAssociation());
+            $this->storeRepository->updateShopAssociation($store, $command->getShopAssociation());
         }
 
         if (null !== $command->getImagePath()) {
@@ -76,13 +88,5 @@ final class AddStoreHandler implements AddStoreHandlerInterface
         }
 
         return $storeId;
-    }
-
-    /**
-     * @param int[] $shopIds
-     */
-    private function associateWithShops(Store $store, array $shopIds): void
-    {
-        $store->associateTo($shopIds);
     }
 }

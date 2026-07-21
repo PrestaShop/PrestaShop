@@ -9,15 +9,20 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
 
 final class StoreFormDataProvider implements FormDataProviderInterface
 {
+    /** @var int[] */
+    private readonly array $contextShopIds;
+
     public function __construct(
         private readonly CommandBusInterface $queryBus,
-        private readonly array $contextShopIds,
+        ShopContext $shopContext,
     ) {
+        $this->contextShopIds = $shopContext->getAssociatedShopIds();
     }
 
     public function getData($storeId): array
