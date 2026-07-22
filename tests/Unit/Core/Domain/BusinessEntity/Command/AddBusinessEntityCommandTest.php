@@ -248,7 +248,7 @@ class AddBusinessEntityCommandTest extends TestCase
         $this->expectExceptionCode(BusinessEntityBillingAddressConstraintException::MISSING_DEFAULT_SHIPPING_ADDRESS);
 
         new AddBusinessEntityCommand(
-            self::DEFAULT_BUSINESS_ENTITY_ADDRESS1,
+            self::DEFAULT_BUSINESS_ENTITY_NAME,
             self::DEFAULT_BUSINESS_ENTITY_LEGAL_NAME,
             self::DEFAULT_BUSINESS_ENTITY_EXTERNAL_REF,
             true,

@@ -4,13 +4,15 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Address;
 use Behat\Gherkin\Node\TableNode;
-use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCommand;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityBillingAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityId;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityShippingAddress;
@@ -97,7 +99,7 @@ class BusinessEntityFeatureContext extends AbstractDomainFeatureContext
 
         try {
             $this->lastBusinessEntityId = $this->getCommandBus()->handle($command);
-        } catch (Exception $e) {
+        } catch (BusinessEntityException $e) {
             $this->setLastException($e);
         }
     }

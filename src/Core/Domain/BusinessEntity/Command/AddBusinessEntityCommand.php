@@ -4,11 +4,15 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\AddBusinessEntityHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityBillingAddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\AbstractBusinessEntityAddress;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityBillingAddress;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityShippingAddress;
 use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 
 /**
@@ -19,6 +23,9 @@ use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 class AddBusinessEntityCommand
 {
     /**
+     * @param array<BusinessEntityBillingAddress> $billingAddresses
+     * @param array<BusinessEntityShippingAddress> $shippingAddresses
+     *
      * @throws BusinessEntityBillingAddressConstraintException
      */
     public function __construct(
@@ -71,11 +78,17 @@ class AddBusinessEntityCommand
         return $this->customerGroupId;
     }
 
+    /**
+     * @return array<BusinessEntityBillingAddress>
+     */
     public function getBillingAddresses(): array
     {
         return $this->billingAddresses;
     }
 
+    /**
+     * @return array<BusinessEntityShippingAddress>
+     */
     public function getShippingAddresses(): array
     {
         return $this->shippingAddresses;
