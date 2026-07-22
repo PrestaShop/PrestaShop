@@ -4,18 +4,17 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler;
 
 use Address;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Address\Repository\AddressRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Command\AddBusinessEntityCommand;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\CommandHandler\AddBusinessEntityHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityBillingAddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\UnableToCreateBusinessEntityAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\AbstractBusinessEntityAddress;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityBillingAddress;
@@ -23,6 +22,7 @@ use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\ValueObject\BusinessEntityI
 use PrestaShopBundle\Entity\B2B\BusinessEntity;
 use PrestaShopBundle\Entity\B2B\BusinessEntityAddress;
 use PrestaShopBundle\Entity\Enum\AddressTypeEnum;
+use PrestaShopBundle\Entity\Repository\BusinessEntityRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -30,7 +30,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
+        private readonly BusinessEntityRepository $businessEntityRepository,
         private readonly AddressRepository $addressRepository,
         #[Autowire(service: 'prestashop.adapter.legacy.logger')]
         private readonly LoggerInterface $logger,
@@ -38,9 +38,7 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
     }
 
     /**
-     * @throws BusinessEntityBillingAddressConstraintException
      * @throws UnableToCreateBusinessEntityAddress
-     * @throws AddressConstraintException
      */
     public function handle(AddBusinessEntityCommand $command): BusinessEntityId
     {
@@ -65,8 +63,7 @@ final class AddBusinessEntityHandler implements AddBusinessEntityHandlerInterfac
         // rollback spanning both layers. This stays until Address gets a Doctrine entity of its own.
         try {
             $this->addAddressesToBusinessEntity($businessEntity, $command, $createdAddressIds);
-            $this->em->persist($businessEntity);
-            $this->em->flush();
+            $this->businessEntityRepository->save($businessEntity);
         } catch (Exception $e) {
             foreach ($createdAddressIds as $addressId) {
                 try {
