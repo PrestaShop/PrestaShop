@@ -47,7 +47,7 @@ class Toolbar
         $this->sidebarEnabled = $enableSidebar;
         $this->helpLink = $helpLink;
         $this->layoutHeaderToolbarBtn = $layoutHeaderToolbarBtn;
-        $currentTab = $this->menuBuilder->getCurrentTab();
+        $currentTab = $this->menuBuilder->getCurrentTab() ?? $this->menuBuilder->getParentTab();
         $tabs = [];
         $ancestorsTab = [];
         if (null !== $currentTab) {

@@ -57,6 +57,22 @@ class MenuBuilder
         return $tab;
     }
 
+    public function getParentTab(): ?Tab
+    {
+        $request = $this->requestStack->getMainRequest();
+        if (!$request) {
+            return null;
+        }
+
+        $parentRoute = $request->attributes->get('_parent');
+
+        if (!empty($parentRoute)) {
+            return $this->tabRepository->findOneByRouteName($parentRoute);
+        }
+
+        return null;
+    }
+
     public function getCurrentTabLevel(): int
     {
         $currentTab = $this->getCurrentTab();
@@ -86,7 +102,7 @@ class MenuBuilder
      */
     public function getBreadcrumbLinks(): array
     {
-        $currentTab = $this->getCurrentTab();
+        $currentTab = $this->getCurrentTab() ?? $this->getParentTab();
         if (null === $currentTab) {
             return [];
         }
