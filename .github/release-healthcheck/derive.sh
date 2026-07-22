@@ -79,18 +79,28 @@ else
 fi
 
 # --- runtime flags -------------------------------------------------------------
-# release_published: a non-draft GH release for CORE_VERSION exists on the public target.
+# release_published: a non-draft GH release for the actual tag exists on the public target.
+# The release tag IS the full target version (9.2.0-beta.1), never the semver core (9.2.0).
 RELEASE_PUBLISHED="false"
-if gh_release_published "$UPSTREAM_REPO" "$CORE_VERSION"; then
+if gh_release_published "$UPSTREAM_REPO" "$TARGET_VERSION"; then
   RELEASE_PUBLISHED="true"
 fi
 
 # classic_released: a non-draft PrestaShopCorp/prestashop-classic release exists for the version.
-# Classic appends its own scope version to the tag (e.g. 9.1.4 ships as "9.1.4-5.0"), so match
-# the core version as a prefix. Best-effort: needs token access to the private repo.
+# Classic inserts its own scope version between the core and the prerelease label (9.1.4 ships
+# as "9.1.4-5.0", 9.2.0-beta.1 as "9.2.0-6.0-beta.1"; old releases may be bare "8.2.7"), so match
+# core + optional scope + the target's exact prerelease suffix — a plain core-prefix match would
+# let a beta tag satisfy a stable run and vice versa. Best-effort: needs token access to the
+# private repo.
+CORE_RE="${CORE_VERSION//./\\.}"
+if [ -n "${SV_PRERELEASE_LABEL:-}" ]; then
+  CLASSIC_TAG_RE="^${CORE_RE}-[0-9][0-9.]*-${SV_PRERELEASE_LABEL}\.${SV_PRERELEASE_NUM}\$"
+else
+  CLASSIC_TAG_RE="^${CORE_RE}(-[0-9][0-9.]*)?\$"
+fi
 CLASSIC_RELEASED="false"
 if gh release list --repo PrestaShopCorp/prestashop-classic --limit 100 --json tagName,isDraft \
-     -q '.[] | select(.isDraft==false) | .tagName' 2>/dev/null | grep -qE "^${CORE_VERSION}(-|\$)"; then
+     -q '.[] | select(.isDraft==false) | .tagName' 2>/dev/null | grep -qE "$CLASSIC_TAG_RE"; then
   CLASSIC_RELEASED="true"
 fi
 

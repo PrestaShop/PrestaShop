@@ -76,7 +76,7 @@ esac
 
 # --- Markdown report -----------------------------------------------------------
 {
-  echo "## 🩺 Release Healthcheck — ${CORE_VERSION:-?} on \`${REF:-?}\`"
+  echo "## 🩺 Release Healthcheck — ${TARGET_VERSION:-?} on \`${REF:-?}\`"
   echo
   echo "**Target:** \`${TARGET_VERSION:-?}\` · **Type:** ${RELEASE_TYPE:-?} · **Mode:** ${MODE}"
   echo "**Release published:** ${RELEASE_PUBLISHED:-?} · **Classic released:** ${CLASSIC_RELEASED:-?}"

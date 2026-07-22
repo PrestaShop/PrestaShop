@@ -16,6 +16,12 @@ HC_GROUP="Cross-repo / external readiness"
 # OPEN PR's diff adds it. Never relies on the PR title.
 check_autoupgrade_max_version_pr() {
   local id="cross-repo/autoupgrade-max-version-pr" title="Autoupgrade max-version" af="public/json/autoupgrade.json" maxes n patch
+  # autoupgrade.json only ever lists stable versions as prestashop_max — a pre-release is
+  # never an upgrade target, so there is nothing to add for it.
+  if [ "$RELEASE_TYPE" = "pre-release" ]; then
+    emit "$id" "$title" "$HC_NA" "$HC_SEV_WARN" "autoupgrade never targets pre-releases (this is $RELEASE_TYPE)"
+    return
+  fi
   # Default verify link: the canonical file (used by the merged + not-found outcomes).
   HC_LINK="https://github.com/PrestaShop/distribution-api/blob/HEAD/$af"
   # 1. Merged: the live file lists the version as a max upgrade target.
