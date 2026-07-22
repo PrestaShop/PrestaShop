@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Form\Admin\Sell\BusinessEntity;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
@@ -64,7 +66,7 @@ class BusinessEntityAddressType extends TranslatorAwareType
         );
 
         $builder->add(self::FIELD_ALIAS, TextType::class, [
-            'label' => $this->trans('Address alias', 'Admin.Catalog.Feature'),
+            'label' => $this->trans('Alias', 'Admin.Catalog.Feature'),
             'help' => $genericInvalidCharsMessage,
             'required' => true,
             'attr' => ['autocomplete' => 'off'],
@@ -92,6 +94,7 @@ class BusinessEntityAddressType extends TranslatorAwareType
             ->add(self::FIELD_ADDRESS_1, TextType::class, [
                 'label' => $this->trans('Address', 'Admin.Global'),
                 'required' => true,
+                'attr' => ['autocomplete' => 'address-line1'],
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -117,6 +120,7 @@ class BusinessEntityAddressType extends TranslatorAwareType
                 'label' => $this->trans('Address (2)', 'Admin.Global'),
                 'required' => false,
                 'empty_data' => '',
+                'attr' => ['autocomplete' => 'address-line2'],
                 'constraints' => [
                     new CleanHtml(),
                     new TypedRegex([
@@ -156,6 +160,7 @@ class BusinessEntityAddressType extends TranslatorAwareType
                 ],
                 'attr' => [
                     'class' => 'js-address-postcode-select',
+                    'autocomplete' => 'postal-code',
                 ],
                 'label_attr' => [
                     'class' => 'js-address-postcode-label',
@@ -164,6 +169,7 @@ class BusinessEntityAddressType extends TranslatorAwareType
             ->add(self::FIELD_CITY, TextType::class, [
                 'label' => $this->trans('City', 'Admin.Global'),
                 'required' => true,
+                'attr' => ['autocomplete' => 'address-level2'],
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -200,6 +206,7 @@ class BusinessEntityAddressType extends TranslatorAwareType
                 'attr' => [
                     'data-states-url' => $this->router->generate('admin_country_states'),
                     'class' => 'js-address-country-select',
+                    'autocomplete' => 'country',
                 ],
             ])
             ->add(self::FIELD_STATE_ID, ChoiceType::class, ['choices' => []])
@@ -207,6 +214,7 @@ class BusinessEntityAddressType extends TranslatorAwareType
                 'label' => $this->trans('Phone', 'Admin.Global'),
                 'required' => false,
                 'empty_data' => '',
+                'attr' => ['autocomplete' => 'tel'],
                 'constraints' => [
                     new CleanHtml(),
                     new TypedRegex([
@@ -226,6 +234,7 @@ class BusinessEntityAddressType extends TranslatorAwareType
                 'label' => $this->trans('Mobile phone', 'Admin.Global'),
                 'required' => false,
                 'empty_data' => '',
+                'attr' => ['autocomplete' => 'tel'],
                 'constraints' => [
                     new CleanHtml(),
                     new TypedRegex([
@@ -278,6 +287,7 @@ class BusinessEntityAddressType extends TranslatorAwareType
             'attr' => [
                 'visible' => !empty($stateChoices),
                 'class' => 'js-address-state-select',
+                'autocomplete' => 'address-level1',
             ],
         ];
     }

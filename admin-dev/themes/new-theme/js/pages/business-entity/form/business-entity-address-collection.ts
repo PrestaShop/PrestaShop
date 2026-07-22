@@ -78,14 +78,14 @@ export default class BusinessEntityAddressCollection {
       return;
     }
 
-    const deleteBtn = target.closest<HTMLElement>('.delete-business-entity-address');
+    const deleteBtn = target.closest<HTMLElement>(this.map.deleteBusinessEntityAddress);
 
     if (deleteBtn) {
       this.removeAddress(deleteBtn);
       return;
     }
 
-    const setAsDefaultBtn = target.closest<HTMLElement>('.set-as-default-business-entity-address');
+    const setAsDefaultBtn = target.closest<HTMLElement>(this.map.setAsDefaultBusinessEntityAddress);
 
     if (setAsDefaultBtn) {
       this.setAsDefaultAddress(setAsDefaultBtn);
@@ -191,7 +191,7 @@ export default class BusinessEntityAddressCollection {
   private addDeleteLink(item: HTMLElement): void {
     const removeFormButton = document.createElement('button');
     removeFormButton.type = 'button';
-    removeFormButton.className = 'btn btn-link delete-business-entity-address';
+    removeFormButton.className = `btn btn-link ${this.map.deleteBusinessEntityAddress.slice(1)}`;
 
     const icon = document.createElement('i');
     icon.className = 'material-icons text-danger';
@@ -246,7 +246,7 @@ export default class BusinessEntityAddressCollection {
   private addSetAsDefaultBtn(item: HTMLElement): void {
     const setAsDefaultBtn = document.createElement('button');
     setAsDefaultBtn.type = 'button';
-    setAsDefaultBtn.className = 'btn btn-link set-as-default-business-entity-address';
+    setAsDefaultBtn.className = `btn btn-link ${this.map.setAsDefaultBusinessEntityAddress.slice(1)}`;
     setAsDefaultBtn.textContent = window.translate_javascripts['Set as default'];
 
     const setAsDefaultBtnLocation = item.querySelector(

@@ -14,7 +14,8 @@
 {% endmacro %}
 
 {% block business_entity_form %}
-  {{ form_start(businessEntityForm) }}
+  {{ form_start(businessEntityForm, {attr: {novalidate: 'novalidate'}}) }}
+  {{ form_errors(businessEntityForm) }}
   <div class="card">
     <h3 class="card-header">
       {{ 'General information'|trans({}, 'Admin.Global') }}
@@ -133,7 +134,7 @@
   </div>
   <div class="d-flex justify-content-end">
     <a href="{{ path('admin_business_entities_list') }}" class="btn btn-outline-secondary mr-3">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</a>
-    <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+    <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
   </div>
   {{ form_widget(businessEntityForm._token) }}
   {{ form_widget(businessEntityForm.default_billing_address) }}
