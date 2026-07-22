@@ -4,13 +4,14 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Form\Admin\Sell\BusinessEntity;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\BusinessEntityFormDataProvider;
 use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\DataTransformer\BusinessEntityCommandTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -32,7 +33,6 @@ class BusinessEntityType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        private readonly BusinessEntityCommandTransformer $commandTransformer
     ) {
         parent::__construct($translator, $locales);
     }
@@ -83,7 +83,5 @@ class BusinessEntityType extends TranslatorAwareType
 
             $event->getForm()->add(self::SHOP_ID, ShopSelectorType::class);
         });
-
-        $builder->addModelTransformer($this->commandTransformer);
     }
 }
