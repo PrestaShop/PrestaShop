@@ -121,10 +121,12 @@ gh_json() {
 }
 
 # gh_tag_exists <owner/repo> <tag>  -> returns 0 if the tag ref exists (tries with and without a leading "v").
+# Uses the singular git/ref endpoint: git/refs/tags/<tag> PREFIX-matches (tag "9.2.0" would
+# be reported present because "9.2.0-beta.1" exists); git/ref/tags/<tag> matches exactly.
 gh_tag_exists() {
   local repo="$1" tag="$2"
-  if gh api "repos/${repo}/git/refs/tags/${tag}" >/dev/null 2>&1; then return 0; fi
-  if gh api "repos/${repo}/git/refs/tags/v${tag}" >/dev/null 2>&1; then return 0; fi
+  if gh api "repos/${repo}/git/ref/tags/${tag}" >/dev/null 2>&1; then return 0; fi
+  if gh api "repos/${repo}/git/ref/tags/v${tag}" >/dev/null 2>&1; then return 0; fi
   return 1
 }
 

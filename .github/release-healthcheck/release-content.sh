@@ -11,17 +11,18 @@ HC_GROUP="Release content artifacts"
 
 CHANGELOG_FILE="docs/CHANGELOG.txt"   # NB: under docs/, not repo root
 
-# spec ref: D1 — CHANGELOG.txt has an entry for core_version (header e.g. "#   v9.1.4 - (2026-06-03)")
+# spec ref: D1 — CHANGELOG.txt has an entry for the full target version (header e.g.
+# "#   v9.1.4 - (2026-06-03)"; pre-releases keep their suffix: "v9.2.0-beta.1")
 check_changelog_updated() {
   HC_LINK="https://github.com/$REPO/blob/$REF/$CHANGELOG_FILE"
   if [ ! -f "$CHANGELOG_FILE" ]; then
     emit "release/changelog-updated" "Changelog updated" "$HC_FAIL" "$HC_SEV_FAIL" "$CHANGELOG_FILE not found"
     return
   fi
-  if grep -qF "v$CORE_VERSION" "$CHANGELOG_FILE"; then
-    emit "release/changelog-updated" "Changelog updated" "$HC_PASS" "$HC_SEV_FAIL" "$CHANGELOG_FILE has an entry for v$CORE_VERSION"
+  if grep -qF "v$TARGET_VERSION" "$CHANGELOG_FILE"; then
+    emit "release/changelog-updated" "Changelog updated" "$HC_PASS" "$HC_SEV_FAIL" "$CHANGELOG_FILE has an entry for v$TARGET_VERSION"
   else
-    emit "release/changelog-updated" "Changelog updated" "$HC_FAIL" "$HC_SEV_FAIL" "no v$CORE_VERSION entry in $CHANGELOG_FILE"
+    emit "release/changelog-updated" "Changelog updated" "$HC_FAIL" "$HC_SEV_FAIL" "no v$TARGET_VERSION entry in $CHANGELOG_FILE"
   fi
 }
 

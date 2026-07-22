@@ -40,26 +40,35 @@ check_build_branch_merged_back() {
   fi
 }
 
-# spec ref: G2 — tag + non-draft GitHub release published (== release_published)
+# spec ref: G2 — tag + non-draft GitHub release published (== release_published).
+# The release tag is the FULL target version (9.2.0-beta.1), never the semver core.
 check_tag_and_release_published() {
-  local id="post-release/tag-and-release-published" title="Tag & GitHub release published"
-  HC_LINK="https://github.com/$UPSTREAM_REPO/releases/tag/$CORE_VERSION"
-  if [ "$RELEASE_PUBLISHED" = "true" ]; then
-    emit "$id" "$title" "$HC_PASS" "$HC_SEV_FAIL" "tag $CORE_VERSION published with a non-draft release"
+  local id="post-release/tag-and-release-published" title="Tag & GitHub release published" pre expected
+  HC_LINK="https://github.com/$UPSTREAM_REPO/releases/tag/$TARGET_VERSION"
+  if [ "$RELEASE_PUBLISHED" != "true" ]; then
+    emit "$id" "$title" "$HC_PENDING" "$HC_SEV_FAIL" "pending — no published release for $TARGET_VERSION yet"
+    return
+  fi
+  # The GitHub "pre-release" flag must match the release type (beta/RC flagged, stable not).
+  pre="$(gh release view "$TARGET_VERSION" --repo "$UPSTREAM_REPO" --json isPrerelease -q '.isPrerelease' 2>/dev/null)"
+  expected="false"; [ "$RELEASE_TYPE" = "pre-release" ] && expected="true"
+  if [ -z "$pre" ] || [ "$pre" = "$expected" ]; then
+    emit "$id" "$title" "$HC_PASS" "$HC_SEV_FAIL" "tag $TARGET_VERSION published with a non-draft release"
   else
-    emit "$id" "$title" "$HC_PENDING" "$HC_SEV_FAIL" "pending — no published release for $CORE_VERSION yet"
+    emit "$id" "$title" "$HC_FAIL" "$HC_SEV_WARN" "release $TARGET_VERSION published but its pre-release flag is '$pre' (expected '$expected' for a $RELEASE_TYPE)"
   fi
 }
 
-# spec ref: G3 — distribution API lists core_version (independent of the Classic release)
+# spec ref: G3 — distribution API lists the released version (independent of the Classic
+# release). The API carries the full tag, pre-release suffix included ("9.2.0-beta.1").
 check_distribution_api_fresh_install() {
   local id="post-release/distribution-api" title="Distribution API — fresh install"
   HC_LINK="https://api.prestashop-project.org/prestashop"
   _gate_published "$id" "$title" "$HC_SEV_WARN" || return
-  if http_body_contains "https://api.prestashop-project.org/prestashop" "\"version\":\"$CORE_VERSION\""; then
-    emit "$id" "$title" "$HC_PASS" "$HC_SEV_WARN" "distribution API lists $CORE_VERSION"
+  if http_body_contains "https://api.prestashop-project.org/prestashop" "\"version\":\"$TARGET_VERSION\""; then
+    emit "$id" "$title" "$HC_PASS" "$HC_SEV_WARN" "distribution API lists $TARGET_VERSION"
   else
-    emit "$id" "$title" "$HC_FAIL" "$HC_SEV_WARN" "distribution API does not list $CORE_VERSION yet"
+    emit "$id" "$title" "$HC_FAIL" "$HC_SEV_WARN" "distribution API does not list $TARGET_VERSION yet"
   fi
 }
 
@@ -69,6 +78,19 @@ check_docker_images_published() {
   HC_LINK="https://hub.docker.com/r/prestashop/prestashop/tags?name=$CORE_VERSION"
   _gate_published "$id" "$title" "$HC_SEV_WARN" || return
   # Docker PRs have generic titles ("Sync backlog …") — verify the published image tag instead.
+  if [ "$RELEASE_TYPE" = "pre-release" ]; then
+    # Pre-releases never get a plain core tag; they ship only as classic-edition images with
+    # the edition scope inserted before the prerelease label (e.g. 9.1.0-3.0-beta.1-classic).
+    parse_semver "$TARGET_VERSION"
+    local tags core_re="${CORE_VERSION//./\\.}"
+    tags=$(http_get "https://hub.docker.com/v2/repositories/prestashop/prestashop/tags/?name=${CORE_VERSION}-&page_size=100" | jq -r '.results[].name' 2>/dev/null)
+    if printf '%s\n' "$tags" | grep -qE "^${core_re}-[0-9][0-9.]*-${SV_PRERELEASE_LABEL}\.${SV_PRERELEASE_NUM}(-|\$)"; then
+      emit "$id" "$title" "$HC_PASS" "$HC_SEV_WARN" "Docker Hub has classic-edition images for $TARGET_VERSION"
+    else
+      emit "$id" "$title" "$HC_FAIL" "$HC_SEV_WARN" "no Docker Hub image for $TARGET_VERSION yet"
+    fi
+    return
+  fi
   local name
   name=$(http_get "https://hub.docker.com/v2/repositories/prestashop/prestashop/tags/$CORE_VERSION" | jq -r '.name // empty' 2>/dev/null)
   if [ -n "$name" ]; then
@@ -78,16 +100,33 @@ check_docker_images_published() {
   fi
 }
 
-# spec ref: G5 — classic feeds updated (independent of the Classic-release flag)
+# spec ref: G5 — classic feeds updated (independent of the Classic-release flag).
+# Classic version strings insert the edition scope between core and prerelease label
+# (9.1.4 → "9.1.4-5.0", 9.2.0-beta.1 → "9.2.0-6.0-beta.1"). Feed entries are extracted as
+# whole version tokens and matched exactly, so a beta entry can never satisfy a stable run
+# (or beta.1 a beta.10).
 check_classic_feeds_updated() {
   local id="post-release/classic-feeds" title="Classic feeds updated"
   local base="https://assets.prestashop3.com/dst/edition/corporate"
   HC_LINK="$base/edition_versions.js"
   _gate_published "$id" "$title" "$HC_SEV_WARN" || return
+  local core_re="${CORE_VERSION//./\\.}"
+  local token_re="${core_re}-[0-9][0-9.]*(-(alpha|beta|rc)\.[0-9]+)?"
+  if [ "$RELEASE_TYPE" = "pre-release" ]; then
+    # latest-classic.js only ever points at the latest STABLE — edition_versions.js alone.
+    parse_semver "$TARGET_VERSION"
+    if http_get "$base/edition_versions.js" | grep -oE "$token_re" \
+         | grep -qxE "${core_re}-[0-9][0-9.]*-${SV_PRERELEASE_LABEL}\.${SV_PRERELEASE_NUM}"; then
+      emit "$id" "$title" "$HC_PASS" "$HC_SEV_WARN" "edition_versions.js references $TARGET_VERSION (latest-classic is stable-only)"
+    else
+      emit "$id" "$title" "$HC_FAIL" "$HC_SEV_WARN" "edition_versions.js does not reference $TARGET_VERSION yet"
+    fi
+    return
+  fi
   # BOTH feeds must reference the version — one alone is an incomplete update.
   local ev="no" lc="no"
-  http_body_contains "$base/edition_versions.js" "$CORE_VERSION" && ev="yes"
-  http_body_contains "$base/latest-classic.js"   "$CORE_VERSION" && lc="yes"
+  http_get "$base/edition_versions.js" | grep -oE "$token_re" | grep -qxE "${core_re}-[0-9][0-9.]*" && ev="yes"
+  http_get "$base/latest-classic.js"   | grep -oE "$token_re" | grep -qxE "${core_re}-[0-9][0-9.]*" && lc="yes"
   if [ "$ev" = "yes" ] && [ "$lc" = "yes" ]; then
     emit "$id" "$title" "$HC_PASS" "$HC_SEV_WARN" "both classic feeds reference $CORE_VERSION"
   else
@@ -116,6 +155,11 @@ check_localization_packs() {
 # max upgrade target (the end state of merging public/json/autoupgrade.json).
 check_autoupgrade_pr_merged() {
   local id="post-release/autoupgrade-pr-merged" title="Autoupgrade max-version live" maxes
+  # The autoupgrade API only ever lists stable versions as max upgrade targets.
+  if [ "$RELEASE_TYPE" = "pre-release" ]; then
+    emit "$id" "$title" "$HC_NA" "$HC_SEV_WARN" "autoupgrade never targets pre-releases (this is $RELEASE_TYPE)"
+    return
+  fi
   HC_LINK="https://api.prestashop-project.org/autoupgrade"
   _gate_published "$id" "$title" "$HC_SEV_WARN" || return
   maxes=$(http_get "https://api.prestashop-project.org/autoupgrade" | jq -r '.prestashop[]?.prestashop_max' 2>/dev/null)

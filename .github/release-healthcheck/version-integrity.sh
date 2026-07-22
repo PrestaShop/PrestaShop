@@ -117,18 +117,19 @@ check_branch_naming() {
 check_tag_state_vs_publication() {
   local tag_present=0
   HC_LINK="https://github.com/$REPO/tags"
-  gh_tag_exists "$REPO" "$CORE_VERSION" && tag_present=1
+  # The release tag is the FULL target version (9.2.0-beta.1), not the semver core.
+  gh_tag_exists "$REPO" "$TARGET_VERSION" && tag_present=1
   if [ "$RELEASE_PUBLISHED" = "true" ]; then
     if [ "$tag_present" = 1 ]; then
-      emit "version/tag-state" "Tag state vs publication" "$HC_PASS" "$HC_SEV_WARN" "tag $CORE_VERSION present (release published)"
+      emit "version/tag-state" "Tag state vs publication" "$HC_PASS" "$HC_SEV_WARN" "tag $TARGET_VERSION present (release published)"
     else
-      emit "version/tag-state" "Tag state vs publication" "$HC_FAIL" "$HC_SEV_WARN" "release published but tag $CORE_VERSION missing"
+      emit "version/tag-state" "Tag state vs publication" "$HC_FAIL" "$HC_SEV_WARN" "release published but tag $TARGET_VERSION missing"
     fi
   else
     if [ "$tag_present" = 0 ]; then
-      emit "version/tag-state" "Tag state vs publication" "$HC_PASS" "$HC_SEV_WARN" "tag $CORE_VERSION absent (not yet published)"
+      emit "version/tag-state" "Tag state vs publication" "$HC_PASS" "$HC_SEV_WARN" "tag $TARGET_VERSION absent (not yet published)"
     else
-      emit "version/tag-state" "Tag state vs publication" "$HC_FAIL" "$HC_SEV_WARN" "tag $CORE_VERSION already exists before publication"
+      emit "version/tag-state" "Tag state vs publication" "$HC_FAIL" "$HC_SEV_WARN" "tag $TARGET_VERSION already exists before publication"
     fi
   fi
 }
