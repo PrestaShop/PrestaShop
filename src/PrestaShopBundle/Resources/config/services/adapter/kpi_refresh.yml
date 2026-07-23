@@ -1,0 +1,201 @@
+services:
+  _defaults:
+    public: true
+
+  # Repository backing the Stats page KPI boxes' refresh values.
+  PrestaShop\PrestaShop\Adapter\Stats\Repository\StatsRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  # KPI refresh providers, each indexed by its 'key' tag attribute for KpiRefreshProviderLocator.
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\ConversionRateKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'conversion_rate' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\AbandonedCartKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'abandoned_cart' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\InstalledModulesKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'installed_modules' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\DisabledModulesKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'disabled_modules' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\UpdateModulesKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'update_modules' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\PercentProductStockKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'percent_product_stock' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\PercentProductOutOfStockKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'percent_product_out_of_stock' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\ProductAvgGrossMarginKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'product_avg_gross_margin' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\DisabledCategoriesKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'disabled_categories' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\DisabledProductsKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'disabled_products' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\Sales8020KpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: '8020_sales_catalog' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\EmptyCategoriesKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'empty_categories' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\CustomerMainGenderKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'customer_main_gender' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\AvgCustomerAgeKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'avg_customer_age' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\PendingMessagesKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'pending_messages' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\AvgMsgResponseTimeKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'avg_msg_response_time' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\MessagesPerThreadKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'messages_per_thread' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\NewsletterRegistrationsKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'newsletter_registrations' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\EnabledLanguagesKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'enabled_languages' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\FrontofficeTranslationsKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'frontoffice_translations' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\MainCountryKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'main_country' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\OrdersPerCustomerKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'orders_per_customer' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\AverageOrderValueKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'average_order_value' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\NetProfitVisitKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'netprofit_visit' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\ProductsPerCategoryKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'products_per_category' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\TopCategoryKpiRefreshProvider:
+    autowire: true
+    arguments:
+      $configuration: '@prestashop.adapter.legacy.kpi_configuration'
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'top_category' }
+
+  # No configuration argument: this KPI is not cached via ConfigurationKPI, unlike all others above.
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\ShoppingCartTotalKpiRefreshProvider:
+    autowire: true
+    tags:
+      - { name: 'prestashop.kpi_refresh_provider', key: 'shopping_cart_total' }
+
+  PrestaShop\PrestaShop\Adapter\Kpi\Refresh\KpiRefreshProviderLocator:
+    autowire: true
