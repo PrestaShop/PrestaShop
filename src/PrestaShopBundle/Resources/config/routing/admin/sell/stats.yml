@@ -1,0 +1,44 @@
+admin_stats_index:
+  path: /
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Stats\StatsController::indexAction
+    _legacy_controller: AdminStats
+    _legacy_link: AdminStats
+    _legacy_feature_flag: stats
+
+admin_stats_get_kpi:
+  path: /kpi
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Stats\StatsController::getKpiAction
+    _legacy_controller: AdminStats
+    _legacy_link: AdminStats:getKpi
+    _legacy_feature_flag: stats
+
+admin_stats_graph_draw:
+  path: /graph-draw
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Stats\StatsController::graphDrawAction
+    _legacy_controller: AdminStats
+    _legacy_link: AdminStats:graphDraw
+    _legacy_feature_flag: stats
+
+admin_stats_graph_grid:
+  path: /graph-grid
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Stats\StatsController::graphGridAction
+    _legacy_controller: AdminStats
+    _legacy_link: AdminStats:graphGrid
+    _legacy_feature_flag: stats
+
+admin_stats_set_date_range:
+  path: /date-range
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Stats\StatsController::setDateRangeAction
+    _legacy_controller: AdminStats
+    _legacy_link: AdminStats:setDashboardDateRange
+    _legacy_feature_flag: stats

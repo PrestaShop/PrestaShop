@@ -1,0 +1,60 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% trans_default_domain 'Admin.Stats.Feature' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="list-group">
+          {% for module in modules %}
+            <a class="list-group-item list-group-item-action{{ module.name == currentModule ? ' active' : '' }}"
+               href="{{ path('admin_stats_index', {module: module.name}) }}">
+              {{ module.displayName }}
+            </a>
+          {% else %}
+            <div class="list-group-item">
+              {{ 'No module has been installed.'|trans({}, 'Admin.Notifications.Warning') }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      {{ include('@PrestaShop/Admin/Sell/Stats/Blocks/calendar.html.twig') }}
+
+      <div class="card">
+        <div class="card-body" id="stats-module-content">
+          {# The module content itself stays a legacy-rendered block: the "stats*" modules
+             are not part of this migration and keep rendering via the existing hook mechanism.
+             renderhooksarray executes the hook for every module registered on it (unlike the
+             legacy page, which scoped execution to the single selected module), so only the
+             entry matching the currently selected module is displayed below.
+             Note: the module's own markup (icon, inner panel heading, table/form classes) is
+             untouched legacy HTML and will not pick up new-theme styling — see PR description. #}
+          {% set displayed = false %}
+          {% for hookRender in renderhooksarray('displayAdminStatsModules') %}
+            {% if hookRender.id == currentModule %}
+              {% set displayed = true %}
+              {{ hookRender.content|raw }}
+            {% endif %}
+          {% endfor %}
+          {% if not displayed %}
+            <h3 class="space">{{ 'Please select a module from the left column.'|trans({}, 'Admin.Stats.Notification') }}</h3>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/stats.bundle.js') }}"></script>
+{% endblock %}
