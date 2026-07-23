@@ -12,6 +12,8 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Store\HoursEncoder: ~
 
+  PrestaShop\PrestaShop\Adapter\Store\Validate\StoreValidator: ~
+
   PrestaShop\PrestaShop\Adapter\Store\QueryHandler\GetStoreForEditingHandler:
     arguments:
       $imageTagSourceParser: '@prestashop.core.image.parser.image_tag_source_parser'

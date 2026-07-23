@@ -11,7 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\StoreImageUploader;
 use PrestaShop\PrestaShop\Adapter\Store\HoursEncoder;
-use PrestaShop\PrestaShop\Adapter\Store\Trait\StoreHandlerTrait;
+use PrestaShop\PrestaShop\Adapter\Store\Validate\StoreValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\AddStoreHandlerInterface;
@@ -27,13 +27,12 @@ use Store;
 #[AsCommandHandler]
 final class AddStoreHandler implements AddStoreHandlerInterface
 {
-    use StoreHandlerTrait;
-
     public function __construct(
         private readonly StoreRepository $storeRepository,
         private readonly StoreImageUploader $imageUploader,
         private readonly ImageValidator $imageValidator,
         private readonly HoursEncoder $hoursEncoder,
+        private readonly StoreValidator $storeValidator,
     ) {
     }
 
@@ -46,7 +45,7 @@ final class AddStoreHandler implements AddStoreHandlerInterface
      */
     public function handle(AddStoreCommand $command): StoreId
     {
-        $this->assertStateCountryConsistency(
+        $this->storeValidator->assertStateCountryConsistency(
             $command->getCountryId(),
             $command->getStateId()
         );

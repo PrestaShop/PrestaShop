@@ -11,7 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\StoreImageUploader;
 use PrestaShop\PrestaShop\Adapter\Store\HoursEncoder;
-use PrestaShop\PrestaShop\Adapter\Store\Trait\StoreHandlerTrait;
+use PrestaShop\PrestaShop\Adapter\Store\Validate\StoreValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\EditStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\EditStoreHandlerInterface;
@@ -25,13 +25,12 @@ use PrestaShopDatabaseException;
 #[AsCommandHandler]
 final class EditStoreHandler implements EditStoreHandlerInterface
 {
-    use StoreHandlerTrait;
-
     public function __construct(
         private readonly StoreRepository $storeRepository,
         private readonly StoreImageUploader $imageUploader,
         private readonly ImageValidator $imageValidator,
         private readonly HoursEncoder $hoursEncoder,
+        private readonly StoreValidator $storeValidator,
     ) {
     }
 
@@ -59,7 +58,7 @@ final class EditStoreHandler implements EditStoreHandlerInterface
             $store->id_state = $command->getStateId();
         }
 
-        $this->assertStateCountryConsistency((int) $store->id_country, $store->id_state);
+        $this->storeValidator->assertStateCountryConsistency((int) $store->id_country, $store->id_state);
 
         if (null !== $command->getCity()) {
             $store->city = $command->getCity();
