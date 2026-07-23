@@ -1,0 +1,29 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  <div class="card">
+    <h3 class="card-header">{{ 'Select discount type'|trans({}, 'Admin.Catalog.Feature') }}</h3>
+    <div class="card-body">
+      {# The form submits to the current url so the iframe modal parameters are preserved #}
+      {{ form_start(discountTypeForm) }}
+        {{ form_row(discountTypeForm) }}
+        <div class="d-flex justify-content-end mt-3">
+          <button id="discountTypeSubmit" type="submit" class="btn btn-primary disabled" disabled="disabled">
+            {{ 'Create discount'|trans({}, 'Admin.Catalog.Feature') }}
+          </button>
+        </div>
+      {{ form_end(discountTypeForm) }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/discount.bundle.js') }}"></script>
+{% endblock %}
