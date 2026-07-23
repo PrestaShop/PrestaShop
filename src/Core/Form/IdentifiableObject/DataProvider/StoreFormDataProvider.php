@@ -15,14 +15,10 @@ use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
 
 final class StoreFormDataProvider implements FormDataProviderInterface
 {
-    /** @var int[] */
-    private readonly array $contextShopIds;
-
     public function __construct(
         private readonly CommandBusInterface $queryBus,
-        ShopContext $shopContext,
+        private readonly ShopContext $shopContext,
     ) {
-        $this->contextShopIds = $shopContext->getAssociatedShopIds();
     }
 
     public function getData($storeId): array
@@ -55,7 +51,7 @@ final class StoreFormDataProvider implements FormDataProviderInterface
     {
         return [
             'active' => true,
-            'shop_association' => $this->contextShopIds,
+            'shop_association' => $this->shopContext->getAssociatedShopIds(),
             'hours' => [],
         ];
     }
