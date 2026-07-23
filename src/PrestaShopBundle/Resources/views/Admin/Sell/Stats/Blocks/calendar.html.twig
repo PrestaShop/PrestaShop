@@ -1,0 +1,42 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% set today = 'now'|date('Y-m-d') %}
+{% set yesterday = 'now'|date_modify('-1 day')|date('Y-m-d') %}
+{% set monthStart = 'now'|date('Y-m-01') %}
+{% set monthEnd = 'now'|date('Y-m-t') %}
+{% set lastMonthStart = 'now'|date_modify('first day of last month')|date('Y-m-d') %}
+{% set lastMonthEnd = 'now'|date_modify('last day of last month')|date('Y-m-d') %}
+{% set yearStart = 'now'|date('Y-01-01') %}
+{% set yearEnd = 'now'|date('Y-12-31') %}
+{% set lastYearStart = ('now'|date('Y') - 1) ~ '-01-01' %}
+{% set lastYearEnd = ('now'|date('Y') - 1) ~ '-12-31' %}
+
+<div class="card" id="stats-calendar">
+  <div class="card-body d-flex flex-wrap justify-content-between align-items-center">
+    <form id="stats-date-range-form" data-url="{{ path('admin_stats_set_date_range') }}" class="form-inline flex-wrap">
+      <div class="btn-group mr-2 mb-2 mb-lg-0">
+        <button type="button" class="btn btn-outline-secondary js-stats-date-preset" data-from="{{ today }}" data-to="{{ today }}">{{ 'Day'|trans({}, 'Admin.Global') }}</button>
+        <button type="button" class="btn btn-outline-secondary js-stats-date-preset" data-from="{{ monthStart }}" data-to="{{ monthEnd }}">{{ 'Month'|trans({}, 'Admin.Global') }}</button>
+        <button type="button" class="btn btn-outline-secondary js-stats-date-preset" data-from="{{ yearStart }}" data-to="{{ yearEnd }}">{{ 'Year'|trans({}, 'Admin.Global') }}</button>
+        <button type="button" class="btn btn-outline-secondary js-stats-date-preset" data-from="{{ yesterday }}" data-to="{{ yesterday }}">{{ 'Day'|trans({}, 'Admin.Global') }}-1</button>
+        <button type="button" class="btn btn-outline-secondary js-stats-date-preset" data-from="{{ lastMonthStart }}" data-to="{{ lastMonthEnd }}">{{ 'Month'|trans({}, 'Admin.Global') }}-1</button>
+        <button type="button" class="btn btn-outline-secondary js-stats-date-preset" data-from="{{ lastYearStart }}" data-to="{{ lastYearEnd }}">{{ 'Year'|trans({}, 'Admin.Global') }}-1</button>
+      </div>
+
+      <div class="form-group mr-2 mb-2 mb-lg-0">
+        <label class="mr-2" for="stats-date-range-from">{{ 'From:'|trans({}, 'Admin.Global') }}</label>
+        <input type="date" id="stats-date-range-from" name="datepickerFrom" class="form-control" value="{{ dateRange.from }}">
+      </div>
+      <div class="form-group mr-2 mb-2 mb-lg-0">
+        <label class="mr-2" for="stats-date-range-to">{{ 'To:'|trans({}, 'Admin.Global') }}</label>
+        <input type="date" id="stats-date-range-to" name="datepickerTo" class="form-control" value="{{ dateRange.to }}">
+      </div>
+      <button type="submit" class="btn btn-primary" id="stats-date-range-save">
+        {{ 'Save'|trans({}, 'Admin.Actions') }}
+      </button>
+    </form>
+  </div>
+</div>

@@ -39,4 +39,5 @@ class FeatureFlagSettings
     public const FEATURE_FLAG_NEW_PRICING = 'new_pricing';
     public const FEATURE_FLAG_EMAIL_BODY_TRANSLATION = 'email_body_translation';
     public const FEATURE_FLAG_HOOK_MODULE_V2 = 'hook_module_v2';
+    public const FEATURE_FLAG_STATS = 'stats';
 }
