@@ -6,17 +6,20 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Store\Trait;
+namespace PrestaShop\PrestaShop\Adapter\Store\Validate;
 
 use Country;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
 
-trait StoreHandlerTrait
+final class StoreValidator
 {
     /**
+     * Ensures the selected state is consistent with the selected country:
+     * a country containing states requires one, and a country without states must not have one.
+     *
      * @throws StoreConstraintException
      */
-    private function assertStateCountryConsistency(int $countryId, ?int $stateId): void
+    public function assertStateCountryConsistency(int $countryId, ?int $stateId): void
     {
         $country = new Country($countryId);
 
