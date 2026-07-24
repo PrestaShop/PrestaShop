@@ -54,7 +54,15 @@ class DiscountQueryBuilder extends AbstractDoctrineQueryBuilder
                 'cr.id_cart_rule AS id_discount,
                 crl.name,
                 crt.discount_type,
-                crtl.name AS discount_type_name,
+                COALESCE(crtl.name, crt.discount_type) AS discount_type_label,
+                CASE crt.discount_type
+                    WHEN \'free_shipping\' THEN \'success\'
+                    WHEN \'cart_level\' THEN \'info\'
+                    WHEN \'order_level\' THEN \'info\'
+                    WHEN \'product_level\' THEN \'warning\'
+                    WHEN \'free_gift\' THEN \'warning\'
+                    ELSE \'\'
+                END AS discount_type_badge,
                 cr.code,
                 ' . $quantityUsedSubquery . ' AS quantity_used,
                 cr.total_quantity,

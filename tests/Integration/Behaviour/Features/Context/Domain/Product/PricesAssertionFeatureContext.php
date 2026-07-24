@@ -8,9 +8,12 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use Context;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use Product;
+use ProductAssembler;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use TaxRulesGroup;
@@ -57,6 +60,62 @@ class PricesAssertionFeatureContext extends AbstractProductFeatureContext
         $pricesInfo = $this->getProductForEditing($productReference)->getPricesInformation();
 
         $this->assertPricesInfos($pricesInfo, $data);
+    }
+
+    /**
+     * @Then product :productReference should have following front office prices:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function assertFrontOfficePriceFields(string $productReference, TableNode $tableNode): void
+    {
+        $expectedPrices = $tableNode->getRowsHash();
+        $actualProductProperties = $this->getFrontOfficeProductProperties($productReference);
+
+        foreach ($expectedPrices as $fieldName => $expectedPrice) {
+            // Each expected field must exist in the front-office product array returned by Product::getProductProperties().
+            if (!array_key_exists($fieldName, $actualProductProperties)) {
+                throw new RuntimeException(sprintf('Front office product price field "%s" was not found', $fieldName));
+            }
+
+            $expectedNumber = new DecimalNumber((string) $expectedPrice);
+            $actualNumber = new DecimalNumber((string) $actualProductProperties[$fieldName]);
+
+            // Numeric fields are compared as DecimalNumber values to match the existing product price assertions.
+            if (!$expectedNumber->equals($actualNumber)) {
+                throw new RuntimeException(sprintf(
+                    'Front office product %s expected to be "%s", but is "%s"',
+                    $fieldName,
+                    $expectedNumber,
+                    $actualNumber
+                ));
+            }
+        }
+    }
+
+    /**
+     * Gets product properties through the legacy front-office product assembler.
+     *
+     * @param string $productReference
+     *
+     * @return array<string, mixed>
+     */
+    private function getFrontOfficeProductProperties(string $productReference): array
+    {
+        // Reset Product static caches so price changes and specific prices from previous Behat steps are read fresh.
+        Product::resetStaticCache();
+
+        $productId = $this->getSharedStorage()->get($productReference);
+        $productAssembler = new ProductAssembler(Context::getContext());
+        $productProperties = $productAssembler->assembleProduct(['id_product' => $productId]);
+
+        // The assembler should always return a front-office product array for a valid shared product reference.
+        if (!is_array($productProperties)) {
+            throw new RuntimeException(sprintf('Front office product properties for "%s" could not be loaded', $productReference));
+        }
+
+        return $productProperties;
     }
 
     /**
