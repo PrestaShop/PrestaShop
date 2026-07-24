@@ -136,6 +136,7 @@ services:
     arguments:
       $localizationPackChoices: '@=service("prestashop.core.form.choice_provider.localization_pack_by_iso_code").getChoices()'
 
+  PrestaShopBundle\Form\Admin\Dashboard\DashboardDateRangeType:
   PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalUnitsType:
   PrestaShopBundle\Form\Admin\Improve\International\Localization\AdvancedConfigurationType:
   PrestaShopBundle\Form\Admin\Improve\International\Geolocation\GeolocationByIpAddressType:
