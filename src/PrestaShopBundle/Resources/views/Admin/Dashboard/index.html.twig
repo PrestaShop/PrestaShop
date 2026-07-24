@@ -4,6 +4,11 @@
  #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/chartjs.bundle.js') }}"></script>
+{% endblock %}
+
 {% block content %}
   {% set toolbarContent = renderhook('displayAdminDashboardToolbar') %}
   {% set topContent = renderhook('displayAdminDashboardTop', {date_from: dateFrom, date_to: dateTo}) %}

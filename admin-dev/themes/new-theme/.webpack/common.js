@@ -62,6 +62,7 @@ module.exports = {
     catalog_product: './js/pages/catalog/product',
     category: './js/pages/category',
     category_edit: './js/pages/category/edit',
+    chartjs: './js/vendor/chartjs',
     cldr: './js/app/cldr',
     cms_page: './js/pages/cms-page',
     cms_page_form: './js/pages/cms-page/form',
