@@ -43,8 +43,6 @@ use Validate;
 
 /**
  * Regression tests for OrderHistory::changeIdOrderState() when legacy Context::currency is unset.
- *
- * @see https://github.com/PrestaShop/PrestaShop/issues/XXXX
  */
 class OrderHistoryCurrencyContextTest extends KernelTestCase
 {
