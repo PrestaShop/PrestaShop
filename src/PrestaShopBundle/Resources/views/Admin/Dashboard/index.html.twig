@@ -4,6 +4,8 @@
  #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% form_theme dateRangeForm '@PrestaShop/Admin/Dashboard/form_theme.html.twig' %}
+
 {% block content %}
   {% set toolbarContent = renderhook('displayAdminDashboardToolbar') %}
   {% set topContent = renderhook('displayAdminDashboardTop', {date_from: dateFrom, date_to: dateTo}) %}
@@ -42,13 +44,13 @@
     {% if hasZoneOne or hasZoneTwo or hasZoneThree %}
       <div class="row">
         {% if hasZoneOne %}
-          <div class="col-md-4 col-lg-3" id="displayAdminDashboardZoneOne">{{ zoneOneContent|raw }}</div>
+          <div class="col-12 col-xl-3" id="displayAdminDashboardZoneOne">{{ zoneOneContent|raw }}</div>
         {% endif %}
         {% if hasZoneTwo %}
-          <div class="col-md-8 col-lg-{{ hasZoneThree ? 7 : 9 }}" id="displayAdminDashboardZoneTwo">{{ zoneTwoContent|raw }}</div>
+          <div class="col-12 col-xl-{{ hasZoneThree ? 7 : 9 }}" id="displayAdminDashboardZoneTwo">{{ zoneTwoContent|raw }}</div>
         {% endif %}
         {% if hasZoneThree %}
-          <div class="col-md-12 col-lg-2" id="displayAdminDashboardZoneThree">{{ zoneThreeContent|raw }}</div>
+          <div class="col-12 col-xl-2" id="displayAdminDashboardZoneThree">{{ zoneThreeContent|raw }}</div>
         {% endif %}
       </div>
     {% endif %}

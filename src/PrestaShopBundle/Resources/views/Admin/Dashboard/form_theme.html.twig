@@ -1,0 +1,17 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/TwigTemplateForm/bootstrap_4_horizontal_layout.html.twig' %}
+
+{#
+ # Render each row inline (label next to the field) so the date range fits on a single
+ # line, instead of the stacked layout of the default admin form theme.
+ #}
+{%- block form_row -%}
+  <div class="form-group d-inline-flex align-items-center mb-0 mr-3">
+    {{- form_label(form, null, {label_attr: {class: 'mb-0 mr-2'}}) -}}
+    {{- form_widget(form) -}}
+    {{- form_errors(form) -}}
+  </div>
+{%- endblock -%}
