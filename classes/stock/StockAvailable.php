@@ -525,31 +525,51 @@ class StockAvailableCore extends ObjectModel
         $shop_list = $shop_group->share_stock ? Shop::getShops(false, $shop_group->id, true) : [];
 
         if (count($shop_list) > 0) {
-            $id_shops_list = implode(', ', $shop_list);
+            $id_shops_list = implode(', ', array_map('intval', $shop_list));
 
             $db = Db::getInstance();
 
-            $db->update('stock_available', ['quantity' => 0], 'id_shop IN (' . $id_shops_list . ')');
+            $db->update(
+                'stock_available',
+                ['quantity' => 0],
+                'id_shop IN (' . $id_shops_list . ')'
+            );
 
             // Keep one row per product/combination before switching to group scope,
             // otherwise multiple shop-level rows could collide on the shared-stock unique key.
-            $db->execute('
-                DELETE sa
+            // Collect the lower-priority duplicate ids first, then delete by primary key:
+            // a self-join DELETE crashes the optimizer on MariaDB 10.10-11.4 (CVE-2023-52971).
+            $duplicate_ids = $db->executeS('
+                SELECT DISTINCT sa.id_stock_available
                 FROM ' . _DB_PREFIX_ . 'stock_available sa
                 INNER JOIN ' . _DB_PREFIX_ . 'stock_available duplicate
                     ON duplicate.id_product = sa.id_product
                     AND duplicate.id_product_attribute = sa.id_product_attribute
                     AND duplicate.id_shop IN (' . $id_shops_list . ')
-                    AND sa.id_shop IN (' . $id_shops_list . ')
                     AND duplicate.id_shop < sa.id_shop
+                WHERE sa.id_shop IN (' . $id_shops_list . ')
             ');
+
+            if (!empty($duplicate_ids)) {
+                $ids = array_map(
+                    'intval',
+                    array_column($duplicate_ids, 'id_stock_available')
+                );
+
+                foreach (array_chunk($ids, 1000) as $ids_chunk) {
+                    $db->execute('
+                        DELETE FROM ' . _DB_PREFIX_ . 'stock_available
+                        WHERE id_stock_available IN (' . implode(', ', $ids_chunk) . ')
+                    ');
+                }
+            }
 
             // A row may already exist at group scope for this product/combination
             // (id_shop = 0, id_shop_group = X). Moving a shop-level row onto it would hit the
             // `product_sqlstock` unique key, so drop that stale group-scope row first; the
             // reset shop-level row then takes its place at quantity 0.
-            $db->execute('
-                DELETE sa
+            $stale_group_ids = $db->executeS('
+                SELECT DISTINCT sa.id_stock_available
                 FROM ' . _DB_PREFIX_ . 'stock_available sa
                 INNER JOIN ' . _DB_PREFIX_ . 'stock_available shop_row
                     ON shop_row.id_product = sa.id_product
@@ -558,6 +578,20 @@ class StockAvailableCore extends ObjectModel
                 WHERE sa.id_shop = 0
                     AND sa.id_shop_group = ' . (int) $shop_group->id . '
             ');
+
+            if (!empty($stale_group_ids)) {
+                $ids = array_map(
+                    'intval',
+                    array_column($stale_group_ids, 'id_stock_available')
+                );
+
+                foreach (array_chunk($ids, 1000) as $ids_chunk) {
+                    $db->execute('
+                        DELETE FROM ' . _DB_PREFIX_ . 'stock_available
+                        WHERE id_stock_available IN (' . implode(', ', $ids_chunk) . ')
+                    ');
+                }
+            }
 
             // Move the remaining rows to the shared stock scope expected by shop groups.
             return $db->update(
@@ -570,7 +604,11 @@ class StockAvailableCore extends ObjectModel
             );
         }
 
-        return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop_group = ' . $shop_group->id);
+        return Db::getInstance()->update(
+            'stock_available',
+            ['quantity' => 0],
+            'id_shop_group = ' . (int) $shop_group->id
+        );
     }
 
     /**
