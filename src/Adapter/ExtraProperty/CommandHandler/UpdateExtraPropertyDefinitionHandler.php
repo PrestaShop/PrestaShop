@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyRegis
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException as CoreExtraPropertyException;
 
 /**
  * Updates editable metadata fields of a core extra property definition.
@@ -40,7 +41,8 @@ final class UpdateExtraPropertyDefinitionHandler implements UpdateExtraPropertyD
      *
      * @throws ExtraPropertyDefinitionNotFoundException
      * @throws ProtectedModuleExtraPropertyDefinitionException
-     * @throws ExtraPropertyRegistrationFailureException
+     * @throws ExtraPropertyRegistrationFailureException carries the failure reason as its code
+     *                                                   and the core exception as previous
      */
     public function handle(UpdateExtraPropertyDefinitionCommand $command): void
     {
@@ -100,10 +102,12 @@ final class UpdateExtraPropertyDefinitionHandler implements UpdateExtraPropertyD
         }
 
         $updated = $definition->withOverrides($overrides);
-        $saved = $this->registry->register($updated);
 
-        if (false === $saved) {
-            throw new ExtraPropertyRegistrationFailureException(
+        try {
+            $this->registry->register($updated);
+        } catch (CoreExtraPropertyException $exception) {
+            throw ExtraPropertyRegistrationFailureException::fromCoreException(
+                $exception,
                 sprintf('Failed to update extra property definition with id %d.', $id)
             );
         }

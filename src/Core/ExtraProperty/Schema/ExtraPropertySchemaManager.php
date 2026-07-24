@@ -13,8 +13,8 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyType;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryException;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 use Throwable;
 
 /**
@@ -40,7 +40,7 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function ensureExtraTableAndColumn(ExtraPropertyDefinition $definition): void
+    public function ensureExtraTableAndColumn(ExtraPropertyDefinition $definition): bool
     {
         $baseTableName = $this->prefix . $definition->getBaseTableName();
         $extraTableName = $this->prefix . $definition->getExtraTableName();
@@ -49,7 +49,10 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
         $sqlIndex = $definition->getSqlIndex();
 
         if (!$this->tableExists($baseTableName)) {
-            throw new RuntimeException(sprintf('The base table "%s" does not exist.', $baseTableName));
+            throw new ExtraPropertyRegistryException(
+                sprintf('The base table "%s" does not exist.', $baseTableName),
+                ExtraPropertyRegistryException::BASE_TABLE_NOT_FOUND
+            );
         }
 
         if (!$this->tableExists($extraTableName)) {
@@ -57,14 +60,18 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
             $this->logger->info('Extra table created: {table}', ['table' => $extraTableName]);
         }
 
+        $columnAdded = false;
         if (!$this->columnExists($extraTableName, $columnName)) {
             $this->createExtraColumn($extraTableName, $columnName, $sqlColumnDefinition);
             $this->logger->info('Extra column created: {table}.{column}', ['table' => $extraTableName, 'column' => $columnName]);
+            $columnAdded = true;
         } else {
             $this->syncExtraColumnDefinition($extraTableName, $columnName, $definition);
         }
 
         $this->syncExtraColumnIndex($extraTableName, $columnName, $sqlIndex);
+
+        return $columnAdded;
     }
 
     /**
@@ -304,14 +311,17 @@ class ExtraPropertySchemaManager implements ExtraPropertySchemaManagerInterface
      * @param string $baseTableName Full base table name (with prefix)
      * @param string $extraTableName Full extra table name (with prefix)
      *
-     * @throws RuntimeException if the base table schema cannot be loaded or has no PK
+     * @throws ExtraPropertyRegistryException if the base table schema cannot be loaded or has no PK
      */
     protected function createExtraTableFromBaseTable(string $baseTableName, string $extraTableName): void
     {
         $baseTableDetails = $this->connection->createSchemaManager()->introspectTable($baseTableName);
         $primaryKey = $baseTableDetails->getPrimaryKey();
         if (null === $primaryKey) {
-            throw new RuntimeException(sprintf('The base table "%s" has no primary key.', $baseTableName));
+            throw new ExtraPropertyRegistryException(
+                sprintf('The base table "%s" has no primary key.', $baseTableName),
+                ExtraPropertyRegistryException::SCHEMA_FAILURE
+            );
         }
 
         $platform = $this->connection->getDatabasePlatform();
