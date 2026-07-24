@@ -4,8 +4,6 @@
  #}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% form_theme dateRangeForm '@PrestaShop/Admin/Dashboard/form_theme.html.twig' %}
-
 {% block content %}
   {% set toolbarContent = renderhook('displayAdminDashboardToolbar') %}
   {% set topContent = renderhook('displayAdminDashboardTop', {date_from: dateFrom, date_to: dateTo}) %}
@@ -25,16 +23,19 @@
       </div>
     {% endif %}
 
-    <div class="row">
-      <div class="col-lg-12">
-        <div id="dashboard-calendar" class="panel mb-3">
-          {{ form_start(dateRangeForm, {attr: {class: 'form-inline'}}) }}
-            {{ form_widget(dateRangeForm) }}
-            <button type="submit" class="btn btn-primary mb-2">{{ 'Apply'|trans({}, 'Admin.Actions') }}</button>
-          {{ form_end(dateRangeForm) }}
+    {% if dateRangeForm is not null %}
+      <div class="row">
+        <div class="col-lg-12">
+          <div id="dashboard-calendar" class="panel mb-3">
+            {% form_theme dateRangeForm '@PrestaShop/Admin/Dashboard/form_theme.html.twig' %}
+            {{ form_start(dateRangeForm, {attr: {class: 'form-inline'}}) }}
+              {{ form_widget(dateRangeForm) }}
+              <button type="submit" class="btn btn-primary mb-2">{{ 'Apply'|trans({}, 'Admin.Actions') }}</button>
+            {{ form_end(dateRangeForm) }}
+          </div>
         </div>
       </div>
-    </div>
+    {% endif %}
 
     {% if topContent|trim is not empty %}
       <div class="row">
