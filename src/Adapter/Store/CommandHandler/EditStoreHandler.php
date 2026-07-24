@@ -70,7 +70,7 @@ final class EditStoreHandler implements EditStoreHandlerInterface
             $store->latitude = (float) $command->getLatitude()->round(8);
         }
         if (null !== $command->getLongitude()) {
-            $store->longitude = (float) $command->getLatitude()->round(8);
+            $store->longitude = (float) $command->getLongitude()->round(8);
         }
         if (null !== $command->getPhone()) {
             $store->phone = $command->getPhone();
