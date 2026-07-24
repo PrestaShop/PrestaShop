@@ -21,4 +21,8 @@ export default {
   reductionValueSymbol: `${discountContainer} .price-reduction-value .input-group .input-group-append .input-group-text, .price-reduction-value .input-group .input-group-prepend .input-group-text`,
   specificProductSearchComponent: '#cart_rule_actions_discount_specific_product',
   specificProductSearchContainer: '.specific-product-search-container',
+  // TODO: Remove this placeholder and the remaining obsolete cart rule migration scripts.
+  // cart-rule-map.ts and form/discount-manager.ts are leftovers from PR https://github.com/PrestaShop/PrestaShop/pull/40603,
+  // and no corresponding reduction value input exists.
+  reductionValueInput: '#specific_price_impact_reduction_value',
 };

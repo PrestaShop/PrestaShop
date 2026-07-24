@@ -125,7 +125,7 @@ class ProductTypeUpdater
         $this->productRepository->partialUpdate(
             $product,
             $updatedProperties,
-            ShopConstraint::shop($this->productRepository->getProductDefaultShopId($productId)->getValue()),
+            ShopConstraint::allShops(),
             CannotUpdateProductException::FAILED_UPDATE_TYPE
         );
 

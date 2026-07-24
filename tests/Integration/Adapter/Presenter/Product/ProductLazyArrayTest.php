@@ -66,10 +66,12 @@ class ProductLazyArrayTest extends TestCase
     private $baseProduct = [
         'id_product' => 0,
         'id_product_attribute' => 0,
+        'price' => 0,
         'price_tax_exc' => 0,
         'specific_prices' => 0,
         'reduction' => 0,
         'price_without_reduction' => 0,
+        'price_without_reduction_without_tax' => 0,
         'new' => 0,
         'pack' => 0,
         'out_of_stock' => OutOfStockType::OUT_OF_STOCK_DEFAULT,

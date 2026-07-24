@@ -9,6 +9,7 @@ use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentCreator;
 use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentService;
 use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater;
 use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 
@@ -509,7 +510,9 @@ abstract class PaymentModuleCore extends Module
                         $customization_text = '';
                         if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
                             foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
-                                $customization_text .= '<strong>' . $text['name'] . '</strong>: ' . htmlspecialchars($text['value'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '<br />';
+                                $customization_text .= '<strong>' . $text['name'] . '</strong>: '
+                                    . $this->formatCustomizationValueForEmail($text)
+                                    . '<br />';
                             }
                         }
 
@@ -889,6 +892,42 @@ abstract class PaymentModuleCore extends Module
         }
 
         return Currency::getCurrencyInstance((int) $id_currency);
+    }
+
+    /**
+     * @param array<string, mixed> $customizationText
+     */
+    private function formatCustomizationValueForEmail(array $customizationText): string
+    {
+        static $moduleNames = [];
+        static $moduleManager = null;
+
+        if (!empty($customizationText['id_module'])) {
+            $moduleId = (int) $customizationText['id_module'];
+
+            if (!array_key_exists($moduleId, $moduleNames)) {
+                $module = Module::getInstanceById($moduleId);
+
+                if (false === $module) {
+                    $moduleNames[$moduleId] = null;
+                } else {
+                    $moduleNames[$moduleId] = $module->name;
+                }
+            }
+
+            if (!empty($moduleNames[$moduleId])) {
+                if (null === $moduleManager) {
+                    $moduleManager = ModuleManagerBuilder::getInstance()->build();
+                }
+
+                if ($moduleManager->isEnabled($moduleNames[$moduleId])) {
+                    // Allow module-provided HTML in emails only after sanitizing to prevent XSS.
+                    return Tools::purifyHTML((string) $customizationText['value']);
+                }
+            }
+        }
+
+        return htmlspecialchars((string) $customizationText['value'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
     /**

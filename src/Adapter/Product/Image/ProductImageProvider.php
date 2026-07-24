@@ -46,7 +46,7 @@ class ProductImageProvider implements ProductImageProviderInterface
         $imageId = $this->productImageRepository->getDefaultImageId($productId, $shopId);
 
         return $imageId ?
-            $this->productImagePathFactory->getPath($imageId) :
+            $this->productImagePathFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT) :
             $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT)
         ;
     }
@@ -56,7 +56,7 @@ class ProductImageProvider implements ProductImageProviderInterface
         $imageId = $this->productImageRepository->getPreviewCombinationProduct($combinationId);
 
         if ($imageId) {
-            return $this->productImagePathFactory->getPath($imageId);
+            return $this->productImagePathFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
         }
 
         $productId = $this->combinationRepository->getProductId($combinationId);
