@@ -13,6 +13,15 @@ class PageNotFoundControllerCore extends FrontController
     public $ssl = true;
 
     /**
+     * @see FrontController::init()
+     */
+    public function init()
+    {
+        Hook::exec('actionNotFound');
+        parent::init();
+    }
+
+    /**
      * Assign template vars related to page content.
      *
      * @see FrontController::initContent()
