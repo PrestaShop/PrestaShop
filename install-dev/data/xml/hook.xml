@@ -791,6 +791,11 @@
       <title>Symfony Dashboard - Top</title>
       <description>Displays module content in the top area of the migrated (Symfony) dashboard page. Modern counterpart of the legacy displayDashboardTop hook.</description>
     </hook>
+    <hook id="displayAdminDashboardBottom">
+      <name>displayAdminDashboardBottom</name>
+      <title>Symfony Dashboard - Bottom</title>
+      <description>Displays module content in a full-width area at the bottom of the migrated (Symfony) dashboard page.</description>
+    </hook>
     <hook id="displayAdminDashboardToolbar">
       <name>displayAdminDashboardToolbar</name>
       <title>Symfony Dashboard - Toolbar</title>

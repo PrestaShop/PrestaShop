@@ -9,6 +9,7 @@
 {% block content %}
   {% set toolbarContent = renderhook('displayAdminDashboardToolbar') %}
   {% set topContent = renderhook('displayAdminDashboardTop', {date_from: dateFrom, date_to: dateTo}) %}
+  {% set bottomContent = renderhook('displayAdminDashboardBottom', {date_from: dateFrom, date_to: dateTo}) %}
   {% set zoneOneContent = renderhook('displayAdminDashboardZoneOne', {date_from: dateFrom, date_to: dateTo}) %}
   {% set zoneTwoContent = renderhook('displayAdminDashboardZoneTwo', {date_from: dateFrom, date_to: dateTo}) %}
   {% set zoneThreeContent = renderhook('displayAdminDashboardZoneThree', {date_from: dateFrom, date_to: dateTo}) %}
@@ -52,6 +53,12 @@
         {% if hasZoneThree %}
           <div class="col-12 col-xl-2" id="displayAdminDashboardZoneThree">{{ zoneThreeContent|raw }}</div>
         {% endif %}
+      </div>
+    {% endif %}
+
+    {% if bottomContent|trim is not empty %}
+      <div class="row">
+        <div class="col-12" id="displayAdminDashboardBottom">{{ bottomContent|raw }}</div>
       </div>
     {% endif %}
   </div>
