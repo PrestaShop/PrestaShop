@@ -16,8 +16,8 @@ use Hook;
 use Module;
 use PrestaShop\PrestaShop\Adapter\Order\Checkout\CheckoutProcessProviderResolver;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use PrestaShopBundle\Translation\TranslatorComponent;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tests\Integration\Utility\ContextMocker;
 use Tests\Resources\DatabaseDump;
 
@@ -78,7 +78,7 @@ class CheckoutProcessProviderResolverTest extends KernelTestCase
     {
         $resolvedProcess = $this->checkoutProcessProviderResolver->resolve(
             $this->createMock(CheckoutSession::class),
-            $this->createMock(TranslatorComponent::class)
+            $this->createMock(TranslatorInterface::class)
         );
 
         $this->assertNull($resolvedProcess);
@@ -91,7 +91,7 @@ class CheckoutProcessProviderResolverTest extends KernelTestCase
         $session = $this->createMock(CheckoutSession::class);
         $resolvedProcess = $this->checkoutProcessProviderResolver->resolve(
             $session,
-            $this->createMock(TranslatorComponent::class)
+            $this->createMock(TranslatorInterface::class)
         );
 
         $this->assertInstanceOf(CheckoutProcess::class, $resolvedProcess);
@@ -105,7 +105,7 @@ class CheckoutProcessProviderResolverTest extends KernelTestCase
 
         $resolvedProcess = $this->checkoutProcessProviderResolver->resolve(
             $this->createMock(CheckoutSession::class),
-            $this->createMock(TranslatorComponent::class)
+            $this->createMock(TranslatorInterface::class)
         );
 
         $this->assertNull($resolvedProcess);
@@ -118,7 +118,7 @@ class CheckoutProcessProviderResolverTest extends KernelTestCase
 
         $resolvedProcess = $this->checkoutProcessProviderResolver->resolve(
             $this->createMock(CheckoutSession::class),
-            $this->createMock(TranslatorComponent::class)
+            $this->createMock(TranslatorInterface::class)
         );
 
         $this->assertNull($resolvedProcess);
@@ -131,7 +131,7 @@ class CheckoutProcessProviderResolverTest extends KernelTestCase
 
         $resolvedProcess = $this->checkoutProcessProviderResolver->resolve(
             $this->createMock(CheckoutSession::class),
-            $this->createMock(TranslatorComponent::class)
+            $this->createMock(TranslatorInterface::class)
         );
 
         $this->assertNull($resolvedProcess);

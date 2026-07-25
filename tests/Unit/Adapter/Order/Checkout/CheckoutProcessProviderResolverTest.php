@@ -13,7 +13,7 @@ use CheckoutSession;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Order\Checkout\CheckoutProcessProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Order\Checkout\CheckoutProcessProviderResolver;
-use PrestaShopBundle\Translation\TranslatorComponent;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StubCheckoutProcessProvider implements CheckoutProcessProviderInterface
 {
@@ -30,7 +30,7 @@ class StubCheckoutProcessProvider implements CheckoutProcessProviderInterface
 
     public function buildCheckoutProcess(
         $session,
-        TranslatorComponent $translator
+        TranslatorInterface $translator
     ): CheckoutProcess {
         return $this->checkoutProcess;
     }
@@ -57,7 +57,7 @@ class CheckoutProcessProviderResolverTest extends TestCase
 
         $resolvedProcess = $resolver->resolve(
             $this->createMock(CheckoutSession::class),
-            $this->createMock(TranslatorComponent::class)
+            $this->createMock(TranslatorInterface::class)
         );
 
         $this->assertNull($resolvedProcess);
@@ -72,7 +72,7 @@ class CheckoutProcessProviderResolverTest extends TestCase
 
         $resolvedProcess = $resolver->resolve(
             $this->createMock(CheckoutSession::class),
-            $this->createMock(TranslatorComponent::class)
+            $this->createMock(TranslatorInterface::class)
         );
 
         $this->assertSame($checkoutProcess, $resolvedProcess);
@@ -87,10 +87,27 @@ class CheckoutProcessProviderResolverTest extends TestCase
 
         $resolvedProcess = $resolver->resolve(
             $this->createMock(CheckoutSession::class),
-            $this->createMock(TranslatorComponent::class)
+            $this->createMock(TranslatorInterface::class)
         );
 
         $this->assertNull($resolvedProcess);
+    }
+
+    public function testResolveAcceptsAnyTranslatorInterfaceImplementation(): void
+    {
+        $checkoutProcess = $this->createMock(CheckoutProcess::class);
+        $resolver = new TestableCheckoutProcessProviderResolver([
+            'provider' => $this->createProvider(true, $checkoutProcess),
+        ]);
+
+        // The checkout can run with a translator that is not the legacy TranslatorComponent
+        // (e.g. the one injected when the new front controller container is enabled).
+        $resolvedProcess = $resolver->resolve(
+            $this->createMock(CheckoutSession::class),
+            $this->createMock(TranslatorInterface::class)
+        );
+
+        $this->assertSame($checkoutProcess, $resolvedProcess);
     }
 
     private function createProvider(bool $enabled, ?CheckoutProcess $checkoutProcess = null): CheckoutProcessProviderInterface
