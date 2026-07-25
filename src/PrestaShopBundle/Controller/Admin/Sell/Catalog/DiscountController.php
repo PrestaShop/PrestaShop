@@ -127,8 +127,23 @@ class DiscountController extends PrestaShopAdminController
         if (empty($discountType) && $request->request->has('discount_type_selector')) {
             $submittedData = $request->request->all('discount_type_selector');
             if (!empty($submittedData['discount_type_selector'])) {
-                return $this->redirectToRoute('admin_discounts_create', ['discountType' => $submittedData['discount_type_selector']]);
+                return $this->redirectToRoute(
+                    'admin_discounts_create',
+                    ['discountType' => $submittedData['discount_type_selector']] + $this->getIframeModalParameters($request)
+                );
             }
+        }
+
+        // The page can also be accessed directly without a discount type, typically in the iframe modal
+        // opened from the order creation page, so the discount type must be selected first
+        if (empty($discountType)) {
+            return $this->render('@PrestaShop/Admin/Sell/Catalog/Discount/create_type_selection.html.twig', [
+                'discountTypeForm' => $this->createForm(DiscountTypeSelectorType::class)->createView(),
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'layoutTitle' => $this->trans('Discounts', [], 'Admin.Navigation.Menu'),
+                'lightDisplay' => $request->query->has('liteDisplaying'),
+            ]);
         }
 
         $form = $formBuilder->getForm([], [
@@ -142,6 +157,11 @@ class DiscountController extends PrestaShopAdminController
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
                     $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
+
+                    if ($request->query->has('submitFormAjax')) {
+                        // When the discount is created from the iframe modal the parent page is refreshed by this template
+                        return $this->render('@PrestaShop/Admin/Sell/Catalog/Discount/modal_create_success.html.twig');
+                    }
 
                     return $this->redirectToRoute('admin_discount_edit', ['discountId' => $result->getIdentifiableObjectId()]);
                 } else {
@@ -157,7 +177,7 @@ class DiscountController extends PrestaShopAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'layoutTitle' => $this->trans('Discounts', [], 'Admin.Navigation.Menu'),
-            'lightDisplay' => false,
+            'lightDisplay' => $request->query->has('liteDisplaying'),
         ]);
     }
 
@@ -201,7 +221,7 @@ class DiscountController extends PrestaShopAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'layoutTitle' => $this->trans('Discounts', [], 'Admin.Navigation.Menu'),
-            'lightDisplay' => false,
+            'lightDisplay' => $request->query->has('liteDisplaying'),
         ]);
     }
 
@@ -460,5 +480,18 @@ class DiscountController extends PrestaShopAdminController
         }
 
         return $this->redirectToRoute('admin_discounts_index');
+    }
+
+    /**
+     * Returns the query parameters that must be kept across the creation funnel when the page
+     * is displayed in an iframe modal (e.g. opened from the order creation page).
+     *
+     * @param Request $request
+     *
+     * @return array<string, mixed>
+     */
+    private function getIframeModalParameters(Request $request): array
+    {
+        return array_intersect_key($request->query->all(), array_flip(['liteDisplaying', 'submitFormAjax']));
     }
 }

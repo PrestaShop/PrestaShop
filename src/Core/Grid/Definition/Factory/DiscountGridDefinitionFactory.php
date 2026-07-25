@@ -99,9 +99,9 @@ final class DiscountGridDefinitionFactory extends AbstractGridDefinitionFactory 
                 (new BadgeColumn('discount_type'))
                     ->setName($this->trans('Type', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
-                        'field' => 'discount_type_name',
-                        'alignment' => 'left',
-                        'badge_type' => 'light-info',
+                        'field' => 'discount_type_label',
+                        'badge_type' => '',
+                        'badge_type_field' => 'discount_type_badge',
                     ])
             )
             ->add(

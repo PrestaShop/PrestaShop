@@ -88,12 +88,12 @@
                 <div class="attribute-item-content">
                   <span
                     class="attribute-item-texture"
-                    v-if="attribute.texture"
+                    v-if="attributeGroup.isColorGroup && attribute.texture"
                     :style="`background: transparent url(${attribute.texture}) no-repeat; background-size: 100% auto;`"
                   />
                   <span
                     class="attribute-item-color"
-                    v-else-if="attribute.color"
+                    v-else-if="attributeGroup.isColorGroup && attribute.color"
                     :style="`background-color: ${attribute.color}`"
                   />
                   <span class="attribute-item-name">{{ attribute.name }}</span>

@@ -18,4 +18,5 @@ export default {
   // mapping for include-tax-field-visibility-handler
   reductionType: '.js-reduction-type-source',
   includeTax: '.js-include-tax-row',
+  reductionValueInput: '#catalog_price_rule_reduction_value',
 };

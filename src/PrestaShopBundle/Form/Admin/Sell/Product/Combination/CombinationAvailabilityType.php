@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -40,7 +41,8 @@ class CombinationAvailabilityType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         FormChoiceProviderInterface $outOfStockTypeChoiceProvider,
-        RouterInterface $router
+        RouterInterface $router,
+        private ShopContext $shopContext
     ) {
         parent::__construct($translator, $locales);
         $this->outOfStockTypeChoiceProvider = $outOfStockTypeChoiceProvider;
@@ -56,6 +58,10 @@ class CombinationAvailabilityType extends TranslatorAwareType
                 'expanded' => true,
                 'column_breaker' => true,
                 'modify_all_shops' => true,
+                'help' => $this->shopContext->isMultiShopEnabled()
+                        && $this->shopContext->hasGroupSharingStocks() ?
+                        $this->trans('Stock is shared between the stores in this group, so this setting is automatically applied to all of them, regardless of the "Apply changes to all stores" checkbox.', 'Admin.Catalog.Feature') :
+                        null,
                 'external_link' => [
                     'text' => $this->trans('[1]Edit default behavior[/1]', 'Admin.Catalog.Feature'),
                     'href' => $this->router->generate('admin_product_preferences') . '#configuration_fieldset_stock',

@@ -5903,5 +5903,10 @@
       <title>Modify extra property definition grid template data</title>
       <description>This hook allows to modify data which is about to be used in template for extra property definition grid</description>
     </hook>
+    <hook id="actionNotFound">
+      <name>actionNotFound</name>
+      <title>Action when a page is not found</title>
+      <description>Allows modules to react when a page is not found - log it, redirect or perform other actions.</description>
+    </hook>
   </entities>
 </entity_hook>

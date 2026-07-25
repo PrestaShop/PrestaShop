@@ -134,3 +134,9 @@ services:
       package: PrestaShop\PrestaShop
       version: 9.0
     public: true
+
+  PrestaShop\PrestaShop\Adapter\Module\ModuleHtmlAuthorizationChecker:
+    public: false
+    arguments:
+      - '@prestashop.adapter.legacy.module'
+      - '@PrestaShop\PrestaShop\Core\Module\ModuleManager'

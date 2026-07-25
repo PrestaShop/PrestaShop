@@ -21,4 +21,5 @@ export default {
   switchFixedName: 'specific_price[impact][disabling_switch_fixed_price_tax_excluded]',
   shopIdSelect: '#specific_price_groups_shop_id',
   combinationIdSelect: '#specific_price_combination_id',
+  reductionValueInput: '#specific_price_impact_reduction_value',
 };
