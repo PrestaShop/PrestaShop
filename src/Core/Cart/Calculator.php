@@ -403,7 +403,7 @@ class Calculator
      *
      * @return AmountImmutable
      */
-    private function roundedTaxIncluded(AmountImmutable $amount, int $computePrecision)
+    private function roundedTaxIncluded(AmountImmutable $amount, int $computePrecision): AmountImmutable
     {
         return new AmountImmutable(
             Tools::ps_round($amount->getTaxIncluded(), $computePrecision),
