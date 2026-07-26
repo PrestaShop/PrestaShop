@@ -46,6 +46,7 @@ final class GetAttachmentForEditingHandler implements GetAttachmentForEditingHan
         $file = file_exists($filePath) ? new SplFileInfo($filePath) : null;
 
         $editableAttachment = new EditableAttachment(
+            $attachmentIdValue,
             $attachment->file_name,
             $attachment->name,
             $attachment->description
