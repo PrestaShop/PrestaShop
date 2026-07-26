@@ -366,6 +366,7 @@ class ModuleController extends ModuleAbstractController
                             'application/gzip',
                             'application/x-gtar',
                             'application/x-tgz',
+                            'application/x-tar',
                         ],
                     ]
                 ),
