@@ -290,6 +290,7 @@ class PackCore extends Product
          */
 
         // If no pack stock or shop default, set it from configuration
+        // Avoid using empty(), because it would treat STOCK_TYPE_PACK_ONLY (0) as STOCK_TYPE_DEFAULT
         if ($packStockType === null || $packStockType === '' || (int) $packStockType == self::STOCK_TYPE_DEFAULT) {
             $packStockType = Configuration::get('PS_PACK_STOCK_TYPE');
         }
