@@ -602,7 +602,7 @@ class AdminModuleController {
     // @see: dropzone.js
     const dropzoneOptions = {
       url: window.moduleURLs.moduleImport,
-      acceptedFiles: '.zip, .tar',
+      acceptedFiles: '.zip, .tar, .tar.gz, .tgz',
       // The name that will be used to transfer the file
       paramName: 'file_uploaded',
       uploadMultiple: false,
