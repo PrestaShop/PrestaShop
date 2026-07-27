@@ -43,6 +43,12 @@ services:
       $modulePath: '%prestashop.module_dir%'
     tags: [ core.module.source_handler ]
 
+  PrestaShop\PrestaShop\Core\Module\SourceHandler\TarSourceHandler:
+    autowire: true
+    arguments:
+      $modulePath: '%prestashop.module_dir%'
+    tags: [ core.module.source_handler ]
+
   PrestaShop\PrestaShop\Core\Module\SourceHandler\RemoteZipSourceHandler:
     autowire: true
     public: false
