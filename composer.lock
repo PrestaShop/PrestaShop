@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5e99877b976b48992fc2de115178abf",
+    "content-hash": "eea381d521e3ae3831f1cdab7fb90a0a",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5085,16 +5085,16 @@
         },
         {
             "name": "prestashop/hummingbird",
-            "version": "v2.1.0-beta.2",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/hummingbird.git",
-                "reference": "238dd265b4c73cbaa35c84e7340d9f62d97eaf76"
+                "reference": "440d4f9134bcfb4f2812831006440d6cb54a7ef3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/238dd265b4c73cbaa35c84e7340d9f62d97eaf76",
-                "reference": "238dd265b4c73cbaa35c84e7340d9f62d97eaf76",
+                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/440d4f9134bcfb4f2812831006440d6cb54a7ef3",
+                "reference": "440d4f9134bcfb4f2812831006440d6cb54a7ef3",
                 "shasum": ""
             },
             "require-dev": {
@@ -5119,9 +5119,9 @@
             "description": "Hummingbird development theme for PrestaShop",
             "support": {
                 "issues": "https://github.com/PrestaShop/hummingbird/issues",
-                "source": "https://github.com/PrestaShop/hummingbird/tree/v2.1.0-beta.2"
+                "source": "https://github.com/PrestaShop/hummingbird/tree/v2.1.0"
             },
-            "time": "2026-06-26T13:01:05+00:00"
+            "time": "2026-07-14T08:13:28+00:00"
         },
         {
             "name": "prestashop/pagesnotfound",
@@ -18501,5 +18501,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
