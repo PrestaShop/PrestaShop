@@ -234,13 +234,8 @@ class ConfigurationTestCore
             return false;
         }
         closedir($dh);
-        $dummy = rtrim($dir, '\\/') . DIRECTORY_SEPARATOR . uniqid();
-        if (@file_put_contents($dummy, 'test')) {
-            @unlink($dummy);
-            if (!$recursive) {
-                return true;
-            }
-        } elseif (!is_writable($dir)) {
+
+        if (!ConfigurationTest::isDirectoryWritable($dir)) {
             $full_report = sprintf('Directory %s is not writable', $dir); // sprintf for future translation
 
             return false;
@@ -255,6 +250,25 @@ class ConfigurationTestCore
         }
 
         return true;
+    }
+
+    /**
+     * is_writable() first because it is far cheaper. The probe is kept for ACL/network filesystems where the bits are wrong.
+     */
+    private static function isDirectoryWritable(string $dir): bool
+    {
+        if (is_writable($dir)) {
+            return true;
+        }
+
+        $dummy = rtrim($dir, '\\/') . DIRECTORY_SEPARATOR . uniqid();
+        if (@file_put_contents($dummy, 'test')) {
+            @unlink($dummy);
+
+            return true;
+        }
+
+        return false;
     }
 
     public static function test_file($file_relative)
