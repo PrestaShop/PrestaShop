@@ -421,7 +421,7 @@ class ImageManagerCore
             $mimeType = mime_content_type($filename);
         }
         // Try with exec command and file binary
-        if (!$mimeType && function_exists('exec')) {
+        if (!$mimeType && function_exists('exec') && function_exists('escapeshellarg')) {
             $mimeType = trim(exec('file -b --mime-type ' . escapeshellarg($filename)));
             if (!$mimeType) {
                 $mimeType = trim(exec('file --mime ' . escapeshellarg($filename)));
