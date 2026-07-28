@@ -265,16 +265,16 @@ class OrderSlipCore extends ObjectModel
 
         if ($shipping_cost !== false) {
             $order_slip->shipping_cost = true;
-            $carrier = new Carrier((int) $order->id_carrier);
-            $address = Address::initialize($order->id_address_delivery, false);
-            $tax_calculator = $carrier->getTaxCalculator($address);
             $order_slip->{'total_shipping_tax_' . $inc_or_ex_1} = ($shipping_cost === null ? $order->{'total_shipping_tax_' . $inc_or_ex_1} : (float) $shipping_cost);
 
-            if ($tax_calculator instanceof TaxCalculator) {
-                $order_slip->{'total_shipping_tax_' . $inc_or_ex_2} = Tools::ps_round($tax_calculator->{$taxCalculatorMethod}($order_slip->{'total_shipping_tax_' . $inc_or_ex_1}), Context::getContext()->getComputingPrecision());
-            } else {
-                $order_slip->{'total_shipping_tax_' . $inc_or_ex_2} = $order_slip->{'total_shipping_tax_' . $inc_or_ex_1};
-            }
+            // Rate recorded on the order, as in OrderSlipCreator
+            $shippingTaxFactor = 1 + (float) $order->carrier_tax_rate / 100;
+            $order_slip->{'total_shipping_tax_' . $inc_or_ex_2} = Tools::ps_round(
+                $add_tax
+                    ? $order_slip->{'total_shipping_tax_' . $inc_or_ex_1} * $shippingTaxFactor
+                    : $order_slip->{'total_shipping_tax_' . $inc_or_ex_1} / $shippingTaxFactor,
+                Context::getContext()->getComputingPrecision()
+            );
         } else {
             $order_slip->shipping_cost = false;
         }
