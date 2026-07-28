@@ -99,6 +99,8 @@ abstract class AbstractScopedOperation extends HttpOperation
         array $scopes = [],
         ?array $ApiResourceMapping = null,
         ?bool $experimentalOperation = null,
+        ?string $minVersion = null,
+        ?string $maxVersion = null,
     ) {
         $passedArguments = \get_defined_vars();
 
@@ -117,10 +119,22 @@ abstract class AbstractScopedOperation extends HttpOperation
             $passedArguments['extraProperties']['experimentalOperation'] = $experimentalOperation;
         }
 
+        if (!empty($minVersion)) {
+            $this->checkArgumentAndExtraParameterValidity('minVersion', $minVersion, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['minVersion'] = $minVersion;
+        }
+
+        if (!empty($maxVersion)) {
+            $this->checkArgumentAndExtraParameterValidity('maxVersion', $maxVersion, $passedArguments['extraProperties']);
+            $passedArguments['extraProperties']['maxVersion'] = $maxVersion;
+        }
+
         // Remove custom arguments
         unset($passedArguments['scopes']);
         unset($passedArguments['ApiResourceMapping']);
         unset($passedArguments['experimentalOperation']);
+        unset($passedArguments['minVersion']);
+        unset($passedArguments['maxVersion']);
 
         // Unless especially specified we only handle JSON format by default
         $passedArguments['formats'] = $formats ?? ['json'];
@@ -163,6 +177,32 @@ abstract class AbstractScopedOperation extends HttpOperation
     {
         $self = clone $this;
         $self->extraProperties['experimentalOperation'] = $experimentalOperation;
+
+        return $self;
+    }
+
+    public function getMinVersion(): ?string
+    {
+        return $this->extraProperties['minVersion'] ?? null;
+    }
+
+    public function withMinVersion(string $minVersion): static
+    {
+        $self = clone $this;
+        $self->extraProperties['minVersion'] = $minVersion;
+
+        return $self;
+    }
+
+    public function getMaxVersion(): ?string
+    {
+        return $this->extraProperties['maxVersion'] ?? null;
+    }
+
+    public function withMaxVersion(string $maxVersion): static
+    {
+        $self = clone $this;
+        $self->extraProperties['maxVersion'] = $maxVersion;
 
         return $self;
     }

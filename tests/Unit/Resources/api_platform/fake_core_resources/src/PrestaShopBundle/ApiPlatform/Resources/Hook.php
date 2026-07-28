@@ -38,6 +38,28 @@ use PrestaShopBundle\ApiPlatform\Provider\QueryProvider;
                 'scopes' => ['hook_read'],
             ]
         ),
+        new Get(
+            uriTemplate: '/hook-versioned-kept/{id}',
+            requirements: ['id' => '\d+'],
+            exceptionToStatus: [HookNotFoundException::class => 404],
+            provider: QueryProvider::class,
+            extraProperties: [
+                'query' => GetHook::class,
+                'scopes' => ['hook_versioned_kept'],
+                'minVersion' => '1.0.0',
+            ]
+        ),
+        new Get(
+            uriTemplate: '/hook-versioned-filtered/{id}',
+            requirements: ['id' => '\d+'],
+            exceptionToStatus: [HookNotFoundException::class => 404],
+            provider: QueryProvider::class,
+            extraProperties: [
+                'query' => GetHook::class,
+                'scopes' => ['hook_versioned_filtered'],
+                'minVersion' => '99.99.99',
+            ]
+        ),
     ],
 )]
 class Hook
