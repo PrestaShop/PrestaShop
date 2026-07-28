@@ -8,14 +8,18 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 
 /**
  * Handles commands which edits given customer with provided data.
@@ -39,8 +43,11 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
      * @param Hashing $hashing
      * @param string $legacyCookieKey
      */
-    public function __construct(Hashing $hashing, $legacyCookieKey)
-    {
+    public function __construct(
+        Hashing $hashing,
+        $legacyCookieKey,
+        private readonly ?ConfigurationInterface $configuration = null,
+    ) {
         $this->hashing = $hashing;
         $this->legacyCookieKey = $legacyCookieKey;
     }
@@ -63,6 +70,7 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         }
 
         $this->assertCustomerCanAccessDefaultGroup($customer, $command);
+        $this->assertPasswordMeetsConfiguredPolicy($command->getPassword());
 
         $this->updateCustomerWithCommandData($customer, $command);
 
@@ -216,6 +224,43 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
             throw new DuplicateCustomerEmailException(
                 $command->getEmail(), sprintf('Registered customer with email "%s" already exists', $command->getEmail()->getValue()),
                 DuplicateCustomerEmailException::EDIT
+            );
+        }
+    }
+
+    /**
+     * The back office form applies the configured length policy through Symfony constraints, so a
+     * customer created there obeys it. Entry points that build the command directly - the Admin API
+     * among them - only met the Password value object's absolute bounds, which are wider. Applying
+     * the same configuration here makes both agree.
+     *
+     * Only the length is checked: PS_SECURITY_PASSWORD_POLICY_MINIMUM_SCORE is rendered as a
+     * data-minscore attribute for the client-side meter and is not enforced server-side anywhere,
+     * so enforcing it here would be stricter than the back office rather than consistent with it.
+     *
+     * @throws CustomerConstraintException
+     */
+    private function assertPasswordMeetsConfiguredPolicy(?Password $password): void
+    {
+        if (null === $password || null === $this->configuration) {
+            return;
+        }
+
+        $minLength = (int) $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH);
+        $maxLength = (int) $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH);
+        $length = mb_strlen($password->getValue(), 'UTF-8');
+
+        if ($minLength > 0 && $length < $minLength) {
+            throw new CustomerConstraintException(
+                sprintf('Customer password must be at least %d characters long', $minLength),
+                CustomerConstraintException::INVALID_PASSWORD
+            );
+        }
+
+        if ($maxLength > 0 && $length > $maxLength) {
+            throw new CustomerConstraintException(
+                sprintf('Customer password must not exceed %d characters', $maxLength),
+                CustomerConstraintException::INVALID_PASSWORD
             );
         }
     }

@@ -8,15 +8,19 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\AddCustomerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 
 /**
  * Handles command that adds new customer
@@ -40,8 +44,11 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
      * @param Hashing $hashing
      * @param string $legacyCookieKey
      */
-    public function __construct(Hashing $hashing, $legacyCookieKey)
-    {
+    public function __construct(
+        Hashing $hashing,
+        $legacyCookieKey,
+        private readonly ?ConfigurationInterface $configuration = null,
+    ) {
         $this->hashing = $hashing;
         $this->legacyCookieKey = $legacyCookieKey;
     }
@@ -74,6 +81,7 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
 
         // Check if provided groups contain the correct data (the default group must be in group list)
         $this->assertCustomerCanAccessDefaultGroup($command);
+        $this->assertPasswordMeetsConfiguredPolicy($command->getPassword());
 
         $customer->add();
         if (null !== $command->getGroupIds()) {
@@ -138,6 +146,43 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
         $customer->outstanding_allow_amount = $command->getAllowedOutstandingAmount();
         $customer->max_payment_days = $command->getMaxPaymentDays();
         $customer->id_risk = $command->getRiskId();
+    }
+
+    /**
+     * The back office form applies the configured length policy through Symfony constraints, so a
+     * customer created there obeys it. Entry points that build the command directly - the Admin API
+     * among them - only met the Password value object's absolute bounds, which are wider. Applying
+     * the same configuration here makes both agree.
+     *
+     * Only the length is checked: PS_SECURITY_PASSWORD_POLICY_MINIMUM_SCORE is rendered as a
+     * data-minscore attribute for the client-side meter and is not enforced server-side anywhere,
+     * so enforcing it here would be stricter than the back office rather than consistent with it.
+     *
+     * @throws CustomerConstraintException
+     */
+    private function assertPasswordMeetsConfiguredPolicy(?Password $password): void
+    {
+        if (null === $password || null === $this->configuration) {
+            return;
+        }
+
+        $minLength = (int) $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH);
+        $maxLength = (int) $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH);
+        $length = mb_strlen($password->getValue(), 'UTF-8');
+
+        if ($minLength > 0 && $length < $minLength) {
+            throw new CustomerConstraintException(
+                sprintf('Customer password must be at least %d characters long', $minLength),
+                CustomerConstraintException::INVALID_PASSWORD
+            );
+        }
+
+        if ($maxLength > 0 && $length > $maxLength) {
+            throw new CustomerConstraintException(
+                sprintf('Customer password must not exceed %d characters', $maxLength),
+                CustomerConstraintException::INVALID_PASSWORD
+            );
+        }
     }
 
     /**
