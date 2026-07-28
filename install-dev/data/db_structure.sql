@@ -37,7 +37,6 @@ CREATE TABLE `PREFIX_address` (
   `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_address`),
   KEY `address_customer` (`id_customer`),
-  KEY `id_country` (`id_country`),
   KEY `id_state` (`id_state`),
   KEY `id_manufacturer` (`id_manufacturer`),
   KEY `id_supplier` (`id_supplier`),
