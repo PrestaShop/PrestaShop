@@ -237,7 +237,14 @@ class TranslationService
             } else {
                 $queryBuilder->andWhere('t.theme IS NULL');
             }
-            $translation = $queryBuilder->getQuery()->getOneOrNullResult();
+            // The `key` collation is case and accent insensitive: keep the exact match only
+            foreach ($queryBuilder->getQuery()->getResult() as $candidate) {
+                if ($candidate->getKey() === $key) {
+                    $translation = $candidate;
+
+                    break;
+                }
+            }
         } catch (Exception $exception) {
             $logger->error($exception->getMessage(), $log_context);
         }
@@ -306,19 +313,26 @@ class TranslationService
             'domain' => $domain,
             'key' => $key,
         ];
-        if (!empty($theme)) {
-            $searchTranslation['theme'] = $theme;
+        $searchTranslation['theme'] = empty($theme) ? null : $theme;
+
+        $translations = [];
+        // The `key` collation is case and accent insensitive: keep exact matches only
+        foreach ($entityManager->getRepository(Translation::class)->findBy($searchTranslation) as $candidate) {
+            if ($candidate->getKey() === $key) {
+                $translations[] = $candidate;
+            }
         }
 
-        $translation = $entityManager->getRepository(Translation::class)->findOneBy($searchTranslation);
+        if (empty($translations)) {
+            return true;
+        }
 
         $resetTranslationSuccessfully = false;
-        if (null === $translation) {
-            $resetTranslationSuccessfully = true;
-        }
 
         try {
-            $entityManager->remove($translation);
+            foreach ($translations as $translation) {
+                $entityManager->remove($translation);
+            }
             $entityManager->flush();
 
             $resetTranslationSuccessfully = true;
