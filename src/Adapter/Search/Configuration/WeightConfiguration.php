@@ -8,47 +8,86 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Search\Configuration;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use Exception;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class WeightConfiguration implements DataConfigurationInterface
+class WeightConfiguration extends AbstractMultistoreConfiguration
 {
-    public function __construct(private readonly Configuration $configuration)
-    {
-    }
+    /**
+     * @var array<int, string>
+     */
+    private const CONFIGURATION_FIELDS = [
+        'product_name_weight',
+        'reference_weight',
+        'short_description_weight',
+        'description_weight',
+        'category_weight',
+        'brand_weight',
+        'tags_weight',
+        'attributes_weight',
+        'features_weight',
+    ];
 
+    /**
+     * @var array<string, string> Maps configuration field names to their configuration keys
+     */
+    private const FIELD_TO_KEY = [
+        'product_name_weight' => 'PS_SEARCH_WEIGHT_PNAME',
+        'reference_weight' => 'PS_SEARCH_WEIGHT_REF',
+        'short_description_weight' => 'PS_SEARCH_WEIGHT_SHORTDESC',
+        'description_weight' => 'PS_SEARCH_WEIGHT_DESC',
+        'category_weight' => 'PS_SEARCH_WEIGHT_CNAME',
+        'brand_weight' => 'PS_SEARCH_WEIGHT_MNAME',
+        'tags_weight' => 'PS_SEARCH_WEIGHT_TAG',
+        'attributes_weight' => 'PS_SEARCH_WEIGHT_ATTRIBUTE',
+        'features_weight' => 'PS_SEARCH_WEIGHT_FEATURE',
+    ];
+
+    /**
+     * @return array<string, mixed>
+     */
     public function getConfiguration(): array
     {
-        return [
-            'product_name_weight' => $this->configuration->get('PS_SEARCH_WEIGHT_PNAME'),
-            'reference_weight' => $this->configuration->get('PS_SEARCH_WEIGHT_REF'),
-            'short_description_weight' => $this->configuration->get('PS_SEARCH_WEIGHT_SHORTDESC'),
-            'description_weight' => $this->configuration->get('PS_SEARCH_WEIGHT_DESC'),
-            'category_weight' => $this->configuration->get('PS_SEARCH_WEIGHT_CNAME'),
-            'brand_weight' => $this->configuration->get('PS_SEARCH_WEIGHT_MNAME'),
-            'tags_weight' => $this->configuration->get('PS_SEARCH_WEIGHT_TAG'),
-            'attributes_weight' => $this->configuration->get('PS_SEARCH_WEIGHT_ATTRIBUTE'),
-            'features_weight' => $this->configuration->get('PS_SEARCH_WEIGHT_FEATURE'),
-        ];
+        $shopConstraint = $this->getShopConstraint();
+
+        $configuration = [];
+        foreach (self::FIELD_TO_KEY as $field => $key) {
+            $configuration[$field] = (int) $this->configuration->get($key, 0, $shopConstraint);
+        }
+
+        return $configuration;
     }
 
+    /**
+     * @param array<string, mixed> $config
+     *
+     * @return array<string, mixed>
+     *
+     * @throws Exception
+     */
     public function updateConfiguration(array $config): array
     {
-        $this->configuration->set('PS_SEARCH_WEIGHT_PNAME', (int) $config['product_name_weight']);
-        $this->configuration->set('PS_SEARCH_WEIGHT_REF', (int) $config['reference_weight']);
-        $this->configuration->set('PS_SEARCH_WEIGHT_SHORTDESC', (int) $config['short_description_weight']);
-        $this->configuration->set('PS_SEARCH_WEIGHT_DESC', (int) $config['description_weight']);
-        $this->configuration->set('PS_SEARCH_WEIGHT_CNAME', (int) $config['category_weight']);
-        $this->configuration->set('PS_SEARCH_WEIGHT_MNAME', (int) $config['brand_weight']);
-        $this->configuration->set('PS_SEARCH_WEIGHT_TAG', (int) $config['tags_weight']);
-        $this->configuration->set('PS_SEARCH_WEIGHT_ATTRIBUTE', (int) $config['attributes_weight']);
-        $this->configuration->set('PS_SEARCH_WEIGHT_FEATURE', (int) $config['features_weight']);
+        if ($this->validateConfiguration($config)) {
+            $shopConstraint = $this->getShopConstraint();
+
+            foreach (self::FIELD_TO_KEY as $field => $key) {
+                $this->updateConfigurationValue($key, $field, $config, $shopConstraint);
+            }
+        }
 
         return [];
     }
 
-    public function validateConfiguration(array $config): bool
+    protected function buildResolver(): OptionsResolver
     {
-        return true;
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS);
+
+        foreach (self::CONFIGURATION_FIELDS as $field) {
+            $resolver->setAllowedTypes($field, ['null', 'int']);
+        }
+
+        return $resolver;
     }
 }
