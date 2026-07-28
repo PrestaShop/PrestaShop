@@ -26,6 +26,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCo
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\AddDiscountCommand;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\UpdateDiscountCommand;
@@ -52,6 +53,7 @@ use PrestaShopBundle\ApiPlatform\NormalizationMapper;
 use PrestaShopBundle\ApiPlatform\Serializer\CQRSApiSerializer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Tests\Integration\Utility\LanguageTrait;
 use Tests\Resources\ApiPlatform\Resources\LocalizedResource;
 use Tests\Resources\ApiPlatform\Resources\UpdatePositionResource;
@@ -530,6 +532,34 @@ class CQRSApiSerializerTest extends KernelTestCase
             ],
             $addDiscountCommand,
         ];
+    }
+
+    /**
+     * A type error on request data must describe the parameter, not the CQRS class the request is
+     * denormalized into - that name is internal and tells an API client more than it needs.
+     */
+    public function testDenormalizeClientInputHidesTheCQRSClass(): void
+    {
+        $serializer = self::getContainer()->get(CQRSApiSerializer::class);
+        $badInput = ['phrases' => 'demo'];
+
+        try {
+            $serializer->denormalize($badInput, SearchCustomers::class, null, [
+                CQRSApiSerializer::CLIENT_INPUT => true,
+            ]);
+            self::fail('Denormalizing a string into the array parameter should have thrown');
+        } catch (NotNormalizableValueException $e) {
+            self::assertSame('The "phrases" parameter must be of type array, string given.', $e->getMessage());
+            self::assertStringNotContainsString(SearchCustomers::class, $e->getMessage());
+        }
+
+        // Without the flag the data did not come from a client, so the original message is kept.
+        try {
+            $serializer->denormalize($badInput, SearchCustomers::class, null, []);
+            self::fail('Denormalizing a string into the array parameter should have thrown');
+        } catch (NotNormalizableValueException $e) {
+            self::assertStringContainsString(SearchCustomers::class, $e->getMessage());
+        }
     }
 
     public function testNormalize(): void

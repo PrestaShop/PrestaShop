@@ -51,7 +51,7 @@ class QueryProvider implements ProviderInterface
         $filters = $context['filters'] ?? [];
         $queryParameters = array_merge($uriVariables, $filters, $this->contextParametersProvider->getContextParameters());
 
-        $CQRSQuery = $this->domainSerializer->denormalize($queryParameters, $CQRSQueryClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation)]);
+        $CQRSQuery = $this->domainSerializer->denormalize($queryParameters, $CQRSQueryClass, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSQueryMapping($operation), CQRSApiSerializer::CLIENT_INPUT => true]);
         $CQRSQueryResult = $this->queryBus->handle($CQRSQuery);
         // The result may be null (for DELETE action for example)
         if (null === $CQRSQueryResult) {

@@ -15,6 +15,7 @@ use PrestaShopBundle\ApiPlatform\PositionCollectionUpdater;
 use ReflectionNamedType;
 use Symfony\Component\Serializer\Encoder\ContextAwareDecoderInterface;
 use Symfony\Component\Serializer\Encoder\ContextAwareEncoderInterface;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Exception\UnsupportedFormatException;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -30,6 +31,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerInterface, ContextAwareDenormalizerInterface, ContextAwareEncoderInterface, ContextAwareDecoderInterface
 {
     public const CAST_BOOL = 'cast_bool';
+
+    /**
+     * Set on the denormalization of data that came from the request, as opposed to a CQRS result
+     * being turned into an ApiResource. Only the former is worth rephrasing for an API client.
+     */
+    public const CLIENT_INPUT = 'client_input';
 
     public function __construct(
         protected readonly Serializer $decorated,
@@ -91,7 +98,46 @@ class CQRSApiSerializer implements SerializerInterface, ContextAwareNormalizerIn
             $data = $this->denormalizeLocalizedValues($data, $type, $context);
         }
 
-        return $this->decorated->denormalize($data, $type, $format, $context);
+        try {
+            return $this->decorated->denormalize($data, $type, $format, $context);
+        } catch (NotNormalizableValueException $e) {
+            if (empty($context[self::CLIENT_INPUT])) {
+                throw $e;
+            }
+
+            throw $this->describeWithoutInternals($e);
+        }
+    }
+
+    /**
+     * The serializer's own message names the CQRS class the request is denormalized into, which
+     * tells an API client the internal namespace and the query or command behind the endpoint.
+     * The exception already carries the same information in a structured form, so the message can
+     * be rebuilt from that and describe the input instead.
+     */
+    private function describeWithoutInternals(NotNormalizableValueException $exception): NotNormalizableValueException
+    {
+        $path = $exception->getPath();
+        $expectedTypes = $exception->getExpectedTypes();
+
+        // Without a path there is nothing to name, and a hand-written message would say less than
+        // the original one.
+        if (null === $path || empty($expectedTypes)) {
+            return $exception;
+        }
+
+        return NotNormalizableValueException::createForUnexpectedDataType(
+            sprintf(
+                'The "%s" parameter must be of type %s, %s given.',
+                $path,
+                implode(' or ', $expectedTypes),
+                $exception->getCurrentType() ?? 'none'
+            ),
+            null,
+            $expectedTypes,
+            $path,
+            true
+        );
     }
 
     public function encode(mixed $data, string $format, array $context = []): string
