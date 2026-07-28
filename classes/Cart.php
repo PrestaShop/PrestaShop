@@ -2918,8 +2918,10 @@ class CartCore extends ObjectModel
      */
     public function getDeliveryOptionList(?Country $default_country = null, $flush = false)
     {
-        if (isset(static::$cacheDeliveryOptionList[$this->id]) && !$flush) {
-            return static::$cacheDeliveryOptionList[$this->id];
+        $cacheKey = (int) $this->id . '_' . (int) $this->id_address_delivery;
+
+        if (isset(static::$cacheDeliveryOptionList[$cacheKey]) && !$flush) {
+            return static::$cacheDeliveryOptionList[$cacheKey];
         }
 
         $delivery_option_list = [];
@@ -2974,9 +2976,7 @@ class CartCore extends ObjectModel
                  * We can't just use empty($package['carrier_list']) because it looks like [0 => 0] if there are no carriers.
                  */
                 if (count($package['carrier_list']) == 1 && current($package['carrier_list']) == 0) {
-                    $cache[$this->id] = [];
-
-                    return $cache[$this->id];
+                    return [];
                 }
 
                 $carriers_price[$id_address][$id_package] = [];
@@ -3223,9 +3223,9 @@ class CartCore extends ObjectModel
             ]
         );
 
-        static::$cacheDeliveryOptionList[$this->id] = $delivery_option_list;
+        static::$cacheDeliveryOptionList[$cacheKey] = $delivery_option_list;
 
-        return static::$cacheDeliveryOptionList[$this->id];
+        return static::$cacheDeliveryOptionList[$cacheKey];
     }
 
     /**

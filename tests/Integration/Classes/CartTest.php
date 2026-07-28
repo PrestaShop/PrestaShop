@@ -349,6 +349,73 @@ class CartTest extends KernelTestCase
         $this->assertEquals(13.2, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
     }
 
+    public function testDeliveryOptionListCacheIsScopedByDeliveryAddress(): void
+    {
+        Cart::resetStaticCache();
+
+        $firstAddress = self::makeAddress();
+        $secondAddress = self::makeAddress();
+
+        $this->assertNotSame(
+            (int) $firstAddress->id,
+            (int) $secondAddress->id
+        );
+
+        $product = self::makeProduct(
+            'Delivery option cache product',
+            10,
+            self::getIdTaxRulesGroup(20)
+        );
+
+        // Passing a shipping cost also associates the carrier with all zones.
+        self::getIdCarrier('Delivery option cache carrier', 2);
+
+        $cart = self::makeCart();
+        $cart->id_address_delivery = (int) $firstAddress->id;
+        $cart->id_address_invoice = (int) $firstAddress->id;
+
+        $this->assertTrue($cart->update());
+
+        $cart->updateQty(1, (int) $product->id);
+
+        // Warm the delivery option cache using the first address.
+        $firstAddressDeliveryOptions = $cart->getDeliveryOptionList();
+
+        $this->assertArrayHasKey(
+            (int) $firstAddress->id,
+            $firstAddressDeliveryOptions
+        );
+        $this->assertArrayNotHasKey(
+            (int) $secondAddress->id,
+            $firstAddressDeliveryOptions
+        );
+
+        /*
+        * Change the delivery address in the same PHP process.
+        *
+        * Cart::update() does not reset the delivery option cache, so the next
+        * call must use a cache entry scoped by the new delivery address.
+        */
+        $cart->id_address_delivery = (int) $secondAddress->id;
+
+        $this->assertTrue($cart->update());
+
+        /*
+        * Do not use $flush = true here: forcing a recalculation would hide
+        * the cache-key regression.
+        */
+        $secondAddressDeliveryOptions = $cart->getDeliveryOptionList();
+
+        $this->assertArrayHasKey(
+            (int) $secondAddress->id,
+            $secondAddressDeliveryOptions
+        );
+        $this->assertArrayNotHasKey(
+            (int) $firstAddress->id,
+            $secondAddressDeliveryOptions
+        );
+    }
+
     public function testBasicRoundTypeLine(): void
     {
         self::setRoundingType('line');
