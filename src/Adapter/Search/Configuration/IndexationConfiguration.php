@@ -8,31 +8,53 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Search\Configuration;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use Exception;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class IndexationConfiguration implements DataConfigurationInterface
+class IndexationConfiguration extends AbstractMultistoreConfiguration
 {
-    public function __construct(private readonly Configuration $configuration)
-    {
-    }
+    /**
+     * @var array<int, string>
+     */
+    private const CONFIGURATION_FIELDS = [
+        'indexing',
+    ];
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getConfiguration(): array
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'indexing' => $this->configuration->getBoolean('PS_SEARCH_INDEXATION'),
+            'indexing' => (bool) $this->configuration->get('PS_SEARCH_INDEXATION', false, $shopConstraint),
         ];
     }
 
+    /**
+     * @param array<string, mixed> $config
+     *
+     * @return array<string, mixed>
+     *
+     * @throws Exception
+     */
     public function updateConfiguration(array $config): array
     {
-        $this->configuration->set('PS_SEARCH_INDEXATION', (int) $config['indexing']);
+        if ($this->validateConfiguration($config)) {
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->updateConfigurationValue('PS_SEARCH_INDEXATION', 'indexing', $config, $shopConstraint);
+        }
 
         return [];
     }
 
-    public function validateConfiguration(array $config): bool
+    protected function buildResolver(): OptionsResolver
     {
-        return true;
+        return (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('indexing', 'bool');
     }
 }

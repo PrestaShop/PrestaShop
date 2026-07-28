@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Search\QueryHandler;
 
+use Doctrine\DBAL\Exception as DBALException;
 use PrestaShop\PrestaShop\Adapter\Search\Repository\IndexedProductsRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsQueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Search\Query\GetIndexedProductsCount;
@@ -23,6 +24,9 @@ final class GetIndexedProductsCountHandler implements GetIndexedProductsCountHan
     ) {
     }
 
+    /**
+     * @throws DBALException
+     */
     public function handle(GetIndexedProductsCount $query): IndexedProductsCount
     {
         $counts = $this->indexedProductsRepository->getIndexedProductsCount(Shop::getContextListShopID());
