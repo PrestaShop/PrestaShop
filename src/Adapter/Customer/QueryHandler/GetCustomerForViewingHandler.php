@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Shop;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
+use Validate;
 
 /**
  * Handles commands which gets customer for viewing in Back Office.
@@ -341,6 +342,14 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
 
         foreach ($groups as $groupId) {
             $group = new Group($groupId);
+
+            // Rows in customer_group are not constrained, so a group can be missing - deleted
+            // directly in database, or written by a client that did not check it existed.
+            // Skipping keeps the customer page usable instead of failing on a null name.
+            if (!Validate::isLoadedObject($group)) {
+                continue;
+            }
+
             $customerGroups[] = new GroupInformation(
                 (int) $group->id,
                 $group->name[$this->contextLangId],
