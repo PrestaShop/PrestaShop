@@ -243,7 +243,7 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         Assert::assertEquals($employeeEmail, $resetEmail['to'][0]['address']);
 
         if (!preg_match('#/reset-password/([^\s"\'<]+)#', $resetEmail['text'], $matches)) {
-            throw new \RuntimeException('Reset URL not found in email body');
+            throw new RuntimeException('Reset URL not found in email body');
         }
         $resetToken = $matches[1];
         Assert::assertNotEmpty($resetToken);
