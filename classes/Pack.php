@@ -289,8 +289,10 @@ class PackCore extends Product
          * STOCK_TYPE_PACK_BOTH - pack 1pcs + product A 10pcs + product B 20pcs = 1 pcs
          */
 
-        // If no pack stock or shop default, set it from configuration
-        if (empty($packStockType) || $packStockType == self::STOCK_TYPE_DEFAULT) {
+        // If no pack stock or shop default, set it from configuration.
+        // STOCK_TYPE_PACK_ONLY is 0, so empty() used to swallow it and fall back to the shop
+        // default, making an explicit "Decrement pack only" indistinguishable from an unset value.
+        if (null === $packStockType || (int) $packStockType === self::STOCK_TYPE_DEFAULT) {
             $packStockType = Configuration::get('PS_PACK_STOCK_TYPE');
         }
 
