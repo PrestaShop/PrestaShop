@@ -119,7 +119,12 @@ abstract class ModuleCore implements ModuleInterface
     /** @var array to store the limited country */
     public $limited_countries = [];
 
-    /** @var array names of the controllers */
+    /**
+     * Key used by getDeclaredControllers() for a meta value that applies to every language.
+     */
+    public const CONTROLLER_META_ALL_LANGUAGES = '*';
+
+    /** @var array names of the controllers, or definitions carrying their meta */
     public $controllers = [];
 
     /** @var bool */
@@ -926,8 +931,8 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Remove all configured meta data (titles, URLs etc.) for this module's front controllers
-        foreach ($this->controllers as $controller) {
-            $page_name = 'module-' . $this->name . '-' . $controller;
+        foreach ($this->getDeclaredControllers() as $controller) {
+            $page_name = 'module-' . $this->name . '-' . $controller['name'];
             $meta = Db::getInstance()->getValue('SELECT `id_meta` FROM `' . _DB_PREFIX_ . 'meta` WHERE `page`="' . pSQL($page_name) . '"');
             if ((int) $meta > 0) {
                 Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'meta_lang` WHERE `id_meta`=' . (int) $meta);
@@ -2952,8 +2957,10 @@ abstract class ModuleCore implements ModuleInterface
      */
     protected function installControllers()
     {
-        foreach ($this->controllers as $controller) {
-            $page = 'module-' . $this->name . '-' . $controller;
+        $languages = Language::getLanguages(false);
+
+        foreach ($this->getDeclaredControllers() as $controller) {
+            $page = 'module-' . $this->name . '-' . $controller['name'];
             $result = Db::getInstance()->getValue('SELECT * FROM `' . _DB_PREFIX_ . 'meta` WHERE `page`="' . pSQL($page) . '"');
             if ((int) $result > 0) {
                 continue;
@@ -2962,10 +2969,72 @@ abstract class ModuleCore implements ModuleInterface
             $meta = new Meta();
             $meta->page = $page;
             $meta->configurable = 1;
+
+            foreach ($languages as $language) {
+                $isoCode = $language['iso_code'];
+                $idLang = (int) $language['id_lang'];
+
+                foreach (['title', 'url_rewrite'] as $field) {
+                    $value = $controller[$field][$isoCode] ?? $controller[$field][self::CONTROLLER_META_ALL_LANGUAGES] ?? null;
+                    if (null !== $value) {
+                        $meta->{$field}[$idLang] = $value;
+                    }
+                }
+            }
+
             $meta->save();
         }
 
         return true;
+    }
+
+    /**
+     * Normalise the front controllers the module declares.
+     *
+     * A controller has always been declared by name alone, and still can be. It may also be declared
+     * as an array carrying the meta its page should be installed with:
+     *
+     *     public $controllers = [
+     *         'payment',
+     *         ['name' => 'validation', 'title' => 'Payment validation', 'url_rewrite' => 'payment-validation'],
+     *         ['name' => 'confirm', 'url_rewrite' => ['en' => 'order-confirmed', 'fr' => 'commande-confirmee']],
+     *     ];
+     *
+     * title and url_rewrite take either one value, used for every language, or a map keyed by the
+     * language ISO code. A language the map does not mention keeps the empty value it gets today, so
+     * declaring nothing behaves exactly as before.
+     *
+     * @return array<int, array{name: string, title: array<string, string>, url_rewrite: array<string, string>}>
+     */
+    protected function getDeclaredControllers(): array
+    {
+        $controllers = [];
+
+        foreach ($this->controllers as $controller) {
+            if (!is_array($controller)) {
+                $controllers[] = ['name' => (string) $controller, 'title' => [], 'url_rewrite' => []];
+
+                continue;
+            }
+
+            $definition = ['name' => (string) ($controller['name'] ?? ''), 'title' => [], 'url_rewrite' => []];
+
+            foreach (['title', 'url_rewrite'] as $field) {
+                if (!isset($controller[$field])) {
+                    continue;
+                }
+
+                $definition[$field] = is_array($controller[$field])
+                    ? $controller[$field]
+                    : [self::CONTROLLER_META_ALL_LANGUAGES => $controller[$field]];
+            }
+
+            if ('' !== $definition['name']) {
+                $controllers[] = $definition;
+            }
+        }
+
+        return $controllers;
     }
 
     /**
