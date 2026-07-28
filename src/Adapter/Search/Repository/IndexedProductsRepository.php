@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Search\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception as DBALException;
 
 class IndexedProductsRepository
 {
@@ -24,6 +25,8 @@ class IndexedProductsRepository
      * @param int[] $shopIds
      *
      * @return array{indexed: int, total: int}
+     *
+     * @throws DBALException
      */
     public function getIndexedProductsCount(array $shopIds): array
     {

@@ -332,16 +332,16 @@ services:
     autowire: true
 
   prestashop.admin.search_preferences.indexation.data_provider:
-    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search\IndexationFormDataProvider'
+    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search\ConfigurationFormDataProvider'
     arguments:
-      - '@prestashop.adapter.search.indexation.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Search\Configuration\IndexationConfiguration'
 
   prestashop.admin.search_preferences.search_options.data_provider:
-    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search\SearchOptionsFormDataProvider'
+    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search\ConfigurationFormDataProvider'
     arguments:
-      - '@prestashop.adapter.search.search_options.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Search\Configuration\SearchOptionsConfiguration'
 
   prestashop.admin.search_preferences.weight.data_provider:
-    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search\WeightFormDataProvider'
+    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Search\ConfigurationFormDataProvider'
     arguments:
-      - '@prestashop.adapter.search.weight.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Search\Configuration\WeightConfiguration'
