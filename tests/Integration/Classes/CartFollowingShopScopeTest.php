@@ -63,6 +63,13 @@ class CartFollowingShopScopeTest extends KernelTestCase
 
     public static function tearDownAfterClass(): void
     {
+        // Restoring the tables is not enough: the shop context is static, so leaving it pointed at
+        // the shop this class created makes every later test read through a shop that no longer
+        // exists once the rows are gone.
+        LegacyShop::setContext(LegacyShop::CONTEXT_ALL);
+        LegacyShop::resetStaticCache();
+        LegacyConfiguration::resetStaticCache();
+
         DatabaseDump::restoreTables(self::TABLES_TO_RESTORE);
         parent::tearDownAfterClass();
     }
