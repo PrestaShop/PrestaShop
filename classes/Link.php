@@ -974,6 +974,7 @@ class LinkCore
         if (strpos($idImage, 'default') !== false) {
             $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . $idImage . $type . '-' . Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
             $uriPath = _THEME_PROD_DIR_ . $idImage . $type . $theme . '.' . $extension;
+            $filePath = _PS_PRODUCT_IMG_DIR_ . $idImage . $type . $theme . '.' . $extension;
 
         // Regular image with numeric ID
         } else {
@@ -998,9 +999,11 @@ class LinkCore
             } else {
                 $uriPath = _THEME_PROD_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . $type . $theme . '.' . $extension;
             }
+
+            $filePath = _PS_PRODUCT_IMG_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . $type . $theme . '.' . $extension;
         }
 
-        $url = $this->getMediaLink($uriPath);
+        $url = $this->addImageVersion($this->getMediaLink($uriPath), $filePath);
 
         Hook::exec(
             'adaptImageLink',
@@ -1041,7 +1044,7 @@ class LinkCore
             $uriPath = _THEME_SUP_DIR_ . Context::getContext()->language->iso_code . '.' . $extension;
         }
 
-        return $this->getMediaLink($uriPath);
+        return $this->addImageVersion($this->getMediaLink($uriPath), _PS_SUPP_IMG_DIR_ . substr($uriPath, strlen(_THEME_SUP_DIR_)));
     }
 
     /**
@@ -1067,7 +1070,7 @@ class LinkCore
             $uriPath = _THEME_MANU_DIR_ . Context::getContext()->language->iso_code . '.' . $extension;
         }
 
-        return $this->getMediaLink($uriPath);
+        return $this->addImageVersion($this->getMediaLink($uriPath), _PS_MANU_IMG_DIR_ . substr($uriPath, strlen(_THEME_MANU_DIR_)));
     }
 
     /**
@@ -1094,7 +1097,7 @@ class LinkCore
             $uriPath = _THEME_STORE_DIR_ . Context::getContext()->language->iso_code . '.' . $extension;
         }
 
-        return $this->getMediaLink($uriPath);
+        return $this->addImageVersion($this->getMediaLink($uriPath), _PS_STORE_IMG_DIR_ . substr($uriPath, strlen(_THEME_STORE_DIR_)));
     }
 
     /**
@@ -1105,6 +1108,20 @@ class LinkCore
     public function getMediaLink($filepath)
     {
         return $this->protocol_content . Tools::getMediaServer($filepath) . $filepath;
+    }
+
+    /**
+     * Appends the file's modification time, or leaves the URL as is when the file cannot be read.
+     */
+    private function addImageVersion(string $url, string $filePath): string
+    {
+        $modifiedAt = @filemtime($filePath);
+
+        if (false === $modifiedAt) {
+            return $url;
+        }
+
+        return $url . (false === strpos($url, '?') ? '?' : '&') . 'v=' . $modifiedAt;
     }
 
     /**
@@ -1180,7 +1197,10 @@ class LinkCore
             $uriPath = _THEME_CAT_DIR_ . $idCategory . ($type ? '-' . $type : '') . '.' . $extension;
         }
 
-        return $this->getMediaLink($uriPath);
+        return $this->addImageVersion(
+            $this->getMediaLink($uriPath),
+            _PS_CAT_IMG_DIR_ . $idCategory . ($type ? '-' . $type : '') . '.' . $extension
+        );
     }
 
     /**
