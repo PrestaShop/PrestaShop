@@ -1362,6 +1362,12 @@ class AdminTranslationsControllerCore extends AdminController
                         // the previous behaviour is kept, so nothing that used to be saved is lost.
                         $selectedModule = Tools::getValue('module');
                         if ($selectedModule) {
+                            // The name reaches file paths that are read, included and written, so it
+                            // is checked the same way the mail translations above check theirs.
+                            if (!Validate::isModuleName($selectedModule)) {
+                                throw new PrestaShopException($this->trans('Invalid module name "%module%"', ['%module%' => Tools::safeOutput($selectedModule)], 'Admin.International.Notification'));
+                            }
+
                             $modules = [$selectedModule];
                         }
 
