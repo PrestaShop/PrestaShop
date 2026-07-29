@@ -284,9 +284,13 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         foreach ($updatedProducts as $updatedProduct) {
             $updatedCombinationId = null !== $updatedProduct->getCombinationId() ? $updatedProduct->getCombinationId()->getValue() : 0;
             $affectedOrderDetail = null;
+            $updatedCustomizationId = $updatedProduct->getCustomizationId() !== null
+                ? $updatedProduct->getCustomizationId()->getValue()
+                : 0;
             foreach ($orderDetails as $orderDetailData) {
                 if ((int) $orderDetailData['product_id'] === $updatedProduct->getProductId()->getValue()
-                    && (int) $orderDetailData['product_attribute_id'] === $updatedCombinationId) {
+                    && (int) $orderDetailData['product_attribute_id'] === $updatedCombinationId
+                    && (int) $orderDetailData['id_customization'] === $updatedCustomizationId) {
                     $affectedOrderDetail = new OrderDetail($orderDetailData['id_order_detail']);
                     break;
                 }
