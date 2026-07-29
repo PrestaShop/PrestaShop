@@ -16,15 +16,16 @@ class GetCmsPageCategoryNameForListing
     private ?CmsPageCategoryId $cmsPageCategoryId;
 
     /**
-     * @param int|null $cmsPageCategoryId Explicit category id. Null (or 0)
-     *                                    keeps the legacy behavior: the
-     *                                    handler falls back to the current
-     *                                    HTTP request's `id_cms_category`
-     *                                    query parameter.
+     * @param int|null $cmsPageCategoryId Explicit category id. Null keeps the
+     *                                    legacy behavior: the handler falls
+     *                                    back to the current HTTP request's
+     *                                    `id_cms_category` query parameter.
+     *                                    Any other value is validated by
+     *                                    CmsPageCategoryId (must be > 0).
      */
     public function __construct(?int $cmsPageCategoryId = null)
     {
-        $this->cmsPageCategoryId = ($cmsPageCategoryId !== null && $cmsPageCategoryId > 0)
+        $this->cmsPageCategoryId = $cmsPageCategoryId !== null
             ? new CmsPageCategoryId($cmsPageCategoryId)
             : null;
     }
