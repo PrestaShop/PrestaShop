@@ -26,13 +26,13 @@ class AdminUrlGenerator
     ) {
     }
 
-    public function generateResetPasswordUrl(string $resetToken): string
+    public function generateAdminUrl(string $urlPath): string
     {
         return sprintf(
-            '%s/%s/index.php/reset-password/%s',
+            '%s/%s/index.php%s',
             rtrim($this->shopContext->getBaseURL(), '/'),
             trim($this->adminFolderName, '/'),
-            $resetToken,
+            $urlPath,
         );
     }
 }

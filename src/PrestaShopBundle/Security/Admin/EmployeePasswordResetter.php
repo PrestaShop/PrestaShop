@@ -117,7 +117,7 @@ class EmployeePasswordResetter
 
     private function doSendResetEmail(Employee $employee): void
     {
-        $resetUrl = $this->adminUrlGenerator->generateResetPasswordUrl($employee->getResetPasswordToken());
+        $resetUrl = $this->adminUrlGenerator->generateAdminUrl('/reset-password/' . $employee->getResetPasswordToken());
 
         $params = [
             '{email}' => $employee->getEmail(),
