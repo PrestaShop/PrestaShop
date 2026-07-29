@@ -2244,7 +2244,7 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        $total_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+        $total_quantity = (int) Db::getInstance()->getValue(
             'SELECT SUM(quantity) as quantity
             FROM ' . _DB_PREFIX_ . 'stock_available
             WHERE id_product = ' . (int) $this->id . '

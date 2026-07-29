@@ -4671,7 +4671,7 @@ class CartCore extends ObjectModel
                 'INSERT INTO `' . _DB_PREFIX_ . 'customization` (id_cart, id_product_attribute, id_product, `id_address_delivery`, `in_cart`)
                 VALUES(' . (int) $cart->id . ', ' . (int) $val['id_product_attribute'] . ', ' . (int) $val['id_product'] . ', 0, 1)'
             );
-            $custom_ids[$customization_id] = Db::getInstance(_PS_USE_SQL_SLAVE_)->Insert_ID();
+            $custom_ids[$customization_id] = Db::getInstance()->Insert_ID();
         }
 
         // Insert customized_data
