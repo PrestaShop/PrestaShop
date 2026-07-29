@@ -2692,14 +2692,16 @@ class CartCore extends ObjectModel
      */
     public function getNbOfPackages()
     {
-        if (!isset(static::$cacheNbPackages[$this->id])) {
-            static::$cacheNbPackages[$this->id] = 0;
+        $cacheKey = (int) $this->id . '_' . (int) $this->id_address_delivery;
+
+        if (!isset(static::$cacheNbPackages[$cacheKey])) {
+            static::$cacheNbPackages[$cacheKey] = 0;
             foreach ($this->getPackageList() as $by_address) {
-                static::$cacheNbPackages[$this->id] += count($by_address);
+                static::$cacheNbPackages[$cacheKey] += count($by_address);
             }
         }
 
-        return static::$cacheNbPackages[$this->id];
+        return static::$cacheNbPackages[$cacheKey];
     }
 
     /**
