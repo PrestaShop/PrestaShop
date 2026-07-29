@@ -483,15 +483,24 @@ class ImageCore extends ObjectModel
         if (!isset($combinationImages['new']) || !is_array($combinationImages['new'])) {
             return true;
         }
-        $query = 'INSERT INTO `' . _DB_PREFIX_ . 'product_attribute_image` (`id_product_attribute`, `id_image`) VALUES ';
+        // WHY: the association carries its shop, and the duplicated image was just associated to the
+        // shops of the one it was copied from, so the new rows follow the new image's own shops.
+        $selects = [];
         foreach ($combinationImages['new'] as $idProductAttribute => $imageIds) {
             foreach ($imageIds as $imageId) {
-                $query .= '(' . (int) $idProductAttribute . ', ' . (int) $imageId . '), ';
+                $selects[] = 'SELECT ' . (int) $idProductAttribute . ', `id_image`, `id_shop`
+                    FROM `' . _DB_PREFIX_ . 'image_shop` WHERE `id_image` = ' . (int) $imageId;
             }
         }
-        $query = rtrim($query, ', ');
 
-        return Db::getInstance()->execute($query);
+        if (empty($selects)) {
+            return true;
+        }
+
+        return Db::getInstance()->execute(
+            'INSERT IGNORE INTO `' . _DB_PREFIX_ . 'product_attribute_image` (`id_product_attribute`, `id_image`, `id_shop`) '
+            . implode(' UNION ALL ', $selects)
+        );
     }
 
     /**

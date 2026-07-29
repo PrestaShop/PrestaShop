@@ -379,9 +379,18 @@ class CombinationCore extends ObjectModel
      */
     public function setImages($idsImage)
     {
+        // WHY: the selection belongs to the shops it was made in. Clearing every shop's rows is what
+        // made a save in one shop discard what the others had chosen for the same combination.
+        $shopIds = array_map('intval', Shop::getContextListShopID());
+        if (empty($shopIds)) {
+            $shopIds = [(int) Context::getContext()->shop->id];
+        }
+        $shopList = implode(',', $shopIds);
+
         if (Db::getInstance()->execute('
 			DELETE FROM `' . _DB_PREFIX_ . 'product_attribute_image`
-			WHERE `id_product_attribute` = ' . (int) $this->id) === false) {
+			WHERE `id_product_attribute` = ' . (int) $this->id . '
+			AND `id_shop` IN (' . $shopList . ')') === false) {
             return false;
         }
 
@@ -389,11 +398,13 @@ class CombinationCore extends ObjectModel
             $sqlValues = [];
 
             foreach ($idsImage as $value) {
-                $sqlValues[] = '(' . (int) $this->id . ', ' . (int) $value . ')';
+                foreach ($shopIds as $shopId) {
+                    $sqlValues[] = '(' . (int) $this->id . ', ' . (int) $value . ', ' . $shopId . ')';
+                }
             }
 
             Db::getInstance()->execute(
-                'INSERT INTO `' . _DB_PREFIX_ . 'product_attribute_image` (`id_product_attribute`, `id_image`)
+                'INSERT INTO `' . _DB_PREFIX_ . 'product_attribute_image` (`id_product_attribute`, `id_image`, `id_shop`)
 					VALUES ' . implode(',', $sqlValues)
             );
         }
