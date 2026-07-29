@@ -118,7 +118,7 @@ class PasswordControllerCore extends FrontController
                 $this->errors[] = $this->trans('Customer account not found', [], 'Shop.Notifications.Error');
             } elseif (!$customer->active) {
                 $this->errors[] = $this->trans('You cannot regenerate the password for this account.', [], 'Shop.Notifications.Error');
-            } elseif ($customer->getValidResetPasswordToken() !== $reset_token) {
+            } elseif (!hash_equals((string) $customer->getValidResetPasswordToken(), (string) $reset_token)) {
                 $this->errors[] = $this->trans('The password change request expired. You should ask for a new one.', [], 'Shop.Notifications.Error');
             }
 

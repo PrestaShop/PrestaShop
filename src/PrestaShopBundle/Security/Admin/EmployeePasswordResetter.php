@@ -69,7 +69,7 @@ class EmployeePasswordResetter
 
         if (!empty($employee)
             && $employee->hasValidResetPasswordToken()
-            && $employee->getResetPasswordToken() === $resetPasswordToken) {
+            && hash_equals((string) $employee->getResetPasswordToken(), (string) $resetPasswordToken)) {
             return $employee;
         }
 
