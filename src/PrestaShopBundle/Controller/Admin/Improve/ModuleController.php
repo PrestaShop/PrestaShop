@@ -102,14 +102,25 @@ class ModuleController extends ModuleAbstractController
     public function configureModuleAction(
         string $module_name,
         LegacyContext $legacyContext,
+        Request $request,
     ): Response {
         // When the back office security tokens are disabled, generated admin links no longer
         // contain a query string. Modules that build their configuration form action by
         // concatenating extra query parameters (e.g. the official GDPR module appends
         // "&page=...") then glue those parameters onto the {module_name} route placeholder
         // instead of the query string, leading to a "module not found" 500 error.
-        // We extract the real module name so the configuration page keeps working. See #41314.
-        $module_name = preg_replace('/[^a-zA-Z0-9_-].*$/s', '', $module_name);
+        // We extract the real module name so the configuration page keeps working, and re-inject
+        // the glued parameters into the request query so the module's own getContent() sees them
+        // via Tools::getValue(). See #41314.
+        if (preg_match('/^(?P<name>[a-zA-Z0-9_-]+)(?P<tail>.*)$/s', $module_name, $matches)) {
+            $module_name = $matches['name'];
+            parse_str(ltrim($matches['tail'], '&?'), $gluedParameters);
+            if (!empty($gluedParameters)) {
+                $request->query->add($gluedParameters);
+            }
+        } else {
+            $module_name = '';
+        }
 
         // Get accessed module object
         /** @var ModuleAdapter $module */

@@ -168,6 +168,11 @@ class ModuleControllerTest extends WebTestCase
             // The glued suffix must be stripped before the repository is queried.
             $this->assertSame('ps_emailalerts', $this->capturedConfiguredModuleName);
 
+            // The glued parameters must be re-injected into the request query so the module's own
+            // getContent() sees them via Tools::getValue(), otherwise the link points at the
+            // module's default configuration page rather than the sub-page it was meant to reach.
+            $this->assertSame('dataConsent', $this->client->getRequest()->query->get('page'));
+
             // A missing module must redirect to the module manager instead of triggering a 500.
             $response = $this->client->getResponse();
             $this->assertTrue(
