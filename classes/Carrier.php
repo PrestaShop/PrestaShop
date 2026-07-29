@@ -731,9 +731,12 @@ class CarrierCore extends ObjectModel
         foreach ($result as $k => $row) {
             $carrier = new Carrier((int) $row['id_carrier']);
             $shipping_method = $carrier->getShippingMethod();
-            // A carrier that does not need ranges cannot be judged by them; its price comes from
-            // the module instead.
-            if ($shipping_method != Carrier::SHIPPING_METHOD_FREE && $carrier->need_range) {
+            // Only a carrier module that computes its price externally escapes the range check: its
+            // price comes from the module, so there are no ranges to judge it by. A core carrier
+            // with need_range = 0 is simply one nobody configured ranges for, and it still has to be
+            // filtered out here.
+            $computesItsOwnPrice = $carrier->is_module && !$carrier->need_range;
+            if ($shipping_method != Carrier::SHIPPING_METHOD_FREE && !$computesItsOwnPrice) {
                 /*
                  * First, we check loosely if the carrier is available for the zone with at least one range.
                  * No weight, no price, just check if the carrier has any ranges for the zone.
