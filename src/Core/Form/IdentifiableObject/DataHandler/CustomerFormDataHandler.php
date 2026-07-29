@@ -168,7 +168,7 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             ->setDefaultGroupId((int) $data['default_group_id'])
             ->setGroupIds($groupIds)
             ->setBirthday($data['birthday'] ?: Birthday::EMPTY_BIRTHDAY)
-            ->setLanguageId($data['language_id'])
+            ->setLanguageId((int) $data['language_id'])
         ;
 
         if (null !== $data['password']) {
