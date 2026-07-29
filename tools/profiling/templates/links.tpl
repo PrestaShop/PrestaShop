@@ -5,7 +5,7 @@
 
 <div id="profiling-links">
   <span>Profiling</span>
-  <a download="profiling-report.md" href="data:text/markdown;charset=utf-8;base64,{$profilingMarkdownBase64}">⬇ Download Markdown</a>
+  <a download="profiling-report.md" href="{$profilingMarkdownUrl}">⬇ Download Markdown</a>
   <ol>
     <li>
       <a href="#summary">Summary</a>
