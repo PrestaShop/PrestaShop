@@ -99,16 +99,6 @@ services:
       version: 9.0
     public: true
 
-  prestashop.router:
-    class: PrestaShopBundle\Service\Routing\Router
-    parent: 'router.default'
-    public: true
-    arguments:
-      $container: '@service_container'
-    calls:
-      - [ 'setUserTokenManager', [ '@PrestaShopBundle\Security\Admin\UserTokenManager' ] ]
-      - [ 'setAnonymousRouteProvider', [ '@PrestaShopBundle\Routing\AnonymousRouteProvider' ] ]
-
   PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker:
     arguments:
       - "@prestashop.adapter.legacy.configuration"

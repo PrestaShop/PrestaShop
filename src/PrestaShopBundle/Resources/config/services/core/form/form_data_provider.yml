@@ -143,7 +143,10 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\OrderReturnFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
-      - '@prestashop.router'
+      # The router contract, not the tokenized implementation: in the Admin app this alias resolves
+      # to prestashop.router, so the back office links it builds keep their token, while the front
+      # office and Admin API containers - which never use this provider - still compile.
+      - '@router'
       - '@translator'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
 
