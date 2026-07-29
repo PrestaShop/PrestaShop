@@ -7,15 +7,18 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
+use Db;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\EditCustomerHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+use Shop;
 
 /**
  * Handles commands which edits given customer with provided data.
@@ -63,6 +66,7 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         }
 
         $this->assertCustomerCanAccessDefaultGroup($customer, $command);
+        $this->assertGroupsExistInCustomerShops($customer, $command);
 
         $this->updateCustomerWithCommandData($customer, $command);
 
@@ -239,5 +243,55 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         if (!in_array($defaultGroupId, $groupIds)) {
             throw new CustomerDefaultGroupAccessException(sprintf('Customer default group with id "%s" must be in access groups', $command->getDefaultGroupId()));
         }
+    }
+
+    /**
+     * A group belongs to the shops it is associated with, and a customer to the shops that share
+     * customers with the one it was created in. Assigning a group from outside that set leaves the
+     * customer with a group its own shop cannot resolve.
+     *
+     * WHY the form can offer them at all: the choices come from Group::getGroups($langId, true),
+     * which restricts by the current shop context, so in the All shops context every group of every
+     * shop is listed.
+     *
+     * @throws CustomerConstraintException
+     */
+    private function assertGroupsExistInCustomerShops(Customer $customer, EditCustomerCommand $command): void
+    {
+        // If nothing is updated on groups, nothing to do here
+        if (null === $command->getDefaultGroupId() && null === $command->getGroupIds()) {
+            return;
+        }
+
+        $customerShopIds = Shop::getSharedShops((int) $customer->id_shop, Shop::SHARE_CUSTOMER);
+        if (empty($customerShopIds)) {
+            $customerShopIds = [(int) $customer->id_shop];
+        }
+
+        $groupIds = null === $command->getGroupIds() ? $customer->getGroups() : $command->getGroupIds();
+        if (null !== $command->getDefaultGroupId()) {
+            $groupIds[] = $command->getDefaultGroupId();
+        }
+
+        foreach (array_unique(array_map('intval', $groupIds)) as $groupId) {
+            if (!$this->isGroupAvailableInShops($groupId, $customerShopIds)) {
+                throw new CustomerConstraintException(
+                    sprintf('Customer group with id "%s" does not exist in the shops this customer belongs to', $groupId)
+                );
+            }
+        }
+    }
+
+    /**
+     * @param int[] $shopIds
+     */
+    private function isGroupAvailableInShops(int $groupId, array $shopIds): bool
+    {
+        $shopList = implode(',', array_map('intval', $shopIds));
+
+        return (bool) Db::getInstance()->getValue(
+            'SELECT 1 FROM `' . _DB_PREFIX_ . 'group_shop` WHERE `id_group` = ' . $groupId
+            . ' AND `id_shop` IN (' . $shopList . ')'
+        );
     }
 }
