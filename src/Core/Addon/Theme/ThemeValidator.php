@@ -43,11 +43,12 @@ class ThemeValidator
     {
         $themeName = $theme->getName();
 
-        // A missing name is reported by hasRequiredProperties; here we only make sure a
-        // provided name stays a single, safe directory segment. The name is later
-        // concatenated to _PS_ALL_THEMES_DIR_ to build the theme folder, so a value like
-        // "../../evil" or "/var/www/evil" would let an uploaded theme be written outside themes/.
-        if (empty($themeName) || $this->isSafePathSegment($themeName)) {
+        // The name is later concatenated to _PS_ALL_THEMES_DIR_ to build the theme folder, so a
+        // value like "../../evil" or "/var/www/evil" would let an uploaded theme be written outside
+        // themes/, and an empty name would resolve to the themes root itself. We make sure the name
+        // stays a single, safe directory segment here rather than relying on hasRequiredProperties,
+        // which only checks that the "name" key exists, not that it holds a usable value.
+        if ($this->isSafePathSegment($themeName)) {
             return true;
         }
 
@@ -66,7 +67,7 @@ class ThemeValidator
 
     private function isSafePathSegment($themeName)
     {
-        if ('.' === $themeName || '..' === $themeName) {
+        if (!is_string($themeName) || '' === $themeName || '.' === $themeName || '..' === $themeName) {
             return false;
         }
 

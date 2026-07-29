@@ -82,6 +82,7 @@ class ThemeValidatorTest extends TestCase
         yield 'current dir' => ['.'];
         yield 'parent dir' => ['..'];
         yield 'null byte' => ["evil\0"];
+        yield 'empty name' => [''];
     }
 
     /**
