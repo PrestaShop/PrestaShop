@@ -6693,9 +6693,15 @@ class ProductCore extends ObjectModel
             DELETE FROM `' . _DB_PREFIX_ . 'feature_product`
             WHERE `id_product` = ' . (int) $this->id
         );
-        foreach ($product_features as $product_feature) {
-            $this->addFeaturesToDB($product_feature['id'], $product_feature['id_feature_value']);
+        SpecificPriceRule::disableAnyApplication();
+        try {
+            foreach ($product_features as $product_feature) {
+                $this->addFeaturesToDB($product_feature['id'], $product_feature['id_feature_value']);
+            }
+        } finally {
+            SpecificPriceRule::enableAnyApplication();
         }
+        SpecificPriceRule::applyAllRules([(int) $this->id]);
 
         return true;
     }
