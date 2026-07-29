@@ -12,6 +12,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as DomainEmail;
+use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\LanguageByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Form\Admin\Type\ApeType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
@@ -93,8 +94,8 @@ class CustomerType extends TranslatorAwareType
         $isB2bFeatureEnabled,
         $isPartnerOffersEnabled,
         ConfigurationInterface $configuration,
-        array $languageChoices,
-        FormCloner $formCloner
+        FormCloner $formCloner,
+        LanguageByIdChoiceProvider $languageByIdChoiceProvider,
     ) {
         parent::__construct($translator, $locales);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
@@ -103,7 +104,7 @@ class CustomerType extends TranslatorAwareType
         $this->configuration = $configuration;
         $this->formCloner = $formCloner;
         $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
-        $this->languageChoices = $languageChoices;
+        $this->languageChoices = $languageByIdChoiceProvider->getChoices();
     }
 
     /**

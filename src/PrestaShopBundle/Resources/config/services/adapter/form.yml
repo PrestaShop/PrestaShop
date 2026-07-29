@@ -47,9 +47,6 @@ services:
   prestashop.adapter.form.choice_provider.country_state_by_id:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CountryStateByIdChoiceProvider'
 
-  prestashop.adapter.form.choice_provider.language_by_id_choice_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\LanguageByIdChoiceProvider'
-
   prestashop.adapter.form.choice_provider.order_countries:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\OrderCountriesChoiceProvider'
 

@@ -251,7 +251,6 @@ services:
       $riskChoices: '@=service("prestashop.adapter.form.choice_provider.risk_by_id_choice_provider").getChoices()'
       $isB2bFeatureEnabled: '@=service("prestashop.core.b2b.b2b_feature").isActive()'
       $isPartnerOffersEnabled: '@=service("prestashop.adapter.legacy.configuration").get("PS_CUSTOMER_OPTIN")'
-      $languageChoices: '@=service("prestashop.adapter.form.choice_provider.language_by_id_choice_provider").getChoices()'
 
   PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyType:
     arguments:
