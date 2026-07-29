@@ -111,7 +111,11 @@ class CartAttributeNameWithColonTest extends KernelTestCase
 
         // What the theme actually renders: the presented line must carry the same pair.
         $presented = (new CartPresenter())->present($cart);
-        $presentedLine = reset($presented['products']);
+        // reset() takes its argument by reference and the presented cart is a lazy array, so the
+        // element has to be read into a variable first or PHP raises "indirect modification of
+        // overloaded element ... has no effect".
+        $presentedProducts = $presented['products'];
+        $presentedLine = reset($presentedProducts);
         self::assertArrayHasKey(
             'Colour : shade',
             $presentedLine['attributes'],
