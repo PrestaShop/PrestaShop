@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CannotDisableDefaultLan
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF;
 
 /**
  * Handles command which edits language using legacy object model
@@ -77,15 +78,19 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
             $language->name = $command->getName();
         }
 
-        if (null !== $command->getIsoCode()) {
-            $language->iso_code = $command->getIsoCode()->getValue();
-            if (false !== ($languageDetails = Language::getLangDetails($command->getIsoCode()->getValue()))) {
-                $language->locale = $languageDetails['locale'];
-            }
-        }
-
         if (null !== $command->getTagIETF()) {
             $language->language_code = $command->getTagIETF()->getValue();
+        }
+
+        if (null !== $command->getIsoCode()) {
+            $language->iso_code = $command->getIsoCode()->getValue();
+            // Same as when adding: an ISO code PrestaShop does not ship has no locale to look up,
+            // so fall back to the IETF tag. Read from the language rather than the command, since
+            // the tag is only present when it is being changed too.
+            $languageDetails = Language::getLangDetails($command->getIsoCode()->getValue());
+            $language->locale = false !== $languageDetails
+                ? $languageDetails['locale']
+                : (new TagIETF($language->language_code))->toLocale();
         }
 
         if (null !== $command->getShortDateFormat()) {
