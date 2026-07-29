@@ -26,7 +26,7 @@ class MailSmtpTlsTest extends TestCase
      */
     public function testTheEncryptionSettingDecidesImplicitTls($setting, ?bool $expected, string $because): void
     {
-        self::assertSame($expected, Mail::resolveSmtpTls($setting), $because);
+        self::assertSame($expected, Mail::resolveImplicitTls($setting), $because);
     }
 
     public static function getEncryptionSettings(): array
@@ -47,7 +47,7 @@ class MailSmtpTlsTest extends TestCase
      */
     public function testTheTransportPicksImplicitTlsByPort(int $port, bool $expectedTls, string $because): void
     {
-        $transport = new EsmtpTransport('smtp.example.com', $port, Mail::resolveSmtpTls('tls'));
+        $transport = new EsmtpTransport('smtp.example.com', $port, Mail::resolveImplicitTls('tls'));
 
         $getStream = new ReflectionMethod($transport, 'getStream');
         $getStream->setAccessible(true);

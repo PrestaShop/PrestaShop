@@ -352,7 +352,7 @@ class MailCore extends ObjectModel
             // Connect with the appropriate configuration, either SMTP or sendmail
             if ($configuration['PS_MAIL_METHOD'] == self::METHOD_SMTP) {
                 // Setup TLS configuration
-                $isTls = self::resolveSmtpTls($configuration['PS_MAIL_SMTP_ENCRYPTION'] ?? 'off');
+                $implicitTls = self::resolveImplicitTls($configuration['PS_MAIL_SMTP_ENCRYPTION'] ?? 'off');
 
                 // Setup port configration
                 if (!isset($configuration['PS_MAIL_SMTP_PORT'])) {
@@ -369,7 +369,7 @@ class MailCore extends ObjectModel
                 $transport = (new EsmtpTransport(
                     $configuration['PS_MAIL_SERVER'],
                     $configuration['PS_MAIL_SMTP_PORT'],
-                    $isTls
+                    $implicitTls
                 ))
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD'])
@@ -782,11 +782,11 @@ class MailCore extends ObjectModel
 
         try {
             if ($smtpChecked) {
-                $isTls = self::resolveSmtpTls($smtpEncryption);
+                $implicitTls = self::resolveImplicitTls($smtpEncryption);
                 $transport = (new EsmtpTransport(
                     $smtpServer,
                     $smtpPort,
-                    $isTls
+                    $implicitTls
                 ))
                     ->setUsername($smtpLogin)
                     ->setPassword($smtpPassword)
@@ -1031,17 +1031,23 @@ class MailCore extends ObjectModel
     }
 
     /**
-     * Resolves the third argument of EsmtpTransport, which selects implicit TLS (SMTPS) rather than
-     * STARTTLS.
+     * Value for the third argument of EsmtpTransport, which is not "does this connection use TLS"
+     * but the narrower "open the socket in implicit TLS (SMTPS)". Its three states are:
      *
-     * Forcing it to true for the "tls" setting is what made port 587 unusable: implicit TLS only
-     * answers on 465, while 587 expects a plain connection upgraded with STARTTLS. Returning null
-     * lets the transport pick by port - implicit TLS on 465, STARTTLS anywhere else - which is the
-     * combination Symfony documents as the only one that works.
+     *  - true  force implicit TLS whatever the port is
+     *  - false never implicit TLS, so an encrypted connection is reached by STARTTLS
+     *  - null  let the transport choose by port: implicit TLS on 465, STARTTLS anywhere else
      *
-     * @param bool|string $smtpEncryption "off" or false disables encryption
+     * Only false and null are produced here. true is deliberately never returned: forcing it for
+     * the "tls" setting is what made port 587 unusable, since implicit TLS only answers on 465
+     * while 587 expects a plain connection upgraded with STARTTLS. Leaving the choice to the
+     * transport covers both ports without asking the merchant to know the difference.
+     *
+     * @param bool|string $smtpEncryption "off", "" or false disables encryption
+     *
+     * @return bool|null false to refuse implicit TLS, null to let the port decide
      */
-    public static function resolveSmtpTls($smtpEncryption): ?bool
+    public static function resolveImplicitTls($smtpEncryption): ?bool
     {
         if (false === $smtpEncryption || '' === $smtpEncryption || null === $smtpEncryption) {
             return false;
