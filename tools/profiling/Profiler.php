@@ -368,6 +368,7 @@ class Profiler
 
         $md = "# PrestaShop Profiling Report\n\n";
         $md .= '_Generated: ' . date('Y-m-d H:i:s') . "_\n\n";
+        $md .= "_This report comes from a separate request triggered by the download link, so its timings and query count will not match the panel on the page you downloaded it from._\n\n";
 
         $md .= "## Summary\n\n";
         $md .= '- Load Time: ' . round((float) $vars['summary']['loadTime'], 4) . " s\n";
