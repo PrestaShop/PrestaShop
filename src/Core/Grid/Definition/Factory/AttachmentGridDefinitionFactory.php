@@ -171,6 +171,16 @@ final class AttachmentGridDefinitionFactory extends AbstractFilterableGridDefini
                 (new Filter('file_size', IntegerMinMaxFilterType::class))
                     ->setTypeOptions([
                         'required' => false,
+                        'min_field_options' => [
+                            'attr' => [
+                                'placeholder' => $this->trans('Min (bytes)', [], 'Admin.Actions'),
+                            ],
+                        ],
+                        'max_field_options' => [
+                            'attr' => [
+                                'placeholder' => $this->trans('Max (bytes)', [], 'Admin.Actions'),
+                            ],
+                        ],
                     ])
                     ->setAssociatedColumn('file_size')
             )
