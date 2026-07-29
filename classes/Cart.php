@@ -2661,17 +2661,7 @@ class CartCore extends ObjectModel
                         $id_address = (int) $this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
                     }
 
-                    /*
-                     * We initialize the address object and wrap it in try/catch. This should not be normally needed,
-                     * we are using the method without any safeguard in other places of the code, but there is
-                     * a possibility that someone will pass broken ID manually. If it fails, we just run the method
-                     * again, but without any address specified.
-                     */
-                    try {
-                        $address[$cacheKey] = Address::initialize($id_address);
-                    } catch (Exception $e) {
-                        $address[$cacheKey] = Address::initialize();
-                    }
+                    $address[$cacheKey] = Address::initialize($id_address);
                 }
 
                 $tax_manager = TaxManagerFactory::getManager($address[$cacheKey], (int) Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
