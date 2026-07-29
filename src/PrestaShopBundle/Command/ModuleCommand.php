@@ -11,10 +11,15 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Context\ContextBuilderPreparer;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Module\Query\GetModuleInfos;
+use PrestaShop\PrestaShop\Core\Domain\Module\QueryResult\ModuleInfos;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -32,6 +37,7 @@ class ModuleCommand extends Command
         'upgrade',
         'configure',
         'delete',
+        'status',
     ];
 
     /**
@@ -51,6 +57,7 @@ class ModuleCommand extends Command
         protected readonly ModuleManager $moduleManager,
         protected readonly ContextBuilderPreparer $contextBuilderPreparer,
         protected readonly Configuration $configuration,
+        protected readonly CommandBusInterface $queryBus,
     ) {
         parent::__construct();
     }
@@ -63,7 +70,8 @@ class ModuleCommand extends Command
             ->addArgument('action', InputArgument::REQUIRED, sprintf('Action to execute (Allowed actions: %s).', implode(' / ', $this->allowedActions)))
             ->addArgument('module name', InputArgument::REQUIRED, 'Module on which the action will be executed')
             ->addArgument('file path', InputArgument::OPTIONAL, 'YML file path for configuration')
-            ->addOption('skip-overrides', null, InputOption::VALUE_NONE, 'Skip installing/uninstalling module overrides');
+            ->addOption('skip-overrides', null, InputOption::VALUE_NONE, 'Skip installing/uninstalling module overrides')
+            ->addOption('json', null, InputOption::VALUE_NONE, 'For the "status" action, output the status as a JSON object instead of a table.');
     }
 
     protected function init(InputInterface $input, OutputInterface $output)
@@ -112,6 +120,8 @@ class ModuleCommand extends Command
         try {
             if ($action === 'configure') {
                 $this->executeConfigureModuleAction($moduleName, $file);
+            } elseif ($action === 'status') {
+                return $this->executeStatusModuleAction($moduleName, (bool) $input->getOption('json'));
             } else {
                 $this->executeGenericModuleAction($action, $moduleName);
             }
@@ -153,6 +163,54 @@ class ModuleCommand extends Command
             $this->translator->trans('Configuration successfully applied.', [], 'Admin.Modules.Notification'),
             'info'
         );
+    }
+
+    /**
+     * Read-only action: reports whether the module is installed and enabled, along with its versions.
+     */
+    protected function executeStatusModuleAction(string $moduleName, bool $asJson): int
+    {
+        try {
+            /** @var ModuleInfos $moduleInfos */
+            $moduleInfos = $this->queryBus->handle(new GetModuleInfos($moduleName));
+        } catch (ModuleNotFoundException) {
+            $this->displayMessage(
+                $this->translator->trans(
+                    'Module %module% was not found on disk.',
+                    ['%module%' => $moduleName],
+                    'Admin.Modules.Notification'
+                ),
+                'error'
+            );
+
+            return 1;
+        }
+
+        if ($asJson) {
+            $this->output->writeln((string) json_encode([
+                'technical_name' => $moduleInfos->getTechnicalName(),
+                'module_id' => $moduleInfos->getModuleId(),
+                'installed' => $moduleInfos->isInstalled(),
+                'enabled' => $moduleInfos->isEnabled(),
+                'version' => $moduleInfos->getModuleVersion(),
+                'installed_version' => $moduleInfos->getInstalledVersion(),
+            ]));
+
+            return 0;
+        }
+
+        $table = new Table($this->output);
+        $table->setRows([
+            ['Technical name', $moduleInfos->getTechnicalName()],
+            ['Module ID', null === $moduleInfos->getModuleId() ? '-' : (string) $moduleInfos->getModuleId()],
+            ['Installed', $moduleInfos->isInstalled() ? 'yes' : 'no'],
+            ['Enabled', $moduleInfos->isEnabled() ? 'yes' : 'no'],
+            ['Version (disk)', $moduleInfos->getModuleVersion()],
+            ['Version (installed)', $moduleInfos->getInstalledVersion() ?? '-'],
+        ]);
+        $table->render();
+
+        return 0;
     }
 
     protected function executeGenericModuleAction($action, $moduleName)
