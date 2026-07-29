@@ -102,6 +102,13 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         if (isset($requestParams['saveAddress'])) {
             $saved = $this->addressForm->fillWith($requestParams)->submit();
             if (!$saved) {
+                if (!$this->addressForm->hasErrors()) {
+                    $this->context->controller->errors[] = $this->getTranslator()->trans(
+                        'Could not save address.',
+                        [],
+                        'Shop.Notifications.Error'
+                    );
+                }
                 $this->setCurrent(true);
                 $this->getCheckoutProcess()->setHasErrors(true);
                 if ($requestParams['saveAddress'] === 'delivery') {
