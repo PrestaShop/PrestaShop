@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class SetCombinationImagesCommand
 {
@@ -27,8 +28,14 @@ class SetCombinationImagesCommand
      * @param int $combinationId
      * @param array $imageIds
      */
-    public function __construct(int $combinationId, array $imageIds)
+    /**
+     * @var ShopConstraint|null
+     */
+    private $shopConstraint;
+
+    public function __construct(int $combinationId, array $imageIds, ?ShopConstraint $shopConstraint = null)
     {
+        $this->shopConstraint = $shopConstraint;
         $this->combinationId = new CombinationId($combinationId);
         $this->imageIds = array_map(function (int $imageId) { return new ImageId($imageId); }, $imageIds);
     }
@@ -47,5 +54,14 @@ class SetCombinationImagesCommand
     public function getImageIds(): array
     {
         return $this->imageIds;
+    }
+
+    /**
+     * @return ShopConstraint|null Null when the caller has no shop context, which keeps the
+     *                             historical behaviour of writing across every shop
+     */
+    public function getShopConstraint(): ?ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }
