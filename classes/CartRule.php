@@ -1447,6 +1447,42 @@ class CartRuleCore extends ObjectModel
      *
      * @return float|int|string
      */
+    /**
+     * How much of the cart survives the rules already applied, as a fraction of what it started at.
+     * An amount taken off the order total is spread over the lines in proportion to their value, so
+     * a line that has been through it is worth this much of its original price.
+     *
+     * Returns 1 when there is no running total to compare against: getContextualValue() is also
+     * called outside the loop that maintains it, and then nothing has been applied yet to account for.
+     *
+     * @param Context $context
+     * @param bool $useTax
+     * @param float $cartAmountTaxIncluded
+     * @param float $cartAmountTaxExcluded
+     *
+     * @return float
+     */
+    private function getAlreadyReducedRatio(Context $context, $useTax, $cartAmountTaxIncluded, $cartAmountTaxExcluded)
+    {
+        $runningTotal = $useTax ? $context->virtualTotalTaxIncluded : $context->virtualTotalTaxExcluded;
+        // What the running total started at, recorded beside it. Deliberately not CartRule's static
+        // cart-amount cache: that is filled the first time a cart is priced in the request and never
+        // refreshed, so adding a product afterwards leaves it holding a smaller cart than the one
+        // being priced. It falls back to that cache only when no running total was set up at all.
+        $originalTotal = $useTax ? $context->virtualTotalBaseTaxIncluded : $context->virtualTotalBaseTaxExcluded;
+        if (empty($originalTotal)) {
+            $originalTotal = $useTax ? $cartAmountTaxIncluded : $cartAmountTaxExcluded;
+        }
+
+        if (empty($runningTotal) || $originalTotal <= 0) {
+            return 1.0;
+        }
+
+        // A rule can take the cart below zero on paper; a line is never worth less than nothing, and
+        // never more than it started at.
+        return max(0.0, min(1.0, $runningTotal / $originalTotal));
+    }
+
     public function getContextualValue($use_tax, ?Context $context = null, $filter = null, $package = null, $use_cache = true)
     {
         if (!CartRule::isFeatureActive()) {
@@ -1591,9 +1627,16 @@ class CartRuleCore extends ObjectModel
 
             // Discount (%) on a specific product
             if ((float) $this->reduction_percent && $this->reduction_product > 0) {
+                // Rules are applied one after another, so a percentage reaching a product line has to
+                // see what earlier rules already took off it - which is what the percentage on the
+                // order total does a few lines above by reading the running total. Without it the
+                // line printed under the cart is computed on the undiscounted price while the total
+                // charged is not, and the two stop adding up.
+                $alreadyReducedRatio = $this->getAlreadyReducedRatio($context, $use_tax, $cart_amount_ti, $cart_amount_te);
                 foreach ($package_products as $product) {
                     if ($product['id_product'] == $this->reduction_product && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
-                        $reduction_value += ($use_tax ? $product['total_wt'] : $product['total']) * $this->reduction_percent / 100;
+                        $productTotal = ($use_tax ? $product['total_wt'] : $product['total']) * $alreadyReducedRatio;
+                        $reduction_value += $productTotal * $this->reduction_percent / 100;
                     }
                 }
             }
