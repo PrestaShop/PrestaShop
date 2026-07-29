@@ -1821,7 +1821,7 @@ class FrontControllerCore extends Controller
         }
 
         $page_name = $this->getPageName();
-        $meta_tags = Meta::getMetaTags($this->context->language->id, $page_name);
+        $meta_tags = Meta::getMetaTags($this->context->language->id, $this->getMetaPageName($page_name));
 
         $my_account_controllers = [
             'address',
@@ -2063,6 +2063,32 @@ class FrontControllerCore extends Controller
     protected function getCurrentURL()
     {
         return Tools::getCurrentUrl();
+    }
+
+    /**
+     * The page a controller is configured under in SEO & URLs, which is not always the name it
+     * presents to the theme.
+     *
+     * WHY: getPageName() answers with $page_name when it is set, and that is what the theme uses for
+     * its body class and template. A controller can be registered in the meta table under its
+     * $php_self instead - the order page is "checkout" for the theme and "order" in the table - and
+     * looking only at the first one silently lost the title and description the merchant configured.
+     *
+     * @param string $pageName
+     *
+     * @return string
+     */
+    protected function getMetaPageName($pageName)
+    {
+        if (empty($this->php_self) || $this->php_self === $pageName) {
+            return $pageName;
+        }
+
+        if (Meta::getMetaByPage($pageName, $this->context->language->id)) {
+            return $pageName;
+        }
+
+        return $this->php_self;
     }
 
     public function getPageName()
