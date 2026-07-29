@@ -86,10 +86,14 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
 
     /**
      * This method checks that:
-     * - Only defined configuration fields exist
+     * - Defined configuration fields hold valid values
      * - In single or group shop context, multistore fields are added to the list of defined fields, so that no error
      * is triggered because of additional checkboxes
      * - In all shop context, all fields are required
+     *
+     * Fields that a module added to the form through the `action<Page>Form` hook are left out of the check:
+     * they are not core configuration, the module saves them itself in the matching `action<Page>Save` hook,
+     * and they reach this method in the same array as the core ones.
      *
      * @param array $configurationInputValues
      *
@@ -112,7 +116,7 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
             $resolver->setRequired($definedOptions);
         }
 
-        $resolver->resolve($configurationInputValues);
+        $resolver->resolve(array_intersect_key($configurationInputValues, array_flip($fields)));
 
         return true;
     }
