@@ -216,6 +216,11 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
             if ((int) $orderDetail->product_attribute_id !== (int) $orderDetailData['product_attribute_id']) {
                 continue;
             }
+            // WHY: two lines of the same product and combination are still distinct when they carry
+            // different customizations, and the rest of this handler treats them that way.
+            if ((int) $orderDetail->id_customization !== (int) $orderDetailData['id_customization']) {
+                continue;
+            }
             $invoicesContainingProduct[] = (int) $orderDetailData['id_order_invoice'];
         }
 
