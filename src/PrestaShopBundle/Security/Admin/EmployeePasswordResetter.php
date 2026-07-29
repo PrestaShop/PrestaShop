@@ -12,10 +12,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\UnexpectedResultException;
 use Mail;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShopBundle\Entity\Employee\Employee;
 use PrestaShopBundle\Entity\Repository\EmployeeRepository;
+use PrestaShopBundle\Routing\AdminUrlGenerator;
 use PrestaShopBundle\Security\Admin\Exception\PasswordResetTemporarilyBlockedException;
 use RuntimeException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -28,10 +28,9 @@ class EmployeePasswordResetter
         private readonly ConfigurationInterface $configuration,
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
-        private readonly ShopContext $shopContext,
+        private readonly AdminUrlGenerator $adminUrlGenerator,
         private readonly Hashing $hashing,
         private readonly string $cookieKey,
-        private readonly string $adminFolderName,
     ) {
     }
 
@@ -118,15 +117,7 @@ class EmployeePasswordResetter
 
     private function doSendResetEmail(Employee $employee): void
     {
-        // Build the reset URL manually so it works regardless of the current request context
-        // (admin, admin-api, CLI): both kernels expose the "prestashop.admin_folder_name" container
-        // parameter, but the "admin_reset_password" route is only registered in the admin kernel.
-        $resetUrl = sprintf(
-            '%s/%s/index.php/reset-password/%s',
-            rtrim($this->shopContext->getBaseURL(), '/'),
-            trim($this->adminFolderName, '/'),
-            $employee->getResetPasswordToken(),
-        );
+        $resetUrl = $this->adminUrlGenerator->generateResetPasswordUrl($employee->getResetPasswordToken());
 
         $params = [
             '{email}' => $employee->getEmail(),
