@@ -519,8 +519,6 @@ class CartLazyArray extends AbstractLazyArray
     private function presentProduct(array $rawProduct)
     {
         if (isset($rawProduct['attributes']) && is_string($rawProduct['attributes'])) {
-            // The cart carries the group/value pairs as they were read; parsing the flattened
-            // string is only a fallback for rows built by something other than Cart::getProducts().
             $rawProduct['attributes'] = !empty($rawProduct['attributes_array'])
                 ? $rawProduct['attributes_array']
                 : $this->cartPresenter->getAttributesArrayFromString($rawProduct['attributes']);

@@ -17,13 +17,9 @@ use Language;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\Integration\Utility\ContextMocker;
 use Tests\Resources\DatabaseDump;
 
-/**
- * The cart flattens each attribute into "group<colon>value" and used to parse that text back into
- * pairs. A group or attribute name may itself contain the colon - the back office allows it - and
- * then the pair cannot be recovered, so the attribute silently disappeared from the cart.
- */
 class CartAttributeNameWithColonTest extends KernelTestCase
 {
     private const TABLES_TO_RESTORE = ['attribute_group_lang'];
@@ -31,6 +27,20 @@ class CartAttributeNameWithColonTest extends KernelTestCase
 
     private static int $cartId;
     private static int $groupId;
+
+    private ContextMocker $contextMocker;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->contextMocker = (new ContextMocker())->mockContext();
+    }
+
+    protected function tearDown(): void
+    {
+        $this->contextMocker->resetContext();
+        parent::tearDown();
+    }
 
     public static function setUpBeforeClass(): void
     {
@@ -111,19 +121,17 @@ class CartAttributeNameWithColonTest extends KernelTestCase
 
         // What the theme actually renders: the presented line must carry the same pair.
         $presented = (new CartPresenter())->present($cart);
-        $presentedLine = reset($presented['products']);
+        // reset() takes its argument by reference and the presented cart is a lazy array, so the
+        // element has to be read into a variable first or PHP raises "indirect modification of
+        // overloaded element ... has no effect".
+        $presentedProducts = $presented['products'];
+        $presentedLine = reset($presentedProducts);
         self::assertArrayHasKey(
             'Colour : shade',
             $presentedLine['attributes'],
             'the presented cart line lost the group name containing a colon'
         );
-
-        // The flattened text cannot express it, which is why the pairs are kept alongside it.
-        self::assertArrayNotHasKey(
-            'Colour : shade',
-            (new CartPresenter())->getAttributesArrayFromString($line['attributes']),
-            'if parsing the text recovered the name, keeping the pairs would be pointless'
-        );
+        self::assertSame($this->expectedAttributeName(), $presentedLine['attributes']['Colour : shade']);
     }
 
     private function expectedAttributeName(): string
