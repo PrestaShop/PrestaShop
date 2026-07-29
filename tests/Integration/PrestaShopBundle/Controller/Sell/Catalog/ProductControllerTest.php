@@ -14,6 +14,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory;
+use Product;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
 use Tests\Integration\PrestaShopBundle\Controller\FormGridControllerTestCase;
@@ -268,6 +270,74 @@ class ProductControllerTest extends FormGridControllerTestCase
     /**
      * {@inheritDoc}
      */
+    /**
+     * The export writes its own rows instead of reusing the grid columns, so the price it writes has
+     * to be the one the listing shows: ps.price, not ps.price + ecotax.
+     */
+    public function testExportUsesTheDisplayedPrice(): void
+    {
+        $product = new Product(1);
+        $originalEcotax = $product->ecotax;
+        $product->ecotax = 3.5;
+        $product->save();
+
+        // The export follows whatever filter the grid currently holds, and that filter is stored per
+        // employee, so a test that ran before this one leaves its own filter behind - re-submitting
+        // the form does not clear it, since the form renders with those values already in it.
+        $this->client->request('POST', $this->router->generate(
+            'admin_common_reset_search_by_filter_id',
+            ['filterId' => ProductGridDefinitionFactory::GRID_ID]
+        ));
+
+        try {
+            $this->client->request('GET', $this->router->generate('admin_products_export'));
+            // The streamed body is already consumed by the test client, so it is read from there
+            // rather than by calling sendContent() again.
+            $csv = (string) $this->client->getInternalResponse()->getContent();
+        } finally {
+            $product->ecotax = $originalEcotax;
+            $product->save();
+        }
+
+        $rows = array_map(
+            static fn (string $line): array => str_getcsv($line, ';'),
+            array_filter(explode("\n", trim($csv)))
+        );
+        $headers = array_shift($rows);
+        $priceColumn = array_search('Price (tax excl.)', $headers, true);
+        $this->assertNotFalse($priceColumn, 'The tax excluded price column is missing from the export');
+
+        $exportedRow = null;
+        foreach ($rows as $row) {
+            if ((int) $row[0] === 1) {
+                $exportedRow = $row;
+
+                break;
+            }
+        }
+
+        $this->assertNotNull($exportedRow, 'Product 1 is missing from the export');
+        // The cell carries the formatted price, so only its digits are compared.
+        $this->assertSame(
+            number_format((float) $product->price, 2, '.', ''),
+            preg_replace('/[^0-9.]/', '', $exportedRow[$priceColumn]),
+            'The exported price must be the one the listing shows, without the ecotax added on top'
+        );
+    }
+
+    /**
+     * The listing has a status column and the export writes its own header list, so it used to drop it.
+     */
+    public function testExportIncludesTheStatusColumn(): void
+    {
+        $this->client->request('GET', $this->router->generate('admin_products_export'));
+        $csv = (string) $this->client->getInternalResponse()->getContent();
+
+        $headers = str_getcsv(strtok(trim($csv), "\n"), ';');
+
+        $this->assertNotFalse(array_search('Status', $headers, true), 'The status column is missing from the export');
+    }
+
     protected function getFilterSearchButtonSelector(): string
     {
         return 'product[actions][search]';
