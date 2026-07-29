@@ -352,11 +352,7 @@ class MailCore extends ObjectModel
             // Connect with the appropriate configuration, either SMTP or sendmail
             if ($configuration['PS_MAIL_METHOD'] == self::METHOD_SMTP) {
                 // Setup TLS configuration
-                if (!isset($configuration['PS_MAIL_SMTP_ENCRYPTION']) || Tools::strtolower($configuration['PS_MAIL_SMTP_ENCRYPTION']) === 'off') {
-                    $isTls = false;
-                } else {
-                    $isTls = true;
-                }
+                $isTls = self::resolveSmtpTls($configuration['PS_MAIL_SMTP_ENCRYPTION'] ?? 'off');
 
                 // Setup port configration
                 if (!isset($configuration['PS_MAIL_SMTP_PORT'])) {
@@ -786,11 +782,7 @@ class MailCore extends ObjectModel
 
         try {
             if ($smtpChecked) {
-                if (Tools::strtolower($smtpEncryption) === 'off') {
-                    $isTls = false;
-                } else {
-                    $isTls = true;
-                }
+                $isTls = self::resolveSmtpTls($smtpEncryption);
                 $transport = (new EsmtpTransport(
                     $smtpServer,
                     $smtpPort,
@@ -1036,5 +1028,25 @@ class MailCore extends ObjectModel
         }
 
         return $recipientsTo;
+    }
+
+    /**
+     * Resolves the third argument of EsmtpTransport, which selects implicit TLS (SMTPS) rather than
+     * STARTTLS.
+     *
+     * Forcing it to true for the "tls" setting is what made port 587 unusable: implicit TLS only
+     * answers on 465, while 587 expects a plain connection upgraded with STARTTLS. Returning null
+     * lets the transport pick by port - implicit TLS on 465, STARTTLS anywhere else - which is the
+     * combination Symfony documents as the only one that works.
+     *
+     * @param bool|string $smtpEncryption "off" or false disables encryption
+     */
+    public static function resolveSmtpTls($smtpEncryption): ?bool
+    {
+        if (false === $smtpEncryption || '' === $smtpEncryption || null === $smtpEncryption) {
+            return false;
+        }
+
+        return Tools::strtolower((string) $smtpEncryption) === 'off' ? false : null;
     }
 }
