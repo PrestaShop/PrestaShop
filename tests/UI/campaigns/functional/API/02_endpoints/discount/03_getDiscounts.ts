@@ -10,6 +10,7 @@ import {
   boFeatureFlagPage,
   boLoginPage,
   type BrowserContext,
+  dataDiscountTypes,
   FakerDiscount,
   type Page,
   utilsAPI,
@@ -187,9 +188,10 @@ describe('API : GET /admin-api/discounts', async () => {
         const discountId = parseInt((await boDiscountsPage.getTextColumn(page, 'id_discount', 1)).toString(), 10);
         expect(discountId).to.equal(jsonResponse.items[idxItem].discountId);
 
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/41110
-        //const type = await boDiscountsPage.getTextColumn(page, 'type', 1);
-        //expect(type).to.equal(jsonResponse.items[idxItem].type);
+        const type = await boDiscountsPage.getTextColumn(page, 'discount_type', 1);
+        expect(type).to.equal(
+          dataDiscountTypes[jsonResponse.items[idxItem].type as keyof typeof dataDiscountTypes],
+        );
 
         const name = await boDiscountsPage.getTextColumn(page, 'name', 1);
         expect(name).to.equal(jsonResponse.items[idxItem].name);

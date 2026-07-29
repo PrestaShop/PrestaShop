@@ -11,6 +11,7 @@ import {
   boFeatureFlagPage,
   boLoginPage,
   type BrowserContext,
+  dataLanguages,
   type Page,
   utilsAPI,
   utilsPlaywright,
@@ -106,9 +107,29 @@ describe('API : GET /admin-api/discounts/types', async () => {
       expect(pageTitle).to.contains(boDiscountsPage.pageTitle);
     });
 
-    //@todo : https://github.com/PrestaShop/PrestaShop/issues/41110
-    it.skip('should check the JSON Response', async function () {
+    it('should check the JSON Response', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponse', baseContext);
+
+      await boDiscountsPage.clickOnCreateDiscountButton(page);
+      expect(jsonResponse.length).to.be.greaterThan(0);
+
+      for (let idxItem: number = 0; idxItem < jsonResponse.length; idxItem++) {
+        if (jsonResponse[idxItem].type === 'order_level') {
+          // @todo : https://github.com/PrestaShop/PrestaShop/issues/42209
+          this.skip();
+        }
+
+        const hasDiscountType = await boDiscountsPage.hasDiscountType(page, jsonResponse[idxItem].type);
+        expect(hasDiscountType).to.equals(true);
+
+        const discountType = await boDiscountsPage.getDiscountType(page, jsonResponse[idxItem].type);
+        expect(discountType.core).to.equals(jsonResponse[idxItem].core);
+        // descriptions
+        // discountTypeId
+        expect(discountType.enabled).to.equals(jsonResponse[idxItem].enabled);
+        expect(discountType.name).to.contains(jsonResponse[idxItem].names[dataLanguages.english.locale]);
+        expect(discountType.type).to.equals(jsonResponse[idxItem].type);
+      }
     });
   });
 

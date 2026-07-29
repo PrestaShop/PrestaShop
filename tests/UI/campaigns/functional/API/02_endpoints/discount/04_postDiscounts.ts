@@ -44,6 +44,8 @@ describe('API : POST /admin-api/discounts', async () => {
     discountCode: 'test',
     discountCompatibilityTypes: [2, 3],
     priority: 5,
+    enabled: true,
+    highlightInCart: true,
   });
   const today: string = utilsDate.getDateFormat('yyyy-mm-dd');
 
@@ -84,6 +86,8 @@ describe('API : POST /admin-api/discounts', async () => {
         priority: dataDiscount.priority,
         code: dataDiscount.discountCode,
         compatibleDiscountTypeIds: dataDiscount.discountCompatibilityTypes,
+        enabled: dataDiscount.enabled,
+        highlightInCart: dataDiscount.highlightInCart,
       };
 
       if (dataDiscount.discountReductionType === '%') {
@@ -135,7 +139,6 @@ describe('API : POST /admin-api/discounts', async () => {
         'enabled',
         'giftCombinationId',
         'giftProductId',
-        // @todo : https://github.com/PrestaShop/PrestaShop/issues/41197
         'highlightInCart',
         'minimumAmount',
         'minimumProductQuantity',
@@ -163,7 +166,7 @@ describe('API : POST /admin-api/discounts', async () => {
       });
       expect(jsonResponse.description).to.equal(dataDiscount.description);
       expect(jsonResponse.code).to.equal(dataDiscount.discountCode);
-      expect(jsonResponse.enabled).to.equals(false);
+      expect(jsonResponse.enabled).to.equals(dataDiscount.enabled);
       expect(jsonResponse.totalQuantity).to.equals(null);
       expect(jsonResponse.quantityPerUser).to.equals(null);
       expect(jsonResponse.reductionPercent).to.equals(null);
@@ -190,8 +193,7 @@ describe('API : POST /admin-api/discounts', async () => {
       expect(jsonResponse.carrierIds).to.deep.equal([]);
       expect(jsonResponse.countryIds).to.deep.equal([]);
       expect(jsonResponse.compatibleDiscountTypeIds).to.deep.equal(dataDiscount.discountCompatibilityTypes);
-      // @todo : https://github.com/PrestaShop/PrestaShop/issues/41197
-      expect(jsonResponse.highlightInCart).to.equals(false);
+      expect(jsonResponse.highlightInCart).to.equals(dataDiscount.highlightInCart);
       // @todo : https://github.com/PrestaShop/PrestaShop/issues/41198
       expect(jsonResponse.allowPartialUse).to.equals(true);
       expect(jsonResponse.priority).to.equals(dataDiscount.priority);
@@ -433,11 +435,11 @@ describe('API : POST /admin-api/discounts', async () => {
       );
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/41197
-    it.skip('should check the JSON Response : `highlightInCart`', async function () {
+    it('should check the JSON Response : `highlightInCart`', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkResponseHighlightInCart', baseContext);
 
-      expect(jsonResponse.highlightInCart).to.equals(false);
+      const value = await boDiscountsCreatePage.getValue(page, 'highlight_in_cart');
+      expect(jsonResponse.highlightInCart).to.be.equal(value === '1');
     });
 
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/41198
