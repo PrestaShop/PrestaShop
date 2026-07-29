@@ -53,6 +53,23 @@ export default class CartEditor {
   }
 
   /**
+   * Stores the order message typed while the order is still being prepared.
+   *
+   * The cart summary is deliberately not refreshed here: re-rendering it would replace the
+   * textarea the user is still typing in.
+   *
+   * @param {Number} cartId
+   * @param {String} orderMessage
+   */
+  changeOrderMessage(cartId: number, orderMessage: string): void {
+    $.post(this.router.generate('admin_carts_set_order_message', {cartId}), {
+      orderMessage,
+    })
+      .catch((response: Record<string, any>) => window.showErrorMessage(response.responseJSON.message),
+      );
+  }
+
+  /**
    * Modifies cart delivery option
    *
    * @param {Number} cartId
