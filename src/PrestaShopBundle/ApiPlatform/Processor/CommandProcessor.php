@@ -82,15 +82,16 @@ class CommandProcessor implements ProcessorInterface
      */
     protected function denormalizeCommandResult(mixed $commandResult, Operation $operation, array $uriVariables): mixed
     {
+        // If the command returned a scalar value (e.g. a generated secret string) it can't be merged
+        // with the URI variables, so wrap it behind a "_commandResult" key that the mapping can then
+        // target (same principle as "_queryResult" for scalar query results).
+        if (is_scalar($commandResult)) {
+            $commandResult = ['_commandResult' => $commandResult];
+        }
+
         $normalizedCommandResult = [];
         if (!empty($commandResult)) {
             $normalizedCommandResult = $this->domainSerializer->normalize($commandResult, null, [NormalizationMapper::NORMALIZATION_MAPPING => $this->getCQRSCommandMapping($operation)]);
-        }
-        // If the command returned a scalar value (e.g. a generated secret string) it can't be merged
-        // with the URI variables, so wrap it behind a "_commandResult" key that resources can map to a
-        // property (same principle as "_queryResult" for scalar query results).
-        if (is_scalar($normalizedCommandResult)) {
-            $normalizedCommandResult = ['_commandResult' => $normalizedCommandResult];
         }
         // Merge uri variables and normalized command result to have all needed data to create the CQRS query (it probably contains all the needed info to create the CQRS query)
         $normalizedCommandResult = array_merge($uriVariables, $normalizedCommandResult, $this->contextParametersProvider->getContextParameters());
