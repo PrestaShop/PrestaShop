@@ -817,7 +817,13 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
             ->addSelect('p.reference as product_reference')
             ->addSelect('pa.reference as combination_reference')
             ->addSelect('ai.id_image as combination_image_id')
-            ->leftJoin('p', $this->dbPrefix . 'product_attribute_image', 'ai', 'ai.id_product_attribute = pa.id_product_attribute')
+            ->leftJoin(
+                'p',
+                $this->dbPrefix . 'product_attribute_image',
+                'ai',
+                'ai.id_product_attribute = pa.id_product_attribute AND ai.id_shop = :combinationImageShopId'
+            )
+            ->setParameter('combinationImageShopId', $shopId->getValue())
             ->addGroupBy('p.id_product, pa.id_product_attribute')
             ->addOrderBy('pl.name', 'ASC')
             ->addOrderBy('p.id_product', 'ASC')

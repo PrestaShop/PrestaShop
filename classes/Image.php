@@ -214,7 +214,8 @@ class ImageCore extends ObjectModel
 					INNER JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop
 						ON (i.id_image = image_shop.id_image AND image_shop.id_shop = ' . (int) $idShop . ')
 						INNER JOIN `' . _DB_PREFIX_ . 'product_attribute_image` pai
-						ON (pai.`id_image` = i.`id_image` AND pai.`id_product_attribute` = ' . (int) $idProductAttribute . ')
+						ON (pai.`id_image` = i.`id_image` AND pai.`id_product_attribute` = ' . (int) $idProductAttribute . '
+							AND pai.`id_shop` = ' . (int) $idShop . ')
 					LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il
 						ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $idLang . ')
 					WHERE i.`id_product` = ' . (int) $idProduct . ' ORDER BY i.`position` ASC');

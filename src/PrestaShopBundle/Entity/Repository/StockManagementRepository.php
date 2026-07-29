@@ -560,9 +560,11 @@ abstract class StockManagementRepository
         $query = 'SELECT id_image
                   FROM ' . $this->tablePrefix . 'product_attribute_image pai
                   WHERE id_product_attribute=:id_product_attribute
+                  AND id_shop=:id_shop
                   LIMIT 1';
         $statement = $this->connection->prepare($query);
         $statement->bindValue('id_product_attribute', (int) $row['combination_id'], PDO::PARAM_INT);
+        $statement->bindValue('id_shop', $this->getContextualShopId(), PDO::PARAM_INT);
         $result = $statement->executeQuery();
         $combinationCoverId = (int) $result->fetchOne();
         $result->free();
