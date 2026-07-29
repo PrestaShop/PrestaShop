@@ -387,8 +387,9 @@ class RequirementCollection implements IteratorAggregate
  */
 class SymfonyRequirements extends RequirementCollection
 {
-    const LEGACY_REQUIRED_PHP_VERSION = '5.3.3';
-    const REQUIRED_PHP_VERSION = '5.5.9';
+    const LEGACY_REQUIRED_PHP_VERSION = '8.1';
+    const REQUIRED_PHP_VERSION = '8.1';
+    const MAXIMUM_PHP_VERSION = '8.5';
 
     /**
      * Constructor that initializes the requirements.
@@ -399,6 +400,7 @@ class SymfonyRequirements extends RequirementCollection
 
         $installedPhpVersion = PHP_VERSION;
         $requiredPhpVersion = $this->getPhpRequiredVersion();
+        $maximumPhpVersion = $this->getMaximumPhpVersion();
 
         $this->addRecommendation(
             $requiredPhpVersion,
@@ -421,11 +423,19 @@ class SymfonyRequirements extends RequirementCollection
             );
         }
 
-        $this->addRequirement(
-            version_compare($installedPhpVersion, '5.3.16', '!='),
-            'PHP version must not be 5.3.16 as Symfony won\'t work properly with it',
-            'Install PHP 5.3.17 or newer (or downgrade to an earlier PHP version)'
-        );
+        if (false !== $maximumPhpVersion) {
+            $this->addRequirement(
+                version_compare($installedPhpVersion, $maximumPhpVersion, '<='),
+                sprintf('PHP version must be %s or lower (%s installed)', $maximumPhpVersion, $installedPhpVersion),
+                sprintf(
+                    'You are running PHP version "<strong>%s</strong>", but Symfony needs PHP "<strong>%s</strong>" or lower to run.
+                Before using Symfony, upgrade your PHP installation, preferably to the latest version.',
+                    $installedPhpVersion,
+                    $maximumPhpVersion
+                ),
+                sprintf('Install PHP %s or lower (installed version is %s)', $maximumPhpVersion, $installedPhpVersion)
+            );
+        }
 
         $this->addRequirement(
             is_dir(__DIR__.'/../vendor/composer'),
@@ -449,16 +459,6 @@ class SymfonyRequirements extends RequirementCollection
             'app/logs/ or var/logs/ directory must be writable',
             'Change the permissions of either "<strong>app/logs/</strong>" or  "<strong>var/logs/</strong>" directory so that the web server can write into it.'
         );
-
-        if (version_compare($installedPhpVersion, '7.0.0', '<')) {
-            $this->addPhpIniRequirement(
-                'date.timezone',
-                true,
-                false,
-                'date.timezone setting must be set',
-                'Set the "<strong>date.timezone</strong>" setting in php.ini<a href="#phpini">*</a> (like Europe/Paris).'
-            );
-        }
 
         if (false !== $requiredPhpVersion && version_compare($installedPhpVersion, $requiredPhpVersion, '>=')) {
             $this->addRequirement(
@@ -505,19 +505,11 @@ class SymfonyRequirements extends RequirementCollection
         );
 
         if (function_exists('apc_store') && ini_get('apc.enabled')) {
-            if (version_compare($installedPhpVersion, '5.4.0', '>=')) {
-                $this->addRequirement(
-                    version_compare(phpversion('apc'), '3.1.13', '>='),
-                    'APC version must be at least 3.1.13 when using PHP 5.4',
-                    'Upgrade your <strong>APC</strong> extension (3.1.13+).'
-                );
-            } else {
-                $this->addRequirement(
-                    version_compare(phpversion('apc'), '3.0.17', '>='),
-                    'APC version must be at least 3.0.17',
-                    'Upgrade your <strong>APC</strong> extension (3.0.17+).'
-                );
-            }
+            $this->addRequirement(
+                version_compare(phpversion('apc'), '3.1.13', '>='),
+                'APC version must be at least 3.1.13 when using PHP 5.4',
+                'Upgrade your <strong>APC</strong> extension (3.1.13+).'
+            );
         }
 
         $this->addPhpIniRequirement('detect_unicode', false);
@@ -590,38 +582,6 @@ class SymfonyRequirements extends RequirementCollection
                 'Your requirements file is outdated. Run composer install and re-check your configuration.'
             );
         }
-
-        $this->addRecommendation(
-            version_compare($installedPhpVersion, '5.3.4', '>='),
-            'You should use at least PHP 5.3.4 due to PHP bug #52083 in earlier versions',
-            'Your project might malfunction randomly due to PHP bug #52083 ("Notice: Trying to get property of non-object"). Install PHP 5.3.4 or newer.'
-        );
-
-        $this->addRecommendation(
-            version_compare($installedPhpVersion, '5.3.8', '>='),
-            'When using annotations you should have at least PHP 5.3.8 due to PHP bug #55156',
-            'Install PHP 5.3.8 or newer if your project uses annotations.'
-        );
-
-        $this->addRecommendation(
-            version_compare($installedPhpVersion, '5.4.0', '!='),
-            'You should not use PHP 5.4.0 due to the PHP bug #61453',
-            'Your project might not work properly due to the PHP bug #61453 ("Cannot dump definitions which have method calls"). Install PHP 5.4.1 or newer.'
-        );
-
-        $this->addRecommendation(
-            version_compare($installedPhpVersion, '5.4.11', '>='),
-            'When using the logout handler from the Symfony Security Component, you should have at least PHP 5.4.11 due to PHP bug #63379 (as a workaround, you can also set invalidate_session to false in the security logout handler configuration)',
-            'Install PHP 5.4.11 or newer if your project uses the logout handler from the Symfony Security Component.'
-        );
-
-        $this->addRecommendation(
-            (version_compare($installedPhpVersion, '5.3.18', '>=') && version_compare($installedPhpVersion, '5.4.0', '<'))
-            ||
-            version_compare($installedPhpVersion, '5.4.8', '>='),
-            'You should use PHP 5.3.18+ or PHP 5.4.8+ to always get nice error messages for fatal errors in the development environment due to PHP bug #61767/#60909',
-            'Install PHP 5.3.18+ or PHP 5.4.8+ if you want nice error messages for all fatal errors in the development environment.'
-        );
 
         if (null !== $pcreVersion) {
             $this->addRecommendation(
@@ -822,5 +782,15 @@ class SymfonyRequirements extends RequirementCollection
         }
 
         return false;
+    }
+
+    /**
+     * Defines PHP maximum to use.
+     *
+     * @return string The PHP maximum version if it could not be guessed
+     */
+    public function getMaximumPhpVersion()
+    {
+        return self::MAXIMUM_PHP_VERSION;
     }
 }
