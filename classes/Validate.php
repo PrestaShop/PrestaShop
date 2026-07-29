@@ -465,6 +465,33 @@ class ValidateCore
     }
 
     /**
+     * Check that a name can actually be found by the search engine.
+     *
+     * The rule cannot be expressed as a character class: the indexer keeps some hyphenated terms
+     * (e.g. "----") and drops some terms that contain letters (e.g. "a+"), so we ask the indexer
+     * itself. A name is searchable when Search::extractKeyWords() yields at least one keyword.
+     *
+     * We use the indexation path (the strict one). The query path would keep terms like "a+" that
+     * indexation drops - a tag surviving the query path but not indexation would still be
+     * unfindable in the front-office search, so validation must follow indexation.
+     *
+     * @param string $name Name to validate
+     * @param int $idLang Language id used by the indexer
+     * @param string $isoCode Language iso code used by the indexer
+     *
+     * @return bool Validity is ok or not
+     */
+    public static function isSearchableName($name, $idLang, $isoCode)
+    {
+        $words = array_filter(
+            array_map('trim', (array) Search::extractKeyWords((string) $name, (int) $idLang, true, (string) $isoCode)),
+            static function ($word) { return $word !== ''; }
+        );
+
+        return $words !== [];
+    }
+
+    /**
      * Check for HTML field validity (no XSS please !).
      *
      * @param string $html HTML field to validate
