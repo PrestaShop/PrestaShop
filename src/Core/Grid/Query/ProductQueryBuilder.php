@@ -87,7 +87,7 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         if ($this->configuration->getBoolean('PS_USE_ECOTAX')) {
             $qb->addSelect('(ps.`price` + ps.`ecotax`) AS `final_price_tax_excluded`');
         } else {
-            $qb->addSelect('(ps.`price` + ps.`ecotax`) AS `final_price_tax_excluded`');
+            $qb->addSelect('ps.`price` AS `final_price_tax_excluded`');
         }
 
         if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
