@@ -4,7 +4,7 @@
   "description": "",
   "private": "true",
   "scripts": {
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --require ts-node/register --require tsconfig-paths/register --reporter spec \"tests/**/*.spec.js\"",
+    "test": "NODE_ENV=test TS_NODE_FILES=true ./node_modules/.bin/mocha --require ts-node/register --require tsconfig-paths/register --reporter spec \"tests/**/*.spec.js\"",
     "build": "webpack --progress --mode=production",
     "dev": "webpack --progress --watch --mode=development",
     "serve": "webpack serve --mode=development",
