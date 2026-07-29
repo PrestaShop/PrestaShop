@@ -43,8 +43,7 @@ class DiscountTypeSelectorType extends TranslatorAwareType
         $choiceAttr = [];
 
         foreach ($this->discountTypeRepository->getAllTypes() as $type) {
-            // Disabled temporarily, because of infinite loop issue with this kind of discount. See issue #39419
-            if (!$type['enabled'] || $type['discount_type'] === DiscountType::ORDER_LEVEL) {
+            if (!$type['enabled']) {
                 continue;
             }
             $discountTypeValue = $type['discount_type'];
