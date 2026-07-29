@@ -606,6 +606,32 @@ Feature: Order from Back Office (BO)
     And the third invoice from order "bo_order1" should contain 2 products "Test Product A"
     And the third invoice from order "bo_order1" should contain 5 products "Test Product B"
 
+  Scenario: A line moves to an invoice holding the same product with another customization
+    Given I create an empty cart "custom_cart" for customer "testCustomer"
+    And I add 1 customized products with reference "demo_14" with all its customizations to the cart "custom_cart"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "custom_cart"
+    And I add order "bo_order_custom" with the following details:
+      | cart                | custom_cart      |
+      | message             | test             |
+      | payment module name | dummy_payment    |
+      | status              | Payment accepted |
+    Then order "bo_order_custom" should have 1 invoice
+    And the first invoice from order "bo_order_custom" should contain 1 products "Customizable mug"
+    When I add products to order "bo_order_custom" with new invoice and the following products details:
+      | name   | Customizable mug |
+      | amount | 1                |
+      | price  | 13.9             |
+    Then order "bo_order_custom" should have 2 invoices
+    And the first invoice from order "bo_order_custom" should contain 1 products "Customizable mug"
+    And the second invoice from order "bo_order_custom" should contain 1 products "Customizable mug"
+    When I edit product "Customizable mug" in second invoice from order "bo_order_custom" with following products details:
+      | amount  | 1     |
+      | price   | 13.9  |
+      | invoice | first |
+    Then the first invoice from order "bo_order_custom" should contain 2 products "Customizable mug"
+    And the second invoice from order "bo_order_custom" should contain 0 products "Customizable mug"
+    And order "bo_order_custom" should contain 2 products "Customizable mug"
+
   # This scenario is completely commented for now because it includes too many features that still need to be fixed
   #  - discount targetting specific invoice
   #  - free shipping for a specific invoice on creation
