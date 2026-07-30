@@ -13,7 +13,7 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS)]
 class AsQueryHandler
 {
-    public function __construct(public $method = 'handle')
+    public function __construct(public string $method = 'handle')
     {
     }
 }
