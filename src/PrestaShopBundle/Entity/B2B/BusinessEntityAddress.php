@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Entity\B2B;
 
 use DateTime;
@@ -118,9 +120,9 @@ class BusinessEntityAddress
         return $this->isDefault;
     }
 
-    public function setDefault(bool $default): self
+    public function setIsDefault(bool $isDefault): self
     {
-        $this->isDefault = $default;
+        $this->isDefault = $isDefault;
 
         return $this;
     }

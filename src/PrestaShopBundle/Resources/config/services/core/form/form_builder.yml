@@ -381,6 +381,13 @@ services:
       - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\Tag\TagType'
       - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TagFormDataProvider'
 
+  prestashop.core.form.identifiable_object.builder.business_entity_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityType'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\BusinessEntityFormDataProvider'
+
   prestashop.core.form.identifiable_object.builder.add_product_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]

@@ -46,6 +46,8 @@ services:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/Discount/*"
   PrestaShopBundle\Form\Admin\Sell\Product\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/Product/*"
+  PrestaShopBundle\Form\Admin\Sell\BusinessEntity\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Sell/BusinessEntity/*"
   PrestaShopBundle\Form\Admin\Type\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Type/*"
   PrestaShopBundle\Form\Admin\AdvancedParameters\:
@@ -740,6 +742,10 @@ services:
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\Tag\TagType:
     arguments:
       $languagesChoices: '@=service("prestashop.core.form.choice_provider.all_languages").getChoices()'
+
+  PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityAddressType:
+    arguments:
+      $stateChoiceProvider: '@prestashop.adapter.form.choice_provider.country_state_by_id'
 
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyDefinitionFieldDefinitionType:
     arguments:

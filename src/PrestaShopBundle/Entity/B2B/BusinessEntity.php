@@ -4,6 +4,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Entity\B2B;
 
 use DateTime;
@@ -27,7 +29,7 @@ use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
  *
  * @ORM\HasLifecycleCallbacks
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\BusinessEntityRepository")
  */
 class BusinessEntity
 {
@@ -91,7 +93,7 @@ class BusinessEntity
     private DateTime $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\B2B\BusinessEntityAddress", mappedBy="businessEntity")
+     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\B2B\BusinessEntityAddress", mappedBy="businessEntity", cascade={"persist"})
      */
     private Collection $businessEntityAddresses;
 

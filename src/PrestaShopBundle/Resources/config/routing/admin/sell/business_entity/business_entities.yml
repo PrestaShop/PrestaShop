@@ -3,3 +3,13 @@ admin_business_entities_list:
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::listAction
+    _legacy_controller: AdminBusinessEntities
+    _legacy_link: AdminBusinessEntities
+
+admin_business_entities_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::createAction
+    _legacy_controller: AdminBusinessEntities
+    _legacy_link: AdminBusinessEntities
