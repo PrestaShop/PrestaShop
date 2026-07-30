@@ -731,7 +731,6 @@ describe('BO - Dashboard : Activity overview', async () => {
       expect(pageTitle).to.eq(boDashboardPage.pageTitle);
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/37033
     it('should update the form', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFormActivityOverview', baseContext);
 

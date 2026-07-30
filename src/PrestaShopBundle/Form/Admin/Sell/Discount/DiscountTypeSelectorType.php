@@ -44,6 +44,7 @@ class DiscountTypeSelectorType extends TranslatorAwareType
 
         foreach ($this->discountTypeRepository->getAllTypes() as $type) {
             // Disabled temporarily, because of infinite loop issue with this kind of discount. See issue #39419
+            // Linked to https://github.com/PrestaShop/PrestaShop/issues/42209
             if (!$type['enabled'] || $type['discount_type'] === DiscountType::ORDER_LEVEL) {
                 continue;
             }

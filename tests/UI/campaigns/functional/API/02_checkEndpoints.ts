@@ -52,8 +52,11 @@ describe('API : Check endpoints', async () => {
     '/api-clients: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/apiClient/05_postApiClient.ts
     '/api-clients: POST',
+    // @todo: add tests
     '/attachments/search: GET',
+    // @todo: add tests
     '/attachments/{attachmentId}/files: GET',
+    // @todo: add tests
     '/attachments/{attachmentId}/information: GET',
     // @todo: add tests
     '/attributes/attributes/bulk-delete: DELETE',
@@ -85,6 +88,7 @@ describe('API : Check endpoints', async () => {
     '/attributes/groups: POST',
     // @todo: add tests
     '/cart-rules/search: GET',
+    // @todo: add tests
     '/carts/{cartId}/emails: PUT',
     // @todo: add tests
     '/categories/bulk-delete/{deleteMode}: DELETE',
@@ -140,6 +144,7 @@ describe('API : Check endpoints', async () => {
     '/customers/groups: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/05_postCustomersGroup.ts
     '/customers/groups: POST',
+    // @todo: add tests
     '/customers/required-fields: PUT',
     // @todo: add tests
     '/customers/search: GET',
@@ -387,8 +392,11 @@ describe('API : Check endpoints', async () => {
     '/tax-rules-groups: GET',
     // @todo: add tests
     '/tax-rules-groups: POST',
+    // @todo: add tests
     '/tax-rules/{taxRuleId}: DELETE',
+    // @todo: add tests
     '/tax-rules: GET',
+    // @todo: add tests
     '/tax-rules: POST',
     // @todo: add tests
     '/taxes/bulk-delete: PUT',
