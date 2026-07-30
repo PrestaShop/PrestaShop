@@ -54,33 +54,13 @@ class StoreType extends TranslatorAwareType
         $builder
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Name', 'Admin.Global'),
+                'required' => true,
                 'constraints' => [new DefaultLanguage()],
-                'options' => [
-                    'constraints' => [
-                        new NotBlank([
-                            'message' => $this->trans(
-                                'The %s field is required.',
-                                'Admin.Notifications.Error',
-                                [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
-                            ),
-                        ]),
-                    ],
-                ],
             ])
             ->add('address1', TranslatableType::class, [
                 'label' => $this->trans('Address', 'Admin.Global'),
+                'required' => true,
                 'constraints' => [new DefaultLanguage()],
-                'options' => [
-                    'constraints' => [
-                        new NotBlank([
-                            'message' => $this->trans(
-                                'The %s field is required.',
-                                'Admin.Notifications.Error',
-                                [sprintf('"%s"', $this->trans('Address', 'Admin.Global'))]
-                            ),
-                        ]),
-                    ],
-                ],
             ])
             ->add('address2', TranslatableType::class, [
                 'label' => $this->trans('Address (2)', 'Admin.Global'),
