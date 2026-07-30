@@ -303,6 +303,9 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CustomerGroupFormDataProvider:
+    autowire: true
+
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EditProductFormDataProvider:
     autowire: true
     public: false

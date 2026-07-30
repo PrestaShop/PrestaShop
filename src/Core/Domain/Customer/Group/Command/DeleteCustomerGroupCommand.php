@@ -8,18 +8,18 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\CustomerGroupId;
 
 class DeleteCustomerGroupCommand
 {
-    private GroupId $customerGroupId;
+    private CustomerGroupId $customerGroupId;
 
-    public function __construct(int $groupId)
+    public function __construct(int $customerGroupId)
     {
-        $this->customerGroupId = new GroupId($groupId);
+        $this->customerGroupId = new CustomerGroupId($customerGroupId);
     }
 
-    public function getCustomerGroupId(): GroupId
+    public function getCustomerGroupId(): CustomerGroupId
     {
         return $this->customerGroupId;
     }

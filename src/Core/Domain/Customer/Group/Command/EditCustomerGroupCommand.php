@@ -9,16 +9,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\CustomerGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class EditCustomerGroupCommand
 {
-    private GroupId $customerGroupId;
+    private CustomerGroupId $customerGroupId;
 
-    /**
-     * @var string[]|null
-     */
+    /** @var string[]|null */
     private ?array $localizedNames = null;
 
     private ?DecimalNumber $reductionPercent = null;
@@ -27,17 +25,21 @@ class EditCustomerGroupCommand
 
     private ?bool $showPrice = null;
 
-    /**
-     * @var ShopId[]|null
-     */
+    /** @var ShopId[]|null */
     private ?array $shopIds = null;
+
+    /** @var array<int, DecimalNumber>|null category id => reduction percent */
+    private ?array $categoryReductions = null;
+
+    /** @var int[]|null */
+    private ?array $authorizedModuleIds = null;
 
     public function __construct(int $customerGroupId)
     {
-        $this->customerGroupId = new GroupId($customerGroupId);
+        $this->customerGroupId = new CustomerGroupId($customerGroupId);
     }
 
-    public function getCustomerGroupId(): GroupId
+    public function getCustomerGroupId(): CustomerGroupId
     {
         return $this->customerGroupId;
     }
@@ -97,14 +99,45 @@ class EditCustomerGroupCommand
 
     /**
      * @param int[] $shopIds
-     *
-     * @return $this
      */
     public function setShopIds(array $shopIds): self
     {
-        $this->shopIds = array_map(function (int $shopId) {
-            return new ShopId($shopId);
-        }, $shopIds);
+        $this->shopIds = array_map(fn (int $shopId) => new ShopId($shopId), $shopIds);
+
+        return $this;
+    }
+
+    /** @return array<int, DecimalNumber>|null */
+    public function getCategoryReductions(): ?array
+    {
+        return $this->categoryReductions;
+    }
+
+    /**
+     * @param array<int, string|float> $categoryReductions category id => reduction percent
+     */
+    public function setCategoryReductions(array $categoryReductions): self
+    {
+        $this->categoryReductions = [];
+        foreach ($categoryReductions as $categoryId => $reduction) {
+            $this->categoryReductions[(int) $categoryId] = new DecimalNumber((string) $reduction);
+        }
+
+        return $this;
+    }
+
+    /** @return int[]|null */
+    public function getAuthorizedModuleIds(): ?array
+    {
+        return $this->authorizedModuleIds;
+    }
+
+    /**
+     * @param int[] $authorizedModuleIds
+     */
+    public function setAuthorizedModuleIds(array $authorizedModuleIds): self
+    {
+        $this->authorizedModuleIds = array_map('intval', $authorizedModuleIds);
 
         return $this;
     }

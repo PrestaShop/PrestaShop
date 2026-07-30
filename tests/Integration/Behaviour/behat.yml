@@ -86,6 +86,7 @@ default:
         - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
         - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\CustomerGroupFeatureContext
+        - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
         - Tests\Integration\Behaviour\Features\Context\Domain\Discount\DiscountFeatureContext
         - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
         - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext

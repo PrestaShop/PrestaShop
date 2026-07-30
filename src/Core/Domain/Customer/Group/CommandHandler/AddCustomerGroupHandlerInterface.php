@@ -8,14 +8,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Group\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\CustomerGroupId;
 
 interface AddCustomerGroupHandlerInterface
 {
-    /**
-     * @param AddCustomerGroupCommand $command
-     *
-     * @return GroupId
-     */
-    public function handle(AddCustomerGroupCommand $command): GroupId;
+    public function handle(AddCustomerGroupCommand $command): CustomerGroupId;
 }

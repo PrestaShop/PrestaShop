@@ -741,6 +741,14 @@ services:
     arguments:
       $languagesChoices: '@=service("prestashop.core.form.choice_provider.all_languages").getChoices()'
 
+  PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerGroup\CustomerGroupType:
+    arguments:
+      $isShopFeatureEnabled: '@=service("prestashop.adapter.multistore_feature").isUsed()'
+
+  PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerGroup\DefaultGroupsType:
+    arguments:
+      $groupChoices: '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
+
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyDefinitionFieldDefinitionType:
     arguments:
       $typeChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ExtraPropertyTypeChoiceProvider'

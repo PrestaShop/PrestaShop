@@ -13,7 +13,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotAddGroupExc
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotDeleteGroupException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\CannotUpdateGroupException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\CustomerGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 
@@ -23,14 +23,10 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository
 class GroupRepository extends AbstractMultiShopObjectModelRepository
 {
     /**
-     * @param GroupId $customerGroupId
-     *
-     * @return CustomerGroup
-     *
      * @throws CoreException
      * @throws GroupNotFoundException
      */
-    public function get(GroupId $customerGroupId): CustomerGroup
+    public function get(CustomerGroupId $customerGroupId): CustomerGroup
     {
         /** @var CustomerGroup $customerGroup */
         $customerGroup = $this->getObjectModel(
@@ -43,11 +39,9 @@ class GroupRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
-     * @param GroupId $groupId
-     *
      * @throws GroupNotFoundException
      */
-    public function assertGroupExists(GroupId $groupId): void
+    public function assertGroupExists(CustomerGroupId $groupId): void
     {
         $this->assertObjectModelExists(
             $groupId->getValue(),
@@ -57,13 +51,9 @@ class GroupRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
-     * @param CustomerGroup $customerGroup
-     *
-     * @return GroupId
-     *
      * @throws CoreException
      */
-    public function create(CustomerGroup $customerGroup): GroupId
+    public function create(CustomerGroup $customerGroup): CustomerGroupId
     {
         $groupId = $this->addObjectModelToShops(
             $customerGroup,
@@ -71,12 +61,10 @@ class GroupRepository extends AbstractMultiShopObjectModelRepository
             CannotAddGroupException::class
         );
 
-        return new GroupId($groupId);
+        return new CustomerGroupId($groupId);
     }
 
     /**
-     * @param int $customerGroupId
-     *
      * @return int[]
      */
     public function getAssociatedShopIds(int $customerGroupId): array
@@ -84,16 +72,15 @@ class GroupRepository extends AbstractMultiShopObjectModelRepository
         return $this->getObjectModelAssociatedShopIds($customerGroupId, CustomerGroup::class);
     }
 
-    /**
-     * @param CustomerGroup $customerGroup
-     */
     public function partialUpdate(CustomerGroup $customerGroup, array $propertiesToUpdate): void
     {
         $this->partiallyUpdateObjectModel($customerGroup, $propertiesToUpdate, CannotUpdateGroupException::class);
-        $this->updateObjectModelShopAssociations((int) $customerGroup->id, CustomerGroup::class, $customerGroup->id_shop_list);
+        if (in_array('id_shop_list', $propertiesToUpdate, true)) {
+            $this->updateObjectModelShopAssociations((int) $customerGroup->id, CustomerGroup::class, $customerGroup->id_shop_list);
+        }
     }
 
-    public function delete(GroupId $customerGroupId): void
+    public function delete(CustomerGroupId $customerGroupId): void
     {
         $customerGroup = $this->get($customerGroupId);
         $shopIds = $this->getAssociatedShopIds($customerGroupId->getValue());

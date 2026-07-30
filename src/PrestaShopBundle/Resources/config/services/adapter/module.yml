@@ -46,6 +46,11 @@ services:
     autoconfigure: true
     public: false
 
+  PrestaShop\PrestaShop\Adapter\Module\QueryHandler\GetInstalledModulesHandler:
+    autowire: true
+    autoconfigure: true
+    public: false
+
   PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'

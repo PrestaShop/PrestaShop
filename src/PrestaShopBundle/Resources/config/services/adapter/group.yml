@@ -46,3 +46,20 @@ services:
   PrestaShop\PrestaShop\Adapter\Customer\Group\Validate\CustomerGroupValidator:
     public: false
     autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler\BulkDeleteCustomerGroupHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\Customer\Group\CommandHandler\ToggleCustomerGroupShowPricesHandler:
+    public: false
+    autowire: true
+    autoconfigure: true
+
+  prestashop.adapter.customer_group.default_groups.configuration:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\Group\DefaultGroupsConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
