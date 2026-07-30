@@ -87,5 +87,25 @@ class BackUrlProviderTest extends TestCase
             'data:text/html,<script>alert(1)</script>',
             '',
         ];
+
+        yield 'javascript scheme with leading control character is dropped' => [
+            "\0javascript:alert(1)",
+            '',
+        ];
+
+        yield 'javascript scheme with embedded tab is dropped' => [
+            "java\tscript:alert(1)",
+            '',
+        ];
+
+        yield 'javascript scheme with embedded line feed is dropped' => [
+            "java\nscript:alert(1)",
+            '',
+        ];
+
+        yield 'javascript scheme with embedded carriage return is dropped' => [
+            "java\rscript:alert(1)",
+            '',
+        ];
     }
 }

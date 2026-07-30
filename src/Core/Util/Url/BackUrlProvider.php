@@ -39,14 +39,21 @@ class BackUrlProvider
      */
     private function hasHttpScheme(string $url): bool
     {
-        // Browsers treat backslashes as forward slashes, so normalise them before reading the scheme.
-        $normalisedUrl = str_replace('\\', '/', $url);
+        // Browsers strip ASCII tab, LF and CR from anywhere in a URL and trim leading C0 controls
+        // before reading the scheme, and treat backslashes as forward slashes. Normalise the same
+        // way first, or "java\tscript:" passes as relative here and still runs in the browser.
+        $normalisedUrl = str_replace(['\\', "\t", "\n", "\r"], ['/', '', '', ''], $url);
+        $normalisedUrl = ltrim($normalisedUrl, "\x00..\x20");
 
-        // A url without an explicit scheme is relative (or protocol-relative) and is kept as before.
-        if (!preg_match('#^\s*([a-z][a-z0-9+.\-]*)\s*:#i', $normalisedUrl, $matches)) {
+        $matched = preg_match('#^([a-z][a-z0-9+.\-]*):#i', $normalisedUrl, $matches);
+        if (false === $matched) {
+            // A failed match says nothing about the value, so refuse instead of letting it through.
+            return false;
+        }
+        if (0 === $matched) {
             return true;
         }
 
-        return in_array(strtolower(trim($matches[1])), ['http', 'https'], true);
+        return in_array(strtolower($matches[1]), ['http', 'https'], true);
     }
 }
