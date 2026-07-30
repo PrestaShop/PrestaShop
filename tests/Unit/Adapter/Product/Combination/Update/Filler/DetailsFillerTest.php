@@ -64,6 +64,7 @@ class DetailsFillerTest extends CombinationFillerTestCase
             ->setReference('ref-HUE222-7')
             ->setUpc('0123456789')
             ->setImpactOnWeight('3')
+            ->setIsVirtual(true)
         ;
         $expectedCombination = $this->mockDefaultCombination();
         $expectedCombination->ean13 = '1234567890111';
@@ -72,6 +73,7 @@ class DetailsFillerTest extends CombinationFillerTestCase
         $expectedCombination->reference = 'ref-HUE222-7';
         $expectedCombination->upc = '0123456789';
         $expectedCombination->weight = '3';
+        $expectedCombination->is_virtual = true;
 
         yield [
             $this->mockDefaultCombination(),
@@ -83,7 +85,22 @@ class DetailsFillerTest extends CombinationFillerTestCase
                 'reference',
                 'upc',
                 'weight',
+                'is_virtual',
             ],
+            $expectedCombination,
+        ];
+
+        // is_virtual is only filled when provided on the command
+        $command = $this->getEmptyCommand()
+            ->setIsVirtual(false)
+        ;
+        $expectedCombination = $this->mockDefaultCombination();
+        $expectedCombination->is_virtual = false;
+
+        yield [
+            $this->mockDefaultCombination(),
+            $command,
+            ['is_virtual'],
             $expectedCombination,
         ];
     }

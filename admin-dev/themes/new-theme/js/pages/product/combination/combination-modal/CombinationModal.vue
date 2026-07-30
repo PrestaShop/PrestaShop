@@ -278,6 +278,45 @@
         this.getIframeDocument().addEventListener('datepickerChange', () => {
           this.isFormUpdated = true;
         });
+
+        this.initVirtualProductFile(iframeBody);
+      },
+      /**
+       * Wires the per-combination downloadable file section when present: toggles the file fields
+       * with the "Has file" switch and prefills the display name on upload. Mirrors the product-level
+       * VirtualProductManager. No-op when the combination form has no file section.
+       */
+      initVirtualProductFile(iframeBody: HTMLElement): void {
+        const VirtualFileMap = ProductMap.combinations.virtualProductFile;
+        const contentContainer = iframeBody.querySelector<HTMLElement>(VirtualFileMap.contentContainer);
+
+        if (!contentContainer) {
+          return;
+        }
+
+        const enabledInput = iframeBody.querySelector<HTMLInputElement>(VirtualFileMap.hasFileEnabled);
+        const toggleContentVisibility = (): void => {
+          contentContainer.classList.toggle('d-none', !enabledInput?.checked);
+        };
+        toggleContentVisibility();
+        iframeBody.querySelectorAll<HTMLInputElement>(VirtualFileMap.hasFileInputs).forEach(
+          (input: HTMLInputElement) => {
+            input.addEventListener('change', toggleContentVisibility);
+          },
+        );
+
+        const fileUploadInput = iframeBody.querySelector<HTMLInputElement>(VirtualFileMap.fileUploadInput);
+        const filenameInput = iframeBody.querySelector<HTMLInputElement>(VirtualFileMap.filenameInput);
+
+        if (fileUploadInput && filenameInput) {
+          fileUploadInput.addEventListener('change', (event: Event) => {
+            const selectedFile = (<HTMLInputElement> event.currentTarget)?.files?.[0];
+
+            if (selectedFile) {
+              filenameInput.value = selectedFile.name;
+            }
+          });
+        }
       },
       applyIframeStyling(): void {
         this.getIframeDocument().body.style.overflowX = 'hidden';

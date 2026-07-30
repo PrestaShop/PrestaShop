@@ -10,6 +10,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
@@ -36,18 +37,26 @@ class CombinationDeleter
     private $defaultCombinationUpdater;
 
     /**
+     * @var VirtualProductUpdater
+     */
+    private $virtualProductUpdater;
+
+    /**
      * @param ProductRepository $productRepository
      * @param CombinationRepository $combinationRepository
      * @param DefaultCombinationUpdater $defaultCombinationUpdater
+     * @param VirtualProductUpdater $virtualProductUpdater
      */
     public function __construct(
         ProductRepository $productRepository,
         CombinationRepository $combinationRepository,
-        DefaultCombinationUpdater $defaultCombinationUpdater
+        DefaultCombinationUpdater $defaultCombinationUpdater,
+        VirtualProductUpdater $virtualProductUpdater
     ) {
         $this->productRepository = $productRepository;
         $this->combinationRepository = $combinationRepository;
         $this->defaultCombinationUpdater = $defaultCombinationUpdater;
+        $this->virtualProductUpdater = $virtualProductUpdater;
     }
 
     /**
@@ -57,10 +66,12 @@ class CombinationDeleter
     public function deleteCombination(CombinationId $combinationId, ShopConstraint $shopConstraint): void
     {
         $combination = $this->combinationRepository->getByShopConstraint($combinationId, $shopConstraint);
+        $productId = new ProductId((int) $combination->id_product);
+
+        $this->virtualProductUpdater->deleteFileForCombination($productId, $combinationId->getValue());
         $this->combinationRepository->delete($combinationId, $shopConstraint);
 
         if ($combination->default_on) {
-            $productId = new ProductId((int) $combination->id_product);
             $this->updateDefaultCombination($productId, $shopConstraint);
         }
     }
@@ -72,6 +83,9 @@ class CombinationDeleter
     public function bulkDeleteProductCombinations(ProductId $productId, array $combinationIds, ShopConstraint $shopConstraint): void
     {
         try {
+            foreach ($combinationIds as $combinationId) {
+                $this->virtualProductUpdater->deleteFileForCombination($productId, $combinationId->getValue());
+            }
             $this->combinationRepository->bulkDelete($combinationIds, $shopConstraint);
         } finally {
             $this->updateDefaultCombination($productId, $shopConstraint);
@@ -88,8 +102,12 @@ class CombinationDeleter
     public function deleteAllProductCombinations(ProductId $productId, ShopConstraint $shopConstraint): void
     {
         $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
-        if ($product->product_type !== ProductType::TYPE_COMBINATIONS) {
+        if (!ProductType::hasCombinations($product->product_type)) {
             throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_COMBINATIONS_TYPE);
+        }
+
+        foreach ($this->combinationRepository->getCombinationIds($productId, $shopConstraint) as $combinationId) {
+            $this->virtualProductUpdater->deleteFileForCombination($productId, $combinationId->getValue());
         }
 
         $this->combinationRepository->deleteByProductId($productId, $shopConstraint);

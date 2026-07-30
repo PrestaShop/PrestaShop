@@ -573,13 +573,18 @@ class OrderCore extends ObjectModel
 
     public function getProductsDetail()
     {
-        // The `od.ecotax` is a newly added at end as ecotax is used in multiples columns but it's the ecotax value we need
-        $sql = 'SELECT p.*, ps.*, od.*';
+        // The `od.ecotax` is a newly added at end as ecotax is used in multiples columns but it's the ecotax value we need.
+        // The effective `is_virtual` is resolved per line from the chosen combination (when any), otherwise from the product.
+        // It MUST stay the LAST `is_virtual` column of the SELECT: it overrides the one coming from `p.*` via the
+        // associative fetch "last column wins" rule. Do not reorder it before `p.*` or de-glob `p.*` without keeping it last.
+        $sql = 'SELECT p.*, ps.*, od.*,';
+        $sql .= ' IF(od.product_attribute_id > 0, pa.`is_virtual`, p.`is_virtual`) AS `is_virtual`';
         $sql .= ' FROM `%sorder_detail` od';
         $sql .= ' LEFT JOIN `%sproduct` p ON (p.id_product = od.product_id)';
+        $sql .= ' LEFT JOIN `%sproduct_attribute` pa ON (pa.id_product_attribute = od.product_attribute_id)';
         $sql .= ' LEFT JOIN `%sproduct_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)';
         $sql .= ' WHERE od.`id_order` = %d';
-        $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, (int) $this->id);
+        $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, (int) $this->id);
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }

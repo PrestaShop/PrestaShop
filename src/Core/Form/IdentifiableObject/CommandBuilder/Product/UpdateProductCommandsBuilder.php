@@ -207,7 +207,7 @@ class UpdateProductCommandsBuilder implements ProductCommandsBuilderInterface
         }
 
         $productType = $formData['header']['type'] ?? ProductType::TYPE_STANDARD;
-        if ($productType === ProductType::TYPE_COMBINATIONS) {
+        if (ProductType::hasCombinations($productType)) {
             $config
                 ->addMultiShopField('[combinations][availability][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
                 ->addMultiShopField('[combinations][availability][available_later_label]', 'setLocalizedAvailableLaterLabels', DataField::TYPE_ARRAY)

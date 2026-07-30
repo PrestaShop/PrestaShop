@@ -44,6 +44,7 @@ class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInte
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
             ->addMultiShopField('[header][is_default]', 'setIsDefault', DataField::TYPE_BOOL)
+            ->addField('[is_virtual]', 'setIsVirtual', DataField::TYPE_BOOL)
         ;
 
         $this

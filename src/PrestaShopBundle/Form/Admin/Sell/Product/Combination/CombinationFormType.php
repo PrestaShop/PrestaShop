@@ -10,7 +10,9 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShopBundle\Form\Admin\Sell\Product\Details\ReferencesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Stock\VirtualProductFileType;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -71,6 +73,16 @@ class CombinationFormType extends TranslatorAwareType
                 'product_id' => $options['product_id'],
                 'label_tag_name' => 'h3',
             ])
+            ->add('is_virtual', SwitchType::class, [
+                'label' => $this->trans('Is virtual', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h3',
+                'required' => false,
+            ])
+            ->add('virtual_product_file', VirtualProductFileType::class, [
+                'virtual_product_file_id' => $options['virtual_product_file_id'],
+                'required' => false,
+                'label' => false,
+            ])
         ;
 
         /*
@@ -93,9 +105,11 @@ class CombinationFormType extends TranslatorAwareType
             ->setDefaults([
                 'required' => false,
                 'label' => false,
+                'virtual_product_file_id' => null,
                 'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig',
                 'use_default_themes' => false,
             ])
+            ->setAllowedTypes('virtual_product_file_id', ['int', 'null'])
         ;
     }
 }

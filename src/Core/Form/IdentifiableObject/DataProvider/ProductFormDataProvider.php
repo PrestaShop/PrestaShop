@@ -122,7 +122,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'options' => $this->extractOptionsData($productForEditing),
         ];
 
-        if ($productForEditing->getType() === ProductType::TYPE_COMBINATIONS) {
+        if (ProductType::hasCombinations($productForEditing->getType())) {
             $productData['combinations'] = [
                 'availability' => [
                     'out_of_stock_type' => $productData['stock']['availability']['out_of_stock_type'],
@@ -504,7 +504,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'redirect_option' => $this->extractRedirectOptionData($productForEditing),
             'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
         ];
-        if ($productForEditing->getType() === ProductType::TYPE_COMBINATIONS) {
+        if (ProductType::hasCombinations($productForEditing->getType())) {
             if ((bool) $this->configuration->get('PS_PRODUCT_ATTRIBUTES_IN_TITLE')) {
                 /** @var CombinationId[] $combinationIds */
                 $combinationIds = $this->queryBus->handle(
@@ -693,7 +693,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         foreach ($productSupplierOptions->getProductSuppliers() as $supplierForEditing) {
             $supplierId = $supplierForEditing->getSupplierId();
 
-            if ($productForEditing->getType() !== ProductType::TYPE_COMBINATIONS) {
+            if (!ProductType::hasCombinations($productForEditing->getType())) {
                 $suppliersData['product_suppliers'][$supplierId] = [
                     'supplier_id' => $supplierId,
                     'supplier_name' => $supplierForEditing->getSupplierName(),

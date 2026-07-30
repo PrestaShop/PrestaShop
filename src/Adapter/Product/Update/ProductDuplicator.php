@@ -319,7 +319,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             );
             $this->productStockUpdater->update($targetProductId, $stockProperties, ShopConstraint::shop($targetShopId->getValue()));
 
-            if ($productType === ProductType::TYPE_COMBINATIONS) {
+            if (ProductType::hasCombinations($productType)) {
                 $this->duplicateCombinationsStock($oldProductId, $newProductId, $targetShopId, $combinationMatching);
             }
         }

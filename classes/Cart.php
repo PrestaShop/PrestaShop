@@ -717,7 +717,8 @@ class CartCore extends ObjectModel
         $sql = new DbQuery();
 
         // Build SELECT
-        $sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, cp.`id_customization`, pl.`name`, p.`is_virtual`,
+        $sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, cp.`id_customization`, pl.`name`,
+                        IF(cp.`id_product_attribute` > 0, pa_virtual.`is_virtual`, p.`is_virtual`) AS `is_virtual`,
                         pl.`description_short`, pl.`available_now`, pl.`available_later`, product_shop.`id_category_default`, p.`id_supplier`,
                         p.`id_manufacturer`, m.`name` AS manufacturer_name, product_shop.`on_sale`, product_shop.`ecotax`, product_shop.`additional_shipping_cost`,
                         product_shop.`available_for_order`, product_shop.`show_price`, product_shop.`price`, product_shop.`active`, product_shop.`unity`, product_shop.`unit_price`,
@@ -731,6 +732,8 @@ class CartCore extends ObjectModel
 
         // Build JOIN
         $sql->leftJoin('product', 'p', 'p.`id_product` = cp.`id_product`');
+        // Always-present join used to resolve the effective per-line is_virtual value from the chosen combination
+        $sql->leftJoin('product_attribute', 'pa_virtual', 'pa_virtual.`id_product_attribute` = cp.`id_product_attribute`');
         $sql->innerJoin('product_shop', 'product_shop', '(product_shop.`id_shop` = cp.`id_shop` AND product_shop.`id_product` = p.`id_product`)');
         $sql->leftJoin(
             'product_lang',
@@ -4384,12 +4387,15 @@ class CartCore extends ObjectModel
      */
     public function hasRealProducts()
     {
-        // Check for non-virtual products which are not packs
+        // Check for non-virtual products which are not packs.
+        // A line is virtual when it has a combination flagged is_virtual, otherwise it follows the product flag.
         $sql = 'SELECT 1 FROM %scart_product cp
-            INNER JOIN %sproduct p ON (p.id_product = cp.id_product AND cache_is_pack = 0 and p.is_virtual = 0)
+            INNER JOIN %sproduct p ON (p.id_product = cp.id_product AND cache_is_pack = 0)
+            LEFT JOIN %sproduct_attribute pa ON (pa.id_product_attribute = cp.id_product_attribute)
             INNER JOIN %sproduct_shop ps ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product)
-            WHERE cp.id_cart=%d';
-        $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, $this->id);
+            WHERE cp.id_cart=%d
+            AND IF(cp.id_product_attribute > 0, pa.is_virtual, p.is_virtual) = 0';
+        $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, $this->id);
         if ((bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql)) {
             return true;
         }

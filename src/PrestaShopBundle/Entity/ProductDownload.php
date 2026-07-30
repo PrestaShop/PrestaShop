@@ -34,6 +34,11 @@ class ProductDownload
     private int $idProduct;
 
     /**
+     * @ORM\Column(name="id_product_attribute", type="integer", options={"default":0, "unsigned"=true})
+     */
+    private int $idProductAttribute = 0;
+
+    /**
      * @ORM\Column(name="display_filename", type="string", length=255, nullable=true)
      */
     private ?string $displayFilename;
@@ -87,6 +92,14 @@ class ProductDownload
     public function getIdProduct(): int
     {
         return $this->idProduct;
+    }
+
+    /**
+     * Related product combination ID. 0 means the download is set at product level.
+     */
+    public function getIdProductAttribute(): int
+    {
+        return $this->idProductAttribute;
     }
 
     /**
@@ -150,6 +163,13 @@ class ProductDownload
     public function setIdProduct(int $idProduct): static
     {
         $this->idProduct = $idProduct;
+
+        return $this;
+    }
+
+    public function setIdProductAttribute(int $idProductAttribute): static
+    {
+        $this->idProductAttribute = $idProductAttribute;
 
         return $this;
     }

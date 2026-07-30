@@ -52,7 +52,7 @@ class GetProductSupplierOptionsHandler extends AbstractProductSupplierHandler im
         $supplierIds = $this->productSupplierRepository->getAssociatedSupplierIds($query->getProductId());
         $productType = $this->productRepository->getProductType($query->getProductId());
         $productSuppliers = [];
-        if ($productType->getValue() !== ProductType::TYPE_COMBINATIONS) {
+        if (!ProductType::hasCombinations($productType->getValue())) {
             $productSuppliers = $this->getProductSuppliersInfo($query->getProductId());
         }
         $supplierIntIds = array_map(function (SupplierId $supplierId) {

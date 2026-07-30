@@ -81,3 +81,6 @@ services:
     tags: [ 'core.combination_command_builder' ]
     arguments:
       - !php/const PrestaShopBundle\Form\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationVirtualProductFileCommandsBuilder:
+    tags: [ 'core.combination_command_builder' ]

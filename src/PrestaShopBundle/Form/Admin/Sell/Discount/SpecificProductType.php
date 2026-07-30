@@ -130,7 +130,7 @@ class SpecificProductType extends TranslatorAwareType
         }
 
         // If product has no combinations we hide the combination selector
-        if ($data['product_type'] !== ProductType::TYPE_COMBINATIONS) {
+        if (!ProductType::hasCombinations($data['product_type'])) {
             $oldCombinationChoicesForm = $form->get('combination_id');
             $combinationOptions = $oldCombinationChoicesForm->getConfig()->getOptions();
             $combinationOptions['attr']['class'] = trim(($combinationOptions['attr']['class'] ?? '') . ' d-none');

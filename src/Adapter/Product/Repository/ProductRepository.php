@@ -249,7 +249,7 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
         $product = new Product(null, false, null, $shopId->getValue());
         $product->active = false;
         $product->id_category_default = $defaultCategoryId->getValue();
-        $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType;
+        $product->is_virtual = ProductType::isVirtualType($productType);
         $product->cache_is_pack = ProductType::TYPE_PACK === $productType;
         $product->product_type = $productType;
         $product->id_shop_default = $shopId->getValue();

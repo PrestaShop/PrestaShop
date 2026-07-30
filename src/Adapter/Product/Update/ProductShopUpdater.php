@@ -172,7 +172,7 @@ class ProductShopUpdater
             $this->productStockUpdater->update($productId, $stockProperties, ShopConstraint::shop($targetShopId->getValue()));
         }
 
-        if ($productType === ProductType::TYPE_COMBINATIONS) {
+        if (ProductType::hasCombinations($productType)) {
             $this->copyCombinationsStockToShop($productId, $sourceShopId, $targetShopId, $outOfStock);
         }
     }
