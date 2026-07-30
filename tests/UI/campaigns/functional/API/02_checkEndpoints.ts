@@ -4,15 +4,16 @@ import {expect} from 'chai';
 import {
   boApiClientsPage,
   boDashboardPage,
+  boFeatureFlagPage,
   boLoginPage,
   type BrowserContext,
   type Page,
   utilsPlaywright,
 } from '@prestashop-core/ui-testing';
+import setFeatureFlag from '@commonTests/BO/advancedParameters/newFeatures';
 
 const baseContext: string = 'functional_API_checkEndpoints';
 
-// @todo : https://github.com/PrestaShop/PrestaShop/issues/41109
 // Dear developers, the CI is broken when you update the module ps_apiresources on the Core.
 // It's normal : it's time to add them UI Tests.
 describe('API : Check endpoints', async () => {
@@ -51,6 +52,9 @@ describe('API : Check endpoints', async () => {
     '/api-clients: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/apiClient/05_postApiClient.ts
     '/api-clients: POST',
+    '/attachments/search: GET',
+    '/attachments/{attachmentId}/files: GET',
+    '/attachments/{attachmentId}/information: GET',
     // @todo: add tests
     '/attributes/attributes/bulk-delete: DELETE',
     // tests/UI/campaigns/functional/API/02_endpoints/attribute/01_deleteAttributesAttributeId.ts
@@ -81,6 +85,7 @@ describe('API : Check endpoints', async () => {
     '/attributes/groups: POST',
     // @todo: add tests
     '/cart-rules/search: GET',
+    '/carts/{cartId}/emails: PUT',
     // @todo: add tests
     '/categories/bulk-delete/{deleteMode}: DELETE',
     // @todo: add tests
@@ -135,6 +140,7 @@ describe('API : Check endpoints', async () => {
     '/customers/groups: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/customerGroup/05_postCustomersGroup.ts
     '/customers/groups: POST',
+    '/customers/required-fields: PUT',
     // @todo: add tests
     '/customers/search: GET',
     // @todo: add tests
@@ -148,23 +154,23 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/customers: POST',
     // @todo: add tests
-    //'/discounts/bulk-delete: DELETE',
+    '/discounts/bulk-delete: DELETE',
     // @todo: add tests
-    //'/discounts/bulk-update-status: PATCH',
+    '/discounts/bulk-update-status: PATCH',
     // tests/UI/campaigns/functional/API/02_endpoints/discount/01_getDiscountTypes.ts
-    //'/discounts/types: GET',
+    '/discounts/types: GET',
     // @todo: add tests
-    //'/discounts/{discountId}/duplicate: POST',
+    '/discounts/{discountId}/duplicate: POST',
     // tests/UI/campaigns/functional/API/02_endpoints/discount/02_deleteDiscountsDiscountsId.ts
-    //'/discounts/{discountId}: DELETE',
+    '/discounts/{discountId}: DELETE',
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/38647
-    //'/discounts/{discountId}: GET',
+    '/discounts/{discountId}: GET',
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/39682
-    //'/discounts/{discountId}: PATCH',
+    '/discounts/{discountId}: PATCH',
     // tests/UI/campaigns/functional/API/02_endpoints/discount/03_getDiscounts.ts
-    //'/discounts: GET',
+    '/discounts: GET',
     // tests/UI/campaigns/functional/API/02_endpoints/discount/03_postDiscounts.ts
-    //'/discounts: POST',
+    '/discounts: POST',
     // @todo: add tests
     '/features/bulk-delete: DELETE',
     // @todo: add tests
@@ -312,6 +318,8 @@ describe('API : Check endpoints', async () => {
     // @todo: add tests
     '/search-aliases/{searchTerm}: PUT',
     // @todo: add tests
+    '/search-aliases: GET',
+    // @todo: add tests
     '/search-aliases: POST',
     // tests/UI/campaigns/functional/API/02_endpoints/searchAlias/01_deleteSearch.ts
     // '/search-aliases: DELETE',
@@ -379,6 +387,9 @@ describe('API : Check endpoints', async () => {
     '/tax-rules-groups: GET',
     // @todo: add tests
     '/tax-rules-groups: POST',
+    '/tax-rules/{taxRuleId}: DELETE',
+    '/tax-rules: GET',
+    '/tax-rules: POST',
     // @todo: add tests
     '/taxes/bulk-delete: PUT',
     // @todo: add tests
@@ -443,6 +454,8 @@ describe('API : Check endpoints', async () => {
     await utilsPlaywright.closeBrowserContext(browserContext);
   });
 
+  setFeatureFlag(boFeatureFlagPage.featureFlagExperimentalEndpoints, true, `${baseContext}_preTest_0`);
+
   describe('Check endpoints', async () => {
     it('should login in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginBO', baseContext);
@@ -503,7 +516,7 @@ describe('API : Check endpoints', async () => {
       //console.log(endpoints);
 
       // @todo : Check regulary
-      //expect(endpoints).to.deep.equals(subsetEndpoints);
+      expect(endpoints).to.deep.equals(subsetEndpoints);
 
       expect(endpoints.length).to.be.greaterThan(0);
       subsetEndpoints.forEach((endpoint: string) => {
@@ -514,4 +527,6 @@ describe('API : Check endpoints', async () => {
       });
     });
   });
+
+  setFeatureFlag(boFeatureFlagPage.featureFlagExperimentalEndpoints, false, `${baseContext}_postTest_0`);
 });
