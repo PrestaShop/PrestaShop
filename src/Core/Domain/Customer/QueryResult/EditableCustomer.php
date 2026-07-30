@@ -118,6 +118,11 @@ class EditableCustomer
     private $languageId;
 
     /**
+     * @var int
+     */
+    private $shopId;
+
+    /**
      * @param CustomerId $customerId
      * @param int $genderId
      * @param FirstName $firstName
@@ -138,6 +143,7 @@ class EditableCustomer
      * @param int $riskId
      * @param bool $isGuest
      * @param int $languageId
+     * @param int $shopId
      */
     public function __construct(
         CustomerId $customerId,
@@ -159,7 +165,8 @@ class EditableCustomer
         $maxPaymentDays,
         $riskId,
         bool $isGuest = false,
-        int $languageId = 0
+        int $languageId = 0,
+        int $shopId = 0
     ) {
         $this->customerId = $customerId;
         $this->genderId = $genderId;
@@ -181,6 +188,7 @@ class EditableCustomer
         $this->riskId = $riskId;
         $this->isGuest = $isGuest;
         $this->languageId = $languageId;
+        $this->shopId = $shopId;
     }
 
     /**
@@ -341,5 +349,13 @@ class EditableCustomer
     public function getLanguageId()
     {
         return $this->languageId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShopId(): int
+    {
+        return $this->shopId;
     }
 }

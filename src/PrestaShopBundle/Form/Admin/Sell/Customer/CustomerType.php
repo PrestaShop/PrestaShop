@@ -9,7 +9,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
-use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as DomainEmail;
@@ -44,9 +43,9 @@ use Validate;
 class CustomerType extends TranslatorAwareType
 {
     /**
-     * @var array
+     * @var LanguageByIdChoiceProvider
      */
-    private $languageChoices;
+    private $languageByIdChoiceProvider;
 
     /**
      * @var bool
@@ -96,8 +95,7 @@ class CustomerType extends TranslatorAwareType
         $isPartnerOffersEnabled,
         ConfigurationInterface $configuration,
         FormCloner $formCloner,
-        LanguageByIdChoiceProvider $languageByIdChoiceProvider,
-        ShopContext $shopContext
+        LanguageByIdChoiceProvider $languageByIdChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
@@ -106,9 +104,7 @@ class CustomerType extends TranslatorAwareType
         $this->configuration = $configuration;
         $this->formCloner = $formCloner;
         $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
-        $this->languageChoices = $languageByIdChoiceProvider->getChoices([
-            'shop_id' => $shopContext->getId(),
-        ]);
+        $this->languageByIdChoiceProvider = $languageByIdChoiceProvider;
     }
 
     /**
@@ -317,7 +313,9 @@ class CustomerType extends TranslatorAwareType
                 'label' => $this->trans('Language', 'Admin.Global'),
                 'required' => false,
                 'placeholder' => null,
-                'choices' => $this->languageChoices,
+                'choices' => $this->languageByIdChoiceProvider->getChoices([
+                    'shop_id' => $options['shop_id'],
+                ]),
                 'attr' => [
                     'data-toggle' => 'select2',
                     'data-minimumResultsForSearch' => '7',
@@ -418,8 +416,10 @@ class CustomerType extends TranslatorAwareType
                 'is_password_required' => true,
                 'show_guest_field' => false,
             ])
+            ->setRequired('shop_id')
             ->setAllowedTypes('is_password_required', 'bool')
             ->setAllowedTypes('show_guest_field', 'bool')
+            ->setAllowedTypes('shop_id', 'int')
         ;
     }
 }

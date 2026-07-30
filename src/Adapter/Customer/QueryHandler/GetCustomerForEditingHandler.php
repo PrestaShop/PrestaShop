@@ -62,7 +62,8 @@ final class GetCustomerForEditingHandler implements GetCustomerForEditingHandler
             (int) $customer->max_payment_days,
             (int) $customer->id_risk,
             (bool) $customer->isGuest(),
-            (int) $customer->id_lang
+            (int) $customer->id_lang,
+            (int) $customer->id_shop
         );
     }
 }
