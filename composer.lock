@@ -5215,12 +5215,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "c22c120242dcf4a723fd1c7d4b8da60a62c6566c"
+                "reference": "4f2124baf5e6f7dd1a530c98ec9ffae4474411ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/c22c120242dcf4a723fd1c7d4b8da60a62c6566c",
-                "reference": "c22c120242dcf4a723fd1c7d4b8da60a62c6566c",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/4f2124baf5e6f7dd1a530c98ec9ffae4474411ef",
+                "reference": "4f2124baf5e6f7dd1a530c98ec9ffae4474411ef",
                 "shasum": ""
             },
             "require": {
@@ -5303,7 +5303,7 @@
                 "source": "https://github.com/PrestaShop/ps_apiresources/tree/taxrules-list",
                 "issues": "https://github.com/PrestaShop/ps_apiresources/issues"
             },
-            "time": "2026-07-27T15:56:40+00:00"
+            "time": "2026-07-30T12:05:03+00:00"
         },
         {
             "name": "prestashop/ps_banner",
