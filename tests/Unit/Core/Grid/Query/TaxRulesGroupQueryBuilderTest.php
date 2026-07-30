@@ -149,7 +149,7 @@ class TaxRulesGroupQueryBuilderTest extends TestCase
                     'trg.`deleted` = 0',
                 ]
             ),
-            'groupBy' => [],
+            'groupBy' => ['trg.`id_tax_rules_group`'],
             'having' => null,
             'orderBy' => [],
             'values' => [],
@@ -162,7 +162,7 @@ class TaxRulesGroupQueryBuilderTest extends TestCase
         yield [
             $defaultFilters,
             $defaultQueryParts,
-            array_merge($defaultQueryParts, ['select' => [0 => 'COUNT(DISTINCT trg.`id_tax_rules_group`)']]),
+            array_merge($defaultQueryParts, ['select' => [0 => 'COUNT(DISTINCT trg.`id_tax_rules_group`)'], 'distinct' => false, 'groupBy' => []]),
             $defaultParameters,
         ];
 
@@ -186,7 +186,7 @@ class TaxRulesGroupQueryBuilderTest extends TestCase
         yield [
             $filters1,
             $queryParts1,
-            array_merge($queryParts1, ['select' => [0 => 'COUNT(DISTINCT trg.`id_tax_rules_group`)']]),
+            array_merge($queryParts1, ['select' => [0 => 'COUNT(DISTINCT trg.`id_tax_rules_group`)'], 'distinct' => false, 'groupBy' => []]),
             $parameters1,
         ];
 
@@ -210,7 +210,7 @@ class TaxRulesGroupQueryBuilderTest extends TestCase
         yield [
             $filters2,
             $queryParts2,
-            array_merge($queryParts2, ['select' => [0 => 'COUNT(DISTINCT trg.`id_tax_rules_group`)']]),
+            array_merge($queryParts2, ['select' => [0 => 'COUNT(DISTINCT trg.`id_tax_rules_group`)'], 'distinct' => false, 'groupBy' => []]),
             $parameters2,
         ];
     }
