@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\TaxRule\Command\AddTaxRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\TaxRule\CommandHandler\AddTaxRuleHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\TaxRule\CommandResult\AddTaxRuleResult;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\TaxRule\ValueObject\TaxRuleId;
 use TaxRule;
 
 /**
@@ -45,13 +46,14 @@ final class AddTaxRuleHandler implements AddTaxRuleHandlerInterface
 
         $taxRulesGroup = $this->taxRulesGroupRepository->get($newGroupId);
 
+        $taxRuleIds = [];
         foreach ($countryIds as $countryId) {
             foreach ($stateIds as $stateId) {
                 if ($taxRulesGroup->hasUniqueTaxRuleForCountry($countryId, $stateId)) {
                     continue;
                 }
 
-                $this->createTaxRule(
+                $taxRuleIds[] = $this->createTaxRule(
                     $newGroupId->getValue(),
                     $countryId,
                     $stateId,
@@ -60,7 +62,7 @@ final class AddTaxRuleHandler implements AddTaxRuleHandlerInterface
             }
         }
 
-        return new AddTaxRuleResult($newGroupId);
+        return new AddTaxRuleResult($newGroupId, $taxRuleIds);
     }
 
     /**
@@ -88,13 +90,15 @@ final class AddTaxRuleHandler implements AddTaxRuleHandlerInterface
      * @param int $countryId
      * @param int $stateId
      * @param AddTaxRuleCommand $command
+     *
+     * @return TaxRuleId
      */
     private function createTaxRule(
         int $taxRulesGroupId,
         int $countryId,
         int $stateId,
         AddTaxRuleCommand $command
-    ): void {
+    ): TaxRuleId {
         $taxRule = new TaxRule();
         $taxRule->id_tax_rules_group = $taxRulesGroupId;
         $taxRule->id_country = $countryId;
@@ -115,6 +119,6 @@ final class AddTaxRuleHandler implements AddTaxRuleHandlerInterface
             $taxRule->zipcode_to = $zipcodeTo;
         }
 
-        $this->taxRuleRepository->add($taxRule);
+        return $this->taxRuleRepository->add($taxRule);
     }
 }

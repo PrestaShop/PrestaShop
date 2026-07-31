@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5e99877b976b48992fc2de115178abf",
+    "content-hash": "5af655fb448c617686550abe39d33d2d",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5085,16 +5085,16 @@
         },
         {
             "name": "prestashop/hummingbird",
-            "version": "v2.1.0-beta.2",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/hummingbird.git",
-                "reference": "238dd265b4c73cbaa35c84e7340d9f62d97eaf76"
+                "reference": "440d4f9134bcfb4f2812831006440d6cb54a7ef3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/238dd265b4c73cbaa35c84e7340d9f62d97eaf76",
-                "reference": "238dd265b4c73cbaa35c84e7340d9f62d97eaf76",
+                "url": "https://api.github.com/repos/PrestaShop/hummingbird/zipball/440d4f9134bcfb4f2812831006440d6cb54a7ef3",
+                "reference": "440d4f9134bcfb4f2812831006440d6cb54a7ef3",
                 "shasum": ""
             },
             "require-dev": {
@@ -5119,9 +5119,9 @@
             "description": "Hummingbird development theme for PrestaShop",
             "support": {
                 "issues": "https://github.com/PrestaShop/hummingbird/issues",
-                "source": "https://github.com/PrestaShop/hummingbird/tree/v2.1.0-beta.2"
+                "source": "https://github.com/PrestaShop/hummingbird/tree/v2.1.0"
             },
-            "time": "2026-06-26T13:01:05+00:00"
+            "time": "2026-07-14T08:13:28+00:00"
         },
         {
             "name": "prestashop/pagesnotfound",
@@ -5211,16 +5211,16 @@
         },
         {
             "name": "prestashop/ps_apiresources",
-            "version": "v0.8.0",
+            "version": "dev-taxrules-list",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_apiresources.git",
-                "reference": "86d4883698e4e132b357e512f09eff0e773e029f"
+                "reference": "4f2124baf5e6f7dd1a530c98ec9ffae4474411ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/86d4883698e4e132b357e512f09eff0e773e029f",
-                "reference": "86d4883698e4e132b357e512f09eff0e773e029f",
+                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/4f2124baf5e6f7dd1a530c98ec9ffae4474411ef",
+                "reference": "4f2124baf5e6f7dd1a530c98ec9ffae4474411ef",
                 "shasum": ""
             },
             "require": {
@@ -5300,10 +5300,10 @@
             "description": "PrestaShop - API Resources",
             "homepage": "https://github.com/PrestaShop/ps_apiresources",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_apiresources/tree/v0.8.0",
+                "source": "https://github.com/PrestaShop/ps_apiresources/tree/taxrules-list",
                 "issues": "https://github.com/PrestaShop/ps_apiresources/issues"
             },
-            "time": "2026-07-07T17:24:43+00:00"
+            "time": "2026-07-30T12:05:03+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -18480,7 +18480,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": {
+        "prestashop/ps_apiresources": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -18501,5 +18503,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
