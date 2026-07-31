@@ -1,0 +1,52 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% set linkedCustomers = businessEntity.linkedCustomersCount %}
+{% set addressesCount = businessEntity.addressesCount %}
+
+<div class="card business-entity-view-summary">
+  <div class="card-body">
+    <div class="business-entity-view-summary__block business-entity-view-summary__block--customers">
+      <i class="material-icons">people</i>
+      <div class="business-entity-view-summary__text">
+        <div class="business-entity-view-summary__value">{{ linkedCustomers }}</div>
+        <div class="business-entity-view-summary__label">
+          {{ (linkedCustomers != 1
+            ? 'linked customers'|trans({}, 'Admin.Orderscustomers.Feature')
+            : 'linked customer'|trans({}, 'Admin.Orderscustomers.Feature')) }}
+        </div>
+      </div>
+    </div>
+
+    <div class="business-entity-view-summary__block business-entity-view-summary__block--addresses">
+      <i class="material-icons">location_on</i>
+      <div class="business-entity-view-summary__text">
+        <div class="business-entity-view-summary__value">{{ addressesCount }}</div>
+        <div class="business-entity-view-summary__label">
+          {{ (addressesCount != 1
+            ? 'addresses'|trans({}, 'Admin.Orderscustomers.Feature')
+            : 'address'|trans({}, 'Admin.Orderscustomers.Feature')) }}
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="business-entity-view-summary__meta">
+      <div class="business-entity-view-summary__meta-line">
+        <i class="material-icons">schedule</i>
+        <span>
+          {{ 'Created on'|trans({}, 'Admin.Global') }} {{ businessEntity.createdAt|date_format_full }}
+        </span>
+      </div>
+      <div class="business-entity-view-summary__meta-line">
+        <i class="material-icons">update</i>
+        <span>
+          {{ 'Updated on'|trans({}, 'Admin.Orderscustomers.Feature') }} {{ businessEntity.updatedAt|date_format_full }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

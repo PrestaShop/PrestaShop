@@ -1,0 +1,16 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{#
+ # Override of the badge column content for business_entity/customers_count: the count is rendered
+ # with a leading icon, and unconditionally, because the shared badge template treats a "0" count as
+ # empty and would render nothing.
+ #}
+<div class="text-{{ column.options.alignment }}">
+  <span class="badge rounded">
+    {{ record[column.options.field] }}
+    <i class="material-icons">info</i>
+  </span>
+</div>

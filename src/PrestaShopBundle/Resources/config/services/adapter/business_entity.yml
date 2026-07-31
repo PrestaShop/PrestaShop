@@ -1,5 +1,19 @@
 services:
   _defaults:
+    public: false
     autoconfigure: true
     autowire: true
   PrestaShop\PrestaShop\Adapter\BusinessEntity\CommandHandler\AddBusinessEntityHandler: ~
+
+  PrestaShop\PrestaShop\Adapter\BusinessEntity\Address\BusinessEntityAddressFormatter: ~
+
+  PrestaShop\PrestaShop\Adapter\BusinessEntity\QueryHandler\GetBusinessEntityForViewingHandler:
+    arguments:
+      $addressFormatter: '@PrestaShop\PrestaShop\Adapter\BusinessEntity\Address\BusinessEntityAddressFormatter'
+
+  PrestaShop\PrestaShop\Adapter\BusinessEntity\QueryHandler\GetPendingBusinessEntitiesCountHandler: ~
+
+  PrestaShop\PrestaShop\Adapter\BusinessEntity\Repository\BusinessEntityAddressRepository:
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'

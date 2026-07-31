@@ -571,3 +571,10 @@ services:
     arguments:
       $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
       $languageContext: '@PrestaShop\PrestaShop\Core\Context\LanguageContext'
+
+  PrestaShop\PrestaShop\Core\Grid\Query\BusinessEntityQueryBuilder:
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    public: false
+    arguments:
+      $searchCriteriaApplicator: '@prestashop.core.query.doctrine_search_criteria_applicator'
+      $shopContext: '@PrestaShop\PrestaShop\Core\Context\ShopContext'

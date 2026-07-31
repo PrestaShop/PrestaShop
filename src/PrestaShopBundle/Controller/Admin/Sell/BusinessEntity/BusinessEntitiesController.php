@@ -10,10 +10,20 @@ namespace PrestaShopBundle\Controller\Admin\Sell\BusinessEntity;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityBillingAddressConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityException;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\BusinessEntityNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Exception\UnableToCreateBusinessEntityAddress;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetBusinessEntityForViewing;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\Query\GetPendingBusinessEntitiesCount;
+use PrestaShop\PrestaShop\Core\Domain\BusinessEntity\QueryResult\BusinessEntityForViewing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BusinessEntityGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\BusinessEntityFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Entity\Enum\BusinessEntityStatus;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityAddressType;
 use PrestaShopBundle\Form\Admin\Sell\BusinessEntity\BusinessEntityType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
@@ -26,15 +36,80 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class BusinessEntitiesController extends PrestaShopAdminController
 {
-    #[AdminSecurity("is_granted('read', 'AdminBusinessEntities')")]
-    public function listAction(): Response
-    {
-        return $this->render('@PrestaShop/Admin/Sell/BusinessEntity/list.html.twig', [
-            'layoutHeaderToolbarBtn' => $this->getBusinessEntitiesToolbarButtons(),
+    /**
+     * Lists the business entities the employee is allowed to see, scoped to the current shop context.
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function listAction(
+        Request $request,
+        BusinessEntityFilters $filters,
+        #[Autowire(service: 'prestashop.core.grid.factory.business_entity')]
+        GridFactoryInterface $businessEntityGridFactory,
+    ): Response {
+        $pendingCount = $this->dispatchQuery(new GetPendingBusinessEntitiesCount());
+
+        $currentStatusFilter = $filters->getFilters()['status'] ?? null;
+        $isPendingFilter = ($currentStatusFilter === BusinessEntityStatus::PENDING->value);
+
+        $pendingUrl = $this->generateUrl('admin_business_entities_list', [
+            BusinessEntityGridDefinitionFactory::GRID_ID => [
+                'filters' => ['status' => BusinessEntityStatus::PENDING->value],
+            ],
         ]);
+
+        return $this->render(
+            '@PrestaShop/Admin/Sell/BusinessEntity/list.html.twig',
+            [
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'layoutTitle' => $this->trans('Business entities', [], 'Admin.Navigation.Menu'),
+                'layoutHeaderToolbarBtn' => $this->getBusinessEntitiesToolbarButtons(),
+                'businessEntityGrid' => $this->presentGrid($businessEntityGridFactory->getGrid($filters)),
+                'pendingCount' => $pendingCount,
+                'pendingUrl' => $pendingUrl,
+                'isPendingFilter' => $isPendingFilter,
+            ]
+        );
     }
 
-    #[AdminSecurity("is_granted('create', 'AdminBusinessEntities')", message: 'You do not have permission to create this.', redirectRoute: 'admin_business_entities_list')]
+    /**
+     * Shows a single business entity in read-only. An entity belonging to another shop is reported
+     * as not found rather than as an access error, so the listing does not leak its existence.
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute: 'admin_business_entities_list')]
+    public function viewAction(
+        Request $request,
+        int $businessEntityId,
+    ): Response {
+        try {
+            /** @var BusinessEntityForViewing $businessEntityForViewing */
+            $businessEntityForViewing = $this->dispatchQuery(
+                new GetBusinessEntityForViewing($businessEntityId)
+            );
+        } catch (BusinessEntityException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_business_entities_list');
+        }
+
+        return $this->render(
+            '@PrestaShop/Admin/Sell/BusinessEntity/view.html.twig',
+            [
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'layoutTitle' => $this->trans(
+                    'Business entity %name%',
+                    [
+                        '%name%' => $businessEntityForViewing->getName(),
+                    ],
+                    'Admin.Navigation.Menu'
+                ),
+                'businessEntity' => $businessEntityForViewing,
+            ]
+        );
+    }
+
+    #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message: 'You do not have permission to create this.', redirectRoute: 'admin_business_entities_list')]
     public function createAction(
         Request $request,
         #[Autowire(service: 'prestashop.core.form.identifiable_object.builder.business_entity_form_builder')]
@@ -80,12 +155,12 @@ class BusinessEntitiesController extends PrestaShopAdminController
                 'layoutTitle' => $this->trans('New business entity', [], 'Admin.Navigation.Menu'),
                 'businessEntityForm' => $form->createView(),
                 'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink('AdminBusinessEntities'),
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             ]
         );
     }
 
-    protected function getBusinessEntitiesToolbarButtons(): array
+    private function getBusinessEntitiesToolbarButtons(): array
     {
         $toolbarButtons = [];
 
@@ -101,6 +176,18 @@ class BusinessEntitiesController extends PrestaShopAdminController
     private function getErrorMessages(): array
     {
         return [
+            BusinessEntityNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found).',
+                [],
+                'Admin.Notifications.Error'
+            ),
+            BusinessEntityConstraintException::class => [
+                BusinessEntityConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
+            ],
             UnableToCreateBusinessEntityAddress::class => $this->trans(
                 'An error occurred while creating the business entity.',
                 [],

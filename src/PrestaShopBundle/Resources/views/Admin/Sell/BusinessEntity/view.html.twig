@@ -1,0 +1,36 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% block pageTitle %}
+  {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/header.html.twig') }}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-8 mb-3 mb-md-0">
+      {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/company_information.html.twig') }}
+    </div>
+
+    <div class="col-md-4">
+      {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/company_summary.html.twig') }}
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-6 mb-3 mb-md-0">
+      {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/billing_address.html.twig') }}
+    </div>
+
+    <div class="col-md-6">
+      {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/shipping_address.html.twig') }}
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col">
+      {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/linked_customers.html.twig') }}
+    </div>
+  </div>
+{% endblock %}

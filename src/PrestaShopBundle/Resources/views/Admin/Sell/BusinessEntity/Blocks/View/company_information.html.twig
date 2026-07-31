@@ -1,0 +1,48 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+<div class="card business-entity-view-info">
+  <h3 class="card-header">
+    {{ 'Company information'|trans({}, 'Admin.Orderscustomers.Feature') }}
+  </h3>
+
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-4 mb-3 mb-md-0">
+        <div class="text-muted mb-2">{{ 'Name'|trans({}, 'Admin.Global') }}</div>
+        <div><strong>{{ businessEntity.name }}</strong></div>
+      </div>
+      <div class="col-md-4 mb-3 mb-md-0">
+        <div class="text-muted mb-2">{{ 'Legal name'|trans({}, 'Admin.Orderscustomers.Feature') }}</div>
+        <div><strong>{{ businessEntity.legalName ?: 'N/A'|trans({}, 'Admin.Global') }}</strong></div>
+      </div>
+    </div>
+
+    {% set identifiers = businessEntity.identifiers %}
+    {% if identifiers is not empty %}
+      <hr>
+      <div class="row">
+        {% for identifier in identifiers %}
+          <div class="col-md-4 mb-3">
+            <div class="text-muted mb-2">{{ identifier.label }}</div>
+            <div><strong>{{ identifier.value ?: 'N/A'|trans({}, 'Admin.Global') }}</strong></div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <hr>
+    <div class="row">
+      <div class="col-md-4 mb-3 mb-md-0">
+        <div class="text-muted mb-2">{{ 'Status'|trans({}, 'Admin.Global') }}</div>
+        <div>{{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/_status_badge.html.twig') }}</div>
+      </div>
+      <div class="col-md-4 mb-3 mb-md-0">
+        <div class="text-muted mb-2">{{ 'Customer group'|trans({}, 'Admin.Orderscustomers.Feature') }}</div>
+        <div><strong>{{ businessEntity.customerGroupName ?: 'N/A'|trans({}, 'Admin.Global') }}</strong></div>
+      </div>
+    </div>
+  </div>
+</div>

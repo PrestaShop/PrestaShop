@@ -6,10 +6,32 @@ admin_business_entities_list:
     _legacy_controller: AdminBusinessEntities
     _legacy_link: AdminBusinessEntities
 
+admin_business_entities_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    _legacy_controller: AdminBusinessEntities
+    _legacy_link: AdminBusinessEntities:submitFilterbusiness_entity
+    gridDefinitionFactoryServiceId: PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BusinessEntityGridDefinitionFactory
+    redirectRoute: admin_business_entities_list
+
+admin_business_entities_view:
+  path: /{businessEntityId}/view
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::viewAction
+    _legacy_controller: AdminBusinessEntities
+    _legacy_link: AdminBusinessEntities:viewbusiness_entity
+    _legacy_parameters:
+      id_business_entity: businessEntityId
+  requirements:
+    businessEntityId: \d+
+
 admin_business_entities_create:
   path: /new
   methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\BusinessEntity\BusinessEntitiesController::createAction
     _legacy_controller: AdminBusinessEntities
-    _legacy_link: AdminBusinessEntities
+    _legacy_link: AdminBusinessEntities:addbusiness_entity

@@ -11,4 +11,12 @@ enum AddressTypeEnum: string
     case BOTH = 'both';
     case INVOICE = 'invoice';
     case DELIVERY = 'delivery';
+
+    /**
+     * @return string[]
+     */
+    public static function values(): array
+    {
+        return array_column(self::cases(), 'value');
+    }
 }

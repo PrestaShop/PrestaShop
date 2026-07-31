@@ -1,0 +1,22 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+<div class="business-entity-view-header">
+  <div class="business-entity-view-header__main">
+    <div class="business-entity-view-avatar" aria-hidden="true">
+      {{ businessEntity.initials }}
+    </div>
+    <div class="business-entity-view-header__titles">
+      <h1 class="business-entity-view-header__name">{{ businessEntity.name }}</h1>
+      {% if businessEntity.legalName %}
+        <div class="business-entity-view-header__legal-name">{{ businessEntity.legalName }}</div>
+      {% endif %}
+    </div>
+    <span class="business-entity-view-header__divider" aria-hidden="true"></span>
+    {{ include('@PrestaShop/Admin/Sell/BusinessEntity/Blocks/View/_status_badge.html.twig', {
+      extraClass: 'business-entity-view-header__status',
+    }) }}
+  </div>
+</div>
