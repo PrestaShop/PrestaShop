@@ -1513,8 +1513,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $langId = static::getIdByIso($iso_code);
 
         if (!empty($langId)) {
-            $lang = new static($langId);
             /** @var Language $lang */
+            $lang = new static($langId);
             $rows = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
             if (!empty($rows)) {
                 // get all values

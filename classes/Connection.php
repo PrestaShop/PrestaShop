@@ -259,11 +259,9 @@ class ConnectionCore extends ObjectModel
             return;
         }
 
-        if ($interval != null) {
-            // Records of connections details older than the beginning of the  specified interval are deleted
-            Db::getInstance()->execute('
-			DELETE FROM `' . _DB_PREFIX_ . 'connections_page`
-			WHERE time_start < LAST_DAY(DATE_SUB(NOW(), INTERVAL ' . $interval . '))');
-        }
+        // Records of connections details older than the beginning of the  specified interval are deleted
+        Db::getInstance()->execute('
+        DELETE FROM `' . _DB_PREFIX_ . 'connections_page`
+        WHERE time_start < LAST_DAY(DATE_SUB(NOW(), INTERVAL ' . $interval . '))');
     }
 }

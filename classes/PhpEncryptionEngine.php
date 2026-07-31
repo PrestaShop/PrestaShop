@@ -107,8 +107,7 @@ class PhpEncryptionEngineCore
         $secure = true;
         $buf = openssl_random_pseudo_bytes($bytes, $secure);
         if (
-            $buf !== false
-            && $secure
+            $secure
             && mb_strlen($buf, '8bit') === $bytes
         ) {
             return $buf;

@@ -578,7 +578,7 @@ class PackCore extends Product
      * @param int $id_attribute_item The combination of the product
      * @param int $id_lang
      *
-     * @return array[Product] Packs that contains the given product
+     * @return Product[] Packs that contains the given product
      */
     public static function getPacksContainingItem($id_item, $id_attribute_item, $id_lang)
     {
