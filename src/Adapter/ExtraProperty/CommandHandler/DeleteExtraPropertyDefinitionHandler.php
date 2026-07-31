@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyRegis
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException as CoreExtraPropertyException;
 
 /**
  * Deletes a core extra property definition and optionally its physical SQL column.
@@ -38,17 +39,19 @@ final class DeleteExtraPropertyDefinitionHandler implements DeleteExtraPropertyD
      *
      * @throws ExtraPropertyDefinitionNotFoundException
      * @throws ProtectedModuleExtraPropertyDefinitionException
-     * @throws ExtraPropertyRegistrationFailureException
+     * @throws ExtraPropertyRegistrationFailureException carries the failure reason as its code
+     *                                                   and the core exception as previous
      */
     public function handle(DeleteExtraPropertyDefinitionCommand $command): void
     {
         $id = $command->getId()->getValue();
         $definition = $this->repository->getUnprotectedDefinitionById($id);
 
-        $unregistered = $this->registry->unregister($definition, $command->shouldDropColumn());
-
-        if (!$unregistered) {
-            throw new ExtraPropertyRegistrationFailureException(
+        try {
+            $this->registry->unregister($definition, $command->shouldDropColumn());
+        } catch (CoreExtraPropertyException $exception) {
+            throw ExtraPropertyRegistrationFailureException::fromCoreException(
+                $exception,
                 sprintf('Failed to delete extra property definition with id %d.', $id)
             );
         }
