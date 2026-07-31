@@ -185,7 +185,14 @@ class ImageManagerCore
             return false;
         }
 
-        list($tmpWidth, $tmpHeight, $sourceFileType) = getimagesize($sourceFile);
+        $sourceInfo = getimagesize($sourceFile);
+        if ($sourceInfo === false) {
+            $error = self::ERROR_FILE_WIDTH;
+
+            return false;
+        }
+
+        list($tmpWidth, $tmpHeight, $sourceFileType) = $sourceInfo;
         $rotate = 0;
         if (function_exists('exif_read_data')) {
             $exif = @exif_read_data($sourceFile);
