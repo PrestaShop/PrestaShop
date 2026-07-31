@@ -1,0 +1,23 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<table id="payment-tab" width="100%">
+    <tr>
+        <td class="payment center small grey bold" width="44%">{{ 'Payment Method'|trans({}, 'Shop.Pdf') }}</td>
+        <td class="payment left white" width="56%">
+            {% if payments %}
+                <table width="100%" border="0">
+                    {% for payment in payments %}
+                        <tr>
+                            <td class="right small">{{ payment.payment_method }}</td>
+                            <td class="right small">{{ payment.amount|price_format(payment.currency_iso_code) }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                {{ order_payment }}
+            {% endif %}
+        </td>
+    </tr>
+</table>

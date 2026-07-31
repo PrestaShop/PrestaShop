@@ -4,12 +4,13 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
-use Context;
 use Hook;
+use ObjectModel;
 use Order;
-use PDF;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\PDF\GeneratedPdf;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
@@ -22,38 +23,29 @@ use Validate;
  */
 final class OrderInvoicePdfGenerator implements PDFGeneratorInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        private readonly PDFGenerator $pdfGenerator
+    ) {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function generatePDF(array $orderId): string
+    public function generatePDF(array $orderId): void
     {
-        return $this->createPdf($orderId)->render(true);
+        $this->pdfGenerator->generatePDF($this->getOrderInvoiceList($orderId));
     }
 
     public function generatePDFForResponse(array $orderId): GeneratedPdf
     {
-        $pdf = $this->createPdf($orderId);
-
-        return new GeneratedPdf(
-            $pdf->render(false),
-            $pdf->getFilename()
-        );
+        return $this->pdfGenerator->generatePDFForResponse($this->getOrderInvoiceList($orderId));
     }
 
-    private function createPdf(array $orderId): PDF
+    /**
+     * @return ObjectModel[]
+     */
+    private function getOrderInvoiceList(array $orderId): array
     {
         if (count($orderId) !== 1) {
             throw new CoreException(sprintf('"%s" supports generating invoice for single order only.', self::class));
@@ -65,10 +57,10 @@ final class OrderInvoicePdfGenerator implements PDFGeneratorInterface
             throw new RuntimeException($this->translator->trans('The order cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
         }
 
-        $order_invoice_list = $order->getInvoicesCollection();
+        $orderInvoiceList = $order->getInvoicesCollection();
 
-        Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
+        Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $orderInvoiceList]);
 
-        return new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, Context::getContext()->smarty);
+        return iterator_to_array($orderInvoiceList);
     }
 }

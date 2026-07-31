@@ -1,0 +1,22 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<table id="summary-tab" width="100%">
+    <tr>
+        <th class="header small" valign="middle">{{ 'Order Reference'|trans({}, 'Shop.Pdf') }}</th>
+        <th class="header small" valign="middle">{{ 'Order date'|trans({}, 'Shop.Pdf') }}</th>
+        {% if invoice_address_vat_number %}
+            <th class="header small" valign="middle">{{ 'VAT Number'|trans({}, 'Shop.Pdf') }}</th>
+        {% endif %}
+    </tr>
+    <tr>
+        <td class="center small white">{{ order_reference }}</td>
+        <td class="center small white">{{ order_date_formatted }}</td>
+        {% if invoice_address_vat_number %}
+            <td class="center small white">
+                {{ invoice_address_vat_number }}
+            </td>
+        {% endif %}
+    </tr>
+</table>

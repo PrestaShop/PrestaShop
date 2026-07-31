@@ -1,0 +1,92 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+<table id="total-tab" width="100%">
+
+    {% if order_slip.shipping_cost_amount > 0 %}
+        <tr>
+            {% if tax_excluded_display %}
+                <td class="grey" width="70%">{{ 'Shipping (Tax Excl.)'|trans({}, 'Shop.Pdf') }}</td>
+            {% else %}
+                <td class="grey" width="70%">{{ 'Shipping (Tax Incl.)'|trans({}, 'Shop.Pdf') }}</td>
+            {% endif %}
+            <td class="white" width="30%">
+                - {{ order_slip.shipping_cost_amount|price_format(currency_iso_code) }}
+            </td>
+        </tr>
+    {% endif %}
+
+    {% if order_details|length > 0 %}
+        {% if (order.total_paid_tax_incl - order.total_paid_tax_excl) > 0 %}
+            {% if tax_excluded_display %}
+                <tr>
+                    <td class="grey" width="70%">
+                        {{ 'Product Total (Tax Excl.)'|trans({}, 'Shop.Pdf') }}
+                    </td>
+                    <td class="white" width="30%">
+                        - {{ order.total_products|price_format(currency_iso_code) }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td class="grey" width="70%">
+                        {{ 'Product Total (Tax Incl.)'|trans({}, 'Shop.Pdf') }}
+                    </td>
+                    <td class="white" width="30%">
+                        - {{ order.total_products_wt|price_format(currency_iso_code) }}
+                    </td>
+                </tr>
+            {% endif %}
+        {% else %}
+            <tr>
+                <td class="grey" width="70%">
+                    {{ 'Product Total'|trans({}, 'Shop.Pdf') }}
+                </td>
+                <td class="white" width="30%">
+                    - {{ order.total_products|price_format(currency_iso_code) }}
+                </td>
+            </tr>
+        {% endif %}
+    {% endif %}
+
+    {% if (order.total_paid_tax_incl - order.total_paid_tax_excl) > 0 %}
+        <tr>
+            <td class="grey" width="70%">
+                {{ 'Total Tax'|trans({}, 'Shop.Pdf') }}
+            </td>
+            <td class="white" width="30%">
+                - {{ (order.total_paid_tax_incl - order.total_paid_tax_excl)|price_format(currency_iso_code) }}
+            </td>
+        </tr>
+    {% endif %}
+
+    {% if tax_excluded_display %}
+        <tr class="bold">
+            <td class="grey" width="70%">
+                {{ 'Total (Tax Excl.)'|trans({}, 'Shop.Pdf') }}
+            </td>
+            <td class="white" width="30%">
+                {% if total_cart_rule %}
+                    - {{ (order.total_paid_tax_excl - total_cart_rule)|price_format(currency_iso_code) }}
+                {% else %}
+                    - {{ order.total_paid_tax_excl|price_format(currency_iso_code) }}
+                {% endif %}
+            </td>
+        </tr>
+    {% endif %}
+
+    <tr class="bold">
+        <td class="grey" width="70%">
+            {{ 'Total (Tax Incl.)'|trans({}, 'Shop.Pdf') }}
+        </td>
+        <td class="white" width="30%">
+            {% if total_cart_rule %}
+                - {{ (order.total_paid_tax_incl - total_cart_rule)|price_format(currency_iso_code) }}
+            {% else %}
+                - {{ order.total_paid_tax_incl|price_format(currency_iso_code) }}
+            {% endif %}
+        </td>
+    </tr>
+
+</table>

@@ -1,0 +1,12 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% if not is_virtual_order %}
+    <table id="shipping-tab" width="100%">
+        <tr>
+            <td class="shipping center small grey bold" width="44%">{{ 'Carrier'|trans({}, 'Shop.Pdf') }}</td>
+            <td class="shipping center small white" width="56%">{{ carrier_name }}</td>
+        </tr>
+    </table>
+{% endif %}

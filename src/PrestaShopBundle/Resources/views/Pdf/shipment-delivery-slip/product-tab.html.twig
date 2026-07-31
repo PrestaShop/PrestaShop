@@ -1,0 +1,87 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{# See legacy pdf/shipment-delivery-slip.product-tab.tpl. #}
+<table class="product" width="100%" cellpadding="4" cellspacing="0">
+    <thead>
+    <tr>
+        <th class="product header small" width="25%">{{ 'Reference'|trans({}, 'Shop.Pdf') }}</th>
+        <th class="product header small" width="65%">{{ 'Product'|trans({}, 'Shop.Pdf') }}</th>
+        <th class="product header small" width="10%">{{ 'Qty'|trans({}, 'Shop.Pdf') }}</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {# PRODUCTS #}
+    {% for order_detail in order_details %}
+        {% if (order_detail.product_quantity - order_detail.product_quantity_refunded) > 0 %}
+            {% set bgcolor_class = cycle(['color_line_even', 'color_line_odd'], loop.index0) %}
+            <tr class="product {{ bgcolor_class }}">
+                <td class="product left">
+                    {% if order_detail.product_reference is empty %}
+                        ---
+                    {% else %}
+                        {{ order_detail.product_reference }}
+                    {% endif %}
+                </td>
+                <td class="product left">
+                    {% if display_product_images %}
+                        <table width="100%">
+                            <tr>
+                                <td width="15%">
+                                    {% if order_detail.image is defined and order_detail.image and order_detail.image.id %}
+                                        {{ order_detail.image_tag|raw }}
+                                    {% endif %}
+                                </td>
+                                <td width="5%">&nbsp;</td>
+                                <td width="80%">
+                                    {{ order_detail.product_name }}
+                                </td>
+                            </tr>
+                        </table>
+                    {% else %}
+                        {{ order_detail.product_name }}
+                    {% endif %}
+                </td>
+                <td class="product center">
+                    {{ order_detail.product_quantity - order_detail.product_quantity_refunded }}
+                </td>
+            </tr>
+
+            {% for customization_per_address in order_detail.customizedDatas %}
+                {% for customization in customization_per_address %}
+                    <tr class="customization_data {{ bgcolor_class }}">
+                        <td class="center">&nbsp;</td>
+                        <td>
+                            {% if customization.datas[constant('Product::CUSTOMIZE_TEXTFIELD')] is defined and customization.datas[constant('Product::CUSTOMIZE_TEXTFIELD')]|length > 0 %}
+                                <table style="width: 100%;">
+                                    {% for customization_infos in customization.datas[constant('Product::CUSTOMIZE_TEXTFIELD')] %}
+                                        <tr>
+                                            <td style="width: 30%;">{{ '%s:'|trans({'%s': customization_infos.name}, 'Shop.Pdf') }}</td>
+                                            <td>{{ customization_infos.value }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            {% endif %}
+
+                            {% if customization.datas[constant('Product::CUSTOMIZE_FILE')] is defined and customization.datas[constant('Product::CUSTOMIZE_FILE')]|length > 0 %}
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="width: 30%;">{{ 'image(s):'|trans({}, 'Shop.Pdf') }}</td>
+                                        <td>{{ customization.datas[constant('Product::CUSTOMIZE_FILE')]|length }}</td>
+                                    </tr>
+                                </table>
+                            {% endif %}
+                        </td>
+                        <td class="center">
+                            ({% if customization.quantity == 0 %}1{% else %}{{ customization.quantity - order_detail.product_quantity_refunded }}{% endif %})
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+    {# END PRODUCTS #}
+    </tbody>
+</table>
