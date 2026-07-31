@@ -122,6 +122,9 @@ export default class EmployeeForm {
       }
     });
     $tabsDropdown.prop('disabled', false);
+    // The default page field is rendered as a select2 component, which keeps its own rendering:
+    // trigger change so it re-syncs with the rebuilt options instead of showing the previous role's list.
+    $tabsDropdown.trigger('change');
   }
 
   /**
