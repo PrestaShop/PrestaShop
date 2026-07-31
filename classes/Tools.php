@@ -352,7 +352,11 @@ class ToolsCore
     }
 
     /**
-     * Get the server variable REMOTE_ADDR, or the first ip of HTTP_X_FORWARDED_FOR (when using proxy).
+     * Get the server variable REMOTE_ADDR, or the client IP from HTTP_X_FORWARDED_FOR (when using proxy).
+     *
+     * Parses the XFF chain from right-to-left to prevent IP spoofing (CWE-290 / CWE-348):
+     * the rightmost entries are appended by trusted proxy infrastructure and cannot be forged
+     * by the client. The leftmost entry is entirely client-controlled and must never be trusted.
      *
      * @return string $remote_addr ip of client
      */
@@ -371,16 +375,22 @@ class ToolsCore
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] && (!isset($_SERVER['REMOTE_ADDR'])
             || preg_match('/^127\..*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^172\.(1[6-9]|2\d|30|31)\..*/i', trim($_SERVER['REMOTE_ADDR']))
             || preg_match('/^192\.168\.*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^10\..*/i', trim($_SERVER['REMOTE_ADDR'])))) {
-            if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')) {
-                $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-
-                return $ips[0];
-            } else {
-                return $_SERVER['HTTP_X_FORWARDED_FOR'];
+            // CWE-348: Traverse right-to-left — the rightmost entries are appended by trusted
+            // proxy infrastructure and cannot be forged by the client. Return the first
+            // non-private, non-reserved IP to prevent XFF header spoofing (CWE-290).
+            $ips = array_map('trim', explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']));
+            foreach (array_reverse($ips) as $ip) {
+                if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
+                    return $ip;
+                }
             }
-        } else {
-            return $_SERVER['REMOTE_ADDR'];
+
+            // All entries are private/reserved (internal proxy chain) — return the rightmost
+            // which is at minimum the last hop and not client-controlled.
+            return end($ips);
         }
+
+        return $_SERVER['REMOTE_ADDR'];
     }
 
     /**
