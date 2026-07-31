@@ -25,6 +25,8 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
@@ -105,10 +107,7 @@ final class EmployeeType extends AbstractType
         $maxLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH);
         $minLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH);
 
-        $profileId = $builder->getData()['profile'] ?? reset($this->profilesChoices);
-        $viewableTabs = $this->tabDataProvider->getViewableTabs($profileId, $this->languageContext->getId());
-
-        $tabChoices = $this->formatTabs($viewableTabs);
+        $profileId = (int) ($builder->getData()['profile'] ?? reset($this->profilesChoices));
 
         $builder
             ->add('firstname', TextType::class, [
@@ -206,18 +205,21 @@ final class EmployeeType extends AbstractType
                 ),
                 'required' => false,
             ])
-            ->add('default_page', ChoiceType::class, [
-                'label' => $this->trans('Default page', [], 'Admin.Advparameters.Feature'),
-                'help' => $this->trans(
-                    'This page will be displayed just after login.',
-                    [],
-                    'Admin.Advparameters.Help'
-                ),
-                'autocomplete' => true,
-                'autocomplete_minimum_choices' => 5,
-                'choices' => $tabChoices,
-            ])
+            ->add('default_page', ChoiceType::class, $this->getDefaultPageOptions($profileId))
         ;
+
+        // The default page choices depend on the selected profile. Rebuild them from the submitted
+        // profile so a page that is only accessible to the newly selected role is accepted instead
+        // of being rejected against the previously saved role (matches the command handler check).
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
+            $submittedData = $event->getData();
+            // The profile field is not submitted in restricted-access mode, where the role cannot change.
+            if (!isset($submittedData['profile'])) {
+                return;
+            }
+
+            $event->getForm()->add('default_page', ChoiceType::class, $this->getDefaultPageOptions((int) $submittedData['profile']));
+        });
 
         if ($options['is_restricted_access']) {
             $builder
@@ -325,6 +327,26 @@ final class EmployeeType extends AbstractType
         return new NotBlank([
             'message' => $this->trans('This field cannot be empty.', [], 'Admin.Notifications.Error'),
         ]);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function getDefaultPageOptions(int $profileId): array
+    {
+        $viewableTabs = $this->tabDataProvider->getViewableTabs($profileId, $this->languageContext->getId());
+
+        return [
+            'label' => $this->trans('Default page', [], 'Admin.Advparameters.Feature'),
+            'help' => $this->trans(
+                'This page will be displayed just after login.',
+                [],
+                'Admin.Advparameters.Help'
+            ),
+            'autocomplete' => true,
+            'autocomplete_minimum_choices' => 5,
+            'choices' => $this->formatTabs($viewableTabs),
+        ];
     }
 
     private function formatTabs(array $tabs): array
