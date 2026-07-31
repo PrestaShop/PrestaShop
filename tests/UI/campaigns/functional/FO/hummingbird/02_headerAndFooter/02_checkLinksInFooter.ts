@@ -191,7 +191,6 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       it('should login to FO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'loginFONewCustomer', baseContext);
 
-        await foHummingbirdHomePage.goToLoginPage(page);
         await foHummingbirdLoginPage.customerLogin(page, createCustomerData);
 
         const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);

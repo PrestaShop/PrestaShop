@@ -66,8 +66,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function canonicalRedirection(string $canonical_url = ''): void
     {
-        // This is there to prevent error, because this function is also called
-        // in parent front controller before we have even loaded our data.
+        /*
+         * This is there to prevent error, because this function is also called
+         * in parent front controller before we have even loaded our data.
+         *
+         * There can also be a scenario where this page is accessed for a non-existing product ID,
+         * in this case, we need to always validate everything, because we can't "die early".
+         */
         if (!Validate::isLoadedObject($this->product)) {
             return;
         }
@@ -98,13 +103,15 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function getCanonicalURL(): string
     {
-        $product = $this->getTemplateVarProduct();
-
-        if (!($product instanceof ProductLazyArray)) {
+        /*
+         * There can be a scenario where this page is accessed for a non-existing product ID,
+         * in this case, we need to always validate everything, because we can't "die early".
+         */
+        if (!Validate::isLoadedObject($this->product)) {
             return '';
         }
 
-        return $product->getCanonicalUrl();
+        return $this->getTemplateVarProduct()->getCanonicalUrl();
     }
 
     /**
@@ -140,6 +147,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         // Otherwise immediately show 404
+        // Watch out - the controller goes on, always validate $this->product.
         if (!Validate::isLoadedObject($this->product)) {
             Hook::exec('actionNotFound');
             $this->product = null;
@@ -308,7 +316,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function initContent(): void
     {
-        if ($this->product === null) {
+        /*
+         * There can be a scenario where this page is accessed for a non-existing product ID,
+         * in this case, we need to always validate everything, because we can't "die early".
+         */
+        if (!Validate::isLoadedObject($this->product)) {
             parent::initContent();
 
             return;
@@ -437,6 +449,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function displayAjaxQuickview(): void
     {
+        /*
+         * Since this call is made on already a valid product page, we can safely assume that
+         * the product is valid and loaded, so we can use getTemplateVarProduct() without any checks.
+         */
         $productForTemplate = $this->getTemplateVarProduct();
         ob_end_clean();
         header('Content-Type: application/json');
@@ -451,6 +467,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     public function displayAjaxRefresh(): void
     {
+        /*
+         * Since this call is made on already a valid product page, we can safely assume that
+         * the product is valid and loaded, so we can use getTemplateVarProduct() without any checks.
+         */
         $product = $this->getTemplateVarProduct();
 
         // After refresh, we will show the customer a new quantity he has to use
@@ -1422,7 +1442,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
-        if ($this->product === null) {
+        if (!Validate::isLoadedObject($this->product)) {
             return $breadcrumb;
         }
 
@@ -1471,6 +1491,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $structuredData = parent::getStructuredData();
 
+        /*
+         * There can be a scenario where this page is accessed for a non-existing product ID,
+         * in this case, we need to always validate everything, because we can't "die early".
+         */
+        if (!Validate::isLoadedObject($this->product)) {
+            return $structuredData;
+        }
+
         $product = $this->getTemplateVarProduct();
 
         // Base structure
@@ -1479,7 +1507,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             '@type' => 'Product',
             'name' => $product['name'],
             'url' => $this->getCanonicalURL(),
-            'description' => preg_replace("/[\r\n]+/", ' ', $product['meta']['description'] ?? ''),
+            'description' => $product['description_short_text'],
             'category' => $product['category_name'] ?? '',
         ];
 
