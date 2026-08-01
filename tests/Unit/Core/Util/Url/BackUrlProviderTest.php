@@ -51,6 +51,45 @@ class BackUrlProviderTest extends TestCase
         $this->assertEquals($expected, $actualResult);
     }
 
+    /**
+     * The fail-closed branch is the security-relevant half of the guard and nothing else exercises it:
+     * preg_match() has to return false, not 0. Exhausting the backtrack limit does that. The JIT is
+     * disabled alongside because its error path would not reach the same branch, and the test needs
+     * its own process: PHP caches compiled patterns per process, so once an earlier test has compiled
+     * this pattern with the JIT enabled, setting pcre.jit at runtime no longer affects it and the
+     * backtrack limit is never hit.
+     *
+     * @runInSeparateProcess
+     *
+     * @preserveGlobalState disabled
+     */
+    public function testItDropsTheUrlWhenTheSchemeCheckErrors()
+    {
+        $backUrlProvider = new BackUrlProvider();
+        $previousLimit = ini_get('pcre.backtrack_limit');
+        $previousJit = ini_get('pcre.jit');
+        ini_set('pcre.backtrack_limit', '2');
+        ini_set('pcre.jit', '0');
+
+        try {
+            $actualResult = $backUrlProvider->getBackUrl(
+                new Request(
+                    ['back' => rawurlencode(str_repeat('a', 50) . ':')],
+                    [],
+                    [],
+                    [],
+                    [],
+                    ['HTTP_HOST' => 'localhost']
+                )
+            );
+        } finally {
+            ini_set('pcre.backtrack_limit', (string) $previousLimit);
+            ini_set('pcre.jit', (string) $previousJit);
+        }
+
+        $this->assertSame('', $actualResult, 'a scheme check that errored must not let the value through');
+    }
+
     public static function provideBackUrls(): iterable
     {
         yield 'relative url stays' => [
