@@ -40,6 +40,8 @@ use TaxRulesGroup;
 
 /**
  * Class ProductImportHandler is responsible for product import.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by the import engine importers, see \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ProductImporter
  */
 final class ProductImportHandler extends AbstractImportHandler
 {

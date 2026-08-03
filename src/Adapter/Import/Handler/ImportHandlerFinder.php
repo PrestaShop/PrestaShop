@@ -12,6 +12,8 @@ use PrestaShop\PrestaShop\Core\Import\Handler\ImportHandlerInterface;
 
 /**
  * Class ImportHandlerFinder is responsible for finding a proper import handler.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterRegistry
  */
 final class ImportHandlerFinder implements ImportHandlerFinderInterface
 {

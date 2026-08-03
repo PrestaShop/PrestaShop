@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class ImportRuntimeConfigFactory is responsible for building import runtime config.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by \PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext
  */
 final class ImportRuntimeConfigFactory implements ImportRuntimeConfigFactoryInterface
 {

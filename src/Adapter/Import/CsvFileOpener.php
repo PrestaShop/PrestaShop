@@ -13,6 +13,9 @@ use SplFileInfo;
 
 /**
  * Class CsvFileOpener is responsible for opening the CSV import file.
+ *
+ * @deprecated since 9.3, the import engine normalizes uploads once via
+ * CsvImportFileNormalizer and opens working files directly
  */
 final class CsvFileOpener implements FileOpenerInterface
 {

@@ -14,6 +14,8 @@ use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 
 /**
  * Interface ImportHandlerInterface describes an import handler.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by the import engine, see \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface
  */
 interface ImportHandlerInterface
 {

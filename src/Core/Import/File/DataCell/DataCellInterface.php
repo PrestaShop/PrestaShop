@@ -8,6 +8,9 @@ namespace PrestaShop\PrestaShop\Core\Import\File\DataCell;
 
 /**
  * Interface DataCellInterface describes a data cell from imported file.
+ *
+ * @deprecated since 9.3, part of the legacy DataRow reading layer — the import
+ * engine reads records as plain string arrays
  */
 interface DataCellInterface
 {

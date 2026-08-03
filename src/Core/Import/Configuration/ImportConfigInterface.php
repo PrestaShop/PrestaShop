@@ -8,6 +8,8 @@ namespace PrestaShop\PrestaShop\Core\Import\Configuration;
 
 /**
  * Interface ImportConfigInterface describes an import configuration VO.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by \PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext
  */
 interface ImportConfigInterface
 {

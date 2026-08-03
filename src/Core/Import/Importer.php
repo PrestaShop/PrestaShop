@@ -19,6 +19,8 @@ use SplFileInfo;
 
 /**
  * Class Importer is responsible for data import.
+ *
+ * @deprecated since 9.3, will be removed in the next major version - replaced by the import engine, see \PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface
  */
 final class Importer implements ImporterInterface
 {
