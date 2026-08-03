@@ -6,6 +6,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Import\File;
 
+use Generator;
+use PrestaShop\PrestaShop\Core\Import\Engine\Exception\InvalidResumeCursorException;
+use PrestaShop\PrestaShop\Core\Import\Engine\File\ImportFileNormalizer;
 use PrestaShop\PrestaShop\Core\Import\Exception\UnreadableFileException;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRow;
 use SplFileInfo;
@@ -13,7 +16,7 @@ use SplFileInfo;
 /**
  * Class CsvFileReader defines a CSV file reader.
  */
-final class CsvFileReader implements FileReaderInterface
+final class CsvFileReader implements ResumableFileReaderInterface
 {
     /**
      * @var string the data delimiter in the CSV row
@@ -75,12 +78,57 @@ final class CsvFileReader implements FileReaderInterface
 
         while ($row = fgetcsv($handle, $this->length, $this->delimiter, $this->enclosure, $this->escape)) {
             if ($convertToUtf8) {
-                $row = array_map('utf8_encode', $row);
+                $row = array_map(
+                    static function (?string $cell): string {
+                        return mb_convert_encoding((string) $cell, 'UTF-8', 'ISO-8859-1');
+                    },
+                    $row
+                );
             }
 
             yield DataRow::createFromArray($row);
         }
 
         fclose($handle);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * The cursor is a byte offset into the file (fseek, O(1) resume). This
+     * method is meant for working files produced by ImportFileNormalizer:
+     * it always reads the canonical CSV dialect and performs no encoding
+     * detection (normalized files are UTF-8 without BOM by construction).
+     */
+    public function readFrom(SplFileInfo $file, ?string $cursor = null): Generator
+    {
+        if (!$file->isReadable()) {
+            throw new UnreadableFileException(sprintf('Import file "%s" is not readable', $file->getPathname()));
+        }
+
+        $handle = fopen($file->getPathname(), 'rb');
+        if (false === $handle) {
+            throw new UnreadableFileException(sprintf('Could not open import file "%s"', $file->getPathname()));
+        }
+
+        try {
+            if (null !== $cursor) {
+                if (!ctype_digit($cursor)) {
+                    throw new InvalidResumeCursorException(sprintf('Invalid CSV resume cursor "%s", expected a byte offset', $cursor));
+                }
+                if (0 !== fseek($handle, (int) $cursor)) {
+                    throw new InvalidResumeCursorException(sprintf('Could not seek to byte offset %s in "%s"', $cursor, $file->getPathname()));
+                }
+            }
+
+            while (false !== ($row = fgetcsv($handle, 0, ImportFileNormalizer::CSV_DELIMITER, ImportFileNormalizer::CSV_ENCLOSURE, ImportFileNormalizer::CSV_ESCAPE))) {
+                // fgetcsv() yields [null] for blank lines; DataRow cells must be strings
+                $row = array_map(static fn (?string $cell): string => (string) $cell, $row);
+
+                yield (string) ftell($handle) => DataRow::createFromArray($row);
+            }
+        } finally {
+            fclose($handle);
+        }
     }
 }
