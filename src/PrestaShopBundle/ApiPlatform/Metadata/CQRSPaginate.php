@@ -112,6 +112,8 @@ class CQRSPaginate extends AbstractCQRSOperation implements CollectionOperationI
         ?bool $experimentalOperation = null,
         ?string $itemsField = null,
         ?string $countField = null,
+        ?string $minVersion = null,
+        ?string $maxVersion = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_GET;

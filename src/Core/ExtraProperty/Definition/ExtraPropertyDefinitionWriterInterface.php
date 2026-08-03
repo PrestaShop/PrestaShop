@@ -50,7 +50,8 @@ interface ExtraPropertyDefinitionWriterInterface
      *
      * @param ExtraPropertyDefinition $definition
      *
-     * @return bool False when no matching row is found
+     * @return bool True on success — including when no matching row exists (already deleted);
+     *              false only when the delete statement itself fails
      */
     public function deleteByDefinition(ExtraPropertyDefinition $definition): bool;
 }

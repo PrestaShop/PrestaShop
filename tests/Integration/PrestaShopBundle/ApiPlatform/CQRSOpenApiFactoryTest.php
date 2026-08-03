@@ -58,6 +58,37 @@ class CQRSOpenApiFactoryTest extends KernelTestCase
         }
     }
 
+    public function testVersionedOperationsAreFiltered(): void
+    {
+        /** @var OpenApiFactoryInterface $openApiFactory */
+        $openApiFactory = $this->getContainer()->get(OpenApiFactoryInterface::class);
+        /** @var OpenApi $openApi */
+        $openApi = $openApiFactory->__invoke();
+
+        // The core version compatibility filtering applies in debug mode as well (unless the experimental
+        // endpoints feature flag is enabled), so the versioned test operations incompatible with the core
+        // version are absent from the OpenApi documentation while the compatible ones are present (this
+        // also validates that the minVersion/maxVersion extra properties don't break the OpenApi generation,
+        // the full filtering behaviour is asserted in Tests\Integration\ApiPlatform\VersionedEndpointsTest)
+        $compatiblePaths = [
+            '/test/versioned/min-valid/product/{productId}',
+            '/test/versioned/max-valid/product/{productId}',
+            '/test/versioned/range-valid/product/{productId}',
+        ];
+        foreach ($compatiblePaths as $compatiblePath) {
+            $this->assertNotNull($openApi->getPaths()->getPath($compatiblePath), sprintf('Path %s not found in the OpenApi documentation', $compatiblePath));
+        }
+
+        $incompatiblePaths = [
+            '/test/versioned/min-invalid/product/{productId}',
+            '/test/versioned/max-invalid/product/{productId}',
+            '/test/versioned/range-invalid/product/{productId}',
+        ];
+        foreach ($incompatiblePaths as $incompatiblePath) {
+            $this->assertNull($openApi->getPaths()->getPath($incompatiblePath), sprintf('Path %s should have been filtered from the OpenApi documentation', $incompatiblePath));
+        }
+    }
+
     /**
      * @dataProvider provideEndpointScopes
      */

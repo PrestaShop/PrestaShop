@@ -14,10 +14,10 @@ use ApiPlatform\Metadata\Resource\Factory\AttributesResourceNameCollectionFactor
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShop\PrestaShop\Core\Version;
+use PrestaShopBundle\ApiPlatform\ExperimentalEndpointsCheckerTrait;
 use Psr\Container\ContainerInterface;
-use Throwable;
 
 /**
  * This service manually extracts data from the ApiResource classes to get the scopes associated
@@ -31,6 +31,8 @@ use Throwable;
  */
 class ApiResourceScopesExtractor implements ApiResourceScopesExtractorInterface
 {
+    use ExperimentalEndpointsCheckerTrait;
+
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $resourceMetadataCollectionFactory,
         private readonly EnvironmentInterface $environment,
@@ -147,6 +149,10 @@ class ApiResourceScopesExtractor implements ApiResourceScopesExtractorInterface
                 continue;
             }
 
+            if ($this->skipIncompatibleCoreVersion($operation)) {
+                continue;
+            }
+
             $extraProperties = $operation->getExtraProperties();
             if (array_key_exists('scopes', $extraProperties)) {
                 $operationScopes = $extraProperties['scopes'];
@@ -172,7 +178,7 @@ class ApiResourceScopesExtractor implements ApiResourceScopesExtractorInterface
     private function skipCQRSNotFound(Operation $operation): bool
     {
         // If experimental endpoints are enabled we don't filter anything
-        if ($this->areInvalidEndpointsEnabled()) {
+        if ($this->areExperimentalEndpointsEnabled()) {
             return false;
         }
 
@@ -191,18 +197,28 @@ class ApiResourceScopesExtractor implements ApiResourceScopesExtractorInterface
     }
 
     /**
-     * This service is implied during cache clearing which would fail when the shop is not installed
-     * because the DB config is not set up yet. So we protected the feature flag fetching in a try/catch
-     * and return false (default value) in case of an error.
+     * Similar filter as in CoreVersionCompatibilityMetadataCollectionFactoryDecorator, operations whose
+     * minVersion/maxVersion extra properties don't match the running core version are skipped.
+     *
+     * @param Operation $operation
      *
      * @return bool
      */
-    private function areInvalidEndpointsEnabled(): bool
+    private function skipIncompatibleCoreVersion(Operation $operation): bool
     {
-        try {
-            return $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS);
-        } catch (Throwable) {
+        // If experimental endpoints are enabled we don't filter anything
+        if ($this->areExperimentalEndpointsEnabled()) {
             return false;
         }
+
+        $extraProperties = $operation->getExtraProperties();
+        if (!empty($extraProperties['minVersion']) && version_compare(Version::VERSION, $extraProperties['minVersion'], '<')) {
+            return true;
+        }
+        if (!empty($extraProperties['maxVersion']) && version_compare(Version::VERSION, $extraProperties['maxVersion'], '>')) {
+            return true;
+        }
+
+        return false;
     }
 }

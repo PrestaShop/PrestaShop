@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\ExtraProperty\Schema;
 
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyRegistryException;
 
 /**
  * Manages the DDL (Data Definition Language) operations on extra storage tables.
@@ -28,8 +29,18 @@ interface ExtraPropertySchemaManagerInterface
      * Synchronises the SQL index strategy on the column.
      *
      * @param ExtraPropertyDefinition $definition Fully configured definition including type, scope, column name, and index strategy
+     *
+     * @return bool true when the storage column was newly added by this call, false when it
+     *              already existed and was only synchronised — callers use this to know whether
+     *              a compensating dropExtraColumnIfExists() would remove pre-existing data
+     *
+     * @throws ExtraPropertyRegistryException code BASE_TABLE_NOT_FOUND when the native base table to mirror
+     *                                        does not exist, SCHEMA_FAILURE when it has no primary key
+     *
+     * Raw database driver exceptions may also escape from the DDL statements themselves —
+     * callers are expected to wrap them (see ExtraPropertyRegistry)
      */
-    public function ensureExtraTableAndColumn(ExtraPropertyDefinition $definition): void;
+    public function ensureExtraTableAndColumn(ExtraPropertyDefinition $definition): bool;
 
     /**
      * Drops the custom column from the extra table when table and column exist.

@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyExcep
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyRegistrationFailureException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException as CoreExtraPropertyException;
 
 /**
  * Deletes several core extra property definitions in bulk.
@@ -46,16 +47,22 @@ final class BulkDeleteExtraPropertyDefinitionHandler extends AbstractBulkCommand
     }
 
     /**
+     * The core→domain wrap happens here, per item: handleBulkAction() only aggregates
+     * domain ExtraPropertyException instances — an escaping core exception would abort
+     * the whole batch instead of being collected.
+     *
      * @param int $id
      * @param BulkDeleteExtraPropertyDefinitionCommand $command
      */
     protected function handleSingleAction(mixed $id, mixed $command): void
     {
         $definition = $this->repository->getUnprotectedDefinitionById($id);
-        $unregistered = $this->registry->unregister($definition, $command->shouldDropColumn());
 
-        if (!$unregistered) {
-            throw new ExtraPropertyRegistrationFailureException(
+        try {
+            $this->registry->unregister($definition, $command->shouldDropColumn());
+        } catch (CoreExtraPropertyException $exception) {
+            throw ExtraPropertyRegistrationFailureException::fromCoreException(
+                $exception,
                 sprintf('Failed to delete extra property definition with id %d.', $id)
             );
         }

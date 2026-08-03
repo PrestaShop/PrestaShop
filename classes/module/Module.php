@@ -1236,15 +1236,16 @@ abstract class ModuleCore implements ModuleInterface
      * About BO label translations: store wording/domain pairs in the definition, and also call
      * $this->trans() in the module code so strings are discoverable by the BO translation UI.
      *
-     * The registry signals failure two ways: false for a structural refusal (see
-     * ExtraPropertyRegistryInterface::register()), an exception for form options that cannot
-     * build the field — module install code should handle both.
+     * Every failure throws (there is no false return): wrap the call in
+     * catch (PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException $e)
+     * in module install code to handle all failure reasons — the exception message carries
+     * the reason. A failed registration persists nothing (no definition row, no column).
      *
      * @param ExtraPropertyDefinition $definition definition
      *
-     * @return bool
+     * @return bool always true — failures throw
      *
-     * @throws PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyFormOptionsException when the definition's form options cannot build the form field
+     * @throws PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException on any failure: scope conflict, destructive schema change, invalid form options, missing base table, DDL or persistence failure (see the reason-code constants on ExtraPropertyRegistryException)
      */
     public function registerExtraProperty(ExtraPropertyDefinition $definition): bool
     {
@@ -1256,7 +1257,9 @@ abstract class ModuleCore implements ModuleInterface
         /** @var ExtraPropertyRegistryInterface $entityCustomFieldRegistry */
         $entityCustomFieldRegistry = $this->get(ExtraPropertyRegistryInterface::class);
 
-        return $entityCustomFieldRegistry->register($definition);
+        $entityCustomFieldRegistry->register($definition);
+
+        return true;
     }
 
     /**
@@ -1268,7 +1271,9 @@ abstract class ModuleCore implements ModuleInterface
      * @param ExtraPropertyDefinition $definition Definition identifying the property to unregister
      * @param bool $dropData If true, also DROP the SQL column and its data from the *_extra table
      *
-     * @return bool
+     * @return bool always true — failures throw (no-op when nothing is registered)
+     *
+     * @throws PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException when deleting the definition row or dropping the column fails — catch it in module uninstall code
      */
     public function unregisterExtraProperty(ExtraPropertyDefinition $definition, bool $dropData = false): bool
     {
@@ -1279,7 +1284,9 @@ abstract class ModuleCore implements ModuleInterface
         /** @var ExtraPropertyRegistryInterface $entityCustomFieldRegistry */
         $entityCustomFieldRegistry = $this->get(ExtraPropertyRegistryInterface::class);
 
-        return $entityCustomFieldRegistry->unregister($definition, $dropData);
+        $entityCustomFieldRegistry->unregister($definition, $dropData);
+
+        return true;
     }
 
     /**

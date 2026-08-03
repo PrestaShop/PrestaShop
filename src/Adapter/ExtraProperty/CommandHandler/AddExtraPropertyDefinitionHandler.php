@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyRegis
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\ValueObject\ExtraPropertyDefinitionId;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\ExtraPropertyException as CoreExtraPropertyException;
 
 /**
  * Creates a new core extra property definition via the registry.
@@ -34,7 +35,8 @@ final class AddExtraPropertyDefinitionHandler implements AddExtraPropertyDefinit
     /**
      * {@inheritdoc}
      *
-     * @throws ExtraPropertyRegistrationFailureException
+     * @throws ExtraPropertyRegistrationFailureException carries the failure reason as its code
+     *                                                   and the core exception as previous
      */
     public function handle(AddExtraPropertyDefinitionCommand $command): ExtraPropertyDefinitionId
     {
@@ -63,10 +65,11 @@ final class AddExtraPropertyDefinitionHandler implements AddExtraPropertyDefinit
             descriptionDomain: $command->getDescriptionDomain() ?: null,
         );
 
-        $id = $this->registry->register($definition);
-
-        if (false === $id) {
-            throw new ExtraPropertyRegistrationFailureException(
+        try {
+            $id = $this->registry->register($definition);
+        } catch (CoreExtraPropertyException $exception) {
+            throw ExtraPropertyRegistrationFailureException::fromCoreException(
+                $exception,
                 sprintf(
                     'Failed to register extra property "%s" on entity "%s".',
                     $command->getPropertyName(),

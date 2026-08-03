@@ -12,10 +12,9 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShopBundle\ApiPlatform\ExperimentalEndpointsCheckerTrait;
 use Psr\Container\ContainerInterface;
-use Throwable;
 
 /**
  * This factory decorates the ApiPlatform default resource factory. It looks into each operation and checks
@@ -30,6 +29,8 @@ use Throwable;
  */
 class CQRSNotFoundMetadataCollectionFactoryDecorator implements ResourceMetadataCollectionFactoryInterface
 {
+    use ExperimentalEndpointsCheckerTrait;
+
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $decorated,
         private readonly FeatureFlagStateCheckerInterface $featureFlagStateChecker,
@@ -43,7 +44,7 @@ class CQRSNotFoundMetadataCollectionFactoryDecorator implements ResourceMetadata
         $resourceMetadataCollection = $this->decorated->create($resourceClass);
 
         // In debug and prod mode we always hide the invalid endpoints, unless the experimental endpoints are forcefully enabled
-        if ($this->areInvalidEndpointsEnabled()) {
+        if ($this->areExperimentalEndpointsEnabled()) {
             return $resourceMetadataCollection;
         }
 
@@ -67,21 +68,5 @@ class CQRSNotFoundMetadataCollectionFactoryDecorator implements ResourceMetadata
         }
 
         return $resourceMetadataCollection;
-    }
-
-    /**
-     * This decorator is implied during cache clearing which would fail when the shop is not installed
-     * because the DB config is not set up yet. So we protected the feature flag fetching in a try/catch
-     * and return false (default value) in case of an error.
-     *
-     * @return bool
-     */
-    private function areInvalidEndpointsEnabled(): bool
-    {
-        try {
-            return $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS);
-        } catch (Throwable) {
-            return false;
-        }
     }
 }
