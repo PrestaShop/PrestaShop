@@ -118,7 +118,7 @@
     "dotenv": "^17.4.1",
     "mocha": "^11.7.6",
     "mochawesome": "^7.1.4",
-    "mysql2": "^3.23.1"
+    "mysql2": "^3.23.2"
   },
   "devDependencies": {
     "@types/chai": "^5.2.3",
