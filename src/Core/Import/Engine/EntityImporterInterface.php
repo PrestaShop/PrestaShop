@@ -29,6 +29,13 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 interface EntityImporterInterface
 {
     /**
+     * Engine-wide convention for multi-value association fields: a cell
+     * containing exactly this marker empties the association (legacy could
+     * not clear associations at all).
+     */
+    public const CLEAR_ASSOCIATION_MARKER = '@clear@';
+
+    /**
      * String identifier of the imported entity (e.g. 'product').
      */
     public function getEntityType(): string;
