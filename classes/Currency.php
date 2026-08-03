@@ -175,6 +175,9 @@ class CurrencyCore extends ObjectModel
     protected static $countActiveCurrencies = [];
 
     protected $webserviceParameters = [
+        'objectMethods' => array(
+            'delete' => 'deleteWs',
+        ),
         'objectsNodeName' => 'currencies',
         'fields' => [
             'names' => [
@@ -464,6 +467,25 @@ class CurrencyCore extends ObjectModel
         $res = Db::getInstance()->delete('module_currency', 'id_currency = ' . (int) $this->id);
 
         return $res && $this->softDelete();
+    }
+
+    /**
+     * Deletes current multistore association from database.
+     *
+     * @return bool True if delete was successful
+     *
+     * @throws PrestaShopException
+     */
+    public function deleteWs()
+    {
+        if (!parent::delete()) {
+            return false;
+        }
+
+        // Remove currency restrictions
+        $res = Db::getInstance()->delete('module_currency', 'id_currency = ' . (int) $this->id);
+
+        return $res;
     }
 
     /**
