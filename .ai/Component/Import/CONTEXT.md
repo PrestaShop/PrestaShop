@@ -10,8 +10,9 @@ Multi-phase, batch-capable import engine for the BO **Advanced Parameters > Impo
 
 | Layer | Path | Status |
 |-------|------|--------|
-| Engine contracts (importers, phases, registry) | `src/Core/Import/Engine/` | planned (PR1) |
-| Per-entity importers | `src/Core/Import/Engine/EntityImporter/` | planned (PR1: Product) |
+| Engine contracts (importers, phases, registry) | `src/Core/Import/Engine/` | existing (PR1) |
+| Engine internal lookups + fallback writer contract | `src/Core/Import/Engine/Repository/` | existing (PR1) — `@internal`, DBAL-based; writer impl in `src/Adapter/Import/Repository/` |
+| Per-entity importers | `src/Core/Import/Engine/EntityImporter/` | existing (PR1: Product) |
 | Entity field metadata (value objects) | `src/Core/Import/EntityField/` | VOs kept; provider services deprecated as importers embed their field lists |
 | File handling (readers, uploader, Excel→CSV) | `src/Core/Import/File/` | existing, kept |
 | CQRS `ImportRun` aggregate (commands, query, VOs) | `src/Core/Domain/Import/` | existing, reworked in PR2 |
@@ -30,10 +31,10 @@ Multi-phase, batch-capable import engine for the BO **Advanced Parameters > Impo
 - **One state shape.** `RunImportBatch` returns the same `ImportRunState` DTO as the `GetImportRunState` query — polling and state reads share one structure.
 - **Store-and-skip invalid rows.** Validation scans the whole file; invalid row indexes are stored (sparse, per phase) and later phases skip them; the import finishes even with errors. An internal sanity cap (~10k invalid rows) fails the run instead ("file malformed" — wrong separator/encoding). All persisted state is bounded by constants (caps), never by file size — no per-row table.
 - **Association existence is checked twice.** (1) End of validation: one request builds an in-memory hashed identity set from the file's identity columns, then verifies every association target against set + DB — nothing persisted; skippable per-run for huge files (not recommended). (2) At `association` phase resolution, defensively (DB may have changed; only check when (1) was skipped) — failures are errors but the run completes.
-- **Existence-failure severity is per-field policy owned by the importer**: some references auto-create (product categories, manufacturers, suppliers — legacy behavior kept), others warn-and-drop (accessories).
-- **Batching resumes by row position + opaque reader cursor.** At `StartImportRun` the file is normalized once (encoding → UTF-8, Excel → CSV) into a run-scoped working file. The engine tracks progress in row positions; after each batch the reader returns an opaque resume cursor persisted on the run (the CSV reader's cursor is a byte offset for `fseek` — no O(n²) re-scan; other formats define their own), which the engine never interprets. One batch budget may span a phase boundary; per-phase unit counts are recomputed at phase entry (0 units → phase skipped); completion = last phase's offset reaching its total.
+- **Existence-failure severity is per-field policy owned by the importer**: some references auto-create (product categories, manufacturers, features — legacy behavior kept), others warn-and-drop (suppliers — an address is required to create one; accessories).
+- **Batching resumes by row position + opaque reader cursor.** At `StartImportRun` the file is normalized once (encoding → UTF-8, Excel → CSV, BOM stripped) into a run-scoped working file that always uses one canonical CSV dialect (`;`, `"` — constants on `ImportFileNormalizer`): the user-chosen separator is consumed at normalization and the engine reader is dialect-free. The engine tracks progress in row positions; after each batch the reader returns an opaque resume cursor persisted on the run (the CSV reader's cursor is a byte offset for `fseek` — no O(n²) re-scan; other formats define their own), which the engine never interprets. One batch budget may span a phase boundary; per-phase unit counts are recomputed at phase entry (0 units → phase skipped); completion = last phase's offset reaching its total.
 - **Hybrid persistence, no ObjectModel.** Importers dispatch existing CQRS commands for everything commands cover; a narrow import-specific repository handles the two gaps (forced-ID creation for the *force IDs* option, `date_add`). This keeps importers in `Core`. The batch sequencer dispatching commands through the bus is a sanctioned composition service — it does not violate the "handlers never call handlers" rule (nothing injects another handler).
-- **Registry by service tag.** Importers are tagged services collected into a registry: one source of truth for the BO entity dropdown, the mapping page's field list, and batch dispatch. Modules can register importers the same way.
+- **Registry by service tag.** Importers are tagged services collected into `EntityImporterRegistry`: one source of truth for the BO entity dropdown, the mapping page's field list, and batch dispatch. The tag is applied automatically to every **autoconfigured** service implementing `EntityImporterInterface` (`registerForAutoconfiguration` in `PrestaShopExtension` — a class-level attribute is not needed and `#[AutoconfigureTag]` on the interface is ignored by Symfony 6.4). Modules register importers the same way: an autoconfigured service definition is enough (see the `demoentityimporter` example module).
 - **Bounded messages.** Run messages are structured (`severity, phase, row, field, message`), capped per severity, with overflow counters — reporting works identically for a 100-row and a 5M-row file.
 - **Cleanup.** On any terminal status (`finished`/`cancelled`/`failed`): skipped-row lists, shared data and the resume cursor are cleared and the working file deleted; capped messages are kept for the post-run report. Old run rows are garbage-collected two ways: an opportunistic purge inside `StartImportRun` (terminal runs older than the retention constant, plus their leftover working files) and a console purge command for real cron setups.
 - **Reader abstraction.** CSV only today; the reader interface is deliberately narrow so a Symfony-Serializer-based reader (e.g. JSON with native multi-language fields) can be added without touching importers.
@@ -44,7 +45,9 @@ Multi-phase, batch-capable import engine for the BO **Advanced Parameters > Impo
 - `src/Core/Import/File/FileReaderInterface.php` — kept generator-based reader contract
 - `src/Core/Domain/Import/Command/StartImportRunCommand.php` — run creation carrying the frozen config + mapping
 - `src/Adapter/Import/CommandHandler/RunImportBatchHandler.php` — batch entry point (becomes the phase sequencer in PR2)
-- `src/Core/Import/Engine/EntityImporterInterface.php` — importer contract *(lands in PR1; spec in [PLAN.md](PLAN.md))*
+- `src/Core/Import/Engine/EntityImporterInterface.php` — importer contract (spec in [PLAN.md](PLAN.md))
+- `src/Core/Import/Engine/EntityImporter/ProductImporter.php` — reference importer implementation (phases, command dispatch, association resolution)
+- `tests/Integration/Core/Import/Engine/ImportEngineTestRunner.php` — minimal phase sequencer showing how a caller drives an importer
 
 ## Related
 
