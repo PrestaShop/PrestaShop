@@ -107,6 +107,8 @@ class CQRSGetCollection extends AbstractCQRSOperation implements CollectionOpera
         ?array $CQRSQueryMapping = null,
         ?array $ApiResourceMapping = null,
         ?bool $experimentalOperation = null,
+        ?string $minVersion = null,
+        ?string $maxVersion = null,
     ) {
         $passedArguments = \get_defined_vars();
         $passedArguments['method'] = self::METHOD_GET;

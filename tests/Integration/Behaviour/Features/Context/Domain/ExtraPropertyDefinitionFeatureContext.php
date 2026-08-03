@@ -23,6 +23,7 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Query\GetExtraPropertyDefini
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\QueryResult\EditableExtraPropertyDefinition;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\ValueObject\ExtraPropertyDefinitionId;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinition;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyRegistryInterface;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyScope;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertySqlIndex;
@@ -112,11 +113,8 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
 
         /** @var ExtraPropertyRegistryInterface $registry */
         $registry = $this->getContainer()->get(ExtraPropertyRegistryInterface::class);
+        // register() throws on failure, which surfaces naturally as a fixture failure.
         $id = $registry->register($definition);
-
-        if (false === $id) {
-            throw new RuntimeException(sprintf('Failed to set up the module-owned fixture "%s".', $reference));
-        }
 
         SharedStorage::getStorage()->set($reference, $id);
     }
@@ -337,6 +335,51 @@ class ExtraPropertyDefinitionFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsRegistrationFailure(): void
     {
         $this->assertLastErrorIs(ExtraPropertyRegistrationFailureException::class);
+    }
+
+    /**
+     * @Then I should get an error that the entity table is missing
+     */
+    public function assertLastErrorIsRegistrationFailureForMissingBaseTable(): void
+    {
+        $this->assertLastErrorIs(ExtraPropertyRegistrationFailureException::class, ExtraPropertyRegistrationFailureException::BASE_TABLE_MISSING);
+    }
+
+    /**
+     * @Then I should get an error that the scope conflicts with an existing definition
+     */
+    public function assertLastErrorIsRegistrationFailureForScopeConflict(): void
+    {
+        $this->assertLastErrorIs(ExtraPropertyRegistrationFailureException::class, ExtraPropertyRegistrationFailureException::SCOPE_CONFLICT);
+    }
+
+    /**
+     * @Then I should get an error that the change is destructive
+     */
+    public function assertLastErrorIsRegistrationFailureForDestructiveChange(): void
+    {
+        $this->assertLastErrorIs(ExtraPropertyRegistrationFailureException::class, ExtraPropertyRegistrationFailureException::DESTRUCTIVE_CHANGE);
+    }
+
+    /**
+     * Non-existence check by name rather than by stored reference: when the creation itself
+     * failed, no id was ever stored in SharedStorage, so the reference-based steps cannot be
+     * used. BO-created definitions are core-owned, hence the null module name in the lookup.
+     *
+     * @Then no extra property definition should exist for entity :entityName and property :propertyName
+     */
+    public function assertNoExtraPropertyDefinitionExistsByName(string $entityName, string $propertyName): void
+    {
+        /** @var ExtraPropertyDefinitionRepositoryInterface $repository */
+        $repository = $this->getContainer()->get(ExtraPropertyDefinitionRepositoryInterface::class);
+
+        if (null !== $repository->findDefinitionByModuleAndField($entityName, null, $propertyName)) {
+            throw new RuntimeException(sprintf(
+                'An extra property definition exists for entity "%s" and property "%s", but none was expected.',
+                $entityName,
+                $propertyName
+            ));
+        }
     }
 
     /**

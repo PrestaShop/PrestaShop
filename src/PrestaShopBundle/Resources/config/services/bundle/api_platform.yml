@@ -116,6 +116,13 @@ services:
       $decorated: '@.inner'
       $isDebug: '%kernel.debug%'
 
+  # This decorator filters out operations whose minVersion/maxVersion extra properties don't match the running core version
+  PrestaShopBundle\ApiPlatform\Metadata\Resource\Factory\CoreVersionCompatibilityMetadataCollectionFactoryDecorator:
+    decorates: api_platform.metadata.resource.metadata_collection_factory
+    autowire: true
+    arguments:
+      $decorated: '@.inner'
+
   # This decorator allows filtering the available ApiPlatform resources when they are base on non existing CQRS classes
   PrestaShopBundle\ApiPlatform\Metadata\Resource\Factory\CQRSNotFoundMetadataCollectionFactoryDecorator:
     # It is important to decorate early in the decoration chain, because InputOutputResourceMetadataCollectionFactory checks the existence

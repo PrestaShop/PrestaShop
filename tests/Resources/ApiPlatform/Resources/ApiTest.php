@@ -58,6 +58,51 @@ use PrestaShopBundle\ApiPlatform\Metadata\PaginatedList;
             scopes: ['filtered_grid_factory_scope'],
             gridDataFactory: 'grid_factory_service_not_found',
         ),
+        // Versioned operations with extreme min/max versions so the expected filtering does not depend on the actual core version
+        new CQRSGet(
+            uriTemplate: '/test/versioned/min-valid/product/{productId}',
+            CQRSQuery: GetProductForEditing::class,
+            scopes: ['versioned_min_valid_scope'],
+            CQRSQueryMapping: ApiTest::QUERY_MAPPING,
+            minVersion: '1.0.0',
+        ),
+        new CQRSGet(
+            uriTemplate: '/test/versioned/min-invalid/product/{productId}',
+            CQRSQuery: GetProductForEditing::class,
+            scopes: ['versioned_min_invalid_scope'],
+            CQRSQueryMapping: ApiTest::QUERY_MAPPING,
+            minVersion: '99.99.99',
+        ),
+        new CQRSGet(
+            uriTemplate: '/test/versioned/max-valid/product/{productId}',
+            CQRSQuery: GetProductForEditing::class,
+            scopes: ['versioned_max_valid_scope'],
+            CQRSQueryMapping: ApiTest::QUERY_MAPPING,
+            maxVersion: '99.99.99',
+        ),
+        new CQRSGet(
+            uriTemplate: '/test/versioned/max-invalid/product/{productId}',
+            CQRSQuery: GetProductForEditing::class,
+            scopes: ['versioned_max_invalid_scope'],
+            CQRSQueryMapping: ApiTest::QUERY_MAPPING,
+            maxVersion: '1.0.0',
+        ),
+        new CQRSGet(
+            uriTemplate: '/test/versioned/range-valid/product/{productId}',
+            CQRSQuery: GetProductForEditing::class,
+            scopes: ['versioned_range_valid_scope'],
+            CQRSQueryMapping: ApiTest::QUERY_MAPPING,
+            minVersion: '1.0.0',
+            maxVersion: '99.99.99',
+        ),
+        new CQRSGet(
+            uriTemplate: '/test/versioned/range-invalid/product/{productId}',
+            CQRSQuery: GetProductForEditing::class,
+            scopes: ['versioned_range_invalid_scope'],
+            CQRSQueryMapping: ApiTest::QUERY_MAPPING,
+            minVersion: '99.0.0',
+            maxVersion: '99.99.99',
+        ),
     ],
 )]
 class ApiTest

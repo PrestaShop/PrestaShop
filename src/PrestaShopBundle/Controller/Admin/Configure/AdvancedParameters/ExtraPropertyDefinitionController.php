@@ -14,11 +14,11 @@ use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\BulkDeleteExtraPrope
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Command\DeleteExtraPropertyDefinitionCommand;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\BulkExtraPropertyException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyDefinitionNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ExtraPropertyRegistrationFailureException;
 use PrestaShop\PrestaShop\Core\Domain\ExtraProperty\Exception\ProtectedModuleExtraPropertyDefinitionException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\AssociationExistenceChecker;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Catalog\FormFieldTreeProvider;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyDefinitionException;
-use PrestaShop\PrestaShop\Core\ExtraProperty\Exception\InvalidExtraPropertyFormOptionsException;
 use PrestaShop\PrestaShop\Core\ExtraProperty\Form\AssociationRowSerializer;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -393,8 +393,9 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
 
     /**
      * Maps domain exceptions to human-readable error messages for flash display.
+     * ExtraPropertyRegistrationFailureException is keyed by its reason code.
      *
-     * @return array<string, string>
+     * @return array<string, string|array<int, string>>
      */
     protected function getErrorMessages(): array
     {
@@ -404,13 +405,45 @@ class ExtraPropertyDefinitionController extends PrestaShopAdminController
                 [],
                 'Admin.Advparameters.Notification'
             ),
+            ExtraPropertyRegistrationFailureException::class => [
+                ExtraPropertyRegistrationFailureException::UNKNOWN => $this->trans(
+                    'The extra property definition could not be saved.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
+                ExtraPropertyRegistrationFailureException::BASE_TABLE_MISSING => $this->trans(
+                    'No database table exists for this entity, so the extra property cannot be created. Check the entity name.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
+                ExtraPropertyRegistrationFailureException::SCOPE_CONFLICT => $this->trans(
+                    'This property is already registered on this entity with a different scope. Use the existing scope or delete the existing definition first.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
+                ExtraPropertyRegistrationFailureException::DESTRUCTIVE_CHANGE => $this->trans(
+                    'This change would put existing data at risk (type or scope change, size decrease, nullable tightening, or removed choice value) and was refused. Delete and recreate the property instead.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
+                ExtraPropertyRegistrationFailureException::PERSISTENCE_FAILURE => $this->trans(
+                    'The extra property definition could not be saved to the registry.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
+                ExtraPropertyRegistrationFailureException::SCHEMA_FAILURE => $this->trans(
+                    'The database column for this extra property could not be created or updated.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
+                ExtraPropertyRegistrationFailureException::INVALID_FORM_OPTIONS => $this->trans(
+                    'The form options are not compatible with the form field type: the field could not be built. Fix the "Advanced form integration" card and try again.',
+                    [],
+                    'Admin.Advparameters.Notification'
+                ),
+            ],
             InvalidExtraPropertyDefinitionException::class => $this->trans(
                 'The submitted extra property definition is invalid. Check the form values and try again.',
-                [],
-                'Admin.Advparameters.Notification'
-            ),
-            InvalidExtraPropertyFormOptionsException::class => $this->trans(
-                'The form options are not compatible with the form field type: the field could not be built. Fix the "Advanced form integration" card and try again.',
                 [],
                 'Admin.Advparameters.Notification'
             ),
