@@ -35,7 +35,8 @@ class ApiResourceScopesExtractorTest extends TestCase
         $resourceScopes = $scopesExtractor->getAllApiResourceScopes();
 
         $expectedResourceScopes = [
-            ApiResourceScopes::createCoreScopes(['hook_read', 'hook_write']),
+            // The operation associated to hook_versioned_filtered has a minVersion higher than the core version, so it is filtered out
+            ApiResourceScopes::createCoreScopes(['hook_read', 'hook_versioned_kept', 'hook_write']),
             ApiResourceScopes::createModuleScopes(['api_client_read'], 'fake_module'),
             ApiResourceScopes::createModuleScopes(['customer_group_read'], 'disabled_fake_module'),
         ];
@@ -48,7 +49,8 @@ class ApiResourceScopesExtractorTest extends TestCase
         $resourceScopes = $scopesExtractor->getEnabledApiResourceScopes();
 
         $expectedResourceScopes = [
-            ApiResourceScopes::createCoreScopes(['hook_read', 'hook_write']),
+            // The operation associated to hook_versioned_filtered has a minVersion higher than the core version, so it is filtered out
+            ApiResourceScopes::createCoreScopes(['hook_read', 'hook_versioned_kept', 'hook_write']),
             ApiResourceScopes::createModuleScopes(['api_client_read'], 'fake_module'),
         ];
         $this->assertEquals($expectedResourceScopes, $resourceScopes);

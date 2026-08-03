@@ -36,7 +36,16 @@ Feature: Extra property definition management
       | property_name | conflict_field |
       | type          | string         |
       | scope         | lang           |
-    Then I should get an error registering the extra property definition
+    Then I should get an error that the scope conflicts with an existing definition
+
+  Scenario: Adding an extra property definition on an unknown entity is rejected and persists nothing
+    When I add an extra property definition "epGhost" with following properties:
+      | entity_name   | demo_unknown |
+      | property_name | ghost_field  |
+      | type          | string       |
+      | scope         | common       |
+    Then I should get an error that the entity table is missing
+    And no extra property definition should exist for entity "demo_unknown" and property "ghost_field"
 
   Scenario: Edit a core extra property definition
     When I add an extra property definition "ep3" with following properties:
@@ -77,7 +86,7 @@ Feature: Extra property definition management
       | size          | 128       |
     When I edit extra property definition "ep4" with following properties:
       | size | 32 |
-    Then I should get an error registering the extra property definition
+    Then I should get an error that the change is destructive
     And extra property definition "ep4" should have the following parameters:
       | entity_name   | product   |
       | property_name | shrink_me |

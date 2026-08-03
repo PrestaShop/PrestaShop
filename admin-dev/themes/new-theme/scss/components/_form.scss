@@ -246,12 +246,10 @@
     }
   }
 
-  /* Ensure select2 have the same height as other regular select inputs */
   .select2-selection--single {
-    padding-top: var(--#{$cdk}size-2);
-    padding-bottom: var(--#{$cdk}size-2);
-    // stylelint-disable-next-line
-    height: auto !important;
+    .select2-selection__rendered {
+      min-height: 2rem;
+    }
   }
 }
 
