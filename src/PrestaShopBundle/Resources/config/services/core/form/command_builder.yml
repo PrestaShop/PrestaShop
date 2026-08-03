@@ -72,6 +72,9 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationImagesCommandsBuilder:
     tags: [ 'core.combination_command_builder' ]
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationFeatureValuesCommandsBuilder:
+    tags: [ 'core.combination_command_builder' ]
+
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationCommandsBuilder:
     tags: [ 'core.combination_command_builder' ]
     arguments:

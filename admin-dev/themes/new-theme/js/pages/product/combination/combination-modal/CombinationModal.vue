@@ -278,6 +278,12 @@
         this.getIframeDocument().addEventListener('datepickerChange', () => {
           this.isFormUpdated = true;
         });
+
+        // Feature values are managed through hidden inputs and DOM rows (add/delete), which do not
+        // trigger the input listeners above, so the widget signals its changes with a custom event.
+        this.getIframeDocument().addEventListener('combinationFeatureValuesChange', () => {
+          this.isFormUpdated = true;
+        });
       },
       applyIframeStyling(): void {
         this.getIframeDocument().body.style.overflowX = 'hidden';

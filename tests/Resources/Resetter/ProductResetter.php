@@ -54,6 +54,7 @@ class ProductResetter
             // Miscellaneous relationships
             'category_product',
             'feature_product',
+            'feature_product_attribute',
         ]);
     }
 }

@@ -1,0 +1,119 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination\Feature;
+
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShopBundle\Form\Admin\Type\IconButtonType;
+use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class CombinationFeatureValueType extends TranslatorAwareType
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('feature_value_id', HiddenType::class, [
+                'attr' => [
+                    'class' => 'combination-feature-value-id',
+                ],
+            ])
+            ->add('feature_value_name', TextPreviewType::class, [
+                'row_attr' => [
+                    'class' => 'combination-feature-value-preview',
+                ],
+                'attr' => [
+                    'class' => 'combination-feature-value-name',
+                ],
+                'label' => false,
+            ])
+            ->add('is_custom', HiddenType::class, [
+                'attr' => [
+                    'class' => 'combination-is-custom-feature-value',
+                ],
+                'required' => false,
+                'empty_data' => false,
+            ])
+            ->add('custom_value', TranslatableType::class, [
+                'label' => false,
+                'required' => false,
+                'type' => TextType::class,
+                'row_attr' => [
+                    'class' => 'combination-custom-values-form-group',
+                ],
+                'constraints' => [
+                    new DefaultLanguage([
+                        'message' => $this->trans(
+                            'The field %field_name% is required at least in your default language.',
+                            'Admin.Notifications.Error',
+                            [
+                                '%field_name%' => sprintf(
+                                    '"%s"',
+                                    $this->trans('Custom value', 'Admin.Catalog.Feature')
+                                ),
+                            ]
+                        ),
+                        'groups' => 'custom_value',
+                    ]),
+                ],
+            ])
+            ->add('delete', IconButtonType::class, [
+                'icon' => 'delete',
+                'attr' => [
+                    'class' => 'tooltip-link combination-delete-feature-value pl-0 pr-0',
+                    'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
+                    'data-modal-message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
+                    'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
+                    'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
+                    'data-toggle' => 'pstooltip',
+                    'data-original-title' => $this->trans('Delete', 'Admin.Actions'),
+                ],
+            ])
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'validation_groups' => function (FormInterface $form): array {
+                $formData = $form->getData();
+
+                return !empty($formData['is_custom']) ? ['Default', 'custom_value'] : ['Default'];
+            },
+        ]);
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::buildView($view, $form, $options);
+        $formData = $form->getData();
+
+        // When data is null the prototype is being rendered so the input is not custom and is not not custom either (schrodinger custom input)
+        $view->vars['is_custom'] = null === $formData ? null : !empty($formData['is_custom']);
+    }
+
+    /**
+     * Change block prefix for theme override.
+     *
+     * @return string
+     */
+    public function getBlockPrefix(): string
+    {
+        return 'combination_feature_value';
+    }
+}

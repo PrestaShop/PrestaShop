@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotUpdateFeatureValue
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureValueIdException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -152,6 +153,42 @@ class FeatureValueRepository extends AbstractObjectModelRepository
         ;
 
         $result = $qb->execute()->fetchAllAssociative();
+        $featureValues = [];
+        foreach ($result as $featureValue) {
+            $featureValueId = (int) $featureValue['id_feature_value'];
+            if (!isset($featureValues[$featureValueId])) {
+                $featureValues[$featureValueId] = [
+                    'id_feature_value' => $featureValueId,
+                    'id_feature' => (int) $featureValue['id_feature'],
+                    'custom' => (int) $featureValue['custom'],
+                ];
+            }
+            $featureValues[$featureValueId]['localized_values'][(int) $featureValue['id_lang']] = $featureValue['value'];
+        }
+
+        return array_values($featureValues);
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param ShopId $shopId
+     *
+     * @return array
+     */
+    public function getAllCombinationFeatureValues(CombinationId $combinationId, ShopId $shopId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->from($this->dbPrefix . 'feature_value', 'fv')
+            ->innerJoin('fv', $this->dbPrefix . 'feature_product_attribute', 'fpa', 'fpa.id_feature_value = fv.id_feature_value AND fpa.id_product_attribute = :combinationId')
+            ->innerJoin('fpa', $this->dbPrefix . 'feature_shop', 'fs', 'fpa.id_feature = fs.id_feature AND fs.id_shop = :shopId')
+            ->leftJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value')
+            ->select('fv.*, fvl.*')
+            ->setParameter('combinationId', $combinationId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+
+        $result = $qb->executeQuery()->fetchAllAssociative();
         $featureValues = [];
         foreach ($result as $featureValue) {
             $featureValueId = (int) $featureValue['id_feature_value'];

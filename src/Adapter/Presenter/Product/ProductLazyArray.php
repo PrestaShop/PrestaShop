@@ -496,7 +496,8 @@ class ProductLazyArray extends AbstractLazyArray
         if (!isset($this->product['features'])) {
             $this->product['features'] = Product::getFrontFeaturesStatic(
                 (int) $this->language->id,
-                $this->product['id_product']
+                $this->product['id_product'],
+                (int) ($this->product['id_product_attribute'] ?? 0)
             );
         }
 

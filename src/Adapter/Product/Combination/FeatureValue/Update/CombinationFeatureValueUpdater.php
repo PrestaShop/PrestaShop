@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\FeatureValue\Update;
+namespace PrestaShop\PrestaShop\Adapter\Product\Combination\FeatureValue\Update;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception as DBALException;
@@ -14,22 +14,22 @@ use Doctrine\DBAL\Exception\InvalidArgumentException;
 use FeatureValue;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotAddFeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotUpdateFeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureValueNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\FeatureValue\ValueObject\CombinationFeatureValue;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\ValueObject\ProductFeatureValue;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
- * Updates FeatureValue & Product relation
+ * Updates FeatureValue & Combination (product_attribute) relation
  */
-class ProductFeatureValueUpdater
+class CombinationFeatureValueUpdater
 {
     /**
      * @var Connection
@@ -42,9 +42,9 @@ class ProductFeatureValueUpdater
     private $dbPrefix;
 
     /**
-     * @var ProductRepository
+     * @var CombinationRepository
      */
-    private $productRepository;
+    private $combinationRepository;
 
     /**
      * @var FeatureRepository
@@ -59,27 +59,27 @@ class ProductFeatureValueUpdater
     /**
      * @param Connection $connection
      * @param string $dbPrefix
-     * @param ProductRepository $productRepository
+     * @param CombinationRepository $combinationRepository
      * @param FeatureRepository $featureRepository
      * @param FeatureValueRepository $featureValueRepository
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        ProductRepository $productRepository,
+        CombinationRepository $combinationRepository,
         FeatureRepository $featureRepository,
         FeatureValueRepository $featureValueRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
-        $this->productRepository = $productRepository;
+        $this->combinationRepository = $combinationRepository;
         $this->featureRepository = $featureRepository;
         $this->featureValueRepository = $featureValueRepository;
     }
 
     /**
-     * @param ProductId $productId
-     * @param ProductFeatureValue[] $productFeatureValues
+     * @param CombinationId $combinationId
+     * @param CombinationFeatureValue[] $combinationFeatureValues
      *
      * @return FeatureValueId[]
      *
@@ -91,76 +91,75 @@ class ProductFeatureValueUpdater
      * @throws InvalidArgumentException
      * @throws FeatureNotFoundException
      */
-    public function setFeatureValues(ProductId $productId, array $productFeatureValues): array
+    public function setFeatureValues(CombinationId $combinationId, array $combinationFeatureValues): array
     {
         // First assert that all entities exist
-        $this->productRepository->assertProductExists($productId);
-        $previousFeatureIds = [];
-        foreach ($productFeatureValues as $productFeatureValue) {
-            $this->featureRepository->assertExists($productFeatureValue->getFeatureId());
-            if (null !== $productFeatureValue->getFeatureValueId()) {
-                $featureValue = $this->featureValueRepository->get($productFeatureValue->getFeatureValueId());
-                if ((int) $featureValue->id_feature !== $productFeatureValue->getFeatureId()->getValue()) {
+        $this->combinationRepository->assertCombinationExists($combinationId);
+        $previousFeatureValueIds = [];
+        foreach ($combinationFeatureValues as $combinationFeatureValue) {
+            $this->featureRepository->assertExists($combinationFeatureValue->getFeatureId());
+            if (null !== $combinationFeatureValue->getFeatureValueId()) {
+                $featureValue = $this->featureValueRepository->get($combinationFeatureValue->getFeatureValueId());
+                if ((int) $featureValue->id_feature !== $combinationFeatureValue->getFeatureId()->getValue()) {
                     throw new InvalidAssociatedFeatureException('You cannot associate a value to another feature.');
                 }
-                if (in_array($productFeatureValue->getFeatureValueId()->getValue(), $previousFeatureIds)) {
+                if (in_array($combinationFeatureValue->getFeatureValueId()->getValue(), $previousFeatureValueIds)) {
                     throw new DuplicateFeatureValueAssociationException('You cannot associate the same feature value more than once.');
                 }
-                $previousFeatureIds[] = $productFeatureValue->getFeatureValueId()->getValue();
+                $previousFeatureValueIds[] = $combinationFeatureValue->getFeatureValueId()->getValue();
             }
         }
 
-        foreach ($productFeatureValues as $productFeatureValue) {
-            if (null !== $productFeatureValue->getFeatureValueId()) {
-                $this->updateFeatureValue($productFeatureValue);
+        foreach ($combinationFeatureValues as $combinationFeatureValue) {
+            if (null !== $combinationFeatureValue->getFeatureValueId()) {
+                $this->updateFeatureValue($combinationFeatureValue);
             } else {
-                $this->addFeatureValue($productFeatureValue);
+                $this->addFeatureValue($combinationFeatureValue);
             }
         }
 
-        return $this->updateAssociations($productId, $productFeatureValues);
+        return $this->updateAssociations($combinationId, $combinationFeatureValues);
     }
 
     /**
-     * @param ProductId $productId
-     * @param array $productFeatureValues
+     * @param CombinationId $combinationId
+     * @param array $combinationFeatureValues
      *
      * @return FeatureValueId[]
      *
      * @throws DBALException
      * @throws InvalidArgumentException
      */
-    private function updateAssociations(ProductId $productId, array $productFeatureValues): array
+    private function updateAssociations(CombinationId $combinationId, array $combinationFeatureValues): array
     {
-        // First delete all associations from the product
+        // First delete all associations from the combination
         $this->connection->delete(
-            $this->dbPrefix . 'feature_product',
-            ['id_product' => $productId->getValue()]
+            $this->dbPrefix . 'feature_product_attribute',
+            ['id_product_attribute' => $combinationId->getValue()]
         );
 
         // Then create all new ones
-        $productFeatureValueIds = [];
-        foreach ($productFeatureValues as $productFeatureValue) {
+        $combinationFeatureValueIds = [];
+        foreach ($combinationFeatureValues as $combinationFeatureValue) {
             $insertedValues = [
-                'id_product' => $productId->getValue(),
-                'id_feature' => $productFeatureValue->getFeatureId()->getValue(),
-                'id_feature_value' => $productFeatureValue->getFeatureValueId()->getValue(),
+                'id_product_attribute' => $combinationId->getValue(),
+                'id_feature' => $combinationFeatureValue->getFeatureId()->getValue(),
+                'id_feature_value' => $combinationFeatureValue->getFeatureValueId()->getValue(),
             ];
-            $this->connection->insert($this->dbPrefix . 'feature_product', $insertedValues);
+            $this->connection->insert($this->dbPrefix . 'feature_product_attribute', $insertedValues);
 
-            $productFeatureValueIds[] = $productFeatureValue->getFeatureValueId();
+            $combinationFeatureValueIds[] = $combinationFeatureValue->getFeatureValueId();
         }
 
         $this->cleanOrphanCustomFeatureValues();
 
-        return $productFeatureValueIds;
+        return $combinationFeatureValueIds;
     }
 
     /**
      * Remove custom feature values that are no longer associated to a product nor a combination.
      * A custom value can be referenced either by feature_product or feature_product_attribute,
-     * so both tables must be checked before deleting (otherwise saving a product would delete
-     * custom values that are only used at combination level).
+     * so both tables must be checked before deleting.
      */
     private function cleanOrphanCustomFeatureValues(): void
     {
@@ -194,38 +193,38 @@ class ProductFeatureValueUpdater
     }
 
     /**
-     * @param ProductFeatureValue $productFeatureValue
+     * @param CombinationFeatureValue $combinationFeatureValue
      *
      * @throws CannotUpdateFeatureValueException
      * @throws CoreException
      * @throws FeatureValueNotFoundException
      */
-    private function updateFeatureValue(ProductFeatureValue $productFeatureValue): void
+    private function updateFeatureValue(CombinationFeatureValue $combinationFeatureValue): void
     {
         // Only custom values need to be updated
-        if (null === $productFeatureValue->getLocalizedCustomValues()) {
+        if (null === $combinationFeatureValue->getLocalizedCustomValues()) {
             return;
         }
-        $featureValue = $this->featureValueRepository->get($productFeatureValue->getFeatureValueId());
-        $featureValue->value = $productFeatureValue->getLocalizedCustomValues();
+        $featureValue = $this->featureValueRepository->get($combinationFeatureValue->getFeatureValueId());
+        $featureValue->value = $combinationFeatureValue->getLocalizedCustomValues();
         $this->featureValueRepository->update($featureValue);
     }
 
     /**
-     * @param ProductFeatureValue $productFeatureValue
+     * @param CombinationFeatureValue $combinationFeatureValue
      *
      * @throws CannotAddFeatureValueException
      * @throws CoreException
      */
-    private function addFeatureValue(ProductFeatureValue $productFeatureValue): void
+    private function addFeatureValue(CombinationFeatureValue $combinationFeatureValue): void
     {
         $featureValue = new FeatureValue();
-        $featureValue->id_feature = (int) $productFeatureValue->getFeatureId()->getValue();
-        $featureValue->custom = null !== $productFeatureValue->getLocalizedCustomValues();
-        if (null !== $productFeatureValue->getLocalizedCustomValues()) {
-            $featureValue->value = $productFeatureValue->getLocalizedCustomValues();
+        $featureValue->id_feature = (int) $combinationFeatureValue->getFeatureId()->getValue();
+        $featureValue->custom = null !== $combinationFeatureValue->getLocalizedCustomValues();
+        if (null !== $combinationFeatureValue->getLocalizedCustomValues()) {
+            $featureValue->value = $combinationFeatureValue->getLocalizedCustomValues();
         }
         $featureValueId = $this->featureValueRepository->add($featureValue);
-        $productFeatureValue->setFeatureValueId($featureValueId);
+        $combinationFeatureValue->setFeatureValueId($featureValueId);
     }
 }

@@ -8,6 +8,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShopBundle\Form\Admin\Sell\Product\Combination\Feature\CombinationFeaturesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Details\ReferencesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
@@ -29,17 +33,33 @@ class CombinationFormType extends TranslatorAwareType
     private $combinationListener;
 
     /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
+     * @var FeatureFlagStateCheckerInterface
+     */
+    private $featureFlagStateChecker;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param EventSubscriberInterface $combinationListener
+     * @param Configuration $configuration
+     * @param FeatureFlagStateCheckerInterface $featureFlagStateChecker
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        EventSubscriberInterface $combinationListener
+        EventSubscriberInterface $combinationListener,
+        Configuration $configuration,
+        FeatureFlagStateCheckerInterface $featureFlagStateChecker
     ) {
         parent::__construct($translator, $locales);
         $this->combinationListener = $combinationListener;
+        $this->configuration = $configuration;
+        $this->featureFlagStateChecker = $featureFlagStateChecker;
     }
 
     /**
@@ -72,6 +92,12 @@ class CombinationFormType extends TranslatorAwareType
                 'label_tag_name' => 'h3',
             ])
         ;
+
+        if ($this->configuration->getBoolean('PS_FEATURE_FEATURE_ACTIVE')
+            && $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_COMBINATION_FEATURE_VALUES)
+        ) {
+            $builder->add('features', CombinationFeaturesType::class);
+        }
 
         /*
          * This listener adapts the content of the form based on the data, it can remove add or transforms some
