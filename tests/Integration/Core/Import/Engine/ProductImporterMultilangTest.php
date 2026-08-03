@@ -13,6 +13,7 @@ use Language;
 use Tests\Integration\Utility\LanguageTrait;
 use Tests\Resources\Resetter\LanguageResetter;
 use Tests\Resources\Resetter\ProductResetter;
+use Tests\Resources\ResourceResetter;
 
 class ProductImporterMultilangTest extends AbstractImportEngineTestCase
 {
@@ -21,6 +22,15 @@ class ProductImporterMultilangTest extends AbstractImportEngineTestCase
     private const FIELDS = ['name', 'reference', 'description'];
 
     private static int $frenchLanguageId;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        // LanguageResetter ends with resetTestModules(), which mirrors the
+        // test modules from a temp backup: refresh that backup now so the
+        // teardown cannot restore a stale tree
+        (new ResourceResetter())->backupTestModules();
+    }
 
     public static function tearDownAfterClass(): void
     {
