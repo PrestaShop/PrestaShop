@@ -22,4 +22,13 @@ interface TransactionManagerInterface
      * Rollback a transaction
      */
     public function rollback();
+
+    /**
+     * Execute a callable inside a transaction scope.
+     *
+     * @param callable $func
+     *
+     * @return mixed
+     */
+    public function executeInTransaction(callable $func): mixed;
 }

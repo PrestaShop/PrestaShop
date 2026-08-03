@@ -8,10 +8,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\CommandBus\Middleware;
 
-use Doctrine\ORM\EntityManager;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface;
 use PrestaShopBundle\CommandBus\Middleware\TransactionalMiddleware;
 use stdClass;
 use Symfony\Component\Messenger\Envelope;
@@ -25,8 +25,8 @@ class TransactionalMiddlewareTest extends TestCase
     /** @var HandlersLocatorInterface&MockObject */
     private $handlersLocator;
 
-    /** @var EntityManager&MockObject */
-    private $entityManager;
+    /** @var TransactionManagerInterface&MockObject */
+    private $transactionManager;
 
     /** @var TransactionalMiddleware */
     private $middleware;
@@ -34,8 +34,8 @@ class TransactionalMiddlewareTest extends TestCase
     protected function setUp(): void
     {
         $this->handlersLocator = $this->createMock(HandlersLocatorInterface::class);
-        $this->entityManager = $this->createMock(EntityManager::class);
-        $this->middleware = new TransactionalMiddleware($this->handlersLocator, $this->entityManager);
+        $this->transactionManager = $this->createMock(TransactionManagerInterface::class);
+        $this->middleware = new TransactionalMiddleware($this->handlersLocator, $this->transactionManager);
     }
 
     public function testNonTransactionalHandlerExecutesWithoutTransaction(): void
@@ -66,9 +66,9 @@ class TransactionalMiddlewareTest extends TestCase
             ->with($envelope, $stack)
             ->willReturn($envelope);
 
-        $this->entityManager
+        $this->transactionManager
             ->expects($this->never())
-            ->method('wrapInTransaction');
+            ->method('executeInTransaction');
 
         $result = $this->middleware->handle($envelope, $stack);
 
@@ -92,9 +92,9 @@ class TransactionalMiddlewareTest extends TestCase
             ->with($envelope)
             ->willReturn([$handlerDescriptor]);
 
-        $this->entityManager
+        $this->transactionManager
             ->expects($this->once())
-            ->method('wrapInTransaction')
+            ->method('executeInTransaction')
             ->willReturnCallback(static function (callable $func) {
                 return $func();
             });
@@ -132,9 +132,9 @@ class TransactionalMiddlewareTest extends TestCase
             ->with($envelope)
             ->willReturn([$handlerDescriptor]);
 
-        $this->entityManager
+        $this->transactionManager
             ->expects($this->once())
-            ->method('wrapInTransaction')
+            ->method('executeInTransaction')
             ->willReturnCallback(static function (callable $func) {
                 return $func();
             });

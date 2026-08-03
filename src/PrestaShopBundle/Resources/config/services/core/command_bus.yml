@@ -27,7 +27,7 @@ services:
     public: false
     arguments:
       - '@messenger.bus.default.messenger.handlers_locator'
-      - '@doctrine.orm.entity_manager'
+      - '@PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface'
 
   PrestaShop\PrestaShop\Core\CommandBus\ExecutedCommandRegistry:
     arguments:

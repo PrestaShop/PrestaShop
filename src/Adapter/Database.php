@@ -80,4 +80,9 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
     {
         Db::getInstance()->disableCache();
     }
+
+    public function getInstance(): Db
+    {
+        return Db::getInstance()->getInstance();
+    }
 }
