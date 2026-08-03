@@ -1,0 +1,3 @@
+name;reference;features
+Feature Prod 1;FEAT-1;Composition:Cotton:0,Imported Feature:Imported Value:1
+Feature Prod 2;FEAT-2;Imported Feature:Imported Value:1,Imported Feature:Custom note:2:1

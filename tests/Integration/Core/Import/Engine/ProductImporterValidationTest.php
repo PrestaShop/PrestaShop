@@ -1,0 +1,89 @@
+<?php
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+namespace Tests\Integration\Core\Import\Engine;
+
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
+use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
+use Tests\Resources\Resetter\ProductResetter;
+
+class ProductImporterValidationTest extends AbstractImportEngineTestCase
+{
+    private const FIELDS = ['name', 'reference', 'visibility', 'ean13', 'category', 'active'];
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        ProductResetter::resetProducts();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        ProductResetter::resetProducts();
+        parent::tearDownAfterClass();
+    }
+
+    public function testValidationPhasePerformsNoWrites(): void
+    {
+        $productCount = (int) $this->fetchOne('SELECT COUNT(*) FROM {p}product');
+        $categoryCount = (int) $this->fetchOne('SELECT COUNT(*) FROM {p}category');
+
+        [, $messages] = $this->runImport('product_invalid_rows.csv', self::FIELDS, [], [ImportPhaseDefinition::PHASE_VALIDATION]);
+
+        $this->assertNotEmpty($messages);
+        $this->assertSame($productCount, (int) $this->fetchOne('SELECT COUNT(*) FROM {p}product'), 'Validation must not create products');
+        $this->assertSame($categoryCount, (int) $this->fetchOne('SELECT COUNT(*) FROM {p}category'), 'Validation must not create categories');
+    }
+
+    public function testInvalidRowsAreReportedAndSkippedWhileValidRowsAreImported(): void
+    {
+        [$context, $messages] = $this->runImport('product_invalid_rows.csv', self::FIELDS);
+
+        // structured messages carry severity/phase/row/field
+        $errors = $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_ERROR);
+        $errorsByField = [];
+        foreach ($errors as $error) {
+            $this->assertSame(ImportPhaseDefinition::PHASE_VALIDATION, $error->phase);
+            $this->assertNotNull($error->row);
+            $errorsByField[$error->field][] = $error->row;
+        }
+        // header = row 0; data rows start at 1
+        $this->assertSame([2], $errorsByField['visibility'] ?? [], 'bad visibility row');
+        $this->assertSame([3], $errorsByField['ean13'] ?? [], 'bad gtin row');
+        $this->assertSame([4], $errorsByField['name'] ?? [], 'missing name row');
+        $this->assertSame([6], $errorsByField['category'] ?? [], 'unknown numeric category row');
+
+        // blank line = notice + skip, not an abort
+        $notices = $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_NOTICE);
+        $this->assertNotEmpty($notices);
+        $this->assertSame(5, $notices[0]->row);
+
+        // unparseable boolean = warning, row still goes through
+        $booleanWarnings = array_values(array_filter(
+            $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_WARNING),
+            static fn (ImportMessage $message): bool => 'active' === $message->field
+        ));
+        $this->assertCount(1, $booleanWarnings);
+        $this->assertSame(7, $booleanWarnings[0]->row);
+
+        // skipped rows = the 4 error rows + the blank row
+        $this->assertSame([2, 3, 4, 5, 6], $context->getSkippedRows(ImportPhaseDefinition::PHASE_VALIDATION));
+
+        // valid rows imported, invalid ones absent
+        $this->assertNotNull($this->getProductIdByReference('INV-OK-1'));
+        $this->assertNotNull($this->getProductIdByReference('INV-FUZZY-BOOL'));
+        $this->assertNull($this->getProductIdByReference('INV-BAD-VIS'));
+        $this->assertNull($this->getProductIdByReference('INV-BAD-GTIN'));
+        $this->assertNull($this->getProductIdByReference('INV-NO-NAME'));
+        $this->assertNull($this->getProductIdByReference('INV-BAD-CAT'));
+
+        // the fuzzy boolean was treated as false
+        $fuzzyId = $this->getProductIdByReference('INV-FUZZY-BOOL');
+        $this->assertSame('0', (string) $this->fetchOne('SELECT active FROM {p}product_shop WHERE id_product = :id AND id_shop = 1', ['id' => $fuzzyId]));
+    }
+}
