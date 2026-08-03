@@ -52,7 +52,7 @@ class WebserviceKeyCore extends ObjectModel
                 'WebserviceKey',
                 (int) $this->id,
                 false,
-                (int) Context::getContext()->employee->id
+                (int) (Context::getContext()->employee->id ?? 0)
             );
         }
 
@@ -85,7 +85,7 @@ class WebserviceKeyCore extends ObjectModel
                 'WebserviceKey',
                 (int) $this->id,
                 false,
-                (int) Context::getContext()->employee->id
+                (int) (Context::getContext()->employee->id ?? 0)
             );
         }
 
