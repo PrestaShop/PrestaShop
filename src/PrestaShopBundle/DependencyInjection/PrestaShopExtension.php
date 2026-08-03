@@ -9,6 +9,8 @@ namespace PrestaShopBundle\DependencyInjection;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterRegistry;
 use PrestaShop\PrestaShop\Core\Security\OAuth2\AuthorisationServerInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -37,6 +39,12 @@ class PrestaShopExtension extends Extension implements PrependExtensionInterface
         // Automatically tag services that implements this interface
         $container->registerForAutoconfiguration(AuthorisationServerInterface::class)
             ->addTag('core.oauth2.authorization_server')
+        ;
+
+        // Automatically tag entity importers (including module services, as
+        // long as their definitions enable autoconfiguration)
+        $container->registerForAutoconfiguration(EntityImporterInterface::class)
+            ->addTag(EntityImporterRegistry::SERVICE_TAG)
         ;
     }
 

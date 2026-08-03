@@ -10,7 +10,6 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
 
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\UnknownPhaseException;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollectionInterface;
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 /**
  * Contract for entity importers driven by the import engine phase model.
@@ -21,11 +20,11 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
  * mutate the run context: progress is reported through PhaseBatchResult and
  * applied by the caller (the batch sequencer).
  *
- * Implementations registered as autoconfigured services are automatically
- * tagged and collected into the EntityImporterRegistry — this also applies to
- * module services, as long as their definitions enable autoconfiguration.
+ * Every autoconfigured service implementing this interface is automatically
+ * tagged with EntityImporterRegistry::SERVICE_TAG (registered in
+ * PrestaShopExtension) and collected into the registry — this also applies
+ * to module services, as long as their definitions enable autoconfiguration.
  */
-#[AutoconfigureTag(EntityImporterRegistry::SERVICE_TAG)]
 interface EntityImporterInterface
 {
     /**

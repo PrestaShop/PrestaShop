@@ -91,3 +91,17 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Tools'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       - '@prestashop.core.hook.dispatcher'
+
+  # Import engine (#41907 PR1) - narrow fallback writer (forced-id creation,
+  # date_add); everything else goes through CQRS commands
+  PrestaShop\PrestaShop\Adapter\Import\Repository\ProductImportWriter:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator'
+      - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
+      - '@PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Tools'
+
+  PrestaShop\PrestaShop\Core\Import\Engine\Repository\ProductImportWriterInterface:
+    alias: PrestaShop\PrestaShop\Adapter\Import\Repository\ProductImportWriter
