@@ -22,6 +22,8 @@ class AddCustomerGroupCommandTest extends TestCase
      */
     public function testItWorksWhenProvidingValidReduction(DecimalNumber $reductionPercent): void
     {
+        $this->expectNotToPerformAssertions();
+
         new AddCustomerGroupCommand(
             ['toto', 'tata'],
             $reductionPercent,
@@ -29,7 +31,6 @@ class AddCustomerGroupCommandTest extends TestCase
             true,
             [1]
         );
-        $this->assertTrue(true);
     }
 
     /**

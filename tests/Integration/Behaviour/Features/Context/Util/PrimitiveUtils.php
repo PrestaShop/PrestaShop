@@ -86,7 +86,7 @@ class PrimitiveUtils
             return false;
         }
 
-        if ($element1 instanceof DateTime) {
+        if ($element1 instanceof DateTime && $element2 instanceof DateTime) {
             return $element1->format('YmdHis') === $element2->format('YmdHis');
         }
 

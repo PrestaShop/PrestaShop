@@ -71,11 +71,11 @@ class Download
             }
         } elseif (function_exists('curl_init')) {
             $curl = curl_init();
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
             curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             $opts = stream_context_get_options($stream_context);
 
             if (isset($opts['http']['method']) && strtolower($opts['http']['method']) == 'post') {

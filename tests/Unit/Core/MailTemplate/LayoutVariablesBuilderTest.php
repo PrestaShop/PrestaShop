@@ -19,23 +19,23 @@ class LayoutVariablesBuilderTest extends TestCase
 {
     public function testConstructor()
     {
-        /** @var HookDispatcherInterface $dispatcherMock */
+        /** @var HookDispatcherInterface&MockObject $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        /** @var LanguageDefaultFontsCatalog $fontCatalog */
+        /** @var LanguageDefaultFontsCatalog&MockObject $fontCatalog */
         $fontCatalog = $this->getMockBuilder(LanguageDefaultFontsCatalog::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
         $builder = new LayoutVariablesBuilder($dispatcherMock, $fontCatalog);
-        $this->assertNotNull($builder);
+        $this->assertInstanceOf(LayoutVariablesBuilder::class, $builder);
 
         $builder = new LayoutVariablesBuilder($dispatcherMock, $fontCatalog, ['locale' => 'en']);
-        $this->assertNotNull($builder);
+        $this->assertInstanceOf(LayoutVariablesBuilder::class, $builder);
     }
 
     public function testBuildParameters()

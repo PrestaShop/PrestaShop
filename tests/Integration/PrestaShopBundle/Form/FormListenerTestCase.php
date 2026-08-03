@@ -65,7 +65,7 @@ class FormListenerTestCase extends KernelTestCase
     protected function assertFormTypeExistsInForm(FormInterface $form, string $typeName, bool $shouldExist): void
     {
         if ($shouldExist) {
-            $this->assertNotNull($this->getFormChild($form, $typeName));
+            $this->assertInstanceOf(FormInterface::class, $this->getFormChild($form, $typeName));
         } else {
             $expectedException = null;
             try {

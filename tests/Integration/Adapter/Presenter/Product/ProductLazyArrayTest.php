@@ -161,7 +161,7 @@ class ProductLazyArrayTest extends TestCase
             $this->mockHookManager,
             $this->mockConfiguration
         );
-        $this->assertNotNull($productLazyArray);
+        $this->assertInstanceOf(ProductLazyArray::class, $productLazyArray);
     }
 
     /**

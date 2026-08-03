@@ -37,7 +37,6 @@ class SearchCombinationsForAssociationTest extends TestCase
     public function testValidQuery(string $phrase, int $languageId, int $shopId, array $filters, ?int $limit): void
     {
         $query = new SearchCombinationsForAssociation($phrase, $languageId, $shopId, $filters, $limit);
-        $this->assertNotNull($query);
         $this->assertEquals($phrase, $query->getPhrase());
         $this->assertEquals($languageId, $query->getLanguageId()->getValue());
         $this->assertEquals($shopId, $query->getShopId()->getValue());

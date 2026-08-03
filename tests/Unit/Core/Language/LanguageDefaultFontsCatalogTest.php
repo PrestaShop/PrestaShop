@@ -16,13 +16,13 @@ class LanguageDefaultFontsCatalogTest extends TestCase
     public function testConstructor()
     {
         $fontCatalog = new LanguageDefaultFontsCatalog();
-        $this->assertNotNull($fontCatalog);
+        $this->assertEquals('Tahoma', $fontCatalog->getDefaultFontByLanguage($this->buildLanguageMock('fa')));
 
         $fontCatalog = new LanguageDefaultFontsCatalog([
-            'ar' => 'Tahoma',
-            'fa' => 'Tahoma',
+            'ar' => 'Comic Sans MS',
         ]);
-        $this->assertNotNull($fontCatalog);
+        $this->assertEquals('Comic Sans MS', $fontCatalog->getDefaultFontByLanguage($this->buildLanguageMock('ar')));
+        $this->assertEquals('', $fontCatalog->getDefaultFontByLanguage($this->buildLanguageMock('fa')));
     }
 
     public function testGetDefaultFont()
@@ -32,7 +32,6 @@ class LanguageDefaultFontsCatalogTest extends TestCase
             'fa' => 'Tahoma',
             'fr' => 'Comic Sans MS',
         ]);
-        $this->assertNotNull($fontCatalog);
 
         $font = $fontCatalog->getDefaultFontByLanguage($this->buildLanguageMock('ar'));
         $this->assertEquals('Tahoma', $font);

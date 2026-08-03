@@ -110,7 +110,6 @@ class PositionUpdateFactoryTest extends TestCase
         }
         $positionUpdateFactory = $this->getPositionUpdateFactory();
 
-        /** @var PositionDataException $caughtException */
         $caughtException = null;
 
         try {

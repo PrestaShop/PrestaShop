@@ -31,7 +31,6 @@ class SearchProductsForAssociationTest extends TestCase
     public function testValidQuery(string $phrase, int $languageId, int $shopId, ?int $limit): void
     {
         $query = new SearchProductsForAssociation($phrase, $languageId, $shopId, $limit);
-        $this->assertNotNull($query);
         $this->assertEquals($phrase, $query->getPhrase());
         $this->assertEquals($languageId, $query->getLanguageId()->getValue());
         $this->assertEquals($shopId, $query->getShopId()->getValue());

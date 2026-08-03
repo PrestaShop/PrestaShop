@@ -45,8 +45,6 @@ class GenerateHtaccessCommandTest extends KernelTestCase
         $application = new Application(static::$kernel);
         $command = $application->find('prestashop:htaccess:generate');
 
-        $this->assertNotNull($command, 'Command prestashop:htaccess:generate not found');
-
         $tester = new CommandTester($command);
         $tester->execute([
             'command' => $command->getName(),

@@ -15,10 +15,10 @@ class MailVariablesTransformationTest extends TestCase
     public function testConstructor()
     {
         $transformation = new MailVariablesTransformation(MailTemplateInterface::HTML_TYPE);
-        $this->assertNotNull($transformation);
+        $this->assertEquals(MailTemplateInterface::HTML_TYPE, $transformation->getType());
 
         $transformation = new MailVariablesTransformation(MailTemplateInterface::TXT_TYPE);
-        $this->assertNotNull($transformation);
+        $this->assertEquals(MailTemplateInterface::TXT_TYPE, $transformation->getType());
     }
 
     public function testApply()

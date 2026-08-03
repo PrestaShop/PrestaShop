@@ -17,7 +17,7 @@ class SearchAttachmentTest extends TestCase
     public function testConstructor(): void
     {
         $search = new SearchAttachment('search');
-        $this->assertNotNull($search);
+        $this->assertSame('search', $search->getSearchPhrase());
     }
 
     public function testEmptySearch(): void

@@ -42,6 +42,7 @@ class ProductControllerTest extends FormGridControllerTestCase
     public function testIndex(): int
     {
         $products = $this->getEntitiesFromGrid();
+        // @phpstan-ignore-next-line
         $this->assertNotEmpty($products);
 
         return $products->count();
@@ -62,7 +63,7 @@ class ProductControllerTest extends FormGridControllerTestCase
             'create_product[type]' => ProductType::TYPE_STANDARD,
         ];
         $createdProductId = $this->createEntityFromPage($formData);
-        $this->assertNotNull($createdProductId);
+        $this->assertGreaterThan(0, $createdProductId);
 
         // Check that there is one more product in the list
         $newProducts = $this->getEntitiesFromGrid();

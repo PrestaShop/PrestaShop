@@ -73,7 +73,6 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
 
         Context::getContext()->controller = null;
         $command = $application->find('prestashop-tests:load-legacy-classes');
-        $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command' => $command->getName(),
@@ -107,7 +106,6 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
 
         Context::getContext()->controller = null;
         $command = $application->find('prestashop-tests:load-legacy-classes');
-        $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             'command' => $command->getName(),

@@ -15,14 +15,12 @@ class AbstractTypedCollectionTest extends TestCase
     public function testConstructor()
     {
         $collection = new TestCollection();
-        $this->assertNotNull($collection);
         $this->assertCount(0, $collection);
 
         $collection = new TestCollection([
             new CollectionTestElement(),
             new CollectionTestElementChild(),
         ]);
-        $this->assertNotNull($collection);
         $this->assertCount(2, $collection);
     }
 
@@ -51,7 +49,6 @@ class AbstractTypedCollectionTest extends TestCase
     {
         $element = new CollectionTestElement();
         $collection = new TestCollection([$element]);
-        $this->assertNotNull($collection);
         $this->assertCount(1, $collection);
 
         $elementRemoved = $collection->removeElement($element);
@@ -70,7 +67,6 @@ class AbstractTypedCollectionTest extends TestCase
 
         $element = new CollectionTestElement();
         $collection = new TestCollection([$element]);
-        $this->assertNotNull($collection);
         $this->assertCount(1, $collection);
 
         $collection->removeElement(new InvalidCollectionTestElement());
@@ -79,7 +75,6 @@ class AbstractTypedCollectionTest extends TestCase
     public function testOffsetSet()
     {
         $collection = new TestCollection();
-        $this->assertNotNull($collection);
         $this->assertCount(0, $collection);
 
         $element = new CollectionTestElement();
@@ -96,7 +91,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->expectExceptionMessage('Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         $collection = new TestCollection();
-        $this->assertNotNull($collection);
         $this->assertCount(0, $collection);
 
         $collection->offsetSet(0, new InvalidCollectionTestElement());
@@ -105,7 +99,6 @@ class AbstractTypedCollectionTest extends TestCase
     public function testContains()
     {
         $collection = new TestCollection();
-        $this->assertNotNull($collection);
         $this->assertCount(0, $collection);
 
         $element = new CollectionTestElement();
@@ -121,7 +114,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->expectExceptionMessage('Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         $collection = new TestCollection();
-        $this->assertNotNull($collection);
         $this->assertCount(0, $collection);
 
         $element = new InvalidCollectionTestElement();
@@ -131,7 +123,6 @@ class AbstractTypedCollectionTest extends TestCase
     public function testIndexOf()
     {
         $collection = new TestCollection();
-        $this->assertNotNull($collection);
         $this->assertCount(0, $collection);
 
         $element = new CollectionTestElement();
@@ -154,7 +145,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->expectExceptionMessage('Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         $collection = new TestCollection();
-        $this->assertNotNull($collection);
         $this->assertCount(0, $collection);
 
         $collection->indexOf(new InvalidCollectionTestElement());
@@ -163,7 +153,6 @@ class AbstractTypedCollectionTest extends TestCase
     public function testSet()
     {
         $collection = new TestCollection();
-        $this->assertNotNull($collection);
         $this->assertCount(0, $collection);
 
         $element = new CollectionTestElement();
@@ -180,7 +169,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->expectExceptionMessage('Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         $collection = new TestCollection();
-        $this->assertNotNull($collection);
         $this->assertCount(0, $collection);
 
         $collection->set('invalidElement', new InvalidCollectionTestElement());
@@ -189,7 +177,6 @@ class AbstractTypedCollectionTest extends TestCase
     public function testAdd()
     {
         $collection = new TestCollection();
-        $this->assertNotNull($collection);
         $this->assertCount(0, $collection);
 
         $element = new CollectionTestElement();
@@ -205,7 +192,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->expectExceptionMessage('Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         $collection = new TestCollection();
-        $this->assertNotNull($collection);
         $this->assertCount(0, $collection);
 
         $collection->add(new InvalidCollectionTestElement());
@@ -214,7 +200,6 @@ class AbstractTypedCollectionTest extends TestCase
     public function testAddMock()
     {
         $collection = new TestCollection();
-        $this->assertNotNull($collection);
         $this->assertCount(0, $collection);
 
         $elementMock = $this->getMockBuilder(CollectionTestElement::class)
@@ -234,7 +219,6 @@ class AbstractTypedCollectionTest extends TestCase
         $this->expectExceptionMessage('Invalid element type string, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         $collection = new TestCollection();
-        $this->assertNotNull($collection);
         $this->assertCount(0, $collection);
 
         $collection->add('test');

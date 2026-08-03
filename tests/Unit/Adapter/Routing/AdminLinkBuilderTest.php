@@ -18,7 +18,7 @@ class AdminLinkBuilderTest extends TestCase
         $builder = new AdminLinkBuilder($this->getLinkMock(), [
             'customer' => 'AdminCustomer',
         ]);
-        $this->assertNotNull($builder);
+        $this->assertTrue($builder->canBuild('customer'));
     }
 
     public function testCanBuild()

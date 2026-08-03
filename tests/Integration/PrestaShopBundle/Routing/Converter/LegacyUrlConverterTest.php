@@ -519,7 +519,6 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
      */
     private function getCleanUrl(string $url): string
     {
-        $this->assertNotNull($url);
         $parsedUrl = parse_url($url);
         $parameters = [];
         if (isset($parsedUrl['query'])) {

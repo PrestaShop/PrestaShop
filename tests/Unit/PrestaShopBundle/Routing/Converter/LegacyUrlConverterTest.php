@@ -155,65 +155,36 @@ class LegacyUrlConverterTest extends TestCase
         $router = $this->buildRouterMock('admin_products_index', '/products', 'AdminProducts');
         $converter = new LegacyUrlConverter($router, new RouterProvider($router, new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))));
 
-        $caughtException = null;
-
-        try {
-            $converter->convertByParameters([
-                'controller' => 'AdminProducts',
-                'action' => 'create',
-            ]);
-        } catch (RouteNotFoundException $e) {
-            $caughtException = $e;
+        $parametersSets = [
+            ['controller' => 'AdminProducts', 'action' => 'create'],
+            ['controller' => 'AdminProducts', 'create' => true],
+            ['controller' => 'AdminProducts', 'create' => ''],
+        ];
+        foreach ($parametersSets as $parameters) {
+            $caughtException = null;
+            try {
+                $converter->convertByParameters($parameters);
+            } catch (RouteNotFoundException $e) {
+                $caughtException = $e;
+            }
+            $this->assertNotNull($caughtException);
         }
-        $this->assertNotNull($caughtException);
 
-        try {
-            $converter->convertByParameters([
-                'controller' => 'AdminProducts',
-                'create' => true,
-            ]);
-        } catch (RouteNotFoundException $e) {
-            $caughtException = $e;
+        $urls = [
+            '?controller=AdminProducts&action=create',
+            '?controller=AdminProducts&create=1',
+            '?controller=AdminProducts&create=',
+            '?controller=AdminProducts&create',
+        ];
+        foreach ($urls as $url) {
+            $caughtException = null;
+            try {
+                $converter->convertByUrl($url);
+            } catch (RouteNotFoundException $e) {
+                $caughtException = $e;
+            }
+            $this->assertNotNull($caughtException);
         }
-        $this->assertNotNull($caughtException);
-
-        try {
-            $converter->convertByParameters([
-                'controller' => 'AdminProducts',
-                'create' => '',
-            ]);
-        } catch (RouteNotFoundException $e) {
-            $caughtException = $e;
-        }
-        $this->assertNotNull($caughtException);
-
-        try {
-            $converter->convertByUrl('?controller=AdminProducts&action=create');
-        } catch (RouteNotFoundException $e) {
-            $caughtException = $e;
-        }
-        $this->assertNotNull($caughtException);
-
-        try {
-            $converter->convertByUrl('?controller=AdminProducts&create=1');
-        } catch (RouteNotFoundException $e) {
-            $caughtException = $e;
-        }
-        $this->assertNotNull($caughtException);
-
-        try {
-            $converter->convertByUrl('?controller=AdminProducts&create=');
-        } catch (RouteNotFoundException $e) {
-            $caughtException = $e;
-        }
-        $this->assertNotNull($caughtException);
-
-        try {
-            $converter->convertByUrl('?controller=AdminProducts&create');
-        } catch (RouteNotFoundException $e) {
-            $caughtException = $e;
-        }
-        $this->assertNotNull($caughtException);
     }
 
     /**
@@ -333,7 +304,6 @@ class LegacyUrlConverterTest extends TestCase
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
         $converter = new LegacyUrlConverter($router, new RouterProvider($router, new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))));
 
-        /** @var RouteNotFoundException $caughtException */
         $caughtException = null;
 
         try {
@@ -354,7 +324,6 @@ class LegacyUrlConverterTest extends TestCase
         $router = $this->buildRouterMock('admin_products_create', '/products/create', 'AdminProducts:create');
         $converter = new LegacyUrlConverter($router, new RouterProvider($router, new LegacyRouteFactory($this->createMock(FeatureFlagManager::class))));
 
-        /** @var RouteNotFoundException $caughtException */
         $caughtException = null;
 
         try {

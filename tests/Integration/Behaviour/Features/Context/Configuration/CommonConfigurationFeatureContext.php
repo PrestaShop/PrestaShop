@@ -79,7 +79,7 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
     /**
      * @Given /^customization feature is (enabled|disabled)$/
      *
-     * @Transform(enabled|disabled)
+     * @Transform /(enabled|disabled)/
      */
     public function toggleCustomizationFeature(string $status)
     {
@@ -93,7 +93,7 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
     /**
      * @Given /^search indexation feature is (enabled|disabled)$/
      *
-     * @Transform(enabled|disabled)
+     * @Transform /(enabled|disabled)/
      *
      * @param string $status
      */

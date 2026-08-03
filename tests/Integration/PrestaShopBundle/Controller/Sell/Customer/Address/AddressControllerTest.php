@@ -46,6 +46,7 @@ class AddressControllerTest extends FormGridControllerTestCase
     public function testIndex(): int
     {
         $adresses = $this->getEntitiesFromGrid();
+        // @phpstan-ignore-next-line
         $this->assertNotEmpty($adresses);
 
         return $adresses->count();

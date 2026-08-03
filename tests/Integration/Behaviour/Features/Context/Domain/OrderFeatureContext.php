@@ -9,14 +9,12 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Address;
-use AdminController;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Configuration;
 use Context;
 use Currency;
-use FrontController;
 use Order;
 use OrderInvoice;
 use OrderState;
@@ -87,10 +85,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function before()
     {
         // needed because if no controller defined then CONTEXT_ALL is selected and exception is thrown
-        /** @var AdminController|FrontController $adminControllerTestDouble */
         $adminControllerTestDouble = new stdClass();
         $adminControllerTestDouble->controller_type = 'admin';
         $adminControllerTestDouble->php_self = 'dummyTestDouble';
+        // a duck-typed stdClass double is enough for the legacy context here
+        // @phpstan-ignore assign.propertyType
         Context::getContext()->controller = $adminControllerTestDouble;
     }
 

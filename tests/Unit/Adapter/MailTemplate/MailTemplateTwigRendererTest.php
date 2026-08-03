@@ -41,7 +41,7 @@ class MailTemplateTwigRendererTest extends TestCase
         ;
 
         $generator = new MailTemplateTwigRenderer($engineMock, $builderMock, $dispatcherMock, false);
-        $this->assertNotNull($generator);
+        $this->assertInstanceOf(MailTemplateTwigRenderer::class, $generator);
     }
 
     public function testFileNotFound()
@@ -63,20 +63,19 @@ class MailTemplateTwigRendererTest extends TestCase
             ->method('render')
             ->willThrowException(new LoaderError(''))
         ;
-        /** @var HookDispatcherInterface $dispatcherMock */
+        /** @var HookDispatcherInterface&MockObject $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        /** @var Environment $engineMock */
+        /** @var Environment&MockObject $engineMock */
         $generator = new MailTemplateTwigRenderer(
             $engineMock,
             $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
             $dispatcherMock,
             false
         );
-        $this->assertNotNull($generator);
 
         $generator->renderHtml($mailLayout, $expectedLanguage);
     }
@@ -97,7 +96,6 @@ class MailTemplateTwigRendererTest extends TestCase
             $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::HTML_TYPE),
             true
         );
-        $this->assertNotNull($generator);
 
         $generatedTemplate = $generator->renderHtml($mailLayout, $expectedLanguage);
         $this->assertEquals($expectedTemplate, $generatedTemplate);
@@ -120,7 +118,6 @@ class MailTemplateTwigRendererTest extends TestCase
             $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::HTML_TYPE),
             true
         );
-        $this->assertNotNull($generator);
 
         $generatedTemplate = $generator->renderHtml($mailLayout, $expectedLanguage);
         $this->assertEquals($expectedTemplate, $generatedTemplate);
@@ -142,7 +139,6 @@ class MailTemplateTwigRendererTest extends TestCase
             $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::TXT_TYPE),
             true
         );
-        $this->assertNotNull($generator);
 
         $generatedTemplate = $generator->renderTxt($mailLayout, $expectedLanguage);
         $this->assertEquals($expectedTemplate, $generatedTemplate);
@@ -165,7 +161,6 @@ class MailTemplateTwigRendererTest extends TestCase
             $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::TXT_TYPE),
             true
         );
-        $this->assertNotNull($generator);
 
         $generatedTemplate = $generator->renderTxt($mailLayout, $expectedLanguage);
         $this->assertEquals($expectedTemplate, $generatedTemplate);
@@ -188,7 +183,6 @@ class MailTemplateTwigRendererTest extends TestCase
             $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::HTML_TYPE, 1),
             true
         );
-        $this->assertNotNull($generator);
 
         $generator->addTransformation($this->createTransformationMock($generatedTemplate, $expectedVariables, MailTemplateInterface::HTML_TYPE));
         $generatedTemplate = $generator->renderHtml($mailLayout, $expectedLanguage);

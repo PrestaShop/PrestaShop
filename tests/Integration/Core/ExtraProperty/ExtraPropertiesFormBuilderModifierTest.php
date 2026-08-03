@@ -70,6 +70,7 @@ class ExtraPropertiesFormBuilderModifierTest extends AbstractFormTester
         $this->assertSame([$url], $constraints);
         // … and required no longer injects a server-side NotBlank — requiredness is the module's job.
         foreach ($constraints as $constraint) {
+            // @phpstan-ignore-next-line
             $this->assertNotInstanceOf(\Symfony\Component\Validator\Constraints\NotBlank::class, $constraint);
         }
     }

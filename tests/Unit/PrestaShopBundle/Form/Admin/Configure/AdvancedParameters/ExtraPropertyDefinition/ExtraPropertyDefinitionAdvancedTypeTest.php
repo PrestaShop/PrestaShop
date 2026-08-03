@@ -18,6 +18,7 @@ use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefini
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyFormPlacementRowType;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyGridPlacementRowType;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Validator\Validation;
@@ -117,6 +118,7 @@ class ExtraPropertyDefinitionAdvancedTypeTest extends TypeTestCase
         ]));
 
         $this->assertFalse($form->isValid());
+        /** @var FormError[] $errors */
         $errors = iterator_to_array($form->get('associated_forms')->getErrors(true), false);
         $this->assertCount(1, $errors);
         $this->assertSame('The form identifier is required.', $errors[0]->getMessage());
@@ -133,6 +135,7 @@ class ExtraPropertyDefinitionAdvancedTypeTest extends TypeTestCase
         ]));
 
         $this->assertFalse($form->isValid());
+        /** @var FormError[] $errors */
         $errors = iterator_to_array($form->get('associated_apis')->getErrors(true), false);
         $this->assertCount(1, $errors);
         $this->assertStringContainsString('FLY', $errors[0]->getMessage());
@@ -150,6 +153,7 @@ class ExtraPropertyDefinitionAdvancedTypeTest extends TypeTestCase
         ]));
 
         $this->assertFalse($form->isValid());
+        /** @var FormError[] $errors */
         $errors = iterator_to_array($form->get('associated_forms')->getErrors(true), false);
         $this->assertCount(1, $errors);
         $this->assertSame('Duplicate form "product" — each form may only be referenced once.', $errors[0]->getMessage());

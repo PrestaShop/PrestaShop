@@ -24,7 +24,7 @@ class SetProductFeatureValuesCommandTest extends TestCase
     public function testValidInput(int $productId, array $featureValues)
     {
         $command = new SetProductFeatureValuesCommand($productId, $featureValues);
-        $this->assertNotNull($command);
+        $this->assertSame($productId, $command->getProductId()->getValue());
     }
 
     /**

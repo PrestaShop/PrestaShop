@@ -9,6 +9,7 @@ namespace Tests\Unit\Core\MailTemplate;
 use DOMNode;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
+use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -17,7 +18,7 @@ class CSSInlineTransformationTest extends TestCase
     public function testConstructor(): void
     {
         $transformation = new CSSInlineTransformation();
-        $this->assertNotNull($transformation);
+        $this->assertEquals(MailTemplateInterface::HTML_TYPE, $transformation->getType());
     }
 
     public function testSetters(): void
