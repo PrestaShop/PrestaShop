@@ -287,7 +287,20 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
         ?Order $order)
     {
         if (null === $order) {
-            return Product::getPriceStatic($productId, $withTaxes, $productAttributeId, $computingPrecision);
+            // Pass 0 as cart ID to avoid requiring an employee in the context (needed for API requests)
+            return Product::getPriceStatic(
+                $productId,
+                $withTaxes,
+                $productAttributeId,
+                $computingPrecision,
+                null,
+                false,
+                true,
+                1,
+                false,
+                null,
+                0
+            );
         }
 
         return Product::getPriceStatic(

@@ -2903,15 +2903,20 @@ class ProductCore extends ObjectModel
             $context = Context::getContext();
         }
 
-        $id_address = $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+        $id_address = 0;
+        if (is_object($context->cart) && $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} != null) {
+            $id_address = $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+        }
         $ids = Address::getCountryAndState($id_address);
         $id_country = isset($ids['id_country']) ? (int) $ids['id_country'] : (int) Configuration::get('PS_COUNTRY_DEFAULT');
+
+        $id_group = Validate::isLoadedObject($context->customer) ? $context->customer->id_default_group : (int) Configuration::get('PS_UNIDENTIFIED_GROUP');
 
         return SpecificPrice::getProductIdByDate(
             $context->shop->id,
             $context->currency->id,
             $id_country,
-            $context->customer->id_default_group,
+            $id_group,
             $beginning,
             $ending,
             0,
@@ -3433,10 +3438,12 @@ class ProductCore extends ObjectModel
             /*
             * When a user (e.g., guest, customer, Google...) is on PrestaShop, he has already its cart as the global (see /init.php)
             * When a non-user calls directly this method (e.g., payment module...) is on PrestaShop, he does not have already it BUT knows the cart ID
-            * When called from the back office, cart ID can be inexistant
+            * When called from the back office, cart ID can be inexistent
+            * When called from API, there's no employee and no cart ID (use empty cart)
             */
-            if (!$id_cart && !isset($context->employee)) {
-                throw new PrestaShopException('If no employee is assigned in the context, cart ID must be provided to this method.');
+            if (!$id_cart && !isset($context->employee) && !Validate::isLoadedObject($context->employee)) {
+                // For API requests without cart or employee, use an empty cart (id = 0)
+                $id_cart = 0;
             }
             $cur_cart = new Cart($id_cart);
             // Store cart in context to avoid multiple instantiations in BO
@@ -3929,16 +3936,23 @@ class ProductCore extends ObjectModel
             $context = Context::getContext();
         }
 
-        $id_group = $context->customer->id_default_group;
-        $cart_quantity = !$context->cart ? 0 : Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT SUM(`quantity`)
-            FROM `' . _DB_PREFIX_ . 'cart_product`
-            WHERE `id_product` = ' . (int) $id_product . ' AND `id_cart` = ' . (int) $context->cart->id
-        );
+        $id_group = Validate::isLoadedObject($context->customer) ? $context->customer->id_default_group : (int) Configuration::get('PS_UNIDENTIFIED_GROUP');
+        $cart_quantity = 0;
+        if (Validate::isLoadedObject($context->cart)) {
+            $cart_quantity = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                'SELECT SUM(`quantity`)
+                FROM `' . _DB_PREFIX_ . 'cart_product`
+                WHERE `id_product` = ' . (int) $id_product . ' AND `id_cart` = ' . (int) $context->cart->id
+            );
+        }
         $quantity = $cart_quantity ? $cart_quantity : $quantity;
 
         $id_currency = (int) $context->currency->id;
-        $ids = Address::getCountryAndState((int) $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+        $id_address = 0;
+        if (is_object($context->cart) && $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} != null) {
+            $id_address = (int) $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+        }
+        $ids = Address::getCountryAndState($id_address);
         $id_country = (int) ($ids['id_country'] ?? Configuration::get('PS_COUNTRY_DEFAULT'));
 
         return (bool) SpecificPrice::getSpecificPrice((int) $id_product, $context->shop->id, $id_currency, $id_country, $id_group, $quantity, null, 0, 0, $quantity);
@@ -4813,8 +4827,8 @@ class ProductCore extends ObjectModel
         $results_array = [];
         /** @var array{id_product: int} $row */
         foreach ($result as $row) {
-            $row['price_tax_incl'] = Product::getPriceStatic($row['id_product'], true, null, 2);
-            $row['price_tax_excl'] = Product::getPriceStatic($row['id_product'], false, null, 2);
+            $row['price_tax_incl'] = Product::getPriceStatic($row['id_product'], true, null, 2, null, false, true, 1, false, null, 0);
+            $row['price_tax_excl'] = Product::getPriceStatic($row['id_product'], false, null, 2, null, false, true, 1, false, null, 0);
             $results_array[] = $row;
         }
 
@@ -5686,7 +5700,11 @@ class ProductCore extends ObjectModel
 
         $row = Product::getTaxesInformations($row, $context);
 
-        $row['ecotax_rate'] = (float) Tax::getProductEcotaxRate($context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+        $id_address = 0;
+        if (is_object($context->cart) && $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')} != null) {
+            $id_address = $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+        }
+        $row['ecotax_rate'] = (float) Tax::getProductEcotaxRate($id_address);
 
         Hook::exec('actionGetProductPropertiesAfter', [
             'id_lang' => $id_lang,
@@ -6574,6 +6592,11 @@ class ProductCore extends ObjectModel
         }
         if (!$context) {
             $context = Context::getContext();
+        }
+
+        // If there's no cart in the context, we can't check customizations
+        if (!Validate::isLoadedObject($context->cart)) {
+            return true;
         }
 
         $fields = $context->cart->getProductCustomization($this->id, null, true);
