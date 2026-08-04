@@ -16,6 +16,27 @@ class DbPDOCore extends Db
     protected $result;
 
     /**
+     * Shares an externally-managed PDO connection (typically Doctrine's) with this legacy Db instance,
+     * so that both sides run in the same physical connection/transaction.
+     *
+     * Note: if this shared connection is later lost, query()'s reconnect-on-error-2006 logic replaces
+     * $this->link with a brand new, legacy-only PDO (see Db::query()). The two layers then run on separate
+     * connections again until setPDO() is called anew (i.e. the next transactional command).
+     *
+     * @throws PrestaShopException if this instance's current connection has an uncommitted transaction,
+     *                             since replacing it would silently discard that work instead of erroring
+     */
+    public function setPDO(PDO $pdo)
+    {
+        if ($this->link instanceof PDO && $this->link !== $pdo && $this->link->inTransaction()) {
+            throw new PrestaShopException('Cannot share the Doctrine connection: the legacy Db connection it would replace has an uncommitted transaction.');
+        }
+
+        $this->link = $pdo;
+        $this->applySessionSettings();
+    }
+
+    /**
      * Returns a new PDO object (database link).
      *
      * @param string $host
@@ -112,15 +133,27 @@ class DbPDOCore extends Db
     public function connect()
     {
         try {
-            $this->link = $this->getPDO($this->server, $this->user, $this->password, $this->database, 5);
+            if (!$this->link) {
+                $this->link = $this->getPDO($this->server, $this->user, $this->password, $this->database, 5);
+            }
         } catch (PDOException $e) {
             throw new PrestaShopException('Link to database cannot be established: ' . $e->getMessage());
         }
 
-        $this->link->exec('SET SESSION sql_mode = \'\'');
-        $this->setTimeZone();
+        $this->applySessionSettings();
 
         return $this->link;
+    }
+
+    /**
+     * Applies the session settings legacy code relies on (permissive sql_mode, configured timezone).
+     * Must run both after a fresh connect() and after setPDO(), since an externally-provided PDO
+     * (e.g. Doctrine's) was not opened through connect() and never got these applied otherwise.
+     */
+    private function applySessionSettings(): void
+    {
+        $this->link->exec('SET SESSION sql_mode = \'\'');
+        $this->setTimeZone();
     }
 
     /**

@@ -361,6 +361,10 @@ abstract class DbCore
         $this->result = $this->_query($sql);
 
         if (!$this->result && $this->getNumberError() == 2006) {
+            // disconnect() first: DbPDOCore::connect() now skips reconnecting if $this->link is
+            // still set (needed to avoid overwriting a connection shared with Doctrine), so without
+            // this the dead link here would never actually get replaced.
+            $this->disconnect();
             $this->connect();
             $this->result = $this->_query($sql);
         }

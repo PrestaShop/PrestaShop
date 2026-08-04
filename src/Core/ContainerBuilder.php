@@ -23,8 +23,14 @@ class ContainerBuilder
 
         $container->bind('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
         $container->bind('PrestaShop\\PrestaShop\\Core\\ConfigurationInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Configuration', true);
-        $container->bind('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
-        $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', '\\PrestaShop\\PrestaShop\\Adapter\\Database', true);
+        // Bound via a factory rather than the class name: Container::makeInstanceFromClassName() would
+        // otherwise try to build Database's optional Connection $connection constructor argument by
+        // reflection (it only checks for a default value *after* checking for a class type-hint), which
+        // it cannot do since Connection needs real driver configuration. This container has no notion of
+        // Doctrine/Symfony services anyway, so Database is built here without connection sharing.
+        $databaseFactory = static fn () => new \PrestaShop\PrestaShop\Adapter\Database();
+        $container->bind('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', $databaseFactory, true);
+        $container->bind('PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface', $databaseFactory, true);
         $container->bind('PrestaShop\\PrestaShop\\Core\\Image\\ImageFormatConfiguration', 'PrestaShop\\PrestaShop\\Core\\Image\\ImageFormatConfiguration', true);
 
         return $container;

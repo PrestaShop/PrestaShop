@@ -11,7 +11,6 @@ namespace PrestaShopBundle\Service\Database;
 use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Database;
 use PrestaShop\PrestaShop\Core\Repository\TransactionManagerInterface;
-use Throwable;
 
 class TransactionManager implements TransactionManagerInterface
 {
@@ -39,39 +38,33 @@ class TransactionManager implements TransactionManagerInterface
     }
 
     /**
+     * The legacy Db connection is synchronized here too (not just in executeInTransaction()), otherwise
+     * code using this begin/commit/rollback trio instead of executeInTransaction() would silently lose
+     * the single-connection guarantee: legacy writes would go back to running on their own connection.
+     *
      * {@inheritdoc}
      */
     public function beginTransaction(): void
     {
+        $this->database->getInstance();
         $this->entityManager->beginTransaction();
     }
 
     /**
-     * Executes a callable within a dual-layer database transaction covering both legacy Db and Doctrine EntityManager.
+     * Executes a callable within a single database transaction covering both legacy Db and Doctrine EntityManager
+     * operations.
      *
-     * Benefits of transactional management:
-     * - Guarantees atomicity and data consistency across operations executed in both legacy PrestaShop (Db/ObjectModel) and Doctrine ORM layers.
-     * - Ensures that if any failure or exception occurs during execution, all changes made across both layers are rolled back together, preventing partial data updates.
-     *
-     * Deadlock risks with dual transaction layers:
-     * - Managing transactions across two separate database abstraction layers (legacy Db connection and Doctrine EntityManager) increases the risk of database deadlocks.
-     * - If legacy SQL queries and Doctrine flush operations access or lock database tables/rows in different orders within the same transaction workflow, or if they use separate DB connections holding uncommitted locks, concurrent executions can trigger deadlocks or lock wait timeouts.
+     * The legacy Db connection is synchronized beforehand (see Database::getInstance()) to share the same
+     * underlying PDO connection as Doctrine, so both layers participate in the very same physical transaction
+     * instead of two independent ones. This avoids the deadlocks and lock wait timeouts that a dual-connection,
+     * dual-transaction approach would be exposed to.
      *
      * {@inheritdoc}
      */
     public function executeInTransaction(callable $func): mixed
     {
-        $db = $this->database->getInstance();
-        $db->execute('START TRANSACTION');
+        $this->database->getInstance();
 
-        try {
-            $result = $this->entityManager->wrapInTransaction($func);
-            $db->execute('COMMIT');
-
-            return $result;
-        } catch (Throwable $e) {
-            $db->execute('ROLLBACK');
-            throw $e;
-        }
+        return $this->entityManager->wrapInTransaction($func);
     }
 }
