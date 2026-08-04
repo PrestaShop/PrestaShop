@@ -320,3 +320,21 @@ services:
 
   PrestaShop\PrestaShop\Adapter\AdminAPI\AdminAPIConfiguration:
     autowire: true
+
+  PrestaShop\PrestaShop\Adapter\Search\Configuration\IndexationConfiguration:
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
+
+  PrestaShop\PrestaShop\Adapter\Search\Configuration\SearchOptionsConfiguration:
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
+
+  PrestaShop\PrestaShop\Adapter\Search\Configuration\WeightConfiguration:
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
