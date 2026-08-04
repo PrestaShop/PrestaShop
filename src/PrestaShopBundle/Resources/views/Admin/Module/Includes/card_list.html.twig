@@ -3,6 +3,7 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 {% set isModuleActive = module.database.active|default('0') %}
+{% set overriddenFiles = module.overrides.files|default([]) %}
 
 <div
   class="module-item module-item-list col-md-12 {% if origin == 'manage' and isModuleActive == '0' %}module-item-list-isNotActive{% endif %}"
@@ -21,6 +22,10 @@
   data-active="{{ isModuleActive }}"
   data-installed="{{ module.database.installed|default('0') }}"
   data-last-access="{{ module.database.last_access_date }}"
+  {% if overriddenFiles is not empty %}
+    data-has-overrides="1"
+    data-overridden-files="{{ overriddenFiles|join('|') }}"
+  {% endif %}
 >
   <div class="container-fluid">
     <div class="module-item-wrapper-list row">
@@ -58,6 +63,16 @@
           <div>
             {% if module.attributes.urls.upgrade is defined %}
                 <span class="badge badge-success my-1">{{ 'Upgrade available'|trans({}, 'Admin.Modules.Feature') }}</span>
+            {% endif %}
+            {% if overriddenFiles is not empty %}
+                {# Warn the employee the module is customized: an update is likely to break the override #}
+                <span
+                  class="badge badge-warning my-1 module-overridden-badge"
+                  data-toggle="pstooltip"
+                  data-placement="top"
+                  data-html="true"
+                  title="{{ 'This module is customized by files in the override folder. Updating it may break these customizations.'|trans({}, 'Admin.Modules.Help') }}{% for file in overriddenFiles %}<br>{{ file }}{% endfor %}"
+                >{{ 'Overridden'|trans({}, 'Admin.Modules.Feature') }}</span>
             {% endif %}
           </div>
         </div>

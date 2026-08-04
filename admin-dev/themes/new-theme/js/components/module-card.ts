@@ -4,6 +4,7 @@
  */
 import {EventEmitter} from 'events';
 import ConfirmModal from '@components/modal';
+import {getModuleOverridesWarning} from '@components/module-overrides-warning';
 import ComponentsMap from './components-map';
 
 const ModuleCardMap = ComponentsMap.moduleCard;
@@ -160,6 +161,7 @@ export default class ModuleCard {
       event.preventDefault();
       const modal = $(`#${$(this).data('confirm_modal')}`);
       const isMaintenanceMode = window.isShopMaintenance;
+      const overridesWarning = getModuleOverridesWarning($(this));
 
       if (modal.length !== 1) {
         // Modal body element
@@ -181,8 +183,8 @@ export default class ModuleCard {
               ? 'btn-primary'
               : 'btn-secondary',
             confirmMessage: isMaintenanceMode
-              ? ''
-              : window.moduleTranslations.moduleModalUpdateConfirmMessage,
+              ? overridesWarning
+              : overridesWarning + window.moduleTranslations.moduleModalUpdateConfirmMessage,
             closable: true,
             customButtons: isMaintenanceMode ? [] : [maintenanceLink],
           },

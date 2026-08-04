@@ -92,7 +92,10 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter:
     public: false
-    arguments: [ "@=service('prestashop.adapter.legacy.context').getContext().currency", "@prestashop.adapter.formatter.price" ]
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().currency"
+      - '@prestashop.adapter.formatter.price'
+      - '@PrestaShop\PrestaShop\Core\Module\OverriddenModulesProvider'
 
   prestashop.adapter.presenter.module:
     alias: PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter

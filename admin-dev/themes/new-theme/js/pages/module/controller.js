@@ -4,6 +4,7 @@
  */
 
 import ConfirmModal from '@components/modal';
+import {getModulesOverridesWarning} from '@components/module-overrides-warning';
 
 const {$} = window;
 
@@ -860,6 +861,7 @@ class AdminModuleController {
     $('body').on('click', self.upgradeAllSource, (event) => {
       event.preventDefault();
       const isMaintenanceMode = window.isShopMaintenance;
+      const overridesWarning = getModulesOverridesWarning($(self.upgradeAllTargets));
 
       // Modal body element
       const maintenanceLink = document.createElement('a');
@@ -876,7 +878,9 @@ class AdminModuleController {
             ? window.moduleTranslations.moduleModalUpdateUpgrade
             : window.moduleTranslations.upgradeAnywayButtonText,
           confirmButtonClass: isMaintenanceMode ? 'btn-primary' : 'btn-secondary',
-          confirmMessage: isMaintenanceMode ? '' : window.moduleTranslations.moduleModalUpdateConfirmMessage,
+          confirmMessage: isMaintenanceMode
+            ? overridesWarning
+            : overridesWarning + window.moduleTranslations.moduleModalUpdateConfirmMessage,
           closable: true,
           customButtons: isMaintenanceMode ? [] : [maintenanceLink],
         },
