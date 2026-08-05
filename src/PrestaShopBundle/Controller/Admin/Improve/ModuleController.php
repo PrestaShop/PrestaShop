@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\OverriddenModulesProvider;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 use PrestaShop\PrestaShop\Core\Security\Permission;
@@ -312,6 +313,7 @@ class ModuleController extends ModuleAbstractController
         Request $request,
         ModuleManager $moduleManager,
         SourceHandlerFactory $sourceHandlerFactory,
+        OverriddenModulesProvider $overriddenModulesProvider,
     ): JsonResponse {
         if ($this->isDemoModeEnabled()) {
             return new JsonResponse(
@@ -386,6 +388,35 @@ class ModuleController extends ModuleAbstractController
             $moduleName = $sourceHandlerFactory->getHandler($uploadedPath)->getModuleName($uploadedPath);
 
             $moduleWasAlreadyInstalled = $moduleManager->isInstalled($moduleName);
+
+            // Uploading over an installed module replaces its files, which is likely to break the
+            // customizations made in override/modules. The archive is the only place the target module
+            // name can be read from, so the confirmation can only be asked for at this point.
+            $overriddenFiles = $overriddenModulesProvider->getOverriddenFiles($moduleName);
+            if (
+                $moduleWasAlreadyInstalled
+                && [] !== $overriddenFiles
+                && !$request->request->getBoolean('confirm_overrides')
+            ) {
+                return new JsonResponse([
+                    'status' => false,
+                    'confirmation_needed' => 'overrides',
+                    'module_name' => $moduleName,
+                    'overridden_files' => array_map(
+                        static function (string $overriddenFile) use ($moduleName): string {
+                            return 'override/modules/' . $moduleName . '/' . $overriddenFile;
+                        },
+                        $overriddenFiles
+                    ),
+                    // Also stated as a plain message, so a client unaware of the confirmation
+                    // does not report an empty failure
+                    'msg' => $this->trans(
+                        'Module %module% is customized by override files, updating it may break them. Confirm the upload to replace it anyway.',
+                        ['%module%' => $moduleName],
+                        'Admin.Modules.Notification',
+                    ),
+                ]);
+            }
             $installationResult = $moduleManager->install($moduleName, $uploadedPath);
 
             // Install the module

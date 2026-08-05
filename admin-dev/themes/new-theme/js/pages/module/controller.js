@@ -4,7 +4,7 @@
  */
 
 import ConfirmModal from '@components/modal';
-import {getModulesOverridesWarning} from '@components/module-overrides-warning';
+import {getModulesOverridesWarning, getOverriddenFilesWarning} from '@components/module-overrides-warning';
 
 const {$} = window;
 
@@ -629,13 +629,15 @@ class AdminModuleController {
         if (file.status !== 'error') {
           const responseObject = $.parseJSON(file.xhr.response);
 
-          if (typeof responseObject.is_configurable === 'undefined') responseObject.is_configurable = null;
-          if (typeof responseObject.module_name === 'undefined') responseObject.module_name = null;
+          // The server holds back an upload replacing an overridden module until the employee confirms
+          if (responseObject.confirmation_needed === 'overrides') {
+            self.isUploadStarted = false;
+            self.confirmOverriddenModuleUpload(file, responseObject);
 
-          self.displayOnUploadDone(responseObject);
+            return;
+          }
 
-          const elem = $(`<div data-tech-name="${responseObject.module_name}"></div>`);
-          this.eventEmitter.emit((responseObject.upgraded ? 'Module Upgraded' : 'Module Installed'), elem);
+          self.handleImportResponse(responseObject);
         }
         // State that we have finish the process to unlock some actions
         self.isUploadStarted = false;
@@ -696,6 +698,108 @@ class AdminModuleController {
       $(self.moduleImportFailureMsgDetailsSelector).html(message);
       $(self.moduleImportFailureSelector).fadeIn();
     });
+  }
+
+  /**
+   * Common handling of a finished import, whether it came from the dropzone or from a replayed upload.
+   *
+   * @param object result containing the server response
+   */
+  handleImportResponse(result) {
+    if (typeof result.is_configurable === 'undefined') result.is_configurable = null;
+    if (typeof result.module_name === 'undefined') result.module_name = null;
+
+    this.displayOnUploadDone(result);
+
+    const elem = $(`<div data-tech-name="${result.module_name}"></div>`);
+    this.eventEmitter.emit(result.upgraded ? 'Module Upgraded' : 'Module Installed', elem);
+  }
+
+  /**
+   * The server refuses to replace an installed module customized in override/modules until the
+   * employee acknowledges the update may break those customizations.
+   *
+   * @param File file the archive the employee dropped
+   * @param object result containing the server response
+   */
+  confirmOverriddenModuleUpload(file, result) {
+    const self = this;
+
+    self.animateEndUpload(() => {
+      // Asked for inside the import modal, using its own confirm block and footer, rather than
+      // stacking a second modal on top of it
+      $(self.moduleImportConfirmSelector)
+        .html(getOverriddenFilesWarning(result.overridden_files || []))
+        .show();
+
+      const cancelButton = $('<button type="button" class="btn btn-outline-secondary"></button>')
+        .text(window.moduleTranslations.moduleModalUpdateCancel)
+        .on('click', () => {
+          self.clearImportConfirm();
+          self.resetImportModal();
+        });
+
+      const confirmButton = $('<button type="button" class="btn btn-primary"></button>')
+        .text(window.moduleTranslations.upgradeAnywayButtonText)
+        .on('click', () => {
+          self.clearImportConfirm();
+          self.replayOverriddenModuleUpload(file);
+        });
+
+      $(self.dropZoneModalFooterSelector).empty().append(cancelButton, confirmButton);
+    });
+  }
+
+  /**
+   * Removes the in-modal confirmation, so the modal can show the upload outcome instead.
+   */
+  clearImportConfirm() {
+    $(this.moduleImportConfirmSelector).hide().empty();
+    $(this.dropZoneModalFooterSelector).empty();
+  }
+
+  /**
+   * Sends the archive again, this time allowed to replace the overridden module.
+   *
+   * @param File file the archive the employee dropped
+   */
+  replayOverriddenModuleUpload(file) {
+    const self = this;
+    const formData = new FormData();
+    formData.append('file_uploaded', file);
+    formData.append('confirm_overrides', '1');
+
+    self.isUploadStarted = true;
+    self.animateStartUpload();
+
+    $.ajax({
+      url: window.moduleURLs.moduleImport,
+      method: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      dataType: 'json',
+    })
+      .done((result) => self.handleImportResponse(result))
+      .fail((jqXHR) => self.displayOnUploadError(
+        (jqXHR.responseJSON && jqXHR.responseJSON.msg) || jqXHR.statusText,
+      ))
+      .always(() => {
+        self.isUploadStarted = false;
+      });
+  }
+
+  /**
+   * Puts the import modal back to its initial state, so the employee can drop another archive.
+   */
+  resetImportModal() {
+    const self = this;
+
+    $(self.moduleImportProcessingSelector).hide();
+    $(`${self.moduleImportSuccessSelector}, ${self.moduleImportFailureSelector}`).hide();
+    $(self.moduleImportStartSelector).fadeIn();
+    $('.dropzone').removeAttr('style');
+    self.isUploadStarted = false;
   }
 
   /**

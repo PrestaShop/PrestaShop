@@ -32,6 +32,20 @@ export function getModuleOverrides(element: JQuery): ModuleOverrides | null {
 }
 
 /**
+ * Warning for an explicit list of overriding files, used when the files are known from a server
+ * response rather than from the page (module upload).
+ */
+export function getOverriddenFilesWarning(files: string[]): string {
+  if (files.length === 0) {
+    return '';
+  }
+
+  const {overridesUpdateWarning, overridesUpdateFilesIntro} = window.moduleTranslations;
+
+  return buildWarning(overridesUpdateWarning, overridesUpdateFilesIntro, files);
+}
+
+/**
  * Warning displayed before updating a single module customized by override files:
  * the update may silently break them.
  */
@@ -42,9 +56,7 @@ export function getModuleOverridesWarning(element: JQuery): string {
     return '';
   }
 
-  const {overridesUpdateWarning, overridesUpdateFilesIntro} = window.moduleTranslations;
-
-  return buildWarning(overridesUpdateWarning, overridesUpdateFilesIntro, overrides.files);
+  return getOverriddenFilesWarning(overrides.files);
 }
 
 /**
