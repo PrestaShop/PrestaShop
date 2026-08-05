@@ -995,7 +995,7 @@ class AdminControllerCore extends Controller
                     $this->processFilter();
                 }
 
-                if (!empty($_POST) && is_array($_POST) && (int) Tools::getValue('submitFilter' . $this->list_id) || Tools::isSubmit('submitReset' . $this->list_id)) {
+                if (!empty($_POST) && (int) Tools::getValue('submitFilter' . $this->list_id) || Tools::isSubmit('submitReset' . $this->list_id)) {
                     $this->setRedirectAfter(self::$currentIndex . '&token=' . $this->token . (Tools::isSubmit('submitFilter' . $this->list_id) ? '&submitFilter' . $this->list_id . '=' . (int) Tools::getValue('submitFilter' . $this->list_id) : ''));
                 }
 
@@ -1197,10 +1197,15 @@ class AdminControllerCore extends Controller
 
             $this->copyFromPost($this->object, $this->table);
             $this->beforeAdd($this->object);
-            if (method_exists($this->object, 'add') && !$this->object->add()) {
+            if (!$this->object->add()) {
                 $this->errors[] = $this->trans('An error occurred while creating an object.', [], 'Admin.Notifications.Error') .
                     ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
-            } elseif (($_POST[$this->identifier] = $this->object->id /* voluntary do affectation here */) && $this->postImage($this->object->id) && count($this->errors) === 0 && $this->_redirect) {
+            } elseif (
+                ($_POST[$this->identifier] = $this->object->id /* voluntary do affectation here */)
+                && $this->postImage($this->object->id)
+                && count($this->errors) === 0 // @phpstan-ignore identical.alwaysTrue
+                && $this->_redirect
+            ) {
                 PrestaShopLogger::addLog(
                     $this->trans('%s addition', [htmlspecialchars($this->className)]),
                     1,
@@ -1306,7 +1311,7 @@ class AdminControllerCore extends Controller
                         }
 
                         // Default behavior (save and back)
-                        if (empty($this->redirect_after) && $this->redirect_after !== false) {
+                        if (empty($this->redirect_after)) {
                             $this->redirect_after = self::$currentIndex . ($parent_id ? '&' . $this->identifier . '=' . $object->id : '') . '&conf=4&token=' . $this->token;
                         }
                     }
@@ -3470,10 +3475,6 @@ class AdminControllerCore extends Controller
             $this->context->cookie->{$this->list_id . '_pagination'} = $limit;
         } else {
             unset($this->context->cookie->{$this->list_id . '_pagination'});
-        }
-
-        if (!is_numeric($limit)) {
-            throw new PrestaShopException('Invalid limit. It should be a numeric.');
         }
 
         return $limit;

@@ -3099,7 +3099,7 @@ class ProductCore extends ObjectModel
             WHERE product_shop.`active` = 1
             AND product_shop.`show_price` = 1
             ' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
-            ' . ((!$beginning && !$ending) ? 'AND p.`id_product` IN(' . (is_array($tab_id_product) ? implode(', ', $tab_id_product) : 0) . ')' : '') . '
+            ' . ((!$beginning && !$ending) ? 'AND p.`id_product` IN(' . implode(', ', $tab_id_product) . ')' : '') . '
             ' . $sql_groups);
 
             return $count === false ? $count : (int) $count;

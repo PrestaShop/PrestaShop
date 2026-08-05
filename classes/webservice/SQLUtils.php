@@ -39,6 +39,7 @@ class SQLUtils
                     unset($matches3[0]);
                     if (count($matches3) > 0) {
                         sort($matches3);
+                        // @phpstan-ignore arrayValues.list
                         [$first, $last] = array_values($matches3); // reset-keys
                         $ret .= ' AND ' . $tableAlias . '`' . bqSQL($sqlId) . '` BETWEEN "' . pSQL($first) . '" AND "' . pSQL($last) . "\"\n";
                     }

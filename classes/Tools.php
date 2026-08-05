@@ -1179,7 +1179,7 @@ class ToolsCore
      *             If you have an object or array, you can stringify it for example by print_r($object, true).
      *
      * @param mixed $object
-     * @param int|null $message_type
+     * @param int<0, 4>|null $message_type
      * @param string|null $destination
      * @param string|null $extra_headers
      *
@@ -1902,7 +1902,7 @@ class ToolsCore
 
             $curl = curl_init();
 
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_URL, $currentUrl);
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
             curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
@@ -3648,7 +3648,7 @@ exit;
 
         // get the first argument and parse it like a query string
         parse_str($argv[1], $args);
-        if (!is_array($args) || !count($args)) {
+        if (!count($args)) {
             return;
         }
         $_GET = array_merge($args, $_GET);
@@ -4014,7 +4014,7 @@ exit;
         $base = log($size) / log(1024);
         $suffixes = ['B', 'KB', 'MB', 'GB', 'TB'];
 
-        return round(1024 ** ($base - floor($base)), $precision) . Context::getContext()->getTranslator()->trans($suffixes[floor($base)], [], 'Shop.Theme.Catalog');
+        return round(1024 ** ($base - floor($base)), $precision) . Context::getContext()->getTranslator()->trans($suffixes[(int) floor($base)], [], 'Shop.Theme.Catalog');
     }
 
     public static function boolVal($value)

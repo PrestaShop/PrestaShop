@@ -256,7 +256,7 @@ class OrderDetailCore extends ObjectModel
     /** @var Address object */
     protected $vat_address = null;
 
-    /** @var Address|null */
+    /** @var array|null */
     protected $specificPrice = null;
 
     /** @var Customer object */

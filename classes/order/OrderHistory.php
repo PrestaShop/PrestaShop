@@ -93,7 +93,7 @@ class OrderHistoryCore extends ObjectModel
             'id_order' => (int) $order->id,
         ], null, false, true, false, $order->id_shop);
 
-        if (Validate::isLoadedObject($order) && $new_os instanceof OrderState) {
+        if (Validate::isLoadedObject($order)) {
             $context = Context::getContext();
 
             // An email is sent the first time a virtual item is validated

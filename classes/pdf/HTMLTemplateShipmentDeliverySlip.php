@@ -36,7 +36,7 @@ class HTMLTemplateShipmentDeliverySlipCore extends HTMLTemplate
      */
     public function __construct(array $shipmentData, Smarty $smarty)
     {
-        if (!isset($shipmentData['shipment']) || !is_array($shipmentData)) {
+        if (!isset($shipmentData['shipment'])) {
             $errorMessage = Context::getContext()->getTranslator()->trans('Invalid shipment data provided to HTMLTemplateShipmentDeliverySlip');
             throw new PrestaShopException($errorMessage);
         }

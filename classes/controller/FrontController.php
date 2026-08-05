@@ -584,10 +584,8 @@ class FrontControllerCore extends Controller
             )
         );
 
-        if (is_array($modulesVariables)) {
-            foreach ($modulesVariables as $moduleName => $variables) {
-                $templateVars['modules'][$moduleName] = $variables;
-            }
+        foreach ($modulesVariables as $moduleName => $variables) {
+            $templateVars['modules'][$moduleName] = $variables;
         }
 
         $this->context->smarty->assign($templateVars);

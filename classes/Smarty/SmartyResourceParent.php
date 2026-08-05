@@ -30,16 +30,21 @@ class SmartyResourceParentCore extends Smarty_Resource_Custom
     {
         foreach ($this->paths as $path) {
             if (Tools::file_exists_cache($file = $path . $name)) {
+                $contents = file_get_contents($file);
+
                 if (_PS_MODE_DEV_) {
                     $source = implode('', [
                         '<!-- begin ' . $file . ' -->',
-                        file_get_contents($file),
+                        $contents,
                         '<!-- end ' . $file . ' -->',
                     ]);
-                } else {
-                    $source = file_get_contents($file);
+                } elseif ($contents) {
+                    $source = $contents;
                 }
-                $mtime = filemtime($file);
+                $time = filemtime($file);
+                if ($time) {
+                    $mtime = $time;
+                }
 
                 return;
             }

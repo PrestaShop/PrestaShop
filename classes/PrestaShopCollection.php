@@ -6,6 +6,10 @@
 
 /**
  * Create a collection of ObjectModel objects.
+ * 
+ * @template T
+ * @implements Iterator<int, T>
+ * @implements ArrayAccess<int, T>
  */
 class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 {
@@ -14,7 +18,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     public const LEFT_OUTER_JOIN = 3;
 
     /**
-     * @var string Object class name
+     * @var class-string<T> Object class name
      */
     protected $classname;
 
@@ -34,7 +38,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     protected $query;
 
     /**
-     * @var array Collection of objects in an array
+     * @var T[] Collection of objects in an array
      */
     protected $results = [];
 
@@ -72,7 +76,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     public const LANG_ALIAS = 'l';
 
     /**
-     * @param string $classname
+     * @param class-string<T> $classname
      * @param int $id_lang
      */
     public function __construct($classname, $id_lang = null)
@@ -369,7 +373,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Retrieve the first result.
      *
-     * @return ObjectModel|bool
+     * @return T|false
      */
     public function getFirst()
     {
@@ -384,7 +388,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Retrieve the last result.
      *
-     * @return ObjectModel|false
+     * @return T|false
      */
     public function getLast()
     {
@@ -399,7 +403,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     /**
      * Get results array.
      *
-     * @return array
+     * @return T[]
      */
     public function getResults()
     {
@@ -426,7 +430,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @see Iterator::current()
      *
-     * @return ObjectModel
+     * @return T
      */
     #[ReturnTypeWillChange]
     public function current()
@@ -506,7 +510,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      *
      * @param mixed $offset
      *
-     * @return ObjectModel
+     * @return T
      */
     #[ReturnTypeWillChange]
     public function offsetGet($offset)
@@ -525,7 +529,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
      * @see ArrayAccess::offsetSet()
      *
      * @param mixed $offset
-     * @param ObjectModel $value
+     * @param T $value
      */
     public function offsetSet($offset, $value): void
     {
