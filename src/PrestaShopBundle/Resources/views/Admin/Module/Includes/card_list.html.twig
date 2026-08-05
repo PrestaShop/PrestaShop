@@ -65,13 +65,13 @@
                 <span class="badge badge-success my-1">{{ 'Upgrade available'|trans({}, 'Admin.Modules.Feature') }}</span>
             {% endif %}
             {% if overriddenFiles is not empty %}
-                {# Warn the employee the module is customized: an update is likely to break the override #}
+                {# Warn the employee the module is customized: an update is likely to break the override.
+                   The overriding files are listed in a modal, to keep the tooltip short. #}
                 <span
                   class="badge badge-warning my-1 module-overridden-badge"
                   data-toggle="pstooltip"
                   data-placement="top"
-                  data-html="true"
-                  title="{{ 'This module is customized by files in the override folder. Updating it may break these customizations.'|trans({}, 'Admin.Modules.Help') }}{% for file in overriddenFiles %}<br>{{ file }}{% endfor %}"
+                  title="{{ 'This module is customized by files in the override folder. Updating it may break these customizations. Click to see the files.'|trans({}, 'Admin.Modules.Help') }}"
                 >{{ 'Overridden'|trans({}, 'Admin.Modules.Feature') }}</span>
             {% endif %}
           </div>

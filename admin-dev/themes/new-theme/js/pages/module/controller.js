@@ -3,8 +3,12 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
-import ConfirmModal from '@components/modal';
-import {getModulesOverridesWarning, getOverriddenFilesWarning} from '@components/module-overrides-warning';
+import ConfirmModal, {Modal} from '@components/modal';
+import {
+  getModuleOverrides,
+  getModulesOverridesWarning,
+  getOverriddenFilesWarning,
+} from '@components/module-overrides-warning';
 
 const {$} = window;
 
@@ -107,6 +111,7 @@ class AdminModuleController {
     this.initPageChangeProtection();
     this.initFilterStatusDropdown();
     this.initOverriddenBadgeTooltip();
+    this.initOverriddenBadgeModal();
     this.fetchModulesList();
     this.getNotificationsCount();
   }
@@ -119,8 +124,33 @@ class AdminModuleController {
   initOverriddenBadgeTooltip() {
     $('body').pstooltip({
       selector: this.overriddenBadgeSelector,
-      html: true,
       placement: 'top',
+    });
+  }
+
+  /**
+   * The badge lists the overriding files in a modal rather than in its tooltip, which would grow
+   * unreadable on a module carrying several overrides.
+   */
+  initOverriddenBadgeModal() {
+    $('body').on('click', this.overriddenBadgeSelector, function showOverriddenFiles(event) {
+      event.preventDefault();
+
+      const overrides = getModuleOverrides($(this));
+
+      if (overrides === null) {
+        return;
+      }
+
+      $(this).pstooltip('hide');
+
+      new Modal({
+        id: 'module-overrides-modal',
+        modalTitle: `${window.moduleTranslations.overridesModalTitle} - ${overrides.displayName}`,
+        closable: true,
+      })
+        .render(getOverriddenFilesWarning(overrides.files))
+        .show();
     });
   }
 
