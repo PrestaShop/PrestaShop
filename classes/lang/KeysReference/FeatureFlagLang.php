@@ -76,3 +76,7 @@ trans('Enable / Disable the migrated quick access page.', 'Admin.Advparameters.H
 // Stats feature flag
 trans('Stats', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the migrated stats page.', 'Admin.Advparameters.Help');
+
+// Dashboard feature flag
+trans('Dashboard', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the migrated Symfony dashboard page. Native dashboard modules are not yet compatible with the new page and will not display until they are migrated.', 'Admin.Advparameters.Help');
