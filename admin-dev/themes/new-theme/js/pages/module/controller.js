@@ -49,6 +49,7 @@ class AdminModuleController {
 
     // Selectors into vars to make it easier to change them while keeping same code logic
     this.moduleItemListSelector = '.module-item-list';
+    this.overriddenBadgeSelector = '.module-overridden-badge';
     this.categorySelectorLabelSelector = '.module-category-selector-label';
     this.categorySelector = '.module-category-selector';
     this.categoryItemSelector = '.module-category-menu';
@@ -105,8 +106,22 @@ class AdminModuleController {
     this.initDropzone();
     this.initPageChangeProtection();
     this.initFilterStatusDropdown();
+    this.initOverriddenBadgeTooltip();
     this.fetchModulesList();
     this.getNotificationsCount();
+  }
+
+  /**
+   * `pstooltip` is an alias of the Bootstrap tooltip, deliberately named so that Bootstrap does not
+   * pick it up on its own, and nothing initialises it globally in the back office. It is delegated
+   * from the body here because module cards are also appended after the page has loaded.
+   */
+  initOverriddenBadgeTooltip() {
+    $('body').pstooltip({
+      selector: this.overriddenBadgeSelector,
+      html: true,
+      placement: 'top',
+    });
   }
 
   initFilterStatusDropdown() {
