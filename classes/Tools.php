@@ -1794,13 +1794,15 @@ class ToolsCore
     }
 
     /**
+     * Supported $options keys:
+     *  - restrict_ssrf (bool): harden the download against SSRF, for untrusted
+     *    (user-supplied) URLs. See Tools::copy().
+     *  - max_redirects (int): redirect cap, defaults to 5.
+     *
      * @param string $url
      * @param int $curl_timeout
      * @param array|null $opts
-     * @param array $options behaviour flags:
-     *                       - restrict_ssrf (bool): harden the download against SSRF, for
-     *                         untrusted (user-supplied) URLs. See Tools::copy().
-     *                       - max_redirects (int): redirect cap, defaults to 5
+     * @param array $options behaviour flags, see above
      *
      * @return string|false
      *
@@ -1988,7 +1990,7 @@ class ToolsCore
         // Untrusted source: always go through the hardened curl path, never through the
         // stream wrappers, and never fall back to fopen.
         if (!empty($options['restrict_ssrf'])) {
-            return static::file_get_contents_curl($url, $curl_timeout, null, $options);
+            return Tools::file_get_contents_curl($url, $curl_timeout, null, $options);
         }
 
         $is_local_file = !preg_match('/^https?:\/\//', $url);
@@ -2084,21 +2086,20 @@ class ToolsCore
     }
 
     /**
+     * $options['restrict_ssrf'] turns on hardening for untrusted (user-supplied) sources,
+     * e.g. CSV imports. It is off by default to preserve backward compatibility for the many
+     * internal callers.
+     *
+     * Hardened mode is a defense in depth against CWE-918: remote sources are restricted to
+     * the UNTRUSTED_URL_ALLOWED_SCHEMES allow-list, so any other wrapper (phar://, file://,
+     * gopher://, data://, ...) is rejected; hosts must resolve to public addresses only; the
+     * resolved IP is pinned (anti DNS-rebinding) and every redirect hop is re-validated.
+     * Local (scheme-less) sources keep the historical copy() behaviour.
+     *
      * @param string $source
      * @param string $destination
      * @param resource|null $stream_context
-     * @param array $options behaviour flags:
-     *                       - restrict_ssrf (bool): opt-in hardening for untrusted
-     *                         (user-supplied) sources, e.g. CSV imports. Off by default to
-     *                         preserve backward compatibility for the many internal callers.
-     *
-     *                       Hardened mode is a defense in depth against CWE-918:
-     *                       remote sources are restricted to the UNTRUSTED_URL_ALLOWED_SCHEMES
-     *                       allow-list, so any other wrapper (phar://, file://, gopher://,
-     *                       data://, ...) is rejected; hosts must resolve to public addresses
-     *                       only; the resolved IP is pinned (anti DNS-rebinding) and every
-     *                       redirect hop is re-validated. Local (scheme-less) sources keep the
-     *                       historical copy() behaviour.
+     * @param array $options behaviour flags, see above
      *
      * @return bool
      */
