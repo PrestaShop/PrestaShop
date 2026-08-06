@@ -21,6 +21,7 @@
     "bootstrap-colorpicker": "^3.4.0",
     "bootstrap-tokenfield": "^0.12.0",
     "bourbon": "^7.3.0",
+    "chart.js": "^4.5.1",
     "dropzone": "^5.9.3",
     "email-validator": "^2.0.4",
     "eonasdan-bootstrap-datetimepicker": "^4.17.49",
