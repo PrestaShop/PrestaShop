@@ -9,6 +9,7 @@ use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Context\LegacyControllerContext;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
@@ -510,7 +511,11 @@ class ContextCore
     {
         if ($this->priceComputingPrecision === null) {
             $computingPrecision = new ComputingPrecision();
-            $this->priceComputingPrecision = $computingPrecision->getPrecision($this->currency->precision);
+            // The context currency may be unavailable (e.g. invoice/slip PDF generation on a
+            // multishop install), in which case we fall back to the default precision instead
+            // of fataling on the strictly typed ComputingPrecision::getPrecision(int).
+            $displayPrecision = isset($this->currency->precision) ? (int) $this->currency->precision : Precision::DEFAULT_PRECISION;
+            $this->priceComputingPrecision = $computingPrecision->getPrecision($displayPrecision);
         }
 
         return $this->priceComputingPrecision;
