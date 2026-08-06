@@ -1,0 +1,63 @@
+admin_grid_views_list:
+  path: /{gridId}
+  methods: [ GET ]
+  requirements:
+    gridId: '[A-Za-z0-9_-]+'
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\GridViewController::listAction'
+
+admin_grid_views_counts:
+  path: /counts/{gridId}
+  methods: [ GET ]
+  requirements:
+    gridId: '[A-Za-z0-9_-]+'
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\GridViewController::countsAction'
+
+admin_grid_views_create:
+  path: /{gridId}
+  methods: [ POST ]
+  requirements:
+    gridId: '[A-Za-z0-9_-]+'
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\GridViewController::createAction'
+
+admin_grid_views_export:
+  path: /export/{gridViewId}
+  methods: [ GET ]
+  requirements:
+    gridViewId: \d+
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\GridViewController::exportAction'
+
+admin_grid_views_edit:
+  path: /edit/{gridViewId}
+  methods: [ GET, POST ]
+  requirements:
+    gridViewId: \d+
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\GridViewController::editAction'
+
+admin_grid_views_delete:
+  path: /delete/{gridViewId}
+  methods: [ POST ]
+  requirements:
+    gridViewId: \d+
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\GridViewController::deleteAction'
+
+admin_grid_views_duplicate:
+  path: /duplicate/{gridViewId}
+  methods: [ POST ]
+  requirements:
+    gridViewId: \d+
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\GridViewController::duplicateAction'
+
+admin_grid_views_save_configuration:
+  path: /configuration/{gridId}
+  methods: [ POST ]
+  requirements:
+    gridId: '[A-Za-z0-9_-]+'
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\GridViewController::saveConfigurationAction'
