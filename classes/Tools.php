@@ -34,6 +34,20 @@ class ToolsCore
 
     public const LANGUAGE_EXTRACTOR_REGEXP = '#(?<=-)\w\w|\w\w(?!-)#';
 
+    /**
+     * Schemes an untrusted (user-supplied) URL is allowed to use, mapped to their default port.
+     * Any other wrapper (phar://, file://, gopher://, data://, ...) is rejected.
+     *
+     * @see Tools::copy() $options['restrict_ssrf']
+     */
+    public const UNTRUSTED_URL_ALLOWED_SCHEMES = [
+        'http' => 80,
+        'https' => 443,
+        'ftp' => 21,
+        'ftps' => 990,
+        'sftp' => 22,
+    ];
+
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
     protected static $_caching;
@@ -1782,7 +1796,11 @@ class ToolsCore
     /**
      * @param string $url
      * @param int $curl_timeout
-     * @param array $opts
+     * @param array|null $opts
+     * @param array $options behaviour flags:
+     *                       - restrict_ssrf (bool): harden the download against SSRF, for
+     *                         untrusted (user-supplied) URLs. See Tools::copy().
+     *                       - max_redirects (int): redirect cap, defaults to 5
      *
      * @return string|false
      *
@@ -1791,22 +1809,53 @@ class ToolsCore
     private static function file_get_contents_curl(
         $url,
         $curl_timeout,
-        $opts
+        $opts,
+        array $options = []
     ) {
-        $content = false;
+        if (!function_exists('curl_init')) {
+            return false;
+        }
 
-        if (function_exists('curl_init')) {
-            Tools::refreshCACertFile();
+        $restrictSsrf = !empty($options['restrict_ssrf']);
+        $maxRedirects = isset($options['max_redirects']) ? (int) $options['max_redirects'] : 5;
+
+        Tools::refreshCACertFile();
+
+        $currentUrl = $url;
+        for ($hop = 0; $hop <= $maxRedirects; ++$hop) {
+            // Hardened mode: validate the URL of *every* hop (allowed scheme, host resolving
+            // only to public addresses) and pin the validated IP for the connection.
+            $pinnedResolve = null;
+            if ($restrictSsrf) {
+                $pinnedResolve = static::getPinnedResolveEntry($currentUrl);
+                if (null === $pinnedResolve) {
+                    return false;
+                }
+            }
+
             $curl = curl_init();
 
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_URL, $currentUrl);
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
             curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
             curl_setopt($curl, CURLOPT_CAINFO, _PS_CACHE_CA_CERT_FILE_);
-            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($curl, CURLOPT_MAXREDIRS, 5);
+            // Hardened mode follows redirects manually, one validated hop at a time.
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, !$restrictSsrf);
+            curl_setopt($curl, CURLOPT_MAXREDIRS, $maxRedirects);
+
+            if ($restrictSsrf) {
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+                // curl connects to this exact address, so the hostname cannot be
+                // re-pointed at an internal host after our check (DNS rebinding).
+                curl_setopt($curl, CURLOPT_RESOLVE, [$pinnedResolve]);
+                if (defined('CURLPROTO_HTTP')) {
+                    $allowedProtocols = CURLPROTO_HTTP | CURLPROTO_HTTPS | CURLPROTO_FTP | CURLPROTO_FTPS;
+                    curl_setopt($curl, CURLOPT_PROTOCOLS, $allowedProtocols);
+                    curl_setopt($curl, CURLOPT_REDIR_PROTOCOLS, $allowedProtocols);
+                }
+            }
 
             if ($opts != null) {
                 if (isset($opts['http']['method']) && Tools::strtolower($opts['http']['method']) == 'post') {
@@ -1819,20 +1868,87 @@ class ToolsCore
             }
 
             $content = curl_exec($curl);
+            $errno = curl_errno($curl);
+            $error = curl_error($curl);
+            $httpStatus = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $redirectUrl = curl_getinfo($curl, CURLINFO_REDIRECT_URL);
+            curl_close($curl);
 
-            if (false === $content && _PS_MODE_DEV_) {
+            // Hardened mode is used while importing untrusted data: a single unreachable
+            // URL must not interrupt the import, so keep the failure silent there.
+            if (false === $content && !$restrictSsrf && _PS_MODE_DEV_) {
                 $errorMessage = sprintf(
                     'file_get_contents_curl failed to download %s : (error code %d) %s',
-                    $url,
-                    curl_errno($curl),
-                    curl_error($curl)
+                    $currentUrl,
+                    $errno,
+                    $error
                 );
 
                 throw new Exception($errorMessage);
             }
+
+            if (!$restrictSsrf) {
+                return $content;
+            }
+
+            if (false === $content || 0 !== $errno) {
+                return false;
+            }
+
+            if ($httpStatus >= 300 && $httpStatus < 400 && !empty($redirectUrl)) {
+                $currentUrl = $redirectUrl;
+
+                continue;
+            }
+
+            return $content;
         }
 
-        return $content;
+        // Too many redirects.
+        return false;
+    }
+
+    /**
+     * Validates an untrusted URL and builds the CURLOPT_RESOLVE entry pinning its host to a
+     * validated public IP, so that curl connects to the address we checked and nothing else.
+     *
+     * @param string $url
+     *
+     * @return string|null a "host:port:ip" entry, or null when the URL must not be fetched
+     */
+    protected static function getPinnedResolveEntry($url)
+    {
+        $parts = parse_url($url);
+        if ($parts === false || empty($parts['scheme']) || empty($parts['host'])) {
+            return null;
+        }
+
+        $scheme = Tools::strtolower($parts['scheme']);
+        if (!static::isUntrustedUrlSchemeAllowed($scheme)) {
+            return null;
+        }
+
+        // Strips the brackets of an IPv6 literal.
+        $host = trim($parts['host'], '[]');
+
+        $publicIps = static::resolvePublicIps($host);
+        if (empty($publicIps)) {
+            return null;
+        }
+
+        $port = isset($parts['port']) ? (int) $parts['port'] : static::UNTRUSTED_URL_ALLOWED_SCHEMES[$scheme];
+
+        return $host . ':' . $port . ':' . $publicIps[0];
+    }
+
+    /**
+     * @param string $scheme
+     *
+     * @return bool whether an untrusted URL may use this scheme
+     */
+    public static function isUntrustedUrlSchemeAllowed($scheme)
+    {
+        return isset(static::UNTRUSTED_URL_ALLOWED_SCHEMES[Tools::strtolower($scheme)]);
     }
 
     private static function file_get_contents_fopen(
@@ -1857,6 +1973,7 @@ class ToolsCore
      * @param resource $stream_context third parameter of http://php.net/manual/en/function.file-get-contents.php
      * @param int $curl_timeout
      * @param bool $fallback whether or not to use the fallback if the main solution fails
+     * @param array $options behaviour flags, see Tools::file_get_contents_curl()
      *
      * @return string|false false or the file content
      */
@@ -1865,8 +1982,15 @@ class ToolsCore
         $use_include_path = false,
         $stream_context = null,
         $curl_timeout = 5,
-        $fallback = false
+        $fallback = false,
+        array $options = []
     ) {
+        // Untrusted source: always go through the hardened curl path, never through the
+        // stream wrappers, and never fall back to fopen.
+        if (!empty($options['restrict_ssrf'])) {
+            return static::file_get_contents_curl($url, $curl_timeout, null, $options);
+        }
+
         $is_local_file = !preg_match('/^https?:\/\//', $url);
         $require_fopen = false;
         $opts = null;
@@ -1959,12 +2083,44 @@ class ToolsCore
         return Cache::retrieve($cache_id);
     }
 
+    /**
+     * @param string $source
+     * @param string $destination
+     * @param resource|null $stream_context
+     * @param array $options behaviour flags:
+     *                       - restrict_ssrf (bool): opt-in hardening for untrusted
+     *                         (user-supplied) sources, e.g. CSV imports. Off by default to
+     *                         preserve backward compatibility for the many internal callers.
+     *
+     *                       Hardened mode is a defense in depth against CWE-918:
+     *                       remote sources are restricted to the UNTRUSTED_URL_ALLOWED_SCHEMES
+     *                       allow-list, so any other wrapper (phar://, file://, gopher://,
+     *                       data://, ...) is rejected; hosts must resolve to public addresses
+     *                       only; the resolved IP is pinned (anti DNS-rebinding) and every
+     *                       redirect hop is re-validated. Local (scheme-less) sources keep the
+     *                       historical copy() behaviour.
+     *
+     * @return bool
+     */
     public static function copy($source, $destination, $stream_context = null, array $options = [])
     {
-        // Opt-in SSRF-hardened mode for untrusted (user-supplied) sources, e.g. CSV imports.
-        // Disabled by default to preserve backward compatibility for the many internal callers.
         if (!empty($options['restrict_ssrf'])) {
-            return self::copyRestricted($source, $destination);
+            $parsed = parse_url($source);
+            if ($parsed === false) {
+                return false;
+            }
+
+            // No scheme => local path: preserve the historical copy behaviour.
+            if (!isset($parsed['scheme'])) {
+                return @copy($source, $destination);
+            }
+
+            $content = Tools::file_get_contents($source, false, null, 30, false, $options);
+            if (false === $content) {
+                return false;
+            }
+
+            return (bool) @file_put_contents($destination, $content);
         }
 
         if (null === $stream_context && !preg_match('/^https?:\/\//', $source)) {
@@ -1972,133 +2128,6 @@ class ToolsCore
         }
 
         return @file_put_contents($destination, Tools::file_get_contents($source, false, $stream_context));
-    }
-
-    /**
-     * SSRF-hardened variant of copy() for untrusted sources.
-     *
-     * - Local (scheme-less) sources keep the historical @copy() behaviour.
-     * - Remote sources are restricted to an HTTP(S)/FTP(S) allow-list; any other
-     *   wrapper (phar://, file://, gopher://, data://, ...) is rejected.
-     * - Remote fetches go through downloadRemoteFileSafely(), which blocks
-     *   private/reserved hosts, pins the resolved IP (anti DNS-rebinding) and
-     *   re-validates every redirect hop.
-     *
-     * @param string $source
-     * @param string $destination
-     *
-     * @return bool
-     */
-    protected static function copyRestricted($source, $destination)
-    {
-        $parsed = parse_url($source);
-        if ($parsed === false) {
-            return false;
-        }
-
-        if (isset($parsed['scheme'])) {
-            $scheme = Tools::strtolower($parsed['scheme']);
-            if (!in_array($scheme, ['http', 'https', 'ftp', 'ftps', 'sftp'], true)) {
-                return false;
-            }
-
-            return static::downloadRemoteFileSafely($source, $destination);
-        }
-
-        // No scheme => local path: preserve the historical copy behaviour.
-        return @copy($source, $destination);
-    }
-
-    /**
-     * SSRF-hardened remote file download.
-     *
-     * Defense in depth against CWE-918:
-     *  - every hostname is resolved and MUST resolve only to public addresses
-     *    (blocks loopback, RFC1918, link-local 169.254/16 incl. cloud metadata, and IPv6 equivalents)
-     *  - the validated IP is pinned via CURLOPT_RESOLVE so curl cannot be re-pointed
-     *    at an internal host between our check and the connection (DNS rebinding)
-     *  - redirects are followed manually so each hop is re-validated
-     *    (an initial-URL-only check is otherwise trivially bypassed by an
-     *    allow-listed URL that 302-redirects to an internal address)
-     *
-     * @param string $url
-     * @param string $destination
-     * @param int $maxRedirects
-     *
-     * @return bool
-     */
-    protected static function downloadRemoteFileSafely($url, $destination, $maxRedirects = 5)
-    {
-        if (!function_exists('curl_init')) {
-            return false;
-        }
-
-        Tools::refreshCACertFile();
-
-        $current = $url;
-        for ($hop = 0; $hop <= $maxRedirects; ++$hop) {
-            $parts = parse_url($current);
-            if ($parts === false || empty($parts['scheme']) || empty($parts['host'])) {
-                return false;
-            }
-
-            $scheme = Tools::strtolower($parts['scheme']);
-            if (!in_array($scheme, ['http', 'https', 'ftp', 'ftps', 'sftp'], true)) {
-                return false;
-            }
-
-            $host = trim($parts['host'], '[]');
-            $defaultPorts = ['http' => 80, 'https' => 443, 'ftp' => 21, 'ftps' => 990, 'sftp' => 22];
-            $port = isset($parts['port']) ? (int) $parts['port'] : $defaultPorts[$scheme];
-
-            // Resolve and ensure every candidate IP is a public address.
-            $publicIps = static::resolvePublicIps($host);
-            if (empty($publicIps)) {
-                return false;
-            }
-            $pinnedIp = $publicIps[0];
-
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $current);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            // Follow redirects manually so each target is re-validated.
-            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
-            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
-            curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($curl, CURLOPT_CAINFO, _PS_CACHE_CA_CERT_FILE_);
-            if (defined('CURLPROTO_HTTP')) {
-                $allowed = CURLPROTO_HTTP | CURLPROTO_HTTPS | CURLPROTO_FTP | CURLPROTO_FTPS;
-                curl_setopt($curl, CURLOPT_PROTOCOLS, $allowed);
-                curl_setopt($curl, CURLOPT_REDIR_PROTOCOLS, $allowed);
-            }
-            // Pin the validated public IP: curl connects to this exact address,
-            // preventing a rebind to an internal host after our DNS check.
-            curl_setopt($curl, CURLOPT_RESOLVE, [$host . ':' . $port . ':' . $pinnedIp]);
-
-            $body = curl_exec($curl);
-            $errno = curl_errno($curl);
-            $status = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            $redirectUrl = curl_getinfo($curl, CURLINFO_REDIRECT_URL);
-            curl_close($curl);
-
-            if ($errno !== 0 || $body === false) {
-                return false;
-            }
-
-            // Manual redirect handling with per-hop re-validation.
-            if ($status >= 300 && $status < 400 && !empty($redirectUrl)) {
-                $current = $redirectUrl;
-
-                continue;
-            }
-
-            return (bool) @file_put_contents($destination, $body);
-        }
-
-        // Too many redirects.
-        return false;
     }
 
     /**

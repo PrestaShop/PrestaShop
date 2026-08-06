@@ -875,7 +875,7 @@ class ImageManagerCore
 
     /**
      * Validates an import image target URL.
-     * Remote URLs are restricted to HTTP(S) and FTP(S).
+     * Remote URLs are restricted to Tools::UNTRUSTED_URL_ALLOWED_SCHEMES.
      *
      * @param array $parsedUrl
      *
@@ -887,8 +887,7 @@ class ImageManagerCore
             return true;
         }
 
-        $scheme = Tools::strtolower($parsedUrl['scheme']);
-        if (!in_array($scheme, ['http', 'https', 'ftp', 'sftp', 'ftps'], true)) {
+        if (!Tools::isUntrustedUrlSchemeAllowed($parsedUrl['scheme'])) {
             return false;
         }
 
