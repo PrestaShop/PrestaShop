@@ -1,0 +1,74 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% set grid_views = grid.grid_views %}
+{% set panel_id = grid.id ~ '_grid_views' %}
+
+<div class="grid-views-panel js-grid-views d-flex flex-wrap align-items-center mt-2"
+     id="{{ panel_id }}"
+     data-grid-id="{{ grid.id }}"
+     data-selected-view-id="{{ grid_views.selected_view_id }}"
+     data-display-totals="{{ grid_views.display_totals ? '1' : '0' }}"
+     data-list-url="{{ path('admin_grid_views_list', {gridId: grid.id, route: grid_views.controller_route, selected: grid_views.selected_view_id}) }}"
+     data-counts-url="{{ path('admin_grid_views_counts', {gridId: grid.id, route: grid_views.controller_route}) }}"
+     data-error-message="{{ 'An unexpected error occurred.'|trans({}, 'Admin.Notifications.Error') }}"
+>
+  {% block grid_views_actions %}
+    <div class="btn-group">
+      <button type="button"
+              class="btn btn-outline-secondary btn-sm"
+              data-toggle="modal"
+              data-target="#{{ panel_id }}_create_modal">
+        <i class="material-icons">bookmark_border</i>
+        {{ 'Save current view'|trans({}, 'Admin.Actions') }}
+      </button>
+
+      <button type="button"
+              class="btn btn-outline-secondary btn-sm dropdown-toggle dropdown-toggle-split"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false">
+        <i class="material-icons">settings</i>
+      </button>
+
+      <div class="dropdown-menu grid-views-configuration js-grid-views-configuration">
+        {{ form_start(grid_views.configuration_form, {action: path('admin_grid_views_save_configuration', {gridId: grid.id})}) }}
+          <div class="px-3 py-2">
+            {{ form_widget(grid_views.configuration_form.display_shared_filters) }}
+            {{ form_widget(grid_views.configuration_form.display_totals) }}
+            {{ form_rest(grid_views.configuration_form) }}
+          </div>
+        {{ form_end(grid_views.configuration_form) }}
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block grid_views_list_container %}
+    <div class="grid-views-list js-grid-views-list d-flex flex-wrap align-items-center ml-2"></div>
+  {% endblock %}
+
+  {% block grid_views_create_modal %}
+    <div class="modal fade" id="{{ panel_id }}_create_modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          {{ include('@PrestaShop/Admin/Common/Grid/GridViews/form.html.twig', {
+            grid_view_form: grid_views.save_view_form,
+            form_action: path('admin_grid_views_create', {gridId: grid.id}),
+          }) }}
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block grid_views_edit_modal %}
+    <div class="modal fade js-grid-views-edit-modal" id="{{ panel_id }}_edit_modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+      </div>
+    </div>
+  {% endblock %}
+</div>
+
+<script src="{{ asset('themes/new-theme/public/grid_views.bundle.js') }}" defer></script>
