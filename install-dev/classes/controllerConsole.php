@@ -152,9 +152,6 @@ abstract class InstallControllerConsole
             $this->model_install->getErrors()
         );
         if (count($errors)) {
-            if (!is_array($errors)) {
-                $errors = [$errors];
-            }
             echo 'Errors ' . ($context === null ?: $context) . ':' . PHP_EOL;
             foreach ($errors as $error_process) {
                 if (!is_array($error_process)) {
