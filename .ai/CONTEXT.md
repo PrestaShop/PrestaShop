@@ -11,11 +11,13 @@ PrestaShop is an open-source e-commerce platform built on Symfony. It follows a 
 
 ## Branching & Versioning
 
-PrestaShop follows [SemVer](https://semver.org/). Active branches merge upward: `9.1.x` → `develop`. Target the lowest applicable branch.
+PrestaShop follows [SemVer](https://semver.org/). Active branches merge upward: `9.2.x` → `develop`. Target the lowest applicable branch.
 
-- **`9.1.x`**: Current stable (patch releases). Bug fixes and minor improvements only — no new features.
-- **`develop`**: Next minor (9.2.0). New features and improvements go here. No breaking changes.
+- **`9.2.x`**: Next release (9.2.0). Bug fixes and improvements go here.
+- **`develop`**: Next minor (9.3.0). New features go here. No breaking changes.
 - **`8.2.x`**: LTS, security fixes only. Rarely modified.
+
+`9.1.x` was closed and deleted once 9.1.5 was finalised, so nothing targets it any more.
 
 Breaking changes are only allowed in major versions. See [ADR 0017](https://github.com/PrestaShop/adr/blob/master/0017-backward-compatibility-promise.md) for the backward compatibility promise. More architecture decisions at https://github.com/PrestaShop/adr.
 
@@ -73,7 +75,7 @@ Common slips unrelated to the feature itself — check before pushing:
 - **No IDE / local config files** (`.idea/`, editor settings) and no stray blank-line or missing-end-of-line changes.
 - **Keep lists alphabetically sorted** (interface members, imports where applicable, enum-like lists) — not all of this is caught by php-cs-fixer.
 - **Squash noise commits** (review fixups, reverts) so history stays readable.
-- **Target the lowest applicable branch** (`9.1.x` for bug fixes, `develop` for features) — see Branching & Versioning above.
+- **Target the lowest applicable branch** (`9.2.x` for bug fixes, `develop` for features) — see Branching & Versioning above.
 
 ## Skills
 
