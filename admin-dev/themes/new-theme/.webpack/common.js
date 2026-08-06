@@ -102,6 +102,7 @@ module.exports = {
     feature_value_form: './js/pages/feature/feature-value/form',
     form_popover_error: './js/components/form/form-popover-error',
     geolocation: './js/pages/geolocation',
+    grid_views: './js/components/grid/grid-views',
     image_settings: './js/pages/image-settings',
     imports: './js/pages/import',
     improve_design_positions: './js/pages/improve/design_positions',
