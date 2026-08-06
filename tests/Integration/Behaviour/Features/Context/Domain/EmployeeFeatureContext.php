@@ -234,23 +234,27 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
         $mailDevClient = $this->getMailDevClient();
         $mailDevClient->deleteAllEmails();
 
-        $resetUrl = $this->getCommandBus()->handle(new SendEmployeePasswordResetEmailCommand($employeeEmail));
-        $resetUrl = str_replace('http://localhost', '', $resetUrl);
-        /** @var UrlMatcherInterface $router */
-        $router = CommonFeatureContext::getContainer()->get('router');
-        $matchedRoute = $router->match($resetUrl);
-        Assert::assertEquals('admin_reset_password', $matchedRoute['_route']);
-        Assert::assertNotEmpty($matchedRoute['resetToken']);
+        $this->getCommandBus()->handle(new SendEmployeePasswordResetEmailCommand($employeeEmail));
 
         $emails = $mailDevClient->getAllEmails();
         Assert::assertCount(1, $emails);
         $resetEmail = $emails[0];
         Assert::assertStringContainsString('Your new password', $resetEmail['subject']);
-        Assert::assertStringContainsString($resetUrl, $resetEmail['text']);
-        Assert::assertStringContainsString($resetUrl, $resetEmail['html']);
         Assert::assertEquals($employeeEmail, $resetEmail['to'][0]['address']);
 
-        $this->getSharedStorage()->set($tokenReference, $matchedRoute['resetToken']);
+        if (!preg_match('#/reset-password/([^\s"\'<]+)#', $resetEmail['text'], $matches)) {
+            throw new RuntimeException('Reset URL not found in email body');
+        }
+        $resetToken = $matches[1];
+        Assert::assertNotEmpty($resetToken);
+        Assert::assertStringContainsString('/reset-password/' . $resetToken, $resetEmail['html']);
+
+        /** @var UrlMatcherInterface $router */
+        $router = CommonFeatureContext::getContainer()->get('router');
+        $matchedRoute = $router->match('/reset-password/' . $resetToken);
+        Assert::assertEquals('admin_reset_password', $matchedRoute['_route']);
+
+        $this->getSharedStorage()->set($tokenReference, $resetToken);
     }
 
     /**
