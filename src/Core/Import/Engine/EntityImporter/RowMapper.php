@@ -6,22 +6,25 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product;
+namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter;
 
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
-use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 
 /**
- * Applies the run's column-to-field mapping to a raw data row.
+ * Applies the run's column-to-field mapping to a raw record. Entity-agnostic:
+ * the mapping only knows column indexes and field names, so every entity
+ * importer shares this service.
  */
-final class ProductRowMapper
+final class RowMapper
 {
     /**
+     * @param array<int, string> $record raw record cells, as read by the file reader
+     *
      * @return array<string, string> field name => trimmed cell value; ignored
      *                               columns dropped; when the same field is
      *                               mapped to several columns the last one wins
      */
-    public function map(DataRowInterface $dataRow, ImportRunContext $context): array
+    public function map(array $record, ImportRunContext $context): array
     {
         $mappedRow = [];
         foreach ($context->getFieldMapping() as $columnIndex => $fieldName) {
@@ -29,8 +32,7 @@ final class ProductRowMapper
                 continue;
             }
 
-            $value = $dataRow->offsetExists($columnIndex) ? (string) $dataRow[$columnIndex]->getValue() : '';
-            $mappedRow[$fieldName] = trim($value);
+            $mappedRow[$fieldName] = trim($record[$columnIndex] ?? '');
         }
 
         return $mappedRow;

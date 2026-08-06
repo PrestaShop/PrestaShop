@@ -12,22 +12,22 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\MalformedImportFileException;
-use PrestaShop\PrestaShop\Core\Import\Engine\File\ImportFileNormalizer;
+use PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer;
 use SplFileInfo;
 
-class ImportFileNormalizerTest extends TestCase
+class CsvImportFileNormalizerTest extends TestCase
 {
     /**
      * @var list<string>
      */
     private array $temporaryFiles = [];
 
-    private ImportFileNormalizer $normalizer;
+    private CsvImportFileNormalizer $normalizer;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->normalizer = new ImportFileNormalizer();
+        $this->normalizer = new CsvImportFileNormalizer();
     }
 
     protected function tearDown(): void
@@ -45,8 +45,10 @@ class ImportFileNormalizerTest extends TestCase
         $source = $this->createFile('src_', '.csv', "\xEF\xBB\xBFname,desc\n\"Caf\xE9\",\"line1\nline2\"\n\nlast,row\n");
         $target = $this->reserveFilePath('work_', '.csv');
 
-        $this->normalizer->normalize(new SplFileInfo($source), $target, ',');
+        $normalizedFile = $this->normalizer->normalize(new SplFileInfo($source), $target, ',');
 
+        // 4 records (no skip requested): header, data row, preserved blank line, last row
+        $this->assertSame(4, $normalizedFile->dataRecordCount);
         $content = (string) file_get_contents($target);
         $this->assertTrue(mb_check_encoding($content, 'UTF-8'));
         $this->assertStringNotContainsString("\xEF\xBB\xBF", $content);
@@ -72,7 +74,8 @@ class ImportFileNormalizerTest extends TestCase
         (new Xlsx($spreadsheet))->save($source);
 
         $target = $this->reserveFilePath('work_', '.csv');
-        $this->normalizer->normalize(new SplFileInfo($source), $target);
+        $normalizedFile = $this->normalizer->normalize(new SplFileInfo($source), $target);
+        $this->assertSame(2, $normalizedFile->dataRecordCount);
         $firstContent = (string) file_get_contents($target);
         $this->assertStringContainsString('name;price', str_replace('"', '', $firstContent));
         $this->assertStringContainsString('Excel product', $firstContent);
@@ -84,6 +87,18 @@ class ImportFileNormalizerTest extends TestCase
         $secondTarget = $this->reserveFilePath('work_', '.csv');
         $this->normalizer->normalize(new SplFileInfo($source), $secondTarget);
         $this->assertStringContainsString('Updated product', (string) file_get_contents($secondTarget));
+    }
+
+    public function testSkipRowsAreStrippedAtNormalization(): void
+    {
+        // header + blank line both count toward the skip (physical position)
+        $source = $this->createFile('src_', '.csv', "name;desc\n\nfirst;row\nsecond;row\n");
+        $target = $this->reserveFilePath('work_', '.csv');
+
+        $normalizedFile = $this->normalizer->normalize(new SplFileInfo($source), $target, ';', 2);
+
+        $this->assertSame(2, $normalizedFile->dataRecordCount);
+        $this->assertSame("first;row\nsecond;row\n", (string) file_get_contents($target), 'The working file must contain data records only');
     }
 
     public function testUtf16FileIsRejected(): void

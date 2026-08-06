@@ -40,6 +40,12 @@ interface EntityImporterInterface
     public function getEntityType(): string;
 
     /**
+     * Translated human-readable label of the imported entity (e.g. 'Products'),
+     * displayed in the import page entity dropdown.
+     */
+    public function getLabel(): string;
+
+    /**
      * Importable fields, embedded in the importer (EntityField value objects).
      */
     public function getFields(): EntityFieldCollectionInterface;
@@ -53,17 +59,19 @@ interface EntityImporterInterface
     public function getPhases(): array;
 
     /**
-     * Total unit count for a phase, recomputed at phase entry; 0 means the phase is skipped.
+     * Total unit count for a phase, computed once at phase entry (the caller
+     * stores it on the context, see ImportRunContext::enterPhase()); 0 means
+     * the phase is skipped.
      *
-     * @throws UnknownPhaseException when the phase is not one of getPhases()
+     * @throws UnknownPhaseException when the phase id is not one of getPhases()
      */
-    public function countPhaseUnits(ImportPhaseDefinition $phase, ImportRunContext $context): int;
+    public function countPhaseUnits(string $phaseId, ImportRunContext $context): int;
 
     /**
      * Processes up to $limit units from the phase's current position (row position
      * + opaque resume cursor carried by the context).
      *
-     * @throws UnknownPhaseException when the phase is not one of getPhases()
+     * @throws UnknownPhaseException when the phase id is not one of getPhases()
      */
-    public function processPhaseBatch(ImportPhaseDefinition $phase, ImportRunContext $context, int $limit): PhaseBatchResult;
+    public function processPhaseBatch(string $phaseId, ImportRunContext $context, int $limit): PhaseBatchResult;
 }

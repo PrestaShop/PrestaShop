@@ -21,19 +21,26 @@ use SplFileInfo;
  * Importers only read from the context; the caller (batch sequencer) mutates
  * it through enterPhase() and applyBatchResult().
  *
- * Row indexes are 0-based physical record indexes in the working file. The
- * working file is produced once by ImportFileNormalizer using the canonical
- * CSV dialect: csvSeparator is the separator of the ORIGINAL upload and is
- * consumed at normalization time only — the engine reader never uses it.
+ * Row indexes are 0-based DATA-RECORD indexes in the working file. The
+ * working file is produced once by CsvImportFileNormalizer using the canonical
+ * CSV dialect, with the configured skip rows already stripped: csvSeparator
+ * and the skip count are properties of the ORIGINAL upload, consumed at
+ * normalization time only — the engine never sees either. Presenters add the
+ * run's skip count back when they need source-file line numbers.
  */
 final class ImportRunContext
 {
     /**
-     * Field-mapping value marking a column as ignored.
+     * Field-mapping value marking a column as ignored: the mapping screen's
+     * "Ignore this column" dropdown option has always used the literal value
+     * 'no' (legacy available_fields['no']), which the persisted mapping
+     * reuses as-is.
      */
     public const COLUMN_IGNORED = 'no';
 
     private ?string $currentPhaseId = null;
+
+    private int $currentPhaseTotalUnits = 0;
 
     private int $currentOffset = 0;
 
@@ -50,10 +57,10 @@ final class ImportRunContext
     public function __construct(
         private readonly string $entityType,
         private readonly string $workingFilePath,
+        private readonly int $dataRecordCount,
         private readonly string $langIso,
         private readonly string $csvSeparator,
         private readonly string $multipleValueSeparator,
-        private readonly int $skipRows,
         private readonly array $fieldMapping,
         private readonly ImportRunOptions $options,
         private readonly int $shopId,
@@ -75,6 +82,15 @@ final class ImportRunContext
         return new SplFileInfo($this->workingFilePath);
     }
 
+    /**
+     * Number of data records in the working file, measured once during
+     * normalization (nothing ever re-reads the file just to count).
+     */
+    public function getDataRecordCount(): int
+    {
+        return $this->dataRecordCount;
+    }
+
     public function getLangIso(): string
     {
         return $this->langIso;
@@ -88,11 +104,6 @@ final class ImportRunContext
     public function getMultipleValueSeparator(): string
     {
         return $this->multipleValueSeparator;
-    }
-
-    public function getSkipRows(): int
-    {
-        return $this->skipRows;
     }
 
     /**
@@ -136,9 +147,16 @@ final class ImportRunContext
         return ShopConstraint::shop($this->shopId);
     }
 
-    public function enterPhase(string $phaseId): void
+    /**
+     * @param int $totalUnits the phase's unit count, computed ONCE here by the
+     *                        caller (EntityImporterInterface::countPhaseUnits());
+     *                        importers read it back instead of rescanning the
+     *                        file on every batch
+     */
+    public function enterPhase(string $phaseId, int $totalUnits): void
     {
         $this->currentPhaseId = $phaseId;
+        $this->currentPhaseTotalUnits = $totalUnits;
         $this->currentOffset = 0;
         $this->resumeCursor = null;
         $this->skippedRows[$phaseId] ??= [];
@@ -147,6 +165,11 @@ final class ImportRunContext
     public function getCurrentPhaseId(): ?string
     {
         return $this->currentPhaseId;
+    }
+
+    public function getCurrentPhaseTotalUnits(): int
+    {
+        return $this->currentPhaseTotalUnits;
     }
 
     public function getCurrentOffset(): int

@@ -9,7 +9,7 @@
 ## Decision log
 
 1. **Abandon the old orchestration** (`Core\Import\Importer`, `Configuration\ImportRuntimeConfig`, `Handler\*`, `Adapter\Import\Handler\*`, session-coupled `@=` wiring). It was never switched on (step-1 forwards to legacy), covers 2/9 entities as ObjectModel ports, and entangles validation with insertion. Mark `@deprecated` in PR1; removal timing decided later (BC promise likely forces next major).
-2. **Salvage the clean pieces**: `Core\Import\EntityField/**` **value objects** (`EntityField`, collection — the 8 provider *services* are deprecated once importers embed their field lists), `File/**` (readers, uploader, Excel→CSV), exception hierarchy, `Adapter\Import\{ImportDataFormatter, ImportEntityDeleter}`. `Core\Import\Configuration\**` (`ImportConfig` + `ImportRuntimeConfig` + their interfaces and factories) is fully deprecated — `ImportRunContext` is the single runtime object (see contract), built from the Doctrine entity, no factories. `ImageCopier` is replaced by a small engine `ImageDownloader` (URL/path → local temp file); image association + thumbnail generation belong to the CQRS image commands.
+2. **Salvage the clean pieces**: `Core\Import\EntityField/**` **value objects** (`EntityField`, collection — the 8 provider *services* are deprecated once importers embed their field lists), `File/**` (readers, uploader, Excel→CSV), exception hierarchy, `Adapter\Import\{ImportDataFormatter, ImportEntityDeleter}`. `Core\Import\Configuration\**` (`ImportConfig` + `ImportRuntimeConfig` + their interfaces and factories) is fully deprecated — `ImportRunContext` is the single runtime object (see contract), built from the Doctrine entity, no factories. `ImageCopier` is replaced by a small engine `FileDownloader` (URL/path → local temp file); image association + thumbnail generation belong to the CQRS image commands.
 3. **New engine namespace**: `Core\Import\Engine\` (sibling of the salvaged pieces).
 4. **Hybrid persistence**: importers dispatch existing CQRS commands; a narrow import-specific repository covers only the gaps — forced-ID creation (*force IDs* option) and `date_add`. No ObjectModel → importers live in `Core`.
 5. **Invalid rows: store-and-skip, always.** Validation scans the whole file; invalid row indexes are stored sparse per phase; later phases skip them; the run finishes even with errors. Internal sanity cap (~10 000 invalid rows): beyond it the run fails ("file appears malformed"). Persisted state is bounded by constants, never file size — no per-row table.
@@ -23,8 +23,10 @@
 13. **Row position + opaque resume cursor**: the engine tracks progress in row positions (format-agnostic); after each batch the reader returns an opaque cursor persisted on the run (`resume_cursor`) — the CSV reader's cursor is a byte offset for `fseek`, a future JSON reader defines its own (split files, item index). The engine never interprets it. `CsvFileReader` is refactored directly with an additive resumable interface — no wrapper class.
 14. **String entity ids end-to-end**: the legacy `Core\Import\Entity::TYPE_*` int mapping is dropped — the ints only feed deprecated code (step-1 form choices, session config, int-keyed provider finder, current `EntityType` VO), `ps_import_match` presets don't store an entity, and the feature flag being off means no production rows exist. `entity_type` column becomes a string in PR2.
 15. **Canonical working-file dialect** (PR1 review): the normalizer rewrites EVERY input (CSV with the user's separator, or spreadsheet) into one canonical CSV dialect (`;`, `"`, empty escape, UTF-8, no BOM, blank lines preserved for row-index parity). The user-chosen separator is consumed once at normalization; the engine reader takes no per-run dialect (kills the session-coupled ctor wiring), `readFrom()` needs no dialect params.
-16. **Lookups are Core `@internal` services, no interfaces** (PR1 review): the engine's name/path/reference lookups are concrete `final` classes in `Core\Import\Engine\Repository\` injecting DBAL `Connection` directly (precedent: Core Grid query builders), documented `@internal` — not meant to be overridden or decorated. Only the fallback **writer** keeps the Core-interface → Adapter-implementation split (`ProductImportWriterInterface` → `Adapter\Import\Repository\ProductImportWriter`, which needs ObjectModel `force_id`).
+16. **Lookups & fallback writes live on the existing repositories, EXISTING METHODS FIRST** (PR1 review round 2 + follow-up): the engine has NO dedicated lookup layer. Importer internals inject the existing repositories and MUST use a method that already serves the purpose, even VO-based/throwing ones (small private bool wrappers around `assertProductExists`/`assertCategoryExists`/`assertManufacturerExists`/`assertSupplierExists`, `TaxRulesGroupRepository::get()` + soft-deleted check, `StockAvailableRepository::getForProduct()` for the current quantity, Core `LanguageRepositoryInterface` `getOneByIsoCode()`/`findAll()` for language ids). Listing-oriented methods do NOT count as equivalents when they would load whole tables for a single-id resolution (that ruled out `getFeaturesByLang()`/`getFeatureValuesByLang()`). New repository methods are added ONLY when no fitting equivalent exists — and then with plain `int`/`string` params: `ProductRepository::getProductIdByReference()`, `FeatureRepository::getFeatureIdByName()`, `FeatureValueRepository::getFeatureValueIdByValue()` (+ the fallback writes `createWithForcedId()`/`setDateAdd()`, hard PHPDoc warnings: import-engine use only), `CategoryRepository::getChildCategoryIdByName()`, `ManufacturerRepository::getManufacturerIdByName()`, `SupplierRepository::getSupplierIdByName()`, `ShopRepository::getShopIdByName()`. The tax rate for de-taxing `price_tin` comes from `Adapter\Tax\TaxComputer` directly. Core→Adapter injection is accepted pragmatism here — importers already live at the boundary.
 17. **Importer auto-tagging via the interface** (PR1 review): no per-implementation attribute — `PrestaShopExtension` calls `registerForAutoconfiguration(EntityImporterInterface::class)->addTag(...)` (`#[AutoconfigureTag]` on an interface is ignored by Symfony 6.4), so any autoconfigured service implementing the interface is collected, module services included (their definitions must set `autoconfigure: true`). Proven by the `demoentityimporter` module in the example-modules repository.
+18. **Skip rows are consumed at normalization, and the record count is measured there too** (PR1 review round 2): like the CSV separator, the skip count is a property of the ORIGINAL upload — `CsvImportFileNormalizer` strips the N leading records (blank lines count; spreadsheets always go through an intermediate CSV pass) so the working file contains DATA RECORDS ONLY. The same pass counts the records (`NormalizedImportFile` result); the count travels in the run's frozen config (`ImportRunContext::getDataRecordCount()`, `ps_import_run.total_rows` in PR2), so NOTHING downstream ever re-reads the file just to count — plain EOL counting or `wc -l` were rejected (records can span physical lines; exec is often disabled). The reader interface therefore has no countRecords() at all. The engine, `ImportRunContext` (no `skipRows` anymore) and importers never see a skip count; row indexes everywhere are 0-based data-record indexes. Presentation keeps spreadsheet-line parity: the skip count stays in the run's frozen config (`ps_import_run.skip_rows`, PR2) and the presenter/report layer adds it back when displaying source-file line numbers.
+19. **`AbstractEntityImporter` base class** (PR1 review round 2): recommended base for core and module importers, hosting the duplicated mechanics — `iterateBatch()` (cursor-resumable batch loop over mapped rows), `assertKnownPhase()`, `containsError()`, `batchCompletesPhase()`, `contextWithBatchApplied()`, `isEmptyMappedRow()` and a default `countPhaseUnits()` = working-file record count (override to skip phases). Concrete importers hand the reader + row mapper to the base constructor (exposed as protected fields) and implement their phase processing. Implementing `EntityImporterInterface` directly stays supported. Proven by both `ProductImporter` and the `demoentityimporter` module.
 
 ## Codebase map — audit snapshot (develop, 2026-07-30)
 
@@ -41,7 +43,7 @@ Step-1 submit saves to the session then 307-forwards to the legacy controller (`
 | File handling: `CsvFileReader` (fgetcsv generator), `FileUploader`/`FileFinder`/`FileRemoval`, `ImportDirectory`, `DataRow`/`DataCell` (preview) | `src/Core/Import/File/` | kept — reader refactored in place with the cursor-resume interface (decision 13); `utf8_encode()` call replaced by the normalization step |
 | Entity handlers: `AbstractImportHandler`, `ProductImportHandler` (~1270 lines), `CategoryImportHandler` (~540 lines), `ImportHandlerFinder` | `src/Adapter/Import/Handler/` | **deprecated** — line-by-line ObjectModel ports; never build on them |
 | Utilities: `CsvFileOpener` (Excel→CSV), `ImportDataFormatter` (`getBoolean`/`getPrice`/`split`/`createMultiLangField`), `ImportEntityDeleter` (truncate), `DataMatchSaver` | `src/Adapter/Import/` | kept |
-| `ImageCopier` | `src/Adapter/Import/` | **deprecated** — replaced by engine `ImageDownloader` (download only); association + thumbnails via CQRS image commands |
+| `ImageCopier` | `src/Adapter/Import/` | **deprecated** — replaced by engine `FileDownloader` (download only); association + thumbnails via CQRS image commands |
 | Controllers: `ImportController` (step-1 page + upload/delete/download/sample/fields AJAX are **live**; `processImportAction` dead), `ImportDataConfigurationController` (step 2 — dead but complete) | `src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/` | wired for real in the UI PR |
 | Forms: `ImportType`, `ImportDataConfigurationType`, `ImportFormDataProvider` | `src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/` | reused in UI PR — session writes removed: step-1 config POSTs through step-2 as hidden inputs (decision 12) |
 | TS batch driver: `Importer.ts`, `ImportBatchSizeCalculator` (targets ~5 s/request, limit clamped 5–100), `PostSizeChecker`, `ImportProgressModal`, … | `admin-dev/themes/new-theme/js/pages/import-data/` | good engineering, reusable for the UI PR (payload shrinks: runId only) |
@@ -81,20 +83,21 @@ Key helpers to consult when porting semantics: `getBoolean`/`getPrice`/`split`/`
 interface EntityImporterInterface
 {
     public function getEntityType(): string;                      // 'product' — string id; legacy Entity::TYPE_* int mapping kept for wizard BC
+    public function getLabel(): string;                           // translated entity label for the BO dropdown ('Products')
     public function getFields(): EntityFieldCollectionInterface;  // fields embedded in the importer (EntityField VOs); old provider services deprecated
     /** @return list<ImportPhaseDefinition> ordered — ids are open strings; validation/database/association/finalization are conventions */
     public function getPhases(): array;
-    /** recomputed at phase entry; 0 => phase skipped */
-    public function countPhaseUnits(ImportPhaseDefinition $phase, ImportRunContext $context): int;
+    /** computed ONCE at phase entry, stored on the context by the caller; 0 => phase skipped */
+    public function countPhaseUnits(string $phaseId, ImportRunContext $context): int;
     /** process up to $limit units from the phase's stored position */
-    public function processPhaseBatch(ImportPhaseDefinition $phase, ImportRunContext $context, int $limit): PhaseBatchResult;
+    public function processPhaseBatch(string $phaseId, ImportRunContext $context, int $limit): PhaseBatchResult;
 }
 ```
 
 - `ImportPhaseDefinition` — technical id + translatable label + `isPausing` flag (a pausing phase completing with any message stops the run as `awaiting_confirmation` — see decision 6). **Code-defined only, never persisted**; the DB stores phase-id strings. Ids are **open strings** — the `PHASE_*` constants only name the common four; importers may declare custom phases (e.g. a combinations `attribute_generation` pre-phase). A stored id no longer matching `getPhases()` (deploy changed the list mid-run) fails the run gracefully.
-- `ImportRunContext` — **the single runtime/config object** (replaces the deprecated `ImportConfig`/`ImportRuntimeConfig` pair and their factories): a plain core object mirroring the `ImportRun` entity's structure without depending on Doctrine, built from the entity by the adapter. Carries the frozen config, reader position (row + resume cursor), skipped-row set, options, shop constraint.
+- `ImportRunContext` — **the single runtime/config object** (replaces the deprecated `ImportConfig`/`ImportRuntimeConfig` pair and their factories): a plain core object mirroring the `ImportRun` entity's structure without depending on Doctrine, built from the entity by the adapter. Carries the frozen config (WITHOUT the skip count — consumed at normalization, decision 18), reader position (row + resume cursor), the current phase's total unit count (set once by `enterPhase(string $phaseId, int $totalUnits)` so importers never rescan the file per batch), skipped-row set, options, shop constraint. Row indexes are 0-based data-record indexes; presenters add `skip_rows` back for source-file line numbers.
 - `PhaseBatchResult` — processed unit count, structured messages, newly skipped row indexes, new resume cursor.
-- `EntityImporterRegistry` — collects tagged importer services (`#[AutoconfigureTag]`); powers the BO entity dropdown, the mapping-page field list, and batch dispatch. Module-extensible.
+- `EntityImporterRegistry` — collects tagged importer services (tag applied via `registerForAutoconfiguration()`, decision 17); powers the BO entity dropdown, the mapping-page field list, and batch dispatch. Module-extensible.
 
 ### Proposed engine layout (PR1)
 
@@ -105,18 +108,20 @@ src/Core/Import/Engine/
 ├── ImportPhaseDefinition.php             # PHASE_VALIDATION|PHASE_DATABASE|PHASE_ASSOCIATION|PHASE_FINALIZATION + label wording
 ├── ImportRunContext.php
 ├── PhaseBatchResult.php
-├── ImportMessage.php                     # severity, phase, row, field, message
+├── ImportMessage.php                     # severity, phase, message (+ optional row, field)
 ├── Exception/                            # UnknownEntityTypeException, UnknownPhaseException, MalformedImportFileException, …
 ├── File/
-│   └── ImportFileNormalizer.php          # UTF-8 + Excel→CSV → run-scoped working file
-│       # (Core\Import\File\CsvFileReader gains the cursor-resume interface directly — no wrapper)
-├── ImageDownloader.php                   # URL/path → local temp file (replaces ImageCopier; CQRS commands own association + thumbnails)
+│   └── CsvImportFileNormalizer.php       # UTF-8 + Excel→CSV → run-scoped working file
+│       # (Core\Import\File\CsvFileReader implements the standalone ResumableFileReaderInterface — plain array records + countRecords())
+├── FileDownloader.php                    # URL/path → local temp file in sys_get_temp_dir() (replaces ImageCopier; CQRS commands own association + thumbnails)
 └── EntityImporter/
-    ├── ProductImporter.php               # dispatches commands via Core\CommandBus\CommandBusInterface
-    └── Product/…                         # field mapper / association resolver as implementation demands
+    ├── AbstractEntityImporter.php        # recommended base: iterateBatch, phase guard, default unit count (decision 19)
+    ├── ProductImporter.php               # extends the base; dispatches commands via Core\CommandBus\CommandBusInterface
+    ├── EntityMatch.php / ResolvedAssociation.php / RowMapper.php / LocalizedValueTrait.php   # shared by every importer
+    └── Product/…                         # identity resolver / row validator / association resolver / row importer / accessories pre-check
 ```
 
-Core/Adapter split rule (amended per decision 16): importers stay in Core (they only talk to the command bus). Read-only lookups are Core `@internal` DBAL services under `Core\Import\Engine\Repository\` (`ProductLookup`, `CategoryLookup`, `ManufacturerLookup`, `SupplierLookup`, `ShopLookup`, `LanguageLookup`, `FeatureLookup`, `TaxRulesGroupLookup` — the last one wraps `Adapter\Tax\TaxComputer`). Only the fallback writer keeps the interface split: `Core\Import\Engine\Repository\ProductImportWriterInterface` → `src/Adapter/Import/Repository/ProductImportWriter.php` (forced-ID insert via ObjectModel `force_id` + `date_add`).
+Core/Adapter split rule (amended per decision 16, round 2): importers stay in Core (they only talk to the command bus)... except for reads and the two fallback writes, which use the EXISTING `Adapter\*\Repository\*` classes directly — no engine-owned lookup layer. New plain-`int` lookup methods were added to those repositories; the fallback writer is `ProductRepository::createWithForcedId()` + `ProductRepository::setDateAdd()` (ObjectModel `force_id`).
 
 ### Batch sequencing (PR2, reworked `RunImportBatchHandler`)
 
@@ -144,11 +149,11 @@ One batch budget may span a phase boundary (e.g. "validate last 2 rows + insert 
 Sequencer notes:
 - **Truncate timing**: `options.truncate` executes **once at `database` phase entry** — i.e. after validation completed and any pause was confirmed — via the kept `ImportEntityDeleter`. Never in `dryRun`, never on a run cancelled at the pause, never re-executed on later batches (phase entry happens once). Same semantics as legacy (truncate at offset 0 of the real pass, skipped in validateOnly).
 - **Phase skipping via `countPhaseUnits`**: an importer skips a phase cheaply by returning 0 — e.g. `association` returns 0 when no association column is mapped; otherwise it may simply count all data rows and fast-skip cells without values.
-- **Phase totals count data rows** (after `skip_rows`) — legacy's `total_rows` counted physical lines including headers; fix in PR2.
+- **Phase totals count data rows** — the working file only contains data records (skip rows stripped at normalization, decision 18) and the count is measured by that same pass (`ImportRunContext::getDataRecordCount()`), so the default `countPhaseUnits()` reads nothing; legacy's `total_rows` counted physical lines including headers; fix in PR2.
 
 ### File handling
 
-- `StartImportRun` normalizes the upload **once** into a run-scoped working file: encoding → UTF-8 (replaces the deprecated `utf8_encode()` and the legacy whole-file `mb_check_encoding` on every batch), Excel → CSV (fixing the legacy converter's forced `;` and stale filename cache), BOM stripped. **The working file always uses the canonical CSV dialect** (`;`, `"`, empty escape — constants on `ImportFileNormalizer`; decision 15): the user's separator is consumed at normalization, the engine reader is dialect-free, blank lines are preserved so row indexes stay aligned with the source. The working file lives next to the upload in the import directory, named by run id (e.g. `<runId>.work.csv`), and is deleted at terminal state.
+- `StartImportRun` normalizes the upload **once** into a run-scoped working file: encoding → UTF-8 (replaces the deprecated `utf8_encode()` and the legacy whole-file `mb_check_encoding` on every batch), Excel → CSV (fixing the legacy converter's forced `;` and stale filename cache), BOM stripped. **The working file always uses the canonical CSV dialect** (`;`, `"`, empty escape — constants on `CsvImportFileNormalizer`; decision 15): the user's separator AND the skip count are consumed at normalization (decision 18) — the engine reader is dialect-free and the working file holds data records only; blank lines are preserved so record mapping stays 1:1 apart from the stripped head. The working file lives next to the upload in the import directory, named by run id (e.g. `<runId>.work.csv`), and is deleted at terminal state.
 - Batches resume by **row position + opaque reader cursor** persisted on the run (`resume_cursor` column): the engine asks the reader to resume at row N and hands back the last cursor; the CSV reader's cursor is a byte offset (`fseek`, O(1) resume — total O(n) per phase, not O(n²)); a future JSON reader defines its own (split files at init, item index). The engine never interprets the cursor.
 - Reader stays behind `FileReaderInterface`, extended in place with the resumable contract (additive — `CsvFileReader` refactored directly, no wrapper); a Symfony-Serializer-based reader (JSON, native multi-language) can be added later without touching importers.
 
@@ -182,28 +187,28 @@ Sequencer notes:
 
 ## PR roadmap
 
-### PR1 — engine + ProductImporter (from `develop`, no CQRS layer) — **done 2026-08-03** (same PR as the docs, #42247)
+### PR1 — engine + ProductImporter (from `develop`, no CQRS layer) — **done 2026-08-03**, review round 2 applied 2026-08-05 (same PR as the docs, #42247)
 
 - [x] Engine contracts: `EntityImporterInterface`, `ImportPhaseDefinition` (open string ids + `pausing` flag), `ImportRunContext` (single runtime object), `PhaseBatchResult`, `ImportMessage`, `EntityImporterRegistry` (+ tag via `registerForAutoconfiguration`, decision 17), engine exceptions
-- [x] File normalization service (UTF-8 + Excel→CSV → run-scoped working file, canonical dialect per decision 15) + cursor-resumable reading (`CsvFileReader` refactored in place, additive `ResumableFileReaderInterface` — CSV cursor = byte offset, generator yields cursor as key)
+- [x] File normalization service (`CsvImportFileNormalizer`: UTF-8 + Excel→CSV → run-scoped working file, canonical dialect per decision 15) + cursor-resumable reading (`CsvFileReader` refactored in place, STANDALONE `ResumableFileReaderInterface` — plain `array<int,string>` records, CSV cursor = byte offset yielded as generator key; the record count is measured by the normalization pass itself and carried by the context, the reader never counts)
 - [x] `ProductImporter` (`validation` / `database` / `association`) — fields embedded via `getFields()` (no provider service), field→command mapping below
-- [x] `ImageDownloader` (URL/path → local temp file) — replaces `ImageCopier`, which gets `@deprecated`
-- [x] Import-specific repository fallback: forced-ID creation, `date_add` (narrow, documented)
+- [x] `FileDownloader` (URL/path → local temp file in `sys_get_temp_dir()`) — replaces `ImageCopier`, which gets `@deprecated`
+- [x] Import-specific fallback writes folded into `Adapter ProductRepository` (`createWithForcedId`, `setDateAdd` — narrow, hard PHPDoc warnings)
 - [x] Association pre-check sub-step (in-memory identity set) + `skipAssociationPrecheck` option
-- [x] `@deprecated` on the abandoned classes (lists in decisions 1–2) — annotated (27 files), all still wired; removal comes later
-- [x] Integration tests (`tests/Integration/Core/Import/Engine/`) driving the importer through a mini-sequencer (batch limit 2 → cursor resume everywhere) with CSV fixtures (`tests/Resources/import/`): create (every mapped column asserted), update via `forceIDs` and `match_ref`, mutual accessories (A↔B in one file) + `@clear@`, invalid rows skipped + reported (zero validation writes), multilang single-language file, images from local fixture paths, virtual product, features
+- [x] `@deprecated since 9.3` on the abandoned classes (lists in decisions 1–2) — 27 files from the first pass + the legacy reading layer added in review round 2 (`FileReaderInterface`, `CsvFileReader::read()`, `FileOpenerInterface`, `CsvFileOpener`, the whole `DataRow`/`DataCell` layer), all still wired; removal comes later
+- [x] Integration tests (`tests/Integration/Core/Import/Engine/`, generic `AbstractImportEngineTestCase` + product-bound `AbstractProductImportEngineTestCase`) driving the importer through a mini-sequencer (batch limit 2 → cursor resume everywhere) with CSV fixtures (`tests/Resources/import/`): create (every mapped column asserted), update via `forceIDs` and `match_ref`, mutual accessories (A↔B in one file) + `@clear@` + numeric targets (id-wins/reference-fallback warnings), invalid rows skipped + reported (zero validation writes, message texts asserted), gtin-over-ean13, customization counts (+ explicit 0/0 removal), mutually-exclusive reductions, multilang single-language file, images from local fixture paths, virtual product, features
 - [x] Hook-per-command benchmark: `IMPORT_BENCHMARK=1 phpunit --filter ProductImporterBenchmarkTest` — **1 000 rows in 30.4 s ≈ 33 rows/s** (5-column shape ≈ 3 commands/row, local macOS dev box, 2026-08-03); mitigation decision before GA still open
 - [x] Keep `.ai/Component/Import/` docs in sync
 
 PR1 field-decision notes (resolved 2026-08-03, details in the mapping table / behavior inventory):
-- `quantity` → read current stock (`ProductLookup::getStockQuantity`), dispatch `setDeltaQuantity(target − current)`, skip when 0 (the stock command is delta-only by design).
+- `quantity` → read current stock (`StockAvailableRepository::getQuantityForProduct`), dispatch `setDeltaQuantity(target − current)`, skip when 0 (the stock command is delta-only by design).
 - `supplier` → **no auto-create** (warn-and-drop): `AddSupplierCommand` requires an address the file cannot provide; existing suppliers still resolve by id/name.
-- `customizable`/`uploadable_files`/`text_fields` → one real generic customization field per requested kind via `SetProductCustomizationFieldsCommand`; `customizable` alone → warning.
+- `customizable`/`uploadable_files`/`text_fields` → `uploadable_files`/`text_fields` are integer COUNTS (review round 2, not booleans): N FILE + M TEXT fields with numbered generic labels via `SetProductCustomizationFieldsCommand`; explicit `0`/`0` on an update dispatches `RemoveAllCustomizationFieldsFromProductCommand`; empty/unmapped cells leave the product untouched; `customizable` alone → warning.
 - `low_stock_alert` → follows the command coupling (alert = threshold ≠ 0); contradicting file value → warning.
 - Multilang UPDATE writes the file's language only (legacy fill-empty-languages dropped); creation still duplicates into every language.
 - `is_virtual` on update only converts TO virtual; an explicit 0 never converts back (protects existing types/downloads).
 - `shop` column: `SetProductShopsCommand` with the run's shop guaranteed in the list (it holds the just-written data).
-- Lookup additions beyond the spec'd set: `LanguageLookup` (iso→id, all-language duplication), `FeatureLookup` (feature/value by name).
+- Repository usage (decision 16): existing methods reused wherever an equivalent exists (asserts wrapped in private bool helpers, `getForProduct` for stock, Core `LanguageRepositoryInterface`); only 7 genuinely new lookups added (`ProductRepository::getProductIdByReference`, `CategoryRepository::getChildCategoryIdByName`, `ManufacturerRepository::getManufacturerIdByName`, `SupplierRepository::getSupplierIdByName`, `ShopRepository::getShopIdByName`, `FeatureRepository::getFeatureIdByName`, `FeatureValueRepository::getFeatureValueIdByValue`) plus the two fallback writes on `ProductRepository`.
 
 ### PR2 — CQRS rework (rebase/rework #41911 on the engine)
 
@@ -237,20 +242,20 @@ PR1 field-decision notes (resolved 2026-08-03, details in the mapping table / be
 | `active`, `visibility`, `condition`, `online_only`, `show_price`, `available_for_order`, `available_date`, `on_sale` | database | `UpdateProductCommand` (options) |
 | `price_tex` / `price_tin`, `id_tax_rules_group`, `wholesale_price`, `unity`, `unit_price`, `ecotax` | database | `UpdateProductCommand` (prices; `price_tin` de-taxed via resolved tax group, `price_tex` wins when both present; ecotax zeroed unless `PS_USE_ECOTAX`; tax rules group must pre-exist — warning, no auto-create) |
 | `width`, `height`, `depth`, `weight`, `additional_shipping_cost` | database | `UpdateProductCommand` (shipping) |
-| `ean13`, `isbn`, `upc`, `mpn` | database | `UpdateProductCommand` (details) |
+| `gtin`, `ean13`, `isbn`, `upc`, `mpn` | database | `UpdateProductCommand` (details); `gtin` (67th field) wins over its legacy alias `ean13` when both are filled — both feed `setGtin()` |
 | `manufacturer` | database | resolve by id/name, auto-create via `AddManufacturerCommand` → `UpdateProductCommand` (manufacturerId) |
 | `category` | database | resolve by id / name-path (`/` hierarchy), auto-create per missing path level via `AddCategoryCommand` → `SetAssociatedProductCategoriesCommand` (default = first entry) |
 | `quantity`, `location`, `out_of_stock`, `minimal_quantity`, `low_stock_threshold`, `low_stock_alert` | database | `UpdateProductStockAvailableCommand` (location, out_of_stock; quantity converted to a delta from the current stock — the command is delta-only) / `UpdateProductCommand` (minimal_quantity, low_stock_threshold; alert derived = threshold ≠ 0, contradicting file value → warning) |
 | `supplier`, `supplier_reference` | database | resolve by id/name — **no auto-create** (warn-and-drop; `AddSupplierCommand` needs address/city/country the file cannot provide) → `SetSuppliersCommand` + `UpdateProductSuppliersCommand` + `SetProductDefaultSupplierCommand` |
 | `tags` | database | `SetProductTagsCommand` |
 | `features` (`Name:Value:Position[:Custom]`) | database | resolve, auto-create via `AddFeatureCommand` / `AddFeatureValueCommand` → `SetProductFeatureValuesCommand` |
-| `image`, `image_alt`, `delete_existing_images` | database | `ImageDownloader` (URL/path → temp file) → `AddProductImageCommand` / `UpdateProductImageCommand` (legend) / `DeleteProductImageCommand` |
+| `image`, `image_alt`, `delete_existing_images` | database | `FileDownloader` (URL/path → temp file) → `AddProductImageCommand` / `UpdateProductImageCommand` (legend) / `DeleteProductImageCommand` |
 | `is_virtual`, `file_url`, `nb_downloadable`, `date_expiration`, `nb_days_accessible` | database | `UpdateProductTypeCommand` (virtual) + `AddVirtualProductFileCommand` |
-| `customizable`, `uploadable_files`, `text_fields` | database | legacy set bare counters; the importer creates one real generic customization field per requested kind (FILE for uploadable_files, TEXT for text_fields) via `SetProductCustomizationFieldsCommand`; `customizable` alone → warning |
-| `reduction_price`, `reduction_percent`, `reduction_from`, `reduction_to` | database | `AddSpecificPriceCommand` (legacy "basic reduction": single rule, all currencies/countries/groups, from qty 1) |
+| `customizable`, `uploadable_files`, `text_fields` | database | `uploadable_files`/`text_fields` are integer COUNTS: N FILE + M TEXT numbered generic fields via `SetProductCustomizationFieldsCommand`; explicit `0`/`0` on update → `RemoveAllCustomizationFieldsFromProductCommand`; `customizable` alone → warning |
+| `reduction_price`, `reduction_percent`, `reduction_from`, `reduction_to` | database | `AddSpecificPriceCommand` (legacy "basic reduction": single rule, all currencies/countries/groups, from qty 1); a row with BOTH kinds is ambiguous → warning + both dropped |
 | `shop` | database | shop id or name → `SetProductShopsCommand` / `ShopConstraint` on commands |
 | `date_add` | database | fallback repository (not expressible via commands; `date_upd` always forced to now, per legacy) |
-| `accessories` | **association** | resolve ids-or-references in DB → `SetRelatedProductsCommand` |
+| `accessories` | **association** | resolve ids-or-references in DB → `SetRelatedProductsCommand`; numeric targets: id wins (warning when a reference also matches), reference fallback when no id matches (warned) |
 
 **Update-vs-create decision** (legacy `productImportOne` parity, per row): (1) `match_ref` on **and** `reference` matches an existing product (shop-scoped lookup) → update that product; (2) else `id` present **and** the product exists → update it; (3) else create — via the fallback repository with the forced id when `forceIDs` is on and `id` is present, via `AddProductCommand` otherwise. `date_upd` is always now; `date_add` only settable through the fallback repository.
 

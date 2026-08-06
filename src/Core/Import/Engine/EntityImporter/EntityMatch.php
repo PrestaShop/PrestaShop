@@ -6,23 +6,25 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product;
+namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter;
 
 /**
- * Update-vs-create decision for one product row.
+ * Update-vs-create decision for one imported row, shared by every entity
+ * importer (each importer owns its resolution logic, e.g.
+ * ProductIdentityResolver).
  */
-final class ProductMatch
+final class EntityMatch
 {
     public const MATCHED_BY_REFERENCE = 'reference';
     public const MATCHED_BY_ID = 'id';
 
     /**
-     * @param int|null $productId existing product to update, null to create
+     * @param int|null $entityId existing entity to update, null to create
      * @param string|null $matchedBy MATCHED_BY_* constant when updating
      * @param int|null $forcedId id to force on creation (force IDs option)
      */
     public function __construct(
-        public readonly ?int $productId,
+        public readonly ?int $entityId,
         public readonly ?string $matchedBy = null,
         public readonly ?int $forcedId = null,
     ) {
@@ -30,6 +32,6 @@ final class ProductMatch
 
     public function isUpdate(): bool
     {
-        return null !== $this->productId;
+        return null !== $this->entityId;
     }
 }

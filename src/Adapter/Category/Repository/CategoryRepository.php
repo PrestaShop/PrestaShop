@@ -490,4 +490,23 @@ class CategoryRepository extends AbstractObjectModelRepository
 
         return $names;
     }
+
+    /**
+     * Direct child of $parentCategoryId whose name matches in the given
+     * language (legacy Category::searchByNameAndParentCategoryId parity).
+     */
+    public function getChildCategoryIdByName(int $parentCategoryId, string $name, int $languageId): ?int
+    {
+        $categoryId = $this->connection->fetchOne(
+            'SELECT c.id_category
+            FROM ' . $this->dbPrefix . 'category c
+            INNER JOIN ' . $this->dbPrefix . 'category_lang cl
+                ON cl.id_category = c.id_category AND cl.id_lang = :languageId
+            WHERE cl.name = :name AND c.id_parent = :parentCategoryId
+            ORDER BY c.id_category ASC',
+            ['languageId' => $languageId, 'name' => $name, 'parentCategoryId' => $parentCategoryId]
+        );
+
+        return false === $categoryId ? null : (int) $categoryId;
+    }
 }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\Repository;
 
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -18,6 +19,12 @@ use Supplier;
  */
 class SupplierRepository extends AbstractObjectModelRepository
 {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly string $dbPrefix,
+    ) {
+    }
+
     /**
      * @param SupplierId $supplierId
      *
@@ -45,5 +52,18 @@ class SupplierRepository extends AbstractObjectModelRepository
         );
 
         return $supplier;
+    }
+
+    /**
+     * Exact-name lookup (legacy Supplier::getIdByName parity).
+     */
+    public function getSupplierIdByName(string $name): ?int
+    {
+        $supplierId = $this->connection->fetchOne(
+            'SELECT id_supplier FROM ' . $this->dbPrefix . 'supplier WHERE name = :name ORDER BY id_supplier ASC',
+            ['name' => $name]
+        );
+
+        return false === $supplierId ? null : (int) $supplierId;
     }
 }

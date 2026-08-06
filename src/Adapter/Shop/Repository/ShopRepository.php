@@ -128,4 +128,17 @@ class ShopRepository extends AbstractObjectModelRepository
 
         return array_map(fn (array $shopRow) => (int) $shopRow['id_shop'], $result);
     }
+
+    /**
+     * Exact-name lookup (legacy Shop::getIdByName parity).
+     */
+    public function getShopIdByName(string $name): ?int
+    {
+        $shopId = $this->connection->fetchOne(
+            'SELECT id_shop FROM ' . $this->dbPrefix . 'shop WHERE name = :name ORDER BY id_shop ASC',
+            ['name' => $name]
+        );
+
+        return false === $shopId ? null : (int) $shopId;
+    }
 }

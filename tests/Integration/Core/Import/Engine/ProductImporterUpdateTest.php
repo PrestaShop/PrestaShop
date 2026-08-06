@@ -10,7 +10,7 @@ namespace Tests\Integration\Core\Import\Engine;
 
 use Tests\Resources\Resetter\ProductResetter;
 
-class ProductImporterUpdateTest extends AbstractImportEngineTestCase
+class ProductImporterUpdateTest extends AbstractProductImportEngineTestCase
 {
     private const FORCE_IDS_FIELDS = ['id', 'name', 'reference', 'price_tex'];
     private const MATCH_REF_FIELDS = ['reference', 'name', 'price_tex'];

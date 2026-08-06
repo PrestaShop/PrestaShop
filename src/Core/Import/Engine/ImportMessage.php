@@ -11,8 +11,9 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
 /**
  * One structured message produced while processing an import run.
  *
- * Row indexes are 0-based physical record indexes in the working file (the
- * header line is row 0 when one row is skipped); null means a file-level
+ * Row indexes are 0-based data-record indexes in the working file (skip rows
+ * were already stripped at normalization); presenters add the run's skip
+ * count back to display source-file line numbers. Null means a file-level
  * message. The message text is already translated by the importer.
  */
 final class ImportMessage
@@ -24,9 +25,9 @@ final class ImportMessage
     public function __construct(
         public readonly string $severity,
         public readonly string $phase,
-        public readonly ?int $row,
-        public readonly ?string $field,
         public readonly string $message,
+        public readonly ?int $row = null,
+        public readonly ?string $field = null,
     ) {
     }
 }

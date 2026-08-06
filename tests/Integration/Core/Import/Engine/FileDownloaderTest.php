@@ -10,37 +10,17 @@ namespace Tests\Integration\Core\Import\Engine;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImageDownloader;
+use PrestaShop\PrestaShop\Core\Import\Engine\FileDownloader;
 use Tests\Resources\DummyFileUploader;
 
-class ImageDownloaderTest extends TestCase
+class FileDownloaderTest extends TestCase
 {
-    private ImageDownloader $downloader;
+    private FileDownloader $downloader;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->downloader = new ImageDownloader(new class() implements \PrestaShop\PrestaShop\Core\ConfigurationInterface {
-            public function get($key, $default = null, ?\PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint $shopConstraint = null)
-            {
-                return sys_get_temp_dir();
-            }
-
-            public function set($key, $value, ?\PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint $shopConstraint = null, array $options = [])
-            {
-                return $this;
-            }
-
-            public function has($key)
-            {
-                return true;
-            }
-
-            public function remove($key)
-            {
-                return $this;
-            }
-        });
+        $this->downloader = new FileDownloader();
     }
 
     public function testLocalPathIsCopiedToATemporaryFile(): void

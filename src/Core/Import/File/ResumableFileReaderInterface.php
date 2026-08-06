@@ -16,21 +16,27 @@ use SplFileInfo;
 /**
  * A file reader able to resume reading from an opaque cursor.
  *
- * The cursor is reader-specific and must never be interpreted by callers:
- * the CSV reader uses a byte offset (O(1) fseek resume), a future JSON
- * reader may use a split-file/item index. The caller persists the last
- * consumed cursor and hands it back to resume the next batch.
+ * The cursor is a string because it is persisted verbatim (the future
+ * ImportRun entity stores it in a resume_cursor varchar column) and handed
+ * back untouched: the engine never interprets it. Each reader encodes
+ * whatever state it needs INTO the string — the CSV reader uses a byte
+ * offset (O(1) fseek resume), a future reader may encode richer state
+ * (e.g. JSON with a split-file index and an item offset).
+ *
+ * Standalone interface: it deliberately does not extend the deprecated
+ * FileReaderInterface, so the whole legacy DataRow-based reading layer can
+ * be removed in the next major.
  */
-interface ResumableFileReaderInterface extends FileReaderInterface
+interface ResumableFileReaderInterface
 {
     /**
-     * Reads rows starting at the given cursor (or from the beginning when null).
+     * Reads records starting at the given cursor (or from the beginning when null).
      *
-     * The generator yields the cursor resuming AFTER the row as key, and the
-     * row as value: the caller's batch cursor is simply the key of the last
-     * row it consumed.
+     * The generator yields the cursor resuming AFTER the record as key, and
+     * the record as a plain list of string cell values: the caller's batch
+     * cursor is simply the key of the last record it consumed.
      *
-     * @return Generator<string, DataRow\DataRowInterface>
+     * @return Generator<string, array<int, string>>
      *
      * @throws UnreadableFileException
      * @throws InvalidResumeCursorException

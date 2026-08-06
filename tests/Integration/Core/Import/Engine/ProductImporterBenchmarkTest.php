@@ -17,14 +17,15 @@ use Tests\Resources\Resetter\ProductResetter;
  * CQRS command while the legacy import deferred them via Module::setBatchMode.
  * This measures the accepted cost on a generated fixture.
  *
- * Not part of the regular suite - run it manually:
+ * SKIPPED in regular suite runs: setUp() calls markTestSkipped() unless the
+ * IMPORT_BENCHMARK environment variable is set. Run it manually:
  *
  *   IMPORT_BENCHMARK=1 php vendor/bin/phpunit -c tests/Integration/phpunit.xml \
  *     --filter ProductImporterBenchmarkTest
  *
  * Record the numbers in .ai/Component/Import/PLAN.md.
  */
-class ProductImporterBenchmarkTest extends AbstractImportEngineTestCase
+class ProductImporterBenchmarkTest extends AbstractProductImportEngineTestCase
 {
     private const ROW_COUNT = 1000;
     private const FIELDS = ['name', 'reference', 'price_tex', 'quantity', 'active'];
@@ -56,15 +57,15 @@ class ProductImporterBenchmarkTest extends AbstractImportEngineTestCase
         fclose($handle);
 
         $workingFilePath = $this->createTemporaryFilePath('bench_work_', '.csv');
-        (new \PrestaShop\PrestaShop\Core\Import\Engine\File\ImportFileNormalizer())
-            ->normalize(new SplFileInfo($fixturePath), $workingFilePath);
+        $normalizedFile = (new \PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer())
+            ->normalize(new SplFileInfo($fixturePath), $workingFilePath, ';', 1);
         $context = new \PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext(
             'product',
             $workingFilePath,
+            $normalizedFile->dataRecordCount,
             self::DEFAULT_LANG_ISO,
             ';',
             ',',
-            1,
             self::FIELDS,
             new \PrestaShop\PrestaShop\Core\Import\Engine\ImportRunOptions(),
             self::DEFAULT_SHOP_ID

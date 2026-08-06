@@ -44,8 +44,10 @@ class EntityImporterRegistryTest extends KernelTestCase
         $registry = self::getContainer()->get(EntityImporterRegistry::class);
         $importer = $registry->get(ProductImporter::ENTITY_TYPE);
 
+        $this->assertSame('Products', $importer->getLabel());
+
         $fields = $importer->getFields();
-        $this->assertCount(66, iterator_to_array($fields));
+        $this->assertCount(67, iterator_to_array($fields));
         $this->assertSame(['name'], $fields->getRequiredFields());
 
         $phases = $importer->getPhases();

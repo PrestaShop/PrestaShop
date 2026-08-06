@@ -12,7 +12,7 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
 use Tests\Resources\Resetter\ProductResetter;
 
-class ProductImporterValidationTest extends AbstractImportEngineTestCase
+class ProductImporterValidationTest extends AbstractProductImportEngineTestCase
 {
     private const FIELDS = ['name', 'reference', 'visibility', 'ean13', 'category', 'active'];
 
@@ -52,16 +52,27 @@ class ProductImporterValidationTest extends AbstractImportEngineTestCase
             $this->assertNotNull($error->row);
             $errorsByField[$error->field][] = $error->row;
         }
-        // header = row 0; data rows start at 1
-        $this->assertSame([2], $errorsByField['visibility'] ?? [], 'bad visibility row');
-        $this->assertSame([3], $errorsByField['ean13'] ?? [], 'bad gtin row');
-        $this->assertSame([4], $errorsByField['name'] ?? [], 'missing name row');
-        $this->assertSame([6], $errorsByField['category'] ?? [], 'unknown numeric category row');
+        // row indexes are 0-based DATA-record indexes (the header was already
+        // stripped at normalization); presenters add the skip count back
+        $this->assertSame([1], $errorsByField['visibility'] ?? [], 'bad visibility row');
+        $this->assertSame([2], $errorsByField['ean13'] ?? [], 'bad gtin row');
+        $this->assertSame([3], $errorsByField['name'] ?? [], 'missing name row');
+        $this->assertSame([5], $errorsByField['category'] ?? [], 'unknown numeric category row');
+
+        // the message texts name the offending value / expectation
+        $errorTextsByField = [];
+        foreach ($errors as $error) {
+            $errorTextsByField[$error->field][] = $error->message;
+        }
+        $this->assertStringContainsString('Invalid visibility "everywhere"', $errorTextsByField['visibility'][0]);
+        $this->assertStringContainsString('Invalid GTIN', $errorTextsByField['ean13'][0]);
+        $this->assertStringContainsString('name is required', $errorTextsByField['name'][0]);
+        $this->assertStringContainsString('does not exist', $errorTextsByField['category'][0]);
 
         // blank line = notice + skip, not an abort
         $notices = $this->messagesOfSeverity($messages, ImportMessage::SEVERITY_NOTICE);
         $this->assertNotEmpty($notices);
-        $this->assertSame(5, $notices[0]->row);
+        $this->assertSame(4, $notices[0]->row);
 
         // unparseable boolean = warning, row still goes through
         $booleanWarnings = array_values(array_filter(
@@ -69,10 +80,12 @@ class ProductImporterValidationTest extends AbstractImportEngineTestCase
             static fn (ImportMessage $message): bool => 'active' === $message->field
         ));
         $this->assertCount(1, $booleanWarnings);
-        $this->assertSame(7, $booleanWarnings[0]->row);
+        $this->assertSame(6, $booleanWarnings[0]->row);
+        $this->assertStringContainsString('Unrecognized boolean', $booleanWarnings[0]->message);
+        $this->assertStringContainsString('"false" will be used', $booleanWarnings[0]->message);
 
         // skipped rows = the 4 error rows + the blank row
-        $this->assertSame([2, 3, 4, 5, 6], $context->getSkippedRows(ImportPhaseDefinition::PHASE_VALIDATION));
+        $this->assertSame([1, 2, 3, 4, 5], $context->getSkippedRows(ImportPhaseDefinition::PHASE_VALIDATION));
 
         // valid rows imported, invalid ones absent
         $this->assertNotNull($this->getProductIdByReference('INV-OK-1'));

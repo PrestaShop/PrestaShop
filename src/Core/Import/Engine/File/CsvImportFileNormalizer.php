@@ -23,15 +23,20 @@ use Throwable;
  *
  * Normalization guarantees on the working file:
  * - canonical dialect (CSV_* constants), UTF-8, no BOM
- * - 1:1 record mapping with the source (blank lines preserved), so row
- *   indexes are stable between the source and the working file
+ * - the configured skip rows (header lines, already-processed leading rows)
+ *   are stripped here, once: the working file contains DATA RECORDS ONLY,
+ *   so the engine, the run context and the importers never deal with a
+ *   skip count. Row indexes are 0-based data-record indexes; presenters
+ *   add the run's skip count back when they need source-file line numbers.
+ * - apart from that shift, 1:1 record mapping with the source (blank lines
+ *   preserved)
  *
  * Replaces the per-batch whole-file encoding checks and the deprecated
  * utf8_encode() of the legacy path, and fixes the legacy Excel->CSV
  * converter's forced ';' separator and stale filename-keyed cache (the
  * caller provides a fresh target path per run, nothing is cached).
  */
-final class ImportFileNormalizer
+final class CsvImportFileNormalizer
 {
     /**
      * Canonical CSV dialect of every working file.
@@ -48,31 +53,37 @@ final class ImportFileNormalizer
      * @param SplFileInfo $sourceFile the uploaded file (CSV or spreadsheet)
      * @param string $targetPath where to write the working file (fresh path per run)
      * @param string $sourceCsvDelimiter CSV separator of the SOURCE file (ignored for spreadsheets)
+     * @param int $skipRows leading records to strip (header lines, already-imported leading rows)
      *
      * @throws UnreadableFileException
      * @throws MalformedImportFileException
      */
-    public function normalize(SplFileInfo $sourceFile, string $targetPath, string $sourceCsvDelimiter = self::CSV_DELIMITER): SplFileInfo
+    public function normalize(SplFileInfo $sourceFile, string $targetPath, string $sourceCsvDelimiter = self::CSV_DELIMITER, int $skipRows = 0): NormalizedImportFile
     {
         if (!$sourceFile->isReadable()) {
             throw new UnreadableFileException(sprintf('Import file "%s" is not readable', $sourceFile->getPathname()));
         }
 
         if (preg_match('/\.csv$/i', $sourceFile->getFilename())) {
-            $this->normalizeCsv($sourceFile, $targetPath, $sourceCsvDelimiter);
+            $dataRecordCount = $this->normalizeCsv($sourceFile, $targetPath, $sourceCsvDelimiter, $skipRows);
         } else {
-            $this->convertSpreadsheet($sourceFile, $targetPath);
+            $dataRecordCount = $this->convertSpreadsheet($sourceFile, $targetPath, $skipRows);
         }
 
-        return new SplFileInfo($targetPath);
+        return new NormalizedImportFile(new SplFileInfo($targetPath), $dataRecordCount);
     }
 
-    private function normalizeCsv(SplFileInfo $sourceFile, string $targetPath, string $sourceCsvDelimiter): void
+    /**
+     * @return int number of data records written to the working file
+     */
+    private function normalizeCsv(SplFileInfo $sourceFile, string $targetPath, string $sourceCsvDelimiter, int $skipRows): int
     {
         $source = fopen($sourceFile->getPathname(), 'rb');
         if (false === $source) {
             throw new UnreadableFileException(sprintf('Could not open import file "%s"', $sourceFile->getPathname()));
         }
+
+        $dataRecordCount = 0;
 
         try {
             $this->skipByteOrderMark($source, $sourceFile->getPathname());
@@ -84,9 +95,15 @@ final class ImportFileNormalizer
 
             try {
                 while (false !== ($row = fgetcsv($source, 0, $sourceCsvDelimiter, self::CSV_ENCLOSURE, '\\'))) {
+                    if ($skipRows > 0) {
+                        // blank records count too: the skip is a physical position in the source
+                        --$skipRows;
+                        continue;
+                    }
                     if ($this->isBlankRecord($row)) {
                         // preserve blank lines so row indexes stay aligned with the source
                         fwrite($target, "\n");
+                        ++$dataRecordCount;
                         continue;
                     }
 
@@ -102,6 +119,7 @@ final class ImportFileNormalizer
                     if (false === fputcsv($target, $row, self::CSV_DELIMITER, self::CSV_ENCLOSURE, self::CSV_ESCAPE)) {
                         throw new MalformedImportFileException(sprintf('Could not write to working file "%s"', $targetPath));
                     }
+                    ++$dataRecordCount;
                 }
             } finally {
                 fclose($target);
@@ -109,10 +127,19 @@ final class ImportFileNormalizer
         } finally {
             fclose($source);
         }
+
+        return $dataRecordCount;
     }
 
-    private function convertSpreadsheet(SplFileInfo $sourceFile, string $targetPath): void
+    /**
+     * @return int number of data records written to the working file
+     */
+    private function convertSpreadsheet(SplFileInfo $sourceFile, string $targetPath, int $skipRows): int
     {
+        // always convert to an intermediate file, then reuse the CSV pass:
+        // it strips the skip rows record-accurately AND counts the records
+        $conversionTarget = $targetPath . '.spreadsheet.tmp';
+
         try {
             $reader = IOFactory::createReaderForFile($sourceFile->getPathname());
             $reader->setReadDataOnly(true);
@@ -124,9 +151,15 @@ final class ImportFileNormalizer
             $writer->setDelimiter(self::CSV_DELIMITER);
             $writer->setEnclosure(self::CSV_ENCLOSURE);
             $writer->setUseBOM(false);
-            $writer->save($targetPath);
+            $writer->save($conversionTarget);
         } catch (Throwable $e) {
             throw new MalformedImportFileException(sprintf('Could not convert spreadsheet "%s" to CSV: %s', $sourceFile->getFilename(), $e->getMessage()), 0, $e);
+        }
+
+        try {
+            return $this->normalizeCsv(new SplFileInfo($conversionTarget), $targetPath, self::CSV_DELIMITER, $skipRows);
+        } finally {
+            @unlink($conversionTarget);
         }
     }
 

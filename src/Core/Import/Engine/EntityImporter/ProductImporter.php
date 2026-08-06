@@ -12,21 +12,18 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\AccessoriesPrecheck;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductIdentityResolver;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowImporter;
-use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowMapper;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowValidator;
 use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface;
-use PrestaShop\PrestaShop\Core\Import\Engine\Exception\UnknownPhaseException;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\PhaseBatchResult;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\ProductLookup;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityField;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollectionInterface;
-use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 use PrestaShop\PrestaShop\Core\Import\File\ResumableFileReaderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
@@ -37,26 +34,32 @@ use Throwable;
  * after every row exists so file order never matters, including mutual
  * A<->B references).
  */
-final class ProductImporter implements EntityImporterInterface
+final class ProductImporter extends AbstractEntityImporter
 {
     public const ENTITY_TYPE = 'product';
 
     public function __construct(
         private readonly TranslatorInterface $translator,
-        private readonly ResumableFileReaderInterface $fileReader,
-        private readonly ProductRowMapper $rowMapper,
+        ResumableFileReaderInterface $fileReader,
+        RowMapper $rowMapper,
         private readonly ProductRowValidator $rowValidator,
         private readonly ProductRowImporter $rowImporter,
         private readonly AccessoriesPrecheck $accessoriesPrecheck,
-        private readonly ProductLookup $productLookup,
+        private readonly ProductIdentityResolver $identityResolver,
         private readonly ValueParser $valueParser,
         private readonly CommandBusInterface $commandBus,
     ) {
+        parent::__construct($fileReader, $rowMapper);
     }
 
     public function getEntityType(): string
     {
         return self::ENTITY_TYPE;
+    }
+
+    public function getLabel(): string
+    {
+        return $this->trans('Products', 'Admin.Global');
     }
 
     public function getFields(): EntityFieldCollectionInterface
@@ -79,6 +82,7 @@ final class ProductImporter implements EntityImporterInterface
             new EntityField('supplier_reference', $this->trans('Supplier reference #', 'Admin.Advparameters.Feature')),
             new EntityField('supplier', $this->trans('Supplier', 'Admin.Global')),
             new EntityField('manufacturer', $this->trans('Brand', 'Admin.Global')),
+            new EntityField('gtin', $this->trans('GTIN', 'Admin.Catalog.Feature')),
             new EntityField('ean13', $this->trans('EAN-13', 'Admin.Advparameters.Feature')),
             new EntityField('isbn', $this->trans('ISBN', 'Admin.Catalog.Feature')),
             new EntityField('upc', $this->trans('UPC', 'Admin.Advparameters.Feature')),
@@ -118,8 +122,8 @@ final class ProductImporter implements EntityImporterInterface
             new EntityField('online_only', $this->trans('Available online only (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
             new EntityField('condition', $this->trans('Condition', 'Admin.Catalog.Feature')),
             new EntityField('customizable', $this->trans('Customizable (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
-            new EntityField('uploadable_files', $this->trans('Uploadable files (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
-            new EntityField('text_fields', $this->trans('Text fields (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
+            new EntityField('uploadable_files', $this->trans('Number of file upload fields to create', 'Admin.Advparameters.Feature')),
+            new EntityField('text_fields', $this->trans('Number of text fields to create', 'Admin.Advparameters.Feature')),
             new EntityField('out_of_stock', $this->trans('Action when out of stock', 'Admin.Advparameters.Feature')),
             new EntityField('is_virtual', $this->trans('Virtual product (0 = No, 1 = Yes)', 'Admin.Advparameters.Feature')),
             new EntityField('file_url', $this->trans('File URL', 'Admin.Advparameters.Feature')),
@@ -164,22 +168,22 @@ final class ProductImporter implements EntityImporterInterface
         ];
     }
 
-    public function countPhaseUnits(ImportPhaseDefinition $phase, ImportRunContext $context): int
+    public function countPhaseUnits(string $phaseId, ImportRunContext $context): int
     {
-        $this->assertKnownPhase($phase);
+        $this->assertKnownPhase($phaseId);
 
-        if (ImportPhaseDefinition::PHASE_ASSOCIATION === $phase->id && !$context->isFieldMapped('accessories')) {
+        if (ImportPhaseDefinition::PHASE_ASSOCIATION === $phaseId && !$context->isFieldMapped('accessories')) {
             return 0;
         }
 
-        return $this->countDataRows($context);
+        return parent::countPhaseUnits($phaseId, $context);
     }
 
-    public function processPhaseBatch(ImportPhaseDefinition $phase, ImportRunContext $context, int $limit): PhaseBatchResult
+    public function processPhaseBatch(string $phaseId, ImportRunContext $context, int $limit): PhaseBatchResult
     {
-        $this->assertKnownPhase($phase);
+        $this->assertKnownPhase($phaseId);
 
-        return match ($phase->id) {
+        return match ($phaseId) {
             ImportPhaseDefinition::PHASE_VALIDATION => $this->processValidationBatch($context, $limit),
             ImportPhaseDefinition::PHASE_DATABASE => $this->processDatabaseBatch($context, $limit),
             default => $this->processAssociationBatch($context, $limit),
@@ -198,22 +202,21 @@ final class ProductImporter implements EntityImporterInterface
                 $messages[] = new ImportMessage(
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_VALIDATION,
+                    $this->trans('Importing accessories requires an id column (with the force IDs option) or a reference column to identify the owning product; the accessories will be dropped.', 'Admin.Advparameters.Notification'),
                     null,
-                    'accessories',
-                    $this->trans('Importing accessories requires an id column (with the force IDs option) or a reference column to identify the owning product; the accessories will be dropped.', 'Admin.Advparameters.Notification')
+                    'accessories'
                 );
             }
         }
 
-        $result = $this->iterateBatch($context, $limit, function (array $row, DataRowInterface $dataRow, int $rowIndex) use ($context): array {
-            if ($dataRow->isEmpty()) {
+        $result = $this->iterateBatch($context, $limit, function (array $row, int $rowIndex) use ($context): array {
+            if (self::isEmptyMappedRow($row)) {
                 return [
                     'messages' => [new ImportMessage(
                         ImportMessage::SEVERITY_NOTICE,
                         ImportPhaseDefinition::PHASE_VALIDATION,
-                        $rowIndex,
-                        null,
-                        $this->trans('The row is empty and was skipped.', 'Admin.Advparameters.Notification')
+                        $this->trans('The row is empty and was skipped.', 'Admin.Advparameters.Notification'),
+                        $rowIndex
                     )],
                     'skipped' => true,
                 ];
@@ -242,7 +245,7 @@ final class ProductImporter implements EntityImporterInterface
 
     private function processDatabaseBatch(ImportRunContext $context, int $limit): PhaseBatchResult
     {
-        return $this->iterateBatch($context, $limit, function (array $row, DataRowInterface $dataRow, int $rowIndex) use ($context): array {
+        return $this->iterateBatch($context, $limit, function (array $row, int $rowIndex) use ($context): array {
             if ($context->isRowSkipped($rowIndex)) {
                 return ['messages' => [], 'skipped' => false];
             }
@@ -255,53 +258,13 @@ final class ProductImporter implements EntityImporterInterface
 
     private function processAssociationBatch(ImportRunContext $context, int $limit): PhaseBatchResult
     {
-        return $this->iterateBatch($context, $limit, function (array $row, DataRowInterface $dataRow, int $rowIndex) use ($context): array {
+        return $this->iterateBatch($context, $limit, function (array $row, int $rowIndex) use ($context): array {
             if ($context->isRowSkipped($rowIndex)) {
                 return ['messages' => [], 'skipped' => false];
             }
 
             return ['messages' => $this->associateAccessories($row, $rowIndex, $context), 'skipped' => false];
         });
-    }
-
-    /**
-     * Shared batch iteration: resumes at the persisted cursor (skipping the
-     * configured header rows on a fresh phase), processes up to $limit data
-     * rows and reports the cursor of the last consumed row.
-     *
-     * @param callable(array<string, string>, DataRowInterface, int): array{messages: list<ImportMessage>, skipped: bool} $rowProcessor
-     */
-    private function iterateBatch(ImportRunContext $context, int $limit, callable $rowProcessor): PhaseBatchResult
-    {
-        $messages = [];
-        $newlySkippedRows = [];
-        $processed = 0;
-        $cursor = $context->getResumeCursor();
-        $physicalRowsToSkip = null === $cursor ? $context->getSkipRows() : 0;
-
-        foreach ($this->fileReader->readFrom($context->getWorkingFile(), $context->getResumeCursor()) as $rowCursor => $dataRow) {
-            if ($physicalRowsToSkip > 0) {
-                --$physicalRowsToSkip;
-                $cursor = $rowCursor;
-                continue;
-            }
-            if ($processed >= $limit) {
-                break;
-            }
-
-            $rowIndex = $context->getSkipRows() + $context->getCurrentOffset() + $processed;
-            $outcome = $rowProcessor($this->rowMapper->map($dataRow, $context), $dataRow, $rowIndex);
-
-            $messages = array_merge($messages, $outcome['messages']);
-            if ($outcome['skipped']) {
-                $newlySkippedRows[] = $rowIndex;
-            }
-
-            ++$processed;
-            $cursor = $rowCursor;
-        }
-
-        return new PhaseBatchResult($processed, $messages, $newlySkippedRows, $cursor);
     }
 
     /**
@@ -332,13 +295,11 @@ final class ProductImporter implements EntityImporterInterface
 
             $accessoryIds = [];
             foreach ($this->valueParser->split($accessories, $context->getMultipleValueSeparator()) as $target) {
-                $accessoryId = $this->resolveAccessoryTarget($target, $context);
-                if (null === $accessoryId) {
-                    // defensive re-check failure: error naming the association, link dropped, run completes
-                    $messages[] = $this->associationError($rowIndex, $this->trans('Accessory "%target%" could not be resolved; the link was dropped.', 'Admin.Advparameters.Notification', ['%target%' => $target]));
-                    continue;
+                $resolved = $this->resolveAccessoryTarget($target, $rowIndex, $context);
+                $messages = array_merge($messages, $resolved->messages);
+                if (null !== $resolved->id) {
+                    $accessoryIds[] = $resolved->id;
                 }
-                $accessoryIds[] = $accessoryId;
             }
 
             if ([] !== $accessoryIds) {
@@ -360,87 +321,59 @@ final class ProductImporter implements EntityImporterInterface
      */
     private function resolveAssociationOwner(array $row, ImportRunContext $context): ?int
     {
-        $reference = $row['reference'] ?? '';
-        if ('' !== $reference) {
-            $productId = $this->productLookup->getProductIdByReference($reference, $context->getShopId());
-            if (null !== $productId) {
-                return $productId;
-            }
-        }
-
         $id = $row['id'] ?? '';
-        if ($context->getOptions()->forceIds && ctype_digit($id) && $this->productLookup->productExists((int) $id)) {
-            return (int) $id;
-        }
+        $usableId = $context->getOptions()->forceIds && ctype_digit($id) ? (int) $id : null;
 
-        return null;
+        return $this->identityResolver->findExistingByReferenceThenId($row['reference'] ?? '', $usableId, $context->getShopId());
     }
 
-    private function resolveAccessoryTarget(string $target, ImportRunContext $context): ?int
+    /**
+     * A NUMERIC target is treated as a product id first, but may equally be
+     * a reference that merely looks numeric: an id match wins (with a warning
+     * when a reference also matches), a reference match is the fallback
+     * (also warned). Unresolvable targets produce an error naming the link;
+     * the link is dropped and the run completes.
+     */
+    private function resolveAccessoryTarget(string $target, int $rowIndex, ImportRunContext $context): ResolvedAssociation
     {
         if (ctype_digit($target)) {
-            return $this->productLookup->productExists((int) $target) ? (int) $target : null;
-        }
+            $probe = $this->identityResolver->classifyNumericTarget((int) $target, $context->getShopId());
 
-        return $this->productLookup->getProductIdByReference($target, $context->getShopId());
-    }
+            if ($probe['idExists']) {
+                if (null !== $probe['referenceMatchId']) {
+                    return new ResolvedAssociation((int) $target, [
+                        $this->associationWarning($rowIndex, $this->trans('Accessory "%target%" matches both a product id and a product reference; it was linked by id.', 'Admin.Advparameters.Notification', ['%target%' => $target])),
+                    ]);
+                }
 
-    private function countDataRows(ImportRunContext $context): int
-    {
-        $physicalRows = 0;
-        foreach ($this->fileReader->readFrom($context->getWorkingFile()) as $dataRow) {
-            ++$physicalRows;
-        }
+                return new ResolvedAssociation((int) $target);
+            }
 
-        return max(0, $physicalRows - $context->getSkipRows());
-    }
-
-    /**
-     * Whether this batch just consumed the last unit of the phase.
-     */
-    private function batchCompletesPhase(ImportRunContext $context, PhaseBatchResult $result): bool
-    {
-        return $context->getCurrentOffset() + $result->processedUnitCount >= $this->countDataRows($context);
-    }
-
-    /**
-     * The pre-check runs on a context that already knows the rows this batch
-     * skipped — clone + apply, since the caller only applies the result after
-     * processPhaseBatch() returns.
-     */
-    private function contextWithBatchApplied(ImportRunContext $context, PhaseBatchResult $result): ImportRunContext
-    {
-        $clonedContext = clone $context;
-        $clonedContext->applyBatchResult($result);
-
-        return $clonedContext;
-    }
-
-    /**
-     * @param list<ImportMessage> $messages
-     */
-    private function containsError(array $messages): bool
-    {
-        foreach ($messages as $message) {
-            if (ImportMessage::SEVERITY_ERROR === $message->severity) {
-                return true;
+            if (null !== $probe['referenceMatchId']) {
+                return new ResolvedAssociation($probe['referenceMatchId'], [
+                    $this->associationWarning($rowIndex, $this->trans('Accessory "%target%" matches no product id; it was linked by reference.', 'Admin.Advparameters.Notification', ['%target%' => $target])),
+                ]);
+            }
+        } else {
+            $accessoryId = $this->identityResolver->findExistingByReferenceThenId($target, null, $context->getShopId());
+            if (null !== $accessoryId) {
+                return new ResolvedAssociation($accessoryId);
             }
         }
 
-        return false;
+        return new ResolvedAssociation(null, [
+            $this->associationError($rowIndex, $this->trans('Accessory "%target%" could not be resolved; the link was dropped.', 'Admin.Advparameters.Notification', ['%target%' => $target])),
+        ]);
     }
 
     private function associationError(int $rowIndex, string $message): ImportMessage
     {
-        return new ImportMessage(ImportMessage::SEVERITY_ERROR, ImportPhaseDefinition::PHASE_ASSOCIATION, $rowIndex, 'accessories', $message);
+        return new ImportMessage(ImportMessage::SEVERITY_ERROR, ImportPhaseDefinition::PHASE_ASSOCIATION, $message, $rowIndex, 'accessories');
     }
 
-    private function assertKnownPhase(ImportPhaseDefinition $phase): void
+    private function associationWarning(int $rowIndex, string $message): ImportMessage
     {
-        $knownPhaseIds = array_map(static fn (ImportPhaseDefinition $definition): string => $definition->id, $this->getPhases());
-        if (!in_array($phase->id, $knownPhaseIds, true)) {
-            throw new UnknownPhaseException(sprintf('Unknown phase "%s" for the %s importer', $phase->id, self::ENTITY_TYPE));
-        }
+        return new ImportMessage(ImportMessage::SEVERITY_WARNING, ImportPhaseDefinition::PHASE_ASSOCIATION, $message, $rowIndex, 'accessories');
     }
 
     /**

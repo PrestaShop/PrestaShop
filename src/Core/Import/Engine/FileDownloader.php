@@ -8,24 +8,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Import\Engine;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
 
 /**
  * Fetches a file referenced by import data (http/https URL or local path)
  * into a local temporary file, and nothing more: association, validation,
  * resizing and thumbnail generation belong to the CQRS commands the importer
- * dispatches with the returned path. Replaces the download half of the
- * deprecated ImageCopier; also used for virtual product files (file_url).
+ * dispatches with the returned path. Used for product images and virtual
+ * product files (file_url); replaces the download half of the deprecated
+ * ImageCopier.
  */
-final class ImageDownloader
+final class FileDownloader
 {
     private const DOWNLOAD_TIMEOUT_SECONDS = 20;
-
-    public function __construct(
-        private readonly ConfigurationInterface $configuration,
-    ) {
-    }
 
     /**
      * @return string path of the temporary file — the caller is responsible for deleting it
@@ -104,10 +99,9 @@ final class ImageDownloader
 
     private function createTemporaryFile(): string
     {
-        $temporaryDirectory = (string) $this->configuration->get('_PS_TMP_IMG_DIR_');
-        if ('' === $temporaryDirectory || !is_dir($temporaryDirectory)) {
-            $temporaryDirectory = sys_get_temp_dir();
-        }
+        // always the system temp dir: these files live only for the duration
+        // of one command dispatch and are deleted by the caller
+        $temporaryDirectory = sys_get_temp_dir();
 
         $targetPath = tempnam($temporaryDirectory, 'ps_import');
         if (false === $targetPath) {

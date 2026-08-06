@@ -50,4 +50,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\QueryHandler\GetManufacturerForViewingHandler'
     autoconfigure: true
 
-  PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository: ~
+  PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'

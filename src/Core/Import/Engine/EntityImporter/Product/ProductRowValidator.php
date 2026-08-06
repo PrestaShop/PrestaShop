@@ -9,14 +9,18 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
+use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\CategoryLookup;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\TaxRulesGroupLookup;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -39,14 +43,16 @@ final class ProductRowValidator
     private const DECIMAL_FIELDS = ['price_tex', 'price_tin', 'wholesale_price', 'unit_price', 'ecotax', 'additional_shipping_cost', 'reduction_price', 'reduction_percent'];
     private const DIMENSION_FIELDS = ['width', 'height', 'depth', 'weight'];
     private const DATE_FIELDS = ['available_date', 'date_add', 'reduction_from', 'reduction_to', 'date_expiration'];
-    private const BOOLEAN_FIELDS = ['active', 'on_sale', 'online_only', 'available_for_order', 'show_price', 'delete_existing_images', 'is_virtual', 'customizable', 'uploadable_files', 'text_fields', 'low_stock_alert'];
+    private const BOOLEAN_FIELDS = ['active', 'on_sale', 'online_only', 'available_for_order', 'show_price', 'delete_existing_images', 'is_virtual', 'customizable', 'low_stock_alert'];
     private const INTEGER_FIELDS = ['quantity', 'minimal_quantity', 'low_stock_threshold', 'nb_downloadable', 'nb_days_accessible'];
+    /** Non-negative integer COUNTS of customization fields to create (not booleans) */
+    private const CUSTOMIZATION_COUNT_FIELDS = ['uploadable_files', 'text_fields'];
 
     public function __construct(
         private readonly ValueParser $valueParser,
         private readonly ProductIdentityResolver $identityResolver,
-        private readonly CategoryLookup $categoryLookup,
-        private readonly TaxRulesGroupLookup $taxRulesGroupLookup,
+        private readonly CategoryRepository $categoryRepository,
+        private readonly TaxRulesGroupRepository $taxRulesGroupRepository,
         private readonly TranslatorInterface $translator,
     ) {
     }
@@ -86,9 +92,12 @@ final class ProductRowValidator
             $messages[] = $this->error($rowIndex, 'reference', $this->translator->trans('Invalid reference "%value%".', ['%value%' => $reference], 'Admin.Advparameters.Notification'));
         }
 
-        $ean13 = $row['ean13'] ?? '';
-        if ('' !== $ean13 && !preg_match(self::GTIN_PATTERN, $ean13)) {
-            $messages[] = $this->error($rowIndex, 'ean13', $this->translator->trans('Invalid EAN-13/GTIN "%value%".', ['%value%' => $ean13], 'Admin.Advparameters.Notification'));
+        // gtin and its legacy alias ean13 share the same storage and pattern
+        foreach (['gtin', 'ean13'] as $gtinField) {
+            $gtin = $row[$gtinField] ?? '';
+            if ('' !== $gtin && !preg_match(self::GTIN_PATTERN, $gtin)) {
+                $messages[] = $this->error($rowIndex, $gtinField, $this->translator->trans('Invalid GTIN "%value%".', ['%value%' => $gtin], 'Admin.Advparameters.Notification'));
+            }
         }
 
         $upc = $row['upc'] ?? '';
@@ -142,6 +151,12 @@ final class ProductRowValidator
             }
         }
 
+        // a row cannot carry both reduction kinds: there is no way to guess
+        // which one was intended, both are dropped by the database phase
+        if ('' !== ($row['reduction_price'] ?? '') && '' !== ($row['reduction_percent'] ?? '')) {
+            $messages[] = $this->warning($rowIndex, 'reduction_price', $this->translator->trans('Both reduction_price and reduction_percent are set; the two fields are mutually exclusive so both will be ignored.', [], 'Admin.Advparameters.Notification'));
+        }
+
         $reductionPercent = $row['reduction_percent'] ?? '';
         if ('' !== $reductionPercent) {
             $percent = $this->valueParser->parseDecimal($reductionPercent);
@@ -167,6 +182,13 @@ final class ProductRowValidator
             $value = $row[$field] ?? '';
             if ('' !== $value && !preg_match('/^-?[0-9]+$/', $value)) {
                 $messages[] = $this->warning($rowIndex, $field, $this->translator->trans('Invalid number "%value%", the field will be ignored.', ['%value%' => $value], 'Admin.Advparameters.Notification'));
+            }
+        }
+
+        foreach (self::CUSTOMIZATION_COUNT_FIELDS as $field) {
+            $value = $row[$field] ?? '';
+            if ('' !== $value && !preg_match('/^[0-9]+$/', $value)) {
+                $messages[] = $this->warning($rowIndex, $field, $this->translator->trans('Invalid count "%value%" (expected a number of customization fields, 0 or more), the field will be ignored.', ['%value%' => $value], 'Admin.Advparameters.Notification'));
             }
         }
     }
@@ -207,7 +229,7 @@ final class ProductRowValidator
         }
 
         foreach ($this->valueParser->split($categories, $context->getMultipleValueSeparator()) as $entry) {
-            if (ctype_digit($entry) && !$this->categoryLookup->categoryExists((int) $entry)) {
+            if (ctype_digit($entry) && !$this->categoryExists((int) $entry)) {
                 $messages[] = $this->error($rowIndex, 'category', $this->translator->trans('Category with id %id% does not exist.', ['%id%' => $entry], 'Admin.Advparameters.Notification'));
             }
         }
@@ -224,18 +246,52 @@ final class ProductRowValidator
             return;
         }
 
-        if (!ctype_digit($taxRulesGroupId) || !$this->taxRulesGroupLookup->taxRulesGroupExists((int) $taxRulesGroupId)) {
+        if (!ctype_digit($taxRulesGroupId) || !$this->taxRulesGroupExists((int) $taxRulesGroupId)) {
             $messages[] = $this->warning($rowIndex, 'id_tax_rules_group', $this->translator->trans('Tax rules group %id% does not exist, the field will be ignored (tax rules groups are never auto-created).', ['%id%' => $taxRulesGroupId], 'Admin.Advparameters.Notification'));
         }
     }
 
+    private function categoryExists(int $categoryId): bool
+    {
+        if ($categoryId <= 0) {
+            return false;
+        }
+
+        try {
+            $this->categoryRepository->assertCategoryExists(new CategoryId($categoryId));
+        } catch (CategoryNotFoundException) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Soft-deleted (historized) groups are treated as absent — assigning one
+     * would resurrect it on the product.
+     */
+    private function taxRulesGroupExists(int $taxRulesGroupId): bool
+    {
+        if ($taxRulesGroupId <= 0) {
+            return false;
+        }
+
+        try {
+            $taxRulesGroup = $this->taxRulesGroupRepository->get(new TaxRulesGroupId($taxRulesGroupId));
+        } catch (TaxRulesGroupNotFoundException) {
+            return false;
+        }
+
+        return !(bool) $taxRulesGroup->deleted;
+    }
+
     private function error(int $rowIndex, string $field, string $message): ImportMessage
     {
-        return new ImportMessage(ImportMessage::SEVERITY_ERROR, ImportPhaseDefinition::PHASE_VALIDATION, $rowIndex, $field, $message);
+        return new ImportMessage(ImportMessage::SEVERITY_ERROR, ImportPhaseDefinition::PHASE_VALIDATION, $message, $rowIndex, $field);
     }
 
     private function warning(int $rowIndex, string $field, string $message): ImportMessage
     {
-        return new ImportMessage(ImportMessage::SEVERITY_WARNING, ImportPhaseDefinition::PHASE_VALIDATION, $rowIndex, $field, $message);
+        return new ImportMessage(ImportMessage::SEVERITY_WARNING, ImportPhaseDefinition::PHASE_VALIDATION, $message, $rowIndex, $field);
     }
 }

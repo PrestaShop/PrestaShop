@@ -6,13 +6,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product;
+namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter;
 
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 
 /**
  * Result of resolving one association target (id or null when unresolved,
- * plus any message produced along the way).
+ * plus any message produced along the way). Shared by every entity importer.
  */
 final class ResolvedAssociation
 {

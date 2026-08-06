@@ -80,4 +80,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\EditSupplierHandler'
     autoconfigure: true
 
-  PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository: ~
+  PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'

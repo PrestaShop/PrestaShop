@@ -402,4 +402,30 @@ class FeatureValueRepository extends AbstractObjectModelRepository
 
         return $qb;
     }
+
+    /**
+     * Exact pre-defined (non custom) value lookup within a feature, resolving
+     * a single id (unlike the listing-oriented getFeatureValuesByLang() which
+     * loads every value).
+     */
+    public function getFeatureValueIdByValue(int $featureId, string $value, int $languageId): ?int
+    {
+        $featureValueId = $this->connection->createQueryBuilder()
+            ->select('fv.id_feature_value')
+            ->from($this->dbPrefix . 'feature_value', 'fv')
+            ->innerJoin('fv', $this->dbPrefix . 'feature_value_lang', 'fvl', 'fvl.id_feature_value = fv.id_feature_value AND fvl.id_lang = :languageId')
+            ->where('fv.id_feature = :featureId')
+            ->andWhere('fv.custom = 0')
+            ->andWhere('fvl.value = :value')
+            ->orderBy('fv.id_feature_value', 'ASC')
+            ->setMaxResults(1)
+            ->setParameter('languageId', $languageId)
+            ->setParameter('featureId', $featureId)
+            ->setParameter('value', $value)
+            ->executeQuery()
+            ->fetchOne()
+        ;
+
+        return false === $featureValueId ? null : (int) $featureValueId;
+    }
 }

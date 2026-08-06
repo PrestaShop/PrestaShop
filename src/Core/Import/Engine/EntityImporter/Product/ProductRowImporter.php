@@ -10,13 +10,20 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product;
 
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\SetProductFeatureValuesCommand;
@@ -27,24 +34,27 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\SetProductShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\EntityMatch;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
-use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ImportEngineException;
-use PrestaShop\PrestaShop\Core\Import\Engine\ImageDownloader;
+use PrestaShop\PrestaShop\Core\Import\Engine\FileDownloader;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\LanguageLookup;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\ProductImportWriterInterface;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\ProductLookup;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\TaxRulesGroupLookup;
 use PrestaShop\PrestaShop\Core\Import\Engine\ValueParser;
+use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
@@ -62,16 +72,20 @@ use Throwable;
  */
 final class ProductRowImporter
 {
+    use LocalizedValueTrait;
+
     public function __construct(
         private readonly CommandBusInterface $commandBus,
         private readonly ValueParser $valueParser,
         private readonly ProductIdentityResolver $identityResolver,
         private readonly ProductAssociationResolver $associationResolver,
-        private readonly ProductLookup $productLookup,
-        private readonly TaxRulesGroupLookup $taxRulesGroupLookup,
-        private readonly LanguageLookup $languageLookup,
-        private readonly ProductImportWriterInterface $importWriter,
-        private readonly ImageDownloader $imageDownloader,
+        private readonly ProductRepository $productRepository,
+        private readonly StockAvailableRepository $stockAvailableRepository,
+        private readonly TaxRulesGroupRepository $taxRulesGroupRepository,
+        private readonly TaxComputer $taxComputer,
+        private readonly LanguageRepositoryInterface $languageRepository,
+        private readonly Tools $tools,
+        private readonly FileDownloader $fileDownloader,
         private readonly ConfigurationInterface $configuration,
         private readonly TranslatorInterface $translator,
     ) {
@@ -113,9 +127,8 @@ final class ProductRowImporter
             $messages[] = new ImportMessage(
                 ImportMessage::SEVERITY_ERROR,
                 ImportPhaseDefinition::PHASE_DATABASE,
-                $rowIndex,
-                null,
-                $this->translator->trans('The row could not be fully imported: %error%', ['%error%' => $e->getMessage()], 'Admin.Advparameters.Notification')
+                $this->translator->trans('The row could not be fully imported: %error%', ['%error%' => $e->getMessage()], 'Admin.Advparameters.Notification'),
+                $rowIndex
             );
         }
 
@@ -125,17 +138,18 @@ final class ProductRowImporter
     /**
      * @param array<string, string> $row
      */
-    private function resolveTargetProduct(array $row, ProductMatch $match, ImportRunContext $context): int
+    private function resolveTargetProduct(array $row, EntityMatch $match, ImportRunContext $context): int
     {
         if ($match->isUpdate()) {
-            return (int) $match->productId;
+            return (int) $match->entityId;
         }
 
         $productType = $this->isVirtual($row) ? ProductType::TYPE_VIRTUAL : ProductType::TYPE_STANDARD;
         $localizedNames = $this->localizeForCreation($row['name'] ?? '');
 
         if (null !== $match->forcedId) {
-            $this->importWriter->createProductWithId($match->forcedId, $productType, $context->getShopId(), $localizedNames);
+            $localizedLinkRewrites = array_map(fn (string $name): string => (string) $this->tools->linkRewrite($name), $localizedNames);
+            $this->productRepository->createWithForcedId($match->forcedId, $localizedNames, $localizedLinkRewrites, $productType, $context->getShopId());
 
             return $match->forcedId;
         }
@@ -154,7 +168,7 @@ final class ProductRowImporter
      *
      * @param array<string, string> $row
      */
-    private function updateProductType(array $row, ProductMatch $match, int $productId, ImportRunContext $context): void
+    private function updateProductType(array $row, EntityMatch $match, int $productId, ImportRunContext $context): void
     {
         if (!$match->isUpdate()) {
             return;
@@ -263,8 +277,10 @@ final class ProductRowImporter
             $command->setReference($row['reference']);
             $hasUpdate = true;
         }
-        if ('' !== ($row['ean13'] ?? '')) {
-            $command->setGtin($row['ean13']);
+        // gtin wins over its legacy alias ean13 when both are mapped and filled
+        $gtin = '' !== ($row['gtin'] ?? '') ? $row['gtin'] : ($row['ean13'] ?? '');
+        if ('' !== $gtin) {
+            $command->setGtin($gtin);
             $hasUpdate = true;
         }
         if ('' !== ($row['isbn'] ?? '')) {
@@ -283,7 +299,7 @@ final class ProductRowImporter
             $hasUpdate = true;
         }
         $taxRulesGroupId = $row['id_tax_rules_group'] ?? '';
-        if ('' !== $taxRulesGroupId && ctype_digit($taxRulesGroupId) && $this->taxRulesGroupLookup->taxRulesGroupExists((int) $taxRulesGroupId)) {
+        if ('' !== $taxRulesGroupId && ctype_digit($taxRulesGroupId) && $this->taxRulesGroupExists((int) $taxRulesGroupId)) {
             $command->setTaxRulesGroupId((int) $taxRulesGroupId);
             $hasUpdate = true;
         }
@@ -336,9 +352,9 @@ final class ProductRowImporter
                     $messages[] = new ImportMessage(
                         ImportMessage::SEVERITY_WARNING,
                         ImportPhaseDefinition::PHASE_DATABASE,
+                        $this->translator->trans('The low stock alert follows the low stock level (enabled when the level is not 0); the low_stock_alert value was ignored.', [], 'Admin.Advparameters.Notification'),
                         $rowIndex,
-                        'low_stock_alert',
-                        $this->translator->trans('The low stock alert follows the low stock level (enabled when the level is not 0); the low_stock_alert value was ignored.', [], 'Admin.Advparameters.Notification')
+                        'low_stock_alert'
                     );
                 }
             }
@@ -386,13 +402,27 @@ final class ProductRowImporter
         }
 
         $taxRulesGroupId = $row['id_tax_rules_group'] ?? '';
-        if ('' !== $taxRulesGroupId && ctype_digit($taxRulesGroupId) && $this->taxRulesGroupLookup->taxRulesGroupExists((int) $taxRulesGroupId)) {
-            $rate = $this->taxRulesGroupLookup->getTaxRate((int) $taxRulesGroupId);
+        if ('' !== $taxRulesGroupId && ctype_digit($taxRulesGroupId) && $this->taxRulesGroupExists((int) $taxRulesGroupId)) {
+            $rate = $this->taxComputer->getTaxRate(
+                new TaxRulesGroupId((int) $taxRulesGroupId),
+                new CountryId($this->getShopCountryId())
+            );
             $divisor = $rate->dividedBy(new DecimalNumber('100'), 6)->plus(new DecimalNumber('1'));
             $price = $price->dividedBy($divisor, 6);
         }
 
         return $price;
+    }
+
+    /**
+     * Legacy Shop::getAddress() country resolution — the country whose tax
+     * rate de-taxes price_tin values.
+     */
+    private function getShopCountryId(): int
+    {
+        $shopCountryId = (int) $this->configuration->get('PS_SHOP_COUNTRY_ID');
+
+        return $shopCountryId > 0 ? $shopCountryId : (int) $this->configuration->get('PS_COUNTRY_DEFAULT');
     }
 
     /**
@@ -417,8 +447,7 @@ final class ProductRowImporter
             // the stock command only expresses deltas: read the current
             // quantity and convert the file's absolute value (delta 0 is
             // illegal and means nothing to change)
-            $currentQuantity = $this->productLookup->getStockQuantity($productId, $context->getShopId()) ?? 0;
-            $delta = (int) $quantity - $currentQuantity;
+            $delta = (int) $quantity - $this->getCurrentStockQuantity($productId, $context->getShopId());
             if (0 !== $delta) {
                 $command->setDeltaQuantity($delta);
                 $hasUpdate = true;
@@ -506,7 +535,7 @@ final class ProductRowImporter
 
         $localizedTags = [];
         if ($isCreation) {
-            foreach ($this->languageLookup->getAllLanguageIds() as $langId) {
+            foreach ($this->getAllLanguageIds() as $langId) {
                 $localizedTags[$langId] = $tags;
             }
         } else {
@@ -560,14 +589,14 @@ final class ProductRowImporter
 
         foreach ($imageUrls as $index => $imageUrl) {
             try {
-                $temporaryFile = $this->imageDownloader->download($imageUrl);
+                $temporaryFile = $this->fileDownloader->download($imageUrl);
             } catch (FileDownloadException $e) {
                 $messages[] = new ImportMessage(
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('Image "%url%" could not be fetched and was skipped: %error%', ['%url%' => $imageUrl, '%error%' => $e->getMessage()], 'Admin.Advparameters.Notification'),
                     $rowIndex,
-                    'image',
-                    $this->translator->trans('Image "%url%" could not be fetched and was skipped: %error%', ['%url%' => $imageUrl, '%error%' => $e->getMessage()], 'Admin.Advparameters.Notification')
+                    'image'
                 );
                 continue;
             }
@@ -601,14 +630,14 @@ final class ProductRowImporter
         }
 
         try {
-            $temporaryFile = $this->imageDownloader->download($fileUrl);
+            $temporaryFile = $this->fileDownloader->download($fileUrl);
         } catch (FileDownloadException $e) {
             $messages[] = new ImportMessage(
                 ImportMessage::SEVERITY_WARNING,
                 ImportPhaseDefinition::PHASE_DATABASE,
+                $this->translator->trans('Virtual product file "%url%" could not be fetched and was skipped: %error%', ['%url%' => $fileUrl, '%error%' => $e->getMessage()], 'Admin.Advparameters.Notification'),
                 $rowIndex,
-                'file_url',
-                $this->translator->trans('Virtual product file "%url%" could not be fetched and was skipped: %error%', ['%url%' => $fileUrl, '%error%' => $e->getMessage()], 'Admin.Advparameters.Notification')
+                'file_url'
             );
 
             return;
@@ -633,65 +662,85 @@ final class ProductRowImporter
     }
 
     /**
-     * Legacy set bare customizability counters on the product row;
-     * the reviewed replacement creates one real generic customization field
-     * per requested kind (file upload / text).
+     * uploadable_files and text_fields are integer COUNTS: the row requests
+     * N file-upload fields and M text fields (the legacy stored the raw
+     * counters without creating any real field — a reviewed fix). The Set
+     * command replaces the product's whole field set; an explicit 0/0 on an
+     * update therefore removes every existing field. Empty/unmapped cells
+     * leave the product untouched.
      *
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
     private function dispatchCustomizationFields(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context, array &$messages): void
     {
-        $wantsFileField = true === $this->valueParser->parseBoolean($row['uploadable_files'] ?? '');
-        $wantsTextField = true === $this->valueParser->parseBoolean($row['text_fields'] ?? '');
+        $fileCount = $this->parseCount($row['uploadable_files'] ?? '');
+        $textCount = $this->parseCount($row['text_fields'] ?? '');
         $customizable = true === $this->valueParser->parseBoolean($row['customizable'] ?? '');
 
-        if (!$wantsFileField && !$wantsTextField) {
+        if (null === $fileCount && null === $textCount) {
             if ($customizable) {
                 $messages[] = new ImportMessage(
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('"customizable" requires a number of uploadable_files/text_fields; no customization field was created.', [], 'Admin.Advparameters.Notification'),
                     $rowIndex,
-                    'customizable',
-                    $this->translator->trans('"customizable" requires at least one of uploadable_files/text_fields; no customization field was created.', [], 'Admin.Advparameters.Notification')
+                    'customizable'
                 );
             }
 
             return;
         }
 
-        $label = $this->translator->trans('Customization', [], 'Admin.Global');
-        $localizedNames = $isCreation ? $this->localizeForCreation($label) : [$languageId => $label];
+        $fileCount ??= 0;
+        $textCount ??= 0;
+
+        if (0 === $fileCount && 0 === $textCount) {
+            if (!$isCreation) {
+                $this->commandBus->handle(new RemoveAllCustomizationFieldsFromProductCommand($productId));
+            }
+
+            return;
+        }
 
         $fields = [];
-        if ($wantsFileField) {
-            $fields[] = [
-                'type' => CustomizationFieldType::TYPE_FILE,
-                'localized_names' => $localizedNames,
-                'is_required' => false,
-                'added_by_module' => false,
-            ];
-        }
-        if ($wantsTextField) {
-            $fields[] = [
-                'type' => CustomizationFieldType::TYPE_TEXT,
-                'localized_names' => $localizedNames,
-                'is_required' => false,
-                'added_by_module' => false,
-            ];
+        $fieldNumber = 0;
+        foreach ([CustomizationFieldType::TYPE_FILE => $fileCount, CustomizationFieldType::TYPE_TEXT => $textCount] as $type => $count) {
+            for ($i = 0; $i < $count; ++$i) {
+                $label = $this->translator->trans('Customization #%number%', ['%number%' => ++$fieldNumber], 'Admin.Global');
+                $fields[] = [
+                    'type' => $type,
+                    'localized_names' => $isCreation ? $this->localizeForCreation($label) : [$languageId => $label],
+                    'is_required' => false,
+                    'added_by_module' => false,
+                ];
+            }
         }
 
         $this->commandBus->handle(new SetProductCustomizationFieldsCommand($productId, $fields, $context->getShopConstraint()));
     }
 
     /**
+     * @return int|null null when the cell is empty or not a non-negative integer
+     */
+    private function parseCount(string $value): ?int
+    {
+        return preg_match('/^[0-9]+$/', $value) ? (int) $value : null;
+    }
+
+    /**
      * Legacy "basic reduction": one specific price rule, all currencies/
-     * countries/groups, from quantity 1.
+     * countries/groups, from quantity 1. A row carrying BOTH reduction kinds
+     * is ambiguous: both are dropped (the validator already warned).
      *
      * @param array<string, string> $row
      */
     private function dispatchSpecificPrice(array $row, int $productId): void
     {
+        if ('' !== ($row['reduction_price'] ?? '') && '' !== ($row['reduction_percent'] ?? '')) {
+            return;
+        }
+
         $reductionPrice = $this->valueParser->parseDecimal($row['reduction_price'] ?? '');
         $reductionPercent = $this->valueParser->parseDecimal($row['reduction_percent'] ?? '');
 
@@ -752,7 +801,40 @@ final class ProductRowImporter
     {
         $dateAdd = $this->valueParser->parseDate($row['date_add'] ?? '');
         if (null !== $dateAdd) {
-            $this->importWriter->setDateAdd($productId, $dateAdd);
+            $this->productRepository->setDateAdd($productId, $dateAdd);
+        }
+    }
+
+    /**
+     * Soft-deleted (historized) groups are treated as absent — assigning one
+     * would resurrect it on the product.
+     */
+    private function taxRulesGroupExists(int $taxRulesGroupId): bool
+    {
+        if ($taxRulesGroupId <= 0) {
+            return false;
+        }
+
+        try {
+            $taxRulesGroup = $this->taxRulesGroupRepository->get(new TaxRulesGroupId($taxRulesGroupId));
+        } catch (TaxRulesGroupNotFoundException) {
+            return false;
+        }
+
+        return !(bool) $taxRulesGroup->deleted;
+    }
+
+    /**
+     * Current physical quantity of the product itself (no combination), 0
+     * when no stock row exists yet. getForProduct() resolves shared-stock
+     * setups (group-level stock rows) through the legacy shop restriction.
+     */
+    private function getCurrentStockQuantity(int $productId, int $shopId): int
+    {
+        try {
+            return (int) $this->stockAvailableRepository->getForProduct(new ProductId($productId), new ShopId($shopId))->quantity;
+        } catch (StockAvailableNotFoundException) {
+            return 0;
         }
     }
 
@@ -762,24 +844,5 @@ final class ProductRowImporter
     private function isVirtual(array $row): bool
     {
         return true === $this->valueParser->parseBoolean($row['is_virtual'] ?? '');
-    }
-
-    /**
-     * @return array<int, string>
-     */
-    private function localizeForCreation(string $value): array
-    {
-        $localized = [];
-        foreach ($this->languageLookup->getAllLanguageIds() as $languageId) {
-            $localized[$languageId] = $value;
-        }
-
-        return $localized;
-    }
-
-    private function getLanguageId(ImportRunContext $context): int
-    {
-        return $this->languageLookup->getLanguageIdByIsoCode($context->getLangIso())
-            ?? throw new ImportEngineException(sprintf('Unknown language iso code "%s"', $context->getLangIso()));
     }
 }

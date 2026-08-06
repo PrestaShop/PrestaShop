@@ -8,22 +8,31 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product;
 
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
+use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository;
+use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository;
 use PrestaShop\PrestaShop\Adapter\Import\ImportDataFormatter;
+use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
+use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\AddFeatureValueCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
-use PrestaShop\PrestaShop\Core\Import\Engine\Exception\ImportEngineException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\LocalizedValueTrait;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ResolvedAssociation;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportPhaseDefinition;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\CategoryLookup;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\FeatureLookup;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\LanguageLookup;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\ManufacturerLookup;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\ShopLookup;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\SupplierLookup;
+use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -40,6 +49,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class ProductAssociationResolver
 {
+    use LocalizedValueTrait;
+
     /**
      * @var array<string, int>
      */
@@ -62,12 +73,14 @@ final class ProductAssociationResolver
 
     public function __construct(
         private readonly CommandBusInterface $commandBus,
-        private readonly CategoryLookup $categoryLookup,
-        private readonly ManufacturerLookup $manufacturerLookup,
-        private readonly SupplierLookup $supplierLookup,
-        private readonly ShopLookup $shopLookup,
-        private readonly LanguageLookup $languageLookup,
-        private readonly FeatureLookup $featureLookup,
+        private readonly CategoryRepository $categoryRepository,
+        private readonly ManufacturerRepository $manufacturerRepository,
+        private readonly SupplierRepository $supplierRepository,
+        private readonly ShopRepository $shopRepository,
+        private readonly LanguageRepositoryInterface $languageRepository,
+        private readonly FeatureRepository $featureRepository,
+        private readonly FeatureValueRepository $featureValueRepository,
+        private readonly ConfigurationInterface $configuration,
         private readonly ImportDataFormatter $dataFormatter,
         private readonly TranslatorInterface $translator,
     ) {
@@ -89,15 +102,15 @@ final class ProductAssociationResolver
 
         foreach ($entries as $entry) {
             if (ctype_digit($entry)) {
-                if ($this->categoryLookup->categoryExists((int) $entry)) {
+                if ($this->categoryExists((int) $entry)) {
                     $ids[] = (int) $entry;
                 } else {
                     $messages[] = new ImportMessage(
                         ImportMessage::SEVERITY_ERROR,
                         ImportPhaseDefinition::PHASE_DATABASE,
+                        $this->translator->trans('Category with id %id% does not exist.', ['%id%' => $entry], 'Admin.Advparameters.Notification'),
                         $rowIndex,
-                        'category',
-                        $this->translator->trans('Category with id %id% does not exist.', ['%id%' => $entry], 'Admin.Advparameters.Notification')
+                        'category'
                     );
                 }
                 continue;
@@ -111,7 +124,7 @@ final class ProductAssociationResolver
 
     public function resolveManufacturer(string $value, ImportRunContext $context): ResolvedAssociation
     {
-        if (ctype_digit($value) && $this->manufacturerLookup->manufacturerExists((int) $value)) {
+        if (ctype_digit($value) && $this->manufacturerExists((int) $value)) {
             return new ResolvedAssociation((int) $value);
         }
 
@@ -119,7 +132,7 @@ final class ProductAssociationResolver
             return new ResolvedAssociation($this->manufacturerCache[$value]);
         }
 
-        $manufacturerId = $this->manufacturerLookup->getManufacturerIdByName($value);
+        $manufacturerId = $this->manufacturerRepository->getManufacturerIdByName($value);
         if (null === $manufacturerId) {
             $manufacturerId = $this->commandBus->handle(
                 new AddManufacturerCommand($value, true, [], [], [], [], [$context->getShopId()])
@@ -136,11 +149,11 @@ final class ProductAssociationResolver
      */
     public function resolveSupplier(string $value, int $rowIndex): ResolvedAssociation
     {
-        if (ctype_digit($value) && $this->supplierLookup->supplierExists((int) $value)) {
+        if (ctype_digit($value) && $this->supplierExists((int) $value)) {
             return new ResolvedAssociation((int) $value);
         }
 
-        $supplierId = $this->supplierLookup->getSupplierIdByName($value);
+        $supplierId = $this->supplierRepository->getSupplierIdByName($value);
         if (null !== $supplierId) {
             return new ResolvedAssociation($supplierId);
         }
@@ -149,9 +162,9 @@ final class ProductAssociationResolver
             new ImportMessage(
                 ImportMessage::SEVERITY_WARNING,
                 ImportPhaseDefinition::PHASE_DATABASE,
+                $this->translator->trans('Supplier "%name%" does not exist and suppliers are not auto-created by the import; the field will be ignored.', ['%name%' => $value], 'Admin.Advparameters.Notification'),
                 $rowIndex,
-                'supplier',
-                $this->translator->trans('Supplier "%name%" does not exist and suppliers are not auto-created by the import; the field will be ignored.', ['%name%' => $value], 'Admin.Advparameters.Notification')
+                'supplier'
             ),
         ]);
     }
@@ -181,9 +194,9 @@ final class ProductAssociationResolver
                 $messages[] = new ImportMessage(
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('Invalid feature entry "%entry%" (expected Name:Value:Position[:Custom]); the entry will be ignored.', ['%entry%' => $entry], 'Admin.Advparameters.Notification'),
                     $rowIndex,
-                    'features',
-                    $this->translator->trans('Invalid feature entry "%entry%" (expected Name:Value:Position[:Custom]); the entry will be ignored.', ['%entry%' => $entry], 'Admin.Advparameters.Notification')
+                    'features'
                 );
                 continue;
             }
@@ -227,16 +240,16 @@ final class ProductAssociationResolver
                 $shopIds[] = (int) $entry;
                 continue;
             }
-            $shopId = $this->shopLookup->getShopIdByName($entry);
+            $shopId = $this->shopRepository->getShopIdByName($entry);
             if (null !== $shopId) {
                 $shopIds[] = $shopId;
             } else {
                 $messages[] = new ImportMessage(
                     ImportMessage::SEVERITY_WARNING,
                     ImportPhaseDefinition::PHASE_DATABASE,
+                    $this->translator->trans('Shop "%name%" does not exist; the entry will be ignored.', ['%name%' => $entry], 'Admin.Advparameters.Notification'),
                     $rowIndex,
-                    'shop',
-                    $this->translator->trans('Shop "%name%" does not exist; the entry will be ignored.', ['%name%' => $entry], 'Admin.Advparameters.Notification')
+                    'shop'
                 );
             }
         }
@@ -251,6 +264,11 @@ final class ProductAssociationResolver
     /**
      * Walks a '/'-separated category path from Home, creating each missing
      * level (legacy Category::searchByPath parity, via AddCategoryCommand).
+     * Path segments are ALWAYS names: numeric ids are whole-entry values,
+     * handled by resolveCategories() before the walk.
+     *
+     * @return int the id of the DEEPEST path segment (the last one walked) —
+     *             the category the product will be associated with
      */
     private function resolveCategoryPath(string $path, int $languageId): int
     {
@@ -258,34 +276,36 @@ final class ProductAssociationResolver
             return $this->categoryCache[$path];
         }
 
-        $parentId = $this->categoryLookup->getHomeCategoryId();
+        // the id of the category the current segment was found (or created)
+        // under; after the loop it holds the deepest segment's own id
+        $currentCategoryId = (int) $this->configuration->get('PS_HOME_CATEGORY');
         $walkedPath = '';
-        foreach (array_map('trim', explode('/', $path)) as $level) {
-            if ('' === $level) {
+        foreach (array_map('trim', explode('/', $path)) as $categoryName) {
+            if ('' === $categoryName) {
                 continue;
             }
-            $walkedPath .= ('' === $walkedPath ? '' : '/') . $level;
+            $walkedPath .= ('' === $walkedPath ? '' : '/') . $categoryName;
 
             if (isset($this->categoryCache[$walkedPath])) {
-                $parentId = $this->categoryCache[$walkedPath];
+                $currentCategoryId = $this->categoryCache[$walkedPath];
                 continue;
             }
 
-            $categoryId = $this->categoryLookup->getChildCategoryIdByName($parentId, $level, $languageId);
+            $categoryId = $this->categoryRepository->getChildCategoryIdByName($currentCategoryId, $categoryName, $languageId);
             if (null === $categoryId) {
                 $categoryId = $this->commandBus->handle(new AddCategoryCommand(
-                    $this->localizeForCreation($level),
-                    $this->localizeForCreation($this->dataFormatter->createFriendlyUrl($level)),
+                    $this->localizeForCreation($categoryName),
+                    $this->localizeForCreation($this->dataFormatter->createFriendlyUrl($categoryName)),
                     true,
-                    $parentId
+                    $currentCategoryId
                 ))->getValue();
             }
 
             $this->categoryCache[$walkedPath] = $categoryId;
-            $parentId = $categoryId;
+            $currentCategoryId = $categoryId;
         }
 
-        return $parentId;
+        return $currentCategoryId;
     }
 
     private function resolveFeature(string $name, int $languageId, ImportRunContext $context): int
@@ -294,7 +314,7 @@ final class ProductAssociationResolver
             return $this->featureCache[$name];
         }
 
-        $featureId = $this->featureLookup->getFeatureIdByName($name, $languageId);
+        $featureId = $this->featureRepository->getFeatureIdByName($name, $languageId);
         if (null === $featureId) {
             $featureId = $this->commandBus->handle(
                 new AddFeatureCommand($this->localizeForCreation($name), [$context->getShopId()])
@@ -312,7 +332,7 @@ final class ProductAssociationResolver
             return $this->featureValueCache[$cacheKey];
         }
 
-        $featureValueId = $this->featureLookup->getFeatureValueIdByValue($featureId, $value, $languageId);
+        $featureValueId = $this->featureValueRepository->getFeatureValueIdByValue($featureId, $value, $languageId);
         if (null === $featureValueId) {
             $featureValueId = $this->commandBus->handle(
                 new AddFeatureValueCommand($featureId, $this->localizeForCreation($value))
@@ -323,25 +343,48 @@ final class ProductAssociationResolver
         return $featureValueId;
     }
 
-    /**
-     * Duplicates a value into every installed language (creation rule for
-     * single-language import files).
-     *
-     * @return array<int, string>
-     */
-    private function localizeForCreation(string $value): array
+    private function categoryExists(int $categoryId): bool
     {
-        $localized = [];
-        foreach ($this->languageLookup->getAllLanguageIds() as $languageId) {
-            $localized[$languageId] = $value;
+        if ($categoryId <= 0) {
+            return false;
         }
 
-        return $localized;
+        try {
+            $this->categoryRepository->assertCategoryExists(new CategoryId($categoryId));
+        } catch (CategoryNotFoundException) {
+            return false;
+        }
+
+        return true;
     }
 
-    private function getLanguageId(ImportRunContext $context): int
+    private function manufacturerExists(int $manufacturerId): bool
     {
-        return $this->languageLookup->getLanguageIdByIsoCode($context->getLangIso())
-            ?? throw new ImportEngineException(sprintf('Unknown language iso code "%s"', $context->getLangIso()));
+        if ($manufacturerId <= 0) {
+            return false;
+        }
+
+        try {
+            $this->manufacturerRepository->assertManufacturerExists(new ManufacturerId($manufacturerId));
+        } catch (ManufacturerNotFoundException) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function supplierExists(int $supplierId): bool
+    {
+        if ($supplierId <= 0) {
+            return false;
+        }
+
+        try {
+            $this->supplierRepository->assertSupplierExists(new SupplierId($supplierId));
+        } catch (SupplierNotFoundException) {
+            return false;
+        }
+
+        return true;
     }
 }

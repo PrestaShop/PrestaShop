@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\DBAL\Exception as ExceptionAlias;
@@ -265,6 +266,96 @@ class ProductRepository extends AbstractMultiShopObjectModelRepository
         );
 
         return $product;
+    }
+
+    /**
+     * Import-engine fallback: creates a minimal product shell with a
+     * caller-chosen id, mirroring create() with ObjectModel::$force_id
+     * enabled (same pattern as combination creation).
+     *
+     * WARNING: forcing ids is deliberately not expressible through the CQRS
+     * product commands — this method exists only for the import "force IDs"
+     * option. Do NOT use it outside the import engine.
+     *
+     * @param array<int, string> $localizedNames indexed by language id
+     * @param array<int, string> $localizedLinkRewrites indexed by language id
+     */
+    public function createWithForcedId(
+        int $forcedProductId,
+        array $localizedNames,
+        array $localizedLinkRewrites,
+        string $productType,
+        int $shopId
+    ): Product {
+        $shopIdVo = new ShopId($shopId);
+        $defaultCategoryId = $this->categoryRepository->getShopDefaultCategory($shopIdVo);
+
+        $product = new Product(null, false, null, $shopId);
+        $product->id = $forcedProductId;
+        $product->force_id = true;
+        $product->active = false;
+        $product->id_category_default = $defaultCategoryId->getValue();
+        $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType;
+        $product->cache_is_pack = ProductType::TYPE_PACK === $productType;
+        $product->product_type = $productType;
+        $product->id_shop_default = $shopId;
+        $product->name = $localizedNames;
+        $product->link_rewrite = $localizedLinkRewrites;
+        $product->id_tax_rules_group = $this->taxRulesGroupRepository->getIdTaxRulesGroupMostUsed();
+
+        $this->productValidator->validateCreation($product);
+        $this->addObjectModelToShops($product, [$shopIdVo], CannotAddProductException::class);
+        $this->categoryRepository->addProductAssociations(
+            new ProductId((int) $product->id),
+            [$defaultCategoryId]
+        );
+
+        return $product;
+    }
+
+    /**
+     * Import-engine fallback: sets date_add on an existing product.
+     *
+     * WARNING: the CQRS product commands deliberately force date_upd/date_add
+     * to now — this direct write exists only for the import date_add column.
+     * Do NOT use it outside the import engine.
+     */
+    public function setDateAdd(int $productId, DateTimeImmutable $dateAdd): void
+    {
+        $formattedDate = $dateAdd->format('Y-m-d H:i:s');
+
+        try {
+            $this->connection->executeStatement(
+                'UPDATE ' . $this->dbPrefix . 'product SET date_add = :dateAdd WHERE id_product = :productId',
+                ['dateAdd' => $formattedDate, 'productId' => $productId]
+            );
+            $this->connection->executeStatement(
+                'UPDATE ' . $this->dbPrefix . 'product_shop SET date_add = :dateAdd WHERE id_product = :productId',
+                ['dateAdd' => $formattedDate, 'productId' => $productId]
+            );
+        } catch (ExceptionAlias $e) {
+            throw new CannotUpdateProductException(sprintf('Could not set date_add on product %d', $productId), 0, $e);
+        }
+    }
+
+    /**
+     * Shop-scoped reference lookup, as used by the import match_ref option
+     * (the legacy import had two divergent reference lookups; this is the
+     * unified one).
+     */
+    public function getProductIdByReference(string $reference, int $shopId): ?int
+    {
+        $productId = $this->connection->fetchOne(
+            'SELECT p.id_product
+            FROM ' . $this->dbPrefix . 'product p
+            INNER JOIN ' . $this->dbPrefix . 'product_shop ps
+                ON ps.id_product = p.id_product AND ps.id_shop = :shopId
+            WHERE p.reference = :reference
+            ORDER BY p.id_product ASC',
+            ['reference' => $reference, 'shopId' => $shopId]
+        );
+
+        return false === $productId ? null : (int) $productId;
     }
 
     /**

@@ -36,20 +36,21 @@ final class ImportEngineTestRunner
                 continue;
             }
 
-            $context->enterPhase($phase->id);
-            $totalUnits = $importer->countPhaseUnits($phase, $context);
+            // count ONCE per phase entry; the context carries the total so
+            // importers never rescan the file per batch
+            $context->enterPhase($phase->id, $importer->countPhaseUnits($phase->id, $context));
 
-            while ($context->getCurrentOffset() < $totalUnits) {
+            while ($context->getCurrentOffset() < $context->getCurrentPhaseTotalUnits()) {
                 $result = $importer->processPhaseBatch(
-                    $phase,
+                    $phase->id,
                     $context,
-                    min($batchLimit, $totalUnits - $context->getCurrentOffset())
+                    min($batchLimit, $context->getCurrentPhaseTotalUnits() - $context->getCurrentOffset())
                 );
                 $context->applyBatchResult($result);
                 $messages = array_merge($messages, $result->messages);
 
                 if (0 === $result->processedUnitCount) {
-                    throw new RuntimeException(sprintf('Import made no progress in phase "%s" at offset %d/%d', $phase->id, $context->getCurrentOffset(), $totalUnits));
+                    throw new RuntimeException(sprintf('Import made no progress in phase "%s" at offset %d/%d', $phase->id, $context->getCurrentOffset(), $context->getCurrentPhaseTotalUnits()));
                 }
             }
         }

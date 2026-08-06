@@ -9,11 +9,13 @@ declare(strict_types=1);
 namespace Tests\Integration\Core\Import\Engine;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Import\Engine\Repository\TaxRulesGroupLookup;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use Tests\Resources\DatabaseDump;
 use Tests\Resources\Resetter\ProductResetter;
 
-class ProductImporterCreateTest extends AbstractImportEngineTestCase
+class ProductImporterCreateTest extends AbstractProductImportEngineTestCase
 {
     private const FIXTURE = 'product_create_basic.csv';
 
@@ -167,7 +169,12 @@ class ProductImporterCreateTest extends AbstractImportEngineTestCase
         $productShop = $this->fetchRow('SELECT price, visibility, `condition`, online_only, on_sale FROM {p}product_shop WHERE id_product = :id AND id_shop = 1', ['id' => $productId]);
 
         // expected price derives from the same rate the importer used
-        $rate = self::getContainer()->get(TaxRulesGroupLookup::class)->getTaxRate(1);
+        // (tax rules group 1 for the shop address country, legacy Shop::getAddress resolution)
+        $shopCountryId = (int) $this->fetchOne("SELECT value FROM {p}configuration WHERE name = 'PS_SHOP_COUNTRY_ID'");
+        if ($shopCountryId <= 0) {
+            $shopCountryId = (int) $this->fetchOne("SELECT value FROM {p}configuration WHERE name = 'PS_COUNTRY_DEFAULT'");
+        }
+        $rate = self::getContainer()->get(TaxComputer::class)->getTaxRate(new TaxRulesGroupId(1), new CountryId($shopCountryId));
         $divisor = $rate->dividedBy(new DecimalNumber('100'), 6)->plus(new DecimalNumber('1'));
         $expectedPrice = (new DecimalNumber('120.00'))->dividedBy($divisor, 6);
         $this->assertEqualsWithDelta((float) (string) $expectedPrice, (float) $productShop['price'], 0.000001);

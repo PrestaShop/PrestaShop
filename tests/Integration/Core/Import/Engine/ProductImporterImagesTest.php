@@ -11,7 +11,7 @@ namespace Tests\Integration\Core\Import\Engine;
 use Tests\Resources\Resetter\ProductResetter;
 use Tests\Resources\ResourceResetter;
 
-class ProductImporterImagesTest extends AbstractImportEngineTestCase
+class ProductImporterImagesTest extends AbstractProductImportEngineTestCase
 {
     private const IMAGE_FIELDS = ['name', 'reference', 'image', 'image_alt'];
     private const IMAGE_REPLACE_FIELDS = ['name', 'reference', 'image', 'image_alt', 'delete_existing_images'];

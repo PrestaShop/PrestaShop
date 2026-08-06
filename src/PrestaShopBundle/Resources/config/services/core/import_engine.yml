@@ -4,7 +4,7 @@ services:
     autowire: true
     autoconfigure: true
 
-  # Engine reader: working files are produced by ImportFileNormalizer using
+  # Engine reader: working files are produced by CsvImportFileNormalizer using
   # one canonical CSV dialect, so this reader needs no per-run separator and
   # no session coupling (unlike the legacy prestashop.core.import.csv_file_reader).
   prestashop.core.import.engine.csv_file_reader:
@@ -16,51 +16,21 @@ services:
     alias: prestashop.core.import.engine.csv_file_reader
     public: true
 
-  PrestaShop\PrestaShop\Core\Import\Engine\File\ImportFileNormalizer: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer: ~
   PrestaShop\PrestaShop\Core\Import\Engine\ValueParser: ~
-  PrestaShop\PrestaShop\Core\Import\Engine\ImageDownloader: ~
+  PrestaShop\PrestaShop\Core\Import\Engine\FileDownloader: ~
 
   # Registry of every tagged importer; the tag is applied automatically to
-  # any autoconfigured service implementing EntityImporterInterface (the
-  # AutoconfigureTag attribute lives on the interface) - including module
+  # any autoconfigured service implementing EntityImporterInterface
+  # (registerForAutoconfiguration in PrestaShopExtension) - including module
   # services, as long as their definitions enable autoconfiguration.
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterRegistry: ~
 
-  # Internal engine lookups (@internal, not to be overridden or decorated)
-  PrestaShop\PrestaShop\Core\Import\Engine\Repository\ProductLookup:
-    arguments:
-      $dbPrefix: '%database_prefix%'
+  # Shared entity-importer internals
+  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\RowMapper: ~
 
-  PrestaShop\PrestaShop\Core\Import\Engine\Repository\CategoryLookup:
-    arguments:
-      $dbPrefix: '%database_prefix%'
-
-  PrestaShop\PrestaShop\Core\Import\Engine\Repository\ManufacturerLookup:
-    arguments:
-      $dbPrefix: '%database_prefix%'
-
-  PrestaShop\PrestaShop\Core\Import\Engine\Repository\SupplierLookup:
-    arguments:
-      $dbPrefix: '%database_prefix%'
-
-  PrestaShop\PrestaShop\Core\Import\Engine\Repository\ShopLookup:
-    arguments:
-      $dbPrefix: '%database_prefix%'
-
-  PrestaShop\PrestaShop\Core\Import\Engine\Repository\LanguageLookup:
-    arguments:
-      $dbPrefix: '%database_prefix%'
-
-  PrestaShop\PrestaShop\Core\Import\Engine\Repository\FeatureLookup:
-    arguments:
-      $dbPrefix: '%database_prefix%'
-
-  PrestaShop\PrestaShop\Core\Import\Engine\Repository\TaxRulesGroupLookup:
-    arguments:
-      $dbPrefix: '%database_prefix%'
-
-  # Product importer and its internals
-  PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowMapper: ~
+  # Product importer and its internals (persistence goes through CQRS
+  # commands and the existing Adapter repositories)
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductIdentityResolver: ~
   PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\Product\ProductRowValidator: ~
 

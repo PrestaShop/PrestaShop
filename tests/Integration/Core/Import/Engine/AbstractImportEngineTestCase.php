@@ -9,8 +9,8 @@ declare(strict_types=1);
 namespace Tests\Integration\Core\Import\Engine;
 
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter\ProductImporter;
-use PrestaShop\PrestaShop\Core\Import\Engine\File\ImportFileNormalizer;
+use PrestaShop\PrestaShop\Core\Import\Engine\EntityImporterInterface;
+use PrestaShop\PrestaShop\Core\Import\Engine\File\CsvImportFileNormalizer;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportMessage;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
 use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunOptions;
@@ -18,6 +18,20 @@ use SplFileInfo;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Integration\Utility\ContextMockerTrait;
 
+/**
+ * Entity-agnostic harness: normalize a fixture, build a run context and drive
+ * an importer through the mini batch sequencer. Entity-specific test cases
+ * provide the importer (see AbstractProductImportEngineTestCase).
+ *
+ * Why mockContext(): measured by running the whole suite without it, exactly
+ * one command-dispatch path still reads the legacy context — stock movements.
+ * UpdateProductStockAvailableCommand (delta quantity) ends in
+ * StockManager::saveMovement(), which reads Context::getContext()->employee
+ * to stamp the movement; without the mock the employee is an unloaded shell
+ * whose null id fatals in StockMvt::setIdEmployee(). Every other phase/command
+ * chain covered here runs fine on the raw kernel context; the mock also pins
+ * shop/language/currency so assertions stay deterministic.
+ */
 abstract class AbstractImportEngineTestCase extends KernelTestCase
 {
     use ContextMockerTrait;
@@ -84,17 +98,20 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
     ): ImportRunContext {
         $fixturePath = $this->prepareFixture($fixtureName);
 
+        // skip rows (fixture headers) are consumed here, like the separator:
+        // the working file contains data records only, and the record count
+        // is measured by the same pass
         $workingFilePath = $this->createTemporaryFilePath('work_', '.csv');
-        $normalizer = new ImportFileNormalizer();
-        $normalizer->normalize(new SplFileInfo($fixturePath), $workingFilePath, $sourceCsvSeparator);
+        $normalizer = new CsvImportFileNormalizer();
+        $normalizedFile = $normalizer->normalize(new SplFileInfo($fixturePath), $workingFilePath, $sourceCsvSeparator, $skipRows);
 
         return new ImportRunContext(
-            ProductImporter::ENTITY_TYPE,
+            $this->getEntityImporter()->getEntityType(),
             $workingFilePath,
+            $normalizedFile->dataRecordCount,
             static::DEFAULT_LANG_ISO,
             $sourceCsvSeparator,
             ',',
-            $skipRows,
             $fieldMapping,
             ImportRunOptions::fromArray($options),
             static::DEFAULT_SHOP_ID
@@ -118,17 +135,17 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
         int $batchLimit = 2
     ): array {
         $context = $this->buildContext($fixtureName, $fieldMapping, $options);
-        $importer = $this->getProductImporter();
+        $importer = $this->getEntityImporter();
 
         $messages = (new ImportEngineTestRunner())->run($importer, $context, $batchLimit, $phaseIds);
 
         return [$context, $messages];
     }
 
-    protected function getProductImporter(): ProductImporter
-    {
-        return self::getContainer()->get(ProductImporter::class);
-    }
+    /**
+     * The importer under test, usually fetched from the container.
+     */
+    abstract protected function getEntityImporter(): EntityImporterInterface;
 
     /**
      * Copies the fixture to a temporary location, substituting the
@@ -216,12 +233,5 @@ abstract class AbstractImportEngineTestCase extends KernelTestCase
     protected function fetchAll(string $sql, array $parameters = []): array
     {
         return $this->connection->fetchAllAssociative(str_replace('{p}', $this->dbPrefix, $sql), $parameters);
-    }
-
-    protected function getProductIdByReference(string $reference): ?int
-    {
-        $productId = $this->fetchOne('SELECT id_product FROM {p}product WHERE reference = :reference', ['reference' => $reference]);
-
-        return false === $productId ? null : (int) $productId;
     }
 }

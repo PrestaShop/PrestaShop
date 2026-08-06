@@ -15,7 +15,7 @@ use Tests\Resources\Resetter\LanguageResetter;
 use Tests\Resources\Resetter\ProductResetter;
 use Tests\Resources\ResourceResetter;
 
-class ProductImporterMultilangTest extends AbstractImportEngineTestCase
+class ProductImporterMultilangTest extends AbstractProductImportEngineTestCase
 {
     use LanguageTrait;
 

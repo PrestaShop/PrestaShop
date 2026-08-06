@@ -11,7 +11,7 @@ namespace Tests\Integration\Core\Import\Engine;
 use Tests\Resources\DatabaseDump;
 use Tests\Resources\Resetter\ProductResetter;
 
-class ProductImporterFeaturesTest extends AbstractImportEngineTestCase
+class ProductImporterFeaturesTest extends AbstractProductImportEngineTestCase
 {
     private const FIELDS = ['name', 'reference', 'features'];
 

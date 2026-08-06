@@ -11,7 +11,6 @@ namespace Tests\Integration\Core\Import\Engine\File;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Import\Engine\Exception\InvalidResumeCursorException;
 use PrestaShop\PrestaShop\Core\Import\File\CsvFileReader;
-use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 use PrestaShop\PrestaShop\Core\Import\File\FileOpenerInterface;
 use SplFileInfo;
 
@@ -76,35 +75,26 @@ class CsvFileReaderResumeTest extends TestCase
     {
         $rows = [];
         foreach ($this->reader->read(new SplFileInfo($this->workingFile)) as $dataRow) {
-            $rows[] = $this->rowValues($dataRow);
+            $values = [];
+            foreach ($dataRow as $cell) {
+                $values[] = $cell->getValue();
+            }
+            $rows[] = $values;
         }
 
         $this->assertSame([['name', 'desc'], ['A', "first\nproduct"], ['B', 'second'], ['C', 'third']], $rows);
     }
 
     /**
-     * @return list<array{cursor: string, values: list<string>}>
+     * @return list<array{cursor: string, values: array<int, string>}>
      */
     private function readAll(?string $cursor): array
     {
         $rows = [];
-        foreach ($this->reader->readFrom(new SplFileInfo($this->workingFile), $cursor) as $rowCursor => $dataRow) {
-            $rows[] = ['cursor' => $rowCursor, 'values' => $this->rowValues($dataRow)];
+        foreach ($this->reader->readFrom(new SplFileInfo($this->workingFile), $cursor) as $rowCursor => $record) {
+            $rows[] = ['cursor' => $rowCursor, 'values' => $record];
         }
 
         return $rows;
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function rowValues(DataRowInterface $dataRow): array
-    {
-        $values = [];
-        foreach ($dataRow as $cell) {
-            $values[] = $cell->getValue();
-        }
-
-        return $values;
     }
 }
