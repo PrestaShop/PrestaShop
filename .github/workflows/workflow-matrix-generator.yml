@@ -28,7 +28,12 @@ jobs:
         run: |
           # Put label list in one line JSON style to avoid parse error
           labelList=$( echo '${{ env.PR_LABEL_LIST }}' | jq -c )
-          if [[ ${{ env.DESCRIPTION }} =~ \|?[[:space:]]*Category\?[[:space:]]*\|[[:space:]]*ME([[:space:]]|(\\[rn]))+ ]]; then
+          description=$(
+          cat <<"EOF"
+          ${{ toJSON(github.event.pull_request.body) }}
+          EOF
+          )
+          if [[ $description =~ \|?[[:space:]]*Category\?[[:space:]]*\|[[:space:]]*ME([[:space:]]|(\\[rn]))+ ]]; then
             echo Using all versions for a merge request
             echo "use_all_versions=1" >> $GITHUB_OUTPUT
           elif [[ "$labelList" == *"Run all versions"* ]]; then

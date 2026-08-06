@@ -777,12 +777,14 @@ class OrderDetailCore extends ObjectModel
         $this->id_shop = (int) $product['id_shop'];
 
         // Add new entry to the table
-        $this->save();
+        $result = $this->save();
 
         if ($use_taxes) {
             $this->saveTaxCalculator($order);
         }
         unset($this->tax_calculator);
+
+        return (bool) $result;
     }
 
     /**
@@ -805,7 +807,11 @@ class OrderDetailCore extends ObjectModel
         $this->outOfStock = false;
 
         foreach ($product_list as $product) {
-            $this->create($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes);
+            if (!$this->create($order, $cart, $product, $id_order_state, $id_order_invoice, $use_taxes)) {
+                throw new PrestaShopException(
+                    sprintf('Failed to create order detail for product id %d', (int) $product['id_product'])
+                );
+            }
         }
 
         unset(

@@ -26,6 +26,12 @@ class SearchedCustomerType extends CommonAbstractType
             ->add('fullname_and_email', TextPreviewType::class, [
                 'label' => false,
             ])
+            ->add('active', HiddenType::class, [
+                'label' => false,
+            ])
+            ->add('is_guest', HiddenType::class, [
+                'label' => false,
+            ])
         ;
     }
 }

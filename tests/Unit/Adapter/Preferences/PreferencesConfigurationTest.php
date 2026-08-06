@@ -12,7 +12,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration;
+use PrestaShop\PrestaShop\Core\Feature\Enum\ShopModeEnum;
+use PrestaShop\PrestaShop\Core\Feature\ShopModeFeature;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
+use PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType;
 
 class PreferencesConfigurationTest extends TestCase
 {
@@ -29,7 +32,7 @@ class PreferencesConfigurationTest extends TestCase
     protected function setUp(): void
     {
         $this->mockConfiguration = $this->getMockBuilder(Configuration::class)
-            ->onlyMethods(['get', 'getBoolean', 'set'])
+            ->onlyMethods(['get', 'getBoolean', 'set', 'getEnum'])
             ->disableOriginalConstructor()
             ->getMock();
         $this->object = new PreferencesConfiguration($this->mockConfiguration);
@@ -61,11 +64,20 @@ class PreferencesConfigurationTest extends TestCase
                 ]
             );
 
+        $this->mockConfiguration
+            ->method('getEnum')
+            ->willReturnMap(
+                [
+                    [ShopModeFeature::CONFIGURATION_NAME, ShopModeEnum::class, ShopModeFeature::DEFAULT_SHOP_MODE, ShopModeEnum::SHOP_MODE_B2C_ONLY],
+                ]
+            );
+
         $result = $this->object->getConfiguration();
         $this->assertSame(
             [
                 'enable_ssl' => true,
                 'enable_token' => true,
+                PreferencesType::SHOP_MODE => ShopModeEnum::SHOP_MODE_B2C_ONLY,
                 'allow_html_iframes' => true,
                 'use_htmlpurifier' => true,
                 'price_round_mode' => 'test',
@@ -116,6 +128,7 @@ class PreferencesConfigurationTest extends TestCase
                 [
                     'enable_ssl' => false,
                     'enable_token' => true,
+                    PreferencesType::SHOP_MODE => ShopModeEnum::SHOP_MODE_B2C_ONLY,
                     'allow_html_iframes' => true,
                     'use_htmlpurifier' => true,
                     'price_round_mode' => 'test',
@@ -138,12 +151,14 @@ class PreferencesConfigurationTest extends TestCase
                     ['PS_COOKIE_SAMESITE', null, null, CookieOptions::SAMESITE_NONE],
                 ]
             );
+
         $this->mockConfiguration
             ->method('set')
             ->willReturnMap(
                 [
                     ['PS_SSL_ENABLED', true],
                     ['PS_TOKEN_ENABLE', true],
+                    [ShopModeFeature::CONFIGURATION_NAME, ShopModeEnum::SHOP_MODE_B2C_ONLY],
                     ['PS_ALLOW_HTML_IFRAME', true],
                     ['PS_USE_HTMLPURIFIER', true],
                     ['PS_DISPLAY_SUPPLIERS', false],
@@ -156,18 +171,12 @@ class PreferencesConfigurationTest extends TestCase
             );
 
         $this->assertSame(
-            [
-                [
-                    'key' => 'Cannot disable SSL configuration due to the Cookie SameSite=None.',
-                    'domain' => 'Admin.Advparameters.Notification',
-                    'parameters' => [],
-                ],
-            ],
-
+            [],
             $this->object->updateConfiguration(
                 [
-                    'enable_ssl' => false,
+                    'enable_ssl' => true,
                     'enable_token' => true,
+                    PreferencesType::SHOP_MODE => ShopModeEnum::SHOP_MODE_B2C_ONLY,
                     'allow_html_iframes' => true,
                     'use_htmlpurifier' => true,
                     'price_round_mode' => 'test',

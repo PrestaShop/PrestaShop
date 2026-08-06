@@ -41,7 +41,8 @@ class OrderReturnStateFeatureContext extends AbstractDomainFeatureContext
                 [
                     $this->getDefaultLangId() => $data['name'],
                 ],
-                $data['color']
+                $data['color'],
+                $data['is_cancelling_return'] === '1' ? true : false
             ));
 
             SharedStorage::getStorage()->set($orderReturnStateReference, $orderReturnStateId->getValue());
@@ -70,6 +71,9 @@ class OrderReturnStateFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['color'])) {
             $editableOrderReturnState->setColor($data['color']);
+        }
+        if (isset($data['is_cancelling_return'])) {
+            $editableOrderReturnState->setCancellingReturn($data['is_cancelling_return'] === '1' ? true : false);
         }
 
         try {
@@ -134,6 +138,10 @@ class OrderReturnStateFeatureContext extends AbstractDomainFeatureContext
         Assert::assertArrayHasKey($this->getDefaultLangId(), $localizedNames);
         Assert::assertEquals($data['name'], $localizedNames[$this->getDefaultLangId()]);
         Assert::assertEquals($data['color'], $editableOrderReturnState->getColor());
+        Assert::assertEquals(
+            $data['is_cancelling_return'] === '1' ? true : false,
+            $editableOrderReturnState->isCancellingReturn()
+        );
     }
 
     /**

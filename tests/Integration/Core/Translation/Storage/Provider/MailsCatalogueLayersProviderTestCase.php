@@ -162,7 +162,8 @@ class MailsCatalogueLayersProviderTestCase extends AbstractCatalogueLayersProvid
             ),
             $this->translationsDir,
             $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
+            $providerDefinition->getTranslationDomains(),
+            $this->createEmptyExtraPropertyTranslationExtractor()
         );
     }
 }

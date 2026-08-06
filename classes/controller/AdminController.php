@@ -10,6 +10,7 @@ use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
@@ -656,6 +657,7 @@ class AdminControllerCore extends Controller
             'breadcrumbs2' => $breadcrumbs2,
             'quick_access_current_link_name' => Tools::safeOutput($breadcrumbs2['tab']['name'] . ' - ' . $breadcrumbs2['action']['name']),
             'quick_access_current_link_icon' => $breadcrumbs2['container']['icon'],
+            'quick_access_current_link_short_name' => Tools::safeOutput($breadcrumbs2['tab']['name']),
         ]);
 
         /* BEGIN - Backward compatibility < 1.6.0.3 */
@@ -1999,8 +2001,30 @@ class AdminControllerCore extends Controller
         $is_multishop = Shop::isFeatureActive();
 
         // Quick access
+        $quick_access = [];
+        $legacyAjaxUrl = $this->context->link->getAdminLink('AdminQuickAccesses', true, [], ['action' => 'GetUrl', 'ajax' => 1]);
+        $quick_access_ajax_add_url = $legacyAjaxUrl;
+        $quick_access_ajax_delete_url = $legacyAjaxUrl;
         if ((int) $this->context->employee->id) {
             $quick_access = QuickAccess::getQuickAccessesWithToken($this->context->language->id, (int) $this->context->employee->id);
+            /** @var FeatureFlagStateCheckerInterface $featureFlagChecker */
+            $featureFlagChecker = $this->get(FeatureFlagStateCheckerInterface::class);
+            if ($featureFlagChecker->isEnabled('quick_access')) {
+                try {
+                    $quick_access_ajax_add_url = $this->context->link->getAdminLink(
+                        'AdminQuickAccesses',
+                        true,
+                        ['route' => 'admin_quick_accesses_ajax_add']
+                    );
+                    $quick_access_ajax_delete_url = $this->context->link->getAdminLink(
+                        'AdminQuickAccesses',
+                        true,
+                        ['route' => 'admin_quick_accesses_ajax_delete']
+                    );
+                } catch (Exception $e) {
+                    // keep legacy fallback URLs
+                }
+            }
         }
 
         $tabs = $this->getTabs();
@@ -2031,6 +2055,8 @@ class AdminControllerCore extends Controller
                 'search_type' => Tools::getValue('bo_search_type'),
                 'bo_query' => Tools::safeOutput(Tools::getValue('bo_query')),
                 'quick_access' => empty($quick_access) ? [] : $quick_access,
+                'quick_access_ajax_add_url' => $quick_access_ajax_add_url,
+                'quick_access_ajax_delete_url' => $quick_access_ajax_delete_url,
                 'multi_shop' => Shop::isFeatureActive(),
                 'shop_list' => $helperShop->getRenderedShopList(),
                 'current_shop_name' => $helperShop->getCurrentShopName(),

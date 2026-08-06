@@ -1,4 +1,5 @@
 <?php
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -82,6 +83,7 @@ class OrderLazyArray extends AbstractLazyArray
         $containerFinder = new ContainerFinder(Context::getContext());
         $this->shipmentRepository = $containerFinder->getContainer()->get(ShipmentRepository::class);
         $this->shipmentTotalCalculator = $containerFinder->getContainer()->get(ShipmentTotalsCalculatorInterface::class);
+        $this->initExtraPropertiesBag(Order::class, (int) $order->id, (int) $order->id_lang ?: null);
 
         parent::__construct();
     }
@@ -144,6 +146,19 @@ class OrderLazyArray extends AbstractLazyArray
         $details = $this->getDetails();
 
         return $details['shipping'];
+    }
+
+    /**
+     * @return mixed
+     *
+     * @throws PrestaShopException
+     */
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function hasShipments()
+    {
+        $details = $this->getDetails();
+
+        return $details['shipments'];
     }
 
     /**

@@ -22,7 +22,7 @@
             <div class="module-import-start">
               <i class="module-import-start-icon material-icons">cloud_upload</i><br/>
               <p class="module-import-start-main-text">
-                {{ 'Drop your module archive here or [1]select file[/1]'|trans({}, 'Admin.Modules.Feature')|replace({'[1]': '<a href="#" class="module-import-start-select-manual">', '[/1]': '</a>'})|raw }}
+                {{ 'Drop your module archive here or [1]select file[/1]'|trans({}, 'Admin.Modules.Feature')|replace({'[1]': '<a href="#" class="module-import-start-select-manual">', '[/1]': '</a>'})|raw_purified }}
               </p>
               <p class="module-import-start-footer-text">
                 {{ 'Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).'|trans({}, 'Admin.Modules.Help') }}

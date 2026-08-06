@@ -733,6 +733,7 @@ class ProductImageRepository extends AbstractMultiShopObjectModelRepository
             $imageType->name = $result['name'];
             $imageType->width = (int) $result['width'];
             $imageType->height = (int) $result['height'];
+            $imageType->image_fitment = $result['image_fitment'];
             $imageType->products = (bool) $result['products'];
             $imageType->categories = (bool) $result['categories'];
             $imageType->manufacturers = (bool) $result['manufacturers'];

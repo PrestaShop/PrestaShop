@@ -79,6 +79,12 @@ services:
     autowire: true
     autoconfigure: true
 
+  PrestaShop\PrestaShop\Core\ConstraintValidator\ValidAddressFormatValidator:
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Domain\Country\AddressFormat\AddressFormatCheckerInterface'
+    tags:
+      - { name: validator.constraint_validator }
+
   PrestaShop\PrestaShop\Core\ConstraintValidator\UniqueDiscountCodeValidator:
     autowire: true
     autoconfigure: true

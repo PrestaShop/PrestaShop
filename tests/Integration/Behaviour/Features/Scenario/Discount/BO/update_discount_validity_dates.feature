@@ -200,7 +200,7 @@ Feature: Update discount validity dates
       | period_never_expires | false               |
       | reduction_percent    | 15.0                |
 
-  Scenario: Verify never-expiring discount has expiration far in the future
+  Scenario: Verify never-expiring discount has no expiration date
     When I create a "cart_level" discount "verify_never_expires" with following properties:
       | name[en-US]          | Long Term Discount  |
       | valid_from           | 2024-01-01 00:00:00 |
@@ -208,5 +208,5 @@ Feature: Update discount validity dates
       | reduction_percent    | 20.0                |
     Then discount "verify_never_expires" should have the following properties:
       | period_never_expires | true |
-    And discount "verify_never_expires" expiration date should be more than 50 years in the future
+    And discount "verify_never_expires" should have no expiration date
 

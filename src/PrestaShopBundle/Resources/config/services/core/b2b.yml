@@ -1,9 +1,8 @@
 services:
   _defaults:
-    public: true
+    autowire: true
 
   PrestaShop\PrestaShop\Core\B2b\B2bFeature:
-    public: false
     arguments:
       - '@prestashop.adapter.legacy.configuration'
 
@@ -13,3 +12,7 @@ services:
     deprecated:
       package: PrestaShop\PrestaShop
       version: 9.0
+
+  PrestaShop\PrestaShop\Core\Feature\ShopModeFeature: ~
+
+  PrestaShopBundle\Service\Form\ImprovedB2bTabsToggler: ~

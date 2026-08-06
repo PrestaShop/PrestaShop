@@ -31,22 +31,81 @@ class ShipmentRepository extends EntityRepository
      */
     public function findByOrderId(int $orderId)
     {
+        return $this->findBy(['orderId' => $orderId, 'deleted' => false]);
+    }
+
+    /**
+     * @param int $orderId
+     *
+     * @return Shipment[]
+     */
+    public function getAllShipmentsByOrderId(int $orderId)
+    {
         return $this->findBy(['orderId' => $orderId]);
+    }
+
+    /**
+     * @return array<int, array{
+     *     id_shipment: int,
+     *     quantity: int,
+     * }>
+     */
+    public function findByOrderIdAndOrderDetailId(
+        int $orderId,
+        int $orderDetailId
+    ): array {
+        $conn = $this->getEntityManager()->getConnection();
+        $qb = $conn->createQueryBuilder();
+        $qb
+            ->select(
+                'sp.id_shipment',
+                'sp.quantity AS quantity'
+            )
+            ->from($this->tablePrefix . 'shipment_product', 'sp')
+            ->innerJoin(
+                'sp',
+                $this->tablePrefix . 'shipment',
+                's',
+                's.id_shipment = sp.id_shipment'
+            )
+            ->where('sp.id_order_detail = :orderDetailId')
+            ->andWhere('s.id_order = :orderId')
+            ->andWhere('s.deleted = false')
+            ->groupBy('sp.id_shipment')
+            ->setParameter('orderDetailId', $orderDetailId)
+            ->setParameter('orderId', $orderId);
+
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 
     public function findByOrderAndShipmentId(int $orderId, int $shipmentId): ?Shipment
     {
-        return $this->findOneBy(['orderId' => $orderId, 'id' => $shipmentId]);
+        return $this->findOneBy(['orderId' => $orderId, 'id' => $shipmentId, 'deleted' => false]);
     }
 
     public function findById(int $shipmentId): ?Shipment
     {
-        return $this->findOneBy(['id' => $shipmentId]);
+        return $this->findOneBy(['id' => $shipmentId, 'deleted' => false]);
+    }
+
+    /**
+     * @param int[] $shipmentIds
+     *
+     * @return Shipment[]
+     */
+    public function findByIds(array $shipmentIds): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.id IN (:ids)')
+            ->andWhere('s.deleted = false')
+            ->setParameter('ids', $shipmentIds)
+            ->getQuery()
+            ->getResult();
     }
 
     public function findByCarrierId(int $carrierId): array
     {
-        return $this->findBy(['carrierId' => $carrierId]);
+        return $this->findBy(['carrierId' => $carrierId, 'deleted' => false]);
     }
 
     public function save(Shipment $shipment): int
@@ -59,7 +118,7 @@ class ShipmentRepository extends EntityRepository
 
     public function delete(Shipment $shipment): void
     {
-        $this->getEntityManager()->remove($shipment);
+        $shipment->setDeleted(true);
         $this->getEntityManager()->flush();
     }
 
@@ -91,10 +150,70 @@ class ShipmentRepository extends EntityRepository
             ->from($this->tablePrefix . 'shipment', 's')
             ->leftJoin('s', $this->tablePrefix . 'shipment_product', 'sp', 's.id_shipment = sp.id_shipment')
             ->leftJoin('sp', $this->tablePrefix . 'order_detail', 'od', 'sp.id_order_detail = od.id_order_detail')
-            ->leftJoin('s', $this->tablePrefix . 'carrier', 'c', 's.id_carrier = c.id_carrier')->where('s.id_order = :orderId')
+            ->leftJoin('s', $this->tablePrefix . 'carrier', 'c', 's.id_carrier = c.id_carrier')
+            ->where('s.id_order = :orderId')
+            ->andWhere('s.deleted = false')
             ->setParameter('orderId', $orderId)
             ->groupBy('s.id_shipment');
 
         return $qb->executeQuery()->fetchAllAssociative();
+    }
+
+    public function deleteShipmentProductByOrderAndOrderDetail(
+        int $orderId,
+        int $orderDetailId
+    ): void {
+        $shipments = $this->findByOrderId($orderId);
+        foreach ($shipments as $shipment) {
+            foreach ($shipment->getProducts() as $product) {
+                if ($product->getOrderDetailId() === $orderDetailId) {
+                    $shipment->removeProduct($product);
+                }
+            }
+            if ($shipment->getProducts()->isEmpty()) {
+                $shipment->setDeleted(true);
+            }
+        }
+        $this->getEntityManager()->flush();
+    }
+
+    public function deleteEmptyShipmentByOrder(
+        int $orderId,
+    ): void {
+        $shipments = $this->findByOrderId($orderId);
+        foreach ($shipments as $shipment) {
+            if ($shipment->getProducts()->isEmpty()) {
+                $shipment->setDeleted(true);
+            }
+        }
+        $this->getEntityManager()->flush();
+    }
+
+    public function updateShipmentProductQuantity(
+        int $shipmentId,
+        int $orderDetailId,
+        int $quantity
+    ): void {
+        $shipment = $this->findById($shipmentId);
+        if (!$shipment) {
+            return;
+        }
+
+        foreach ($shipment->getProducts() as $product) {
+            if ($product->getOrderDetailId() === $orderDetailId) {
+                if ($quantity <= 0) {
+                    $shipment->removeProduct($product);
+                } else {
+                    $product->setQuantity($quantity);
+                }
+                break;
+            }
+        }
+
+        if ($shipment->getProducts()->isEmpty()) {
+            $shipment->setDeleted(true);
+        }
+
+        $this->getEntityManager()->flush();
     }
 }

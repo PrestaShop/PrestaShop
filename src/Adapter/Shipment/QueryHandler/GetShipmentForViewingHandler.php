@@ -88,6 +88,7 @@ class GetShipmentForViewingHandler implements GetShipmentForViewingHandlerInterf
             $shipment->getTrackingNumber(),
             $carrierSummary,
             $shippingAdressSummary,
+            $shipment->isDeleted()
         );
     }
 }

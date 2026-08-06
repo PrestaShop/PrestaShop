@@ -5,7 +5,7 @@
       <trans-unit id="7601c8e861088bd27255e18afaefab6b">
         <source>%copyright% %year% - Ecommerce software by %prestashop%</source>
         <target>%copyright% %year% - Ecommerce software by %prestashop%</target>
-        <note>File: themes/hummingbird/templates/_partials/copyright.tpl [Line: 5]</note>
+        <note>File: themes/hummingbird/templates/_partials/copyright.tpl [Line: 9]</note>
       </trans-unit>
       <trans-unit id="d0f369aab921195580d8319855bbb69f">
         <source>%label%:</source>
@@ -15,7 +15,7 @@
       <trans-unit id="942f0386fba4d2d5c0496f020be920d5">
         <source>(No option selected)</source>
         <target>(No option selected)</target>
-        <note>File: themes/hummingbird/modules/ps_facetedsearch/views/templates/front/catalog/facets.tpl [Line: 198]</note>
+        <note>File: themes/hummingbird/modules/ps_facetedsearch/views/templates/front/catalog/facets.tpl [Line: 184]</note>
       </trans-unit>
       <trans-unit id="7a1c5301da6b1ce9e4345bd501397045">
         <source>(no filter)</source>
@@ -25,22 +25,22 @@
       <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
         <source>(tax excl.)</source>
         <target>(tax excl.)</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 529]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 553]</note>
       </trans-unit>
       <trans-unit id="e9e7ca277da652bde67ef5faafb755dc">
         <source>(tax excluded)</source>
         <target>(tax excluded)</target>
-        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 486]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 501]</note>
       </trans-unit>
       <trans-unit id="1f87346a16cf80c372065de3c54c86d9">
         <source>(tax incl.)</source>
         <target>(tax incl.)</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 524]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 548]</note>
       </trans-unit>
       <trans-unit id="e3ddbe6b144e01554bfa072db9bcca2f">
         <source>(tax included)</source>
         <target>(tax included)</target>
-        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 485]</note>
+        <note>File: src/Adapter/Presenter/Order/OrderLazyArray.php [Line: 500]</note>
       </trans-unit>
       <trans-unit id="6351030f724f6f42fd11ec9aa6ee8c76">
         <source>403 Forbidden</source>
@@ -50,7 +50,7 @@
       <trans-unit id="9769bc6be635c708fee72d29f5a08f30">
         <source>A word by itself is easy to guess</source>
         <target>A word by itself is easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1800]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1880]</note>
       </trans-unit>
       <trans-unit id="adc4f9f9cccaa450c10977d50da58d8d">
         <source>About and Contact</source>
@@ -65,7 +65,7 @@
       <trans-unit id="a2bfda43aef35df5f7edb8f8de1f5f30">
         <source>Add another word or two. Uncommon words are better.</source>
         <target>Add another word or two. Uncommon words are better.</target>
-        <note>File: classes/controller/FrontController.php [Line: 1814]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1894]</note>
       </trans-unit>
       <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
         <source>Addresses</source>
@@ -75,12 +75,12 @@
       <trans-unit id="b1c94ca2fbc3e78fc30069c8d0f01680">
         <source>All</source>
         <target>All</target>
-        <note>File: themes/hummingbird/modules/ps_mainmenu/ps_mainmenu.tpl [Line: 221]</note>
+        <note>File: themes/hummingbird/modules/ps_mainmenu/ps_mainmenu.tpl [Line: 224]</note>
       </trans-unit>
       <trans-unit id="82958461f3498cc00c0e95ffc05c482d">
         <source>All-uppercase is almost as easy to guess as all-lowercase</source>
         <target>All-uppercase is almost as easy to guess as all-lowercase</target>
-        <note>File: classes/controller/FrontController.php [Line: 1811]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1891]</note>
       </trans-unit>
       <trans-unit id="b1897515d548a960afe49ecf66a29021">
         <source>Average</source>
@@ -90,32 +90,32 @@
       <trans-unit id="54e26a80f66b734f94bc2bd91f3a39ca">
         <source>Avoid dates and years that are associated with you</source>
         <target>Avoid dates and years that are associated with you</target>
-        <note>File: classes/controller/FrontController.php [Line: 1809]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1889]</note>
       </trans-unit>
       <trans-unit id="b4535b0e01e0d48c4e38758a933870ad">
         <source>Avoid recent years</source>
         <target>Avoid recent years</target>
-        <note>File: classes/controller/FrontController.php [Line: 1807]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1887]</note>
       </trans-unit>
       <trans-unit id="6af81f974e7c0a35a3a80db30e8e9fa1">
         <source>Avoid repeated words and characters</source>
         <target>Avoid repeated words and characters</target>
-        <note>File: classes/controller/FrontController.php [Line: 1805]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1885]</note>
       </trans-unit>
       <trans-unit id="cf80cfbbf9eb1b8fc60a7c2c4a1d02d2">
         <source>Avoid sequences</source>
         <target>Avoid sequences</target>
-        <note>File: classes/controller/FrontController.php [Line: 1806]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1886]</note>
       </trans-unit>
       <trans-unit id="18d5eb58e70730c3d43d6a8775201057">
         <source>Avoid years that are associated with you</source>
         <target>Avoid years that are associated with you</target>
-        <note>File: classes/controller/FrontController.php [Line: 1808]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1888]</note>
       </trans-unit>
       <trans-unit id="0557fa923dcee4d0f86b1409f5c2167f">
         <source>Back</source>
         <target>Back</target>
-        <note>File: themes/hummingbird/templates/catalog/_partials/product-customization-modal.tpl [Line: 80]</note>
+        <note>File: themes/hummingbird/templates/catalog/_partials/product-customization-modal.tpl [Line: 84]</note>
       </trans-unit>
       <trans-unit id="7c491b68fcdc8169f7aadfffbafaf47d">
         <source>Back to top</source>
@@ -125,7 +125,7 @@
       <trans-unit id="84be54bb4bd1b755a27d86388700d097">
         <source>Brands</source>
         <target>Brands</target>
-        <note>File: controllers/front/listing/ManufacturerController.php [Line: 224]</note>
+        <note>File: controllers/front/listing/ManufacturerController.php [Line: 215]</note>
       </trans-unit>
       <trans-unit id="2859504d8a2d6dc9f6505dc2fd8e5371">
         <source>Call us at: %phone%</source>
@@ -150,12 +150,12 @@
       <trans-unit id="ea4788705e6873b424c65e91c2846b19">
         <source>Cancel</source>
         <target>Cancel</target>
-        <note>File: themes/hummingbird/modules/ps_searchbar/ps_searchbar.tpl [Line: 79]</note>
+        <note>File: themes/hummingbird/modules/ps_searchbar/ps_searchbar.tpl [Line: 60]</note>
       </trans-unit>
       <trans-unit id="fb6fb2ced4938c895874cd10f135a624">
         <source>Capitalization doesn't help very much</source>
         <target>Capitalization doesn't help very much</target>
-        <note>File: classes/controller/FrontController.php [Line: 1810]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1890]</note>
       </trans-unit>
       <trans-unit id="6dbac206aa2d7e374277ae9ff8ec1987">
         <source>Carousel buttons</source>
@@ -190,12 +190,12 @@
       <trans-unit id="a462ef1c04901e8b0f276c76c1b683c8">
         <source>Close search</source>
         <target>Close search</target>
-        <note>File: themes/hummingbird/modules/ps_searchbar/ps_searchbar.tpl [Line: 79]</note>
+        <note>File: themes/hummingbird/modules/ps_searchbar/ps_searchbar.tpl [Line: 60]</note>
       </trans-unit>
       <trans-unit id="c8a17899dc267baa655e66e93dfa97a2">
         <source>Common names and surnames are easy to guess</source>
         <target>Common names and surnames are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1802]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1882]</note>
       </trans-unit>
       <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
         <source>Contact us</source>
@@ -229,7 +229,7 @@
       <trans-unit id="b3c7b778a3c8c869426ae81486275b12">
         <source>Dates are often easy to guess</source>
         <target>Dates are often easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1795]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1875]</note>
       </trans-unit>
       <trans-unit id="d54d0d430d4b7a5ee44490337c932138">
         <source>Delivery option: %carrier_name%</source>
@@ -254,7 +254,7 @@
       <trans-unit id="c33b138a163847cdb6caeeb7c9a126b4">
         <source>Friday</source>
         <target>Friday</target>
-        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 121]</note>
+        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 126]</note>
       </trans-unit>
       <trans-unit id="3805f49499fa5010c394e219aa1fe7a0">
         <source>Get our latest news and special sales</source>
@@ -305,6 +305,11 @@
         <target>Log in</target>
         <note>File: controllers/front/SitemapController.php [Line: 146]</note>
       </trans-unit>
+      <trans-unit id="4d7a3b1c46041dc73dec5764f3a6b63a">
+        <source>Main menu</source>
+        <target>Main menu</target>
+        <note>File: themes/hummingbird/modules/ps_mainmenu/ps_mainmenu.tpl [Line: 218]</note>
+      </trans-unit>
       <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
         <source>Merchandise returns</source>
         <target>Merchandise returns</target>
@@ -313,17 +318,17 @@
       <trans-unit id="6f8522e0610541f1ef215a22ffa66ff6">
         <source>Monday</source>
         <target>Monday</target>
-        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 105]</note>
+        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 110]</note>
       </trans-unit>
       <trans-unit id="83812066e07a07e691d165c97ba89735">
         <source>Names and surnames by themselves are easy to guess</source>
         <target>Names and surnames by themselves are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1801]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1881]</note>
       </trans-unit>
       <trans-unit id="03c2e7e41ffc181a4e84080b4710e81e">
         <source>New</source>
         <target>New</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 726]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 750]</note>
       </trans-unit>
       <trans-unit id="10ac3d04253ef7e1ddc73e6091c0cd55">
         <source>Next</source>
@@ -348,7 +353,7 @@
       <trans-unit id="db3fe1774e30b4103c663805d999043b">
         <source>No need for symbols, digits, or uppercase letters</source>
         <target>No need for symbols, digits, or uppercase letters</target>
-        <note>File: classes/controller/FrontController.php [Line: 1804]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1884]</note>
       </trans-unit>
       <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
         <source>None</source>
@@ -373,7 +378,7 @@
       <trans-unit id="8aedfe9265263408f5a72fff0a21c118">
         <source>Predictable substitutions like "@" instead of "a" don't help very much</source>
         <target>Predictable substitutions like "@" instead of "a" don't help very much</target>
-        <note>File: classes/controller/FrontController.php [Line: 1813]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1893]</note>
       </trans-unit>
       <trans-unit id="dd1f775e443ff3b9a89270713580a51b">
         <source>Previous</source>
@@ -393,32 +398,32 @@
       <trans-unit id="9d4eaa9c941d7d5bbdb0547255e7fd0b">
         <source>Product filters</source>
         <target>Product filters</target>
-        <note>File: themes/hummingbird/modules/ps_facetedsearch/views/templates/front/catalog/facets.tpl [Line: 22]</note>
+        <note>File: themes/hummingbird/modules/ps_facetedsearch/views/templates/front/catalog/facets.tpl [Line: 8]</note>
       </trans-unit>
       <trans-unit id="25096ab4fbb9994547ace751ca107515">
         <source>Recent years are easy to guess</source>
         <target>Recent years are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1794]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1874]</note>
       </trans-unit>
       <trans-unit id="773ac0d662987369abf46eebc9000a09">
         <source>Repeats like "aaa" are easy to guess</source>
         <target>Repeats like "aaa" are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1791]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1871]</note>
       </trans-unit>
       <trans-unit id="97681c90722711e8081dcbd10620502e">
         <source>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</source>
         <target>Repeats like "abcabcabc" are only slightly harder to guess than "abc"</target>
-        <note>File: classes/controller/FrontController.php [Line: 1792]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1872]</note>
       </trans-unit>
       <trans-unit id="fc51ea2f3761abe2201b06a33f75748e">
         <source>Reversed words aren't much harder to guess</source>
         <target>Reversed words aren't much harder to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1812]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1892]</note>
       </trans-unit>
       <trans-unit id="8b7051187b9191cdcdae6ed5a10e5adc">
         <source>Saturday</source>
         <target>Saturday</target>
-        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 125]</note>
+        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 130]</note>
       </trans-unit>
       <trans-unit id="46daba3c618d21ffd4f564527bd9b118">
         <source>Send us a fax to: %fax%</source>
@@ -433,7 +438,7 @@
       <trans-unit id="de3492070cd44f280a6f398dca2f1efb">
         <source>Sequences like "abc" or "6543" are easy to guess</source>
         <target>Sequences like "abc" or "6543" are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1793]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1873]</note>
       </trans-unit>
       <trans-unit id="552a0d8c17d95d5dbdc0c28217024f5a">
         <source>Shipping cost</source>
@@ -442,12 +447,12 @@
       <trans-unit id="bed5e315d09dedac517831b95571a7f4">
         <source>Short keyboard patterns are easy to guess</source>
         <target>Short keyboard patterns are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1789]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1869]</note>
       </trans-unit>
       <trans-unit id="f1006d542b60752f0f72107f84d7069a">
         <source>Show search bar</source>
         <target>Show search bar</target>
-        <note>File: themes/hummingbird/modules/ps_searchbar/ps_searchbar.tpl [Line: 71]</note>
+        <note>File: themes/hummingbird/modules/ps_searchbar/ps_searchbar.tpl [Line: 52]</note>
       </trans-unit>
       <trans-unit id="5813ce0ec7196c492c97596718f71969">
         <source>Sitemap</source>
@@ -487,7 +492,7 @@
       <trans-unit id="43775ce1723057d9e3d21e5969324fd1">
         <source>Straight rows of keys are easy to guess</source>
         <target>Straight rows of keys are easy to guess</target>
-        <note>File: classes/controller/FrontController.php [Line: 1788]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1868]</note>
       </trans-unit>
       <trans-unit id="c43e0fd449c758dab8f891d8e19eb1a9">
         <source>Strong</source>
@@ -497,17 +502,17 @@
       <trans-unit id="9d1a0949c39e66a0cd65240bc0ac9177">
         <source>Sunday</source>
         <target>Sunday</target>
-        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 129]</note>
+        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 134]</note>
       </trans-unit>
       <trans-unit id="befcac0f9644a7abee43e69f49252ac4">
         <source>Tax excluded</source>
         <target>Tax excluded</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 540]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 564]</note>
       </trans-unit>
       <trans-unit id="f4a0d7cb0cd45214c8ca5912c970de13">
         <source>Tax included</source>
         <target>Tax included</target>
-        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 535]</note>
+        <note>File: src/Adapter/Presenter/Product/ProductLazyArray.php [Line: 559]</note>
       </trans-unit>
       <trans-unit id="f2fbecfb4e1f8fd471dcc0881d8518f1">
         <source>The page you are looking for was not found.</source>
@@ -517,22 +522,22 @@
       <trans-unit id="954a21d373e3f1bd2446606700a37217">
         <source>This is a top-10 common password</source>
         <target>This is a top-10 common password</target>
-        <note>File: classes/controller/FrontController.php [Line: 1796]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1876]</note>
       </trans-unit>
       <trans-unit id="f6e52aa06b58dd0d8855340b165c0b49">
         <source>This is a top-100 common password</source>
         <target>This is a top-100 common password</target>
-        <note>File: classes/controller/FrontController.php [Line: 1797]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1877]</note>
       </trans-unit>
       <trans-unit id="0f4a64d2fecd6b4ab2c10d21313e02a6">
         <source>This is a very common password</source>
         <target>This is a very common password</target>
-        <note>File: classes/controller/FrontController.php [Line: 1798]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1878]</note>
       </trans-unit>
       <trans-unit id="c92578d4545d5aceb430aed0c7285398">
         <source>This is similar to a commonly used password</source>
         <target>This is similar to a commonly used password</target>
-        <note>File: classes/controller/FrontController.php [Line: 1799]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1879]</note>
       </trans-unit>
       <trans-unit id="4f0e08d060041845b0bbc6571b3a03d5">
         <source>This page could not be found</source>
@@ -542,12 +547,12 @@
       <trans-unit id="78ae6f0cd191d25147e252dc54768238">
         <source>Thursday</source>
         <target>Thursday</target>
-        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 117]</note>
+        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 122]</note>
       </trans-unit>
       <trans-unit id="3224ef79c5274fe89e9960d7b17ff1c1">
         <source>Toggle %s links</source>
         <target>Toggle %s links</target>
-        <note>File: themes/hummingbird/modules/ps_linklist/views/templates/hook/linkblock.tpl [Line: 26]</note>
+        <note>File: themes/hummingbird/modules/ps_linklist/views/templates/hook/linkblock.tpl [Line: 25]</note>
       </trans-unit>
       <trans-unit id="a6ca322157021c835ff63a8b03ed1f9d">
         <source>Toggle store information</source>
@@ -566,22 +571,22 @@
       <trans-unit id="5792315f09a5d54fb7e3d066672b507f">
         <source>Tuesday</source>
         <target>Tuesday</target>
-        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 109]</note>
+        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 114]</note>
       </trans-unit>
       <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
         <source>Undefined</source>
         <target>Undefined</target>
-        <note>File: classes/controller/FrontController.php [Line: 922]</note>
+        <note>File: classes/controller/FrontController.php [Line: 956]</note>
       </trans-unit>
       <trans-unit id="dd96380694cf9e241cba2b2ac4cf8c03">
         <source>Use a few words, avoid common phrases</source>
         <target>Use a few words, avoid common phrases</target>
-        <note>File: classes/controller/FrontController.php [Line: 1803]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1883]</note>
       </trans-unit>
       <trans-unit id="37ffb1976d12530b5c07821baaf5be39">
         <source>Use a longer keyboard pattern with more turns</source>
         <target>Use a longer keyboard pattern with more turns</target>
-        <note>File: classes/controller/FrontController.php [Line: 1790]</note>
+        <note>File: classes/controller/FrontController.php [Line: 1870]</note>
       </trans-unit>
       <trans-unit id="516b34a4d2351006f3a0f39ccffccefa">
         <source>Very strong</source>
@@ -631,7 +636,7 @@
       <trans-unit id="796c163589f295373e171842f37265d5">
         <source>Wednesday</source>
         <target>Wednesday</target>
-        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 113]</note>
+        <note>File: src/Adapter/Presenter/Store/StoreLazyArray.php [Line: 118]</note>
       </trans-unit>
       <trans-unit id="8c489d0946f66d17d73f26366a4bf620">
         <source>Weight</source>
@@ -655,12 +660,12 @@
       <trans-unit id="b4a88417b3d0170d754c647c30b7216a">
         <source>result</source>
         <target>result</target>
-        <note>File: themes/hummingbird/modules/ps_facetedsearch/views/templates/front/catalog/facets.tpl [Line: 213]</note>
+        <note>File: themes/hummingbird/modules/ps_facetedsearch/views/templates/front/catalog/facets.tpl [Line: 199]</note>
       </trans-unit>
       <trans-unit id="53e61336bb49ec978968786b07dea50b">
         <source>results</source>
         <target>results</target>
-        <note>File: themes/hummingbird/modules/ps_facetedsearch/views/templates/front/catalog/facets.tpl [Line: 213]</note>
+        <note>File: themes/hummingbird/modules/ps_facetedsearch/views/templates/front/catalog/facets.tpl [Line: 199]</note>
       </trans-unit>
       <trans-unit id="72027ab6282cfc260d37496ee61b335d">
         <source>x%quantity%</source>

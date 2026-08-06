@@ -5,6 +5,8 @@
  */
 
 /**
+ * @deprecated since 9.2 and will be removed in 10.0 - This controller was migrated in 9.2
+ *
  * @property Tag $object
  */
 class AdminTagsControllerCore extends AdminController

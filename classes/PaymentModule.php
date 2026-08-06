@@ -3,9 +3,13 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPartialTemplateRenderer;
 use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentCreator;
+use PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentService;
+use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater;
 use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 
@@ -211,6 +215,7 @@ abstract class PaymentModuleCore extends Module
             'id_order_state' => &$id_order_state,
             'payment_method' => $payment_method,
         ]);
+        $orderShipmentService = $this->get(OrderShipmentService::class);
 
         $this->context->cart = new Cart((int) $id_cart);
         $this->context->customer = new Customer((int) $this->context->cart->id_customer);
@@ -469,11 +474,22 @@ abstract class PaymentModuleCore extends Module
 
                 $product_price = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, Context::getContext()->getComputingPrecision()) : $price_wt;
 
+                $carrierName = null;
+                if ($orderShipmentService->orderHasShipment($order->id)) {
+                    $carrierName = $orderShipmentService->getCarrierForProduct($order->id, (int) $product['id_product'])->name;
+                }
+
                 $product_var_tpl = [
                     'id_product' => $product['id_product'],
                     'id_product_attribute' => $product['id_product_attribute'],
                     'reference' => $product['reference'],
-                    'name' => $product['name'] . (!empty($product['attributes']) ? ' - ' . $product['attributes'] : ''),
+                    'name' => $this->trans(
+                        '%name%%attributes%%carrier%',
+                        [
+                            '%name%' => $product['name'],
+                            '%attributes%' => !empty($product['attributes']) ? $this->trans(' - %attributes%', ['%attributes%' => $product['attributes']], 'Emails.Body') : '',
+                            '%carrier%' => $carrierName ? $this->trans(' - Carrier: %carrier_name%', ['%carrier_name%' => $carrierName], 'Emails.Body') : '',
+                        ], 'Emails.Body'),
                     'price' => Tools::getContextLocale($this->context)->formatPrice($product_price * $product['quantity'], $this->context->currency->iso_code),
                     'quantity' => $product['quantity'],
                     'customization' => [],
@@ -494,7 +510,9 @@ abstract class PaymentModuleCore extends Module
                         $customization_text = '';
                         if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
                             foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
-                                $customization_text .= '<strong>' . $text['name'] . '</strong>: ' . htmlspecialchars($text['value'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '<br />';
+                                $customization_text .= '<strong>' . $text['name'] . '</strong>: '
+                                    . $this->formatCustomizationValueForEmail($text)
+                                    . '<br />';
                             }
                         }
 
@@ -662,6 +680,15 @@ abstract class PaymentModuleCore extends Module
                 }
 
                 if (Validate::isEmail($this->context->customer->email)) {
+                    if ($orderShipmentService->orderHasShipment($order->id)) {
+                        $carriers = $orderShipmentService->getAllCarriersForOrder($order->id);
+                        $carrierNames = array_map(fn ($carrier) => $carrier->name, $carriers);
+                        $carrierNames = implode(', ', $carrierNames);
+                    } else {
+                        $carrier = new Carrier($order->id_carrier);
+                        $carrierNames = $carrier->name;
+                    }
+
                     $data = [
                         '{firstname}' => $this->context->customer->firstname,
                         '{lastname}' => $this->context->customer->lastname,
@@ -702,7 +729,7 @@ abstract class PaymentModuleCore extends Module
                         '{order_name}' => $order->getUniqReference(),
                         '{id_order}' => $order->id,
                         '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), true),
-                        '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', [], 'Admin.Payment.Notification') : $carrier->name,
+                        '{carrier}' => ($virtual_product || !isset($carrierNames)) ? $this->trans('No carrier', [], 'Admin.Payment.Notification') : $carrierNames,
                         '{payment}' => $order->payment,
                         '{products}' => $product_list_html,
                         '{products_txt}' => $product_list_txt,
@@ -865,6 +892,42 @@ abstract class PaymentModuleCore extends Module
         }
 
         return Currency::getCurrencyInstance((int) $id_currency);
+    }
+
+    /**
+     * @param array<string, mixed> $customizationText
+     */
+    private function formatCustomizationValueForEmail(array $customizationText): string
+    {
+        static $moduleNames = [];
+        static $moduleManager = null;
+
+        if (!empty($customizationText['id_module'])) {
+            $moduleId = (int) $customizationText['id_module'];
+
+            if (!array_key_exists($moduleId, $moduleNames)) {
+                $module = Module::getInstanceById($moduleId);
+
+                if (false === $module) {
+                    $moduleNames[$moduleId] = null;
+                } else {
+                    $moduleNames[$moduleId] = $module->name;
+                }
+            }
+
+            if (!empty($moduleNames[$moduleId])) {
+                if (null === $moduleManager) {
+                    $moduleManager = ModuleManagerBuilder::getInstance()->build();
+                }
+
+                if ($moduleManager->isEnabled($moduleNames[$moduleId])) {
+                    // Allow module-provided HTML in emails only after sanitizing to prevent XSS.
+                    return Tools::purifyHTML((string) $customizationText['value']);
+                }
+            }
+        }
+
+        return htmlspecialchars((string) $customizationText['value'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
     /**
@@ -1065,37 +1128,22 @@ abstract class PaymentModuleCore extends Module
         );
         $order->total_discounts = $order->total_discounts_tax_incl;
 
-        $order->total_shipping_tax_incl = Tools::ps_round(
-            (float) abs($cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $order->product_list, null)),
-            $computingPrecision
-        );
-
-        $order->total_shipping_tax_excl = Tools::ps_round(
-            (float) abs($cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $order->product_list, null)),
-            $computingPrecision
-        );
-
-        // loop for each carrier to store the shipping cost
-        if ($this->isFeatureFlagIsEnabledForMultiShipment()) {
-            foreach ($productList as $carrierId => $product) {
-                $totalShippingTaxExcl = Tools::ps_round(
-                    (float) abs($cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $order->product_list, $carrierId)),
-                    $computingPrecision
-                );
-                $totalShippingTaxIncl = Tools::ps_round(
-                    (float) abs($cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $order->product_list, $carrierId)),
-                    $computingPrecision
-                );
-
-                $productList[$carrierId]['total_shipping_tax_excl'] = $totalShippingTaxExcl;
-                $productList[$carrierId]['total_shipping_tax_incl'] = $totalShippingTaxIncl;
-            }
-        }
-
-        $order->total_shipping = $order->total_shipping_tax_incl;
-
         if (null !== $carrier && Validate::isLoadedObject($carrier)) {
             $order->carrier_tax_rate = $carrier->getTaxesRate(new Address((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+        }
+
+        if (!$this->isFeatureFlagIsEnabledForMultiShipment()) {
+            $order->total_shipping_tax_incl = Tools::ps_round(
+                (float) abs($cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $order->product_list, null)),
+                $computingPrecision
+            );
+
+            $order->total_shipping_tax_excl = Tools::ps_round(
+                (float) abs($cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $order->product_list, null)),
+                $computingPrecision
+            );
+
+            $order->total_shipping = $order->total_shipping_tax_incl;
         }
 
         $order->total_wrapping_tax_excl = Tools::ps_round(
@@ -1176,6 +1224,10 @@ abstract class PaymentModuleCore extends Module
 
         if ($this->isFeatureFlagIsEnabledForMultiShipment()) {
             $this->addShipmentToOrder($order, $productList);
+
+            /** @var ShipmentShippingCostUpdater $shipmentShippingCostUpdater */
+            $shipmentShippingCostUpdater = $this->get(ShipmentShippingCostUpdater::class);
+            $order = $shipmentShippingCostUpdater->recalculateForOrder((int) $order->id);
         }
 
         return ['order' => $order, 'orderDetail' => $order_detail];
@@ -1332,12 +1384,8 @@ abstract class PaymentModuleCore extends Module
 
     private function addShipmentToOrder(Order $order, array $productsByCarrier)
     {
-        if (!$this->isFeatureFlagIsEnabledForMultiShipment()) {
-            return;
-        }
-
         /** @var OrderShipmentCreator $orderShipmentCreator */
-        $orderShipmentCreator = $this->get('PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentCreator');
+        $orderShipmentCreator = $this->get(OrderShipmentCreator::class);
         $physicalProductsByCarrier = [];
 
         foreach ($productsByCarrier as $carrierId => $products) {
@@ -1347,8 +1395,6 @@ abstract class PaymentModuleCore extends Module
 
             if (!empty($filteredProducts)) {
                 $physicalProductsByCarrier[$carrierId]['product_list'] = array_values($filteredProducts);
-                $physicalProductsByCarrier[$carrierId]['total_shipping_tax_excl'] = $products['total_shipping_tax_excl'];
-                $physicalProductsByCarrier[$carrierId]['total_shipping_tax_incl'] = $products['total_shipping_tax_incl'];
             }
         }
         $orderShipmentCreator->addShipmentOrder($order, $physicalProductsByCarrier);

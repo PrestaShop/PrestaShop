@@ -39,6 +39,9 @@
     <tab id="Customers_1" name="Customers" />
     <tab id="Customers_2" name="Customers" />
     <tab id="Customers" name="Customers" />
+    <tab id="AdminCustomersB2B" name="Customers B2B" />
+    <tab id="AdminBusinessEntities" name="Business Entities" />
+    <tab id="AdminBusinessEntity" name="Business Entity" />
     <tab id="Dashboard" name="Dashboard" />
     <tab id="Database" name="Database" />
     <tab id="DB_Backup" name="DB Backup" />
@@ -132,6 +135,7 @@
     <tab id="Traffic" name="Traffic &amp; SEO" />
     <tab id="Translations" name="Translations" />
     <tab id="Webservice" name="Webservice" />
+    <tab id="ExtraPropertyDefinitions" name="Extra Properties" />
     <tab id="AdminAPI" name="Admin API" />
     <tab id="Zones" name="Zones" />
     <tab id="Marketing_tools" name="Module Selections" />

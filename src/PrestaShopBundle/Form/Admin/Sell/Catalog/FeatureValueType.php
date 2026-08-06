@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Feature\FeatureValueSettings;
@@ -41,6 +42,9 @@ class FeatureValueType extends TranslatorAwareType
                 ],
                 'options' => [
                     'constraints' => [
+                        new CleanHtml([
+                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        ]),
                         new TypedRegex([
                             'type' => 'generic_name',
                         ]),

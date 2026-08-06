@@ -113,7 +113,7 @@ export default class FormFieldToggler {
     this.toggle(targetSelector, disabledState, switchEvent);
   }
 
-  private getInputValue(inputElement: HTMLInputElement): string | undefined {
+  private getInputValue(inputElement: HTMLInputElement): string | false | undefined {
     switch (inputElement.type) {
       case 'radio': {
         const checkedRadios = document.querySelectorAll<HTMLInputElement>(`[name="${inputElement.name}"]`);
@@ -127,7 +127,7 @@ export default class FormFieldToggler {
         return checkedValue;
       }
       case 'checkbox':
-        return inputElement.checked ? inputElement.value : undefined;
+        return inputElement.checked ? inputElement.value : false;
       default:
         return inputElement.value;
     }

@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Discount\Update\Filler;
 
 use CartRule;
+use PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountRepository;
 use PrestaShop\PrestaShop\Adapter\Discount\Trait\ProductConditionsTrait;
 use PrestaShop\PrestaShop\Adapter\Domain\LocalizedObjectModelTrait;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\UpdateDiscountCommand;
@@ -18,6 +19,11 @@ class DiscountFiller
     use LocalizedObjectModelTrait;
     use ProductConditionsTrait;
 
+    public function __construct(
+        protected readonly DiscountRepository $discountRepository,
+    ) {
+    }
+
     public function fillUpdatableProperties(CartRule $cartRule, UpdateDiscountCommand $command): array
     {
         $updatableProperties = [];
@@ -26,7 +32,8 @@ class DiscountFiller
             $updatableProperties[] = 'date_from';
         }
         if ($command->isDirty('validTo')) {
-            $cartRule->date_to = $command->getValidTo()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+            $validTo = $command->getValidTo();
+            $cartRule->date_to = $validTo !== null ? $validTo->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) : null;
             $updatableProperties[] = 'date_to';
         }
         if ($command->isDirty('localizedNames')) {
@@ -58,7 +65,17 @@ class DiscountFiller
             $updatableProperties[] = 'id_customer';
         }
         if ($command->isDirty('totalQuantity')) {
-            $cartRule->quantity = $command->getTotalQuantity();
+            if (null === $command->getTotalQuantity()) {
+                $cartRule->total_quantity = null;
+                $cartRule->quantity = null;
+            } else {
+                // Update total quantity field with provided integer value, the remaining quantity should be updated
+                // accordingly based on the already used quantity
+                $quantityUsed = $this->discountRepository->getQuantityUsedInOrders($command->getDiscountId());
+                $cartRule->total_quantity = $command->getTotalQuantity();
+                $cartRule->quantity = max($cartRule->total_quantity - $quantityUsed, 0);
+            }
+            $updatableProperties[] = 'total_quantity';
             $updatableProperties[] = 'quantity';
         }
         if ($command->isDirty('quantityPerUser')) {

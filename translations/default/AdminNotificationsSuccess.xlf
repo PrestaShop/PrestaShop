@@ -60,7 +60,7 @@
       <trans-unit id="149cd107b688af7a007e739fd51ac919">
         <source>Successful deletion.</source>
         <target>Successful deletion.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/CountryController.php [Line: 157]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Improve/International/CountryController.php [Line: 200]</note>
       </trans-unit>
       <trans-unit id="63cca4f457cad586dc9495a2e671b745">
         <source>Successful duplication</source>
@@ -70,12 +70,12 @@
       <trans-unit id="d4eab6753f9f3d4b57580427264beaa6">
         <source>Successful update</source>
         <target>Successful update</target>
-        <note>File: admin-dev/themes/default/template/header.tpl [Line: 61]</note>
+        <note>File: admin-dev/themes/default/template/header.tpl [Line: 62]</note>
       </trans-unit>
       <trans-unit id="b4a34d3f58b039e7685c2e39b5413757">
         <source>Successful update.</source>
         <target>Successful update.</target>
-        <note>File: modules/ps_linklist/src/Controller/Admin/Improve/Design/LinkBlockController.php [Line: 169]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/QuickAccessController.php [Line: 119]</note>
       </trans-unit>
       <trans-unit id="be3af9d697c193da1a7dbfcf195050ea">
         <source>Successful upgrade.</source>
@@ -115,12 +115,12 @@
       <trans-unit id="9cdbb80d4545ac63312bd530784829a3">
         <source>The product was successfully added.</source>
         <target>The product was successfully added.</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/view.html.twig [Line: 92]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/view.html.twig [Line: 97]</note>
       </trans-unit>
       <trans-unit id="dc6df66ef8a64a3bf228c70e64269a8e">
         <source>The product was successfully removed.</source>
         <target>The product was successfully removed.</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/view.html.twig [Line: 93]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/view.html.twig [Line: 98]</note>
       </trans-unit>
       <trans-unit id="13f1ce18a02ac5293cf5a4274f9300de">
         <source>The selected images have successfully been moved.</source>
@@ -140,7 +140,7 @@
       <trans-unit id="efc226b17e0532afff43be870bff0de7">
         <source>The settings have been updated.</source>
         <target>The settings have been updated.</target>
-        <note>File: modules/ps_viewedproduct/ps_viewedproduct.php [Line: 107]</note>
+        <note>File: modules/ps_viewedproduct/ps_viewedproduct.php [Line: 93]</note>
       </trans-unit>
       <trans-unit id="1802a23025825ae791c1eea0118ee5f0">
         <source>The status has been successfully updated.</source>
@@ -170,7 +170,7 @@
       <trans-unit id="cc6450370541d1ecfdbdada739732ec1">
         <source>Update successful.</source>
         <target>Update successful.</target>
-        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 1017]</note>
+        <note>File: src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php [Line: 1021]</note>
       </trans-unit>
       <trans-unit id="714903406a224ca68890e377ea111388">
         <source>Your cover image selection has been saved.</source>
@@ -200,12 +200,12 @@
       <trans-unit id="abb8738509cd73014d30de00b1b16ebe">
         <source>[1] products were successfully added.</source>
         <target>[1] products were successfully added.</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/view.html.twig [Line: 94]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/view.html.twig [Line: 99]</note>
       </trans-unit>
       <trans-unit id="b34a5361f169c417578d4bfcf924aff6">
         <source>[1] products were successfully removed.</source>
         <target>[1] products were successfully removed.</target>
-        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/view.html.twig [Line: 95]</note>
+        <note>File: src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/view.html.twig [Line: 100]</note>
       </trans-unit>
     </body>
   </file>

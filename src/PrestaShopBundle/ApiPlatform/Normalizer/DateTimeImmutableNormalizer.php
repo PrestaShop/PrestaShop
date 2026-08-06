@@ -23,6 +23,10 @@ class DateTimeImmutableNormalizer implements DenormalizerInterface, NormalizerIn
 {
     public function denormalize($data, string $type, ?string $format = null, array $context = [])
     {
+        if (DateTimeUtil::isNull($data)) {
+            return null;
+        }
+
         return new DateTimeImmutable($data);
     }
 

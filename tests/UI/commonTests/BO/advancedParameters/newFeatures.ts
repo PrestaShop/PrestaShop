@@ -29,7 +29,11 @@ function setFeatureFlag(featureFlag: string, expectedStatus: boolean, baseContex
     case boFeatureFlagPage.featureFlagDiscount:
       title = 'Discount';
       break;
+    case boFeatureFlagPage.featureFlagExperimentalEndpoints:
+      title = 'Admin API - Enable experimental endpoints';
+      break;
     default:
+      console.error(`The feature flag ${featureFlag} is not defined`);
       throw new Error(`The feature flag ${featureFlag} is not defined`);
   }
 

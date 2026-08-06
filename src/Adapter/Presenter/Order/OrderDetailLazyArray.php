@@ -1,4 +1,5 @@
 <?php
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -12,11 +13,8 @@ use Context;
 use Currency;
 use HistoryController;
 use Order;
-use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\LazyArrayAttribute;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use PrestaShopBundle\Translation\TranslatorComponent;
@@ -59,6 +57,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
         $this->translator = Context::getContext()->getTranslator();
         $this->locale = $this->context->getCurrentLocale();
         $this->shipmentRepository = $shipmentRepository;
+        $this->initExtraPropertiesBag(Order::class, (int) $order->id, (int) $order->id_lang ?: null);
         parent::__construct();
     }
 
@@ -183,17 +182,19 @@ class OrderDetailLazyArray extends AbstractLazyArray
         return $cart->isVirtualCart();
     }
 
+    #[LazyArrayAttribute(arrayAccess: true)]
+    public function hasShipments(): bool
+    {
+        return !empty($this->shipmentRepository->findByOrderId($this->order->id));
+    }
+
     /**
      * @return array
      */
     #[LazyArrayAttribute(arrayAccess: true)]
     public function getShipping()
     {
-        $containerFinder = new ContainerFinder(Context::getContext());
-        /** @var FeatureFlagStateCheckerInterface $featureFlagManager */
-        $featureFlagManager = $containerFinder->getContainer()->get(FeatureFlagStateCheckerInterface::class);
-
-        if ($featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT)) {
+        if ($this->hasShipments()) {
             return $this->getShipments();
         }
 

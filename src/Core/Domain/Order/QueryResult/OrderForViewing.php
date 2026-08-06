@@ -68,6 +68,11 @@ class OrderForViewing
     private $shipping;
 
     /**
+     * @var OrderShipmentsForViewing
+     */
+    private $shipments;
+
+    /**
      * @var OrderReturnsForViewing
      */
     private $returns;
@@ -223,6 +228,7 @@ class OrderForViewing
      * @param OrderDiscountsForViewing $discounts
      * @param OrderSourcesForViewing $sources
      * @param LinkedOrdersForViewing $linkedOrders
+     * @param OrderShipmentsForViewing $shipments
      * @param string $shippingAddressFormatted
      * @param string $invoiceAddressFormatted
      * @param string $note
@@ -261,6 +267,7 @@ class OrderForViewing
         OrderDiscountsForViewing $discounts,
         OrderSourcesForViewing $sources,
         LinkedOrdersForViewing $linkedOrders,
+        OrderShipmentsForViewing $shipments,
         string $shippingAddressFormatted = '',
         string $invoiceAddressFormatted = '',
         string $note = '',
@@ -298,6 +305,7 @@ class OrderForViewing
         $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
         $this->sources = $sources;
         $this->linkedOrders = $linkedOrders;
+        $this->shipments = $shipments;
         $this->shippingAddressFormatted = $shippingAddressFormatted;
         $this->invoiceAddressFormatted = $invoiceAddressFormatted;
         $this->note = $note;
@@ -429,6 +437,14 @@ class OrderForViewing
     public function getShipping(): OrderShippingForViewing
     {
         return $this->shipping;
+    }
+
+    /**
+     * @return OrderShipmentsForViewing
+     */
+    public function getShipments(): OrderShipmentsForViewing
+    {
+        return $this->shipments;
     }
 
     /**

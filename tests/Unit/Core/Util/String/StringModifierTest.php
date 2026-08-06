@@ -100,6 +100,52 @@ class StringModifierTest extends TestCase
     }
 
     /**
+     * @dataProvider htmlToTextProvider
+     */
+    public function testHtmlToText(string $input, string $expected): void
+    {
+        self::assertSame($expected, $this->stringModifier->htmlToText($input));
+    }
+
+    public function htmlToTextProvider(): Generator
+    {
+        yield 'plain text' => [
+            'Plain text',
+            'Plain text',
+        ];
+
+        yield 'paragraphs' => [
+            '<p>First sentence.</p><p>Second sentence.</p>',
+            'First sentence. Second sentence.',
+        ];
+
+        yield 'unordered list' => [
+            '<ul><li>Stainless steel</li><li>Silent run</li><li>5 year warranty</li></ul>',
+            'Stainless steel, Silent run, 5 year warranty.',
+        ];
+
+        yield 'ordered list with surrounding content' => [
+            '<p>Features:</p><ol><li>Fast</li><li>Reliable</li></ol><p>Available now.</p>',
+            'Features: Fast, Reliable. Available now.',
+        ];
+
+        yield 'line break and entities' => [
+            'One&nbsp;two<br>Three &amp; four',
+            'One two Three & four',
+        ];
+
+        yield 'empty list items' => [
+            '<ul><li>First</li><li></li><li>Second</li></ul>',
+            'First, Second.',
+        ];
+
+        yield 'list items with punctuation' => [
+            '<ul><li>First sentence.</li><li>Second sentence.</li></ul>',
+            'First sentence. Second sentence.',
+        ];
+    }
+
+    /**
      * @dataProvider str2UrlProvider
      */
     public function testStr2url(string $input, string $expected, bool $allow_accented_chars): void

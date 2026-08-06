@@ -12,9 +12,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
-use Throwable;
+use PrestaShopBundle\ApiPlatform\ExperimentalEndpointsCheckerTrait;
 
 /**
  * This factory decorates the ApiPlatform default resource factory. It looks into each operation and checks
@@ -29,6 +28,8 @@ use Throwable;
  */
 class ExperimentalOperationsMetadataCollectionFactoryDecorator implements ResourceMetadataCollectionFactoryInterface
 {
+    use ExperimentalEndpointsCheckerTrait;
+
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $decorated,
         private readonly bool $isDebug,
@@ -59,21 +60,5 @@ class ExperimentalOperationsMetadataCollectionFactoryDecorator implements Resour
         }
 
         return $resourceMetadataCollection;
-    }
-
-    /**
-     * This decorator is implied during cache clearing which would fail when the shop is not installed
-     * because the DB config is not set up yet. So we protected the feature flag fetching in a try/catch
-     * and return false (default value) in case of an error.
-     *
-     * @return bool
-     */
-    private function areExperimentalEndpointsEnabled(): bool
-    {
-        try {
-            return $this->featureFlagStateChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_ADMIN_API_EXPERIMENTAL_ENDPOINTS);
-        } catch (Throwable) {
-            return false;
-        }
     }
 }

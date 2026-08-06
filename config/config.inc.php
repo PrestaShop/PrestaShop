@@ -138,6 +138,13 @@ $context->country = $default_country;
 /* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
 @date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
 
+/*
+ * The first DB connection was opened (during Shop::initialize() above) before the shop
+ * timezone was known, so its MySQL session is still on the default offset. Re-align it now
+ * that PHP's timezone is set, so NOW()/CURRENT_TIMESTAMP match PHP date() (see issue #30828).
+ */
+Db::getInstance()->setTimeZone();
+
 /* Set locales */
 $locale = strtolower(Configuration::get('PS_LOCALE_LANGUAGE')) . '_' . strtoupper(Configuration::get('PS_LOCALE_COUNTRY'));
 /* Please do not use LC_ALL here http://www.php.net/manual/fr/function.setlocale.php#25041 */

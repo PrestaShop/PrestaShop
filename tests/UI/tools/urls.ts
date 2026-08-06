@@ -156,7 +156,7 @@ export default [
         },
       },
       {name: 'BO_positions', url: 'index.php/improve/design/modules/positions/'},
-      {name: 'BO_transplant_module', url: 'index.php?controller=AdminModulesPositions&addToHook='},
+      {name: 'BO_transplant_module', url: 'index.php/improve/design/modules/positions/hook-module'},
       {name: 'BO_image_settings', url: 'index.php?controller=AdminImages'},
       {name: 'BO_add_image_type', url: 'index.php?controller=AdminImages&addimage_type'},
       {name: 'BO_link_widget', url: 'index.php/modules/link-widget/list'},

@@ -57,6 +57,11 @@ class NavBar
     {
         $tabs = Tab::getTabs($this->context->getContext()->language->id, $parentId);
         $currentId = (int) Tab::getCurrentParentId();
+
+        if ($currentId === -1) {
+            $currentId = $this->menuBuilder->getCurrentTab()?->getId() ?: -1;
+        }
+
         $controllerName = $this->menuBuilder->getLegacyControllerClassName();
 
         $filteredTabs = array_filter($tabs, function ($tab) {

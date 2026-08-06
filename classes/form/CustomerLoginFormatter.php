@@ -23,7 +23,7 @@ class CustomerLoginFormatterCore implements FormFormatterInterface
             'email' => (new FormField())
                 ->setName('email')
                 ->setType('email')
-                ->setAutocompleteAttribute('email')
+                ->setAutocompleteAttribute('username')
                 ->setRequired(true)
                 ->setLabel($this->translator->trans(
                     'Email',

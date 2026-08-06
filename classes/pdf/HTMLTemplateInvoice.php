@@ -4,7 +4,9 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Core\Util\Sorter;
+use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 
 class HTMLTemplateInvoiceCore extends HTMLTemplate
 {
@@ -24,6 +26,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     public $available_in_your_account = false;
 
     /**
+     * @var ShipmentRepository
+     */
+    private $shipmentRepository;
+
+    /**
      * @param OrderInvoice $order_invoice
      * @param Smarty $smarty
      * @param bool $bulk_mode
@@ -36,6 +43,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $this->order = new Order((int) $this->order_invoice->id_order);
         $this->smarty = $smarty;
         $this->smarty->assign('isTaxEnabled', (bool) Configuration::get('PS_TAX'));
+
+        $containerFinder = new ContainerFinder(Context::getContext());
+        $this->shipmentRepository = $containerFinder->getContainer()->get(ShipmentRepository::class);
 
         // If shop_address is null, then update it with current one.
         // But no DB save required here to avoid massive updates for bulk PDF generation case.
@@ -221,6 +231,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $sorter = new Sorter();
         $order_details = $sorter->natural($order_details, Sorter::ORDER_DESC, 'product_reference', 'product_supplier_reference');
 
+        $shipmentCarrierNames = $this->getCarrierNamesFromShipments($this->order->id);
+        if (!empty($shipmentCarrierNames)) {
+            $carrier->name = $shipmentCarrierNames;
+        }
+
         $cart_rules = $this->order->getCartRules();
         $free_shipping = false;
         foreach ($cart_rules as $key => $cart_rule) {
@@ -369,9 +384,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     {
         $address = new Address((int) $this->order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $tax_exempt = Configuration::get('VATNUMBER_MANAGEMENT')
-                            && !empty($address->vat_number)
-                            && $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
-        $carrier = new Carrier($this->order->id_carrier);
+            && !empty($address->vat_number)
+            && $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
 
         $data = [
             'tax_exempt' => $tax_exempt,
@@ -384,7 +398,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'tax_breakdowns' => $this->getTaxBreakdown(),
             'order' => $this->order,
             'order_invoice' => $this->order_invoice,
-            'carrier' => $carrier,
         ];
 
         $this->smarty->assign($data);
@@ -474,9 +487,36 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $id_lang = Context::getContext()->language->id;
         $id_shop = (int) $this->order->id_shop;
 
-        return sprintf(
-            '%s.pdf',
-            $this->order_invoice->getInvoiceNumberFormatted($id_lang, $id_shop)
-        );
+        $invoiceNumber = $this->order_invoice->getInvoiceNumberFormatted($id_lang, $id_shop);
+        $safeNumber = str_replace(['/', '\\'], '-', $invoiceNumber);
+
+        return sprintf('%s.pdf', $safeNumber);
+    }
+
+    /**
+     * Get all carrier names from shipments for an order, joined by ", ".
+     * Falls back to an empty string if no shipments exist or on error.
+     */
+    private function getCarrierNamesFromShipments(int $orderId): string
+    {
+        try {
+            $shipments = $this->shipmentRepository->findByOrderId($orderId);
+        } catch (Throwable $e) {
+            return '';
+        }
+
+        if (empty($shipments)) {
+            return '';
+        }
+
+        $carrierNames = [];
+        foreach ($shipments as $shipment) {
+            $carrier = new Carrier($shipment->getCarrierId());
+            if ($carrier->name && !in_array($carrier->name, $carrierNames)) {
+                $carrierNames[] = $carrier->name;
+            }
+        }
+
+        return implode(', ', $carrierNames);
     }
 }

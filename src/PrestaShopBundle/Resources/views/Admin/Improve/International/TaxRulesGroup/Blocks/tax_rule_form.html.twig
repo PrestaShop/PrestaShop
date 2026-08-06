@@ -1,0 +1,40 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% form_theme taxRuleForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{{ form_start(taxRuleForm, {attr: {'data-states-url': path('admin_tax_rules_states_for_country', {countryId: 0})}}) }}
+{% block tax_rule_form_widget %}
+  {% if lightDisplay|default(false) %}
+    <div class="form-wrapper">
+      {{ form_widget(taxRuleForm) }}
+    </div>
+  {% else %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">payments</i>
+        {{ 'Tax Rule'|trans({}, 'Admin.International.Feature') }}
+      </h3>
+
+      <div class="card-body">
+        <div class="form-wrapper">
+          {{ form_widget(taxRuleForm) }}
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="d-inline-flex">
+          <a href="{{ path('admin_tax_rules_groups_edit', {taxRulesGroupId: taxRulesGroupId}) }}" class="btn btn-outline-secondary cancel-btn">
+            {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+          </a>
+        </div>
+        <div class="d-inline-flex float-right">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+{{ form_end(taxRuleForm) }}

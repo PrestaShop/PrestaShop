@@ -14,6 +14,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotDeleteCountryExcep
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\DuplicateCountryIsoCodeException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -21,16 +22,11 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 /**
  * Provides methods to access data storage of Country
  */
-class CountryRepository extends AbstractObjectModelRepository
+final class CountryRepository extends AbstractObjectModelRepository implements CountryRepositoryInterface
 {
-    /**
-     * @var CountryValidator
-     */
-    private $countryValidator;
-
-    public function __construct(CountryValidator $countryValidator)
-    {
-        $this->countryValidator = $countryValidator;
+    public function __construct(
+        private readonly CountryValidator $countryValidator,
+    ) {
     }
 
     /**
@@ -72,6 +68,7 @@ class CountryRepository extends AbstractObjectModelRepository
      * @return Country
      *
      * @throws CountryConstraintException
+     * @throws DuplicateCountryIsoCodeException
      * @throws CoreException
      */
     public function add(Country $country): Country
@@ -89,6 +86,7 @@ class CountryRepository extends AbstractObjectModelRepository
      * @return Country
      *
      * @throws CannotEditCountryException
+     * @throws DuplicateCountryIsoCodeException
      * @throws CoreException
      */
     public function update(Country $country): Country

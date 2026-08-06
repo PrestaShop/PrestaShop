@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Context\ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
@@ -44,7 +45,8 @@ class AvailabilityType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         FormChoiceProviderInterface $outOfStockTypeChoiceProvider,
-        RouterInterface $router
+        RouterInterface $router,
+        private ShopContext $shopContext
     ) {
         parent::__construct($translator, $locales);
         $this->outOfStockTypeChoiceProvider = $outOfStockTypeChoiceProvider;
@@ -63,6 +65,10 @@ class AvailabilityType extends TranslatorAwareType
                 'expanded' => true,
                 'column_breaker' => true,
                 'modify_all_shops' => true,
+                'help' => $this->shopContext->isMultiShopEnabled()
+                        && $this->shopContext->hasGroupSharingStocks() ?
+                        $this->trans('Stock is shared between the stores in this group, so this setting is automatically applied to all of them, regardless of the "Apply changes to all stores" checkbox.', 'Admin.Catalog.Feature') :
+                        null,
                 'external_link' => [
                     'text' => $this->trans('[1]Edit default behavior[/1]', 'Admin.Catalog.Feature'),
                     'href' => $this->router->generate('admin_product_preferences') . '#configuration_fieldset_stock',

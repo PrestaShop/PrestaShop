@@ -10,6 +10,7 @@ use Context;
 use Order;
 use PDF;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\PDF\GeneratedPdf;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use RuntimeException;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -40,6 +41,21 @@ final class DeliverySlipPdfGenerator implements PDFGeneratorInterface
      */
     public function generatePDF(array $orderId): string
     {
+        return $this->createPdf($orderId)->render(true);
+    }
+
+    public function generatePDFForResponse(array $orderId): GeneratedPdf
+    {
+        $pdf = $this->createPdf($orderId);
+
+        return new GeneratedPdf(
+            $pdf->render(false),
+            $pdf->getFilename()
+        );
+    }
+
+    private function createPdf(array $orderId): PDF
+    {
         if (count($orderId) !== 1) {
             throw new CoreException(sprintf('"%s" supports generating delivery slip for single order only.', self::class));
         }
@@ -53,8 +69,6 @@ final class DeliverySlipPdfGenerator implements PDFGeneratorInterface
 
         $order_invoice_collection = $order->getInvoicesCollection();
 
-        $pdf = new PDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP, Context::getContext()->smarty);
-
-        return $pdf->render(true);
+        return new PDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP, Context::getContext()->smarty);
     }
 }

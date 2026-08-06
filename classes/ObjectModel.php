@@ -1,12 +1,24 @@
 <?php
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionCollection;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Definition\ExtraPropertyDefinitionRepositoryInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Validation\ExtraPropertyValidatorInterface;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertiesBag;
+use PrestaShop\PrestaShop\Core\ExtraProperty\Value\ExtraPropertyWriterInterface;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 use PrestaShopBundle\Translation\TranslatorComponent;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * @property ExtraPropertiesBag $extra_properties
+ */
 abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\Database\EntityInterface
 {
     /**
@@ -116,6 +128,23 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
 
     /** @var array|null List of specific fields to update (all fields if null). */
     protected $update_fields = null;
+
+    /**
+     * Lazy-loading grouped bag for extra properties on this entity instance.
+     * Null = not yet initialized. Accessed via __get('extra_properties').
+     * Keys are module names; values are ModuleFieldsBag instances keyed by field name.
+     *
+     * @var ExtraPropertiesBag|null
+     */
+    protected $extra_properties_bag = null;
+
+    /**
+     * Typed definition collection for this entity (loaded via getDefinitionCollection()).
+     * Cached for the object's lifetime; null until first access.
+     *
+     * @var ExtraPropertyDefinitionCollection|null
+     */
+    protected $extra_property_definitions = null;
 
     /** @var Db|bool An instance of the db in order to avoid calling Db::getInstance() thousands of times. */
     protected static $db = false;
@@ -355,7 +384,10 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             if ($type == self::FORMAT_LANG && $id_lang && is_array($value)) {
                 if (!empty($value[$id_lang])) {
                     $value = $value[$id_lang];
-                } elseif (!empty($data['required'])) {
+                } elseif (!empty($data['required']) || in_array(
+                    Tools::strtolower($data['validate'] ?? ''),
+                    ['isrequiredwhenactive', 'defaultlanguagerequiredwhenactive']
+                )) {
                     $value = $value[Configuration::get('PS_LANG_DEFAULT')];
                 } else {
                     $value = '';
@@ -521,6 +553,9 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             $entityMultiLangFields = [];
         }
 
+        // Also validate extra properties before any insert to avoid partial writes
+        $this->validateExtraProperties();
+
         if (!$result = Db::getInstance()->insert($this->def['table'], $entityFields, $null_values)) {
             return false;
         }
@@ -568,11 +603,16 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             }
         }
 
-        // @hook actionObject<ObjectClassName>AddAfter
+        $extraResult = true;
+        if ($result) {
+            $extraResult = $this->persistExtraProperties();
+        }
+
+        // @hook actionObject<ObjectClassName>AddAfter — runs even if extra persistence fails.
         Hook::exec('actionObjectAddAfter', ['object' => $this]);
         Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'AddAfter', ['object' => $this]);
 
-        return $result;
+        return $result && $extraResult;
     }
 
     /**
@@ -713,6 +753,9 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             $multiLangFieldsToUpdate = [];
         }
 
+        // Validate extra properties before any update to avoid partial writes.
+        $this->validateExtraProperties();
+
         if (!$result = Db::getInstance()->update($this->def['table'], $fieldsToUpdate, '`' . pSQL($this->def['primary']) . '` = ' . (int) $this->id, 0, $null_values)) {
             return false;
         }
@@ -792,11 +835,16 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             }
         }
 
-        // @hook actionObject<ObjectClassName>UpdateAfter
+        $extraResult = true;
+        if ($result) {
+            $extraResult = $this->persistExtraProperties();
+        }
+
+        // @hook actionObject<ObjectClassName>UpdateAfter — runs even if extra persistence fails.
         Hook::exec('actionObjectUpdateAfter', ['object' => $this]);
         Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'UpdateAfter', ['object' => $this]);
 
-        return $result;
+        return $result && $extraResult;
     }
 
     /**
@@ -847,6 +895,19 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
 
         if (!$result) {
             return false;
+        }
+
+        // Delete extra property rows from *_extra / *_extra_lang / *_extra_shop
+        if (!$has_multishop_entries && !empty($this->def['table']) && (int) $this->id > 0) {
+            /** @var ExtraPropertyWriterInterface|null $writer */
+            $writer = static::findService(ExtraPropertyWriterInterface::class);
+            if ($writer) {
+                try {
+                    $writer->deleteAll($this->def['table'], $this->def['primary'], (int) $this->id);
+                } catch (Throwable) {
+                    $result = false;
+                }
+            }
         }
 
         // @hook actionObject<ObjectClassName>DeleteAfter
@@ -1004,6 +1065,62 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         }
 
         return true;
+    }
+
+    /**
+     * Checks if extra-properties values are valid before database interaction.
+     *
+     * Delegates to ExtraPropertyValidator which centralizes all Validate::xxx calls.
+     * Only validates values that are in the write buffer ($extra_properties); if nothing has
+     * been set on this instance, validation is skipped entirely.
+     *
+     * Returns true without validating when the container is unavailable or when
+     * ExtraPropertyValidatorInterface is not registered in it (front-office legacy container) —
+     * persistence is still safe because the writer only stores values for registered properties.
+     *
+     * @param bool $die [default=true] If false, return a value instead of throwing an exception on error
+     * @param bool $errorReturn [default=false] If true, return error message instead of false on error
+     *
+     * @return bool|string true, false or error message
+     *
+     * @throws PrestaShopException
+     */
+    public function validateExtraProperties(bool $die = true, bool $errorReturn = false)
+    {
+        // B6: check definitions first (avoids loading bag when entity has no extra fields).
+        $collection = $this->getDefinitionCollection();
+        if ($collection->isEmpty()) {
+            return true;
+        }
+
+        $bag = $this->getExtraPropertiesBag();
+        if (!$bag->hasModifications()) {
+            return true;
+        }
+
+        /** @var ExtraPropertyValidatorInterface|null $validator */
+        $validator = self::findService(ExtraPropertyValidatorInterface::class);
+        if (!$validator) {
+            return true;
+        }
+
+        $violations = $validator->validate($bag->getModifiedValues(), $collection);
+        if (0 === count($violations)) {
+            return true;
+        }
+
+        // Flatten every violation into one human-readable message ("<path>: <message>" per line).
+        $messages = [];
+        foreach ($violations as $violation) {
+            $messages[] = sprintf('%s: %s', $violation->getPropertyPath(), (string) $violation->getMessage());
+        }
+        $message = implode("\n", $messages);
+
+        if ($die) {
+            throw new PrestaShopException($message);
+        }
+
+        return $errorReturn ? $message : false;
     }
 
     /**
@@ -1728,6 +1845,37 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     }
 
     /**
+     * Returns true when the given ObjectModel class stores lang fields in a per-shop table.
+     *
+     * Reads the static definition of the class (the $definition array) without instantiating it.
+     * Results are cached by class name to avoid repeated reflection across calls.
+     *
+     * Use this static helper instead of $this->isLangMultishop() whenever you need to check
+     * multishop-lang behaviour from outside an ObjectModel instance (e.g. in ExtraPropertyReader,
+     * form builder, or API integrations).
+     *
+     * @param string $className Fully-qualified or short class name of the ObjectModel subclass
+     *
+     * @return bool
+     */
+    public static function isClassLangMultishop(string $className): bool
+    {
+        static $cache = [];
+
+        if (isset($cache[$className])) {
+            return $cache[$className];
+        }
+
+        if (!class_exists($className)) {
+            return $cache[$className] = false;
+        }
+
+        $def = ObjectModel::getDefinition($className);
+
+        return $cache[$className] = !empty($def['multilang']) && !empty($def['multilang_shop']);
+    }
+
+    /**
      * Updates a table and splits the common datas and the shop datas.
      *
      * @param string $classname
@@ -2051,6 +2199,157 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     }
 
     /**
+     * Returns magic properties for legacy ObjectModel usage.
+     *
+     * For 'extra_properties', returns the lazy ExtraPropertiesBag instance so callers can use
+     * grouped array access ($object->extra_properties['module']['field']).
+     *
+     * For all other names, keeps the legacy fallback behavior (null when unresolved).
+     *
+     * @return mixed
+     */
+    public function __get(string $name): mixed
+    {
+        if ('extra_properties' === $name) {
+            return $this->getExtraPropertiesBag();
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns (and lazily creates) the extra properties bag for this instance.
+     *
+     * @return ExtraPropertiesBag
+     */
+    private function getExtraPropertiesBag(): ExtraPropertiesBag
+    {
+        if (null === $this->extra_properties_bag) {
+            $this->extra_properties_bag = $this->createExtraPropertiesBag();
+        }
+
+        return $this->extra_properties_bag;
+    }
+
+    /**
+     * Builds the ExtraPropertiesBag with a loader closure that reads values from the DB.
+     *
+     * The loader returns grouped data (module => [field => value]) which the bag
+     * wraps in ModuleFieldsBag instances. The bag langId follows the ObjectModel
+     * semantics: when the instance was constructed with a langId, lang fields are
+     * scalars for that language; without one, they carry [id_lang => value] arrays
+     * (allowing all languages to be read, modified and saved in one go).
+     *
+     * On front-office requests (see Context::isFrontOfficeContext()) the bag is built with
+     * forFrontOffice: true so displayFront=false fields are filtered out natively.
+     * Everywhere else (BO, CLI, API, programmatic access) the bag is unfiltered.
+     *
+     * @return ExtraPropertiesBag
+     */
+    private function createExtraPropertiesBag(): ExtraPropertiesBag
+    {
+        return ExtraPropertiesBag::createForEntity(
+            static::findContainer(),
+            static::class,
+            (int) $this->id,
+            (int) $this->id_lang > 0 ? (int) $this->id_lang : null,
+            Context::getContext()->getShopConstraint(),
+            forFrontOffice: Context::isFrontOfficeContext()
+        );
+    }
+
+    /**
+     * Returns (and lazily loads) the definition collection for this entity.
+     *
+     * Uses ExtraPropertyDefinitionRepositoryInterface via ContainerFinder.
+     */
+    private function getDefinitionCollection(): ExtraPropertyDefinitionCollection
+    {
+        if (null !== $this->extra_property_definitions) {
+            return $this->extra_property_definitions;
+        }
+
+        $this->extra_property_definitions = ExtraPropertyDefinitionCollection::empty();
+
+        if (empty($this->def['table'])) {
+            return $this->extra_property_definitions;
+        }
+
+        /** @var ExtraPropertyDefinitionRepositoryInterface|null $repository */
+        $repository = self::findService(ExtraPropertyDefinitionRepositoryInterface::class);
+        if (!$repository) {
+            return $this->extra_property_definitions;
+        }
+
+        $this->extra_property_definitions = $repository->getAllDefinitions()->filterByEntity($this->def['table']);
+
+        return $this->extra_property_definitions;
+    }
+
+    /**
+     * Persists runtime extra properties into dedicated *_extra tables.
+     *
+     * Uses ExtraPropertyWriterInterface via ContainerFinder (Symfony service,
+     * available in both FO and BO contexts via common.yml). The bag's modified
+     * values are passed grouped by module — scope routing, storage column
+     * resolution and nullable NULL handling all happen inside the writer.
+     * Lang-scoped scalar values are written for resolveCurrentLangId().
+     *
+     * @return bool
+     */
+    protected function persistExtraProperties(): bool
+    {
+        if (empty($this->def['table']) || (int) $this->id <= 0) {
+            return true;
+        }
+
+        // B6: check definitions before bag to avoid a container lookup + DB read when no extras are registered.
+        $collection = $this->getDefinitionCollection();
+        if ($collection->isEmpty()) {
+            return true;
+        }
+
+        $bag = $this->getExtraPropertiesBag();
+        if (!$bag->hasModifications()) {
+            return true;
+        }
+
+        /** @var ExtraPropertyWriterInterface $writer|null */
+        $writer = self::findService(ExtraPropertyWriterInterface::class);
+        if (!$writer) {
+            return true;
+        }
+
+        try {
+            $writer->writeAll(
+                $this->def['table'],
+                $this->def['primary'],
+                (int) $this->id,
+                $bag->getModifiedValues(),
+                Context::getContext()->getShopConstraint(),
+                $this->resolveCurrentLangId() ?: null
+            );
+        } catch (Throwable) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns the effective lang id for extra properties storage.
+     * Uses the object's own id_lang when set, falls back to the current context language.
+     *
+     * @return int
+     */
+    protected function resolveCurrentLangId(): int
+    {
+        return ((int) $this->id_lang > 0)
+            ? (int) $this->id_lang
+            : (int) Context::getContext()->language->id;
+    }
+
+    /**
      * Set a list of specific fields to update
      * array(field1 => true, field2 => false,
      * langfield1 => array(1 => true, 2 => false)).
@@ -2125,5 +2424,20 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
         }
 
         return $shopIdsList;
+    }
+
+    protected static function findContainer(): ?ContainerInterface
+    {
+        try {
+            return (new ContainerFinder(Context::getContext()))->getContainer();
+        } catch (ContainerNotFoundException) {
+        }
+
+        return null;
+    }
+
+    protected static function findService(string $serviceName): ?object
+    {
+        return static::findContainer()?->get($serviceName);
     }
 }

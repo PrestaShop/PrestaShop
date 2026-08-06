@@ -878,4 +878,25 @@ abstract class DbCore
     {
         return $this->link;
     }
+
+    /**
+     * Aligns the MySQL session time zone with PHP's current time zone offset.
+     *
+     * Without this, SQL directives such as NOW() or CURRENT_TIMESTAMP evaluate
+     * in the MySQL server time zone (UTC by default) instead of the shop time
+     * zone configured in PHP, producing timestamps that disagree with PHP's
+     * date() (see issue #30828). A numeric offset (e.g. "+02:00") is used on
+     * purpose: it needs no MySQL time zone tables and is recomputed on each
+     * call, so DST is always correct at connection time.
+     */
+    public function setTimeZone(): void
+    {
+        $offset = (new DateTime())->format('P');
+        // Defensive: only ever inject a well-formed offset into the statement.
+        if (!preg_match('/^[+-]\d{2}:\d{2}$/', $offset)) {
+            return;
+        }
+
+        $this->_query("SET SESSION time_zone = '" . $offset . "'");
+    }
 }

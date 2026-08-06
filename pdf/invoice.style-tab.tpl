@@ -45,10 +45,11 @@
 		}
 		table#note-tab {
 			padding: {$table_padding};
+			word-wrap: break-word;
 			border: 1px solid {$color_border};
 		}
-		table#note-tab td.note{
-			word-wrap: break-word;
+		table#note-tab th {
+			text-align: left;
 		}
 		table#tax-tab {
 			padding: {$table_padding};

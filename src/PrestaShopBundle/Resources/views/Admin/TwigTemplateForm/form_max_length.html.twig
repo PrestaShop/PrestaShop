@@ -12,14 +12,14 @@
             '[/1]': '</span>',
             '[2]': '<span class="currentTotalMax">' ~ attr.counter,
             '[/2]': '</span>',
-          })|raw }}
+          })|raw_purified }}
         {% else %}
           {{ '[1][/1] of [2][/2] characters allowed'|trans({}, 'Admin.Catalog.Feature')|replace({
             '[1]': '<span class="currentLength">',
             '[/1]': '</span>',
             '[2]': '<span class="currentTotalMax">' ~ attr.counter,
             '[/2]': '</span>',
-          })|raw }}
+          })|raw_purified }}
         {% endif %}
       </em>
   </small>

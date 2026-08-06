@@ -21,3 +21,30 @@ admin_modules_positions_toggle_status:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::toggleStatusAction'
     _legacy_controller: AdminModulesPositions
     _legacy_link: AdminModulesPositions
+
+admin_modules_positions_hook_module:
+  path: /hook-module
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::hookModuleAction'
+    _legacy_controller: AdminModulesPositions
+    _legacy_link: AdminModulesPositions:addToHook
+    _legacy_feature_flag: hook_module_v2
+
+admin_modules_positions_edit_hook:
+  path: /edit-hook
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::editHookedModuleAction'
+    _legacy_controller: AdminModulesPositions
+    _legacy_link: AdminModulesPositions:editGraft
+    _legacy_feature_flag: hook_module_v2
+
+admin_modules_positions_possible_hooks:
+  path: /possible-hooks
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::getPossibleHooksForModuleAction'
+    _legacy_controller: AdminModulesPositions
+    _legacy_link: AdminModulesPositions:getPossibleHookingListForModule
+    _legacy_feature_flag: hook_module_v2

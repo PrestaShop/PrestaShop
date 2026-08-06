@@ -1,0 +1,18 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% block discount_usage_preview_widget %}
+  {% for child in form %}
+    {{ form_widget(child) }}
+  {% endfor %}
+  <span class="discount-usage-preview">
+    <span class="discount-usage-preview-usage">
+      {{ quantity_used }} / {% if total_quantity is null %}&#8734;{% else %}{{ total_quantity }}{% endif %}
+    </span>
+    <span class="discount-usage-preview-remaining">
+      ({{ 'Remaining quantity:'|trans({}, 'Admin.Catalog.Feature') }} {% if remaining_quantity is null %}&#8734;{% else %}{{ remaining_quantity }}{% endif %})
+    </span>
+  </span>
+{% endblock %}

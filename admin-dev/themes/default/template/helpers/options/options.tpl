@@ -113,7 +113,7 @@
 											{if $field['list']}
 												<select class="form-control fixed-width-xxl {if isset($field['class'])}{$field['class']}{/if}" name="{$key}"{if isset($field['js'])} onchange="{$field['js']}"{/if} id="{$key}" {if isset($field['size'])} size="{$field['size']}"{/if} {if !empty($field['multiple'])} multiple="multiple"{/if}>
 													{foreach $field['list'] AS $k => $option}
-														<option value="{$option[$field['identifier']]}"{if $field['value'] == $option[$field['identifier']]} selected="selected"{/if}>{$option['name']}</option>
+														<option value="{$option[$field['identifier']]|escape:'html':'UTF-8'}"{if $field['value'] == $option[$field['identifier']]} selected="selected"{/if}>{$option['name']|escape:'html':'UTF-8'}</option>
 													{/foreach}
 												</select>
 											{elseif isset($input.empty_message)}
@@ -281,9 +281,9 @@
 												<div id="{$key}_{$language.id_lang}" style="display: {if $language.id_lang == $current_id_lang}block{else}none{/if};" class="col-lg-9">
 													<select name="{$key}_{$language.iso_code|upper}">
 														{foreach $field['list'] AS $k => $v}
-															<option value="{if isset($v.cast)}{$v.cast[$v[$field.identifier]]}{else}{$v[$field.identifier]}{/if}"
+															<option value="{if isset($v.cast)}{$v.cast[$v[$field.identifier]]|escape:'html':'UTF-8'}{else}{$v[$field.identifier]|escape:'html':'UTF-8'}{/if}"
 																{if $field['value'][$language.id_lang] == $v['name']} selected="selected"{/if}>
-																{$v['name']}
+																{$v['name']|escape:'html':'UTF-8'}
 															</option>
 														{/foreach}
 													</select>

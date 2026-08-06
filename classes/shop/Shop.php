@@ -1204,6 +1204,11 @@ class ShopCore extends ObjectModel
             $old_id = Configuration::get('PS_SHOP_DEFAULT');
         }
 
+        // Default currency import to avoid missing currency data when the option is not explicitly set.
+        if (!isset($tables_import['currency'])) {
+            $tables_import['currency'] = 'on';
+        }
+
         if (isset($tables_import['carrier'])) {
             $tables_import['carrier_tax_rules_group_shop'] = true;
             $tables_import['carrier_lang'] = true;

@@ -17,6 +17,8 @@ use StockAvailable;
  */
 class StockManager
 {
+    private $cachedStockContext = [];
+
     /**
      * Gets available stock for a given product / combination / shop.
      *
@@ -101,10 +103,12 @@ class StockManager
             ';
         }
 
+        $stockContext = $this->getStockContext((int) $shopId);
+
         $updatePhysicalQuantityQuery .= '
             SET sa.physical_quantity = sa.quantity + sa.reserved_quantity
-            WHERE sa.id_shop = ' . (int) $shopId . '
-        ';
+            WHERE sa.id_shop = ' . (int) $stockContext['shopId'] . ' AND sa.id_shop_group = ' . (int) $stockContext['shopGroupId']
+        ;
 
         if ($idProduct) {
             $updatePhysicalQuantityQuery .= ' AND sa.id_product = ' . (int) $idProduct;
@@ -139,13 +143,19 @@ class StockManager
             ';
         }
 
+        $stockContext = $this->getStockContext((int) $shopId);
+
+        $orderScopeCondition = $stockContext['shopGroupId'] > 0
+            ? 'o.id_shop_group = :stock_shop_group_id'
+            : 'o.id_shop = :stock_shop_id';
+
         $updateReservedQuantityQuery .= '
             SET sa.reserved_quantity = (
                 SELECT SUM(od.product_quantity - od.product_quantity_refunded)
                 FROM {table_prefix}orders o
                 INNER JOIN {table_prefix}order_detail od ON od.id_order = o.id_order
                 INNER JOIN {table_prefix}order_state os ON os.id_order_state = o.current_state
-                WHERE o.id_shop = :shop_id AND
+                WHERE ' . $orderScopeCondition . ' AND
                 os.shipped != 1 AND (
                     o.valid = 1 OR (
                         os.id_order_state != :error_state AND
@@ -155,12 +165,15 @@ class StockManager
                 sa.id_product_attribute = od.product_attribute_id
                 GROUP BY od.product_id, od.product_attribute_id
             )
-            WHERE sa.id_shop = :shop_id
+            WHERE
+                sa.id_shop = :stock_shop_id AND 
+                sa.id_shop_group = :stock_shop_group_id 
         ';
 
         $strParams = [
             '{table_prefix}' => _DB_PREFIX_,
-            ':shop_id' => (int) $shopId,
+            ':stock_shop_id' => (int) $stockContext['shopId'],
+            ':stock_shop_group_id' => (int) $stockContext['shopGroupId'],
             ':error_state' => (int) $errorState,
             ':cancellation_state' => (int) $cancellationState,
         ];
@@ -177,6 +190,34 @@ class StockManager
         $updateReservedQuantityQuery = strtr($updateReservedQuantityQuery, $strParams);
 
         return Db::getInstance()->execute($updateReservedQuantityQuery);
+    }
+
+    /**
+     * Returns the stock context for the given shop.
+     *
+     * Note: when stock is shared at shop group level (share_stock = true),
+     * PrestaShop uses id_shop = 0 as a “virtual shop id” to read/write the shared stock
+     * in stock_available.
+     *
+     * @return array{shopGroupId:int, shopId:int} shopId is 0 when stock is shared, otherwise it's the given $shopId
+     */
+    private function getStockContext(int $shopId)
+    {
+        if (isset($this->cachedStockContext[$shopId])) {
+            return $this->cachedStockContext[$shopId];
+        }
+
+        $shopAdapter = new ShopAdapter();
+        $shopGroup = $shopAdapter->ShopGroup((int) $shopAdapter->getGroupFromShop((int) $shopId));
+
+        return $this->cachedStockContext[$shopId] = [
+            // When stock is shared at group level, we scope the stock to the shop group.
+            // Otherwise we use 0 as a sentinel value meaning "not group-scoped".
+            'shopGroupId' => $shopGroup->share_stock ? $shopGroup->id : 0,
+            // When stock is shared at group level, PrestaShop uses id_shop = 0 to store/read the shared stock.
+            // Otherwise the stock is scoped to the current shop id.
+            'shopId' => $shopGroup->share_stock ? 0 : $shopId,
+        ];
     }
 
     /**

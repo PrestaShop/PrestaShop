@@ -21,13 +21,21 @@ class GetOrderShipments
      */
     private $orderId;
 
-    public function __construct(int $orderId)
+    private bool $includeDeleted;
+
+    public function __construct(int $orderId, bool $includeDeleted = false)
     {
         $this->orderId = new OrderId($orderId);
+        $this->includeDeleted = $includeDeleted;
     }
 
     public function getOrderId(): OrderId
     {
         return $this->orderId;
+    }
+
+    public function includeDeleted(): bool
+    {
+        return $this->includeDeleted;
     }
 }

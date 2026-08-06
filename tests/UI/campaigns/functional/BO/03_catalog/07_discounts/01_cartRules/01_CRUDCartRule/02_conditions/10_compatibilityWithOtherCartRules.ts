@@ -92,17 +92,9 @@ describe('BO - Cart rules - Conditions : Case 9 - Compatibility with other cart 
     excludeDiscountProducts: true,
   });
   const customerAddressUS: FakerAddress = new FakerAddress({
-    alias: dataAddresses.address_2.alias,
-    firstName: dataAddresses.address_2.firstName,
-    lastName: dataAddresses.address_2.lastName,
-    company: dataAddresses.address_2.company,
-    address: dataAddresses.address_2.address,
-    secondAddress: dataAddresses.address_2.secondAddress,
-    postalCode: dataAddresses.address_2.postalCode,
-    city: dataAddresses.address_2.city,
+    ...dataAddresses.address_2,
     state: 'Georgia',
     country: dataCountries.unitedStates.name,
-    phone: dataAddresses.address_2.phone,
   });
 
   before(async function () {

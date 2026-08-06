@@ -313,9 +313,8 @@ class StockRepository extends StockManagementRepository
      */
     protected function addAdditionalData(array $rows)
     {
-        $rows = $this->addCombinationsAndFeatures($rows);
-        $rows = $this->addImageThumbnailPaths($rows);
-        $rows = $this->addEditProductLink($rows);
+        $rows = parent::addAdditionalData($rows);
+        $rows = $this->addStockApiUrls($rows);
 
         return $rows;
     }
@@ -357,7 +356,7 @@ class StockRepository extends StockManagementRepository
         return $this->totalCombinations[$row['product_id']];
     }
 
-    private function addEditProductLink(array $rows)
+    private function addStockApiUrls(array $rows)
     {
         $router = $this->container->get('router');
 

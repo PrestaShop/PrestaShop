@@ -57,6 +57,17 @@ services:
       - { name: 'prestashop.openapi.schema_adapter.resource', priority: 10 }
       - { name: 'prestashop.openapi.schema_adapter.operation', priority: 40 }
 
+  PrestaShopBundle\ApiPlatform\OpenApi\FileUploadRequestBodyBuilder: ~
+
+  # Documents the extraProperties sub-object. Runs LAST (after SchemaSynchronizer, which would otherwise strip
+  # this synthetic property since it is not declared on the resource class).
+  PrestaShopBundle\ApiPlatform\OpenApi\Adapter\ExtraPropertiesSchemaAdapter:
+    arguments:
+      $resourceMetadataFactory: '@api_platform.metadata.resource.metadata_collection_factory'
+    tags:
+      - { name: 'prestashop.openapi.schema_adapter.resource', priority: -100 }
+      - { name: 'prestashop.openapi.schema_adapter.operation', priority: -100 }
+
   # Schema adapter chains - orchestrates adapters in the correct order
   prestashop_bundle.api_platform.open_api.resource_schema_adapter_chain:
     class: PrestaShopBundle\ApiPlatform\OpenApi\Adapter\SchemaAdapterChain

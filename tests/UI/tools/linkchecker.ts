@@ -1,5 +1,3 @@
-import 'module-alias/register';
-
 // Import utils
 import urlsList from '@tools/urls';
 

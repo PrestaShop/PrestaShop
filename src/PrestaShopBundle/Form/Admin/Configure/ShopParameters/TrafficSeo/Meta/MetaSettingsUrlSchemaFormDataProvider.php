@@ -86,33 +86,39 @@ final class MetaSettingsUrlSchemaFormDataProvider implements FormDataProviderInt
     {
         $patternErrors = [];
         $fieldErrors = [];
-        foreach ($data as $routeId => $rule) {
-            if (!$this->routeValidator->isRoutePattern($rule)) {
-                $patternErrors[] = $this->translator->trans(
-                    'The route %routeRule% is not valid',
-                    [
-                        '%routeRule%' => htmlspecialchars($rule),
-                    ],
-                    'Admin.Shopparameters.Feature'
-                );
+        foreach ($data as $routeId => $routeData) {
+            // Skip multistore checkbox helper fields added to the form, they are not route patterns.
+            if (str_starts_with($routeId, 'multistore_') && is_bool($routeData)) {
+                continue;
             }
+            foreach ($routeData as $langId => $routeRule) {
+                if (!$this->routeValidator->isRoutePattern($routeRule)) {
+                    $patternErrors[] = $this->translator->trans(
+                        'The route %routeRule% is not valid',
+                        [
+                            '%routeRule%' => htmlspecialchars($routeRule),
+                        ],
+                        'Admin.Shopparameters.Feature'
+                    );
+                }
 
-            $errors = $this->routeValidator->isRouteValid($routeId, $rule);
+                $errors = $this->routeValidator->isRouteValid($routeId, $routeRule);
 
-            foreach (['missing', 'unknown'] as $type) {
-                if (!empty($errors[$type])) {
-                    foreach ($errors[$type] as $keyword) {
-                        $fieldErrors[] = $this->translator->trans(
-                            $type === 'missing'
-                                ? 'Keyword "{%keyword%}" required for route "%routeName%" (rule: "%routeRule%")'
-                                : 'Keyword "{%keyword%}" doesn\'t exist for route "%routeName%" (rule: "%routeRule%")',
-                            [
-                                '%keyword%' => $keyword,
-                                '%routeName%' => $routeId,
-                                '%routeRule%' => $rule,
-                            ],
-                            'Admin.Shopparameters.Feature'
-                        );
+                foreach (['missing', 'unknown'] as $type) {
+                    if (!empty($errors[$type])) {
+                        foreach ($errors[$type] as $keyword) {
+                            $fieldErrors[] = $this->translator->trans(
+                                $type === 'missing'
+                                    ? 'Keyword "{%keyword%}" required for route "%routeName%" (rule: "%routeRule%")'
+                                    : 'Keyword "{%keyword%}" doesn\'t exist for route "%routeName%" (rule: "%routeRule%")',
+                                [
+                                    '%keyword%' => $keyword,
+                                    '%routeName%' => $routeId,
+                                    '%routeRule%' => $routeRule,
+                                ],
+                                'Admin.Shopparameters.Feature'
+                            );
+                        }
                     }
                 }
             }

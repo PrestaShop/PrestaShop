@@ -1,0 +1,72 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% form_theme hookModuleForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{{ form_start(hookModuleForm, {attr: {
+  'data-hook-url': path('admin_modules_positions_possible_hooks'),
+  'data-label-available': 'Available hooks'|trans({}, 'Admin.Design.Feature'),
+  'data-label-registered': 'Already registered hooks'|trans({}, 'Admin.Design.Feature'),
+}}) }}
+<div class="card">
+  <h3 class="card-header">
+    {{ 'Hook a module'|trans({}, 'Admin.Design.Feature') }}
+  </h3>
+
+  <div class="card-body">
+    <div class="form-wrapper">
+      {{ form_errors(hookModuleForm) }}
+      {{ form_row(hookModuleForm.id_module) }}
+      {{ form_row(hookModuleForm.id_hook) }}
+      {{ form_row(hookModuleForm.exceptions) }}
+
+      <div class="form-group row hook-module-exception-list-row">
+        <label class="form-control-label col-sm-2"></label>
+        <div class="col-sm">
+          {# Compute custom exceptions: those present in the form data but absent from the known choice lists. #}
+          {% set knownExceptions = exceptionChoices.core|merge(exceptionChoices.admin_modules)|merge(exceptionChoices.front_modules) %}
+          {% set customExceptions = selectedExceptions|default([])|filter(value => value not in knownExceptions) %}
+          <select size="10" multiple class="form-control scroll-300" name="hook_module[exception_selected][]" data-exception-list="true">
+            <optgroup label="{{ '___________ CUSTOM ___________'|trans({}, 'Admin.Design.Feature') }}" data-exception-group="custom">
+              {% for value in customExceptions %}
+                <option value="{{ value }}" selected>{{ value }}</option>
+              {% endfor %}
+            </optgroup>
+            <optgroup label="{{ '____________ CORE ____________'|trans({}, 'Admin.Design.Feature') }}" data-exception-group="core">
+              {% for value in exceptionChoices.core %}
+                <option value="{{ value }}"{% if value in selectedExceptions|default([]) %} selected{% endif %}>{{ value }}</option>
+              {% endfor %}
+            </optgroup>
+            <optgroup label="____________ {{ 'Admin modules controller'|trans({}, 'Admin.Design.Feature') }} ____________" data-exception-group="admin_modules">
+              {% for value in exceptionChoices.admin_modules %}
+                <option value="{{ value }}"{% if value in selectedExceptions|default([]) %} selected{% endif %}>{{ value }}</option>
+              {% endfor %}
+            </optgroup>
+            <optgroup label="____________ {{ 'Front modules controller'|trans({}, 'Admin.Design.Feature') }} ____________" data-exception-group="front_modules">
+              {% for value in exceptionChoices.front_modules %}
+                <option value="{{ value }}"{% if value in selectedExceptions|default([]) %} selected{% endif %}>{{ value }}</option>
+              {% endfor %}
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      {{ form_row(hookModuleForm.id_hook_original) }}
+      {{ form_rest(hookModuleForm) }}
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <div class="d-inline-flex">
+      <a href="{{ path('admin_modules_positions') }}" class="btn btn-outline-secondary">
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+    </div>
+    <div class="d-inline-flex float-right">
+      <button class="btn btn-primary" id="save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+    </div>
+  </div>
+</div>
+{{ form_end(hookModuleForm) }}

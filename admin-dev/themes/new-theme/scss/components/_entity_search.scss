@@ -63,5 +63,12 @@ ul.entities-list {
     img {
       width: 50px;
     }
+
+    &.disabled {
+      color: $medium-gray;
+      pointer-events: none;
+      cursor: not-allowed;
+      background-color: #eceeef;
+    }
   }
 }

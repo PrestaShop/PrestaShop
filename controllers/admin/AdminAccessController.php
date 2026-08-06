@@ -4,6 +4,10 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShopBundle\Service\Form\ImprovedB2bTabsToggler;
+
 /**
  * @property Profile $object
  */
@@ -44,6 +48,12 @@ class AdminAccessControllerCore extends AdminController
             $accesses[$profile['id_profile']] = Profile::getProfileAccesses($profile['id_profile']);
         }
 
+        $isImprovedB2BEnabled = false;
+        if ($this->getContainer()->has(FeatureFlagStateCheckerInterface::class)) {
+            $featureFlagChecker = $this->get(FeatureFlagStateCheckerInterface::class);
+            $isImprovedB2BEnabled = $featureFlagChecker->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_B2B);
+        }
+
         // Deleted id_tab that do not have access
         foreach ($tabs as $key => $tab) {
             // Don't allow permissions for unnamed tabs (ie. AdminLogin)
@@ -53,6 +63,9 @@ class AdminAccessControllerCore extends AdminController
 
             foreach ($this->accesses_black_list as $id_tab) {
                 if ($tab['id_tab'] == (int) $id_tab) {
+                    unset($tabs[$key]);
+                }
+                if (!$isImprovedB2BEnabled && in_array($tab['class_name'], ImprovedB2bTabsToggler::TAB_CLASS_NAMES, true)) {
                     unset($tabs[$key]);
                 }
             }

@@ -47,6 +47,27 @@ admin_orders_generate_delivery_slip_pdf:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::generateDeliverySlipPdfAction
     _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders:generateDeliverySlipPdf
+  requirements:
+    orderId: \d+
+
+admin_orders_generate_shipment_delivery_slip_pdf:
+  path: /shipment/{shipmentId}/generate-delivery-slip-pdf
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::generateShipmentDeliverySlipPdfAction
+  options:
+    expose: true
+  requirements:
+    shipmentId: \d+
+
+admin_orders_generate_shipments_delivery_slip_pdf:
+  path: /{orderId}/shipments/generate-delivery-slip-pdf
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::generateShipmentsDeliverySlipPdfAction
+  options:
+    expose: true
   requirements:
     orderId: \d+
 
@@ -201,7 +222,7 @@ admin_orders_split_shipment:
     shipmentId: \d+
 
 admin_orders_shipment_get_split_form:
-  path: /{orderId}/shipment/split-form
+  path: /{orderId}/shipment/{shipmentId}/split-form
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getSplitShipmentForm
@@ -221,7 +242,7 @@ admin_orders_generate_invoice:
     orderId: \d+
 
 admin_orders_shipment_get_merge_form:
-  path: /{orderId}/shipment/merge-form
+  path: /{orderId}/shipment/{shipmentId}/merge-form
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getMergeShipmentForm
@@ -232,7 +253,7 @@ admin_orders_shipment_get_merge_form:
     expose: true
 
 admin_orders_shipment_get_edit_form:
-  path: /{orderId}/shipment/edit-form
+  path: /{orderId}/shipment/{shipmentId}/edit-form
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getEditShipmentForm
@@ -242,8 +263,19 @@ admin_orders_shipment_get_edit_form:
   options:
     expose: true
 
+admin_orders_shipment_get_fulfill_form:
+  path: /{orderId}/shipment/{shipmentId}/fulfill-form
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getFulfillShipmentForm
+  requirements:
+    orderId: \d+
+    shipmentId: \d+
+  options:
+    expose: true
+
 admin_orders_merge_shipment:
-  path: /{orderId}/shipment/merge
+  path: /{orderId}/shipment/{shipmentId}/merge
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::mergeShipmentAction
@@ -251,9 +283,39 @@ admin_orders_merge_shipment:
     orderId: \d+
     shipmentId: \d+
 
-admin_orders_edit_shipment:
-  path: /{orderId}/shipment/edit
+admin_orders_fulfill_shipment:
+  path: /{orderId}/shipment/{shipmentId}/fulfill
   methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::fulfillShipmentAction
+  requirements:
+    orderId: \d+
+    shipmentId: \d+
+
+admin_orders_get_add_product_form:
+  path: /{orderId}/product/add
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getAddProductForm
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_get_edit_product_form:
+  path: /{orderId}/product/{orderDetailId}/edit
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getEditProductForm
+  requirements:
+    orderId: \d+
+    orderDetailId: \d+
+  options:
+    expose: true
+
+admin_orders_edit_shipment:
+  path: /{orderId}/shipment/{shipmentId}/edit
+  methods: [ PUT ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::editShipmentAction
   requirements:
@@ -315,6 +377,27 @@ admin_orders_send_process_order_email:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::sendProcessOrderEmailAction
     _legacy_controller: AdminOrders
+  options:
+    expose: true
+
+admin_orders_get_shipments_for_product:
+  path: /orders/{orderId}/product/{productId}/shipments
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getShipmentsForProduct
+  requirements:
+    orderId: \d+
+    productId: \d+
+  options:
+    expose: true
+
+admin_orders_get_carriers_for_product:
+  path: /orders/product/{productId}/carriers
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getCarriersForProduct
+  requirements:
+    productId: \d+
   options:
     expose: true
 
@@ -413,6 +496,16 @@ admin_orders_get_shipping:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getShippingAction
     _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_get_shipments:
+  path: /{orderId}/shipments
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getShipmentsAction
   requirements:
     orderId: \d+
   options:

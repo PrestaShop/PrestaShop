@@ -59,4 +59,7 @@ class DiscountConstraintException extends DiscountException
     public const INVALID_PRODUCT_DISCOUNT_INCOMPATIBLE_TARGETS = 49;
     public const INVALID_PRODUCT_DISCOUNT_INCOMPATIBLE_REDUCTIONS = 50;
     public const INVALID_GUEST_CUSTOMER = 51;
+    public const INVALID_GIFT_PRODUCT_NOT_AVAILABLE_FOR_ORDER = 52;
+    public const INVALID_GIFT_PRODUCT_MINIMUM_QUANTITY = 53;
+    public const INVALID_GIFT_PRODUCT_OUT_OF_STOCK = 54;
 }

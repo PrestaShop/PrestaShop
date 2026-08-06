@@ -175,7 +175,7 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
       await testContext.addContextItem(this, 'testIdentifier', 'checkSubTotal', baseContext);
 
       const orderSubTotal = await foClassicCheckoutOrderConfirmationPage.getOrderSubTotal(page);
-      expect(orderSubTotal).to.equal(`€${dataProducts.demo_6.combinations[0].price.toFixed(2)}`);
+      expect(orderSubTotal).to.equal(`€${dataProducts.demo_6.combinations[0].priceTI.toFixed(2)}`);
     });
 
     it('should check the shipping total', async function () {
@@ -189,7 +189,7 @@ describe('FO - Order confirmation : Order details and totals - Recap of payment 
       await testContext.addContextItem(this, 'testIdentifier', 'checkTotalTaxInc', baseContext);
 
       const orderTotalTaxInc = await foClassicCheckoutOrderConfirmationPage.getOrderTotal(page);
-      expect(orderTotalTaxInc).to.equal(`€${dataProducts.demo_6.combinations[0].price.toFixed(2)}`);
+      expect(orderTotalTaxInc).to.equal(`€${dataProducts.demo_6.combinations[0].priceTI.toFixed(2)}`);
     });
 
     it('should check the order details', async function () {

@@ -14,7 +14,7 @@
 			<div class="col-lg-6">
 				<select multiple id="select_left">
 					{foreach from=$field.products_unselected item='product'}
-					<option value="{$product.id_product}">{$product.name}</option>
+					<option value="{$product.id_product}">{$product.name|escape:'html':'UTF-8'}</option>
 					{/foreach}
 				</select>
 				<a href="#" id="move_to_right" class="btn btn-default btn-block multiple_select_add">
@@ -24,7 +24,7 @@
 			<div class="col-lg-6">
 				<select multiple id="select_right" name="products[]">
 					{foreach from=$field.products item='product'}
-					<option selected="selected" value="{$product.id_product}">{$product.name}</option>
+					<option selected="selected" value="{$product.id_product}">{$product.name|escape:'html':'UTF-8'}</option>
 					{/foreach}
 				</select>
 				<a href="#" id="move_to_left" class="btn btn-default btn-block multiple_select_remove">

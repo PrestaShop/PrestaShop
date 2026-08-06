@@ -11,7 +11,6 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\When;
 
@@ -31,20 +30,6 @@ class CartConditionsType extends TranslatorAwareType
             ->add(self::MINIMUM_AMOUNT, MinimumAmountType::class, [
                 'label' => $this->trans('Minimum purchase amount', 'Admin.Catalog.Feature'),
                 'required' => false,
-                'constraints' => [
-                    new When(
-                        expression: sprintf(
-                            'this.getParent().get("children_selector").getData() === "%s"',
-                            self::MINIMUM_AMOUNT
-                        ),
-                        constraints: new Collection(
-                            fields: [
-                                'value' => new GreaterThan(0),
-                            ],
-                            allowExtraFields: true,
-                        ),
-                    ),
-                ],
             ])
             ->add(self::MINIMUM_PRODUCT_QUANTITY, IntegerType::class, [
                 'label' => $this->trans('Minimum product quantity', 'Admin.Catalog.Feature'),

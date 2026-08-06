@@ -20,15 +20,15 @@ use Db;
 use Exception;
 use Group;
 use Order;
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
 use Product;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tax;
 use TaxRule;
 use TaxRulesGroup;
 use Tools;
 
-class CartTest extends TestCase
+class CartTest extends KernelTestCase
 {
     /**
      * @var int
@@ -290,6 +290,14 @@ class CartTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        // Init Symfony so the container is reachable: Cart computations resolve services through
+        // ContainerFinder (e.g. the discount feature flag in Cart::getCartRules). Without booting here the
+        // class only passed inside the full suite, relying on a kernel a previous test happened to leave booted.
+        self::bootKernel();
+        // Global var read by SymfonyContainer::getInstance() / ContainerFinder.
+        global $kernel;
+        $kernel = self::$kernel;
 
         // Context needs a currency but doesn't set it by itself, use default one.
         Context::getContext()->currency = Currency::getDefaultCurrency();

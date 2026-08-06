@@ -22,7 +22,45 @@ class OrderDetailControllerCore extends FrontController
 
     protected $order_to_display;
 
+    protected $order;
+
     protected $reference;
+
+    protected function loadOrder(): void
+    {
+        $id_order = (int) Tools::getValue('id_order');
+        $id_order = $id_order && Validate::isUnsignedId($id_order) ? $id_order : false;
+
+        if (!$id_order) {
+            $reference = Tools::getValue('reference');
+            $reference = $reference && Validate::isReference($reference) ? $reference : false;
+            $order = $reference ? Order::getByReference($reference)->getFirst() : false;
+            $id_order = $order ? $order->id : false;
+        }
+
+        if (!$id_order) {
+            $this->redirect_after = '404';
+            $this->redirect();
+        }
+
+        $order = new Order($id_order);
+        if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id) {
+            $this->redirect_after = '404';
+            $this->redirect();
+        }
+
+        if ($order->id_shop != $this->context->shop->id && $this->context->customer->id_shop_group == $this->context->shop->id_shop_group) {
+            $shopGroup = new ShopGroup($this->context->customer->id_shop_group);
+            if (!$shopGroup->share_order) {
+                $this->redirect_after = '404';
+                $this->redirect();
+            }
+        }
+
+        $this->order = $order;
+        $this->order_to_display = (new OrderPresenter())->present($order);
+        $this->reference = $order->reference;
+    }
 
     /**
      * Start forms process.
@@ -146,67 +184,37 @@ class OrderDetailControllerCore extends FrontController
      */
     public function initContent(): void
     {
-        parent::initContent();
         if (Configuration::isCatalogMode()) {
             Tools::redirect('index.php');
         }
 
-        $id_order = (int) Tools::getValue('id_order');
-        $id_order = $id_order && Validate::isUnsignedId($id_order) ? $id_order : false;
+        $this->loadOrder();
 
-        if (!$id_order) {
-            $reference = Tools::getValue('reference');
-            $reference = $reference && Validate::isReference($reference) ? $reference : false;
-            $order = $reference ? Order::getByReference($reference)->getFirst() : false;
-            $id_order = $order ? $order->id : false;
+        parent::initContent();
+
+        if (Tools::getIsset('errorQuantity')) {
+            $this->errors[] = $this->trans('You do not have enough products to request an additional merchandise return.', [], 'Shop.Notifications.Error');
+        } elseif (Tools::getIsset('errorMsg')) {
+            $this->errors[] = $this->trans('Please provide an explanation for your RMA.', [], 'Shop.Notifications.Error');
+        } elseif (Tools::getIsset('errorDetail1')) {
+            $this->errors[] = $this->trans('Please check at least one product you would like to return.', [], 'Shop.Notifications.Error');
+        } elseif (Tools::getIsset('errorDetail2')) {
+            $this->errors[] = $this->trans('For each product you wish to add, please specify the desired quantity.', [], 'Shop.Notifications.Error');
+        } elseif (Tools::getIsset('errorNotReturnable')) {
+            $this->errors[] = $this->trans('This order cannot be returned', [], 'Shop.Notifications.Error');
+        } elseif (Tools::getIsset('messagesent')) {
+            $this->success[] = $this->trans('Message successfully sent', [], 'Shop.Notifications.Success');
         }
 
-        if (!$id_order) {
-            $this->redirect_after = '404';
-            $this->redirect();
-        } else {
-            if (Tools::getIsset('errorQuantity')) {
-                $this->errors[] = $this->trans('You do not have enough products to request an additional merchandise return.', [], 'Shop.Notifications.Error');
-            } elseif (Tools::getIsset('errorMsg')) {
-                $this->errors[] = $this->trans('Please provide an explanation for your RMA.', [], 'Shop.Notifications.Error');
-            } elseif (Tools::getIsset('errorDetail1')) {
-                $this->errors[] = $this->trans('Please check at least one product you would like to return.', [], 'Shop.Notifications.Error');
-            } elseif (Tools::getIsset('errorDetail2')) {
-                $this->errors[] = $this->trans('For each product you wish to add, please specify the desired quantity.', [], 'Shop.Notifications.Error');
-            } elseif (Tools::getIsset('errorNotReturnable')) {
-                $this->errors[] = $this->trans('This order cannot be returned', [], 'Shop.Notifications.Error');
-            } elseif (Tools::getIsset('messagesent')) {
-                $this->success[] = $this->trans('Message successfully sent', [], 'Shop.Notifications.Success');
-            }
+        /** @var FeatureFlagStateCheckerInterface $featureFlagManager */
+        $featureFlagManager = $this->get(FeatureFlagStateCheckerInterface::class);
 
-            $order = new Order($id_order);
-            if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
-                if ($order->id_shop != $this->context->shop->id && $this->context->customer->id_shop_group == $this->context->shop->id_shop_group) {
-                    $shopGroup = new ShopGroup($this->context->customer->id_shop_group);
-                    if (!$shopGroup->share_order) {
-                        $this->redirect_after = '404';
-                        $this->redirect();
-                    }
-                }
-                $this->order_to_display = (new OrderPresenter())->present($order);
-
-                $this->reference = $order->reference;
-
-                /** @var FeatureFlagStateCheckerInterface $featureFlagManager */
-                $featureFlagManager = $this->get(FeatureFlagStateCheckerInterface::class);
-
-                $this->context->smarty->assign([
-                    'order' => $this->order_to_display,
-                    'orderIsVirtual' => $order->isVirtual(),
-                    'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $order]),
-                    'is_multishipment_enabled' => $featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT),
-                ]);
-            } else {
-                $this->redirect_after = '404';
-                $this->redirect();
-            }
-            unset($order);
-        }
+        $this->context->smarty->assign([
+            'order' => $this->order_to_display,
+            'orderIsVirtual' => $this->order->isVirtual(),
+            'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order]),
+            'is_multishipment_enabled' => $featureFlagManager->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT),
+        ]);
 
         $this->setTemplate('customer/order-detail');
     }

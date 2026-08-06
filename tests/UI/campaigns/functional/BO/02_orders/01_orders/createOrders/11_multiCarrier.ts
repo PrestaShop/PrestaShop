@@ -19,6 +19,12 @@ import {
   boProductsCreateTabShippingPage,
   boOrdersViewBlockProductsPage,
   boOrdersViewBlockTabListPage,
+  // FO pages
+  foHummingbirdHomePage,
+  foHummingbirdMyAccountPage,
+  foHummingbirdMyOrderHistoryPage,
+  foHummingbirdMyOrderDetailsPage,
+  foHummingbirdLoginPage,
   // Data
   dataCustomers,
   dataOrderStatuses,
@@ -43,7 +49,8 @@ Pre-condition:
 - Create 2 carriers
 - Create 3 product
 Scenario:
--
+- Create simple order with the created product
+- Check and update shipments tab( Split/Merge, Add tracking number)
 Post-condition:
 - Disable multiCarrier
 - Delete products
@@ -53,11 +60,10 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let secondShipmentNumber: number = 0;
-  let thirdShipmentNumber: number = 0;
 
   const firstCarrierData: FakerCarrier = new FakerCarrier({
     // General settings
-    name: 'Carrier for product 1',
+    name: 'Voiture',
     speedGrade: 7,
     // Shipping locations and cost
     handlingCosts: false,
@@ -87,7 +93,7 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
   });
   const secondCarrierData: FakerCarrier = new FakerCarrier({
     // General settings
-    name: 'Carrier for product 2 and 3',
+    name: 'Fourgonnette',
     speedGrade: 7,
     // Shipping locations and cost
     handlingCosts: false,
@@ -117,7 +123,7 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
   });
 
   const firstProductData: FakerProduct = new FakerProduct({
-    name: 'First product',
+    name: 'Assiette',
     price: 10.95,
     taxRule: 'No tax',
     quantity: 20,
@@ -126,7 +132,7 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
     packageDimensionWeight: 2,
   });
   const secondProductData: FakerProduct = new FakerProduct({
-    name: 'Second product',
+    name: 'Chaise',
     price: 15.55,
     taxRule: 'No tax',
     quantity: 20,
@@ -135,7 +141,7 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
     packageDimensionWeight: 2,
   });
   const thirdProductData: FakerProduct = new FakerProduct({
-    name: 'Third product',
+    name: 'Table',
     price: 30.55,
     taxRule: 'No tax',
     quantity: 20,
@@ -282,103 +288,112 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
       expect(pageTitle).to.contains(boProductsPage.pageTitle);
     });
 
-    it('should click on \'New product\' button and check new product modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
+    describe(`Create the first product: ${firstProductData.name}`, async () => {
+      it('should click on \'New product\' button and check new product modal', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
-      expect(isModalVisible).to.equals(true);
+        const isModalVisible = await boProductsPage.clickOnNewProductButton(page);
+        expect(isModalVisible).to.equals(true);
+      });
+
+      it('should choose \'Standard product\' and go to new product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
+
+        await boProductsPage.selectProductType(page, firstProductData.type);
+        await boProductsPage.clickOnAddNewProduct(page);
+
+        const pageTitle = await boProductsCreatePage.getPageTitle(page);
+        expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
+      });
+
+      it('should create standard product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
+
+        const createProductMessage = await boProductsCreatePage.setProduct(page, firstProductData);
+        expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
+      });
+
+      it('should go to shipping tab and set package dimension', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'editPackageDimension', baseContext);
+
+        await boProductsCreateTabShippingPage.setPackageDimension(page, firstProductData);
+
+        const message = await boProductsCreatePage.saveProduct(page);
+        expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
+      });
+
+      it('should select the first created carrier', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'selectFirstCarrier', baseContext);
+
+        await boProductsCreateTabShippingPage.selectAvailableCarrier(page, 5);
+
+        const message = await boProductsCreatePage.saveProduct(page);
+        expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
+      });
     });
 
-    it('should choose \'Standard product\' and go to new product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
+    describe(`Create the second product: ${secondProductData.name}`, async () => {
+      it('should create the second product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'duplicateProduct', baseContext);
 
-      await boProductsPage.selectProductType(page, firstProductData.type);
-      await boProductsPage.clickOnAddNewProduct(page);
+        await boProductsCreatePage.clickOnNewProductButton(page);
+        await boProductsPage.selectProductType(page, secondProductData.type);
+        await boProductsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await boProductsCreatePage.getPageTitle(page);
-      expect(pageTitle).to.contains(boProductsCreatePage.pageTitle);
+        const createProductMessage = await boProductsCreatePage.setProduct(page, secondProductData);
+        expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
+      });
+
+      it('should go to shipping tab and edit package dimension', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'editPackageDimension2', baseContext);
+
+        await boProductsCreateTabShippingPage.setPackageDimension(page, secondProductData);
+
+        const message = await boProductsCreatePage.saveProduct(page);
+        expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
+      });
+
+      it('should select the first and second created carrier', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'selectFirstSecondCarrier', baseContext);
+
+        await boProductsCreateTabShippingPage.setPackageDimension(page, secondProductData);
+        await boProductsCreateTabShippingPage.selectAvailableCarrier(page, 5);
+        await boProductsCreateTabShippingPage.selectAvailableCarrier(page, 6);
+
+        const message = await boProductsCreatePage.saveProduct(page);
+        expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
+      });
     });
 
-    it('should create standard product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
+    describe(`Create the third product: ${thirdProductData.name}`, async () => {
+      it('should create the third product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createThirdProduct', baseContext);
 
-      const createProductMessage = await boProductsCreatePage.setProduct(page, firstProductData);
-      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
-    });
+        await boProductsCreatePage.clickOnNewProductButton(page);
+        await boProductsPage.selectProductType(page, thirdProductData.type);
+        await boProductsPage.clickOnAddNewProduct(page);
 
-    it('should go to shipping tab and set package dimension', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'editPackageDimension', baseContext);
+        const createProductMessage = await boProductsCreatePage.setProduct(page, thirdProductData);
+        expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
+      });
 
-      await boProductsCreateTabShippingPage.setPackageDimension(page, firstProductData);
+      it('should go to shipping tab and edit package dimension', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'editPackageDimension3', baseContext);
 
-      const message = await boProductsCreatePage.saveProduct(page);
-      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
-    });
+        await boProductsCreateTabShippingPage.setPackageDimension(page, thirdProductData);
 
-    it('should select the first created carrier', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'selectFirstCarrier', baseContext);
+        const message = await boProductsCreatePage.saveProduct(page);
+        expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
+      });
 
-      await boProductsCreateTabShippingPage.selectAvailableCarrier(page, 5);
+      it('should select the second created carrier', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'selectSecondCarrier', baseContext);
 
-      const message = await boProductsCreatePage.saveProduct(page);
-      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
-    });
+        await boProductsCreateTabShippingPage.selectAvailableCarrier(page, 6);
 
-    it('should duplicate the product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'duplicateProduct', baseContext);
-
-      const textMessage = await boProductsCreatePage.duplicateProduct(page);
-      expect(textMessage).to.equal(boProductsCreatePage.successfulDuplicateMessage);
-    });
-
-    it('should edit the duplicated product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'editSecondProduct', baseContext);
-
-      const createProductMessage = await boProductsCreatePage.setProduct(page, secondProductData);
-      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
-    });
-
-    it('should go to shipping tab and edit package dimension', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'editPackageDimension2', baseContext);
-
-      await boProductsCreateTabShippingPage.setPackageDimension(page, secondProductData);
-
-      const message = await boProductsCreatePage.saveProduct(page);
-      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
-    });
-
-    it('should select the second created carrier', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'selectSecondCarrier2', baseContext);
-
-      await boProductsCreateTabShippingPage.clearChoiceCarrier(page);
-      await boProductsCreateTabShippingPage.selectAvailableCarrier(page, 6);
-
-      const message = await boProductsCreatePage.saveProduct(page);
-      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
-    });
-
-    it('should duplicate the second product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'duplicateProduct2', baseContext);
-
-      const textMessage = await boProductsCreatePage.duplicateProduct(page);
-      expect(textMessage).to.equal(boProductsCreatePage.successfulDuplicateMessage);
-    });
-
-    it('should edit the second duplicated product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'editThirdProduct', baseContext);
-
-      const createProductMessage = await boProductsCreatePage.setProduct(page, thirdProductData);
-      expect(createProductMessage).to.equal(boProductsCreatePage.successfulUpdateMessage);
-    });
-
-    it('should select the first and second created carrier', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'selectSecondCarrier', baseContext);
-
-      await boProductsCreateTabShippingPage.setPackageDimension(page, secondProductData);
-      await boProductsCreateTabShippingPage.selectAvailableCarrier(page, 5);
-
-      const message = await boProductsCreatePage.saveProduct(page);
-      expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
+        const message = await boProductsCreatePage.saveProduct(page);
+        expect(message).to.eq(boProductsCreatePage.successfulUpdateMessage);
+      });
     });
   });
 
@@ -416,8 +431,8 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
       expect(isHistoryBlockVisible).to.eq(true);
     });
 
-    it('should add products to cart and check the list of carriers', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkListOfCarriers', baseContext);
+    it('should add the created products to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductsToCart', baseContext);
 
       for (let i = 0; i < orderToMake.products.length; i++) {
         await boOrdersCreatePage.addProductToCart(
@@ -425,13 +440,33 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
           } - €${orderToMake.products[i].product.price}`, orderToMake.products[i].quantity);
       }
 
+      let result = await boOrdersCreatePage.getProductDetailsFromTable(page, 1);
+      await Promise.all([
+        expect(result.description).to.equal(firstProductData.name),
+        expect(result.reference).to.equal(firstProductData.reference),
+      ]);
+      result = await boOrdersCreatePage.getProductDetailsFromTable(page, 2);
+      await Promise.all([
+        expect(result.description).to.equal(secondProductData.name),
+        expect(result.reference).to.equal(secondProductData.reference),
+      ]);
+      result = await boOrdersCreatePage.getProductDetailsFromTable(page, 3);
+      await Promise.all([
+        expect(result.description).to.equal(thirdProductData.name),
+        expect(result.reference).to.equal(thirdProductData.reference),
+      ]);
+    });
+
+    it('should check the list of carriers', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkListOfCarriers', baseContext);
+
       const deliveryOptions = await boOrdersCreatePage.getDeliveryOptions(page);
       expect(deliveryOptions).to
         .equal(`${firstCarrierData.name} - ${firstCarrierData.transitName}${secondCarrierData.name}`
           + ` - ${secondCarrierData.transitName}`);
     });
 
-    it('should choose delivery option', async function () {
+    it(`should choose the delivery option '${orderToMake.deliveryOption.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseCarrier', baseContext);
 
       const shippingPriceTTC = await boOrdersCreatePage.setDeliveryOption(
@@ -449,7 +484,7 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
       expect(isOrderCreated, 'The order is created!').to.eq(true);
     });
 
-    it('should check the page title', async function () {
+    it('should check the view order page title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPageTitle', baseContext);
 
       const pageTitle = await boOrdersViewBlockProductsPage.getPageTitle(page);
@@ -502,7 +537,7 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
       await boOrdersViewBlockTabListPage.selectProductAndQuantityInSplitShipment(page, 2, 1);
 
       const listOfCarriers = await boOrdersViewBlockTabListPage.getListOfCarriersInSplitShipment(page);
-      expect(listOfCarriers).to.equal(`Select a carrier${firstCarrierData.name}${secondCarrierData.name}`);
+      expect(listOfCarriers).to.equal(`Select a carrier${secondCarrierData.name}${firstCarrierData.name}`);
     });
 
     it('should choose the second carrier', async function () {
@@ -529,12 +564,123 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
       expect(shipmentsTabName).to.contain('Shipments (3)');
     });
 
-    it('should click on merge the second carrier', async function () {
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
+
+      page = await boOrdersViewBlockTabListPage.viewMyShop(page);
+      await foHummingbirdHomePage.changeLanguage(page, 'en');
+
+      const isHomePage = await foHummingbirdHomePage.isHomePage(page);
+      expect(isHomePage).to.eq(true);
+    });
+
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
+
+      await foHummingbirdHomePage.goToLoginPage(page);
+
+      const pageTitle = await foHummingbirdLoginPage.getPageTitle(page);
+      expect(pageTitle, 'Fail to open FO login page').to.contains(foHummingbirdLoginPage.pageTitle);
+    });
+
+    it('should sign in with customer credentials', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
+
+      await foHummingbirdLoginPage.customerLogin(page, dataCustomers.johnDoe);
+
+      const isCustomerConnected = await foHummingbirdLoginPage.isCustomerConnected(page);
+      expect(isCustomerConnected, 'Customer is not connected').to.eq(true);
+    });
+
+    it('should go to Your account > Order history and details page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage2', baseContext);
+
+      await foHummingbirdHomePage.goToMyAccountPage(page);
+      await foHummingbirdMyAccountPage.goToHistoryAndDetailsPage(page);
+
+      const pageHeaderTitle = await foHummingbirdMyOrderHistoryPage.getPageTitle(page);
+      expect(pageHeaderTitle).to.equal(foHummingbirdMyOrderHistoryPage.pageTitle);
+    });
+
+    it('should go to order details page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails2', baseContext);
+
+      await foHummingbirdMyOrderHistoryPage.goToDetailsPage(page);
+
+      const pageTitle = await foHummingbirdMyOrderDetailsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdMyOrderDetailsPage.pageTitle);
+    });
+
+    it('should check the number of carriers from Shipment tracking details table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfCarriers', baseContext);
+
+      const numberOfCarriers = await foHummingbirdMyOrderDetailsPage.getNumberOfCarriersFromShipmentDetailsTable(page);
+      expect(numberOfCarriers).to.equal(3);
+    });
+
+    it('should check the Shipment tracking details table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersTable', baseContext);
+
+      let carrier = await foHummingbirdMyOrderDetailsPage.getCarrierDataFromTable(page, 1);
+      expect(carrier).to.equal(firstCarrierData.name);
+
+      carrier = await foHummingbirdMyOrderDetailsPage.getCarrierDataFromTable(page, 2);
+      expect(carrier).to.equal(secondCarrierData.name);
+
+      carrier = await foHummingbirdMyOrderDetailsPage.getCarrierDataFromTable(page, 3);
+      expect(carrier).to.equal(secondCarrierData.name);
+    });
+
+    it('should check the number of products from Product details table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
+
+      const numberOfProducts = await foHummingbirdMyOrderDetailsPage.getNumberOfRowsFromProductDetailsTable(page);
+      expect(numberOfProducts).to.equal(4);
+    });
+
+    it('should check product details table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetails', baseContext);
+
+      let productName = await foHummingbirdMyOrderDetailsPage.getOrderProductColumn(page, 1);
+      expect(productName).to.contain(firstProductData.name)
+        .and.to.contain(firstCarrierData.name);
+      let productQuantity = await foHummingbirdMyOrderDetailsPage.getProductQuantity(page, 1);
+      expect(productQuantity).to.equal(3);
+
+      productName = await foHummingbirdMyOrderDetailsPage.getOrderProductColumn(page, 2);
+      expect(productName).to.contain(secondProductData.name)
+        .and.to.contain(firstCarrierData.name);
+      productQuantity = await foHummingbirdMyOrderDetailsPage.getProductQuantity(page, 2);
+      expect(productQuantity).to.equal(3);
+
+      productName = await foHummingbirdMyOrderDetailsPage.getOrderProductColumn(page, 3);
+      expect(productName).to.contain(thirdProductData.name)
+        .and.to.contain(secondCarrierData.name);
+      productQuantity = await foHummingbirdMyOrderDetailsPage.getProductQuantity(page, 3);
+      expect(productQuantity).to.equal(2);
+
+      productName = await foHummingbirdMyOrderDetailsPage.getOrderProductColumn(page, 4);
+      expect(productName).to.contain(secondProductData.name)
+        .and.to.contain(secondCarrierData.name);
+      productQuantity = await foHummingbirdMyOrderDetailsPage.getProductQuantity(page, 4);
+      expect(productQuantity).to.equal(1);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
+
+      page = await foHummingbirdMyOrderDetailsPage.changePage(browserContext, 0);
+
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
+    });
+
+    it('should click on merge the third carrier line', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnMergeCarrier', baseContext);
 
-      thirdShipmentNumber = await boOrdersViewBlockTabListPage.getShipmentNumber(page, 3);
+      secondShipmentNumber = await boOrdersViewBlockTabListPage.getShipmentNumber(page, 2);
 
-      const isModalVisible = await boOrdersViewBlockTabListPage.clickOnMergeLink(page, 2);
+      const isModalVisible = await boOrdersViewBlockTabListPage.clickOnMergeLink(page, 3);
       expect(isModalVisible, 'Merge shipping modal is not visible!').to.equal(true);
     });
 
@@ -544,7 +690,7 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
       await boOrdersViewBlockTabListPage.selectProductInMergeShipment(page, 1);
 
       const isButtonNotDisabled = await boOrdersViewBlockTabListPage
-        .selectCarrierInMergeShipment(page, `Shipment ${thirdShipmentNumber} - carrier ${secondCarrierData.name}`);
+        .selectCarrierInMergeShipment(page, `Shipment ${secondShipmentNumber} - carrier ${secondCarrierData.name}`);
       expect(isButtonNotDisabled).to.equal(true);
     });
 
@@ -565,17 +711,88 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
       expect(shipmentsTabName).to.contain('Shipments (2)');
     });
 
-    it('should click on edit shipment link of the first carrier', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditShipmentLink', baseContext);
+    it('should go back to FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToFO', baseContext);
 
-      const isEditModalVisible = await boOrdersViewBlockTabListPage.clickOnEditShipmentLink(page, 1);
-      expect(isEditModalVisible).to.equal(true);
+      page = await boOrdersViewBlockTabListPage.changePage(browserContext, 1);
+      await foHummingbirdMyOrderHistoryPage.reloadPage(page);
+
+      const pageTitle = await foHummingbirdMyOrderDetailsPage.getPageTitle(page);
+      expect(pageTitle).to.equal(foHummingbirdMyOrderDetailsPage.pageTitle);
+    });
+
+    it('should check the number of carriers from Shipment tracking details table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfCarriers_2', baseContext);
+
+      const numberOfCarriers = await foHummingbirdMyOrderDetailsPage.getNumberOfCarriersFromShipmentDetailsTable(page);
+      expect(numberOfCarriers).to.equal(2);
+    });
+
+    it('should check the Shipment tracking details table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersTable_2', baseContext);
+
+      let carrier = await foHummingbirdMyOrderDetailsPage.getCarrierDataFromTable(page, 1);
+      expect(carrier).to.equal(firstCarrierData.name);
+
+      carrier = await foHummingbirdMyOrderDetailsPage.getCarrierDataFromTable(page, 2);
+      expect(carrier).to.equal(secondCarrierData.name);
+    });
+
+    it('should check the number of products in Product details table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts_2', baseContext);
+
+      const numberOfProducts = await foHummingbirdMyOrderDetailsPage.getNumberOfRowsFromProductDetailsTable(page);
+      expect(numberOfProducts).to.equal(4);
+    });
+
+    it('should check product details table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetails_2', baseContext);
+
+      let productName = await foHummingbirdMyOrderDetailsPage.getOrderProductColumn(page, 1);
+      expect(productName).to.contain(firstProductData.name)
+        .and.to.contain(firstCarrierData.name);
+      let productQuantity = await foHummingbirdMyOrderDetailsPage.getProductQuantity(page, 1);
+      expect(productQuantity).to.equal(3);
+
+      productName = await foHummingbirdMyOrderDetailsPage.getOrderProductColumn(page, 2);
+      expect(productName).to.contain(secondProductData.name)
+        .and.to.contain(firstCarrierData.name);
+      productQuantity = await foHummingbirdMyOrderDetailsPage.getProductQuantity(page, 2);
+      expect(productQuantity).to.equal(3);
+
+      productName = await foHummingbirdMyOrderDetailsPage.getOrderProductColumn(page, 3);
+      expect(productName).to.contain(thirdProductData.name)
+        .and.to.contain(secondCarrierData.name);
+      productQuantity = await foHummingbirdMyOrderDetailsPage.getProductQuantity(page, 3);
+      expect(productQuantity).to.equal(2);
+
+      productName = await foHummingbirdMyOrderDetailsPage.getOrderProductColumn(page, 4);
+      expect(productName).to.contain(secondProductData.name)
+        .and.to.contain(secondCarrierData.name);
+      productQuantity = await foHummingbirdMyOrderDetailsPage.getProductQuantity(page, 4);
+      expect(productQuantity).to.equal(1);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo_2', baseContext);
+
+      page = await foHummingbirdMyOrderDetailsPage.changePage(browserContext, 0);
+
+      const pageTitle = await boOrdersViewBlockTabListPage.getPageTitle(page);
+      expect(pageTitle).to.contains(boOrdersViewBlockTabListPage.pageTitle);
+    });
+
+    it('should click on fulfill link of the first carrier', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickFulfillLink', baseContext);
+
+      const isFulFillModalVisible = await boOrdersViewBlockTabListPage.clickOnFulfillLink(page, 1);
+      expect(isFulFillModalVisible).to.equal(true);
     });
 
     it('should add a tracking number and save', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addTrackingNumber', baseContext);
 
-      const isModalNotVisible = await boOrdersViewBlockTabListPage.editShipment(page, 'TN12345678', firstCarrierData.name);
+      const isModalNotVisible = await boOrdersViewBlockTabListPage.addTrackingNumber(page, 'TN12345678');
       expect(isModalNotVisible).to.equal(true);
     });
 
@@ -589,97 +806,25 @@ describe('BO - Orders - Create order : Multi Carrier', async () => {
       expect(trackingNumber).to.equal('TN12345678');
     });
 
-    it('should click on split link of the first shipment', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnSplitLink2', baseContext);
+    it('should check that the edit icon is not displayed for the first shipment', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEditIconNotVisible', baseContext);
 
-      const isModalVisible = await boOrdersViewBlockTabListPage.clickOnSplitLink(page, 1);
-      expect(isModalVisible, 'Split shipping modal is not visible!').to.equal(true);
+      const isVisible = await boOrdersViewBlockTabListPage.isEditIconVisible(page);
+      expect(isVisible).to.equal(false);
     });
 
-    it('should check the alert mesage in the split modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkAlertText', baseContext);
+    it('should check that the dropdown list of actions is not visible for the first shipment', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDropDownListNotVisible', baseContext);
 
-      const alertText = await boOrdersViewBlockTabListPage.getAlertTextFromSplitModal(page);
-      expect(alertText).to.equal(boOrdersViewBlockTabListPage.alertTextInSplitModal);
+      const isVisible = await boOrdersViewBlockTabListPage.isDropdownActionsButtonVisible(page);
+      expect(isVisible).to.equal(false);
     });
 
-    it('should select a product and a carrier and check that the Split shipment button is disabled', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkButtonStillDisabled', baseContext);
+    it('should check that the merge link is not visible for the second shipment', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkMergeNotVisible', baseContext);
 
-      await boOrdersViewBlockTabListPage.selectProductAndQuantityInSplitShipment(page, 2, 1);
-
-      const isSplitButtonDisabled = await boOrdersViewBlockTabListPage.selectCarrierInSplitShipment(page, secondCarrierData.name);
-      expect(isSplitButtonDisabled).to.equal(1);
-    });
-
-    it('should close the split modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeSplitModal', baseContext);
-
-      const isSplitModalNotVisible = await boOrdersViewBlockTabListPage.closeSplitModal(page);
-      expect(isSplitModalNotVisible).to.equal(true);
-    });
-
-    it('should click on merge link of the first shipment', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'mergeFirstShipment', baseContext);
-
-      secondShipmentNumber = await boOrdersViewBlockTabListPage.getShipmentNumber(page, 2);
-
-      const isModalVisible = await boOrdersViewBlockTabListPage.clickOnMergeLink(page, 1);
-      expect(isModalVisible, 'Merge shipping modal is not visible!').to.equal(true);
-    });
-
-    it('should check the alert mesage in the split modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkAlertTextInMergeModal', baseContext);
-
-      const alertText = await boOrdersViewBlockTabListPage.getAlertTextFromMergeModal(page);
-      expect(alertText).to.equal(boOrdersViewBlockTabListPage.alertTextInMergeModal);
-    });
-
-    it('should select the first product and check that the list of carriers is enabled', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkListCarriersEnabled', baseContext);
-
-      await boOrdersViewBlockTabListPage.selectProductInMergeShipment(page, 1);
-
-      const isCarrierDisabled = await boOrdersViewBlockTabListPage.checkCarrierStatusInMergeModal(page);
-      expect(isCarrierDisabled).to.equal(0);
-    });
-
-    it('should check that the Merge shipment button is disabled', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkMergeButtonDisabled', baseContext);
-
-      const isButtonNotDisabled = await boOrdersViewBlockTabListPage
-        .selectCarrierInMergeShipment(page, `Shipment ${secondShipmentNumber} - carrier ${secondCarrierData.name}`);
-      expect(isButtonNotDisabled).to.equal(false);
-    });
-
-    it('should close the merge modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeMergeModal', baseContext);
-
-      const isMergeModalNotVisible = await boOrdersViewBlockTabListPage.closeMergeModal(page);
-      expect(isMergeModalNotVisible).to.equal(true);
-    });
-
-    it('should click on merge link of the second shipment', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'mergeSecondShipment', baseContext);
-
-      const isModalVisible = await boOrdersViewBlockTabListPage.clickOnMergeLink(page, 2);
-      expect(isModalVisible, 'Merge shipping modal is not visible!').to.equal(true);
-    });
-
-    it('should select the second product and check that the list of carriers is disbled', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkListCarriersDisabled2', baseContext);
-
-      await boOrdersViewBlockTabListPage.selectProductInMergeShipment(page, 1);
-
-      const isCarrierDisabled = await boOrdersViewBlockTabListPage.checkCarrierStatusInMergeModal(page);
-      expect(isCarrierDisabled).to.equal(1);
-    });
-
-    it('should close the merge modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeMergeModal2', baseContext);
-
-      const isMergeModalNotVisible = await boOrdersViewBlockTabListPage.closeMergeModal(page);
-      expect(isMergeModalNotVisible).to.equal(true);
+      const isMergeLinkVisible = await boOrdersViewBlockTabListPage.isMergeLinkVisible(page, 2);
+      expect(isMergeLinkVisible, 'Merge link is visible!').to.equal(false);
     });
   });
 

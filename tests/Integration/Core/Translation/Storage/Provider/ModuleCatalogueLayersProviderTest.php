@@ -10,6 +10,7 @@ namespace Tests\Integration\Core\Translation\Storage\Provider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ExtraPropertyTranslationExtractor;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\LegacyModuleExtractor;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\LegacyModuleExtractorInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\LegacyFileLoader;
@@ -40,6 +41,11 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
      * @var MockObject|LoaderInterface
      */
     private $legacyFileLoader;
+
+    /**
+     * @var MockObject|ExtraPropertyTranslationExtractor
+     */
+    private $extraPropertyTranslationExtractor;
 
     /**
      * @var mixed
@@ -78,6 +84,13 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
             });
 
         $this->legacyFileLoader = $this->createMock(LoaderInterface::class);
+
+        // by default the extra property registry contributes nothing, so the existing expectations are unchanged
+        $this->extraPropertyTranslationExtractor = $this->createMock(ExtraPropertyTranslationExtractor::class);
+        $this->extraPropertyTranslationExtractor->method('extract')
+            ->willReturnCallback(function (string $locale) {
+                return new MessageCatalogue($locale);
+            });
     }
 
     /**
@@ -162,7 +175,8 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
             $this->translationsDir,
             $providerDefinition->getModuleName(),
             $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
+            $providerDefinition->getTranslationDomains(),
+            $this->extraPropertyTranslationExtractor
         );
 
         // load catalogue from translations/fr-FR
@@ -249,7 +263,8 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
             $this->translationsDir,
             $providerDefinition->getModuleName(),
             $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
+            $providerDefinition->getTranslationDomains(),
+            $this->extraPropertyTranslationExtractor
         );
 
         // load catalogue from translations/default
@@ -280,6 +295,52 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
 
         // verify all catalogues are loaded
         $this->assertResultIsAsExpected($expected, $catalogue);
+    }
+
+    /**
+     * Test it merges the label/description wordings declared in the extra property registry into the
+     * default catalogue, keeping only the domains that belong to the module being translated.
+     */
+    public function testItMergesExtraPropertyWordingsIntoDefaultCatalogue(): void
+    {
+        $extraPropertyTranslationExtractor = $this->createMock(ExtraPropertyTranslationExtractor::class);
+        $extraPropertyTranslationExtractor->method('extract')
+            ->willReturnCallback(function (string $locale) {
+                $catalogue = new MessageCatalogue($locale);
+                // belongs to the translated module: must be kept (normalized to ModulesTranslationtestAdmin)
+                $catalogue->set('A registry label', 'A registry label', 'Modules.Translationtest.Admin');
+                $catalogue->set('A registry description', 'A registry description', 'Modules.Translationtest.Admin');
+                // belongs to another module: must be filtered out
+                $catalogue->set('A foreign label', 'A foreign label', 'Modules.Othermodule.Admin');
+
+                return $catalogue;
+            });
+
+        $providerDefinition = new ModuleProviderDefinition('translationtest');
+        $provider = new ModuleCatalogueLayersProvider(
+            new MockDatabaseTranslationLoader(
+                [],
+                $this->createMock(LanguageRepositoryInterface::class),
+                $this->createMock(TranslationRepositoryInterface::class)
+            ),
+            $this->legacyModuleExtractor,
+            $this->legacyFileLoader,
+            $this->modulesDir,
+            $this->translationsDir,
+            $providerDefinition->getModuleName(),
+            $providerDefinition->getFilenameFilters(),
+            $providerDefinition->getTranslationDomains(),
+            $extraPropertyTranslationExtractor
+        );
+
+        $catalogue = $provider->getDefaultCatalogue('fr-FR');
+
+        // the module's registry wordings are present under the normalized domain, with key == value
+        $this->assertSame('A registry label', $catalogue->get('A registry label', 'ModulesTranslationtestAdmin'));
+        $this->assertSame('A registry description', $catalogue->get('A registry description', 'ModulesTranslationtestAdmin'));
+
+        // a wording belonging to another module is filtered out
+        $this->assertNotContains('ModulesOthermoduleAdmin', $catalogue->getDomains());
     }
 
     public function testItDoesntLoadsCustomizedTranslationsWithThemeDefinedFromDatabase(): void
@@ -393,7 +454,8 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
             $this->translationsDir,
             $providerDefinition->getModuleName(),
             $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
+            $providerDefinition->getTranslationDomains(),
+            $this->extraPropertyTranslationExtractor
         );
     }
 

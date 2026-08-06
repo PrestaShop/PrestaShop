@@ -20,7 +20,7 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\GeneratePdfByDateType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -90,8 +90,17 @@ class CreditSlipController extends PrestaShopAdminController
     ) {
         try {
             $creditSlipId = new CreditSlipId($creditSlipId);
+            $generatedPdf = $creditSlipPdfGenerator->generatePDFForResponse([$creditSlipId]);
 
-            return new BinaryFileResponse($creditSlipPdfGenerator->generatePDF([$creditSlipId]));
+            $response = new Response($generatedPdf->getContent());
+            $disposition = HeaderUtils::makeDisposition(
+                HeaderUtils::DISPOSITION_ATTACHMENT,
+                $generatedPdf->getFileName()
+            );
+            $response->headers->set('Content-Type', 'application/pdf');
+            $response->headers->set('Content-Disposition', $disposition);
+
+            return $response;
         } catch (CoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
@@ -121,8 +130,17 @@ class CreditSlipController extends PrestaShopAdminController
                     new DateTime($dateRange['from']),
                     new DateTime($dateRange['to'])
                 ));
+                $generatedPdf = $creditSlipPdfGenerator->generatePDFForResponse($slipIds);
 
-                return new BinaryFileResponse($creditSlipPdfGenerator->generatePDF($slipIds));
+                $response = new Response($generatedPdf->getContent());
+                $disposition = HeaderUtils::makeDisposition(
+                    HeaderUtils::DISPOSITION_ATTACHMENT,
+                    $generatedPdf->getFileName()
+                );
+                $response->headers->set('Content-Type', 'application/pdf');
+                $response->headers->set('Content-Disposition', $disposition);
+
+                return $response;
             } catch (CoreException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }

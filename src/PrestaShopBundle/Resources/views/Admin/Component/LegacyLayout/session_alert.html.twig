@@ -46,7 +46,7 @@
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <ul id="infos_block" class="list-unstyled">
       {% for info in this.informations %}
-      <li>{{ info|raw }}</li>
+      <li>{{ info|raw_purified }}</li>
       {% endfor %}
     </ul>
   </div>
@@ -72,7 +72,7 @@
     {% endif %}
     <ul class="list-unstyled">
       {% for warning in this.warnings %}
-      <li>{{ warning|raw }}</li>
+      <li>{{ warning|raw_purified }}</li>
       {% endfor %}
     </ul>
   </div>

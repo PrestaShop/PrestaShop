@@ -9,16 +9,19 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Customization\CommandHandler;
 
 use CustomizationField;
+use PrestaShop\PrestaShop\Adapter\CartRule\CartRuleDisablerService;
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Repository\CustomizationFieldRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Update\ProductCustomizationFieldUpdater;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\SetProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField as CustomizationFieldDTO;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use Product;
 
 /**
  * Handles @see SetProductCustomizationFieldsCommand using legacy object model
@@ -42,7 +45,8 @@ class SetProductCustomizationFieldsHandler implements SetProductCustomizationFie
      */
     public function __construct(
         CustomizationFieldRepository $customizationFieldRepository,
-        ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
+        ProductCustomizationFieldUpdater $productCustomizationFieldUpdater,
+        private readonly CartRuleDisablerService $cartRuleDisablerService,
     ) {
         $this->customizationFieldRepository = $customizationFieldRepository;
         $this->productCustomizationFieldUpdater = $productCustomizationFieldUpdater;
@@ -71,6 +75,11 @@ class SetProductCustomizationFieldsHandler implements SetProductCustomizationFie
             $customizationFields[] = $this->buildEntityFromDTO($productId, $providedCustomizationField, $shopId);
         }
         $this->productCustomizationFieldUpdater->setProductCustomizationFields($productId, $customizationFields, $shopConstraint);
+
+        $product = new Product($productId->getValue());
+        if ((int) $product->customizable === ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION) {
+            $this->cartRuleDisablerService->disableCartRulesThatUsedProductAsGift($productId->getValue());
+        }
 
         return $this->customizationFieldRepository->getCustomizationFieldIds($productId);
     }

@@ -18,6 +18,12 @@ services:
     tags:
       - 'console.command'
 
+  PrestaShopBundle\Command\GenerateHtaccessCommand:
+    arguments:
+      - '@prestashop.adapter.file.htaccess_file_generator'
+    tags:
+      - 'console.command'
+
   PrestaShopBundle\Command\GenerateMailTemplatesCommand:
     arguments:
       - '@prestashop.core.command_bus'
@@ -38,6 +44,11 @@ services:
       - 'console.command'
 
   PrestaShopBundle\Command\ModuleCommand:
+    autowire: true
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\ModuleListCommand:
     autowire: true
     tags:
       - 'console.command'
@@ -96,5 +107,15 @@ services:
   PrestaShopBundle\Command\RegenerateThumbnailsCommand:
     arguments:
       - '@prestashop.core.command_bus'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\EmployeeChangePasswordCommand:
+    autowire: true
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\EmployeeCreateCommand:
+    autowire: true
     tags:
       - 'console.command'

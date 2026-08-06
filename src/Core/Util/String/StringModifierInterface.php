@@ -30,4 +30,13 @@ interface StringModifierInterface
      * @return string
      */
     public function cutEnd(string $string, int $expectedLength): string;
+
+    /**
+     * Converts HTML content to readable plain text.
+     *
+     * @param string $html
+     *
+     * @return string
+     */
+    public function htmlToText(string $html): string;
 }

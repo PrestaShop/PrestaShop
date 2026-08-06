@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Discount\CommandHandler;
 
 use CartRule;
+use PrestaShop\PrestaShop\Adapter\Discount\Validate\DiscountValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\AbstractBulkCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Command\BulkUpdateDiscountsStatusCommand;
@@ -21,6 +22,11 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\BulkCommandExceptionInterface;
 #[AsCommandHandler]
 final class BulkUpdateDiscountsStatusHandler extends AbstractBulkCommandHandler implements BulkUpdateDiscountsStatusHandlerInterface
 {
+    public function __construct(
+        private readonly DiscountValidator $discountValidator,
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -41,11 +47,14 @@ final class BulkUpdateDiscountsStatusHandler extends AbstractBulkCommandHandler 
     protected function handleSingleAction(mixed $id, mixed $command): void
     {
         $entity = new CartRule($id->getValue());
-        $entity->active = $command->getNewStatus();
 
         if (!$entity->id) {
             throw new DiscountNotFoundException(sprintf('Discount with id "%s" was not found', $id->getValue()));
         }
+
+        $entity->active = $command->getNewStatus();
+        $this->discountValidator->validateDiscountPropertiesForType($entity, null);
+
         if (!$entity->update()) {
             throw new CannotUpdateDiscountException(sprintf('Cannot update status for discount with id "%s"', $id->getValue()));
         }

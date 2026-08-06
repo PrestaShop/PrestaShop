@@ -26,6 +26,10 @@
   &.badge-critical {
     background-color: var(--#{$cdk}red-700);
   }
+
+  &.badge-light-info {
+    background-color: var(--#{$cdk}blue-300);
+  }
 }
 
 // Custom

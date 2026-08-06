@@ -613,6 +613,7 @@ class CombinationController extends PrestaShopAdminController
                 'id' => $attributeGroup->getAttributeGroupId(),
                 'name' => $names[$contextLangId] ?? reset($names),
                 'publicName' => $publicNames[$contextLangId] ?? reset($publicNames),
+                'isColorGroup' => $attributeGroup->isColorGroup(),
                 'attributes' => $attributes,
             ];
         }

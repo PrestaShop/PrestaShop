@@ -5,7 +5,7 @@
  */
 
 /**
- * Class UpgraderCore.
+ * @deprecated since 9.2.0, will be removed in 10.0.0
  */
 class UpgraderCore
 {

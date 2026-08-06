@@ -31,7 +31,6 @@ describe('BO - Header : Quick access links', async () => {
     openNewWindow: true,
   });
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -53,18 +52,18 @@ describe('BO - Header : Quick access links', async () => {
     });
 
     [
-      {args: {pageName: 'Catalog evaluation', pageTitle: boStatisticsPage.pageTitle}},
-      {args: {pageName: 'Installed modules', pageTitle: boModuleManagerPage.pageTitle}},
-      {args: {pageName: 'New category', pageTitle: boCategoriesCreatePage.pageTitleCreate}},
-      {args: {pageName: 'New product', pageTitle: boProductsPage.pageTitle}},
-      {args: {pageName: 'Orders', pageTitle: boOrdersPage.pageTitle}},
-      {args: {pageName: 'New voucher', pageTitle: boCartRulesCreatePage.pageTitle}},
-    ].forEach((test, index: number) => {
-      it(`should check '${test.args.pageName}' link from Quick access`, async function () {
+      {pageName: 'Catalog evaluation', pageTitle: boStatisticsPage.pageTitle},
+      {pageName: 'Installed modules', pageTitle: boModuleManagerPage.pageTitle},
+      {pageName: 'New category', pageTitle: boCategoriesCreatePage.pageTitleCreate},
+      {pageName: 'New product', pageTitle: boProductsPage.pageTitle},
+      {pageName: 'Orders', pageTitle: boOrdersPage.pageTitle},
+      {pageName: 'New voucher', pageTitle: boCartRulesCreatePage.pageTitle},
+    ].forEach((test: {pageName: string, pageTitle: string}, index: number) => {
+      it(`should check '${test.pageName}' link from Quick access`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkLink${index}`, baseContext);
 
-        if (test.args.pageName === 'New product') {
-          await boDashboardPage.quickAccessToPageWithFrame(page, test.args.pageName);
+        if (test.pageName === 'New product') {
+          await boDashboardPage.quickAccessToPageWithFrame(page, test.pageName);
 
           const isModalVisible = await boProductsPage.isNewProductModalVisibleInFrame(page);
           expect(isModalVisible).to.be.equal(true);
@@ -72,10 +71,10 @@ describe('BO - Header : Quick access links', async () => {
           const isModalNotVisible = await boProductsPage.closeNewProductModal(page);
           expect(isModalNotVisible).to.be.equal(true);
         } else {
-          await boDashboardPage.quickAccessToPage(page, test.args.pageName);
+          await boDashboardPage.quickAccessToPage(page, test.pageName);
 
           const pageTitle = await boDashboardPage.getPageTitle(page);
-          expect(pageTitle).to.contains(test.args.pageTitle);
+          expect(pageTitle).to.contains(test.pageTitle);
         }
       });
     });
@@ -85,6 +84,16 @@ describe('BO - Header : Quick access links', async () => {
 
       const validationMessage = await boCartRulesCreatePage.removeLinkFromQuickAccess(page);
       expect(validationMessage).to.contains(boCartRulesCreatePage.successfulUpdateMessage);
+    });
+
+    it('should reload, try to add the current page with an empty name and check the inline error', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addCurrentPageWithEmptyName', baseContext);
+
+      await boCartRulesCreatePage.reloadPage(page);
+
+      const inlineError = await boCartRulesCreatePage.addCurrentPageToQuickAccessWithEmptyName(page);
+
+      expect(inlineError).to.contains('Shortcut name is required');
     });
 
     it('should refresh the page and add current page to Quick access', async function () {
@@ -125,10 +134,15 @@ describe('BO - Header : Quick access links', async () => {
     it('should check the new link from Quick access', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNewLink', baseContext);
 
-      page = await boDashboardPage.quickAccessToPageNewWindow(page, quickAccessLinkData.name);
+      const newPage = await boDashboardPage.quickAccessToPageNewWindow(page, quickAccessLinkData.name);
 
-      const pageTitle = await boCustomersCreatePage.getPageTitle(page);
+      const pageTitle = await boCustomersCreatePage.getPageTitle(newPage);
       expect(pageTitle).to.contains(boCustomersCreatePage.pageTitleCreate);
+
+      // Close the tab opened in a new window and keep working on the original tab.
+      // Reading the grid on the freshly-opened tab while several heavy BO tabs stay open makes
+      // the later "filter by link name" step flaky (the filtered row renders after the read timeout).
+      await newPage.close();
     });
 
     it('should go to \'Manage quick access\' page', async function () {
@@ -153,7 +167,7 @@ describe('BO - Header : Quick access links', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteByBulkActions', baseContext);
 
       const textColumn = await boQuickAccessPage.bulkDeleteQuickAccessLink(page);
-      expect(textColumn).to.be.contains(boQuickAccessPage.successfulMultiDeleteMessage);
+      expect(textColumn).to.be.contains(boQuickAccessPage.successfulDeleteMessage);
     });
 
     it('should reset the filter', async function () {
@@ -169,7 +183,7 @@ describe('BO - Header : Quick access links', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAllByBulkActions', baseContext);
 
       const textColumn = await boQuickAccessPage.bulkDeleteQuickAccessLink(page);
-      expect(textColumn).to.be.contains(boQuickAccessPage.successfulMultiDeleteMessage);
+      expect(textColumn).to.be.contains(boQuickAccessPage.successfulDeleteMessage);
     });
 
     it('should return to dashboard page', async function () {

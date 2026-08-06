@@ -57,7 +57,7 @@ module.exports = {
     {
       files: ['*.ts'],
       parser: '@typescript-eslint/parser',
-      plugins: ['@typescript-eslint', 'deprecation'],
+      plugins: ['@typescript-eslint'],
       extends: ['plugin:@typescript-eslint/eslint-recommended', 'plugin:@typescript-eslint/recommended'],
       rules: {
         'spaced-comment': 0,
@@ -66,6 +66,7 @@ module.exports = {
         'class-methods-use-this': 0,
         'no-alert': 0,
         '@typescript-eslint/ban-ts-comment': 0,
+        '@typescript-eslint/no-deprecated': 'error',
         '@typescript-eslint/no-non-null-assertion': 0,
         '@typescript-eslint/no-explicit-any': 0,
         '@typescript-eslint/no-this-alias': 0,
@@ -73,7 +74,6 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': ['error', {allowArgumentsExplicitlyTypedAsAny: true}],
         'func-names': 0,
         'no-new': 0,
-        'deprecation/deprecation': 'error',
       },
     },
   ],

@@ -83,3 +83,28 @@ services:
   PrestaShopBundle\ApiPlatform\Encoder\MultipartDecoder:
     autowire: true
     autoconfigure: true
+
+  # ─── Extra properties (Admin API bridge) ─────────────────────────────────────
+  # Exposes and persists module-declared extra properties on the Admin API. Defined here (API kernel only) so
+  # the behaviour never loads in the Back-Office or Front-Office kernels.
+
+  # Request-scoped reuse of the extra-property values already fetched by a grid query, so list responses do not
+  # re-read them row by row. Populated by QueryListProvider, read back by the subscriber. Implements
+  # ResetInterface, so autoconfiguration tags it kernel.reset (cleared between requests in a worker runtime).
+  PrestaShop\PrestaShop\Core\ExtraProperty\Api\ExtraPropertyApiListRecordCollector: ~
+
+  # Single API-Platform bridge: resolves the entity id and converts LANG values (locale <-> id_lang), then writes
+  # the submitted payload after a write (directly via the writer) and enriches the JSON response (nested object for
+  # an item, inline grid values per list item). Auto-tagged kernel.event_subscriber via autoconfigure.
+  PrestaShopBundle\EventListener\API\ExtraPropertyApiSubscriber:
+    arguments:
+      $propertyNameCollectionFactory: '@?api_platform.metadata.property_name_collection_factory'
+      $propertyMetadataFactory: '@?api_platform.metadata.property.metadata_factory'
+
+  # Merging validator: decorates CQRSApiValidator (Admin API kernel only) so CQRSApiNormalizer transparently uses
+  # it, combining extra-property violations with the resource constraint violations into a single 422.
+  PrestaShopBundle\ApiPlatform\Validator\ExtraPropertyCQRSApiValidator:
+    decorates: PrestaShopBundle\ApiPlatform\Validator\CQRSApiValidator
+    arguments:
+      $inner: '@.inner'
+      $resourceMetadataFactory: '@api_platform.metadata.resource.metadata_collection_factory'

@@ -9,18 +9,25 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 use Cart;
 use Currency;
 use Customer;
+use Exception;
 use Hook;
 use Order;
 use OrderDetail;
 use OrderInvoice;
+use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
+use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\DeleteProductFromOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Shipment\Exception\ShipmentException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
+use PrestaShopBundle\Entity\Repository\ShipmentRepository;
 use Shop;
 use Validate;
 
@@ -39,13 +46,13 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
      */
     private $orderProductQuantityUpdater;
 
-    /**
-     * @param ContextStateManager $contextStateManager
-     * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
-     */
     public function __construct(
         ContextStateManager $contextStateManager,
-        OrderProductQuantityUpdater $orderProductQuantityUpdater
+        OrderProductQuantityUpdater $orderProductQuantityUpdater,
+        private ShipmentShippingCostUpdater $shipmentShippingCostUpdater,
+        private AdapterConfiguration $configuration,
+        private ShipmentRepository $shipmentRepository,
+        private FeatureFlagStateCheckerInterface $featureFlagStateCheckerInterface,
     ) {
         $this->contextStateManager = $contextStateManager;
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
@@ -82,6 +89,10 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
         } finally {
             $this->contextStateManager->restorePreviousContext();
         }
+
+        if ($this->featureFlagStateCheckerInterface->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT)) {
+            $this->handleShipmentDeletion($command);
+        }
     }
 
     /**
@@ -105,6 +116,23 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
         // We can't edit a delivered order
         if ($order->hasBeenDelivered()) {
             throw new OrderException('Delivered order cannot be modified.');
+        }
+    }
+
+    private function handleShipmentDeletion(DeleteProductFromOrderCommand $command): void
+    {
+        $orderId = $command->getOrderId()->getValue();
+        $orderDetailId = $command->getOrderDetailId();
+
+        try {
+            $this->shipmentRepository->deleteShipmentProductByOrderAndOrderDetail($orderId, $orderDetailId);
+            $this->shipmentRepository->deleteEmptyShipmentByOrder($orderId);
+
+            if ($this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING')) {
+                $this->shipmentShippingCostUpdater->recalculateForOrder($orderId);
+            }
+        } catch (Exception $e) {
+            throw new ShipmentException(sprintf('Failed to delete shipment product from order with id "%s"', $orderId), 0, $e);
         }
     }
 }

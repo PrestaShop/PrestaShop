@@ -50,7 +50,7 @@ class ValidateCore
 
         $validator = Validation::createValidator();
         $errors = $validator->validate($email, new Email([
-            'mode' => 'loose',
+            'mode' => 'strict',
         ]));
 
         if (count($errors) > 0) {
@@ -476,17 +476,76 @@ class ValidateCore
         // any html attribute starting with "on" (event attributes)
         $eventAttributeRegex = '/<\s*\w+[^>]*\s(on\w+)=["\'][^"\']*["\']/ims';
 
-        $events = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange';
-        $events .= '|onsubmit|ondblclick|onclick|onkeydown|onkeyup|onkeypress|onmouseenter|onmouseleave|onerror|onselect|onreset|onabort|ondragdrop|onresize|onactivate|onafterprint|onmoveend';
-        $events .= '|onafterupdate|onbeforeactivate|onbeforecopy|onbeforecut|onbeforedeactivate|onbeforeeditfocus|onbeforepaste|onbeforeprint|onbeforeunload|onbeforeupdate|onmove';
-        $events .= '|onbounce|oncellchange|oncontextmenu|oncontrolselect|oncopy|oncut|ondataavailable|ondatasetchanged|ondatasetcomplete|ondeactivate|ondrag|ondragend|ondragenter|ondragexit|onmousewheel';
-        $events .= '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
-        $events .= '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
-        $events .= '|onselectstart|onstart|onstop|onanimationcancel|onanimationend|onanimationiteration|onanimationstart';
-        $events .= '|onpointerover|onpointerenter|onpointerdown|onpointermove|onpointerup|onpointerout|onpointerleave|onpointercancel|ongotpointercapture|onlostpointercapture';
-        $events .= '|onpagehide|onpageshow|onautocomplete|onautocompleteerror|oncanplay|oncanplaythrough|onclose|oncuechange|ondurationchange|onemptied|onended|oninvalid|onloadeddata';
-        $events .= '|onloadedmetadata|onloadstart|onpause|onplay|onplaying|onpopstate|onprogress|onratechange|onreset|onseeked|onseeking|onshow|onsort|onstalled|onstorage|onsuspend|ontimeupdate';
-        $events .= '|ontoggle|onvolumechange|onwaiting';
+        $events = 'onabort|onactivate|onactive|onaddsourcebuffer|onaddstream|onaddtrack|onafterprint|onafterscriptexecute|onafterupdate|onalerting|onanimationcancel|onanimationend|onanimationiteration|onanimationstart'
+            . '|onantennaavailablechange|onappinstalled|onaudioend|onaudioprocess|onaudiostart|onautocomplete|onautocompleteerror|onauxclick'
+            . '|onbeforeactivate|onbeforecopy|onbeforecut|onbeforedeactivate|onbeforeeditfocus|onbeforeinput|onbeforeinstallprompt|onbeforematch|onbeforepaste|onbeforeprint|onbeforescriptexecute|onbeforetoggle|onbeforeunload|onbeforeupdate|onbeforexrselect'
+            . '|onbegin|onbeginevent|onblocked|onblur|onbounce|onboundary|onbroadcast|onbusy|oncached|oncallschanged|oncancel|oncanplay|oncanplaythrough|oncardstatechange|oncellchange|oncfstatechange|onchange|onchargingchange|onchargingtimechange|oncheckboxstatechange|onchecking'
+            . '|onclick|onclose|oncommand|oncommandupdate|oncompassneedscalibration|oncomplete|oncompositionend|oncompositionstart|oncompositionupdate'
+            . '|onconnect|onconnected|onconnecting|onconnectioninfoupdate|oncontactchange|oncontentvisibilityautostatechange|oncontextlost|oncontextmenu|oncontextrestored'
+            . '|oncontrollerchange|oncontrolselect|oncopy|oncuechange|oncurrentchannelchanged|oncurrentsourcechanged|oncut'
+            . '|ondata|ondataavailable|ondatachange|ondatachannel|ondataerror|ondatasetchanged|ondatasetcomplete'
+            . '|ondblclick|ondeactivate|ondelivered|ondeliveryerror|ondeliverysuccess'
+            . '|ondevicechange|ondevicelight|ondevicemotion|ondeviceorientation|ondeviceproximity|ondialing|ondisabled|ondischargingtimechange|ondisconnected|ondisconnecting'
+            . '|ondomattrmodified|ondomcharacterdatamodified|ondomcontentloaded|ondommenuitemactive|ondommenuiteminactive|ondommousescroll|ondomnodeinserted|ondomnodeinsertedintodocument|ondomnoderemoved|ondomnoderemovedfromdocument|ondomsubtreemodified'
+            . '|ondownloading'
+            . '|ondrag|ondragdrop|ondragend|ondragenter|ondragexit|ondragleave|ondragover|ondragstart|ondrain|ondrop|ondurationchange'
+            . '|oneitbroadcasted|onemptied|onenabled|onencrypted'
+            . '|onend|onended|oneendevent|onenter|onenterpictureinpicture|onerror|onerrorupdate|onexit'
+            . '|onfailed|onfetch|onfilterchange|onfinish'
+            . '|onfocus|onfocusin|onfocusout'
+            . '|onformchange|onformdata|onforminput'
+            . '|onfrequencychange'
+            . '|onfullscreenchange|onfullscreenerror'
+            . '|ongamepadconnected|ongamepaddisconnected'
+            . '|ongesturechange|ongestureend|ongesturestart|ongotpointercapture'
+            . '|onhashchange|onheadphoneschange|onheld|onhelp|onholding'
+            . '|onicccardlockerror|oniccinfochange'
+            . '|onicecandidate|oniceconnectionstatechange|onicegatheringstatechange'
+            . '|onidentityresult|onidpassertionerror|onidpvalidationerror'
+            . '|oninactive|onincoming|oninput|oninstall|oninvalid|onisolationchange'
+            . '|onkeydown|onkeypress|onkeystatuschange|onkeyup'
+            . '|onlanguagechange|onlayoutcomplete|onleavepictureinpicture|onlevelchange'
+            . '|onload|onloaded|onloadeddata|onloadedmetadata|onloadend|onloading|onloadingdone|onloadingerror|onloadstart|onlocalized'
+            . '|onlosecapture|onlostpointercapture|onmark'
+            . '|onmediacomplete|onmediaerror'
+            . '|onmessage|onmessageerror|onmidimessage'
+            . '|onmousedown|onmouseenter|onmouseleave|onmousemove|onmouseout|onmouseover|onmouseup|onmousewheel'
+            . '|onmove|onmoveend|onmovestart|onmozaudioavailable'
+            // mozbrowser* events
+            . '|onmozbrowseractivitydone|onmozbrowserasyncscroll|onmozbrowseraudioplaybackchange|onmozbrowsercaretstatechanged|onmozbrowserclose|onmozbrowsercontextmenu|onmozbrowserdocumentfirstpaint|onmozbrowsererror|onmozbrowserfindchange|onmozbrowserfirstpaint|onmozbrowsericonchange|onmozbrowserloadend|onmozbrowserloadstart|onmozbrowserlocationchange|onmozbrowsermanifestchange|onmozbrowsermetachange|onmozbrowseropensearch|onmozbrowseropentab|onmozbrowseropenwindow|onmozbrowserresize|onmozbrowserscroll|onmozbrowserscrollareachanged|onmozbrowserselectionstatechanged|onmozbrowsershowmodalprompt|onmozbrowsertitlechange|onmozbrowserusernameandpasswordrequired|onmozbrowservisibilitychange'
+            . '|onmozfullscreenchange|onmozfullscreenerror|onmozgamepadbuttondown|onmozgamepadbuttonup|onmozinterruptbegin|onmozinterruptend|onmozmousepixelscroll|onmozorientation|onmozpointerlockchange|onmozpointerlockerror|onmozscrolledareachanged|onmoztimechange'
+            . '|onmscontentzoom|onmsgesturechange|onmsgesturedoubletap|onmsgestureend|onmsgesturehold|onmsgesturerestart|onmsgesturestart|onmsgesturetap|onmsgotpointercapture|onmsinertiastart|onmslostpointercapture|onmsmanipulationstatechanged|onmsneedkey|onmspointercancel|onmspointerdown|onmspointerenter|onmspointerhover|onmspointerleave|onmspointermove|onmspointerout|onmspointerover|onmspointerup'
+            . '|onmute|onnegotiationneeded|onnodecreate|onnomatch|onnotificationclick|onnoupdate|onobsolete|onoffline|ononline|onopen'
+            . '|onorientationchange|onoutofsync|onoverconstrained'
+            . '|onoverflow|onpage|onpagehide|onpagereveal|onpageshow|onpageswap'
+            . '|onpaste|onpause|onpeeridentity|onpeerinfoupdate'
+            . '|onplay|onplaying'
+            . '|onpointercancel|onpointerdown|onpointerenter|onpointerleave|onpointerlockchange|onpointerlockerror|onpointermove|onpointerout|onpointerover|onpointerrawupdate|onpointerup'
+            . '|onpopstate|onpopuphidden|onpopuphiding|onpopupshowing|onpopupshown'
+            . '|onprogress|onpropertychange|onpush|onpushsubscriptionchange|onradiostatechange|onratechange|onreadystatechange|onreceived|onrejectionhandled'
+            . '|onremovesourcebuffer|onremovestream|onremovetrack'
+            . '|onrepeat|onrepeatevent|onreset|onresize|onresizeend|onresizestart|onresourcetimingbufferfull'
+            . '|onresult|onresume|onresuming|onretrieving|onreverse'
+            . '|onrowdelete|onrowenter|onrowexit|onrowinserted|onrowsdelete|onrowsinserted'
+            . '|onscanningstatechanged|onscroll|onscrollend|onscrollsnapchange|onscrollsnapchanging'
+            . '|onsearch|onsecuritypolicyviolation|onseek|onseeked|onseeking'
+            . '|onselect|onselectionchange|onselectstart'
+            . '|onsending|onsent|onsessionavailable|onsessionconnect|onsettingchange'
+            . '|onshippingaddresschange|onshippingoptionchange|onshow|onsignalingstatechange|onslotchange|onsmartcard|onsort'
+            . '|onsoundend|onsoundstart|onsourceclose|onsourceended|onsourceopen|onspeakerforcedchange'
+            . '|onspeechend|onspeechstart|onstalled|onstart|onstarted|onstatechange|onstatuschange'
+            . '|onstkcommand|onstksessionend|onstop|onstorage|onsubmit|onsuccess|onsuspend'
+            . '|onsvgabort|onsvgerror|onsvgload|onsvgresize|onsvgscroll|onsvgunload|onsvgzoom|onsynchrestored'
+            . '|ontimeerror|ontimeout|ontimer|ontimeupdate|ontoggle|ontonechange'
+            . '|ontouchcancel|ontouchend|ontouchenter|ontouchleave|ontouchmove|ontouchstart'
+            . '|ontrackchange'
+            . '|ontransitioncancel|ontransitionend|ontransitionrun|ontransitionstart'
+            . '|onunderflow|onunhandledrejection|onunload|onunmute|onupdate|onupdateend|onupdatefound|onupdateready|onupdatestart|onupgradeneeded|onurlflip'
+            . '|onuserproximity|onussdreceived|onvaluechange|onversionchange|onvisibilitychange|onvoicechange|onvoiceschanged|onvolumechange'
+            . '|onvrdisplayactivate|onvrdisplayblur|onvrdisplayconnect|onvrdisplayconnected|onvrdisplaydeactivate|onvrdisplaydisconnect|onvrdisplaydisconnected|onvrdisplayfocus|onvrdisplaypresentchange'
+            . '|onwaiting|onwaitingforkey|onwebglcontextcreationerror|onwebglcontextlost|onwebglcontextrestored'
+            . '|onwebkitanimationend|onwebkitanimationiteration|onwebkitanimationstart|onwebkitfullscreenchange|onwebkitfullscreenerror|onwebkitmouseforcechanged|onwebkitmouseforcedown|onwebkitmouseforceup|onwebkitmouseforcewillbegin|onwebkitplaybacktargetavailabilitychanged|onwebkitpresentationmodechanged|onwebkittransitionend|onwebkitwillrevealbottom'
+            . '|onwheel|onwriteend|onzoom';
 
         if (preg_match('/<[\s]*script/ims', $html) || preg_match($eventAttributeRegex, $html) || preg_match('/(' . $events . ')[\s]*=/ims', $html) || preg_match('/.*script\:/ims', $html)) {
             return false;
@@ -531,9 +590,15 @@ class ValidateCore
     {
         $zxcvbn = new Zxcvbn();
         $result = $zxcvbn->passwordStrength($password);
-        $minScore = Configuration::hasKey(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE) ?
-                  Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE) :
-                  PasswordPolicyConfiguration::PASSWORD_SAFELY_UNGUESSABLE;
+
+        // During install, Configuration is not available; require strong password (score 3) without relying on DB
+        if (defined('PS_INSTALLATION_IN_PROGRESS')) {
+            $minScore = PasswordPolicyConfiguration::PASSWORD_SAFELY_UNGUESSABLE;
+        } else {
+            $minScore = Configuration::hasKey(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE) ?
+                      Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE) :
+                      PasswordPolicyConfiguration::PASSWORD_SAFELY_UNGUESSABLE;
+        }
 
         return isset($result['score']) && $result['score'] >= $minScore;
     }

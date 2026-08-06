@@ -8,3 +8,7 @@ services:
 
   PrestaShop\PrestaShop\Core\Domain\Shipment\Service\ShipmentMergerInterface:
     class: PrestaShop\PrestaShop\Adapter\Shipment\ShipmentMerger
+
+  PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductQuantityUpdater:
+
+  PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductAssigner:

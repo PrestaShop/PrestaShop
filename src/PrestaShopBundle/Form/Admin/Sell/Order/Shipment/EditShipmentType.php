@@ -10,9 +10,7 @@ use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\AvailableCarriersForShipme
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EditShipmentType extends AbstractType
@@ -25,28 +23,18 @@ class EditShipmentType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $data = $builder->getData();
+
         $builder
             ->add('carrier', ChoiceType::class, [
                 'choices' => $this->availableCarriersForShipmentChoiceProvider->getChoices([
-                    'selectedProducts' => $options['data']['selectedProducts'],
-                    'shipment_id' => $options['data']['shipment_id'],
+                    'selectedProducts' => $data['selectedProducts'],
+                    'shipment_id' => $data['shipment_id'],
+                    'useCurrentCarrierId' => true,
                 ]),
                 'placeholder' => $this->translator->trans('Select a carrier', [], 'Admin.Orderscustomers.Feature'),
                 'required' => true,
             ])
-            ->add('current_order_carrier_id', HiddenType::class)
-            ->add('tracking_number', TextType::class, [
-                'required' => false,
-            ]);
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setRequired([
-            'order_id',
-            'shipment_id',
-        ])
-            ->setAllowedTypes('order_id', 'int')
-            ->setAllowedTypes('shipment_id', 'int');
+            ->add('current_order_carrier_id', HiddenType::class);
     }
 }

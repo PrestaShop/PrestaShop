@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Carrier\QueryHandler;
 
 use Address;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Address\Repository\AddressRepository;
 use PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
@@ -66,6 +67,7 @@ class GetAvailableCarriersHandler implements GetAvailableCarriersHandlerInterfac
 
         // Compute common carriers shared by all products
         $commonCarriers = $this->getCommonCarriers($carriersMapping);
+
         $carriersIndex = $this->indexCarriers($carriersMapping);
 
         $eligibleCarrierIds = [];
@@ -220,10 +222,14 @@ class GetAvailableCarriersHandler implements GetAvailableCarriersHandlerInterfac
 
         $limits = $this->carrierRepository->getCarrierConstraints(new CarrierId($carrier['id_carrier']));
 
-        return $totalWeight <= $limits->maxWeight
-            && $maxWidth <= $limits->maxWidth
-            && $maxHeight <= $limits->maxHeight
-            && $maxDepth <= $limits->maxDepth;
+        $check = fn ($value, $limit) => $limit === 0 || $value <= $limit;
+
+        $weightOk = $limits->maxWeight->equalsZero() || $limits->maxWeight->isGreaterOrEqualThan(new DecimalNumber((string) $totalWeight));
+        $widthOk = $check($maxWidth, $limits->maxWidth);
+        $heightOk = $check($maxHeight, $limits->maxHeight);
+        $depthOk = $check($maxDepth, $limits->maxDepth);
+
+        return $weightOk && $widthOk && $heightOk && $depthOk;
     }
 
     /**

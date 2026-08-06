@@ -10,7 +10,8 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -52,38 +53,33 @@ class EditProductRowType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $invoices = $options['order_id'] ?
+        $data = $builder->getData();
+
+        $invoices = $data['order_id'] ?
             $this->orderInvoiceByIdChoiceProvider->getChoices([
-                'id_order' => $options['order_id'],
+                'id_order' => $data['order_id'],
                 'id_lang' => $this->contextLangId,
                 'display_total' => false,
             ]) : [];
 
         $builder
-            ->add('price_tax_excluded', NumberType::class, [
-                'label' => false,
-                'unit' => sprintf('%s %s',
-                    $options['symbol'],
-                    $this->trans('tax excl.', 'Admin.Global')
-                ),
+            ->add('price_tax_excluded', MoneyType::class, [
+                'label' => $this->trans('tax excl.', 'Admin.Global'),
+                'currency' => $data['currency']->iso_code,
                 'attr' => [
                     'class' => 'editProductPriceTaxExcl',
                 ],
             ])
-            ->add('price_tax_included', NumberType::class, [
-                'label' => false,
-                'unit' => sprintf('%s %s',
-                    $options['symbol'],
-                    $this->trans('tax incl.', 'Admin.Global')
-                ),
+            ->add('price_tax_included', MoneyType::class, [
+                'label' => $this->trans('tax incl.', 'Admin.Global'),
+                'currency' => $data['currency']->iso_code,
                 'attr' => [
                     'class' => 'editProductPriceTaxIncl',
                 ],
             ])
-            ->add('quantity', NumberType::class, [
+            ->add('quantity', IntegerType::class, [
                 'label' => false,
                 'data' => 1,
-                'scale' => 0,
                 'attr' => [
                     'min' => 1,
                     'class' => 'editProductQuantity',
@@ -107,7 +103,7 @@ class EditProductRowType extends TranslatorAwareType
                 'disabled' => true,
                 'attr' => [
                     'class' => 'btn btn-sm btn-primary js-product-edit-action-btn mt-2 mb-2 productEditSaveBtn',
-                    'data-order-id' => $options['order_id'],
+                    'data-order-id' => $data['order_id'],
                     'data-update-message' => $this->trans('Are you sure?', 'Admin.Notifications.Warning'),
                 ],
             ])
@@ -119,13 +115,10 @@ class EditProductRowType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver
-            ->setRequired(['symbol'])
-            ->setDefaults([
-                'order_id' => null,
-            ])
-            ->setAllowedTypes('order_id', ['int', 'null'])
-            ->setAllowedTypes('symbol', ['string'])
-        ;
+        $resolver->setDefaults([
+            'order_id' => null,
+            'currency' => [],
+            'is_multishipment_is_enabled' => false,
+        ]);
     }
 }

@@ -146,6 +146,7 @@
     product_reference: string;
     product_reserved_quantity: number;
     product_thumbnail: string;
+    product_url: string;
     qty: number;
     supplier_id: number;
     supplier_name: string;

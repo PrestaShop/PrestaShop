@@ -397,7 +397,13 @@ describe('WS - Products : CRUD', async () => {
           for (let o: number = 0; o < productsNodes.length; o++) {
             const oNode: Element = productsNodes[o];
 
-            if (['manufacturer_name', 'quantity', 'date_add', 'date_upd'].includes(oNode.nodeName)) {
+            if ([
+              'date_add',
+              'date_upd',
+              'manufacturer_name',
+              'new',
+              'quantity',
+            ].includes(oNode.nodeName)) {
               // It can be defined in POST/PUT
             } else if (oNode.nodeName === 'id') {
               expect(oNode.textContent).to.eq(productNodeID.toString());
@@ -437,8 +443,6 @@ describe('WS - Products : CRUD', async () => {
                 '2',
               );
               expect(objectNodeValueFR).to.eq(createNodeValueFR);
-            } else if (oNode.nodeName === 'new') {
-              // @todo : https://github.com/PrestaShop/PrestaShop/issues/33429
             } else if (oNode.nodeName === 'position_in_category') {
               // @todo : https://github.com/PrestaShop/PrestaShop/issues/14903
             } else if (oNode.nodeName === 'associations') {
@@ -1085,7 +1089,13 @@ describe('WS - Products : CRUD', async () => {
           for (let o: number = 0; o < productsNodes.length; o++) {
             const oNode: Element = productsNodes[o];
 
-            if (['manufacturer_name', 'quantity', 'date_add', 'date_upd'].includes(oNode.nodeName)) {
+            if ([
+              'date_add',
+              'date_upd',
+              'manufacturer_name',
+              'new',
+              'quantity',
+            ].includes(oNode.nodeName)) {
               // It can be defined in POST/PUT
             } else if (oNode.nodeName === 'id') {
               expect(oNode.textContent).to.eq(productNodeID.toString());
@@ -1125,8 +1135,6 @@ describe('WS - Products : CRUD', async () => {
                 '2',
               );
               expect(objectNodeValueFR).to.eq(updateNodeValueFR);
-            } else if (oNode.nodeName === 'new') {
-              // @todo : https://github.com/PrestaShop/PrestaShop/issues/33429
             } else if (oNode.nodeName === 'position_in_category') {
               // @todo : https://github.com/PrestaShop/PrestaShop/issues/14903
             } else if (oNode.nodeName === 'associations') {

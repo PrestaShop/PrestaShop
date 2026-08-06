@@ -47,6 +47,11 @@ class CategoryLazyArray extends AbstractLazyArray
         $this->language = $language;
         $this->imageRetriever = $imageRetriever;
         $this->link = $link;
+        $this->initExtraPropertiesBag(
+            Category::class,
+            (int) ($this->category['id_category'] ?? $this->category['id'] ?? 0),
+            $language->getId()
+        );
 
         parent::__construct();
         $this->appendArray($this->category);
@@ -116,11 +121,13 @@ class CategoryLazyArray extends AbstractLazyArray
     }
 
     /**
-     * Checks if given category image exists for our category.
+     * Checks if an image exists for our category.
+     *
+     * @param int|string $idImage
      *
      * @return bool
      */
-    private function doesCategoryImageExist($idImage)
+    private function doesCategoryImageExist(int|string $idImage): bool
     {
         return file_exists(_PS_CAT_IMG_DIR_ . $idImage . '.jpg');
     }

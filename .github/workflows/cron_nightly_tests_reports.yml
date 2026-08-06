@@ -18,15 +18,11 @@ jobs:
       max-parallel: 1
       matrix:
         include:
-          - branch: 8.0.x
-            database: mysql
-          - branch: 8.1.x
-            database: mysql
           - branch: 8.2.x
             database: mysql
-          - branch: 9.0.x
+          - branch: 9.1.x
             database: mysql
-          - branch: 9.0.x
+          - branch: 9.1.x
             database: mariadb
           - branch: develop
             database: mysql

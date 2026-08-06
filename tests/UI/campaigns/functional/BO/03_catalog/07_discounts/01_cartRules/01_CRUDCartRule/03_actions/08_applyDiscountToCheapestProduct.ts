@@ -157,13 +157,13 @@ describe('BO - Cart rules - Actions : Apply a discount to Cheapest product', asy
 
       await foHummingbirdCartPage.addPromoCode(page, cartRuleData.code);
 
-      const cheapestProductPrice: number = (dataProducts.demo_14.finalPrice > dataProducts.demo_6.combinations[0].price)
-        ? dataProducts.demo_6.combinations[0].price
+      const cheapestProductPrice: number = (dataProducts.demo_14.finalPrice > dataProducts.demo_6.combinations[0].priceTI)
+        ? dataProducts.demo_6.combinations[0].priceTI
         : dataProducts.demo_14.finalPrice;
       const discount = utilsCore.percentage(cheapestProductPrice, cartRuleData.getDiscountPercent());
 
       const subTotalProducts = await foHummingbirdCartPage.getSubtotalProductsValue(page);
-      expect(subTotalProducts).to.eq(dataProducts.demo_14.finalPrice + dataProducts.demo_6.combinations[0].price);
+      expect(subTotalProducts).to.eq(dataProducts.demo_14.finalPrice + dataProducts.demo_6.combinations[0].priceTI);
 
       const subTotalDiscount = await foHummingbirdCartPage.getSubtotalDiscountValue(page);
       expect(subTotalDiscount.toString()).to.eq(`-${discount.toFixed(2)}`);
@@ -173,7 +173,7 @@ describe('BO - Cart rules - Actions : Apply a discount to Cheapest product', asy
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
       expect(priceATI.toString()).to.eq(
-        (dataProducts.demo_14.finalPrice + dataProducts.demo_6.combinations[0].price - discount).toFixed(2),
+        (dataProducts.demo_14.finalPrice + dataProducts.demo_6.combinations[0].priceTI - discount).toFixed(2),
       );
 
       const cartRuleName = await foHummingbirdCartPage.getCartRuleName(page);
@@ -209,13 +209,13 @@ describe('BO - Cart rules - Actions : Apply a discount to Cheapest product', asy
       page = await boCartRulesCreatePage.changePage(browserContext, 1);
       await foHummingbirdCartPage.reloadPage(page);
 
-      const cheapestProductPrice: number = (dataProducts.demo_14.finalPrice > dataProducts.demo_6.combinations[0].price)
-        ? dataProducts.demo_6.combinations[0].price
+      const cheapestProductPrice: number = (dataProducts.demo_14.finalPrice > dataProducts.demo_6.combinations[0].priceTI)
+        ? dataProducts.demo_6.combinations[0].priceTI
         : dataProducts.demo_14.finalPrice;
       const discount = utilsCore.percentage(cheapestProductPrice, cartRuleData.getDiscountPercent());
 
       const subTotalProducts = await foHummingbirdCartPage.getSubtotalProductsValue(page);
-      expect(subTotalProducts).to.eq(dataProducts.demo_14.finalPrice + dataProducts.demo_6.combinations[0].price);
+      expect(subTotalProducts).to.eq(dataProducts.demo_14.finalPrice + dataProducts.demo_6.combinations[0].priceTI);
 
       const subTotalDiscount = await foHummingbirdCartPage.getSubtotalDiscountValue(page);
       expect(subTotalDiscount.toString()).to.eq(`-${discount.toFixed(2)}`);
@@ -225,7 +225,7 @@ describe('BO - Cart rules - Actions : Apply a discount to Cheapest product', asy
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
       expect(priceATI.toFixed(2)).to.eq(
-        (dataProducts.demo_14.finalPrice + dataProducts.demo_6.combinations[0].price - discount).toFixed(2),
+        (dataProducts.demo_14.finalPrice + dataProducts.demo_6.combinations[0].priceTI - discount).toFixed(2),
       );
 
       const cartRuleName = await foHummingbirdCartPage.getCartRuleName(page);
@@ -242,11 +242,11 @@ describe('BO - Cart rules - Actions : Apply a discount to Cheapest product', asy
 
       await foHummingbirdCartPage.deleteProduct(page, 1);
 
-      const cheapestProductPrice: number = dataProducts.demo_6.combinations[0].price;
+      const cheapestProductPrice: number = dataProducts.demo_6.combinations[0].priceTI;
       const discount = utilsCore.percentage(cheapestProductPrice, cartRuleData.getDiscountPercent());
 
       const subTotalProducts = await foHummingbirdCartPage.getSubtotalProductsValue(page);
-      expect(subTotalProducts).to.eq(dataProducts.demo_6.combinations[0].price);
+      expect(subTotalProducts).to.eq(dataProducts.demo_6.combinations[0].priceTI);
 
       const subTotalDiscount = await foHummingbirdCartPage.getSubtotalDiscountValue(page);
       expect(subTotalDiscount.toFixed(2)).to.eq(`-${discount.toFixed(2)}`);
@@ -255,7 +255,7 @@ describe('BO - Cart rules - Actions : Apply a discount to Cheapest product', asy
       expect(subTotalShipping).to.eq('Free');
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
-      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].price - discount).toFixed(2));
+      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].priceTI - discount).toFixed(2));
 
       const cartRuleName = await foHummingbirdCartPage.getCartRuleName(page);
       expect(cartRuleName).to.contains(cartRuleData.name);
@@ -271,11 +271,11 @@ describe('BO - Cart rules - Actions : Apply a discount to Cheapest product', asy
 
       await foHummingbirdCartPage.setProductQuantity(page, 1, 2);
 
-      const cheapestProductPrice: number = dataProducts.demo_6.combinations[0].price;
+      const cheapestProductPrice: number = dataProducts.demo_6.combinations[0].priceTI;
       const discount = utilsCore.percentage(cheapestProductPrice, cartRuleData.getDiscountPercent());
 
       const subTotalProducts = await foHummingbirdCartPage.getSubtotalProductsValue(page);
-      expect(subTotalProducts).to.eq(dataProducts.demo_6.combinations[0].price * 2);
+      expect(subTotalProducts).to.eq(dataProducts.demo_6.combinations[0].priceTI * 2);
 
       const subTotalDiscount = await foHummingbirdCartPage.getSubtotalDiscountValue(page);
       expect(subTotalDiscount.toFixed(2)).to.eq(`-${discount.toFixed(2)}`);
@@ -284,7 +284,7 @@ describe('BO - Cart rules - Actions : Apply a discount to Cheapest product', asy
       expect(subTotalShipping).to.eq('Free');
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
-      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].price * 2 - discount).toFixed(2));
+      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].priceTI * 2 - discount).toFixed(2));
 
       const cartRuleName = await foHummingbirdCartPage.getCartRuleName(page);
       expect(cartRuleName).to.contains(cartRuleData.name);

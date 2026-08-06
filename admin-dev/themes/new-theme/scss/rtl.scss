@@ -294,6 +294,12 @@ ul {
   }
 }
 
+#right-sidebar {
+  right: 0;
+  left: auto;
+  float: right;
+}
+
 .material-icons {
   &.rtl-flip {
     transform: scaleX(-1);

@@ -70,7 +70,7 @@ describe('BO - Catalog - Attributes & Features : Filter feature values table', a
     await boFeaturesPage.resetFilter(page);
     await boFeaturesPage.filterTable(page, 'name', dataFeatures.composition.name);
 
-    const textColumn = await boFeaturesPage.getTextColumn(page, 1, 'name', 'id_feature');
+    const textColumn = await boFeaturesPage.getTextColumn(page, 1, 'name');
     expect(textColumn).to.contains(dataFeatures.composition.name);
   });
 

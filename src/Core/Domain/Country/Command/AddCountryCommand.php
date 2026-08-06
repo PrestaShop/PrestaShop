@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CallPrefix;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
 use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 use Tools;
@@ -17,99 +18,34 @@ use Tools;
  */
 class AddCountryCommand
 {
-    /**
-     * @var string[]
-     */
-    private $localizedNames;
+    private string $isoCode;
+    private CallPrefix $callPrefix;
+    private ZoneId $zoneId;
+    private ?CountryZipCodeFormat $zipCodeFormat;
 
     /**
-     * @var string
+     * @param string[] $localizedNames
+     * @param int[] $shopAssociation
      */
-    private $isoCode;
-
-    /**
-     * @var int
-     */
-    private $callPrefix;
-
-    /**
-     * @var int
-     */
-    private $defaultCurrency;
-
-    /**
-     * @var ZoneId
-     */
-    private $zoneId;
-
-    /**
-     * @var bool
-     */
-    private $needZipCode;
-
-    /**
-     * @var ?CountryZipCodeFormat
-     */
-    private $zipCodeFormat;
-
-    /**
-     * @var string
-     */
-    private $addressFormat;
-
-    /**
-     * @var bool
-     */
-    private $enabled;
-
-    /**
-     * @var bool
-     */
-    private $containsStates;
-
-    /**
-     * @var bool
-     */
-    private $needIdNumber;
-
-    /**
-     * @var bool
-     */
-    private $displayTaxLabel;
-
-    /**
-     * @var int[]
-     */
-    private $shopAssociation;
-
     public function __construct(
-        array $localizedNames,
+        private array $localizedNames,
         string $isoCode,
         int $callPrefix,
-        int $defaultCurrency,
+        private int $defaultCurrency,
         int $zoneId,
-        bool $needZipCode,
+        private bool $needZipCode,
         ?string $zipCodeFormat,
-        string $addressFormat,
-        bool $enabled,
-        bool $containsStates,
-        bool $needIdNumber,
-        bool $displayTaxLabel,
-        array $shopAssociation
+        private string $addressFormat,
+        private bool $enabled,
+        private bool $containsStates,
+        private bool $needIdNumber,
+        private bool $displayTaxLabel,
+        private array $shopAssociation,
     ) {
-        $this->localizedNames = $localizedNames;
         $this->isoCode = Tools::strtoupper(Tools::substr($isoCode, 0, 2));
-        $this->callPrefix = $callPrefix;
-        $this->defaultCurrency = $defaultCurrency;
+        $this->callPrefix = new CallPrefix($callPrefix);
         $this->zoneId = new ZoneId($zoneId);
-        $this->needZipCode = $needZipCode;
         $this->zipCodeFormat = $zipCodeFormat ? new CountryZipCodeFormat($zipCodeFormat) : null;
-        $this->addressFormat = $addressFormat;
-        $this->enabled = $enabled;
-        $this->containsStates = $containsStates;
-        $this->needIdNumber = $needIdNumber;
-        $this->displayTaxLabel = $displayTaxLabel;
-        $this->shopAssociation = $shopAssociation;
     }
 
     /**
@@ -120,12 +56,12 @@ class AddCountryCommand
         return $this->localizedNames;
     }
 
-    public function getIsoCode()
+    public function getIsoCode(): string
     {
         return $this->isoCode;
     }
 
-    public function getCallPrefix(): int
+    public function getCallPrefix(): CallPrefix
     {
         return $this->callPrefix;
     }

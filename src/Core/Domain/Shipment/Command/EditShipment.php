@@ -20,19 +20,13 @@ class EditShipment
     private $shipmentId;
 
     /**
-     * @var string
-     */
-    private $trackingNumber;
-
-    /**
      * @var CarrierId
      */
     private $carrierId;
 
-    public function __construct(int $shipmentId, string $trackingNumber, int $carrierId)
+    public function __construct(int $shipmentId, int $carrierId)
     {
         $this->shipmentId = new ShipmentId($shipmentId);
-        $this->trackingNumber = $trackingNumber;
         $this->carrierId = new CarrierId(
             $carrierId,
         );
@@ -41,11 +35,6 @@ class EditShipment
     public function getShipmentId(): ShipmentId
     {
         return $this->shipmentId;
-    }
-
-    public function getTrackingNumber(): string
-    {
-        return $this->trackingNumber;
     }
 
     public function getCarrierId(): CarrierId

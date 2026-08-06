@@ -380,7 +380,7 @@ class CustomerController extends PrestaShopAdminController
         $privateNoteForm = $this->createForm(PrivateNoteType::class);
         $privateNoteForm->handleRequest($request);
 
-        if ($privateNoteForm->isSubmitted()) {
+        if ($privateNoteForm->isSubmitted() && $privateNoteForm->isValid()) {
             $data = $privateNoteForm->getData();
 
             try {
@@ -394,6 +394,10 @@ class CustomerController extends PrestaShopAdminController
                     'error',
                     $this->getErrorMessageForException($e, $this->getErrorMessages($e))
                 );
+            }
+        } else {
+            foreach ($privateNoteForm->getErrors(true) as $error) {
+                $this->addFlash('error', htmlentities($error->getMessage()));
             }
         }
 

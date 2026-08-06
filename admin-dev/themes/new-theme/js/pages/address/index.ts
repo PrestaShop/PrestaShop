@@ -20,4 +20,17 @@ $(() => {
       'ChoiceTable',
     ],
   );
+
+  // When deep-linked from the country address-format builder
+  // (e.g. /admin/sell/addresses#addressRequiredFieldsContainer), expand the
+  // required-fields collapse panel and scroll it into view so the merchant
+  // lands directly on the form.
+  if (window.location.hash === '#addressRequiredFieldsContainer') {
+    const target = document.querySelector<HTMLElement>(window.location.hash);
+
+    if (target) {
+      $(target).collapse('show');
+      target.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+  }
 });

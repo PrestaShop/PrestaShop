@@ -35,14 +35,58 @@ final class StringModifier implements StringModifierInterface
      */
     public function cutEnd(string $string, int $expectedLength): string
     {
-        $length = strlen($string);
-
-        if ($length > $expectedLength) {
-            // cut symbols difference from the end of the string
-            $string = substr($string, 0, $expectedLength - $length);
+        if (mb_strlen($string, 'UTF-8') > $expectedLength) {
+            return mb_substr($string, 0, $expectedLength, 'UTF-8');
         }
 
         return $string;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function htmlToText(string $html): string
+    {
+        // Replace explicit line breaks with spaces so words from adjacent lines stay separated.
+        $html = preg_replace('/<br\s*\/?>/i', ' ', $html);
+
+        // Add commas after list items before stripping tags so list values stay separated.
+        $html = preg_replace('/<\/li\s*>/i', ', ', $html);
+
+        // Add a sentence boundary after lists before stripping tags.
+        $html = preg_replace('/<\/(?:ul|ol)\s*>/i', '. ', $html);
+
+        // Replace common block endings with spaces so paragraphs and headings stay separated.
+        $html = preg_replace('/<\/(?:p|div|section|article|header|footer|aside|nav|blockquote|h[1-6]|tr|td|th)\s*>/i', ' ', $html);
+
+        // Remove remaining HTML tags after separators have been inserted.
+        $text = strip_tags($html);
+
+        // Decode HTML entities so the returned text contains readable characters.
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        // Normalize all whitespace first so punctuation cleanup can use predictable spacing.
+        $text = preg_replace('/\s+/u', ' ', $text);
+
+        // Remove spaces before punctuation introduced by stripped tags.
+        $text = preg_replace('/\s+([,.!?;:])/', '$1', $text);
+
+        // Remove commas before sentence punctuation, for example after the last list item.
+        $text = preg_replace('/,\s*([.!?])/', '$1', $text);
+
+        // Remove list commas after items that already ended with sentence punctuation.
+        $text = preg_replace('/([.!?])\s*,/', '$1', $text);
+
+        // Collapse repeated commas created by empty list items.
+        $text = preg_replace('/(?:\s*,\s*){2,}/', ', ', $text);
+
+        // Collapse repeated sentence dots created by list endings next to existing punctuation.
+        $text = preg_replace('/(?:\.\s*){2,}/', '. ', $text);
+
+        // Normalize whitespace again after punctuation cleanup.
+        $text = preg_replace('/\s+/u', ' ', $text);
+
+        return trim($text);
     }
 
     /**

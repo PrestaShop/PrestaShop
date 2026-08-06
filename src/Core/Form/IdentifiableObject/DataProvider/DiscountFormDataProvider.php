@@ -7,7 +7,6 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use DateTime;
-use DateTimeInterface;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
 use PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository;
@@ -71,6 +70,7 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         return [
             'information' => [
                 'active' => true,
+                'highlight_in_cart' => false,
             ],
             'period' => [
                 'valid_date_range' => [
@@ -92,6 +92,11 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     'code' => '',
                 ],
                 'quantity_total' => null,
+                'usage' => [
+                    'quantity_used' => 0,
+                    'total_quantity' => null,
+                    'remaining_quantity' => null,
+                ],
                 'quantity_per_customer' => null,
                 'compatibility' => [],
                 'priority' => 1,
@@ -121,7 +126,6 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         /** @var DiscountForEditing $discountForEditing */
         $discountForEditing = $this->queryBus->handle(new GetDiscountForEditing($id));
         $isAmountDiscount = $discountForEditing->getReductionAmount() !== null;
-        $details = $this->getGiftDetails($discountForEditing);
         $specificProducts = $this->getSpecificProducts($discountForEditing);
         $productSegment = $this->getProductSegmentDetails($discountForEditing);
         $productSegmentDefined =
@@ -161,6 +165,8 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         return [
             'id' => $id,
             'information' => [
+                'active' => $discountForEditing->isActive(),
+                'highlight_in_cart' => $discountForEditing->isHighlightInCart(),
                 'discount_type' => $discountForEditing->getType()->getValue(),
                 'names' => $discountForEditing->getLocalizedNames(),
                 'description' => $discountForEditing->getDescription(),
@@ -168,21 +174,18 @@ class DiscountFormDataProvider implements FormDataProviderInterface
             ],
             'value' => [
                 'reduction' => [
+                    'value' => [
+                        'amount' => $isAmountDiscount
+                            ? (float) (string) $discountForEditing->getReductionAmount()->getAmount()
+                            : (float) (string) $discountForEditing->getReductionPercent(),
+                        'currency' => $discountForEditing->getReductionAmount()?->getCurrencyId(),
+                    ],
                     'type' => $isAmountDiscount ? DiscountSettings::AMOUNT : DiscountSettings::PERCENT,
-                    'value' => $isAmountDiscount
-                        ? (float) (string) $discountForEditing->getReductionAmount()->getAmount()
-                        : (float) (string) $discountForEditing->getReductionPercent(),
-                    'currency' => $discountForEditing->getReductionAmount()?->getCurrencyId(),
                     'include_tax' => $discountForEditing->getReductionAmount()?->isTaxIncluded(),
                 ],
             ],
             'free_gift' => [
-                [
-                    'product_id' => $discountForEditing->getGiftProductId(),
-                    'combination_id' => $discountForEditing->getGiftCombinationId(),
-                    'name' => $details['name'],
-                    'image' => $details['imageUrl'],
-                ],
+                'product' => $this->getGiftDetails($discountForEditing),
             ],
             'conditions' => [
                 DiscountConditionsType::PRODUCT_CONDITIONS => [
@@ -194,8 +197,10 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     'children_selector' => $selectedCartCondition,
                     'minimum_product_quantity' => $discountForEditing->getMinimumProductQuantity(),
                     'minimum_amount' => [
-                        'value' => $discountForEditing->getMinimumAmount() ? (float) (string) $discountForEditing->getMinimumAmount()->getAmount() : null,
-                        'currency' => $discountForEditing->getMinimumAmount()?->getCurrencyId(),
+                        'value' => [
+                            'amount' => $discountForEditing->getMinimumAmount() ? (float) (string) $discountForEditing->getMinimumAmount()->getAmount() : null,
+                            'currency' => $discountForEditing->getMinimumAmount()?->getCurrencyId(),
+                        ],
                         'tax_included' => $discountForEditing->getMinimumAmount()?->isTaxIncluded(),
                         'shipping_included' => $discountForEditing->getMinimumAmount()?->isShippingIncluded(),
                     ],
@@ -211,7 +216,7 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     'from' => $discountForEditing->getValidFrom() ? $discountForEditing->getValidFrom()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) : null,
                     'to' => $discountForEditing->getValidTo() ? $discountForEditing->getValidTo()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) : null,
                 ],
-                'period_never_expires' => $this->isPeriodNeverExpires($discountForEditing->getValidFrom(), $discountForEditing->getValidTo()),
+                'period_never_expires' => null === $discountForEditing->getValidTo(),
             ],
             'customer_eligibility' => [
                 'eligibility' => $this->getCustomerEligibilityData($discountForEditing),
@@ -222,6 +227,11 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     'code' => $discountForEditing->getCode(),
                 ],
                 'quantity_total' => $discountForEditing->getTotalQuantity(),
+                'usage' => [
+                    'quantity_used' => $discountForEditing->getQuantityUsedInOrders(),
+                    'total_quantity' => $discountForEditing->getTotalQuantity(),
+                    'remaining_quantity' => $discountForEditing->getRemainingQuantity(),
+                ],
                 'quantity_per_customer' => $discountForEditing->getQuantityPerUser(),
                 'compatibility' => $discountForEditing->getCompatibleDiscountTypeIds(),
                 'priority' => $discountForEditing->getPriority(),
@@ -299,10 +309,18 @@ class DiscountFormDataProvider implements FormDataProviderInterface
      */
     private function getGiftDetails(DiscountForEditing $discountForEditing): array
     {
+        $id = $discountForEditing->getGiftProductId();
+        $combinationId = $discountForEditing->getGiftCombinationId();
         $name = '';
         $imageUrl = '';
         if (!empty($discountForEditing->getGiftProductId())) {
-            $product = $this->productRepository->getProductByDefaultShop(new ProductId($discountForEditing->getGiftProductId()));
+            try {
+                $product = $this->productRepository->getProductByDefaultShop(new ProductId($discountForEditing->getGiftProductId()));
+            } catch (ProductNotFoundException $e) {
+                $this->displayWarning('The free gift product no longer exists. It has been removed from the form data and will be erased if you submit this form.');
+
+                return [];
+            }
             $name = $product->name[$this->languageContext->getId()];
 
             if (!empty($discountForEditing->getGiftCombinationId())) {
@@ -327,9 +345,16 @@ class DiscountFormDataProvider implements FormDataProviderInterface
             }
         }
 
+        if (empty($id)) {
+            return [];
+        }
+
         return [
-            'name' => $name,
-            'imageUrl' => $imageUrl,
+            [
+                'id' => $id,
+                'name' => $name,
+                'image' => $imageUrl,
+            ],
         ];
     }
 
@@ -451,6 +476,8 @@ class DiscountFormDataProvider implements FormDataProviderInterface
                     [
                         'id_customer' => $customerId,
                         'fullname_and_email' => $fullnameAndEmail,
+                        'active' => (int) $customer->active,
+                        'is_guest' => (int) $customer->is_guest,
                     ],
                 ];
             } catch (CustomerNotFoundException $e) {
@@ -458,20 +485,5 @@ class DiscountFormDataProvider implements FormDataProviderInterface
         }
 
         return $data;
-    }
-
-    /**
-     * Check if the discount period is set to "never expires" (>= 100 years duration).
-     */
-    private function isPeriodNeverExpires(?DateTimeInterface $validFrom, ?DateTimeInterface $validTo): bool
-    {
-        if ($validFrom === null || $validTo === null) {
-            return false;
-        }
-
-        $diff = $validFrom->diff($validTo);
-        $years = $diff->y + ($diff->m / 12) + ($diff->d / 365);
-
-        return $years >= 100;
     }
 }

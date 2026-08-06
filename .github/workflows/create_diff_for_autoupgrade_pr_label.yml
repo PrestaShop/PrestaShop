@@ -75,7 +75,7 @@ jobs:
           docker compose run --rm mysql sh -c "exec mysqldump -hmysql -uroot --no-create-info --compact -pprestashop presta_${{ matrix.branch }} ${{ env.DUMP_TABLES_FOR_DIFF }}" >> dump_${{ matrix.branch }}.sql
 
       - name: Upload dump
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: dump_${{ matrix.branch }}
           path: |
@@ -86,7 +86,7 @@ jobs:
     needs: [ install_prestashop_and_dump ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
 
       - name: Create diff
         run: git diff ./dump_head/dump_head.sql ./dump_base/dump_base.sql > sql-diff.txt | true
@@ -97,7 +97,7 @@ jobs:
           echo ${{ github.event.number }} > ./pr_number
 
       - name: Upload diff
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: sql_diff
           path: |

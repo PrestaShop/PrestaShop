@@ -7,13 +7,13 @@
   add: {
     href: path('admin_themes_import'),
     desc: 'Add new theme'|trans({}, 'Admin.Design.Feature'),
-    icon: 'add_circle_outline'
+    icon: 'add_circle_outline',
   },
   export: {
     href: path('admin_themes_export_current'),
     desc: 'Export current theme'|trans({}, 'Admin.Design.Feature'),
-    icon: 'cloud_download'
-  }
+    icon: 'cloud_download',
+  },
   } %}
 
 {% block content %}
@@ -65,7 +65,7 @@
             themeAuthor: currentlyUsedTheme.get('author.name'),
             themeAuthorUrl: theme.get('author.url'),
             themeFramework: theme.get('meta.compatibility.framework'),
-            isActive: true
+            isActive: true,
           } %}
             {% block image %}
               <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.get('display_name') }}">
@@ -87,7 +87,7 @@
                 themeAuthor: theme.get('author.name'),
                 themeAuthorUrl: theme.get('author.url'),
                 themeFramework: theme.get('meta.compatibility.framework'),
-                isActive: false
+                isActive: false,
               } %}
                 {% block image %}
                   <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.get('display_name') }}">

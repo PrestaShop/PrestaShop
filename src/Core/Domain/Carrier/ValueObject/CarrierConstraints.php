@@ -8,13 +8,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
 
+use PrestaShop\Decimal\DecimalNumber;
+
 class CarrierConstraints
 {
     public function __construct(
-        public readonly float $maxWeight,
-        public readonly float $maxWidth,
-        public readonly float $maxHeight,
-        public readonly float $maxDepth,
+        public readonly DecimalNumber $maxWeight,
+        public readonly int $maxWidth,
+        public readonly int $maxHeight,
+        public readonly int $maxDepth,
     ) {
     }
 }

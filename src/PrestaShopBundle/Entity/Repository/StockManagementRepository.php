@@ -159,6 +159,25 @@ abstract class StockManagementRepository
     {
         $rows = $this->addCombinationsAndFeatures($rows);
         $rows = $this->addImageThumbnailPaths($rows);
+        $rows = $this->addProductLink($rows);
+
+        return $rows;
+    }
+
+    /**
+     * @param array $rows
+     *
+     * @return array
+     */
+    protected function addProductLink(array $rows)
+    {
+        $router = $this->container->get('router');
+
+        foreach ($rows as &$row) {
+            $row['product_url'] = $router->generate('admin_products_edit', [
+                'productId' => $row['product_id'],
+            ]);
+        }
 
         return $rows;
     }

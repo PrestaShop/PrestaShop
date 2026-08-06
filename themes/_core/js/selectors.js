@@ -33,7 +33,7 @@ prestashop.selectors = {
       '.quickview .product-discounts, .page-product:not(.modal-open) .row .product-discounts, .page-product:not(.modal-open) .product-container .product-discounts, .quickview .js-product-discounts, .page-product:not(.modal-open) .row .js-product-discounts, .page-product:not(.modal-open) .product-container .js-product-discounts',
     additionalInfos:
       '.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info, .page-product:not(.modal-open) .product-container .product-additional-info, .quickview .js-product-additional-info, .page-product:not(.modal-open) .row .js-product-additional-info, .page-product:not(.modal-open) .js-product-container .js-product-additional-info',
-    details: '.quickview #product-details, #product-details, .quickview .js-product-details, .js-product-details',
+    details: '.quickview #product-details, .page-product:not(.modal-open) #product-details, .quickview .js-product-details, .page-product:not(.modal-open) .js-product-details',
     flags:
       '.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags, .page-product:not(.modal-open) .product-container .product-flags, .quickview .js-product-flags, .page-product:not(.modal-open) .row .js-product-flags, .page-product:not(.modal-open) .js-product-container .js-product-flags',
     /* eslint-enable */

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\Translation\Storage\Provider;
 
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ExtraPropertyTranslationExtractor;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -27,6 +28,20 @@ abstract class AbstractCatalogueLayersProviderTestCase extends KernelTestCase
     }
 
     abstract protected function getProvider(array $databaseContent = []);
+
+    /**
+     * Builds an extra property extractor that contributes nothing, so the catalogue is unchanged.
+     */
+    protected function createEmptyExtraPropertyTranslationExtractor(): ExtraPropertyTranslationExtractor
+    {
+        $extractor = $this->createMock(ExtraPropertyTranslationExtractor::class);
+        $extractor->method('extract')
+            ->willReturnCallback(function (string $locale) {
+                return new MessageCatalogue($locale);
+            });
+
+        return $extractor;
+    }
 
     protected function getDefaultCatalogue($locale): MessageCatalogue
     {

@@ -16,7 +16,11 @@ class CategoryControllerCore extends ProductListingFrontController
     /** @var string Internal controller name */
     public $php_self = 'category';
 
-    /** @var bool If set to false, customer cannot view the current category. */
+    /**
+     * @var bool If set to false, customer cannot view the current category
+     *
+     * @deprecated since 9.2.0 and will be removed in 10.0.0, the variable is not used anymore
+     */
     public $customer_access = true;
 
     /** @var bool */
@@ -74,7 +78,9 @@ class CategoryControllerCore extends ProductListingFrontController
         parent::init();
 
         // Otherwise immediately show 404
+        // Watch out - the controller goes on, always validate $this->category.
         if (!Validate::isLoadedObject($this->category)) {
+            Hook::exec('actionNotFound');
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
             $this->errors[] = $this->trans('This category is no longer available.', [], 'Shop.Notifications.Error');
@@ -155,20 +161,18 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        if (
-            Validate::isLoadedObject($this->category)
-            && $this->category->active
-            && $this->category->checkAccess($this->context->customer->id)
-            && $this->category->existsInShop($this->context->shop->id)
-        ) {
-            $this->doProductSearch(
-                'catalog/listing/category',
-                [
-                    'entity' => 'category',
-                    'id' => $this->category->id,
-                ]
-            );
+        // Skip product listing for error pages or when access is denied
+        if ($this->notFound || !$this->category->checkAccess($this->context->customer->id)) {
+            return;
         }
+
+        $this->doProductSearch(
+            'catalog/listing/category',
+            [
+                'entity' => 'category',
+                'id' => $this->category->id,
+            ]
+        );
     }
 
     /**
@@ -178,7 +182,8 @@ class CategoryControllerCore extends ProductListingFrontController
      */
     public function getLayout(): bool|string
     {
-        if (!$this->category->checkAccess($this->context->customer->id) || $this->notFound) {
+        // Use the error layout for error pages or when access is denied
+        if ($this->notFound || !$this->category->checkAccess($this->context->customer->id)) {
             return $this->context->shop->theme->getLayoutRelativePathForPage('error');
         }
 
@@ -285,6 +290,11 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
+        // No breadcrumbs for error pages
+        if ($this->notFound || !$this->category->checkAccess($this->context->customer->id)) {
+            return $breadcrumb;
+        }
+
         foreach ($this->category->getAllParents() as $category) {
             /** @var Category $category */
             if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
@@ -323,7 +333,7 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         $page = parent::getTemplateVarPage();
 
-        if ($this->notFound) {
+        if ($this->notFound || !$this->category->checkAccess($this->context->customer->id)) {
             $page['page_name'] = 'pagenotfound';
             $page['body_classes']['pagenotfound'] = true;
             $page['title'] = $this->trans('The page you are looking for was not found.', [], 'Shop.Theme.Global');
@@ -339,11 +349,8 @@ class CategoryControllerCore extends ProductListingFrontController
 
     public function getListingLabel(): string
     {
-        if (!Validate::isLoadedObject($this->category)) {
-            $this->category = new Category(
-                (int) Tools::getValue('id_category'),
-                $this->context->language->id
-            );
+        if ($this->notFound || !$this->category->checkAccess($this->context->customer->id)) {
+            return '';
         }
 
         return $this->trans(
@@ -364,19 +371,35 @@ class CategoryControllerCore extends ProductListingFrontController
         $categoryToRedirectTo = null;
         foreach ($this->category->getParentsCategories() as $category) {
             /*
-             * Or new favourite category is a one:
-             * that is not the current one
-             * that is active
-             * and that is deeper than the last one
+             * Or new favourite category is a one that:
+             * - Is not the current one
+             * - Is active
+             * - Is either the first candidate or deeper than the previous one
              */
             if ($category['id_category'] != $this->category->id
                 && $category['active'] == 1
-                && $category['level_depth'] > $categoryToRedirectTo['level_depth']
+                && ($categoryToRedirectTo === null || $category['level_depth'] > $categoryToRedirectTo['level_depth'])
             ) {
                 $categoryToRedirectTo = $category;
             }
         }
 
         return $categoryToRedirectTo['id_category'];
+    }
+
+    /**
+     * Generates structured data for this page. We use a custom implementation different from
+     * ProductListingFrontController because we need to handle pages where the category cannot be loaded.
+     *
+     * @return array
+     */
+    public function getStructuredData(): array
+    {
+        // No structured data for error pages
+        if ($this->notFound || !$this->category->checkAccess($this->context->customer->id)) {
+            return FrontController::getStructuredData();
+        }
+
+        return parent::getStructuredData();
     }
 }

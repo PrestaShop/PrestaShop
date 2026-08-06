@@ -1,4 +1,5 @@
 <?php
+
 /**
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
@@ -6,6 +7,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Shipment\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
+use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\Command\SplitShipment;
 use PrestaShop\PrestaShop\Core\Domain\Shipment\CommandHandler\SplitShipmentHandlerInterface;
@@ -23,6 +26,8 @@ class SplitShipmentHandler implements SplitShipmentHandlerInterface
         private ShipmentRepository $repository,
         private ShipmentSplitterInterface $splitter,
         private TranslatorInterface $translator,
+        private ShipmentShippingCostUpdater $shipmentShippingCostUpdater,
+        private AdapterConfiguration $configuration,
     ) {
     }
 
@@ -71,6 +76,10 @@ class SplitShipmentHandler implements SplitShipmentHandlerInterface
             $this->repository->delete($shipment);
         } else {
             $this->repository->save($shipment);
+        }
+
+        if ($this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING')) {
+            $this->shipmentShippingCostUpdater->recalculateForOrder($shipment->getOrderId());
         }
     }
 }

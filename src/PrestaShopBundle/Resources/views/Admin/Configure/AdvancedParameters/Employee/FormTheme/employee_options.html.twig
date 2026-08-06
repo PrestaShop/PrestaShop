@@ -29,7 +29,7 @@
       {% endif %}
       <div class="{{ block('form_group_class') }}{% if disabledField %} disabled{% endif %}">
         {{ form_widget(form) }}
-        {# #}
+        {##}
         {{ form_errors(form, {attr: {fieldError: true}}) }}
         {{- block('form_alert') -}}
       </div>
@@ -52,12 +52,12 @@
     <div class="alert alert-{{ alert_type }}{% if alert_title is defined %} expandable-alert{% endif %} mt-1" role="alert">
       {% if alert_title is defined %}
         <p class="alert-text">
-          {{ alert_title|raw }}
+          {{ alert_title|raw_purified }}
         </p>
       {% else %}
         {% for message in alert_message %}
           <p class="alert-text">
-            {{ message|raw }}
+            {{ message|raw_purified }}
           </p>
         {% endfor %}
       {% endif %}
@@ -66,7 +66,7 @@
         <div class="alert-more collapse" id="expandable_{{ form.vars.id }}" style="">
           {% for message in alert_message %}
             <p>
-              {{ message|raw }}
+              {{ message|raw_purified }}
             </p>
           {% endfor %}
         </div>

@@ -8,22 +8,20 @@ namespace PrestaShop\PrestaShop\Adapter\Preferences;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Feature\Enum\ShopModeEnum;
+use PrestaShop\PrestaShop\Core\Feature\ShopModeFeature;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
+use PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType;
+use PrestaShopLogger;
 
 /**
  * This class will provide Shop Preferences configuration.
  */
 class PreferencesConfiguration implements DataConfigurationInterface
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
     public function __construct(
-        Configuration $configuration
+        private readonly Configuration $configuration,
     ) {
-        $this->configuration = $configuration;
     }
 
     /**
@@ -31,9 +29,16 @@ class PreferencesConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
+        $shopMode = $this->configuration->getEnum(
+            ShopModeFeature::CONFIGURATION_NAME,
+            ShopModeEnum::class,
+            ShopModeFeature::DEFAULT_SHOP_MODE
+        );
+
         return [
             'enable_ssl' => $this->configuration->getBoolean('PS_SSL_ENABLED'),
             'enable_token' => $this->configuration->getBoolean('PS_TOKEN_ENABLE'),
+            PreferencesType::SHOP_MODE => $shopMode,
             'allow_html_iframes' => $this->configuration->getBoolean('PS_ALLOW_HTML_IFRAME'),
             'use_htmlpurifier' => $this->configuration->getBoolean('PS_USE_HTMLPURIFIER'),
             'price_round_mode' => $this->configuration->get('PS_PRICE_ROUND_MODE'),
@@ -70,8 +75,30 @@ class PreferencesConfiguration implements DataConfigurationInterface
             ];
         }
 
+        /** @var ShopModeEnum $newShopModeValue */
+        $newShopModeValue = $configuration[PreferencesType::SHOP_MODE];
+
+        /** @var ShopModeEnum $oldShopModeValue */
+        $oldShopModeValue = $this->configuration->getEnum(
+            ShopModeFeature::CONFIGURATION_NAME,
+            ShopModeEnum::class,
+            ShopModeFeature::DEFAULT_SHOP_MODE
+        );
+
+        if ($oldShopModeValue !== $newShopModeValue) {
+            PrestaShopLogger::addLog(
+                sprintf('Shop mode updated: from "%s" to "%s"', $oldShopModeValue->value, $newShopModeValue->value),
+                1,
+                null,
+                'Configuration',
+                0,
+                true
+            );
+        }
+
         $this->configuration->set('PS_SSL_ENABLED', $configuration['enable_ssl']);
         $this->configuration->set('PS_TOKEN_ENABLE', $configuration['enable_token']);
+        $this->configuration->set(ShopModeFeature::CONFIGURATION_NAME, $newShopModeValue->value);
         $this->configuration->set('PS_ALLOW_HTML_IFRAME', $configuration['allow_html_iframes']);
         $this->configuration->set('PS_USE_HTMLPURIFIER', $configuration['use_htmlpurifier']);
         $this->configuration->set('PS_PRICE_ROUND_MODE', $configuration['price_round_mode']);
@@ -105,6 +132,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
         return isset(
             $configuration['enable_ssl'],
             $configuration['enable_token'],
+            $configuration[PreferencesType::SHOP_MODE],
             $configuration['allow_html_iframes'],
             $configuration['use_htmlpurifier'],
             $configuration['price_round_mode'],

@@ -373,7 +373,7 @@ describe('BO - Customer Service - Merchandise Returns : Update status', async ()
         it('should check the updated status in the merchandise returns table', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkStatus${index}`, baseContext);
 
-          const status = await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'name');
+          const status = await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'status');
           expect(status).to.eq(test.args.status);
         });
       });

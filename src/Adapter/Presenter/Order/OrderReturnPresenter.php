@@ -49,7 +49,11 @@ class OrderReturnPresenter implements PresenterInterface
             throw new Exception('orderReturnPresenter can only present order_return passed as array');
         }
 
-        $orderReturnLazyArray = new OrderReturnLazyArray($this->prefix, $this->link, $orderReturn);
+        $orderReturnLazyArray = new OrderReturnLazyArray(
+            $this->prefix,
+            $this->link,
+            $orderReturn
+        );
 
         Hook::exec('actionPresentOrderReturn',
             ['presentedOrderReturn' => &$orderReturnLazyArray]

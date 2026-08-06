@@ -77,7 +77,7 @@ export default class MergeShipmentManager {
   };
 
   async refreshMergeShipmentForm(): Promise<void> {
-    const modal = document.querySelector(OrderViewPageMap.mergeShipmentModal) as HTMLElement;
+    const modal = document.querySelector<HTMLElement>(OrderViewPageMap.mergeShipmentModal);
 
     if (!modal) {
       throw new Error('Merge shipment modal not found.');
@@ -99,7 +99,7 @@ export default class MergeShipmentManager {
       if (!response.ok) {
         throw new Error(await response.text());
       }
-      const formContainer = document.querySelector(OrderViewPageMap.mergeShipmentModalContainer) as HTMLElement;
+      const formContainer = document.querySelector<HTMLElement>(OrderViewPageMap.mergeShipmentModalContainer);
       formContainer!.innerHTML = await response.text();
 
       modal.dataset.state = 'loaded';
@@ -112,7 +112,7 @@ export default class MergeShipmentManager {
   }
 
   private get form(): HTMLFormElement {
-    const form = document.forms.namedItem(OrderViewPageMap.mergeShipmentFormName) as HTMLFormElement;
+    const form = document.forms.namedItem(OrderViewPageMap.mergeShipmentFormName);
 
     if (!form) {
       throw new Error('Merge shipment form not found');

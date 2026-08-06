@@ -69,7 +69,7 @@ class AttributeGroupCore extends ObjectModel
         $this->is_color_group = $this->group_type == 'color';
 
         if ($this->position <= 0) {
-            $this->position = AttributeGroup::getHigherPosition() + 1;
+            $this->position = AttributeGroup::getHighestPosition() + 1;
         }
 
         $return = parent::add($autoDate, true);
@@ -379,13 +379,32 @@ class AttributeGroupCore extends ObjectModel
      * Get the highest AttributeGroup position.
      *
      * @return int $position Position
+     *
+     * @deprecated Since 9.2, use AttributeGroup::getHighestPosition() instead.
      */
     public static function getHigherPosition()
+    {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 9.2. Use %s instead.',
+                __METHOD__,
+                self::class . '::getHighestPosition()'
+            ),
+            E_USER_DEPRECATED
+        );
+
+        return self::getHighestPosition();
+    }
+
+    /**
+     * Get the highest AttributeGroup position.
+     */
+    public static function getHighestPosition(): int
     {
         $sql = 'SELECT MAX(`position`)
 				FROM `' . _DB_PREFIX_ . 'attribute_group`';
         $position = Db::getInstance()->getValue($sql);
 
-        return (is_numeric($position)) ? $position : -1;
+        return (is_numeric($position)) ? (int) $position : -1;
     }
 }

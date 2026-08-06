@@ -148,7 +148,7 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
     expect(pageTitle).to.contains(dataProducts.demo_6.name);
 
     const productPrice = await foHummingbirdProductPage.getProductPrice(page);
-    expect(productPrice).to.contains(dataProducts.demo_6.combinations[0].price);
+    expect(productPrice).to.contains(dataProducts.demo_6.combinations[0].priceTI);
   });
 
   it('should check the product features list', async function () {
@@ -188,8 +188,8 @@ describe('BO - Advanced Parameters - Performance : Optional features', async () 
     expect(pageTitle).to.contains(dataProducts.demo_6.name);
 
     const productPrice = await foHummingbirdProductPage.getProductPrice(page);
-    const discountValue = utilsCore.percentage(dataProducts.demo_6.combinations[0].price, groupDiscount);
-    expect(productPrice).to.contains((dataProducts.demo_6.combinations[0].price - discountValue).toFixed(2));
+    const discountValue = utilsCore.percentage(dataProducts.demo_6.combinations[0].priceTI, groupDiscount);
+    expect(productPrice).to.contains((dataProducts.demo_6.combinations[0].priceTI - discountValue).toFixed(2));
   });
 
   it('should go to \'Advanced Parameters > Performance\' page', async function () {

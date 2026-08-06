@@ -35,6 +35,7 @@ final class AvailableCarriersForShipmentChoiceProvider implements ConfigurableFo
     {
         $options = $this->resolveOptions($options);
         $shipmentId = $options['shipment_id'];
+        $useCurrentCarrierId = $options['useCurrentCarrierId'];
         $shipment = $this->shipmentRepository->findById($shipmentId);
 
         if ($shipment === null) {
@@ -59,7 +60,7 @@ final class AvailableCarriersForShipmentChoiceProvider implements ConfigurableFo
         $carriers = $this->commandBus->handle(new GetAvailableCarriers(
             $productQuantities,
             new AddressId($shipment->getAddressId()),
-            $shipment->getCarrierId()
+            $useCurrentCarrierId === true ? $shipment->getCarrierId() : null
         ));
 
         return FormChoiceFormatter::formatFormChoices(
@@ -80,6 +81,7 @@ final class AvailableCarriersForShipmentChoiceProvider implements ConfigurableFo
         $resolver->setRequired([
             'shipment_id',
             'selectedProducts',
+            'useCurrentCarrierId',
         ]);
         $resolver->setAllowedTypes('selectedProducts', 'array');
 

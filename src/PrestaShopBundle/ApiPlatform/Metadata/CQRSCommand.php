@@ -110,6 +110,8 @@ class CQRSCommand extends AbstractCQRSOperation
         ?array $CQRSCommandMapping = null,
         ?bool $experimentalOperation = null,
         ?bool $allowEmptyBody = null,
+        ?string $minVersion = null,
+        ?string $maxVersion = null,
     ) {
         $passedArguments = \get_defined_vars();
 

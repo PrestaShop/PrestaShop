@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Discount;
 
-use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType as DiscountTypeVO;
 use PrestaShopBundle\Form\Admin\Type\CardType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -21,13 +20,6 @@ class DiscountUsabilityType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $cartRuleTypeChoices = [];
-        foreach ($options['available_cart_rule_types'] as $cartRuleType) {
-            if ($cartRuleType['name'] === DiscountTypeVO::ORDER_LEVEL) {
-                continue;
-            }
-            $cartRuleTypeChoices[$cartRuleType['name']] = $cartRuleType['id_cart_rule_type'];
-        }
         $builder
             ->add('mode', DiscountUsabilityModeType::class, [
                 'label' => $this->trans('Specifiy discount mode', 'Admin.Catalog.Feature'),
@@ -59,6 +51,9 @@ class DiscountUsabilityType extends TranslatorAwareType
                     new Assert\GreaterThanOrEqual(0),
                 ],
             ])
+            ->add('usage', DiscountUsagePreviewType::class, [
+                'label' => $this->trans('Usage', 'Admin.Catalog.Feature'),
+            ])
             ->add('quantity_per_customer', IntegerType::class, [
                 'required' => false,
                 'label' => $this->trans('Select usage limits per customer', 'Admin.Catalog.Feature'),
@@ -89,7 +84,7 @@ class DiscountUsabilityType extends TranslatorAwareType
                 'label_tag_name' => 'h3',
                 'label' => $this->trans('Compatible with discounts', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('Select which discount types this discount is compatible with.', 'Admin.Catalog.Help'),
-                'choices' => $cartRuleTypeChoices,
+                'choices' => $options['available_discount_types'],
                 'multiple' => true,
                 'expanded' => true,
                 'required' => false,
@@ -115,9 +110,9 @@ class DiscountUsabilityType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'available_cart_rule_types' => [],
+            'available_discount_types' => [],
         ]);
-        $resolver->setAllowedTypes('available_cart_rule_types', ['array']);
+        $resolver->setAllowedTypes('available_discount_types', ['array']);
     }
 
     public function getParent()

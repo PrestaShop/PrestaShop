@@ -1,0 +1,37 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+
+{% set layoutHeaderToolbarBtn = {
+  add: {
+    href: path('admin_extra_property_definitions_create'),
+    desc: 'Add new extra property'|trans({}, 'Admin.Advparameters.Feature'),
+    icon: 'add_circle_outline',
+  },
+} %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/extra_property_definition.bundle.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+  <div class="alert alert-info" role="alert">
+    <p class="alert-text">
+      {{ 'Extra properties extend existing entities (products, customers, orders…) with custom fields stored in dedicated database columns.'|trans({}, 'Admin.Advparameters.Feature') }}
+    </p>
+    <p class="alert-text">
+      {{ 'Properties owned by a module (column "Module" is not empty) are read-only: the module is responsible for registering and removing them.'|trans({}, 'Admin.Advparameters.Feature') }}
+    </p>
+    <p class="alert-text">
+      {{ 'Where each field is exposed (front-office, forms, grids, Admin API) is configured from the edit form.'|trans({}, 'Admin.Advparameters.Feature') }}
+    </p>
+  </div>
+
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: grid}) }}
+
+{% endblock %}

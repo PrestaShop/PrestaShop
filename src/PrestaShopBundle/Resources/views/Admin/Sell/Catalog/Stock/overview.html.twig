@@ -31,7 +31,7 @@
                 catalogUrl: '{{ url('admin_products_index') }}',
                 stockUrl: '{{ url('admin_stock_overview') }}',
                 stockExportUrl: '{{ url('api_stock_list_products_export') }}',
-                stockImportUrl: '{{ getAdminLink('AdminImport')|raw }}',
+                stockImportUrl: '{{ getAdminLink('AdminImport')|raw_purified }}',
                 apiStockUrl: '{{ productId ? url('api_stock_list_product_combinations', {productId: productId}) : url('api_stock_list_products') }}',
                 apiMovementsUrl: '{{ productId ? url('api_stock_product_list_movements', {productId: productId}) : url('api_stock_list_movements') }}',
                 employeesUrl: '{{ url('api_stock_list_movements_employees') }}',

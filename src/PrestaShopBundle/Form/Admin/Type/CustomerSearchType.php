@@ -47,6 +47,10 @@ class CustomerSearchType extends EntitySearchInputType
             'suggestion_field' => 'fullname_and_email',
             'required' => false,
             'exclude_guests' => false,
+            'attr' => [
+                'data-disabled-badge-label' => $this->trans('Disabled', 'Admin.Global'),
+                'data-guest-badge-label' => $this->trans('Guest', 'Admin.Shopparameters.Feature'),
+            ],
         ]);
 
         $resolver->setAllowedTypes('exclude_guests', 'bool');

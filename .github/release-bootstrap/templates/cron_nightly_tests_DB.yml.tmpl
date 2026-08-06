@@ -1,0 +1,21 @@
+# This workflow aim to run all UI tests on active branches
+# and upload the report on Google cloud platform storage
+name: Nightly tests and report - @BRANCH@ (@DB@)
+
+on:
+  workflow_run:
+    workflows: [ 'Nightly Build' ]
+    types:
+      - requested
+
+jobs:
+  test_@JOB@:
+    uses: ./.github/workflows/cron_nightly_tests_reusable.yml
+    with:
+      BRANCH: @BRANCH@
+      PHP_VERSION: '@PHP@'
+      NODE_VERSION: '@NODE@'
+      DB_SERVER: '@DB@'
+    secrets:
+      GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
+      GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}

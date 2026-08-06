@@ -170,16 +170,24 @@
 
                             <div class="module-column-actions">
                               <div class="btn-group">
-                                {% set linkParams = {
-                                  id_module: moduleInstance.id,
-                                  id_hook: hook['id_hook'],
-                                  editGraft: 1
-                                } %}
-                                {% if selectedModule %}
-                                  {% set linkParams = linkParams|merge({show_modules: selectedModule}) %}
+                                {% if hookModuleV2Enabled %}
+                                  {% set editLink = path('admin_modules_positions_edit_hook', {
+                                    id_module: moduleInstance.id,
+                                    id_hook: hook['id_hook'],
+                                  }) %}
+                                {% else %}
+                                  {% set linkParams = {
+                                    id_module: moduleInstance.id,
+                                    id_hook: hook['id_hook'],
+                                    editGraft: 1,
+                                  } %}
+                                  {% if selectedModule %}
+                                    {% set linkParams = linkParams|merge({show_modules: selectedModule}) %}
+                                  {% endif %}
+                                  {% set editLink = getAdminLink('AdminModulesPositions', true, linkParams) %}
                                 {% endif %}
 
-                                <a class="btn tooltip-link" href="{{ getAdminLink('AdminModulesPositions', true, linkParams) }}"
+                                <a class="btn tooltip-link" href="{{ editLink }}"
                                    aria-label="{{ 'Edit'|trans({}, 'Admin.Actions') }}" title="{{ 'Edit'|trans({}, 'Admin.Actions') }}">
                                   <i class="material-icons">edit</i>
                                 </a>

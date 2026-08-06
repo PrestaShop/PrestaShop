@@ -220,9 +220,24 @@ class CmsControllerCore extends FrontController
             $categoryCms['sub_categories'][$subCategory['id_cms_category']]['link'] = $this->context->link->getCMSCategoryLink($subCategory['id_cms_category'], $subCategory['link_rewrite']);
         }
 
-        foreach (CMS::getCMSPages($this->context->language->id, (int) $this->cms_category->id, true, (int) $this->context->shop->id) as $cmsPages) {
-            $categoryCms['cms_pages'][$cmsPages['id_cms']] = $cmsPages;
-            $categoryCms['cms_pages'][$cmsPages['id_cms']]['link'] = $this->context->link->getCMSLink($cmsPages['id_cms'], $cmsPages['link_rewrite']);
+        foreach (CMS::getCMSPages($this->context->language->id, (int) $this->cms_category->id, true, (int) $this->context->shop->id) as $cmsPage) {
+            $cmsVar = $this->objectPresenter->present(new CMS((int) $cmsPage['id_cms'], (int) $this->context->language->id));
+            $filteredCmsContent = Hook::exec(
+                'filterCmsContent',
+                ['object' => $cmsVar],
+                null,
+                false,
+                true,
+                false,
+                null,
+                true
+            );
+            if (!empty($filteredCmsContent['object'])) {
+                $cmsVar = $filteredCmsContent['object'];
+            }
+
+            $categoryCms['cms_pages'][$cmsPage['id_cms']] = $cmsVar;
+            $categoryCms['cms_pages'][$cmsPage['id_cms']]['link'] = $this->context->link->getCMSLink($cmsPage['id_cms'], $cmsPage['link_rewrite']);
         }
 
         return $categoryCms;

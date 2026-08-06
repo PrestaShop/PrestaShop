@@ -1,0 +1,247 @@
+# Version-branch bootstrap (issue #41818)
+#
+# When a new version branch is opened (e.g. develop -> 9.2.x), this manually
+# dispatched, prestashop-sa-gated workflow:
+#   1. creates the version branch on core if it does not exist yet (idempotent),
+#   2. opens/updates ONE idempotent PR per repository adding that branch to each
+#      repo's CI matrices / branch lists.
+# Everything (version, X.Y.x branch, minor/major) is derived from
+# src/Core/Version.php on develop — there are no release inputs. Re-runnable:
+# already-merged changes open no PR; an open PR is updated; a closed one is
+# ignored and a fresh PR is created. Humans review & merge (never auto-merged).
+name: Version-branch bootstrap
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Compute diffs and log, but do not push branches or open/update PRs'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: version-branch-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  # 1) Gate: only members of the prestashop-sa team may run this.
+  #    Copied verbatim from create-build-branch.yml.
+  check-membership:
+    name: Check team membership
+    runs-on: ubuntu-latest
+    env:
+      TEAM_SLUG: prestashop-sa
+    steps:
+      - name: Verify actor belongs to ${{ env.TEAM_SLUG }}
+        env:
+          TOKEN: ${{ secrets.JARVIS_TOKEN }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::JARVIS_TOKEN secret is empty. Configure a token with read:org scope before running this workflow."
+            exit 1
+          fi
+
+          API_URL="https://api.github.com/orgs/PrestaShop/teams/${TEAM_SLUG}/memberships/${ACTOR}"
+          echo "Checking membership: ${API_URL}"
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "$API_URL")
+          STATUS=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          if [ "$STATUS" = "200" ]; then
+            ROLE=$(echo "$BODY" | jq -r '.role // "unknown"')
+            STATE=$(echo "$BODY" | jq -r '.state // "unknown"')
+            echo "✅ ${ACTOR} is a member of ${TEAM_SLUG} (role=${ROLE}, state=${STATE})." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::error::${ACTOR} is not a member of ${TEAM_SLUG} (HTTP ${STATUS}). Only members of this team can run version-branch bootstrap."
+            echo "⛔ ${ACTOR} is not a member of ${TEAM_SLUG} (HTTP ${STATUS})." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+  # 2) Derive version_branch / new_version / release_type from Version.php on develop.
+  derive:
+    name: Derive version branch
+    runs-on: ubuntu-latest
+    needs: check-membership
+    outputs:
+      version_branch: ${{ steps.d.outputs.version_branch }}
+      new_version: ${{ steps.d.outputs.new_version }}
+      release_type: ${{ steps.d.outputs.release_type }}
+      target_owner: ${{ steps.owner.outputs.target_owner }}
+    steps:
+      - name: Checkout develop
+        uses: actions/checkout@v5
+        with:
+          ref: develop
+          sparse-checkout: src/Core/Version.php
+          sparse-checkout-cone-mode: false
+      - name: Read Version.php
+        id: d
+        run: |
+          set -euo pipefail
+          f="src/Core/Version.php"
+          maj=$(sed -nE "s/.*const MAJOR_VERSION = ([0-9]+);.*/\1/p" "$f")
+          min=$(sed -nE "s/.*const MINOR_VERSION = ([0-9]+);.*/\1/p" "$f")
+          rel=$(sed -nE "s/.*const RELEASE_VERSION = ([0-9]+);.*/\1/p" "$f")
+          if [ -z "$maj" ] || [ -z "$min" ] || [ -z "$rel" ]; then
+            echo "::error::Could not parse MAJOR/MINOR/RELEASE from ${f}."; exit 1
+          fi
+          version_branch="${maj}.${min}.x"
+          new_version="${maj}.${min}.${rel}"
+          if [ "$min" = "0" ] && [ "$rel" = "0" ]; then rt="major"; else rt="minor"; fi
+          {
+            echo "version_branch=${version_branch}"
+            echo "new_version=${new_version}"
+            echo "release_type=${rt}"
+          } >> "$GITHUB_OUTPUT"
+          echo "Derived ${version_branch} (version ${new_version}, ${rt} release)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Resolve target owner (forks vs production)
+        id: owner
+        run: |
+          # Targeting is driven by WHERE the workflow runs, not a manual flag:
+          # running on PrestaShop/* (upstream) targets the official repos; running
+          # on any fork targets that fork owner's repos and never the official ones.
+          owner="${{ github.repository_owner }}"
+          if [ "${owner}" = "PrestaShop" ]; then
+            echo "target_owner=" >> "$GITHUB_OUTPUT"
+            echo "🎯 Production mode: targeting the official PrestaShop / PrestaShopCorp repositories." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "target_owner=${owner}" >> "$GITHUB_OUTPUT"
+            echo "🧪 Fork mode: targeting forks under \`${owner}\` only — the official repositories are never touched." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  # 3) Create the version branch on core (idempotent) before the per-repo PRs.
+  create-version-branch:
+    name: Create ${{ needs.derive.outputs.version_branch }} on core
+    runs-on: ubuntu-latest
+    needs: derive
+    steps:
+      # github.repository is already the repo the workflow runs in: a fork when
+      # triggered on a fork, PrestaShop/PrestaShop when triggered upstream.
+      - name: Checkout core (develop)
+        uses: actions/checkout@v5
+        with:
+          repository: ${{ github.repository }}
+          ref: develop
+          fetch-depth: 1
+          token: ${{ secrets.JARVIS_TOKEN }}
+      - name: Create version branch if missing
+        env:
+          VB: ${{ needs.derive.outputs.version_branch }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if git ls-remote --exit-code --heads origin "${VB}" >/dev/null 2>&1; then
+            echo "::notice::Branch '${VB}' already exists on ${REPO} — skipping creation."
+            echo "✅ Version branch \`${VB}\` already exists on \`${REPO}\`." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git checkout -b "${VB}"
+          if [ "${DRY_RUN}" = "true" ]; then
+            echo "::notice::[dry_run] would create '${VB}' from develop on ${REPO}."
+            echo "🧪 [dry_run] would create \`${VB}\` from \`develop\` on \`${REPO}\`." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git push origin "${VB}"
+          echo "🌱 Created \`${VB}\` from \`develop\` on \`${REPO}\`." >> "$GITHUB_STEP_SUMMARY"
+
+  # 4) Per-repo fan-out. Each leg runs its transform and opens/updates one PR.
+  #    kanbanbot is included for every release (its TARGET_BRANCH_AVAILABLE list
+  #    must learn the new branch even for a minor); its security-window constants
+  #    are flagged for manual review on majors by the transform itself.
+  bootstrap-repo:
+    name: Bootstrap ${{ matrix.transform_id }}
+    needs: [ derive, create-version-branch ]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - repo: PrestaShop/PrestaShop
+            base: develop
+            transform_id: core
+            reviewers: ""
+          - repo: PrestaShop/test-scenarios
+            base: master
+            transform_id: test-scenarios
+            reviewers: ""
+          - repo: PrestaShop/presthubot
+            base: master
+            transform_id: presthubot
+            reviewers: ""
+          - repo: PrestaShop/kanbanbot
+            base: main
+            transform_id: kanbanbot
+            reviewers: ""
+          - repo: PrestaShopCorp/TranslationTool
+            base: dev
+            transform_id: translationtool
+            reviewers: ""
+          - repo: PrestaShop/ga.tests.ui.pr
+            base: main
+            transform_id: ga-tests-ui-pr
+            reviewers: PrestaShop/qa-automation
+          - repo: PrestaShop/ps_apiresources
+            base: dev
+            transform_id: ps-apiresources
+            reviewers: ""
+    steps:
+      - name: Checkout bootstrap action
+        uses: actions/checkout@v5
+        with:
+          sparse-checkout: .github/actions/version-branch-bootstrap
+      - name: Bootstrap ${{ matrix.repo }}
+        uses: ./.github/actions/version-branch-bootstrap
+        with:
+          repository: ${{ matrix.repo }}
+          base: ${{ matrix.base }}
+          version_branch: ${{ needs.derive.outputs.version_branch }}
+          new_version: ${{ needs.derive.outputs.new_version }}
+          release_type: ${{ needs.derive.outputs.release_type }}
+          transform_id: ${{ matrix.transform_id }}
+          target_owner: ${{ needs.derive.outputs.target_owner }}
+          reviewers: ${{ matrix.reviewers }}
+          dry_run: ${{ inputs.dry_run }}
+          token: ${{ secrets.JARVIS_TOKEN }}
+
+  # 5) Consolidated report: one table of every PR for the maintainers to review.
+  report:
+    name: PR report
+    runs-on: ubuntu-latest
+    needs: [ derive, bootstrap-repo ]
+    if: always()
+    steps:
+      - name: Download result artifacts
+        uses: actions/download-artifact@v7
+        with:
+          pattern: pr-result-*
+          path: results
+      - name: Build report
+        run: |
+          set -euo pipefail
+          {
+            echo "## Version-branch bootstrap — ${{ needs.derive.outputs.version_branch }}"
+            echo ""
+            if [ "${{ inputs.dry_run }}" = "true" ]; then echo "_dry run — no branches pushed, no PRs opened._"; echo ""; fi
+            echo "| Repository | Action | Pull request |"
+            echo "| --- | --- | --- |"
+          } >> "$GITHUB_STEP_SUMMARY"
+          shopt -s nullglob
+          for f in results/*/pr-result.json; do
+            repo=$(jq -r '.repo' "$f")
+            action=$(jq -r '.action' "$f")
+            url=$(jq -r '.url' "$f")
+            if [ -n "$url" ] && [ "$url" != "null" ]; then link="[link]($url)"; else link="—"; fi
+            echo "| ${repo} | ${action} | ${link} |" >> "$GITHUB_STEP_SUMMARY"
+          done

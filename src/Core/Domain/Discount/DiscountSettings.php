@@ -16,7 +16,8 @@ class DiscountSettings
     public const PERCENT = 'percentage';
 
     // Period filter values
-    public const PERIOD_FILTER_ALL = 'all';
+    // Use empty value, this way when All is selected the filter value is empty and the clear button disappears
+    public const PERIOD_FILTER_ALL = '';
     public const PERIOD_FILTER_ACTIVE = 'active';
     public const PERIOD_FILTER_SCHEDULED = 'scheduled';
     public const PERIOD_FILTER_EXPIRED = 'expired';

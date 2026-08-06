@@ -280,12 +280,26 @@ class ImageRetriever
 
         // Check if the thumbnail exists and generate it if needed
         if (!file_exists($resizedImagePath)) {
+            $error = 0;
+            $targetWidth = null;
+            $targetHeight = null;
+            $sourceWidth = null;
+            $sourceHeight = null;
+
             ImageManager::resize(
                 $originalImagePath,
                 $resizedImagePath,
                 (int) $imageTypeData['width'],
                 (int) $imageTypeData['height'],
-                $imageFormat
+                $imageFormat,
+                false,
+                $error,
+                $targetWidth,
+                $targetHeight,
+                5,
+                $sourceWidth,
+                $sourceHeight,
+                $imageTypeData['image_fitment']
             );
         }
     }
@@ -380,11 +394,26 @@ class ImageRetriever
 
                 // Check if the thumbnail exists and generate it if needed
                 if (!file_exists($resizedImagePath)) {
+                    $error = 0;
+                    $targetWidth = null;
+                    $targetHeight = null;
+                    $sourceWidth = null;
+                    $sourceHeight = null;
+
                     ImageManager::resize(
                         $originalImagePath,
                         $resizedImagePath,
                         (int) $imageType['width'],
-                        (int) $imageType['height']
+                        (int) $imageType['height'],
+                        'jpg',
+                        false,
+                        $error,
+                        $targetWidth,
+                        $targetHeight,
+                        5,
+                        $sourceWidth,
+                        $sourceHeight,
+                        $imageType['image_fitment']
                     );
                 }
 

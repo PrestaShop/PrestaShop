@@ -62,9 +62,9 @@ make docker-start
 
 **Default Admin Credentials:**
 - Email: `demo@prestashop.com`
-- Password: `Correct Horse Battery Staple`
+- Password: `Pr3st4Sh0P`
 
-Or the backoffice on this URL: http://localhost:8001/admin-dev (default access credentials: demo@prestashop.com / Correct Horse Battery Staple)
+Or the backoffice on this URL: http://localhost:8001/admin-dev (default access credentials: demo@prestashop.com / Pr3st4Sh0P)
 
 You can customize the admin credentials by setting the following environment variables before running docker compose:
 ```
@@ -112,6 +112,8 @@ If you want to contribute code to PrestaShop, read the [CONTRIBUTING.md][contrib
 Don't know where to start? Check the [good first issue](https://github.com/PrestaShop/PrestaShop/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) label to have a look at all beginner-friendly improvements and bug fixes.
 
 If you want to help translate PrestaShop in your language, [join us on Crowdin][crowdin]!
+
+If using AI tools to write code, make sure your agent has read the [.ai/CONTEXT.md](.ai/CONTEXT.md) file. You can find more details in our dev doc regarding [AI assisted development](https://devdocs.prestashop-project.org/9/development/ai-assisted-development/).
 
 
 Reporting Issues

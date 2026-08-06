@@ -14,9 +14,12 @@ use Hook;
 use Order;
 use OrderDetail;
 use OrderInvoice;
+use PrestaShop\PrestaShop\Adapter\Configuration as AdapterConfiguration;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
+use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentProductQuantityUpdater;
+use PrestaShop\PrestaShop\Adapter\Shipment\ShipmentShippingCostUpdater;
 use PrestaShop\PrestaShop\Core\CommandBus\Attributes\AsCommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
@@ -25,6 +28,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use Product;
 use StockAvailable;
 use Validate;
@@ -35,36 +40,15 @@ use Validate;
 #[AsCommandHandler]
 final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler implements UpdateProductInOrderHandlerInterface
 {
-    /**
-     * @var ContextStateManager
-     */
-    private $contextStateManager;
-
-    /**
-     * @var OrderProductQuantityUpdater
-     */
-    private $orderProductQuantityUpdater;
-
-    /**
-     * @var OrderDetailUpdater
-     */
-    private $orderDetailUpdater;
-
-    /**
-     * UpdateProductInOrderHandler constructor.
-     *
-     * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
-     * @param OrderDetailUpdater $orderDetailUpdater
-     * @param ContextStateManager $contextStateManager
-     */
     public function __construct(
-        OrderProductQuantityUpdater $orderProductQuantityUpdater,
-        OrderDetailUpdater $orderDetailUpdater,
-        ContextStateManager $contextStateManager
+        private OrderProductQuantityUpdater $orderProductQuantityUpdater,
+        private OrderDetailUpdater $orderDetailUpdater,
+        private ContextStateManager $contextStateManager,
+        private ShipmentProductQuantityUpdater $shipmentProductQuantityUpdater,
+        private FeatureFlagStateCheckerInterface $featureflagStateCheckerInterface,
+        private ShipmentShippingCostUpdater $shipmentShippingCostUpdater,
+        private AdapterConfiguration $configuration,
     ) {
-        $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
-        $this->orderDetailUpdater = $orderDetailUpdater;
-        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -105,8 +89,23 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
                 (int) $orderDetail->id_customization
             );
 
-            // Update invoice, quantity and amounts
-            $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $command->getQuantity(), $orderInvoice);
+            if ($this->featureflagStateCheckerInterface->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT) && !empty($command->getShipmentsQuantities())) {
+                $totalProductQuantity = array_sum(array_column($command->getShipmentsQuantities(), 'quantity'));
+
+                // Update invoice, quantity and amounts
+                $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $totalProductQuantity, $orderInvoice);
+
+                $this->shipmentProductQuantityUpdater->updateShipmentQuantity($command->getOrderDetailId(), $command->getShipmentsQuantities());
+
+                if ($this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING')) {
+                    $this->shipmentShippingCostUpdater->recalculateForOrder((int) $order->id);
+                }
+            }
+
+            if (!$this->featureflagStateCheckerInterface->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_SHIPMENT)) {
+                // Update invoice, quantity and amounts
+                $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $command->getQuantity(), $orderInvoice);
+            }
 
             // Update order_detail_tax table without modifying prices
             $this->orderDetailUpdater->updateOrderDetailTaxTableOnly($order);

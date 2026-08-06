@@ -25,7 +25,7 @@ class DiscountBuilder
     {
         $cartRule = new CartRule();
         $validFrom = $command->getValidFrom() ?: new DateTimeImmutable();
-        $validTo = $command->getValidTo() ?: $validFrom->modify('+1 month');
+        $validTo = $command->getValidTo();
 
         $cartRule->name = $command->getLocalizedNames();
         $cartRule->description = $command->getDescription();
@@ -36,7 +36,9 @@ class DiscountBuilder
         $cartRule->active = $command->isActive();
         $cartRule->id_customer = $command->getCustomerId()?->getValue();
         $cartRule->date_from = $validFrom->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
-        $cartRule->date_to = $validTo->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+        $cartRule->date_to = $validTo !== null ? $validTo->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) : null;
+        // We are initializing the discount so the remaining quantity and the total quantity are the same thing
+        $cartRule->total_quantity = $command->getTotalQuantity();
         $cartRule->quantity = $command->getTotalQuantity();
         $cartRule->quantity_per_user = $command->getQuantityPerUser();
         $cartRule->reduction_amount = 0;

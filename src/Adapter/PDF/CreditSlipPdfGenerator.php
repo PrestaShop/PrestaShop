@@ -14,6 +14,7 @@ use PDF;
 use PrestaShop\PrestaShop\Core\Domain\CreditSlip\ValueObject\CreditSlipId;
 use PrestaShop\PrestaShop\Core\PDF\Exception\MissingDataException;
 use PrestaShop\PrestaShop\Core\PDF\Exception\PdfException;
+use PrestaShop\PrestaShop\Core\PDF\GeneratedPdf;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShopException;
 
@@ -53,21 +54,38 @@ final class CreditSlipPdfGenerator implements PDFGeneratorInterface
      */
     public function generatePDF(array $creditSlipIds): string
     {
+        try {
+            return $this->createPdf($creditSlipIds)->render(true);
+        } catch (PrestaShopException $e) {
+            throw new PdfException('Something went wrong when trying to generate pdf', 0, $e);
+        }
+    }
+
+    public function generatePDFForResponse(array $creditSlipIds): GeneratedPdf
+    {
+        try {
+            $pdf = $this->createPdf($creditSlipIds);
+
+            return new GeneratedPdf(
+                $pdf->render(false),
+                $pdf->getFilename()
+            );
+        } catch (PrestaShopException $e) {
+            throw new PdfException('Something went wrong when trying to generate pdf', 0, $e);
+        }
+    }
+
+    private function createPdf(array $creditSlipIds): PDF
+    {
         $ids = [];
         foreach ($creditSlipIds as $creditSlipId) {
             $ids[] = $creditSlipId->getValue();
         }
 
-        try {
-            $slipsList = $this->getCreditSlipsList($ids);
-            $slipsCollection = ObjectModel::hydrateCollection('OrderSlip', $slipsList);
+        $slipsList = $this->getCreditSlipsList($ids);
+        $slipsCollection = ObjectModel::hydrateCollection('OrderSlip', $slipsList);
 
-            $pdf = new PDF($slipsCollection, PDF::TEMPLATE_ORDER_SLIP, Context::getContext()->smarty);
-
-            return $pdf->render(true);
-        } catch (PrestaShopException $e) {
-            throw new PdfException('Something went wrong when trying to generate pdf', 0, $e);
-        }
+        return new PDF($slipsCollection, PDF::TEMPLATE_ORDER_SLIP, Context::getContext()->smarty);
     }
 
     /**

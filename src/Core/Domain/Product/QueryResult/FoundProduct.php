@@ -66,6 +66,8 @@ class FoundProduct
      */
     private $customizationFields;
 
+    private bool $isVirtual;
+
     /**
      * @param int $productId
      * @param string $name
@@ -78,6 +80,7 @@ class FoundProduct
      * @param bool $availableOutOfStock
      * @param ProductCombination[] $combinations
      * @param ProductCustomizationField[] $customizationFields
+     * @param bool $isVirtual
      */
     public function __construct(
         int $productId,
@@ -89,8 +92,9 @@ class FoundProduct
         int $stock,
         string $location,
         bool $availableOutOfStock,
+        bool $isVirtual,
         array $combinations = [],
-        array $customizationFields = []
+        array $customizationFields = [],
     ) {
         $this->productId = $productId;
         $this->name = $name;
@@ -103,6 +107,7 @@ class FoundProduct
         $this->availableOutOfStock = $availableOutOfStock;
         $this->combinations = $combinations;
         $this->customizationFields = $customizationFields;
+        $this->isVirtual = $isVirtual;
     }
 
     /**
@@ -191,5 +196,10 @@ class FoundProduct
     public function isAvailableOutOfStock(): bool
     {
         return $this->availableOutOfStock;
+    }
+
+    public function isVirtual(): bool
+    {
+        return $this->isVirtual;
     }
 }

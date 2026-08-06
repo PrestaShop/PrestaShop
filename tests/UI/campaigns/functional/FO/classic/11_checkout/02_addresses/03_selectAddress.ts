@@ -109,12 +109,12 @@ describe('FO - Checkout - Addresses: Select address', async () => {
       it(`should search for the country '${country.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'enableCountry_filterByNameToEnable', baseContext);
 
-        await boCountriesPage.filterTable(page, 'input', 'b!name', country.name);
+        await boCountriesPage.filterTable(page, 'input', 'name', country.name);
 
         const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
         expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-        const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+        const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'name');
         expect(textColumn).to.equal(country.name);
       });
 
@@ -298,12 +298,12 @@ describe('FO - Checkout - Addresses: Select address', async () => {
       it(`should search for the country '${country.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'disableCountry_filterByNameToEnable', baseContext);
 
-        await boCountriesPage.filterTable(page, 'input', 'b!name', country.name);
+        await boCountriesPage.filterTable(page, 'input', 'name', country.name);
 
         const numberOfCountriesAfterFilter = await boCountriesPage.getNumberOfElementInGrid(page);
         expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-        const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'b!name');
+        const textColumn = await boCountriesPage.getTextColumnFromTable(page, 1, 'name');
         expect(textColumn).to.equal(country.name);
       });
 

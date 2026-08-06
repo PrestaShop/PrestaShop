@@ -10,12 +10,12 @@
       <trans-unit id="93332134fd11cffbe680dd8afaa521fc">
         <source>-- day --</source>
         <target>-- day --</target>
-        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 117]</note>
+        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 128]</note>
       </trans-unit>
       <trans-unit id="9180b4d5ab8103f244c2d4fd661934e2">
         <source>-- month --</source>
         <target>-- month --</target>
-        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 118]</note>
+        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 129]</note>
       </trans-unit>
       <trans-unit id="1625e29c02062efe5dbc42c3efeeebc4">
         <source>-- please choose --</source>
@@ -25,42 +25,42 @@
       <trans-unit id="ae1cc541ba45ce670ea7e0e3a30e3205">
         <source>-- year --</source>
         <target>-- year --</target>
-        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 119]</note>
+        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 130]</note>
       </trans-unit>
       <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
         <source>Address</source>
         <target>Address</target>
-        <note>File: classes/form/CustomerAddressFormatter.php [Line: 196]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 193]</note>
       </trans-unit>
       <trans-unit id="86376e3b5c80d090dbc625b4d241431b">
         <source>Address Complement</source>
         <target>Address Complement</target>
-        <note>File: classes/form/CustomerAddressFormatter.php [Line: 198]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 195]</note>
       </trans-unit>
       <trans-unit id="effdb9ce6c5d44df31b89d7069c8e0fb">
         <source>Alias</source>
         <target>Alias</target>
-        <note>File: classes/form/CustomerAddressFormatter.php [Line: 190]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 187]</note>
       </trans-unit>
       <trans-unit id="e9cb217697088a98b1937d111d936281">
         <source>Attachment</source>
         <target>Attachment</target>
-        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 67]</note>
+        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 72]</note>
       </trans-unit>
       <trans-unit id="ccd41dac2cc2284362975a05bd9ce363">
         <source>Birthdate</source>
         <target>Birthdate</target>
-        <note>File: classes/form/CustomerFormatter.php [Line: 189]</note>
+        <note>File: classes/form/CustomerFormatter.php [Line: 192]</note>
       </trans-unit>
       <trans-unit id="57d056ed0984166336b7879c2af3657f">
         <source>City</source>
         <target>City</target>
-        <note>File: classes/form/CustomerAddressFormatter.php [Line: 202]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 199]</note>
       </trans-unit>
       <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
         <source>Company</source>
         <target>Company</target>
-        <note>File: classes/form/CustomerFormatter.php [Line: 127]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 209]</note>
       </trans-unit>
       <trans-unit id="f4d1ea475eaa85102e2b4e6d95da84bd">
         <source>Confirmation</source>
@@ -70,7 +70,7 @@
       <trans-unit id="59716c97497eb9694541f7c3d37b1a4d">
         <source>Country</source>
         <target>Country</target>
-        <note>File: classes/form/CustomerAddressFormatter.php [Line: 204]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 201]</note>
       </trans-unit>
       <trans-unit id="ce8ae9da5b7cd6c3df2929543a9af92d">
         <source>Email</source>
@@ -90,17 +90,17 @@
       <trans-unit id="20db0bfeecd8fe60533206a2b5e9891a">
         <source>First name</source>
         <target>First name</target>
-        <note>File: classes/form/CustomerFormatter.php [Line: 96]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 189]</note>
       </trans-unit>
       <trans-unit id="b60bb13a87fe3ae5463aeb0980a5a8a1">
         <source>Identification number</source>
         <target>Identification number</target>
-        <note>File: classes/form/CustomerFormatter.php [Line: 136]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 213]</note>
       </trans-unit>
       <trans-unit id="8d3f5eff9c40ee315d452392bed5309b">
         <source>Last name</source>
         <target>Last name</target>
-        <note>File: classes/form/CustomerFormatter.php [Line: 111]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 191]</note>
       </trans-unit>
       <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4">
         <source>Message</source>
@@ -110,7 +110,7 @@
       <trans-unit id="41c2fff4867cc204120f001e7af20f7a">
         <source>Mobile phone</source>
         <target>Mobile phone</target>
-        <note>File: classes/form/CustomerAddressFormatter.php [Line: 210]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 207]</note>
       </trans-unit>
       <trans-unit id="3544848f820b9d94a3f3871a382cf138">
         <source>New password</source>
@@ -120,7 +120,7 @@
       <trans-unit id="ebb061953c0454b2c8ee7b0ac615ebcd">
         <source>Optional</source>
         <target>Optional</target>
-        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 215]</note>
+        <note>File: themes/hummingbird/templates/_partials/form-fields.tpl [Line: 232]</note>
       </trans-unit>
       <trans-unit id="1e860e56970a81a1ba3e1fcb7fccc846">
         <source>Order Reference</source>
@@ -135,12 +135,12 @@
       <trans-unit id="5d4710f9a8250b13164a82c94d5b00d1">
         <source>Order reference</source>
         <target>Order reference</target>
-        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 52]</note>
+        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 57]</note>
       </trans-unit>
       <trans-unit id="6311ae17c1ee52b36e68aaf4ad066387">
         <source>Other</source>
         <target>Other</target>
-        <note>File: classes/form/CustomerAddressFormatter.php [Line: 218]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 215]</note>
       </trans-unit>
       <trans-unit id="dc647eb65e6711e155375218212b3964">
         <source>Password</source>
@@ -150,7 +150,7 @@
       <trans-unit id="bcc254b55c4a1babdf1dcb82c207506b">
         <source>Phone</source>
         <target>Phone</target>
-        <note>File: classes/form/CustomerAddressFormatter.php [Line: 208]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 205]</note>
       </trans-unit>
       <trans-unit id="4293bbcd95a38b4da545b4a245610dbb">
         <source>Please choose</source>
@@ -185,17 +185,17 @@
       <trans-unit id="46a2a41cc6e552044816a2d04634545d">
         <source>State</source>
         <target>State</target>
-        <note>File: classes/form/CustomerAddressFormatter.php [Line: 206]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 203]</note>
       </trans-unit>
       <trans-unit id="c7892ebbb139886662c6f2fc8c450710">
         <source>Subject</source>
         <target>Subject</target>
-        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 24]</note>
+        <note>File: themes/hummingbird/modules/contactform/views/templates/widget/contactform.tpl [Line: 28]</note>
       </trans-unit>
       <trans-unit id="7cb32e708d6b961d476baced73d362bb">
         <source>VAT number</source>
         <target>VAT number</target>
-        <note>File: classes/form/CustomerAddressFormatter.php [Line: 214]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 211]</note>
       </trans-unit>
       <trans-unit id="198584454b0ce1101ff5b50323325aa8">
         <source>Your email address</source>
@@ -205,7 +205,7 @@
       <trans-unit id="e4eb5dadb6ee84c5c55a8edf53f6e554">
         <source>Zip/Postal Code</source>
         <target>Zip/Postal Code</target>
-        <note>File: classes/form/CustomerAddressFormatter.php [Line: 200]</note>
+        <note>File: modules/ps_onepagecheckout/src/Form/AddressFieldsFormatTrait.php [Line: 197]</note>
       </trans-unit>
     </body>
   </file>

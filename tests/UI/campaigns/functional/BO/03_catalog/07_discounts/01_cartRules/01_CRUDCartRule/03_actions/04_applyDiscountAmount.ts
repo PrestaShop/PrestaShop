@@ -152,7 +152,7 @@ describe('BO - Cart rules - Actions : Apply a discount Amount', async () => {
       expect(subTotalShipping).to.eq('Free');
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
-      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].price - discount).toFixed(2));
+      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].priceTI - discount).toFixed(2));
 
       const cartRuleName = await foHummingbirdCartPage.getCartRuleName(page);
       expect(cartRuleName).to.contains(cartRuleData.name);
@@ -197,7 +197,7 @@ describe('BO - Cart rules - Actions : Apply a discount Amount', async () => {
       expect(subTotalShipping).to.eq('Free');
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
-      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].price - discount).toFixed(2));
+      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].priceTI - discount).toFixed(2));
 
       const cartRuleName = await foHummingbirdCartPage.getCartRuleName(page);
       expect(cartRuleName).to.contains(cartRuleData.name);
@@ -234,7 +234,7 @@ describe('BO - Cart rules - Actions : Apply a discount Amount', async () => {
 
       let discount: number = cartRuleData.getDiscountAmount()
         + utilsCore.percentage(cartRuleData.getDiscountAmount(), dataProducts.demo_6.tax);
-      discount = discount < dataProducts.demo_6.combinations[0].price ? discount : dataProducts.demo_6.combinations[0].price;
+      discount = discount < dataProducts.demo_6.combinations[0].priceTI ? discount : dataProducts.demo_6.combinations[0].priceTI;
 
       const subTotalDiscount = await foHummingbirdCartPage.getSubtotalDiscountValue(page);
       expect(subTotalDiscount.toFixed(2)).to.eq(`-${discount.toFixed(2)}`);
@@ -243,7 +243,7 @@ describe('BO - Cart rules - Actions : Apply a discount Amount', async () => {
       expect(subTotalShipping).to.eq('Free');
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
-      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].price - discount).toFixed(2));
+      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].priceTI - discount).toFixed(2));
 
       const cartRuleName = await foHummingbirdCartPage.getCartRuleName(page);
       expect(cartRuleName).to.contains(cartRuleData.name);
@@ -311,7 +311,7 @@ describe('BO - Cart rules - Actions : Apply a discount Amount', async () => {
       expect(subTotalShipping).to.eq('Free');
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
-      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].price).toFixed(2));
+      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].priceTI).toFixed(2));
 
       const isCartRuleNameVisible = await foHummingbirdCartPage.isCartRuleNameVisible(page);
       expect(isCartRuleNameVisible).to.equals(true);

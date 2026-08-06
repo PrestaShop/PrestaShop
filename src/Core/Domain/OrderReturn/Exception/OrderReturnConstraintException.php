@@ -47,4 +47,14 @@ class OrderReturnConstraintException extends OrderReturnException
      * When date updated is not valid
      */
     public const INVALID_DATE_UPD = 70;
+
+    /**
+     * When order detail id is not valid
+     */
+    public const INVALID_ORDER_DETAIL_ID = 80;
+
+    /**
+     * When customization id is not valid
+     */
+    public const INVALID_CUSTOMIZATION_ID = 90;
 }

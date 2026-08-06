@@ -2356,7 +2356,7 @@ class AdminImportControllerCore extends AdminController
                     $obj->group_type = pSQL($type);
                     $obj->name[$default_language] = $group;
                     $obj->public_name[$default_language] = $group;
-                    $obj->position = (!$position) ? AttributeGroup::getHigherPosition() + 1 : $position;
+                    $obj->position = (!$position) ? AttributeGroup::getHighestPosition() + 1 : $position;
 
                     if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true
                         && ($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
@@ -2410,7 +2410,7 @@ class AdminImportControllerCore extends AdminController
                         // sets the proper id (corresponding to the right key)
                         $obj->id_attribute_group = $groups_attributes[$key]['id'];
                         $obj->name[$default_language] = str_replace('\n', '', str_replace('\r', '', $attribute));
-                        $obj->position = (!$position && isset($groups[$group])) ? ProductAttribute::getHigherPosition($groups[$group]) + 1 : $position;
+                        $obj->position = (!$position && isset($groups[$group])) ? ProductAttribute::getHighestPosition($groups[$group]) + 1 : $position;
 
                         if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true
                             && ($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {

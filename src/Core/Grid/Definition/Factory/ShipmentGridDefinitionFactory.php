@@ -9,7 +9,11 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Shipment\AdditionalShipmentRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Shipment\DeliverySlipShipmentRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Shipment\EditShipmentRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Shipment\FulfillShipmentRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Shipment\MergeShipmentRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Shipment\SplitShipmentRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
@@ -23,7 +27,7 @@ final class ShipmentGridDefinitionFactory extends AbstractFilterableGridDefiniti
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        private LanguageContext $languageContext
+        private LanguageContext $languageContext,
     ) {
         parent::__construct($hookDispatcher);
     }
@@ -126,24 +130,61 @@ final class ShipmentGridDefinitionFactory extends AbstractFilterableGridDefiniti
         return $columns;
     }
 
-    /**
-     * @return RowActionCollectionInterface
-     */
-    private function getRowActions()
+    private function getRowActions(): RowActionCollectionInterface
     {
         $rowActions = new RowActionCollection();
         $rowActions
             ->add(
-                (new AdditionalShipmentRowAction('More'))
-                    ->setName($this->trans('More', [], 'Admin.Actions'))
-                    ->setIcon('more_vert')
+                (new EditShipmentRowAction('Edit'))
+                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                    ->setIcon('edit')
+                    ->setOptions([
+                        'tracking_number' => 'tracking_number',
+                        'carrier' => 'carrier',
+                        'shipment_id_field' => 'shipment_number',
+                        'order_id_field' => 'order_id',
+                    ])
+            )
+            ->add(
+                (new DeliverySlipShipmentRowAction('print_delivery_slip'))
+                    ->setName($this->trans('Download delivery slip', [], 'Admin.Orderscustomers.Feature'))
+                    ->setIcon('local_shipping')
+                    ->setOptions([
+                        'route' => 'admin_orders_generate_shipment_delivery_slip_pdf',
+                        'route_param_name' => 'orderId',
+                        'route_param_field' => 'order_id',
+                        'extra_route_params' => [
+                            'shipmentId' => 'shipment_number',
+                        ],
+                    ])
+            )
+            ->add(
+                (new FulfillShipmentRowAction('fulfill'))
+                    ->setName($this->trans('Fulfill', [], 'Admin.Actions'))
+                    ->setIcon('package_2')
+                    ->setOptions([
+                        'shipment_id_field' => 'shipment_number',
+                        'order_id_field' => 'order_id',
+                    ])
+            )
+            ->add(
+                (new SplitShipmentRowAction('split'))
+                    ->setName($this->trans('Split', [], 'Admin.Actions'))
+                    ->setIcon('call_split')
                     ->setOptions([
                         'shipment_id_field' => 'shipment_number',
                         'order_id_field' => 'order_id',
                         'items' => 'items',
+                    ])
+            )
+            ->add(
+                (new MergeShipmentRowAction('merge'))
+                    ->setName($this->trans('Merge', [], 'Admin.Actions'))
+                    ->setIcon('call_merge')
+                    ->setOptions([
+                        'shipment_id_field' => 'shipment_number',
+                        'order_id_field' => 'order_id',
                         'total_shipments' => 'total_shipments',
-                        'tracking_number' => 'tracking_number',
-                        'carrier' => 'carrier',
                     ])
             );
 

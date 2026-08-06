@@ -49,6 +49,7 @@ jobs:
 
   # Define which PHP versions need to be used
   workflow_matrix_generator:
+    name: PHP matrix
     uses: ./.github/workflows/workflow-matrix-generator.yml
     with:
       matrix_type: PHP

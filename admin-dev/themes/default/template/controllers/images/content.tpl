@@ -54,7 +54,7 @@
 					<select name="type" onchange="changeFormat(this)">
 						<option value="all">{l s='All' d='Admin.Global'}</option>
 						{foreach $types AS $k => $type}
-							<option value="{$k}">{$type}</option>
+							<option value="{$k|escape:'html':'UTF-8'}">{$type|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				</div>
@@ -67,7 +67,7 @@
 					<select name="format_{$k}">
 						<option value="all">{l s='All' d='Admin.Global'}</option>
 						{foreach $formats[$k] AS $format}
-							<option value="{$format['id_image_type']}">{$format['name']}</option>
+							<option value="{$format['id_image_type']|escape:'html':'UTF-8'}">{$format['name']|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				</div>

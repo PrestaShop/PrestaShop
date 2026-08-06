@@ -2,6 +2,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  *}
+
 <table class="product" width="100%" cellpadding="4" cellspacing="0">
 
   {assign var='widthColProduct' value=$layout.product.width}

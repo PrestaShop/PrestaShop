@@ -160,7 +160,7 @@ describe('BO - Catalog price Rules : CRUD - Reduction type', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice', baseContext);
 
       // Price - (20€ + 20% on 20€)
-      const calculatedPrice = dataProducts.demo_6.combinations[0].price
+      const calculatedPrice = dataProducts.demo_6.combinations[0].priceTI
         - (catalogPriceRuleData0.reduction
           + utilsCore.percentage(catalogPriceRuleData0.reduction, parseInt(dataTaxes.DefaultFrTax.rate, 10))
         );
@@ -205,7 +205,7 @@ describe('BO - Catalog price Rules : CRUD - Reduction type', async () => {
       await foHummingbirdProductPage.reloadPage(page);
 
       // Price - 20€
-      const calculatedPrice = dataProducts.demo_6.combinations[0].price - catalogPriceRuleData0.reduction;
+      const calculatedPrice = dataProducts.demo_6.combinations[0].priceTI - catalogPriceRuleData0.reduction;
 
       const productPrice = await foHummingbirdProductPage.getProductPrice(page);
       expect(productPrice).to.eq(`€${calculatedPrice.toFixed(2)}`);
@@ -247,7 +247,7 @@ describe('BO - Catalog price Rules : CRUD - Reduction type', async () => {
       await foHummingbirdProductPage.reloadPage(page);
 
       // (Price Without Tax - 20% Catalog Price) + 20% Tax
-      const calculatedPriceWOTax = dataProducts.demo_6.combinations[0].price / (
+      const calculatedPriceWOTax = dataProducts.demo_6.combinations[0].priceTI / (
         (100 + parseInt(dataTaxes.DefaultFrTax.rate, 10)) / 100
       );
       const calculatedPriceWOTaxAndReduction = calculatedPriceWOTax
@@ -298,10 +298,10 @@ describe('BO - Catalog price Rules : CRUD - Reduction type', async () => {
 
       // Price - (20% Price)
       const calculatedPricePercent = utilsCore.percentage(
-        dataProducts.demo_6.combinations[0].price,
+        dataProducts.demo_6.combinations[0].priceTI,
         catalogPriceRuleData3.reduction,
       );
-      const calculatedPrice = dataProducts.demo_6.combinations[0].price - calculatedPricePercent;
+      const calculatedPrice = dataProducts.demo_6.combinations[0].priceTI - calculatedPricePercent;
 
       const productPrice = await foHummingbirdProductPage.getProductPrice(page);
       expect(productPrice).to.eq(`€${calculatedPrice.toFixed(2)}`);

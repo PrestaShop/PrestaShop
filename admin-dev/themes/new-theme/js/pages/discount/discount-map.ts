@@ -5,14 +5,13 @@
 const discountContainer = '.discount-container';
 
 export default {
-  currencySelect: '#discount_value_reduction_currency',
-  currencySelectContainer: `${discountContainer} .price-reduction-currency-selector`,
-  discountContainer,
-  includeTaxInput: '#discount_value_reduction_include_tax',
   reductionTypeSelect: '#discount_value_reduction_type',
-  reductionValueSymbol: `${discountContainer} .price-reduction-value .input-group .input-group-append .input-group-text,
-   ${discountContainer} .price-reduction-value .input-group .input-group-prepend .input-group-text`,
-  freeGiftProductSearchContainer: '#discount_free_gift',
+  reductionCurrencySelect: '#discount_value_reduction_value_currency',
+  reductionCurrencyAppend: `${discountContainer} .currency-money .input-group-append`,
+  reductionIncludeTaxRow: '#discount_value_reduction_include_tax',
+  reductionPercentSpan: '.currency-money-percent',
+  discountContainer,
+  freeGiftProductSearchContainer: '#discount_free_gift_product',
   discountTypeRadios: '#discount_type_selector_discount_type_selector input[type="radio"]',
   discountTypeSubmit: '#discountTypeSubmit',
   specificProductsSearchContainer: '#discount_conditions_product_specific_products',
@@ -28,4 +27,6 @@ export default {
   productSegmentFeatures: '#discount_conditions_product_product_segment_features',
   quantityPerCustomerInput: '#discount_usability_quantity_per_customer',
   customerEligibilityInput: '#discount_customer_eligibility_eligibility',
+  periodNeverExpiresCheckbox: 'input[name*="[period_never_expires]"]',
+  periodExpiryDateFormGroup: '.date-range.row .col:has(.date-range-end-date)',
 };

@@ -19,6 +19,7 @@ use PrestaShop\PrestaShop\Core\Domain\Carrier\Command\EditCarrierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetAvailableCarriers;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarrierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Query\GetCarriersForProduct;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\QueryResult\EditableCarrier;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierId;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\OutOfRangeBehavior;
@@ -471,6 +472,20 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
 
         Assert::assertEqualsCanonicalizing($expectedAvailable, $actualAvailable, 'Available carriers do not match expected.');
         Assert::assertEqualsCanonicalizing($expectedFiltered, $actualFiltered, 'Filtered carriers do not match expected.');
+    }
+
+    /**
+     * @Then the product :productReference should have the following carriers assigned:
+     */
+    public function assertCarriersForProduct(string $productReference, TableNode $table): void
+    {
+        $productId = $this->referenceToId($productReference);
+        $carriers = $this->getQueryBus()->handle(new GetCarriersForProduct($productId));
+
+        $expectedCarrierNames = array_column($table->getColumnsHash(), 'name');
+        $actualCarrierNames = array_map(fn ($c) => $c->getName(), $carriers);
+
+        Assert::assertEqualsCanonicalizing($expectedCarrierNames, $actualCarrierNames);
     }
 
     private function createCarrierUsingCommand(

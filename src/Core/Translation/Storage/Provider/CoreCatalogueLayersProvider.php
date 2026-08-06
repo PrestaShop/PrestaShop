@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider;
 
 use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ExtraPropertyTranslationExtractor;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Finder\DefaultCatalogueFinder;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Finder\FileTranslatedCatalogueFinder;
@@ -67,21 +68,29 @@ class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
     private $translationDomains;
 
     /**
+     * @var ExtraPropertyTranslationExtractor
+     */
+    private $extraPropertyTranslationExtractor;
+
+    /**
      * @param DatabaseTranslationLoader $databaseTranslationLoader
      * @param string $resourceDirectory
      * @param array<int, string> $filenameFilters
      * @param array<int, string> $translationDomains
+     * @param ExtraPropertyTranslationExtractor $extraPropertyTranslationExtractor
      */
     public function __construct(
         DatabaseTranslationLoader $databaseTranslationLoader,
         string $resourceDirectory,
         array $filenameFilters,
-        array $translationDomains
+        array $translationDomains,
+        ExtraPropertyTranslationExtractor $extraPropertyTranslationExtractor
     ) {
         $this->databaseTranslationLoader = $databaseTranslationLoader;
         $this->resourceDirectory = $resourceDirectory;
         $this->filenameFilters = $filenameFilters;
         $this->translationDomains = $translationDomains;
+        $this->extraPropertyTranslationExtractor = $extraPropertyTranslationExtractor;
     }
 
     /**
@@ -91,7 +100,27 @@ class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
      */
     public function getDefaultCatalogue(string $locale): MessageCatalogue
     {
-        return $this->getDefaultCatalogueFinder()->getCatalogue($locale);
+        // A core domain may exist only through the extra property registry (no XLF file is shipped
+        // for it), so a missing default file is not an error here: fall back to an empty catalogue
+        // and let the registry wordings below populate it.
+        try {
+            $defaultCatalogue = $this->getDefaultCatalogueFinder()->getCatalogue($locale);
+        } catch (TranslationFilesNotFoundException) {
+            $defaultCatalogue = new MessageCatalogue($locale);
+        }
+
+        // add the label/description wordings declared in the extra property registry (by the core
+        // or by modules) whose normalized domain belongs to this catalogue type, so they become
+        // translatable too
+        $extraPropertyCatalogue = (new CatalogueDomainConverter())->normalizeAndFilter(
+            $this->extraPropertyTranslationExtractor->extract($locale),
+            $this->filenameFilters
+        );
+        foreach ($extraPropertyCatalogue->getDomains() as $domain) {
+            $defaultCatalogue->add($extraPropertyCatalogue->all($domain), $domain);
+        }
+
+        return $defaultCatalogue;
     }
 
     /**
@@ -99,7 +128,13 @@ class CoreCatalogueLayersProvider implements CatalogueLayersProviderInterface
      */
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogue
     {
-        return $this->getFileTranslatedCatalogueFinder()->getCatalogue($locale);
+        // A registry-only core domain has no XLF translation file; that is not an error, it simply
+        // has no file-provided translations yet (its wordings come from the registry and the DB).
+        try {
+            return $this->getFileTranslatedCatalogueFinder()->getCatalogue($locale);
+        } catch (TranslationFilesNotFoundException) {
+            return new MessageCatalogue($locale);
+        }
     }
 
     /**

@@ -77,7 +77,14 @@ class ThemeManager implements AddonManagerInterface
     public function install($source)
     {
         if (filter_var($source, FILTER_VALIDATE_URL)) {
-            $source = Tools::createFileFromUrl($source);
+            $downloaded = Tools::createFileFromUrl($source);
+            if (false === $downloaded) {
+                throw new ThemeConstraintException(
+                    sprintf('Cannot download theme from URL "%s".', $source),
+                    ThemeConstraintException::CANNOT_DOWNLOAD_FROM_URL
+                );
+            }
+            $source = $downloaded;
         }
         if (preg_match('/\.zip$/', $source)) {
             $this->installFromZip($source);

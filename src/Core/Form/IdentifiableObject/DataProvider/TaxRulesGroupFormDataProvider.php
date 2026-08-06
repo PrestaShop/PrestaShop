@@ -50,6 +50,8 @@ class TaxRulesGroupFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData(): array
     {
-        return [];
+        return [
+            'is_enabled' => false,
+        ];
     }
 }

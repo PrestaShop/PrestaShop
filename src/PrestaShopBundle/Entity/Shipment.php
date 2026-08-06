@@ -81,6 +81,11 @@ class Shipment
     private ?string $trackingNumber;
 
     /**
+     * @ORM\Column(name="deleted", type="boolean", options={"default": false})
+     */
+    private bool $deleted = false;
+
+    /**
      * @ORM\Column(name="date_add", type="datetime", nullable=false)
      */
     private DateTime $createdAt;
@@ -165,6 +170,18 @@ class Shipment
     public function getTrackingNumber(): ?string
     {
         return $this->trackingNumber;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted(bool $deleted): self
+    {
+        $this->deleted = $deleted;
+
+        return $this;
     }
 
     public function getProducts(): Collection
@@ -276,6 +293,9 @@ class Shipment
 
         if (!isset($this->createdAt)) {
             $this->createdAt = new DateTime();
+        }
+        if (!isset($this->packedAt)) {
+            $this->packedAt = null;
         }
     }
 }

@@ -18,6 +18,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ModulePermission;
+use PrestaShop\PrestaShop\Core\Util\PHPCli;
 use Symfony\Component\Finder\Finder;
 use Throwable;
 
@@ -363,10 +364,18 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * Filter modules if the current employee has the right to see it
+     * Filter modules if the current employee has the right to see it.
+     *
+     * Skipped when running in CLI: there is no logged-in employee in that
+     * context, so the per-employee permission check has no meaning and would
+     * otherwise hide every installed module from console commands.
      */
     protected function filterModulesByPermissions(ModuleCollection $modules): ModuleCollection
     {
+        if (PHPCli::isPHPCli()) {
+            return $modules;
+        }
+
         foreach ($modules as $key => $module) {
             $moduleName = $module->getAttributes()->get('name');
             if ($this->moduleDataProvider->isInstalled($moduleName)

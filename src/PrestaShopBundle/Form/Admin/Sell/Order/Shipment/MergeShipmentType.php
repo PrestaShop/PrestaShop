@@ -23,7 +23,9 @@ class MergeShipmentType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        foreach ($options['products'] as $product) {
+        $datas = $builder->getData();
+
+        foreach ($datas['products'] as $product) {
             $builder->add('product_' . $product['order_detail_id'], CheckboxType::class, [
                 'label' => $product['order_detail_id'],
                 'required' => false,
@@ -43,7 +45,7 @@ class MergeShipmentType extends AbstractType
 
         $builder->add('merge_to_shipment', ChoiceType::class, [
             'label' => $this->translator->trans('Select shipment to merge to', [], 'Admin.Orderscustomers.Feature'),
-            'choices' => $options['shipments'],
+            'choices' => $datas['shipments'],
             'choice_label' => function ($shipment) {
                 return $this->translator->trans(
                     'Shipment %shipment_id% - carrier %carrier_name%',

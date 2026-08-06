@@ -12,7 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -50,24 +51,55 @@ class AddProductRowType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $invoices = $options['order_id'] ?
+        $data = $builder->getData();
+
+        $invoices = $data['order_id'] ?
             $this->orderInvoiceByIdChoiceProvider->getChoices([
-                'id_order' => $options['order_id'],
+                'id_order' => $data['order_id'],
                 'id_lang' => $this->contextLangId,
                 'display_total' => false,
             ]) : [];
 
+        if ($data['is_multishipment_is_enabled'] === true) {
+            $builder
+                ->add('addShipment', ChoiceType::class, [
+                    'label' => $this->trans('Select a shipment', 'Admin.Orderscustomers.Feature'),
+                    'disabled' => true,
+                    'placeholder' => $this->trans('Choose a shipment', 'Admin.Orderscustomers.Feature'),
+                    'attr' => [
+                        'class' => 'custom-select',
+                    ],
+                ])
+                ->add('carrier_for_shipment', ChoiceType::class, [
+                    'label' => $this->trans('Select a carrier for the new shipment', 'Admin.Orderscustomers.Feature'),
+                    'disabled' => true,
+                    'placeholder' => $this->trans('Choose a carrier', 'Admin.Orderscustomers.Feature'),
+                    'attr' => [
+                        'class' => 'custom-select',
+                    ],
+                ])
+                ->add('confirm_new_invoice', CheckboxType::class, [
+                    'required' => false,
+                    'label' => $this->trans('I confirm the creation of a new invoice', 'Admin.Orderscustomers.Feature', []),
+                    'attr' => [
+                        'material_design' => true,
+                    ],
+                ]);
+        }
+
         $builder
-            ->add('product_id', HiddenType::class)
+            ->add('product_id', HiddenType::class, [
+                'mapped' => false,
+            ])
             ->add('tax_rate', HiddenType::class)
             ->add('search', TextType::class, [
-                'label' => $this->trans('Add a product', 'Admin.Orderscustomers.Feature'),
+                'label' => $this->trans('Search for a product', 'Admin.Orderscustomers.Feature'),
                 'attr' => [
                     'class' => 'col-sm-12',
                     'autocomplete' => 'off',
                     'placeholder' => $this->trans('Search for a product', 'Admin.Orderscustomers.Feature'),
-                    'data-currency' => $options['currency_id'],
-                    'data-order' => $options['order_id'],
+                    'data-currency' => $data['currency']->id,
+                    'data-order' => $data['order_id'],
                 ],
             ])
             ->add('addProductCombinations', ChoiceType::class, [
@@ -75,24 +107,17 @@ class AddProductRowType extends TranslatorAwareType
                     'class' => 'custom-select',
                 ],
             ])
-            ->add('price_tax_excluded', NumberType::class, [
-                'label' => false,
-                'unit' => sprintf('%s %s',
-                    $options['symbol'],
-                    $this->trans('tax excl.', 'Admin.Global')
-                ),
+            ->add('price_tax_excluded', MoneyType::class, [
+                'label' => $this->trans('tax excl.', 'Admin.Global'),
+                'currency' => $data['currency']->iso_code,
             ])
-            ->add('price_tax_included', NumberType::class, [
-                'label' => false,
-                'unit' => sprintf('%s %s',
-                    $options['symbol'],
-                    $this->trans('tax incl.', 'Admin.Global')
-                ),
+            ->add('price_tax_included', MoneyType::class, [
+                'label' => $this->trans('tax incl.', 'Admin.Global'),
+                'currency' => $data['currency']->iso_code,
             ])
-            ->add('quantity', NumberType::class, [
+            ->add('quantity', IntegerType::class, [
                 'label' => false,
                 'data' => 1,
-                'scale' => 0,
                 'attr' => [
                     'min' => 1,
                 ],
@@ -127,7 +152,7 @@ class AddProductRowType extends TranslatorAwareType
                 'disabled' => true,
                 'attr' => [
                     'class' => 'btn btn-sm btn-primary js-product-add-action-btn mt-2 mb-2',
-                    'data-order-id' => $options['order_id'],
+                    'data-order-id' => $data['order_id'],
                 ],
             ])
         ;
@@ -138,15 +163,10 @@ class AddProductRowType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver
-            ->setRequired(['symbol'])
-            ->setDefaults([
-                'order_id' => null,
-                'currency_id' => null,
-            ])
-            ->setAllowedTypes('order_id', ['int', 'null'])
-            ->setAllowedTypes('currency_id', ['int', 'null'])
-            ->setAllowedTypes('symbol', ['string'])
-        ;
+        $resolver->setDefaults([
+            'order_id' => null,
+            'currency' => [],
+            'is_multishipment_is_enabled' => false,
+        ]);
     }
 }

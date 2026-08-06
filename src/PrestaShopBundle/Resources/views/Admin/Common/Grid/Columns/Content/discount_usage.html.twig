@@ -1,0 +1,9 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+{% set quantity_used = record[column.options.quantity_used_field] %}
+{% set total_quantity = record[column.options.total_quantity_field] %}
+
+{{ quantity_used }} / {% if total_quantity is null %}&#8734;{% else %}{{ total_quantity }}{% endif %}

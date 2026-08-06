@@ -14,7 +14,10 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsFor
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ControllerPermission;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagStateCheckerInterface;
 use PrestaShop\PrestaShop\Core\Security\Permission;
+use PrestaShopBundle\Service\Form\ImprovedB2bTabsToggler;
 use Profile;
 use RuntimeException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -59,7 +62,8 @@ class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigur
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
         int $languageId,
-        array $nonConfigurableTabs
+        array $nonConfigurableTabs,
+        private readonly ?FeatureFlagStateCheckerInterface $featureFlagStateChecker = null,
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->languageId = $languageId;
@@ -142,6 +146,8 @@ class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigur
         $legacyTabs = Tab::getTabs($this->languageId);
         $tabs = [];
 
+        $isImprovedB2BEnabled = $this->featureFlagStateChecker?->isEnabled(FeatureFlagSettings::FEATURE_FLAG_IMPROVED_B2B) ?? false;
+
         foreach ($legacyTabs as $tab) {
             // Don't allow permissions for unnamed tabs (ie. AdminLogin)
             if (empty($tab['name'])) {
@@ -154,6 +160,10 @@ class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigur
             }
 
             if (in_array((int) $tab['id_tab'], $nonConfigurableTabs)) {
+                continue;
+            }
+
+            if (!$isImprovedB2BEnabled && in_array($tab['class_name'], ImprovedB2bTabsToggler::TAB_CLASS_NAMES, true)) {
                 continue;
             }
 

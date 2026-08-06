@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\NoConfigurationException;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationSuccessEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -53,7 +53,7 @@ class ShopContextSubscriber implements EventSubscriberInterface
         private readonly EmployeeContext $employeeContext,
         private readonly ShopConfigurationInterface $configuration,
         private readonly MultistoreFeature $multistoreFeature,
-        private readonly RouterInterface $router,
+        private readonly RequestMatcherInterface $router,
         private readonly Security $security,
         private readonly LegacyContext $legacyContext,
         private readonly TranslatorInterface $translator,
@@ -351,8 +351,12 @@ class ShopContextSubscriber implements EventSubscriberInterface
     private function getShopConstraintFromRouteAttribute(Request $request): ?ShopConstraint
     {
         try {
-            $routeInfo = $this->router->match($request->getPathInfo());
-            $controller = $routeInfo['_controller'];
+            $controller = $request->attributes->get('_controller');
+            if (empty($controller)) {
+                // If the attribute is not present yet we handle the matching ourselves and get the controller via routing info
+                $routeInfo = $this->router->matchRequest($request);
+                $controller = $routeInfo['_controller'];
+            }
             [$className, $methodName] = explode('::', $controller);
 
             $reflectionClass = new ReflectionClass($className);

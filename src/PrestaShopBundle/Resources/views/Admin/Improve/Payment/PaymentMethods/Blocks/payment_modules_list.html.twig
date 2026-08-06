@@ -36,13 +36,13 @@
       </div>
       <div class="col-sm-6 col-md-8 col-lg-9 pl-0">
         <p class="mb-0">
-          {{ module.attributes.displayName|raw }}
+          {{ module.attributes.displayName|raw_purified }}
           <span class="text-muted">
             {{ 'v%version% - by %author%'|trans({'%version%': module.attributes.version, '%author%': module.attributes.author}, 'Admin.Modules.Feature') }}
           </span>
         </p>
         <p class="text-muted">
-          {{ module.attributes.description|raw }}
+          {{ module.attributes.description|raw_purified }}
         </p>
       </div>
       {% if module.attributes.is_configurable %}

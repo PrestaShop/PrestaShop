@@ -15,10 +15,10 @@ jobs:
       matrix:
         BRANCH:
           - develop
-          - 9.0.x
+          - 9.1.x
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}
-      IGNORE_PRESTASHOP_PACKAGES: "prestashop/psgdpr"
+      IGNORE_PRESTASHOP_PACKAGES: "prestashop/psgdpr prestashop/ps_apiresources"
 
     steps:
       - name: Checkout
@@ -36,9 +36,6 @@ jobs:
 
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Disable Composer audit blocking (global for CI)
-        run: composer config --no-interaction audit.block-insecure false
 
       - name: Install dependencies
         run: composer install --no-interaction --no-progress --no-scripts

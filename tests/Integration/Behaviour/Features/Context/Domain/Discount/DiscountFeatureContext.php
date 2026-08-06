@@ -9,9 +9,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Discount;
 use Behat\Gherkin\Node\TableNode;
 use Cart;
 use CartRule;
-use DateTime;
 use DateTimeImmutable;
-use DateTimeInterface;
 use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
@@ -58,6 +56,14 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
         };
 
         $this->assertLastErrorIs(DiscountConstraintException::class, $errorCode);
+    }
+
+    /**
+     * @Then I should get an error that the gift product has a minimum quantity greater than 1
+     */
+    public function assertGiftProductMinimumQuantity(): void
+    {
+        $this->assertLastErrorIs(DiscountConstraintException::class, DiscountConstraintException::INVALID_GIFT_PRODUCT_MINIMUM_QUANTITY);
     }
 
     /**
@@ -202,11 +208,8 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['valid_from'])) {
             $validFrom = new DateTimeImmutable($data['valid_from']);
 
-            // Check if "never expires" is set
             if (isset($data['period_never_expires']) && PrimitiveUtils::castStringBooleanIntoBoolean($data['period_never_expires'])) {
-                // Set expiration date to 100 years in the future
-                $validTo = (new DateTime())->modify('+100 years')->setTime(23, 59, 59);
-                $validTo = DateTimeImmutable::createFromMutable($validTo);
+                $validTo = null;
             } elseif (!empty($data['valid_to'])) {
                 $validTo = new DateTimeImmutable($data['valid_to']);
             } else {
@@ -380,17 +383,14 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
             $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
         }
         if (isset($data['period_never_expires']) && PrimitiveUtils::castStringBooleanIntoBoolean($data['period_never_expires'])) {
-            // When "never expires" is set, use 100 years in the future
             if (isset($data['valid_from'])) {
                 $validFrom = new DateTimeImmutable($data['valid_from']);
             } else {
                 $validFrom = new DateTimeImmutable();
             }
-            $validTo = (new DateTime())->modify('+100 years')->setTime(23, 59, 59);
-            $validTo = DateTimeImmutable::createFromMutable($validTo);
 
             try {
-                $command->setValidityDateRange($validFrom, $validTo);
+                $command->setValidityDateRange($validFrom, null);
             } catch (DiscountConstraintException $e) {
                 $this->setLastException($e);
             }
@@ -612,9 +612,19 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($expectedData['total_quantity'])) {
             if ($expectedData['total_quantity'] === 'null') {
-                Assert::assertNull($discountForEditing->getTotalQuantity(), 'Unexpected total quantity, expected null');
+                Assert::assertNull($discountForEditing->getTotalQuantity(), 'Unexpected total_quantity, expected null');
             } else {
-                Assert::assertSame((int) $expectedData['total_quantity'], $discountForEditing->getTotalQuantity(), 'Unexpected quantity');
+                Assert::assertSame((int) $expectedData['total_quantity'], $discountForEditing->getTotalQuantity(), 'Unexpected total_quantity');
+            }
+        }
+        if (isset($expectedData['quantity_used_in_orders'])) {
+            Assert::assertSame((int) $expectedData['quantity_used_in_orders'], $discountForEditing->getQuantityUsedInOrders(), 'Unexpected quantity_used_in_orders');
+        }
+        if (isset($expectedData['remaining_quantity'])) {
+            if ($expectedData['remaining_quantity'] === 'null') {
+                Assert::assertNull($discountForEditing->getRemainingQuantity(), 'Unexpected remaining_quantity, expected null');
+            } else {
+                Assert::assertSame((int) $expectedData['remaining_quantity'], $discountForEditing->getRemainingQuantity(), 'Unexpected remaining_quantity');
             }
         }
         if (isset($expectedData['quantity_per_user'])) {
@@ -708,7 +718,7 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
             Assert::assertSame($this->referencesToIds($expectedData['countries']), $discountForEditing->getCountryIds(), 'Unexpected countries');
         }
         if (isset($expectedData['period_never_expires'])) {
-            $neverExpires = $this->isPeriodNeverExpires($discountForEditing->getValidTo());
+            $neverExpires = $discountForEditing->getValidTo() === null;
             Assert::assertSame(
                 PrimitiveUtils::castStringBooleanIntoBoolean($expectedData['period_never_expires']),
                 $neverExpires,
@@ -721,40 +731,15 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then discount :discountReference expiration date should be more than :years years in the future
+     * @Then discount :discountReference should have no expiration date
      */
-    public function assertExpirationDateIsFarInFuture(string $discountReference, int $years = 50): void
+    public function assertDiscountHasNoExpirationDate(string $discountReference): void
     {
         $discountForEditing = $this->getDiscountForEditing($discountReference);
-        $validTo = $discountForEditing->getValidTo();
-
-        Assert::assertNotNull($validTo, 'Expiration date should not be null');
-
-        $now = new DateTime();
-        $threshold = $now->modify('+' . $years . ' years');
-
-        Assert::assertGreaterThan(
-            $threshold,
-            $validTo,
-            sprintf('Expiration date should be more than %d years in the future', $years)
+        Assert::assertNull(
+            $discountForEditing->getValidTo(),
+            'Discount should have no expiration date (period never expires)'
         );
-    }
-
-    /**
-     * Check if the discount period is set to "never expires" (100 years in the future).
-     */
-    private function isPeriodNeverExpires(?DateTimeInterface $validTo): bool
-    {
-        if ($validTo === null) {
-            return false;
-        }
-
-        // Check if the expiration date is more than 50 years in the future
-        // (we use 50 years as a threshold to detect "never expires" dates set to 100 years)
-        $now = new DateTime();
-        $threshold = $now->modify('+50 years');
-
-        return $validTo > $threshold;
     }
 
     protected function getDiscountForEditing(string $discountReference): DiscountForEditing
@@ -765,6 +750,58 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
         );
 
         return $discountForEditing;
+    }
+
+    /**
+     * @Then discount :discountReference applies to all customers and is disabled
+     */
+    public function assertDiscountAppliesToAllCustomersAndIsDisabled(string $discountReference): void
+    {
+        $discount = $this->getDiscountForEditing($discountReference);
+        Assert::assertNull(
+            $discount->getCustomerId(),
+            sprintf('Discount "%s" should apply to all customers (no customer restriction)', $discountReference)
+        );
+        Assert::assertFalse(
+            $discount->isActive(),
+            sprintf('Discount "%s" should be disabled', $discountReference)
+        );
+    }
+
+    /**
+     * @Then discount :discountReference is enabled and still applies to customer :customerReference
+     */
+    public function assertDiscountIsEnabledAndStillAppliesToCustomer(string $discountReference, string $customerReference): void
+    {
+        $discount = $this->getDiscountForEditing($discountReference);
+        Assert::assertTrue(
+            $discount->isActive(),
+            sprintf('Discount "%s" should still be enabled', $discountReference)
+        );
+        $expectedCustomerId = $this->referenceToId($customerReference);
+        Assert::assertEquals(
+            $expectedCustomerId,
+            $discount->getCustomerId(),
+            sprintf('Discount "%s" should still apply to customer "%s"', $discountReference, $customerReference)
+        );
+    }
+
+    /**
+     * @Then discount :discountReference is enabled and applies only to group :groupReference
+     */
+    public function assertDiscountIsEnabledAndAppliesOnlyToGroup(string $discountReference, string $groupReference): void
+    {
+        $discount = $this->getDiscountForEditing($discountReference);
+        Assert::assertTrue(
+            $discount->isActive(),
+            sprintf('Discount "%s" should be enabled', $discountReference)
+        );
+        $expectedGroupId = $this->referenceToId($groupReference);
+        Assert::assertEquals(
+            [$expectedGroupId],
+            $discount->getCustomerGroupIds(),
+            sprintf('Discount "%s" should apply only to group "%s"', $discountReference, $groupReference)
+        );
     }
 
     /**
@@ -808,9 +845,41 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
      */
     public function bulkUpdateDiscountsStatus(bool $enable, string $discountReferences)
     {
-        $this->getCommandBus()->handle(
-            new BulkUpdateDiscountsStatusCommand($this->referencesToIds($discountReferences), $enable)
-        );
+        try {
+            $this->getCommandBus()->handle(
+                new BulkUpdateDiscountsStatusCommand($this->referencesToIds($discountReferences), $enable)
+            );
+        } catch (DiscountException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When /^I enable discount "(.+)"$/
+     */
+    public function enableDiscount(string $discountReference): void
+    {
+        try {
+            $command = new UpdateDiscountCommand($this->referenceToId($discountReference));
+            $command->setActive(true);
+            $this->getCommandBus()->handle($command);
+        } catch (DiscountException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When /^I disable discount "(.+)"$/
+     */
+    public function disableDiscount(string $discountReference): void
+    {
+        try {
+            $command = new UpdateDiscountCommand($this->referenceToId($discountReference));
+            $command->setActive(false);
+            $this->getCommandBus()->handle($command);
+        } catch (DiscountException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -881,7 +950,7 @@ class DiscountFeatureContext extends AbstractDomainFeatureContext
         if (!$this->getSharedStorage()->exists(self::DISCOUNT_TYPE_PREFIX . $discountType)) {
             /** @var DiscountTypeRepository $repository */
             $repository = $this->getContainer()->get(DiscountTypeRepository::class);
-            $activeTypes = $repository->getAllActiveTypes();
+            $activeTypes = $repository->getAllActiveTypes($this->getDefaultLangId());
 
             // Cache all existing discount types in shared storage for future references
             foreach ($activeTypes as $activeType) {

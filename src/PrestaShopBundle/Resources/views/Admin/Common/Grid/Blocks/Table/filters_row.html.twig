@@ -2,8 +2,9 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
-
-<tr class="column-filters{% if grid.attributes.is_empty_state %} d-none{% endif %}">
+{# By default headers are not show for empty state unles the view option empty_state_without_headers is set to false #}
+{% set emptyStateWithoutHeaders = grid.view_options.empty_state_without_headers is not defined or grid.view_options.empty_state_without_headers == true %}
+<tr class="column-filters{% if grid.attributes.is_empty_state and emptyStateWithoutHeaders %} d-none{% endif %}">
   {% for column in grid.columns %}
     <td
       data-type="{{ column.type }}"

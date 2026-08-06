@@ -45,7 +45,7 @@ Scenario
 Post-condition:
 - Reset SMTP parameters
  */
-describe('Mail alerts module - Enable/Disable new order', async () => {
+describe('Mail alerts module - Merchant notifications : Enable/Disable new order', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let allEmails: MailDevEmail[];

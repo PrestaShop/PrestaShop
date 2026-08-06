@@ -30,7 +30,6 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
   let page: Page;
   let numberOfTags: number = 0;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -107,30 +106,28 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
 
   // 2 - Filter tags
   describe('Filter tags table', async () => {
-    const tests = [
-      {args: {testIdentifier: 'filterById', filterBy: 'id_tag', filterValue: '5'}},
-      {args: {testIdentifier: 'filterByLanguage', filterBy: 'l!name', filterValue: dataLanguages.english.name}},
-      {args: {testIdentifier: 'filterByName', filterBy: 'a!name', filterValue: 'todelete10'}},
-      {args: {testIdentifier: 'filterByProducts', filterBy: 'products', filterValue: '0'}},
-    ];
+    [
+      {testIdentifier: 'filterById', filterBy: 'id_tag', filterValue: '5'},
+      {testIdentifier: 'filterByLanguage', filterBy: 'id_lang', filterValue: dataLanguages.english.name},
+      {testIdentifier: 'filterByName', filterBy: 'name', filterValue: 'todelete10'},
+      {testIdentifier: 'filterByProducts', filterBy: 'num_products', filterValue: '0'},
+    ].forEach((test) => {
+      it(`should filter by ${test.filterBy} '${test.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
-    tests.forEach((test) => {
-      it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
-
-        await boTagsPage.filterTable(page, test.args.filterBy, test.args.filterValue);
+        await boTagsPage.filterTable(page, test.filterBy, test.filterValue);
 
         const numberOfLinesAfterFilter = await boTagsPage.getNumberOfElementInGrid(page);
         expect(numberOfLinesAfterFilter).to.be.at.most(numberOfTags + 21);
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
-          const textColumn = await boTagsPage.getTextColumn(page, row, test.args.filterBy);
-          expect(textColumn).to.contains(test.args.filterValue);
+          const textColumn = await boTagsPage.getTextColumn(page, row, test.filterBy);
+          expect(textColumn).to.contains(test.filterValue);
         }
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${test.testIdentifier}Reset`, baseContext);
 
         const numberOfLinesAfterReset = await boTagsPage.resetAndGetNumberOfLines(page);
         expect(numberOfLinesAfterReset).to.equal(numberOfTags + 21);
@@ -140,66 +137,42 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
 
   // 3 - Sort tags table
   describe('Sort tags table', async () => {
-    const sortTests = [
+    [
       {
-        args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_tag', sortDirection: 'down', isFloat: true,
-        },
+        testIdentifier: 'sortByIdDesc', sortBy: 'id_tag', sortDirection: 'desc', isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByLanguageAsc', sortBy: 'l!name', sortDirection: 'up',
-        },
+        testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc',
       },
       {
-        args: {
-          testIdentifier: 'sortByLanguageDesc', sortBy: 'l!name', sortDirection: 'down',
-        },
+        testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc',
       },
       {
-        args: {
-          testIdentifier: 'sortByNameAsc', sortBy: 'a!name', sortDirection: 'up',
-        },
+        testIdentifier: 'sortByProductAsc', sortBy: 'num_products', sortDirection: 'asc', isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByNameDesc', sortBy: 'a!name', sortDirection: 'down',
-        },
+        testIdentifier: 'sortByProductDesc', sortBy: 'num_products', sortDirection: 'desc', isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByProductAsc', sortBy: 'products', sortDirection: 'up', isFloat: true,
-        },
+        testIdentifier: 'sortByIdAsc', sortBy: 'id_tag', sortDirection: 'asc', isFloat: true,
       },
-      {
-        args: {
-          testIdentifier: 'sortByProductDesc', sortBy: 'products', sortDirection: 'down', isFloat: true,
-        },
-      },
-      {
-        args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_tag', sortDirection: 'up', isFloat: true,
-        },
-      },
-    ];
+    ].forEach((test) => {
+      it(`should sort by '${test.sortBy}' '${test.sortDirection}' and check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
-    sortTests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+        const nonSortedTable = await boTagsPage.getAllRowsColumnContent(page, test.sortBy);
 
-        const nonSortedTable = await boTagsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await boTagsPage.sortTable(page, test.sortBy, test.sortDirection);
 
-        await boTagsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const sortedTable = await boTagsPage.getAllRowsColumnContent(page, test.sortBy);
 
-        const sortedTable = await boTagsPage.getAllRowsColumnContent(page, test.args.sortBy);
-
-        if (test.args.isFloat) {
+        if (test.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult: number[] = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
@@ -207,7 +180,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
         } else {
           const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());
@@ -223,28 +196,28 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await boTagsPage.selectPaginationLimit(page, 20);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
       const paginationNumber = await boTagsPage.paginationNext(page);
-      expect(paginationNumber).to.equal('2');
+      expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
       const paginationNumber = await boTagsPage.paginationPrevious(page);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await boTagsPage.selectPaginationLimit(page, 50);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
 
@@ -253,12 +226,12 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await boTagsPage.filterTable(page, 'a!name', 'todelete');
+      await boTagsPage.filterTable(page, 'name', 'todelete');
 
       const numberOfLinesAfterFilter = await boTagsPage.getNumberOfElementInGrid(page);
 
       for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
-        const textColumn = await boTagsPage.getTextColumn(page, i, 'a!name');
+        const textColumn = await boTagsPage.getTextColumn(page, i, 'name');
         expect(textColumn).to.contains('todelete');
       }
     });

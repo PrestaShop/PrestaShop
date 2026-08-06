@@ -9,3 +9,27 @@ services:
     alias: PrestaShop\PrestaShop\Adapter\QuickAccess\Repository\QuickAccessRepository
 
   PrestaShop\PrestaShop\Adapter\QuickAccess\Repository\QuickAccessRepository: ~
+
+  PrestaShop\PrestaShop\Adapter\QuickAccess\CommandHandler\AddQuickAccessHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\QuickAccess\CommandHandler\EditQuickAccessHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\QuickAccess\CommandHandler\DeleteQuickAccessHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\QuickAccess\CommandHandler\BulkDeleteQuickAccessHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\QuickAccess\CommandHandler\ToggleQuickAccessNewWindowHandler:
+    autowire: true
+    autoconfigure: true
+
+  PrestaShop\PrestaShop\Adapter\QuickAccess\QueryHandler\GetQuickAccessForEditingHandler:
+    autowire: true
+    autoconfigure: true

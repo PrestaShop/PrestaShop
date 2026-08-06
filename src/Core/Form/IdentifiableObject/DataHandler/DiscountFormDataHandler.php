@@ -74,6 +74,7 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
         $command = new UpdateDiscountCommand($id);
 
         $command->setLocalizedNames($data['information']['names']);
+        $command->setActive((bool) $data['information']['active']);
 
         $this->fillCommandFromData($command, $data);
 
@@ -104,8 +105,8 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
                 $this->setDiscountValue($command, $data);
                 break;
             case DiscountType::FREE_GIFT:
-                $command->setGiftProductId(!empty($data['free_gift'][0]['product_id']) ? (int) $data['free_gift'][0]['product_id'] : null);
-                $command->setGiftCombinationId(!empty($data['free_gift'][0]['combination_id']) ? (int) $data['free_gift'][0]['combination_id'] : null);
+                $command->setGiftProductId(!empty($data['free_gift']['product'][0]['id']) ? (int) $data['free_gift']['product'][0]['id'] : null);
+                $command->setGiftCombinationId(!empty($data['free_gift']['product'][0]['combination_id']) ? (int) $data['free_gift']['product'][0]['combination_id'] : null);
                 break;
             default:
                 throw new RuntimeException('Unknown discount type ' . $discountType);
@@ -113,6 +114,7 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
 
         // Set description
         $command->setDescription($data['information']['description'] ?? '');
+        $command->setHighlightInCart((bool) ($data['information']['highlight_in_cart'] ?? false));
 
         // Set active
         $command->setActive($data['information']['active'] ?? true);
@@ -131,13 +133,12 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
 
             $neverExpires = !empty($data['period']['period_never_expires']);
             if ($neverExpires) {
-                $validTo = (new DateTime())->modify('+100 years')->setTime(23, 59, 59);
-                $validTo = DateTimeImmutable::createFromMutable($validTo);
+                $validTo = null;
             } else {
                 $validTo = $this->parseDateWithDefaultTime($dateRange['to'] ?? null, '23:59');
             }
 
-            if ($validFrom && $validTo) {
+            if ($validFrom) {
                 $command->setValidityDateRange($validFrom, $validTo);
             }
         }
@@ -172,16 +173,18 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
      */
     private function setDiscountValue(AddDiscountCommand|UpdateDiscountCommand $command, array $data): void
     {
-        if ($data['value']['reduction']['type'] === DiscountSettings::AMOUNT) {
+        $reduction = $data['value']['reduction'];
+
+        if ($reduction['type'] === DiscountSettings::AMOUNT) {
             $command->setReductionAmount(
-                new DecimalNumber((string) $data['value']['reduction']['value']),
-                (int) $data['value']['reduction']['currency'],
-                (bool) $data['value']['reduction']['include_tax']
+                new DecimalNumber((string) $reduction['value']['amount']),
+                (int) $reduction['value']['currency'],
+                (bool) $reduction['include_tax']
             );
-        } elseif ($data['value']['reduction']['type'] === DiscountSettings::PERCENT) {
-            $command->setReductionPercent(new DecimalNumber((string) $data['value']['reduction']['value']));
+        } elseif ($reduction['type'] === DiscountSettings::PERCENT) {
+            $command->setReductionPercent(new DecimalNumber((string) $reduction['value']['amount']));
         } else {
-            throw new RuntimeException('Unknown discount value type ' . $data['value']['reduction']['type']);
+            throw new RuntimeException('Unknown discount value type ' . $reduction['type']);
         }
     }
 
@@ -272,11 +275,12 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
         if ($data['conditions'][DiscountConditionsType::CART_CONDITIONS]['children_selector'] === CartConditionsType::MINIMUM_PRODUCT_QUANTITY) {
             $command->setMinimumProductQuantity($data['conditions'][DiscountConditionsType::CART_CONDITIONS]['minimum_product_quantity']);
         } elseif ($data['conditions'][DiscountConditionsType::CART_CONDITIONS]['children_selector'] === CartConditionsType::MINIMUM_AMOUNT) {
+            $minimumAmount = $data['conditions'][DiscountConditionsType::CART_CONDITIONS]['minimum_amount'];
             $command->setMinimumAmount(
-                new DecimalNumber((string) $data['conditions'][DiscountConditionsType::CART_CONDITIONS]['minimum_amount']['value']),
-                $data['conditions'][DiscountConditionsType::CART_CONDITIONS]['minimum_amount']['currency'],
-                $data['conditions'][DiscountConditionsType::CART_CONDITIONS]['minimum_amount']['tax_included'],
-                $data['conditions'][DiscountConditionsType::CART_CONDITIONS]['minimum_amount']['shipping_included'] ?? false,
+                new DecimalNumber((string) $minimumAmount['value']['amount']),
+                (int) $minimumAmount['value']['currency'],
+                $minimumAmount['tax_included'],
+                $minimumAmount['shipping_included'] ?? false,
             );
         } elseif ($data['conditions'][DiscountConditionsType::CART_CONDITIONS]['children_selector'] === CartConditionsType::NONE) {
             $command->setMinimumAmount(null);
@@ -286,9 +290,13 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
         // Delivery conditions
         if ($data['conditions'][DiscountConditionsType::DELIVERY_CONDITIONS]['children_selector'] === DeliveryConditionsType::CARRIERS) {
             $command->setCarrierIds($data['conditions'][DiscountConditionsType::DELIVERY_CONDITIONS][DeliveryConditionsType::CARRIERS]);
-        }
-        if ($data['conditions'][DiscountConditionsType::DELIVERY_CONDITIONS]['children_selector'] === DeliveryConditionsType::COUNTRY) {
+            $command->setCountryIds([]);
+        } elseif ($data['conditions'][DiscountConditionsType::DELIVERY_CONDITIONS]['children_selector'] === DeliveryConditionsType::COUNTRY) {
             $command->setCountryIds($data['conditions'][DiscountConditionsType::DELIVERY_CONDITIONS][DeliveryConditionsType::COUNTRY]);
+            $command->setCarrierIds([]);
+        } elseif ($data['conditions'][DiscountConditionsType::DELIVERY_CONDITIONS]['children_selector'] === DeliveryConditionsType::NONE) {
+            $command->setCarrierIds([]);
+            $command->setCountryIds([]);
         }
     }
 

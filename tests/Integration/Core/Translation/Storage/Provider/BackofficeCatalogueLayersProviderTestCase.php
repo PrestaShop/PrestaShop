@@ -115,7 +115,8 @@ class BackofficeCatalogueLayersProviderTestCase extends AbstractCatalogueLayersP
             ),
             $this->translationsDir,
             $providerDefinition->getFilenameFilters(),
-            $providerDefinition->getTranslationDomains()
+            $providerDefinition->getTranslationDomains(),
+            $this->createEmptyExtraPropertyTranslationExtractor()
         );
     }
 }

@@ -20,12 +20,14 @@
     </div>
   </td>
   <td class="pr-2">
-   <div class="row add-product-inputs">
+   <div class="row">
      <div class="col-sm-6">
+      {{ form_label(addProductRowForm.price_tax_excluded) }}
       {{ form_widget(addProductRowForm.price_tax_excluded) }}
      </div>
 
      <div class="col-sm-6">
+      {{ form_label(addProductRowForm.price_tax_included) }}
       {{ form_widget(addProductRowForm.price_tax_included) }}
      </div>
    </div>

@@ -79,6 +79,11 @@ Once you enable the "%generate_rtl_label%" option, any RTL-specific file that yo
         <target>If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.</target>
         <note>File: src/PrestaShopBundle/Resources/views/Admin/macros.html.twig [Line: 274]</note>
       </trans-unit>
+      <trans-unit id="d5d6e522f913b7f263e64aa3336ade15">
+        <source>Indicate page file names for which the module will not be displayed (e.g., "product, category"). Separate them with commas.</source>
+        <target>Indicate page file names for which the module will not be displayed (e.g., "product, category"). Separate them with commas.</target>
+        <note>File: src/PrestaShopBundle/Form/Admin/Improve/Design/HookModuleType.php [Line: 64]</note>
+      </trans-unit>
       <trans-unit id="f545e8220cd6f37617c495e59695f7f3">
         <source>Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".</source>
         <target>Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".</target>

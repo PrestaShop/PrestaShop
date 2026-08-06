@@ -1,0 +1,96 @@
+{**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ *}
+<table class="product" width="100%" cellpadding="4" cellspacing="0">
+
+	<thead>
+		<tr>
+			<th class="product header small" width="25%">{l s='Reference' d='Shop.Pdf' pdf='true'}</th>
+			<th class="product header small" width="65%">{l s='Product' d='Shop.Pdf' pdf='true'}</th>
+			<th class="product header small" width="10%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		<!-- PRODUCTS -->
+		{foreach $products as $product}
+			{if $product.product_quantity-$product.product_quantity_refunded > 0}
+				{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
+				<tr class="product {$bgcolor_class}">
+
+					<td class="product left">
+						{if empty($product.product_reference)}
+							---
+						{else}
+							{$product.product_reference}
+						{/if}
+					</td>
+					<td class="product left">
+						{if $display_product_images}
+							<table width="100%">
+								<tr>
+									<td width="15%">
+										{if isset($product.image) && $product.image->id}
+											{$product.image_tag}
+										{/if}
+									</td>
+									<td width="5%">&nbsp;</td>
+									<td width="80%">
+										{$product.product_name}
+									</td>
+								</tr>
+							</table>
+						{else}
+							{$product.product_name}
+						{/if}
+					</td>
+					<td class="product center">
+						{$product.product_quantity-$product.product_quantity_refunded}
+					</td>
+
+				</tr>
+
+        {if $product.customizedDatas}
+          {foreach $product.customizedDatas as $customizationPerAddress}
+            {foreach $customizationPerAddress as $customizationId => $customization}
+              <tr class="customization_data {$bgcolor_class}">
+                <td class="center"> &nbsp;</td>
+
+                <td>
+                  {if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
+                    <table style="width: 100%;">
+                      {foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
+                        <tr>
+                          <td style="width: 30%;">
+                            {$customization_infos.name|string_format:{l s='%s:' d='Shop.Pdf' pdf='true'}}
+                          </td>
+                          <td>{$customization_infos.value}</td>
+                        </tr>
+                      {/foreach}
+                    </table>
+                  {/if}
+
+                  {if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
+                    <table style="width: 100%;">
+                      <tr>
+                        <td style="width: 30%;">{l s='image(s):' d='Shop.Pdf' pdf='true'}</td>
+                        <td>{count($customization.datas[Product::CUSTOMIZE_FILE])}</td>
+                      </tr>
+                    </table>
+                  {/if}
+                </td>
+
+                <td class="center">
+                  ({if $customization.quantity == 0}1{else}{$customization.quantity-$product.product_quantity_refunded}{/if})
+                </td>
+
+              </tr>
+            {/foreach}
+          {/foreach}
+        {/if}
+      {/if}
+    {/foreach}
+    <!-- END PRODUCTS -->
+  </tbody>
+</table>

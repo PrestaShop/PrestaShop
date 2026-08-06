@@ -15,14 +15,13 @@ import {
 const baseContext: string = 'functional_BO_international_locations_countries_sortAndPagination';
 
 /*
-Sort countries table
-Paginate between pages
+ * Sort countries table
+ * Paginate between pages
  */
 describe('BO - International - Countries : Sort and pagination', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -70,103 +69,105 @@ describe('BO - International - Countries : Sort and pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await boCountriesPage.selectPaginationLimit(page, 20);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 13)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
       const paginationNumber = await boCountriesPage.paginationNext(page);
-      expect(paginationNumber).to.equal('2');
+      expect(paginationNumber).to.contains('(page 2 / 13)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
       const paginationNumber = await boCountriesPage.paginationPrevious(page);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 13)');
     });
 
     it('should change the item number to 300 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo300', baseContext);
 
       const paginationNumber = await boCountriesPage.selectPaginationLimit(page, 300);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
 
   // 2 : Sort countries table
   describe('Sort countries table', async () => {
-    const sortTests = [
+    [
       {
-        args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_country', sortDirection: 'down', isFloat: true,
-        },
+        testIdentifier: 'sortByIdDesc',
+        sortBy: 'id_country',
+        sortDirection: 'desc',
+        isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByCountryAsc', sortBy: 'b!name', sortDirection: 'up',
-        },
+        testIdentifier: 'sortByCountryAsc',
+        sortBy: 'name',
+        sortDirection: 'asc',
       },
       {
-        args: {
-          testIdentifier: 'sortByCountryDesc', sortBy: 'b!name', sortDirection: 'down',
-        },
+        testIdentifier: 'sortByCountryDesc',
+        sortBy: 'name',
+        sortDirection: 'desc',
       },
       {
-        args: {
-          testIdentifier: 'sortByIsoCodeAsc', sortBy: 'iso_code', sortDirection: 'up',
-        },
+        testIdentifier: 'sortByIsoCodeAsc',
+        sortBy: 'iso_code',
+        sortDirection: 'asc',
       },
       {
-        args: {
-          testIdentifier: 'sortByIsoCodeDesc', sortBy: 'iso_code', sortDirection: 'down',
-        },
+        testIdentifier: 'sortByIsoCodeDesc',
+        sortBy: 'iso_code',
+        sortDirection: 'desc',
       },
       {
-        args: {
-          testIdentifier: 'sortByCallPrefixAsc', sortBy: 'call_prefix', sortDirection: 'up', isFloat: true,
-        },
+        testIdentifier: 'sortByCallPrefixAsc',
+        sortBy: 'call_prefix',
+        sortDirection: 'asc',
+        isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByCallPrefixDesc', sortBy: 'call_prefix', sortDirection: 'down', isFloat: true,
-        },
+        testIdentifier: 'sortByCallPrefixDesc',
+        sortBy: 'call_prefix',
+        sortDirection: 'desc',
+        isFloat: true,
       },
       {
-        args: {
-          testIdentifier: 'sortByZoneAsc', sortBy: 'z!id_zone', sortDirection: 'up',
-        },
+        testIdentifier: 'sortByZoneAsc',
+        sortBy: 'zone_name',
+        sortDirection: 'asc',
       },
       {
-        args: {
-          testIdentifier: 'sortByZoneDesc', sortBy: 'z!id_zone', sortDirection: 'down',
-        },
+        testIdentifier: 'sortByZoneDesc',
+        sortBy: 'zone_name',
+        sortDirection: 'desc',
       },
       {
-        args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_country', sortDirection: 'up', isFloat: true,
-        },
+        testIdentifier: 'sortByIdAsc',
+        sortBy: 'id_country',
+        sortDirection: 'asc',
+        isFloat: true,
       },
-    ];
+    ].forEach((test) => {
+      it(`should sort by '${test.sortBy}' '${test.sortDirection}' And check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.testIdentifier, baseContext);
 
-    sortTests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+        const nonSortedTable = await boCountriesPage.getAllRowsColumnContent(page, test.sortBy);
 
-        const nonSortedTable = await boCountriesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        await boCountriesPage.sortTable(page, test.sortBy, test.sortDirection);
 
-        await boCountriesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+        const sortedTable = await boCountriesPage.getAllRowsColumnContent(page, test.sortBy);
 
-        const sortedTable = await boCountriesPage.getAllRowsColumnContent(page, test.args.sortBy);
-
-        if (test.args.isFloat) {
+        if (test.isFloat) {
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await utilsCore.sortArrayNumber(nonSortedTableFloat);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.sortDirection === 'asc') {
             expect(sortedTableFloat).to.deep.equal(expectedResult);
           } else {
             expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
@@ -174,7 +175,7 @@ describe('BO - International - Countries : Sort and pagination', async () => {
         } else {
           const expectedResult = await utilsCore.sortArray(nonSortedTable);
 
-          if (test.args.sortDirection === 'up') {
+          if (test.sortDirection === 'asc') {
             expect(sortedTable).to.deep.equal(expectedResult);
           } else {
             expect(sortedTable).to.deep.equal(expectedResult.reverse());
@@ -187,7 +188,7 @@ describe('BO - International - Countries : Sort and pagination', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await boCountriesPage.selectPaginationLimit(page, 50);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contains('(page 1 / 5)');
     });
   });
 });

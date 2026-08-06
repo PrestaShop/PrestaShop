@@ -237,10 +237,14 @@ class PositionsListHandler {
     const $moduleId = <string>self.$showModules.val();
     const $regex = new RegExp(`(${$hookName})`, 'gi');
 
-    // Update "Transplant module" button
-    const transplantModuleHref = new URL(this.$transplantModuleButton.prop('href'));
-    transplantModuleHref.searchParams.set('show_modules', $moduleId);
-    this.$transplantModuleButton.attr('href', transplantModuleHref.toString());
+    // Update "Transplant module" button (only present on the positions list page)
+    const transplantModuleRawHref = this.$transplantModuleButton.prop('href');
+
+    if (transplantModuleRawHref) {
+      const transplantModuleHref = new URL(transplantModuleRawHref);
+      transplantModuleHref.searchParams.set('show_modules', $moduleId);
+      this.$transplantModuleButton.attr('href', transplantModuleHref.toString());
+    }
 
     const isVisible: boolean = $hookName === '' && $moduleId === 'all';
 

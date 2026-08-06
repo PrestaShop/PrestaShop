@@ -8,6 +8,7 @@ Feature: Add discount
   I must be able to create discounts
 
   Background:
+    Given I enable feature flag "discount"
     Given shop "shop1" with name "test_shop" exists
     Given there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     Given there is a currency named "chf" with iso code "CHF" and exchange rate of 1.25
@@ -38,7 +39,7 @@ Feature: Add discount
 
   Scenario: Create a complete discount with free gift but customizable product
     Given there is a product in the catalog named "customizable-mug" with a price of 20.0 and 1000 items in stock
-    Given product "customizable-mug" has a customization field named "custo1"
+    Given product "customizable-mug" requires customization
     When I create a "free_gift" discount "complete_free_gift_discount_customizable_product" with following properties:
       | name[en-US]  | Promotion           |
       | name[fr-FR]  | Promotion fr        |

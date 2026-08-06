@@ -28,11 +28,12 @@ services:
       - '@router'
       - '@request_stack'
 
-  prestashop.core.grid.filter.merchandise_return_form_factory:
+  prestashop.core.grid.filter.order_return_form_factory:
     class: 'PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryFormActionDecorator'
     arguments:
       - '@prestashop.core.grid.filter.form_factory'
       - '@router'
+      # Route name kept as-is to preserve BC for existing module path() calls.
       - 'admin_merchandise_returns_filter'
 
   prestashop.core.grid.filter.credit_slip_form_factory:

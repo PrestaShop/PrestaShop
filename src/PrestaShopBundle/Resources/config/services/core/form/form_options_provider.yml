@@ -13,7 +13,7 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
 
-  prestashop.core.form.identifiable_object.option_provider.discount_form_options_provider:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\DiscountFormOptionsProvider'
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Discount\Repository\DiscountTypeRepository'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\DiscountFormOptionsProvider:
+    autowire: true
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ExtraPropertyDefinitionFormOptionsProvider: ~

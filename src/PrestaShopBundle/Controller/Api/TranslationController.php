@@ -77,7 +77,7 @@ class TranslationController extends ApiController
             } elseif (
                 !empty($theme)
                 // Core themes are not considered like other themes because their translations belong to the Core
-                && in_array($theme, Theme::CORE_THEMES)
+                && !in_array($theme, Theme::CORE_THEMES)
             ) {
                 $providerDefinition = new ThemeProviderDefinition($theme);
             } else {

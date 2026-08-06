@@ -40,7 +40,9 @@ class GetOrderShipmentsHandler implements GetOrderShipmentsHandlerInterface
         $orderId = $query->getOrderId()->getValue();
 
         try {
-            $result = $this->shipmentRepository->findByOrderId($orderId);
+            $result = $query->includeDeleted()
+                ? $this->shipmentRepository->getAllShipmentsByOrderId($orderId)
+                : $this->shipmentRepository->findByOrderId($orderId);
         } catch (Throwable $e) {
             throw new ShipmentNotFoundException(
                 $this->translator->trans(
@@ -79,6 +81,7 @@ class GetOrderShipmentsHandler implements GetOrderShipmentsHandlerInterface
                 new DecimalNumber((string) $shipment->getShippingCostTaxIncluded()),
                 $shipment->getProducts()->count(),
                 $shipment->getTrackingNumber(),
+                $shipment->getPackedAt(),
                 $shipment->getShippedAt(),
                 $shipment->getDeliveredAt(),
                 $shipment->getCancelledAt(),

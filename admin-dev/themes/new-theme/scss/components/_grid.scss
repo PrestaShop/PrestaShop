@@ -400,7 +400,8 @@ table {
   display: inline-flex;
   flex-wrap: wrap;
   gap: var(--cdk-size-16);
-  margin-bottom: var(--cdk-size-16);
+  margin-top: var(--cdk-size-16);
+  margin-bottom: 0;
 
   &__item {
     padding-bottom: var(--cdk-size-4);

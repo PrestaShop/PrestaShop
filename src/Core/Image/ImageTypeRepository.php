@@ -7,6 +7,7 @@
 namespace PrestaShop\PrestaShop\Core\Image;
 
 use Db;
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
 
 class ImageTypeRepository
 {
@@ -33,19 +34,26 @@ class ImageTypeRepository
                 $name,
                 $data['width'],
                 $data['height'],
-                $data['scope']
+                $data['scope'],
+                $data['image_fitment'] ?? ImageFitment::FIT
             );
         }
 
         return $this;
     }
 
-    public function createType($name, $width, $height, array $scope)
+    public function createType($name, $width, $height, array $scope, string $imageFitment = ImageFitment::FIT)
     {
+        // Keep unsupported theme values on the default behavior instead of breaking theme activation.
+        if (!in_array($imageFitment, ImageFitment::AVAILABLE_VALUES, true)) {
+            $imageFitment = ImageFitment::FIT;
+        }
+
         $data = [
             'name' => $this->db->escape($name),
             'width' => $this->db->escape($width),
             'height' => $this->db->escape($height),
+            'image_fitment' => $this->db->escape($imageFitment),
         ];
 
         foreach ($this->getScopeList() as $scope_item) {

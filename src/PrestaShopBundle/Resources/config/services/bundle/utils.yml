@@ -7,3 +7,7 @@ services:
 
   PrestaShopBundle\Utils\FloatParser:
     autowire: true
+
+  prestashop.utils.html_purifier:
+    class: PrestaShopBundle\Utils\HTMLPurifier
+    autowire: true

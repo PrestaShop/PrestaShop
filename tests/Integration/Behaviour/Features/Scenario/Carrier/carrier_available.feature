@@ -193,6 +193,28 @@ Scenario: Carrier available when product fits all constraints
     | carrier         | state     | products     |
     | Perfect Carrier | available |              |
 
+Scenario: Carrier available when carrier constraints is not set
+  Given I add product "s81_fit_product" with following information:
+    | name[en-US] | Perfect Box |
+    | type        | standard    |
+  And I create carrier "s81_zero_carrier" with specified properties:
+    | name        | Zero Carrier |
+    | max_width   | 0            |
+    | max_height  | 0            |
+    | max_depth   | 0            |
+    | max_weight  | 0            |
+    | zones       | zone1        |
+  And I assign product "s81_fit_product" with following carriers:
+    | s81_zero_carrier |
+  And I update product "s81_fit_product" with following values:
+    | width  | 40 |
+    | height | 40 |
+    | depth  | 30 |
+    | weight | 10 |
+  Then the products "s81_fit_product" should have the following carriers with address "address1":
+    | carrier         | state     | products |
+    | Zero Carrier    | available |          |
+
 Scenario: Get available carrier when product constraints are equal to carrier limits
   Given I add product "s9_precise_product" with following information:
     | name[en-US] | precise product |

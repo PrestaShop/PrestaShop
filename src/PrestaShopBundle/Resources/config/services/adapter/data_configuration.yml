@@ -215,6 +215,13 @@ services:
       - '@prestashop.adapter.shop.context'
       - '@prestashop.adapter.multistore_feature'
 
+  prestashop.adapter.country.country_options_configuration:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\CountryOptionsConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
+
   prestashop.core.email.email_configurator:
     class: 'PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator'
     arguments:
@@ -256,6 +263,7 @@ services:
       - '@prestashop.adapter.shop.context'
       - '@prestashop.adapter.multistore_feature'
       - '@=service("prestashop.adapter.data_provider.default_route").getRules()'
+      - '@=service("prestashop.core.admin.lang.repository").findAll()'
 
   prestashop.adapter.meta.seo_options.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Meta\SEOOptionsDataConfiguration'
@@ -284,8 +292,8 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.core.mail_template.theme_catalog'
 
-  prestashop.core.merchandise_return.configuration.merchandise_return_options_configuration:
-    class: 'PrestaShop\PrestaShop\Core\MerchandiseReturn\Configuration\MerchandiseReturnOptionsConfiguration'
+  prestashop.core.order_return.configuration.order_return_options_configuration:
+    class: 'PrestaShop\PrestaShop\Core\OrderReturn\Configuration\OrderReturnOptionsConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.shop.context'

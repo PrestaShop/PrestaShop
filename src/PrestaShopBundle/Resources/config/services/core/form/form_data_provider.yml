@@ -36,6 +36,10 @@ services:
       - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
 
+  prestashop.core.form.identifiable_object.data_provider.extra_property_definition_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ExtraPropertyDefinitionFormDataProvider'
+    autowire: true
+
   prestashop.core.form.identifiable_object.data_provider.meta_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\MetaFormDataProvider'
     arguments:
@@ -244,6 +248,10 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TaxRuleFormDataProvider:
+    arguments:
+      - '@prestashop.core.query_bus'
+
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\DiscountFormDataProvider:
     autowire: true
 
@@ -267,5 +275,34 @@ services:
     public: false
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\TagFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AddProductFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\MergeShipmentFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EditShipmentFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SplitShipmentFormDataProvider:
+    autowire: true
+    public: false
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FulfillShipmentFormDataProvider:
+    autowire: true
+    public: false
+
+  prestashop.core.form.identifiable_object.data_provider.quick_access_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\QuickAccessFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EditProductFormDataProvider:
     autowire: true
     public: false

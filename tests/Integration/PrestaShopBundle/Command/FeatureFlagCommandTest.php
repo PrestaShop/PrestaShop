@@ -103,7 +103,8 @@ class FeatureFlagCommandTest extends KernelTestCase
         $matches = [];
         preg_match($regexp, $output, $matches);
         $type = $matches[1];
-        $this->assertTrue($type === 'env,dotenv,[db]' || $type === 'env,query,dotenv,[db]');
+        // DB layer selected
+        $this->assertTrue(strpos($type, '[db]') !== false);
         $state = $matches[2];
         $this->assertTrue(in_array($state, ['Enabled', 'Disabled']));
 

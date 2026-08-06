@@ -9,11 +9,14 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\ImageSettings\ValueObject\ImageFitment;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 
@@ -80,6 +83,22 @@ class ImageTypeType extends TranslatorAwareType
                     ]),
                 ],
                 'help' => $this->trans('Maximum image height in pixels.', 'Admin.Design.Help'),
+            ])
+            ->add('image_fitment', ChoiceType::class, [
+                'label' => $this->trans('Image fitment', 'Admin.Design.Feature'),
+                'required' => true,
+                'choices' => [
+                    $this->trans('Fit the thumbnail and fill the rest with empty space', 'Admin.Design.Feature') => ImageFitment::FIT,
+                    $this->trans('Fill the thumbnail and crop the rest', 'Admin.Design.Feature') => ImageFitment::CROP,
+                    $this->trans('Keep the ratio of the original image', 'Admin.Design.Feature') => ImageFitment::BOUND,
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                    new Choice([
+                        'choices' => ImageFitment::AVAILABLE_VALUES,
+                    ]),
+                ],
+                'help' => $this->trans('Defines how source images are resized into this image type. Fit keeps the configured thumbnail dimensions and fills empty space when ratios differ. Fill and crop keeps the configured thumbnail dimensions and crops overflowing image parts. Keep ratio uses the configured dimensions as maximum bounds, keeps the original ratio, does not upscale, and does not add empty space.', 'Admin.Design.Help'),
             ])
             ->add('products', SwitchType::class, [
                 'label' => $this->trans('Products', 'Admin.Global'),

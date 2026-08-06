@@ -6,6 +6,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,6 +43,11 @@ class PrivateNoteType extends AbstractType
                 'empty_data' => '',
                 'attr' => [
                     'placeholder' => $this->translator->trans('Add a note on this customer. It will only be visible to you.', [], 'Admin.Orderscustomers.Feature'),
+                ],
+                'constraints' => [
+                    new CleanHtml([
+                        'message' => $this->translator->trans('%s is invalid.', [], 'Admin.Notifications.Error'),
+                    ]),
                 ],
             ]);
     }

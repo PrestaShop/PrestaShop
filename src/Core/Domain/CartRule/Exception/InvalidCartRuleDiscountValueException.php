@@ -37,4 +37,9 @@ class InvalidCartRuleDiscountValueException extends InvalidCartRuleValueExceptio
      * Code used when free shipping cannot be applied
      */
     public const INVALID_FREE_SHIPPING = 50;
+
+    /**
+     * Code used when a free shipping discount is added to an order that already has one
+     */
+    public const DUPLICATE_FREE_SHIPPING = 60;
 }

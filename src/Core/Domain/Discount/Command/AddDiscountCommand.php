@@ -124,9 +124,11 @@ class AddDiscountCommand
     /**
      * @throws DiscountConstraintException
      */
-    public function setValidityDateRange(DateTimeImmutable $from, DateTimeImmutable $to): self
+    public function setValidityDateRange(DateTimeImmutable $from, ?DateTimeImmutable $to = null): self
     {
-        $this->assertDateRangeIsValid($from, $to);
+        if ($to !== null) {
+            $this->assertDateRangeIsValid($from, $to);
+        }
         $this->validFrom = $from;
         $this->validTo = $to;
 

@@ -12,8 +12,10 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\Form\Admin\Type\CardType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DiscountPeriodType extends TranslatorAwareType
@@ -23,8 +25,6 @@ class DiscountPeriodType extends TranslatorAwareType
         $builder
             ->add('valid_date_range', DateRangeType::class, [
                 'label' => false,
-                'label_from' => $this->trans('Start date', 'Admin.Catalog.Feature'),
-                'label_to' => $this->trans('Expiry date', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'date_format' => DateRangeType::DEFAULT_DATE_TIME_FORMAT,
                 'placeholder' => DateRangeType::DEFAULT_DATE_TIME_FORMAT,
@@ -49,13 +49,21 @@ class DiscountPeriodType extends TranslatorAwareType
                 ],
             ])
         ;
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event): void {
+            $data = $event->getData();
+            if (!empty($data['period_never_expires'])) {
+                $data['valid_date_range']['to'] = null;
+                $event->setData($data);
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'label' => $this->trans('Select a Period', 'Admin.Catalog.Feature'),
+            'label' => $this->trans('Select period', 'Admin.Catalog.Feature'),
             'required' => false,
         ]);
     }

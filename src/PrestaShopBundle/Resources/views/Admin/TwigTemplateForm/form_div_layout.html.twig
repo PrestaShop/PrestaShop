@@ -230,7 +230,7 @@
         {% set label = name|humanize %}
       {%- endif -%}
     {%- endif -%}
-    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ translation_domain is same as(false) ? label|raw : label|raw }}
+    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ translation_domain is same as(false) ? label|raw_purified : label|raw_purified }}
       {% if label_attr['tooltip'] is defined %}
         {% set placement = label_attr['tooltip_placement'] is defined ? label_attr['tooltip_placement'] : 'top' %}
         <i class="icon-question" data-toggle="pstooltip" data-placement="{{ placement }}"
@@ -328,7 +328,7 @@
   {% for child in form -%}
     {% if not child.rendered %}
       {{- ps.form_group_row(child, {attr: child.vars.attr}, {
-        label: child.vars.label
+        label: child.vars.label,
       }) -}}
     {% endif %}
   {%- endfor %}

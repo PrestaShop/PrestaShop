@@ -9,8 +9,8 @@
 {# Display database version #}
 {% block addon_version %}
   {% if module.attributes.productType == 'service' %}
-    {{ 'Service by %author%'|trans({'%author%': '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
+    {{ 'Service by %author%'|trans({'%author%': '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw_purified }}
   {% else %}
-    {{ 'v%version% - by %author%'|trans({'%version%': module.attributes.version, '%author%': '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
+    {{ 'v%version% - by %author%'|trans({'%version%': module.attributes.version, '%author%': '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw_purified }}
   {% endif %}
 {% endblock %}

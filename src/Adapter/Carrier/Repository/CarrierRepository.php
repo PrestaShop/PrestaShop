@@ -11,6 +11,7 @@ namespace PrestaShop\PrestaShop\Adapter\Carrier\Repository;
 use Carrier;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CannotAddCarrierException;
@@ -364,10 +365,10 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
         }
 
         return new CarrierConstraints(
-            (float) $result['max_weight'],
-            (float) $result['max_width'],
-            (float) $result['max_height'],
-            (float) $result['max_depth']
+            new DecimalNumber($result['max_weight']),
+            (int) $result['max_width'],
+            (int) $result['max_height'],
+            (int) $result['max_depth']
         );
     }
 
@@ -440,7 +441,7 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
                 'pc',
                 $this->prefix . 'carrier',
                 'c',
-                'c.id_reference = pc.id_carrier_reference AND c.deleted = 0'
+                'c.id_reference = pc.id_carrier_reference AND c.deleted = 0 AND c.active = 1'
             )
             ->where($qb->expr()->in('pc.id_product', ':product_ids'))
             ->andWhere('pc.id_shop = :shop_id')
@@ -450,6 +451,9 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
             ->fetchAllAssociative();
     }
 
+    /**
+     * @return array<int, array{id_carrier: int|string, name: string}>
+     */
     private function getAllActiveCarriers(): array
     {
         return $this->connection->createQueryBuilder()
@@ -457,6 +461,7 @@ class CarrierRepository extends AbstractMultiShopObjectModelRepository
             ->from($this->prefix . 'carrier')
             ->where('deleted = 0')
             ->andWhere('active = 1')
+            ->orderBy('name', 'ASC')
             ->executeQuery()
             ->fetchAllAssociative();
     }

@@ -184,10 +184,10 @@ describe('BO - Cart rules - Actions : Exclude discounted products', async () => 
 
       await foHummingbirdCartPage.addPromoCode(page, cartRuleData.code);
 
-      const discount = utilsCore.percentage(dataProducts.demo_6.combinations[0].price, cartRuleData.getDiscountPercent());
+      const discount = utilsCore.percentage(dataProducts.demo_6.combinations[0].priceTI, cartRuleData.getDiscountPercent());
 
       const subTotalProducts = await foHummingbirdCartPage.getSubtotalProductsValue(page);
-      expect(subTotalProducts).to.eq(dataProducts.demo_6.combinations[0].price);
+      expect(subTotalProducts).to.eq(dataProducts.demo_6.combinations[0].priceTI);
 
       const subTotalDiscount = await foHummingbirdCartPage.getSubtotalDiscountValue(page);
       expect(subTotalDiscount.toFixed(2)).to.eq(`-${discount.toFixed(2)}`);
@@ -196,7 +196,7 @@ describe('BO - Cart rules - Actions : Exclude discounted products', async () => 
       expect(subTotalShipping).to.eq('Free');
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
-      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].price - discount).toFixed(2));
+      expect(priceATI.toFixed(2)).to.eq((dataProducts.demo_6.combinations[0].priceTI - discount).toFixed(2));
 
       const cartRuleName = await foHummingbirdCartPage.getCartRuleName(page);
       expect(cartRuleName).to.contains(cartRuleData.name);
@@ -227,11 +227,11 @@ describe('BO - Cart rules - Actions : Exclude discounted products', async () => 
     it('should check that discount is applied to the cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountApplied2', baseContext);
 
-      const discount = utilsCore.percentage(dataProducts.demo_6.combinations[0].price, cartRuleData.getDiscountPercent());
+      const discount = utilsCore.percentage(dataProducts.demo_6.combinations[0].priceTI, cartRuleData.getDiscountPercent());
 
       const subTotalProducts = await foHummingbirdCartPage.getSubtotalProductsValue(page);
       expect(subTotalProducts.toFixed(2)).to.eq(
-        (dataProducts.demo_6.combinations[0].price + dataProducts.demo_1.finalPrice).toFixed(2),
+        (dataProducts.demo_6.combinations[0].priceTI + dataProducts.demo_1.finalPrice).toFixed(2),
       );
 
       const subTotalDiscount = await foHummingbirdCartPage.getSubtotalDiscountValue(page);
@@ -242,7 +242,7 @@ describe('BO - Cart rules - Actions : Exclude discounted products', async () => 
 
       const priceATI = await foHummingbirdCartPage.getATIPrice(page);
       expect(priceATI.toFixed(2)).to.eq(
-        (dataProducts.demo_6.combinations[0].price + dataProducts.demo_1.finalPrice - discount).toFixed(2),
+        (dataProducts.demo_6.combinations[0].priceTI + dataProducts.demo_1.finalPrice - discount).toFixed(2),
       );
 
       const cartRuleName = await foHummingbirdCartPage.getCartRuleName(page);

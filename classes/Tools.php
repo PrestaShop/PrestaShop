@@ -1926,11 +1926,11 @@ class ToolsCore
         if (!in_array(strtolower($scheme), ['http', 'https'], true)) {
             return false;
         }
-        $remoteFile = fopen($url, 'rb');
+        $remoteFile = @fopen($url, 'rb');
         if (!$remoteFile) {
             return false;
         }
-        $localFile = fopen(basename($url), 'wb');
+        $localFile = @fopen(basename($url), 'wb');
         if (!$localFile) {
             return false;
         }
@@ -4004,6 +4004,18 @@ exit;
         }
 
         return false;
+    }
+
+    /**
+     * Converts HTML content to readable plain text.
+     *
+     * @param string $html
+     *
+     * @return string
+     */
+    public static function htmlToText($html)
+    {
+        return self::getStringModifier()->htmlToText($html);
     }
 }
 

@@ -25,7 +25,10 @@
           class="d-flex align-items-center ml-2"
           :thumbnail="thumbnail"
         >
-          {{ product.product_name }}
+          <a
+            :href="product.product_url"
+            class="product-name-link"
+          >{{ product.product_name }}</a>
           <small
             v-if="hasCombination"
             class="product-combinations"
@@ -225,5 +228,15 @@
 .product-combinations {
   padding-top: var(--#{$cdk}size-4);
   color: var(--#{$cdk}primary-500);
+}
+
+.product-name-link {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--#{$cdk}primary-500);
+    text-decoration: underline;
+  }
 }
 </style>

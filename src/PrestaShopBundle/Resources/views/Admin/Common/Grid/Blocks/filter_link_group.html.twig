@@ -3,14 +3,13 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
-{% set filter = grid.filter_form[filter_name] %}
-{% set filter_name = filter_name|default(filter.vars.name) %}
-{% set filter_options = filter.vars.filter_options|default([]) %}
-{% set filter_field_selector = filter.vars.filter_field_selector|default('[data-role="' ~ filter_name ~ '-filter-field"]') %}
-{% set default_value = filter.vars.default_value|default('') %}
+{% set filter_name = filterForm.vars.name %}
+{% set filter_options = filterForm.vars.filter_options|default([]) %}
+{% set filter_field_selector = filterForm.vars.filter_field_selector|default('[data-role="' ~ filter_name ~ '-filter-field"]') %}
+{% set default_value = filterForm.vars.default_value|default('') %}
 {% set current_value = grid.filters[filter_name]|default(app.request.get(grid.form_prefix) is iterable
   ? app.request.get(grid.form_prefix).filters[filter_name]|default(app.request.get(grid.form_prefix)[filter_name]|default(default_value))
-  : default_value
+  : default_value,
 ) %}
 {% set container_class = container_class|default('filter-link-group') %}
 {% set item_class = item_class|default('filter-link-group__item') %}

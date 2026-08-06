@@ -37,7 +37,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = new Customer();
         $customer->firstname = 'fake';
         $customer->lastname = 'fake';
-        $customer->passwd = $crypto->hash('Correct Horse Battery Staple');
+        $customer->passwd = $crypto->hash('Pr3st4Sh0P');
         $customer->email = $customerEmail;
         $customer->id_shop = Context::getContext()->shop->id;
         $customer->add();
@@ -56,7 +56,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = new Customer();
         $customer->firstname = 'fake';
         $customer->lastname = 'fake';
-        $customer->passwd = $crypto->hash('Correct Horse Battery Staple');
+        $customer->passwd = $crypto->hash('Pr3st4Sh0P');
         $customer->email = $customerEmail;
         $customer->is_guest = true;
         $customer->id_shop = Context::getContext()->shop->id;

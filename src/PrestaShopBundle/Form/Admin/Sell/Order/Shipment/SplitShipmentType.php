@@ -45,10 +45,7 @@ class SplitShipmentType extends AbstractType
         $selectedProductsId = array_column($selectedProducts, 'quantity', 'product_id');
 
         $builder->add('carrier', ChoiceType::class, [
-            'choices' => $this->availableCarriersForShipmentChoiceProvider->getChoices([
-                'shipment_id' => $options['data']['shipment_id'],
-                'selectedProducts' => $selectedProductsId,
-            ]),
+            'choices' => $this->getCarrierChoices($options, $selectedProductsId),
             'placeholder' => $this->translator->trans('Select a carrier', [], 'Admin.Orderscustomers.Feature'),
             'required' => true,
         ]);
@@ -60,5 +57,21 @@ class SplitShipmentType extends AbstractType
             'products' => [],
             'carrier' => 0,
         ]);
+    }
+
+    /**
+     * @param array<int, string> $selectedProductsId
+     */
+    private function getCarrierChoices(array $options, array $selectedProductsId): array
+    {
+        if (count($selectedProductsId) > 0) {
+            return $this->availableCarriersForShipmentChoiceProvider->getChoices([
+                'shipment_id' => $options['data']['shipment_id'],
+                'selectedProducts' => $selectedProductsId,
+                'useCurrentCarrierId' => false,
+            ]);
+        }
+
+        return [];
     }
 }

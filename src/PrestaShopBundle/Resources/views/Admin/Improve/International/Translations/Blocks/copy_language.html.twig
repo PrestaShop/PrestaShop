@@ -23,7 +23,7 @@
               <div class="alert-text">
                 {{ 'Copies data from one language to another.'|trans({}, 'Admin.International.Help') }}<br>
                 {{ 'Warning: This will replace all of the existing data inside the destination language.'|trans({}, 'Admin.International.Help') }}<br>
-                {{ 'If necessary [1][2] you must first create a new language[/1].'|trans({}, 'Admin.International.Help')|replace({'[1]': '<a href="' ~ addLanguageUrl ~ '">', '[2]': '<i class="material-icons">launch</i>', '[/1]': '</a>'})|raw }}
+                {{ 'If necessary [1][2] you must first create a new language[/1].'|trans({}, 'Admin.International.Help')|replace({'[1]': '<a href="' ~ addLanguageUrl ~ '">', '[2]': '<i class="material-icons">launch</i>', '[/1]': '</a>'})|raw_purified }}
               </div>
             </div>
           </div>

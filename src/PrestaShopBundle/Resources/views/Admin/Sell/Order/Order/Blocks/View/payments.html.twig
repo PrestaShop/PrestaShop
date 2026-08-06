@@ -13,7 +13,7 @@
   <div class="card-body">
     {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments_alert.html.twig', {
         payments: orderForViewing.payments,
-        linkedOrders: orderForViewing.linkedOrders
+        linkedOrders: orderForViewing.linkedOrders,
     }) }}
 
     <table class="table mb-0" data-role="payments-grid-table">

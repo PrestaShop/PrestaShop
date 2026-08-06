@@ -32,13 +32,18 @@
             'data-is-delivered': orderForViewing.isDelivered,
             'data-is-tax-included': orderForViewing.isTaxIncluded,
             'data-discounts-amount': orderForViewing.prices.discountsAmountRaw,
-            'data-price-specification': priceSpecification|json_encode
-          }
+            'data-price-specification': priceSpecification|json_encode,
+          },
         } %}
     {{ form_start(cancelProductForm, formOptions) }}
 
     {# PRODUCT TABLE #}
-    <table class="table" id="orderProductsTable" data-currency-precision="{{ orderCurrency.precision }}">
+    <table
+      class="table"
+      id="orderProductsTable"
+      data-currency-precision="{{ orderCurrency.precision }}"
+      data-multishipment-enabled="{{ isImprovedShipmentFeatureFlagEnabled and orderHasShipment == true }}"
+    >
       <thead>
         <tr>
           <th>
@@ -82,8 +87,10 @@
       </thead>
       <tbody>
         {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product_list.html.twig') }}
-        {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig') }}
-        {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig') }}
+        {% if isImprovedShipmentFeatureFlagEnabled is defined and isImprovedShipmentFeatureFlagEnabled == false or orderHasShipment == false %}
+          {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig') }}
+          {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig') }}
+        {% endif %}
       </tbody>
     </table>
 
@@ -128,12 +135,22 @@
 
       <div class="col-xl-6 text-xl-right discount-action">
         {% if not orderForViewing.delivered %}
-          <button type="button" class="btn btn-outline-secondary js-product-action-btn mr-3" id="addProductBtn">
+          <button
+            type="button"
+            class="btn btn-outline-secondary js-product-action-btn mr-3"
+            id="addProductBtn"
+            {% if isImprovedShipmentFeatureFlagEnabled is defined and isImprovedShipmentFeatureFlagEnabled == true and orderHasShipment == true %}data-toggle="modal" data-target="#addOrderProductModal"{% endif %}
+          >
             <i class="material-icons">add_circle_outline</i>
             {{ 'Add a product'|trans({}, 'Admin.Orderscustomers.Feature') }}
           </button>
         {% endif %}
-        <button type="button" class="btn btn-outline-secondary js-product-action-btn" data-toggle="modal" data-target="#addOrderDiscountModal">
+        <button
+          type="button"
+          class="btn btn-outline-secondary js-product-action-btn"
+          data-toggle="modal"
+          data-target="#addOrderDiscountModal"
+        >
           <i class="material-icons">confirmation_number</i>
           {{ 'Add a discount'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </button>
@@ -144,7 +161,7 @@
     {# DISCOUNT LIST #}
     {{ include('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig', {
         discounts: orderForViewing.discounts.discounts,
-        orderId: orderForViewing.id
+        orderId: orderForViewing.id,
     }) }}
 
     {# ORDER TOTALS #}
@@ -218,8 +235,8 @@
         {{ 'For this customer group, prices are displayed as: [1]%tax_method%[/1]'|trans({
           '%tax_method%': orderForViewing.taxMethod,
           '[1]': '<strong>',
-          '[/1]': '</strong>'
-        }, 'Admin.Orderscustomers.Notification')|raw }}.
+          '[/1]': '</strong>',
+        }, 'Admin.Orderscustomers.Notification')|raw_purified }}.
 
         {% if not configuration('PS_ORDER_RETURN') %}
           <strong>{{ 'Merchandise returns are disabled'|trans({}, 'Admin.Orderscustomers.Notification') }}</strong>

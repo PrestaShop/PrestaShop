@@ -37,10 +37,12 @@ use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopException;
 
 /**
@@ -247,8 +249,11 @@ class DiscountValidator extends AbstractObjectModelValidator
                 }
 
                 $product = $this->productRepository->getByShopConstraint(new ProductId((int) $discount->gift_product), ShopConstraint::allShops());
-                if ($product->customizable) {
+                if ((int) $product->customizable === ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION) {
                     throw new DiscountConstraintException('Product with required customization fields cannot be used as a gift.', DiscountConstraintException::INVALID_GIFT_PRODUCT);
+                }
+                if ((int) $product->minimal_quantity > 1) {
+                    throw new DiscountConstraintException('Gift product has a minimum quantity greater than 1.', DiscountConstraintException::INVALID_GIFT_PRODUCT_MINIMUM_QUANTITY);
                 }
                 break;
             default:
@@ -296,6 +301,10 @@ class DiscountValidator extends AbstractObjectModelValidator
 
     private function assertDateRangeIsCorrect(CartRule $cartrule): void
     {
+        if (DateTimeUtil::isNull($cartrule->date_to)) {
+            return;
+        }
+
         if ($cartrule->date_from > $cartrule->date_to) {
             throw new DiscountConstraintException('Date from cannot be greater than date to.', DiscountConstraintException::DATE_FROM_GREATER_THAN_DATE_TO);
         }

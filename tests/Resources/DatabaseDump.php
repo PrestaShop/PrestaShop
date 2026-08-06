@@ -317,7 +317,7 @@ class DatabaseDump
      */
     private function getTableChecksum(string $table): string
     {
-        $checksum = $this->db->executeS(sprintf('CHECKSUM TABLE %s;', $table));
+        $checksum = $this->db->executeS(sprintf('CHECKSUM TABLE `%s`;', $table));
         $checksum = $checksum[0]['Checksum'];
 
         // The content only is not enough we must make sure that the auto increment index is the same
@@ -438,6 +438,23 @@ class DatabaseDump
             $tableName = substr($tableName, strlen($dump->dbPrefix));
             if (preg_match($regexp, $tableName)) {
                 $dump->restoreTable($tableName);
+            }
+        }
+    }
+
+    public static function removeExtraTables(): void
+    {
+        $dump = new static();
+
+        $tables = $dump->db->executeS('SHOW TABLES;');
+        foreach ($tables as $table) {
+            // $table is an array looking like this [Tables_in_database_name => 'ps_access']
+            $tableName = reset($table);
+            // Remove all tables that contain _extra, they are the dynamically created tables used
+            // by extra property feature, except extra_property_definition which is in the default structure
+            // and must be kept
+            if ($tableName !== $dump->dbPrefix . 'extra_property_definition' && str_contains($tableName, '_extra')) {
+                $dump->db->execute('DROP TABLE `' . $tableName . '`;');
             }
         }
     }

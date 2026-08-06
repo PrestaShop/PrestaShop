@@ -9,6 +9,7 @@ namespace PrestaShop\PrestaShop\Adapter\Discount\Repository;
 use CartRule;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Discount\Validate\DiscountValidator;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\CannotAddDiscountException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\CannotDeleteDiscountException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\CannotUpdateDiscountException;
@@ -30,6 +31,7 @@ class DiscountRepository extends AbstractObjectModelRepository
         protected readonly DiscountValidator $discountValidator,
         protected readonly Connection $connection,
         protected readonly string $dbPrefix,
+        protected readonly ConfigurationInterface $configuration,
     ) {
     }
 
@@ -51,6 +53,24 @@ class DiscountRepository extends AbstractObjectModelRepository
         );
 
         return $cartRule;
+    }
+
+    public function getQuantityUsedInOrders(DiscountId $discountId): int
+    {
+        $qb = $this->connection->createQueryBuilder();
+
+        return (int) $qb
+            ->select('COUNT(*)')
+            ->from($this->dbPrefix . 'orders', 'o')
+            ->leftJoin('o', $this->dbPrefix . 'order_cart_rule', 'ocr', 'ocr.id_order = o.id_order')
+            ->where('ocr.deleted = 0')
+            ->andWhere('ocr.id_cart_rule = :cartRuleId')
+            ->andWhere('o.current_state != :orderErrorStateId')
+            ->setParameter('cartRuleId', $discountId->getValue())
+            ->setParameter('orderErrorStateId', (int) $this->configuration->get('PS_OS_ERROR'))
+            ->executeQuery()
+            ->fetchOne()
+        ;
     }
 
     /**

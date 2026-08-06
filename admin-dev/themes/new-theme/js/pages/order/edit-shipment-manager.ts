@@ -41,7 +41,7 @@ export default class EditShipmentManager {
     const {orderId, shipmentId} = link.dataset;
 
     if (!orderId || !shipmentId) {
-      throw new Error('error while gettint orderId or shipmentId');
+      throw new Error('error while getting orderId or shipmentId');
     }
 
     this.orderId = Number(orderId);
@@ -51,7 +51,7 @@ export default class EditShipmentManager {
   };
 
   async refreshEditShipmentForm(): Promise<void> {
-    const modal = document.querySelector(OrderViewPageMap.editShipmentModal) as HTMLElement;
+    const modal = document.querySelector<HTMLElement>(OrderViewPageMap.editShipmentModal);
 
     if (!modal) {
       throw new Error('Edit shipment modal not found.');
@@ -73,7 +73,7 @@ export default class EditShipmentManager {
       if (!response.ok) {
         throw new Error(await response.text());
       }
-      const formContainer = document.querySelector(OrderViewPageMap.editShipmentModalContainer) as HTMLElement;
+      const formContainer = document.querySelector<HTMLElement>(OrderViewPageMap.editShipmentModalContainer);
       formContainer!.innerHTML = await response.text();
 
       modal.dataset.state = 'loaded';

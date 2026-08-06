@@ -15,6 +15,7 @@ env:
 jobs:
   # Define which PHP versions need to be used
   workflow_matrix_generator:
+    name: Sanity matrix
     uses: ./.github/workflows/workflow-matrix-generator.yml
     with:
       matrix_type: sanity
@@ -69,7 +70,7 @@ jobs:
           docker logs ${{ inputs.DOCKER_PREFIX }}-prestashop-git-1 > ./var/docker-logs/prestashop.log
 
       - name: Upload Screenshots and logs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: sanity-${{ matrix.php }}-${{ matrix.browser }}-${{ matrix.db }}

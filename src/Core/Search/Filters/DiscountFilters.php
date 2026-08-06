@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Domain\Discount\DiscountSettings;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DiscountGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
@@ -30,9 +29,7 @@ final class DiscountFilters extends Filters
             'offset' => 0,
             'orderBy' => 'id_discount',
             'sortOrder' => 'desc',
-            'filters' => [
-                'period_filter' => DiscountSettings::PERIOD_FILTER_ALL,
-            ],
+            'filters' => [],
         ];
     }
 }

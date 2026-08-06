@@ -35,4 +35,25 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
+  PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository:
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
   PrestaShop\PrestaShop\Adapter\Order\Repository\OrderDetailRepository:
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  PrestaShop\PrestaShop\Adapter\Shipment\OrderShipmentService:
+    public: true
+    arguments:
+      - '@PrestaShopBundle\Entity\Repository\ShipmentRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Carrier\Repository\CarrierRepository'

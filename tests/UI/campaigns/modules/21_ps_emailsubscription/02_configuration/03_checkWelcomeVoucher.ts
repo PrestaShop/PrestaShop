@@ -32,7 +32,7 @@ Scenario
 Post-condition:
 - Reset SMTP parameters
  */
-describe('Mail alerts module - Check welcome voucher code', async () => {
+describe('Mail alerts module : Check welcome voucher code', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let allEmails: MailDevEmail[];

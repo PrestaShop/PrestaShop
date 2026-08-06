@@ -135,11 +135,11 @@
 		{/foreach}
 
 	{if $multishop_active && $shop_link_type}
-		<td title="{$tr.shop_name}">
+		<td title="{$tr.shop_name|escape:'html':'UTF-8'}">
 			{if isset($tr.shop_short_name)}
-				{$tr.shop_short_name}
+				{$tr.shop_short_name|escape:'html':'UTF-8'}
 			{else}
-				{$tr.shop_name}
+				{$tr.shop_name|escape:'html':'UTF-8'}
 			{/if}
 		</td>
 	{/if}

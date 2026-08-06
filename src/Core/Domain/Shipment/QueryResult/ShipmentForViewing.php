@@ -15,17 +15,20 @@ class ShipmentForViewing
     private ?string $trackingNumber;
     private CarrierSummary $carrierSummary;
     private ShippingAdressSummary $shippingAdressSummary;
+    private bool $isDeleted;
 
     public function __construct(
         int $id,
         ?string $trackingNumber,
         CarrierSummary $carrierSummary,
-        ShippingAdressSummary $shippingAdressSummary
+        ShippingAdressSummary $shippingAdressSummary,
+        bool $isDeleted,
     ) {
         $this->id = $id;
         $this->trackingNumber = $trackingNumber;
         $this->carrierSummary = $carrierSummary;
         $this->shippingAdressSummary = $shippingAdressSummary;
+        $this->isDeleted = $isDeleted;
     }
 
     public function getId(): int
@@ -33,9 +36,9 @@ class ShipmentForViewing
         return $this->id;
     }
 
-    public function setId(int $id): void
+    public function isDeleted(): bool
     {
-        $this->id = $id;
+        return $this->isDeleted;
     }
 
     public function getTrackingNumber(): ?string
@@ -43,28 +46,13 @@ class ShipmentForViewing
         return $this->trackingNumber;
     }
 
-    public function setTrackingNumber(?string $trackingNumber): void
-    {
-        $this->trackingNumber = $trackingNumber;
-    }
-
     public function getCarrierSummary(): CarrierSummary
     {
         return $this->carrierSummary;
     }
 
-    public function setCarrierSummary(CarrierSummary $carrierSummary): void
-    {
-        $this->carrierSummary = $carrierSummary;
-    }
-
     public function getShippingAdressSummary(): ShippingAdressSummary
     {
         return $this->shippingAdressSummary;
-    }
-
-    public function setShippingAdressSummary(ShippingAdressSummary $shippingAdressSummary): void
-    {
-        $this->shippingAdressSummary = $shippingAdressSummary;
     }
 }

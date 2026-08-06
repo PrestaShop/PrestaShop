@@ -571,6 +571,9 @@
   <configuration id="PS_TOKEN_ENABLE" name="PS_TOKEN_ENABLE">
     <value>1</value>
   </configuration>
+  <configuration id="PS_SHOP_MODE" name="PS_SHOP_MODE">
+    <value>b2c_only</value>
+  </configuration>
   <configuration id="PS_STATS_RENDER" name="PS_STATS_RENDER">
     <value>graphnvd3</value>
   </configuration>

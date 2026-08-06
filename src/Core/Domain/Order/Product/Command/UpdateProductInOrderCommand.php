@@ -48,12 +48,24 @@ class UpdateProductInOrderCommand
     private $orderInvoiceId;
 
     /**
+     * @var null|array<int, array{
+     *     shipment_id: int,
+     *     quantity: int
+     * }>
+     */
+    private ?array $shipmentsQuantities;
+
+    /**
      * @param int $orderId
      * @param int $orderDetailId
      * @param string $priceTaxIncluded
      * @param string $priceTaxExcluded
      * @param int $quantity
      * @param int|null $orderInvoiceId
+     * @param null|array<int, array{
+     *     shipment_id: int,
+     *     quantity: int
+     * }> $shipmentsQuantities
      */
     public function __construct(
         int $orderId,
@@ -61,7 +73,8 @@ class UpdateProductInOrderCommand
         string $priceTaxIncluded,
         string $priceTaxExcluded,
         int $quantity,
-        ?int $orderInvoiceId = null
+        ?int $orderInvoiceId = null,
+        ?array $shipmentsQuantities = null
     ) {
         $this->orderId = new OrderId($orderId);
         $this->orderDetailId = $orderDetailId;
@@ -72,6 +85,7 @@ class UpdateProductInOrderCommand
             throw new InvalidAmountException();
         }
         $this->setQuantity($quantity);
+        $this->setShipmentsQuantities($shipmentsQuantities);
         $this->orderInvoiceId = $orderInvoiceId;
     }
 
@@ -134,5 +148,49 @@ class UpdateProductInOrderCommand
             throw new InvalidProductQuantityException('When adding a product quantity must be strictly positive');
         }
         $this->quantity = $quantity;
+    }
+
+    /**
+     * @param null|array<int, array{
+     *     shipment_id: int,
+     *     quantity: int
+     * }> $shipmentsQuantities
+     *
+     * @throws InvalidProductQuantityException
+     */
+    private function setShipmentsQuantities(?array $shipmentsQuantities): void
+    {
+        if (!empty($shipmentsQuantities)) {
+            $hasPositiveQuantity = false;
+
+            foreach ($shipmentsQuantities as $shipmentQuantity) {
+                if ($shipmentQuantity['quantity'] < 0) {
+                    throw new InvalidProductQuantityException('Shipment quantity must be positive');
+                }
+
+                if ($shipmentQuantity['quantity'] >= 1) {
+                    $hasPositiveQuantity = true;
+                }
+            }
+
+            if (!$hasPositiveQuantity) {
+                throw new InvalidProductQuantityException(
+                    'At least one shipment quantity must be greater than or equal to 1'
+                );
+            }
+        }
+
+        $this->shipmentsQuantities = $shipmentsQuantities;
+    }
+
+    /**
+     * @return null|array<int, array{
+     *     shipment_id: int,
+     *     quantity: int
+     * }>
+     */
+    public function getShipmentsQuantities()
+    {
+        return $this->shipmentsQuantities;
     }
 }

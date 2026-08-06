@@ -1,0 +1,17 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+
+<div class="text-center showcase-list-card">
+  <p class="mt-4">
+    {{ 'No customer information available yet.'|trans({}, 'Admin.Orderscustomers.Feature') }}
+  </p>
+
+  <div class="mt-4">
+    <a href="{{ path('admin_customers_create') }}" class="btn btn-primary ml-1">
+      <i class="material-icons">add_circle_outline</i>
+      {{ 'Add new customer'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    </a>
+  </div>
+</div>

@@ -16,6 +16,8 @@ class NotCustomizableProduct extends Constraint
 {
     public $message = 'Customizable product cannot be selected.';
 
+    public bool $requiredOnly = false;
+
     /**
      * {@inheritdoc}
      */

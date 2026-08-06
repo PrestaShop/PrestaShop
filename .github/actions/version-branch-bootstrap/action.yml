@@ -1,0 +1,212 @@
+# Composite action for "Version-branch bootstrap": bootstraps ONE repository.
+# Checks out the target repo, runs its transform script (fetched from the
+# orchestrator repo), and — if the transform produced a diff — opens or updates
+# a single idempotent PR. Closed PRs are ignored (gh pr list --state open), so a
+# fresh one is created when none is open. Emits a pr-result-<id> artifact for the
+# orchestrator's report job. Never merges: humans review & merge.
+name: 'Version-branch bootstrap (single repo)'
+description: 'Run a repo''s version-branch transform and open/update an idempotent bootstrap PR.'
+
+inputs:
+  repository:
+    description: 'Production repo (org/name), e.g. PrestaShop/test-scenarios'
+    required: true
+  base:
+    description: 'Branch the PR targets (develop / master / dev / main)'
+    required: true
+  version_branch:
+    description: 'New version branch, e.g. 9.2.x'
+    required: true
+  new_version:
+    description: 'New version, e.g. 9.2.0 (for PR title/body)'
+    required: true
+  release_type:
+    description: 'minor | major'
+    required: true
+  transform_id:
+    description: 'Selects .github/release-bootstrap/transform-<id>.sh'
+    required: true
+  target_owner:
+    description: 'Test override: when set, operate on <target_owner>/<name> instead of the production owner'
+    required: false
+    default: ''
+  reviewers:
+    description: 'Comma-separated users/teams to request review from (optional)'
+    required: false
+    default: ''
+  dry_run:
+    description: 'Compute the diff but do not push or open/update a PR'
+    required: false
+    default: 'true'
+  token:
+    description: 'Token with write access to the target repo (and the test forks). The orchestrator passes secrets.JARVIS_TOKEN.'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Resolve target repo & head branch
+      id: meta
+      shell: bash
+      run: |
+        NAME="${{ inputs.repository }}"
+        BASENAME="${NAME##*/}"
+        if [ -n "${{ inputs.target_owner }}" ]; then
+          REPO="${{ inputs.target_owner }}/${BASENAME}"
+        else
+          REPO="${NAME}"
+        fi
+        # Dotless head branch (9.2.x -> 92x): a "bootstrap/9.2.x" name matches the
+        # "9.[1-9].x" protected-branch ruleset on the official repo and is then
+        # hard to delete. The real version branch (9.2.x) keeps its dots — only
+        # this transient PR head branch is slugified.
+        VB="${{ inputs.version_branch }}"
+        {
+          echo "repo=${REPO}"
+          echo "head=bootstrap/${VB//./}"
+        } >> "$GITHUB_OUTPUT"
+        echo "Target repo: ${REPO} (base ${{ inputs.base }}), head bootstrap/${VB//./}"
+
+    - name: Checkout target repo
+      uses: actions/checkout@v5
+      with:
+        repository: ${{ steps.meta.outputs.repo }}
+        ref: ${{ inputs.base }}
+        fetch-depth: 1
+        token: ${{ inputs.token }}
+        path: target
+
+    - name: Checkout transform scripts
+      uses: actions/checkout@v5
+      with:
+        repository: ${{ github.repository }}
+        ref: ${{ github.sha }}
+        sparse-checkout: .github/release-bootstrap
+        path: _scripts
+
+    - name: Apply transform & detect changes
+      id: tf
+      working-directory: target
+      shell: bash
+      env:
+        VERSION_BRANCH: ${{ inputs.version_branch }}
+        NEW_VERSION: ${{ inputs.new_version }}
+        BASE: ${{ inputs.base }}
+        RELEASE_TYPE: ${{ inputs.release_type }}
+      run: |
+        set -euo pipefail
+        bash "${GITHUB_WORKSPACE}/_scripts/.github/release-bootstrap/transform-${{ inputs.transform_id }}.sh"
+        git add -A
+        if git diff --staged --quiet; then
+          echo "changed=false" >> "$GITHUB_OUTPUT"
+          echo "ℹ️ ${{ steps.meta.outputs.repo }}: \`${{ inputs.version_branch }}\` already present — no PR." >> "$GITHUB_STEP_SUMMARY"
+        else
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          {
+            echo "<details><summary>${{ steps.meta.outputs.repo }} — changes</summary>"
+            echo ""
+            echo '```'
+            git --no-pager diff --staged --stat
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+    - name: Commit, push & open/update PR
+      id: pr
+      if: steps.tf.outputs.changed == 'true'
+      working-directory: target
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        REPO: ${{ steps.meta.outputs.repo }}
+        HEAD: ${{ steps.meta.outputs.head }}
+        BASE: ${{ inputs.base }}
+        VB: ${{ inputs.version_branch }}
+        NEW_VERSION: ${{ inputs.new_version }}
+        REVIEWERS: ${{ inputs.reviewers }}
+        DRY_RUN: ${{ inputs.dry_run }}
+      run: |
+        set -euo pipefail
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git commit -q -m "Bootstrap CI for ${VB}"
+
+        if [ "${DRY_RUN}" = "true" ]; then
+          echo "::notice::[dry_run] ${REPO}: would push ${HEAD} and open/update a PR onto ${BASE}."
+          echo "action=dry-run" >> "$GITHUB_OUTPUT"
+          echo "url=" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+
+        git push --force origin "HEAD:${HEAD}"
+
+        TITLE="Bootstrap CI for ${VB}"
+        BODY=$(cat <<EOF
+        | Questions         | Answers
+        | ----------------- | -------------------------------------------------------
+        | Branch?           | ${BASE}
+        | Description?      | Add the new version branch \`${VB}\` (opened for ${NEW_VERSION}) to this repository's CI matrices / branch lists.
+        | Type?             | improvement
+        | Category?         | PM
+        | BC breaks?        | no
+        | Deprecations?     | no
+        | How to test?      | Review the diff: \`${VB}\` is added wherever active version branches are enumerated.
+        | UI Tests          | N/A
+        | Fixed issue or discussion? | N/A
+        | Related PRs       | Companion PRs opened by the same "Version-branch bootstrap" run.
+        | Sponsor company   | N/A
+
+        > 🤖 Opened automatically by the **Version-branch bootstrap** workflow. Idempotent: re-running updates this PR; if it was closed, a new one is created.
+        EOF
+        )
+
+        EXISTING=$(gh pr list --repo "${REPO}" --state open --head "${HEAD}" --base "${BASE}" --json number -q '.[0].number' 2>/dev/null || true)
+        if [ -n "${EXISTING}" ]; then
+          gh pr edit "${EXISTING}" --repo "${REPO}" --title "${TITLE}" --body "${BODY}" >/dev/null 2>&1 || true
+          URL=$(gh pr view "${EXISTING}" --repo "${REPO}" --json url -q .url)
+          echo "action=updated" >> "$GITHUB_OUTPUT"
+        else
+          URL=$(gh pr create --repo "${REPO}" --base "${BASE}" --head "${HEAD}" --title "${TITLE}" --body "${BODY}")
+          echo "action=created" >> "$GITHUB_OUTPUT"
+        fi
+        echo "url=${URL}" >> "$GITHUB_OUTPUT"
+
+        if [ -n "${REVIEWERS}" ]; then
+          gh pr edit "${URL}" --repo "${REPO}" --add-reviewer "${REVIEWERS}" 2>/dev/null \
+            || echo "::warning::could not request review from ${REVIEWERS} on ${REPO}"
+        fi
+
+    - name: Record result
+      if: always()
+      shell: bash
+      env:
+        REPO: ${{ steps.meta.outputs.repo }}
+        TF_OUTCOME: ${{ steps.tf.outcome }}
+        PR_OUTCOME: ${{ steps.pr.outcome }}
+        CHANGED: ${{ steps.tf.outputs.changed }}
+        ACTION_IN: ${{ steps.pr.outputs.action }}
+        URL_IN: ${{ steps.pr.outputs.url }}
+        TRANSFORM_ID: ${{ inputs.transform_id }}
+      run: |
+        if [ "${TF_OUTCOME}" != "success" ]; then
+          ACTION="failed"
+        elif [ "${CHANGED}" != "true" ]; then
+          ACTION="skipped"
+        elif [ "${PR_OUTCOME}" != "success" ]; then
+          ACTION="failed"
+        else
+          ACTION="${ACTION_IN:-skipped}"
+        fi
+        jq -n --arg repo "${REPO}" --arg action "${ACTION}" --arg url "${URL_IN}" \
+          --arg transform "${TRANSFORM_ID}" \
+          '{repo:$repo, action:$action, url:$url, transform:$transform}' > pr-result.json
+        cat pr-result.json
+
+    - name: Upload result artifact
+      if: always()
+      uses: actions/upload-artifact@v7
+      with:
+        name: pr-result-${{ inputs.transform_id }}
+        path: pr-result.json
+        retention-days: 5

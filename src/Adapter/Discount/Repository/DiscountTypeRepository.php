@@ -71,7 +71,7 @@ class DiscountTypeRepository
      *
      * @return array
      */
-    public function getAllActiveTypes(): array
+    public function getAllActiveTypes(int $languageId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
@@ -79,6 +79,8 @@ class DiscountTypeRepository
             ->from($this->dbPrefix . 'cart_rule_type', 'crt')
             ->leftJoin('crt', $this->dbPrefix . 'cart_rule_type_lang', 'crtl', 'crt.id_cart_rule_type = crtl.id_cart_rule_type')
             ->where('crt.active = 1')
+            ->andWhere('crtl.id_lang = :languageId')
+            ->setParameter('languageId', $languageId)
             ->orderBy('crtl.name')
         ;
 
@@ -213,6 +215,28 @@ class DiscountTypeRepository
         $result = $qb->executeQuery()->fetchAssociative();
 
         return $result ? (int) $result['id_cart_rule_type'] : null;
+    }
+
+    /**
+     * Get discount type by type string
+     *
+     * @param string $discountType
+     *
+     * @return array|null
+     */
+    public function getByDiscountType(string $discountType, int $languageId): ?array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('crt.*, crtl.*')
+            ->from($this->dbPrefix . 'cart_rule_type', 'crt')
+            ->leftJoin('crt', $this->dbPrefix . 'cart_rule_type_lang', 'crtl', 'crt.id_cart_rule_type = crtl.id_cart_rule_type AND crtl.id_lang = :languageId')
+            ->where('crt.discount_type = :discountType')
+            ->setParameter('discountType', $discountType)
+            ->setParameter('languageId', $languageId)
+        ;
+
+        return $qb->executeQuery()->fetchAssociative() ?: null;
     }
 
     /**

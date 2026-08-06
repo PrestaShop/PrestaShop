@@ -12,6 +12,11 @@ services:
     arguments:
       - '@prestashop.adapter.shipping_preferences.carrier_options_configuration'
 
+  prestashop.admin.country.options.data_provider:
+    class: 'PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryOptionsFormDataProvider'
+    arguments:
+      - '@prestashop.adapter.country.country_options_configuration'
+
   prestashop.admin.order.invoices.by_date.data_provider:
     class: 'PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider'
     arguments:
@@ -266,10 +271,10 @@ services:
     arguments:
       - '@prestashop.core.mail_theme.configuration'
 
-  prestashop.admin.merchandise_return_options.form_data_provider:
-    class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsFormDataProvider'
+  prestashop.admin.order_return_options.form_data_provider:
+    class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderReturn\OrderReturnOptionsFormDataProvider'
     arguments:
-      - '@prestashop.core.merchandise_return.configuration.merchandise_return_options_configuration'
+      - '@prestashop.core.order_return.configuration.order_return_options_configuration'
 
   prestashop.admin.sell.order.credit_slip.credit_slip_options_form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsFormDataProvider'

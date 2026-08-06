@@ -88,7 +88,7 @@ runs:
         DB_USER: 'root'
         DB_PASSWD: 'prestashop'
         PS_LANGUAGE: 'en'
-        ADMIN_PASSWD: 'Correct Horse Battery Staple'
+        ADMIN_PASSWD: 'Pr3st4Sh0P'
         TIMEZONE: 'Europe/Paris'
       run: |
         cd ${{ inputs.PRESTASHOP_DIR }}

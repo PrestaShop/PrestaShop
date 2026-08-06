@@ -4,17 +4,9 @@
  */
 
 import FormSubmitButton from '@components/form-submit-button';
+import TaxRulesManager from '@pages/tax-rules/tax-rules-manager';
 
-const {$} = window;
-
-$(() => {
-  const taxRuleGrid = new window.prestashop.component.Grid('tax_rule');
-
-  taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.ExportToSqlManagerExtension());
-  taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
-  taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
-  taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
-  taxRuleGrid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
-
+document.addEventListener('DOMContentLoaded', () => {
   new FormSubmitButton();
+  new TaxRulesManager();
 });

@@ -21,7 +21,7 @@ trait BulkDeleteActionTrait
      *
      * @return BulkActionInterface
      */
-    protected function buildBulkDeleteAction(string $bulkDeleteRouteName, array $options = [])
+    protected function buildBulkDeleteAction(string $bulkDeleteRouteName, array $options = [], string $actionId = 'delete_selection', ?string $actionLabel = null)
     {
         $options = array_merge(
             [
@@ -41,8 +41,8 @@ trait BulkDeleteActionTrait
             $options['modal_options']
         ));
 
-        return (new SubmitBulkAction('delete_selection'))
-            ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+        return (new SubmitBulkAction($actionId))
+            ->setName($actionLabel ?? $this->trans('Delete selected', [], 'Admin.Actions'))
             ->setOptions($options)
         ;
     }

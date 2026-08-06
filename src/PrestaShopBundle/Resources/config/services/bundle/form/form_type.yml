@@ -54,8 +54,13 @@ services:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Catalog/Category/*"
   PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/*"
+    # The Placement card type needs the Admin API endpoint catalog, which only exists in the
+    # admin kernel — it is registered in app/config/admin/services.yml instead.
+    exclude: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/ExtraPropertyDefinition/ExtraPropertyDefinitionAdvancedType.php"
   PrestaShopBundle\Form\Admin\Improve\International\Localization\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Improve/International/Localization/*"
+  PrestaShopBundle\Form\Admin\Improve\International\Locations\:
+    resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Improve/International/Locations/*"
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\:
     resource: "%kernel.project_dir%/src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/*"
   PrestaShopBundle\Form\Admin\Login\:
@@ -373,6 +378,7 @@ services:
       $currencyChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CurrencyByIdChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\TranslateMailsBodyType:
+  PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\EmailBodyTemplateEditType:
   PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType:
     arguments:
       $carrierForOrderChoiceProvider: '@prestashop.adapter.form.choice.provider.carrier_for_order_choice_provider'
@@ -400,7 +406,7 @@ services:
       - '@prestashop.core.form.choice_provider.customer_service_order_messages_name'
       - '@prestashop.core.form.choice_provider.customer_service_order_messages'
 
-  PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\OrderReturnType:
+  PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderReturn\OrderReturnType:
     arguments:
       $stateChoices: '@=service("prestashop.adapter.form.choice_provider.order_return_state").getChoices()'
 
@@ -436,6 +442,9 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Discount\DiscountFeaturesType'
     arguments:
       $featuresChoiceProvider: '@prestashop.adapter.form.choice_provider.features_choice_provider'
+  PrestaShopBundle\Form\Admin\Sell\Discount\DiscountTypeChoiceType:
+    arguments:
+      $choiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\DiscountTypeChoiceProvider'
 
   PrestaShopBundle\Form\Admin\Sell\Discount\DiscountCustomerEligibilityChoiceType:
     arguments:
@@ -568,7 +577,9 @@ services:
     arguments:
       $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
-  PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsType:
+  PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryOptionsType:
+
+  PrestaShopBundle\Form\Admin\Sell\CustomerService\OrderReturn\OrderReturnOptionsType:
 
   PrestaShopBundle\Form\Admin\Type\CarrierChoiceType:
     arguments:
@@ -600,6 +611,10 @@ services:
     arguments:
       $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
 
+  PrestaShopBundle\Form\Admin\Improve\International\Locations\ChangeCountriesZoneType:
+    arguments:
+      $zoneChoiceProvider: '@prestashop.core.form.choice_provider.zone_by_id'
+
   PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener:
     arguments:
       $combinationRepository: '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
@@ -621,6 +636,15 @@ services:
       $permissionChoices: '@=service("prestashop.core.form.choice_provider.permissions_choice_provider").getChoices()'
 
   PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType:
+
+  PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesType:
+
+  PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRuleType:
+    arguments:
+      $taxByIdChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\TaxByIdChoiceProvider'
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+
   PrestaShopBundle\Form\Admin\Type\FeatureChoiceType:
     arguments:
       $featureChoiceProvider: '@PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider'
@@ -702,6 +726,8 @@ services:
   PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageSettingsType: ~
   PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\RegenerateThumbnailsType: ~
 
+  PrestaShopBundle\Form\Admin\Improve\Design\HookModuleType: ~
+
   PrestaShopBundle\Form\Admin\Sell\Order\Shipment\MergeShipmentType:
     arguments:
       $translator: '@translator'
@@ -713,3 +739,9 @@ services:
   PrestaShopBundle\Form\Admin\Configure\ShopParameters\Tag\TagType:
     arguments:
       $languagesChoices: '@=service("prestashop.core.form.choice_provider.all_languages").getChoices()'
+
+  PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExtraPropertyDefinition\ExtraPropertyDefinitionFieldDefinitionType:
+    arguments:
+      $typeChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ExtraPropertyTypeChoiceProvider'
+      $scopeChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ExtraPropertyScopeChoiceProvider'
+      $sqlIndexChoiceProvider: '@PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ExtraPropertySqlIndexChoiceProvider'

@@ -18,16 +18,23 @@ use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Exception\DiscountNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Discount\Query\GetDiscountForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Discount\QueryResult\DiscountForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForFreeGift;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForFreeGift;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DiscountGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\GridFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\DiscountFilters;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
+use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use PrestaShopBundle\Form\Admin\Sell\Discount\DiscountTypeSelectorType;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -70,6 +77,41 @@ class DiscountController extends PrestaShopAdminController
         ]);
     }
 
+    /**
+     * Custom reset action, we don't use the CommonController one because the reset must keep the
+     * period filter, and resets all other filters.
+     *
+     * @return JsonResponse
+     */
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function resetSearchAction(AdminFilterRepository $adminFiltersRepository): JsonResponse
+    {
+        $employeeId = $this->getEmployeeContext()->getEmployee()->getId();
+        $shopId = $this->getShopContext()->getId();
+        $adminFilter = $adminFiltersRepository->findByEmployeeAndFilterId($employeeId, $shopId, DiscountGridDefinitionFactory::GRID_ID);
+
+        if (isset($adminFilter)) {
+            $currentFilters = json_decode($adminFilter->getFilter(), true);
+            // Reset offset to show first page of list after filters resetting
+            $currentFilters['offset'] = 0;
+
+            // If no period_filter is selected we can unset all filters
+            if (empty($currentFilters['filters']['period_filter'])) {
+                unset($currentFilters['filters']);
+            } else {
+                // If period_filter ise set we only keep period_filter as a filter
+                $selectedPeriod = $currentFilters['filters']['period_filter'];
+                $currentFilters['filters'] = [
+                    'period_filter' => $selectedPeriod,
+                ];
+            }
+            $adminFilter->setFilter(json_encode($currentFilters));
+            $adminFiltersRepository->updateFilter($adminFilter);
+        }
+
+        return new JsonResponse();
+    }
+
     #[DemoRestricted(redirectRoute: 'admin_discounts_index')]
     #[AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute: 'admin_discounts_index')]
     public function createAction(
@@ -85,8 +127,23 @@ class DiscountController extends PrestaShopAdminController
         if (empty($discountType) && $request->request->has('discount_type_selector')) {
             $submittedData = $request->request->all('discount_type_selector');
             if (!empty($submittedData['discount_type_selector'])) {
-                return $this->redirectToRoute('admin_discounts_create', ['discountType' => $submittedData['discount_type_selector']]);
+                return $this->redirectToRoute(
+                    'admin_discounts_create',
+                    ['discountType' => $submittedData['discount_type_selector']] + $this->getIframeModalParameters($request)
+                );
             }
+        }
+
+        // The page can also be accessed directly without a discount type, typically in the iframe modal
+        // opened from the order creation page, so the discount type must be selected first
+        if (empty($discountType)) {
+            return $this->render('@PrestaShop/Admin/Sell/Catalog/Discount/create_type_selection.html.twig', [
+                'discountTypeForm' => $this->createForm(DiscountTypeSelectorType::class)->createView(),
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'layoutTitle' => $this->trans('Discounts', [], 'Admin.Navigation.Menu'),
+                'lightDisplay' => $request->query->has('liteDisplaying'),
+            ]);
         }
 
         $form = $formBuilder->getForm([], [
@@ -97,10 +154,19 @@ class DiscountController extends PrestaShopAdminController
             $form->handleRequest($request);
             $result = $formHandler->handle($form);
 
-            if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
+            if ($result->isSubmitted()) {
+                if ($result->isValid()) {
+                    $this->addFlash('success', $this->trans('Successful creation', [], 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_discount_edit', ['discountId' => $result->getIdentifiableObjectId()]);
+                    if ($request->query->has('submitFormAjax')) {
+                        // When the discount is created from the iframe modal the parent page is refreshed by this template
+                        return $this->render('@PrestaShop/Admin/Sell/Catalog/Discount/modal_create_success.html.twig');
+                    }
+
+                    return $this->redirectToRoute('admin_discount_edit', ['discountId' => $result->getIdentifiableObjectId()]);
+                } else {
+                    $this->displayFormErrors($form);
+                }
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -111,7 +177,7 @@ class DiscountController extends PrestaShopAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'layoutTitle' => $this->trans('Discounts', [], 'Admin.Navigation.Menu'),
-            'lightDisplay' => false,
+            'lightDisplay' => $request->query->has('liteDisplaying'),
         ]);
     }
 
@@ -143,14 +209,7 @@ class DiscountController extends PrestaShopAdminController
 
                     return $this->redirectToRoute('admin_discount_edit', ['discountId' => $discountId]);
                 } else {
-                    // Display root level errors with flash messages
-                    foreach ($form->getErrors() as $error) {
-                        $this->addFlash('error', sprintf(
-                            '%s: %s',
-                            $error->getOrigin()->getName(),
-                            $error->getMessage()
-                        ));
-                    }
+                    $this->displayFormErrors($form);
                 }
             }
         } catch (Exception $e) {
@@ -162,7 +221,7 @@ class DiscountController extends PrestaShopAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'layoutTitle' => $this->trans('Discounts', [], 'Admin.Navigation.Menu'),
-            'lightDisplay' => false,
+            'lightDisplay' => $request->query->has('liteDisplaying'),
         ]);
     }
 
@@ -242,6 +301,79 @@ class DiscountController extends PrestaShopAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             return $this->redirectToRoute('admin_discounts_index');
+        }
+    }
+
+    #[AdminSecurity("is_granted('read', request.get('_legacy_controller'))")]
+    public function searchGiftProductsAction(Request $request): JsonResponse
+    {
+        $languageId = $this->getLanguageContext()->getId();
+        $shopId = $this->getShopContext()->getId();
+
+        try {
+            /** @var ProductForFreeGift[] $products */
+            $products = $this->dispatchQuery(new SearchProductsForFreeGift(
+                $request->get('query', ''),
+                $languageId,
+                $shopId,
+                (int) $request->get('limit', 20)
+            ));
+        } catch (ProductConstraintException $e) {
+            return $this->json([
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (empty($products)) {
+            return $this->json([]);
+        }
+
+        return $this->json($this->formatGiftProducts($products));
+    }
+
+    /**
+     * @param ProductForFreeGift[] $products
+     *
+     * @return array
+     */
+    private function formatGiftProducts(array $products): array
+    {
+        $productsData = [];
+        foreach ($products as $product) {
+            $productName = $product->getName();
+            if (!empty($product->getReference())) {
+                $productName .= sprintf(' (ref: %s)', $product->getReference());
+            }
+
+            $productsData[] = [
+                'id' => $product->getProductId(),
+                'name' => $productName,
+                'image' => $product->getImageUrl(),
+                'product_type' => $product->getProductType(),
+                'disabled' => $product->isDisabled(),
+                'disabled_reason' => $product->getDisabledReason(),
+            ];
+        }
+
+        return $productsData;
+    }
+
+    private function displayFormErrors(FormInterface $form): void
+    {
+        // Some errors are only on root level and not displayed so we display them as flash messages
+        $rootErrors = $form->getErrors();
+        if ($rootErrors->count()) {
+            foreach ($form->getErrors() as $error) {
+                $this->addFlash('error', sprintf(
+                    '%s: %s',
+                    $error->getOrigin()->getName(),
+                    $error->getMessage()
+                ));
+            }
+        } else {
+            // Other inline errors are linked to their input, but since the page is quite long we display a generic error message at the top to make sure the user
+            // understand something is not right
+            $this->addFlash('error', $this->trans('The form contains errors. Please fix them and save again.', [], 'Admin.Notifications.Error'));
         }
     }
 
@@ -348,5 +480,18 @@ class DiscountController extends PrestaShopAdminController
         }
 
         return $this->redirectToRoute('admin_discounts_index');
+    }
+
+    /**
+     * Returns the query parameters that must be kept across the creation funnel when the page
+     * is displayed in an iframe modal (e.g. opened from the order creation page).
+     *
+     * @param Request $request
+     *
+     * @return array<string, mixed>
+     */
+    private function getIframeModalParameters(Request $request): array
+    {
+        return array_intersect_key($request->query->all(), array_flip(['liteDisplaying', 'submitFormAjax']));
     }
 }
