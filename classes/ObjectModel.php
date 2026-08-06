@@ -621,7 +621,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
      * Takes current object ID, gets its values from database,
      * saves them in a new row and loads newly saved values as a new object.
      *
-     * @return ObjectModel|false
+     * @return static|false
      *
      * @throws PrestaShopDatabaseException
      */
@@ -690,7 +690,7 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
             }
         }
 
-        /** @var ObjectModel $object_duplicated */
+        /** @var static $object_duplicated */
         $object_duplicated = new $definition['classname']((int) $object_id);
         $object_duplicated->duplicateShops((int) $this->id);
 
@@ -2134,7 +2134,8 @@ abstract class ObjectModelCore implements PrestaShop\PrestaShop\Core\Foundation\
     /**
      * Returns object definition.
      *
-     * @param string|object $class Name of object
+     * @template T of ObjectModelCore
+     * @param class-string<T>|T $class Name of object
      * @param string|null $field Name of field if we want the definition of one field only
      *
      * @return array

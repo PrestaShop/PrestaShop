@@ -3716,7 +3716,9 @@ class AdminControllerCore extends Controller
     /**
      * Copy data values from $_POST to object.
      *
-     * @param ObjectModel $object Object
+     * @template T of ObjectModel
+     *
+     * @param T $object
      * @param string $table Object table
      */
     protected function copyFromPost(&$object, $table)

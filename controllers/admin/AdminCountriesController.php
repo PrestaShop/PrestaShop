@@ -458,7 +458,7 @@ class AdminCountriesControllerCore extends AdminController
     protected function processBulkAffectZone()
     {
         $zone_to_affect = Tools::getValue('zone_to_affect');
-        if ($zone_to_affect && $zone_to_affect !== 0) {
+        if ($zone_to_affect) {
             parent::processBulkAffectZone();
         }
 

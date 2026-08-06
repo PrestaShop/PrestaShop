@@ -797,6 +797,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $index = 0;
                 $current_selected_attribute = 0;
                 foreach ($group['attributes'] as $key => $attribute) {
+                    // TODO: This case seems to be always run, so the last attribute is always selected.
+                    // @phpstan-ignore identical.alwaysTrue
                     if ($index === 0) {
                         $current_selected_attribute = $key;
                     }

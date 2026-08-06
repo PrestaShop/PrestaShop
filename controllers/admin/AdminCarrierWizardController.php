@@ -775,7 +775,6 @@ class AdminCarrierWizardControllerCore extends AdminController
                 $current_carrier = new Carrier((int) $id_carrier);
 
                 // if update we duplicate current Carrier
-                /** @var Carrier $new_carrier */
                 $new_carrier = $current_carrier->duplicateObject();
 
                 if (Validate::isLoadedObject($new_carrier)) {

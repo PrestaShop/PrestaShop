@@ -60,6 +60,7 @@ class OrderControllerCore extends FrontController
 
     public function postProcess(): void
     {
+        // @phpstan-ignore staticMethod.resultUnused
         parent::postProcess();
 
         if (Tools::isSubmit('submitReorder')
