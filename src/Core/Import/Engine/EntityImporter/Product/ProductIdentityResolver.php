@@ -23,10 +23,10 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
  * phase — the row was already imported, so the run options must not gate
  * the lookup).
  */
-final class ProductIdentityResolver
+class ProductIdentityResolver
 {
     public function __construct(
-        private readonly ProductRepository $productRepository,
+        protected readonly ProductRepository $productRepository,
     ) {
     }
 
@@ -100,7 +100,7 @@ final class ProductIdentityResolver
         ];
     }
 
-    private function productExists(int $productId): bool
+    protected function productExists(int $productId): bool
     {
         if ($productId <= 0) {
             return false;

@@ -56,7 +56,7 @@ abstract class AbstractEntityImporter implements EntityImporterInterface
      *
      * @param callable(array<string, string>, int): array{messages: list<ImportMessage>, skipped: bool} $rowProcessor receives the MAPPED row and the 0-based data-record index
      */
-    final protected function iterateBatch(ImportRunContext $context, int $limit, callable $rowProcessor): PhaseBatchResult
+    protected function iterateBatch(ImportRunContext $context, int $limit, callable $rowProcessor): PhaseBatchResult
     {
         $messages = [];
         $newlySkippedRows = [];
@@ -86,7 +86,7 @@ abstract class AbstractEntityImporter implements EntityImporterInterface
     /**
      * @throws UnknownPhaseException when the phase id is not one of getPhases()
      */
-    final protected function assertKnownPhase(string $phaseId): void
+    protected function assertKnownPhase(string $phaseId): void
     {
         $knownPhaseIds = array_map(static fn (ImportPhaseDefinition $definition): string => $definition->id, $this->getPhases());
         if (!in_array($phaseId, $knownPhaseIds, true)) {
@@ -97,7 +97,7 @@ abstract class AbstractEntityImporter implements EntityImporterInterface
     /**
      * @param list<ImportMessage> $messages
      */
-    final protected function containsError(array $messages): bool
+    protected function containsError(array $messages): bool
     {
         foreach ($messages as $message) {
             if (ImportMessage::SEVERITY_ERROR === $message->severity) {
@@ -112,7 +112,7 @@ abstract class AbstractEntityImporter implements EntityImporterInterface
      * Whether this batch just consumed the last unit of the phase (the total
      * was computed once at phase entry and carried by the context).
      */
-    final protected function batchCompletesPhase(ImportRunContext $context, PhaseBatchResult $result): bool
+    protected function batchCompletesPhase(ImportRunContext $context, PhaseBatchResult $result): bool
     {
         return $context->getCurrentOffset() + $result->processedUnitCount >= $context->getCurrentPhaseTotalUnits();
     }
@@ -122,7 +122,7 @@ abstract class AbstractEntityImporter implements EntityImporterInterface
      * apply, since the caller only applies the result after processPhaseBatch()
      * returns.
      */
-    final protected function contextWithBatchApplied(ImportRunContext $context, PhaseBatchResult $result): ImportRunContext
+    protected function contextWithBatchApplied(ImportRunContext $context, PhaseBatchResult $result): ImportRunContext
     {
         $clonedContext = clone $context;
         $clonedContext->applyBatchResult($result);
@@ -136,7 +136,7 @@ abstract class AbstractEntityImporter implements EntityImporterInterface
      *
      * @param array<string, string> $mappedRow
      */
-    final protected static function isEmptyMappedRow(array $mappedRow): bool
+    protected static function isEmptyMappedRow(array $mappedRow): bool
     {
         return [] === array_filter($mappedRow, static fn (string $value): bool => '' !== $value);
     }

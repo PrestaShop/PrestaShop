@@ -28,7 +28,7 @@ use SplFileInfo;
  * normalization time only — the engine never sees either. Presenters add the
  * run's skip count back when they need source-file line numbers.
  */
-final class ImportRunContext
+class ImportRunContext
 {
     /**
      * Field-mapping value marking a column as ignored: the mapping screen's
@@ -38,32 +38,32 @@ final class ImportRunContext
      */
     public const COLUMN_IGNORED = 'no';
 
-    private ?string $currentPhaseId = null;
+    protected ?string $currentPhaseId = null;
 
-    private int $currentPhaseTotalUnits = 0;
+    protected int $currentPhaseTotalUnits = 0;
 
-    private int $currentOffset = 0;
+    protected int $currentOffset = 0;
 
-    private ?string $resumeCursor = null;
+    protected ?string $resumeCursor = null;
 
     /**
      * @var array<string, array<int, true>> sparse skipped row indexes, per phase id
      */
-    private array $skippedRows = [];
+    protected array $skippedRows = [];
 
     /**
      * @param array<int, string> $fieldMapping column index => field name ('no' = ignored column)
      */
     public function __construct(
-        private readonly string $entityType,
-        private readonly string $workingFilePath,
-        private readonly int $dataRecordCount,
-        private readonly string $langIso,
-        private readonly string $csvSeparator,
-        private readonly string $multipleValueSeparator,
-        private readonly array $fieldMapping,
-        private readonly ImportRunOptions $options,
-        private readonly int $shopId,
+        protected readonly string $entityType,
+        protected readonly string $workingFilePath,
+        protected readonly int $dataRecordCount,
+        protected readonly string $langIso,
+        protected readonly string $csvSeparator,
+        protected readonly string $multipleValueSeparator,
+        protected readonly array $fieldMapping,
+        protected readonly ImportRunOptions $options,
+        protected readonly int $shopId,
     ) {
     }
 

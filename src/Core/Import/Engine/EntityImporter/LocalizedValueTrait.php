@@ -25,12 +25,12 @@ trait LocalizedValueTrait
     /**
      * @var list<int>|null memoized: language installs cannot happen mid-run
      */
-    private ?array $allLanguageIds = null;
+    protected ?array $allLanguageIds = null;
 
     /**
      * @return array<int, string> the value duplicated into every installed language
      */
-    private function localizeForCreation(string $value): array
+    protected function localizeForCreation(string $value): array
     {
         $localized = [];
         foreach ($this->getAllLanguageIds() as $languageId) {
@@ -43,7 +43,7 @@ trait LocalizedValueTrait
     /**
      * @return list<int> every installed language id
      */
-    private function getAllLanguageIds(): array
+    protected function getAllLanguageIds(): array
     {
         return $this->allLanguageIds ??= array_map(
             static fn (LanguageInterface $language): int => $language->getId(),
@@ -56,7 +56,7 @@ trait LocalizedValueTrait
      *
      * @throws ImportEngineException when the iso code matches no installed language
      */
-    private function getLanguageId(ImportRunContext $context): int
+    protected function getLanguageId(ImportRunContext $context): int
     {
         $language = $this->languageRepository->getOneByIsoCode($context->getLangIso());
         if (null === $language) {

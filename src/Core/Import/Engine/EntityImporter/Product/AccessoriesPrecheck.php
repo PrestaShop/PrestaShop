@@ -28,14 +28,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Memory bound: roughly tens of MB per million rows (one hash-set entry per
  * identity column value).
  */
-final class AccessoriesPrecheck
+class AccessoriesPrecheck
 {
     public function __construct(
-        private readonly ResumableFileReaderInterface $fileReader,
-        private readonly RowMapper $rowMapper,
-        private readonly ProductIdentityResolver $identityResolver,
-        private readonly ValueParser $valueParser,
-        private readonly TranslatorInterface $translator,
+        protected readonly ResumableFileReaderInterface $fileReader,
+        protected readonly RowMapper $rowMapper,
+        protected readonly ProductIdentityResolver $identityResolver,
+        protected readonly ValueParser $valueParser,
+        protected readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -71,7 +71,7 @@ final class AccessoriesPrecheck
     /**
      * @return array<string, true> keys: 'id:<value>' and 'ref:<value>'
      */
-    private function buildIdentitySet(ImportRunContext $context): array
+    protected function buildIdentitySet(ImportRunContext $context): array
     {
         $identitySet = [];
         $collectIds = $context->getOptions()->forceIds && $context->isFieldMapped('id');
@@ -110,7 +110,7 @@ final class AccessoriesPrecheck
      *
      * @return list<ImportMessage>
      */
-    private function checkTarget(string $target, array $identitySet, int $rowIndex, ImportRunContext $context): array
+    protected function checkTarget(string $target, array $identitySet, int $rowIndex, ImportRunContext $context): array
     {
         if (ctype_digit($target)) {
             $probe = $this->identityResolver->classifyNumericTarget((int) $target, $context->getShopId());
@@ -134,7 +134,7 @@ final class AccessoriesPrecheck
         return [$this->warning($rowIndex, $this->translator->trans('Accessory "%target%" matches no product in the file or the catalog; the link will be dropped.', ['%target%' => $target], 'Admin.Advparameters.Notification'))];
     }
 
-    private function warning(int $rowIndex, string $message): ImportMessage
+    protected function warning(int $rowIndex, string $message): ImportMessage
     {
         return new ImportMessage(ImportMessage::SEVERITY_WARNING, ImportPhaseDefinition::PHASE_VALIDATION, $message, $rowIndex, 'accessories');
     }

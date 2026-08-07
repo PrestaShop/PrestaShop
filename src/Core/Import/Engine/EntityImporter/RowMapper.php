@@ -15,7 +15,7 @@ use PrestaShop\PrestaShop\Core\Import\Engine\ImportRunContext;
  * the mapping only knows column indexes and field names, so every entity
  * importer shares this service.
  */
-final class RowMapper
+class RowMapper
 {
     /**
      * @param array<int, string> $record raw record cells, as read by the file reader

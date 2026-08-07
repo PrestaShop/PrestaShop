@@ -13,7 +13,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine\EntityImporter;
  * importer (each importer owns its resolution logic, e.g.
  * ProductIdentityResolver).
  */
-final class EntityMatch
+class EntityMatch
 {
     public const MATCHED_BY_REFERENCE = 'reference';
     public const MATCHED_BY_ID = 'id';

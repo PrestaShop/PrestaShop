@@ -34,20 +34,20 @@ use Throwable;
  * after every row exists so file order never matters, including mutual
  * A<->B references).
  */
-final class ProductImporter extends AbstractEntityImporter
+class ProductImporter extends AbstractEntityImporter
 {
     public const ENTITY_TYPE = 'product';
 
     public function __construct(
-        private readonly TranslatorInterface $translator,
+        protected readonly TranslatorInterface $translator,
         ResumableFileReaderInterface $fileReader,
         RowMapper $rowMapper,
-        private readonly ProductRowValidator $rowValidator,
-        private readonly ProductRowImporter $rowImporter,
-        private readonly AccessoriesPrecheck $accessoriesPrecheck,
-        private readonly ProductIdentityResolver $identityResolver,
-        private readonly ValueParser $valueParser,
-        private readonly CommandBusInterface $commandBus,
+        protected readonly ProductRowValidator $rowValidator,
+        protected readonly ProductRowImporter $rowImporter,
+        protected readonly AccessoriesPrecheck $accessoriesPrecheck,
+        protected readonly ProductIdentityResolver $identityResolver,
+        protected readonly ValueParser $valueParser,
+        protected readonly CommandBusInterface $commandBus,
     ) {
         parent::__construct($fileReader, $rowMapper);
     }
@@ -190,7 +190,7 @@ final class ProductImporter extends AbstractEntityImporter
         };
     }
 
-    private function processValidationBatch(ImportRunContext $context, int $limit): PhaseBatchResult
+    protected function processValidationBatch(ImportRunContext $context, int $limit): PhaseBatchResult
     {
         $messages = [];
 
@@ -243,7 +243,7 @@ final class ProductImporter extends AbstractEntityImporter
         return new PhaseBatchResult($result->processedUnitCount, $messages, $result->newlySkippedRows, $result->resumeCursor);
     }
 
-    private function processDatabaseBatch(ImportRunContext $context, int $limit): PhaseBatchResult
+    protected function processDatabaseBatch(ImportRunContext $context, int $limit): PhaseBatchResult
     {
         return $this->iterateBatch($context, $limit, function (array $row, int $rowIndex) use ($context): array {
             if ($context->isRowSkipped($rowIndex)) {
@@ -256,7 +256,7 @@ final class ProductImporter extends AbstractEntityImporter
         });
     }
 
-    private function processAssociationBatch(ImportRunContext $context, int $limit): PhaseBatchResult
+    protected function processAssociationBatch(ImportRunContext $context, int $limit): PhaseBatchResult
     {
         return $this->iterateBatch($context, $limit, function (array $row, int $rowIndex) use ($context): array {
             if ($context->isRowSkipped($rowIndex)) {
@@ -272,7 +272,7 @@ final class ProductImporter extends AbstractEntityImporter
      *
      * @return list<ImportMessage>
      */
-    private function associateAccessories(array $row, int $rowIndex, ImportRunContext $context): array
+    protected function associateAccessories(array $row, int $rowIndex, ImportRunContext $context): array
     {
         $accessories = $row['accessories'] ?? '';
         if ('' === $accessories) {
@@ -319,7 +319,7 @@ final class ProductImporter extends AbstractEntityImporter
      *
      * @param array<string, string> $row
      */
-    private function resolveAssociationOwner(array $row, ImportRunContext $context): ?int
+    protected function resolveAssociationOwner(array $row, ImportRunContext $context): ?int
     {
         $id = $row['id'] ?? '';
         $usableId = $context->getOptions()->forceIds && ctype_digit($id) ? (int) $id : null;
@@ -334,7 +334,7 @@ final class ProductImporter extends AbstractEntityImporter
      * (also warned). Unresolvable targets produce an error naming the link;
      * the link is dropped and the run completes.
      */
-    private function resolveAccessoryTarget(string $target, int $rowIndex, ImportRunContext $context): ResolvedAssociation
+    protected function resolveAccessoryTarget(string $target, int $rowIndex, ImportRunContext $context): ResolvedAssociation
     {
         if (ctype_digit($target)) {
             $probe = $this->identityResolver->classifyNumericTarget((int) $target, $context->getShopId());
@@ -366,12 +366,12 @@ final class ProductImporter extends AbstractEntityImporter
         ]);
     }
 
-    private function associationError(int $rowIndex, string $message): ImportMessage
+    protected function associationError(int $rowIndex, string $message): ImportMessage
     {
         return new ImportMessage(ImportMessage::SEVERITY_ERROR, ImportPhaseDefinition::PHASE_ASSOCIATION, $message, $rowIndex, 'accessories');
     }
 
-    private function associationWarning(int $rowIndex, string $message): ImportMessage
+    protected function associationWarning(int $rowIndex, string $message): ImportMessage
     {
         return new ImportMessage(ImportMessage::SEVERITY_WARNING, ImportPhaseDefinition::PHASE_ASSOCIATION, $message, $rowIndex, 'accessories');
     }
@@ -379,7 +379,7 @@ final class ProductImporter extends AbstractEntityImporter
     /**
      * @param array<string, string> $parameters
      */
-    private function trans(string $id, string $domain, array $parameters = []): string
+    protected function trans(string $id, string $domain, array $parameters = []): string
     {
         return $this->translator->trans($id, $parameters, $domain);
     }

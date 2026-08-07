@@ -16,7 +16,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
  * count back to display source-file line numbers. Null means a file-level
  * message. The message text is already translated by the importer.
  */
-final class ImportMessage
+class ImportMessage
 {
     public const SEVERITY_NOTICE = 'notice';
     public const SEVERITY_WARNING = 'warning';

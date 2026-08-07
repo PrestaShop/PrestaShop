@@ -18,10 +18,10 @@ use PrestaShop\Decimal\DecimalNumber;
  * which "false" and "no" were truthy — a reviewed behavior change of the
  * import refactoring (see the behavior inventory in the Import plan).
  */
-final class ValueParser
+class ValueParser
 {
-    private const TRUE_VALUES = ['1', 'true', 'yes'];
-    private const FALSE_VALUES = ['0', 'false', 'no', ''];
+    protected const TRUE_VALUES = ['1', 'true', 'yes'];
+    protected const FALSE_VALUES = ['0', 'false', 'no', ''];
 
     /**
      * Tolerant boolean parsing: 0/1/true/false/yes/no (case-insensitive).

@@ -18,9 +18,9 @@ use PrestaShop\PrestaShop\Core\Import\Engine\Exception\FileDownloadException;
  * product files (file_url); replaces the download half of the deprecated
  * ImageCopier.
  */
-final class FileDownloader
+class FileDownloader
 {
-    private const DOWNLOAD_TIMEOUT_SECONDS = 20;
+    protected const DOWNLOAD_TIMEOUT_SECONDS = 20;
 
     /**
      * @return string path of the temporary file — the caller is responsible for deleting it
@@ -44,7 +44,7 @@ final class FileDownloader
         return $this->copyLocalFile($urlOrPath);
     }
 
-    private function downloadUrl(string $url): string
+    protected function downloadUrl(string $url): string
     {
         $sanitizedUrl = $this->sanitizeUrl($url);
         $targetPath = $this->createTemporaryFile();
@@ -82,7 +82,7 @@ final class FileDownloader
         return $targetPath;
     }
 
-    private function copyLocalFile(string $path): string
+    protected function copyLocalFile(string $path): string
     {
         if (!is_file($path) || !is_readable($path)) {
             throw new FileDownloadException(sprintf('Local file "%s" does not exist or is not readable', $path));
@@ -97,7 +97,7 @@ final class FileDownloader
         return $targetPath;
     }
 
-    private function createTemporaryFile(): string
+    protected function createTemporaryFile(): string
     {
         // always the system temp dir: these files live only for the duration
         // of one command dispatch and are deleted by the caller
@@ -116,7 +116,7 @@ final class FileDownloader
      * characters survive the request (legacy ImageCopier parity, without the
      * http_build_url dependency).
      */
-    private function sanitizeUrl(string $url): string
+    protected function sanitizeUrl(string $url): string
     {
         $parts = parse_url($url);
         if (false === $parts || !isset($parts['scheme'], $parts['host'])) {

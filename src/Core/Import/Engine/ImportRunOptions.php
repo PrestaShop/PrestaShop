@@ -16,7 +16,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
  * not by importers: truncate executes once at database-phase entry, dryRun
  * truncates the phase list after validation (API validate-only).
  */
-final class ImportRunOptions
+class ImportRunOptions
 {
     public function __construct(
         public readonly bool $truncate = false,

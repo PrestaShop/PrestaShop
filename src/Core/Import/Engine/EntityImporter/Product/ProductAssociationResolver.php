@@ -47,42 +47,42 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * (one batch request), so a 1000-row file creates each missing
  * category/manufacturer/feature once.
  */
-final class ProductAssociationResolver
+class ProductAssociationResolver
 {
     use LocalizedValueTrait;
 
     /**
      * @var array<string, int>
      */
-    private array $categoryCache = [];
+    protected array $categoryCache = [];
 
     /**
      * @var array<string, int>
      */
-    private array $manufacturerCache = [];
+    protected array $manufacturerCache = [];
 
     /**
      * @var array<string, int>
      */
-    private array $featureCache = [];
+    protected array $featureCache = [];
 
     /**
      * @var array<string, int>
      */
-    private array $featureValueCache = [];
+    protected array $featureValueCache = [];
 
     public function __construct(
-        private readonly CommandBusInterface $commandBus,
-        private readonly CategoryRepository $categoryRepository,
-        private readonly ManufacturerRepository $manufacturerRepository,
-        private readonly SupplierRepository $supplierRepository,
-        private readonly ShopRepository $shopRepository,
-        private readonly LanguageRepositoryInterface $languageRepository,
-        private readonly FeatureRepository $featureRepository,
-        private readonly FeatureValueRepository $featureValueRepository,
-        private readonly ConfigurationInterface $configuration,
-        private readonly ImportDataFormatter $dataFormatter,
-        private readonly TranslatorInterface $translator,
+        protected readonly CommandBusInterface $commandBus,
+        protected readonly CategoryRepository $categoryRepository,
+        protected readonly ManufacturerRepository $manufacturerRepository,
+        protected readonly SupplierRepository $supplierRepository,
+        protected readonly ShopRepository $shopRepository,
+        protected readonly LanguageRepositoryInterface $languageRepository,
+        protected readonly FeatureRepository $featureRepository,
+        protected readonly FeatureValueRepository $featureValueRepository,
+        protected readonly ConfigurationInterface $configuration,
+        protected readonly ImportDataFormatter $dataFormatter,
+        protected readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -270,7 +270,7 @@ final class ProductAssociationResolver
      * @return int the id of the DEEPEST path segment (the last one walked) —
      *             the category the product will be associated with
      */
-    private function resolveCategoryPath(string $path, int $languageId): int
+    protected function resolveCategoryPath(string $path, int $languageId): int
     {
         if (isset($this->categoryCache[$path])) {
             return $this->categoryCache[$path];
@@ -308,7 +308,7 @@ final class ProductAssociationResolver
         return $currentCategoryId;
     }
 
-    private function resolveFeature(string $name, int $languageId, ImportRunContext $context): int
+    protected function resolveFeature(string $name, int $languageId, ImportRunContext $context): int
     {
         if (isset($this->featureCache[$name])) {
             return $this->featureCache[$name];
@@ -325,7 +325,7 @@ final class ProductAssociationResolver
         return $featureId;
     }
 
-    private function resolveFeatureValue(int $featureId, string $value, int $languageId): int
+    protected function resolveFeatureValue(int $featureId, string $value, int $languageId): int
     {
         $cacheKey = $featureId . ':' . $value;
         if (isset($this->featureValueCache[$cacheKey])) {
@@ -343,7 +343,7 @@ final class ProductAssociationResolver
         return $featureValueId;
     }
 
-    private function categoryExists(int $categoryId): bool
+    protected function categoryExists(int $categoryId): bool
     {
         if ($categoryId <= 0) {
             return false;
@@ -358,7 +358,7 @@ final class ProductAssociationResolver
         return true;
     }
 
-    private function manufacturerExists(int $manufacturerId): bool
+    protected function manufacturerExists(int $manufacturerId): bool
     {
         if ($manufacturerId <= 0) {
             return false;
@@ -373,7 +373,7 @@ final class ProductAssociationResolver
         return true;
     }
 
-    private function supplierExists(int $supplierId): bool
+    protected function supplierExists(int $supplierId): bool
     {
         if ($supplierId <= 0) {
             return false;

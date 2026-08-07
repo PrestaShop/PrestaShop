@@ -36,7 +36,7 @@ use Throwable;
  * converter's forced ';' separator and stale filename-keyed cache (the
  * caller provides a fresh target path per run, nothing is cached).
  */
-final class CsvImportFileNormalizer
+class CsvImportFileNormalizer
 {
     /**
      * Canonical CSV dialect of every working file.
@@ -46,8 +46,8 @@ final class CsvImportFileNormalizer
     /** Empty escape: RFC 4180 quote-doubling only, no backslash escaping */
     public const CSV_ESCAPE = '';
 
-    private const UTF8_BOM = "\xEF\xBB\xBF";
-    private const UTF16_BOMS = ["\xFE\xFF", "\xFF\xFE"];
+    protected const UTF8_BOM = "\xEF\xBB\xBF";
+    protected const UTF16_BOMS = ["\xFE\xFF", "\xFF\xFE"];
 
     /**
      * @param SplFileInfo $sourceFile the uploaded file (CSV or spreadsheet)
@@ -76,7 +76,7 @@ final class CsvImportFileNormalizer
     /**
      * @return int number of data records written to the working file
      */
-    private function normalizeCsv(SplFileInfo $sourceFile, string $targetPath, string $sourceCsvDelimiter, int $skipRows): int
+    protected function normalizeCsv(SplFileInfo $sourceFile, string $targetPath, string $sourceCsvDelimiter, int $skipRows): int
     {
         $source = fopen($sourceFile->getPathname(), 'rb');
         if (false === $source) {
@@ -134,7 +134,7 @@ final class CsvImportFileNormalizer
     /**
      * @return int number of data records written to the working file
      */
-    private function convertSpreadsheet(SplFileInfo $sourceFile, string $targetPath, int $skipRows): int
+    protected function convertSpreadsheet(SplFileInfo $sourceFile, string $targetPath, int $skipRows): int
     {
         // always convert to an intermediate file, then reuse the CSV pass:
         // it strips the skip rows record-accurately AND counts the records
@@ -166,7 +166,7 @@ final class CsvImportFileNormalizer
     /**
      * @param resource $handle
      */
-    private function skipByteOrderMark($handle, string $pathname): void
+    protected function skipByteOrderMark($handle, string $pathname): void
     {
         $leadingBytes = (string) fread($handle, 3);
 
@@ -186,7 +186,7 @@ final class CsvImportFileNormalizer
      *
      * @param array<int, string|null> $row
      */
-    private function isBlankRecord(array $row): bool
+    protected function isBlankRecord(array $row): bool
     {
         return [null] === $row;
     }

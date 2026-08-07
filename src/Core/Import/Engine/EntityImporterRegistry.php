@@ -17,21 +17,21 @@ use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
  * page field list and batch dispatch. Modules can register their own importers
  * by implementing EntityImporterInterface with an autoconfigured service.
  */
-final class EntityImporterRegistry
+class EntityImporterRegistry
 {
     public const SERVICE_TAG = 'core.import.entity_importer';
 
     /**
      * @var array<string, EntityImporterInterface>|null lazily built index, keyed by entity type
      */
-    private ?array $index = null;
+    protected ?array $index = null;
 
     /**
      * @param iterable<EntityImporterInterface> $importers
      */
     public function __construct(
         #[TaggedIterator(self::SERVICE_TAG)]
-        private readonly iterable $importers,
+        protected readonly iterable $importers,
     ) {
     }
 
@@ -64,7 +64,7 @@ final class EntityImporterRegistry
     /**
      * @return array<string, EntityImporterInterface>
      */
-    private function getIndex(): array
+    protected function getIndex(): array
     {
         if (null === $this->index) {
             $this->index = [];

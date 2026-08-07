@@ -17,7 +17,7 @@ use SplFileInfo;
  * the count travels with the run's frozen config (ImportRunContext,
  * ps_import_run.total_rows).
  */
-final class NormalizedImportFile
+class NormalizedImportFile
 {
     public function __construct(
         public readonly SplFileInfo $workingFile,

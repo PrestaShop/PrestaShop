@@ -20,7 +20,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
  * awaiting_confirmation so the client can review; a clean pausing phase
  * continues without pause.
  */
-final class ImportPhaseDefinition
+class ImportPhaseDefinition
 {
     public const PHASE_VALIDATION = 'validation';
     public const PHASE_DATABASE = 'database';

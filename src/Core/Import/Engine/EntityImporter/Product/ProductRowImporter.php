@@ -70,24 +70,24 @@ use Throwable;
  * value is duplicated into every installed language, on update only the
  * file's language is written.
  */
-final class ProductRowImporter
+class ProductRowImporter
 {
     use LocalizedValueTrait;
 
     public function __construct(
-        private readonly CommandBusInterface $commandBus,
-        private readonly ValueParser $valueParser,
-        private readonly ProductIdentityResolver $identityResolver,
-        private readonly ProductAssociationResolver $associationResolver,
-        private readonly ProductRepository $productRepository,
-        private readonly StockAvailableRepository $stockAvailableRepository,
-        private readonly TaxRulesGroupRepository $taxRulesGroupRepository,
-        private readonly TaxComputer $taxComputer,
-        private readonly LanguageRepositoryInterface $languageRepository,
-        private readonly Tools $tools,
-        private readonly FileDownloader $fileDownloader,
-        private readonly ConfigurationInterface $configuration,
-        private readonly TranslatorInterface $translator,
+        protected readonly CommandBusInterface $commandBus,
+        protected readonly ValueParser $valueParser,
+        protected readonly ProductIdentityResolver $identityResolver,
+        protected readonly ProductAssociationResolver $associationResolver,
+        protected readonly ProductRepository $productRepository,
+        protected readonly StockAvailableRepository $stockAvailableRepository,
+        protected readonly TaxRulesGroupRepository $taxRulesGroupRepository,
+        protected readonly TaxComputer $taxComputer,
+        protected readonly LanguageRepositoryInterface $languageRepository,
+        protected readonly Tools $tools,
+        protected readonly FileDownloader $fileDownloader,
+        protected readonly ConfigurationInterface $configuration,
+        protected readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -138,7 +138,7 @@ final class ProductRowImporter
     /**
      * @param array<string, string> $row
      */
-    private function resolveTargetProduct(array $row, EntityMatch $match, ImportRunContext $context): int
+    protected function resolveTargetProduct(array $row, EntityMatch $match, ImportRunContext $context): int
     {
         if ($match->isUpdate()) {
             return (int) $match->entityId;
@@ -168,7 +168,7 @@ final class ProductRowImporter
      *
      * @param array<string, string> $row
      */
-    private function updateProductType(array $row, EntityMatch $match, int $productId, ImportRunContext $context): void
+    protected function updateProductType(array $row, EntityMatch $match, int $productId, ImportRunContext $context): void
     {
         if (!$match->isUpdate()) {
             return;
@@ -183,7 +183,7 @@ final class ProductRowImporter
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function resolveManufacturer(array $row, ImportRunContext $context, array &$messages): ?int
+    protected function resolveManufacturer(array $row, ImportRunContext $context, array &$messages): ?int
     {
         $manufacturer = $row['manufacturer'] ?? '';
         if ('' === $manufacturer) {
@@ -202,7 +202,7 @@ final class ProductRowImporter
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function dispatchProductUpdate(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context, ?int $manufacturerId, array &$messages): void
+    protected function dispatchProductUpdate(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context, ?int $manufacturerId, array &$messages): void
     {
         $command = new UpdateProductCommand($productId, $context->getShopConstraint());
         $hasUpdate = false;
@@ -384,7 +384,7 @@ final class ProductRowImporter
      *
      * @param array<string, string> $row
      */
-    private function resolvePrice(array $row): ?DecimalNumber
+    protected function resolvePrice(array $row): ?DecimalNumber
     {
         $priceTaxExcluded = $row['price_tex'] ?? '';
         if ('' !== $priceTaxExcluded) {
@@ -418,7 +418,7 @@ final class ProductRowImporter
      * Legacy Shop::getAddress() country resolution — the country whose tax
      * rate de-taxes price_tin values.
      */
-    private function getShopCountryId(): int
+    protected function getShopCountryId(): int
     {
         $shopCountryId = (int) $this->configuration->get('PS_SHOP_COUNTRY_ID');
 
@@ -428,7 +428,7 @@ final class ProductRowImporter
     /**
      * @param array<string, string> $row
      */
-    private function dispatchStockUpdate(array $row, int $productId, ImportRunContext $context): void
+    protected function dispatchStockUpdate(array $row, int $productId, ImportRunContext $context): void
     {
         $command = new UpdateProductStockAvailableCommand($productId, $context->getShopConstraint());
         $hasUpdate = false;
@@ -463,7 +463,7 @@ final class ProductRowImporter
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function dispatchCategories(array $row, int $rowIndex, int $productId, ImportRunContext $context, array &$messages): void
+    protected function dispatchCategories(array $row, int $rowIndex, int $productId, ImportRunContext $context, array &$messages): void
     {
         $categories = $row['category'] ?? '';
         if ('' === $categories) {
@@ -490,7 +490,7 @@ final class ProductRowImporter
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function dispatchSuppliers(array $row, int $rowIndex, int $productId, array &$messages): void
+    protected function dispatchSuppliers(array $row, int $rowIndex, int $productId, array &$messages): void
     {
         $supplier = $row['supplier'] ?? '';
         if ('' === $supplier) {
@@ -521,7 +521,7 @@ final class ProductRowImporter
     /**
      * @param array<string, string> $row
      */
-    private function dispatchTags(array $row, int $productId, bool $isCreation, int $languageId, ImportRunContext $context): void
+    protected function dispatchTags(array $row, int $productId, bool $isCreation, int $languageId, ImportRunContext $context): void
     {
         $tagsCell = $row['tags'] ?? '';
         if ('' === $tagsCell) {
@@ -549,7 +549,7 @@ final class ProductRowImporter
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function dispatchFeatures(array $row, int $rowIndex, int $productId, ImportRunContext $context, array &$messages): void
+    protected function dispatchFeatures(array $row, int $rowIndex, int $productId, ImportRunContext $context, array &$messages): void
     {
         $featuresCell = $row['features'] ?? '';
         if ('' === $featuresCell) {
@@ -569,7 +569,7 @@ final class ProductRowImporter
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function dispatchImages(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context, array &$messages): void
+    protected function dispatchImages(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context, array &$messages): void
     {
         if ('' !== ($row['delete_existing_images'] ?? '') && true === $this->valueParser->parseBoolean($row['delete_existing_images'])) {
             /** @var array<int, \PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage> $existingImages */
@@ -622,7 +622,7 @@ final class ProductRowImporter
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function dispatchVirtualProductFile(array $row, int $rowIndex, int $productId, array &$messages): void
+    protected function dispatchVirtualProductFile(array $row, int $rowIndex, int $productId, array &$messages): void
     {
         $fileUrl = $row['file_url'] ?? '';
         if ('' === $fileUrl || !$this->isVirtual($row)) {
@@ -672,7 +672,7 @@ final class ProductRowImporter
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function dispatchCustomizationFields(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context, array &$messages): void
+    protected function dispatchCustomizationFields(array $row, int $rowIndex, int $productId, bool $isCreation, int $languageId, ImportRunContext $context, array &$messages): void
     {
         $fileCount = $this->parseCount($row['uploadable_files'] ?? '');
         $textCount = $this->parseCount($row['text_fields'] ?? '');
@@ -723,7 +723,7 @@ final class ProductRowImporter
     /**
      * @return int|null null when the cell is empty or not a non-negative integer
      */
-    private function parseCount(string $value): ?int
+    protected function parseCount(string $value): ?int
     {
         return preg_match('/^[0-9]+$/', $value) ? (int) $value : null;
     }
@@ -735,7 +735,7 @@ final class ProductRowImporter
      *
      * @param array<string, string> $row
      */
-    private function dispatchSpecificPrice(array $row, int $productId): void
+    protected function dispatchSpecificPrice(array $row, int $productId): void
     {
         if ('' !== ($row['reduction_price'] ?? '') && '' !== ($row['reduction_percent'] ?? '')) {
             return;
@@ -770,7 +770,7 @@ final class ProductRowImporter
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function dispatchShops(array $row, int $rowIndex, int $productId, ImportRunContext $context, array &$messages): void
+    protected function dispatchShops(array $row, int $rowIndex, int $productId, ImportRunContext $context, array &$messages): void
     {
         $shopCell = $row['shop'] ?? '';
         if ('' === $shopCell) {
@@ -797,7 +797,7 @@ final class ProductRowImporter
     /**
      * @param array<string, string> $row
      */
-    private function applyDateAdd(array $row, int $productId): void
+    protected function applyDateAdd(array $row, int $productId): void
     {
         $dateAdd = $this->valueParser->parseDate($row['date_add'] ?? '');
         if (null !== $dateAdd) {
@@ -809,7 +809,7 @@ final class ProductRowImporter
      * Soft-deleted (historized) groups are treated as absent — assigning one
      * would resurrect it on the product.
      */
-    private function taxRulesGroupExists(int $taxRulesGroupId): bool
+    protected function taxRulesGroupExists(int $taxRulesGroupId): bool
     {
         if ($taxRulesGroupId <= 0) {
             return false;
@@ -829,7 +829,7 @@ final class ProductRowImporter
      * when no stock row exists yet. getForProduct() resolves shared-stock
      * setups (group-level stock rows) through the legacy shop restriction.
      */
-    private function getCurrentStockQuantity(int $productId, int $shopId): int
+    protected function getCurrentStockQuantity(int $productId, int $shopId): int
     {
         try {
             return (int) $this->stockAvailableRepository->getForProduct(new ProductId($productId), new ShopId($shopId))->quantity;
@@ -841,7 +841,7 @@ final class ProductRowImporter
     /**
      * @param array<string, string> $row
      */
-    private function isVirtual(array $row): bool
+    protected function isVirtual(array $row): bool
     {
         return true === $this->valueParser->parseBoolean($row['is_virtual'] ?? '');
     }

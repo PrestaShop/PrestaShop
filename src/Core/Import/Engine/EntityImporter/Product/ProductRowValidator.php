@@ -32,28 +32,28 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * ERROR means the row will be skipped by the later phases; WARNING means the
  * offending field will be dropped or defaulted but the row goes through.
  */
-final class ProductRowValidator
+class ProductRowValidator
 {
-    private const REFERENCE_MAX_LENGTH = 64;
-    private const REFERENCE_PATTERN = '/^[^<>;={}]*$/u';
-    private const GTIN_PATTERN = '/^[0-9]{0,14}$/';
-    private const UPC_PATTERN = '/^[0-9]{0,12}$/';
-    private const ISBN_MAX_LENGTH = 32;
+    protected const REFERENCE_MAX_LENGTH = 64;
+    protected const REFERENCE_PATTERN = '/^[^<>;={}]*$/u';
+    protected const GTIN_PATTERN = '/^[0-9]{0,14}$/';
+    protected const UPC_PATTERN = '/^[0-9]{0,12}$/';
+    protected const ISBN_MAX_LENGTH = 32;
 
-    private const DECIMAL_FIELDS = ['price_tex', 'price_tin', 'wholesale_price', 'unit_price', 'ecotax', 'additional_shipping_cost', 'reduction_price', 'reduction_percent'];
-    private const DIMENSION_FIELDS = ['width', 'height', 'depth', 'weight'];
-    private const DATE_FIELDS = ['available_date', 'date_add', 'reduction_from', 'reduction_to', 'date_expiration'];
-    private const BOOLEAN_FIELDS = ['active', 'on_sale', 'online_only', 'available_for_order', 'show_price', 'delete_existing_images', 'is_virtual', 'customizable', 'low_stock_alert'];
-    private const INTEGER_FIELDS = ['quantity', 'minimal_quantity', 'low_stock_threshold', 'nb_downloadable', 'nb_days_accessible'];
+    protected const DECIMAL_FIELDS = ['price_tex', 'price_tin', 'wholesale_price', 'unit_price', 'ecotax', 'additional_shipping_cost', 'reduction_price', 'reduction_percent'];
+    protected const DIMENSION_FIELDS = ['width', 'height', 'depth', 'weight'];
+    protected const DATE_FIELDS = ['available_date', 'date_add', 'reduction_from', 'reduction_to', 'date_expiration'];
+    protected const BOOLEAN_FIELDS = ['active', 'on_sale', 'online_only', 'available_for_order', 'show_price', 'delete_existing_images', 'is_virtual', 'customizable', 'low_stock_alert'];
+    protected const INTEGER_FIELDS = ['quantity', 'minimal_quantity', 'low_stock_threshold', 'nb_downloadable', 'nb_days_accessible'];
     /** Non-negative integer COUNTS of customization fields to create (not booleans) */
-    private const CUSTOMIZATION_COUNT_FIELDS = ['uploadable_files', 'text_fields'];
+    protected const CUSTOMIZATION_COUNT_FIELDS = ['uploadable_files', 'text_fields'];
 
     public function __construct(
-        private readonly ValueParser $valueParser,
-        private readonly ProductIdentityResolver $identityResolver,
-        private readonly CategoryRepository $categoryRepository,
-        private readonly TaxRulesGroupRepository $taxRulesGroupRepository,
-        private readonly TranslatorInterface $translator,
+        protected readonly ValueParser $valueParser,
+        protected readonly ProductIdentityResolver $identityResolver,
+        protected readonly CategoryRepository $categoryRepository,
+        protected readonly TaxRulesGroupRepository $taxRulesGroupRepository,
+        protected readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -85,7 +85,7 @@ final class ProductRowValidator
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function validateFormats(array $row, int $rowIndex, array &$messages): void
+    protected function validateFormats(array $row, int $rowIndex, array &$messages): void
     {
         $reference = $row['reference'] ?? '';
         if ('' !== $reference && (mb_strlen($reference) > self::REFERENCE_MAX_LENGTH || !preg_match(self::REFERENCE_PATTERN, $reference))) {
@@ -120,7 +120,7 @@ final class ProductRowValidator
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function validateEnums(array $row, int $rowIndex, array &$messages): void
+    protected function validateEnums(array $row, int $rowIndex, array &$messages): void
     {
         $visibility = $row['visibility'] ?? '';
         if ('' !== $visibility && !in_array($visibility, ProductVisibility::AVAILABLE_VISIBILITY_VALUES, true)) {
@@ -142,7 +142,7 @@ final class ProductRowValidator
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function validateNumbers(array $row, int $rowIndex, array &$messages): void
+    protected function validateNumbers(array $row, int $rowIndex, array &$messages): void
     {
         foreach (self::DECIMAL_FIELDS as $field) {
             $value = $row[$field] ?? '';
@@ -197,7 +197,7 @@ final class ProductRowValidator
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function validateDatesAndBooleans(array $row, int $rowIndex, array &$messages): void
+    protected function validateDatesAndBooleans(array $row, int $rowIndex, array &$messages): void
     {
         foreach (self::DATE_FIELDS as $field) {
             $value = $row[$field] ?? '';
@@ -221,7 +221,7 @@ final class ProductRowValidator
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function validateCategories(array $row, int $rowIndex, ImportRunContext $context, array &$messages): void
+    protected function validateCategories(array $row, int $rowIndex, ImportRunContext $context, array &$messages): void
     {
         $categories = $row['category'] ?? '';
         if ('' === $categories) {
@@ -239,7 +239,7 @@ final class ProductRowValidator
      * @param array<string, string> $row
      * @param list<ImportMessage> $messages
      */
-    private function validateTaxRulesGroup(array $row, int $rowIndex, array &$messages): void
+    protected function validateTaxRulesGroup(array $row, int $rowIndex, array &$messages): void
     {
         $taxRulesGroupId = $row['id_tax_rules_group'] ?? '';
         if ('' === $taxRulesGroupId) {
@@ -251,7 +251,7 @@ final class ProductRowValidator
         }
     }
 
-    private function categoryExists(int $categoryId): bool
+    protected function categoryExists(int $categoryId): bool
     {
         if ($categoryId <= 0) {
             return false;
@@ -270,7 +270,7 @@ final class ProductRowValidator
      * Soft-deleted (historized) groups are treated as absent — assigning one
      * would resurrect it on the product.
      */
-    private function taxRulesGroupExists(int $taxRulesGroupId): bool
+    protected function taxRulesGroupExists(int $taxRulesGroupId): bool
     {
         if ($taxRulesGroupId <= 0) {
             return false;
@@ -285,12 +285,12 @@ final class ProductRowValidator
         return !(bool) $taxRulesGroup->deleted;
     }
 
-    private function error(int $rowIndex, string $field, string $message): ImportMessage
+    protected function error(int $rowIndex, string $field, string $message): ImportMessage
     {
         return new ImportMessage(ImportMessage::SEVERITY_ERROR, ImportPhaseDefinition::PHASE_VALIDATION, $message, $rowIndex, $field);
     }
 
-    private function warning(int $rowIndex, string $field, string $message): ImportMessage
+    protected function warning(int $rowIndex, string $field, string $message): ImportMessage
     {
         return new ImportMessage(ImportMessage::SEVERITY_WARNING, ImportPhaseDefinition::PHASE_VALIDATION, $message, $rowIndex, $field);
     }

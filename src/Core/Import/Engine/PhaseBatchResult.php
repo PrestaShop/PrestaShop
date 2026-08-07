@@ -13,7 +13,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Engine;
  * (batch sequencer) applies it to the run context — importers never mutate
  * the context themselves.
  */
-final class PhaseBatchResult
+class PhaseBatchResult
 {
     /**
      * @param int $processedUnitCount units consumed by this batch (skipped rows still consume one unit)
