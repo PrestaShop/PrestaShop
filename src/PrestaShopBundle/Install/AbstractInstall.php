@@ -86,7 +86,7 @@ abstract class AbstractInstall
     }
 
     /**
-     * @return PrestaShopLoggerInterface;
+     * @return PrestaShopLoggerInterface
      */
     public function getLogger(): PrestaShopLoggerInterface
     {

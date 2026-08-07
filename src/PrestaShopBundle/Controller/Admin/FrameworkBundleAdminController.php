@@ -188,6 +188,7 @@ class FrameworkBundleAdminController extends AbstractController
         }
 
         foreach ($form->getErrors(true) as $error) {
+            /** @var FormError $error */
             if ($error->getCause() && method_exists($error->getCause(), 'getPropertyPath')) {
                 $formId = str_replace(
                     ['.', 'children[', ']', '_data'],

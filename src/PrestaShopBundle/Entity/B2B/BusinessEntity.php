@@ -118,8 +118,6 @@ class BusinessEntity
         $this->businessEntityIdentifiers = new ArrayCollection();
         $this->businessEntityCustomerB2bs = new ArrayCollection();
         $this->status = BusinessEntityStatus::PENDING;
-        $this->createdAt = new DateTime();
-        $this->updatedAt = new DateTime();
     }
 
     public function getId(): int

@@ -165,9 +165,6 @@ class LanguageList
     {
         // This code is from a php.net comment : http://www.php.net/manual/fr/reserved.variables.server.php#94237
         $split_languages = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']) : [];
-        if (!is_array($split_languages)) {
-            return false;
-        }
 
         foreach ($split_languages as $lang) {
             $pattern = '/^(?P<primarytag>[a-zA-Z]{2,8})' .

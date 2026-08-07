@@ -177,9 +177,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
             }
             $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain, $theme);
 
-            if ($domainCatalogue instanceof MessageCatalogue) {
-                $databaseCatalogue->addCatalogue($domainCatalogue);
-            }
+            $databaseCatalogue->addCatalogue($domainCatalogue);
         }
 
         return $databaseCatalogue;
