@@ -46,6 +46,7 @@ use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Defines products grid name, its columns, actions, bulk actions and filters.
@@ -741,7 +742,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, string|FormInterface>
      */
     protected function getMultiShopEditionAttributes(): array
     {

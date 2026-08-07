@@ -193,7 +193,7 @@ class DiscountFormDataHandler implements FormDataHandlerInterface
             $productRuleGroups = [];
 
             foreach ($specificProducts as $specificProduct) {
-                if (!empty($specificProduct['combination_id']) && $specificProduct['combination_id'] !== NoCombinationId::NO_COMBINATION_ID) {
+                if (!empty($specificProduct['combination_id'])) {
                     $productRuleGroups[] = new ProductRuleGroup(
                         $specificProduct['quantity'],
                         [

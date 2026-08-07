@@ -999,7 +999,7 @@ class ProductLazyArray extends AbstractLazyArray
             || !$this->configuration->get('PS_USE_COMBINATION_IMAGE_IN_LISTING')
         ) {
             foreach ($productImages as $image) {
-                if (isset($image['cover']) && $image['cover'] !== null) {
+                if (isset($image['cover'])) {
                     $this->product['cover'] = $image;
 
                     break;

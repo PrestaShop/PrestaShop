@@ -33,7 +33,7 @@ class PriceCalculator
      *                         (e.g., inside a payment module, a cron task...)
      * @param int|null $idAddress Customer address ID. Required for price (tax included)
      *                            calculation regarding the guest localization
-     * @param null $specificPriceOutput If a specific price applies regarding the previous parameters,
+     * @param array|null $specificPriceOutput If a specific price applies regarding the previous parameters,
      *                                  this variable is filled with the corresponding SpecificPrice object
      * @param bool $withEcotax insert ecotax in price output
      * @param bool $useGroupReduction
@@ -102,7 +102,7 @@ class PriceCalculator
      * @param bool $onlyReduc Returns only the reduction amount
      * @param bool $useReduc Set if the returned amount will include reduction
      * @param bool $withEcotax insert ecotax in price output
-     * @param null $specificPrice If a specific price applies regarding the previous parameters,
+     * @param array|null $specificPrice If a specific price applies regarding the previous parameters,
      *                            this variable is filled with the corresponding SpecificPrice object
      * @param bool $useGroupReduction
      * @param int $idCustomer

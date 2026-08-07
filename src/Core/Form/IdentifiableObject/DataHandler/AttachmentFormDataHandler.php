@@ -101,7 +101,7 @@ final class AttachmentFormDataHandler implements FormDataHandlerInterface
             $data['file_description']
         );
 
-        if (isset($data['file']) && $data['file'] !== null) {
+        if (isset($data['file'])) {
             /** @var UploadedFile $file */
             $file = $data['file'];
 

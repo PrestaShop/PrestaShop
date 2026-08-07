@@ -12,6 +12,7 @@ use Db;
 use Product;
 use ProductAttribute;
 use Shop;
+use Validate;
 
 /**
  * This class will provide data from DB / ORM about Attributes.
@@ -75,7 +76,7 @@ class AttributeDataProvider
 
         // get product
         $product = new Product((int) $idProduct, false);
-        if (!is_object($product) || empty($product->id)) {
+        if (!Validate::isLoadedObject($product)) {
             return false;
         }
 

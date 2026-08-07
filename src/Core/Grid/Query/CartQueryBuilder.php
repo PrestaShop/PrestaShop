@@ -241,6 +241,8 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
+            // Last possible case
+            // @phpstan-ignore identical.alwaysTrue
             if ('customer_online' === $filterName) {
                 if ($filterValue) {
                     $qb->andWhere('co.id_guest > 0');
@@ -250,8 +252,7 @@ final class CartQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere('c.' . $filterName . ' = :' . $filterName);
-            $qb->setParameter($filterName, $filterValue);
+            // Unreachable. All possible values have been handled.
         }
     }
 }

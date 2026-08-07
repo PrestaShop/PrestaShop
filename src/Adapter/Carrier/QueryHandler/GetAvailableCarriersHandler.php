@@ -88,9 +88,7 @@ class GetAvailableCarriersHandler implements GetAvailableCarriersHandlerInterfac
         $currentCarrierId = $query->getCurrentCarrierId();
         if ($currentCarrierId !== null && !in_array($currentCarrierId, $eligibleCarrierIds)) {
             $currentCarrier = $this->carrierRepository->get(new CarrierId($currentCarrierId));
-            if ($currentCarrier !== null) {
-                $availableCarriers[] = new CarrierSummary($currentCarrier->id, $currentCarrier->name);
-            }
+            $availableCarriers[] = new CarrierSummary($currentCarrier->id, $currentCarrier->name);
         }
 
         // Compute filtered carriers (carriers not available for all products)

@@ -63,13 +63,8 @@ class AddCountryHandler implements AddCountryHandlerInterface
             $country->zip_code_format = $command->getZipCodeFormat()->getValue();
         }
 
-        if (null !== $command->getDefaultCurrency()) {
-            $country->id_currency = $command->getDefaultCurrency();
-        }
-
-        if (null !== $command->getZoneId()) {
-            $country->id_zone = $command->getZoneId()->getValue();
-        }
+        $country->id_currency = $command->getDefaultCurrency();
+        $country->id_zone = $command->getZoneId()->getValue();
 
         $this->countryRepository->add($country);
 

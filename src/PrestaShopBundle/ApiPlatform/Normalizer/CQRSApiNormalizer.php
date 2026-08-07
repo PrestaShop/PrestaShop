@@ -179,7 +179,7 @@ class CQRSApiNormalizer extends ObjectNormalizer
             $metadata = $this->classMetadataFactory->getMetadataFor($object);
             $reflClass = $metadata->getReflectionClass();
         } else {
-            $reflClass = new ReflectionClass(\is_object($object) ? $object::class : $object);
+            $reflClass = new ReflectionClass($object);
         }
 
         foreach ($reflClass->getMethods(ReflectionMethod::IS_PUBLIC) as $reflMethod) {

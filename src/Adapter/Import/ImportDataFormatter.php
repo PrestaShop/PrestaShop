@@ -128,7 +128,7 @@ final class ImportDataFormatter
             @unlink($uniqidPath);
         }
 
-        if (empty($content) || !is_array($content)) {
+        if (empty($content)) {
             return [];
         }
 

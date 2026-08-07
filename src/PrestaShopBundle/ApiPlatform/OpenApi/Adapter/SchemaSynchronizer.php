@@ -64,7 +64,7 @@ class SchemaSynchronizer implements OpenApiSchemaAdapterInterface
         // instead of the resource class, as the input class defines what properties can be set
         $inputClass = null;
         $classToUse = $class;
-        if (method_exists($operation, 'getInput') && is_array($operation->getInput())) {
+        if (is_array($operation->getInput())) {
             $inputClass = $operation->getInput()['class'] ?? null;
             if ($inputClass && class_exists($inputClass)) {
                 // Use the input/command class for write operations
@@ -166,7 +166,7 @@ class SchemaSynchronizer implements OpenApiSchemaAdapterInterface
                     $mappedRequired[] = $requiredProperty;
                 }
             }
-            $definition['required'] = array_values($mappedRequired);
+            $definition['required'] = $mappedRequired;
         }
     }
 

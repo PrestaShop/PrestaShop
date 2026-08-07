@@ -138,6 +138,8 @@ final class CustomerOrderQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
+            // Last possible case
+            // @phpstan-ignore identical.alwaysTrue
             if ('id_customer' === $filterName) {
                 $qb->andWhere('o.`id_customer` = :' . $filterName);
                 $qb->setParameter($filterName, $value);

@@ -243,7 +243,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         }
 
         $countryId = (int) $specificPrice->id_country;
-        if ($countryId !== null && $countryId !== NoCountryId::NO_COUNTRY_ID_VALUE) {
+        if ($countryId !== NoCountryId::NO_COUNTRY_ID_VALUE) {
             $this->countryRepository->assertCountryExists(new CountryId($countryId));
         }
 

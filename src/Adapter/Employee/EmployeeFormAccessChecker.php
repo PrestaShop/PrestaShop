@@ -43,10 +43,6 @@ final class EmployeeFormAccessChecker implements EmployeeFormAccessCheckerInterf
      */
     public function isRestrictedAccess(int $employeeId): bool
     {
-        if (!is_int($employeeId)) {
-            throw new InvalidArgumentException(sprintf('Employee ID must be an integer, %s given', gettype($employeeId)));
-        }
-
         return $employeeId === $this->contextEmployeeProvider->getId();
     }
 

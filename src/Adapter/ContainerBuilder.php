@@ -175,7 +175,6 @@ class ContainerBuilder
             // The FO legacy container has no FrameworkBundle, so the Symfony `validator` is wired manually here.
             new ValidatorBuilderExtension(),
         ];
-        /** @var ContainerBuilderExtensionInterface $builderExtension */
         foreach ($builderExtensions as $builderExtension) {
             $builderExtension->build($container);
         }

@@ -32,7 +32,7 @@ final class FrontDoctrineProxyWarmer
             $doctrine = $this->container->get('doctrine');
 
             foreach ($doctrine->getManagers() as $entityManager) {
-                if (!$entityManager instanceof EntityManagerInterface || !method_exists($entityManager, 'getProxyFactory')) {
+                if (!$entityManager instanceof EntityManagerInterface) {
                     continue;
                 }
 

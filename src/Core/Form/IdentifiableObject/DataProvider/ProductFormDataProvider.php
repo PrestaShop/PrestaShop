@@ -326,10 +326,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * @param int $productId
-     * @param ShopConstraint $shopConstraint
-     *
-     * @return array<string, array<int, array<string, int|array<int, string>>>>
+     * @return array{'feature_collection'?: array{'feature_id': int, 'feature_name': string, 'feature_values': array{'feature_value_id': int, 'feature_value_name': string, 'is_custom': bool, 'custom_value'?: string[]}[]}[]}
      */
     private function extractFeatureValues(int $productId, ShopConstraint $shopConstraint): array
     {

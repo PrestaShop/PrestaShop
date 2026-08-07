@@ -88,7 +88,7 @@ final class AddressFormatChecker implements AddressFormatCheckerInterface
     {
         $tokens = preg_split(self::TOKEN_SPLIT_REGEX, $line, -1, PREG_SPLIT_NO_EMPTY);
 
-        return false === $tokens ? [] : array_values($tokens);
+        return false === $tokens ? [] : $tokens;
     }
 
     /**

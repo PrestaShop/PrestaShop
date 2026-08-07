@@ -52,6 +52,7 @@ final class PositionModification implements PositionModificationInterface
 
     /**
      * {@inheritdoc}
+     * @phpstan-ignore return.unusedType
      */
     public function getOldPosition()
     {

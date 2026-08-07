@@ -83,9 +83,7 @@ class AddSearchTermAliasesCommand
     }
 
     /**
-     * @param string $string
-     *
-     * @throws InvalidArgumentException
+     * @throws AliasConstraintException
      */
     private function assertStringNotEmpty(string $string): void
     {

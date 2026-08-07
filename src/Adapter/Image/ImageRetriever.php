@@ -214,7 +214,7 @@ class ImageRetriever
 
                 // Get the URL of the thumb and add it to sources
                 // Manufacturer and supplier use only IDs
-                if ($object::class === 'Manufacturer' || $object::class === 'Supplier') {
+                if ($getImageURL === 'getManufacturerImageLink' || $getImageURL === 'getSupplierImageLink') {
                     $sources[$imageFormat] = $this->link->$getImageURL($id_image, $image_type['name'], $imageFormat);
                 // Products, categories and stores pass both rewrite and ID
                 } else {
@@ -249,7 +249,7 @@ class ImageRetriever
         $keys = array_keys($urls);
         $small = $urls[$keys[0]];
         $large = end($urls);
-        $medium = $urls[$keys[ceil((count($keys) - 1) / 2)]];
+        $medium = $urls[$keys[(int) ceil((count($keys) - 1) / 2)]];
 
         return [
             'bySize' => $urls,
@@ -441,7 +441,7 @@ class ImageRetriever
 
         $small = $urls[$keys[0]];
         $large = end($urls);
-        $medium = $urls[$keys[ceil((count($keys) - 1) / 2)]];
+        $medium = $urls[$keys[(int) ceil((count($keys) - 1) / 2)]];
 
         return [
             'bySize' => $urls,

@@ -21,7 +21,7 @@ class PackItemsManager
      * @param Pack $pack
      * @param bool|int $id_lang Optional
      *
-     * @return array(Product) The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]
+     * @return Product[] The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]
      */
     public function getPackItems($pack, $id_lang = false)
     {
@@ -40,7 +40,7 @@ class PackItemsManager
      * @param int $item_attribute_id
      * @param bool|int $id_lang Optional
      *
-     * @return array(Pack) The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
+     * @return Product[] The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
      */
     public function getPacksContainingItem($item, $item_attribute_id, $id_lang = false)
     {

@@ -125,6 +125,8 @@ final class CustomerViewedProductQueryBuilder extends AbstractDoctrineQueryBuild
                 continue;
             }
 
+            // Last possible case
+            // @phpstan-ignore identical.alwaysTrue
             if ('id_customer' === $filterName) {
                 $qb->andWhere('c.`id_customer` = :' . $filterName);
                 $qb->setParameter($filterName, $value);

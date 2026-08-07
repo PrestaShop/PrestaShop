@@ -158,6 +158,7 @@ class LogoUploader
             }
 
             Configuration::updateValue($fieldName, $logoName, false, $idShopGroup, $idShop);
+            // @phpstan-ignore function.resultUnused
             unlink($tmpName);
 
             return true;

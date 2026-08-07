@@ -21,7 +21,7 @@ class AttachmentId
     /**
      * @param int $id
      *
-     * @throws AttachmentConstraintException]
+     * @throws AttachmentConstraintException
      */
     public function __construct(int $id)
     {

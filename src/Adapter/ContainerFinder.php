@@ -44,7 +44,6 @@ class ContainerFinder
         if (isset($this->context->controller)
             && method_exists($this->context->controller, 'getContainer')
             && ($container = $this->context->controller->getContainer())
-            && null !== $container
         ) {
             return $container;
         }

@@ -21,7 +21,7 @@ interface KpiRowInterface
     public function addKpi(KpiInterface $kpi);
 
     /**
-     * @return array[KpiInterface]
+     * @return KpiInterface[]
      */
     public function getKpis();
 
